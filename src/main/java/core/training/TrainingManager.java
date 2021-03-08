@@ -6,12 +6,12 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HOLogger;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,12 +23,12 @@ public class TrainingManager implements PropertyChangeListener {
 	// singleton class
 	private static TrainingManager m_clInstance;
 
-	private TrainingPerWeek nextWeekTraining;        // used to determine training bar, include upcoming game   => Created at initilization
-    private TrainingWeekManager recentTrainings;     // trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
-	private List<TrainingPerWeek> historicalTrainings;         // used to populate training history, no match information => Created at initilization
+	private TrainingPerWeek nextWeekTraining;        						// used to determine training bar, include upcoming game   => Created at initilization
+    private TrainingWeekManager recentTrainings;     						// trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
+	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initilization
 
 
-	public static final boolean TRAININGDEBUG = false;
+	public static final boolean TRAINING_DEBUG = false;
 
 
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -59,6 +59,19 @@ public class TrainingManager implements PropertyChangeListener {
 		HOVerwaltung.instance().addPropertyChangeListener(this);
     }
 
+
+	/**
+	 * compute vector of trainingPerWeeks Vector between 2 dates to be used for subskill recalculation
+	 */
+    public List<TrainingPerWeek> getHistoricalTrainingsBetweenDates(Instant startDate, Instant endDate){
+		List<TrainingPerWeek> result = historicalTrainings.stream()
+				.filter(t->t.getTrainingDate().isBefore(endDate) && !startDate.isAfter(t.getTrainingDate()))
+				.collect(Collectors.toList());
+
+		result.forEach(t->t.addMatchesInfo());
+
+    	return result;
+	}
 
     public void updateHistoricalTrainings(){
     	// push trainings that took place since last update into Trainings table

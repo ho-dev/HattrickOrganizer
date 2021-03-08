@@ -25,7 +25,6 @@ public class TrainingWeekManager {
     private List<TrainingPerWeek> m_Trainings;
     private Instant m_StartDate;
 	private Boolean m_IncludeUpcomingTrainings;
-	private Boolean m_IncludeMatches;
 
 	/**
 	 * Construct a list of TrainingPerWeek since provided initial training Date
@@ -45,9 +44,12 @@ public class TrainingWeekManager {
 			}
 
 		m_StartDate = startDate;
-		m_IncludeMatches = includeMatches;
 		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
-		m_Trainings = createTrainingListFromHRF();
+		m_Trainings = createTrainingListFromHRF(includeMatches);
+	}
+
+	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings) {
+		this(startDate, includeUpcomingTrainings, false);
 	}
 
 	public static void reset(){
@@ -100,7 +102,7 @@ public class TrainingWeekManager {
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, DBDataSource.HRF);
+						coachLevel, DBDataSource.HRF, true);
 			}
 		}
 		catch (Exception e) {
@@ -114,7 +116,7 @@ public class TrainingWeekManager {
 	 * Create the list of trainings from DB but excluding 'Trainings' table
 	 *  missing weeks are created by duplicating previous entry
 	 */
-	private List<TrainingPerWeek> createTrainingListFromHRF(){
+	private List<TrainingPerWeek> createTrainingListFromHRF(boolean includeMatches){
 
 		List<TrainingPerWeek>  trainings = new ArrayList<>();
 
@@ -150,12 +152,12 @@ public class TrainingWeekManager {
 				{
 					var previousTraining = trainings.get(trainingsSize - 1);
 					var tpw = new TrainingPerWeek(currDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(), previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(),
-							DBDataSource.GUESS);
+							DBDataSource.GUESS, includeMatches);
 					trainings.add(tpw);
 				}
 				else{
 					var tpw = new TrainingPerWeek(currDate, -1, 0, 0, 0, 0,
-							DBDataSource.GUESS);
+							DBDataSource.GUESS, includeMatches);
 					trainings.add(tpw);
 				}
 			}
