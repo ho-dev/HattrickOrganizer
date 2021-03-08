@@ -23,6 +23,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     private JComponent m_clComponent;
     private final JLabel m_jlTeam = new JLabel();
     private final JLabel m_jlName = new JLabel();
+    private final JLabel m_jlSkill = new JLabel();
     private final JLabel m_jlPositionWarning = new JLabel();
     private final JLabel m_jlSpecialty = new JLabel();
     private final JLabel m_jlWeatherEffect = new JLabel();
@@ -33,6 +34,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     private final boolean m_bShowWeatherEffect;
     private boolean m_bCustomName = false;
     private String m_sCustomNameString = "";
+    private float m_rating;
     private boolean m_IsOneOfBestPositions;
     private boolean m_bMultiLine = false;
     private boolean m_bSelect = false;
@@ -53,6 +55,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
                             float rating, boolean showJersey, boolean showWeatherEffect) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
+        m_rating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
@@ -64,6 +67,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
                             float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
+        m_rating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
@@ -98,6 +102,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         }
 
         m_jlName.setFont(isSelected ? m_jlName.getFont().deriveFont(Font.BOLD) : m_jlName.getFont().deriveFont(Font.PLAIN));
+        m_jlSkill.setFont(isSelected ? m_jlSkill.getFont().deriveFont(Font.BOLD) : m_jlSkill.getFont().deriveFont(Font.PLAIN));
 
         return m_clComponent;
     }
@@ -118,6 +123,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     public final void clear() {
         m_clPlayer = null;
         m_clPlayerMatchRoleID = null;
+        m_rating = 0f;
         m_IsOneOfBestPositions = false;
         updateComponent();
     }
@@ -193,6 +199,12 @@ public final class PlayerLabelEntry implements IHOTableEntry {
             m_jlSpecialty.setOpaque(false);
             spezPanel.add(m_jlSpecialty);
 
+            // Rating
+            m_jlSkill.setBackground(ColorLabelEntry.BG_STANDARD);
+            m_jlSkill.setOpaque(false);
+            m_jlSkill.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
+            spezPanel.add(m_jlSkill);
+
             //Team
             m_jlTeam.setBackground(ColorLabelEntry.BG_STANDARD);
             m_jlTeam.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -228,6 +240,11 @@ public final class PlayerLabelEntry implements IHOTableEntry {
             m_jlWeatherEffect.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
             spezPanel.add(m_jlWeatherEffect);
 
+            // Rating
+            m_jlSkill.setBackground(ColorLabelEntry.BG_STANDARD);
+            m_jlSkill.setOpaque(false);
+            m_jlSkill.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 0));
+            spezPanel.add(m_jlSkill);
 
             // Team
             m_jlTeam.setBackground(ColorLabelEntry.BG_STANDARD);
@@ -304,9 +321,10 @@ public final class PlayerLabelEntry implements IHOTableEntry {
      * Update the entry.
      */
     public final void updateComponent(Player player, MatchRoleID positionAktuell,
-                                      float positionsbewertung, boolean alternativePosition, String nameText) {
+                                      float rating, boolean alternativePosition, String nameText) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = positionAktuell;
+        m_rating = rating;
         m_IsOneOfBestPositions = alternativePosition;
         m_sCustomNameString = nameText;
 
@@ -356,6 +374,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         m_jlSpecialty.setIcon(null);
         m_jlTrainUp.setIcon(null);
         m_jlPositionWarning.setText("");
+        m_jlSkill.setText("");
     }
 
     private void updateDisplay(Player player) {
@@ -370,6 +389,13 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         }
 
         m_jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[player.getPlayerSpecialty()]));
+
+        // positionValue
+        if (m_rating != 0f) {
+            m_jlSkill.setText("(" + m_rating + ")");
+        } else {
+            m_jlSkill.setText("");
+        }
 
         // warning icon iin case of non optimal placement
         if (!m_IsOneOfBestPositions) {
