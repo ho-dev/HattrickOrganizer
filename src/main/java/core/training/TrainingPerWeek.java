@@ -29,13 +29,14 @@ public class TrainingPerWeek  {
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private DBDataSource o_Source;
+    private boolean o_includeMatches;
 
 
     /**
      *
      * Constructor, matches are not passsed as parameters but are loaded at object creation
      */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source) {
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source, boolean o_includeMatches) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
@@ -44,18 +45,32 @@ public class TrainingPerWeek  {
         o_TrainingAssistantsLevel = trainingAssistantsLevel;
         o_Source = source;
 
-        // Loading matches played the week preceding the training date --------------------------
+        if (o_includeMatches) {
+            // Loading matches played the week preceding the training date --------------------------
+            var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+            String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
+            String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
+            o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
+            o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
+        }
+    }
+
+    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source) {
+        this(trainingDate, trainingType, trainingIntensity, staminaShare, trainingAssistantsLevel, coachLevel, source, false);
+    }
+
+
+    public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
+        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
+    }
+
+    public void addMatchesInfo(){
         var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
         String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
         String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
         o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
         o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
     }
-
-    public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
-        this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
-    }
-
 
     /**
      * function that fetch info of NT match played related to the TrainingPerWeek instance
