@@ -8,6 +8,7 @@ import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -402,6 +403,8 @@ public class YouthPlayer {
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
                     skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
+                    trainingEntry.setInjuryLevel(getInjuryLevelAt(training.getMatchDate()));
+                    trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
                 }
             }
@@ -430,9 +433,19 @@ public class YouthPlayer {
         return startSkills;
     }
 
+    private Timestamp playerDevelopmentDate;
+    private YouthPlayer oldPlayerInfo;
+    private YouthPlayer getOldPlayerInfo(Timestamp date){
+        if ( playerDevelopmentDate == null || !date.equals(playerDevelopmentDate)){
+            playerDevelopmentDate = date;
+            oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
+        }
+        return oldPlayerInfo;
+    }
+
     private YouthSkillsInfo getSkillsAt(Timestamp date) {
         if (!date.equals(this.youthMatchDate)) {
-            var oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
+            var oldPlayerInfo = getOldPlayerInfo(date);
             if (oldPlayerInfo != null) {
                 return oldPlayerInfo.currentSkills;
             } else {
@@ -447,6 +460,23 @@ public class YouthPlayer {
             }
         }
         return this.currentSkills;
+    }
+
+    private int getInjuryLevelAt(Timestamp date){
+        var oldPlayerInfo = getOldPlayerInfo(date);
+        if ( oldPlayerInfo != null) return oldPlayerInfo.getInjuryLevel();
+        return this.injuryLevel;
+    }
+
+    private boolean isSuspendedAt(Timestamp date){
+        var oldPlayerInfo = getOldPlayerInfo(date);
+        if ( oldPlayerInfo != null) return oldPlayerInfo.isSuspended();
+        return this.isSuspended();
+
+    }
+
+    public boolean isSuspended() {
+        return this.cards == 3;
     }
 
     public void recalcSkills(Timestamp since) {
@@ -487,6 +517,7 @@ public class YouthPlayer {
     }
 
     public String getSpecialtyString() {
+        this.getTrainingDevelopment(); // may add specialties from highlights
         if (this.specialty != Specialty.NoSpecialty) {
             return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
         }
@@ -895,7 +926,9 @@ public class YouthPlayer {
                     var maxVal = skill.getCurrentValue();
                     if (skill.getPotential17Value() != null) maxVal = skill.getPotential17Value();
                     var skillLimit = 8.3;
-                    if (skill.getMax() != null && skill.getMax() < 8) skillLimit = skill.getMax() + .99;
+                    if (skill.getMax() != null && skill.getMax() < 8) {
+                        skillLimit = skill.getMax() + .99;
+                    }
                     if (!skill.isMaxReached() && maxVal < skillLimit) {
                         double increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
                         maxVal += increment / ntrainings;

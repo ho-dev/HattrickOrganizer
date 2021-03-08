@@ -3,7 +3,6 @@ package module.youth;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
-import core.gui.model.YouthPlayerColumn;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchType;
 import module.training.Skills;
@@ -124,6 +123,18 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(entry.getSpecialtyString());
                     }
                 },
+                new YouthPlayerDetailsColumn("ls.youth.player.isSuspended") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
+                        return new ColorLabelEntry(entry.getSupendedAsString());
+                    }
+                },
+                new YouthPlayerDetailsColumn("ls.youth.player.InjuredWeeks") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
+                        return new ColorLabelEntry(entry.getInjuredLevelAsString());
+                    }
+                }
         };
     }
 
