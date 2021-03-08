@@ -631,14 +631,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         player.getSPskill()
                                 + player.getSub4Skill(PlayerSkill.SET_PIECES)
                                 + RatingPredictionManager.getLoyaltyHomegrownBonus(player),
-                        player, false);
+                        player, true);
                 return item;
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(spielerName,
                         Helper.round(
                                 HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAverageExperience(player.getPlayerID()),
                                 core.model.UserParameter.instance().nbDecimals),
-                        player, false);
+                        player, true);
                 return item;
             } else {
                 final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
