@@ -34,7 +34,15 @@
   <td>
   <a href='https://ho.readthedocs.io/en/latest/?badge=latest'>
     <img src='https://readthedocs.org/projects/ho/badge/?version=latest' alt='Documentation Status' />
-</a>
+  </a>
+</td>
+</tr>
+<tr>
+  <td>Lines of code</td>
+  <td>
+   <a href='https://github.com/Aaronepower/tokei'>
+   <img src='https://tokei.rs/b1/github/akasolace/ho?category=code' alt='Lines of code' />
+  </a>
 </td>
 </tr>
 </table>
