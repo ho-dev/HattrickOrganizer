@@ -211,8 +211,6 @@ public final class UserParameter extends Configuration {
 
     public float TrainerFaktor = 1.0f;
 
-    //Prozentualer Abzug/Gewinn durch Wettereffekt
-    public float WetterEffektBonus = 0.2f;
 
     //Sonstiges
     //currency factor
@@ -565,7 +563,6 @@ public final class UserParameter extends Configuration {
         map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
         map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
         map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
-        map.put("WetterEffektBonus", String.valueOf(WetterEffektBonus));
         map.put("faktorGeld", String.valueOf(faktorGeld));
         map.put("zellenbreitenFaktor", String.valueOf(zellenbreitenFaktor));
         map.put("DAUER_CHANCENVERWERTUNG", String.valueOf(TRAINING_OFFSET_SCORING));
@@ -804,7 +801,6 @@ public final class UserParameter extends Configuration {
         TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
         TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
         TrainerFaktor = getFloatValue(values, "TrainerFaktor");
-        WetterEffektBonus = getFloatValue(values, "WetterEffektBonus");
         faktorGeld = getFloatValue(values, "faktorGeld");
         zellenbreitenFaktor = getFloatValue(values, "zellenbreitenFaktor");
         TRAINING_OFFSET_SCORING = getFloatValue(values, "DAUER_CHANCENVERWERTUNG");

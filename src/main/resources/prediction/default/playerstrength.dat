@@ -40,6 +40,8 @@ resultAddXp=1
 skillDelta=0
 skillMin=0
 
+weatherBonus=0.05
+
 # 9 multipliers for crowding penalties. 1-2-3 central defenders/midfielders/forwards
 1CdMulti=1
 2CdMulti=0.95

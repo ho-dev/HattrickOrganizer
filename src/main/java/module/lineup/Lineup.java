@@ -1327,11 +1327,10 @@ public class Lineup{
 	/**
 	 * Assitant to create automatically the lineup
 	 */
-	public final void optimizeLineup(List<Player> player, byte reihenfolge, boolean mitForm,
-									 boolean idealPosFirst, boolean ignoreVerletzung, boolean ignoreSperren,
-									 float wetterBonus) {
-		m_clAssi.doAufstellung(getPositionen(), player, reihenfolge, mitForm, idealPosFirst,
-				ignoreVerletzung, ignoreSperren, wetterBonus, getWeather());
+	public final void optimizeLineup(List<Player> players, byte sectorsStrengthPriority, boolean withForm,
+									 boolean idealPosFirst, boolean considerInjured, boolean considereSuspended) {
+		m_clAssi.doLineup(getPositionen(), players, sectorsStrengthPriority, withForm, idealPosFirst,
+				considerInjured, considereSuspended, getWeather());
 		setAutoKicker(null);
 		setAutoKapitaen(null);
 	}

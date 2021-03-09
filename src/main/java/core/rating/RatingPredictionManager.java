@@ -1278,4 +1278,11 @@ public class RatingPredictionManager {
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
+
+
+    public final static float getWeatherBonus(){
+		return (float) config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "weatherBonus");
+	}
+
+
 }

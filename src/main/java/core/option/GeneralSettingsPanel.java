@@ -37,7 +37,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslDeadline;
     private SliderPanel m_jslSchriftgroesse;
-    private SliderPanel m_jslWetterEffekt;
     private SliderPanel m_jslFutureWeeks;
     private SliderPanel m_jslAlternativePositionsTolerance;
     private JCheckBox m_jcbPromotionStatusTest;
@@ -77,7 +76,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     @Override
     public final void stateChanged(ChangeEvent changeEvent) {
         core.model.UserParameter.temp().deadlineFrist = (int) m_jslDeadline.getValue();
-        core.model.UserParameter.temp().WetterEffektBonus = m_jslWetterEffekt.getValue();
         core.model.UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
         core.model.UserParameter.temp().schriftGroesse = (int) m_jslSchriftgroesse.getValue();
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
@@ -105,12 +103,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jslDeadline.setValue((float) core.model.UserParameter.temp().deadlineFrist);
         m_jslDeadline.addChangeListener(this);
         add(m_jslDeadline);
-
-        m_jslWetterEffekt = new SliderPanel(HOVerwaltung.instance().getLanguageString("Wettereffekt"), 100, 0, 100, 1f, 120);
-        m_jslWetterEffekt.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Wettereffekt"));
-        m_jslWetterEffekt.setValue(core.model.UserParameter.temp().WetterEffektBonus);
-        m_jslWetterEffekt.addChangeListener(this);
-        add(m_jslWetterEffekt);
 
         m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, 120);
         m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));

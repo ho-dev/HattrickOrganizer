@@ -6,6 +6,8 @@ import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.rating.RatingPredictionManager;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -19,8 +21,14 @@ public class LineupAssistant {
 	public static final byte MF_AW_ST = 3;
 	public static final byte ST_AW_MF = 4;
 	public static final byte ST_MF_AW = 5;
-	private float m_weatherBonus = 0.05f;
+	private float m_weatherBonus = -1f;
 	private Weather weather = Weather.PARTIALLY_CLOUDY;
+
+	public LineupAssistant() {
+		if (m_weatherBonus == -1f){
+			m_weatherBonus = new RatingPredictionManager().getWeatherBonus();
+		}
+	}
 
 	/**
 	 * indicates if the player is already installed. Also ReserveBank counts
@@ -48,19 +56,6 @@ public class LineupAssistant {
         return false;
     }
 
-    public final boolean isPlayerASub(int spielerId, Vector<IMatchRoleID> positionen) {
-        for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
-            if (IMatchRoleID.aSubstitutesMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
-                    (((MatchRoleID) positionen.elementAt(i)).getPlayerId() == spielerId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-
 
 	/**
 	 * Assitant to create automatic lineup
@@ -72,16 +67,13 @@ public class LineupAssistant {
 	 * @param idealPosFirst: whether or not to consider best position first
 	 * @param bInjured: whether or not to consider injured player
 	 * @param bSuspended: whether or not to advanced suspended player
-	 * @param weatherBonus: Threshold indicating how to react to weather effects ??
 	 * @param weather: Actual weather
 	 */
-	public final void doAufstellung(List<IMatchRoleID> lPositions, List<Player> lPlayers,
-                                    byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean bInjured,
-                                    boolean bSuspended, float weatherBonus, Weather weather) {
+	public final void doLineup(List<IMatchRoleID> lPositions, List<Player> lPlayers,
+							   byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean bInjured,
+							   boolean bSuspended, Weather weather) {
 
 		lPositions = filterPositions(lPositions);
-
-		m_weatherBonus = weatherBonus;
 		this.weather = weather;
 
 		// only setup player in ideal position
@@ -111,7 +103,7 @@ public class LineupAssistant {
 		doSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured, bSuspended,
                 lPlayers, lPositions);
 
-		byte[] order = null;
+		byte[] order;
 		// nun reihenfolge beachten und unbesetzte füllen
 		switch (sectorsStrengthPriority) {
 		case AW_MF_ST:

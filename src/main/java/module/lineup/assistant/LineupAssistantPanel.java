@@ -238,8 +238,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		hoModel.getLineup().optimizeLineup(vPlayer,
 				(byte) ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId(),
 				m_jcbxConsiderForm.isSelected(), m_jcbxIdealPositionFirst.isSelected(),
-				m_jcbxConsiderInjuredPlayers.isSelected(), m_jcbxConsiderSuspendedPlayers.isSelected(),
-				core.model.UserParameter.instance().WetterEffektBonus);
+				m_jcbxConsiderInjuredPlayers.isSelected(), m_jcbxConsiderSuspendedPlayers.isSelected());
 		mainFrame.setInformation(
 				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
 		mainFrame.getLineupPanel().update();
