@@ -209,8 +209,6 @@ public final class UserParameter extends Configuration {
     //Zahlen hinter den Bewertungen anzeigen
     public boolean zahlenFuerSkill = true;
 
-    /*gibt die mindeststärke für einen Player an für seine Idealpos um vom Aufstellungsassi bei idealpos gesetzt zu werden*/
-    public float MinIdealPosStk = 3.5f;
     public float TrainerFaktor = 1.0f;
 
     //Prozentualer Abzug/Gewinn durch Wettereffekt
@@ -566,7 +564,6 @@ public final class UserParameter extends Configuration {
         map.put("CoTrainerFaktor", String.valueOf(TRAINING_OFFSET_ASSISTANTS));
         map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
         map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
-        map.put("MinIdealPosStk", String.valueOf(MinIdealPosStk));
         map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
         map.put("WetterEffektBonus", String.valueOf(WetterEffektBonus));
         map.put("faktorGeld", String.valueOf(faktorGeld));
@@ -806,7 +803,6 @@ public final class UserParameter extends Configuration {
         TRAINING_OFFSET_ASSISTANTS = getFloatValue(values, "CoTrainerFaktor");
         TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
         TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
-        MinIdealPosStk = getFloatValue(values, "MinIdealPosStk");
         TrainerFaktor = getFloatValue(values, "TrainerFaktor");
         WetterEffektBonus = getFloatValue(values, "WetterEffektBonus");
         faktorGeld = getFloatValue(values, "faktorGeld");

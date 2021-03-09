@@ -34,7 +34,7 @@ public class OppPlayerSkillEstimator {
 		calcPlayer.age = player.getAlter();
 		calcPlayer.ageDays = player.getAgeDays();
 		calcPlayer.form = player.getForm();
-		calcPlayer.injuryStatus = player.getVerletzt();
+		calcPlayer.injuryStatus = player.isInjured();
 		calcPlayer.isPlayingAbroad = player.isPlayingAbroad();
 		calcPlayer.specialty = player.getPlayerSpecialty();
 		calcPlayer.stamina = player.getKondition();

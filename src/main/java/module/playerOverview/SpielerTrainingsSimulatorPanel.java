@@ -344,7 +344,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
                 .format(tempPlayer.calcPosValue(playerPosition, true)));
 
 
-        byte[] alternativePosition = tempPlayer.getAlternativePositions();
+        byte[] alternativePosition = tempPlayer.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
                 labelEntry.getLeft().setBold(true);

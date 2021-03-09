@@ -576,7 +576,7 @@ final public class UserColumnFactory {
                         + " ("
                         + player.getIdealPosStaerke(true, true, 1)
                         + "%)";
-                byte[] alternativePosition = player.getAlternativePositions();
+                byte[] alternativePosition = player.getAlternativeBestPositions();
                 for (byte altPos : alternativePosition) {
                     if (altPos == idealPosition) {
                         posValue += " *";

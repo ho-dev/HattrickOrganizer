@@ -36,7 +36,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private ComboBoxPanel m_jcbTimeZone;
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslDeadline;
-    private SliderPanel m_jslMinStaerke;
     private SliderPanel m_jslSchriftgroesse;
     private SliderPanel m_jslWetterEffekt;
     private SliderPanel m_jslFutureWeeks;
@@ -78,7 +77,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     @Override
     public final void stateChanged(ChangeEvent changeEvent) {
         core.model.UserParameter.temp().deadlineFrist = (int) m_jslDeadline.getValue();
-        core.model.UserParameter.temp().MinIdealPosStk = m_jslMinStaerke.getValue();
         core.model.UserParameter.temp().WetterEffektBonus = m_jslWetterEffekt.getValue();
         core.model.UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
         core.model.UserParameter.temp().schriftGroesse = (int) m_jslSchriftgroesse.getValue();
@@ -107,12 +105,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jslDeadline.setValue((float) core.model.UserParameter.temp().deadlineFrist);
         m_jslDeadline.addChangeListener(this);
         add(m_jslDeadline);
-
-        m_jslMinStaerke = new SliderPanel(HOVerwaltung.instance().getLanguageString("MinStaerkeIdealPos"), 100, 0, 10, 0.1f, 120);
-        m_jslMinStaerke.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_MinStaerkeIdealPos"));
-        m_jslMinStaerke.setValue(core.model.UserParameter.temp().MinIdealPosStk);
-        m_jslMinStaerke.addChangeListener(this);
-        add(m_jslMinStaerke);
 
         m_jslWetterEffekt = new SliderPanel(HOVerwaltung.instance().getLanguageString("Wettereffekt"), 100, 0, 100, 1f, 120);
         m_jslWetterEffekt.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Wettereffekt"));

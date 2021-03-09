@@ -61,7 +61,7 @@ class PlayerPositionColumn extends PlayerColumn {
                 getBackgroundColor(), false,
                 core.model.UserParameter.instance().nbDecimals);
 
-        byte[] alternativePosition = player.getAlternativePositions();
+        byte[] alternativePosition = player.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == position) {
                 temp.setBold(true);

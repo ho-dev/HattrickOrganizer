@@ -167,7 +167,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getBonus()).append(",");
 			statement.append(player.getNationalitaet()).append(",");
 			statement.append(player.getSaveMarktwert()).append(",");
-			statement.append(player.getVerletzt()).append(",");
+			statement.append(player.isInjured()).append(",");
 			statement.append(player.getToreFreund()).append(",");
 			statement.append(player.getToreLiga()).append(",");
 			statement.append(player.getTorePokal()).append(",");

@@ -34,7 +34,7 @@ public class StatusIcon implements Icon {
         if (player.getTransferlisted() > 0) {
             icons.add(TRANSFERLISTED_ICON);
         }
-        if (player.isGesperrt()) {
+        if (player.isRedCarded()) {
             icons.add(SUSPENDED_ICON);
         } else if (player.getGelbeKarten() == 2) {
             icons.add(TWO_YELLOW_ICON);

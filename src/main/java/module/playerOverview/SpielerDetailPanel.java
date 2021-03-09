@@ -565,7 +565,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 
-        byte[] alternativePosition = m_clPlayer.getAlternativePositions();
+        byte[] alternativePosition = m_clPlayer.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
                 labelEntry.getLeft().setBold(true);
@@ -582,7 +582,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
                 .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true)));
 
-        byte[] alternativePosition = m_clPlayer.getAlternativePositions();
+        byte[] alternativePosition = m_clPlayer.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
                 labelEntry.getLeft().setBold(true);
@@ -1133,7 +1133,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
     public CBItem[] getPositions() {
 
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-        byte[] altPositions = m_clPlayer.getAlternativePositions();
+        byte[] altPositions = m_clPlayer.getAlternativeBestPositions();
 
         CBItem[] positions = new CBItem[allPos.length + 1];
 

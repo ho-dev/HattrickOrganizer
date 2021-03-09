@@ -416,15 +416,15 @@ public final class PlayerLabelEntry implements IHOTableEntry {
                     oneYellowCardLabel)
                     .forEach(label -> label.setIcon(null));
 
-            if (player.getVerletzt() > 0) {
+            if (player.isInjured() > 0) {
                 injuredLabel.setIcon(ImageUtilities.getInjuryIcon(12,12));
-            } else if (player.getVerletzt() == 0) {
+            } else if (player.isInjured() == 0) {
                 bruisedLabel.setIcon(ImageUtilities.getPlasterIcon(12,12));
             }
             if (player.getTransferlisted() > 0) {
                 transferlistedLabel.setIcon(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
             }
-            if (player.isGesperrt()) {
+            if (player.isRedCarded()) {
                 suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
             } else if (player.getGelbeKarten() == 2) {
                 twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));

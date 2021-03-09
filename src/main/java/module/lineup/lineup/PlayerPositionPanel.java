@@ -646,7 +646,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 assert position != null;
                 float value = player.calcPosValue(position.getPosition(), true);
 
-                byte[] alternativePositions = player.getAlternativePositions();
+                byte[] alternativePositions = player.getAlternativeBestPositions();
                 boolean bestPosition = false;
                 for (byte altPos : alternativePositions) {
                     if (altPos == position.getPosition()) {

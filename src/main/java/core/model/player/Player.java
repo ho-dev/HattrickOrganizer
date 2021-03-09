@@ -852,7 +852,7 @@ public class Player {
     /**
      * gibt an ob der spieler gesperrt ist
      */
-    public boolean isGesperrt() {
+    public boolean isRedCarded() {
         return (m_iGelbeKarten > 2);
     }
 
@@ -938,7 +938,7 @@ public class Player {
         final byte flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
-            if ( idealPos == IMatchRoleID.UNKNOWN) {
+            if (idealPos == IMatchRoleID.UNKNOWN) {
                 final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
                 float maxStk = -1.0f;
                 byte currPosition;
@@ -961,9 +961,9 @@ public class Player {
     }
 
     /**
-     * Calculate Player Alternative Positions
+     * Calculate Player Alternative Best Positions
      */
-    public byte[] getAlternativePositions() {
+    public byte[] getAlternativeBestPositions() {
 
         List<PositionContribute> positions = new ArrayList<>();
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
@@ -997,6 +997,14 @@ public class Player {
 
         return alternativePositions;
     }
+
+    /**
+     * return whether or not the position is one of the best position for the player
+     */
+   public boolean isAnAlternativeBestPosition(byte position){
+       return Arrays.asList(getAlternativeBestPositions()).contains(position);
+   }
+
 
     /**
      * Setter for property m_iKondition.
@@ -1803,7 +1811,7 @@ public class Player {
      *
      * @return Value of property m_iVerletzt.
      */
-    public int getVerletzt() {
+    public int isInjured() {
         return m_iVerletzt;
     }
 
