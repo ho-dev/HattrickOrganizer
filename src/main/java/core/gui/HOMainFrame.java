@@ -43,9 +43,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.List;
@@ -81,7 +79,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// -----------  File
 	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
 	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
-//	private final JMenuItem m_jmTraining = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
+	private final JMenuItem m_jmSubksillFull = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
 	private final JMenuItem m_jmSubksillRecalc7 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
 	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
 	private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
@@ -329,15 +327,14 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
 		}
-//		else if (source.equals(m_jmTraining)) { // recalc training
-//			if (JOptionPane.showConfirmDialog(this,
-//					HOVerwaltung.instance().getLanguageString("SubskillRecalcFull"), HOVerwaltung
-//							.instance().getLanguageString("ls.menu.file.subskillrecalculation"),
-//					JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-//				HOVerwaltung.instance().recalcSubskills(true, null);
-//			}
+		else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
+			Instant from = ZonedDateTime.now().minusWeeks(32).toInstant();
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				HOVerwaltung.instance().recalcSubskills(true, Timestamp.from(from));
+			}
+		}
 		else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
-
 			Instant from = ZonedDateTime.now().minusWeeks(7).toInstant();
 			if (JOptionPane.showConfirmDialog(this, 	Helper.getTranslation("subskillRecalc7w", Date.from(from)),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"),	JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
@@ -493,9 +490,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmFile.add(m_jmImportItem);
 		m_jmFile.addSeparator();
 
-		// Training
-//		m_jmTraining.addActionListener(this);
-//		m_jmFile.add(m_jmTraining);
+		// Subksill recalculation
+		m_jmSubksillFull.addActionListener(this);
+		m_jmFile.add(m_jmSubksillFull);
 		m_jmSubksillRecalc7.addActionListener(this);
 		m_jmFile.add(m_jmSubksillRecalc7);
 

@@ -135,11 +135,10 @@ public class HOVerwaltung {
 
 		int progress=0;
 		long s1, s2, lSum = 0, mSum = 0;
-		HOLogger.instance().log(getClass(), "Subskill calculation started: " + new Date());
 
 		HRF previousHRF=hrfListe.get(0);
 
-		int nbSteps =  hrfListe.size() - 1;
+		int nbSteps =  hrfListe.size() + 1;
 
 		for (var hrf: hrfListe.stream().skip(1).collect(Collectors.toList())) {
 			try {
@@ -167,11 +166,17 @@ public class HOVerwaltung {
 		}
 
 		if (showWait ) {
-			HOMainFrame.instance().resetInformation();
+			progress ++;
+			HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
 		}
 
 		// Reload, because the subskills have changed
 		loadLatestHoModel();
+
+		if (showWait ) {
+			progress ++;
+			HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
+		}
 
 		RefreshManager.instance().doReInit();
 		HOLogger.instance().log(
@@ -180,6 +185,12 @@ public class HOVerwaltung {
 						+ (System.currentTimeMillis() - start) + "ms ("
 						+ (System.currentTimeMillis() - start) / 1000L + " sec), lSum=" + lSum
 						+ ", mSum=" + mSum);
+
+
+		if (showWait ) {
+			HOMainFrame.instance().resetInformation();
+		}
+
 	}
 
 	/**
