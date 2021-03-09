@@ -7,6 +7,7 @@ import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.util.HOLogger;
+import core.util.Languages;
 import core.util.UTF8Control;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -14,8 +15,10 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 
 public class HOVerwaltung {
@@ -29,6 +32,7 @@ public class HOVerwaltung {
 
 	/** Resource */
 	protected ResourceBundle languageBundle;
+	protected Locale m_locale;
 
 	public int getId() {
 		return id;
@@ -85,10 +89,13 @@ public class HOVerwaltung {
 
 	public void setResource(String pfad) {
 		try {
-                    languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());
-                } catch (UnsupportedOperationException e) {
-                    // ResourceBundle.Control not supported in named modules in JDK9+
-                    languageBundle = ResourceBundle.getBundle("sprache." + pfad);
+              languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());
+			  m_locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
+		}
+		catch (UnsupportedOperationException e) {
+			// ResourceBundle.Control not supported in named modules in JDK9+
+			languageBundle = ResourceBundle.getBundle("sprache." + pfad);
+			m_locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}
@@ -98,6 +105,8 @@ public class HOVerwaltung {
 	public ResourceBundle getResource() {
 		return languageBundle;
 	}
+
+	public Locale getM_locale() {return m_locale;}
 
 	/**
 	 * läadt das zuletzt importtiert model ein
@@ -124,23 +133,33 @@ public class HOVerwaltung {
 
 		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
 
-		int i=0;
+		int progress=0;
 		long s1, s2, lSum = 0, mSum = 0;
-		HOLogger.instance().log(getClass(), "Subskill calculation prepared. " + new Date());
-		HRF previousHRF=null;
-		for (var hrf: hrfListe) {
+		HOLogger.instance().log(getClass(), "Subskill calculation started: " + new Date());
+
+		HRF previousHRF=hrfListe.get(0);
+
+		int nbSteps =  hrfListe.size() - 1;
+
+		for (var hrf: hrfListe.stream().skip(1).collect(Collectors.toList())) {
 			try {
 				if (showWait ) {
-					HOMainFrame.instance().setWaitInformation((int) ((i++ * 100d) / hrfListe.size()));
+					HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
 				}
+
 				s1 = System.currentTimeMillis();
 
 				HOModel model = new HOModel(hrf, previousHRF);
+				Timestamp trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				Timestamp trainingDateHRF = DBManager.instance().getXtraDaten(hrf.getHrfId()).getNextTrainingDate();
+
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
-				model.calcSubskills();
+				model.calcSubskills(trainingDateOfPreviousHRF.toInstant(), trainingDateHRF.toInstant());
 				previousHRF=hrf;
 				mSum += (System.currentTimeMillis() - s2);
+				progress++;
+
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "recalcSubskills : ");
 				HOLogger.instance().log(getClass(), e);
@@ -222,8 +241,14 @@ public class HOVerwaltung {
 	 *         replaced by the given value(s).
 	 */
 	public String getLanguageString(String key, Object... values) {
+
 		String str = getLanguageString(key);
-		return MessageFormat.format(str, values);
+
+		MessageFormat formatter = new MessageFormat("");
+		formatter.setLocale(m_locale);
+		formatter.applyPattern(str);
+
+		return formatter.format(values);
 	}
 
 	public static String[] getLanguageFileNames() {

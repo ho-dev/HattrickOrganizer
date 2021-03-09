@@ -498,11 +498,27 @@ public class HOModel {
     }
 
     /**
-     * Caclulates the subskill of each player, based on training since the previous hrf.
+     * Caclulates the subskill of each player based on recent trainings
      */
     public final void calcSubskills() {
 
         var trainingWeeks = TrainingManager.instance().getRecentTrainings();
+        for (var player : this.getCurrentPlayers()) {
+            player.calcSubskills(this.getPreviousID(), trainingWeeks);
+        }
+        // store new values of current players
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+
+        // push recent training to historical training table
+        TrainingManager.instance().updateHistoricalTrainings();
+    }
+
+    /**
+     * Caclulates the subskill of each player based on trainings that took place during a given period
+     */
+    public final void calcSubskills(Instant from , Instant to) {
+
+        var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }

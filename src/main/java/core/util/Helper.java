@@ -6,6 +6,7 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.misc.Basics;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -14,6 +15,7 @@ import java.awt.Component;
 import java.awt.Window;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -112,6 +114,7 @@ public class Helper {
     public static int calcCellWidth(int width) {
         return (int) (((float) width) * core.model.UserParameter.instance().zellenbreitenFaktor);
     }
+
 
 	////Debug CacheTest------------------------------------------------
 
@@ -440,4 +443,9 @@ public class Helper {
 	public static String getTranslation(String key){
 		return 	core.model.HOVerwaltung.instance().getLanguageString(key);
 	}
+
+	public static String getTranslation(String key, Object... messageArguments){
+		return 	core.model.HOVerwaltung.instance().getLanguageString(key, messageArguments);
+	}
+
 }
