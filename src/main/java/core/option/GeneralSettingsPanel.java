@@ -14,7 +14,7 @@ import java.awt.event.ItemListener;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.swing.JCheckBox;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -35,8 +35,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private ComboBoxPanel m_jcbLanguage;
     private ComboBoxPanel m_jcbTimeZone;
     private JCheckBox m_jchShowSkillNumericalValue;
-    private SliderPanel m_jslSchriftgroesse;
-    private SliderPanel m_jslFutureWeeks;
+    private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
     private JCheckBox m_jcbPromotionStatusTest;
 
@@ -74,11 +73,10 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
     @Override
     public final void stateChanged(ChangeEvent changeEvent) {
-        core.model.UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
-        core.model.UserParameter.temp().schriftGroesse = (int) m_jslSchriftgroesse.getValue();
+        core.model.UserParameter.temp().fontSize = (int) m_jslFontSize.getValue();
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
 
-        if (core.model.UserParameter.temp().schriftGroesse != core.model.UserParameter.instance().schriftGroesse) {
+        if (core.model.UserParameter.temp().fontSize != core.model.UserParameter.instance().fontSize) {
             OptionManager.instance().setSkinChanged();
             OptionManager.instance().setRestartNeeded();
         }
@@ -94,19 +92,15 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
      * Init components
      */
     private void initComponents() {
-        setLayout(new GridLayout(13, 1, 4, 4));
+        setLayout(new GridLayout(10, 1, 4, 4));
 
-        m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, 120);
-        m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));
-        m_jslFutureWeeks.setValue(core.model.UserParameter.temp().futureWeeks);
-        m_jslFutureWeeks.addChangeListener(this);
-        add(m_jslFutureWeeks);
+        add (new JLabel(" "));
 
-        m_jslSchriftgroesse = new SliderPanel(HOVerwaltung.instance().getLanguageString("Schriftgroesse"), 16, 8, 1, 1.0f, 120);
-        m_jslSchriftgroesse.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Schriftgroesse"));
-        m_jslSchriftgroesse.setValue(core.model.UserParameter.temp().schriftGroesse);
-        m_jslSchriftgroesse.addChangeListener(this);
-        add(m_jslSchriftgroesse);
+        m_jslFontSize = new SliderPanel(HOVerwaltung.instance().getLanguageString("Schriftgroesse"), 16, 8, 1, 1.0f, 120);
+        m_jslFontSize.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Schriftgroesse"));
+        m_jslFontSize.setValue(core.model.UserParameter.temp().fontSize);
+        m_jslFontSize.addChangeListener(this);
+        add(m_jslFontSize);
 
         List<Theme> registeredThemes = ThemeManager.instance().getRegisteredThemes();
         m_jcbSkin = new ComboBoxPanel(

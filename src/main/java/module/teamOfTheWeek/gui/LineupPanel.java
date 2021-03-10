@@ -123,7 +123,7 @@ class LineupPanel extends JPanel {
         m_jlTeamName = new JLabel();
         m_jlTeamName.setOpaque(false);
         m_jlTeamName.setForeground(ThemeManager.getColor(HOColorName.LABEL_ONGREEN_FG));
-        m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD, UserParameter.instance().schriftGroesse + 3));
+        m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD, UserParameter.instance().fontSize + 3));
         layout.setConstraints(m_jlTeamName, constraints);
         centerPanel.add(m_jlTeamName);
 

@@ -254,7 +254,7 @@ public abstract class LineupStylePanel extends JPanel {
         m_jlTeamName.setOpaque(false);
         m_jlTeamName.setForeground(Color.white);
         m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD,
-                                                               core.model.UserParameter.instance().schriftGroesse
+                                                               core.model.UserParameter.instance().fontSize
                                                                + 3));
         layout.setConstraints(m_jlTeamName, constraints);
         centerPanel.add(m_jlTeamName);
@@ -446,7 +446,7 @@ public abstract class LineupStylePanel extends JPanel {
         m_jlTeamName.setOpaque(false);
         m_jlTeamName.setForeground(Color.white);
         m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD,
-                                                               core.model.UserParameter.instance().schriftGroesse
+                                                               core.model.UserParameter.instance().fontSize
                                                                + 3));
         layout.setConstraints(m_jlTeamName, constraints);
         centerPanel.add(m_jlTeamName);

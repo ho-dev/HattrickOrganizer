@@ -30,7 +30,7 @@ public class PromotionInfoPanel extends ImagePanel {
     private final HOVerwaltung verwaltung = HOVerwaltung.instance();
 
     // Force font when loading panel, otherwise chooses a different from default.
-    private final Font defaultFont = new Font("SansSerif", Font.BOLD, UserParameter.instance().schriftGroesse+1);
+    private final Font defaultFont = new Font("SansSerif", Font.BOLD, UserParameter.instance().fontSize +1);
     private final Color fgColor = ThemeManager.getColor(HOColorName.FG_PROMOTION_INFO);
 
     public PromotionInfoPanel(LeaguePromotionHandler promotionHandler) {

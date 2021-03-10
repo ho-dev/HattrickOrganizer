@@ -125,7 +125,7 @@ protected void paintComponent( Graphics g) {
     // Dynamically calculate size information
     Rectangle rectangle = getBounds();
     m_iMaxX = rectangle.width - 2*DXFrame;
-    m_iMaxY = rectangle.height - 2*DYFrame - UserParameter.instance().schriftGroesse - 2 - DXAxis;
+    m_iMaxY = rectangle.height - 2*DYFrame - UserParameter.instance().fontSize - 2 - DXAxis;
     setStartEndDate();
     m_dFactor = (double)(m_iMaxX - m_iCoordX0) / (double)m_iDaysToDisplay;
     if(m_dFactor < 1.0D) m_dFactor = 1.0D;
@@ -263,7 +263,7 @@ protected void paintComponent( Graphics g) {
 
   private void drawCoordSystem( Graphics2D graphics2d) {
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
-    Font font = new Font( "SansSerif", 1, UserParameter.instance().schriftGroesse);
+    Font font = new Font( "SansSerif", 1, UserParameter.instance().fontSize);
     HelperWrapper ihelper = HelperWrapper.instance();
     Rectangle2D rectangle2d = null;
 
@@ -286,7 +286,7 @@ protected void paintComponent( Graphics g) {
         if( i < m_dValues-1)
           graphics2d.drawString( str, m_iCoordX0 - (int)rectangle2d.getWidth() - 5,
                                  (int)(m_iMaxY+DYFrame - i*m_iMaxY/m_dValues - m_iMaxY/(2*m_dValues)
-                                 + UserParameter.instance().schriftGroesse/2 -3));
+                                 + UserParameter.instance().fontSize /2 -3));
         else
           graphics2d.drawString( str, m_iCoordX0 - (int)rectangle2d.getWidth() - 5,
                                  (m_iMaxY+DYFrame - m_iMaxY + 3));
@@ -343,7 +343,7 @@ protected void paintComponent( Graphics g) {
     if( iXX3 > iXX4) iXX3 = iXX4;
     int iYText = m_iMaxY+2*DYFrame+DYAxis+3;
 
-    Font font = new Font("SansSerif", 1, UserParameter.instance().schriftGroesse+2);
+    Font font = new Font("SansSerif", 1, UserParameter.instance().fontSize +2);
     graphics2d.setFont(font);
 
     // current season
@@ -389,7 +389,7 @@ protected void paintComponent( Graphics g) {
     int iSeasonWeek = Math.round( HOVerwaltung.instance().getModel().getBasics().getSpieltag() - (float)m_iTodayPosition / 7.0f);
     while( iSeasonWeek < 1 ) iSeasonWeek += 16;
 
-    Font font = new Font("SansSerif", 1, UserParameter.instance().schriftGroesse);
+    Font font = new Font("SansSerif", 1, UserParameter.instance().fontSize);
     graphics2d.setFont(font);
 
     for( int saturday = Calendar.SATURDAY;
@@ -405,7 +405,7 @@ protected void paintComponent( Graphics g) {
       graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
       graphics2d.drawString( iSeasonWeek+"",
                              (int)((double)(saturday+3)*m_dFactor+(double)m_iCoordX0),
-                             m_iMaxY+2*DYFrame+DYAxis- (UserParameter.instance().schriftGroesse));
+                             m_iMaxY+2*DYFrame+DYAxis- (UserParameter.instance().fontSize));
     }
   }
 
@@ -455,7 +455,7 @@ protected void paintComponent( Graphics g) {
 
   //Calculate longest string at y-axis
   private double getMaxTextWidth( Graphics2D graphics2d) {
-    Font font = new Font( "SansSerif", 1, UserParameter.instance().schriftGroesse);
+    Font font = new Font( "SansSerif", 1, UserParameter.instance().fontSize);
     HelperWrapper ihelper = HelperWrapper.instance();
 
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();

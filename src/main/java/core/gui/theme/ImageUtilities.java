@@ -376,7 +376,7 @@ public class ImageUtilities {
 				g2d.setRenderingHint(
 						RenderingHints.KEY_RENDERING,
 						RenderingHints.VALUE_RENDER_QUALITY);
-				g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().schriftGroesse));
+				g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().fontSize));
 	
 				// Position bei grossen Zahlen weiter nach vorne
 				if (trickotnummer > 9) {

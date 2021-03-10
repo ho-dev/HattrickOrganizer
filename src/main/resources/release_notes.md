@@ -62,9 +62,9 @@ layout: page
 
 
 ### Misc
-- fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
-- improved handling of timezone accross the app
-
+  - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
+  - improved handling of timezone accross the app
+  - sanitizing of preferences panel
 
 ### League
 

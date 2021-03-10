@@ -273,7 +273,7 @@ public final class UserParameter extends Configuration {
     public int miniscout_PositionY = 50;
 
     //Textgroesse
-    public int schriftGroesse = 11;
+    public int fontSize = 11;
     public String skin = "Nimbus";
 
     //Spiele
@@ -583,7 +583,7 @@ public final class UserParameter extends Configuration {
         map.put("hoMainFrame_width", String.valueOf(hoMainFrame_width));
         map.put("miniscout_PositionX", String.valueOf(miniscout_PositionX));
         map.put("miniscout_PositionY", String.valueOf(miniscout_PositionY));
-        map.put("schriftGroesse", String.valueOf(schriftGroesse));
+        map.put("schriftGroesse", String.valueOf(fontSize));
         map.put("spieleFilter", String.valueOf(spieleFilter));
         map.put("spielePanel_horizontalLeftSplitPane", String.valueOf(spielePanel_horizontalLeftSplitPane));
         map.put("spielePanel_horizontalRightSplitPane", String.valueOf(spielePanel_horizontalRightSplitPane));
@@ -821,7 +821,7 @@ public final class UserParameter extends Configuration {
         hoMainFrame_width = getIntValue(values, "hoMainFrame_width");
         miniscout_PositionX = getIntValue(values, "miniscout_PositionX");
         miniscout_PositionY = getIntValue(values, "miniscout_PositionY");
-        schriftGroesse = getIntValue(values, "schriftGroesse");
+        fontSize = getIntValue(values, "schriftGroesse");
         spieleFilter = getIntValue(values, "spieleFilter");
         spielePanel_horizontalLeftSplitPane = getIntValue(values, "spielePanel_horizontalLeftSplitPane");
         spielePanel_horizontalRightSplitPane = getIntValue(values, "spielePanel_horizontalRightSplitPane");

@@ -63,7 +63,7 @@ final class SeriesHistoryPanel extends JPanel {
 			final int abstandVertikal = getHeight() / (anzahlPlaetze + 1);
 			final int abstandHorizontal = (getWidth() - TEAM_NAME_WIDTH) / anzahlSpieltage;
 
-			final int fontsize = UserParameter.instance().schriftGroesse;
+			final int fontsize = UserParameter.instance().fontSize;
 			final Font fettFont = new Font("sansserif", Font.BOLD, fontsize);
 			final Font normalFont = new Font("sansserif", Font.PLAIN, fontsize);
 

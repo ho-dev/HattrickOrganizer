@@ -19,13 +19,12 @@ import javax.swing.text.NumberFormatter;
  */
 public final class SliderPanel extends ImagePanel implements ChangeListener {
 
-	private static final long serialVersionUID = 1L;
 	private JLabel m_jlLabel;
     private JSlider m_jslSlider;
     private JFormattedTextField m_jtfTextfield;
     private float m_fFaktor;
     private float m_fTextfeldFaktor = 1;
-    private int m_iTextbreite = 80;
+    private int m_iTextbreite;
     private int decimals = 0;
     private boolean bDeactivateTxtLister = false;
 

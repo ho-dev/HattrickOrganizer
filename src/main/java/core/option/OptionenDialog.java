@@ -32,7 +32,7 @@ public class OptionenDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private FormelPanel m_jpFormeln;
 	private GeneralSettingsPanel m_jpSonstigeOptionen;
-	private TrainingsOptionenPanel m_jpTrainingsOptionen;
+	private TrainingPreferencesPanel m_jpTrainingsOptionen;
 	private UserColumnsPanel m_jpUserColumns;
 	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
 	private JButton saveButton;
@@ -98,7 +98,7 @@ public class OptionenDialog extends JDialog {
 				m_jpFormeln));
 
 		// Training
-		m_jpTrainingsOptionen = new TrainingsOptionenPanel();
+		m_jpTrainingsOptionen = new TrainingPreferencesPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane(
 				m_jpTrainingsOptionen));
 

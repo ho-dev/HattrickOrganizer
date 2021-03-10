@@ -7,8 +7,6 @@ import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.OSUtils;
 
-import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -28,7 +26,7 @@ public class NimbusTheme extends BaseTheme {
 
 	@Override
 	public boolean loadTheme() {
-		return enableTheme(UserParameter.instance().schriftGroesse);
+		return enableTheme(UserParameter.instance().fontSize);
 	}
 
 	public boolean enableTheme(int fontSize) {

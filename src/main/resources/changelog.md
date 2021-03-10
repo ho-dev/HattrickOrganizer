@@ -61,6 +61,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Misc
   - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
   - improved handling of timezone accross the app
+  - sanitizing of preferences panel
 
 
 ### League

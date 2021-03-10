@@ -33,7 +33,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
     private float offset;
     private float base;
     private NumberFormat nf = NumberFormat.getInstance(Locale.US);
-    private TrainingsOptionenPanel top;
+    private TrainingPreferencesPanel top;
     
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
      * @param base The base value for the item
      * @param offset The initial offset value for the item
      */
-    public TrainingAdjustmentPanel(String text, float base, float offset, TrainingsOptionenPanel top) {
+    public TrainingAdjustmentPanel(String text, float base, float offset, TrainingPreferencesPanel top) {
         this.base = base;
         this.offset = offset;
         this.top = top;

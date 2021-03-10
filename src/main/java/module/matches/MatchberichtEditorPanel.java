@@ -46,7 +46,7 @@ class MatchberichtEditorPanel extends ImagePanel {
 
 		final StyleSheet style = new StyleSheet();
 		style.addRule("a { color:#006400; font-weight:bold; }");
-		style.addRule("BODY, P {font: " + core.model.UserParameter.instance().schriftGroesse
+		style.addRule("BODY, P {font: " + core.model.UserParameter.instance().fontSize
 				+ "pt sans-serif; color:#000000}");
 		String hexColor = Integer.toHexString(ThemeManager.getColor(HOColorName.PANEL_BG).getRGB());
 		style.addRule("body { background: " + hexColor.substring(2) + " }");

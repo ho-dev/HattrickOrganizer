@@ -9,7 +9,7 @@ import core.model.UserParameter;
 public abstract class DarkTheme extends BaseTheme {
 
     public boolean enableTheme() {
-        setFont(UserParameter.instance().schriftGroesse);
+        setFont(UserParameter.instance().fontSize);
         ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
         return true;

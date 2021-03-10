@@ -1,6 +1,4 @@
-// %2563786322:de.hattrickorganizer.gui.menu.option%
 package core.option;
-
 
 import core.constants.TrainingType;
 import core.gui.comp.panel.ImagePanel;
@@ -8,21 +6,21 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.training.SkillDrops;
 import core.training.WeeklyTrainingType;
-
-import java.awt.GridLayout;
+import core.util.Helper;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import static module.lineup.LineupPanel.TITLE_FG;
 
 /**
- * Optionen für das Training
+ * Training options panel
  */
-final class TrainingsOptionenPanel extends ImagePanel implements ActionListener {
-    //~ Static / Instance fields ----------------------------------------------------------------------------
+final class TrainingPreferencesPanel extends ImagePanel implements ChangeListener, ActionListener {
 
-	private static final long serialVersionUID = 1L;
 	private TrainingAdjustmentPanel m_tapAgeFactor;
     private TrainingAdjustmentPanel m_jtapAssisstantFactor;
     private TrainingAdjustmentPanel m_jtapIntensityFactor;
@@ -35,19 +33,16 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
     private TrainingAdjustmentPanel m_jtapGoalkeeping;
     private TrainingAdjustmentPanel m_jtapDefending;
     private TrainingAdjustmentPanel m_jtapOsmosis;
-
+    private SliderPanel m_jslFutureWeeks;
     private JCheckBox m_jcSkillDrops = new JCheckBox(HOVerwaltung.instance().getLanguageString("skillDrops"));
     private JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.options.training.showSkillDrops"));
-    //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-     * Creates a new TrainingsOptionenPanel object.
-     */
-    protected TrainingsOptionenPanel() {
+
+    protected TrainingPreferencesPanel() {
         initComponents();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+
 
     public final void refresh() {
         UserParameter.temp().TRAINING_OFFSET_GOALKEEPING =  m_jtapGoalkeeping.getValue();
@@ -62,18 +57,30 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
         UserParameter.temp().TrainerFaktor = m_jtapCoachFactor.getValue();
         UserParameter.temp().TRAINING_OFFSET_ASSISTANTS = m_jtapAssisstantFactor.getValue();
         UserParameter.temp().TRAINING_OFFSET_INTENSITY = m_jtapIntensityFactor.getValue();
+        UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
         UserParameter.temp().TRAINING_SHOW_SKILLDROPS = this.m_jcSkillDropsInPrediction.isSelected();
         SkillDrops.instance().setActive(m_jcSkillDrops.isSelected());
 
         OptionManager.instance().setReInitNeeded();
     }
 
-    private void initComponents() {
-    	setLayout(new GridLayout(16, 1, 4, 0));
+    @Override
+    public final void stateChanged(ChangeEvent changeEvent) {
+        UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
 
-        JLabel label = new JLabel("   " +
-        		core.model.HOVerwaltung.instance().getLanguageString("VoraussichtlicheTrainingwochen"));
+        if (core.model.UserParameter.temp().futureWeeks != core.model.UserParameter.instance().futureWeeks) {
+            OptionManager.instance().setReInitNeeded();
+        }
+    }
+
+    private void initComponents() {
+    	setLayout(new GridLayout(18, 1, 3, 0));
+
+        JLabel label = new JLabel(Helper.getTranslation("VoraussichtlicheTrainingwochen"));
+        label.setForeground(TITLE_FG);
+        label.setFont(getFont().deriveFont(Font.BOLD));
         add(label);
+
 
         m_jtapGoalkeeping = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.goalkeeping"),
                 WeeklyTrainingType.instance(TrainingType.GOALKEEPING).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_GOALKEEPING, this);
@@ -103,7 +110,9 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
         		WeeklyTrainingType.instance(TrainingType.SET_PIECES).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_SETPIECES, this);
         add(m_jtapSetPieces);
 
-        label = new JLabel("   " + HOVerwaltung.instance().getLanguageString("TrainingFaktoren"));
+        label = new JLabel(Helper.getTranslation("TrainingFaktoren"));
+        label.setForeground(TITLE_FG);
+        label.setFont(getFont().deriveFont(Font.BOLD));
         add(label);
 
         m_jtapOsmosis = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("training.osmosis"),
@@ -125,6 +134,17 @@ final class TrainingsOptionenPanel extends ImagePanel implements ActionListener 
         m_jtapIntensityFactor = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingintensity"),
         		WeeklyTrainingType.BASE_INTENSITY_FACTOR, UserParameter.temp().TRAINING_OFFSET_INTENSITY, this);
         add(m_jtapIntensityFactor);
+
+        label = new JLabel(core.util.StringUtils.capitalizeWord(Helper.getTranslation("ls.general_label.miscellaneous")));
+        label.setForeground(TITLE_FG);
+        label.setFont(getFont().deriveFont(Font.BOLD));
+        add(label);
+
+        m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, 120);
+        m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));
+        m_jslFutureWeeks.setValue(core.model.UserParameter.temp().futureWeeks);
+        m_jslFutureWeeks.addChangeListener(this);
+        add(m_jslFutureWeeks);
 
         m_jcSkillDrops.setSelected(SkillDrops.instance().isActive());
         m_jcSkillDrops.addActionListener(this);
