@@ -123,13 +123,13 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(entry.getSpecialtyString());
                     }
                 },
-                new YouthPlayerDetailsColumn("ls.youth.player.isSuspended") {
+                new YouthPlayerDetailsColumn("ls.player.warningstatus.suspended") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         return new ColorLabelEntry(entry.getSupendedAsString());
                     }
                 },
-                new YouthPlayerDetailsColumn("ls.youth.player.InjuredWeeks") {
+                new YouthPlayerDetailsColumn("ls.player.injurystatus.injured") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         return new ColorLabelEntry(entry.getInjuredLevelAsString());
