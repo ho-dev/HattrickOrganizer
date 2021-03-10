@@ -7,7 +7,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -377,11 +376,11 @@ public class LineupAssistant {
 	}
 
 	/**
-	 * returns the best player one for the requested position
+	 * returns the best player for the requested position
 	 */
-	protected final Player getBestPlayer(byte position, boolean considerForm,
-										 boolean ignoredInjury, boolean ignoreRedCarded, List<Player> players,
-										 List<IMatchRoleID> positions) {
+	protected final Player getBestPlayerForPosition(byte position, boolean considerForm,
+													boolean ignoredInjury, boolean ignoreRedCarded, List<Player> players,
+													List<IMatchRoleID> positions) {
 		Player player;
 		Player bestPlayer = null;
 		float maxRating = -1.0f;
@@ -391,8 +390,7 @@ public class LineupAssistant {
 			player = players.get(i);
 
 			// stk inklusive Wetter effekt errechnen
-			currentRating = player.calcPosValue(position, considerForm);
-			currentRating += m_weatherBonus * player.getWeatherEffect(this.weather) * currentRating;
+			currentRating = player.calcPosValue(position, considerForm, weather, true);
 
 			if ((!isPlayerInLineup(player.getPlayerID(), positions))
 					&& ((bestPlayer == null) || (maxRating < currentRating))
@@ -415,7 +413,7 @@ public class LineupAssistant {
 													 List<IMatchRoleID> positions) {
 
 		List<Player> playersIdealPositionOnly = players.stream().filter(p -> p.isAnAlternativeBestPosition(position)).collect(Collectors.toList());
-		return getBestPlayer(position, considerForm, ignoredInjury, ignoreRedCarded, playersIdealPositionOnly, positions);
+		return getBestPlayerForPosition(position, considerForm, ignoredInjury, ignoreRedCarded, playersIdealPositionOnly, positions);
 	}
 
 	/**
@@ -437,7 +435,7 @@ public class LineupAssistant {
 
 			// nur exacte Pos
 			if (pos.getPosition() == position) {
-				player = getBestPlayer(position, mitForm, ignoreVerletzung, ignoreSperre,
+				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
                         vPlayer, positionen);
 
 				// position besetzen
@@ -505,7 +503,7 @@ public class LineupAssistant {
 
 			// position found => get the best player or that position
 			if (pos.getPosition() == position) {
-				player = getBestPlayer(position, mitForm, ignoreVerletzung, ignoreSperre,
+				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
                         vPlayer, positionen);
 
 				// fill the position

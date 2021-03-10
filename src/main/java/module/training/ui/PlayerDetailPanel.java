@@ -87,7 +87,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         this.playerId = this.model.getActivePlayer().getPlayerID();
         // sets player number
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
-                + this.model.getActivePlayer().getIdealPosStaerke(true, false, 2) + ")";
+                + this.model.getActivePlayer().getIdealPositionStrength(true, false, 2, null, false) + ")";
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);

@@ -317,22 +317,6 @@ public class Lineup{
 	}
 
 	/**
-	 * Calculates the total star rating for defense This is CA-rating?
-	 */
-	public final float getAWTeamStk(List<Player> player, boolean mitForm) {
-		float stk = 0.0f;
-		stk += calcTeamStk(player, IMatchRoleID.CENTRAL_DEFENDER, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.CENTRAL_DEFENDER_OFF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.CENTRAL_DEFENDER_TOWING, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.BACK, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.BACK_OFF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.BACK_DEF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.BACK_TOMID, mitForm);
-
-		return Helper.round(stk, 1);
-	}
-
-	/**
 	 * Setter for property m_iAttitude.
 	 * 
 	 * @param m_iAttitude
@@ -602,23 +586,6 @@ public class Lineup{
 	 */
 	public static int HTfloat2int(double x) {
 		return (int) (((x - 1.0f) * 4.0f) + 1.0f);
-	}
-
-	/**
-	 * Midfield and winger total star rating.
-	 */
-	public final float getMFTeamStk(List<Player> player, boolean mitForm) {
-		float stk = 0.0f;
-		stk += calcTeamStk(player, IMatchRoleID.MIDFIELDER, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.WINGER, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.MIDFIELDER_OFF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.WINGER_OFF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.MIDFIELDER_DEF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.WINGER_DEF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.MIDFIELDER_TOWING, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.WINGER_TOMID, mitForm);
-
-		return Helper.round(stk, 1);
 	}
 
 
@@ -1006,18 +973,6 @@ public class Lineup{
 	}
 
 	/**
-	 * Team star rating for attackers
-	 */
-	public final float getSTTeamStk(List<Player> player, boolean mitForm) {
-		float stk = 0.0f;
-		stk += calcTeamStk(player, IMatchRoleID.FORWARD, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.FORWARD_DEF, mitForm);
-		stk += calcTeamStk(player, IMatchRoleID.FORWARD_TOWING, mitForm);
-
-		return Helper.round(stk, 1);
-	}
-
-	/**
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
 	public final byte setSpielerAtPosition(int positionsid, int spielerid, byte tactic) {
@@ -1192,13 +1147,6 @@ public class Lineup{
 	 */
 	public final String getSystemName(byte system) {
 		return getNameForSystem(system);
-	}
-
-	/**
-	 * Star rating for the keeper.
-	 */
-	public final float getTWTeamStk(List<Player> player, boolean mitForm) {
-		return calcTeamStk(player, IMatchRoleID.KEEPER, mitForm);
 	}
 
 	/**
@@ -1746,12 +1694,11 @@ public class Lineup{
 	/**
 	 * Calculate player strength for the given position.
 	 */
-	private float calcPlayerStk(List<Player> spieler, int spielerId, byte position, boolean mitForm) {
-		if (spieler != null) {
-			for (Player current : spieler) {
-				Player player = (Player) current;
-				if (player.getPlayerID() == spielerId) {
-					return player.calcPosValue(position, mitForm);
+	private float calcPlayerStrength(List<Player> players, int playerID, byte position, boolean considerForm, @Nullable Weather weather, boolean useWeatherImpact) {
+		if (players != null) {
+			for (Player player : players) {
+				if (player.getPlayerID() == playerID) {
+					return player.calcPosValue(position, considerForm, weather, useWeatherImpact);
 				}
 			}
 		}
@@ -1761,13 +1708,13 @@ public class Lineup{
 	/**
 	 * Calculate team strength for the given position.
 	 */
-	private float calcTeamStk(List<Player> player, byte positionId, boolean useForm) {
+	private float calcTeamStrength(List<Player> players, byte positionId, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
 		float stk = 0.0f;
-		if (player != null) {
+		if (players != null) {
 			for (IMatchRoleID pos : m_vFieldPositions) {
 				MatchRoleID position = (MatchRoleID) pos;
 				if (position.getPosition() == positionId) {
-					stk += calcPlayerStk(player, position.getPlayerId(), positionId, useForm);
+					stk += calcPlayerStrength(players, position.getPlayerId(), positionId, useForm, weather, useWeatherImpact);
 				}
 			}
 		}

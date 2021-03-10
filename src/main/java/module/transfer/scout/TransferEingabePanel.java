@@ -373,46 +373,46 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         byte bIdealPosition = tempPlayer.getIdealPosition();
         jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
                 + " ("
-                +  tempPlayer.getIdealPosStaerke(true, true, 1)
+                +  tempPlayer.getIdealPositionStrength(true, true, 1, null, false)
                 + "%)");
         jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)) + "");
         jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)) + "");
         jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true, null, false)) + "");
         jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true, null, false)) + "");
         jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true, null, false)) + "");
         jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true, null, false)) + "");
         jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true, null, false)) + "");
         jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true, null, false)) + "");
         jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true, null, false)) + "");
         jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true, null, false)) + "");
         jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true, null, false)) + "");
         jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true, null, false)) + "");
         jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true, null, false)) + "");
         jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true, null, false)) + "");
         jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true, null, false)) + "");
         jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true, null, false)) + "");
         jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true, null, false)) + "");
         jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false)) + "");
         jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true)) + "");
+        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)) + "");
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         clScoutEntry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());

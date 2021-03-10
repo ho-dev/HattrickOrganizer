@@ -326,7 +326,7 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
 			m_jpFuehrung2.clear();
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
-					+ " (" + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true) + ")");
+					+ " (" + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false) + ")");
 			for (int i = 0; i < playerPositionValues.length; i++) {
 				showNormal(playerPositionValues[i], playerPosition[i], m_clPlayer);
 			}
@@ -419,7 +419,7 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer
 					.getIdealPosition())
 					+ " ("
-					+ m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true) + ")");
+					+ m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false) + ")");
 
 			for (int i = 0; i < playerPositionValues.length; i++) {
 				showWithCompare(playerPositionValues[i], playerPosition[i], m_clPlayer,
@@ -1333,7 +1333,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
 		labelEntry.getLeft().setText(
-				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
+				Helper.round(m_clPlayer.calcPosValue(playerPosition, true, null, false),
 						core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRight().clear();
 	}
@@ -1341,11 +1341,11 @@ final class SpielerDetailDialog extends JDialog {
 	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition,
                                  Player m_clPlayer, Player m_clVergleichsPlayer) {
 		labelEntry.getLeft().setText(
-				Helper.round(m_clPlayer.calcPosValue(playerPosition, true),
+				Helper.round(m_clPlayer.calcPosValue(playerPosition, true, null, false),
 						core.model.UserParameter.instance().nbDecimals) + "");
 
 		labelEntry.getRight().setSpecialNumber(
-				m_clPlayer.calcPosValue(playerPosition, true)
-						- m_clVergleichsPlayer.calcPosValue(playerPosition, true), false);
+				m_clPlayer.calcPosValue(playerPosition, true, null, false)
+						- m_clVergleichsPlayer.calcPosValue(playerPosition, true, null, false), false);
 	}
 }

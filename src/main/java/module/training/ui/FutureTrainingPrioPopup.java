@@ -88,7 +88,7 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
 
     public void updateActivePlayer() {
         if ( model.getActivePlayer() != null) {
-            bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo());
+            bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo(null, false));
         }
     }
 }

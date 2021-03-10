@@ -57,7 +57,7 @@ class PlayerPositionColumn extends PlayerColumn {
      * @return
      */
     public ColorLabelEntry getEntryValue(Player player) {
-        ColorLabelEntry temp = new ColorLabelEntry(player.calcPosValue(position, true),
+        ColorLabelEntry temp = new ColorLabelEntry(player.calcPosValue(position, true, null, false),
                 getBackgroundColor(), false,
                 core.model.UserParameter.instance().nbDecimals);
 
@@ -87,8 +87,8 @@ class PlayerPositionColumn extends PlayerColumn {
                     SwingConstants.RIGHT);
         }
 
-        return new ColorLabelEntry(player.calcPosValue(position, true)
-                - comparePlayer.calcPosValue(position, true),
+        return new ColorLabelEntry(player.calcPosValue(position, true, null, false)
+                - comparePlayer.calcPosValue(position, true, null, false),
                 getBackgroundColor(), false, false,
                 core.model.UserParameter.instance().nbDecimals);
 

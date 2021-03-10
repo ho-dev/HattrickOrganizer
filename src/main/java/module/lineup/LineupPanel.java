@@ -103,7 +103,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		setLayout(new BorderLayout());
 
 		lineupRatingAssistantPanel = new LineupRatingAssistantPanel(this);
-		lineupPositionsPanel = new LineupPositionsPanel(this);
+		lineupPositionsPanel = new LineupPositionsPanel(this, lineupRatingAssistantPanel.getLineupSettingsPanel().getWeather(), true);
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
 		horizontalSplitPane.setLeftComponent(new JScrollPane(lineupPositionsPanel));
