@@ -260,8 +260,6 @@ public final class UserParameter extends Configuration {
     public int teamAnalyzer_MainPanelSplitPane = 532;
     public int teamAnalyzer_BottomSplitPane = 500;
 
-    //Wecker vor der Deadliniezeit
-    public int deadlineFrist = 300000;
     public int hoMainFrame_PositionX;
     public int hoMainFrame_PositionY;
     public int hoMainFrame_height = 740;
@@ -579,7 +577,6 @@ public final class UserParameter extends Configuration {
         map.put("aufstellungsAssistentPanel_reihenfolge", String.valueOf(aufstellungsAssistentPanel_reihenfolge));
         map.put("lineupPanel_horizontalSplitLocation", String.valueOf(lineupPanel_horizontalSplitLocation));
         map.put("lineupPanel_verticalSplitLocation", String.valueOf(lineupPanel_verticalSplitLocation));
-        map.put("deadlineFrist", String.valueOf(deadlineFrist));
         map.put("hoMainFrame_PositionX", String.valueOf(hoMainFrame_PositionX));
         map.put("hoMainFrame_PositionY", String.valueOf(hoMainFrame_PositionY));
         map.put("hoMainFrame_height", String.valueOf(hoMainFrame_height));
@@ -818,7 +815,6 @@ public final class UserParameter extends Configuration {
         aufstellungsAssistentPanel_reihenfolge = getIntValue(values, "aufstellungsAssistentPanel_reihenfolge");
         lineupPanel_horizontalSplitLocation = getIntValue(values, "lineupPanel_horizontalSplitLocation");
         lineupPanel_verticalSplitLocation = getIntValue(values, "lineupPanel_verticalSplitLocation");
-        deadlineFrist = getIntValue(values, "deadlineFrist");
         hoMainFrame_PositionX = getIntValue(values, "hoMainFrame_PositionX");
         hoMainFrame_PositionY = getIntValue(values, "hoMainFrame_PositionY");
         hoMainFrame_height = getIntValue(values, "hoMainFrame_height");

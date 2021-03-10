@@ -35,7 +35,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private ComboBoxPanel m_jcbLanguage;
     private ComboBoxPanel m_jcbTimeZone;
     private JCheckBox m_jchShowSkillNumericalValue;
-    private SliderPanel m_jslDeadline;
     private SliderPanel m_jslSchriftgroesse;
     private SliderPanel m_jslFutureWeeks;
     private SliderPanel m_jslAlternativePositionsTolerance;
@@ -75,7 +74,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
     @Override
     public final void stateChanged(ChangeEvent changeEvent) {
-        core.model.UserParameter.temp().deadlineFrist = (int) m_jslDeadline.getValue();
         core.model.UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
         core.model.UserParameter.temp().schriftGroesse = (int) m_jslSchriftgroesse.getValue();
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
@@ -97,12 +95,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
      */
     private void initComponents() {
         setLayout(new GridLayout(13, 1, 4, 4));
-
-        m_jslDeadline = new SliderPanel(HOVerwaltung.instance().getLanguageString("TransferWecker"), 60, 0, 1f / 60000f, 1.0f, 120);
-        m_jslDeadline.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_TransferWecker"));
-        m_jslDeadline.setValue((float) core.model.UserParameter.temp().deadlineFrist);
-        m_jslDeadline.addChangeListener(this);
-        add(m_jslDeadline);
 
         m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, 120);
         m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));

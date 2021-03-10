@@ -19,44 +19,27 @@ public class ScoutThread implements Runnable {
 
     //~ Methods ------------------------------------------------------------------------------------
     public final void run() {
-        module.transfer.scout.ScoutEintrag se = null;
+        module.transfer.scout.ScoutEintrag se;
         final java.sql.Timestamp ts = new java.sql.Timestamp(System.currentTimeMillis());
         final java.sql.Timestamp ts2 = new java.sql.Timestamp(System.currentTimeMillis());
+        final int DELAY_BEFORE_DEADLINE = 300000;  // 5 minutes
 
-        //5 min vorher meckern : - 300000
-
-        /*m_vScoutEintraege != null && !m_vScoutEintraege.isEmpty ()*/
         while (true) {
             ts.setTime(System.currentTimeMillis());
 
-            //ts2.setTime ( System.currentTimeMillis () + gui.UserParameter.instance ().deadlineFrist );
             for (int i = 0;
                  (m_vScoutEintraege != null) && !m_vScoutEintraege.isEmpty()
                  && (i < m_vScoutEintraege.size()); ++i) {
                 se = m_vScoutEintraege.elementAt(i);
-                ts2.setTime(se.getDeadline().getTime() - core.model.UserParameter.instance().deadlineFrist
-                            + difference);
+                ts2.setTime(se.getDeadline().getTime() - DELAY_BEFORE_DEADLINE + difference);
 
-                //übersehene abgelaufen entfernen
-
-                /*
-                   if ( se.getDeadline ().before ( ts ) )
-                   {
-                       m_vScoutEintraege.removeElementAt ( i );
-                       --i;
-                   }//in 5 min fällige anzeigen
-                
-                   else */
                 if (ts2.before(ts) && !se.getDeadline().before(ts) && !se.isWecker()) {
-                    //melden
+
                     new module.transfer.scout.Wecker(se.getName() + " ("
                                                                       + se.getPlayerID() + ")"
                                                                       + "\r\n"
                                                                       + se.getDeadline().toString());
                     se.setWecker(true);
-
-                    //m_vScoutEintraege.removeElementAt ( i );
-                    //--i;
                 }
             }
 
