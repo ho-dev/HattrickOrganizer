@@ -40,6 +40,7 @@ resultAddXp=1
 skillDelta=0
 skillMin=0
 
+#percentage per which a player is impacted positively/negatively by the weather
 weatherBonus=0.05
 
 # 9 multipliers for crowding penalties. 1-2-3 central defenders/midfielders/forwards

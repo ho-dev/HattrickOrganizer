@@ -55,6 +55,7 @@ public class RatingPredictionManager {
     public static final int SPEC_ALL = SPEC_SUPPORT+1; // 9
     public static final int NUM_SPEC = SPEC_ALL+1; // 10
 	public static final double EPSILON = 0.000001;
+	public static final float DEFAULT_WEATHER_BONUS = 0.05f;
 
     //~ Class fields -------------------------------------------------------------------------------
 	private static HashMap<String, LinkedHashMap<Double, Double>> allStaminaEffect = new HashMap<>();
@@ -1281,7 +1282,7 @@ public class RatingPredictionManager {
 
 
     public final static float getWeatherBonus(){
-		return (float) config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "weatherBonus");
+		return (float) config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "weatherBonus", DEFAULT_WEATHER_BONUS);
 	}
 
 

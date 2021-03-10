@@ -55,6 +55,11 @@ homegrownbonus=0.5
 loyaltyMax=1
 loyaltySkillMax=20 
 
+
+#percentage per which a player is impacted positively/negatively by the weather
+weatherBonus=0.05
+
+
 finalXpMultiplier=0.0716
 finalXpDelta=1
 resultMultiStamina=1
