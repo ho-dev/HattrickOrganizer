@@ -12,6 +12,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -48,19 +49,27 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final GridBagLayout layout = new GridBagLayout();
     private final JLayeredPane jlp = new JLayeredPane();
     private final int layerIndex = 0;
+    private Weather m_weather;
+    private boolean m_useWeatherImpact;
 
     //constructor
-    protected PlayerPositionPanel(Updatable updater, int positionsID) {
+    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather, boolean useWeatherImpact) {
         super(false);
 
         m_clUpdater = updater;
         m_iPositionID = positionsID;
+        m_weather = weather;
+        m_useWeatherImpact = useWeatherImpact;
 
         setOpaque(true);
 
         initTaktik(null);
         initLabel();
         initComponents();
+    }
+
+    protected PlayerPositionPanel(Updatable updater, int positionsID) {
+        this(updater, positionsID, null, false);
     }
 
     public int getPositionsID() {
@@ -140,7 +149,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         add(jlp, BorderLayout.CENTER);
     }
 
-    //-------------Listener------------------------------------------------
+
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -217,11 +226,12 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      * @param plStartingLineup  the players in the starting 11
      * @param plSubstitutes the substitute players (not the backup)
      */
-    public void refresh(List<Player> plCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes) {
+    public void refresh(List<Player> plCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact) {
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
         Lineup lineup = model.getLineupWithoutRatingRecalc();
-
+        m_weather = weather;
+        m_useWeatherImpact = useWeatherImpact;
         iSelectedPlayerId = -1;
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
@@ -265,7 +275,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        setPlayersList(plCandidates, selectedPlayer);
+        setPlayersList(plCandidates, selectedPlayer, m_weather, m_useWeatherImpact);
 
         // for all players in the combobox set correct values for isSelect (starting 11) and isAssis (it is a subsitute)
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
@@ -308,9 +318,11 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
 
-    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub) {
+    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact) {
         Player selectedPlayer = null;
         iSelectedPlayerId = -1;
+        m_weather = weather;
+        m_useWeatherImpact = useWeatherImpact;
 
         //Get currently setup player in that position
         final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
@@ -324,7 +336,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         repaint();
     }
 
-    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer) {
+    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer, @Nullable Weather weather, boolean useWeatherImpact) {
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -364,7 +376,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             int iSelectedPlayerID = oSelectedPlayer.getPlayerID();
             for (Player p : oCandidates) {
                 if (p.getPlayerID() == iSelectedPlayerID) {
-                    cbModel.addElement(createSpielerCBItem(m_clSelectedPlayer, oSelectedPlayer));
+                    cbModel.addElement(createSpielerCBItem(m_clSelectedPlayer, oSelectedPlayer, weather, useWeatherImpact));
                     this.iSelectedPlayerId = iSelectedPlayerID;
                     break;
                 }
@@ -387,7 +399,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         PlayerCBItem[] cbItems = new PlayerCBItem[oCandidates.size()];
 
         for (int i = 0; i < oCandidates.size(); i++) {
-            cbItems[i] = createSpielerCBItem(m_clCBItems[i], oCandidates.get(i));
+            cbItems[i] = createSpielerCBItem(m_clCBItems[i], oCandidates.get(i), weather, useWeatherImpact);
         }
 
         Arrays.sort(cbItems);
@@ -453,7 +465,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         if (selectedPlayer != null) {
             for (Player p : lSubs) {
                 if (p.getPlayerID() == selectedPlayer.getPlayerID())
-                    cbModel.addElement(createSpielerCBItem(m_clSelectedPlayer, selectedPlayer));
+                    cbModel.addElement(createSpielerCBItem(m_clSelectedPlayer, selectedPlayer, m_weather, m_useWeatherImpact));
             }
         }
 
@@ -467,7 +479,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         for (int i = 0; i < lSubs.size(); i++) {
             pp = lSubs.get(i);
             if (pp.getPlayerID() != playerIDcorrespondingSub) {
-                cbItems[i] = createSpielerCBItem(m_clCBItems[i], pp);
+                cbItems[i] = createSpielerCBItem(m_clCBItems[i], pp, m_weather, m_useWeatherImpact);
             }
         }
 
@@ -615,14 +627,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             text += " ("
                     + currentPlayer.calcPosValue(MatchRoleID.getPosition(m_iPositionID,
                     playerPosition),
-                    true) + ")";
+                    true, m_weather, m_useWeatherImpact) + ")";
         }
 
         m_jcbTactic.addItem(new CBItem(text, playerPosition));
     }
     //-------------private-------------------------------------------------
 
-    private PlayerCBItem createSpielerCBItem(PlayerCBItem item, @Nullable Player player) {
+    private PlayerCBItem createSpielerCBItem(PlayerCBItem item, @Nullable Player player, @Nullable Weather weather, boolean useWeatherImpact) {
         if (player != null) {
             String spielerName = player.getShortName();
 
@@ -644,7 +656,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
 
                 assert position != null;
-                float value = player.calcPosValue(position.getPosition(), true);
+                float value = player.calcPosValue(position.getPosition(), true, weather, useWeatherImpact);
 
                 byte[] alternativePositions = player.getAlternativeBestPositions();
                 boolean bestPosition = false;

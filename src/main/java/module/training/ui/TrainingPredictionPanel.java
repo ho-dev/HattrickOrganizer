@@ -215,7 +215,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
             byte bIdealPosition = player.getIdealPosition();
             row.add(MatchRoleID.getNameForPosition(bIdealPosition)
                     + " ("
-                    +  player.getIdealPosStaerke(true, true, 1)
+                    +  player.getIdealPositionStrength(true, true, 1, null, false)
                     + "%)");
             row.add(Integer.toString(ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getPlayerID()));

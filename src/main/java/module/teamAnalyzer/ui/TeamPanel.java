@@ -205,7 +205,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
                 spotLineup.setRating(player.calcPosValue(lineup.getEffectivePos4PositionID(spot),
-                                                          true));
+                                                          true, null, false));
                 if (player.isInjured() > 0) {
                 	spotLineup.setStatus(PlayerDataManager.INJURED);
                 } else if (player.isRedCarded()) {

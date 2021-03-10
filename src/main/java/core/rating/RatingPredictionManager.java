@@ -856,6 +856,10 @@ public class RatingPredictionManager {
         return retArray;
     }
 
+	public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing) {
+    	return calcPlayerStrength(t, player, skillType, useForm, isPressing, null, false);
+	}
+
     public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, @Nullable Weather weather, boolean useWeatherImpact) {
         double retVal = 0.0F;
         try
@@ -871,7 +875,7 @@ public class RatingPredictionManager {
              * the user has set an offset manually -> use this sub/offset
              */
             if (subskillFromDB > 0 || 
-            		(lastLvlUp = player.getLastLevelUp(skillType)) != null && (Timestamp)lastLvlUp[0] != null && (Boolean) lastLvlUp[1])
+            		(lastLvlUp = player.getLastLevelUp(skillType)) != null && lastLvlUp[0] != null && (Boolean) lastLvlUp[1])
                 subSkill = player.getSub4Skill(skillType);
             else
             	/**

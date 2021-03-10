@@ -79,7 +79,7 @@ final public class UserColumnFactory {
                         + " ("
                         + spielerCBItem.getSpieler().calcPosValue((byte) spielerCBItem
                                 .getPosition(),
-                        true) + ")");
+                        true, null, false) + ")");
                 return colorLabelEntry;
             }
         };
@@ -574,7 +574,7 @@ final public class UserColumnFactory {
 
                 String posValue = MatchRoleID.getNameForPosition(idealPosition)
                         + " ("
-                        + player.getIdealPosStaerke(true, true, 1)
+                        + player.getIdealPositionStrength(true, true, 1, null, false)
                         + "%)";
                 byte[] alternativePosition = player.getAlternativeBestPositions();
                 for (byte altPos : alternativePosition) {
@@ -586,7 +586,7 @@ final public class UserColumnFactory {
 
                 ColorLabelEntry tmp = new ColorLabelEntry(
                         -MatchRoleID.getSortId(idealPosition, false)
-                                + (player.getIdealPosStaerke(true) / 100.0f),
+                                + (player.getIdealPositionStrength(true, null, false) / 100.0f),
                         posValue,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);

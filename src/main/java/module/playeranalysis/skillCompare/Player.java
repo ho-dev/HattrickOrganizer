@@ -568,52 +568,52 @@ public class Player
 	
 	public void setOldPositionValues()
 	{
-		setOldPos_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true));
-		setOldPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true));
-		setOldPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true));
-		setOldPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true));
-		setOldPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true));
-		setOldPosVal_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true));
-		setOldPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true));
-		setOldPosVal_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true));
-		setOldPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true));
-		setOldPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true));
-		setOldPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true));
-		setOldPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true));
-		setOldPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true));
-		setOldPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true));
-		setOldPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true));
-		setOldPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true));
-		setOldPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true));
-		setOldPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true));
-		setOldPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true));
+		setOldPos_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true, null, false));
+		setOldPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true, null, false));
+		setOldPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true, null, false));
+		setOldPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true, null, false));
+		setOldPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true, null, false));
+		setOldPosVal_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true, null, false));
+		setOldPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true, null, false));
+		setOldPosVal_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true, null, false));
+		setOldPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true, null, false));
+		setOldPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true, null, false));
+		setOldPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true, null, false));
+		setOldPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true, null, false));
+		setOldPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true, null, false));
+		setOldPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true, null, false));
+		setOldPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true, null, false));
+		setOldPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true, null, false));
+		setOldPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true, null, false));
+		setOldPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true, null, false));
+		setOldPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true, null, false));
 		setOldBestPosition(m_Player.getIdealPosition());
-		setOldBestPositionRating(m_Player.getIdealPosStaerke(true, true, 1));
+		setOldBestPositionRating(m_Player.getIdealPositionStrength(true, true, 1, null, false));
 	}
 	
 	public void setNewPositionValues()
 	{
-		setPosVal_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true));
-		setPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true));
-		setPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true));
-		setPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true));
-		setPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true));
-		setPosVAL_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true));
-		setPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true));
-		setPosVAL_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true));
-		setPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true));
-		setPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true));
-		setPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true));
-		setPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true));
-		setPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true));
-		setPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true));
-		setPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true));
-		setPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true));
-		setPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true));
-		setPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true));
-		setPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true));
+		setPosVal_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true, null, false));
+		setPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true, null, false));
+		setPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true, null, false));
+		setPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true, null, false));
+		setPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true, null, false));
+		setPosVAL_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true, null, false));
+		setPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true, null, false));
+		setPosVAL_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true, null, false));
+		setPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true, null, false));
+		setPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true, null, false));
+		setPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true, null, false));
+		setPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true, null, false));
+		setPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true, null, false));
+		setPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true, null, false));
+		setPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true, null, false));
+		setPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true, null, false));
+		setPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true, null, false));
+		setPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true, null, false));
+		setPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true, null, false));
 		setBestPosition(m_Player.getIdealPosition());
-		setBestPositionRating(m_Player.getIdealPosStaerke(true, true, 1));
+		setBestPositionRating(m_Player.getIdealPositionStrength(true, true, 1, null, false));
 		changePlayerSkillValues(false);
 	}
 	

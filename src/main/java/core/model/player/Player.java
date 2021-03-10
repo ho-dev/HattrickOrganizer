@@ -20,7 +20,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
 import module.training.Skills;
-
+import org.jetbrains.annotations.Nullable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -29,20 +29,20 @@ import static core.constants.player.PlayerSkill.*;
 import static java.lang.Integer.min;
 
 public class Player {
-    //~ Class fields -------------------------------------------------------------------------------
+
 
     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
     private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
     private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
-    // constants for lineup HT-ML export
+    private byte idealPos = IMatchRoleID.UNKNOWN;
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
     private static final String EMPTY = "";
 
-    //~ Instance fields ----------------------------------------------------------------------------
+
 
     /**
      * canPlay
@@ -910,28 +910,29 @@ public class Player {
     /**
      * calculate the contribution for the ideal position
      */
-    public float getIdealPosStaerke(boolean mitForm) {
-        return getIdealPosStaerke(mitForm, false);
+    public float getIdealPositionStrength(boolean mitForm, @Nullable Weather weather, boolean useWeatherImpact) {
+        return getIdealPositionStrength(mitForm, false, weather, useWeatherImpact);
     }
 
 
     /**
      * calculate the contribution for the ideal position
      */
-    public float getIdealPosStaerke(boolean mitForm, boolean normalized) {
-        return calcPosValue(getIdealPosition(), mitForm, normalized, 1);
+    public float getIdealPositionStrength(boolean mitForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
+        return getIdealPositionStrength(mitForm, normalized, 2, weather, useWeatherImpact);
     }
 
     /**
      * calculate the contribution for the ideal position
      */
-    public float getIdealPosStaerke(boolean mitForm, boolean normalized, int nb_decimal) {
-        return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal);
+    public float getIdealPositionStrength(boolean mitForm, boolean normalized, int nb_decimal, @Nullable Weather weather, boolean useWeatherImpact) {
+        return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal, weather, useWeatherImpact);
     }
 
-    private byte idealPos = IMatchRoleID.UNKNOWN;
+
+
     /**
-     * Calculate Player Ideal Position
+     * Calculate Player Ideal Position (weather impact not relevant here)
      */
     public byte getIdealPosition() {
         //in case player best position is forced by user
@@ -947,7 +948,7 @@ public class Player {
                 for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
                     if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
                     currPosition = allPos[i].getPosition();
-                    contrib = calcPosValue(currPosition, true, true);
+                    contrib = calcPosValue(currPosition, true, true, null, false);
                     if (contrib > maxStk) {
                         maxStk = contrib;
                         idealPos = currPosition;
@@ -961,7 +962,7 @@ public class Player {
     }
 
     /**
-     * Calculate Player Alternative Best Positions
+     * Calculate Player Alternative Best Positions (weather impact not relevant here)
      */
     public byte[] getAlternativeBestPositions() {
 
@@ -973,7 +974,7 @@ public class Player {
         for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
             if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
             currPosition = allPos[i].getPosition();
-            currPositionContribute = new PositionContribute(calcPosValue(currPosition, true, true), currPosition);
+            currPositionContribute = new PositionContribute(calcPosValue(currPosition, true, true, null, false), currPosition);
             positions.add(currPositionContribute);
         }
 
@@ -2015,13 +2016,6 @@ public class Player {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Helper
-    ////////////////////////////////////////////////////////////////////////////////
-
-    float calcPosValue(FactorObject fo, boolean useForm) {
-        return calcPosValue(fo, useForm, false);
-    }
 
     /**
      * Calculate the player strength on a specific lineup position
@@ -2032,7 +2026,7 @@ public class Player {
      * @param normalized absolute or normalized contribution?
      * @return the player strength on this position
      */
-    float calcPosValue(FactorObject fo, boolean useForm, boolean normalized) {
+    float calcPosValue(FactorObject fo, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
         if ((fo == null) || (fo.getSum() == 0.0f)) {
             return -1.0f;
         }
@@ -2047,8 +2041,7 @@ public class Player {
         /*
          * Create a key for the Hashtable cache
          * We cache every star rating to speed up calculation
-         * (calling RPM.calcPlayerStrength() is quite expensive and
-         * this method is used very often)
+         * (calling RPM.calcPlayerStrength() is quite expensive and this method is used very often)
          */
 
         float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
@@ -2069,21 +2062,23 @@ public class Player {
         // Check if the key already exists in cache
         if (PlayerAbsoluteContributionCache.containsKey(key)) {
             // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
-            if (normalized) {
-                return (Float) PlayerRelativeContributionCache.get(key);
-            } else {
-                return (Float) PlayerAbsoluteContributionCache.get(key);
+
+            float rating = normalized ? (float) PlayerRelativeContributionCache.get(key) : (Float) PlayerAbsoluteContributionCache.get(key);
+            if(useWeatherImpact){
+                rating *= getImpactWeatherEffect(weather);
             }
+
+            return rating;
         }
 
         // Compute contribution
-        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, KEEPER, useForm, false, null, false);
-        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PLAYMAKING, useForm, false, null, false);
-        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, DEFENDING, useForm, false, null, false);
-        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, WINGER, useForm, false, null, false);
-        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PASSING, useForm, false, null, false);
-        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SET_PIECES, useForm, false, null, false);
-        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SCORING, useForm, false, null, false);
+        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, KEEPER, useForm, false);
+        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PLAYMAKING, useForm, false);
+        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, DEFENDING, useForm, false);
+        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, WINGER, useForm, false);
+        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PASSING, useForm, false);
+        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SET_PIECES, useForm, false);
+        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SCORING, useForm, false);
         float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
 
         float absVal = val * 10; // multiplied by 10 for improved visibility
@@ -2102,12 +2097,12 @@ public class Player {
     }
 
 
-    public float calcPosValue(byte pos, boolean useForm, boolean normalized) {
-        return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals);
+    public float calcPosValue(byte pos, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
+        return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals, weather, useWeatherImpact);
     }
 
-    public float calcPosValue(byte pos, boolean useForm) {
-        return calcPosValue(pos, useForm, false);
+    public float calcPosValue(byte pos, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
+        return calcPosValue(pos, useForm, false, weather, useWeatherImpact);
     }
 
     /**
@@ -2118,7 +2113,7 @@ public class Player {
      * @param useForm consider form?
      * @return the player strength on this position
      */
-    public float calcPosValue(byte pos, boolean useForm, boolean normalized, int nb_decimals) {
+    public float calcPosValue(byte pos, boolean useForm, boolean normalized, int nb_decimals,  @Nullable Weather weather, boolean useWeatherImpact) {
         float es;
         FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
 
@@ -2128,7 +2123,7 @@ public class Player {
         }
 
         if (factor != null) {
-            es = calcPosValue(factor, useForm, normalized);
+            es = calcPosValue(factor, useForm, normalized, weather, useWeatherImpact);
         } else {
             //	For Coach or factor not found return 0
             return 0.0f;
@@ -2137,27 +2132,7 @@ public class Player {
         return core.util.Helper.round(es, nb_decimals);
     }
 
-    /*
-     * Copy old player offset status.
-     * Used by training, checks for skillup and resets subskill in that case
-     *
-     * @param old
 
-    public void copySubSkills(Player old) {
-        for (int skillType = 0; skillType <= EXPERIENCE; skillType++) {
-
-            if ((skillType == FORM) || (skillType == STAMINA)) {
-                continue;
-            }
-
-            if (!check4SkillUp(skillType, old)) {
-                setSubskill4PlayerSkill(skillType, old.getSub4SkillAccurate(skillType));
-            } else {
-                setSubskill4PlayerSkill(skillType, 0);
-            }
-        }
-    }
-   */
     /**
      * Copy the skills of old player.
      * Used by training
@@ -2340,10 +2315,10 @@ public class Player {
         DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
     }
 
-    public String getBestPositionInfo() {
+    public String getBestPositionInfo(@Nullable Weather weather, boolean useWeatherImpact) {
         return MatchRoleID.getNameForPosition(getIdealPosition())
                 + " ("
-                +  getIdealPosStaerke(true, true, 1)
+                +  getIdealPositionStrength(true, true, 1, weather, useWeatherImpact)
                 + "%)";
     }
 
@@ -2367,7 +2342,7 @@ public class Player {
             }
         }
         if ( ret != null ) return ret;
-        return getBestPositionInfo();
+        return getBestPositionInfo(null, false);
 
     }
 

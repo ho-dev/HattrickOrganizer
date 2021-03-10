@@ -12,6 +12,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.Matchdetails;
 import core.model.match.IMatchDetails;
+import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -83,6 +84,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 	private static ActionListener cbActionListener;
+	private Weather m_weather;
+	private boolean m_useWeatherImpact;
 
 	public LineupPanel getLineupPanel() {
 		return m_clLineupPanel;
@@ -92,9 +95,11 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return m_jpMatchAndLineupSelectionPanel;
 	}
 
-	public LineupPositionsPanel(LineupPanel parent) {
+	public LineupPositionsPanel(LineupPanel parent, Weather weather, Boolean useWeatherImpact) {
 		m_clLineupPanel = parent;
 		assistantPanel = m_clLineupPanel.getLineupAssistantPanel();
+		m_weather = weather;
+		m_useWeatherImpact = useWeatherImpact;
 		initComponents();
 		RefreshManager.instance().registerRefreshable(this);
 	}
@@ -128,7 +133,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		boolean bGroupFiltered = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
 		String sGroup = m_clLineupPanel.getLineupAssistantPanel().getGroup();
 		boolean bSelectedGroupExcluded = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
-//		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
+
+		m_weather = m_clLineupPanel.getLineupSettingsPanel().getWeather();
 
 		// All Player Positions Inform First 11
 		List<Player> selectedPlayers = new ArrayList<>();
@@ -166,36 +172,36 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			}
 		}
 
-		m_clKeeper.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clRightBack.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clRightForward.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getiSelectedPlayerId());
-		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, substitutes);
-	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getiSelectedPlayerId());
-		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getiSelectedPlayerId());
-		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getiSelectedPlayerId());
-		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getiSelectedPlayerId());
-		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getiSelectedPlayerId());
-		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, substitutes);
-		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getiSelectedPlayerId());
-		m_clSetPieceTaker.refresh(selectedPlayers, null, null);
-	 	m_clCaptain.refresh(selectedPlayers, null, null);
+		m_clKeeper.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clRightBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clRightForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+	    m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact);
+		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
+		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, substitutes, null, false);
+		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getiSelectedPlayerId(), null, false);
+		m_clSetPieceTaker.refresh(selectedPlayers, null, null, m_weather, m_useWeatherImpact);
+	 	m_clCaptain.refresh(selectedPlayers, null, null, null, false);
 
 		// Check
 		lineup.checkAufgestellteSpieler();
@@ -258,7 +264,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.SOUTH;
-		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper);
+		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper, m_weather, m_useWeatherImpact);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
@@ -336,7 +342,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		constraints.anchor = GridBagConstraints.CENTER;
-		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack);
+		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightBack);
@@ -345,7 +351,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Defense line
 		constraints.gridx = 2;
 		m_clRightCentralDefender = new PlayerPositionPanel(this,
-				IMatchRoleID.rightCentralDefender);
+				IMatchRoleID.rightCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightCentralDefender, constraints);
 		centerPanel.add(m_clRightCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightCentralDefender);
@@ -353,7 +359,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		constraints.gridx = 3;
 		m_clMiddleCentralDefender = new PlayerPositionPanel(this,
-				IMatchRoleID.middleCentralDefender);
+				IMatchRoleID.middleCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clMiddleCentralDefender, constraints);
 		centerPanel.add(m_clMiddleCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clMiddleCentralDefender);
@@ -361,14 +367,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		constraints.gridx = 4;
 		m_clLeftCentralDefender = new PlayerPositionPanel(this,
-				IMatchRoleID.leftCentralDefender);
+				IMatchRoleID.leftCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftCentralDefender, constraints);
 		centerPanel.add(m_clLeftCentralDefender);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftCentralDefender);
 		assistantPanel.addToAssistant(m_clLeftCentralDefender);
 
 		constraints.gridx = 5;
-		m_clLeftBack = new PlayerPositionPanel(this, IMatchRoleID.leftBack);
+		m_clLeftBack = new PlayerPositionPanel(this, IMatchRoleID.leftBack, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftBack, constraints);
 		centerPanel.add(m_clLeftBack);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftBack);
@@ -377,7 +383,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Midfield Line
 		constraints.gridx = 1;
 		constraints.gridy = 3;
-		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger);
+		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightWinger, constraints);
 		centerPanel.add(m_clRightWinger);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightWinger);
@@ -385,7 +391,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		constraints.gridx = 2;
 		m_clRightInnerMidfielder = new PlayerPositionPanel(this,
-				IMatchRoleID.rightInnerMidfield);
+				IMatchRoleID.rightInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightInnerMidfielder, constraints);
 		centerPanel.add(m_clRightInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightInnerMidfielder);
@@ -393,21 +399,21 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		constraints.gridx = 3;
 		m_clCentralInnerMidfielder = new PlayerPositionPanel(this,
-				IMatchRoleID.centralInnerMidfield);
+				IMatchRoleID.centralInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clCentralInnerMidfielder, constraints);
 		centerPanel.add(m_clCentralInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralInnerMidfielder);
 		assistantPanel.addToAssistant(m_clCentralInnerMidfielder);
 
 		constraints.gridx = 4;
-		m_clLeftInnerMidfielder = new PlayerPositionPanel(this, IMatchRoleID.leftInnerMidfield);
+		m_clLeftInnerMidfielder = new PlayerPositionPanel(this, IMatchRoleID.leftInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftInnerMidfielder, constraints);
 		centerPanel.add(m_clLeftInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftInnerMidfielder);
 		assistantPanel.addToAssistant(m_clLeftInnerMidfielder);
 
 		constraints.gridx = 5;
-		m_clLeftWinger = new PlayerPositionPanel(this, IMatchRoleID.leftWinger);
+		m_clLeftWinger = new PlayerPositionPanel(this, IMatchRoleID.leftWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftWinger, constraints);
 		centerPanel.add(m_clLeftWinger);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftWinger);
@@ -416,21 +422,21 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Forward line
 		constraints.gridx = 2;
 		constraints.gridy = 4;
-		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward);
+		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightForward, constraints);
 		centerPanel.add(m_clRightForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightForward);
 		assistantPanel.addToAssistant(m_clRightForward);
 
 		constraints.gridx = 3;
-		m_clCentralForward = new PlayerPositionPanel(this, IMatchRoleID.centralForward);
+		m_clCentralForward = new PlayerPositionPanel(this, IMatchRoleID.centralForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clCentralForward, constraints);
 		centerPanel.add(m_clCentralForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralForward);
 		assistantPanel.addToAssistant(m_clCentralForward);
 
 		constraints.gridx = 4;
-		m_clLeftForward = new PlayerPositionPanel(this, IMatchRoleID.leftForward);
+		m_clLeftForward = new PlayerPositionPanel(this, IMatchRoleID.leftForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftForward, constraints);
 		centerPanel.add(m_clLeftForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftForward);
@@ -440,14 +446,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.anchor = GridBagConstraints.SOUTH;
-		m_clCaptain = new PlayerPositionPanel(this, IMatchRoleID.captain);
+		m_clCaptain = new PlayerPositionPanel(this, IMatchRoleID.captain, null, false);
 		m_clCaptain.addCaptainIcon();
 		layout.setConstraints(m_clCaptain, constraints);
 		centerPanel.add(m_clCaptain);
 
 		constraints.gridy = 3;
 		constraints.anchor = GridBagConstraints.NORTH;
-		m_clSetPieceTaker = new PlayerPositionPanel(this, IMatchRoleID.setPieces);
+		m_clSetPieceTaker = new PlayerPositionPanel(this, IMatchRoleID.setPieces, m_weather, m_useWeatherImpact);
 		m_clSetPieceTaker.addSetPiecesIcon();
 		layout.setConstraints(m_clSetPieceTaker, constraints);
 		centerPanel.add(m_clSetPieceTaker);
@@ -482,37 +488,37 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridx = 0;
 		constraints.gridy = 6;
 		constraints.gridwidth = 1;
-		m_clSubstKeeper1 = new PlayerPositionPanel(this, IMatchRoleID.substGK1);
+		m_clSubstKeeper1 = new PlayerPositionPanel(this, IMatchRoleID.substGK1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstKeeper1, constraints);
 		centerPanel.add(m_clSubstKeeper1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstKeeper1);
 
 		constraints.gridx = 1;
-		m_clSubstCD1 = new PlayerPositionPanel(this, IMatchRoleID.substCD1);
+		m_clSubstCD1 = new PlayerPositionPanel(this, IMatchRoleID.substCD1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstCD1, constraints);
 		centerPanel.add(m_clSubstCD1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstCD1);
 
 		constraints.gridx = 2;
-		m_clSubstWB1 = new PlayerPositionPanel(this, IMatchRoleID.substWB1);
+		m_clSubstWB1 = new PlayerPositionPanel(this, IMatchRoleID.substWB1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstWB1, constraints);
 		centerPanel.add(m_clSubstWB1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstWB1);
 
 		constraints.gridx = 3;
-		m_clSubstIM1 = new PlayerPositionPanel(this, IMatchRoleID.substIM1);
+		m_clSubstIM1 = new PlayerPositionPanel(this, IMatchRoleID.substIM1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstIM1, constraints);
 		centerPanel.add(m_clSubstIM1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM1);
 
 		constraints.gridx = 4;
-		m_clSubstFwd1= new PlayerPositionPanel(this, IMatchRoleID.substFW1);
+		m_clSubstFwd1= new PlayerPositionPanel(this, IMatchRoleID.substFW1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstFwd1, constraints);
 		centerPanel.add(m_clSubstFwd1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd1);
 
 		constraints.gridx = 5;
-		m_clSubstWI1 = new PlayerPositionPanel(this, IMatchRoleID.substWI1);
+		m_clSubstWI1 = new PlayerPositionPanel(this, IMatchRoleID.substWI1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstWI1, constraints);
 		centerPanel.add(m_clSubstWI1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstWI1);
@@ -525,32 +531,32 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		constraints.gridx = 0;
 		constraints.gridy = 7;
-		m_clSubstKeeper2 = new PlayerPositionPanel(this, IMatchRoleID.substGK2);
+		m_clSubstKeeper2 = new PlayerPositionPanel(this, IMatchRoleID.substGK2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstKeeper2, constraints);
 		centerPanel.add(m_clSubstKeeper2);
 
 		constraints.gridx = 1;
-		m_clSubstCD2 = new PlayerPositionPanel(this, IMatchRoleID.substCD2);
+		m_clSubstCD2 = new PlayerPositionPanel(this, IMatchRoleID.substCD2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstCD2, constraints);
 		centerPanel.add(m_clSubstCD2);
 
 		constraints.gridx = 2;
-		m_clSubstWB2 = new PlayerPositionPanel(this, IMatchRoleID.substWB2);
+		m_clSubstWB2 = new PlayerPositionPanel(this, IMatchRoleID.substWB2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstWB2, constraints);
 		centerPanel.add(m_clSubstWB2);
 
 		constraints.gridx = 3;
-		m_clSubstIM2 = new PlayerPositionPanel(this, IMatchRoleID.substIM2);
+		m_clSubstIM2 = new PlayerPositionPanel(this, IMatchRoleID.substIM2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstIM2, constraints);
 		centerPanel.add(m_clSubstIM2);
 
 		constraints.gridx = 4;
-		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2);
+		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstFwd2, constraints);
 		centerPanel.add(m_clSubstFwd2);
 
 		constraints.gridx = 5;
-		m_clSubstWI2 = new PlayerPositionPanel(this, IMatchRoleID.substWI2);
+		m_clSubstWI2 = new PlayerPositionPanel(this, IMatchRoleID.substWI2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstWI2, constraints);
 		centerPanel.add(m_clSubstWI2);
 

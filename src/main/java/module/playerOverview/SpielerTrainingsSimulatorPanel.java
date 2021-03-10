@@ -323,7 +323,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
         m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
                 + " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true)) + ")");
+                .format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true, null, false)) + ")");
 
         for (int i = 0; i < playerPositionValues.length; i++) {
             showWithCompare(playerPositionValues[i], playerPosition[i]);
@@ -333,15 +333,12 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         tempPlayer.setAgeDays(getAgeDays());
         tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
         tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
-//        m_jpEPV.setText(java.text.NumberFormat.getCurrencyInstance()
-//        		.format(HOVerwaltung.instance().getModel().getEPV()
-//        		.getPrice(new EPVData(tempPlayer))));
     }
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
 
         labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(tempPlayer.calcPosValue(playerPosition, true)));
+                .format(tempPlayer.calcPosValue(playerPosition, true, null, false)));
 
 
         byte[] alternativePosition = tempPlayer.getAlternativeBestPositions();
@@ -354,8 +351,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             }
         }
 
-        labelEntry.getRight().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true)
-                - m_clPlayer.calcPosValue(playerPosition, true), false);
+        labelEntry.getRight().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true, null, false)
+                - m_clPlayer.calcPosValue(playerPosition, true, null, false), false);
     }
 
     private int getAge() {

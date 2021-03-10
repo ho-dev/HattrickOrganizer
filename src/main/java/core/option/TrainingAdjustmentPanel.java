@@ -17,6 +17,7 @@ import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import static java.lang.Float.parseFloat;
 
 
 /**
@@ -152,7 +153,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
 	public void keyReleased(KeyEvent e) {
 		
 		try {
-			offset = new Float(m_jtfTextfield.getText());
+			offset = parseFloat(m_jtfTextfield.getText());
 			m_jlTotal.setText(nf.format(offset + base));
 			m_jlTotal.setForeground(ThemeManager.getColor(HOColorName.LABEL_FG));
 			top.refresh(); // Store
