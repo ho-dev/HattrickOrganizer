@@ -25,7 +25,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
 
     private YouthPlayerDetailsColumn[] initColumns() {
         return new YouthPlayerDetailsColumn[]{
-                new YouthPlayerDetailsColumn("ls.youth.player.training.date") {
+                new YouthPlayerDetailsColumn("Datum") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(entry.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -43,7 +43,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(getYouthMatchTypeIcon(entry.getMatchType()), entry.getMatchType().getId(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthPlayerDetailsColumn("ls.youth.player.training.rating") {
+                new YouthPlayerDetailsColumn("Rating") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         return new ColorLabelEntry(entry.getRating(), String.format("%.1f", entry.getRating()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
