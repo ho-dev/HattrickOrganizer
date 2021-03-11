@@ -2,7 +2,7 @@ package module.opponentspy;
 
 import core.constants.player.PlayerSpeciality;
 import core.model.player.IMatchRoleID;
-//import module.opponentspy.OpponentTeam.PlayedPosition;
+
 
 
 public class CalcPlayerBaseProvider {
@@ -145,36 +145,6 @@ public class CalcPlayerBaseProvider {
 				calcPlayer.setSetPieces(20);
 			}
 		}
-	}
-
-	private void setAsCounterDefender(CalcVariables calcPlayer) {
-
-		if (calcPlayer.age < 22) {
-			calcPlayer.setPlaymaking(4);
-			calcPlayer.setDefending(7, 1);
-			calcPlayer.setWing(5);
-			calcPlayer.setPassing(7);
-			calcPlayer.setSetPieces(2);
-		} else if (calcPlayer.age >= 22) {
-			calcPlayer.setPlaymaking(6);
-			calcPlayer.setDefending(15, 1);
-			calcPlayer.setWing(9);
-			calcPlayer.setPassing(15);
-			calcPlayer.setSetPieces(2);
-		} else if (calcPlayer.age >= 27) {
-			calcPlayer.setPlaymaking(6);
-			calcPlayer.setDefending(17, 1);
-			calcPlayer.setWing(9);
-			calcPlayer.setPassing(15);
-			calcPlayer.setSetPieces(2);
-		} else if (calcPlayer.age >= 29) {
-			calcPlayer.setPlaymaking(8);
-			calcPlayer.setDefending(18, 1);
-			calcPlayer.setWing(9);
-			calcPlayer.setPassing(16);
-			calcPlayer.setSetPieces(12);
-		}
-
 	}
 
 	private void setAsCentralDefender(CalcVariables calcPlayer) {

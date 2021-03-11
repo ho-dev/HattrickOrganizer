@@ -127,26 +127,6 @@ class SkillAdjuster {
 		}
 		return ret;
 	}
-	
-	private void adjustMainSkillsOnce(CalcVariables calcPlayer, Direction direction) {
-		double delta = (direction == Direction.Up) ? SKILL_DELTA
-				: (0 - SKILL_DELTA);
-
-		for (Skill skill : calcPlayer.getSkills()) {
-			if (skill.isMainSkill)
-				adjustSkillOnce(skill, delta);
-		}
-	}
-	
-	private void adjustSecondarySkillsOnce(CalcVariables calcPlayer, Direction direction) {
-		double delta = (direction == Direction.Up) ? SKILL_DELTA
-				: (0 - SKILL_DELTA);
-
-		for (Skill skill : calcPlayer.getSkills()) {
-			if (!skill.isMainSkill)
-				adjustSkillOnce(skill, delta);
-		}
-	}
 
 	private boolean adjustSkillOnce(Skill skill, double delta)
 	{

@@ -31,10 +31,9 @@ public class CalcVariables {
 	public int 		calculatedTSI;
 	public int		calculatedWage;
 	public int 		goalkeeperCalculatedWage;
-	public int 		goalkeeperCalculatedTSI;
 
 	public CalcVariables() {
-		skills = new ArrayList<Skill>();
+		skills = new ArrayList<>();
 		skills.add(goalkeeping);
 		skills.add(playmaking);
 		skills.add(defending);
@@ -44,55 +43,10 @@ public class CalcVariables {
 		skills.add(setPieces);
 	}
 
-	public CalcVariables(CalcVariables value) {
-
-		this.age = value.age;
-		this.ageDays = value.ageDays;
-		this.defending = value.defending;
-		this.form = value.form;
-		this.injuryStatus = value.injuryStatus;
-		this.goalkeeping = value.goalkeeping;
-		this.isPlayingAbroad = value.isPlayingAbroad;
-		this.passing = value.passing;
-		this.playmaking = value.playmaking;
-		this.role = value.role;
-		this.scoring = value.scoring;
-		this.setPieces = value.setPieces;
-		this.specialty = value.specialty;
-		this.stamina = value.stamina;
-		this.tsi = value.tsi;
-		this.wage = value.wage;
-		this.wing = value.wing;
-		this.skills = value.skills;
-
-		this.calculatedTSI = value.calculatedTSI;
-		this.calculatedWage = value.calculatedWage;
-		this.goalkeeperCalculatedTSI = value.goalkeeperCalculatedTSI;
-		this.goalkeeperCalculatedWage = value.goalkeeperCalculatedWage;
-
-	}
-
-	public void setSkillPriority(int skillType, int priority) {
-		for (Skill skill : skills) {
-			if (skill.skillType == skillType)
-				skill.priority = priority;
-		}
-	}
-	
 	public List<Skill> getSkills() {
 		return skills;
 	}
-	
-	public void setPrimarySkill(int skillType) {
-		for (Skill skill : skills) {
-			if (skill.skillType == skillType) {
-				skill.isMainSkill = true;
-			} else {
-				skill.isMainSkill = false;
-			}
-		}
-	}
-	
+
 	public double getGoalkeeping() {
 		return goalkeeping.skillValue;
 	}

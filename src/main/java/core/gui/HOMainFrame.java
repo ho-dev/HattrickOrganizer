@@ -218,20 +218,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 	}
 
-//	public static String getVersionString() {
-//		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-//		nf.setMinimumFractionDigits(1);
-//		String txt = nf.format(HO.VERSION);
-//
-//		if (!HO.isRelease()) {
-//			final int r = HO.getRevisionNumber();
-//			if (r >= 1) {
-//				txt += " r" + HO.getRevisionNumber();
-//			}
-//		}
-//
-//		return txt;
-//	}
 
 	/**
 	 * Getter for the singleton HOMainFrame instance.

@@ -1,4 +1,3 @@
-// %1605218128:de.hattrickorganizer.gui.playeroverview%
 package module.playerOverview;
 
 import core.gui.HOMainFrame;
@@ -17,7 +16,6 @@ import javax.swing.*;
  */
 public class SpielerUebersichtsPanel extends ImagePanel {
 
-	private static final long serialVersionUID = -5795792661614081193L;
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
 	private SpielerDetailPanel spielerDetailPanel;

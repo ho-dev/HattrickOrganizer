@@ -13,39 +13,8 @@ public class OppPlayerSkillEstimator {
 		calcPlayerBaseProvider = new CalcPlayerBaseProvider();
 		skillAdjuster = new SkillAdjuster();
 	}
-	
-	public void CalculateSkillsForPlayer(OpponentPlayer player) {
-		
-		if (player == null)
-			return;
-		
-		CalcVariables calcPlayer = CreateCalcPlayerFromOpponent(player);
-		calcPlayerBaseProvider.setBaseSkills(calcPlayer);
-		
-		skillAdjuster.AdjustPlayer(calcPlayer);
-		
-		createPlayer(player, player.getCalculationRole(), calcPlayer);
-		
-	}
-	
-	private CalcVariables CreateCalcPlayerFromOpponent(OpponentPlayer player) {
-		CalcVariables calcPlayer = new CalcVariables();
-		
-		calcPlayer.age = player.getAlter();
-		calcPlayer.ageDays = player.getAgeDays();
-		calcPlayer.form = player.getForm();
-		calcPlayer.injuryStatus = player.isInjured();
-		calcPlayer.isPlayingAbroad = player.isPlayingAbroad();
-		calcPlayer.specialty = player.getPlayerSpecialty();
-		calcPlayer.stamina = player.getKondition();
-		calcPlayer.tsi = player.getTSI();
-		calcPlayer.wage = player.getGehalt();
-		calcPlayer.role = player.getCalculationRole();
 
-		return calcPlayer;
-	}
-
-    public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
+	public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
        			
     	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role, injury_status);
         skillAdjuster.AdjustPlayer(calcPlayer);

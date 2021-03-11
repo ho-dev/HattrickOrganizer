@@ -184,8 +184,12 @@ final class UserConfigurationTable extends AbstractTable {
 			final String storedValue = storedValues.get(key);
 
 			// this will allow to detect further problems
-			if (storedValue == null) HOLogger.instance().error(UserConfigurationTable.class, String.format("parameter %s is not stored in UserConfigurationTable", key));
-			else map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)
+			if (storedValue == null) {
+				HOLogger.instance().error(UserConfigurationTable.class, String.format("parameter %s is not stored in UserConfigurationTable", key));
+			}
+			else {
+				map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)
+			}
 		});
 		obj.setValues(map);
 	}
