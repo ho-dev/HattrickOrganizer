@@ -33,31 +33,41 @@ public class YouthTrainingDevelopmentEntry {
      */
     private Specialty specialty;
 
+    /**
+     * Number of injured weeks
+     */
+    private int injuredLevel;
+
+    /**
+     * Player is suspended (red card or third yellow card)0
+     */
+    private boolean isSuspended;
+
     public YouthTrainingDevelopmentEntry(YouthPlayer player, YouthTraining training) {
         this.training = training;
         this.player = player;
-        this.specialty = findSpecialty();
-        if ( specialty != null){
+        findSpecialty();
+        if (specialty != null) {
             this.player.setSpecialty(specialty);
         }
     }
 
     /**
-     * Check match highlights, if special event of the player is included that indicates his specialty
-     *
-     * @return specialty of the player, null if nothing is found
+     * Check match highlights if special event of the player is included that indicates his specialty
      */
-    private Specialty findSpecialty() {
+    private void findSpecialty() {
         var matchDetails = training.getMatchDetails();
         var highlights = matchDetails.getHighlights().stream()
-                .filter(h->h.getPlayerId()==player.getId()||h.getAssistingPlayerId()==player.getId())
+                .filter(h -> h.getPlayerId() == player.getId() || h.getAssistingPlayerId() == player.getId())
                 .collect(Collectors.toList());
-        for ( var highlight : highlights){
-            if (highlight.getPlayerId()==player.getId()) {
+        for (var highlight : highlights) {
+            if (highlight.getPlayerId() == player.getId()) {
                 switch (highlight.getMatchEventID()) {
+
                     case SE_NO_GOAL_CORNER_HEAD_SPECIALIST:
                     case SE_GOAL_CORNER_HEAD_SPECIALIST:
-                        return Specialty.Head;
+                        this.specialty = Specialty.Head;
+                        break;
 
                     case SE_GOAL_UNPREDICTABLE_OWN_GOAL:
                     case SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN:
@@ -69,14 +79,16 @@ public class YouthTrainingDevelopmentEntry {
                     case SE_NO_GOAL_UNPREDICTABLE_MISTAKE:
                     case SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
                     case SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST:
-                        return Specialty.Unpredictable;
+                        this.specialty = Specialty.Unpredictable;
+                        break;
 
                     case SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE:
                     case SE_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE:
                     case SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE:
                     case SE_POWERFUL_SUFFERS_FROM_SUN:
                     case SE_POWERFUL_THRIVES_IN_RAIN:
-                        return Specialty.Powerful;
+                        this.specialty = Specialty.Powerful;
+                        break;
 
                     case SE_QUICK_LOSES_IN_RAIN:
                     case SE_QUICK_LOSES_IN_SUN:
@@ -85,35 +97,35 @@ public class YouthTrainingDevelopmentEntry {
                     case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
                     case SE_QUICK_SCORES_AFTER_RUSH:
                     case SE_SPEEDY_MISSES_AFTER_RUSH:
-                        return Specialty.Quick;
+                        this.specialty = Specialty.Quick;
+                        break;
 
                     case SE_SUPPORT_PLAYER_BOOST_FAILED:
                     case SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED:
                     case SE_SUPPORT_PLAYER_BOOST_SUCCEEDED:
-                        return Specialty.Support;
-
+                        this.specialty = Specialty.Support;
+                        break;
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
                     case SE_TECHNICAL_SUFFERS_FROM_RAIN:
                     case SE_TECHNICAL_THRIVES_IN_SUN:
-                        return  Specialty.Technical;
+                        this.specialty = Specialty.Technical;
+                        break;
                 }
-            }
-            else {
+            } else {
                 // Analyse assistant
                 switch (highlight.getMatchEventID()) {
                     case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
-                        return Specialty.Quick;
-
+                        this.specialty = Specialty.Quick;
+                        break;
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
                     case SE_WINGER_TO_HEAD_SPEC_SCORES:
-                        return Specialty.Head;
-
+                        this.specialty = Specialty.Head;
+                        break;
                 }
             }
         }
-        return null;
     }
 
     /**
@@ -267,6 +279,26 @@ public class YouthTrainingDevelopmentEntry {
      */
     public String getSpecialtyString() {
         if ( this.specialty != null ) return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
+        return "";
+    }
+
+    public void setInjuryLevel(int injuryLevel) {
+        this.injuredLevel =injuryLevel;
+    }
+
+    public void setIsSuspended(boolean suspended) {
+        this.isSuspended = suspended;
+    }
+
+    public String getSupendedAsString() {
+        if ( isSuspended ) return HOVerwaltung.instance().getLanguageString("ls.youth.isSuspended");
+        return "";
+    }
+
+    public String getInjuredLevelAsString() {
+        if (this.injuredLevel > 0) {
+            return "" + this.injuredLevel;
+        }
         return "";
     }
 }
