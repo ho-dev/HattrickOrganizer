@@ -354,7 +354,7 @@ public class FutureTrainingManager {
 
 	}
 
-
-
-
+	public Player getPlayer() {
+		return this.player;
+	}
 }

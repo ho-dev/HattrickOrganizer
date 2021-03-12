@@ -28,7 +28,7 @@ import javax.swing.table.AbstractTableModel;
 public class OutputTableModel extends AbstractTableModel {
 
     public final static int COL_PLAYER_ID = 11;
-    private List<Player> data = new ArrayList<>();
+    private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
 
     /**
@@ -107,8 +107,8 @@ public class OutputTableModel extends AbstractTableModel {
      * Returns as toolTip for the cell, the last skillup for the proper player
      * and skill
      *
-     * @param rowIndex
-     * @param columnIndex
+     * @param rowIndex row
+     * @param columnIndex column
      * @return toolTip
      */
     public Object getToolTipAt(int rowIndex, int columnIndex) {
@@ -125,9 +125,10 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Player player = data.get(rowIndex);
+        var ftm = data.get(rowIndex);
+        var player = ftm.getPlayer();
 
-        FutureTrainingManager ftm = new FutureTrainingManager(player, this.model.getFutureTrainings());
+        //FutureTrainingManager ftm = new FutureTrainingManager(player, this.model.getFutureTrainings());
 
         // Spielername
         // Spieleralter
@@ -154,7 +155,10 @@ public class OutputTableModel extends AbstractTableModel {
      * Refill the table with the new training based on the last changes
      */
     public void fillWithData() {
-        this.data = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        for ( var p : HOVerwaltung.instance().getModel().getCurrentPlayers()){
+            this.data.add(new FutureTrainingManager(p, this.model.getFutureTrainings()));
+        }
+        //this.data = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
         fireTableDataChanged();
     }
 
