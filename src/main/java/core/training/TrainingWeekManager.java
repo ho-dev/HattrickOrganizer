@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 
@@ -33,15 +34,11 @@ public class TrainingWeekManager {
 	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
 	 */
 	public TrainingWeekManager(Instant startDate, boolean includeUpcomingTrainings, boolean includeMatches) {
-		if(HOVerwaltung.instance().getModel() == null) {
-		HOLogger.instance().error(this.getClass(), "model not yet initialized");
+		if (HOVerwaltung.instance().getModel() == null) {
+			HOLogger.instance().error(this.getClass(), "model not yet initialized");
+		} else {
+			getNextTrainingDate();
 		}
-		else{
-			if (cl_NextTrainingDate == null) {
-					cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
-				    cl_LastUpdateDate = DBManager.instance().getMaxHrf().getDatum().toInstant();
-				}
-			}
 
 		m_StartDate = startDate;
 		m_IncludeUpcomingTrainings = includeUpcomingTrainings;
@@ -56,11 +53,10 @@ public class TrainingWeekManager {
 		cl_NextTrainingDate = null;
 	}
 
-
 	public static TrainingPerWeek getNextWeekTraining(){
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-		String refDate = formatter.format(cl_NextTrainingDate);
+		String refDate = formatter.format(getNextTrainingDate());
 		String sql = String.format("""
 					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
 					FROM XTRADATA
@@ -110,6 +106,14 @@ public class TrainingWeekManager {
 		}
 
 		return null;
+	}
+
+	private static Instant getNextTrainingDate() {
+		if (cl_NextTrainingDate == null) {
+			cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
+			cl_LastUpdateDate = DBManager.instance().getMaxHrf().getDatum().toInstant();
+		}
+		return cl_NextTrainingDate;
 	}
 
 	/**

@@ -222,10 +222,12 @@ public class TrainingPerPlayer  {
 		}
 
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
-		if (skill == wt.getPrimaryTrainingSkill()) {
-			ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
-		} else if (skill == wt.getSecondaryTrainingSkill()) {
-			ret += wt.getTrainingAlternativeFormula( skillValue, this, false);
+		if ( wt != null ) {
+			if (skill == wt.getPrimaryTrainingSkill()) {
+				ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
+			} else if (skill == wt.getSecondaryTrainingSkill()) {
+				ret += wt.getTrainingAlternativeFormula(skillValue, this, false);
+			}
 		}
 
 		if (ret > 1) ret = 1; // limit 1
@@ -236,7 +238,7 @@ public class TrainingPerPlayer  {
 						"; " + PlayerSkill.toString(skill) +
 						"=" + skillValueBeforeTraining +
 						"; Minutes=" + this.logTrainingMinutes() +
-						"; " + wt._Name + "training=" + ret
+						"; " + (wt!=null?wt._Name:"unknown") + " training=" + ret
 		);
 
 		return ret;
