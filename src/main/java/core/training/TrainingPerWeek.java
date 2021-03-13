@@ -46,12 +46,7 @@ public class TrainingPerWeek  {
         o_Source = source;
 
         if (o_includeMatches) {
-            // Loading matches played the week preceding the training date --------------------------
-            var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-            String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
-            String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
-            o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
-            o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
+            loadMatches();
         }
     }
 
@@ -186,5 +181,14 @@ public class TrainingPerWeek  {
 
     public void setTrainingAssistantLevel(int trainingAssistantsLevel) {
         this.o_TrainingAssistantsLevel=trainingAssistantsLevel;
+    }
+
+    public void loadMatches() {
+        // Loading matches played the week preceding the training date --------------------------
+        var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+        String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
+        String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
+        o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
+        o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
     }
 }

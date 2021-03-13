@@ -116,14 +116,14 @@ public class TrainingWeekManager {
 	 * Create the list of trainings from DB but excluding 'Trainings' table
 	 *  missing weeks are created by duplicating previous entry
 	 */
-	private List<TrainingPerWeek> createTrainingListFromHRF(boolean includeMatches){
+	private List<TrainingPerWeek> createTrainingListFromHRF(boolean includeMatches) {
 
-		List<TrainingPerWeek>  trainings = new ArrayList<>();
+		List<TrainingPerWeek> trainings = new ArrayList<>();
 
-		HashMap<Instant, TrainingPerWeek>  trainingsInDB = createTPWfromDBentries();
+		HashMap<Instant, TrainingPerWeek> trainingsInDB = createTPWfromDBentries();
 		int trainingsSize;
 
-		if (m_StartDate.isAfter(cl_NextTrainingDate)){
+		if (m_StartDate.isAfter(cl_NextTrainingDate)) {
 			HOLogger.instance().error(this.getClass(), "It was assumed that start date will always be before next training date in database");
 			return trainings;
 		}
@@ -133,30 +133,30 @@ public class TrainingWeekManager {
 
 		HTDatetime dtiTrainingDate = new HTDatetime(cl_NextTrainingDate);
 
-		ZonedDateTime zdtCurrDate =  dtiTrainingDate.getHattrickTime().minus(nbWeeks * 7, ChronoUnit.DAYS);
+		ZonedDateTime zdtCurrDate = dtiTrainingDate.getHattrickTime().minus(nbWeeks * 7, ChronoUnit.DAYS);
 
 		Instant currDate = zdtCurrDate.toInstant();
 
-		while((currDate.isBefore(cl_NextTrainingDate) || currDate.equals(cl_NextTrainingDate))){
+		while ((currDate.isBefore(cl_NextTrainingDate) || currDate.equals(cl_NextTrainingDate))) {
 
-			if ((! m_IncludeUpcomingTrainings) && (HTDatetime.isAfterLastUpdate(zdtCurrDate))){
+			if ((!m_IncludeUpcomingTrainings) && (HTDatetime.isAfterLastUpdate(zdtCurrDate))) {
 				break;
 			}
 
-			if (trainingsInDB.containsKey(currDate)){
-				// TODO includeMatches
-				trainings.add(trainingsInDB.get(currDate));
-			}
-			else{
+			if (trainingsInDB.containsKey(currDate)) {
+				var training = trainingsInDB.get(currDate);
+				if (includeMatches) {
+					training.loadMatches();
+				}
+				trainings.add(training);
+			} else {
 				trainingsSize = trainings.size();
-				if(trainingsSize != 0)
-				{
+				if (trainingsSize != 0) {
 					var previousTraining = trainings.get(trainingsSize - 1);
 					var tpw = new TrainingPerWeek(currDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(), previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(),
 							DBDataSource.GUESS, includeMatches);
 					trainings.add(tpw);
-				}
-				else{
+				} else {
 					var tpw = new TrainingPerWeek(currDate, -1, 0, 0, 0, 0,
 							DBDataSource.GUESS, includeMatches);
 					trainings.add(tpw);
@@ -168,9 +168,7 @@ public class TrainingWeekManager {
 		}
 
 		return trainings;
-
 	}
-
 
 	/**
 	 * Fetch trainings information from database (excl. Training table)
