@@ -155,10 +155,10 @@ public class OutputTableModel extends AbstractTableModel {
      * Refill the table with the new training based on the last changes
      */
     public void fillWithData() {
+        this.data = new ArrayList<>();
         for ( var p : HOVerwaltung.instance().getModel().getCurrentPlayers()){
             this.data.add(new FutureTrainingManager(p, this.model.getFutureTrainings()));
         }
-        //this.data = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
         fireTableDataChanged();
     }
 
