@@ -235,12 +235,22 @@ public class TrainingPerPlayer  {
 						"; Age=" + _Player.getAlter() +
 						"; " + PlayerSkill.toString(skill) +
 						"=" + skillValueBeforeTraining +
-						"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
-						";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
-						";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
+						"; Minutes=" + this.logTrainingMinutes() +
 						"; " + wt._Name + "training=" + ret
 		);
 
 		return ret;
+	}
+
+	private String logTrainingMinutes() {
+		if ( this.getTrainingPair() != null){
+			var duration = this.getTrainingPair().getTrainingDuration();
+			if ( duration != null){
+				return duration.getFullTrainingMinutes() +
+						";" + duration.getPartlyTrainingMinutes() +
+						";" + duration.getOsmosisTrainingMinutes();
+			}
+		}
+		return "0;0;0";
 	}
 }

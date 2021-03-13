@@ -144,6 +144,7 @@ public class TrainingWeekManager {
 			}
 
 			if (trainingsInDB.containsKey(currDate)){
+				// TODO includeMatches
 				trainings.add(trainingsInDB.get(currDate));
 			}
 			else{
