@@ -33,21 +33,23 @@ final class DBUpdater {
 		int version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME)).getDBVersion();
 
 		if (version != DBVersion) {
-			// We upgrade database from version 300 (HO 3.0)
-			if (version < 300){
-				HOLogger.instance().log(getClass(), "DB version " + DBVersion + " is too old");
-				try {
-					JOptionPane.showMessageDialog(null,
-							"DB is too old.\nPlease update first to HO! 3.0", "Error",
-							JOptionPane.ERROR_MESSAGE);
-				} catch (Exception e) {
-					HOLogger.instance().log(getClass(), e);
-				}
-				System.exit(0);
-			}
-
 			try {
-				switch (version) { // hint: fall through (no breaks) is intended
+				switch (version) {
+					default:
+						// Unsupported database version
+						// We upgrade database from version 300 (HO 3.0)
+						HOLogger.instance().log(getClass(), "DB version " + version + " is too old");
+						try {
+							JOptionPane.showMessageDialog(null,
+									"DB is too old.\nPlease update first to HO! 3.0", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} catch (Exception e) {
+							HOLogger.instance().log(getClass(), e);
+						}
+						System.exit(0);
+						break;
+
+					// hint: fall through (no breaks) is intended
 					case 301:
 						updateDBv300();  // Bug#509 requires another update run of v300
 						updateDBv301(DBVersion);
@@ -113,13 +115,13 @@ final class DBUpdater {
 		}
 
 		AbstractTable matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
-		matchDetailsTable.tryAddColumn("HomeFormation","VARCHAR (5)");
-		matchDetailsTable.tryAddColumn("AwayFormation","VARCHAR (5)");
+		matchDetailsTable.tryAddColumn("HomeFormation", "VARCHAR (5)");
+		matchDetailsTable.tryAddColumn("AwayFormation", "VARCHAR (5)");
 		matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
 		AbstractTable basicsTable = dbManager.getTable(BasicsTable.TABLENAME);
-		basicsTable.tryAddColumn("YouthTeamName","VARCHAR (127)");
-		basicsTable.tryAddColumn("YouthTeamID","INTEGER");
+		basicsTable.tryAddColumn("YouthTeamName", "VARCHAR (127)");
+		basicsTable.tryAddColumn("YouthTeamID", "INTEGER");
 
 		AbstractTable aufstellungTable = dbManager.getTable(AufstellungTable.TABLENAME);
 		aufstellungTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
@@ -148,8 +150,8 @@ final class DBUpdater {
 		}
 
 		AbstractTable youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
-		for ( var skill: YouthPlayer.skillIds) {
-			youthplayerTable.tryAddColumn(skill+"Top3", "BOOLEAN");
+		for (var skill : YouthPlayer.skillIds) {
+			youthplayerTable.tryAddColumn(skill + "Top3", "BOOLEAN");
 		}
 
 		if (!tableExists(TeamsLogoTable.TABLENAME)) {
@@ -157,10 +159,9 @@ final class DBUpdater {
 		}
 
 		// Upgrade TRAINING table =================================================================================
-		if ( columnExistsInTable("COACH_LEVEL", TrainingsTable.TABLENAME)) {
+		if (columnExistsInTable("COACH_LEVEL", TrainingsTable.TABLENAME)) {
 			HOLogger.instance().debug(getClass(), "Upgrade of training table was already performed ... process skipped !");
-		}
-		else {
+		} else {
 			// Step 1. Add new columns in TRAINING table ===========================
 			var trainingTable = dbManager.getTable(TrainingsTable.TABLENAME);
 			trainingTable.tryAddColumn("COACH_LEVEL", "INTEGER");
@@ -250,13 +251,12 @@ final class DBUpdater {
 		}
 
 		// Upgrade FutureTraining table ======================================================================================
-		if ( columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
+		if (columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
 			HOLogger.instance().debug(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
-		}
-		else{
+		} else {
 			// Step 1. Add new columns in FUTURETRAININGS table ===========================================================
 			var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
-			futureTrainingTable.tryAddColumn("COACH_LEVEL","INTEGER");
+			futureTrainingTable.tryAddColumn("COACH_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_ASSISTANTS_LEVEL", "INTEGER");
 			futureTrainingTable.tryAddColumn("TRAINING_DATE", "TIMESTAMP");
 			futureTrainingTable.tryAddColumn("SOURCE", "INTEGER");
@@ -279,7 +279,7 @@ final class DBUpdater {
 			futureTrainingTable.tryRenameColumn("STAMINATRAININGPART", "STAMINA_SHARE");
 			futureTrainingTable.tryDeleteColumn("SEASON");
 			futureTrainingTable.tryDeleteColumn("WEEK");
-			}
+		}
 
 		updateDBVersion(dbVersion, 500);
 	}
@@ -291,7 +291,7 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
 		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 
-		if ( !columnExistsInTable("SeasonOffset", BasicsTable.TABLENAME)){
+		if (!columnExistsInTable("SeasonOffset", BasicsTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN SeasonOffset INTEGER");
 		}
 
@@ -526,24 +526,20 @@ final class DBUpdater {
 
 	private void updateDBVersion(int DBVersion, int version) {
 		if (version < DBVersion) {
-			if(!HO.isDevelopment()) {
+			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update to " + version + " done. Updating DBVersion");
 				dbManager.saveUserParameter("DBVersion", version);
-			}
-			else {
+			} else {
 				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " done but this is a development version so DBVersion will remain unchanged");
 			}
-		}
-		else if (version == DBVersion){
-			if(!HO.isDevelopment()) {
+		} else if (version == DBVersion) {
+			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update complete, setting DBVersion to " + version);
 				dbManager.saveUserParameter("DBVersion", version);
-			}
-			else {
+			} else {
 				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " complete but this is a development version so DBVersion will remain unchanged");
 			}
-		}
-		else {
+		} else {
 			HOLogger.instance().error(DBUpdater.class,
 					"Error trying to set DB version to unidentified value:  " + version
 							+ " (isDevelopment=" + HO.isDevelopment() + ")");
@@ -555,7 +551,7 @@ final class DBUpdater {
 			ResultSet rs = m_clJDBCAdapter.executeQuery("select teamid from basics limit 1");
 			if (rs != null) {
 				rs.first();
-				int ret =  rs.getInt(1);
+				int ret = rs.getInt(1);
 				rs.close();
 				return ret;
 			}
@@ -572,7 +568,7 @@ final class DBUpdater {
 				+ columnName.toUpperCase()
 				+ "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		if ( rs != null )return rs.next();
+		if (rs != null) return rs.next();
 		return false;
 	}
 
@@ -580,8 +576,9 @@ final class DBUpdater {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '"
 				+ tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		if ( rs != null )return rs.next();
-		return false;	}
+		if (rs != null) return rs.next();
+		return false;
+	}
 
 	private void resetUserColumns() {
 		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
@@ -592,6 +589,4 @@ final class DBUpdater {
 		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
 		m_clJDBCAdapter.executeQuery(sql);
 	}
-
-
 }
