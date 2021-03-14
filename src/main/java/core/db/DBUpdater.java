@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,7 +118,13 @@ final class DBUpdater {
 		AbstractTable matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
 		matchDetailsTable.tryAddColumn("HomeFormation", "VARCHAR (5)");
 		matchDetailsTable.tryAddColumn("AwayFormation", "VARCHAR (5)");
-		matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
+
+		if (matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null")){
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
+			for (var constraint: matchDetailsTable.getConstraintStatements()){
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD " + constraint);
+			}
+		}
 
 		AbstractTable basicsTable = dbManager.getTable(BasicsTable.TABLENAME);
 		basicsTable.tryAddColumn("YouthTeamName", "VARCHAR (127)");
