@@ -20,6 +20,8 @@ final class MatchDetailsTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
+				// TODO: MatchID can no longer be primary key, if we store youth matches in that table too
+				// 		 the pair SourceSystem/MatchID is unique
 				new ColumnDescriptor("MatchID", Types.INTEGER, false, true),
 				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaId", Types.INTEGER, false),
