@@ -65,7 +65,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public void createComponent() {
-        setOpaque(true);
+        setOpaque(false);
     }
 
     @Override

@@ -20,7 +20,7 @@ final class MatchDetailsTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
-				new ColumnDescriptor("MatchID", Types.INTEGER, false, true),
+				new ColumnDescriptor("MatchID", Types.INTEGER, false),
 				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaId", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaName", Types.VARCHAR, false, 256),
@@ -76,6 +76,13 @@ final class MatchDetailsTable extends AbstractTable {
 				new ColumnDescriptor("GuestGoal4", Types.INTEGER, true),
 				new ColumnDescriptor("HomeFormation", Types.VARCHAR, true, 5),
 				new ColumnDescriptor("AwayFormation", Types.VARCHAR, true, 5)
+		};
+	}
+
+	@Override
+	protected  String[] getConstraintStatements() {
+		return new String[]{
+			"CONSTRAINT PK_MatchId PRIMARY KEY (MatchID,SourceSystem)"
 		};
 	}
 	

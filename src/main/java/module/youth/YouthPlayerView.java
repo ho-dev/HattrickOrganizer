@@ -42,12 +42,18 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         var detailsPanel = new JPanel();
         detailsPanel.setLayout(new BorderLayout());
         detailsPanel.add(playerNameLabel, BorderLayout.NORTH);
-        detailsPanel.add(new JScrollPane(playerDetailsTable));
+
+        // Training development table
+        var tablePanel = new JPanel();
+        tablePanel.setLayout(new BorderLayout());
+        tablePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")), BorderLayout.NORTH);
+        tablePanel.add(new JScrollPane(playerDetailsTable));
+        detailsPanel.add(tablePanel);
         verticalSplitPane.setRightComponent(detailsPanel);
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
-        playerOverviewTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 
         var dividerLocation = ModuleConfig.instance().getInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION);

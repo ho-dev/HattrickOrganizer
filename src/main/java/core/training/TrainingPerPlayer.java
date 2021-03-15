@@ -222,10 +222,12 @@ public class TrainingPerPlayer  {
 		}
 
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
-		if (skill == wt.getPrimaryTrainingSkill()) {
-			ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
-		} else if (skill == wt.getSecondaryTrainingSkill()) {
-			ret += wt.getTrainingAlternativeFormula( skillValue, this, false);
+		if ( wt != null ) {
+			if (skill == wt.getPrimaryTrainingSkill()) {
+				ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
+			} else if (skill == wt.getSecondaryTrainingSkill()) {
+				ret += wt.getTrainingAlternativeFormula(skillValue, this, false);
+			}
 		}
 
 		if (ret > 1) ret = 1; // limit 1
@@ -235,12 +237,22 @@ public class TrainingPerPlayer  {
 						"; Age=" + _Player.getAlter() +
 						"; " + PlayerSkill.toString(skill) +
 						"=" + skillValueBeforeTraining +
-						"; Minutes=" + this.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
-						";" + this.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
-						";" + this.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
-						"; " + wt._Name + "training=" + ret
+						"; Minutes=" + this.logTrainingMinutes() +
+						"; " + (wt!=null?wt._Name:"unknown") + " training=" + ret
 		);
 
 		return ret;
+	}
+
+	private String logTrainingMinutes() {
+		if ( this.getTrainingPair() != null){
+			var duration = this.getTrainingPair().getTrainingDuration();
+			if ( duration != null){
+				return duration.getFullTrainingMinutes() +
+						";" + duration.getPartlyTrainingMinutes() +
+						";" + duration.getOsmosisTrainingMinutes();
+			}
+		}
+		return "0;0;0";
 	}
 }

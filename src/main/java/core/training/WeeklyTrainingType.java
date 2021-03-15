@@ -322,6 +322,12 @@ public abstract class WeeklyTrainingType {
 	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
 
 	public double getTrainingAlternativeFormula(int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
+
+		if ( trForPlayer.getTrainingPair() == null ||
+				trForPlayer.getTrainingPair().getTrainingDuration() == null)
+		{
+			return 0;
+		}
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
 		/*
