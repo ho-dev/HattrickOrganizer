@@ -450,18 +450,13 @@ public class Player {
             m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
         }
 
-        //Subskills berechnen
-        //Wird beim Speichern des HRFs aufgerufen, da hier nicht unbedingt die notwendigen Daten vorhanden sind
-        //Alte Offsets holen!
-        //Offsets aus dem aktuellen HRF holen
-        final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance()
-                .getModel();
+        //Subskills calculation
+        //Called when saving the HRF because the necessary data is not available here
+        final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
-
         if (oldPlayer != null) {
             // Training block
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
-
         }
     }
 
@@ -2365,11 +2360,11 @@ public class Player {
         var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = before.getSub4Skill(skill);
+            var valueBeforeTraining = before.getValue4Skill(skill);
+            var valueAfterTraining = this.getValue4Skill(skill);
 
             if (trainingWeeks.size() > 0 &&                 // training happened
                     !this.hasTrainingBlock()) {             // player training is not blocked (no longer possible)
-                var valueBeforeTraining = before.getValue4Skill(skill);
-                var valueAfterTraining = this.getValue4Skill(skill);
                 for (var training : trainingWeeks) {
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if ( trainingPerPlayer != null) {
@@ -2402,6 +2397,10 @@ public class Player {
                 if (valueAfterTraining > valueBeforeTraining) { // Skill up (not yet expected)
                     sub = 0;
                 }
+            }
+            else if (valueAfterTraining< valueBeforeTraining){
+                // skill down without trainings (i don't like monday)
+                sub = .99f;
             }
             this.setSubskill4PlayerSkill(skill, sub);
             this.setSubExperience(experienceSub);
