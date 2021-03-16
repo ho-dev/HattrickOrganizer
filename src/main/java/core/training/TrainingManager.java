@@ -60,7 +60,6 @@ public class TrainingManager implements PropertyChangeListener {
 		HOVerwaltung.instance().addPropertyChangeListener(this);
     }
 
-
 	/**
 	 * compute vector of trainingPerWeeks Vector between 2 dates to be used for subskill recalculation
 	 */

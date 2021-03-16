@@ -60,6 +60,7 @@ final class DBUpdater {
 					case 400:
 					case 499:
 						updateDBv500(DBVersion);
+					case 500:
 				}
 
 			} catch (Exception e) {
