@@ -220,6 +220,10 @@ public class DBManager {
 		return m_clInstance;
 	}
 
+	public static double getDBConfigVersion() {
+		return DBConfigVersion;
+	}
+
 	/**
 	 This method is called
 	 */

@@ -55,9 +55,11 @@ public class TrainingWeekManager {
 
 	public static TrainingPerWeek getNextWeekTraining(){
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-		String refDate = formatter.format(getNextTrainingDate());
-		String sql = String.format("""
+		var nextTrainingDate = getNextTrainingDate();
+		if ( nextTrainingDate != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+			String refDate = formatter.format(nextTrainingDate);
+			String sql = String.format("""
 					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
 					FROM XTRADATA
 					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
@@ -69,49 +71,51 @@ public class TrainingWeekManager {
 					WHERE XTRADATA.TRAININGDATE > '%s'""", refDate);
 
 
-		int trainType, trainIntensity, trainStaminaPart, coachLevel, trainingAssistantLevel;
-		Instant trainingDate;
+			int trainType, trainIntensity, trainStaminaPart, coachLevel, trainingAssistantLevel;
+			Instant trainingDate;
 
-		try {
+			try {
 
-			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
-			final ResultSet rs = ijdbca.executeQuery(sql);
-			if(! rs.last()){
-				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
-				return null;
-			}
+				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
+				final ResultSet rs = ijdbca.executeQuery(sql);
+				if (!rs.last()) {
+					HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+					return null;
+				}
 
-			int numRows = rs.getRow();
+				int numRows = rs.getRow();
 
-			if(numRows != 1){
-				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
-				return null;
-			}
+				if (numRows != 1) {
+					HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+					return null;
+				}
 
-			rs.beforeFirst();
+				rs.beforeFirst();
 
-			while (rs.next()) {
-				trainType = rs.getInt("TRAININGSART");
-				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
-				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
-				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-				coachLevel = rs.getInt("TRAINER");
-				trainingAssistantLevel = rs.getInt("COTRAINER");
-				return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, DBDataSource.HRF, true);
+				while (rs.next()) {
+					trainType = rs.getInt("TRAININGSART");
+					trainIntensity = rs.getInt("TRAININGSINTENSITAET");
+					trainStaminaPart = rs.getInt("STAMINATRAININGPART");
+					trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+					coachLevel = rs.getInt("TRAINER");
+					trainingAssistantLevel = rs.getInt("COTRAINER");
+					return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
+							coachLevel, DBDataSource.HRF, true);
+				}
+			} catch (Exception e) {
+				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining():  " + e);
 			}
 		}
-		catch (Exception e) {
-			HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining():  " + e);
-		}
-
 		return null;
 	}
 
 	private static Instant getNextTrainingDate() {
 		if (cl_NextTrainingDate == null) {
-			cl_NextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate().toInstant();
-			cl_LastUpdateDate = DBManager.instance().getMaxHrf().getDatum().toInstant();
+			var date = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+			if ( date != null ) {
+				cl_NextTrainingDate = date.toInstant();
+				cl_LastUpdateDate = DBManager.instance().getMaxHrf().getDatum().toInstant();
+			}
 		}
 		return cl_NextTrainingDate;
 	}
@@ -123,6 +127,8 @@ public class TrainingWeekManager {
 	private List<TrainingPerWeek> createTrainingListFromHRF(boolean includeMatches) {
 
 		List<TrainingPerWeek> trainings = new ArrayList<>();
+
+		if ( cl_NextTrainingDate==null) return  trainings;	// initial call (no data downloaded yet)
 
 		HashMap<Instant, TrainingPerWeek> trainingsInDB = createTPWfromDBentries();
 		int trainingsSize;

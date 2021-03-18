@@ -74,8 +74,14 @@ public class HOModel {
             o_hrf = new HRF(0);
         } else {
             final HRF[] hrfs = DBManager.instance().getAllHRFs(id, id, false);
-            o_hrf = hrfs[0];
-            o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
+            if ( hrfs.length > 0 ) {
+                o_hrf = hrfs[0];
+                o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
+            }
+            else {
+                // not the first Start, but no downloads yet
+                o_hrf = new HRF(0);
+            }
         }
 
         setCurrentPlayers(DBManager.instance().getSpieler(id));
