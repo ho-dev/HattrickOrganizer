@@ -2378,6 +2378,7 @@ public class Player {
                             }
                         }
                         else if ( sub < 0 ){
+                            // TODO: check if skill down day was before training or after. if skill is after training set sub =0 and don't decrement valueBeforeTraining
                             if ( valueAfterTraining < valueBeforeTraining){ // OK
                                 valueBeforeTraining--;
                                 sub += 1.;
