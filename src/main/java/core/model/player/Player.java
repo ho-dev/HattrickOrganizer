@@ -2363,11 +2363,25 @@ public class Player {
             var valueBeforeTraining = before.getValue4Skill(skill);
             var valueAfterTraining = this.getValue4Skill(skill);
 
+            /*
+                TODO: handle skill downs independently from training weeks
+                if trainingWeeks size == 0 and previous hrf was before monday (skill down day) and current hrf is not before monday
+                    calc skill downs
+            */
             if (trainingWeeks.size() > 0 &&                 // training happened
                     !this.hasTrainingBlock()) {             // player training is not blocked (no longer possible)
                 for (var training : trainingWeeks) {
+
+                    /*
+                        TODO: handle skill downs independently from training weeks
+                        if current hrf is not before training's week monday
+                            calc skill downs
+                    */
+
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if ( trainingPerPlayer != null) {
+
+                        //  TODO remove calc skill downs from calcSubskillIncrement
                         sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
                         if (sub > 1) { // Skill up expected
                             if (valueAfterTraining > valueBeforeTraining) { // OK
@@ -2378,7 +2392,6 @@ public class Player {
                             }
                         }
                         else if ( sub < 0 ){
-                            // TODO: check if skill down day was before training or after. if skill is after training set sub =0 and don't decrement valueBeforeTraining
                             if ( valueAfterTraining < valueBeforeTraining){ // OK
                                 valueBeforeTraining--;
                                 sub += 1.;
