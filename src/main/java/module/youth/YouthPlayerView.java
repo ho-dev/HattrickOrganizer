@@ -26,7 +26,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     private TableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
-    private JEditorPane playerScoutCommentField;
+    private JTextPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
     private TableSorter playerDetailsTableSorter;
@@ -41,17 +41,39 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
-        var detailsPanel = new JPanel();
-        detailsPanel.setLayout(new BorderLayout());
-        detailsPanel.add(playerNameLabel, BorderLayout.NORTH);
+        playerScoutCommentField = new JTextPane();
+        playerScoutCommentField.setContentType("text/html");
+        playerScoutCommentField.setEditable(false);
+
+        var detailsPanel = new JPanel(new GridBagLayout());
+        var constraints = new GridBagConstraints();
+        //constraints.gridwidth=2;
+        constraints.fill=GridBagConstraints.HORIZONTAL;
+        constraints.weightx=1;
+        constraints.weighty=0;
+        constraints.gridx=0;
+        constraints.gridy=0;
+        detailsPanel.add(playerNameLabel, constraints);
+        constraints.gridy++;
+        detailsPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), constraints);
+        constraints.gridy++;
+        detailsPanel.add(playerScoutCommentField, constraints);
 
         // Training development table
         var tablePanel = new JPanel();
         tablePanel.setLayout(new BorderLayout());
         tablePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")), BorderLayout.NORTH);
         tablePanel.add(new JScrollPane(playerDetailsTable));
-        detailsPanel.add(tablePanel);
-        verticalSplitPane.setRightComponent(detailsPanel);
+
+        constraints.gridx=0;
+        constraints.gridy++;
+        //constraints.gridwidth=2;
+        constraints.fill=GridBagConstraints.HORIZONTAL;
+        constraints.weightx=1;
+        constraints.weighty=0;
+
+        detailsPanel.add(tablePanel, constraints);
+        verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
@@ -120,9 +142,25 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
+            playerScoutCommentField.setText(getScoutComment(player));
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
         }
+    }
+
+    private String getScoutComment(YouthPlayer player) {
+        var ret = new StringBuilder("<html>");
+        player.getScoutComments().stream()
+                .sorted(Comparator.comparingInt(YouthPlayer.ScoutComment::getIndex))
+                .forEach(i->ret.append(formatLine(i.getText())));
+        return ret.toString();
+    }
+
+    private String formatLine(String text) {
+        var ret = new StringBuilder(text);
+        /*if ( !text.endsWith("&nbsp;")) */
+        ret.append("<br/>");
+        return ret.toString();
     }
 
     private int getOrderByColumn() {
