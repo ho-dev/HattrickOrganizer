@@ -235,10 +235,10 @@ public class TrainingPerPlayer  {
 		HOLogger.instance().info(this.getClass(),
 				_Player.getLastName() +
 						"; Age=" + _Player.getAlter() +
-						"; " + PlayerSkill.toString(skill) +
-						"=" + skillValueBeforeTraining +
 						"; Minutes=" + this.logTrainingMinutes() +
-						"; " + (wt!=null?wt._Name:"unknown") + " training=" + ret
+						"; Training: " + (wt!=null?wt._Name:"unknown") +
+						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
+						" Increment=" + ret
 		);
 
 		return ret;

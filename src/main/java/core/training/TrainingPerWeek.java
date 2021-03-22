@@ -8,6 +8,8 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.util.DateTimeUtils;
 
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
@@ -190,5 +192,10 @@ public class TrainingPerWeek  {
         String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
         o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
         o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
+    }
+
+    public boolean skillDropDayIsBetween(Instant from, Instant to) {
+        var skillDropDay = o_TrainingDate.minus(Duration.ofHours(7*12)); // half week. TODO: check exact time difference
+        return from.isBefore(skillDropDay) && !to.isBefore(skillDropDay);
     }
 }

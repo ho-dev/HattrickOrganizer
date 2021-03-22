@@ -22,6 +22,7 @@ import core.util.HelperWrapper;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -2363,27 +2364,30 @@ public class Player {
             var valueBeforeTraining = before.getValue4Skill(skill);
             var valueAfterTraining = this.getValue4Skill(skill);
 
-            if (trainingWeeks.size() > 0 &&                 // training happened
-                    !this.hasTrainingBlock()) {             // player training is not blocked (no longer possible)
+            if (trainingWeeks.size() > 0) {
                 for (var training : trainingWeeks) {
+
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if ( trainingPerPlayer != null) {
-                        sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
-                        if (sub > 1) { // Skill up expected
-                            if (valueAfterTraining > valueBeforeTraining) { // OK
-                                valueBeforeTraining++;
-                                sub -= 1.;
-                            } else {                                        // No skill up
-                                sub = 0.99f;
-                            }
-                        }
-                        else if ( sub < 0 ){
-                            if ( valueAfterTraining < valueBeforeTraining){ // OK
-                                valueBeforeTraining--;
-                                sub += 1.;
-                            }
-                            else {                                          // No skill down
-                                sub = 0;
+
+                        if ( !this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
+
+                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
+
+                            if (sub > 1) { // Skill up expected
+                                if (valueAfterTraining > valueBeforeTraining) { // OK
+                                    valueBeforeTraining++;
+                                    sub -= 1.;
+                                } else {                                        // No skill up
+                                    sub = 0.99f;
+                                }
+                            } else if (sub < 0) {
+                                if (valueAfterTraining < valueBeforeTraining) { // OK
+                                    valueBeforeTraining--;
+                                    sub += 1.;
+                                } else {                                        // No skill down
+                                    sub = 0;
+                                }
                             }
                         }
 
@@ -2398,10 +2402,26 @@ public class Player {
                     sub = 0;
                 }
             }
-            else if (valueAfterTraining< valueBeforeTraining){
-                // skill down without trainings (i don't like monday)
+
+            // Handle skill drops that happens the monday after training date
+            if ( SkillDrops.instance().isActive() &&
+                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(before.getHrfDate().toInstant(), this.getHrfDate().toInstant()))
+            {
+                // calc another skill down
+                sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;
+                if (sub < 0) {
+                    if (valueAfterTraining < valueBeforeTraining) { // OK
+                        valueBeforeTraining--;
+                        sub += 1.;
+                    } else {                                        // No skill down from Hattrick
+                        sub = 0;
+                    }
+                }
+            }
+            else if (valueAfterTraining < valueBeforeTraining) {
                 sub = .99f;
             }
+
             this.setSubskill4PlayerSkill(skill, sub);
             this.setSubExperience(experienceSub);
         }
