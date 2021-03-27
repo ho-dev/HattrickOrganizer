@@ -189,6 +189,8 @@ public class TrainingWeekManager {
 		HashMap<Instant, TrainingPerWeek> output = new HashMap<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 		String startDate = formatter.format(m_StartDate);
+		// TODO: https://github.com/akasolace/HO/issues/987
+		// use min(HRF_ID) in inner join and TRAININGDATE-7days
 		String sql = String.format("""
 					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
 					FROM XTRADATA
