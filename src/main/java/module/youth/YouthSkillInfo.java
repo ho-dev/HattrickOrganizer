@@ -32,6 +32,12 @@ public class YouthSkillInfo {
     private Integer startLevel;
 
     /**
+     * Range of possible start values
+     * if no scout info of start level is given the range will be limited by the first occurrence of a current value
+     */
+    private SkillRange startValueRange=new SkillRange();
+
+    /**
      * Maximum reachable skill level (potential)
      * null as long as not known
      */
@@ -96,6 +102,10 @@ public class YouthSkillInfo {
             } else if (currentValue > currentLevel + 1) {
                 this.currentValue = currentLevel + 0.99;
             }
+
+            if ( startValueRange.getMax() > currentLevel + 1){
+                startValueRange.setMax(currentLevel+1);
+            }
         }
 
         if (startLevel != null) {
@@ -154,7 +164,16 @@ public class YouthSkillInfo {
 
     public void setStartLevel(Integer startLevel) {
         this.startLevel = startLevel;
+        if ( startLevel != null ) this.startValueRange = new SkillRange(startLevel);
         adjustValues();
+    }
+
+    public SkillRange getStartValueRange(){
+        return this.startValueRange;
+    }
+
+    public void setStartValueRange(SkillRange range){
+        this.startValueRange = range;
     }
 
     public Skills.HTSkillID getSkillID() {
@@ -185,6 +204,44 @@ public class YouthSkillInfo {
         if ( this.max != null) return this.max;
         if ( this.currentLevel != null) return this.currentLevel;
         return 0;
+    }
+
+    // Skill Range class with inclusive minimun and exclusive maximum
+    public static class SkillRange   {
+        private double min;
+        private double max;
+
+        public SkillRange(){this(null);}
+        public SkillRange(Integer level) {
+            if (level != null) {
+                min = level;
+                max = level + 1;
+            } else {
+                min = 0;
+                max = 8.3;
+            }
+        }
+
+        public SkillRange(double min, double max){
+            this.max=max;
+            this.min=min;
+        }
+
+        public double getMin() {
+            return min;
+        }
+
+        public void setMin(double min) {
+            this.min = min;
+        }
+
+        public double getMax() {
+            return max;
+        }
+
+        public void setMax(double max) {
+            this.max = max;
+        }
     }
 }
 

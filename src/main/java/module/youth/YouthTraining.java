@@ -138,6 +138,7 @@ public class YouthTraining {
     public YouthSkillInfo calcSkill(YouthSkillInfo value, YouthPlayer player, MatchLineupTeam team) {
 
         var ret = new YouthSkillInfo(value.getSkillID());
+        ret.setStartValueRange(value.getStartValueRange());
         ret.setMax(value.getMax());
         ret.setIsTop3(value.isTop3());
         ret.setCurrentLevel(value.getCurrentLevel());
