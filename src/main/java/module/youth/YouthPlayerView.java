@@ -26,6 +26,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     private TableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
+    private YouthSkillInfoEditor playerSkillInfoEditors[];
     private JEditorPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
@@ -41,6 +42,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
+        playerSkillInfoEditors = new YouthSkillInfoEditor[YouthPlayer.skillIds.length];
         playerScoutCommentField = new JEditorPane();
         playerScoutCommentField.setContentType("text/html");
         playerScoutCommentField.setEditable(false);
@@ -57,12 +59,31 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(playerNameLabel, constraints);
 
+
+        /*
+                    String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
+                    String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
+                    hov.getLanguageString("ls.youth.skill.max") + ": " + this.skillInfo.getMax() + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.ismaxreached") + ": " + hov.getLanguageString("ls.youth." + this.skillInfo.isMaxReached()) + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.startlevel") + ": " + this.skillInfo.getStartLevel() + "<br>" +
+                    hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + this.skillInfo.getCurrentLevel() +
+                    (this.skillInfo.isTop3()!=null&&this.skillInfo.isTop3()?"<br>" + hov.getLanguageString("ls.youth.skill.istop3"): "") +
+         */
+
+        for ( int i=0; i<YouthPlayer.skillIds.length; i++){
+            var skillInfoEditor = new YouthSkillInfoEditor();
+            playerSkillInfoEditors[i] = skillInfoEditor;
+            constraints = new GridBagConstraints();
+            constraints.gridx=0;
+            constraints.gridy=y++;
+            constraints.weightx=1;
+            constraints.fill=GridBagConstraints.HORIZONTAL;
+            constraints.insets = new Insets(5,5,5,5);
+            detailsPanel.add(skillInfoEditor, constraints );
+        }
+
         // Scout comment panel
         var scoutCommentPanel = new JPanel(new BorderLayout());
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        constraints.insets = new Insets(5,5,5,5);
         scoutCommentPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), BorderLayout.NORTH);
         scoutCommentPanel.add(playerScoutCommentField);
 
@@ -159,6 +180,9 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
+            for ( int i=0; i< YouthPlayer.skillIds.length; i++){
+                playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
+            }
             playerScoutCommentField.setText(getScoutComment(player));
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
