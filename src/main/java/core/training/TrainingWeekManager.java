@@ -92,7 +92,7 @@ public class TrainingWeekManager {
 
 				rs.beforeFirst();
 
-				while (rs.next()) {
+				if (rs.next()) {
 					trainType = rs.getInt("TRAININGSART");
 					trainIntensity = rs.getInt("TRAININGSINTENSITAET");
 					trainStaminaPart = rs.getInt("STAMINATRAININGPART");
@@ -188,9 +188,11 @@ public class TrainingWeekManager {
 
 		HashMap<Instant, TrainingPerWeek> output = new HashMap<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
-		String startDate = formatter.format(m_StartDate);
-		// TODO: https://github.com/akasolace/HO/issues/987
-		// use min(HRF_ID) in inner join and TRAININGDATE-7days
+
+		// for past trainings the first hrf after training date is the best guess
+		// - add one week to next training date of the week
+		// - use min(hrf) here
+		String startDate = formatter.format(m_StartDate.plus(Duration.ofDays(7)));
 		String sql = String.format("""
 					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
 					FROM XTRADATA
@@ -198,8 +200,8 @@ public class TrainingWeekManager {
 					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
 					INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0
 					INNER JOIN (
-					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
-					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
+					     SELECT TRAININGDATE, min(HRF_ID) MIN_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE
+					) IJ1 ON XTRADATA.HRF_ID = IJ1.MIN_HRF_ID
 					WHERE XTRADATA.TRAININGDATE >= '%s'""",startDate);
 
 
@@ -216,7 +218,8 @@ public class TrainingWeekManager {
 				trainType = rs.getInt("TRAININGSART");
 				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
 				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
-				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+				// subtract one week from next training date to get the past week training date
+				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant().minus(Duration.ofDays(7));
 				coachLevel = rs.getInt("TRAINER");
 				trainingAssistantLevel = rs.getInt("COTRAINER");
 				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
