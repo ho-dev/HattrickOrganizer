@@ -35,7 +35,12 @@ public class YouthSkillInfo {
      * Range of possible start values
      * if no scout info of start level is given the range will be limited by the first occurrence of a current value
      */
-    private SkillRange startValueRange=new SkillRange();
+    private SkillRange startValueRange = new SkillRange();
+
+    /**
+     * Range of possible current values
+     */
+    private SkillRange currentValueRange = new SkillRange();
 
     /**
      * Maximum reachable skill level (potential)
@@ -58,7 +63,7 @@ public class YouthSkillInfo {
     /**
      * Scout mentions up to 2 skill info. Both of them belong to the top 3 skills with highest maximum.
      * Information is used to restrict other skill maxima.
-     *
+     * <p>
      * True if skill is one of the skills mentioned by the scout or found maximum is greater than one of the scout infos
      * False if skill maximum is not one of the top 3 maximums
      * null otherwise (not known)
@@ -95,6 +100,8 @@ public class YouthSkillInfo {
             if (currentValue > max + 1) {
                 currentValue = max + 0.99;
             }
+            currentValueRange.lessThan(max+1);
+            startValueRange.lessThan(max+1);
         }
         if (currentLevel != null) {
             if (currentValue < currentLevel) {
@@ -103,9 +110,8 @@ public class YouthSkillInfo {
                 this.currentValue = currentLevel + 0.99;
             }
 
-            if ( startValueRange.getMax() > currentLevel + 1){
-                startValueRange.setMax(currentLevel+1);
-            }
+            startValueRange.lessThan(currentLevel + 1);
+            currentValueRange.between(currentLevel, currentLevel + 1);
         }
 
         if (startLevel != null) {
@@ -115,9 +121,14 @@ public class YouthSkillInfo {
                 this.startValue = startLevel + 0.99;
             }
 
+
             if (currentValue < startValue) {
                 currentValue = startValue;
             }
+
+            startValueRange.between(startLevel, startLevel+1);
+            currentValueRange.greaterEqual(startLevel);
+
         } else if (currentValue < startValue) {
             startValue = currentValue;
         }
@@ -164,15 +175,19 @@ public class YouthSkillInfo {
 
     public void setStartLevel(Integer startLevel) {
         this.startLevel = startLevel;
-        if ( startLevel != null ) this.startValueRange = new SkillRange(startLevel);
+        if (startLevel != null) this.startValueRange = new SkillRange(startLevel);
         adjustValues();
     }
 
-    public SkillRange getStartValueRange(){
+    public SkillRange getStartValueRange() {
         return this.startValueRange;
     }
 
-    public void setStartValueRange(SkillRange range){
+    public SkillRange getCurrentValueRange(){
+        return this.currentValueRange;
+    }
+
+    public void setStartValueRange(SkillRange range) {
         this.startValueRange = range;
     }
 
@@ -181,11 +196,11 @@ public class YouthSkillInfo {
     }
 
     public void addStartValue(double val) {
-        this.startValue+=val;
+        this.startValue += val;
     }
 
     public void setPotential17Value(double val) {
-        this.potential17Value=val;
+        this.potential17Value = val;
     }
 
     public Double getPotential17Value() {
@@ -201,17 +216,20 @@ public class YouthSkillInfo {
     }
 
     public int getMinimumPotential() {
-        if ( this.max != null) return this.max;
-        if ( this.currentLevel != null) return this.currentLevel;
+        if (this.max != null) return this.max;
+        if (this.currentLevel != null) return this.currentLevel;
         return 0;
     }
 
     // Skill Range class with inclusive minimun and exclusive maximum
-    public static class SkillRange   {
+    public static class SkillRange {
         private double min;
         private double max;
 
-        public SkillRange(){this(null);}
+        public SkillRange() {
+            this(null);
+        }
+
         public SkillRange(Integer level) {
             if (level != null) {
                 min = level;
@@ -222,9 +240,9 @@ public class YouthSkillInfo {
             }
         }
 
-        public SkillRange(double min, double max){
-            this.max=max;
-            this.min=min;
+        public SkillRange(double min, double max) {
+            this.max = max;
+            this.min = min;
         }
 
         public double getMin() {
@@ -233,6 +251,7 @@ public class YouthSkillInfo {
 
         public void setMin(double min) {
             this.min = min;
+            if (this.max < min) this.max = min;
         }
 
         public double getMax() {
@@ -241,6 +260,28 @@ public class YouthSkillInfo {
 
         public void setMax(double max) {
             this.max = max;
+            if (this.min >= max) this.min = max;
+        }
+
+        public void lessThan(double limit) {
+            if (this.max > limit) {
+                setMax(limit);
+            }
+        }
+
+        public void between(double min, double max) {
+            if (this.min < min) {
+                setMin(min);
+            }
+            if (this.max>max){
+                setMax(max);
+            }
+        }
+
+        public void greaterEqual(double min) {
+            if ( this.min<min){
+                setMin(min);
+            }
         }
     }
 }

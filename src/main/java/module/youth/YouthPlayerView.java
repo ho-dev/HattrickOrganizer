@@ -59,28 +59,20 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(playerNameLabel, constraints);
 
-
-        /*
-                    String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
-                    String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
-                    hov.getLanguageString("ls.youth.skill.max") + ": " + this.skillInfo.getMax() + "<br>" +
-                    hov.getLanguageString("ls.youth.skill.ismaxreached") + ": " + hov.getLanguageString("ls.youth." + this.skillInfo.isMaxReached()) + "<br>" +
-                    hov.getLanguageString("ls.youth.skill.startlevel") + ": " + this.skillInfo.getStartLevel() + "<br>" +
-                    hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + this.skillInfo.getCurrentLevel() +
-                    (this.skillInfo.isTop3()!=null&&this.skillInfo.isTop3()?"<br>" + hov.getLanguageString("ls.youth.skill.istop3"): "") +
-         */
-
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor();
             playerSkillInfoEditors[i] = skillInfoEditor;
             constraints = new GridBagConstraints();
-            constraints.gridx=0;
-            constraints.gridy=y++;
+            constraints.gridx=i%2;
+            constraints.gridy=y;
+            if ( i%2 == 1 ) y++;
             constraints.weightx=1;
             constraints.fill=GridBagConstraints.HORIZONTAL;
             constraints.insets = new Insets(5,5,5,5);
             detailsPanel.add(skillInfoEditor, constraints );
         }
+
+        y++;
 
         // Scout comment panel
         var scoutCommentPanel = new JPanel(new BorderLayout());
@@ -103,7 +95,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         constraints = new GridBagConstraints();
         constraints.gridx=0;
         constraints.gridy=y++;
-        //constraints.gridwidth=2;
+        constraints.gridwidth=2;
         constraints.fill=GridBagConstraints.HORIZONTAL;
         constraints.weightx=1;
         constraints.weighty=1;
@@ -219,6 +211,11 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     private YouthPlayer getSelectedPlayer() {
         var row = this.playerOverviewTable.getSelectedRow();
+        if ( row < 0 && this.playerOverviewTable.getRowCount() > 0){
+            // init selection
+            this.playerOverviewTable.setRowSelectionInterval(0,0);
+            row = 0;
+        }
         if ( row > -1) {
             var index = playerOverviewTableSorter.getIndex(row);
             var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
