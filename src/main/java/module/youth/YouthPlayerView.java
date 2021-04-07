@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Comparator;
 
 import static java.lang.Math.max;
 import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION;
@@ -25,6 +26,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     private TableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
+    private JEditorPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
     private TableSorter playerDetailsTableSorter;
@@ -39,17 +41,56 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
-        var detailsPanel = new JPanel();
-        detailsPanel.setLayout(new BorderLayout());
-        detailsPanel.add(playerNameLabel, BorderLayout.NORTH);
+        playerScoutCommentField = new JEditorPane();
+        playerScoutCommentField.setContentType("text/html");
+        playerScoutCommentField.setEditable(false);
+
+        var detailsPanel = new JPanel(new GridBagLayout());
+        var constraints = new GridBagConstraints();
+        int y=0;
+        //constraints.gridwidth=2;
+        constraints.fill=GridBagConstraints.HORIZONTAL;
+        constraints.weightx=1;
+        constraints.weighty=0;
+        constraints.gridx=0;
+        constraints.gridy=y++;
+        constraints.insets = new Insets(5,5,5,5);
+        detailsPanel.add(playerNameLabel, constraints);
+
+        // Scout comment panel
+        var scoutCommentPanel = new JPanel(new BorderLayout());
+        constraints = new GridBagConstraints();
+        constraints.gridx=0;
+        constraints.gridy=y++;
+        constraints.insets = new Insets(5,5,5,5);
+        scoutCommentPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), BorderLayout.NORTH);
+        scoutCommentPanel.add(playerScoutCommentField);
+
+        constraints = new GridBagConstraints();
+        constraints.gridx=0;
+        constraints.gridy=y++;
+        constraints.weightx=1;
+        constraints.fill=GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(5,5,5,5);
+        detailsPanel.add(scoutCommentPanel, constraints );
 
         // Training development table
-        var tablePanel = new JPanel();
-        tablePanel.setLayout(new BorderLayout());
+        var tablePanel = new JPanel(new BorderLayout());
         tablePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")), BorderLayout.NORTH);
         tablePanel.add(new JScrollPane(playerDetailsTable));
-        detailsPanel.add(tablePanel);
-        verticalSplitPane.setRightComponent(detailsPanel);
+
+        constraints = new GridBagConstraints();
+        constraints.gridx=0;
+        constraints.gridy=y++;
+        //constraints.gridwidth=2;
+        constraints.fill=GridBagConstraints.HORIZONTAL;
+        constraints.weightx=1;
+        constraints.weighty=1;
+        constraints.anchor=GridBagConstraints.NORTH;
+        constraints.insets = new Insets(5,5,5,5);
+        detailsPanel.add(tablePanel, constraints);
+
+        verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
@@ -118,9 +159,25 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
+            playerScoutCommentField.setText(getScoutComment(player));
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
         }
+    }
+
+    private String getScoutComment(YouthPlayer player) {
+        var ret = new StringBuilder("<html>");
+        player.getScoutComments().stream()
+                .sorted(Comparator.comparingInt(YouthPlayer.ScoutComment::getIndex))
+                .forEach(i->ret.append(formatLine(i.getText())));
+        return ret.toString();
+    }
+
+    private String formatLine(String text) {
+        var ret = new StringBuilder(text);
+        /*if ( !text.endsWith("&nbsp;")) */
+        ret.append("<br/>");
+        return ret.toString();
     }
 
     private int getOrderByColumn() {
