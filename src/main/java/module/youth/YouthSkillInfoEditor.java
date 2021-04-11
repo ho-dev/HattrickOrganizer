@@ -33,8 +33,8 @@ public class YouthSkillInfoEditor extends JPanel {
     }
 
     private JLabel skillLabel = new JLabel();
-    private JSlider skillStartValue = new JSlider(SwingConstants.HORIZONTAL, 0, SliderPos(8.3), 0);
-    private JSlider skillCurrentValue = new JSlider(SwingConstants.HORIZONTAL, 0, SliderPos(8.3), 0);
+    private JSlider skillStartValue = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
+    private JSlider skillCurrentValue = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
 
     public YouthSkillInfoEditor() {
         //super(new BorderLayout());
@@ -66,7 +66,7 @@ public class YouthSkillInfoEditor extends JPanel {
         slider.setMaximum(SliderPos(skillrange.getMax()));
         slider.setValue(SliderPos(value));
 
-        var labelTable = new Hashtable();
+        var labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put(slider.getMinimum(), new JLabel(String.format("%.2f", skillrange.getMin())));
         labelTable.put(slider.getMaximum(), new JLabel(String.format("%.2f", skillrange.getMax())));
         labelTable.put(slider.getValue(), new JLabel(String.format("%.2f", value)));
