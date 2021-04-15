@@ -26,7 +26,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     private TableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
-    private YouthSkillInfoEditor playerSkillInfoEditors[];
+    private YouthSkillInfoEditor[] playerSkillInfoEditors;
     private JEditorPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
@@ -59,21 +59,6 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(playerNameLabel, constraints);
 
-        for ( int i=0; i<YouthPlayer.skillIds.length; i++){
-            var skillInfoEditor = new YouthSkillInfoEditor();
-            playerSkillInfoEditors[i] = skillInfoEditor;
-            constraints = new GridBagConstraints();
-            constraints.gridx=i%2;
-            constraints.gridy=y;
-            if ( i%2 == 1 ) y++;
-            constraints.weightx=1;
-            constraints.fill=GridBagConstraints.HORIZONTAL;
-            constraints.insets = new Insets(5,5,5,5);
-            detailsPanel.add(skillInfoEditor, constraints );
-        }
-
-        y++;
-
         // Scout comment panel
         var scoutCommentPanel = new JPanel(new BorderLayout());
         scoutCommentPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), BorderLayout.NORTH);
@@ -102,6 +87,19 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         constraints.anchor=GridBagConstraints.NORTH;
         constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(tablePanel, constraints);
+
+        for ( int i=0; i<YouthPlayer.skillIds.length; i++){
+            var skillInfoEditor = new YouthSkillInfoEditor();
+            playerSkillInfoEditors[i] = skillInfoEditor;
+            constraints = new GridBagConstraints();
+            constraints.gridx=i%2;
+            constraints.gridy=y;
+            if ( i%2 == 1 ) y++;
+            constraints.weightx=1;
+            constraints.fill=GridBagConstraints.HORIZONTAL;
+            constraints.insets = new Insets(5,5,5,5);
+            detailsPanel.add(skillInfoEditor, constraints );
+        }
 
         verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
 
@@ -190,10 +188,8 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     private String formatLine(String text) {
-        var ret = new StringBuilder(text);
         /*if ( !text.endsWith("&nbsp;")) */
-        ret.append("<br/>");
-        return ret.toString();
+        return text + "<br/>";
     }
 
     private int getOrderByColumn() {

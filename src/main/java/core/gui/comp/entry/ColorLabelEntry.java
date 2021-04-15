@@ -196,6 +196,9 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         setFont(getFont().deriveFont(fontStyle));
     }
 
+    public void deriveFont(int fontStyle, float size){
+        setFont(getFont().deriveFont(fontStyle,size));
+    }
 
     /**
      * Sets the change graphics (For values without sub-skills, e.g. form/stamina/XP...)

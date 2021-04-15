@@ -80,7 +80,7 @@ public class YouthSkillInfoEditor extends JPanel {
 
         skillLabel.setText(HOVerwaltung.instance().getLanguageString(skillInfo.getSkillID().toString()) + ": ");
 
-        // Tag the top 3 skills
+        // TODO: Tag the top 3 skills
         if (skillInfo.isTop3()) skillLabel.setBackground(ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG));
         else skillLabel.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
