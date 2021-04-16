@@ -23,20 +23,6 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
         columns =  initColumns();
     }
 
-    private Color[] cellSkillRatingColor = new Color[]{
-            new Color(255,204,204),
-            new Color(255,255,204),
-            new Color(230,255,204),
-            new Color(0, 255, 0, 100),  // lighter green
-            Color.green
-    };
-
-    private Color getSkillRating(Integer maxSkill){
-        if (  maxSkill != null ) return cellSkillRatingColor[Math.max(0,maxSkill-4)];
-        return Color.white;
-    }
-
-
     private YouthPlayerDetailsColumn[] initColumns() {
         return new YouthPlayerDetailsColumn[]{
                 new YouthPlayerDetailsColumn("Datum") {
@@ -92,43 +78,43 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                 new YouthPlayerDetailsColumn("ls.youth.player.Keeper") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Keeper), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Keeper).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Keeper));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.Defender") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Defender), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Defender).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Defender));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.Playmaker") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Playmaker), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Playmaker).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Playmaker));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.Winger") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Winger), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Winger).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Winger));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.Passing") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Passing), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Passing).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Passing));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.Scorer") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Scorer), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.Scorer).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.Scorer));
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.SetPieces") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.SetPieces), ColorLabelEntry.FG_STANDARD, getSkillRating(entry.getSkills().get(Skills.HTSkillID.SetPieces).getMax()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getSkillValue(Skills.HTSkillID.SetPieces));
                     }
                 },
                 // TODO: Specialty column should include the specialty icon

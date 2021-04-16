@@ -19,6 +19,19 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     private static final int bar_width = 100; // pixels to display skill range from 0 to 9 (8.3)
     private static final int bar_thickness = 12;
 
+    private Color[] cellSkillRatingColor = new Color[]{
+            new Color(255,204,204),         // light red
+            new Color(255,255,160),         // yellow
+            new Color(230,255,204),         // lightest green
+            new Color(0, 255, 0, 100),   // lighter green
+            Color.green
+    };
+
+    private Color getSkillRating(Integer maxSkill){
+        if (  maxSkill != null ) return cellSkillRatingColor[Math.max(0,maxSkill-4)];
+        return Color.white;
+    }
+
     public YouthSkillInfoColumn(YouthSkillInfo info) {
         this.skillInfo = info;
         this.updateComponent();
@@ -41,7 +54,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public JComponent getComponent(boolean isSelected) {
-        setOpaque(false);
+        setBackground(getSkillRating(skillInfo.getMax()));
         return this;
     }
 
@@ -66,7 +79,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public void createComponent() {
-        setOpaque(false);
+        this.setBackground(getSkillRating(this.skillInfo.getMax()));
     }
 
     @Override
@@ -74,12 +87,18 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         this.setToolTipText(createToolTipText());
         this.setText(String.format("%.2f", this.skillInfo.getCurrentValue()));
         this.setHorizontalAlignment(RIGHT);
+        int style = (this.skillInfo.isTop3()) ? Font.BOLD : Font.PLAIN;
+        this.setFont(getFont().deriveFont(style));
+        this.setOpaque(true);
+        this.setBackground(getSkillRating(this.skillInfo.getMax()));
     }
 
     /* draw a color bar */
     @Override
     public void paint(Graphics g) {
+        super.paint(g);
 
+        var bar_thickness = this.getHeight();
         // Draw background
         g.setColor(Color_Background);
         g.fillRect(0, 0, bar_width, bar_thickness);
@@ -94,17 +113,10 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         else xEnd = 83;
         g.fillRect(xStart, 0, xEnd-xStart, bar_thickness);
 
-        // Mark top3 skill
-        xStart = (int) (this.skillInfo.getStartValue() * 10);
-        if ( this.skillInfo.isTop3() != null && this.skillInfo.isTop3()){
-            g.setColor(Color.BLACK);
-            g.drawLine(0,bar_thickness, bar_width, bar_thickness );
-        }
-
         // draw trained range
+        xStart = (int) (this.skillInfo.getStartValue() * 10);
         g.setColor(this.skillInfo.isMaxReached() ? Color_MaxReached : Color_TrainedRange);
         xEnd = (int) (this.skillInfo.getCurrentValue() * 10);
         g.fillRect(xStart, 0, xEnd-xStart+1, bar_thickness);
-        super.paint(g);
     }
 }
