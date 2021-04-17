@@ -48,6 +48,8 @@ public class YouthPlayer {
     private Double rating;
     private Timestamp youthMatchDate;
 
+    private double progressLastMatch=0;
+
     /**
      * current skills of the player
      * mapping skill id to skill info
@@ -390,22 +392,27 @@ public class YouthPlayer {
             trainingDevelopment = new TreeMap<>();
             var model = HOVerwaltung.instance().getModel();
             var teamId = model.getBasics().getYouthTeamId();
+
             // set start skill values (may be edited by the user)
             var skills = getStartSkills();
             var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
             for (var training : trainings) {
                 var keeper = skills.areKeeperSkills();
-                if( keeper != null){
+                if (keeper != null) {
                     skills.setPlayerMaxSkills(keeper);
                     this.currentSkills.setPlayerMaxSkills(keeper);
                 }
                 var team = training.getTeam(teamId);
                 if (team.hasPlayerPlayed(this.id)) {
                     var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
+                    var oldSkills = skills;
                     skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
+                    progressLastMatch = skills.getSkillSum() - oldSkills.getSkillSum();
                     trainingEntry.setInjuryLevel(getInjuryLevelAt(training.getMatchDate()));
                     trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
                     trainingDevelopment.put(training.getMatchDate(), trainingEntry);
+                } else {
+                    progressLastMatch = 0;
                 }
             }
             this.currentSkills = skills;
@@ -536,6 +543,10 @@ public class YouthPlayer {
         if (this.youthMatchDate != null)
             return new SimpleDateFormat("yyyy-MM-dd hh:mm").format(this.getYouthMatchDate());
         return "";
+    }
+
+    public double getProgressLastMatch() {
+        return progressLastMatch;
     }
 
     public static class ScoutComment {

@@ -87,7 +87,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         this.setToolTipText(createToolTipText());
         this.setText(String.format("%.2f", this.skillInfo.getCurrentValue()));
         this.setHorizontalAlignment(RIGHT);
-        int style = (this.skillInfo.isTop3()) ? Font.BOLD : Font.PLAIN;
+        int style = (this.skillInfo.isTop3() != null && this.skillInfo.isTop3()) ? Font.BOLD : Font.PLAIN;
         this.setFont(getFont().deriveFont(style));
         this.setOpaque(true);
         this.setBackground(getSkillRating(this.skillInfo.getMax()));

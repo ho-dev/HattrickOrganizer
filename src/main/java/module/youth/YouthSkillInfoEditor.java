@@ -69,16 +69,16 @@ public class YouthSkillInfoEditor extends JPanel {
         //super(new BorderLayout());
         skillLabel.setOpaque(false);
         this.add(skillLabel);
-        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("startValue:")));
+        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue")+":"));
         this.add(skillStartValue);
-        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("currentValue:")));
+        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue")+":"));
         this.add(skillCurrentValue);
     }
 
     public void setSkillInfo(YouthSkillInfo skillInfo) {
         this.skillInfo = skillInfo;
 
-        skillLabel.setText(HOVerwaltung.instance().getLanguageString(skillInfo.getSkillID().toString()) + ": ");
+        skillLabel.setText(HOVerwaltung.instance().getLanguageString("ls.youth.player." + skillInfo.getSkillID().toString()) + ": ");
 
         // TODO: Tag the top 3 skills
         if (skillInfo.isTop3()) skillLabel.setBackground(ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG));

@@ -143,12 +143,9 @@ public class YouthTrainingDevelopmentEntry {
                 skill.setCurrentLevel(constraint.getCurrentLevel());
                 skill.setMax(constraint.getMax());
                 skill.setMaxReached(constraint.isMaxReached());
-                if ( skill.getStartValue() == 0){
-                    var adjustment = skill.getCurrentValue() - oldVal;
-                    if ( adjustment > 0 ){
-                        player.adjustSkill(skill.getSkillID(), adjustment);
-                        skill.setStartValue(adjustment);
-                    }
+                var adjustment = skill.getCurrentValue() - oldVal;
+                if (adjustment != 0) {
+                    skill.setStartValue(player.adjustSkill(skill.getSkillID(), adjustment));
                 }
             }
         }
@@ -162,6 +159,7 @@ public class YouthTrainingDevelopmentEntry {
      * @param lineupTeam, lineup of the team
      * @return calculated skills
      */
+
     public YouthSkillsInfo calcSkills(YouthSkillsInfo startSkills, YouthSkillsInfo skillConstraints, MatchLineupTeam lineupTeam) {
         if ( this.skills == null){
             this.skills = new YouthSkillsInfo();

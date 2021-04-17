@@ -126,6 +126,12 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry(player.getTrainedSkillSum(), String.format("%.2f", player.getTrainedSkillSum()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
+                new YouthPlayerColumn("ls.youth.player.trainingprogress") {
+                    @Override
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new ColorLabelEntry(player.getProgressLastMatch(), String.format("%.2f", player.getProgressLastMatch()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
                 // TODO: scout information
                 new YouthPlayerColumn("ls.player.id", 0) {
                     @Override
