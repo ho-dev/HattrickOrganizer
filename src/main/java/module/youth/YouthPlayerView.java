@@ -19,7 +19,7 @@ import java.util.Comparator;
 import static java.lang.Math.max;
 import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION;
 
-public class YouthPlayerView extends ImagePanel implements Refreshable, ListSelectionListener {
+public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
 
     private JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
@@ -49,13 +49,10 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
         var detailsPanel = new JPanel(new GridBagLayout());
         var constraints = new GridBagConstraints();
-        int y=0;
-        //constraints.gridwidth=2;
         constraints.fill=GridBagConstraints.HORIZONTAL;
         constraints.weightx=1;
-        constraints.weighty=0;
         constraints.gridx=0;
-        constraints.gridy=y++;
+        constraints.gridy=0;
         constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(playerNameLabel, constraints);
 
@@ -64,12 +61,7 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         scoutCommentPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), BorderLayout.NORTH);
         scoutCommentPanel.add(playerScoutCommentField);
 
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        constraints.weightx=1;
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.gridy++;
         detailsPanel.add(scoutCommentPanel, constraints );
 
         // Training development table
@@ -77,27 +69,21 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         tablePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")), BorderLayout.NORTH);
         tablePanel.add(new JScrollPane(playerDetailsTable));
 
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
+        constraints.gridy++;
         constraints.gridwidth=2;
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.weightx=1;
         constraints.weighty=1;
         constraints.anchor=GridBagConstraints.NORTH;
-        constraints.insets = new Insets(5,5,5,5);
         detailsPanel.add(tablePanel, constraints);
+
+        constraints.anchor=GridBagConstraints.CENTER;
+        constraints.gridwidth=1;
+        constraints.weighty=0;
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor();
             playerSkillInfoEditors[i] = skillInfoEditor;
-            constraints = new GridBagConstraints();
             constraints.gridx=i%2;
-            constraints.gridy=y;
-            if ( i%2 == 1 ) y++;
-            constraints.weightx=1;
-            constraints.fill=GridBagConstraints.HORIZONTAL;
-            constraints.insets = new Insets(5,5,5,5);
+            if ( i%2 == 0 ) constraints.gridy++;
             detailsPanel.add(skillInfoEditor, constraints );
         }
 
