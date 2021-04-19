@@ -36,7 +36,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         super();
 
         playerOverviewTable = new JTable();
-
         var verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         verticalSplitPane.setLeftComponent(new JScrollPane(playerOverviewTable));
 
@@ -79,15 +78,23 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         constraints.gridwidth=1;
         constraints.weighty=0;
 
+        var innerVerticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        innerVerticalSplitPane.setLeftComponent(new JScrollPane(detailsPanel));
+
+        var skillEditorPanel = new JPanel(new GridBagLayout());
+        var skillEditorConstraints = new GridBagConstraints();
+        skillEditorConstraints.anchor=GridBagConstraints.NORTH;
+        skillEditorConstraints.insets = new Insets(5,5,5,5);
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor();
             playerSkillInfoEditors[i] = skillInfoEditor;
-            constraints.gridx=i%2;
-            if ( i%2 == 0 ) constraints.gridy++;
-            detailsPanel.add(skillInfoEditor, constraints );
+            skillEditorConstraints.gridx=i%2;
+            skillEditorPanel.add(skillInfoEditor, skillEditorConstraints );
+            if ( i%2 == 1 ) skillEditorConstraints.gridy++;
         }
 
-        verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
+        innerVerticalSplitPane.setRightComponent(new JScrollPane(skillEditorPanel));
+        verticalSplitPane.setRightComponent(innerVerticalSplitPane);
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
