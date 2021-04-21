@@ -10,8 +10,11 @@ import core.model.player.Player;
 import module.training.Skills;
 
 import javax.swing.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.sql.Timestamp;
+
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
@@ -37,13 +40,13 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.arrival") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(time2Int(player.getArrivalDate()), formatTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(player.getYouthMatchDateAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(time2Int(player.getYouthMatchDate()), formatTime(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {

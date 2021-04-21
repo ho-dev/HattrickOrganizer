@@ -6,6 +6,8 @@ import core.model.HOVerwaltung;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -350,6 +352,16 @@ public abstract class HOTableModel extends AbstractTableModel {
 		if ( changed){
 			DBManager.instance().saveHOColumnModel(this);
 		}
+	}
+
+	static public String formatTime( Timestamp ts){
+		if (ts != null ) return DateFormat.getDateTimeInstance().format(ts);
+		return "";
+	}
+
+	static public long time2Int(Timestamp ts){
+		if ( ts!= null) return ts.getTime();
+		return 0l;
 	}
 
 }

@@ -8,9 +8,7 @@ import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static core.util.Helper.parseDate;
@@ -537,12 +535,6 @@ public class YouthPlayer {
 
     public int getMatchCount() {
         return this.getTrainingDevelopment().size();
-    }
-
-    public String getYouthMatchDateAsString() {
-        if (this.youthMatchDate != null)
-            return new SimpleDateFormat("yyyy-MM-dd hh:mm").format(this.getYouthMatchDate());
-        return "";
     }
 
     public double getProgressLastMatch() {
