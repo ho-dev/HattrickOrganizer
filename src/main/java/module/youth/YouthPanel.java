@@ -9,6 +9,7 @@ import java.awt.*;
 public class YouthPanel extends JPanel {
 
     public static final String YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION = "YouthPlayerView.VerticalSplitPosition";
+    public static final String YOUTHPLAYERVIEW_VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplitPosition2";
 
     private YouthPlayerView youthPlayerView;
     private YouthTrainingView youthTrainingView;
@@ -31,7 +32,5 @@ public class YouthPanel extends JPanel {
     public void storeUserSettings() {
         youthPlayerView.storeUserSettings();
         youthTrainingView.storeUserSettings();
-
-        ModuleConfig.instance().setInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION, ((JSplitPane)youthPlayerView.getComponent(0)).getDividerLocation());
     }
 }
