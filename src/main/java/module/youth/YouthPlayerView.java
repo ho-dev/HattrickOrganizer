@@ -2,7 +2,6 @@ package module.youth;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
@@ -16,11 +15,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Comparator;
 
-import static java.lang.Math.max;
-import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT2_POSITION;
-import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION;
-
 public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
+
+    public static final String VERTICALSPLIT_POSITION = "YouthPlayerView.VerticalSplitPosition";
+    public static final String VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplit2Position";
 
     private JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
@@ -52,8 +50,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
         // Second section
         var developmentPanel = new JPanel(new BorderLayout());
-        var topLinePanel = new JPanel();
-        topLinePanel.add(playerNameLabel);
+        var topLinePanel = new JPanel(new BorderLayout());
+        topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
         topLinePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")));
         developmentPanel.add(topLinePanel, BorderLayout.NORTH);
         developmentPanel.add(new JScrollPane(playerDetailsTable));
@@ -64,7 +62,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         // Scout comment panel
         var scoutAndEditorPanel = new JPanel(new GridBagLayout());
         var scoutAndEditorPanelConstraints = new GridBagConstraints();
+        scoutAndEditorPanelConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
         scoutAndEditorPanelConstraints.insets = new Insets(5,5,5,5);
+        scoutAndEditorPanelConstraints.gridx=0;
+        scoutAndEditorPanelConstraints.gridy=0;
+        scoutAndEditorPanelConstraints.weightx=1;
         scoutAndEditorPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), scoutAndEditorPanelConstraints);
         scoutAndEditorPanelConstraints.gridy++;
         scoutAndEditorPanel.add(playerScoutCommentField, scoutAndEditorPanelConstraints);
@@ -77,7 +79,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             scoutAndEditorPanel.add(skillInfoEditor, scoutAndEditorPanelConstraints );
             if ( i%2 == 1 ) scoutAndEditorPanelConstraints.gridy++;
         }
-
+        scoutAndEditorPanelConstraints.gridy++;
+        scoutAndEditorPanelConstraints.weighty=1;
+        scoutAndEditorPanel.add(new JPanel(), scoutAndEditorPanelConstraints); // empty rows to eat up remaining space
         split2.setRightComponent(new JScrollPane(scoutAndEditorPanel));
 
         initModel();
@@ -85,11 +89,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 
-        var dividerLocation = ModuleConfig.instance().getInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION);
+        var dividerLocation = ModuleConfig.instance().getInteger(VERTICALSPLIT_POSITION);
         if (dividerLocation != null) split1.setDividerLocation(dividerLocation);
-        var divider2location = ModuleConfig.instance().getInteger((YOUTHPLAYERVIEW_VERTICALSPLIT2_POSITION));
+        var divider2location = ModuleConfig.instance().getInteger((VERTICALSPLIT2_POSITION));
         if ( divider2location!=null) split2.setDividerLocation(divider2location);
-        this.add(split2);
+        this.add(split2, BorderLayout.CENTER);
     }
 
     @Override
@@ -223,8 +227,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         this.playerDetailsTableModel.storeUserSettings(playerDetailsTable);
         // store split pane divider positions
         var splitPane = (JSplitPane)this.getComponent(0);
-        ModuleConfig.instance().setInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION, splitPane.getDividerLocation());
+        ModuleConfig.instance().setInteger(VERTICALSPLIT2_POSITION, splitPane.getDividerLocation());
         splitPane = (JSplitPane)splitPane.getLeftComponent();
-        ModuleConfig.instance().setInteger(YOUTHPLAYERVIEW_VERTICALSPLIT2_POSITION, splitPane.getDividerLocation());
+        ModuleConfig.instance().setInteger(VERTICALSPLIT_POSITION, splitPane.getDividerLocation());
     }
 }
