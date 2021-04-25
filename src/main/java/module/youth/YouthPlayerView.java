@@ -17,7 +17,7 @@ import java.util.Comparator;
 
 public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
 
-    public static final String VERTICALSPLIT_POSITION = "YouthPlayerView.VerticalSplitPosition";
+    public static final String VERTICALSPLIT1_POSITION = "YouthPlayerView.VerticalSplitPosition";
     public static final String VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplit2Position";
 
     private JTable playerOverviewTable;
@@ -44,6 +44,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         var split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         var split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         split2.setLeftComponent(split1);
+        setDividerLocation(split1, VERTICALSPLIT1_POSITION);
+        setDividerLocation(split2, VERTICALSPLIT2_POSITION);
 
         // First section
         split1.setLeftComponent(new JScrollPane(playerOverviewTable));
@@ -89,11 +91,12 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 
-        var dividerLocation = ModuleConfig.instance().getInteger(VERTICALSPLIT_POSITION);
-        if (dividerLocation != null) split1.setDividerLocation(dividerLocation);
-        var divider2location = ModuleConfig.instance().getInteger((VERTICALSPLIT2_POSITION));
-        if ( divider2location!=null) split2.setDividerLocation(divider2location);
         this.add(split2, BorderLayout.CENTER);
+    }
+
+    private void setDividerLocation(JSplitPane split, String configKey) {
+        var dividerLocation = ModuleConfig.instance().getInteger(configKey);
+        if (dividerLocation != null) split.setDividerLocation(dividerLocation);
     }
 
     @Override
@@ -229,6 +232,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         var splitPane = (JSplitPane)this.getComponent(0);
         ModuleConfig.instance().setInteger(VERTICALSPLIT2_POSITION, splitPane.getDividerLocation());
         splitPane = (JSplitPane)splitPane.getLeftComponent();
-        ModuleConfig.instance().setInteger(VERTICALSPLIT_POSITION, splitPane.getDividerLocation());
+        ModuleConfig.instance().setInteger(VERTICALSPLIT1_POSITION, splitPane.getDividerLocation());
     }
 }
