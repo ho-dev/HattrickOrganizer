@@ -120,7 +120,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
     @Override
     protected void initData() {
         if (youthPlayer != null) {
-            var trainings = this.youthPlayer.getTrainingDevelopment();
+            var trainings = this.youthPlayer.getTrainingDevelopment().descendingMap();
             m_clData = new Object[trainings.size()][columns.length];
             int rownum = 0;
             for (var training : trainings.values()) {

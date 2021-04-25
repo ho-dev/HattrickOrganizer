@@ -1,10 +1,9 @@
 package module.youth;
 
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.util.Hashtable;
 
@@ -35,16 +34,25 @@ public class YouthSkillInfoEditor extends JPanel {
 
     class SkillInfoSlider extends JPanel {
         private JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
-        private JLabel minLabel = new JLabel("0.00");
-        private JLabel maxLabel = new JLabel("8.30");
+        private JLabel minLabel = new JLabel("0.00", SwingConstants.RIGHT);
+        private JLabel maxLabel = new JLabel("8.30", SwingConstants.LEFT);
 
-        public SkillInfoSlider(){
+        public SkillInfoSlider(String label){
             super(new BorderLayout());
             slider.setPaintLabels(true);
             slider.setPaintTicks(true);
-            this.add(this.minLabel, BorderLayout.WEST);
+
+            var leftLabels = new JPanel(new GridLayout(0,1, 0, 12));
+            leftLabels.add(this.minLabel);
+            leftLabels.add(new JLabel(label));
+
+            this.add(leftLabels, BorderLayout.WEST);
             this.add(this.slider, BorderLayout.CENTER);
-            this.add(this.maxLabel, BorderLayout.EAST);
+
+            var rightLabels = new JPanel(new GridLayout(0,1, 0, 12));
+            rightLabels.add(this.maxLabel);
+            rightLabels.add(new JLabel());
+            this.add(rightLabels, BorderLayout.EAST);
         }
 
         public void set(double value, YouthSkillInfo.SkillRange range) {
@@ -62,17 +70,18 @@ public class YouthSkillInfoEditor extends JPanel {
     }
 
     private JLabel skillLabel = new JLabel();
-    private SkillInfoSlider skillStartValue = new SkillInfoSlider();
-    private SkillInfoSlider skillCurrentValue = new SkillInfoSlider();
+    private SkillInfoSlider skillStartValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue")+": ");
+    private SkillInfoSlider skillCurrentValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue")+": ");
 
     public YouthSkillInfoEditor() {
-        //super(new BorderLayout());
+        super(new BorderLayout());
+        this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         skillLabel.setOpaque(false);
-        this.add(skillLabel);
-        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue")+":"));
-        this.add(skillStartValue);
-        this.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue")+":"));
-        this.add(skillCurrentValue);
+        this.add(skillLabel, BorderLayout.NORTH);
+        var valuesPanel = new JPanel(new GridLayout(1,0, 20, 0));
+        valuesPanel.add(skillStartValue);
+        valuesPanel.add(skillCurrentValue);
+        this.add(valuesPanel, BorderLayout.CENTER);
     }
 
     public void setSkillInfo(YouthSkillInfo skillInfo) {
