@@ -10,6 +10,8 @@ import core.model.UserParameter;
 import core.module.config.ModuleConfig;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -147,6 +149,47 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
+    private class CurrentValueChangeListener  implements ChangeListener{
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+           var source = (JSlider)e.getSource();
+            if (!source.getValueIsAdjusting()) {
+                var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
+                var skillInfo = skillInfoSlider.getSkillInfo();
+                var oldValue = skillInfo.getCurrentValue();
+                var newValue = skillInfoSlider.getSkillValue();
+                var startValue = Math.max(0,skillInfo.getStartValue()+newValue-oldValue);
+                skillInfo.setCurrentValue(newValue);
+                skillInfo.setStartValue(skillInfoSlider.getSkillValue());
+                refreshYouthPlayerDevelopment();
+            }
+        }
+    }
+
+    private void refreshYouthPlayerDevelopment() {
+        var player = getSelectedPlayer();
+        player.calcTrainingDevelopment();
+        refresh();
+    }
+
+    private class StartValueChangeListener implements  ChangeListener{
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            var source = (JSlider)e.getSource();
+            if (!source.getValueIsAdjusting()) {
+                var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
+                var skillInfo = skillInfoSlider.getSkillInfo();
+                var newStartValue = skillInfoSlider.getSkillValue();
+                skillInfo.setCurrentValue(Math.max(skillInfo.getCurrentValue(), newStartValue));
+                skillInfo.setStartValue(newStartValue);
+                refreshYouthPlayerDevelopment();
+            }
+        }
+    }
+    private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
+    private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
+
     private void refreshPlayerDetails() {
         var player = getSelectedPlayer();
         if ( player == null){
@@ -158,6 +201,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             playerNameLabel.setText(player.getFullName());
             for ( int i=0; i< YouthPlayer.skillIds.length; i++){
                 playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
+                playerSkillInfoEditors[i].addCurrentValueChangeListener(currentValueChangeListener);
+                playerSkillInfoEditors[i].addStartValueChangeListener(startValueChangeListener);
             }
             playerScoutCommentField.setText(getScoutComment(player));
             playerDetailsTableModel.setYouthPlayer(player);

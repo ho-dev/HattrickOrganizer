@@ -1,13 +1,14 @@
 package module.youth;
 
 import core.model.HOVerwaltung;
-
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Hashtable;
 
 public class YouthSkillInfoEditor extends JPanel {
+
     private YouthSkillInfo skillInfo;
 
     private static int SliderWidth = 830;
@@ -32,7 +33,12 @@ public class YouthSkillInfoEditor extends JPanel {
         return sliderPosition * 8.3 / SliderWidth;
     }
 
+    public void setStartSkillValue() {
+        skillInfo.setStartValue(SkillValue(skillStartValue.slider.getValue()));
+    }
+
     class SkillInfoSlider extends JPanel {
+        private YouthSkillInfo skillInfo;
         private JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
         private JLabel minLabel = new JLabel("0.00", SwingConstants.RIGHT);
         private JLabel maxLabel = new JLabel("8.30", SwingConstants.LEFT);
@@ -55,7 +61,8 @@ public class YouthSkillInfoEditor extends JPanel {
             this.add(rightLabels, BorderLayout.EAST);
         }
 
-        public void set(double value, YouthSkillInfo.SkillRange range) {
+        public void set(YouthSkillInfo skillInfo, double value, YouthSkillInfo.SkillRange range) {
+            this.skillInfo = skillInfo;
             slider.setMinimum(SliderPos(range.getMin()));
             slider.setMaximum(SliderPos(range.getMax()));
             slider.setValue(SliderPos(value));
@@ -67,6 +74,12 @@ public class YouthSkillInfoEditor extends JPanel {
             labelTable.put(slider.getValue(), new JLabel(String.format("%.2f", value)));
             slider.setLabelTable(labelTable);
         }
+
+        public YouthSkillInfo getSkillInfo(){return skillInfo;}
+        public void addChangeListener(ChangeListener l){
+            this.slider.addChangeListener(l);
+        }
+        double getSkillValue(){ return SkillValue(this.slider.getValue());}
     }
 
     private JLabel skillLabel = new JLabel();
@@ -87,8 +100,16 @@ public class YouthSkillInfoEditor extends JPanel {
     public void setSkillInfo(YouthSkillInfo skillInfo) {
         this.skillInfo = skillInfo;
         skillLabel.setText(HOVerwaltung.instance().getLanguageString("ls.youth.player." + skillInfo.getSkillID().toString()) + ": ");
-        skillStartValue.set(skillInfo.getStartValue(), skillInfo.getStartValueRange());
-        skillCurrentValue.set(skillInfo.getCurrentValue(), skillInfo.getCurrentValueRange());
+        skillStartValue.set(skillInfo, skillInfo.getStartValue(), skillInfo.getStartValueRange());
+        skillCurrentValue.set(skillInfo, skillInfo.getCurrentValue(), skillInfo.getCurrentValueRange());
+    }
+
+    public void addStartValueChangeListener(ChangeListener l){
+        skillStartValue.addChangeListener(l);
+    }
+
+    public void addCurrentValueChangeListener(ChangeListener l){
+        skillCurrentValue.addChangeListener(l);
     }
 
 }

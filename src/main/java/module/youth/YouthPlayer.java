@@ -386,36 +386,42 @@ public class YouthPlayer {
 
     public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> getTrainingDevelopment() {
         if (trainingDevelopment == null) {
-            // init from models match list
-            trainingDevelopment = new TreeMap<>();
-            var model = HOVerwaltung.instance().getModel();
-            var teamId = model.getBasics().getYouthTeamId();
-
-            // set start skill values (may be edited by the user)
-            var skills = getStartSkills();
-            var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
-            for (var training : trainings) {
-                var keeper = skills.areKeeperSkills();
-                if (keeper != null) {
-                    skills.setPlayerMaxSkills(keeper);
-                    this.currentSkills.setPlayerMaxSkills(keeper);
-                }
-                var team = training.getTeam(teamId);
-                if (team.hasPlayerPlayed(this.id)) {
-                    var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
-                    var oldSkills = skills;
-                    skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
-                    progressLastMatch = skills.getSkillSum() - oldSkills.getSkillSum();
-                    trainingEntry.setInjuryLevel(getInjuryLevelAt(training.getMatchDate()));
-                    trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
-                    trainingDevelopment.put(training.getMatchDate(), trainingEntry);
-                } else {
-                    progressLastMatch = 0;
-                }
-            }
-            this.currentSkills = skills;
-            DBManager.instance().storeYouthPlayer(this.hrfid, this);
+            calcTrainingDevelopment();
         }
+        return trainingDevelopment;
+    }
+
+    public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> calcTrainingDevelopment() {
+        // init from models match list
+        trainingDevelopment = new TreeMap<>();
+        var model = HOVerwaltung.instance().getModel();
+        var teamId = model.getBasics().getYouthTeamId();
+
+        // set start skill values (may be edited by the user)
+        var skills = getStartSkills();
+        var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
+        for (var training : trainings) {
+            var keeper = skills.areKeeperSkills();
+            if (keeper != null) {
+                skills.setPlayerMaxSkills(keeper);
+                this.currentSkills.setPlayerMaxSkills(keeper);
+            }
+            var team = training.getTeam(teamId);
+            if (team.hasPlayerPlayed(this.id)) {
+                var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
+                var oldSkills = skills;
+                skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
+                progressLastMatch = skills.getSkillSum() - oldSkills.getSkillSum();
+                trainingEntry.setInjuryLevel(getInjuryLevelAt(training.getMatchDate()));
+                trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
+                trainingDevelopment.put(training.getMatchDate(), trainingEntry);
+            } else {
+                progressLastMatch = 0;
+            }
+        }
+        this.currentSkills = skills;
+        DBManager.instance().storeYouthPlayer(this.hrfid, this);
+
         return trainingDevelopment;
     }
 
@@ -867,7 +873,7 @@ public class YouthPlayer {
     private Integer averageSkillLevel = -1;
 
     public String getAverageSkillLevel() {
-        if ( averageSkillLevel == -1){
+        if ( averageSkillLevel != null && averageSkillLevel == -1){
             var sc = this.getScoutComments().stream()
                     .filter(i->i.type==CommentType.AVERAGE_SKILL_LEVEL)
                     .findFirst()
