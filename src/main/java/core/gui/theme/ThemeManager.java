@@ -184,8 +184,13 @@ public final class ThemeManager {
 			BufferedImage img;
 			try {
 				img = ImageIO.read(new File(logoPath));
-				ImageIcon iconOriginal = new ImageIcon(img);
-				scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
+				if ( img != null) {
+					ImageIcon iconOriginal = new ImageIcon(img);
+					scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
+				}
+				else {
+					return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
+				}
 			}
 			catch (IOException e) {
 				e.printStackTrace();
