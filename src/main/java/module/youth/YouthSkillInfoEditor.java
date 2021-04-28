@@ -70,8 +70,12 @@ public class YouthSkillInfoEditor extends JPanel {
             minLabel.setText(String.format("%.2f", range.getMin()));
             maxLabel.setText(String.format("%.2f", range.getMax()));
 
+            setValueLabel();
+        }
+
+        public void setValueLabel() {
             var labelTable = new Hashtable<Integer, JLabel>();
-            labelTable.put(slider.getValue(), new JLabel(String.format("%.2f", value)));
+            labelTable.put(slider.getValue(), new JLabel(String.format("%.2f", getSkillValue())));
             slider.setLabelTable(labelTable);
         }
 

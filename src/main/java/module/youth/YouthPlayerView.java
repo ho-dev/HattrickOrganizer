@@ -154,8 +154,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         @Override
         public void stateChanged(ChangeEvent e) {
            var source = (JSlider)e.getSource();
+            var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
-                var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
                 var skillInfo = skillInfoSlider.getSkillInfo();
                 var oldValue = skillInfo.getCurrentValue();
                 var newValue = skillInfoSlider.getSkillValue();
@@ -164,27 +164,31 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 skillInfo.setStartValue(skillInfoSlider.getSkillValue());
                 refreshYouthPlayerDevelopment();
             }
+            skillInfoSlider.setValueLabel();
         }
     }
 
     private void refreshYouthPlayerDevelopment() {
         var player = getSelectedPlayer();
-        player.calcTrainingDevelopment();
-        refresh();
+        if (player != null) {
+            player.calcTrainingDevelopment();
+            refresh();
+        }
     }
 
     private class StartValueChangeListener implements  ChangeListener{
         @Override
         public void stateChanged(ChangeEvent e) {
             var source = (JSlider)e.getSource();
+            var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
-                var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
                 var skillInfo = skillInfoSlider.getSkillInfo();
                 var newStartValue = skillInfoSlider.getSkillValue();
                 skillInfo.setCurrentValue(Math.max(skillInfo.getCurrentValue(), newStartValue));
                 skillInfo.setStartValue(newStartValue);
                 refreshYouthPlayerDevelopment();
             }
+            skillInfoSlider.setValueLabel();
         }
     }
     private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
