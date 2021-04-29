@@ -249,13 +249,14 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     private void InitGoalsInParts() {
+        int totalHome=0;
+        int totalGuest=0;
+        int lastPart=0;
         homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         guestGoalsInParts= new Integer[MatchEvent.MatchPartId.values().length];
         for ( var event : getHighlights()){
             int part = 0;
-
             var partId = event.getMatchPartId();
-
             if ( partId == MatchEvent.MatchPartId.PENALTY_CONTEST &&
                 event.isEndOfMatchEvent() ){
                 // HO shifted match end event of extra time part (3) to part 4
@@ -266,6 +267,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             if ( homeGoalsInParts[part] == null) {
                 homeGoalsInParts[part] = 0;
                 guestGoalsInParts[part] = 0;
+                lastPart=part;
             }
             var eventId = event.getMatchEventID().getValue();
             if ( eventId>99 && eventId<200 ||
@@ -275,18 +277,46 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                 if (event.getTeamID() == this.m_iHeimId ||
                         event.getTeamID() <= 0 && this.m_iHeimId <= 0) { // Verlegenheitstruppe has id < 0 are stored as 0 in event
                         homeGoalsInParts[part]++;
-
+                        totalHome++;
                 } else {
-
                     guestGoalsInParts[part]++;
+                    totalGuest++;
                 }
             }
             else if ( eventId == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER.getValue()){
                 guestGoalsInParts[0] = 5;
+                totalGuest=5;
             }
             else if ( eventId == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER.getValue()){
                 homeGoalsInParts[0] = 5;
+                totalHome=5;
             }
+        }
+        verifyGoalsInParts(lastPart, totalHome, totalGuest);
+    }
+
+    /**
+     * Hattrick bug links own goals to wrong team.
+     * In this case the goals in  parts evaluated from match events needs correction.
+     * If match event result differs from match details end result, all goal will be shifted to the last
+     * mentioned match part.
+     *
+     * @param lastPart last mentioned match part
+     * @param totalHome number of home goals counted by match events
+     * @param totalGuest number of guest goals counted by match events
+     */
+    private void verifyGoalsInParts(int lastPart, int totalHome, int totalGuest) {
+        var homeEnd = this.getHomeGoals();
+        var guestEnd = this.getGuestGoals();
+        if ( totalHome != homeEnd || totalGuest != guestEnd){
+            for ( int i=0; i<lastPart; i++){
+                if ( homeGoalsInParts[i] != null) {
+                    homeGoalsInParts[i]=0;
+                    guestGoalsInParts[i]=0;
+                }
+            }
+            homeGoalsInParts[lastPart]=homeEnd;
+            guestGoalsInParts[lastPart]=guestEnd;
         }
     }
 
