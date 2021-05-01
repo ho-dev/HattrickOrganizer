@@ -75,6 +75,10 @@ public class MatchEvent {
         return eventVariation;
     }
 
+    public boolean isEndOfMatchEvent() {
+        return m_iMatchEventID >= 599 && m_iMatchEventID <= 606;
+    }
+
     public enum MatchEventID {
         UNKNOWN_MATCHEVENT(-1),
         PLAYERS_ENTER_THE_FIELD(19), TACTICAL_DISPOSITION(20), PLAYER_NAMES_IN_LINEUP(21), PLAYERS_FROM_NEIGHBORHOOD_USED(22), SAME_FORMATION_BOTH_TEAMS(23), TEAM_FORMATIONS_DIFFERENT(24),
