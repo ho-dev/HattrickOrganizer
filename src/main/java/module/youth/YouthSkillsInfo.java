@@ -145,4 +145,8 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
             }
         }
     }
+
+    public double getSkillSum() {
+        return this.values().stream().mapToDouble(e->e.getCurrentValue()).sum();
+    }
 }

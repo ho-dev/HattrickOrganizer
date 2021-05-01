@@ -7,44 +7,46 @@ import core.gui.model.UserColumnController;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
-public class YouthTrainingView extends JTable implements core.gui.Refreshable {
+public class YouthTrainingView extends JScrollPane implements core.gui.Refreshable {
 
+    private JTable table;
     private YouthTrainingViewTableModel tableModel;
 
     public YouthTrainingView() {
-        super();
+        table = new JTable();
+        this.setViewportView(table);
         initModel();
         RefreshManager.instance().registerRefreshable(this);
-        setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
     }
 
     private void initModel() {
         setOpaque(false);
         if (tableModel == null) {
             tableModel = UserColumnController.instance().getYouthTrainingViewColumnModel();
-            setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            setRowSelectionAllowed(true);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            table.setRowSelectionAllowed(true);
 
-            setModel(tableModel);
-            TableColumnModel tableColumnModel = getColumnModel();
+            table.setModel(tableModel);
+            TableColumnModel tableColumnModel = table.getColumnModel();
             for (int i = 0; i < tableModel.getColumnCount(); i++) {
                 tableColumnModel.getColumn(i).setIdentifier(i);
             }
 
             for ( var c : tableModel.getColumns()){
                 if ( c.isEditable()){
-                    var tablecol = this.getColumn(c.getIndex());
+                    var tablecol = table.getColumn(c.getIndex());
                     if ( tablecol != null ){
                         var cb = new JComboBox<>(new YouthTrainingTableEntry.ComboBoxModel());
                         var editor = new DefaultCellEditor(cb);
-                        editor.addCellEditorListener(this);
+                        editor.addCellEditorListener(table);
                         tablecol.setCellEditor(editor);
                     }
                 }
             }
 
-            tableModel.restoreUserSettings(this);
+            tableModel.restoreUserSettings(table);
         }
         tableModel.initData();
         //tableSorter = new TableSorter(tableModel, tableModel.getPositionInArray(99), getOrderByColumn());
@@ -64,6 +66,6 @@ public class YouthTrainingView extends JTable implements core.gui.Refreshable {
     }
 
     public void storeUserSettings() {
-        this.tableModel.storeUserSettings(this);
+        this.tableModel.storeUserSettings(table);
     }
 }

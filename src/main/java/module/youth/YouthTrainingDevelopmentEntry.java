@@ -71,13 +71,7 @@ public class YouthTrainingDevelopmentEntry {
 
                     case SE_GOAL_UNPREDICTABLE_OWN_GOAL:
                     case SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN:
-                    case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
-                    case SE_GOAL_UNPREDICTABLE_LONG_PASS:
-                    case SE_GOAL_UNPREDICTABLE_MISTAKE:
                     case SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES:
-                    case SE_NO_GOAL_UNPREDICTABLE_LONG_PASS:
-                    case SE_NO_GOAL_UNPREDICTABLE_MISTAKE:
-                    case SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
                     case SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST:
                         this.specialty = Specialty.Unpredictable;
                         break;
@@ -92,8 +86,6 @@ public class YouthTrainingDevelopmentEntry {
 
                     case SE_QUICK_LOSES_IN_RAIN:
                     case SE_QUICK_LOSES_IN_SUN:
-                    case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES:
-                    case SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS:
                     case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
                     case SE_QUICK_SCORES_AFTER_RUSH:
                     case SE_SPEEDY_MISSES_AFTER_RUSH:
@@ -115,13 +107,23 @@ public class YouthTrainingDevelopmentEntry {
             } else {
                 // Analyse assistant
                 switch (highlight.getMatchEventID()) {
+                    case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES:
                     case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
+                    case SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS:
                         this.specialty = Specialty.Quick;
                         break;
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
                     case SE_WINGER_TO_HEAD_SPEC_SCORES:
                         this.specialty = Specialty.Head;
+                        break;
+                    case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
+                    case SE_GOAL_UNPREDICTABLE_LONG_PASS:
+                    case SE_GOAL_UNPREDICTABLE_MISTAKE:
+                    case SE_NO_GOAL_UNPREDICTABLE_LONG_PASS:
+                    case SE_NO_GOAL_UNPREDICTABLE_MISTAKE:
+                    case SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
+                        this.specialty = Specialty.Unpredictable;
                         break;
                 }
             }
@@ -143,12 +145,9 @@ public class YouthTrainingDevelopmentEntry {
                 skill.setCurrentLevel(constraint.getCurrentLevel());
                 skill.setMax(constraint.getMax());
                 skill.setMaxReached(constraint.isMaxReached());
-                if ( skill.getStartValue() == 0){
-                    var adjustment = skill.getCurrentValue() - oldVal;
-                    if ( adjustment > 0 ){
-                        player.adjustSkill(skill.getSkillID(), adjustment);
-                        skill.setStartValue(adjustment);
-                    }
+                var adjustment = skill.getCurrentValue() - oldVal;
+                if (adjustment != 0) {
+                    skill.setStartValue(player.adjustSkill(skill.getSkillID(), adjustment));
                 }
             }
         }
@@ -162,6 +161,7 @@ public class YouthTrainingDevelopmentEntry {
      * @param lineupTeam, lineup of the team
      * @return calculated skills
      */
+
     public YouthSkillsInfo calcSkills(YouthSkillsInfo startSkills, YouthSkillsInfo skillConstraints, MatchLineupTeam lineupTeam) {
         if ( this.skills == null){
             this.skills = new YouthSkillsInfo();

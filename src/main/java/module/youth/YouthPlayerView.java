@@ -2,7 +2,6 @@ package module.youth;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
@@ -11,21 +10,24 @@ import core.model.UserParameter;
 import core.module.config.ModuleConfig;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Comparator;
 
-import static java.lang.Math.max;
-import static module.youth.YouthPanel.YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION;
+public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
 
-public class YouthPlayerView extends ImagePanel implements Refreshable, ListSelectionListener {
+    public static final String VERTICALSPLIT1_POSITION = "YouthPlayerView.VerticalSplitPosition";
+    public static final String VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplit2Position";
 
     private JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
     private TableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
+    private YouthSkillInfoEditor[] playerSkillInfoEditors;
     private JEditorPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
@@ -33,73 +35,70 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     public YouthPlayerView() {
         super();
-
         playerOverviewTable = new JTable();
-
-        var verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-        verticalSplitPane.setLeftComponent(new JScrollPane(playerOverviewTable));
-
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
+        playerSkillInfoEditors = new YouthSkillInfoEditor[YouthPlayer.skillIds.length];
         playerScoutCommentField = new JEditorPane();
         playerScoutCommentField.setContentType("text/html");
         playerScoutCommentField.setEditable(false);
 
-        var detailsPanel = new JPanel(new GridBagLayout());
-        var constraints = new GridBagConstraints();
-        int y=0;
-        //constraints.gridwidth=2;
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.weightx=1;
-        constraints.weighty=0;
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        constraints.insets = new Insets(5,5,5,5);
-        detailsPanel.add(playerNameLabel, constraints);
+        var split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        var split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        split2.setLeftComponent(split1);
+        setDividerLocation(split1, VERTICALSPLIT1_POSITION);
+        setDividerLocation(split2, VERTICALSPLIT2_POSITION);
+
+        // First section
+        split1.setLeftComponent(new JScrollPane(playerOverviewTable));
+
+        // Second section
+        var developmentPanel = new JPanel(new BorderLayout());
+        var topLinePanel = new JPanel(new BorderLayout());
+        topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
+        topLinePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")));
+        developmentPanel.add(topLinePanel, BorderLayout.NORTH);
+        developmentPanel.add(new JScrollPane(playerDetailsTable));
+        split1.setRightComponent(developmentPanel);
+
+        // Third section
 
         // Scout comment panel
-        var scoutCommentPanel = new JPanel(new BorderLayout());
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        constraints.insets = new Insets(5,5,5,5);
-        scoutCommentPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), BorderLayout.NORTH);
-        scoutCommentPanel.add(playerScoutCommentField);
+        var scoutAndEditorPanel = new JPanel(new GridBagLayout());
+        var scoutAndEditorPanelConstraints = new GridBagConstraints();
+        scoutAndEditorPanelConstraints.anchor=GridBagConstraints.FIRST_LINE_START;
+        scoutAndEditorPanelConstraints.insets = new Insets(5,5,5,5);
+        scoutAndEditorPanelConstraints.gridx=0;
+        scoutAndEditorPanelConstraints.gridy=0;
+        scoutAndEditorPanelConstraints.weightx=1;
+        scoutAndEditorPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), scoutAndEditorPanelConstraints);
+        scoutAndEditorPanelConstraints.gridy++;
+        scoutAndEditorPanel.add(playerScoutCommentField, scoutAndEditorPanelConstraints);
+        scoutAndEditorPanelConstraints.gridy++;
 
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        constraints.weightx=1;
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(5,5,5,5);
-        detailsPanel.add(scoutCommentPanel, constraints );
-
-        // Training development table
-        var tablePanel = new JPanel(new BorderLayout());
-        tablePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")), BorderLayout.NORTH);
-        tablePanel.add(new JScrollPane(playerDetailsTable));
-
-        constraints = new GridBagConstraints();
-        constraints.gridx=0;
-        constraints.gridy=y++;
-        //constraints.gridwidth=2;
-        constraints.fill=GridBagConstraints.HORIZONTAL;
-        constraints.weightx=1;
-        constraints.weighty=1;
-        constraints.anchor=GridBagConstraints.NORTH;
-        constraints.insets = new Insets(5,5,5,5);
-        detailsPanel.add(tablePanel, constraints);
-
-        verticalSplitPane.setRightComponent(new JScrollPane(detailsPanel));
+        for ( int i=0; i<YouthPlayer.skillIds.length; i++){
+            var skillInfoEditor = new YouthSkillInfoEditor();
+            playerSkillInfoEditors[i] = skillInfoEditor;
+            scoutAndEditorPanelConstraints.gridx=i%2;
+            scoutAndEditorPanel.add(skillInfoEditor, scoutAndEditorPanelConstraints );
+            if ( i%2 == 1 ) scoutAndEditorPanelConstraints.gridy++;
+        }
+        scoutAndEditorPanelConstraints.gridy++;
+        scoutAndEditorPanelConstraints.weighty=1;
+        scoutAndEditorPanel.add(new JPanel(), scoutAndEditorPanelConstraints); // empty rows to eat up remaining space
+        split2.setRightComponent(new JScrollPane(scoutAndEditorPanel));
 
         initModel();
         RefreshManager.instance().registerRefreshable(this);
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 
-        var dividerLocation = ModuleConfig.instance().getInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION);
-        if (dividerLocation != null) verticalSplitPane.setDividerLocation(dividerLocation);
-        this.add(verticalSplitPane);
+        this.add(split2, BorderLayout.CENTER);
+    }
+
+    private void setDividerLocation(JSplitPane split, String configKey) {
+        var dividerLocation = ModuleConfig.instance().getInteger(configKey);
+        if (dividerLocation != null) split.setDividerLocation(dividerLocation);
     }
 
     @Override
@@ -150,6 +149,51 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         }
     }
 
+    private class CurrentValueChangeListener  implements ChangeListener{
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+           var source = (JSlider)e.getSource();
+            var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
+            if (!source.getValueIsAdjusting()) {
+                var skillInfo = skillInfoSlider.getSkillInfo();
+                var oldValue = skillInfo.getCurrentValue();
+                var newValue = skillInfoSlider.getSkillValue();
+                var startValue = Math.max(0,skillInfo.getStartValue()+newValue-oldValue);
+                skillInfo.setCurrentValue(newValue);
+                skillInfo.setStartValue(skillInfoSlider.getSkillValue());
+                refreshYouthPlayerDevelopment();
+            }
+            skillInfoSlider.setValueLabel();
+        }
+    }
+
+    private void refreshYouthPlayerDevelopment() {
+        var player = getSelectedPlayer();
+        if (player != null) {
+            player.calcTrainingDevelopment();
+            refresh();
+        }
+    }
+
+    private class StartValueChangeListener implements  ChangeListener{
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            var source = (JSlider)e.getSource();
+            var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
+            if (!source.getValueIsAdjusting()) {
+                var skillInfo = skillInfoSlider.getSkillInfo();
+                var newStartValue = skillInfoSlider.getSkillValue();
+                skillInfo.setCurrentValue(Math.max(skillInfo.getCurrentValue(), newStartValue));
+                skillInfo.setStartValue(newStartValue);
+                refreshYouthPlayerDevelopment();
+            }
+            skillInfoSlider.setValueLabel();
+        }
+    }
+    private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
+    private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
+
     private void refreshPlayerDetails() {
         var player = getSelectedPlayer();
         if ( player == null){
@@ -159,6 +203,11 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
         }
         if (player != null) {
             playerNameLabel.setText(player.getFullName());
+            for ( int i=0; i< YouthPlayer.skillIds.length; i++){
+                playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
+                playerSkillInfoEditors[i].addCurrentValueChangeListener(currentValueChangeListener);
+                playerSkillInfoEditors[i].addStartValueChangeListener(startValueChangeListener);
+            }
             playerScoutCommentField.setText(getScoutComment(player));
             playerDetailsTableModel.setYouthPlayer(player);
             playerDetailsTableModel.initData();
@@ -174,10 +223,8 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     }
 
     private String formatLine(String text) {
-        var ret = new StringBuilder(text);
         /*if ( !text.endsWith("&nbsp;")) */
-        ret.append("<br/>");
-        return ret.toString();
+        return text + "<br/>";
     }
 
     private int getOrderByColumn() {
@@ -195,6 +242,11 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
 
     private YouthPlayer getSelectedPlayer() {
         var row = this.playerOverviewTable.getSelectedRow();
+        if ( row < 0 && this.playerOverviewTable.getRowCount() > 0){
+            // init selection
+            this.playerOverviewTable.setRowSelectionInterval(0,0);
+            row = 0;
+        }
         if ( row > -1) {
             var index = playerOverviewTableSorter.getIndex(row);
             var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
@@ -225,5 +277,10 @@ public class YouthPlayerView extends ImagePanel implements Refreshable, ListSele
     public void storeUserSettings() {
         this.playerOverviewTableModel.storeUserSettings(playerOverviewTable);
         this.playerDetailsTableModel.storeUserSettings(playerDetailsTable);
+        // store split pane divider positions
+        var splitPane = (JSplitPane)this.getComponent(0);
+        ModuleConfig.instance().setInteger(VERTICALSPLIT2_POSITION, splitPane.getDividerLocation());
+        splitPane = (JSplitPane)splitPane.getLeftComponent();
+        ModuleConfig.instance().setInteger(VERTICALSPLIT1_POSITION, splitPane.getDividerLocation());
     }
 }

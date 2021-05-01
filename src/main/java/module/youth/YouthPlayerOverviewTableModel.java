@@ -10,8 +10,13 @@ import core.model.player.Player;
 import module.training.Skills;
 
 import javax.swing.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.sql.Timestamp;
+import java.util.List;
+
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
@@ -21,7 +26,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     }
 
     private YouthPlayerColumn[] initColumns() {
-        return new YouthPlayerColumn[]{
+        var tmp = new ArrayList<>(List.of(
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
@@ -37,62 +42,19 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.arrival") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(new SimpleDateFormat("yyyy-MM-dd hh:mm").format(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(time2Int(player.getArrivalDate()), formatTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new ColorLabelEntry(player.getYouthMatchDateAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(time2Int(player.getYouthMatchDate()), formatTime(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
                         return new ColorLabelEntry(player.getCanBePromotedIn(), "" + player.getCanBePromotedInAtDate(new Date().getTime()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-                    }
-                },
-                // TODO double clicking cell should invoke SkillEditorDialog to edit start and or current values
-                new YouthPlayerColumn("ls.youth.player.Keeper", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Keeper));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.Defender", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Defender));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.Playmaker", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Playmaker));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.Winger", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Winger));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.Passing", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Passing));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.Scorer", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.Scorer));
-                    }
-                },
-                new YouthPlayerColumn("ls.youth.player.SetPieces", 200) {
-                    @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
-                        return new YouthSkillInfoColumn(player.getSkillInfo(Skills.HTSkillID.SetPieces));
                     }
                 },
                 // TODO: Specialty column should include the specialty icon
@@ -126,14 +88,25 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry(player.getTrainedSkillSum(), String.format("%.2f", player.getTrainedSkillSum()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                // TODO: scout information
-                new YouthPlayerColumn("ls.player.id", 0) {
+                new YouthPlayerColumn("ls.youth.player.trainingprogress") {
                     @Override
-                    public boolean isDisplay() {
-                        return false;
+                    public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                        return new ColorLabelEntry(player.getProgressLastMatch(), String.format("%.2f", player.getProgressLastMatch()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 }
-        };
+                // TODO: scout information
+        ));
+
+        for (var skillId : YouthPlayer.skillIds) {
+            tmp.add(new YouthPlayerColumn("ls.youth.player." + skillId.toString(), 200) {
+                @Override
+                public IHOTableEntry getTableEntry(YouthPlayer player, YouthPlayer playerCompare) {
+                    return new YouthSkillInfoColumn(player.getSkillInfo(skillId));
+                }
+            });
+        }
+
+        return tmp.toArray(new YouthPlayerColumn[0]);
     }
 
     @Override

@@ -8,8 +8,6 @@ import java.awt.*;
 
 public class YouthPanel extends JPanel {
 
-    public static final String YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION = "YouthPlayerView.VerticalSplitPosition";
-
     private YouthPlayerView youthPlayerView;
     private YouthTrainingView youthTrainingView;
     private JTabbedPane tabbedPane;
@@ -22,16 +20,14 @@ public class YouthPanel extends JPanel {
         setLayout(new BorderLayout());
         youthPlayerView = new YouthPlayerView();
         this.tabbedPane = new JTabbedPane();
-        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.player"), new JScrollPane(this.youthPlayerView));
+        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.player"), this.youthPlayerView);
         youthTrainingView = new YouthTrainingView();
-        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.training"), new JScrollPane((this.youthTrainingView)));
+        this.tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.training"), this.youthTrainingView);
         add(this.tabbedPane, BorderLayout.CENTER);
     }
 
     public void storeUserSettings() {
         youthPlayerView.storeUserSettings();
         youthTrainingView.storeUserSettings();
-
-        ModuleConfig.instance().setInteger(YOUTHPLAYERVIEW_VERTICALSPLIT_POSITION, ((JSplitPane)youthPlayerView.getComponent(0)).getDividerLocation());
     }
 }
