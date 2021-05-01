@@ -256,6 +256,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         guestGoalsInParts= new Integer[MatchEvent.MatchPartId.values().length];
         for ( var event : getHighlights()){
             int part = 0;
+
             var partId = event.getMatchPartId();
             if ( partId == MatchEvent.MatchPartId.PENALTY_CONTEST &&
                 event.isEndOfMatchEvent() ){
