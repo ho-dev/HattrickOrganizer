@@ -59,31 +59,31 @@ public class DataDownloader {
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsMax = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "max");
         Map<Integer, Map<RatingsStatistics, Integer>> hatStatsAvg = fetchLeagueTeamHatStats(iLeagueID, iHTSeason, "avg");
 
-        Set<Integer> teamIDs = new HashSet<>(powerRatings.keySet());
-        teamIDs.addAll(hatStatsMax.keySet());
-        teamIDs.addAll(hatStatsAvg.keySet());
+        if ( hatStatsMax != null && hatStatsAvg != null) {
+            Set<Integer> teamIDs = new HashSet<>(powerRatings.keySet());
+            teamIDs.addAll(hatStatsMax.keySet());
+            teamIDs.addAll(hatStatsAvg.keySet());
 
-        for(Integer teamID : teamIDs){
-            Map<RatingsStatistics, Integer> teamStats = new HashMap<>();
+            for (Integer teamID : teamIDs) {
+                Map<RatingsStatistics, Integer> teamStats = new HashMap<>();
 
-            if (powerRatings.containsKey(teamID)) {
-                teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
+                if (powerRatings.containsKey(teamID)) {
+                    teamStats.put(RatingsStatistics.POWER_RATINGS, powerRatings.get(teamID));
+                }
+
+                if (hatStatsMax.containsKey(teamID)) {
+                    hatStatsMax.get(teamID).forEach(
+                            (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+                }
+
+                if (hatStatsAvg.containsKey(teamID)) {
+                    hatStatsAvg.get(teamID).forEach(
+                            (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
+                }
+
+                resultsMap.put(teamID, teamStats);
             }
-
-            if (hatStatsMax.containsKey(teamID)) {
-                hatStatsMax.get(teamID).forEach(
-                        (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
-            }
-
-            if (hatStatsAvg.containsKey(teamID)) {
-                hatStatsAvg.get(teamID).forEach(
-                        (key, value) -> teamStats.merge(key, value, (v1, v2) -> v1));
-            }
-
-            resultsMap.put(teamID, teamStats);
         }
-
-
         return resultsMap;
     }
 
