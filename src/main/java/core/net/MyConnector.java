@@ -490,7 +490,7 @@ public class MyConnector {
 	}
 
 	public String downloadYouthPlayers(int youthteamId) throws IOException {
-		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST +"&actionType=details&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
+		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST +"&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
 		return getCHPPWebFile(url);
 	}
 
