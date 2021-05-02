@@ -130,7 +130,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     }
 
     private void refreshPlayerOverview() {
+        // Remember current selection, because initDate will reset it
+        var selection = this.playerOverviewTable.getSelectedRow();
         playerOverviewTableModel.initData();
+        // Restore selection
+        if ( selection > -1) initSelection(selection);
     }
 
     private void initPlayerDetails() {
@@ -152,7 +156,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (isRefreshingPlayerDetails == true) return;
+            if (isRefreshingPlayerDetails) return;
             var source = (JSlider) e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
@@ -170,7 +174,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private boolean isRefreshingPlayerDevelopment = false;
     private void refreshYouthPlayerDevelopment() {
-        if (isRefreshingPlayerDevelopment == false) {
+        if (!isRefreshingPlayerDevelopment) {
             isRefreshingPlayerDevelopment = true;
             var player = getSelectedPlayer();
             if (player != null) {
@@ -184,7 +188,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private class StartValueChangeListener implements  ChangeListener{
         @Override
         public void stateChanged(ChangeEvent e) {
-            if ( isRefreshingPlayerDetails==true) return;
+            if (isRefreshingPlayerDetails) return;
             var source = (JSlider)e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
@@ -202,7 +206,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
     private boolean isRefreshingPlayerDetails =false;
     private void refreshPlayerDetails() {
-        if ( isRefreshingPlayerDetails == false) {
+        if (!isRefreshingPlayerDetails) {
             isRefreshingPlayerDetails =true;   // prevent recursions
             var player = getSelectedPlayer();
             if (player == null) {
@@ -255,7 +259,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private YouthPlayer getSelectedPlayer() {
         var row = this.playerOverviewTable.getSelectedRow();
         if ( row < 0 && this.playerOverviewTable.getRowCount() > 0){
-            row = initSelection();
+            row = 0;
+            initSelection(row);
         }
         if ( row > -1) {
             var index = playerOverviewTableSorter.getIndex(row);
@@ -279,18 +284,16 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
-    private boolean initSelection=false;
-    private int initSelection() {
-        var row=0;
-        initSelection=true;
+    private boolean isSelectionInitialized=false;
+    private void initSelection(int row) {
+        isSelectionInitialized=true;
         this.playerOverviewTable.setRowSelectionInterval(row,row);
-        initSelection=false;
-        return row;
+        isSelectionInitialized=false;
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if ( e.getValueIsAdjusting() == false && initSelection==false) {
+        if ( !e.getValueIsAdjusting() && !isSelectionInitialized) {
             refreshPlayerDetails();
         }
     }
