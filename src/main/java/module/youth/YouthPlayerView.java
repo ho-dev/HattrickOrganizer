@@ -123,7 +123,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             selectionModel.addListSelectionListener(this);
             playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
             playerOverviewTable.setModel(playerOverviewTableSorter);
-
             playerOverviewTableModel.restoreUserSettings(playerOverviewTable);
             playerOverviewTableSorter.addMouseListenerToHeaderInTable(playerOverviewTable);
             playerOverviewTableSorter.initsort();
@@ -149,17 +148,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
-    private class CurrentValueChangeListener  implements ChangeListener{
+    private class CurrentValueChangeListener  implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-           var source = (JSlider)e.getSource();
+            if (isRefreshingPlayerDetails == true) return;
+            var source = (JSlider) e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
                 var skillInfo = skillInfoSlider.getSkillInfo();
                 var oldValue = skillInfo.getCurrentValue();
                 var newValue = skillInfoSlider.getSkillValue();
-                var startValue = Math.max(0,skillInfo.getStartValue()+newValue-oldValue);
+                var startValue = Math.max(0, skillInfo.getStartValue() + newValue - oldValue);
                 skillInfo.setCurrentValue(newValue);
                 skillInfo.setStartValue(skillInfoSlider.getSkillValue());
                 refreshYouthPlayerDevelopment();
@@ -168,17 +168,23 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
+    private boolean isRefreshingPlayerDevelopment = false;
     private void refreshYouthPlayerDevelopment() {
-        var player = getSelectedPlayer();
-        if (player != null) {
-            player.calcTrainingDevelopment();
-            refresh();
+        if (isRefreshingPlayerDevelopment == false) {
+            isRefreshingPlayerDevelopment = true;
+            var player = getSelectedPlayer();
+            if (player != null) {
+                player.calcTrainingDevelopment();
+                refresh();
+            }
+            isRefreshingPlayerDevelopment = false;
         }
     }
 
     private class StartValueChangeListener implements  ChangeListener{
         @Override
         public void stateChanged(ChangeEvent e) {
+            if ( isRefreshingPlayerDetails==true) return;
             var source = (JSlider)e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
@@ -191,26 +197,32 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             skillInfoSlider.setValueLabel();
         }
     }
+
     private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
     private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
-
+    private boolean isRefreshingPlayerDetails =false;
     private void refreshPlayerDetails() {
-        var player = getSelectedPlayer();
-        if ( player == null){
-            // reset previous selection
-            player = playerDetailsTableModel.getYouthPlayer();
-            if ( player != null) setSelectedPlayer(player);
-        }
-        if (player != null) {
-            playerNameLabel.setText(player.getFullName());
-            for ( int i=0; i< YouthPlayer.skillIds.length; i++){
-                playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
-                playerSkillInfoEditors[i].addCurrentValueChangeListener(currentValueChangeListener);
-                playerSkillInfoEditors[i].addStartValueChangeListener(startValueChangeListener);
+        if ( isRefreshingPlayerDetails == false) {
+            isRefreshingPlayerDetails =true;   // prevent recursions
+            var player = getSelectedPlayer();
+            if (player == null) {
+                // reset previous selection
+                player = playerDetailsTableModel.getYouthPlayer();
+                if (player != null) setSelectedPlayer(player);
             }
-            playerScoutCommentField.setText(getScoutComment(player));
-            playerDetailsTableModel.setYouthPlayer(player);
-            playerDetailsTableModel.initData();
+            if (player != null) {
+                playerNameLabel.setText(player.getFullName());
+                for (int i = 0; i < YouthPlayer.skillIds.length; i++) {
+                    playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
+                    playerSkillInfoEditors[i].addCurrentValueChangeListener(currentValueChangeListener);
+                    playerSkillInfoEditors[i].addStartValueChangeListener(startValueChangeListener);
+                }
+                playerScoutCommentField.setText(getScoutComment(player));
+                playerDetailsTableModel.setYouthPlayer(player);
+                playerDetailsTableModel.initData();
+            }
+
+            isRefreshingPlayerDetails =false;
         }
     }
 
@@ -243,9 +255,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private YouthPlayer getSelectedPlayer() {
         var row = this.playerOverviewTable.getSelectedRow();
         if ( row < 0 && this.playerOverviewTable.getRowCount() > 0){
-            // init selection
-            this.playerOverviewTable.setRowSelectionInterval(0,0);
-            row = 0;
+            row = initSelection();
         }
         if ( row > -1) {
             var index = playerOverviewTableSorter.getIndex(row);
@@ -269,9 +279,20 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
+    private boolean initSelection=false;
+    private int initSelection() {
+        var row=0;
+        initSelection=true;
+        this.playerOverviewTable.setRowSelectionInterval(row,row);
+        initSelection=false;
+        return row;
+    }
+
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        refreshPlayerDetails();
+        if ( e.getValueIsAdjusting() == false && initSelection==false) {
+            refreshPlayerDetails();
+        }
     }
 
     public void storeUserSettings() {

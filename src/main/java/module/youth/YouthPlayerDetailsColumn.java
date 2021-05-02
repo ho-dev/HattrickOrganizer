@@ -7,7 +7,7 @@ import core.gui.comp.table.UserColumn;
 public class YouthPlayerDetailsColumn extends UserColumn {
     static int nextId=0;
     protected YouthPlayerDetailsColumn(String name) {
-        super(nextId++, name);
+        this( name, 80);
         this.setDisplay(true);
     }
     public YouthPlayerDetailsColumn(String name, int minWidth){
@@ -15,6 +15,7 @@ public class YouthPlayerDetailsColumn extends UserColumn {
     }
     public YouthPlayerDetailsColumn(String name, String tooltip, int minWidth){
         super(nextId++,name,tooltip);
+        this.index= this.getId();
         this.minWidth = minWidth;
         preferredWidth = minWidth;
         this.setDisplay(true);
