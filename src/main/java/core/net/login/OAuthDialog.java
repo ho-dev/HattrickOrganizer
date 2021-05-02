@@ -58,7 +58,8 @@ public class OAuthDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
 		// Hard code set_matchorder due to authorization woes.
-		scopes = "&scope=" + "set_matchorder";
+		// scope manage_youthplayers is needed to use action type unlockskills
+		scopes = "&scope=" + "set_matchorder,manage_youthplayers";
 		
 		obtainUserURL();
 		initComponents();
