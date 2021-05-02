@@ -148,17 +148,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
-    private class CurrentValueChangeListener  implements ChangeListener{
+    private class CurrentValueChangeListener  implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-           var source = (JSlider)e.getSource();
+            if (isRefreshingPlayerDetails == true) return;
+            var source = (JSlider) e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
                 var skillInfo = skillInfoSlider.getSkillInfo();
                 var oldValue = skillInfo.getCurrentValue();
                 var newValue = skillInfoSlider.getSkillValue();
-                var startValue = Math.max(0,skillInfo.getStartValue()+newValue-oldValue);
+                var startValue = Math.max(0, skillInfo.getStartValue() + newValue - oldValue);
                 skillInfo.setCurrentValue(newValue);
                 skillInfo.setStartValue(skillInfoSlider.getSkillValue());
                 refreshYouthPlayerDevelopment();
@@ -183,6 +184,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private class StartValueChangeListener implements  ChangeListener{
         @Override
         public void stateChanged(ChangeEvent e) {
+            if ( isRefreshingPlayerDetails==true) return;
             var source = (JSlider)e.getSource();
             var skillInfoSlider = (YouthSkillInfoEditor.SkillInfoSlider) source.getParent();
             if (!source.getValueIsAdjusting()) {
