@@ -4,17 +4,12 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
-import core.gui.model.YouthPlayerColumn;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import module.training.Skills;
 
 import javax.swing.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 
