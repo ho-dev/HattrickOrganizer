@@ -1,4 +1,4 @@
-package core.gui.model;
+package module.youth;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
@@ -21,6 +21,7 @@ public class YouthPlayerColumn extends UserColumn {
 
     public YouthPlayerColumn(String name, String tooltip, int minWidth) {
         super(nextId++, name, tooltip);
+        this.index= this.getId();
         this.minWidth=minWidth;
         this.setPreferredWidth(minWidth);
         this.setDisplay(true);
