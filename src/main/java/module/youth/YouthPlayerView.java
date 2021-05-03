@@ -129,12 +129,20 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
+    private boolean isRefreshingPlayerOverview=false;
     private void refreshPlayerOverview() {
-        // Remember current selection, because initDate will reset it
-        var selection = this.playerOverviewTable.getSelectedRow();
-        playerOverviewTableModel.initData();
-        // Restore selection
-        if ( selection > -1) initSelection(selection);
+        if ( isRefreshingPlayerOverview) return;
+        try {
+            isRefreshingPlayerOverview = true;
+            // Remember current selection, because initDate will reset it
+            var selection = this.playerOverviewTable.getSelectedRow();
+            playerOverviewTableModel.initData();
+            // Restore selection
+            if (selection > -1) initSelection(selection);
+        }
+        finally {
+            isRefreshingPlayerOverview=false;
+        }
     }
 
     private void initPlayerDetails() {
@@ -174,13 +182,16 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private boolean isRefreshingPlayerDevelopment = false;
     private void refreshYouthPlayerDevelopment() {
-        if (!isRefreshingPlayerDevelopment) {
+        if (isRefreshingPlayerDevelopment) return;
+        try {
             isRefreshingPlayerDevelopment = true;
             var player = getSelectedPlayer();
             if (player != null) {
                 player.calcTrainingDevelopment();
                 refresh();
             }
+        }
+        finally {
             isRefreshingPlayerDevelopment = false;
         }
     }
@@ -206,8 +217,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
     private boolean isRefreshingPlayerDetails =false;
     private void refreshPlayerDetails() {
-        if (!isRefreshingPlayerDetails) {
-            isRefreshingPlayerDetails =true;   // prevent recursions
+        if (isRefreshingPlayerDetails) return;
+        try {
+            isRefreshingPlayerDetails = true;   // prevent recursions
             var player = getSelectedPlayer();
             if (player == null) {
                 // reset previous selection
@@ -225,8 +237,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 playerDetailsTableModel.setYouthPlayer(player);
                 playerDetailsTableModel.initData();
             }
-
-            isRefreshingPlayerDetails =false;
+        }
+        finally {
+            isRefreshingPlayerDetails = false;
         }
     }
 
