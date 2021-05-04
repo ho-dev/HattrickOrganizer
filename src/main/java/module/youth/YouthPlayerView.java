@@ -24,14 +24,14 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
-    private TableSorter playerOverviewTableSorter;
+    private YouthTableSorter playerOverviewTableSorter;
 
     private JLabel playerNameLabel;
     private YouthSkillInfoEditor[] playerSkillInfoEditors;
     private JEditorPane playerScoutCommentField;
     private JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
-    private TableSorter playerDetailsTableSorter;
+    private YouthTableSorter playerDetailsTableSorter;
 
     public YouthPlayerView() {
         super();
@@ -121,11 +121,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             playerOverviewTable.setRowSelectionAllowed(true);
             var selectionModel = playerOverviewTable.getSelectionModel();
             selectionModel.addListSelectionListener(this);
-            playerOverviewTableSorter = new TableSorter(playerOverviewTableModel, playerOverviewTableModel.getPositionInArray(0), getOrderByColumn());
+            playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
             playerOverviewTable.setModel(playerOverviewTableSorter);
             playerOverviewTableModel.restoreUserSettings(playerOverviewTable);
-            playerOverviewTableSorter.addMouseListenerToHeaderInTable(playerOverviewTable);
-            playerOverviewTableSorter.initsort();
         }
     }
 
@@ -134,11 +132,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         if ( isRefreshingPlayerOverview) return;
         try {
             isRefreshingPlayerOverview = true;
-            // Remember current selection, because initDate will reset it
-            var selection = this.playerOverviewTable.getSelectedRow();
             playerOverviewTableModel.initData();
-            // Restore selection
-            if (selection > -1) initSelection(selection);
         }
         finally {
             isRefreshingPlayerOverview=false;
@@ -152,11 +146,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerDetailsTable.setRowSelectionAllowed(true);
 
-            playerDetailsTableSorter = new TableSorter(playerDetailsTableModel, playerDetailsTableModel.getPositionInArray(0), playerDetailsTableModel.getPositionInArray(0));
+            playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
             playerDetailsTable.setModel(playerDetailsTableSorter);
             playerDetailsTableModel.restoreUserSettings(playerDetailsTable);
-            playerDetailsTableSorter.addMouseListenerToHeaderInTable(playerDetailsTable);
-            playerDetailsTableSorter.initsort();
         }
     }
 
@@ -276,7 +268,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             initSelection(row);
         }
         if ( row > -1) {
-            var index = playerOverviewTableSorter.getIndex(row);
+            var index = playerOverviewTableSorter.modelIndex(row);
             var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
             if (currentPlayers != null && currentPlayers.size() > index) {
                 return currentPlayers.get(index);
@@ -288,7 +280,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private void setSelectedPlayer(YouthPlayer selectedPlayer) {
         var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
         for (int row=0; row<currentPlayers.size(); row++){
-            var index = playerOverviewTableSorter.getIndex(row);
+            var index = playerOverviewTableSorter.modelIndex(row);
             var player = currentPlayers.get(index);
             if ( player != null && player.getId() == selectedPlayer.getId()){
                 this.playerOverviewTable.setRowSelectionInterval(row,row);
