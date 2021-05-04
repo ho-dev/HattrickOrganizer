@@ -392,6 +392,7 @@ public class YouthPlayer {
     }
 
     public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> calcTrainingDevelopment() {
+        this.potential=null;    // trigger potential recalc
         // init from models match list
         trainingDevelopment = new TreeMap<>();
         var model = HOVerwaltung.instance().getModel();

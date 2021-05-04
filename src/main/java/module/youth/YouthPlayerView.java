@@ -3,7 +3,6 @@ package module.youth;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.TableSorter;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -38,10 +37,12 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         playerOverviewTable = new JTable();
         playerDetailsTable = new JTable();
         playerNameLabel = new JLabel();
-        playerSkillInfoEditors = new YouthSkillInfoEditor[YouthPlayer.skillIds.length];
+
         playerScoutCommentField = new JEditorPane();
         playerScoutCommentField.setContentType("text/html");
         playerScoutCommentField.setEditable(false);
+
+        playerSkillInfoEditors = new YouthSkillInfoEditor[YouthPlayer.skillIds.length];
 
         var split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         var split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
@@ -78,6 +79,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor();
+            skillInfoEditor.addCurrentValueChangeListener(currentValueChangeListener);
+            skillInfoEditor.addStartValueChangeListener(startValueChangeListener);
+
             playerSkillInfoEditors[i] = skillInfoEditor;
             scoutAndEditorPanelConstraints.gridx=i%2;
             scoutAndEditorPanel.add(skillInfoEditor, scoutAndEditorPanelConstraints );
@@ -132,7 +136,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         if ( isRefreshingPlayerOverview) return;
         try {
             isRefreshingPlayerOverview = true;
+            var selection = this.playerOverviewTableSorter.getSelectedModelIndex();
             playerOverviewTableModel.initData();
+            this.playerOverviewTableSorter.setSelectedModelIndex(selection);
         }
         finally {
             isRefreshingPlayerOverview=false;
@@ -222,8 +228,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 playerNameLabel.setText(player.getFullName());
                 for (int i = 0; i < YouthPlayer.skillIds.length; i++) {
                     playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
-                    playerSkillInfoEditors[i].addCurrentValueChangeListener(currentValueChangeListener);
-                    playerSkillInfoEditors[i].addStartValueChangeListener(startValueChangeListener);
                 }
                 playerScoutCommentField.setText(getScoutComment(player));
                 playerDetailsTableModel.setYouthPlayer(player);

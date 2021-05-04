@@ -87,11 +87,7 @@ public class YouthTableSorter extends AbstractTableModel {
                 int viewColumn = columnModel.getColumnIndexAtX(e.getX());
                 int column = columnModel.getColumn(viewColumn).getModelIndex();
                 if (column != -1) {
-                    // Remember selection
-                    var selection = table.getSelectedRow();
-                    if ( selection > -1){
-                        selection = modelIndex(selection);
-                    }
+                    var selection = getSelectedModelIndex();
                     var status = getSortingOrder(column).getValue();
                     if (!e.isControlDown()) {
                         cancelSorting();
@@ -101,14 +97,25 @@ public class YouthTableSorter extends AbstractTableModel {
                     status = status + (e.isShiftDown() ? -1 : 1);
                     status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
                     setSortingStatus(column, Order.valueOf(status));
-
-                    if ( selection > -1){
-                        selection = viewIndex(selection);
-                        table.setRowSelectionInterval(selection, selection);
-                    }
+                    setSelectedModelIndex(selection);
                 }
             }
         });
+    }
+
+    public void setSelectedModelIndex(int modelIndex) {
+        if ( modelIndex > -1){
+            modelIndex = viewIndex(modelIndex);
+            table.setRowSelectionInterval(modelIndex, modelIndex);
+        }
+    }
+
+    public int getSelectedModelIndex() {
+        var selection = table.getSelectedRow();
+        if ( selection > -1){
+            selection = modelIndex(selection);
+        }
+        return selection;
     }
 
     public boolean isSorting() {
