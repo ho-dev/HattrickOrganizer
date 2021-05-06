@@ -24,10 +24,6 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
     private int[] cols;
 
     public FutureTrainingPrioPopup(LazyImagePanel panel, TrainingModel model ) {
-        initPopupMenu(panel, model);
-    }
-
-    private void initPopupMenu(LazyImagePanel panel, TrainingModel model) {
         this.panel = panel;
         this.model = model;
         fullTrainingMenuItem.addActionListener(this);
