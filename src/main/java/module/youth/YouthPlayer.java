@@ -55,12 +55,12 @@ public class YouthPlayer {
     private YouthSkillsInfo currentSkills = new YouthSkillsInfo();
 
     /**
-     * Comments of the scout at player's arrival (not used yet)
+     * Comments of the scout at player's arrival
      */
     private List<ScoutComment> scoutComments;
 
     /**
-     * Comments of the trainer after training matches (not used yet)
+     * Comments of the trainer after training matches (not available yet)
      */
     private List<YouthTrainerComment> trainerComments;
 
@@ -72,10 +72,20 @@ public class YouthPlayer {
      */
     private TreeMap<Timestamp, YouthTrainingDevelopmentEntry> trainingDevelopment;
 
-    public YouthPlayer() {
 
-    }
+    /**
+     * Create youth player
+     *
+     * (used in YouthPlayerTable when player is loaded from database)
+     */
+    public YouthPlayer() {}
 
+    /**
+     * Get the scout comments
+     * The list is loaded from database.
+     *
+     * @return list of Scout comments
+     */
     public List<ScoutComment> getScoutComments() {
         if (scoutComments == null) {
             scoutComments = DBManager.instance().loadYouthScoutComments(this.getId());
@@ -83,10 +93,19 @@ public class YouthPlayer {
         return this.scoutComments;
     }
 
+    /**
+     * Set the scout comments
+     *
+     * @param scoutComments list of scout comments
+     */
     public void setScoutComments(List<ScoutComment> scoutComments) {
         this.scoutComments = scoutComments;
     }
 
+    /**
+     * Look for start skill levels, potential and specialties given by the scout.
+     * The mentioned skills are tagged as top3 skills.
+     */
     private void evaluateScoutComments() {
         if (scoutComments != null) {
             for (var c : scoutComments) {
@@ -168,6 +187,12 @@ public class YouthPlayer {
         return canBePromotedIn;
     }
 
+    /**
+     * Number of days until the player can be promoted at a given date.
+     *
+     * @param date for which the duration should be calculated, typically the current date.
+     * @return not negative number of days. 0 when the player can be promoted.
+     */
     public int getCanBePromotedInAtDate(long date) {
         long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
         long diff = (date - hrftime + 500*60*60*24) / (1000 * 60 * 60 * 24);
@@ -391,6 +416,12 @@ public class YouthPlayer {
         return trainingDevelopment;
     }
 
+    /**
+     * Calculate the player's training development and store current skills in the database.
+     * Player's potential based on prior calculation is reset.
+     * Player's training of last match is set.
+     * @return map of match date to training development entry
+     */
     public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> calcTrainingDevelopment() {
         this.potential=null;    // trigger potential recalc
         // init from models match list
@@ -426,6 +457,10 @@ public class YouthPlayer {
         return trainingDevelopment;
     }
 
+    /**
+     * Skills infos of player's arrival date are reconstructed.
+     * @return youth skills info
+     */
     private YouthSkillsInfo getStartSkills() {
         YouthSkillsInfo startSkills = new YouthSkillsInfo();
         for (var skill : this.currentSkills.values()) {
@@ -445,8 +480,19 @@ public class YouthPlayer {
         return startSkills;
     }
 
+    /**
+     * Cache of old skills info
+     */
     private Timestamp playerDevelopmentDate;
     private YouthPlayer oldPlayerInfo;
+
+    /**
+     * Get player's state at given date
+     * Skills are loaded from database, if not given in cache.
+     *
+     * @param date
+     * @return youth player state at date
+     */
     private YouthPlayer getOldPlayerInfo(Timestamp date){
         if ( playerDevelopmentDate == null || !date.equals(playerDevelopmentDate)){
             playerDevelopmentDate = date;
@@ -455,6 +501,11 @@ public class YouthPlayer {
         return oldPlayerInfo;
     }
 
+    /**
+     * Get player's skill at given date
+     * @param date timestamp
+     * @return youth player's skills
+     */
     private YouthSkillsInfo getSkillsAt(Timestamp date) {
         if (!date.equals(this.youthMatchDate)) {
             var oldPlayerInfo = getOldPlayerInfo(date);
@@ -474,12 +525,22 @@ public class YouthPlayer {
         return this.currentSkills;
     }
 
+    /**
+     * Get player's injury level at given date
+     * @param date timestamp
+     * @return injury level
+     */
     private int getInjuryLevelAt(Timestamp date){
         var oldPlayerInfo = getOldPlayerInfo(date);
         if ( oldPlayerInfo != null) return oldPlayerInfo.getInjuryLevel();
         return this.injuryLevel;
     }
 
+    /**
+     * Get player's suspension at given date
+     * @param date timestamp
+     * @return boolean
+     */
     private boolean isSuspendedAt(Timestamp date){
         var oldPlayerInfo = getOldPlayerInfo(date);
         if ( oldPlayerInfo != null) return oldPlayerInfo.isSuspended();
@@ -491,6 +552,10 @@ public class YouthPlayer {
         return this.cards == 3;
     }
 
+    /**
+     * recalc skills since given date
+     * @param since timestamp
+     */
     public void recalcSkills(Timestamp since) {
         if (trainingDevelopment != null) {
             var startSkills = getSkillsAt(since);
@@ -618,7 +683,7 @@ public class YouthPlayer {
     }
 
     /**
-     * Create a youthplayer from downloaded information.
+     * Create a youth player from downloaded information.
      *
      * @param properties extracted from chpp-xml file
      */
