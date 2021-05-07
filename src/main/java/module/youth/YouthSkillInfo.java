@@ -63,13 +63,17 @@ public class YouthSkillInfo {
     /**
      * Scout mentions up to 2 skill info. Both of them belong to the top 3 skills with highest maximum.
      * Information is used to restrict other skill maxima.
-     * <p>
+     *
      * True if skill is one of the skills mentioned by the scout or found maximum is greater than one of the scout infos
      * False if skill maximum is not one of the top 3 maximums
      * null otherwise (not known)
      */
     private Boolean isTop3Skill;
 
+    /**
+     * Constructor, only setting the skill id
+     * @param id HTSkillId
+     */
     public YouthSkillInfo(Skills.HTSkillID id) {
         this.skillID = id;
     }
@@ -90,19 +94,34 @@ public class YouthSkillInfo {
         return this.startValue;
     }
 
+    /**
+     * Set the skill's start value.
+     * AdjustValues is called to consider constraints by known skill levels downloaded from hattrick.
+     * @param value New start value. This may be changed, if the value conflicts with skill constraints.
+     */
     public void setStartValue(double value) {
         this.startValue = value;
         adjustValues();
     }
 
+    /**
+     * Checks and adjusts start and current value of the skill to respect constraints:
+     * startlevel<=startValue<startLevel+1
+     * currentLevel<=currentValue<currentLevel+1
+     * 0<=startValue<=currentValue<=max+1 or 8.3
+     *
+     * Additionally possible ranges of start value (startValueRange) and currentValue (currentValueRange)
+     * are examined.
+     */
     private void adjustValues() {
         if (max != null) {
             if (currentValue > max + 1) {
                 currentValue = max + 0.99;
             }
-            currentValueRange.lessThan(max+1);
-            startValueRange.lessThan(max+1);
+            currentValueRange.lessThan(max + 1);
+            startValueRange.lessThan(max + 1);
         }
+
         if (currentLevel != null) {
             if (currentValue < currentLevel) {
                 this.currentValue = currentLevel;
@@ -120,17 +139,16 @@ public class YouthSkillInfo {
             } else if (startValue > startLevel + 1) {
                 this.startValue = startLevel + 0.99;
             }
-
-
             if (currentValue < startValue) {
                 currentValue = startValue;
             }
-
-            startValueRange.between(startLevel, startLevel+1);
+            startValueRange.between(startLevel, startLevel + 1);
             currentValueRange.greaterEqual(startLevel);
-
         } else if (currentValue < startValue) {
+            if ( currentValue < 0) currentValue = 0;
             startValue = currentValue;
+        } else if (startValue < 0) {
+            startValue = 0;
         }
     }
 
