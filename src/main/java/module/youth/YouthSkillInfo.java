@@ -161,6 +161,16 @@ public class YouthSkillInfo {
         adjustValues();
     }
 
+    /**
+     * Skill maximum level is reached, but there might be some subskill points left for future training
+     * @return true if current level is known and equal to maximum level
+     */
+    public boolean isMaxLevelReached() {
+        return this.getCurrentLevel() != null  &&
+                ( this.getCurrentLevel()==8 ||
+                        this.isMaxAvailable() && this.getCurrentValue() == this.getMax());
+    }
+
     public boolean isMaxReached() {
         return isMaxReached;
     }
