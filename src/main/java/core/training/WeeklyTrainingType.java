@@ -16,10 +16,10 @@ public abstract class WeeklyTrainingType {
 	protected int _PrimaryTrainingSkill = -1;
 	protected int _SecondaryTrainingSkill = -1;
 
-	protected List<MatchRoleID.Sector>  bonusTrainingSectors = new ArrayList<>();
-	protected List<MatchRoleID.Sector>  fullTrainingSectors = new ArrayList<>();
-	protected List<MatchRoleID.Sector>  partlyTrainingSectors = new ArrayList<>();
-	protected List<MatchRoleID.Sector>  osmosisTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector> bonusTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector> fullTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector> partlyTrainingSectors = new ArrayList<>();
+	protected List<MatchRoleID.Sector> osmosisTrainingSectors = new ArrayList<>();
 
 	protected int[] _PrimaryTrainingSkillPositions = new int[0];
 	protected int[] _PrimaryTrainingSkillBonusPositions = new int[0];
@@ -142,15 +142,16 @@ public abstract class WeeklyTrainingType {
 	public float getSecondaryTrainingSkillBaseLength() {
 		return _SecondaryTrainingSkillBaseLength;
 	}
-/*
-	public float getSecondaryTrainingSkillSecondaryLengthRate() {
-		return _SecondaryTrainingSkillPartlyLengthRate;
-	}
 
-	public float getSecondaryTrainingSkillOsmosisLengthRate() {
-		return _SecondaryTrainingSkillOsmosisLengthRate;
-	}
-*/
+	/*
+		public float getSecondaryTrainingSkillSecondaryLengthRate() {
+			return _SecondaryTrainingSkillPartlyLengthRate;
+		}
+
+		public float getSecondaryTrainingSkillOsmosisLengthRate() {
+			return _SecondaryTrainingSkillOsmosisLengthRate;
+		}
+	*/
 	public int[] getTrainingSkillPositions() {
 		return _PrimaryTrainingSkillPositions;
 	}
@@ -278,7 +279,6 @@ public abstract class WeeklyTrainingType {
 			skillFactor = 0;
 		}
 
-
 		double trainerFactor = (1 + (7 - Math.min(trainerLevel, 7.5)) * 0.091) * (UserParameter.instance().TrainerFaktor + BASE_COACH_FACTOR);
 		double coFactor = getAssistantFactor(assistantLevel);
 		double tiFactor = Double.MAX_VALUE;
@@ -318,14 +318,13 @@ public abstract class WeeklyTrainingType {
 
 	public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
 
-	static double[] coachKoeff = {0.734,0.834,0.92,1,1.04};
-	static double[] assistantKoeff ={1,1.035,1.07,1.105,1.14,1.175,1.21,1.245,1.28,1.315,1.35};
+	static double[] coachKoeff = {0.734, 0.834, 0.92, 1, 1.04};
+	static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
 
 	public double getTrainingAlternativeFormula(int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 
-		if ( trForPlayer.getTrainingPair() == null ||
-				trForPlayer.getTrainingPair().getTrainingDuration() == null)
-		{
+		if (trForPlayer.getTrainingPair() == null ||
+				trForPlayer.getTrainingPair().getTrainingDuration() == null) {
 			return 0;
 		}
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
@@ -426,7 +425,7 @@ public abstract class WeeklyTrainingType {
 		*/
 
 		var age = trForPlayer.getPlayer().getAlter();
-		var factorAge = Math.pow(.9835, age-17);
+		var factorAge = Math.pow(.9835, age - 17);
 
 		/*
 		K(time)
@@ -437,18 +436,17 @@ public abstract class WeeklyTrainingType {
 		K(time)=(1.0*36+(90-36)*0.5)/90=0.7
 		 */
 
-		double factorTime=1;
+		double factorTime = 1;
 		var minutes = trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes();
-		if ( minutes > 0 && this.getPrimaryTrainingSkillBonus()>0){
-			factorTime = (1+getPrimaryTrainingSkillBonus())* minutes / 90.;
-		}
-		else if ( minutes < 90){
+		if (minutes > 0 && this.getPrimaryTrainingSkillBonus() > 0) {
+			factorTime = (1 + getPrimaryTrainingSkillBonus()) * minutes / 90.;
+		} else if (minutes < 90) {
 			var partlyMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes();
-			factorTime = minutes/90. + partlyMinutes/90.*.5;
+			factorTime = minutes / 90. + partlyMinutes / 90. * .5;
 			minutes += partlyMinutes;
-			if ( minutes < 90){
+			if (minutes < 90) {
 				var osmosisMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes();
-				factorTime += osmosisMinutes/90. * osmosisKoeff;
+				factorTime += osmosisMinutes / 90. * osmosisKoeff;
 			}
 		}
 
@@ -494,48 +492,83 @@ public abstract class WeeklyTrainingType {
 		return factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01;
 	}
 
-
-	protected double trainingCalcError(String s){
+	protected double trainingCalcError(String s) {
 		HOLogger.instance().error(this.getClass(), s);
 		return 1;
 	}
 
-
 	public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
 
-
+	/**
+	 * Training effect of youth bonus training per minute
+	 *
+	 * @param skillId      Skill id
+	 * @param currentValue current skill value
+	 * @param ageYears     current age of the player
+	 * @return training skill increment of bonus training
+	 */
 	public double getBonusYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
-		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) * (1+this.getPrimaryTrainingSkillBonus());
+		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) * (1 + this.getPrimaryTrainingSkillBonus());
 	}
 
+	/**
+	 * Training effect of youth full training per minute
+	 *
+	 * @param skillId      Skill id
+	 * @param currentValue current skill value
+	 * @param ageYears     current age of the player
+	 * @return training skill increment of full training
+	 */
 	public double getFullYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
-		double nweeks = (0.5+0.1*currentValue)*(1+(ageYears-15)*0.14);	// approximation
-		if ( skillId == _PrimaryTrainingSkill){
+		double nweeks = (0.5 + 0.1 * currentValue) * (1 + (ageYears - 15) * 0.14);    // approximation
+		if (skillId == _PrimaryTrainingSkill) {
 			nweeks *= this.getPrimaryTrainingSkillBaseLength();
-		}
-		else if ( skillId == _SecondaryTrainingSkill){
+		} else if (skillId == _SecondaryTrainingSkill) {
 			nweeks *= this.getSecondaryTrainingSkillBaseLength();
-		}
-		else {
+		} else {
 			return 0; // skill is not trained
 		}
-		if ( nweeks>0 ) return  1. / nweeks /90.;
+		if (nweeks > 0) return 1. / nweeks / 90.;
 		return 0; // should not happen
 	}
 
+	/**
+	 * Training effect of youth partly training per minute
+	 *
+	 * @param skillId      Skill id
+	 * @param currentValue current skill value
+	 * @param ageYears     current age of the player
+	 * @return training skill increment of partly training
+	 */
 	public double getPartlyYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillPartlyBaseLengthRate();
 	}
 
+	/**
+	 * Training effect of youth osmosis training per minute
+	 *
+	 * @param skillId      Skill id
+	 * @param currentValue current skill value
+	 * @param ageYears     current age of the player
+	 * @return training skill increment of osmosis training
+	 */
 	public double getOsmosisYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillOsmosisBaseLengthRate();
 	}
 
-	public List<MatchRoleID.Sector> getBonusTrainingSectors(){
+	public List<MatchRoleID.Sector> getBonusTrainingSectors() {
 		return this.bonusTrainingSectors;
 	}
-	public List<MatchRoleID.Sector> getFullTrainingSectors(){return this.fullTrainingSectors;}
-	public List<MatchRoleID.Sector> getPartlyTrainingSectors(){return this.partlyTrainingSectors;}
-	public List<MatchRoleID.Sector> getOsmosisTrainingSectors(){return this.osmosisTrainingSectors;}
 
+	public List<MatchRoleID.Sector> getFullTrainingSectors() {
+		return this.fullTrainingSectors;
+	}
+
+	public List<MatchRoleID.Sector> getPartlyTrainingSectors() {
+		return this.partlyTrainingSectors;
+	}
+
+	public List<MatchRoleID.Sector> getOsmosisTrainingSectors() {
+		return this.osmosisTrainingSectors;
+	}
 }

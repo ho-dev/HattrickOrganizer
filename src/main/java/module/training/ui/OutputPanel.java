@@ -75,18 +75,6 @@ public class OutputPanel extends LazyImagePanel {
     @Override
     protected void update() {
         ((OutputTableModel) outputTable.getModel()).fillWithData();
-        trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
-        outputTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (outputTable.getSelectedRow() < 0)
-                    return;
-                if (e.getComponent() instanceof JTable) {
-                    trainingPrioPopUp.updateActivePlayer();
-                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
     }
 
     /**
@@ -105,7 +93,7 @@ public class OutputPanel extends LazyImagePanel {
         String input = tf.getText();
         if (value == JOptionPane.YES_OPTION && !StringUtils.isEmpty(input)) {
 
-            Integer matchID = Integer.valueOf(input);
+            int matchID = Integer.parseInt(input);
 
             if (HelperWrapper.instance().isUserMatch(input, MatchType.LEAGUE)) {
                 if (OnlineWorker.downloadMatchData(matchID, MatchType.LEAGUE, false)) {
@@ -139,6 +127,19 @@ public class OutputPanel extends LazyImagePanel {
                 selectPlayerFromModel();
             }
         });
+
+        this.outputTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (outputTable.getSelectedRow() < 0)
+                    return;
+                if (e.getComponent() instanceof JTable) {
+                    trainingPrioPopUp.updateActivePlayer();
+                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
     }
 
     private void selectPlayerFromModel() {
@@ -223,6 +224,10 @@ public class OutputPanel extends LazyImagePanel {
         buttonPanel.add(this.calculateButton, gbc);
 
         add(buttonPanel, BorderLayout.NORTH);
+
+
+        trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
+
     }
 
     private class OutputTable extends JTable {

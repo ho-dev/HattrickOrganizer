@@ -11,7 +11,7 @@ public class YouthSkillInfoEditor extends JPanel {
 
     private YouthSkillInfo skillInfo;
 
-    private static int SliderWidth = 830;
+    private static int SliderWidth = 1660;
 
     /**
      * Calculate slider position from skill value

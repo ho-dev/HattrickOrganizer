@@ -20,8 +20,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         if (size() == 0) return null;
         for (var skill : this.values()) {
             if (skill.getMax() != null && skill.getMax() >= 5 ||
-                    skill.getCurrentLevel() != null && skill.getCurrentLevel() >= 5 ||
-                    skill.getCurrentValue() >= 5) {
+                    skill.getCurrentLevel() != null && skill.getCurrentLevel() >= 5 ) {
                 var skillId = skill.getSkillID();
                 if (skillId == Skills.HTSkillID.Keeper) return true;
                 else if (skillId == Skills.HTSkillID.Winger ||
@@ -85,7 +84,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
 
         // Lowest Top3 maximum
         var minTop3Max = this.values().stream()
-                .filter(i -> i.isTop3() != null && i.isTop3() == true && i.isMaxAvailable())
+                .filter(i -> i.isTop3() != null && i.isTop3() && i.isMaxAvailable())
                 .min(Comparator.comparingInt(YouthSkillInfo::getMax)).get().getMax();
 
         // Find skills with higher maximum of current level than lowest known top3 maximum
@@ -147,6 +146,6 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
     }
 
     public double getSkillSum() {
-        return this.values().stream().mapToDouble(e->e.getCurrentValue()).sum();
+        return this.values().stream().mapToDouble(YouthSkillInfo::getCurrentValue).sum();
     }
 }

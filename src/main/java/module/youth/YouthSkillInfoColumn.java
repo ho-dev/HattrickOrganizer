@@ -12,6 +12,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     YouthSkillInfo skillInfo;
 
     private static final Color Color_MaxReached = Color.red;
+    private static final Color Color_MaxLevelReached = Color.yellow;
     private static final Color Color_PossibleRange = new Color(0, 255, 0, 100);
     private static final Color Color_TrainedRange = new Color(0, 153, 0);
     private static final Color Color_Background = Color.lightGray;
@@ -115,8 +116,14 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
         // draw trained range
         xStart = (int) (this.skillInfo.getStartValue() * 10);
-        g.setColor(this.skillInfo.isMaxReached() ? Color_MaxReached : Color_TrainedRange);
+        g.setColor(getColorTrainedBar());
         xEnd = (int) (this.skillInfo.getCurrentValue() * 10);
         g.fillRect(xStart, 0, xEnd-xStart+1, bar_thickness);
+    }
+
+    private Color getColorTrainedBar() {
+        if (this.skillInfo.isMaxReached()) return Color_MaxReached;
+        if (this.skillInfo.isMaxLevelReached()) return Color_MaxLevelReached;
+        return Color_TrainedRange;
     }
 }
