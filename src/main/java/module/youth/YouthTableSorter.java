@@ -232,7 +232,7 @@ public class YouthTableSorter extends AbstractTableModel {
                 Object o2 = tableModel.getValueAt(row2, column);
 
                 if (o1 == null && o2 == null) {
-                    return 0;
+                    continue;   // check next column, if any. Else return 0!
                 } else if (o1 == null) {
                     return columnSorting.getComparison(-1);
                 } else if (o2 == null) {
