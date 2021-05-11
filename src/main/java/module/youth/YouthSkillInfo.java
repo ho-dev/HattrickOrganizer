@@ -186,7 +186,7 @@ public class YouthSkillInfo {
     public boolean isMaxLevelReached() {
         return this.getCurrentLevel() != null  &&
                 ( this.getCurrentLevel()==8 ||
-                        this.isMaxAvailable() && this.getCurrentValue() == this.getMax());
+                        this.isMaxAvailable() && this.getCurrentLevel() == this.getMax());
     }
 
     public boolean isMaxReached() {
