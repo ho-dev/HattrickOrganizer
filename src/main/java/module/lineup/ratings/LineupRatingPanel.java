@@ -774,9 +774,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             clear();
 
             if (currentLineup.getRatings().getLeftDefense().size() !=0) {
-                setRightDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                setRightDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                setLeftDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                setLeftDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setMidfield(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
                 setLeftAttack(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
                 setCentralAttack(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
@@ -832,5 +832,4 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private void setPredictionModel(int newPredictionType) {
         core.util.Helper.setComboBoxFromID(m_jcbPredictionModel, newPredictionType);
     }
-
 }
