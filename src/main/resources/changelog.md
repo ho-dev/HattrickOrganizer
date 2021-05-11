@@ -36,6 +36,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Team Analyser
   - tuning simulation (#865)
+  - fix npe if system configurations of team analyzer are not available in database (#956)
 
 
 ### Rating
