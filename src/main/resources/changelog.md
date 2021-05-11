@@ -56,6 +56,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Training
   - many buf fixes
+  - fix training recap table's resetting scroll positions on table refresh  (#1011) 
+  
 
 
 ### Misc

@@ -59,6 +59,8 @@ layout: page
 
 ### Training
 - many buf fixes
+- fix training recap table's resetting scroll positions on table refresh  (#1011)
+
 
 
 ### Misc
