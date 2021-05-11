@@ -2,33 +2,20 @@ package module.training.ui;
 
 import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.BaseTableModel;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.model.player.ISkillChange;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.training.FutureTrainingManager;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.*;
 
 
 public class TrainingPredictionPanel extends LazyImagePanel  {
 
-    private static final int fixedColumns = 5;
     private TrainingRecapTable recapTable;
     private final TrainingModel model;
-    private FutureTrainingPrioPopup trainingPrioPopUp;
-    private JTable table;
-    private Vector<String> columns;
 
     /**
      * Creates a new TrainingRecapPanel object.
@@ -41,25 +28,25 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     protected void initialize() {
         initComponents();
         addListeners();
-        setNeedsRefresh(true);
+//        setNeedsRefresh(true);
     }
 
     @Override
     protected void update() {
-        reload();
+        this.recapTable.refresh();
     }
 
     /**
      * Reload the panel
-     */
     private void reload() {
-        reAddTable();
+        addRecapTable();
     }
+     */
 
     private void addListeners() {
         RefreshManager.instance().registerRefreshable(() -> {
             if (isShowing()) {
-                reload();
+                update();
             }
         });
 
@@ -67,50 +54,9 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
             if (change == ModelChange.ACTIVE_PLAYER) {
                 selectPlayerFromModel();
             } else {
-                reload();
+                update();
             }
         });
-    }
-
-    /**
-     * Get Columns name
-     *
-     * @return List of string
-     */
-    private Vector<String> getColumns() {
-        if (columns == null) {
-            columns = new Vector<>();
-            columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
-            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
-            columns.add(HOVerwaltung.instance().getLanguageString("BestePosition"));
-            columns.add("Speed");
-            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
-
-            var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
-
-            // We are in the middle where season has not been updated!
-            try {
-                if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                        .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                    actualWeek.addWeeks(1);
-                }
-            } catch (Exception e1) {
-                // Null when first time HO is launched
-            }
-
-            for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                // calculate the week and season of the future training
-                //int week = (actualWeek + i) - 1;
-                //int season = actualSeason + (week / 16);
-                //week = (week % 16) + 1;
-                columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
-                actualWeek.addWeeks(1);
-            }
-
-            columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
-        }
-
-        return columns;
     }
 
     /**
@@ -130,6 +76,8 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
 
         // Add legend panel.
         add(new TrainingLegendPanel(), BorderLayout.SOUTH);
+        recapTable = new TrainingRecapTable( this, this.model);
+        add(recapTable, BorderLayout.CENTER);
     }
 
     private void selectPlayerFromModel() {
@@ -145,104 +93,5 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
                 }
             }
         }
-    }
-
-    private void reAddTable() {
-        if (recapTable != null) {
-            remove(recapTable);
-        }
-
-        table = new JTable(createTableModel());
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        TableColumnModel columnModel = table.getColumnModel();
-        columnModel.setColumnSelectionAllowed(true);
-        ListSelectionModel columnSelectionModel = columnModel.getSelectionModel();
-        columnSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        ListSelectionModel rowSelectionModel = table.getSelectionModel();
-        rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (table.getSelectedRow() < 0)
-                    return;
-
-                if ( e.getComponent() instanceof JTable ) {
-                    var cols = table.getSelectedColumns();
-                    trainingPrioPopUp.setSelectedColumns(cols);
-                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
-        });
-
-        recapTable = new TrainingRecapTable(this.model, table, fixedColumns);
-
-        // Hide the last column
-        JTable scrollTable = recapTable.getScrollTable();
-        int lastSTCol = scrollTable.getColumnCount() - 1;
-        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setPreferredWidth(0);
-        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMinWidth(0);
-        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMaxWidth(0);
-
-        JTable lockedTable = recapTable.getLockedTable();
-        lockedTable.getSelectionModel().addListSelectionListener(
-                new PlayerSelectionListener(this.model, scrollTable, lastSTCol));
-        recapTable.getScrollTable().getTableHeader().setReorderingAllowed(false);
-        add(recapTable, BorderLayout.CENTER);
-    }
-
-    private TableModel createTableModel() {
-
-        Vector<String> columns = getColumns();
-        List<Player> list = HOVerwaltung.instance().getModel().getCurrentPlayers();
-        List<Vector<String>> players = new ArrayList<>();
-
-        for (Player player : list) {
-            FutureTrainingManager ftm = new FutureTrainingManager(player,
-                    this.model.getFutureTrainings());
-            List<ISkillChange> skillChanges = ftm.getFutureSkillups();
-
-            HashMap<String, ISkillChange> maps = new HashMap<>();
-            for ( var s: skillChanges){
-                maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
-            }
-
-            Vector<String> row = new Vector<>();
-
-            row.add(player.getFullName());
-            row.add(player.getAlterWithAgeDaysAsString());
-            byte bIdealPosition = player.getIdealPosition();
-            row.add(MatchRoleID.getNameForPosition(bIdealPosition)
-                    + " ("
-                    +  player.getIdealPositionStrength(true, true, 1, null, false)
-                    + "%)");
-            row.add(Integer.toString(ftm.getTrainingSpeed()));
-            row.add(Integer.toString(player.getPlayerID()));
-
-            for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                ISkillChange s = maps.get(columns.get(i + fixedColumns));
-
-                if (s == null) {
-                    row.add("");
-                } else {
-                    row.add(s.getType() + " " + s.getValue() + " " + s.getChange());
-                }
-            }
-
-            row.add(Integer.toString(player.getPlayerID()));
-            players.add(row);
-        }
-
-        // Sort the players
-        players.sort(new TrainingComparator(3, fixedColumns));
-
-        BaseTableModel tableModel = new BaseTableModel(new Vector<>(), columns);
-        // and add them to the model
-        for (Vector<String> row : players) {
-            tableModel.addRow(row);
-        }
-
-        return tableModel;
     }
 }

@@ -1,26 +1,165 @@
 package module.training.ui;
 
+import core.gui.comp.panel.LazyImagePanel;
+import core.gui.model.BaseTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
+import core.model.player.ISkillChange;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.training.FutureTrainingManager;
 import core.training.TrainingPreviewPlayers;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.TrainingRecapRenderer;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
+import javax.swing.table.TableModel;
 
 
 public class TrainingRecapTable extends JScrollPane {
 
+    static final int fixedColumns = 5;
+    private final FutureTrainingPrioPopup trainingPrioPopUp;
     private JTable fixed;
     private JTable scroll;
 
     private TrainingModel trainingModel;
+
+    /**
+     * Get Columns name
+     *
+     * @return List of string
+     */
+    Vector<String> getColumns() {
+        var columns = new Vector<String>();
+        columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
+        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+        columns.add(HOVerwaltung.instance().getLanguageString("BestePosition"));
+        columns.add("Speed");
+        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+
+        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
+
+        // We are in the middle where season has not been updated!
+        try {
+            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
+                    .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+                actualWeek.addWeeks(1);
+            }
+        } catch (Exception e1) {
+            // Null when first time HO is launched
+        }
+
+        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
+            columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
+            actualWeek.addWeeks(1);
+        }
+
+        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+        return columns;
+    }
+
+    TableModel createTableModel() {
+        Vector<String> columns = getColumns();
+        var rows = createRows();
+        BaseTableModel tableModel = new BaseTableModel(new Vector<>(), columns);
+        // and add them to the model
+        for (Vector<String> row : rows) {
+            tableModel.addRow(row);
+        }
+        return tableModel;
+    }
+
+    public void refresh() {
+        deleteRows(scroll);
+        deleteRows(fixed);
+        var rows = createRows();
+        var model = (DefaultTableModel)scroll.getModel();
+        for (var row: rows) {
+            model.addRow(row);
+        }
+    }
+
+    private void addScrollColumns(Vector<String> row) {
+        var colums = new Vector<String>();
+        for ( int i=fixedColumns; i < row.size(); i++){
+            colums.add(row.get(i));
+        }
+        var model = (DefaultTableModel)scroll.getModel();
+        model.addRow(colums);
+    }
+
+    private void addFixedColumns(Vector<String> row) {
+        var colums = new Vector<String>();
+        for ( int i=0; i < fixedColumns; i++){
+            colums.add(row.get(i));
+        }
+        var model = (DefaultTableModel)fixed.getModel();
+        model.addRow(colums);
+    }
+
+    private void deleteRows(JTable table) {
+        var model = (DefaultTableModel)table.getModel();
+        model.setNumRows(0);
+    }
+
+    private List<Vector<String>> createRows() {
+        Vector<String> columns = getColumns();
+        List<Vector<String>> rows = new ArrayList<>();
+        List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
+
+        for (Player player : players) {
+            FutureTrainingManager ftm = new FutureTrainingManager(player,
+                    this.trainingModel.getFutureTrainings());
+            List<ISkillChange> skillChanges = ftm.getFutureSkillups();
+
+            HashMap<String, ISkillChange> maps = new HashMap<>();
+            for ( var s: skillChanges){
+                maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
+            }
+
+            Vector<String> row = new Vector<>();
+
+            row.add(player.getFullName());
+            row.add(player.getAlterWithAgeDaysAsString());
+            byte bIdealPosition = player.getIdealPosition();
+            row.add(MatchRoleID.getNameForPosition(bIdealPosition)
+                    + " ("
+                    +  player.getIdealPositionStrength(true, true, 1, null, false)
+                    + "%)");
+            row.add(Integer.toString(ftm.getTrainingSpeed()));
+            row.add(Integer.toString(player.getPlayerID()));
+
+            for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
+                ISkillChange s = maps.get(columns.get(i + fixedColumns));
+
+                if (s == null) {
+                    row.add("");
+                } else {
+                    row.add(s.getType() + " " + s.getValue() + " " + s.getChange());
+                }
+            }
+
+            row.add(Integer.toString(player.getPlayerID()));
+            rows.add(row);
+        }
+
+        // Sort the players
+        rows.sort(new TrainingComparator(3, fixedColumns));
+        return rows;
+    }
 
     /**
      * Fixed table renderer to add special background colors depending on training speed
@@ -39,20 +178,22 @@ public class TrainingRecapTable extends JScrollPane {
             this.setToolTipText("");
 
             if (column == 0) {
-                String tooltip = null;
+                String tooltip;
                 int playerId = Integer.parseInt((String) table.getValueAt(row, table.getColumnCount() - 1));
                 Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
 
-                this.setOpaque(true);
-                this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
-                this.setText(player.getFullName());
+                if ( player != null ) {
+                    this.setOpaque(true);
+                    this.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
+                    this.setText(player.getFullName());
 
-                tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
-                if (tooltip == null) {
-                    tooltip = "";
+                    tooltip = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getText();
+                    if (tooltip == null) {
+                        tooltip = "";
+                    }
+                    this.setToolTipText(tooltip);
+                    this.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
                 }
-                this.setToolTipText(tooltip);
-                this.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(player).getIcon());
             }
             
             if (isSelected) {
@@ -79,14 +220,23 @@ public class TrainingRecapTable extends JScrollPane {
     /**
      * Creates a new TrainingRecapTable object.
      *
-     * @param main         Table to show
-     * @param fixedColumns number of fixed columns
+     * @param model         training model
      */
-    public TrainingRecapTable(TrainingModel model, JTable main, int fixedColumns) {
-        super(main);
-        scroll = main;
+    public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
         trainingModel = model;
 
+        var table = new JTable(createTableModel());
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.setColumnSelectionAllowed(true);
+        ListSelectionModel columnSelectionModel = columnModel.getSelectionModel();
+        columnSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        ListSelectionModel rowSelectionModel = table.getSelectionModel();
+        rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        this.setViewportView(table);
+
+        scroll = table;
         fixed = new JTable(scroll.getModel());
         fixed.setFocusable(false);
         fixed.setSelectionModel(scroll.getSelectionModel());
@@ -96,9 +246,9 @@ public class TrainingRecapTable extends JScrollPane {
 
         //  Remove the fixed columns from the main table
         for (int i = 0; i < fixedColumns; i++) {
-            TableColumnModel columnModel = scroll.getColumnModel();
+            TableColumnModel _columnModel = scroll.getColumnModel();
 
-            columnModel.removeColumn(columnModel.getColumn(0));
+            _columnModel.removeColumn(_columnModel.getColumn(0));
         }
 
         scroll.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -106,9 +256,9 @@ public class TrainingRecapTable extends JScrollPane {
 
         //  Remove the non-fixed columns from the fixed table
         while (fixed.getColumnCount() > fixedColumns) {
-            TableColumnModel columnModel = fixed.getColumnModel();
+            TableColumnModel _columnModel = fixed.getColumnModel();
 
-            columnModel.removeColumn(columnModel.getColumn(fixedColumns));
+            _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
         }
 
         fixed.getColumnModel().getColumn(0).setMaxWidth(150);
@@ -137,6 +287,36 @@ public class TrainingRecapTable extends JScrollPane {
         scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
+
+        // Hide the last column
+        JTable scrollTable = getScrollTable();
+        int lastSTCol = scrollTable.getColumnCount() - 1;
+        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setPreferredWidth(0);
+        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMinWidth(0);
+        scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMaxWidth(0);
+
+        JTable lockedTable = getLockedTable();
+        lockedTable.getSelectionModel().addListSelectionListener(
+                new PlayerSelectionListener(this.trainingModel, scrollTable, lastSTCol));
+        getScrollTable().getTableHeader().setReorderingAllowed(false);
+        trainingPrioPopUp = new FutureTrainingPrioPopup(panel, model);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (table.getSelectedRow() < 0)
+                    return;
+
+                if ( e.getComponent() instanceof JTable ) {
+                    var cols = table.getSelectedColumns();
+                    trainingPrioPopUp.setSelectedColumns(cols);
+                    trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+
+
+
+
     }
 
     //~ Methods ------------------------------------------------------------------------------------
