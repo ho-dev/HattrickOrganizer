@@ -39,6 +39,7 @@ layout: page
 
 ### Team Analyser
 - tuning simulation (#865)
+- fix npe if system configurations of team analyzer are not available in database (#956)
 
 
 ### Rating
@@ -59,6 +60,8 @@ layout: page
 
 ### Training
 - many buf fixes
+- fix training recap table's resetting scroll positions on table refresh  (#1011)
+
 
 
 ### Misc
