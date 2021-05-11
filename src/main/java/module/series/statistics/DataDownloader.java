@@ -1,6 +1,7 @@
 package module.series.statistics;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import core.model.enums.RatingsStatistics;
 import core.module.config.ModuleConfig;
@@ -108,7 +109,8 @@ public class DataDownloader {
 
                     for (var entity : output.getAsJsonArray("entities")) {
                         Map<RatingsStatistics, Integer> teamStat = new HashMap<>();
-                        int iTeamID = ((JsonObject) entity).get("teamId").getAsInt();
+                        JsonObject teamSortingKey = (JsonObject)((JsonObject) entity).get("teamSortingKey");
+                        int iTeamID = teamSortingKey.get("teamId").getAsInt();
 
                         int rating = ((JsonObject) entity).get("hatStats").getAsInt();
                         teamStat.put(RatingsStatistics.getCode("total", dataType), rating);
