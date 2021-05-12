@@ -93,7 +93,7 @@ public class Updater {
 
         try {
             Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
-            if ((vPrefsStore != null) || (vPrefsStore.containsKey("updatesUrl"))){
+            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))){
                 String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
                 bValidregisteredMediaID = Arrays.stream(new String[]{DEV_UPDATE_XML_URL, BETA_UPDATE_XML_URL, STABLE_UPDATE_XML_URL}).anyMatch(registeredMediaID::equalsIgnoreCase);
             }
