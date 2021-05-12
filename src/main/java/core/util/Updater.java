@@ -5,6 +5,7 @@ import core.HO;
 import core.gui.HOMainFrame;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,9 +89,16 @@ public class Updater {
 
     public void update() {
 
+        Boolean bValidregisteredMediaID = false;
+
         try {
             Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
-            if ((vPrefsStore == null) || (! vPrefsStore.containsKey("updatesUrl")))
+            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))){
+                String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
+                bValidregisteredMediaID = Arrays.stream(new String[]{DEV_UPDATE_XML_URL, BETA_UPDATE_XML_URL, STABLE_UPDATE_XML_URL}).anyMatch(registeredMediaID::equalsIgnoreCase);
+            }
+
+            if ((vPrefsStore == null) || (! vPrefsStore.containsKey("updatesUrl")) || (! bValidregisteredMediaID))
             {
                 // user has never changed release channel via preference tab, hence no information available in java preference store
                 switch (core.model.UserParameter.temp().ReleaseChannel) {
@@ -98,7 +106,12 @@ public class Updater {
                     case "Beta" -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", BETA_UPDATE_XML_URL), mediaID, true);
                     default -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", DEV_UPDATE_XML_URL), mediaID, true);
                 }
-                HOLogger.instance().log(Updater.class, "release channel preference written for the first time in java store");
+                if (bValidregisteredMediaID) {
+                    HOLogger.instance().log(Updater.class, "release channel preference written for the first time in java store");
+                }
+                else{
+                    HOLogger.instance().error(Updater.class, "preference store was corrupted it has been reset !");
+                }
             }
         } catch (IOException e) {
             HOLogger.instance().error(Updater.class, "error while fetching java store" + e.toString());
