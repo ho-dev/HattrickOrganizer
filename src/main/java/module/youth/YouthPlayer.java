@@ -124,7 +124,7 @@ public class YouthPlayer {
         }
 
         // Find Top3 skills
-        this.currentSkills.FindTop3Skills();
+        this.currentSkills.findTop3Skills();
     }
 
     public int getId() {

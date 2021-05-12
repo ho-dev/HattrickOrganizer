@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.util.HOLogger;
 import module.training.Skills;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         if (size() == 0) return null;
         for (var skill : this.values()) {
             if (skill.getMax() != null && skill.getMax() >= 5 ||
-                    skill.getCurrentLevel() != null && skill.getCurrentLevel() >= 5 ) {
+                    skill.getCurrentLevel() != null && skill.getCurrentLevel() >= 5) {
                 var skillId = skill.getSkillID();
                 if (skillId == Skills.HTSkillID.Keeper) return true;
                 else if (skillId == Skills.HTSkillID.Winger ||
@@ -77,15 +78,20 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
      * Maxima reported by the trainer that could not reach top3 ranking gets a negative (false) top3 mark.
      * When all top3 skills are known, the other skills' maximum values are reduced accordingly.
      */
-    public void FindTop3Skills() {
+    public void findTop3Skills() {
         // Number of skills marked as top3 skill
         var nTop3 = this.values().stream().filter(i -> i.isTop3() != null && i.isTop3()).count();
         if (nTop3 == 3) return; // nothing to do
+        if (nTop3 == 0) {
+            HOLogger.instance().warning(this.getClass(), "Not one skill is marked as top3 skill. This should never happen!");
+        }
 
         // Lowest Top3 maximum
-        var minTop3Max = this.values().stream()
+        var minTop3MaxSkill = this.values().stream()
                 .filter(i -> i.isTop3() != null && i.isTop3() && i.isMaxAvailable())
-                .min(Comparator.comparingInt(YouthSkillInfo::getMax)).get().getMax();
+                .min(Comparator.comparingInt(YouthSkillInfo::getMax)).get();
+        if (minTop3MaxSkill == null) return; // should never happen
+        var minTop3Max = minTop3MaxSkill.getMax();
 
         // Find skills with higher maximum of current level than lowest known top3 maximum
         // Those skills are marked as top3 skills
@@ -125,10 +131,10 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
             }
             // count skills not in top3
             var nNotTop3 = this.values().stream().filter(i -> i.isTop3() != null && !i.isTop3()).count();
-            if ( nNotTop3 == 4){                        // there are 7 skills
+            if (nNotTop3 == 4) {                        // there are 7 skills
                 // the others are top3
-                for ( var skill: notTop3Yet){
-                    if ( skill.isTop3()==null ) skill.setIsTop3(true);
+                for (var skill : notTop3Yet) {
+                    if (skill.isTop3() == null) skill.setIsTop3(true);
                 }
             }
         } else {
