@@ -352,6 +352,9 @@ class NthrfConvertXml2Hrf {
 
 			m_sHRFBuffer.append("[player" + pl.getPlayerId() + "]" + "\n");
 			m_sHRFBuffer.append("name=" + pl.getName() + "\n");
+			m_sHRFBuffer.append("firstname=" + pl.getFirstName() + "\n");
+			m_sHRFBuffer.append("nickname=" + pl.getNickName() + "\n");
+			m_sHRFBuffer.append("lastname=" + pl.getLastName() + "\n");
 			m_sHRFBuffer.append("ald=" + pl.getAgeYears() + "\n");
 			m_sHRFBuffer.append("agedays=" + pl.getAgeDays() + "\n");
 			m_sHRFBuffer.append("ska=" + pl.getInjury() + "\n");
