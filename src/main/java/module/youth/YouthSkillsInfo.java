@@ -82,16 +82,16 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         // Number of skills marked as top3 skill
         var nTop3 = this.values().stream().filter(i -> i.isTop3() != null && i.isTop3()).count();
         if (nTop3 == 3) return; // nothing to do
-        if (nTop3 == 0) {
-            HOLogger.instance().warning(this.getClass(), "Not one skill is marked as top3 skill. This should never happen!");
-        }
 
-        // Lowest Top3 maximum
-        var minTop3MaxSkill = this.values().stream()
-                .filter(i -> i.isTop3() != null && i.isTop3() && i.isMaxAvailable())
-                .min(Comparator.comparingInt(YouthSkillInfo::getMax)).get();
-        if (minTop3MaxSkill == null) return; // should never happen
-        var minTop3Max = minTop3MaxSkill.getMax();
+        int minTop3Max=8;
+        if (nTop3 > 0) { // ntop3 == 0 should only happen with new youth teams with players that were not scouted
+            // There are top3 skills available
+            // Lowest Top3 maximum
+            var minTop3MaxSkill = this.values().stream()
+                    .filter(i -> i.isTop3() != null && i.isTop3() && i.isMaxAvailable())
+                    .min(Comparator.comparingInt(YouthSkillInfo::getMax)).get();
+            minTop3Max = minTop3MaxSkill.getMax();
+        }
 
         // Find skills with higher maximum of current level than lowest known top3 maximum
         // Those skills are marked as top3 skills
