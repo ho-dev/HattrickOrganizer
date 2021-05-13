@@ -147,7 +147,7 @@ public class YouthTrainingDevelopmentEntry {
                 skill.setMaxReached(constraint.isMaxReached());
                 var adjustment = skill.getCurrentValue() - oldVal;
                 if (adjustment != 0) {
-                    skill.setStartValue(player.adjustSkill(skill.getSkillID(), adjustment));
+                    skill.setStartValue(player.adjustSkill(skill.getSkillID(), adjustment, this.getMatchDate()));
                 }
             }
         }

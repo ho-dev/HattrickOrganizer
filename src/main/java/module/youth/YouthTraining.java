@@ -143,7 +143,6 @@ public class YouthTraining {
         ret.setIsTop3(value.isTop3());
         ret.setCurrentLevel(value.getCurrentLevel());
         ret.setStartLevel(value.getStartLevel());
-        ret.setIsTop3(value.isTop3());
         ret.setMaxReached(value.isMaxReached());
         if (value.isMaxReached()) {
             ret.setCurrentValue(value.getCurrentValue());
@@ -151,8 +150,8 @@ public class YouthTraining {
             var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
             ret.setCurrentValue(newVal);
             var adjustment = ret.getCurrentValue() - newVal;
-            if (adjustment > 0) {
-                value.setStartValue(player.adjustSkill(value.getSkillID(), adjustment));
+            if (adjustment != 0) {
+                value.setStartValue(player.adjustSkill(value.getSkillID(), adjustment, this.getMatchDate()));
             }
         }
         // Current value needs to be set before start value could be changed
