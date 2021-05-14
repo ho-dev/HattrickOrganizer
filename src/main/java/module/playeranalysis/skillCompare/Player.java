@@ -737,7 +737,7 @@ public class Player
 	public void setLastName(String name) {
 		m_LastName = name;
 	}
-	public String getFulltName() {
+	public String getFullName() {
 		return m_FirstName + " " + m_NickName + " " + m_LastName;
 	}
 	public int getNationality() {
