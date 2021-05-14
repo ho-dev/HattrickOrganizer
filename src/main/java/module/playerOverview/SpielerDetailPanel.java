@@ -436,7 +436,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpScoring.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)) + "");
             m_jpScoringChange.clear();
-            m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
+            m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()
+                    + m_clPlayer.getSub4Skill(PlayerSkill.EXPERIENCE)) + "");
             m_jpExperienceChange.clear();
             m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
@@ -516,9 +517,13 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                     m_clPlayer.getSub4Skill(PlayerSkill.SCORING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SCORING),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
+            m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()
+                    + m_clPlayer.getSub4Skill(PlayerSkill.EXPERIENCE)) + "");
             m_jpExperienceChange.setGraphicalChangeValue(m_clPlayer.getErfahrung()
-                    - m_clComparisonPlayer.getErfahrung(), !m_clComparisonPlayer.isOld(), true);
+                    - m_clComparisonPlayer.getErfahrung(),
+                    m_clPlayer.getSub4Skill(PlayerSkill.EXPERIENCE)
+                            - m_clComparisonPlayer.getSub4Skill(PlayerSkill.EXPERIENCE),
+                    !m_clComparisonPlayer.isOld(), true);
             m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.setGraphicalChangeValue(m_clPlayer.getLoyalty()
