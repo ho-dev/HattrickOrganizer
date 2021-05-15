@@ -3,6 +3,7 @@ package core.db;
 import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.util.HOLogger;
+import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 
@@ -217,7 +218,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		return sql;
 	}
 
-	static MatchesOverviewRow[] getMatchesOverviewValues(int matchtype){
+	static MatchesOverviewRow[] getMatchesOverviewValues(int matchtype, MatchLocation matchLocation){
 		ArrayList<MatchesOverviewRow> rows = new ArrayList<MatchesOverviewRow>(20);
 		rows.add(new MatchesOverviewRow(HOVerwaltung.instance().getLanguageString("AlleSpiele"), MatchesOverviewRow.TYPE_ALL));
 		rows.add(new MatchesOverviewRow(HOVerwaltung.instance().getLanguageString("ls.team.formation"), MatchesOverviewRow.TYPE_TITLE));
@@ -248,21 +249,37 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		rows.add(new MatchesOverviewRow("IMatchDetails.WETTER_WOLKIG",  MatchesOverviewRow.TYPE_WEATHER, Weather.PARTIALLY_CLOUDY.getId()));
 		rows.add(new MatchesOverviewRow("IMatchDetails.WETTER_BEWOELKT", MatchesOverviewRow.TYPE_WEATHER, Weather.OVERCAST.getId()));
 		rows.add(new MatchesOverviewRow("IMatchDetails.WETTER_REGEN",  MatchesOverviewRow.TYPE_WEATHER, Weather.RAINY.getId()));
-		setMatchesOverviewValues(rows,matchtype,true);
-		setMatchesOverviewValues(rows,matchtype,false);
+		setMatchesOverviewValues(rows,matchtype,true, matchLocation);
+		setMatchesOverviewValues(rows,matchtype,false, matchLocation);
 		return rows.toArray(new MatchesOverviewRow[rows.size()]);
 	}
 
 
 
-	private static void setMatchesOverviewValues(ArrayList<MatchesOverviewRow> rows,int matchtype, boolean home){
+	private static void setMatchesOverviewValues(ArrayList<MatchesOverviewRow> rows,int matchtype, boolean home, MatchLocation matchLocation){
+		if ((home && matchLocation == MatchLocation.AWAY) || (!home && matchLocation == MatchLocation.HOME)) {
+			return;
+		}
+
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		StringBuilder whereClause = new StringBuilder(100);
-		whereClause.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId);
+//		whereClause.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId);
+		whereClause.append(getMatchLocationWhereClause(matchLocation, teamId, home));
 		whereClause.append(getMatchTypWhereClause(matchtype));
 		setMatchesOverviewRow(rows.get(0), whereClause.toString(),home);
 		setFormationRows(rows,whereClause, home);
 		setRows(rows, whereClause, home);
+	}
+
+	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId, boolean home) {
+		StringBuilder sql = new StringBuilder(500);
+		switch (matchLocation) {
+			case HOME: sql.append(" AND HeimID=" + teamId); break;
+			case AWAY: sql.append(" AND GastID=" + teamId); break;
+			case NEUTRAL: sql.append(" AND isNeutral=true");
+			case ALL: sql.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId); break;
+		}
+		return sql;
 	}
 
 	private static void setFormationRows(ArrayList<MatchesOverviewRow> rows,StringBuilder whereClause, boolean home){

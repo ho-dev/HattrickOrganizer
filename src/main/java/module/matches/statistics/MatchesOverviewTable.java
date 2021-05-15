@@ -6,6 +6,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.model.match.MatchesOverviewRow;
 import core.util.Helper;
+import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 
 import javax.swing.JTable;
@@ -21,14 +22,14 @@ public class MatchesOverviewTable extends JTable {
 	 
 	public MatchesOverviewTable(int matchtyp){
 		super();
-	    initModel(matchtyp);
+	    initModel(matchtyp, MatchLocation.ALL); // TODO change to user parameter that is saved somewhere, probably in USerParameter
         setDefaultRenderer(Object.class,new MatchesOverviewRenderer());
         setDefaultRenderer(Integer.class,new MatchesOverviewRenderer());
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 	}
 	
-    private void initModel(int matchtyp) {
+    private void initModel(int matchtyp, MatchLocation matchLocation) {
         setOpaque(false);
 
         if (tableModel == null) {
@@ -37,7 +38,7 @@ public class MatchesOverviewTable extends JTable {
             	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
             	tableModel.setValues(tmp);
             } else {
-            	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp));
+            	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp, matchLocation));
             }
 
             final ToolTipHeader header = new ToolTipHeader(getColumnModel());
@@ -67,7 +68,7 @@ public class MatchesOverviewTable extends JTable {
             //m_clTableSorter.addMouseListenerToHeaderInTable(this);
             tableModel.setColumnsSize(getColumnModel());
         } else {
-        	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp));
+        	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp, matchLocation));
         }
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -102,12 +103,12 @@ public class MatchesOverviewTable extends JTable {
     	DBManager.instance().saveHOColumnModel(tableModel);
     }
     
-    public void refresh(int matchtypen) {
+    public void refresh(int matchtypen, MatchLocation matchLocation) {
         if(matchtypen == MatchesPanel.ALL_MATCHS || matchtypen == MatchesPanel.OTHER_TEAM_MATCHS){
         	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
         	tableModel.setValues(tmp);
         } else {
-        	initModel(matchtypen);
+        	initModel(matchtypen, matchLocation);
         }
     }
  
