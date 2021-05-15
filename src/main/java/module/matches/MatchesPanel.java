@@ -82,7 +82,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 	private JPanel matchesOverviewPanel;
 	private JPanel matchesLocationButtonsPanel;
-	private MatchLocation matchLocation = MatchLocation.ALL;
+//	private MatchLocation matchLocation = MatchLocation.ALL;
 
 	private JPanel linupPanel;
 	private JSplitPane horizontalLeftSplitPane;
@@ -348,10 +348,9 @@ public final class MatchesPanel extends LazyImagePanel {
 				// Update tables
 				int id = ((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId();
 				matchesTable.refresh(id);
-				matchesOverviewTable.refresh(id, matchLocation);
+				matchesOverviewTable.refresh(id, UserParameter.instance().matchLocation);
 				matchesHighlightsTable.refresh(id);
 				UserParameter.instance().spieleFilter = id;
-				// TODO add user parameter for match location as well
 
 				// then refresh all other panels
 				newSelectionInform();
@@ -535,23 +534,22 @@ public final class MatchesPanel extends LazyImagePanel {
 	@NotNull
 	private JPanel getMatchesLocationButtonsPanel() {
 
-		// TODO set selected button from user parameter
-		JRadioButton all = new JRadioButton(MatchLocation.ALL.getText(), true);
+		JRadioButton all = new JRadioButton(MatchLocation.getText(MatchLocation.ALL), MatchLocation.ALL == UserParameter.instance().matchLocation);
 		all.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.ALL);
 		});
 
-		JRadioButton home = new JRadioButton(MatchLocation.HOME.getText());
+		JRadioButton home = new JRadioButton(MatchLocation.getText(MatchLocation.HOME), MatchLocation.HOME == UserParameter.instance().matchLocation);
 		home.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.HOME);
 		});
 
-		JRadioButton away = new JRadioButton(MatchLocation.AWAY.getText());
+		JRadioButton away = new JRadioButton(MatchLocation.getText(MatchLocation.AWAY), MatchLocation.AWAY == UserParameter.instance().matchLocation);
 		away.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.AWAY);
 		});
 
-		JRadioButton neutral = new JRadioButton(MatchLocation.NEUTRAL.getText());
+		JRadioButton neutral = new JRadioButton(MatchLocation.getText(MatchLocation.NEUTRAL), MatchLocation.NEUTRAL == UserParameter.instance().matchLocation);
 		neutral.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.NEUTRAL);
 		});
@@ -579,7 +577,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 	private void refreshOnButtonSelected(ChangeEvent e, MatchLocation selectedLocation) {
 		if (((JRadioButton) e.getSource()).isSelected()) {
-			matchLocation = selectedLocation;
+			UserParameter.instance().matchLocation = selectedLocation;
 			doReInit();
 		}
 	}

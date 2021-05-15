@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
+import core.model.UserParameter;
 import core.model.match.MatchesOverviewRow;
 import core.util.Helper;
 import module.matches.MatchLocation;
@@ -22,7 +23,7 @@ public class MatchesOverviewTable extends JTable {
 	 
 	public MatchesOverviewTable(int matchtyp){
 		super();
-	    initModel(matchtyp, MatchLocation.ALL); // TODO change to user parameter that is saved somewhere, probably in USerParameter
+	    initModel(matchtyp, UserParameter.instance().matchLocation);
         setDefaultRenderer(Object.class,new MatchesOverviewRenderer());
         setDefaultRenderer(Integer.class,new MatchesOverviewRenderer());
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

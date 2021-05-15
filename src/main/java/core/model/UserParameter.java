@@ -4,6 +4,8 @@ import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
 import module.lineup.assistant.LineupAssistant;
+import module.matches.MatchLocation;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -278,6 +280,8 @@ public final class UserParameter extends Configuration {
 
     //Spiele
     public int spieleFilter = 1;
+
+    public MatchLocation matchLocation = MatchLocation.ALL;
 
     //Spiele
     public int spielePanel_horizontalLeftSplitPane = 400;
@@ -585,6 +589,7 @@ public final class UserParameter extends Configuration {
         map.put("miniscout_PositionY", String.valueOf(miniscout_PositionY));
         map.put("schriftGroesse", String.valueOf(fontSize));
         map.put("spieleFilter", String.valueOf(spieleFilter));
+        map.put("matchLocation", matchLocation.toString());
         map.put("spielePanel_horizontalLeftSplitPane", String.valueOf(spielePanel_horizontalLeftSplitPane));
         map.put("spielePanel_horizontalRightSplitPane", String.valueOf(spielePanel_horizontalRightSplitPane));
         map.put("spielePanel_verticalSplitPane", String.valueOf(spielePanel_verticalSplitPane));
@@ -823,6 +828,7 @@ public final class UserParameter extends Configuration {
         miniscout_PositionY = getIntValue(values, "miniscout_PositionY");
         fontSize = getIntValue(values, "schriftGroesse");
         spieleFilter = getIntValue(values, "spieleFilter");
+        matchLocation = MatchLocation.valueOf(MatchLocation.class, values.get("matchLocation"));
         spielePanel_horizontalLeftSplitPane = getIntValue(values, "spielePanel_horizontalLeftSplitPane");
         spielePanel_horizontalRightSplitPane = getIntValue(values, "spielePanel_horizontalRightSplitPane");
         spielePanel_verticalSplitPane = getIntValue(values, "spielePanel_verticalSplitPane");
