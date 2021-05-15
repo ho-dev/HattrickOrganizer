@@ -51,7 +51,7 @@ public class MatchesOverviewTable extends JTable {
             final TableColumnModel tableColumnModel = getColumnModel();
 
             for (int i = 0; i < tableModel.getColumnCount(); i++) {
-                tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+                tableColumnModel.getColumn(i).setIdentifier(i);
             }
 
             int[][] targetColumn = tableModel.getColumnOrder();

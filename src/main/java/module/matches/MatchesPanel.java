@@ -82,7 +82,6 @@ public final class MatchesPanel extends LazyImagePanel {
 
 	private JPanel matchesOverviewPanel;
 	private JPanel matchesLocationButtonsPanel;
-//	private MatchLocation matchLocation = MatchLocation.ALL;
 
 	private JPanel linupPanel;
 	private JSplitPane horizontalLeftSplitPane;
@@ -325,13 +324,11 @@ public final class MatchesPanel extends LazyImagePanel {
 				tacticLevel = lineup.getTacticLevelCounter();
 				break;
 			case IMatchDetails.TAKTIK_MIDDLE:
+			case IMatchDetails.TAKTIK_WINGS:
 				tacticLevel = lineup.getTacticLevelAimAow();
 				break;
 			case IMatchDetails.TAKTIK_PRESSING:
 				tacticLevel = lineup.getTacticLevelPressing();
-				break;
-			case IMatchDetails.TAKTIK_WINGS:
-				tacticLevel = lineup.getTacticLevelAimAow();
 				break;
 			case IMatchDetails.TAKTIK_LONGSHOTS:
 				tacticLevel = lineup.getTacticLevelLongShots();
@@ -625,14 +622,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		boolean gameFinished = matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED ||
 				gameFinishTime < new Date().getTime();
-		if(gameFinished)
-		{
-			reloadMatchButton.setEnabled(true);
-		}
-		else
-		{
-			reloadMatchButton.setEnabled(false);
-		}
+		reloadMatchButton.setEnabled(gameFinished);
 
 		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
 			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();

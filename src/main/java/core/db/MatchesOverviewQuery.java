@@ -16,8 +16,6 @@ import static core.model.match.MatchEvent.isGoalEvent;
 
 
 class MatchesOverviewQuery  {
-	final static String KEY = "MatchesOverviewQuery";
-
 
 	/**
 	 *
@@ -29,7 +27,7 @@ class MatchesOverviewQuery  {
 	static int getMatchesKurzInfoStatisticsCount(int teamId, int matchtype, int statistic){
 		int tmp = 0;
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs = null;
+		ResultSet rs;
 		String whereHomeClause = "";
 		String whereAwayClause = "";
 		sql.append("SELECT COUNT(*) AS C ");
@@ -38,7 +36,7 @@ class MatchesOverviewQuery  {
 		switch(statistic){
 			case MatchesOverviewCommonPanel.LeadingHTLosingFT:
 			case MatchesOverviewCommonPanel.TrailingHTWinningFT:
-				return getChangeGameStat(teamId,matchtype,statistic);
+				return getChangeGameStat(teamId, statistic);
 
 			case MatchesOverviewCommonPanel.WonWithoutOppGoal:
 				whereHomeClause=" AND HEIMTORE > GASTTORE AND GASTTORE = 0 )";
@@ -72,9 +70,9 @@ class MatchesOverviewQuery  {
 		return tmp;
 	}
 
-	static int getChangeGameStat(int teamId, int matchtype, int statistic){
+	static int getChangeGameStat(int teamId, int statistic){
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs = null;
+		ResultSet rs;
 		int tmp = 0;
 		sql.append("SELECT MK_MatchTyp, DIFFH, DIFF, MK_HEIMID, MK_GASTID, MATCHID \n");
 		sql.append("FROM (SELECT (MATCHHIGHLIGHTS.HEIMTORE - MATCHHIGHLIGHTS.GASTTORE) as DIFFH, (MATCHESKURZINFO.HEIMTORE - MATCHESKURZINFO.GASTTORE) as DIFF, HEIMID, GASTID, MATCHID, TYP, MINUTE, \n" + 
@@ -117,7 +115,6 @@ class MatchesOverviewQuery  {
 	/**
 	 * SELECT TYP, COUNT(*)  FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID
 WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING TYP in (1,2) ORDER BY TYP
-	 * @param teamId
 	 * @return
 	 */
 
@@ -149,9 +146,6 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int matchtype){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
-		int iMatchEventID;
-		int iConverted= -1;
-		int iMissed= -1;
 		sql.append("SELECT MATCH_EVENT_ID, COUNT(*) AS C FROM MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID WHERE TEAMID");
 		if(!ownTeam) {sql.append("!");}
 		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
@@ -160,10 +154,10 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(" GROUP BY MATCH_EVENT_ID");
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
 		try {
-			iConverted = 0;
-			iMissed = 0;
+			int iConverted = 0;
+			int iMissed = 0;
 			while(rs.next()) {
-				iMatchEventID = rs.getInt("MATCH_EVENT_ID");
+				int iMatchEventID = rs.getInt("MATCH_EVENT_ID");
 				if (isGoalEvent(iMatchEventID)) {iConverted += rs.getInt("C");}
 				else {iMissed += rs.getInt("C"); }
 			         }

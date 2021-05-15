@@ -1,7 +1,5 @@
 package module.matches;
 
-import core.datatype.ComboItem;
-
 import static core.util.Helper.getTranslation;
 
 public enum MatchLocation {
