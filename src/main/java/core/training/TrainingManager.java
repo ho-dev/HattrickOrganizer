@@ -53,7 +53,10 @@ public class TrainingManager implements PropertyChangeListener {
 			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
 		}
 		else {
-			recentTrainings = new TrainingWeekManager(HOVerwaltung.instance().getModel().getBasics().getActivationDate().toInstant(), false, true);
+			var startDate = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+			if ( startDate != null ) {
+				recentTrainings = new TrainingWeekManager(startDate.toInstant(), false, true);
+			}
 		}
 		// Load next week training
 		nextWeekTraining = TrainingWeekManager.getNextWeekTraining();
