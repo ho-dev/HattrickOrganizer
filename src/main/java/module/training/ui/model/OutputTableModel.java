@@ -3,6 +3,7 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.HattrickDate;
@@ -125,6 +126,9 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        if  ( data.size() != UserParameter.instance().futureWeeks){ // resize future training array
+            initData();
+        }
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
 
@@ -155,11 +159,15 @@ public class OutputTableModel extends AbstractTableModel {
      * Refill the table with the new training based on the last changes
      */
     public void fillWithData() {
+        initData();
+        fireTableDataChanged();
+    }
+
+    private void initData() {
         this.data = new ArrayList<>();
         for ( var p : HOVerwaltung.instance().getModel().getCurrentPlayers()){
             this.data.add(new FutureTrainingManager(p, this.model.getFutureTrainings()));
         }
-        fireTableDataChanged();
     }
 
     /**
