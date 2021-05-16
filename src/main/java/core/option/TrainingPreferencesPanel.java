@@ -69,7 +69,7 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
         UserParameter.temp().futureWeeks = (int) m_jslFutureWeeks.getValue();
 
         if (core.model.UserParameter.temp().futureWeeks != core.model.UserParameter.instance().futureWeeks) {
-            OptionManager.instance().setReInitNeeded();
+            OptionManager.instance().setRestartNeeded();
         }
     }
 
