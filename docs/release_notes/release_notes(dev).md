@@ -35,6 +35,7 @@ layout: page
 ### Squad
 
   - Separate rating and match date columns for easier sorting. (#895)
+  - adjusting of experience subskill is displayed in player details panel (#1023)
 
 
 ### Team Analyser
