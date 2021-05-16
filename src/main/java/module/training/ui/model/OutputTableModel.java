@@ -3,7 +3,6 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.HattrickDate;
