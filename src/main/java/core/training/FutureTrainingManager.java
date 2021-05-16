@@ -357,8 +357,4 @@ public class FutureTrainingManager {
 	public Player getPlayer() {
 		return this.player;
 	}
-
-	public int getFutureTrainingWeeksCount() {
-		return this.futureTrainings.size();
-	}
 }
