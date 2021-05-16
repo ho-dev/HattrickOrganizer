@@ -4,8 +4,10 @@ import core.db.DBManager;
 import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
+import core.model.UserParameter;
 import core.model.match.MatchesOverviewRow;
 import core.util.Helper;
+import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 
 import javax.swing.JTable;
@@ -21,14 +23,14 @@ public class MatchesOverviewTable extends JTable {
 	 
 	public MatchesOverviewTable(int matchtyp){
 		super();
-	    initModel(matchtyp);
+	    initModel(matchtyp, UserParameter.instance().matchLocation);
         setDefaultRenderer(Object.class,new MatchesOverviewRenderer());
         setDefaultRenderer(Integer.class,new MatchesOverviewRenderer());
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 	}
 	
-    private void initModel(int matchtyp) {
+    private void initModel(int matchtyp, MatchLocation matchLocation) {
         setOpaque(false);
 
         if (tableModel == null) {
@@ -37,7 +39,7 @@ public class MatchesOverviewTable extends JTable {
             	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
             	tableModel.setValues(tmp);
             } else {
-            	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp));
+            	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp, matchLocation));
             }
 
             final ToolTipHeader header = new ToolTipHeader(getColumnModel());
@@ -49,7 +51,7 @@ public class MatchesOverviewTable extends JTable {
             final TableColumnModel tableColumnModel = getColumnModel();
 
             for (int i = 0; i < tableModel.getColumnCount(); i++) {
-                tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+                tableColumnModel.getColumn(i).setIdentifier(i);
             }
 
             int[][] targetColumn = tableModel.getColumnOrder();
@@ -67,7 +69,7 @@ public class MatchesOverviewTable extends JTable {
             //m_clTableSorter.addMouseListenerToHeaderInTable(this);
             tableModel.setColumnsSize(getColumnModel());
         } else {
-        	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp));
+        	tableModel.setValues(DBManager.instance().getMatchesOverviewValues(matchtyp, matchLocation));
         }
 
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -102,12 +104,12 @@ public class MatchesOverviewTable extends JTable {
     	DBManager.instance().saveHOColumnModel(tableModel);
     }
     
-    public void refresh(int matchtypen) {
+    public void refresh(int matchtypen, MatchLocation matchLocation) {
         if(matchtypen == MatchesPanel.ALL_MATCHS || matchtypen == MatchesPanel.OTHER_TEAM_MATCHS){
         	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
         	tableModel.setValues(tmp);
         } else {
-        	initModel(matchtypen);
+        	initModel(matchtypen, matchLocation);
         }
     }
  

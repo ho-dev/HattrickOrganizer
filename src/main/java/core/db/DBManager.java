@@ -17,6 +17,7 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import module.matches.MatchLocation;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
@@ -1760,8 +1761,8 @@ public class DBManager {
 	 * @param matchtype the matchtype
 	 * @return matches overview row [ ]
 	 */
-	public MatchesOverviewRow[] getMatchesOverviewValues(int matchtype) {
-		return MatchesOverviewQuery.getMatchesOverviewValues(matchtype);
+	public MatchesOverviewRow[] getMatchesOverviewValues(int matchtype, MatchLocation matchLocation) {
+		return MatchesOverviewQuery.getMatchesOverviewValues(matchtype, matchLocation);
 	}
 
 	// ------------------------------- MatchHighlightsTable
