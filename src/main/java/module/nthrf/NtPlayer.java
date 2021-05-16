@@ -3,9 +3,9 @@ package module.nthrf;
 class NtPlayer {
 
 	private long playerId;
-	private String firstName;
-	private String nickName;
-	private String lastName;
+	private String firstName="";
+	private String nickName="";
+	private String lastName="";
 	private int shirtNumber;
 	private int tsi;
 	private int form;

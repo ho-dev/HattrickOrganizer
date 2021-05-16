@@ -300,11 +300,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
 		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-			if (UserManager.instance().getCurrentUser().isNtTeam())
+			if (UserManager.instance().getCurrentUser().isNtTeam()) {
 				JOptionPane.showMessageDialog(HOMainFrame.instance(), MainPanel.getInstance(),
 						HOVerwaltung.instance().getLanguageString("HRFDownload"), JOptionPane.PLAIN_MESSAGE);
-			else
+			} else {
 				new DownloadDialog();
+			}
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(databaseOptionsMenu)) {
@@ -312,18 +313,16 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		} else if (source.equals(m_jmiDbCleanupTool)) {
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
-		}
-		else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
+		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
 			Instant from = ZonedDateTime.now().minusWeeks(32).toInstant();
 			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, Timestamp.from(from));
 			}
-		}
-		else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
+		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
 			Instant from = ZonedDateTime.now().minusWeeks(7).toInstant();
-			if (JOptionPane.showConfirmDialog(this, 	Helper.getTranslation("subskillRecalc7w", Date.from(from)),
-					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"),	JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from)),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, Timestamp.from(from));
 			}
 		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen mode
@@ -339,14 +338,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			openURL("https://akasolace.github.io/HO/");
 		} else if (source.equals(m_jmWikiItem)) { // User Guide
 			openURL("https://ho.readthedocs.io/");
-		} else if (source.equals(m_jmReportAbug)){ // Report a bug
+		} else if (source.equals(m_jmReportAbug)) { // Report a bug
 			openURL("https://github.com/akasolace/HO/issues/new/choose");
-		}
-
-		else if (source.equals(m_jmCheckUpdate)) {
+		} else if (source.equals(m_jmCheckUpdate)) {
 			UpdateController.check4update();
-		}
-		else if (source.equals(m_jmChangelog)) {
+		} else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
