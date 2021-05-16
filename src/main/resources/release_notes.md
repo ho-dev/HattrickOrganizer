@@ -48,6 +48,7 @@ layout: page
 
 
 ### Matches
+- new match location filter (home/away/neutral/all) on Statistics tab (#470)
 
 
 ### Lineup
