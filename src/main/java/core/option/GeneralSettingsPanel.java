@@ -80,9 +80,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             OptionManager.instance().setSkinChanged();
             OptionManager.instance().setRestartNeeded();
         }
-        if (core.model.UserParameter.temp().futureWeeks != core.model.UserParameter.instance().futureWeeks) {
-            OptionManager.instance().setReInitNeeded();
-        }
         if (core.model.UserParameter.temp().alternativePositionsTolerance != core.model.UserParameter.instance().alternativePositionsTolerance) {
             OptionManager.instance().setReInitNeeded();
         }

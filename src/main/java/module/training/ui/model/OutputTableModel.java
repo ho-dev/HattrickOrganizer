@@ -128,11 +128,6 @@ public class OutputTableModel extends AbstractTableModel {
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
 
-        //FutureTrainingManager ftm = new FutureTrainingManager(player, this.model.getFutureTrainings());
-
-        // Spielername
-        // Spieleralter
-        // Beste Postion
         return switch (columnIndex) {
             case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
             case 1 -> player.getAlterWithAgeDaysAsString();
