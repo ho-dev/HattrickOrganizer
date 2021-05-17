@@ -1,13 +1,14 @@
 package core.option;
 
-import core.model.HOVerwaltung;
 import core.gui.comp.panel.ImagePanel;
-import java.awt.*;
-import java.awt.event.ItemEvent;
+import core.model.HOVerwaltung;
+import core.model.UserParameter;
+import core.util.Updater;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import core.util.Updater;
-import static core.util.Updater.ReleaseChannel.byLabel;
+import java.awt.*;
+import java.awt.event.ItemEvent;
 
 /**
  * Controls for release channel with description
@@ -39,18 +40,22 @@ public final class ReleaseChannelPanel extends ImagePanel
 	//~ Methods ------------------------------------------------------------------------------------
 
 	public final void itemStateChanged(ItemEvent itemEvent) {
-		JRadioButton source = (JRadioButton)itemEvent.getItem();
-		String ReleaseChannelLabel;
-		if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-			ReleaseChannelLabel = source.getText();
-			core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
-			m_jta_Description.setText(
-					core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
-					source.getText().toUpperCase(java.util.Locale.ENGLISH) + "_desc")
+		Object item = itemEvent.getItem();
+		if (item instanceof JCheckBox) {
+			UserParameter.temp().updateCheck = (itemEvent.getStateChange() == ItemEvent.SELECTED);
+		} else {
+			JRadioButton source = (JRadioButton)itemEvent.getItem();
+			String ReleaseChannelLabel;
+			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+				ReleaseChannelLabel = source.getText();
+				core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
+				m_jta_Description.setText(
+						core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
+								source.getText().toUpperCase(java.util.Locale.ENGLISH) + "_desc")
 				);
-			rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
+				rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
+			}
 		}
-		core.model.UserParameter.temp().updateCheck = m_jchUpdateCheck.isSelected();
 	}
 
 	public void stateChanged(ChangeEvent arg0) {}
@@ -109,9 +114,9 @@ public final class ReleaseChannelPanel extends ImagePanel
 
 		m_jchUpdateCheck = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("UpdateCheck"));
         m_jchUpdateCheck.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_UpdateCheck"));
-        m_jchUpdateCheck.setSelected(core.model.UserParameter.temp().updateCheck);
+        m_jchUpdateCheck.setSelected(UserParameter.instance().updateCheck);
         m_jchUpdateCheck.setOpaque(false);
-        m_jchUpdateCheck.setEnabled(false);
+        m_jchUpdateCheck.setEnabled(true);
         m_jchUpdateCheck.addItemListener(this);
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 0);
