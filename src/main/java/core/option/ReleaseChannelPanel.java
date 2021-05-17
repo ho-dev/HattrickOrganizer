@@ -9,14 +9,14 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * Controls for release channel with description
  * and auto-update-check control.
  * Release Channel Panel
  */
-public final class ReleaseChannelPanel extends ImagePanel
-	implements javax.swing.event.ChangeListener, java.awt.event.ItemListener {
+public final class ReleaseChannelPanel extends ImagePanel {
 
 	//~ Static fields/initializers -----------------------------------------------------------------
 	private final JRadioButton m_jrb_Stable = new JRadioButton(Updater.ReleaseChannel.STABLE.label, false);
@@ -39,11 +39,9 @@ public final class ReleaseChannelPanel extends ImagePanel
 
 	//~ Methods ------------------------------------------------------------------------------------
 
-	public final void itemStateChanged(ItemEvent itemEvent) {
-		Object item = itemEvent.getItem();
-		if (item instanceof JCheckBox) {
-			UserParameter.temp().updateCheck = (itemEvent.getStateChange() == ItemEvent.SELECTED);
-		} else {
+	ItemListener releaseChannelListener = new ItemListener() {
+		@Override
+		public void itemStateChanged(ItemEvent itemEvent) {
 			JRadioButton source = (JRadioButton)itemEvent.getItem();
 			String ReleaseChannelLabel;
 			if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -56,7 +54,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 				rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
 			}
 		}
-	}
+	};
 
 	public void stateChanged(ChangeEvent arg0) {}
 
@@ -75,7 +73,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 		placement.gridy = 0;
 		add(m_jl_PleaseSelect, placement);
 
-		m_jrb_Stable.addItemListener(this);
+		m_jrb_Stable.addItemListener(releaseChannelListener);
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 50, 25, 0);
 		placement.anchor = GridBagConstraints.WEST;
@@ -83,7 +81,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 		placement.gridy = 1;
 		add(m_jrb_Stable, placement);
 
-		m_jrb_Beta.addItemListener(this);
+		m_jrb_Beta.addItemListener(releaseChannelListener);
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 0);
 		placement.weightx = 1;
@@ -91,7 +89,7 @@ public final class ReleaseChannelPanel extends ImagePanel
 		placement.gridy = 1;
 		add(m_jrb_Beta, placement);
 
-		m_jrb_Dev.addItemListener(this);
+		m_jrb_Dev.addItemListener(releaseChannelListener);
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 50);
 		placement.anchor = GridBagConstraints.EAST;
@@ -117,7 +115,7 @@ public final class ReleaseChannelPanel extends ImagePanel
         m_jchUpdateCheck.setSelected(UserParameter.instance().updateCheck);
         m_jchUpdateCheck.setOpaque(false);
         m_jchUpdateCheck.setEnabled(true);
-        m_jchUpdateCheck.addItemListener(this);
+        m_jchUpdateCheck.addItemListener(itemEvent -> UserParameter.temp().updateCheck = (itemEvent.getStateChange() == ItemEvent.SELECTED));
 		placement = new GridBagConstraints();
 		placement.insets = new Insets(25, 0, 25, 0);
 		placement.anchor = GridBagConstraints.NORTH;
