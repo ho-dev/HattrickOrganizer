@@ -48,79 +48,9 @@ public class Credits {
 		gbc.insets = new Insets(0, 15, 0, 0);
 		creditsPanel.add(new JLabel(ThemeManager.getIcon(HOIconName.CHPP)), gbc);
 
-		String fugueURL = "http://p.yusukekamiyamane.com";
-		JPanel fuguePanel = new JPanel(new GridBagLayout());
-		gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		fuguePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("credits.someIconsBy")
-				+ " "), gbc);
-		gbc.gridx = 1;
-		JLabel linkLabel = new HyperLinkLabel("Yusuke Kamiyamane", fugueURL);
-		fuguePanel.add(linkLabel, gbc);
-		gbc.gridx = 2;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		fuguePanel.add(
-				new JLabel(". "
-						+ HOVerwaltung.instance().getLanguageString("credits.allRightsReserved")),
-				gbc);
-
-		String fatcowURL = "http://www.fatcow.com/free-icons";
-		JPanel fatcowPanel = new JPanel(new GridBagLayout());
-		gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		fatcowPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("credits.someIconsBy")
-				+ " "), gbc);
-		gbc.gridx = 1;
-		linkLabel = new HyperLinkLabel("Fatcow Hosting", fatcowURL);
-		fatcowPanel.add(linkLabel, gbc);
-		gbc.gridx = 2;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		fatcowPanel.add(
-				new JLabel(". "
-						+ HOVerwaltung.instance().getLanguageString("credits.allRightsReserved")),
-				gbc);
-		
-		String axialisURL = "http://www.axialis.com/free/icons/";
-		JPanel axialisPanel = new JPanel(new GridBagLayout());
-		gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		axialisPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("credits.someIconsBy")
-				+ " "), gbc);
-		gbc.gridx = 1;
-		linkLabel = new HyperLinkLabel("Axialis Software", axialisURL);
-		axialisPanel.add(linkLabel, gbc);
-		gbc.gridx = 2;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		axialisPanel.add(
-				new JLabel(". "
-						+ HOVerwaltung.instance().getLanguageString("credits.allRightsReserved")),
-				gbc);
-		
-		String brsevURL = "http://brsev.deviantart.com";
-		JPanel brsevPanel = new JPanel(new GridBagLayout());
-		gbc = new GridBagConstraints();
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		brsevPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("credits.someIconsBy")
-				+ " "), gbc);
-		gbc.gridx = 1;
-		linkLabel = new HyperLinkLabel("Brsev", brsevURL);
-		brsevPanel.add(linkLabel, gbc);
-		gbc.gridx = 2;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.weightx = 1.0;
-		brsevPanel.add(
-				new JLabel(". "
-						+ HOVerwaltung.instance().getLanguageString("credits.allRightsReserved")),
-				gbc);
-
-		Object[] components = { creditsPanel, fuguePanel, fatcowPanel, axialisPanel, brsevPanel };
-
 		Object[] options1 = { HOVerwaltung.instance().getLanguageString("window.about.licence"), HOVerwaltung.instance().getLanguageString("ls.button.ok")};
 
-		int result = JOptionPane.showOptionDialog(parent, components, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,options1, null);
+		int result = JOptionPane.showOptionDialog(parent, creditsPanel, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null,options1, null);
 		if (result == JOptionPane.YES_OPTION) {
 			try {
 				BrowserLauncher.openURL("https://raw.githubusercontent.com/akasolace/HO/master/LICENSE");
