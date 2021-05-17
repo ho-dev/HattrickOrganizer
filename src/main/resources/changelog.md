@@ -45,7 +45,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Matches
-
+  - new match location filter (home/away/neutral/all) on Statistics tab (#470)
 
 ### Lineup
   - Match orders remove substitution limit (#856)
@@ -66,6 +66,8 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
   - improved handling of timezone accross the app
   - sanitizing of preferences panel
+  - automatic check for new HO! version after HRF-Download (#1019)
+    - configurable in File -> Preferences -> Release Channels
 
 
 ### League
