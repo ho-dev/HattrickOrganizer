@@ -14,36 +14,14 @@ import core.model.match.MatchKurzInfo;
 import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
-import core.training.TrainingManager;
-import core.training.TrainingWeekManager;
 import core.util.HOLogger;
-import core.util.HTDatetime;
+import tool.updater.UpdateController;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerDateModel;
+import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
 
 
 /**
@@ -98,6 +76,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			RefreshManager.instance().doReInit();
 			setVisible(false);
 			dispose();
+			if (UserParameter.instance().updateCheck) {
+				UpdateController.check4update();
+			}
 		} else if (e.getSource().equals(m_jbAbort)) {
 			setVisible(false);
 			dispose();
