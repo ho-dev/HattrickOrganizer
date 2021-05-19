@@ -48,6 +48,7 @@ layout: page
 
 
 ### Matches
+- new match location filter (home/away/neutral/all) on Statistics tab (#470)
 
 
 ### Lineup
@@ -69,6 +70,8 @@ layout: page
   - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
   - improved handling of timezone accross the app
   - sanitizing of preferences panel
+  - automatic check for new HO! version after HRF-Download (#1019)
+    - configurable in File -> Preferences -> Release Channels
 
 ### League
 
