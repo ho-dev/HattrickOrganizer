@@ -1,6 +1,5 @@
 package tool.updater;
 
-import javax.swing.JOptionPane;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -8,6 +7,7 @@ import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.Updater;
 
+import javax.swing.*;
 import java.io.File;
 
 public final class UpdateController {
@@ -19,7 +19,7 @@ public final class UpdateController {
     /**
      * Check the external site for the latest version according to user preference regarding release channel
      */
-    public static void check4update() {
+    public static void check4update(boolean showNoUpdateAvailableDialog) {
         VersionInfo devVersion = MyConnector.instance().getLatestVersion();
         VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
         VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
@@ -103,26 +103,24 @@ public final class UpdateController {
         }
 
         // no update available
-        else if (updVersion == null){
-            final int currRev = HO.getRevisionNumber();
-            JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
-                    .getLanguageString("updatenotavailable")
-                    + "\n\n"
-                    + HOVerwaltung.instance().getLanguageString("ls.version")
-                    + ": "
-                    + HO.VERSION
-                    + (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
-                    .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                    .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
-
+        else if (showNoUpdateAvailableDialog) {
+            if (updVersion == null){
+                    final int currRev = HO.getRevisionNumber();
+                    JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
+                            .getLanguageString("updatenotavailable")
+                            + "\n\n"
+                            + HOVerwaltung.instance().getLanguageString("ls.version")
+                            + ": "
+                            + HO.VERSION
+                            + (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
+                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+                            .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                    JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
+                            HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
+                            JOptionPane.INFORMATION_MESSAGE);
+            }
         }
-
-        else {
-            JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
-                    HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-
     }
 
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {

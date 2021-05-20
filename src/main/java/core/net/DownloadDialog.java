@@ -77,7 +77,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			setVisible(false);
 			dispose();
 			if (UserParameter.instance().updateCheck) {
-				UpdateController.check4update();
+				UpdateController.check4update(false);
 			}
 		} else if (e.getSource().equals(m_jbAbort)) {
 			setVisible(false);
