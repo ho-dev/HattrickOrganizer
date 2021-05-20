@@ -1,4 +1,3 @@
-// %2588915486:hoplugins.teamAnalyzer.ui%
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.entry.RatingTableEntry;
@@ -7,7 +6,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.module.config.ModuleConfig;
 import core.util.HelperWrapper;
@@ -22,10 +20,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+
+import static core.gui.theme.HOIconName.*;
 
 public class PlayerPanel extends JPanel {
 
@@ -37,7 +34,10 @@ public class PlayerPanel extends JPanel {
 	protected JLabel nameField = new JLabel("", SwingConstants.LEFT);
 	protected JLabel positionField = createLabel("", LABEL_FG, 0);
 	protected JLabel positionImage = new JLabel();
-	protected JLabel specialEventImage = new JLabel();
+	protected JLabel jlSpecialty = new JLabel();
+	protected JLabel jlInjuryStatus = new JLabel();
+	protected JLabel jlBookingstatus = new JLabel();
+	protected JLabel jlTransferListedstatus = new JLabel();
 	protected JPanel ratingPanel = new JPanel();
 	protected TacticPanel tacticPanel = new TacticPanel();
 	private final JPanel mainPanel;
@@ -62,11 +62,14 @@ public class PlayerPanel extends JPanel {
 		details.setLayout(new BorderLayout());
 
 		JPanel images = new JPanel();
-
+		images.setLayout(new BoxLayout(images, BoxLayout.X_AXIS));
 		images.setBackground(getBackGround());
-		images.setLayout(new BorderLayout());
+
 		images.add(positionImage, BorderLayout.WEST);
-		images.add(specialEventImage, BorderLayout.EAST);
+		images.add(jlSpecialty, BorderLayout.EAST);
+		images.add(jlInjuryStatus, BorderLayout.EAST);
+		images.add(jlBookingstatus, BorderLayout.EAST);
+		images.add(jlTransferListedstatus, BorderLayout.EAST);
 		details.add(images, BorderLayout.WEST);
 		details.add(nameField, BorderLayout.CENTER);
 		details.add(appearanceField, BorderLayout.EAST);
@@ -149,9 +152,15 @@ public class PlayerPanel extends JPanel {
 					.getSpecialEvent();
 
 			if (lineup.getPlayerId() == 0) {
-				specialEventImage.setIcon(null);
+				jlSpecialty.setIcon(null);
+				jlInjuryStatus.setIcon(null);
+				jlBookingstatus.setIcon(null);
+				jlTransferListedstatus.setIcon(null);
 			} else {
-				specialEventImage.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[specialEvent]));
+				jlSpecialty.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[specialEvent]));
+				jlInjuryStatus.setIcon(getInjuryStatus(lineup.getInjuryStatus()));
+				jlBookingstatus.setIcon(getBookingStatus(lineup.getBookingStatus()));
+				jlTransferListedstatus.setIcon(getTransferListedStatus(lineup.getTransferListedStatus()));
 			}
 
 			positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));
@@ -167,10 +176,49 @@ public class PlayerPanel extends JPanel {
 			infoPanel.clearData();
 			updateRatingPanel(0);
 			positionImage.setIcon(ImageUtilities.getImage4Position(0, (byte) 0, 0));
-			specialEventImage.setIcon(null);
+			jlSpecialty.setIcon(null);
+			jlInjuryStatus.setIcon(null);
+			jlBookingstatus.setIcon(null);
+			jlTransferListedstatus.setIcon(null);
 			tacticPanel.reload(new ArrayList<>());
 		}
 	}
+
+	protected Icon getInjuryStatus(int injuryStatus) {
+		switch (injuryStatus) {
+			case PlayerDataManager.BRUISED:
+				return ImageUtilities.getPlasterIcon(12, 12);
+			case PlayerDataManager.INJURED:
+				return ImageUtilities.getInjuryIcon(12, 12);
+			default:
+				return null;
+		}
+	}
+
+	protected Icon getBookingStatus(int bookingStatus) {
+		switch (bookingStatus) {
+			case PlayerDataManager.YELLOW:
+				return ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12);
+			case PlayerDataManager.DOUBLE_YELLOW:
+				return ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12);
+			case PlayerDataManager.SUSPENDED:
+				return ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12);
+			default:
+				return null;
+		}
+	}
+
+
+	protected Icon getTransferListedStatus(int transferStatus) {
+		if(transferStatus == PlayerDataManager.SOLD) {
+			return ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12);
+		}
+		else{
+			return null;
+		}
+	}
+
+
 
 	private String getPlayerName(String name) {
 		return " " + name.substring(0, 1) + "." + name.substring(name.indexOf(" ") + 1);

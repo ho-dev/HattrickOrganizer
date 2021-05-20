@@ -18,6 +18,9 @@ public class PlayerPerformance {
 
     /** Status of the player on the team. injured, sold etc */
     private int status;
+    private int injuryStatus = 0;
+    private int bookingStatus = 0;
+    private int transferListedStatus = 0;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -69,6 +72,16 @@ public class PlayerPerformance {
 
     public void setStatus(int i) {
         status = i;
+        int digit = i % 10;
+        this.injuryStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.bookingStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.transferListedStatus= digit;
     }
 
     public int getStatus() {
