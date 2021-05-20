@@ -21,6 +21,7 @@ import core.util.Helper;
 import module.nthrf.MainPanel;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
+import tool.updater.UpdateController;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

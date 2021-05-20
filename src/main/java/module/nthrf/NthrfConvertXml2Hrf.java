@@ -514,7 +514,7 @@ class NthrfConvertXml2Hrf {
 				root = (Element) root.getElementsByTagName("Country").item(0);
 				ele = (Element) root.getElementsByTagName("CountryID").item(0);
 				String countryID = XMLManager.getFirstChildNodeValue(ele);
-				ret.put(new Integer(Integer.parseInt(leagueID)), new Integer(Integer.parseInt(countryID)));
+				ret.put(Integer.parseInt(leagueID), Integer.parseInt(countryID));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
