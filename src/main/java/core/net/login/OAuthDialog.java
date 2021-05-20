@@ -59,7 +59,7 @@ public class OAuthDialog extends JDialog {
 
 		// Hard code set_matchorder due to authorization woes.
 		// scope manage_youthplayers is needed to use action type unlockskills
-		scopes = "&scope=" + "set_matchorder,manage_youthplayers";
+		scopes = "&scope=" + "set_matchorder";
 		
 		obtainUserURL();
 		initComponents();
