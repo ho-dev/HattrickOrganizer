@@ -169,6 +169,7 @@ public interface HOIconName {
 	String IFA_VISITED  = "ifa_visited";
 	String INFORMATION  = "information";
 	String CHPP  = "chpp";
+	String CHPP_WHITE_BG = "chpp_white_bg";
 
 	String HOME = "home";
 	String AWAY = "away";

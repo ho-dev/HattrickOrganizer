@@ -1,22 +1,14 @@
 package core.gui;
 
-import core.gui.comp.HyperLinkLabel;
+import core.HO;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import core.HO;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class Credits {
 
@@ -46,7 +38,7 @@ public class Credits {
 		gbc.gridheight = lines;
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 		gbc.insets = new Insets(0, 15, 0, 0);
-		creditsPanel.add(new JLabel(ThemeManager.getIcon(HOIconName.CHPP)), gbc);
+		creditsPanel.add(new JLabel(ThemeManager.getIcon(HOIconName.CHPP_WHITE_BG)), gbc);
 
 		Object[] options1 = { HOVerwaltung.instance().getLanguageString("window.about.licence"), HOVerwaltung.instance().getLanguageString("ls.button.ok")};
 
