@@ -3,7 +3,9 @@ package core.net;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.file.hrf.HRFStringParser;
 import core.gui.HOMainFrame;
+import core.gui.InfoPanel;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
@@ -15,13 +17,24 @@ import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
-import tool.updater.UpdateController;
+import core.util.Helper;
+import module.nthrf.MainPanel;
+import module.nthrf.NtTeamChooser;
+import module.nthrf.NthrfUtil;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
 
 
 /**
@@ -54,25 +67,29 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
+	private boolean isNtTeam;
 	/**
 	 * Creates a new DownloadDialog object.
+	 * @param ntTeam
 	 */
-	public DownloadDialog() {
+	public DownloadDialog(boolean ntTeam) {
 		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), true);
+		this.isNtTeam=ntTeam;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 	}
 
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
-
-	// ------------------------------------------------------------------------
 	@Override
 	public final void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(m_jchOldFixtures)) {
 			m_jlOldSeasons.setEnabled(m_jchOldFixtures.isSelected());
 		} else if (e.getSource().equals(m_jbDownload)) {
-			startDownload();
+			if ( isNtTeam){
+				startNtDownload();
+			}
+			else {
+				startDownload();
+			}
 			RefreshManager.instance().doReInit();
 			setVisible(false);
 			dispose();
@@ -107,85 +124,101 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		setResizable(false);
 		setContentPane(new ImagePanel(null));
 
-		final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
-		normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
+		if ( !isNtTeam) {
+			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
+			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 
-		// Download Filter
 
-		final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
-		downloadFilter.setModel(newModel);
-		newModel.reload();
+			// Download Filter
 
-		// Current Matches
-		// - Official Matches
-		//    currentMatchlist selects now the node OfficialMatches.
-		//    It is the first subitem of current Matches in the Filter tree
-		downloadFilter.checkNode(filterRoot.getOfficialMatches(), UserParameter.instance().downloadCurrentMatchlist);
-		// - Integrated matches
-		downloadFilter.checkNode(filterRoot.getSingleMatches(), UserParameter.instance().downloadSingleMatches);
-		downloadFilter.checkNode(filterRoot.getLadderMatches(), UserParameter.instance().downloadLadderMatches);
-		downloadFilter.checkNode(filterRoot.getTournamentGroupMatches(), UserParameter.instance().downloadTournamentGroupMatches);
-		downloadFilter.checkNode(filterRoot.getTournamentPlayoffMatches(), UserParameter.instance().downloadTournamentPlayoffMatches);
-		downloadFilter.checkNode(filterRoot.getDivisionBattleMatches(), UserParameter.instance().downloadDivisionBattleMatches);
+			final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
+			downloadFilter.setModel(newModel);
+			newModel.reload();
 
-		// Team Data
-		downloadFilter.checkNode(filterRoot.getTeamData(), UserParameter.instance().xmlDownload);
+			// Current Matches
+			// - Official Matches
+			//    currentMatchlist selects now the node OfficialMatches.
+			//    It is the first subitem of current Matches in the Filter tree
+			downloadFilter.checkNode(filterRoot.getOfficialMatches(), UserParameter.instance().downloadCurrentMatchlist);
+			// - Integrated matches
+			downloadFilter.checkNode(filterRoot.getSingleMatches(), UserParameter.instance().downloadSingleMatches);
+			downloadFilter.checkNode(filterRoot.getLadderMatches(), UserParameter.instance().downloadLadderMatches);
+			downloadFilter.checkNode(filterRoot.getTournamentGroupMatches(), UserParameter.instance().downloadTournamentGroupMatches);
+			downloadFilter.checkNode(filterRoot.getTournamentPlayoffMatches(), UserParameter.instance().downloadTournamentPlayoffMatches);
+			downloadFilter.checkNode(filterRoot.getDivisionBattleMatches(), UserParameter.instance().downloadDivisionBattleMatches);
 
-		// Series Data (fixtures)
-		downloadFilter.checkNode(filterRoot.getSeriesData(), UserParameter.instance().fixtures);
+			// Team Data
+			downloadFilter.checkNode(filterRoot.getTeamData(), UserParameter.instance().xmlDownload);
 
-		normalDownloadPanel.setLayout(new BorderLayout());
-		normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
-		normalDownloadPanel.setSize(240, 280);
-		normalDownloadPanel.setLocation(10, 10);
-		getContentPane().add(normalDownloadPanel);
+			// Series Data (fixtures)
+			downloadFilter.checkNode(filterRoot.getSeriesData(), UserParameter.instance().fixtures);
 
-		final JPanel specialDownload = new ImagePanel(new GridLayout(1, 1, 4, 4));
-		specialDownload.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("Verschiedenes")));
+			normalDownloadPanel.setLayout(new BorderLayout());
+			normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
+			normalDownloadPanel.setSize(240, 280);
+			normalDownloadPanel.setLocation(10, 10);
+			getContentPane().add(normalDownloadPanel);
 
-		// Alte Spielpläne
-		final JPanel oldFixturePanel = new ImagePanel(new BorderLayout());
+			final JPanel specialDownload = new ImagePanel(new GridLayout(1, 1, 4, 4));
+			specialDownload.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("Verschiedenes")));
 
-		m_jchOldFixtures.setToolTipText(hov.getLanguageString("download.oldseriesdata.tt"));
-		m_jchOldFixtures.addActionListener(this);
-		m_jchOldFixtures.setOpaque(false);
-		oldFixturePanel.add(m_jchOldFixtures, BorderLayout.NORTH);
+			// Alte Spielpläne
+			final JPanel oldFixturePanel = new ImagePanel(new BorderLayout());
 
-		m_jlOldSeasons.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		m_jlOldSeasons.setEnabled(false);
-		fillOldFixturesList();
-		oldFixturePanel.add(new JScrollPane(m_jlOldSeasons), BorderLayout.CENTER);
+			m_jchOldFixtures.setToolTipText(hov.getLanguageString("download.oldseriesdata.tt"));
+			m_jchOldFixtures.addActionListener(this);
+			m_jchOldFixtures.setOpaque(false);
+			oldFixturePanel.add(m_jchOldFixtures, BorderLayout.NORTH);
 
-		// MatchArchive
-		final JPanel matchArchivePanel = new JPanel(new BorderLayout(1, 2));
-		matchArchivePanel.setOpaque(false);
+			m_jlOldSeasons.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			m_jlOldSeasons.setEnabled(false);
+			fillOldFixturesList();
+			oldFixturePanel.add(new JScrollPane(m_jlOldSeasons), BorderLayout.CENTER);
 
-		m_jchMatchArchive.setToolTipText(hov.getLanguageString("download.oldmatches.tt"));
-		m_jchMatchArchive.addActionListener(this);
-		m_jchMatchArchive.setOpaque(false);
-		matchArchivePanel.add(m_jchMatchArchive, BorderLayout.WEST);
+			// MatchArchive
+			final JPanel matchArchivePanel = new JPanel(new BorderLayout(1, 2));
+			matchArchivePanel.setOpaque(false);
 
-		m_clSpinnerModel.setCalendarField(java.util.Calendar.MONTH);
-		((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
-		matchArchivePanel.add(m_jsSpinner, BorderLayout.EAST);
+			m_jchMatchArchive.setToolTipText(hov.getLanguageString("download.oldmatches.tt"));
+			m_jchMatchArchive.addActionListener(this);
+			m_jchMatchArchive.setOpaque(false);
+			matchArchivePanel.add(m_jchMatchArchive, BorderLayout.WEST);
 
-		// Show HRF FileDialog
-		m_jchShowSaveDialog.setToolTipText(hov.getLanguageString("tt_Optionen_Show_SaveHRF_Dialog"));
-		m_jchShowSaveDialog.setOpaque(false);
-		m_jchShowSaveDialog.addActionListener(this);
+			m_clSpinnerModel.setCalendarField(java.util.Calendar.MONTH);
+			((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
+			matchArchivePanel.add(m_jsSpinner, BorderLayout.EAST);
 
-		final JPanel diverseOptionsPanel = new ImagePanel(new BorderLayout(1,2));
-		diverseOptionsPanel.add(matchArchivePanel, BorderLayout.NORTH);
-		diverseOptionsPanel.add(m_jchShowSaveDialog, BorderLayout.SOUTH);
+			// Show HRF FileDialog
+			m_jchShowSaveDialog.setToolTipText(hov.getLanguageString("tt_Optionen_Show_SaveHRF_Dialog"));
+			m_jchShowSaveDialog.setOpaque(false);
+			m_jchShowSaveDialog.addActionListener(this);
 
-		oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
+			final JPanel diverseOptionsPanel = new ImagePanel(new BorderLayout(1, 2));
+			diverseOptionsPanel.add(matchArchivePanel, BorderLayout.NORTH);
+			diverseOptionsPanel.add(m_jchShowSaveDialog, BorderLayout.SOUTH);
 
-		specialDownload.add(oldFixturePanel);
+			oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
 
-		specialDownload.setSize(260, 280);
-		specialDownload.setLocation(260, 10);
-		getContentPane().add(specialDownload);
+			specialDownload.add(oldFixturePanel);
 
+			specialDownload.setSize(260, 280);
+			specialDownload.setLocation(260, 10);
+			getContentPane().add(specialDownload);
+		}
+		else {
+			// isNtTeaam
+
+			// TODO: Text area is not displayed yet
+			JTextArea ta = new JTextArea();
+			ta.append(hov.getLanguageString("nthrf.hint1")+"\n");
+			ta.append(hov.getLanguageString("nthrf.hint2")+"\n");
+			ta.append(hov.getLanguageString("nthrf.hint3")+"\n");
+			ta.append(hov.getLanguageString("nthrf.hint4")+" '");
+			ta.append(hov.getLanguageString("Start")+"' ");
+			ta.append(hov.getLanguageString("nthrf.hint5"));
+			ta.setEditable(false);
+			getContentPane().add(new JScrollPane(ta), BorderLayout.CENTER);
+		}
 		m_jbDownload.setToolTipText(hov.getLanguageString("tt_Download_Start"));
 		m_jbDownload.addActionListener(this);
 		m_jbDownload.setFont(m_jbDownload.getFont().deriveFont(Font.BOLD));
@@ -236,6 +269,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * The download action.
 	 */
 	private void startDownload() {
+
 		boolean bOK = true;
 
 		// Save Dialog's settings
@@ -318,5 +352,43 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		DBManager.instance().updateLatestData();
 		model.calcSubskills();
 
+	}
+
+	private void startNtDownload() {
+		try {
+			var teams = NthrfUtil.getNtTeams();
+			if (teams == null || teams.size() < 1 || teams.get(0)[0] == null || teams.get(0)[0].length() < 1) {
+				return;
+			}
+			final long teamId;
+			if (teams.size() > 1) {
+				NtTeamChooser chooser = new NtTeamChooser(teams);
+				chooser.setModal(true);
+				chooser.setVisible(true);
+				teamId = chooser.getSelectedTeamId();
+				//System.out.println("Result is: " + chooser.getSelectedTeamId());
+				chooser.dispose();
+			} else {
+				teamId = Long.parseLong(teams.get(0)[0]);
+			}
+			var hrf = NthrfUtil.createNthrf(teamId);
+			if ( !hrf.isEmpty()) {
+				HOModel homodel = HRFStringParser.parse(hrf);
+				if (homodel != null) {
+					// save the model in the database
+					homodel.saveHRF();
+					// Only update when the model is newer than existing
+					if (hov.isNewModel(homodel)) {
+						hov.setModel(homodel);
+					}
+					DBManager.instance().updateLatestData();
+				}
+				else {
+					HOLogger.instance().error(getClass(), "Download error: " + hrf);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

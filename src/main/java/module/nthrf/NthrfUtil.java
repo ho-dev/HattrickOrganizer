@@ -15,20 +15,25 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
+import core.net.OnlineWorker;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-class NthrfUtil {
+public class NthrfUtil {
 
     /**
      * TODO
      * @return success of the operation
      */
-    static boolean createNthrf(long teamId) {
+    public static String createNthrf(long teamId) {
         try {
             MyConnector dh = MyConnector.instance();
             NthrfConvertXml2Hrf x2h = new NthrfConvertXml2Hrf();
-            x2h.createHrf(teamId, dh);
+
+
+            var teamDetails = dh.getTeamdetails((int)teamId);
+
+            var hrf = x2h.createHrf(teamId, dh);
             JFileChooser fileChooser = new JFileChooser();
 
             final String fname = "/nt_"+teamId+"_"+new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())+".hrf";
@@ -69,15 +74,15 @@ class NthrfUtil {
                 }
             } else {
                 debug("Could not write file, nothing selected!");
-                return false;
+                return "";
             }
 
-            return true;
+            return hrf;
         } catch (Exception e) {
             debug("Error: " + e);
             e.printStackTrace();
         }
-        return false;
+        return "";
     }
 
     /**

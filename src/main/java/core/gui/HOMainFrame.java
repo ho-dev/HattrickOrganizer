@@ -300,12 +300,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
 		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-			if (UserManager.instance().getCurrentUser().isNtTeam()) {
-				JOptionPane.showMessageDialog(HOMainFrame.instance(), MainPanel.getInstance(),
-						HOVerwaltung.instance().getLanguageString("HRFDownload"), JOptionPane.PLAIN_MESSAGE);
-			} else {
-				new DownloadDialog();
-			}
+				new DownloadDialog(UserManager.instance().getCurrentUser().isNtTeam());
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(databaseOptionsMenu)) {
