@@ -6,6 +6,7 @@ import core.model.HOVerwaltung;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.Updater;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -20,6 +21,30 @@ public final class UpdateController {
      * Check the external site for the latest version according to user preference regarding release channel
      */
     public static void check4update(boolean showNoUpdateAvailableDialog) {
+        VersionInfo updVersion = getUpdateVersion();
+
+        // a version has been found and auto update is allowed
+        if (updVersion != null) {
+            showUpdateDialog(updVersion);
+        }
+
+        // no update available
+        else if (showNoUpdateAvailableDialog) {
+//            if (updVersion == null){
+            // This condition is always true
+            showNoUpdateAvailableDialog();
+
+            // This part can be never reached
+//            } else {
+//                    JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
+//                            HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
+//                            JOptionPane.INFORMATION_MESSAGE);
+//            }
+        }
+    }
+
+    @Nullable
+    private static VersionInfo getUpdateVersion() {
         VersionInfo devVersion = MyConnector.instance().getLatestVersion();
         VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
         VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
@@ -53,78 +78,69 @@ public final class UpdateController {
 
             }
         }
+        return updVersion;
+    }
 
-        // a version has been found and auto update is allowed
-        if (updVersion != null) {
-            String versionType = updVersion.getVersionType();
-            String updateAvailable;
-            String releaseNoteUrl;
-            switch (versionType){
-                case "DEV":
-                    updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
-                    releaseNoteUrl = DEV_URL;
-                    break;
-                case "BETA":
-                    updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
-                    releaseNoteUrl = BETA_URL;
-                    break;
-                default:
-                    updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
-                    releaseNoteUrl = STABLE_URL;
-                    break;
-            }
-
-            int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-                    new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
-                            + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
-                            + updVersion.getVersionString() + "<br/>"
-                            + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
-                            + updVersion.getReleaseDate() + "<br/><br/>"
-                            + HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
-                            releaseNoteUrl),
-                    HOVerwaltung.instance().getLanguageString("confirmation.title"),
-                    JOptionPane.YES_NO_OPTION);
-
-            // Warning, if install via package, ask user to confirmation
-            if (update == JOptionPane.YES_OPTION &&
-                    System.getProperty("install.mode","").equalsIgnoreCase("pkg") &&
-                    versionType.equals("RELEASE")) {
-                update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-                        HOVerwaltung.instance().getLanguageString("ls.button.update.linux.pkg.warning") + "?",
-                        HOVerwaltung.instance().getLanguageString("confirmation.title"),
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
-            }
-
-                if (update == JOptionPane.YES_OPTION) {
-                    updateHO(updVersion.getFullVersion(), updVersion.getVersion(), versionType);
-                }
-
+    private static void showUpdateDialog(VersionInfo updVersion) {
+        String versionType = updVersion.getVersionType();
+        String updateAvailable;
+        String releaseNoteUrl;
+        switch (versionType){
+            case "DEV":
+                updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
+                releaseNoteUrl = DEV_URL;
+                break;
+            case "BETA":
+                updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
+                releaseNoteUrl = BETA_URL;
+                break;
+            default:
+                updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
+                releaseNoteUrl = STABLE_URL;
+                break;
         }
 
-        // no update available
-        else if (showNoUpdateAvailableDialog) {
-            if (updVersion == null){
-                    final int currRev = HO.getRevisionNumber();
-                    JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
-                            .getLanguageString("updatenotavailable")
-                            + "\n\n"
-                            + HOVerwaltung.instance().getLanguageString("ls.version")
-                            + ": "
-                            + HO.VERSION
-                            + (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                    JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
-                            HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
-                            JOptionPane.INFORMATION_MESSAGE);
-            }
+        int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+                new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
+                        + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
+                        + updVersion.getVersionString() + "<br/>"
+                        + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
+                        + updVersion.getReleaseDate() + "<br/><br/>"
+                        + HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
+                        releaseNoteUrl),
+                HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                JOptionPane.YES_NO_OPTION);
+
+        // Warning, if install via package, ask user to confirmation
+        if (update == JOptionPane.YES_OPTION &&
+                System.getProperty("install.mode","").equalsIgnoreCase("pkg") &&
+                versionType.equals("RELEASE")) {
+            update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+                    HOVerwaltung.instance().getLanguageString("ls.button.update.linux.pkg.warning") + "?",
+                    HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+        }
+
+        if (update == JOptionPane.YES_OPTION) {
+            updateHO(updVersion.getFullVersion(), updVersion.getVersion(), versionType);
         }
     }
 
+    private static void showNoUpdateAvailableDialog() {
+        final int currRev = HO.getRevisionNumber();
+        JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
+                .getLanguageString("updatenotavailable")
+                + "\n\n"
+                + HOVerwaltung.instance().getLanguageString("ls.version")
+                + ": "
+                + HO.VERSION
+                + (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
+                .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+                .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
-        String ver = Double.toString(version);
 
         return switch (versionType) {
             case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
