@@ -95,7 +95,7 @@ public class PlayerPerformance {
             case PlayerDataManager.AVAILABLE: return "Available";
             case PlayerDataManager.INJURED: return "Injured";
             case PlayerDataManager.SUSPENDED: return "Suspended";
-            case PlayerDataManager.SOLD: return "Sold";
+            case PlayerDataManager.TRANSFER_LISTED: return "Sold";
         }
     }
 
