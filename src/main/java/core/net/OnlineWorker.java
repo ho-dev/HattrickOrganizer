@@ -113,7 +113,7 @@ public class OnlineWorker {
 						// Add old players to the model
 						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
 						// Only update when the model is newer than existing
-						if (isNewModel(homodel)) {
+						if (HOVerwaltung.isNewModel(homodel)) {
 							// Reimport Skillup
 							DBManager.instance().checkSkillup(homodel);
 							// Show
@@ -952,12 +952,6 @@ public class OnlineWorker {
 			}
 		}
 		return properties;
-	}
-
-	private static boolean isNewModel(HOModel homodel) {
-		return (homodel != null && ((HOVerwaltung.instance().getModel() == null) || (homodel
-				.getBasics().getDatum().after(HOVerwaltung.instance().getModel().getBasics()
-				.getDatum()))));
 	}
 
 	/**

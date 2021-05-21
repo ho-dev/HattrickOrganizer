@@ -75,7 +75,7 @@ class NthrfConvertXml2Hrf {
 				debug("Got lineup");
 			}
 
-			createBasics(details, players); // ok, TODO
+			createBasics(details, players, world); // ok, TODO
 			debug("created basics");
 			createLeague();					// ok
 			debug("created league");
@@ -128,7 +128,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * basic data
 	 */
-	final void createBasics(NtTeamDetailsParser details, NtPlayersParser players) throws Exception {
+	final void createBasics(NtTeamDetailsParser details, NtPlayersParser players, Map<String, String> world) throws Exception {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
 		m_sHRFBuffer.append("appversion=" + HO.VERSION + "\n");
@@ -142,7 +142,7 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("ownerEmail=0\n");
 		m_sHRFBuffer.append("ownerICQ=0\n");
 		m_sHRFBuffer.append("ownerHomepage=" + details.getHomePageUrl() + "\n");
-		m_sHRFBuffer.append("countryID=" + (players.getAllPlayers().get(0)).getCountryId() + "\n");
+		m_sHRFBuffer.append("countryID=" + world.get("CountryID") + "\n");
 		m_sHRFBuffer.append("leagueID=" + details.getLeagueId() + "\n");
 		m_sHRFBuffer.append("regionID=0\n");
 	}
@@ -514,7 +514,7 @@ class NthrfConvertXml2Hrf {
 				root = (Element) root.getElementsByTagName("Country").item(0);
 				ele = (Element) root.getElementsByTagName("CountryID").item(0);
 				String countryID = XMLManager.getFirstChildNodeValue(ele);
-				ret.put(new Integer(Integer.parseInt(leagueID)), new Integer(Integer.parseInt(countryID)));
+				ret.put(Integer.parseInt(leagueID), Integer.parseInt(countryID));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

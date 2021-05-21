@@ -13,7 +13,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Highlights
   - complete makeover of the statistics module (#788)
   - improving consistency of dark themes
-  - preview of new module Youth academy (#367)
+  - preview of new module youth academy (#367)
 
 
 
@@ -43,7 +43,6 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ### Rating
   - new default model
 
-
 ### Matches
   - new match location filter (home/away/neutral/all) on Statistics tab (#470)
 
@@ -57,7 +56,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Training
-  - many buf fixes
+  - many bug fixes
   - fix training recap table's resetting scroll positions on table refresh  (#1011) 
   
 
@@ -68,6 +67,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - sanitizing of preferences panel
   - automatic check for new HO! version after HRF-Download (#1019)
     - configurable in File -> Preferences -> Release Channels
+  - refactor NT team download (#1025)
 
 
 ### League

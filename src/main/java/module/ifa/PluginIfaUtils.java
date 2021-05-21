@@ -1,6 +1,7 @@
 package module.ifa;
 
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.file.xml.TeamInfo;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLTeamDetailsParser;
@@ -26,8 +27,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.JWindow;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,7 +62,7 @@ public class PluginIfaUtils {
 			if (time != null && time.getTime() > 100) {
 				break;
 			}
-			new DownloadDialog();
+			new DownloadDialog(UserManager.instance().getCurrentUser().isNtTeam());
 		} while (retry == true && !(retry = false));
 
 		//JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());

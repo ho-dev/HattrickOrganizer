@@ -2671,9 +2671,11 @@ public class DBManager {
 	 * @param before       the before
 	 */
 	public void deleteMatchData(int sourcesystem, Timestamp before){
-		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
-		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
-		((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+		if ( before != null) {
+			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
+			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
+			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+		}
 	}
 
 	/**

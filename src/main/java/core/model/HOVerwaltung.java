@@ -34,7 +34,12 @@ public class HOVerwaltung {
 	protected ResourceBundle languageBundle;
 	protected Locale m_locale;
 
-	public int getId() {
+    public static boolean isNewModel(HOModel homodel) {
+		return (homodel != null && ((instance().getModel() == null) ||
+				(homodel.getBasics().getDatum().after(instance().getModel().getBasics().getDatum()))));
+	}
+
+    public int getId() {
 		return id;
 	}
 
