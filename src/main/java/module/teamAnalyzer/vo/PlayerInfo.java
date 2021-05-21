@@ -72,7 +72,7 @@ public class PlayerInfo {
         }
 
         this.status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
-        HOLogger.instance().debug(this.getClass(), this.name + ":" + i );
+//        HOLogger.instance().debug(this.getClass(), this.name + ":" + i );
 
 
         this.teamId = Integer.parseInt(i.get("TeamID"));

@@ -156,7 +156,7 @@ public class PlayerPanel extends JPanel {
 				jlBookingstatus.setIcon(null);
 				jlTransferListedstatus.setIcon(null);
 			} else {
-				HOLogger.instance().debug(this.getClass(), lineup.getName() + ":" +lineup.getStatus() + " " + lineup.getInjuryStatus() + " " +  lineup.getBookingStatus() + " " + lineup.getTransferListedStatus());
+//				HOLogger.instance().debug(this.getClass(), lineup.getName() + ":" +lineup.getStatus() + " " + lineup.getInjuryStatus() + " " +  lineup.getBookingStatus() + " " + lineup.getTransferListedStatus());
 				jlSpecialty.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[specialEvent]));
 				jlInjuryStatus.setIcon(getInjuryStatusIcon(lineup.getInjuryStatus()));
 				jlBookingstatus.setIcon(getBookingStatusIcon(lineup.getBookingStatus()));
