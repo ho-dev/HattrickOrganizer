@@ -1,11 +1,11 @@
 package module.teamAnalyzer.vo;
 
 import core.file.xml.MyHashtable;
+import core.util.HOLogger;
 import module.teamAnalyzer.manager.PlayerDataManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
@@ -64,8 +64,15 @@ public class PlayerInfo {
             default -> injuryStatus = PlayerDataManager.INJURED;
         }
 
-        this.status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+        if(parseBooleanWithDefault(i.get("TransferListed"), false)) {
+            transferListedStatus = PlayerDataManager.TRANSFER_LISTED;
+        }
+        else{
+            transferListedStatus = 0;
+        }
 
+        this.status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+        HOLogger.instance().debug(this.getClass(), this.name + ":" + i );
 
 
         this.teamId = Integer.parseInt(i.get("TeamID"));
@@ -90,6 +97,16 @@ public class PlayerInfo {
         }
         catch (NumberFormatException e){}
         return i;
+    }
+
+    private boolean parseBooleanWithDefault(String s, boolean res) {
+        try {
+            return Boolean.parseBoolean(s);
+        }
+        catch (NumberFormatException e){
+            HOLogger.instance().error(this.getClass(), res + " could not be recognized as a valid boolean");
+        }
+        return res;
     }
 
     public PlayerInfo() {
