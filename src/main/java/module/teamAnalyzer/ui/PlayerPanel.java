@@ -8,12 +8,13 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.player.MatchRoleID;
 import core.module.config.ModuleConfig;
+import core.util.HOLogger;
 import core.util.HelperWrapper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.SpotLineup;
-
+import java.util.Map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,7 +30,6 @@ public class PlayerPanel extends JPanel {
 	private final Color PANEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
 	private final Color LABEL_FG = ThemeManager.getColor(HOColorName.LABEL_FG);
 
-	private static final long serialVersionUID = 1838357704496299083L;
 	protected JLabel appearanceField = new JLabel("", SwingConstants.RIGHT);
 	protected JLabel nameField = new JLabel("", SwingConstants.LEFT);
 	protected JLabel positionField = createLabel("", LABEL_FG, 0);
@@ -101,7 +101,7 @@ public class PlayerPanel extends JPanel {
 	}
 
 	public Dimension getDefaultSize() {
-		int height = 60;
+		int height = 70;
 
 		if (!(this instanceof UserTeamPlayerPanel)) {
 			if (ModuleConfig.instance().getBoolean(SystemManager.ISSHOWPLAYERINFO)) {
@@ -113,8 +113,7 @@ public class PlayerPanel extends JPanel {
 			height = height + 50;
 		}
 
-		// return new Dimension(180, height); - Blaghaid
-		return new Dimension(150, height);
+		return new Dimension(160, height);
 	}
 
 	public boolean getContainsPlayer() {
@@ -131,7 +130,7 @@ public class PlayerPanel extends JPanel {
 		if (lineup != null) {
 			containsPlayer = true;			
 
-			nameField.setText(getPlayerName(lineup.getName()));
+			nameField.setText(lineup.getName());
 			appearanceField.setText("" + lineup.getAppearance());
 
 			if (ModuleConfig.instance().getBoolean(SystemManager.ISSHOWPLAYERINFO)) {
@@ -157,10 +156,11 @@ public class PlayerPanel extends JPanel {
 				jlBookingstatus.setIcon(null);
 				jlTransferListedstatus.setIcon(null);
 			} else {
+				HOLogger.instance().debug(this.getClass(), lineup.getName() + ":" +lineup.getStatus() + " " + lineup.getInjuryStatus() + " " +  lineup.getBookingStatus() + " " + lineup.getTransferListedStatus());
 				jlSpecialty.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[specialEvent]));
-				jlInjuryStatus.setIcon(getInjuryStatus(lineup.getInjuryStatus()));
-				jlBookingstatus.setIcon(getBookingStatus(lineup.getBookingStatus()));
-				jlTransferListedstatus.setIcon(getTransferListedStatus(lineup.getTransferListedStatus()));
+				jlInjuryStatus.setIcon(getInjuryStatusIcon(lineup.getInjuryStatus()));
+				jlBookingstatus.setIcon(getBookingStatusIcon(lineup.getBookingStatus()));
+				jlTransferListedstatus.setIcon(getTransferListedStatusIcon(lineup.getTransferListedStatus()));
 			}
 
 			positionField.setText(MatchRoleID.getNameForPosition((byte) lineup.getPosition()));
@@ -184,7 +184,7 @@ public class PlayerPanel extends JPanel {
 		}
 	}
 
-	protected Icon getInjuryStatus(int injuryStatus) {
+	protected Icon getInjuryStatusIcon(int injuryStatus) {
 		switch (injuryStatus) {
 			case PlayerDataManager.BRUISED:
 				return ImageUtilities.getPlasterIcon(12, 12);
@@ -195,7 +195,7 @@ public class PlayerPanel extends JPanel {
 		}
 	}
 
-	protected Icon getBookingStatus(int bookingStatus) {
+	protected Icon getBookingStatusIcon(int bookingStatus) {
 		switch (bookingStatus) {
 			case PlayerDataManager.YELLOW:
 				return ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12);
@@ -209,19 +209,13 @@ public class PlayerPanel extends JPanel {
 	}
 
 
-	protected Icon getTransferListedStatus(int transferStatus) {
-		if(transferStatus == PlayerDataManager.SOLD) {
-			return ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12);
+	protected Icon getTransferListedStatusIcon(int transferStatus) {
+		if(transferStatus == PlayerDataManager.TRANSFER_LISTED) {
+			return ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR)), 14, 14);
 		}
 		else{
 			return null;
 		}
-	}
-
-
-
-	private String getPlayerName(String name) {
-		return " " + name.substring(0, 1) + "." + name.substring(name.indexOf(" ") + 1);
 	}
 
 	protected void updateRatingPanel(double rating) {
