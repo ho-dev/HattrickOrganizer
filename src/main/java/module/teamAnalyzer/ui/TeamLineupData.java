@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 /**
  * This is an empty panel to display a lineup
- * 553 changes by blaghaid
  */
 public class TeamLineupData {
     //~ Instance fields ----------------------------------------------------------------------------

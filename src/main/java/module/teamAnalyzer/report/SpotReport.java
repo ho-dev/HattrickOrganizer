@@ -65,7 +65,7 @@ public class SpotReport extends Report {
 
         name = name.replaceAll(" ", "");
 
-        PlayerAppearance playerApperance = (PlayerAppearance) players.get(name);
+        PlayerAppearance playerApperance = players.get(name);
 
         if (playerApperance == null) {
             playerApperance = new PlayerAppearance();

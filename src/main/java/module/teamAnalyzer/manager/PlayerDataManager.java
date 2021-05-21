@@ -15,7 +15,10 @@ public class PlayerDataManager {
 	public static final int AVAILABLE = 0;
 	public static final int INJURED = 1;
 	public static final int SUSPENDED = 2;
-	public static final int SOLD = 3;
+	public static final int TRANSFER_LISTED = 3;
+	public static final int YELLOW = 4;
+	public static final int DOUBLE_YELLOW = 5;
+	public static final int BRUISED = 6;
 
 	public static PlayerInfo getLatestPlayerInfo(int playerId) {
 		return DBManager.instance().getTALatestPlayerInfo(playerId);

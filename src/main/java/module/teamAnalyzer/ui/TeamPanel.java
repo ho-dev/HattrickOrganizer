@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.module.config.ModuleConfig;
+import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -21,7 +22,6 @@ import javax.swing.*;
 
 public class TeamPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -4778556838500877114L;
 	private FormationPanel lineupPanel = new FormationPanel();
     private PlayerPanel keeper = new PlayerPanel();
     private PlayerPanel leftAttacker = new PlayerPanel();
@@ -199,7 +199,7 @@ public class TeamPanel extends JPanel {
             if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
                 spotLineup.setAppearance(0);
-                spotLineup.setName(getPlayerName(player.getFullName()));
+                spotLineup.setName(" " + player.getShortName());
                 spotLineup.setPlayerId(player.getPlayerID());
                 spotLineup.setSpecialEvent(player.getPlayerSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
@@ -247,10 +247,6 @@ public class TeamPanel extends JPanel {
         lineupPanel.getMyTeam().setMidfield(convertRating(lineup.getRatings().getMidfield().get(-90d)));
     }
 
-    private String getPlayerName(String name) {
-        return " " + name.charAt(0) + "." +name.substring(name.indexOf(" ")+1);
-    }
-    
     private int convertRating(double rating) {
         return RatingUtil.getIntValue4Rating(rating);
     }
@@ -260,6 +256,7 @@ public class TeamPanel extends JPanel {
         
         // Don't add the panel of an empty position.
         if (playerPanel.getContainsPlayer()) {
+            playerPanel.setPreferredSize(playerPanel.getDefaultSize());
         	panel.add(playerPanel);
         } else {
         	// But leave a box the size of a player panel...

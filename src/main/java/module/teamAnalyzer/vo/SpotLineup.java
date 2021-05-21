@@ -1,4 +1,3 @@
-// %1647522239:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
 import module.teamAnalyzer.report.Report;
@@ -24,6 +23,9 @@ public class SpotLineup extends Report {
 
     /** Status of the player */
     private int status;
+    private int injuryStatus = 0;
+    private int bookingStatus = 0;
+    private int transferListedStatus = 0;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -54,10 +56,33 @@ public class SpotLineup extends Report {
 
     public void setStatus(int i) {
         status = i;
+
+        int digit = i % 10;
+        this.injuryStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.bookingStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.transferListedStatus= digit;
     }
 
     public int getStatus() {
         return status;
+    }
+
+    public int getInjuryStatus() {
+        return injuryStatus;
+    }
+
+    public int getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public int getTransferListedStatus() {
+        return transferListedStatus;
     }
 
     public void setTactics(List<TacticReport> list) {

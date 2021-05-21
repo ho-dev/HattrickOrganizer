@@ -226,7 +226,7 @@ public class SpecialEventsPredictionManager {
 
     public void setOpponentLineup(MatchDetail opponentMatch) {
 
-        HOLogger.instance().debug(getClass(), opponentMatch.getMatch().getMatchDate().toString());
+//        HOLogger.instance().debug(getClass(), opponentMatch.getMatch().getMatchDate().toString());
 
         this.opponentLineup = new Lineup();
         this.opponentLineup.setKicker(opponentMatch.getSetPiecesTaker());
@@ -274,7 +274,7 @@ public class SpecialEventsPredictionManager {
                             player.getSPskill(),
                             playerPerformance.getStatusAsText()
                     );
-                    HOLogger.instance().debug(getClass(), pInfo);
+//                    HOLogger.instance().debug(getClass(), pInfo);
 
                     this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);
                 }

@@ -1,4 +1,3 @@
-// %3745237013:hoplugins.teamAnalyzer.ui.lineup%
 package module.teamAnalyzer.ui.lineup;
 
 import core.module.config.ModuleConfig;
@@ -8,18 +7,9 @@ import module.teamAnalyzer.ui.TeamLineupData;
 import javax.swing.JPanel;
 
 
-/**
- * Main formation Panel class that delegator to subclasses the issue of building the gui
- *
- * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
- */
 public class FormationPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2989171587658994483L;
 
 	/** Left Attack RatingBox */
     protected RatingBox leftAtt = new RatingBox();

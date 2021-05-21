@@ -1,6 +1,7 @@
 package module.teamAnalyzer.vo;
 
 import core.file.xml.MyHashtable;
+import core.util.HOLogger;
 import module.teamAnalyzer.manager.PlayerDataManager;
 
 import java.text.ParseException;
@@ -23,7 +24,10 @@ public class PlayerInfo {
     int form;
     int playerId;
     int specialEvent;
-    int status = PlayerDataManager.UNKNOWN;
+    int status;
+    int injuryStatus = 0;
+    int bookingStatus = 0;
+    int transferListedStatus = 0;
     int tSI;
     int teamId;
     int salary; // Money in SEK
@@ -42,18 +46,34 @@ public class PlayerInfo {
         this.salary = Integer.parseInt(i.get("Salary"));
         this.specialEvent = Integer.parseInt(i.get("Specialty"));
         this.stamina = Integer.parseInt(i.get("StaminaSkill"));
+        this.status = 0;
 
         int cards = parseIntWithDefault(i.get("Cards"), 0);
-        int injury = parseIntWithDefault(i.get("InjuryLevel"), 0);
-        this.status = PlayerDataManager.AVAILABLE;
+        int injury = parseIntWithDefault(i.get("InjuryLevel"), -1);
 
-        if (cards == 3) {
-            status = PlayerDataManager.SUSPENDED;
+        switch (cards) {
+            case 1 -> bookingStatus = PlayerDataManager.YELLOW;
+            case 2 ->  bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
+            case 3 ->  bookingStatus = PlayerDataManager.SUSPENDED;
+            default -> bookingStatus = 0;
         }
 
-        if (injury > 0) {
-            status = PlayerDataManager.INJURED;
+        switch (injury) {
+            case -1 -> injuryStatus = 0;
+            case 0 -> injuryStatus = PlayerDataManager.BRUISED;
+            default -> injuryStatus = PlayerDataManager.INJURED;
         }
+
+        if(parseBooleanWithDefault(i.get("TransferListed"), false)) {
+            transferListedStatus = PlayerDataManager.TRANSFER_LISTED;
+        }
+        else{
+            transferListedStatus = 0;
+        }
+
+        this.status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+//        HOLogger.instance().debug(this.getClass(), this.name + ":" + i );
+
 
         this.teamId = Integer.parseInt(i.get("TeamID"));
         this.tSI = Integer.parseInt(i.get("MarketValue"));
@@ -77,6 +97,16 @@ public class PlayerInfo {
         }
         catch (NumberFormatException e){}
         return i;
+    }
+
+    private boolean parseBooleanWithDefault(String s, boolean res) {
+        try {
+            return Boolean.parseBoolean(s);
+        }
+        catch (NumberFormatException e){
+            HOLogger.instance().error(this.getClass(), res + " could not be recognized as a valid boolean");
+        }
+        return res;
     }
 
     public PlayerInfo() {
@@ -134,6 +164,19 @@ public class PlayerInfo {
 
     public void setStatus(int i) {
         status = i;
+
+        int digit = i % 10;
+        this.injuryStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.bookingStatus = digit;
+        i = i/10;
+
+        digit = i % 10;
+        this.transferListedStatus= digit;
+
+
     }
 
     public int getStatus() {
