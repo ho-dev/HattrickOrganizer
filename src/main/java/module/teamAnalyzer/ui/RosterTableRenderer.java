@@ -3,7 +3,6 @@ package module.teamAnalyzer.ui;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
@@ -71,7 +70,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     setForeground(Color.RED);
                     break;
 
-                case PlayerDataManager.SOLD:
+                case PlayerDataManager.TRANSFER_LISTED:
                     setForeground(Color.BLUE);
                     break;
 
