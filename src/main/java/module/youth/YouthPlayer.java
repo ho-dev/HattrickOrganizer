@@ -502,7 +502,7 @@ public class YouthPlayer {
     }
 
     /**
-     * Get player's skill at given date
+     * Get player's skills after match at given date
      * @param date timestamp
      * @return youth player's skills
      */
@@ -523,6 +523,23 @@ public class YouthPlayer {
             }
         }
         return this.currentSkills;
+    }
+
+    /**
+     * Get player's skills before match at given date
+     * @param date timestamp
+     * @return youth player's skills
+     */
+    private YouthSkillsInfo getSkillsBefore(Timestamp date) {
+        var ret = getStartSkills();
+        for (var entry : this.trainingDevelopment.entrySet()) {
+            if (entry.getKey().before(date)) {
+                ret = entry.getValue().getSkills();
+            } else {
+                break;
+            }
+        }
+        return ret;
     }
 
     /**
@@ -558,7 +575,7 @@ public class YouthPlayer {
      */
     public void recalcSkills(Timestamp since) {
         if (trainingDevelopment != null) {
-            var startSkills = getSkillsAt(since);
+            var startSkills = getSkillsBefore(since);
             for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
                 var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
                 startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
