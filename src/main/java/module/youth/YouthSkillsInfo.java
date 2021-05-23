@@ -126,8 +126,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
                     if (skill.isTop3() == null) skill.setIsTop3(true);
                 }
             }
-        } else if (minTop3Max < 5) { // reduce max only if it is lower than 5
-            // (otherwise it could conflict with keeper estimations)
+        } else {
             // three skills are marked as top3 skill
             // mark 4 other skills and set maximum to lowest top3 max
             for (var skill : this.values()) {
