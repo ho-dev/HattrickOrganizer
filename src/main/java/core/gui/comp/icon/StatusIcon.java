@@ -36,9 +36,9 @@ public class StatusIcon implements Icon {
         }
         if (player.isRedCarded()) {
             icons.add(SUSPENDED_ICON);
-        } else if (player.getGelbeKarten() == 2) {
+        } else if (player.getCards() == 2) {
             icons.add(TWO_YELLOW_ICON);
-        } else if (player.getGelbeKarten() == 1) {
+        } else if (player.getCards() == 1) {
             icons.add(ONE_YELLOW_ICON);
         }
     }

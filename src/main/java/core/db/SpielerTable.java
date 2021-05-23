@@ -125,7 +125,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append( "SubExperience, NationalTeamID, ");
 			statement.append( "LastMatchDate, LastMatchRating, LastMatchId ");
 			statement.append(") VALUES(");
-			statement.append(player.getGelbeKarten()).append(",");
+			statement.append(player.getCards()).append(",");
 						
 			statement.append(player.getPlayerID()).append(",");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
@@ -167,7 +167,7 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getBonus()).append(",");
 			statement.append(player.getNationalitaet()).append(",");
 			statement.append(player.getSaveMarktwert()).append(",");
-			statement.append(player.isInjured()).append(",");
+			statement.append(player.getInjuryWeeks()).append(",");
 			statement.append(player.getToreFreund()).append(",");
 			statement.append(player.getToreLiga()).append(",");
 			statement.append(player.getTorePokal()).append(",");

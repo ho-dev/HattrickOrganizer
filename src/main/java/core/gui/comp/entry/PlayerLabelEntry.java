@@ -416,9 +416,9 @@ public final class PlayerLabelEntry implements IHOTableEntry {
                     oneYellowCardLabel)
                     .forEach(label -> label.setIcon(null));
 
-            if (player.isInjured() > 0) {
+            if (player.getInjuryWeeks() > 0) {
                 injuredLabel.setIcon(ImageUtilities.getInjuryIcon(12,12));
-            } else if (player.isInjured() == 0) {
+            } else if (player.getInjuryWeeks() == 0) {
                 bruisedLabel.setIcon(ImageUtilities.getPlasterIcon(12,12));
             }
             if (player.getTransferlisted() > 0) {
@@ -426,9 +426,9 @@ public final class PlayerLabelEntry implements IHOTableEntry {
             }
             if (player.isRedCarded()) {
                 suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
-            } else if (player.getGelbeKarten() == 2) {
+            } else if (player.getCards() == 2) {
                 twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
-            } else if (player.getGelbeKarten() == 1) {
+            } else if (player.getCards() == 1) {
                 oneYellowCardLabel.setIcon(ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12));
             }
 

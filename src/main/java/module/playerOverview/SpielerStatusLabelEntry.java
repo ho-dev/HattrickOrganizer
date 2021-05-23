@@ -53,12 +53,12 @@ public class SpielerStatusLabelEntry extends DoubleLabelEntries {
             final SpielerStatusLabelEntry entry = (SpielerStatusLabelEntry) obj;
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {
-                if (entry.getPlayer().isInjured() > getPlayer().isInjured()) {
+                if (entry.getPlayer().getInjuryWeeks() > getPlayer().getInjuryWeeks()) {
                     return 1;
-                } else if (entry.getPlayer().isInjured() < getPlayer().isInjured()) {
+                } else if (entry.getPlayer().getInjuryWeeks() < getPlayer().getInjuryWeeks()) {
                     return -1;
                 } else {
-                    return Integer.compare(entry.getPlayer().getGelbeKarten(), getPlayer().getGelbeKarten());
+                    return Integer.compare(entry.getPlayer().getCards(), getPlayer().getCards());
                 }
             }
         }
@@ -72,12 +72,12 @@ public class SpielerStatusLabelEntry extends DoubleLabelEntries {
             getLeft().clear();
             getLeft().setIcon(new StatusIcon(player));
 
-            if (player.isInjured() == 0) {
+            if (player.getInjuryWeeks() == 0) {
                 getRight().setText("");
                 getRight().setIcon(ImageUtilities.getPlasterIcon(12, 12));
-            } else if (player.isInjured() > 0) {
-                if(player.isInjured() != 999) {
-                    getRight().setText(player.isInjured() + "  ");
+            } else if (player.getInjuryWeeks() > 0) {
+                if(player.getInjuryWeeks() != 999) {
+                    getRight().setText(player.getInjuryWeeks() + "  ");
                 }
                 else {
                     getRight().setText("\u221E  ");

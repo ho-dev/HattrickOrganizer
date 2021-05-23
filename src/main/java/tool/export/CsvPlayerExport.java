@@ -150,9 +150,9 @@ public class CsvPlayerExport {
 						"" + curPlayer.getAgeDays(),
 						"" + curPlayer.getTSI(),
 						"" + (int)(curPlayer.getGehalt() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
-						"" + curPlayer.getGelbeKarten(),
+						"" + curPlayer.getCards(),
 						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
-						(curPlayer.isInjured() < 0) ? "" : "+" + (curPlayer.isInjured()>9 ? "∞" : curPlayer.isInjured()),
+						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks()>9 ? "∞" : curPlayer.getInjuryWeeks()),
 
 						curPlayer.isHomeGrown() ? "♥" : "",
 						"" + PlayerAgreeability.toString(curPlayer.getCharakter()),

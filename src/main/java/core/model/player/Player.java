@@ -22,7 +22,6 @@ import core.util.HelperWrapper;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -170,7 +169,7 @@ public class Player {
     /**
      * Gelbe Karten
      */
-    private int m_iGelbeKarten;
+    private int m_iCards;
 
     /**
      * Hattricks
@@ -311,7 +310,7 @@ public class Player {
     /**
      * Verletzt Wochen
      */
-    private int m_iVerletzt = -1;
+    private int m_iInjuryWeeks = -1;
 
     /**
      * Verteidigung
@@ -409,8 +408,8 @@ public class Player {
             m_iTSI /= 1000d;
         }
 
-        m_iGelbeKarten = Integer.parseInt(properties.getProperty("warnings", "0"));
-        m_iVerletzt = Integer.parseInt(properties.getProperty("ska", "0"));
+        m_iCards = Integer.parseInt(properties.getProperty("warnings", "0"));
+        m_iInjuryWeeks = Integer.parseInt(properties.getProperty("ska", "0"));
         m_iToreFreund = Integer.parseInt(properties.getProperty("gtt", "0"));
         m_iToreLiga = Integer.parseInt(properties.getProperty("gtl", "0"));
         m_iTorePokal = Integer.parseInt(properties.getProperty("gtc", "0"));
@@ -833,7 +832,7 @@ public class Player {
      * @param m_iGelbeKarten New value of property m_iGelbeKarten.
      */
     public void setGelbeKarten(int m_iGelbeKarten) {
-        this.m_iGelbeKarten = m_iGelbeKarten;
+        this.m_iCards = m_iGelbeKarten;
     }
 
     /**
@@ -841,15 +840,15 @@ public class Player {
      *
      * @return Value of property m_iGelbeKarten.
      */
-    public int getGelbeKarten() {
-        return m_iGelbeKarten;
+    public int getCards() {
+        return m_iCards;
     }
 
     /**
      * gibt an ob der spieler gesperrt ist
      */
     public boolean isRedCarded() {
-        return (m_iGelbeKarten > 2);
+        return (m_iCards > 2);
     }
 
     /**
@@ -1800,7 +1799,7 @@ public class Player {
      * @param m_iVerletzt New value of property m_iVerletzt.
      */
     public void setVerletzt(int m_iVerletzt) {
-        this.m_iVerletzt = m_iVerletzt;
+        this.m_iInjuryWeeks = m_iVerletzt;
     }
 
     /**
@@ -1808,8 +1807,8 @@ public class Player {
      *
      * @return Value of property m_iVerletzt.
      */
-    public int isInjured() {
-        return m_iVerletzt;
+    public int getInjuryWeeks() {
+        return m_iInjuryWeeks;
     }
 
     /**

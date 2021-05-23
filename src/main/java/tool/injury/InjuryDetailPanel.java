@@ -121,7 +121,7 @@ class InjuryDetailPanel extends JPanel {
              iter.hasNext();) {
             final Player element = iter.next();
 
-            if (element.isInjured() > 0) {
+            if (element.getInjuryWeeks() > 0) {
                 players.addItem(new PlayerItem(element));
             }
         }
@@ -146,7 +146,7 @@ class InjuryDetailPanel extends JPanel {
                     }
 
                     age.setText("" + player.getAlter());
-                    injury.setText("" + player.isInjured());
+                    injury.setText("" + player.getInjuryWeeks());
 
                     String tsi = "";
 

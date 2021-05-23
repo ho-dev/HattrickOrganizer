@@ -395,7 +395,7 @@ public class LineupAssistant {
 			if ((!isPlayerInLineup(player.getPlayerID(), positions))
 					&& ((bestPlayer == null) || (maxRating < currentRating))
 					&& ((ignoreRedCarded) || (!player.isRedCarded()))
-					&& ((ignoredInjury) || (player.isInjured() < 1))
+					&& ((ignoredInjury) || (player.getInjuryWeeks() < 1))
 					&& (player.getCanBeSelectedByAssistant())) {
 				bestPlayer = player;
 				maxRating = currentRating;

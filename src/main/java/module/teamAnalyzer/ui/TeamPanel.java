@@ -206,11 +206,33 @@ public class TeamPanel extends JPanel {
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
                 spotLineup.setRating(player.calcPosValue(lineup.getEffectivePos4PositionID(spot),
                                                           true, null, false));
-                if (player.isInjured() > 0) {
-                	spotLineup.setStatus(PlayerDataManager.INJURED);
-                } else if (player.isRedCarded()) {
-                	spotLineup.setStatus(PlayerDataManager.SUSPENDED);
+
+
+                int cards = player.getCards();
+                int injury =  player.getInjuryWeeks();
+
+                int injuryStatus, bookingStatus;
+
+                switch (cards) {
+                    case 1 -> bookingStatus = PlayerDataManager.YELLOW;
+                    case 2 ->  bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
+                    case 3 ->  bookingStatus = PlayerDataManager.SUSPENDED;
+                    default -> bookingStatus = 0;
                 }
+
+                switch (injury) {
+                    case -1 -> injuryStatus = 0;
+                    case 0 -> injuryStatus = PlayerDataManager.BRUISED;
+                    default -> injuryStatus = PlayerDataManager.INJURED;
+                }
+
+                int transferListedStatus  = player.getTransferlisted() * PlayerDataManager.TRANSFER_LISTED;
+
+                int status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+
+                System.out.println(player.getFullName() + "  " + status);
+
+                spotLineup.setStatus(status);
                 spotLineup.setSpot(spot);
                 spotLineup.setTactics(new ArrayList<>());
                 pp.reload(spotLineup);

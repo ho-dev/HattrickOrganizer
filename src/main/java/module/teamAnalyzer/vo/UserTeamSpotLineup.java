@@ -1,10 +1,7 @@
-// %833795854:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
 /**
  * Extension of the spotLineup that holds user team data, as loaded from HO Lineup tab
- *
- * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class UserTeamSpotLineup extends SpotLineup {
     //~ Instance fields ----------------------------------------------------------------------------
