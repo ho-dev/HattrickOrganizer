@@ -217,14 +217,11 @@ public enum MatchType {
 
 	//team attitude can be set only for competitive match
 	public boolean isCompetitive() {
-		return ! isNotCompetitive();
+		return switch (this) {
+			case LEAGUE, QUALIFICATION, CUP, MASTERS -> true;
+			default -> false;
+		};
 	}
-
-
-	public boolean isNotCompetitive() {
-		return isFriendly() || isTournament();
-	}
-
 
 	public String getName() {
 		return switch (this) {

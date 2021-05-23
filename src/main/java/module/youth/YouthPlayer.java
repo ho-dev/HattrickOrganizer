@@ -458,7 +458,7 @@ public class YouthPlayer {
     }
 
     /**
-     * Skills infos of player's arrival date are reconstructed.
+     * Skills info at player's arrival date are reconstructed.
      * @return youth skills info
      */
     private YouthSkillsInfo getStartSkills() {
@@ -585,7 +585,7 @@ public class YouthPlayer {
 
     /**
      * Skill start value is incremented by value adjustment. Change is propagated through all existing
-     * training development entries.
+     * training development entries until given before date
      *  @param skillID    skill id
      * @param adjustment change of the start value
      * @param before adjust training development before given date
