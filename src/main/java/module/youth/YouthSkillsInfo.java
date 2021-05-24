@@ -1,12 +1,9 @@
 package module.youth;
 
-import core.util.HOLogger;
 import module.training.Skills;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
 
@@ -60,14 +57,6 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
                 }
             }
         }
-    }
-
-    public double getTrainedSkillSum() {
-        double ret = 0;
-        for (var skill : this.values()) {
-            ret += skill.getCurrentValue() - skill.getStartValue();
-        }
-        return ret;
     }
 
     /**
@@ -151,7 +140,23 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         }
     }
 
+    /**
+     * Get Sum of all skills
+     * @return double sum
+     */
     public double getSkillSum() {
         return this.values().stream().mapToDouble(YouthSkillInfo::getCurrentValue).sum();
+    }
+
+    /**
+     * Get trained skill sum of all skills
+     * @return double sum of current minus start skill values
+     */
+    public double getTrainedSkillSum() {
+        double ret = 0;
+        for (var skill : this.values()) {
+            ret += skill.getCurrentValue() - skill.getStartValue();
+        }
+        return ret;
     }
 }
