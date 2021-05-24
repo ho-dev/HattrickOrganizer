@@ -71,7 +71,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private boolean isNtTeam;
 	/**
 	 * Creates a new DownloadDialog object.
-	 * @param ntTeam
+	 * @param ntTeam true if team is a national team
 	 */
 	public DownloadDialog(boolean ntTeam) {
 		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), true);
@@ -207,9 +207,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			getContentPane().add(specialDownload);
 		}
 		else {
-			// isNtTeaam
-
-			// TODO: Text area is not displayed yet
+			// isNtTeam
+			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
+			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 			JTextArea ta = new JTextArea();
 			ta.append(hov.getLanguageString("nthrf.hint1")+"\n");
 			ta.append(hov.getLanguageString("nthrf.hint2")+"\n");
@@ -218,7 +218,13 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			ta.append(hov.getLanguageString("Start")+"' ");
 			ta.append(hov.getLanguageString("nthrf.hint5"));
 			ta.setEditable(false);
-			getContentPane().add(new JScrollPane(ta), BorderLayout.CENTER);
+
+			normalDownloadPanel.setLayout(new BorderLayout());
+			normalDownloadPanel.add(new JScrollPane(ta), BorderLayout.CENTER);
+			normalDownloadPanel.setSize(480, 280);
+			normalDownloadPanel.setLocation(10, 10);
+			getContentPane().add(normalDownloadPanel);
+
 		}
 		m_jbDownload.setToolTipText(hov.getLanguageString("tt_Download_Start"));
 		m_jbDownload.addActionListener(this);
@@ -319,8 +325,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			if (bOK && m_jchMatchArchive.isSelected()) {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
 				allmatches = OnlineWorker.FilterUserSelection(allmatches);
-				for (MatchKurzInfo i : allmatches) {
-					OnlineWorker.downloadMatchData(i, true);
+				if ( allmatches != null) {
+					for (MatchKurzInfo i : allmatches) {
+						OnlineWorker.downloadMatchData(i, true);
+					}
 				}
 			}
 
@@ -379,7 +387,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					// save the model in the database
 					homodel.saveHRF();
 					// Only update when the model is newer than existing
-					if (hov.isNewModel(homodel)) {
+					if (HOVerwaltung.isNewModel(homodel)) {
 						hov.setModel(homodel);
 					}
 					DBManager.instance().updateLatestData();

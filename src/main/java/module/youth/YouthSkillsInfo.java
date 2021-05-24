@@ -1,12 +1,9 @@
 package module.youth;
 
-import core.util.HOLogger;
 import module.training.Skills;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
 
@@ -43,7 +40,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
     public void setPlayerMaxSkills(boolean isKeeper) {
         if (size() == 0) return;
         for (var skill : this.values()) {
-            if (skill.getMax() == null) {
+            if (skill.getMax() == null || skill.getMax() > 4) {
                 switch (skill.getSkillID()) {
                     case Winger:
                     case Playmaker:
@@ -62,14 +59,6 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         }
     }
 
-    public double getTrainedSkillSum() {
-        double ret = 0;
-        for (var skill : this.values()) {
-            ret += skill.getCurrentValue() - skill.getStartValue();
-        }
-        return ret;
-    }
-
     /**
      * Find skills that have one of the top 3 highest potentials
      * From scout report up to 2 skills are known to be in top3
@@ -83,7 +72,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         var nTop3 = this.values().stream().filter(i -> i.isTop3() != null && i.isTop3()).count();
         if (nTop3 == 3) return; // nothing to do
 
-        int minTop3Max=8;
+        int minTop3Max = 8;
         if (nTop3 > 0) { // ntop3 == 0 should only happen with new youth teams with players that were not scouted
             // There are top3 skills available
             // Lowest Top3 maximum
@@ -151,7 +140,23 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         }
     }
 
+    /**
+     * Get Sum of all skills
+     * @return double sum
+     */
     public double getSkillSum() {
         return this.values().stream().mapToDouble(YouthSkillInfo::getCurrentValue).sum();
+    }
+
+    /**
+     * Get trained skill sum of all skills
+     * @return double sum of current minus start skill values
+     */
+    public double getTrainedSkillSum() {
+        double ret = 0;
+        for (var skill : this.values()) {
+            ret += skill.getCurrentValue() - skill.getStartValue();
+        }
+        return ret;
     }
 }

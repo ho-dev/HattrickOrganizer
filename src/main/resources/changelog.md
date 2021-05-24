@@ -67,7 +67,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - sanitizing of preferences panel
   - automatic check for new HO! version after HRF-Download (#1019)
     - configurable in File -> Preferences -> Release Channels
-  - refactor NT team download (#1025)
+  - fix NT team players' name download (#1025)
 
 
 ### League
