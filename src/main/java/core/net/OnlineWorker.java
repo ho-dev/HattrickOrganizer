@@ -836,7 +836,7 @@ public class OnlineWorker {
 		boolean bOK = false;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), curMatchId)) {
 				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
