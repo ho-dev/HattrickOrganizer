@@ -49,6 +49,7 @@ layout: page
 
 ### Matches
 - new match location filter (home/away/neutral/all) on Statistics tab (#470)
+- fix display of national team matches (#1048)
 
 
 ### Lineup

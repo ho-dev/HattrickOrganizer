@@ -129,9 +129,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
 			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 
-
 			// Download Filter
-
 			final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
 			downloadFilter.setModel(newModel);
 			newModel.reload();
@@ -390,11 +388,22 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					if (HOVerwaltung.isNewModel(homodel)) {
 						hov.setModel(homodel);
 					}
+
+					var bOK = (OnlineWorker.getMatches((int)teamId, false, true, true) != null);
+					if (bOK) {
+						OnlineWorker.getAllLineups();
+					}
+
+
 					DBManager.instance().updateLatestData();
 				}
 				else {
 					HOLogger.instance().error(getClass(), "Download error: " + hrf);
 				}
+			}
+			else {
+				// No players in team or training area closed
+				// TODO message box
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

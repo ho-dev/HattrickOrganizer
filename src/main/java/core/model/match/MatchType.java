@@ -167,9 +167,11 @@ public enum MatchType {
 			case FRIENDLYCUPRULES :
 			case INTFRIENDLYNORMAL :
 			case INTFRIENDLYCUPRULES :
-			case MASTERS : {
+			case MASTERS :
+			case NATIONALCOMPNORMAL:
+			case NATIONALCOMPCUPRULES:
+			case NATIONALFRIENDLY:
 				return true;
-			}
 			default:
 				return false;
 		}

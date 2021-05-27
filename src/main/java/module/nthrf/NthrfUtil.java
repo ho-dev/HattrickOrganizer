@@ -30,10 +30,9 @@ public class NthrfUtil {
             MyConnector dh = MyConnector.instance();
             NthrfConvertXml2Hrf x2h = new NthrfConvertXml2Hrf();
 
-
-            var teamDetails = dh.getTeamdetails((int)teamId);
-
             var hrf = x2h.createHrf(teamId, dh);
+            if ( hrf.isEmpty()) return "";
+
             JFileChooser fileChooser = new JFileChooser();
 
             final String fname = "/nt_"+teamId+"_"+new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())+".hrf";

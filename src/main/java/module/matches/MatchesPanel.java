@@ -596,8 +596,8 @@ public final class MatchesPanel extends LazyImagePanel {
 				aufstellungHeimPanel.clearAll();
 				aufstellungGastPanel.clearAll();
 			} else {
-				aufstellungHeimPanel.refresh(info.getMatchID(), info.getHomeTeamID());
-				aufstellungGastPanel.refresh(info.getMatchID(), info.getGuestTeamID());
+				aufstellungHeimPanel.refresh(info, info.getHomeTeamID());
+				aufstellungGastPanel.refresh(info, info.getGuestTeamID());
 			}
 		} else {
 			this.matchesModel.setMatch(null);

@@ -10,6 +10,7 @@ import core.constants.player.PlayerSpeciality;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLMatchArchivParser;
 import core.file.xml.XMLWorldDetailsParser;
+import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
@@ -46,7 +47,7 @@ class NthrfConvertXml2Hrf {
 			debug("Got " + (countryMapping != null ? countryMapping.keySet().size() : "null") + " country mappings.");
 
 			// nt team detail
-			String xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalteamdetails&teamid=" + teamId);
+			String xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalteamdetails&version=1.9&teamid=" + teamId);
 			NtTeamDetailsParser details = new NtTeamDetailsParser(xml);
 			debug("Got team details");
 
@@ -58,6 +59,10 @@ class NthrfConvertXml2Hrf {
 			// nt players + player details
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
 			NtPlayersParser players = new NtPlayersParser(xml, dh, countryMapping);
+			if (players.getAllPlayers().size() == 0 ){
+				// training area closed or all players are released
+				return "";
+			}
 			NtPlayer trainer = NthrfUtil.getTrainer(players);
 			debug("Got " + ((players != null && players.getPlayerIds() != null) ? players.getPlayerIds().size() : "null") + " players and trainer");
 
@@ -75,7 +80,7 @@ class NthrfConvertXml2Hrf {
 				debug("Got lineup");
 			}
 
-			createBasics(details, players, world); // ok, TODO
+			createBasics(details, world); // ok, TODO
 			debug("created basics");
 			createLeague();					// ok
 			debug("created league");
@@ -128,7 +133,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * basic data
 	 */
-	final void createBasics(NtTeamDetailsParser details, NtPlayersParser players, Map<String, String> world) throws Exception {
+	final void createBasics(NtTeamDetailsParser details, Map<String, String> world) throws Exception {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
 		m_sHRFBuffer.append("appversion=" + HO.VERSION + "\n");
