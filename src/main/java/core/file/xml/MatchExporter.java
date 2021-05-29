@@ -55,14 +55,14 @@ public class MatchExporter {
 		List<ExportMatchData> export = new ArrayList<ExportMatchData>();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId);
+		if ( matches == null) return export;
 
-		//Alle matches prï¿½fen        
-		for (int i = 0;(matches != null) && (i < matches.length); i++) {
-			//details holen
-			Matchdetails details = DBManager.instance().loadMatchDetails(SourceSystem.HATTRICK.getValue(), matches[i].getMatchID());
-			boolean isFriendly = matches[i].getMatchType().isFriendly();
-			if (isValidMatch(matches[i], details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
-					|| isValidMatch(matches[i], details, startingDate, strict, skipPullBack) && !isFriendly ) {				
+		//check all matches
+		for (var match: matches) {
+			Matchdetails details = DBManager.instance().loadMatchDetails(match.getMatchType().getSourceSystem().getValue(), match.getMatchID());
+			boolean isFriendly = match.getMatchType().isFriendly();
+			if (isValidMatch(match, details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
+					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
 				Vector<MatchLineupPlayer> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(),teamId);
@@ -83,8 +83,7 @@ public class MatchExporter {
 					}
 
 					formerPlayerData =
-						DBManager.instance().getSpielerAtDate(player.getPlayerId(),matches[i].getMatchDateAsTimestamp());
-
+						DBManager.instance().getSpielerAtDate(player.getPlayerId(),match.getMatchDateAsTimestamp());
 
 					//Keine Daten verfï¿½gbar ?
 					if (formerPlayerData == null) {
@@ -102,7 +101,7 @@ public class MatchExporter {
 				if (dataOK) {
 					ExportMatchData data = new ExportMatchData();
 					data.setDetails(details);
-					data.setInfo(matches[i]);
+					data.setInfo(match);
 					data.setPlayers(lineUpISpieler);
 					export.add(data);					
 				}

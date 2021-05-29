@@ -260,8 +260,7 @@ public class OnlineWorker {
 		return downloadMatchData(info, refresh);
 	}
 
-	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh)
-	{
+	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh) {
 		int matchID = info.getMatchID();
 		if (matchID < 0) {
 			return false;
@@ -270,8 +269,8 @@ public class OnlineWorker {
 		showWaitInformation(1);
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchInDB(matchID)
-				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
-				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), matchID)
+				|| (info.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(matchID))
+				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), matchID)
 		) {
 			try {
 				Matchdetails details;
@@ -279,14 +278,14 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				boolean newInfo = info.getHomeTeamID()<=0 || info.getGuestTeamID()<=0;
+				boolean newInfo = info.getHomeTeamID() <= 0 || info.getGuestTeamID() <= 0;
 				Weather.Forecast weatherDetails = info.getWeatherForecast();
 				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
-				if ( newInfo || !bWeatherKnown) {
+				if (newInfo || !bWeatherKnown) {
 
 					showWaitInformation(10);
 					details = downloadMatchDetails(matchID, info.getMatchType(), null);
-					if ( details != null) {
+					if (details != null) {
 						info.setHomeTeamID(details.getHeimId());
 						info.setGuestTeamID(details.getGastId());
 						info.setArenaId(details.getArenaID());
@@ -301,7 +300,7 @@ public class OnlineWorker {
 
 							if (!info.getWeatherForecast().isSure()) {
 								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
-								if ( regiondetails != null) {
+								if (regiondetails != null) {
 									SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 									java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
 									java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
@@ -349,11 +348,11 @@ public class OnlineWorker {
 
 				MatchLineup lineup;
 				boolean success;
-				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
+				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 
 					if (lineup == null) {
-						if ( !isSilentDownload()) {
+						if (!isSilentDownload()) {
 							String msg = getLangString("Downloadfehler")
 									+ " : Error fetching Matchlineup :";
 							// Info
@@ -363,7 +362,7 @@ public class OnlineWorker {
 						}
 						return false;
 					}
-					
+
 					// Get details with highlights.
 					showWaitInformation(10);
 					details = downloadMatchDetails(matchID, info.getMatchType(), lineup);
@@ -381,8 +380,7 @@ public class OnlineWorker {
 					info.setHomeTeamID(lineup.getHomeTeamId());
 					info.setHomeTeamName(lineup.getHomeTeamName());
 					success = DBManager.instance().storeMatch(info, details, lineup);
-				}
-				else{
+				} else {
 					// Update arena and region ids
 					MatchKurzInfo[] matches = {info};
 					DBManager.instance().storeMatchKurzInfos(matches);
@@ -568,7 +566,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType().getSourceSystem().getValue(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB

@@ -69,10 +69,9 @@ public class MatchReportPanel extends LazyImagePanel {
 	protected void update() {
 		clear();
 		MatchKurzInfo info = this.matchesModel.getMatch();
-		if (info == null) {
+		if (info == null || info.isObsolet()) {
 			return;
 		}
-
 
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 			clear();

@@ -2051,7 +2051,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getValue(), item
+				final Matchdetails details = loadMatchDetails( item.getMatchTyp().getSourceSystem().getValue(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen

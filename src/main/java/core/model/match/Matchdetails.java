@@ -468,9 +468,11 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public final int getHomeHalfTimeGoals() {
         ArrayList<MatchEvent> highLights = getHighlights();
-        for (MatchEvent iMatchHighlight : highLights) {
-            if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                return iMatchHighlight.getHeimTore();
+        if ( highLights != null) {
+            for (MatchEvent iMatchHighlight : highLights) {
+                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
+                    return iMatchHighlight.getHeimTore();
+            }
         }
         return -1;
     }
@@ -917,7 +919,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                     HOLogger.instance().info(Matchdetails.class,
                             "Reload Matchdetails id: "+ this.getMatchID()
                                     +" type:" + this.m_MatchTyp.getName());
-                    boolean silenDownloadMode = OnlineWorker.isSilentDownload();
+                    boolean silentDownload = OnlineWorker.isSilentDownload();
                     try {
                         OnlineWorker.setSilentDownload(true);
                         if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
@@ -932,7 +934,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         HOLogger.instance().error(Matchdetails.class, ex.getMessage());
                     }
                     finally {
-                        OnlineWorker.setSilentDownload(silenDownloadMode);
+                        OnlineWorker.setSilentDownload(silentDownload);
                     }
                 }
             }

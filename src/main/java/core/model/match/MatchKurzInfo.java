@@ -5,6 +5,8 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.util.HTDatetime;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import static core.util.StringUtils.getResultString;
@@ -482,5 +484,16 @@ public class MatchKurzInfo implements Comparable<Object> {
 			return getResultString(-1,-1,"");
 		}
 		return getMatchdetails().getResultLong();
+	}
+
+	/**
+	 * Tournament matches are removed from hattrick's match archive by some internal housekeeping.
+	 * This method estimates if this happened.
+	 * @return true for hto integrated matches older than one year
+	 * 		   false otherwise
+	 */
+	public boolean isObsolet() {
+		return getMatchType().getSourceSystem() == SourceSystem.HTOINTEGRATED
+				&& getMatchSchedule(false).toInstant().isBefore(Instant.now().minus(Duration.ofDays(365)));
 	}
 }

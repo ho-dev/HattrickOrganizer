@@ -10,11 +10,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
@@ -23,6 +19,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -88,7 +86,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 	@Override
 	protected void update() {
 		MatchKurzInfo info = this.matchesModel.getMatch();
-		if (info == null) {
+		if (info == null || info.isObsolet() ) {
 			clear();
 			return;
 		}
