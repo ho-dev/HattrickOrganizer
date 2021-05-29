@@ -1,6 +1,7 @@
 package core.gui;
 
 import core.HO;
+import core.gui.comp.HyperLinkLabel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -19,6 +20,7 @@ public class Credits {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.gridwidth = 2;
 		creditsPanel.add(new JLabel("Hattrick Organizer " + HO.getVersionString()), gbc);
 		gbc.gridy = 1;
 		creditsPanel.add(new JLabel(" "), gbc);
@@ -34,11 +36,26 @@ public class Credits {
 
 		int lines = gbc.gridy + 1;
 		gbc.gridy = 0;
-		gbc.gridx = 1;
+		gbc.gridx = 2;
 		gbc.gridheight = lines;
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 		gbc.insets = new Insets(0, 15, 0, 0);
 		creditsPanel.add(new JLabel(ThemeManager.getIcon(HOIconName.CHPP_WHITE_BG)), gbc);
+
+		JPanel hoPanel = new JPanel(new GridBagLayout());
+		gbc = new GridBagConstraints();
+
+		gbc.gridx = 0;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		JLabel hoLabel = new JLabel("HO website: ");
+		hoPanel.add(hoLabel, gbc);
+
+		gbc.gridx = 1;
+		String gitlabURL = "https://akasolace.github.io/HO/";
+		JLabel linkLabel = new HyperLinkLabel("https://akasolace.github.io/HO/", gitlabURL);
+		hoPanel.add(linkLabel, gbc);
+
+		creditsPanel.add(hoPanel, gbc);
 
 		Object[] options1 = { HOVerwaltung.instance().getLanguageString("window.about.licence"), HOVerwaltung.instance().getLanguageString("ls.button.ok")};
 
