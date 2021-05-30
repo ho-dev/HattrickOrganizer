@@ -356,7 +356,7 @@ public class MatchLineupTeam {
 
 	public MatchType getMatchType() {
 		if (matchType == MatchType.NONE) {
-			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId);
+			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, matchType);
 			if ( info != null){
 				matchType = info.getMatchType();
 			}

@@ -64,7 +64,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 						if (columnName.equalsIgnoreCase(lastMatchRating)) {
 							if (e.isShiftDown()) {
 								int matchId = player.getLastMatchId();
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								//  TODO: get match type of player's last match
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
 							} else if (e.getClickCount() == 2) {
 								HOMainFrame.instance().showMatch(player.getLastMatchId());

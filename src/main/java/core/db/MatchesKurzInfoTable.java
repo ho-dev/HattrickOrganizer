@@ -28,7 +28,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[22];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
+		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false); //The globally unique identifier of the match is NOT unique
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
 		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);  //HomeTeamID
@@ -344,12 +344,15 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Check if a match is already in the database.
 	 */
-	boolean isMatchVorhanden(int matchid) {
+	boolean isMatchVorhanden(int matchid, MatchType matchType) {
 		boolean vorhanden = false;
 
 		try {
-			final String sql = "SELECT MatchId FROM " + getTableName()
+			String sql = "SELECT MatchId FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+			if ( matchType != null){
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -468,13 +471,19 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * 
 	 * @param matchid
 	 *            The ID for the match
+	 * @param matchType
 	 * @return The kurz info object or null
 	 */
-	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
+	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 
 		try {
-			final String sql = "SELECT * FROM " + getTableName()
+			String sql = "SELECT * FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+
+			if ( matchType != null) {
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
+
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();

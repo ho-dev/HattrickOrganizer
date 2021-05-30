@@ -43,7 +43,6 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -1195,22 +1194,24 @@ public class DBManager {
 	 * Check if match is available
 	 *
 	 * @param matchid the matchid
+	 * @param matchType
 	 * @return the boolean
 	 */
-	public boolean isMatchInDB(int matchid) {
+	public boolean isMatchInDB(int matchid, MatchType matchType) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.isMatchVorhanden(matchid);
+				.isMatchVorhanden(matchid, matchType);
 	}
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 *
 	 * @param matchid The ID for the match
+	 * @param matchType
 	 * @return The kurz info object or null
 	 */
-	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
+	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfoByMatchID(matchid);
+				.getMatchesKurzInfoByMatchID(matchid, matchType);
 	}
 
 	/**

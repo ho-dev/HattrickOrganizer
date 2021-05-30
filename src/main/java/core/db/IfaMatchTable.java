@@ -21,7 +21,7 @@ public class IfaMatchTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[8];
-		columns[0] = new ColumnDescriptor("MATCHID", Types.INTEGER, false, true);
+		columns[0] = new ColumnDescriptor("MATCHID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("PLAYEDDATE", Types.VARCHAR, false, 25);
 		columns[2] = new ColumnDescriptor("HOMETEAMID", Types.INTEGER, false);
 		columns[3] = new ColumnDescriptor("AWAYTEAMID", Types.INTEGER, false);

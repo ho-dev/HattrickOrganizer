@@ -356,7 +356,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpLastMatchRating.clear();
         if (m_clPlayer.getLastMatchRating() > 0) {
-            MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId());
+            MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId(), null);
             if (info != null) {
                 ((RatingTableEntry) m_jpLastMatchRating.getTableEntryLeft()).setRating((float)m_clPlayer.getLastMatchRating());
                 ((MatchDateTableEntry) m_jpLastMatchRating.getTableEntryRight()).setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchType());
@@ -690,7 +690,8 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
                 if (m_clPlayer != null) {
                     if (e.isShiftDown()) {
                         int matchId = m_clPlayer.getLastMatchId();
-                        MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+                        // TODO get match type
+                        MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
                         HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
                     } else {
                         HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
