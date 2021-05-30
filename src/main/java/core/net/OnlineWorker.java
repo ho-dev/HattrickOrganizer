@@ -271,7 +271,7 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchInDB(matchID)
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
-				|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), matchID)
+				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), matchID)
 		) {
 			try {
 				Matchdetails details;
@@ -568,7 +568,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId)
 							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
-							|| !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType().getSourceSystem().getValue(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -824,37 +824,37 @@ public class OnlineWorker {
 		}
 		return lineUp;
 	}
-
+	
 
 
 	/**
 	 * Get all lineups for MatchKurzInfos, if they're not there already
 	 */
-	public static void getAllLineups() {
-		final MatchKurzInfo[] infos = DBManager.instance().getMatchesKurzInfo(-1);
-		String haveLineups = "";
-		boolean bOK = false;
+	public static void getAllLineups(@Nullable Integer nbGames) {
+
+		final MatchKurzInfo[] infos;
+
+		if (nbGames == null){
+			infos = DBManager.instance().getMatchesKurzInfo(-1);
+		}
+		else{
+			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false).toArray(new MatchKurzInfo[0]);
+		}
+
+		boolean bOK;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
 			if (!DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), curMatchId)) {
-				// Check if the lineup is available
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
 					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);
 					if (!bOK) {
+						HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + curMatchId);
 						break;
 					}
-				} else
-					HOLogger.instance().debug(OnlineWorker.class, "Not Played : " + curMatchId);
-			} else {
-				// Match lineup already available
-				if (haveLineups.length() > 0)
-					haveLineups += ", ";
-				haveLineups += curMatchId;
+				}
 			}
 		}
-		if (haveLineups.length() > 0)
-			HOLogger.instance().debug(OnlineWorker.class, "Have Lineups : " + haveLineups);
 	}
 
 	/**

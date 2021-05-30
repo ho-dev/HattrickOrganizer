@@ -286,13 +286,13 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         if(m_jcbxOfficialOnly.isSelected()){
             if((previousPlayedMatchesOfficialOnly == null) || bForceRefresh){
-                previousPlayedMatchesOfficialOnly = DBManager.instance().getPlayedMatchInfo(MAX_PREVIOUS_LINEUP, true);
+                previousPlayedMatchesOfficialOnly = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP, true);
             }
             previousPlayedMatches = previousPlayedMatchesOfficialOnly;
         }
         else{
             if((previousPlayedMatchesAll == null) || bForceRefresh){
-                previousPlayedMatchesAll = DBManager.instance().getPlayedMatchInfo(MAX_PREVIOUS_LINEUP);
+                previousPlayedMatchesAll = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP);
             }
             previousPlayedMatches = previousPlayedMatchesAll;
         }

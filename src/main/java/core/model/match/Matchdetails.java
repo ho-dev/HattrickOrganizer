@@ -459,18 +459,22 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public final int getGuestHalfTimeGoals() {
         ArrayList<MatchEvent> highLights = getHighlights();
-        for (MatchEvent iMatchHighlight : highLights) {
-            if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                return iMatchHighlight.getGastTore();
+        if ( highLights != null) {
+            for (MatchEvent iMatchHighlight : highLights) {
+                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
+                    return iMatchHighlight.getGastTore();
+            }
         }
         return -1;
     }
 
     public final int getHomeHalfTimeGoals() {
         ArrayList<MatchEvent> highLights = getHighlights();
-        for (MatchEvent iMatchHighlight : highLights) {
-            if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                return iMatchHighlight.getHeimTore();
+        if ( highLights != null) {
+            for (MatchEvent iMatchHighlight : highLights) {
+                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
+                    return iMatchHighlight.getHeimTore();
+            }
         }
         return -1;
     }

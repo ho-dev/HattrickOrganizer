@@ -43,7 +43,6 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -1267,19 +1266,30 @@ public class DBManager {
 	 * @param iNbGames the nb games
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames){
-		return getPlayedMatchInfo(iNbGames, false);
+	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames){
+		return getOwnPlayedMatchInfo(iNbGames, false);
 	}
 
 	/**
-	 * Get played match info array list.
+	 * Get played match info array list (own team Only)
 	 *
 	 * @param iNbGames           the nb games
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly);
+	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, true);
+	}
+
+	/**
+	 * Get played match info array list (own team Only)
+	 *
+	 * @param iNbGames           the nb games
+	 * @param bOfficialGamesOnly the b official games only
+	 * @return the array list
+	 */
+	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
 	}
 
 
@@ -2051,7 +2061,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getValue(), item
+				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getSourceSystem().getValue(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen

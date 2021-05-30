@@ -109,20 +109,25 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 
-
 	/**
 	 * Return the list of n latest played matches (own team)
 	 */
-	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly) {
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
 		final ArrayList<MatchKurzInfo> playedMatches = new ArrayList<>();
 
 		StringBuilder sql = new StringBuilder(100);
 		ResultSet rs;
 
 		sql.append("SELECT * FROM " + getTableName());
-		sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")");
-		sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+
+		if(ownTeam) {
+			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")");
+			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+		}
+		else{
+			sql.append(" WHERE Status=" + MatchKurzInfo.FINISHED);
+		}
 
 		if(bOfficialOnly) {
 			sql.append(getMatchTypWhereClause(MatchType.GROUP_OFFICIAL.getId()));
@@ -462,6 +467,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	MatchKurzInfo[] getMatchesKurzInfo(final int teamId) {
 		return getMatchesKurzInfo(teamId, -1);
 	}
+
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
