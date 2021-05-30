@@ -124,4 +124,8 @@ public class TrainingWeekPlayer {
 	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, Instant trainingDate) {
 		return player.getTrainingPriority(wt, trainingDate);
 	}
+
+	public boolean hasTrainingMinutes() {
+		return this.fullTrainingMinutes > 0 || this.partlyTrainingMinutes > 0 || this.osmosisTrainingMinutes > 0;
+	}
 }
