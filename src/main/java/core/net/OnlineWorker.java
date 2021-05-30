@@ -221,7 +221,7 @@ public class OnlineWorker {
 				// Store full info for all matches
 				for (MatchKurzInfo match : allMatches) {
 					// if match is available and match is finished
-					if ((DBManager.instance().isMatchInDB(match.getMatchID()))
+					if ((DBManager.instance().isMatchInDB(match.getMatchID(), match.getMatchType()))
 							&& (match.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 						downloadMatchData(match.getMatchID(), match.getMatchType(), true);
 					}
@@ -249,8 +249,8 @@ public class OnlineWorker {
 	 */
 	public static boolean downloadMatchData(int matchid, MatchType matchType, boolean refresh) {
 		MatchKurzInfo info;
-		if (DBManager.instance().isMatchInDB(matchid)) {
-			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid);
+		if (DBManager.instance().isMatchInDB(matchid, matchType)) {
+			info = DBManager.instance().getMatchesKurzInfoByMatchID(matchid, matchType);
 		}
 		else {
 			info = new MatchKurzInfo();
@@ -269,7 +269,7 @@ public class OnlineWorker {
 
 		showWaitInformation(1);
 		// Only download if not present in the database, or if refresh is true
-		if (refresh || !DBManager.instance().isMatchInDB(matchID)
+		if (refresh || !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
 				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), matchID)
 		) {
@@ -566,8 +566,8 @@ public class OnlineWorker {
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
 					int curMatchId = match.getMatchID();
-					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId)
-							|| DBManager.instance().hasUnsureWeatherForecast(curMatchId)
+					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
+							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
 							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType().getSourceSystem().getValue(), curMatchId);
 
 					if (refresh) {

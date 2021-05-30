@@ -354,12 +354,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Check if a match is already in the database.
 	 */
-	boolean isMatchVorhanden(int matchid) {
+	boolean isMatchInDB(int matchid, MatchType matchType) {
 		boolean vorhanden = false;
 
 		try {
-			final String sql = "SELECT MatchId FROM " + getTableName()
+			String sql = "SELECT MatchId FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+			if ( matchType != null){
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
+
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -373,23 +377,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		return vorhanden;
-	}
-
-	boolean hasDerbyInfo(int matchId)
-	{
-		try {
-			final String sql = "SELECT isDerby FROM " + getTableName() + " WHERE MatchId=" + matchId;
-			final ResultSet rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			if (rs.next()) {
-				boolean isDerby = rs.getBoolean(1);
-				return !rs.wasNull();
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"DatenbankZugriff.hasDerbyInfo : " + e);
-		}
-		return false;
 	}
 
 	boolean hasUnsureWeatherForecast(int matchId)
@@ -477,15 +464,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 * 
-	 * @param matchid
-	 *            The ID for the match
+	 * @param matchid the ID for the match
 	 * @return The kurz info object or null
 	 */
-	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
+	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 
 		try {
-			final String sql = "SELECT * FROM " + getTableName()
+
+			String sql = "SELECT * FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+
+			if ( matchType != null) {
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
+
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();

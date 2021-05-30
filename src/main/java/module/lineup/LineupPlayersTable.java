@@ -173,7 +173,8 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 						if(columnName.equalsIgnoreCase(lastMatchRating)){
 							if(e.isShiftDown()){
 								int matchId = selectedPlayer.getLastMatchId();
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+								// TODO get the match type of last match from player. For the moment we hope, that going with no type will work
+								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
 							}else if(e.getClickCount()==2) {
 								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
