@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public final class MatchLineupTable extends AbstractTable {
@@ -25,17 +26,8 @@ public final class MatchLineupTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
 				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-				new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("HeimID", Types.INTEGER, false),
-				new ColumnDescriptor("GastName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("GastID", Types.INTEGER, false),
-				new ColumnDescriptor("FetchDate", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("MatchDate", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("ArenaID", Types.INTEGER, false),
-				new ColumnDescriptor("ArenaName", Types.VARCHAR, false, 256)
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false)
 		};
 	}
 
@@ -70,11 +62,11 @@ public final class MatchLineupTable extends AbstractTable {
 	/**
 	 * Ist das Match schon in der Datenbank vorhanden?
 	 */
-	boolean isMatchLineupVorhanden(int sourceSystem, int matchid) {
+	boolean isMatchLineupInDB(MatchType matchType, int matchid) {
 		boolean vorhanden = false;
 
 		try {
-			final String sql = "SELECT MatchId FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchId=" + matchid;
+			final String sql = "SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=" + matchType.getId() + " AND MatchId=" + matchid;
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -99,24 +91,14 @@ public final class MatchLineupTable extends AbstractTable {
 	void storeMatchLineup(MatchLineup lineup, Integer teamId) {
 		if (lineup != null) {
 			//There should never be anything to delete, but...
-			final String[] where = {"SourceSystem", "MatchID"};
-			final String[] werte = {"" + lineup.getSourceSystem().getValue(), "" + lineup.getMatchID()};
+			final String[] where = {"MatchTyp", "MatchID"};
+			final String[] werte = {"" + lineup.getMatchType().getId(), "" + lineup.getMatchID()};
 			delete(where, werte);
 			try {
 				//insert
-				var sql = "INSERT INTO " + getTableName() + " (SourceSystem,MatchID,MatchTyp,HeimName,HeimID,GastName," +
-						"GastID,FetchDate,MatchDate,ArenaID,ArenaName) VALUES(" +
-						lineup.getSourceSystem().getValue() + "," +
+				var sql = "INSERT INTO " + getTableName() + " (MatchID, MatchTyp) VALUES(" +
 						lineup.getMatchID() + "," +
-						lineup.getMatchTyp().getId() + ", '" +
-						DBManager.insertEscapeSequences(lineup.getHomeTeamName()) + "'," +
-						lineup.getHomeTeamId() + ",'" +
-						DBManager.insertEscapeSequences(lineup.getGuestTeamName()) + "', " +
-						lineup.getGuestTeamId() + ", '" +
-						lineup.getStringDownloadDate() + "', '" +
-						lineup.getStringMatchDate() + "', " +
-						lineup.getArenaID() + ", '" +
-						DBManager.insertEscapeSequences(lineup.getArenaName()) + "' )";
+						lineup.getMatchTyp().getId() + ")";
 				adapter.executeUpdate(sql);
 
 				if (teamId == null || teamId == lineup.getHomeTeamId()) {
@@ -150,9 +132,10 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	public List<MatchLineup> loadMatchLineups(int sourceSystem) {
+
 		var lineups = new ArrayList<MatchLineup>();
 		try {
-			var sql = "SELECT * FROM " + getTableName() + " WHERE SourceSystem=" + sourceSystem;
+			var sql = "SELECT * FROM " + getTableName() + " WHERE MATCHTYP IN " + getWhereClauseFromSourceSystem(sourceSystem);
 
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -193,5 +176,13 @@ public final class MatchLineupTable extends AbstractTable {
 		lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
 		lineup.setMatchDate(rs.getString("MatchDate"));
 		return lineup;
+	}
+
+	private String getWhereClauseFromSourceSystem(int sourceSystem){
+		var lMatchType =  MatchType.fromSourceSystem(SourceSystem.valueOf(sourceSystem));
+		String res = "(";
+		res += lMatchType.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+		res += ")";
+		return res;
 	}
 }

@@ -7,29 +7,29 @@ import static java.util.stream.Collectors.toList;
 
 public enum MatchType {
 
-	NONE((int) 0),
-	LEAGUE((int) 1),  // League match
-	QUALIFICATION((int) 2), //Qualification match
-	CUP((int) 3),  //Cup match (standard league match)
-	FRIENDLYNORMAL((int) 4), //	Friendly (normal rules)
-	FRIENDLYCUPRULES((int) 5), //Friendly (cup rules)
-	INTSPIEL((int) 6), // Not currently in use, but reserved for international competition matches with normal rules (may or may not be implemented at some future point).
-	MASTERS((int) 7), // Hattrick Masters
-	INTFRIENDLYNORMAL((int) 8), //	International friendly (normal rules)
-	INTFRIENDLYCUPRULES((int) 9), // International friendly (cup rules)
-	NATIONALCOMPNORMAL((int) 10), // National teams competition match (normal rules)
-	NATIONALCOMPCUPRULES((int) 11), // 	National teams competition match (cup rules)
-	NATIONALFRIENDLY((int) 12), // 	National teams friendly
-	TOURNAMENTGROUP((int) 50), // Tournament League match
-	TOURNAMENTPLAYOFF((int) 51), // Tournament Playoff match
-	SINGLE((int) 61), // Single match
-	LADDER((int) 62), // Ladder match
-	PREPARATION((int) 80), // Preparation match
-	YOUTHLEAGUE((int)100), //	Youth league match
-	YOUTHFRIENDLY((int)101), //	Youth friendly match
-	YOUTHFRIENDLYCUPRULES((int)103), //	Youth friendly match (cup rules)
-	YOUTHINTERNATIONALFRIENDLY((int)105), // Youth international friendly match
-	YOUTHINTERNATIONALFRIENDLYCUPRULES((int)106), // Youth international friendly match (Cup rules)
+	NONE(0),
+	LEAGUE(1),  // League match
+	QUALIFICATION(2), //Qualification match
+	CUP(3),  //Cup match (standard league match)
+	FRIENDLYNORMAL(4), //	Friendly (normal rules)
+	FRIENDLYCUPRULES(5), //Friendly (cup rules)
+	INTSPIEL(6), // Not currently in use, but reserved for international competition matches with normal rules (may or may not be implemented at some future point).
+	MASTERS(7), // Hattrick Masters
+	INTFRIENDLYNORMAL(8), //	International friendly (normal rules)
+	INTFRIENDLYCUPRULES(9), // International friendly (cup rules)
+	NATIONALCOMPNORMAL(10), // National teams competition match (normal rules)
+	NATIONALCOMPCUPRULES(11), // 	National teams competition match (cup rules)
+	NATIONALFRIENDLY(12), // 	National teams friendly
+	TOURNAMENTGROUP(50), // Tournament League match
+	TOURNAMENTPLAYOFF(51), // Tournament Playoff match
+	SINGLE(61), // Single match
+	LADDER(62), // Ladder match
+	PREPARATION(80), // Preparation match
+	YOUTHLEAGUE(100), //	Youth league match
+	YOUTHFRIENDLY(101), //	Youth friendly match
+	YOUTHFRIENDLYCUPRULES(103), //	Youth friendly match (cup rules)
+	YOUTHINTERNATIONALFRIENDLY(105), // Youth international friendly match
+	YOUTHINTERNATIONALFRIENDLYCUPRULES(106), // Youth international friendly match (Cup rules)
 	EMERALDCUP(1001), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	RUBYCUP(1002), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
 	SAPPHIRECUP(1003), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
@@ -41,7 +41,7 @@ public enum MatchType {
 
 	private final int id;
 
-	private static List<MatchType> cl_officialMatchType, cl_NTMatchType;
+	private static List<MatchType> cl_officialMatchType, cl_NTMatchType, cl_YouthMatchType, cl_HTOintegratedMatchType;
 
 	MatchType(int id) {
 		this.id = id;
@@ -185,6 +185,20 @@ public enum MatchType {
 		return cl_officialMatchType;
 	}
 
+	public static List<MatchType> getYouthMatchType() {
+		if (cl_YouthMatchType == null){
+			cl_YouthMatchType = MatchType.stream().filter(m -> m.isYouth()).collect(toList());
+		}
+		return cl_YouthMatchType;
+	}
+
+	public static List<MatchType> getHTOintegratedMatchType() {
+		if (cl_HTOintegratedMatchType == null){
+			cl_HTOintegratedMatchType = MatchType.stream().filter(m -> !(m.isYouth() || m.isOfficial())).collect(toList());
+		}
+		return cl_HTOintegratedMatchType;
+	}
+
 
 	/**
 	 * Returns true for all NT matches.
@@ -275,5 +289,13 @@ public enum MatchType {
 		if (isOfficial()) return SourceSystem.HATTRICK;
 		if (isYouth()) return SourceSystem.YOUTH;
 		return SourceSystem.HTOINTEGRATED;
+	}
+
+	public static List<MatchType> fromSourceSystem(SourceSystem sourceSystem){
+		switch (sourceSystem) {
+			case HATTRICK -> {return getOfficialMatchType();}
+			case YOUTH -> {return getYouthMatchType();}
+			default -> { return getHTOintegratedMatchType(); }
+		}
 	}
 }

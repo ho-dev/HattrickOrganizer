@@ -271,7 +271,7 @@ public class OnlineWorker {
 		// Only download if not present in the database, or if refresh is true
 		if (refresh || !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
-				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), matchID)
+				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType(), matchID)
 		) {
 			try {
 				Matchdetails details;
@@ -568,7 +568,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
 							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
-							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType().getSourceSystem().getValue(), curMatchId);
+							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -844,7 +844,7 @@ public class OnlineWorker {
 		boolean bOK;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(info.getMatchType().getSourceSystem().getValue(), curMatchId)) {
+			if (!DBManager.instance().isMatchLineupInDB(info.getMatchType(), curMatchId)) {
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
 					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);

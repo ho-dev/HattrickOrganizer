@@ -138,9 +138,6 @@ final class DBUpdater {
 		matchLineupPlayerTable.tryAddColumn("StartSetPieces", "BOOLEAN");
 		matchLineupPlayerTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
-		AbstractTable matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
-		matchLineupTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
 		AbstractTable matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
 		matchLineupTeamTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
@@ -289,12 +286,28 @@ final class DBUpdater {
 			futureTrainingTable.tryDeleteColumn("WEEK");
 		}
 
+		if (columnExistsInTable("SourceSystem", MatchLineupTable.TABLENAME)) {
 
-		// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY");
-		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
-		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			HOLogger.instance().debug(getClass(), "Upgrading MATCHLINEUP and MATCHESKURZINFO tables .... ");
+
+			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+
+			var matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
+			matchLineupTable.tryDeleteColumn("SourceSystem");
+			matchLineupTable.tryDeleteColumn("HeimName");
+			matchLineupTable.tryDeleteColumn("HeimID");
+			matchLineupTable.tryDeleteColumn("GastName");
+			matchLineupTable.tryDeleteColumn("GastID");
+			matchLineupTable.tryDeleteColumn("FetchDate");
+			matchLineupTable.tryDeleteColumn("MatchDate");
+			matchLineupTable.tryDeleteColumn("ArenaID");
+			matchLineupTable.tryDeleteColumn("ArenaName");
+		}
+
 
 		updateDBVersion(dbVersion, 500);
 	}

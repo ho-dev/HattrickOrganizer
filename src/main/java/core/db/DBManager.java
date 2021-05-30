@@ -1162,9 +1162,9 @@ public class DBManager {
 	 * @param matchid      the matchid
 	 * @return the boolean
 	 */
-	public boolean isMatchLineupInDB(int sourceSystem, int matchid) {
+	public boolean isMatchLineupInDB(MatchType matchType, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupVorhanden(sourceSystem, matchid);
+				.isMatchLineupInDB(matchType, matchid);
 	}
 
 	/**
