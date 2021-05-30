@@ -289,6 +289,13 @@ final class DBUpdater {
 			futureTrainingTable.tryDeleteColumn("WEEK");
 		}
 
+
+		// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY");
+		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
+		m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+
 		updateDBVersion(dbVersion, 500);
 	}
 

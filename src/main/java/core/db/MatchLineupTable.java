@@ -26,7 +26,7 @@ public final class MatchLineupTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
-				new ColumnDescriptor("MatchID", Types.INTEGER, false, true),
+				new ColumnDescriptor("MatchID", Types.INTEGER, false),
 				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
 				new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256),
 				new ColumnDescriptor("HeimID", Types.INTEGER, false),
@@ -37,6 +37,11 @@ public final class MatchLineupTable extends AbstractTable {
 				new ColumnDescriptor("ArenaID", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaName", Types.VARCHAR, false, 256)
 		};
+	}
+
+	@Override
+	protected String[] getConstraintStatements() {
+		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
 	@Override

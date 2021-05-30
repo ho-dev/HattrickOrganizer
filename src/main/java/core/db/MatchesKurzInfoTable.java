@@ -28,7 +28,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[22];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
+		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
 		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);  //HomeTeamID
@@ -51,6 +51,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
 
+	}
+
+	@Override
+	protected String[] getConstraintStatements() {
+		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
     @Override
