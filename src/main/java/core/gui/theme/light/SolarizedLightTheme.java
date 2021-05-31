@@ -74,19 +74,16 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             // Lineup
-//            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
+
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
-//
-//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
-//            ThemeManager.instance().put(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
-//            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaults.getColor("palette.lime"));
-//
             ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
             ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
             ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
             ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.brown"));
             ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.brown"));
+
+            ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(61,64,66));
 
             return true;
 

@@ -1,9 +1,10 @@
 package core.gui.comp;
 
 import core.gui.Credits;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -17,8 +18,7 @@ import javax.swing.JLabel;
 
 public class HyperLinkLabel extends JLabel {
 
-	private static final Color LINK_COLOR = new Color(6, 69, 173);
-	private static final long serialVersionUID = 2126074792714483336L;
+	private static final Color LINK_COLOR = ThemeManager.getColor(HOColorName.LINK_LABEL_FG);
 	private String url;
 
 	public HyperLinkLabel() {

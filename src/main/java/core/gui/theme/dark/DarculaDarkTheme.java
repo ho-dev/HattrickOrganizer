@@ -148,6 +148,9 @@ public class DarculaDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(177, 193, 240));
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
+            ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(251,252,254));
+
+
 
             return super.enableTheme();
         } catch (Exception e) {

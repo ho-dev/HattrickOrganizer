@@ -46,6 +46,7 @@ public interface HOColorName {
 	String PLAYER_SKILL_SPECIAL_BG 		= "player.skill.special.bg";
 	String HOME_TEAM_FG 				= "team.fg";
 	String SELECTED_TEAM_FG 			= "selected_team_fg";
+	String LINK_LABEL_FG 				= "link.label.fg";
 
 	String MATCHTYPE_BG 				= "matchtype.bg";
 	String MATCHTYPE_LEAGUE_BG 			= "matchtype.league.bg";

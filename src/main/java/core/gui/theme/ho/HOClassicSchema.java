@@ -510,6 +510,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.SHOW_MATCH, new Color(23, 111, 36));
 		put(HOColorName.DOWNLOAD_MATCH, new Color(238, 39, 39, 255));
 
+		put(HOColorName.LINK_LABEL_FG, new Color(6, 69, 173));
+
 	}
 
 	public Color getDefaultColor(String key) {
