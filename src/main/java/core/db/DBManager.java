@@ -43,7 +43,6 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -746,7 +745,7 @@ public class DBManager {
 	 */
 	public Lineup getAufstellung(int hrfID, String name) {
 		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-				.getAufstellung(hrfID, name);
+				.getLineup(hrfID, name);
 	}
 
 
@@ -1147,25 +1146,25 @@ public class DBManager {
 	/**
 	 * Load match lineup match lineup.
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchID      the match id
 	 * @return the match lineup
 	 */
-	public MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
+	public MatchLineup loadMatchLineup(int iMatchType, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.loadMatchLineup(sourceSystem, matchID);
+				.loadMatchLineup(iMatchType, matchID);
 	}
 
 	/**
 	 * Is the match already in the database?
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchid      the matchid
 	 * @return the boolean
 	 */
-	public boolean isMatchLineupInDB(int sourceSystem, int matchid) {
+	public boolean isMatchLineupInDB(MatchType iMatchType, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupVorhanden(sourceSystem, matchid);
+				.isMatchLineupInDB(iMatchType, matchid);
 	}
 
 	/**
@@ -1195,22 +1194,24 @@ public class DBManager {
 	 * Check if match is available
 	 *
 	 * @param matchid the matchid
+	 * @param matchType
 	 * @return the boolean
 	 */
-	public boolean isMatchInDB(int matchid) {
+	public boolean isMatchInDB(int matchid, MatchType matchType) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.isMatchVorhanden(matchid);
+				.isMatchInDB(matchid, matchType);
 	}
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 *
 	 * @param matchid The ID for the match
+	 * @param matchType
 	 * @return The kurz info object or null
 	 */
-	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
+	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfoByMatchID(matchid);
+				.getMatchesKurzInfoByMatchID(matchid, matchType);
 	}
 
 	/**
@@ -1267,19 +1268,30 @@ public class DBManager {
 	 * @param iNbGames the nb games
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames){
-		return getPlayedMatchInfo(iNbGames, false);
+	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames){
+		return getOwnPlayedMatchInfo(iNbGames, false);
 	}
 
 	/**
-	 * Get played match info array list.
+	 * Get played match info array list (own team Only)
 	 *
 	 * @param iNbGames           the nb games
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly);
+	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, true);
+	}
+
+	/**
+	 * Get played match info array list (own team Only)
+	 *
+	 * @param iNbGames           the nb games
+	 * @param bOfficialGamesOnly the b official games only
+	 * @return the array list
+	 */
+	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
 	}
 
 
@@ -1681,9 +1693,9 @@ public class DBManager {
 	 */
 // ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
+	public MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(sourceSystem, matchID, teamID);
+				.getMatchLineupTeam(iMatchType, matchID, teamID);
 	}
 
 	// ------------------------------- UserParameterTable
@@ -1746,13 +1758,13 @@ public class DBManager {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 *
-	 * @param sourcesystem the sourcesystem
+	 * @param iMatchType the sourcesystem
 	 * @param matchId      the match id
 	 * @return the matchdetails
 	 */
-	public Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
+	public Matchdetails loadMatchDetails(int iMatchType, int matchId) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
-				.loadMatchDetails(sourcesystem, matchId);
+				.loadMatchDetails(iMatchType, matchId);
 	}
 
 	/**
@@ -1771,13 +1783,13 @@ public class DBManager {
 	/**
 	 * Gibt die MatchHighlights zu einem Match zurück
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchId      the match id
 	 * @return the match highlights
 	 */
-	public ArrayList<MatchEvent> getMatchHighlights(int sourceSystem, int matchId) {
+	public ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
-				.getMatchHighlights(sourceSystem, matchId);
+				.getMatchHighlights(iMatchType, matchId);
 	}
 
 	/**
@@ -2051,7 +2063,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(SourceSystem.HATTRICK.getValue(), item
+				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getId(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen

@@ -724,7 +724,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
-                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info == null) {
                         return new RatingTableEntry((float) player.getLastMatchRating(), true);
                     } else {
@@ -740,7 +740,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 if (player.getLastMatchRating() > 0) {
-                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId());
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info != null) {
                         return new MatchDateTableEntry(info.getMatchDateAsTimestamp().toString(), info.getMatchType());
                     }

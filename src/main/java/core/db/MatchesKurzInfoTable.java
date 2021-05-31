@@ -28,7 +28,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[22];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false, true); //The globally unique identifier of the match
+		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
 		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);  //HomeTeamID
@@ -51,6 +51,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
 
+	}
+
+	@Override
+	protected String[] getConstraintStatements() {
+		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
     @Override
@@ -109,20 +114,25 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 
-
 	/**
 	 * Return the list of n latest played matches (own team)
 	 */
-	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly) {
-		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
 		final ArrayList<MatchKurzInfo> playedMatches = new ArrayList<>();
 
 		StringBuilder sql = new StringBuilder(100);
 		ResultSet rs;
 
 		sql.append("SELECT * FROM " + getTableName());
-		sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")");
-		sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+
+		if(ownTeam) {
+			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			sql.append(" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")");
+			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+		}
+		else{
+			sql.append(" WHERE Status=" + MatchKurzInfo.FINISHED);
+		}
 
 		if(bOfficialOnly) {
 			sql.append(getMatchTypWhereClause(MatchType.GROUP_OFFICIAL.getId()));
@@ -344,12 +354,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Check if a match is already in the database.
 	 */
-	boolean isMatchVorhanden(int matchid) {
+	boolean isMatchInDB(int matchid, MatchType matchType) {
 		boolean vorhanden = false;
 
 		try {
-			final String sql = "SELECT MatchId FROM " + getTableName()
+			String sql = "SELECT MatchId FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+			if ( matchType != null){
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
+
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
@@ -363,23 +377,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		return vorhanden;
-	}
-
-	boolean hasDerbyInfo(int matchId)
-	{
-		try {
-			final String sql = "SELECT isDerby FROM " + getTableName() + " WHERE MatchId=" + matchId;
-			final ResultSet rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			if (rs.next()) {
-				boolean isDerby = rs.getBoolean(1);
-				return !rs.wasNull();
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"DatenbankZugriff.hasDerbyInfo : " + e);
-		}
-		return false;
 	}
 
 	boolean hasUnsureWeatherForecast(int matchId)
@@ -463,18 +460,24 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return getMatchesKurzInfo(teamId, -1);
 	}
 
+
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 * 
-	 * @param matchid
-	 *            The ID for the match
+	 * @param matchid the ID for the match
 	 * @return The kurz info object or null
 	 */
-	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid) {
+	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 
 		try {
-			final String sql = "SELECT * FROM " + getTableName()
+
+			String sql = "SELECT * FROM " + getTableName()
 					+ " WHERE MatchId=" + matchid;
+
+			if ( matchType != null) {
+				sql += " AND MatchTyp=" + matchType.getId();
+			}
+
 			final ResultSet rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();

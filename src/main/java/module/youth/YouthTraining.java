@@ -106,14 +106,14 @@ public class YouthTraining {
 
     MatchLineup getMatchLineup() {
         if (this.matchLineup == null) {
-            this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
         }
         return this.matchLineup;
     }
 
     public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
-            this.matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
             this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
         }
         return this.matchdetails;

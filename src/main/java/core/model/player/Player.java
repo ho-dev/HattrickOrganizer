@@ -1938,7 +1938,7 @@ public class Player {
                 int minutes=0;
                 for (var match : matches) {
                     //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
+                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
                     //MatchStatistics ms = new MatchStatistics(match, mlt);
                     MatchType type = mlt.getMatchType();
                     boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
@@ -1959,7 +1959,7 @@ public class Player {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), this.getNationalTeamID());
+                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
                             output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());

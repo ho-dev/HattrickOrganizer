@@ -36,10 +36,11 @@ public class MatchOrderTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 
-		columns = new ColumnDescriptor[3];
+		columns = new ColumnDescriptor[4];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("SpielerID", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("PositionCode", Types.INTEGER, false);
+		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false);
+		columns[2] = new ColumnDescriptor("SpielerID", Types.INTEGER, false);
+		columns[3] = new ColumnDescriptor("PositionCode", Types.INTEGER, false);
 	}
 
 	@Override

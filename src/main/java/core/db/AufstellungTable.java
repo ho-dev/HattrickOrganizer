@@ -1,14 +1,11 @@
 package core.db;
 
-import core.module.IModule;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Vector;
 
 final class AufstellungTable extends AbstractTable {
 	final static String TABLENAME = "AUFSTELLUNG";
@@ -26,15 +23,12 @@ final class AufstellungTable extends AbstractTable {
 				new ColumnDescriptor("Attitude", Types.INTEGER, false),
 				new ColumnDescriptor("Tactic", Types.INTEGER, false),
 				new ColumnDescriptor("Aufstellungsname", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("StyleOfPlay", Types.INTEGER, false),
-				new ColumnDescriptor("SourceSystem", Types.INTEGER, false)
+				new ColumnDescriptor("StyleOfPlay", Types.INTEGER, false)
 		};
 	}
 
-	/**
-	 * lädt System Positionen
-	 */
-	Lineup getAufstellung(int hrfID, String name) {
+
+	Lineup getLineup(int hrfID, String name) {
 
 		module.lineup.Lineup lineup = new module.lineup.Lineup();
 
@@ -72,77 +66,21 @@ final class AufstellungTable extends AbstractTable {
 		return lineup;
 	}
 
-//	/**
-//	 * gibt liste für Aufstellungen
-//	 *
-//	 * @param hrfID
-//	 *            -1 für default = hrf unabhängig
-//	 */
-//	Vector<String> getAufstellungsListe(int hrfID) {
-//		final Vector<String> ret = new Vector<String>();
-//		ResultSet rs = null;
-//		String sql = null;
-//
-//		sql = "SELECT Aufstellungsname FROM " + getTableName() + "";
-//		rs = adapter.executeQuery(sql);
-//
-//		try {
-//			if (rs != null) {
-//				rs.beforeFirst();
-//
-//				while (rs.next()) {
-//					ret.add(rs.getString("Aufstellungsname"));
-//				}
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAufstellungsListe: " + e);
-//		}
-//
-//		return ret;
-//	}
-//
-//	/**
-//	 * Gibt eine Liste aller Usergespeicherten Aufstellungsnamen zurück
-//	 */
-//	Vector<String> getUserAufstellungsListe() {
-//		ResultSet rs = null;
-//		final String statement = "SELECT Aufstellungsname FROM " + getTableName()
-//				+ " WHERE HRF_ID=" + Lineup.NO_HRF_VERBINDUNG;
-//		final Vector<String> ret = new Vector<String>();
-//
-//		try {
-//			rs = adapter.executeQuery(statement);
-//
-//			if (rs != null) {
-//				rs.beforeFirst();
-//
-//				while (rs.next()) {
-//					ret.add(rs.getString("Aufstellungsname"));
-//				}
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(), "DatenbankZugriff.getUserAufstellungsListe: " + e);
-//		}
-//
-//		return ret;
-//	}
 
 	/**
 	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD
 	 * 
 	 * @throws SQLException 
 	 */
-	void saveAufstellung(int sourceSystem, int hrfId, Lineup lineup, String name) throws SQLException {
-		String statement = null;
+	void saveAufstellung(int iMatchType, int hrfId, Lineup lineup, String name) throws SQLException {
+		String statement;
 
 		if (lineup != null) {
 
 			DBManager.instance().deleteAufstellung(hrfId, name);
 
-			// insert vorbereiten
 			statement = "INSERT INTO " + getTableName()
-					+ " ( SourceSystem, HRF_ID, Kicker, Kapitaen, Attitude, Tactic, StyleOfPlay, Aufstellungsname ) VALUES("
-					+ sourceSystem + ","
+					+ " (HRF_ID, Kicker, Kapitaen, Attitude, Tactic, StyleOfPlay, Aufstellungsname ) VALUES("
 					+ hrfId + ","
 					+ lineup.getKicker() + ","
 					+ lineup.getCaptain() + ","
@@ -158,7 +96,7 @@ final class AufstellungTable extends AbstractTable {
 
 			// Save Substitutions
 			((MatchSubstitutionTable)(DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME)))
-					.storeMatchSubstitutionsByHrf(sourceSystem, hrfId,lineup.getSubstitutionList(), name);
+					.storeMatchSubstitutionsByHrf(iMatchType, hrfId,lineup.getSubstitutionList(), name);
 			
 			// save penalty takers
 			((PenaltyTakersTable)(DBManager.instance().getTable(PenaltyTakersTable.TABLENAME)))

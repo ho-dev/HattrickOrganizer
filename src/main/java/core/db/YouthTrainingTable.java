@@ -22,6 +22,7 @@ public class YouthTrainingTable extends AbstractTable{
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
                 new ColumnDescriptor("MATCHID", Types.INTEGER, false),
+                new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
                 new ColumnDescriptor("TRAINING1", Types.INTEGER, true),
                 new ColumnDescriptor("TRAINING2", Types.INTEGER, true)
         };

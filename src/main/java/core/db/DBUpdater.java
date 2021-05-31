@@ -1,7 +1,6 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
-import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +13,6 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import core.HO;
 import module.youth.YouthPlayer;
-import module.youth.YouthSkillInfo;
 
 final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
@@ -120,36 +118,15 @@ final class DBUpdater {
 		matchDetailsTable.tryAddColumn("HomeFormation", "VARCHAR (5)");
 		matchDetailsTable.tryAddColumn("AwayFormation", "VARCHAR (5)");
 
-		if (matchDetailsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null")){
-			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
-			for (var constraint: matchDetailsTable.getConstraintStatements()){
-				m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD " + constraint);
-			}
-		}
-
 		AbstractTable basicsTable = dbManager.getTable(BasicsTable.TABLENAME);
 		basicsTable.tryAddColumn("YouthTeamName", "VARCHAR (127)");
 		basicsTable.tryAddColumn("YouthTeamID", "INTEGER");
 
-		AbstractTable aufstellungTable = dbManager.getTable(AufstellungTable.TABLENAME);
-		aufstellungTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
 		AbstractTable matchLineupPlayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
 		matchLineupPlayerTable.tryAddColumn("StartSetPieces", "BOOLEAN");
-		matchLineupPlayerTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
-		matchLineupTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
-		matchLineupTeamTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
-
-		AbstractTable matchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
-		matchSubstitutionTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
 		AbstractTable matchHighlightsTable = dbManager.getTable(MatchHighlightsTable.TABLENAME);
 		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
-		matchHighlightsTable.tryAddColumn("SourceSystem", "INTEGER DEFAULT 0 Not Null");
 
 		if (!tableExists(YouthTrainingTable.TABLENAME)) {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
@@ -288,6 +265,64 @@ final class DBUpdater {
 			futureTrainingTable.tryDeleteColumn("SEASON");
 			futureTrainingTable.tryDeleteColumn("WEEK");
 		}
+
+		if (columnExistsInTable("SourceSystem", MatchLineupTable.TABLENAME)) {
+
+			HOLogger.instance().debug(getClass(), "Upgrading DB structure SourceSystem/MatchType .... ");
+
+			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+
+			var matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
+			matchLineupTable.tryDeleteColumn("SourceSystem");
+			matchLineupTable.tryDeleteColumn("HeimName");
+			matchLineupTable.tryDeleteColumn("HeimID");
+			matchLineupTable.tryDeleteColumn("GastName");
+			matchLineupTable.tryDeleteColumn("GastID");
+			matchLineupTable.tryDeleteColumn("FetchDate");
+			matchLineupTable.tryDeleteColumn("MatchDate");
+			matchLineupTable.tryDeleteColumn("ArenaID");
+			matchLineupTable.tryDeleteColumn("ArenaName");
+
+			dbManager.getTable(AufstellungTable.TABLENAME).tryDeleteColumn("SourceSystem");
+			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryDeleteColumn("SourceSystem");
+			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryDeleteColumn("SourceSystem");
+			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryDeleteColumn("SourceSystem");
+			dbManager.getTable(MatchDetailsTable.TABLENAME).tryDeleteColumn("SourceSystem");
+			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryDeleteColumn("SourceSystem");
+
+			dbManager.getTable(IfaMatchTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchDetailsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchLineupTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchOrderTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
+
+
+			// Correct history ..............
+			List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP", "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
+					"MATCHORDER", "MATCHSUBSTITUTION", "YOUTHTRAINING");
+
+			for(String tableName : lTables){
+				String sql = "UPDATE " + tableName + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM MATCHESKURZINFO MK WHERE t1.MATCHID = MK.MATCHID)";
+				m_clJDBCAdapter.executeQuery(sql);
+			}
+
+			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
+			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+
+			HOLogger.instance().debug(getClass(), "Upgrade of DB structure SourceSystem/MatchType is complete ! ");
+		}
+
 
 		updateDBVersion(dbVersion, 500);
 	}
