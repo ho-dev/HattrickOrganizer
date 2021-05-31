@@ -1146,25 +1146,25 @@ public class DBManager {
 	/**
 	 * Load match lineup match lineup.
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchID      the match id
 	 * @return the match lineup
 	 */
-	public MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
+	public MatchLineup loadMatchLineup(int iMatchType, int matchID) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.loadMatchLineup(sourceSystem, matchID);
+				.loadMatchLineup(iMatchType, matchID);
 	}
 
 	/**
 	 * Is the match already in the database?
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchid      the matchid
 	 * @return the boolean
 	 */
-	public boolean isMatchLineupInDB(MatchType matchType, int matchid) {
+	public boolean isMatchLineupInDB(MatchType iMatchType, int matchid) {
 		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupInDB(matchType, matchid);
+				.isMatchLineupInDB(iMatchType, matchid);
 	}
 
 	/**

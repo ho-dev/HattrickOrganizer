@@ -106,7 +106,7 @@ public class YouthTraining {
 
     MatchLineup getMatchLineup() {
         if (this.matchLineup == null) {
-            this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
         }
         return this.matchLineup;
     }

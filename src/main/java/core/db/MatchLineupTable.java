@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchType;
 import core.model.match.SourceSystem;
@@ -48,8 +49,11 @@ public final class MatchLineupTable extends AbstractTable {
 			var rs = adapter.executeQuery(sql);
 			rs.first();
 			lineup = createMatchLineup(rs);
-			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, lineup.getHomeTeamId()));
-			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, lineup.getGuestTeamId()));
+
+			MatchKurzInfo match = DBManager.instance().getMatchesKurzInfoByMatchID(matchID, MatchType.getById(matchID));
+			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getHomeTeamID()));
+			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getGuestTeamID()));
+
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error " + e);
 			lineup = null;
@@ -164,16 +168,8 @@ public final class MatchLineupTable extends AbstractTable {
 
 	private MatchLineup createMatchLineup(ResultSet rs) throws SQLException {
 		var lineup = new MatchLineup();
-		lineup.setArenaID(rs.getInt("ArenaID"));
-		lineup.setArenaName(DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
-		lineup.setDownloadDate(rs.getString("FetchDate"));
-		lineup.setGuestTeamId(rs.getInt("GastID"));
-		lineup.setGuestTeamName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
-		lineup.setHomeTeamId(rs.getInt("HeimID"));
-		lineup.setHomeTeamName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
 		lineup.setMatchID(rs.getInt("MatchID"));
 		lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
-		lineup.setMatchDate(rs.getString("MatchDate"));
 		return lineup;
 	}
 

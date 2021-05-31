@@ -46,40 +46,14 @@ public class XMLMatchLineupParser {
 
 		try {
 			Element root = doc.getDocumentElement();
-			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			ml.setDownloadDate(ele.getFirstChild().getNodeValue());
-			ele = (Element) root.getElementsByTagName("MatchID").item(0);
+
+			Element ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
-			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
-					.getNodeValue());
-			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
-			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
-					.getNodeValue());
+
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
 
-			if ((ml.getMatchTyp() != MatchType.TOURNAMENTGROUP)
-					&& (ml.getMatchTyp() != MatchType.TOURNAMENTPLAYOFF)
-					&& (ml.getMatchTyp() != MatchType.NONE)
-					&& (ml.getMatchTyp() != MatchType.LADDER)
-					&& (ml.getMatchTyp() != MatchType.SINGLE)
-					&& (ml.getMatchTyp() != MatchType.DIVISIONBATTLE)) { // no stadium info for this kind  of match
-				ele = (Element) root.getElementsByTagName("Arena").item(0);
-				ml.setArenaID(Integer.parseInt(ele.getElementsByTagName("ArenaID").item(0)
-						.getFirstChild().getNodeValue()));
-				ml.setArenaName(ele.getElementsByTagName("ArenaName").item(0).getFirstChild()
-						.getNodeValue());
-			}
 
-			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
-			ml.setMatchDate(ele.getFirstChild().getNodeValue());
-
-			// team adden
 			MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHomeTeamId()) {

@@ -13,8 +13,6 @@ public class MatchLineup {
     protected MatchType m_MatchTyp = MatchType.NONE;
     MatchLineupTeam guestTeam;
     MatchLineupTeam homeTeam;
-    private String arenaName = "";
-    private String downloadDate = "";
     private String guestTeamName = "";
     private String homeTeamName = "";
     private String matchDate = "";
@@ -49,47 +47,12 @@ public class MatchLineup {
         return arenaId;
     }
 
-    /**
-     * Setter for property m_sArenaName.
-     *
-     * @param m_sArenaName New value of property m_sArenaName.
-     */
-    public final void setArenaName(java.lang.String m_sArenaName) {
-        this.arenaName = m_sArenaName;
-    }
 
-    /**
-     * Getter for property m_sArenaName.
-     *
-     * @return Value of property m_sArenaName.
-     */
-    public final java.lang.String getArenaName() {
-        return arenaName;
-    }
-
-    /**
-     * Setter for property m_lDatum.
-     *
-     * @param date New value of property m_lDatum.
-     */
-    public final void setDownloadDate(String date) {
-        if (date != null) {
-            downloadDate = date;
-        }
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     //Accessor
     /////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Getter for property m_lDatum.
-     *
-     * @return Value of property m_lDatum.
-     */
-    public final Timestamp getDownloadDate() {
-        return Basics.parseHattrickDate(downloadDate);
-    }
 
     /**
      * Setter for property m_clGast.
@@ -266,10 +229,6 @@ public class MatchLineup {
      */
     public final Timestamp getMatchDate() {
         return Basics.parseHattrickDate(this.matchDate);
-    }
-
-    public final String getStringDownloadDate() {
-        return downloadDate;
     }
 
     public final String getStringMatchDate() {

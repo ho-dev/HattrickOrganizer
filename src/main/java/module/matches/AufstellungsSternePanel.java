@@ -102,13 +102,13 @@ public class AufstellungsSternePanel extends RasenPanel {
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
 	public final void refresh(MatchKurzInfo match, int teamid) {
-		final MatchLineup lineup = DBManager.instance().loadMatchLineup(match.getMatchType().getSourceSystem().getValue(), match.getMatchID());
-		MatchLineupTeam lineupteam = null;
+		final MatchLineup lineup = DBManager.instance().loadMatchLineup(match.getMatchType().getId(), match.getMatchID());
+		MatchLineupTeam lineupteam;
 
 		if (lineup.getHomeTeamId() == teamid) {
-			lineupteam = (MatchLineupTeam) lineup.getHomeTeam();
+			lineupteam = lineup.getHomeTeam();
 		} else {
-			lineupteam = (MatchLineupTeam) lineup.getGuestTeam();
+			lineupteam = lineup.getGuestTeam();
 		}
 
 		clearAll();
