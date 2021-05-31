@@ -109,10 +109,6 @@ public class CheckBoxTree extends JTree {
             setOpaque(false);
         }
 
-        public Container getParent() {
-            return CheckBoxTree.this.getParent();
-        }
-
         @Override
         public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                       boolean selected, boolean expanded, boolean leaf, int row,
