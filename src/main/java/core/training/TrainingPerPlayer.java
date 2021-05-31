@@ -22,7 +22,6 @@ import java.util.Vector;
 public class TrainingPerPlayer  {
     private Player _Player;
     private TrainingPoints _TrainingPair = null;
-    private Date _TrainingDate = null;
     private TrainingPerWeek _TrainingWeek;
 	private double experienceSub=0;
 
@@ -45,9 +44,9 @@ public class TrainingPerPlayer  {
 
     
     /**
-     * Setter for property spieler.
+     * Setter for property player.
      *
-     * @param spieler New value of property spieler.
+     * @param player New value of property player.
      */
     public final void setPlayer(Player player) {
         this._Player = player;
@@ -69,22 +68,6 @@ public class TrainingPerPlayer  {
     public TrainingPoints getTrainingPair() {
     	return _TrainingPair;
     }
-       /**
-	 * @return the timestamp
-	 */
-	public Date getTimestamp() {
-		return this._TrainingDate;
-	}
-
-	/**
-	 * Set the timestamp
-	 * if not null, calculate sub increase for this training date only
-	 * 
-	 * @param timestamp the timestamp to set
-	 */
-	public void setTimestamp(Date timestamp) {
-		this._TrainingDate = timestamp;
-	}
 
     /**
      * add sub values of another ITrainingPerPlayer instance to this instance
@@ -111,7 +94,7 @@ public class TrainingPerPlayer  {
 	 * @param trainingDate
 	 * @param skillType
 	 * @return
-	 */
+
 	private boolean isAfterSkillup (Calendar trainingDate, int skillType) {
 		if (getTimestamp() == null) {
 			if (TrainingManager.TRAINING_DEBUG) {
@@ -137,7 +120,8 @@ public class TrainingPerPlayer  {
 			return false;
 		}
 	}
-	
+	 */
+
    /**
      * Calculates the last skillup for the player in the correct training
      *
@@ -145,7 +129,7 @@ public class TrainingPerPlayer  {
      * @param trainTime Trainingtime
      *
      * @return Last skillup Date, or Date(0) if no skillup was found
-     */
+
     private Date getLastSkillupDate(int trainskill, Date trainTime) {
         //get relevant skillups for calculation period
         final Vector<Object[]> skillUps = getPlayer().getAllLevelUp(trainskill);
@@ -164,7 +148,7 @@ public class TrainingPerPlayer  {
         }
         return skilluptime;
     }
-
+   */
     /**
      * get the training point for this instance
      * @return	training point
@@ -254,5 +238,14 @@ public class TrainingPerPlayer  {
 			}
 		}
 		return "0;0;0";
+	}
+
+	/**
+	 * Calculate player's age in years at the given training date
+	 * @return int age of the player in hattrick-years
+	 */
+	public int getPlayerAgeAtTrainingDate() {
+		Timestamp t = Timestamp.from(this._TrainingWeek.getTrainingDate());
+		return (int) this.getPlayer().getDoubleAgeFromDate(t);
 	}
 }

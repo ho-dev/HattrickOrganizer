@@ -323,8 +323,9 @@ public abstract class WeeklyTrainingType {
 
 	public double getTrainingAlternativeFormula(int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
 
-		if (trForPlayer.getTrainingPair() == null ||
-				trForPlayer.getTrainingPair().getTrainingDuration() == null) {
+		if (trForPlayer.getTrainingPair() == null
+				|| trForPlayer.getTrainingPair().getTrainingDuration() == null
+				|| !trForPlayer.getTrainingPair().getTrainingDuration().hasTrainingMinutes()) {
 			return 0;
 		}
 		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
@@ -424,7 +425,7 @@ public abstract class WeeklyTrainingType {
 		35 - 0.741
 		*/
 
-		var age = trForPlayer.getPlayer().getAlter();
+		var age = trForPlayer.getPlayerAgeAtTrainingDate();
 		var factorAge = Math.pow(.9835, age - 17);
 
 		/*
@@ -441,15 +442,14 @@ public abstract class WeeklyTrainingType {
 		if (minutes > 0 && this.getPrimaryTrainingSkillBonus() > 0) {
 			factorTime = (1 + getPrimaryTrainingSkillBonus()) * minutes / 90.;
 		} else if (minutes < 90) {
-			var partlyMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes();
+			var partlyMinutes = Math.min(90-minutes, trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes());
 			factorTime = minutes / 90. + partlyMinutes / 90. * .5;
 			minutes += partlyMinutes;
 			if (minutes < 90) {
-				var osmosisMinutes = trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes();
+				var osmosisMinutes = Math.min(90-minutes, trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes());
 				factorTime += osmosisMinutes / 90. * osmosisKoeff;
 			}
 		}
-
 
 		/*
 			K(train)
