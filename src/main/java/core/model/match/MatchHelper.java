@@ -80,7 +80,7 @@ public class MatchHelper {
 			return FOREIGN_MATCH; // foreign match
 		}
 
-		Matchdetails details = DBManager.instance().loadMatchDetails(matchType.getSourceSystem().getValue(), matchId);
+		Matchdetails details = DBManager.instance().loadMatchDetails(matchType.getId(), matchId);
 
    		// For a league/qualification/cup game, the home team always has the home advantage (no neutral grounds) 
    		// (exception for cup finals, see below)

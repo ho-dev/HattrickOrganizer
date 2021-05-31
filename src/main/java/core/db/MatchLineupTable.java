@@ -4,7 +4,6 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchType;
 import core.model.match.SourceSystem;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -42,17 +41,17 @@ public final class MatchLineupTable extends AbstractTable {
 			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(MatchID)"};
 	}	
 
-	MatchLineup loadMatchLineup(int sourceSystem, int matchID) {
+	MatchLineup loadMatchLineup(int iMatchType, int matchID) {
 		MatchLineup lineup;
 		try {
-			var sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourceSystem + " AND MatchID = " + matchID;
+			var sql = "SELECT * FROM "+getTableName()+" WHERE MatchTyp=" + iMatchType + " AND MatchID = " + matchID;
 			var rs = adapter.executeQuery(sql);
 			rs.first();
 			lineup = createMatchLineup(rs);
-			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getHomeTeamId()));
-			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(sourceSystem, matchID, lineup.getGuestTeamId()));
+			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, lineup.getHomeTeamId()));
+			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, lineup.getGuestTeamId()));
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error" + e);
+			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error " + e);
 			lineup = null;
 		}
 
@@ -117,7 +116,7 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(MatchDate) from " + getTableName() + " where SourceSystem=" + SourceSystem.YOUTH.getValue();
+		var sql = "select max(MatchDate) from " + getTableName() + " WHERE MATCHTYP IN " + getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
 		try {
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -149,11 +148,11 @@ public final class MatchLineupTable extends AbstractTable {
 		return lineups;
 	}
 
-	public void deleteMatchLineupsBefore(int sourceSystem, Timestamp before) {
+	public void deleteMatchLineupsBefore(int iMatchType, Timestamp before) {
 		var sql = "DELETE FROM " +
 				getTableName() +
-				" WHERE SOURCESYSTEM=" +
-				sourceSystem +
+				" WHERE MatchTyp=" +
+				iMatchType +
 				" AND MATCHDATE<'" +
 				before.toString() + "'";
 		try {

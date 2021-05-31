@@ -205,7 +205,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type){
-        var ret = DBManager.instance().loadMatchDetails(type.getSourceSystem().getValue(), matchId);
+        var ret = DBManager.instance().loadMatchDetails(type.getId(), matchId);
         ret.setMatchType(type);
         ret.setSourceSystem(type.getSourceSystem());
         return ret;
@@ -914,7 +914,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public final ArrayList<MatchEvent> getHighlights() {
         if ( this.getMatchID()> -1 && ( m_vHighlights == null || m_vHighlights.size() == 0)){
-            m_vHighlights = DBManager.instance().getMatchHighlights(this.getSourceSystem().getValue(), this.getMatchID());
+            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
 
             if ( maxMatchdetailsReloadsPerSession>0 && this.m_MatchTyp.isOfficial()) {
                 if ( m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
@@ -925,7 +925,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                     try {
                         OnlineWorker.setSilentDownload(true);
                         if ( OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true) ) {
-                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getSourceSystem().getValue(), this.getMatchID());
+                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
                             maxMatchdetailsReloadsPerSession--;
                         }
                         else {
@@ -1213,6 +1213,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public final void setMatchType(MatchType m_MatchTyp) {
         this.m_MatchTyp = m_MatchTyp;
+        this.sourceSystem = m_MatchTyp.getSourceSystem();
     }
 
     /**
@@ -1282,42 +1283,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public MatchLineupTeam getTeamLineup() {
         if ( teamLineup == null){
-            teamLineup = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.getMatchID(), MatchKurzInfo.user_team_id);
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.getMatchID(), MatchKurzInfo.user_team_id);
         }
         return teamLineup;
-    }
-
-    /**
-     * Method that extract a lineup from the full match comment
-     *
-     * @param home true for home lineup, false for away
-     * @return The Lineup object
-     */
-    public final TeamLineup getTeamLineup(boolean home) {
-        final TeamLineup lineup = new TeamLineup();
-
-        try {
-            final Pattern p = Pattern.compile(".-.-.");
-            final Matcher m = p.matcher(m_sMatchreport);
-            int start = m.end();
-            start = m_sMatchreport.indexOf(":", start);
-
-            final int end = m_sMatchreport.indexOf(".", start);
-
-            final String[] zones = m_sMatchreport.substring(start + 1, end).split(" - ");
-
-            for (int i = 0; i < zones.length; i++) {
-                final String[] pNames = zones[i].split(",");
-
-                for (String pName : pNames) {
-                    lineup.add(pName, i);
-                }
-            }
-        } catch (RuntimeException e) {
-            return new TeamLineup();
-        }
-
-        return lineup;
     }
 
     /**

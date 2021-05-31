@@ -108,7 +108,7 @@ public class MatchLineup {
      */
     public MatchLineupTeam getGuestTeam() {
         if ( guestTeam == null){
-            guestTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.guestTeamId);
+            guestTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.guestTeamId);
         }
         return guestTeam;
     }
@@ -166,7 +166,7 @@ public class MatchLineup {
      */
     public final MatchLineupTeam getHomeTeam() {
         if ( homeTeam == null){
-            homeTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.getHomeTeamId());
+            homeTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.getHomeTeamId());
         }
         return homeTeam;
     }

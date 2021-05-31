@@ -40,7 +40,7 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
-			home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHomeTeamID());
+			home = DBManager.instance().getMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getHomeTeamID());
 
 			if ( home == null){
 				// Lineup team was not stored (Verlegenheitstruppe)
@@ -53,7 +53,7 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getAwayTeamInfo() {
 		if (away == null && match != null) {
-			away = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getGuestTeamID());
+			away = DBManager.instance().getMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getGuestTeamID());
 		}
 		return away;
 	}

@@ -58,7 +58,7 @@ public class MatchExporter {
 
 		//check all matches
 		for (var match: matches) {
-			Matchdetails details = DBManager.instance().loadMatchDetails(match.getMatchType().getSourceSystem().getValue(), match.getMatchID());
+			Matchdetails details = DBManager.instance().loadMatchDetails(match.getMatchType().getId(), match.getMatchID());
 			boolean isFriendly = match.getMatchType().isFriendly();
 			if (isValidMatch(match, details, startingDateForFriendlies, strict, skipPullBack) && isFriendly
 					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {

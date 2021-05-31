@@ -20,31 +20,21 @@ public class IfaMatchTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[8];
-		columns[0] = new ColumnDescriptor("MATCHID", Types.INTEGER, false, true);
-		columns[1] = new ColumnDescriptor("PLAYEDDATE", Types.VARCHAR, false, 25);
-		columns[2] = new ColumnDescriptor("HOMETEAMID", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("AWAYTEAMID", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("HOMETEAMGOALS", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("AWAYTEAMGOALS", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("HOME_LEAGUEID", Types.INTEGER, false);
-		columns[7] = new ColumnDescriptor("AWAY_LEAGUEID", Types.INTEGER, false);
+		columns = new ColumnDescriptor[9];
+		columns[0] = new ColumnDescriptor("MATCHID", Types.INTEGER, false);
+		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
+		columns[2] = new ColumnDescriptor("PLAYEDDATE", Types.VARCHAR, false, 25);
+		columns[3] = new ColumnDescriptor("HOMETEAMID", Types.INTEGER, false);
+		columns[4] = new ColumnDescriptor("AWAYTEAMID", Types.INTEGER, false);
+		columns[5] = new ColumnDescriptor("HOMETEAMGOALS", Types.INTEGER, false);
+		columns[6] = new ColumnDescriptor("AWAYTEAMGOALS", Types.INTEGER, false);
+		columns[7] = new ColumnDescriptor("HOME_LEAGUEID", Types.INTEGER, false);
+		columns[8] = new ColumnDescriptor("AWAY_LEAGUEID", Types.INTEGER, false);
 	}
 
-	boolean isLeagueIDinDB(int leagueID, boolean homeAway) {
-		StringBuffer select = new StringBuffer(100);
-		select.append("SELECT * FROM ").append(getTableName());
-		select.append(" WHERE ");
-		select.append(homeAway ? "HOME_LEAGUEID" : "AWAY_LEAGUEID");
-		select.append(" = ").append(leagueID);
-		ResultSet rs = adapter.executeQuery(select.toString());
-		try {
-			if ((rs != null) && (rs.next()))
-				return true;
-		} catch (Exception localException) {
-			return false;
-		}
-		return false;
+	@Override
+	protected String[] getConstraintStatements() {
+		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
 	boolean isMatchinDB(int matchId) {

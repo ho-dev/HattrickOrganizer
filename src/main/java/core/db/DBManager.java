@@ -745,7 +745,7 @@ public class DBManager {
 	 */
 	public Lineup getAufstellung(int hrfID, String name) {
 		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-				.getAufstellung(hrfID, name);
+				.getLineup(hrfID, name);
 	}
 
 
@@ -1693,9 +1693,9 @@ public class DBManager {
 	 */
 // ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int sourceSystem, int matchID, int teamID) {
+	public MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(sourceSystem, matchID, teamID);
+				.getMatchLineupTeam(iMatchType, matchID, teamID);
 	}
 
 	// ------------------------------- UserParameterTable
@@ -1758,13 +1758,13 @@ public class DBManager {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 *
-	 * @param sourcesystem the sourcesystem
+	 * @param iMatchType the sourcesystem
 	 * @param matchId      the match id
 	 * @return the matchdetails
 	 */
-	public Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
+	public Matchdetails loadMatchDetails(int iMatchType, int matchId) {
 		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
-				.loadMatchDetails(sourcesystem, matchId);
+				.loadMatchDetails(iMatchType, matchId);
 	}
 
 	/**
@@ -1783,13 +1783,13 @@ public class DBManager {
 	/**
 	 * Gibt die MatchHighlights zu einem Match zurück
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType the source system
 	 * @param matchId      the match id
 	 * @return the match highlights
 	 */
-	public ArrayList<MatchEvent> getMatchHighlights(int sourceSystem, int matchId) {
+	public ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
-				.getMatchHighlights(sourceSystem, matchId);
+				.getMatchHighlights(iMatchType, matchId);
 	}
 
 	/**
@@ -2063,7 +2063,7 @@ public class DBManager {
 						spielerid, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getSourceSystem().getValue(), item
+				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getId(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen

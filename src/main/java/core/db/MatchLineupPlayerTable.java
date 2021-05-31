@@ -1,11 +1,10 @@
 package core.db;
 
 import core.model.match.MatchLineupPlayer;
-import core.model.match.SourceSystem;
+import core.model.match.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -28,7 +27,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				new ColumnDescriptor("MatchID",Types.INTEGER,false),
-				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
 				new ColumnDescriptor("TeamID",Types.INTEGER,false),
 				new ColumnDescriptor("SpielerID",Types.INTEGER,false),
 				new ColumnDescriptor("RoleID",Types.INTEGER,false),
@@ -175,76 +174,44 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 		return starsStatistics;
 	}
-	
-	/**
-	 * Deletes the given player based on teamID and matchID.
-	 * He is only deleted from the role set in the player object.
-	 * 
-	 * @author blaghaid
-	 */
-	void deleteMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
-		if (player != null) {
-			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
-			delete(where, werte);			
-		}
-	}
-	
-	/**
-	 * Deletes all players from the given match
-	 * 
-	 * @author blaghaid
-	 */
-	void deleteMatchLineupPlayers(int matchID) {
-		final String[] where = { "MatchID"};
-		final String[] werte = { "" + matchID};			
-		delete(where, werte);			
-	}
 
 
-	@SuppressWarnings("deprecation")
-	void storeMatchLineupPlayer(MatchLineupPlayer player, int matchID, int teamID) {
-		if (player != null) {
+	@Deprecated
+	void storeMatchLineupPlayer(MatchLineupPlayer matchLineupPlayer, int matchID, int teamID) {
+		if (matchLineupPlayer != null) {
 			
 			// Need to check for spieler, there may now be multiple players with -1 role.
 			// Should we delete here, anyways? Isn't that for update?
 
-			try {
-				player.getSourceSystem().getValue();
-			}
-			catch(Exception e)
-			{
-				System.out.println("aaaa");
-			}
 
-			final String[] where = { "SourceSystem", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + player.getSourceSystem().getValue(), "" + matchID, "" + teamID, "" + player.getRoleId(), "" + player.getPlayerId()};
+			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID", "SpielerID"};
+			final String[] werte = { "" + matchLineupPlayer.getMatchType().getId(), "" + matchID, "" + teamID, "" + matchLineupPlayer.getRoleId(), "" + matchLineupPlayer.getPlayerId()};
 			delete(where, werte);
 
 			//saven
 			try {
 				//insert vorbereiten
-				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,SourceSystem,SpielerID,RoleID,Taktik," +
+				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,MatchTyp,SpielerID,RoleID,Taktik," +
 						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
 						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
-						player.getSourceSystem().getValue() + "," +
-						player.getPlayerId() + ","	+
-						player.getRoleId() + "," +
-						player.getBehaviour()	+ ","	+
-						player.getRoleId() + ",'" +
-						DBManager.insertEscapeSequences(player.getSpielerVName()) + "', '" +
-						DBManager.insertEscapeSequences(player.getNickName()) + "', '" +
-						DBManager.insertEscapeSequences(player.getSpielerName())+ "'," +
-						player.getRating() + "," +
-						player.getPosition() + "," +
+						matchLineupPlayer.getMatchType().getId() + "," +
+						matchLineupPlayer.getPlayerId() + ","	+
+						matchLineupPlayer.getRoleId() + "," +
+						matchLineupPlayer.getBehaviour()	+ ","	+
+						matchLineupPlayer.getRoleId() + ",'" +
+						DBManager.insertEscapeSequences(matchLineupPlayer.getSpielerVName()) + "', '" +
+						DBManager.insertEscapeSequences(matchLineupPlayer.getNickName()) + "', '" +
+						DBManager.insertEscapeSequences(matchLineupPlayer.getSpielerName())+ "'," +
+						matchLineupPlayer.getRating() + "," +
+						matchLineupPlayer.getPosition() + "," +
 						"0," + // Status
-						player.getRoleId() + "," +
-						player.getRatingStarsEndOfMatch() + "," +
-						player.getStartPosition() + "," +
-						player.getStartBehavior() +  "," +
-						player.isStartSetPiecesTaker() + " )";
+						matchLineupPlayer.getRoleId() + "," +
+						matchLineupPlayer.getRatingStarsEndOfMatch() + "," +
+						matchLineupPlayer.getStartPosition() + "," +
+						matchLineupPlayer.getStartBehavior() +  "," +
+						matchLineupPlayer.isStartSetPiecesTaker() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
@@ -292,7 +259,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var startBeh = rs.getInt("StartBehaviour");
 			var startSetPieces = DBManager.getBoolean(rs, "StartSetPieces", false);
 			var status = rs.getInt("STATUS");
-			var sourceSystem = SourceSystem.valueOf(rs.getInt("SourceSystem"));
+			var matchType = MatchType.getById(rs.getInt("MatchTyp"));
 
 			switch (behavior) {
 				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
@@ -312,7 +279,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
+			var player = new MatchLineupPlayer(matchType, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
 			vec.add(player);
 		}
 
