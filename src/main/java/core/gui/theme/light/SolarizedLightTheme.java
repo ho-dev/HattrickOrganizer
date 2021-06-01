@@ -42,8 +42,6 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
             ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, Color.WHITE);
             ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, Color.WHITE);
-//            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_SPECIAL_BG, new Color(56, 76, 53));
-//            ThemeManager.instance().put(HOColorName.PLAYER_SKILL_BG, new Color(95, 86, 38));
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, defaults.getColor("Label.foreground"));
             ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, new Color(200, 200, 200));
 
@@ -74,7 +72,6 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             // Lineup
-
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
             ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
             ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));

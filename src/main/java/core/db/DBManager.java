@@ -2477,16 +2477,6 @@ public class DBManager {
 
 
 	/**
-	 * Update match order.
-	 *
-	 * @param lineup  the lineup
-	 * @param matchId the match id
-	 */
-	public void updateMatchOrder(Lineup lineup, int matchId) {
-		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME)).updateMatchOrder(lineup, matchId);
-	}
-
-	/**
 	 * Remove match order.
 	 */
 	public void removeMatchOrder() {

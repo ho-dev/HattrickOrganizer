@@ -1,17 +1,11 @@
 package core.training;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
 import core.model.match.MatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Vector;
 
 
 /**
@@ -27,13 +21,7 @@ public class TrainingPerPlayer  {
 
 	//~ Constructors -------------------------------------------------------------------------------
 
-    /**
-     * Creates a new TrainingPerPlayer object.
-     */
-    public TrainingPerPlayer() {
-    }
-
-    /**
+	/**
      * Creates a new TrainingPerPlayer object initialized with a specific player
      */
     public TrainingPerPlayer(Player oPlayer) {
@@ -216,14 +204,14 @@ public class TrainingPerPlayer  {
 
 		if (ret > 1) ret = 1; // limit 1
 
-		HOLogger.instance().info(this.getClass(),
-				_Player.getLastName() +
-						"; Age=" + _Player.getAlter() +
-						"; Minutes=" + this.logTrainingMinutes() +
-						"; Training: " + (wt!=null?wt._Name:"unknown") +
-						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
-						" Increment=" + ret
-		);
+//		HOLogger.instance().info(this.getClass(),
+//				_Player.getLastName() +
+//						"; Age=" + _Player.getAlter() +
+//						"; Minutes=" + this.logTrainingMinutes() +
+//						"; Training: " + (wt!=null?wt._Name:"unknown") +
+//						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
+//						" Increment=" + ret
+//		);
 
 		return ret;
 	}

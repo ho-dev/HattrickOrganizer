@@ -807,7 +807,7 @@ public class OnlineWorker {
 	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
 		String matchLineup;
 		MatchLineup lineUp=null;
-		boolean bOK = false;
+		boolean bOK;
 		try {
 			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
 			bOK = (matchLineup != null && matchLineup.length() > 0);

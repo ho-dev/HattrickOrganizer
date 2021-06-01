@@ -162,7 +162,7 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setWaitInformation(25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
-						MatchType.LEAGUE).toString());
+						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
 		List<MyHashtable> youthplayers=null;
@@ -193,7 +193,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(55);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
-						.parseInt(teamdetailsDataMap.get("TeamID").toString()),
+						.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
 		HOMainFrame.instance().setWaitInformation(57);
 
