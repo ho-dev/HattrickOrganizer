@@ -23,7 +23,7 @@ package module.tsforecast;
 import core.db.DBManager;
 import core.db.JDBCAdapter;
 import core.model.match.IMatchDetails;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 
 import java.awt.Color;
 import java.util.ArrayList;

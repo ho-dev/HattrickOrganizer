@@ -4,9 +4,7 @@ import core.gui.model.ArenaStatistikModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
-import core.training.TrainingPerWeek;
-import core.training.TrainingManager;
+import core.model.enums.MatchType;
 import core.util.HOLogger;
 import module.matches.MatchesPanel;
 
@@ -135,6 +133,7 @@ public class StatisticQuery {
 					break;
 
 				case MatchesPanel.NUR_EIGENE_POKALSPIELE :
+					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter to get only primary cup   ");
 					sql += (" AND MatchTyp=" + MatchType.CUP.getId());
 					break;
 
@@ -151,13 +150,15 @@ public class StatisticQuery {
 				case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
 					sql += (" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 					sql += (" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
-					sql += (" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
+					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter resinstate filter on DIVISIONBATTLE   ");
+//					sql += (" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
 					break;
 				case MatchesPanel.ONLY_SECONDARY_CUP:
-					sql += (" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-					sql += (" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter resinstate filter on secondary cup   ");
+//					sql += (" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
+//					sql += (" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+//					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+//					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
 					break;
 				case MatchesPanel.ONLY_QUALIF_MATCHES:
 					sql += (" AND MatchTyp=" + MatchType.QUALIFICATION.getId());

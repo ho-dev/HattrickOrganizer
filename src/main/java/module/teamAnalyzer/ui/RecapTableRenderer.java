@@ -6,7 +6,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 
 import java.awt.Color;
 import java.awt.Component;

@@ -10,6 +10,7 @@ import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.SpielerMatchCBItem;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;

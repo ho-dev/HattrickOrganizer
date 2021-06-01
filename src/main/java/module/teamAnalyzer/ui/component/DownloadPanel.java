@@ -3,7 +3,7 @@ package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.ui.NumberTextField;

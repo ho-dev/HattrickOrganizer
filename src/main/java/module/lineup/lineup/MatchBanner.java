@@ -6,10 +6,9 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
-import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import core.util.HTCalendarFactory;
 import core.util.Helper;
@@ -17,11 +16,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class MatchBanner extends JPanel implements Refreshable {
 

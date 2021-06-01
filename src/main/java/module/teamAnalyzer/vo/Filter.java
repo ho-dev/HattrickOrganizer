@@ -222,7 +222,7 @@ public class Filter {
 
         return switch (match.getMatchType()) {
             case LEAGUE -> league;
-            case CUP, EMERALDCUP, RUBYCUP, SAPPHIRECUP, CONSOLANTECUP -> cup;
+            case CUP -> cup;
             case MASTERS -> masters;
             case QUALIFICATION -> qualifier;
             default -> false;

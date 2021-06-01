@@ -11,7 +11,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;

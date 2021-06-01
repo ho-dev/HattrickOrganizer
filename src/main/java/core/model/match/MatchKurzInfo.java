@@ -3,7 +3,10 @@ package core.model.match;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
+import core.model.enums.MatchType;
+import core.model.enums.MatchTypeExtended;
 import core.util.HTDatetime;
+import module.specialEvents.Match;
 
 import java.time.ZonedDateTime;
 
@@ -18,7 +21,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sHeimName = "";
-
 
 	private HTDatetime m_matchSchedule;
 
@@ -96,6 +98,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private MatchType m_mtMatchTyp = MatchType.NONE;
 	private CupLevel m_mtCupLevel = CupLevel.NONE;
 	private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
+	private IMatchType m_matchTypeExtended = MatchType.NONE;
+
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
 	public static final int FINISHED = 1;
@@ -338,6 +342,39 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return m_mtMatchTyp;
 	}
 
+	public IMatchType getMatchTypeExtended() {
+		if (m_matchTypeExtended == MatchType.NONE){
+
+		if (m_mtMatchTyp == MatchType.CUP) {
+			if (m_mtCupLevel == CupLevel.NATIONALorDIVISIONAL) {
+				m_matchTypeExtended = MatchType.CUP;
+			}
+			else if (m_mtCupLevel == CupLevel.CONSOLATION) {
+				m_matchTypeExtended = MatchTypeExtended.CONSOLANTECUP;
+			}
+			else {
+				m_matchTypeExtended = switch (m_mtCupLevelIndex) {
+					case EMERALD -> MatchTypeExtended.EMERALDCUP;
+					case RUBY -> MatchTypeExtended.RUBYCUP;
+					case SAPPHIRE -> MatchTypeExtended.SAPPHIRECUP;
+					default -> MatchType.NONE;
+				};
+			}
+		}
+
+		else if (m_mtMatchTyp == MatchType.TOURNAMENTGROUP)
+		{
+			TournamentType tournamentType = TournamentType.getById(iTournamentTypeID);
+			if (tournamentType == TournamentType.DIVISIONBATTLE)
+			{
+				m_matchTypeExtended =  MatchTypeExtended.DIVISIONBATTLE;
+			}
+		}
+	}
+
+		return m_matchTypeExtended;
+	}
+
 	public CupLevel getCupLevel() {
 		return m_mtCupLevel;
 	}
@@ -406,6 +443,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());
+		setCupLevel(match.getCupLevel());
+		setCupLevelIndex(match.getCupLevelIndex());
 		setWeather(match.getWeather());
 		setWeatherForecast(match.getWeatherForecast());
 	}

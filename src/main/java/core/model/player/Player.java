@@ -9,8 +9,7 @@ import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
-import core.model.match.SourceSystem;
+import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
@@ -1949,7 +1948,7 @@ public class Player {
                         tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
                     }
                     tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
-                    output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
+                    output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), match.getMatchTypeExtended());
                     minutes = tp.getPlayedMinutes();
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
@@ -1962,7 +1961,7 @@ public class Player {
                         MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
-                            output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
+                            output.addExperienceIncrease(min(90,minutes), match.getMatchTypeExtended());
                         }
                     }
                 }

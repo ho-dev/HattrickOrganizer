@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;

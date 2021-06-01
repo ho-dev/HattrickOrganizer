@@ -1,11 +1,11 @@
 package core.model.match;
 
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 public class MatchLineupPlayer {
     //~ Instance fields ----------------------------------------------------------------------------

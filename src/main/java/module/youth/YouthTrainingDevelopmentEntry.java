@@ -2,7 +2,7 @@ package module.youth;
 
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.Specialty;
 import module.training.Skills;

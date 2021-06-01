@@ -2,6 +2,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 
 import java.util.ArrayList;
 import java.util.Iterator;

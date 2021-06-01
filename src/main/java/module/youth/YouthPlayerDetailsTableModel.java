@@ -1,16 +1,12 @@
 package module.youth;
 
-import core.db.ColumnDescriptor;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchType;
-import module.training.Skills;
+import core.model.enums.MatchType;
 
 import javax.swing.*;
-import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 

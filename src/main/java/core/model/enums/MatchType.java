@@ -1,11 +1,12 @@
-package core.model.match;
+package core.model.enums;
 
+import core.model.match.IMatchType;
+import core.model.match.SourceSystem;
 import java.util.List;
 import java.util.stream.Stream;
-
 import static java.util.stream.Collectors.toList;
 
-public enum MatchType {
+public enum MatchType implements IMatchType {
 
 	NONE(0),
 	LEAGUE(1),  // League match
@@ -29,14 +30,7 @@ public enum MatchType {
 	YOUTHFRIENDLY(101), //	Youth friendly match
 	YOUTHFRIENDLYCUPRULES(103), //	Youth friendly match (cup rules)
 	YOUTHINTERNATIONALFRIENDLY(105), // Youth international friendly match
-	YOUTHINTERNATIONALFRIENDLYCUPRULES(106), // Youth international friendly match (Cup rules)
-	EMERALDCUP(1001), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	RUBYCUP(1002), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	SAPPHIRECUP(1003), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	CONSOLANTECUP(1004), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	DIVISIONBATTLE(1101), // That match type is not part of HT CHPP API. It is created within HO for convenience with existing DB structure
-	GROUP_OFFICIAL(9990); // Supposed to replace constants declared in SpielePanel
-
+	YOUTHINTERNATIONALFRIENDLYCUPRULES(106); // Youth international friendly match (Cup rules)
 
 
 	private final int id;
@@ -66,40 +60,6 @@ public enum MatchType {
 		return null;
 	}
 
-	public static MatchType getById(int id, int CupLevel, int CupLevelIndex, int iTournamentType) {
-		MatchType matchType = getById(id);
-		if (matchType == CUP) {
-			if (CupLevel == 1) {
-				return CUP;
-			} else if (CupLevel == 3) {
-				return CONSOLANTECUP;
-			} else {
-				switch (CupLevelIndex) {
-					case 1: {
-						return EMERALDCUP;
-					}
-					case 2: {
-						return RUBYCUP;
-					}
-					case 3: {
-						return SAPPHIRECUP;
-					}
-					default: {
-						return NONE;
-					}
-				}
-			}
-		}
-		else if (matchType == TOURNAMENTGROUP)
-		{
-			TournamentType tournamentType = TournamentType.getById(iTournamentType);
-			if (tournamentType == TournamentType.DIVISIONBATTLE)
-			{
-				return DIVISIONBATTLE;
-			}
-		}
-		return matchType;
-	}
 
 	public String getSourceString() {
 		if (isOfficial()) return "hattrick";
@@ -158,10 +118,6 @@ public enum MatchType {
 		switch (this) {
 			case LEAGUE :
 			case QUALIFICATION :
-			case EMERALDCUP :
-			case RUBYCUP :
-			case SAPPHIRECUP :
-			case CONSOLANTECUP :
 			case CUP :
 			case FRIENDLYNORMAL:
 			case FRIENDLYCUPRULES :
@@ -226,7 +182,7 @@ public enum MatchType {
 
 	public boolean isTournament() {
 		return switch (this) {
-			case LADDER, TOURNAMENTGROUP, TOURNAMENTPLAYOFF, DIVISIONBATTLE -> true;
+			case LADDER, TOURNAMENTGROUP, TOURNAMENTPLAYOFF -> true;
 			default -> false;
 		};
 	}
@@ -239,6 +195,37 @@ public enum MatchType {
 		};
 	}
 
+
+    public SourceSystem getSourceSystem() {
+		if (isOfficial()) return SourceSystem.HATTRICK;
+		if (isYouth()) return SourceSystem.YOUTH;
+		return SourceSystem.HTOINTEGRATED;
+	}
+
+	public static List<MatchType> fromSourceSystem(SourceSystem sourceSystem){
+		switch (sourceSystem) {
+			case HATTRICK -> {return getOfficialMatchType();}
+			case YOUTH -> {return getYouthMatchType();}
+			default -> { return getHTOintegratedMatchType(); }
+		}
+	}
+
+	@Override
+	public int getIconArrayIndex() {
+		return switch (this) {
+			case LEAGUE -> 0;
+			case QUALIFICATION -> 1;
+			case FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES -> 2;
+			case CUP -> 3;
+			case LADDER -> 7;
+			case TOURNAMENTGROUP, TOURNAMENTPLAYOFF -> 8;
+			case SINGLE -> 9;
+			case MASTERS -> 10;
+			default -> 11;
+		};
+	}
+
+	@Override
 	public String getName() {
 		return switch (this) {
 			case LEAGUE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.league");
@@ -257,45 +244,8 @@ public enum MatchType {
 			case TOURNAMENTPLAYOFF -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_playoff");
 			case SINGLE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.single");
 			case LADDER -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ladder");
-			case EMERALDCUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.emerald_cup");
-			case RUBYCUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ruby_cup");
-			case SAPPHIRECUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.sapphire_cup");
-			case CONSOLANTECUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup");
-			case DIVISIONBATTLE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.division_battle");
 			default -> "unknown";
 		};
 	}
 
-	public int getIconArrayIndex() {
-		return switch (this) {
-			case LEAGUE -> 0;
-			case QUALIFICATION -> 1;
-			case FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES -> 2;
-			case CUP -> 3;
-			case EMERALDCUP -> 4;
-			case RUBYCUP -> 5;
-			case SAPPHIRECUP -> 6;
-			case LADDER -> 7;
-			case TOURNAMENTGROUP, TOURNAMENTPLAYOFF -> 8;
-			case SINGLE -> 9;
-			case MASTERS -> 10;
-			case CONSOLANTECUP -> 12;
-			case DIVISIONBATTLE -> 13;
-			default -> 11;
-		};
-	}
-
-    public SourceSystem getSourceSystem() {
-		if (isOfficial()) return SourceSystem.HATTRICK;
-		if (isYouth()) return SourceSystem.YOUTH;
-		return SourceSystem.HTOINTEGRATED;
-	}
-
-	public static List<MatchType> fromSourceSystem(SourceSystem sourceSystem){
-		switch (sourceSystem) {
-			case HATTRICK -> {return getOfficialMatchType();}
-			case YOUTH -> {return getYouthMatchType();}
-			default -> { return getHTOintegratedMatchType(); }
-		}
-	}
 }

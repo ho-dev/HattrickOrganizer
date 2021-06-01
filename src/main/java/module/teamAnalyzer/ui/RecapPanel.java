@@ -4,25 +4,19 @@ import core.constants.player.PlayerAbility;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.manager.MatchPopulator;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
-import module.teamAnalyzer.vo.Match;
-import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.TeamLineup;
 
 import java.awt.BorderLayout;
 import java.text.DecimalFormat;
-import java.time.temporal.ValueRange;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;

@@ -1,8 +1,9 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.model.enums.MatchTypeExtended;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.util.HOLogger;
 import module.matches.MatchesPanel;
@@ -135,7 +136,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		if(bOfficialOnly) {
-			sql.append(getMatchTypWhereClause(MatchType.GROUP_OFFICIAL.getId()));
+			sql.append(getMatchTypWhereClause(MatchTypeExtended.GROUP_OFFICIAL.getId()));
 		}
 
 		sql.append(" ORDER BY MatchDate DESC");
@@ -299,21 +300,24 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		} else if (matchtype == MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE) {
 			sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
-			sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
+			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
+//			sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
 		} else if (matchtype == MatchesPanel.ONLY_SECONDARY_CUP) {
-			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )");
+			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
+//			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
+//			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+//			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+//			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )");
 		} else if (matchtype == MatchesPanel.ONLY_QUALIF_MATCHES) {
 			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 		}
-		else if ( matchtype == MatchType.GROUP_OFFICIAL.getId()) {
+		else if ( matchtype == MatchTypeExtended.GROUP_OFFICIAL.getId()) {
 			sql.append(" AND ( MatchTyp=" + MatchType.LEAGUE.getId());
 			sql.append(" OR MatchTyp=" + MatchType.QUALIFICATION.getId());
-			sql.append(" OR MatchTyp=" + MatchType.EMERALDCUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
+//			sql.append(" OR MatchTyp=" + MatchType.EMERALDCUP.getId());
+//			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+//			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.CUP.getId());
 			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
 			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());

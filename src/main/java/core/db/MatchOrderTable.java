@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.MatchRoleID;
 import core.net.MyConnector;
 import core.net.OnlineWorker;

@@ -3,6 +3,7 @@ package module.youth;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import module.lineup.substitution.model.MatchOrderType;
 import module.training.Skills;

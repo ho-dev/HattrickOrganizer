@@ -1,7 +1,7 @@
 // %793684749:de.hattrickorganizer.gui.model%
 package core.gui.model;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
 

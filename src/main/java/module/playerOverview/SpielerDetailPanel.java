@@ -22,7 +22,7 @@ import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;

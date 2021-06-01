@@ -2,7 +2,7 @@ package module.specialEvents.table;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import org.javatuples.Pair;
 import java.awt.Component;
 import java.text.DateFormat;
