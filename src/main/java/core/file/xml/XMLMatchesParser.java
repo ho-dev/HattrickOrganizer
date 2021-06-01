@@ -2,6 +2,8 @@ package core.file.xml;
 
 import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchType;
 import core.util.HOLogger;
@@ -69,15 +71,18 @@ public class XMLMatchesParser {
 					match.setMatchID(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 					tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
 					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-					if (iMatchType != 3) {match.setMatchType(MatchType.getById(iMatchType));}
-					else{
+					match.setMatchType(MatchType.getById(iMatchType));
+
+					if (iMatchType == 3) {
 						tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 						iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+						match.setCupLevel(CupLevel.fromInt(iCupLevel));
+
 						tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
 						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex, 0));
+						match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 					}
-					if (iMatchType == 50) {
+					else if (iMatchType == 50) {
 						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
 						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setMatchContextId(tournamentId);
@@ -89,13 +94,10 @@ public class XMLMatchesParser {
 							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
 						}
 						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
-
-						match.setMatchType(MatchType.getById(iMatchType, 0, 0, match.getTournamentTypeID()));
 					}
 
 
-					tmp = (Element) ele.getElementsByTagName("HomeTeam")
-							.item(0);
+					tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);
 					match.setHomeTeamID(Integer.parseInt(((Element) tmp
 							.getElementsByTagName("HomeTeamID").item(0))
 							.getFirstChild().getNodeValue()));
