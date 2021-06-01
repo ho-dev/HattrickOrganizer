@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.net.OnlineWorker;
 import core.util.Helper;
 import module.teamAnalyzer.ht.HattrickManager;

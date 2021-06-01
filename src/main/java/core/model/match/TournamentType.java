@@ -1,9 +1,10 @@
 package core.model.match;
 
 public enum TournamentType {
-    LEAGUE_WITH_PLAYOFFS((int) 3),
-    CUP((int) 4),  // League match
-    DIVISIONBATTLE((int) 10); //Qualification match
+    NONE(0),
+    LEAGUE_WITH_PLAYOFFS(3),
+    CUP(4),  // League match
+    DIVISIONBATTLE(10); //Qualification match
 
     private final int id;
 

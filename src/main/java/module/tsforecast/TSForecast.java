@@ -6,7 +6,7 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 

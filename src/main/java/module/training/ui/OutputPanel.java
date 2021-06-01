@@ -5,7 +5,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.NumericDocument;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.net.OnlineWorker;
 import core.training.TrainingManager;

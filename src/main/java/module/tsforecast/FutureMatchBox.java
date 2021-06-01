@@ -22,7 +22,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 

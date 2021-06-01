@@ -17,30 +17,23 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.enums.RatingsStatistics;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
-import module.series.statistics.DataDownloader;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
 import core.util.HOLogger;
-import core.util.IOUtils;
 import module.lineup.substitution.model.Substitution;
 import core.HO;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -162,7 +155,7 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setWaitInformation(25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
-						MatchType.LEAGUE).toString());
+						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
 		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
 		List<MyHashtable> youthplayers=null;
@@ -193,7 +186,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(55);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
-						.parseInt(teamdetailsDataMap.get("TeamID").toString()),
+						.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
 		HOMainFrame.instance().setWaitInformation(57);
 

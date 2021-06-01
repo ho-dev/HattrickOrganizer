@@ -2,7 +2,7 @@ package core.db;
 
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;

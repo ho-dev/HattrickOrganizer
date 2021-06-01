@@ -10,6 +10,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
@@ -586,6 +587,7 @@ public class OnlineWorker {
 
 	public static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
 
+		HOLogger.instance().error(OnlineWorker.class, "case DIVISIONBATTLE should be re-implmented !!");
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
 			switch (m.getMatchType()) {
@@ -594,10 +596,6 @@ public class OnlineWorker {
 				case NATIONALCOMPCUPRULES:
 				case NATIONALFRIENDLY:
 				case PREPARATION:
-				case EMERALDCUP:
-				case RUBYCUP:
-				case SAPPHIRECUP:
-				case CONSOLANTECUP:
 				case LEAGUE:
 				case QUALIFICATION:
 				case CUP:
@@ -630,11 +628,12 @@ public class OnlineWorker {
 						ret.add(m);
 					}
 					break;
-				case DIVISIONBATTLE:
-					if (UserParameter.instance().downloadDivisionBattleMatches) {
-						ret.add(m);
-					}
-					break;
+
+//				case DIVISIONBATTLE:
+//					if (UserParameter.instance().downloadDivisionBattleMatches) {
+//						ret.add(m);
+//					}
+//					break;
 				default:
 					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 					break;
@@ -807,7 +806,7 @@ public class OnlineWorker {
 	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
 		String matchLineup;
 		MatchLineup lineUp=null;
-		boolean bOK = false;
+		boolean bOK;
 		try {
 			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
 			bOK = (matchLineup != null && matchLineup.length() > 0);

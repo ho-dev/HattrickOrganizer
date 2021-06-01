@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.MatchRoleID;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
@@ -116,19 +116,6 @@ public class MatchOrderTable extends AbstractTable {
 
 
 	/**
-	 * Update match order
-	 * Remove and insert rows
-	 *
-	 * @param linueup:	lineup of match
-	 * @param matchId:	match id
-	 * @return			true if update, false if no update
-	 */
-    public void updateMatchOrder(Lineup linueup, int matchId) {
-			removeMatchOrder();
-			insertMatchOrder(linueup, matchId, null);
-	}
-
-	/**
 	 * Clean table
 	 */
 	public void removeMatchOrder() {
@@ -147,7 +134,7 @@ public class MatchOrderTable extends AbstractTable {
 
 		if (linueup != null) {
 			LineupPosition lineupPos = new LineupPosition();
-			insertMatchOrder(linueup, matchId, lineupPos);
+			insertMatchOrder(linueup, matchId, matchTyp.getId(), lineupPos);
 			return lineupPos;
 		}
 		return null;
@@ -162,14 +149,14 @@ public class MatchOrderTable extends AbstractTable {
 	 * output:
 	 * @param lineupPos:	match lineup position
 	 */
-	private void insertMatchOrder(Lineup linueup, int matchId, LineupPosition lineupPos) {
+	private void insertMatchOrder(Lineup linueup, int matchId, int iMatchType, LineupPosition lineupPos) {
 		for (int i = 0;(linueup.getPositionen() != null) && (i < linueup.getPositionen().size()); i++) {
 
 			int m_iId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getId();
 			int m_iSpielerId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getPlayerId();
 
-			String statement = "INSERT INTO " + getTableName() + " ( MatchID, SpielerID, PositionCode) VALUES(";
-			statement += ("" + matchId + "," + m_iSpielerId + "," + m_iId + ")");
+			String statement = "INSERT INTO " + getTableName() + " ( MatchID, MatchTyp, SpielerID, PositionCode) VALUES(";
+			statement += ("" + matchId + "," + iMatchType + "," + m_iSpielerId + "," + m_iId + ")");
 
 			adapter.executeUpdate(statement);
 			if (lineupPos != null)

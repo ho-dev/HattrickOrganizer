@@ -1,12 +1,11 @@
 // %3414899912:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
 import core.specialevents.SpecialEventsPredictionManager;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 

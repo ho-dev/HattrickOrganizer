@@ -1,11 +1,6 @@
-// %597232359:de.hattrickorganizer.logik.xml%
-/*
- * XMLMatchLineupParser.java
- *
- * Created on 20. Oktober 2003, 08:08
- */
 package core.file.xml;
 
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -14,13 +9,12 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * 
@@ -53,6 +47,16 @@ public class XMLMatchLineupParser {
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
 
+			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
+			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
+					.getFirstChild().getNodeValue()));
+			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
+					.getNodeValue());
+			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
+			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
+					.getFirstChild().getNodeValue()));
+			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
+					.getNodeValue());
 
 			MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 

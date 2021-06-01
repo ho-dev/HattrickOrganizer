@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;

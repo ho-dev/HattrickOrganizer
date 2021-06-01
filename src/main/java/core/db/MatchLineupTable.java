@@ -2,7 +2,7 @@ package core.db;
 
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import java.sql.ResultSet;

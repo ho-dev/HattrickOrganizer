@@ -2,6 +2,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
@@ -919,8 +920,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             if ( maxMatchdetailsReloadsPerSession>0 && this.m_MatchTyp.isOfficial()) {
                 if ( m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
                     HOLogger.instance().info(Matchdetails.class,
-                            "Reload Matchdetails id: "+ this.getMatchID()
-                                    +" type:" + this.m_MatchTyp.getName());
+                            "Reload Matchdetails id: "+ this.getMatchID());
                     boolean silenDownloadMode = OnlineWorker.isSilentDownload();
                     try {
                         OnlineWorker.setSilentDownload(true);

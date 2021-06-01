@@ -3,7 +3,7 @@ package module.teamAnalyzer.manager;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.Team;

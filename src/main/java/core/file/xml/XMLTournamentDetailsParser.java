@@ -1,22 +1,13 @@
 package core.file.xml;
 
-import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
 import core.model.misc.Basics;
 import core.util.HOLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import static core.net.OnlineWorker.getTournamentDetails;
 
 public class XMLTournamentDetailsParser {
 

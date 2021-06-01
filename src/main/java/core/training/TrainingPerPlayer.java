@@ -1,17 +1,13 @@
 package core.training;
 
-import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
+import core.model.enums.MatchTypeExtended;
+import core.model.match.IMatchType;
+import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HelperWrapper;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Vector;
 
 
 /**
@@ -27,13 +23,7 @@ public class TrainingPerPlayer  {
 
 	//~ Constructors -------------------------------------------------------------------------------
 
-    /**
-     * Creates a new TrainingPerPlayer object.
-     */
-    public TrainingPerPlayer() {
-    }
-
-    /**
+	/**
      * Creates a new TrainingPerPlayer object initialized with a specific player
      */
     public TrainingPerPlayer(Player oPlayer) {
@@ -168,25 +158,22 @@ public class TrainingPerPlayer  {
 		this._TrainingWeek = trainingWeek;
 	}
 
-    public void addExperienceIncrease(int minutes, MatchType matchType) {
-		double p = 0;
-		switch (matchType){
-			case CUP: p = 2; break;
-			case EMERALDCUP:
-			case RUBYCUP:
-			case SAPPHIRECUP:
-			case CONSOLANTECUP: p = .5; break;
-			case FRIENDLYNORMAL:
-			case FRIENDLYCUPRULES: p = .1; break;
-			case INTFRIENDLYCUPRULES:
-			case INTFRIENDLYNORMAL: p = .2; break;
-			case LEAGUE: p = 1; break;
-			case MASTERS: p = 5; break;
-			case NATIONALCOMPCUPRULES:
-			case NATIONALCOMPNORMAL: p = 10.; break;
-			case NATIONALFRIENDLY: p = 2. ; break;
-			case QUALIFICATION: p = 2.; break;
-			case INTSPIEL:
+    public void addExperienceIncrease(int minutes, IMatchType _matchType) {
+		double p;
+
+		if (_matchType instanceof MatchType){
+			p = switch ((MatchType) _matchType){
+				case CUP, NATIONALFRIENDLY, QUALIFICATION -> 2d;
+				case FRIENDLYNORMAL, FRIENDLYCUPRULES -> .1;
+				case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> .2;
+				case LEAGUE -> 1d;
+				case MASTERS -> 5d;
+				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL -> 10d;
+				default -> 0d;
+			};
+		}
+		else{
+			p = 0.5;
 		}
 		this.experienceSub += minutes * p / 90. / 28.571;
     }
@@ -216,14 +203,14 @@ public class TrainingPerPlayer  {
 
 		if (ret > 1) ret = 1; // limit 1
 
-		HOLogger.instance().info(this.getClass(),
-				_Player.getLastName() +
-						"; Age=" + _Player.getAlter() +
-						"; Minutes=" + this.logTrainingMinutes() +
-						"; Training: " + (wt!=null?wt._Name:"unknown") +
-						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
-						" Increment=" + ret
-		);
+//		HOLogger.instance().info(this.getClass(),
+//				_Player.getLastName() +
+//						"; Age=" + _Player.getAlter() +
+//						"; Minutes=" + this.logTrainingMinutes() +
+//						"; Training: " + (wt!=null?wt._Name:"unknown") +
+//						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
+//						" Increment=" + ret
+//		);
 
 		return ret;
 	}

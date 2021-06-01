@@ -1,7 +1,7 @@
 package core.db;
 
 import core.model.match.MatchEvent;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.util.HOLogger;
 

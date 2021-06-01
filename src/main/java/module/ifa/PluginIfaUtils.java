@@ -9,7 +9,7 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.net.DownloadDialog;
 import core.net.MyConnector;
 import core.util.DateTimeUtils;
