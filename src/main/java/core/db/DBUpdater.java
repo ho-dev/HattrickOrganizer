@@ -323,6 +323,10 @@ final class DBUpdater {
 			HOLogger.instance().debug(getClass(), "Upgrade of DB structure SourceSystem/MatchType is complete ! ");
 		}
 
+        if (!columnExistsInTable("LAST_MATCH_TYPE", "SPIELER")) {
+            m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
+        }
+
 
 		updateDBVersion(dbVersion, 500);
 	}

@@ -259,7 +259,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return liste.toArray(new MatchKurzInfo[liste.size()]);
 	}
 
-	public MatchKurzInfo  getLastMatchesKurzInfo(int teamId) {
+	public MatchKurzInfo getLastMatchesKurzInfo(int teamId) {
 		StringBuilder sql = new StringBuilder(100);
 		ResultSet rs = null;
 		try {
@@ -492,6 +492,30 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			HOLogger.instance().error(getClass(),
 					"DB.getMatchesKurzInfo Error" + e);
+		}
+
+		return null;
+	}
+
+	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
+
+		// Find latest match with id = matchId
+		// Here we order by MatchDate, which happens to be string, which is somehow risky,
+		// but it seems to be done in other places.
+		String sql = String.format(
+				"SELECT * FROM %s WHERE MATCHID=%s ORDER BY MATCHDATE DESC LIMIT 1",
+				getTableName(),
+				matchId
+		);
+
+		try {
+			final ResultSet rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if (rs.next()) {
+				return createMatchKurzInfo(rs);
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "getLastMatchWithMatchId error: " + e);
 		}
 
 		return null;

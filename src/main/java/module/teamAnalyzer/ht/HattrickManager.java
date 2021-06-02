@@ -3,9 +3,8 @@ package module.teamAnalyzer.ht;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
-import core.file.xml.xmlPlayersParser;
+import core.file.xml.XMLPlayersParser;
 import core.model.match.MatchKurzInfo;
-import core.model.match.SourceSystem;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -106,7 +105,7 @@ public class HattrickManager {
         }
 
         List<PlayerInfo> players = new ArrayList<>();
-        var playerInfos = new xmlPlayersParser().parsePlayersFromString(xml);
+        var playerInfos = new XMLPlayersParser().parsePlayersFromString(xml);
         for ( var i : playerInfos ) {
             players.add(new PlayerInfo(i));
         }
