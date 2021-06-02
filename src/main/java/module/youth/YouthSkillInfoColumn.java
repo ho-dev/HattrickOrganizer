@@ -92,6 +92,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         this.setFont(getFont().deriveFont(style));
         this.setOpaque(true);
         this.setBackground(getSkillRating(this.skillInfo.getMax()));
+        repaint();
     }
 
     /* draw a color bar */
