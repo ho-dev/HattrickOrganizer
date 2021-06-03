@@ -1,8 +1,8 @@
 package core.model.match;
 
 import core.db.DBManager;
+import core.model.enums.MatchType;
 import core.model.misc.Basics;
-import core.util.HOLogger;
 
 import java.sql.Timestamp;
 
@@ -13,10 +13,8 @@ public class MatchLineup {
     protected MatchType m_MatchTyp = MatchType.NONE;
     MatchLineupTeam guestTeam;
     MatchLineupTeam homeTeam;
-    private String arenaName = "";
-    private String downloadDate = "";
-    private String guestTeamName = "";
-    private String homeTeamName = "";
+    private String guestTeamName = null;
+    private String homeTeamName = null;
     private String matchDate = "";
     private int arenaId = -1;
     private int guestTeamId = -1;
@@ -49,47 +47,12 @@ public class MatchLineup {
         return arenaId;
     }
 
-    /**
-     * Setter for property m_sArenaName.
-     *
-     * @param m_sArenaName New value of property m_sArenaName.
-     */
-    public final void setArenaName(java.lang.String m_sArenaName) {
-        this.arenaName = m_sArenaName;
-    }
 
-    /**
-     * Getter for property m_sArenaName.
-     *
-     * @return Value of property m_sArenaName.
-     */
-    public final java.lang.String getArenaName() {
-        return arenaName;
-    }
-
-    /**
-     * Setter for property m_lDatum.
-     *
-     * @param date New value of property m_lDatum.
-     */
-    public final void setDownloadDate(String date) {
-        if (date != null) {
-            downloadDate = date;
-        }
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     //Accessor
     /////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * Getter for property m_lDatum.
-     *
-     * @return Value of property m_lDatum.
-     */
-    public final Timestamp getDownloadDate() {
-        return Basics.parseHattrickDate(downloadDate);
-    }
 
     /**
      * Setter for property m_clGast.
@@ -108,7 +71,7 @@ public class MatchLineup {
      */
     public MatchLineupTeam getGuestTeam() {
         if ( guestTeam == null){
-            guestTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.guestTeamId);
+            guestTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.guestTeamId);
         }
         return guestTeam;
     }
@@ -128,6 +91,13 @@ public class MatchLineup {
      * @return Value of property m_iGastId.
      */
     public final int getGuestTeamId() {
+        if ( guestTeamId == -1) {
+            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
+            homeTeamId = match.getHomeTeamID();
+            homeTeamName = match.getHomeTeamName();
+            guestTeamId = match.getGuestTeamID();
+            guestTeamName = match.getGuestTeamName();
+        }
         return guestTeamId;
     }
 
@@ -146,6 +116,13 @@ public class MatchLineup {
      * @return Value of property m_sGastName.
      */
     public final String getGuestTeamName() {
+        if (guestTeamName == null) {
+            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
+            homeTeamName = match.getHomeTeamName();
+            homeTeamId = match.getHomeTeamID();
+            guestTeamId = match.getGuestTeamID();
+            guestTeamName = match.getGuestTeamName();
+        }
         return guestTeamName;
     }
 
@@ -166,7 +143,7 @@ public class MatchLineup {
      */
     public final MatchLineupTeam getHomeTeam() {
         if ( homeTeam == null){
-            homeTeam = DBManager.instance().getMatchLineupTeam(this.getSourceSystem().getValue(), this.matchId, this.getHomeTeamId());
+            homeTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.getHomeTeamId());
         }
         return homeTeam;
     }
@@ -186,6 +163,13 @@ public class MatchLineup {
      * @return Value of property m_iHeimId.
      */
     public final int getHomeTeamId() {
+        if ( homeTeamId == -1) {
+            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
+            homeTeamId = match.getHomeTeamID();
+            homeTeamName = match.getHomeTeamName();
+            guestTeamId = match.getGuestTeamID();
+            guestTeamName = match.getGuestTeamName();
+        }
         return homeTeamId;
     }
 
@@ -204,6 +188,13 @@ public class MatchLineup {
      * @return Value of property m_sHeimName.
      */
     public final String getHomeTeamName() {
+        if ( homeTeamName == null) {
+            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
+            homeTeamName = match.getHomeTeamName();
+            homeTeamId = match.getHomeTeamID();
+            guestTeamId = match.getGuestTeamID();
+            guestTeamName = match.getGuestTeamName();
+        }
         return homeTeamName;
     }
 
@@ -266,10 +257,6 @@ public class MatchLineup {
      */
     public final Timestamp getMatchDate() {
         return Basics.parseHattrickDate(this.matchDate);
-    }
-
-    public final String getStringDownloadDate() {
-        return downloadDate;
     }
 
     public final String getStringMatchDate() {

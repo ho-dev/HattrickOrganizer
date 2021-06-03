@@ -2,7 +2,7 @@ package core.util;
 
 import core.file.xml.XMLMatchdetailsParser;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.MyConnector;

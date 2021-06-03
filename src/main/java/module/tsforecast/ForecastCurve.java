@@ -22,7 +22,7 @@ package module.tsforecast;
 
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 

@@ -2,6 +2,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -23,7 +24,7 @@ public class MatchLineupTeam {
 	private int teamId;
 	private int styleOfPlay;
 	// null player to fill empty spots
-	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(SourceSystem.HATTRICK, -1, 0, -1, -1d, "", 0);
+	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(MatchType.NONE, -1, 0, -1, -1d, "", 0);
 	private MatchType matchType = MatchType.NONE;
 	private int matchId;
 	private Matchdetails matchdetails;
@@ -34,8 +35,8 @@ public class MatchLineupTeam {
 	/**
 	 * Creates a new instance of MatchLineupTeam
 	 */
-	public MatchLineupTeam(SourceSystem sourceSystem, int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
-		this.sourceSystem = sourceSystem;
+	public MatchLineupTeam(MatchType matchType, int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
+		this.matchType = matchType;
 		this.teamName = teamName;
 		experience = erfahrung;
 		teamId = teamID;
@@ -356,7 +357,7 @@ public class MatchLineupTeam {
 
 	public MatchType getMatchType() {
 		if (matchType == MatchType.NONE) {
-			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId);
+			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, matchType);
 			if ( info != null){
 				matchType = info.getMatchType();
 			}
@@ -499,30 +500,7 @@ public class MatchLineupTeam {
 		}
 
 		return ret;
-		/*
 
-		// Look for the last substitution before the given minute
-		// Check if the player is involved. If not keep checking back in time
-		// until match start.
-
-		List<Substitution> substitutions = this.getSubstitutions();
-		Substitution tmpSub;
-		for (int i = substitutions.size() - 1; i >= 0; i--) {
-
-			tmpSub = substitutions.get(i);
-			if (tmpSub.getMatchMinuteCriteria() > minute) {
-				// This is after our minute. Next, please.
-				continue;
-			}
-
-			if ((tmpSub.getSubjectPlayerID() == spielerId) || (tmpSub.getObjectPlayerID() == spielerId)) {
-				return getPlayerFieldPostitionAfterSubstitution(spielerId, i, substitutions);
-			}
-		}
-
-		// We survived all the subs, lets see if we found him in the starting
-		// lineup.
-		return (this.getPlayerByID(spielerId)).getStartPosition();*/
 	}
 
 	public int getMatchEndMinute(int spielerId) {
@@ -543,132 +521,9 @@ public class MatchLineupTeam {
 
 	private Matchdetails getMatchdetails() {
 		if ( matchdetails == null){
-			matchdetails = DBManager.instance().loadMatchDetails(this.sourceSystem.getValue(), this.matchId);
+			matchdetails = DBManager.instance().loadMatchDetails(this.getMatchType().getId(), this.matchId);
 		}
 		return matchdetails;
-	}
-/*
-	private int getPlayerFieldPostitionAfterSubstitution(int spielerId, int arrIndex,
-														 List<Substitution> substitutions) {
-		// arrIndex should be the index of the sub in the substitution vector.
-		// We have 100%
-		// trust in our caller (this is a private method), and never verify
-		// that.
-
-		// This is the api logic:
-		// The sub order contains a position, pos.
-		// - Player swap: Pos contains data for the new playerOut position
-		// - Normal sub: Pos contains data for the new playerIn position
-		// - Red card: Pos contains data (0) for playerOut position
-		// PlayerIn is empty
-		// - Repositioning: The player is both playerIn and playerOut,
-		// pos contains is his new one.
-
-		if (arrIndex < 0) {
-			// We have run out of substitutions. Start lineup got answer
-			return (this.getPlayerByID(spielerId)).getStartPosition();
-		}
-
-		Substitution tmpSub = substitutions.get(arrIndex);
-
-		if ((tmpSub.getObjectPlayerID() != spielerId) &&
-				(tmpSub.getSubjectPlayerID() != spielerId)
-				|| tmpSub.getOrderType() == MatchOrderType.MAN_MARKING		// man marking order has no influence on positions
-		) {
-			// This substitution is not exciting, check the next one
-			return getPlayerFieldPostitionAfterSubstitution(spielerId, arrIndex - 1, substitutions);
-		}
-
-		for (int i = arrIndex; i >= 0; i--) {
-			tmpSub = substitutions.get(i);
-			if (tmpSub.getSubjectPlayerID() == spielerId) {
-
-				if (tmpSub.getObjectPlayerID() == spielerId) {
-					// Repositioning
-					return tmpSub.getRoleId();
-				}
-
-				if ((tmpSub.getObjectPlayerID() == 0) && (tmpSub.getRoleId() == 0)) {
-					// Sent off or no sub after injury
-					return -1;
-				}
-
-				if (tmpSub.getOrderType().getId() == 1) {
-					// Normal substitution and he left the field
-					return -1;
-				}
-
-				if (tmpSub.getOrderType().getId() == 3) {
-					// Player swap
-					// The sub object got his new position
-					return tmpSub.getRoleId();
-				}
-
-				HOLogger.instance().debug(
-						getClass(),
-						"getPlayerFieldPostitionAfterSubstitution had a playerOut fall through. "
-								+ this.matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
-			}
-
-			if (tmpSub.getObjectPlayerID() == spielerId) {
-				// Repositioning is already caught.
-				// Sent off does not exist here.
-
-				if (tmpSub.getOrderType().getId() == 1) {
-					// A sub entering. His position is in the sub object.
-					return tmpSub.getRoleId();
-				}
-
-				if (tmpSub.getOrderType().getId() == 3) {
-					// A player swap. We need to know where the other player
-					// came from.
-					// We figure this out by asking where he was at the end of
-					// the previous sub
-					// object (it is safe no matter the value of i).
-					return getPlayerFieldPostitionAfterSubstitution(tmpSub.getSubjectPlayerID(), i - 1,
-							substitutions);
-				}
-
-				HOLogger.instance().debug(
-						getClass(),
-						"getPlayerFieldPostitionAfterSubstitution had a playerIn fall through. "
-								+ this.matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
-			}
-		} // End for loop
-
-		HOLogger.instance().debug(
-				getClass(),
-				"getPlayerFieldPostitionAfterSubstitution reached the end, which should never happen "
-						+this.matchId + " " + spielerId + " " + tmpSub.getPlayerOrderId());
-		return -1;
-	}
-*/
-
-
-	/**
-	 * Check if specified player is in one of the accepted positions
-	 *
-	 * @param playerId Id of the player
-	 * @param accepted list of the accepted positions. List may also include special positions set pieces or captain.
-	 *                 empty list => no position is accepted
-	 *                 null => any position is accepted
-	 * @return
-	 * 	true, if player is in one of the accepted starting positions.
-	 * 	false, if not
-	 */
-	private boolean isPlayerInAcceptedPositions(int playerId, int[] accepted) {
-		if (accepted == null) {
-			var player = this.getPlayerByID(playerId);
-			return player != null && player.getMatchRole().isFieldMatchRoleId(); // all positions are accepted, use an empty array if NO position should be accepted
-		}
-
-		for (int position : accepted) {
-			var player = this.getPlayerByPosition(position);
-			if ( player != null && player.getPlayerId() == playerId) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private boolean isPositionInAcceptedPositions(int pos, int[] accepted) {

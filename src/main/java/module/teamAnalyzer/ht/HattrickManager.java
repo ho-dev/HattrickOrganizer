@@ -3,9 +3,8 @@ package module.teamAnalyzer.ht;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
-import core.file.xml.xmlPlayersParser;
+import core.file.xml.XMLPlayersParser;
 import core.model.match.MatchKurzInfo;
-import core.model.match.SourceSystem;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -57,7 +56,7 @@ public class HattrickManager {
                 continue;
             }
 
-            boolean refresh = !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())
+            boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())
                     || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
             var accepted = filter.isAcceptedMatch(new Match(match));
             if (!filter.isAutomatic() || (accepted && refresh)) {
@@ -84,7 +83,7 @@ public class HattrickManager {
 		    	}
 	   			if (filter.isAcceptedMatch(new Match(match)) 
 	   					&& match.getMatchType().isTournament()
-	   					&& !DBManager.instance().isMatchLineupInDB(SourceSystem.HATTRICK.getValue(), match.getMatchID())) {
+	   					&& !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())) {
 	   				
 	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
 	   			}
@@ -106,7 +105,7 @@ public class HattrickManager {
         }
 
         List<PlayerInfo> players = new ArrayList<>();
-        var playerInfos = new xmlPlayersParser().parsePlayersFromString(xml);
+        var playerInfos = new XMLPlayersParser().parsePlayersFromString(xml);
         for ( var i : playerInfos ) {
             players.add(new PlayerInfo(i));
         }

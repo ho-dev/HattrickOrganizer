@@ -1,14 +1,16 @@
 package core.gui.theme.ho;
 
-import com.github.weisj.darklaf.icons.IconLoader;
-import core.gui.theme.*;
+import core.gui.theme.HOBooleanName;
+import core.gui.theme.HOColorName;
+import core.gui.theme.HOIconName;
+import core.gui.theme.Schema;
 import core.util.HOLogger;
-import java.awt.Color;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
 
 public class HOClassicSchema extends Schema implements HOIconName, HOColorName, HOBooleanName {
 
@@ -225,6 +227,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(IFA_VISITED, "gui/bilder/Fugue/status.png");
 		put(INFORMATION, "gui/bilder/Fugue/information-white.png");
 		put(CHPP, "gui/bilder/chpp.png");
+		put(CHPP_WHITE_BG, "gui/bilder/chpp_white_bg.png");
 		
 		put(HOME, "gui/bilder/home.png");
 		put(AWAY, "gui/bilder/away.png");
@@ -506,6 +509,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// League Details
 		put(HOColorName.SHOW_MATCH, new Color(23, 111, 36));
 		put(HOColorName.DOWNLOAD_MATCH, new Color(238, 39, 39, 255));
+
+		put(HOColorName.LINK_LABEL_FG, new Color(6, 69, 173));
 
 	}
 

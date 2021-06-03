@@ -5,7 +5,8 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
         return matchLink;
     }
 
-    public final void setMatchInfo(String t, MatchType matchType) {
+    public final void setMatchInfo(String t, IMatchType matchType) {
 
         try {
             if (t != null) {

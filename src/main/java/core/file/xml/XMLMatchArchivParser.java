@@ -11,7 +11,7 @@ import core.model.Tournament.TournamentDetails;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -78,17 +78,17 @@ public class XMLMatchArchivParser {
 					iMatchType = MatchType.YOUTHLEAGUE.getId();
 				}
 
-				if (iMatchType != 3) {match.setMatchType(MatchType.getById(iMatchType));}
-				else{
+				match.setMatchType(MatchType.getById(iMatchType));
+
+				if (iMatchType == 3) {
 					tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 					iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 					match.setCupLevel(CupLevel.fromInt(iCupLevel));
 					tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
 					iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 					match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
-					match.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex, 0));
 				}
-				if (iMatchType == 50) {
+				else if (iMatchType == 50) {
 					tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
 					int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 					match.setMatchContextId(tournamentId);
@@ -100,8 +100,6 @@ public class XMLMatchArchivParser {
 						DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
 					}
 					match.setTournamentTypeID(oTournamentDetails.getTournamentType());
-
-					match.setMatchType(MatchType.getById(iMatchType, 0, 0, match.getTournamentTypeID()));
 				}
 
 				tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);

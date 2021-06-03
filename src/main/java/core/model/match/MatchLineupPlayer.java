@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
@@ -9,8 +10,7 @@ import java.util.List;
 public class MatchLineupPlayer {
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = -5986419471284091148L;
-	private SourceSystem sourceSystem;
+	private MatchType m_matchType;
     private String m_sNickName = "";
     private String m_sSpielerName;
     private String m_sSpielerVName = "";
@@ -27,22 +27,17 @@ public class MatchLineupPlayer {
     // (final) lineup match role
     private MatchRoleID matchRoleId;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //KONSTRUKTOR
-    //////////////////////////////////////////////////////////////////////////////////    
 
     /**
      * Creates a new instance of MatchLineupPlayer
      */
-    public MatchLineupPlayer(SourceSystem sourceSystem, int roleID, int behavior, int spielerID, double rating, String name,
+    public MatchLineupPlayer(MatchType matchType, int roleID, int behavior, int spielerID, double rating, String name,
                              int status) {
         this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
 
         //erst mit neuer Version Namen aufsplitten
         //setName( name );
-        this.sourceSystem=sourceSystem;
+        m_matchType = matchType;
         m_sSpielerName = name;
         m_dRating = rating;
        m_iStatus = status;
@@ -51,7 +46,7 @@ public class MatchLineupPlayer {
     /**
      * Creates a new instance of MatchLineupPlayer
      */
-    public MatchLineupPlayer(SourceSystem sourceSystem,
+    public MatchLineupPlayer(MatchType matchType,
                              int roleID,
                              int behavior,
                              int spielerID,
@@ -66,7 +61,7 @@ public class MatchLineupPlayer {
                              boolean startSetPieces) {
         this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
 
-        this.sourceSystem = sourceSystem;
+        m_matchType = matchType;
         m_sSpielerName = name;
         m_sNickName = nickName;
         m_sSpielerVName = vname;
@@ -270,11 +265,15 @@ public class MatchLineupPlayer {
     }
 
     public SourceSystem getSourceSystem() {
-        return sourceSystem;
+        return m_matchType.getSourceSystem();
     }
 
-    public void setSourceSystem(SourceSystem sourceSystem) {
-        this.sourceSystem = sourceSystem;
+    public MatchType getMatchType() {
+        return m_matchType;
+    }
+
+    public void setMatchType(MatchType matchType) {
+        m_matchType = matchType;
     }
 
     public MatchRoleID getMatchRole() {

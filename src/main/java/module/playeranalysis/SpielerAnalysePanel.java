@@ -86,7 +86,8 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 					if(e.getClickCount()==2  && m_jtSpielerMatchesTable.getSelectedRow()>=0){
 						HOMainFrame.instance().showMatch(Integer.parseInt(colorLabelEntry.getText()));
 					}else if(e.getClickCount()==1 && e.isShiftDown()){
-						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId);
+						// TODO: get match type
+						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 						HattrickLink.showMatch(matchId+"",info.getMatchType().isOfficial());
 					}
 				}catch (Exception ex){

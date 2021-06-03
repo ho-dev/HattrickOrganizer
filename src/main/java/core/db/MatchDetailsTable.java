@@ -1,8 +1,8 @@
 package core.db;
 
 import core.model.match.MatchEvent;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -21,7 +21,7 @@ final class MatchDetailsTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
 				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaId", Types.INTEGER, false),
 				new ColumnDescriptor("ArenaName", Types.VARCHAR, false, 256),
 				new ColumnDescriptor("Fetchdatum", Types.TIMESTAMP, false),
@@ -82,7 +82,7 @@ final class MatchDetailsTable extends AbstractTable {
 	@Override
 	protected  String[] getConstraintStatements() {
 		return new String[]{
-			"CONSTRAINT PK_MatchId PRIMARY KEY (MatchID,SourceSystem)"
+			"  PRIMARY KEY (MATCHID, MATCHTYP)"
 		};
 	}
 	
@@ -98,15 +98,15 @@ final class MatchDetailsTable extends AbstractTable {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 */
-	Matchdetails loadMatchDetails(int sourcesystem, int matchId) {
+	Matchdetails loadMatchDetails(int iMatchType, int matchId) {
 		final Matchdetails details = new Matchdetails();
 
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE SourceSystem=" + sourcesystem + " AND MatchID=" + matchId;
+			String sql = "SELECT * FROM "+getTableName()+" WHERE MATCHTYP=" + iMatchType + " AND MatchID=" + matchId;
 			ResultSet rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
-				details.setSourceSystem(SourceSystem.valueOf(rs.getInt("SourceSystem")));
+				details.setMatchType(MatchType.getById(rs.getInt("MATCHTYP")));
 				details.setArenaID(rs.getInt("ArenaId"));
 				details.setArenaName(core.db.DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
 				details.setRegionId(rs.getInt("RegionID"));
@@ -198,8 +198,8 @@ final class MatchDetailsTable extends AbstractTable {
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
 
-			final String[] where = { "SourceSystem", "MatchID" };
-			final String[] werte = { "" + details.getSourceSystem().getValue(), "" + details.getMatchID()};
+			final String[] where = { "MATCHTYP", "MatchID" };
+			final String[] werte = { "" + details.getMatchType().getId(), "" + details.getMatchID()};
 
 			//Remove existing entries
 			delete(where, werte);
@@ -209,7 +209,7 @@ final class MatchDetailsTable extends AbstractTable {
 			try {
 				sql =
 					"INSERT INTO " +getTableName() +
-							" ( MatchID, SourceSystem, ArenaId, ArenaName, Fetchdatum, GastId, " +
+							" ( MatchID, MATCHTYP, ArenaId, ArenaName, Fetchdatum, GastId, " +
 							"GastName, GastEinstellung, GastTore, "	+
 							"GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, " +
 							"GASTHATSTATS, GastTacticSkill, GastTacticType, " +
@@ -223,7 +223,7 @@ final class MatchDetailsTable extends AbstractTable {
 							"HomeFormation, AwayFormation" +
 							") VALUES ("
 						+ details.getMatchID() + ","
-						+ details.getSourceSystem().getValue() + ","
+						+ details.getMatchType().getId() + ","
 						+ details.getArenaID() + ",'"
 						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
 						+ details.getFetchDatum().toString() + "',"
@@ -311,11 +311,11 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
-	public void deleteMatchDetailsBefore(int sourceSystem, Timestamp before) {
+	public void deleteMatchDetailsBefore(int matchTypeId, Timestamp before) {
 		var sql = "DELETE FROM " +
 				getTableName() +
-				" WHERE SOURCESYSTEM=" +
-				sourceSystem +
+				" WHERE MATCHTYP=" +
+				matchTypeId +
 				" AND SPIELDATUM<'" +
 				before.toString() + "'";
 		try {

@@ -3,7 +3,7 @@ package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.ui.NumberTextField;
@@ -116,7 +116,7 @@ public class DownloadPanel extends JPanel {
 
                     if (OnlineWorker.downloadMatchData(id, type, false)) {
 
-                    	Matchdetails md = DBManager.instance().loadMatchDetails(type.getSourceSystem().getValue(), id);
+                    	Matchdetails md = DBManager.instance().loadMatchDetails(type.getId(), id);
 
 	                    if (md.getFetchDatum() != null) {
 	                        status.setText(HOVerwaltung.instance().getLanguageString("ImportOK"));

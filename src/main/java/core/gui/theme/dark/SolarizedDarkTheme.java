@@ -150,6 +150,8 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(82, 179, 217));
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
+            ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(226,236,248));
+
             return super.enableTheme();
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(),

@@ -17,34 +17,25 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.enums.RatingsStatistics;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
-import module.series.statistics.DataDownloader;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
 import core.util.HOLogger;
-import core.util.IOUtils;
 import module.lineup.substitution.model.Substitution;
 import core.HO;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Map;
-
-import static core.file.xml.XMLManager.xmlValue2Hash;
 
 /**
  * Convert the necessary xml data into a HRF file.
@@ -61,15 +52,14 @@ public class ConvertXml2Hrf {
 
 	/**
 	 * Create the HRF data and return it in one string.
+	 *
+	 * <p>The HRF file is built using data downloaded from various CHPP endpoints.
 	 * 
 	 * @throws IOException
 	 */
-	public static @Nullable String createHrf()
-			throws IOException {
+	public static @Nullable String createHrf() throws IOException {
 		// init
 		StringBuilder buffer = new StringBuilder();
-
-		// Hashtable's füllen
 		final MyConnector mc = MyConnector.instance();
 		HOMainFrame.instance().setWaitInformation(5);
 
@@ -106,7 +96,10 @@ public class ConvertXml2Hrf {
 				else {
 					// team id is in DB and this is the first time we download youth team information
 					int finalTeamId = teamId;
-					var teaminfo = teamInfoList.stream().filter(x->x.getTeamId()== finalTeamId).findAny().orElse(null);
+					var teaminfo = teamInfoList.stream()
+							.filter(x -> x.getTeamId() == finalTeamId)
+							.findAny()
+							.orElse(null);
 					if ( teaminfo != null){
 						youthTeamId = teaminfo.getYouthTeamId();
 					}
@@ -162,12 +155,12 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setWaitInformation(25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
-						MatchType.LEAGUE).toString());
+						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
-		List<MyHashtable> playersData = new xmlPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
+		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
 		List<MyHashtable> youthplayers=null;
 		if ( youthTeamId != null && youthTeamId > 0 ){
-			youthplayers = new xmlPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
+			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
 		HOMainFrame.instance().setWaitInformation(35);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
@@ -193,7 +186,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(55);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
-						.parseInt(teamdetailsDataMap.get("TeamID").toString()),
+						.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
 		HOMainFrame.instance().setWaitInformation(57);
 
@@ -785,10 +778,10 @@ public class ConvertXml2Hrf {
 	 */
 	private static void createPlayers(MatchLineupTeam matchLineupTeam,
 									  List<MyHashtable> playersData, StringBuilder buffer) {
-		Map<?, ?> ht = null;
+		Map ht = null;
 
 		for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
-			ht = (Map<?, ?>) playersData.get(i);
+			ht = playersData.get(i);
 
 			buffer.append("[player").append(ht.get("PlayerID").toString())
 					.append(']').append('\n');
@@ -900,6 +893,11 @@ public class ConvertXml2Hrf {
 				buffer.append("LastMatch_Rating=").append('\n');
 				buffer.append("LastMatch_id=0").append('\n');
 			}
+
+			String lastMatchType = (String) ht.getOrDefault("LastMatch_Type", "0");
+			buffer.append("LastMatch_Type=")
+					.append(lastMatchType)
+					.append('\n');
 
 			if ((matchLineupTeam != null)
 					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get(

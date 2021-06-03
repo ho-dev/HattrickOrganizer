@@ -1,6 +1,6 @@
 package module.opponentspy.OpponentTeam;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 
 public class PlayedPosition {
 	

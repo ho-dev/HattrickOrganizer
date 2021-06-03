@@ -21,7 +21,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -136,31 +135,15 @@ public class HRFStringParser {
 		}
 		return modelReturn;
 	}
-/*
-	private static Timestamp getDateFromString(String date) {
-		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				java.util.Locale.GERMANY);
-		try {
-			// Hattrick
-			return new Timestamp(simpleFormat.parse(date).getTime());
-		} catch (Exception e) {
-			try {
-				// Hattrick
-				simpleFormat = new SimpleDateFormat("yyyy-MM-dd", java.util.Locale.GERMANY);
-				return new Timestamp(simpleFormat.parse(date).getTime());
-			} catch (Exception expc) {
-				HOLogger.instance().log(HRFStringParser.class, e);
-				return new Timestamp(System.currentTimeMillis());
-			}
-		}
-	}
-*/
 
 	/**
-	 * Erzeugt aus dem Vector mit Properties ein HOModel
+	 * Creates a {@link HOModel} instance from list of properties.
+	 *
+	 * @param propertiesList  List of {@link Properties} representing various HT entities.
+	 * @param hrfdate Date of the HRF file.
+	 * @return HOModel – Model built from the properties.
 	 */
-	private static HOModel createHOModel(List<Properties> propertiesList, Timestamp hrfdate)
-			throws Exception {
+	private static HOModel createHOModel(List<Properties> propertiesList, Timestamp hrfdate) throws Exception {
 
 		final HOModel hoModel = new HOModel();
 		int trainerID = -1;
@@ -249,13 +232,13 @@ public class HRFStringParser {
 
 		return hoModel;
 	}
-	
-	
+
+
 	private static List<StaffMember> parseStaff(Properties props) {
-		
+
 		try {
 			ArrayList<StaffMember> list = new ArrayList<>();
-			
+
 			int i = 0;
 			while (props.containsKey("staff" + i + "name")) {
 
@@ -269,10 +252,10 @@ public class HRFStringParser {
 				i++;
 				list.add(member);
 			}
-			
+
 			// because it is handy...
 			Collections.sort(list);
-			
+
 			return list;
 
 		} catch (Exception e) {

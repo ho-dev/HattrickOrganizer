@@ -3,6 +3,7 @@ package module.youth;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import module.lineup.substitution.model.MatchOrderType;
 import module.training.Skills;
@@ -106,14 +107,14 @@ public class YouthTraining {
 
     MatchLineup getMatchLineup() {
         if (this.matchLineup == null) {
-            this.matchLineup = DBManager.instance().loadMatchLineup(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
         }
         return this.matchLineup;
     }
 
     public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
-            this.matchdetails = DBManager.instance().loadMatchDetails(SourceSystem.YOUTH.getValue(), this.youthMatchId);
+            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
             this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
         }
         return this.matchdetails;

@@ -4,7 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.net.OnlineWorker;
 import core.util.Helper;
 import module.teamAnalyzer.ht.HattrickManager;
@@ -62,7 +62,7 @@ public class ManualFilterPanel extends JPanel {
 
 			rowData = new Vector<>();
 
-			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId());
+			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId(), element.getMatchType());
 			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + element.getMatchId());
 
 			rowData.add(Boolean.valueOf(isSelected));

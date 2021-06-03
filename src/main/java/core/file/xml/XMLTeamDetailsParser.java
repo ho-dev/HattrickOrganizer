@@ -60,7 +60,7 @@ public class XMLTeamDetailsParser {
 		Element ele, root;
 		Map<String, String> hash = new core.file.xml.MyHashtable();
 
-		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
+//		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
 
 		if (doc == null) {
 			return hash;

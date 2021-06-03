@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 import module.matches.MatchLocation;
@@ -181,6 +182,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 				sql.append(" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 				sql.append(" OR MatchTyp=" + MatchType.LEAGUE.getId());
 				sql.append(" OR MatchTyp=" + MatchType.CUP.getId() + " )");
+				HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter on cup level index to keep only main cup  ");
 				break;
 			case MatchesPanel.NUR_EIGENE_POKALSPIELE :
 				sql.append(" AND MatchTyp=" + MatchType.CUP.getId());
@@ -197,13 +199,13 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 			case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
 				sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
 				sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
-				sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
 				break;
 			case MatchesPanel.ONLY_SECONDARY_CUP:
-				sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-				sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-				sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-				sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+//				sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
+//				sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
+//				sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
+//				sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
+				HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter on cup level index to keep only secondary cup  ");
 				break;
 			case MatchesPanel.ONLY_QUALIF_MATCHES:
 				sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());

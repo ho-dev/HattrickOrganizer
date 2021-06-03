@@ -2,10 +2,12 @@ package core.file.xml;
 
 import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Vector;
 
 import org.jetbrains.annotations.Nullable;
@@ -565,34 +567,14 @@ public class XMLMatchdetailsParser {
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
 			var matchType = MatchType.getById(iMatchType);
 			md.setSourceSystem(matchType.getSourceSystem());
-			if (iMatchType != 3) {md.setMatchType(matchType);}
-			else{
-				ele = (Element) root.getElementsByTagName("CupLevel").item(0);
-				iCupLevel = Integer.parseInt(ele.getFirstChild().getNodeValue());
-				ele = (Element) root.getElementsByTagName("CupLevelIndex").item(0);
-				iCupLevelIndex = Integer.parseInt(ele.getFirstChild().getNodeValue());
-				md.setMatchType(MatchType.getById(iMatchType, iCupLevel, iCupLevelIndex, 0));
-			}
-			if (iMatchType == 50) {
-				ele = (Element) root.getElementsByTagName("MatchContextId").item(0);
-				int tournamentId = Integer.parseInt(ele.getFirstChild().getNodeValue());
-
-				TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-				if (oTournamentDetails == null)
-				{
-					oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-					DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-				}
-				md.setMatchType(MatchType.getById(iMatchType, 0, 0, oTournamentDetails.getTournamentType()));
-			}
+			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
             ele = (Element) root.getElementsByTagName("MatchID").item(0);
             md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("MatchDate").item(0);
             md.setSpielDatumFromString(ele.getFirstChild().getNodeValue());
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class,e);
-            md = null;
-        }
+		}
     }
 
     private static void readGuestTeam(Document doc, Matchdetails md) {

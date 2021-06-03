@@ -2,15 +2,13 @@ package core.net;
 
 
 import com.github.scribejava.core.model.*;
-import core.file.xml.Extension;
 import core.file.xml.XMLCHPPPreParser;
-import core.file.xml.XMLExtensionParser;
 import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.SourceSystem;
 import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;

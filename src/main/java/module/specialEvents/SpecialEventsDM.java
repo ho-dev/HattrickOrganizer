@@ -1,10 +1,11 @@
 package module.specialEvents;
 
 import core.db.DBManager;
+//import core.db.MatchesOverviewQuery;
 import core.model.HOVerwaltung;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.Player;
@@ -91,7 +92,8 @@ public class SpecialEventsDM {
 		if (filter.isShowTournament()) {
 			matchTypes.add(MatchType.TOURNAMENTGROUP.getId());
 			matchTypes.add(MatchType.TOURNAMENTPLAYOFF.getId());
-			matchTypes.add(MatchType.DIVISIONBATTLE.getId());
+			HOLogger.instance().error(SpecialEventsDM.class, "TODO: repair filter !!  ");
+//			matchTypes.add(MatchType.DIVISIONBATTLE.getId());
 		}
 		if (filter.isShowRelegation()) {
 			matchTypes.add(MatchType.QUALIFICATION.getId());

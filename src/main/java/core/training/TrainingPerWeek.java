@@ -5,10 +5,9 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.util.DateTimeUtils;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

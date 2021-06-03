@@ -26,8 +26,8 @@ public class MatchSubstitutionTable extends AbstractTable {
 	protected void initColumns() {
 
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("SourceSystem", Types.INTEGER, false),
 				new ColumnDescriptor("MatchID", Types.INTEGER, false),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
 				new ColumnDescriptor("TeamID", Types.INTEGER, false),
 				new ColumnDescriptor("HrfID", Types.INTEGER, false),
 				new ColumnDescriptor("PlayerOrderID", Types.INTEGER, false),
@@ -61,9 +61,9 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 *            The matchId for the match in question
 	 * 
 	 */
-	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId, int matchId) {
+	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int iMatchType, int teamId, int matchId) {
 		return getSubBySql("SELECT * FROM " + getTableName()
-				+ " WHERE SourceSystem = " + sourceSystem
+				+ " WHERE MatchTyp = " + iMatchType
 				+ " AND MatchID = " + matchId
 				+ " AND TeamID = " + teamId);
 	}
@@ -85,14 +85,14 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * must be unique for the match. All previous substitutions for the
 	 * team/match combination will be deleted.
 	 */
-	void storeMatchSubstitutionsByMatchTeam(int sourceSystem, int matchId, int teamId,
+	void storeMatchSubstitutionsByMatchTeam(int iMatchType, int matchId, int teamId,
 			java.util.List<Substitution> subs) {
 		if ((matchId == DUMMY) || (teamId == DUMMY)) {
 			// Rather not...
 			return;
 		}
 		// D is string dummy
-		storeSub(sourceSystem, matchId, teamId, DUMMY, subs, "D");
+		storeSub(iMatchType, matchId, teamId, DUMMY, subs, "D");
 	}
 
 	/**
@@ -100,21 +100,21 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * must be unique for the match. All previous substitutions for the hrf will
 	 * be deleted.
 	 */
-	void storeMatchSubstitutionsByHrf(int sourceSystem, int hrfId, java.util.List<Substitution> subs,
+	void storeMatchSubstitutionsByHrf(int iMatchType, int hrfId, java.util.List<Substitution> subs,
 			String lineupName) {
 		if (hrfId == DUMMY) {
 			// Rather not...
 			return;
 		}
-		storeSub(sourceSystem, DUMMY, DUMMY, hrfId, subs, lineupName);
+		storeSub(iMatchType, DUMMY, DUMMY, hrfId, subs, lineupName);
 	}
 
-	private void storeSub(int sourceSystem, int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
+	private void storeSub(int iMatchType, int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
 			String lineupName) {
 		String sql = null;
 
-		final String[] where = { "SourceSystem", "MatchID", "TeamID", "HrfID", "LineupName" };
-		final String[] values = { ""+ sourceSystem, "" + matchId, "" + teamId, "" + hrfId, "'" + lineupName + "'" };
+		final String[] where = { "MatchTyp", "MatchID", "TeamID", "HrfID", "LineupName" };
+		final String[] values = { ""+ iMatchType, "" + matchId, "" + teamId, "" + hrfId, "'" + lineupName + "'" };
 
 		// Get rid of any old subs for the inputs.
 		delete(where, values);
@@ -128,9 +128,9 @@ public class MatchSubstitutionTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  SourceSystem, MatchID, TeamID, HrfID, PlayerOrderID, PlayerIn, PlayerOut, OrderType,";
+						+ " (  MatchTyp, MatchID, TeamID, HrfID, PlayerOrderID, PlayerIn, PlayerOut, OrderType,";
 				sql += " MatchMinuteCriteria, Pos, Behaviour, Card, Standing, LineupName ) VALUES(";
-				sql += sourceSystem + "," + matchId + "," + teamId + "," + hrfId + "," + sub.getPlayerOrderId() + ","
+				sql += iMatchType + "," + matchId + "," + teamId + "," + hrfId + "," + sub.getPlayerOrderId() + ","
 						+ sub.getObjectPlayerID() + "," + sub.getSubjectPlayerID() + ","
 						+ sub.getOrderType().getId() + "," + sub.getMatchMinuteCriteria() + ","
 						+ sub.getRoleId() + "," + sub.getBehaviour() + "," + sub.getRedCardCriteria().getId() + ","
@@ -145,8 +145,8 @@ public class MatchSubstitutionTable extends AbstractTable {
 	}
 
 	private java.util.List<Substitution> getSubBySql(String sql) {
-		Substitution sub = null;
-		ResultSet rs = null;
+		Substitution sub;
+		ResultSet rs;
 		List<Substitution> subst = new ArrayList<Substitution>();
 
 		try {

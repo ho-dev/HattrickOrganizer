@@ -9,8 +9,7 @@ import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
-import core.model.match.MatchType;
-import core.model.match.SourceSystem;
+import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
@@ -25,8 +24,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
-import static core.constants.player.PlayerSkill.*;
 import static java.lang.Integer.min;
+import static core.constants.player.PlayerSkill.*;
 
 public class Player {
 
@@ -326,6 +325,8 @@ public class Player {
     private String m_lastMatchDate;
     private double m_lastMatchRating=0;
     private int m_lastMatchId=0;
+    private MatchType lastMatchType;
+
 
     /**
      * specifying at what time –in minutes- that player entered the field
@@ -449,6 +450,10 @@ public class Player {
             m_lastMatchRating = 2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
             m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
         }
+
+        setLastMatchType(MatchType.getById(
+                Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
+        ));
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
@@ -1661,6 +1666,20 @@ public class Player {
     }
 
     /**
+     * Returns the {@link MatchType} of the last match.
+     */
+    public MatchType getLastMatchType() {
+        return lastMatchType;
+    }
+
+    /**
+     * Sets the value of <code>lastMatchType</code> to <code>matchType</code>.
+     */
+    public void setLastMatchType(MatchType matchType) {
+        this.lastMatchType = matchType;
+    }
+
+    /**
      * Set last match £461
      * @param date
      * @param rating
@@ -1938,7 +1957,7 @@ public class Player {
                 int minutes=0;
                 for (var match : matches) {
                     //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), myID);
+                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
                     //MatchStatistics ms = new MatchStatistics(match, mlt);
                     MatchType type = mlt.getMatchType();
                     boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
@@ -1949,7 +1968,7 @@ public class Player {
                         tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
                     }
                     tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
-                    output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), type );
+                    output.addExperienceIncrease(min(90,tp.getPlayedMinutes() - minutes), match.getMatchTypeExtended());
                     minutes = tp.getPlayedMinutes();
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
@@ -1959,10 +1978,10 @@ public class Player {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(SourceSystem.HATTRICK.getValue(), match.getMatchID(), this.getNationalTeamID());
+                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
-                            output.addExperienceIncrease(min(90,minutes), mlt.getMatchType());
+                            output.addExperienceIncrease(min(90,minutes), match.getMatchTypeExtended());
                         }
                     }
                 }

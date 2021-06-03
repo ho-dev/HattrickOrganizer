@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -22,7 +23,7 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[63];
+		columns = new ColumnDescriptor[64];
 		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
 		columns[2] = new ColumnDescriptor("GelbeKarten", Types.INTEGER, false);
@@ -86,6 +87,8 @@ final class SpielerTable extends AbstractTable {
 		columns[60] = new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100);
 		columns[61] = new ColumnDescriptor("LastMatchRating", Types.INTEGER, true);
 		columns[62] = new ColumnDescriptor("LastMatchId", Types.INTEGER, true);
+		columns[63] = new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true);
+
 	}
 
 	@Override
@@ -123,10 +126,10 @@ final class SpielerTable extends AbstractTable {
 			statement.append( "ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, ");
 			statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, ");
 			statement.append( "SubExperience, NationalTeamID, ");
-			statement.append( "LastMatchDate, LastMatchRating, LastMatchId ");
+			statement.append( "LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE ");
 			statement.append(") VALUES(");
 			statement.append(player.getCards()).append(",");
-						
+
 			statement.append(player.getPlayerID()).append(",");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
 			statement.append("'").append(DBManager.insertEscapeSequences(player.getNickName())).append("',");
@@ -189,25 +192,24 @@ final class SpielerTable extends AbstractTable {
 			statement.append(player.getNationalTeamID()).append(",");
 			statement.append("'").append(player.getLastMatchDate()).append("',");
 			statement.append(player.getLastMatchRating()).append(",");
-			statement.append(player.getLastMatchId()).append(")");
+			statement.append(player.getLastMatchId()).append(",");
+			statement.append(player.getLastMatchType().getId()).append(")");
 			adapter.executeUpdate(statement.toString());
 			}
 	}
-	
+
 	/**
-	 * speichert die Player
+	 * Saves the players in the <code>spieler</code> list.
 	 */
 	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
-//		String statement = null;
 		final String[] awhereS = { "HRF_ID" };
 		final String[] awhereV = { "" + hrfId };
-		Player player = null;
 
 		if (spieler != null) {
 			// Delete old values
 			delete(awhereS, awhereV);
 
-			for ( Player p: spieler){
+			for (Player p: spieler) {
 				saveSpieler(hrfId, p, date);
 			}
 		}
@@ -218,7 +220,7 @@ final class SpielerTable extends AbstractTable {
 	 *
 	 * @param hrfID hrd id
 	 * @param playerId player id
-	 * 
+	 *
 	 *
 	 * @return player
 	 */
@@ -243,9 +245,9 @@ final class SpielerTable extends AbstractTable {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerFromHrf: " + e);
 		}
 
-		return null;		
+		return null;
 	}
-	
+
 	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
@@ -516,8 +518,8 @@ final class SpielerTable extends AbstractTable {
 		return -99;
 	}
 
-	   /**
-     * Erstellt einen Player aus der Datenbank
+    /**
+     * Creates a {@link Player} instance populated with values from the db.
      */
     private Player createObject(ResultSet rs) {
     	Player player = new Player();
@@ -586,16 +588,19 @@ final class SpielerTable extends AbstractTable {
             // Training block
 			player.setTrainingBlock(rs.getBoolean("TrainingBlock"));
 
-
 			// LastMatch
 			try {
-
-				player.setLastMatchDetails(DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
-						rs.getInt("LastMatchRating"), rs.getInt("LastMatchId"));
+				player.setLastMatchDetails(
+						DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
+						rs.getInt("LastMatchRating"),
+						rs.getInt("LastMatchId")
+				);
 			} catch (Exception e) {
-
+				HOLogger.instance().error(getClass(), "Error retrieving last match details: " + e);
 			}
-            
+
+            player.setLastMatchType(MatchType.getById(rs.getInt("LAST_MATCH_TYPE")));
+
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);
         }

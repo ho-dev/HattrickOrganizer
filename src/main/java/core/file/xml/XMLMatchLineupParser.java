@@ -1,11 +1,6 @@
-// %597232359:de.hattrickorganizer.logik.xml%
-/*
- * XMLMatchLineupParser.java
- *
- * Created on 20. Oktober 2003, 08:08
- */
 package core.file.xml;
 
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -14,13 +9,12 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * 
@@ -46,10 +40,13 @@ public class XMLMatchLineupParser {
 
 		try {
 			Element root = doc.getDocumentElement();
-			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			ml.setDownloadDate(ele.getFirstChild().getNodeValue());
-			ele = (Element) root.getElementsByTagName("MatchID").item(0);
+
+			Element ele = (Element) root.getElementsByTagName("MatchID").item(0);
 			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+
+			ele = (Element) root.getElementsByTagName("MatchType").item(0);
+			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
+
 			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
 			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
 					.getFirstChild().getNodeValue()));
@@ -60,27 +57,8 @@ public class XMLMatchLineupParser {
 					.getFirstChild().getNodeValue()));
 			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
 					.getNodeValue());
-			ele = (Element) root.getElementsByTagName("MatchType").item(0);
-			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
 
-			if ((ml.getMatchTyp() != MatchType.TOURNAMENTGROUP)
-					&& (ml.getMatchTyp() != MatchType.TOURNAMENTPLAYOFF)
-					&& (ml.getMatchTyp() != MatchType.NONE)
-					&& (ml.getMatchTyp() != MatchType.LADDER)
-					&& (ml.getMatchTyp() != MatchType.SINGLE)
-					&& (ml.getMatchTyp() != MatchType.DIVISIONBATTLE)) { // no stadium info for this kind  of match
-				ele = (Element) root.getElementsByTagName("Arena").item(0);
-				ml.setArenaID(Integer.parseInt(ele.getElementsByTagName("ArenaID").item(0)
-						.getFirstChild().getNodeValue()));
-				ml.setArenaName(ele.getElementsByTagName("ArenaName").item(0).getFirstChild()
-						.getNodeValue());
-			}
-
-			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
-			ml.setMatchDate(ele.getFirstChild().getNodeValue());
-
-			// team adden
-			MatchLineupTeam team = createTeam(ml.getSourceSystem(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+			MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
 
 			if (team.getTeamID() == ml.getHomeTeamId()) {
 				ml.setHomeTeam(team);
@@ -95,7 +73,7 @@ public class XMLMatchLineupParser {
 		return ml;
 	}
 
-	private static MatchLineupPlayer createPlayer(SourceSystem sourceSystem, Element ele) {
+	private static MatchLineupPlayer createPlayer(MatchType matchType, Element ele) {
 		int roleID = -1;
 		int behavior = 0;
 		double rating = -1.0d;
@@ -188,11 +166,7 @@ public class XMLMatchLineupParser {
 			}
 		}
 
-		// HOLogger.instance().debug(getClass(),"RoleID out: " + roleID);
-		// HOLogger.instance().debug(getClass(),"Behavior out: " + behavior);
-		// HOLogger.instance().debug(getClass(),"--------------- Debug by XMLMatchLineupParse if you want it gone");
-
-		MatchLineupPlayer player = new MatchLineupPlayer(sourceSystem, roleID, behavior, spielerID, rating, name, 0);
+		MatchLineupPlayer player = new MatchLineupPlayer(matchType, roleID, behavior, spielerID, rating, name, 0);
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
@@ -207,7 +181,7 @@ public class XMLMatchLineupParser {
 		return "";
 	}
 
-	private static MatchLineupTeam createTeam(SourceSystem sourceSystem, int matchID, Element ele) {
+	private static MatchLineupTeam createTeam(MatchType matchType, int matchID, Element ele) {
 		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
 		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
@@ -216,7 +190,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(sourceSystem, matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung, styleOfPlay);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -235,7 +209,7 @@ public class XMLMatchLineupParser {
 			// substituted
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
-			MatchLineupPlayer player = createPlayer(sourceSystem, (Element) list.item(i));
+			MatchLineupPlayer player = createPlayer(matchType, (Element) list.item(i));
 			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getRoleId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getRoleId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -252,7 +226,7 @@ public class XMLMatchLineupParser {
 		list = starting.getElementsByTagName("Player");
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-			MatchLineupPlayer startPlayer = createPlayer(sourceSystem, (Element) list.item(i));
+			MatchLineupPlayer startPlayer = createPlayer(matchType, (Element) list.item(i));
 			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
 			startPlayer.setStartBehavior(startPlayer.getBehaviour());
 
@@ -288,12 +262,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Lineup(new MatchLineupPlayer(sourceSystem, -1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(matchType, -1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Lineup(new MatchLineupPlayer(sourceSystem, -1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPlayer(matchType, -1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}

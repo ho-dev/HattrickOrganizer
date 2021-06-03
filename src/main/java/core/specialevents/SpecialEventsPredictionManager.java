@@ -2,11 +2,10 @@ package core.specialevents;
 
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;

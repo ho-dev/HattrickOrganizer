@@ -1,13 +1,11 @@
 // %3080703537:de.hattrickorganizer.gui.model%
 package core.gui.model;
 
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.misc.Basics;
-import core.util.HOLogger;
 import tool.arenasizer.ArenaSizer;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 
 /**
@@ -437,7 +435,7 @@ public class ArenaStatistikModel {
     public float getMatchTypeFactor() {
         switch (m_mtMatchTyp) {
             case LEAGUE -> matchTypeFactor = 1;
-            case CUP, EMERALDCUP, RUBYCUP, SAPPHIRECUP, CONSOLANTECUP -> matchTypeFactor = (float) 2 / 3;
+            case CUP -> matchTypeFactor = (float) 2 / 3;
             case FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, FRIENDLYNORMAL, INTFRIENDLYNORMAL, MASTERS, QUALIFICATION -> matchTypeFactor = (float) 1 / 2;
             default -> matchTypeFactor = 0;
         }

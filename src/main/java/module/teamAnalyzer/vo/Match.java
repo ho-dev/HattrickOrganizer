@@ -2,7 +2,7 @@
 package module.teamAnalyzer.vo;
 
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchType;
+import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.util.HTCalendar;
 import core.util.HTCalendarFactory;
