@@ -234,6 +234,17 @@ public class XMLMatchdetailsParser {
 					case 464:
 					case 471:
             		case 599:
+					case 700:
+					case 701:
+					case 702:
+					case 703:
+					case 704:
+					case 800:
+					case 801:
+					case 802:
+					case 803:
+					case 804:
+					case 805:
             			break;
 
             		default:
@@ -259,7 +270,7 @@ public class XMLMatchdetailsParser {
             				} else {
             					subjectplayername = String.valueOf(iSubjectPlayerID);
             					broken.add(new Integer(matchEvents.size()));
-								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d",iMatchEventID, iMinute));
+								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d in game %s",iMatchEventID, iMinute, lineup.getMatchID()));
             				}
             			}
 

@@ -11,6 +11,7 @@ import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
+import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
@@ -586,8 +587,6 @@ public class OnlineWorker {
 	}
 
 	public static List<MatchKurzInfo> FilterUserSelection(List<MatchKurzInfo> matches) {
-
-		HOLogger.instance().error(OnlineWorker.class, "case DIVISIONBATTLE should be re-implmented !!");
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
 			switch (m.getMatchType()) {
@@ -609,8 +608,18 @@ public class OnlineWorker {
 					}
 					break;
 				case TOURNAMENTGROUP:
-					if (UserParameter.instance().downloadTournamentGroupMatches) {
-						ret.add(m);
+					// this is TOURNAMENTGROUP but more specifically a division battle
+					if (m.getMatchTypeExtended() == MatchTypeExtended.DIVISIONBATTLE){
+						if (UserParameter.instance().downloadDivisionBattleMatches) {
+							// we add the game only if user selected division battle category
+							ret.add(m);
+						}
+					}
+					else{
+						// this is TOURNAMENTGROUP but not a division battle
+						if (UserParameter.instance().downloadTournamentGroupMatches) {
+							ret.add(m);
+						}
 					}
 					break;
 				case TOURNAMENTPLAYOFF:
@@ -628,12 +637,6 @@ public class OnlineWorker {
 						ret.add(m);
 					}
 					break;
-
-//				case DIVISIONBATTLE:
-//					if (UserParameter.instance().downloadDivisionBattleMatches) {
-//						ret.add(m);
-//					}
-//					break;
 				default:
 					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 					break;
