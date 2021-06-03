@@ -305,12 +305,31 @@ final class DBUpdater {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
 
 
-			// Correct history ..............
+			// Correct history of MATCHESKURZINFO  ==============================================
+			String sql = """
+						UPDATE MATCHESKURZINFO
+						SET MATCHTYP =
+						    CASE MATCHTYP
+						        WHEN 1001 THEN 3
+						        WHEN 1002 THEN 3
+						        WHEN 1003 THEN 3
+						        WHEN 1004 THEN 3
+						        WHEN 1101 THEN 50
+						        ELSE -1
+						    END
+						WHERE
+						    MATCHTYP IN (1001, 1002, 1003, 1004, 1101)""";
+
+			m_clJDBCAdapter.executeQuery(sql);
+
+
+			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO =============================
+
 			List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP", "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
-					"MATCHORDER", "MATCHSUBSTITUTION", "YOUTHTRAINING");
+					"MATCHORDER", "MATCHSUBSTITUTION");
 
 			for(String tableName : lTables){
-				String sql = "UPDATE " + tableName + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM MATCHESKURZINFO MK WHERE t1.MATCHID = MK.MATCHID)";
+				sql = "UPDATE " + tableName + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM MATCHESKURZINFO MK WHERE t1.MATCHID = MK.MATCHID)";
 				m_clJDBCAdapter.executeQuery(sql);
 			}
 
