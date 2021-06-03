@@ -3,44 +3,45 @@ package core.file.xml;
 import java.util.List;
 import java.util.Vector;
 
+import core.model.match.MatchKurzInfo;
 import module.youth.YouthPlayer;
 import module.training.Skills;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import core.db.DBManager;
+
 import static core.file.xml.XMLManager.xmlAttribute2Hash;
 import static core.file.xml.XMLManager.xmlValue2Hash;
 
 
-public class xmlPlayersParser {
+public class XMLPlayersParser {
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new instance of xmlPlayersParser
      */
-    public xmlPlayersParser() {
+    public XMLPlayersParser() {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    /////////////////////////////////////////////////////////////////////////////////    
+    /////////////////////////////////////////////////////////////////////////////////
     //parse public
-    ////////////////////////////////////////////////////////////////////////////////   
+    ////////////////////////////////////////////////////////////////////////////////
     public final Vector<MyHashtable> parsePlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createListe(doc);
     }
 
-    /////////////////////////////////////////////////////////////////////////////////    
+    /////////////////////////////////////////////////////////////////////////////////
     //Parser Helper private
-    ////////////////////////////////////////////////////////////////////////////////     
+    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * erzeugt das Team aus dem xml
      */
-
-    //throws Exception
     protected final Vector<MyHashtable> createListe(Document doc) {
         final Vector<MyHashtable> liste = new Vector<>();
 
@@ -162,7 +163,16 @@ public class xmlPlayersParser {
                     ele = (Element) tmp_lm.getElementsByTagName("Rating").item(0);
                     hash.put("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)));
                     ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
-                    hash.put("LastMatch_id", (XMLManager.getFirstChildNodeValue(ele)));
+
+
+                    String lastMatchId = XMLManager.getFirstChildNodeValue(ele);
+                    hash.put("LastMatch_id", lastMatchId);
+
+                    // Retrieve MatchType of last match by its ID.
+                    MatchKurzInfo matchInfo =  DBManager.instance().getLastMatchWithMatchId(Integer.parseInt(lastMatchId));
+                    if (matchInfo != null) {
+                        hash.put("LastMatch_Type", String.valueOf(matchInfo.getMatchType().getId()));
+                    }
 
                     ele = (Element) tmp_lm.getElementsByTagName("PositionCode").item(0);
                     hash.put("LastMatch_PositionCode", (XMLManager.getFirstChildNodeValue(ele)));

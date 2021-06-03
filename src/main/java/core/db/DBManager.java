@@ -1232,15 +1232,21 @@ public class DBManager {
 	 * @param teamId the team id
 	 * @return the match kurz info
 	 */
-	public MatchKurzInfo getLastMatchesKurzInfo(int teamId){
+	public MatchKurzInfo getLastMatchesKurzInfo(int teamId) {
 		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getLastMatchesKurzInfo(teamId);
 	}
 
+	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME))
+				.getLastMatchWithMatchId(matchId);
+
+	}
+
 	/**
-	 * Get all matches for the given sql where claus.
+	 * Get all matches for the given sql where clause.
 	 *
-	 * @param where The string containing sql where claus
+	 * @param where The string containing sql where clause
 	 * @return the match kurz info [ ]
 	 */
 	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
@@ -1256,8 +1262,7 @@ public class DBManager {
 	 * @param matchStatus the match status
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(final int teamId,
-			final int matchStatus) {
+	public MatchKurzInfo[] getMatchesKurzInfo(final int teamId, final int matchStatus) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchStatus);
 	}
@@ -1297,15 +1302,19 @@ public class DBManager {
 
 
 	/**
-	 * Wichtig: Wenn die Teamid = -1 ist muss der Matchtyp ALLE_SPIELE sein!
+	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
+	 * and of type <code>matchtyp</code>.
 	 *
-	 * @param teamId   Die Teamid oder -1 für alle
-	 * @param matchtyp Welche Matches? Konstanten im SpielePanel!
-	 * @param asc      the asc
-	 * @return the match kurz info [ ]
+	 * Important: if teamId is -1, <code>matchtype</code> must be set to
+	 * <code>MatchesPanel.ALL_MATCHS</code>.
+	 *
+	 * @param teamId   The ID of the team, or -1 for all.
+	 * @param matchtyp Type of match, as defined in {@link module.matches.MatchesPanel}.
+	 * @param asc      Ascending if true, descending otherwise.
+	 *
+	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp,
-			boolean asc) {
+	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, boolean asc) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchtyp, asc);
 	}
@@ -1687,7 +1696,7 @@ public class DBManager {
 	/**
 	 * Gets match lineup team.
 	 *
-	 * @param sourceSystem the source system
+	 * @param iMatchType  the type of match
 	 * @param matchID      the match id
 	 * @param teamID       the team id
 	 * @return the match lineup team

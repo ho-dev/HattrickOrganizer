@@ -24,8 +24,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
-import static core.constants.player.PlayerSkill.*;
 import static java.lang.Integer.min;
+import static core.constants.player.PlayerSkill.*;
 
 public class Player {
 
@@ -325,6 +325,8 @@ public class Player {
     private String m_lastMatchDate;
     private double m_lastMatchRating=0;
     private int m_lastMatchId=0;
+    private MatchType lastMatchType;
+
 
     /**
      * specifying at what time –in minutes- that player entered the field
@@ -448,6 +450,10 @@ public class Player {
             m_lastMatchRating = 2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
             m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
         }
+
+        setLastMatchType(MatchType.getById(
+                Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
+        ));
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
@@ -1657,6 +1663,20 @@ public class Player {
      */
     public int getLastMatchId(){
         return m_lastMatchId;
+    }
+
+    /**
+     * Returns the {@link MatchType} of the last match.
+     */
+    public MatchType getLastMatchType() {
+        return lastMatchType;
+    }
+
+    /**
+     * Sets the value of <code>lastMatchType</code> to <code>matchType</code>.
+     */
+    public void setLastMatchType(MatchType matchType) {
+        this.lastMatchType = matchType;
     }
 
     /**

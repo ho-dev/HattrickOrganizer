@@ -6,7 +6,7 @@ import core.util.IOUtils;
 import java.io.File;
 
 /**
- * Importiert ein HRF-File und stellt die Werte bereit
+ * Imports an HRF file and creates the correponding {@link HOModel} entities.
  */
 public class HRFFileParser {
 
@@ -14,7 +14,7 @@ public class HRFFileParser {
 	}
 
 	/**
-	 * Datei einlesen und parsen
+	 * Reads and parses the {@link File} input.  The format of the file must be HRF.
 	 */
 	public static HOModel parse(File file) {
 
@@ -30,7 +30,6 @@ public class HRFFileParser {
 			HOLogger.instance().log(HRFFileParser.class, e);
 		}
 
-		// Nur im Fehlerfall
 		return null;
 	}
 }

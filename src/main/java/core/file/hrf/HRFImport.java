@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- * Importiert eine angegebenen HRFDatei
+ * Imports a specified HRF file.
  */
 public class HRFImport {
 
@@ -111,13 +111,6 @@ public class HRFImport {
 
 			HOModel hom = HOVerwaltung.instance().getModel();
 
-//			// Aufstellung in liste als Aktuelle Aufstellungsetzen und als
-//			// Angezeigte Aufstellung
-//			LineupsComparisonHistoryPanel.setHRFAufstellung(hom.getLineup(),
-//					hom.getPreviousLineup());
-//			LineupsComparisonHistoryPanel.setAngezeigteAufstellung(new LineupCBItem(
-//					getLangStr("AktuelleAufstellung"), hom.getLineup()));
-
 			// Refreshen aller Fenster
 			RefreshManager.instance().doReInit();
 		}
@@ -140,8 +133,6 @@ public class HRFImport {
 		filter.addExtension("hrf");
 		filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.hrf"));
 		fileChooser.setFileFilter(filter);
-
-		Timestamp olderHrf = new Timestamp(System.currentTimeMillis());
 
 		if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 			return fileChooser.getSelectedFiles();

@@ -6,7 +6,6 @@ import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
 import core.util.HTDatetime;
-import module.specialEvents.Match;
 
 import java.time.ZonedDateTime;
 
