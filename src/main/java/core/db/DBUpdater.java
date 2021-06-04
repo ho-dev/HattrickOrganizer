@@ -266,7 +266,8 @@ final class DBUpdater {
 			futureTrainingTable.tryDeleteColumn("WEEK");
 		}
 
-		if (columnExistsInTable("SourceSystem", MatchLineupTable.TABLENAME)) {
+		// SourceSystem does NOT exist in HO4, but HeimName does
+		if (columnExistsInTable("HeimName", MatchLineupTable.TABLENAME)) {
 
 			HOLogger.instance().debug(getClass(), "Upgrading DB structure SourceSystem/MatchType .... ");
 

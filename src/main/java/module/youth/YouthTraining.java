@@ -25,21 +25,17 @@ public class YouthTraining {
             UserParameter.instance().youthtrainingFactorSecondary
     };
 
+    // TODO MatchKurzInfo needed to access team information. MatchLineup uses MatchKurzInfo now for teams access
     private MatchLineup matchLineup;
     private Matchdetails matchdetails;
     private int youthMatchId;
+    private MatchType youthMatchType;
     private YouthTrainingType[] training = new YouthTrainingType[2];
     private List<YouthTrainerComment> commentList = new ArrayList<>();
 
-    public YouthTraining(int youthMatchId) {
+    public YouthTraining(int youthMatchId, MatchType matchType) {
         this.youthMatchId = youthMatchId;
-    }
-
-    public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2) {
-        setMatchLineup(youthMatch);
-        this.matchLineup = youthMatch;
-        this.training[Priority.Primary.ordinal()] = t1;
-        this.training[Priority.Secondary.ordinal()] = t2;
+        this.youthMatchType = matchType;
     }
 
     private void setMatchLineup(MatchLineup youthMatch) {
@@ -133,7 +129,7 @@ public class YouthTraining {
     }
 
     public MatchType getMatchType() {
-        return getMatchLineup().getMatchType();
+        return this.youthMatchType;
     }
 
     public YouthSkillInfo calcSkill(YouthSkillInfo value, YouthPlayer player, MatchLineupTeam team) {
