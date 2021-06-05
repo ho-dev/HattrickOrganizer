@@ -2,20 +2,21 @@ package core.file.xml;
 
 import core.db.DBManager;
 import core.model.Tournament.TournamentDetails;
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Vector;
-
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import static core.net.OnlineWorker.getTournamentDetails;
+
 
 /**
  * @author thomas.werth
@@ -559,11 +560,9 @@ public class XMLMatchdetailsParser {
     }
 
     private static void readGeneral(Document doc, Matchdetails md) {
-        Element ele = null;
-        Element root = null;
-        int iMatchType;
-		int iCupLevel;
-		int iCupLevelIndex;
+        Element ele ;
+        Element root ;
+        int iMatchType, iCupLevel, iCupLevelIndex;
 
         root = doc.getDocumentElement();
 
@@ -576,9 +575,38 @@ public class XMLMatchdetailsParser {
             root = (Element) root.getElementsByTagName("Match").item(0);
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
+
 			var matchType = MatchType.getById(iMatchType);
 			md.setSourceSystem(matchType.getSourceSystem());
+			md.setMatchType(matchType);
+
+			if (iMatchType == 3) {
+				ele = (Element) root.getElementsByTagName("CupLevel").item(0);
+				iCupLevel = Integer.parseInt(ele.getFirstChild().getNodeValue());
+				md.setCupLevel(CupLevel.fromInt(iCupLevel));
+
+				ele = (Element) root.getElementsByTagName("CupLevelIndex").item(0);
+				iCupLevelIndex = Integer.parseInt(ele.getFirstChild().getNodeValue());
+				md.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
+			}
+			else if (iMatchType == 50) {
+				ele = (Element) root.getElementsByTagName("MatchContextId").item(0);
+				int tournamentId = Integer.parseInt(ele.getFirstChild().getNodeValue());
+				md.setMatchContextId(tournamentId);
+
+				TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+				if (oTournamentDetails == null)
+				{
+					oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+					DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+				}
+				md.setTournamentTypeID(oTournamentDetails.getTournamentType());
+			}
+
 			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
+			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
+			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
+
             ele = (Element) root.getElementsByTagName("MatchID").item(0);
             md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("MatchDate").item(0);

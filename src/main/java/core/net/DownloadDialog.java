@@ -310,7 +310,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				// Only get lineups for own fixtures
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
-					OnlineWorker.getAllLineups(null); //TODO: revert to 10
+					OnlineWorker.getAllLineups(10);
 				}
 
 				if (model.getBasics().hasYouthTeam()){

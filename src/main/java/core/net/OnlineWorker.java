@@ -264,14 +264,21 @@ public class OnlineWorker {
 
 	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh)
 	{
+		if (info.isObsolet()){
+			return true;
+		}
+
+		HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + info.getMatchID());
+
 		int matchID = info.getMatchID();
 		if (matchID < 0) {
 			return false;
 		}
 
 		showWaitInformation(1);
-		// Only download if not present in the database, or if refresh is true
-		if (refresh || !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
+		// Only download if not present in the database, or if refresh is true or if match not oboslet
+		if (refresh ||
+				!DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
 				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType(), matchID)
 		) {
@@ -351,7 +358,7 @@ public class OnlineWorker {
 
 				MatchLineup lineup;
 				boolean success;
-				if ( info.getMatchStatus() == MatchKurzInfo.FINISHED) {
+				if ( (info.getMatchStatus() == MatchKurzInfo.FINISHED) && (! info.isObsolet())) {
 					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 
 					if (lineup == null) {
@@ -773,6 +780,92 @@ public class OnlineWorker {
 		return result;
 	}
 
+
+	/**
+	 * Try to recover missing matchType information by querying HT with different source system and returning first result
+	 *
+	 * @param _match the match id
+	 * @return the match type
+	 */
+	public static MatchKurzInfo inferMissingMatchType(MatchKurzInfo _match) {
+		String matchDetails;
+		Matchdetails details;
+		var conn = MyConnector.instance();
+		conn.setSilentDownload(true);
+
+
+
+		try {
+			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LEAGUE);
+			if((matchDetails != null) && (! matchDetails.equals(""))) {
+				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+			}
+			else{
+				details = null;
+			}
+			if (details != null) {
+				if (details.getHeimId() == _match.getHomeTeamID()) {
+					_match.setMatchType(details.getMatchType());
+					_match.setMatchContextId(details.getMatchContextId());
+					_match.setCupLevel(details.getCupLevel());
+					_match.setCupLevelIndex(details.getCupLevelIndex());
+					conn.setSilentDownload(false);
+					return _match;
+				}
+			}
+
+			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LADDER);
+			if((matchDetails != null) && (! matchDetails.equals(""))) {
+				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+			}
+			else{
+				details = null;
+			}
+			if (details != null) {
+				if (details.getHeimId() == _match.getHomeTeamID()) {
+					_match.setMatchType(details.getMatchType());
+					_match.setMatchContextId(details.getMatchContextId());
+					_match.setCupLevel(details.getCupLevel());
+					_match.setCupLevelIndex(details.getCupLevelIndex());
+					conn.setSilentDownload(false);
+					return _match;
+				}
+			}
+
+			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.YOUTHLEAGUE);
+			if((matchDetails != null) && (! matchDetails.equals(""))) {
+				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+			}
+			else{
+				details = null;
+			}
+			if (details != null) {
+				if (details.getHeimId() == _match.getHomeTeamID()) {
+					_match.setMatchType(details.getMatchType());
+					_match.setMatchContextId(details.getMatchContextId());
+					_match.setCupLevel(details.getCupLevel());
+					_match.setCupLevelIndex(details.getCupLevelIndex());
+					conn.setSilentDownload(false);
+					return _match;
+				}
+			}
+			_match.setMatchType(MatchType.TOURNAMENTGROUP);
+			_match.setTournamentTypeID(TournamentType.DIVISIONBATTLE.getId());
+			_match.setisObsolet(true);
+			conn.setSilentDownload(false);
+			return _match;
+		}
+		catch (Exception e) {
+			HOLogger.instance().error(OnlineWorker.class, "can't infer MatchType of match: " + _match.getMatchID());
+			_match.setMatchType(MatchType.NONE);
+			conn.setSilentDownload(false);
+			return _match;
+		}
+	}
+
+
+
+
 	private static Matchdetails downloadMatchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
 		String matchDetails;
 		Matchdetails details;
@@ -846,9 +939,8 @@ public class OnlineWorker {
 		boolean bOK;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if (!DBManager.instance().isMatchLineupInDB(info.getMatchType(), curMatchId)) {
+			if ((!(info.isObsolet())) && (!DBManager.instance().isMatchLineupInDB(info.getMatchType(), curMatchId))) {
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
-					HOLogger.instance().debug(OnlineWorker.class, "Get Lineup : " + curMatchId);
 					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);
 					if (!bOK) {
 						HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + curMatchId);

@@ -1269,6 +1269,18 @@ public class DBManager {
 
 
 	/**
+	 * Gets first upcoming match with team id.
+	 *
+	 * @param teamId the team id
+	 * @return the first upcoming match with team id
+	 */
+	public MatchKurzInfo getFirstUpcomingMatchWithTeamId(final int teamId) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getFirstUpcomingMatchWithTeamId(teamId);
+	}
+
+
+	/**
 	 * Get played match info array list.
 	 *
 	 * @param iNbGames the nb games

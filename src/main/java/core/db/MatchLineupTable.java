@@ -78,7 +78,7 @@ public final class MatchLineupTable extends AbstractTable {
 				vorhanden = true;
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.isMatchVorhanden : " + e);
+			HOLogger.instance().log(getClass(),"isMatchLineupInDB() : " + e);
 		}
 
 		return vorhanden;
