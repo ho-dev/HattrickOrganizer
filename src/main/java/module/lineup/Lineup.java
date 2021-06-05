@@ -720,11 +720,10 @@ public class Lineup{
 	private void getUpcomingMatch() {
 		try {
 			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			final MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId,
-					MatchKurzInfo.UPCOMING);
-			final List<MatchKurzInfo> sMatches = orderMatches(matches);
 
-			if (sMatches.isEmpty() || sMatches.get(0) == null) {
+			MatchKurzInfo match = DBManager.instance().getFirstUpcomingMatchWithTeamId(teamId);
+
+			if (match == null) {
 				m_sLocation = 0;
 				m_iArenaId = 0;
 				m_iRegionId = 0;
@@ -734,10 +733,9 @@ public class Lineup{
 				return;
 			}
 
-			MatchKurzInfo match = sMatches.get(0);
 			if (match.getMatchType().isOfficial()) {
 				if (match.isNeutral()) {
-					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;    // could be overwritten if it is also a derby
+					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;
 				}
 				if (match.isDerby()) {
 					m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
@@ -768,51 +766,6 @@ public class Lineup{
 
 	}
 
-	/**
-	 * For some reason we have users with old "upcoming" matches which break the
-	 * location determination. This method removes all matches that are more
-	 * than 8 days older than the previous 'upcoming' match.
-	 * 
-	 * This method also returns the matches in order of the newest first.
-	 */
-	private List<MatchKurzInfo> orderMatches(MatchKurzInfo[] inMatches) {
-		final List<MatchKurzInfo> matches = new ArrayList<MatchKurzInfo>();
-		if (inMatches != null && inMatches.length > 0) {
-			matches.addAll(Arrays.asList(inMatches));
-
-			// Flipped the sign of the return value to get newest first -
-			// blaghaid
-			Collections.sort(matches, new Comparator<MatchKurzInfo>() {
-				@Override
-				public int compare(MatchKurzInfo o1, MatchKurzInfo o2) {
-					return (o1.getMatchDateAsTimestamp().compareTo(o2.getMatchDateAsTimestamp()));
-				}
-			});
-
-			Timestamp checkDate = null;
-			for (Iterator<MatchKurzInfo> i = matches.iterator(); i.hasNext();) {
-				MatchKurzInfo m = i.next();
-				if (checkDate == null) {
-					checkDate = m.getMatchDateAsTimestamp();
-					continue;
-				}
-				if (m.getMatchDateAsTimestamp().getTime() < (checkDate.getTime() - 8 * 24 * 60 * 60
-						* 1000L)) { // older
-									// than
-									// 8
-									// days
-					HOLogger.instance().warning(
-							getClass(),
-							"Old match with status UPCOMING! " + m.getMatchID() + " from "
-									+ m.getMatchScheduleAsString());
-					i.remove();
-				} else {
-					checkDate = m.getMatchDateAsTimestamp();
-				}
-			}
-		}
-		return matches;
-	}
 
 	/**
 	 * Umrechnung von double auf 1-80 int

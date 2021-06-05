@@ -238,7 +238,8 @@ final class DBUpdater {
 		// Upgrade FutureTraining table ======================================================================================
 		if (columnExistsInTable("COACH_LEVEL", FutureTrainingTable.TABLENAME)) {
 			HOLogger.instance().debug(getClass(), "Upgrade of FutureTraining table was already performed ... process skipped !");
-		} else {
+		}
+		else {
 			// Step 1. Add new columns in FUTURETRAININGS table ===========================================================
 			var futureTrainingTable = dbManager.getTable(FutureTrainingTable.TABLENAME);
 			futureTrainingTable.tryAddColumn("COACH_LEVEL", "INTEGER");
@@ -346,6 +347,8 @@ final class DBUpdater {
             m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
         }
 
+
+		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("isObsolete", "BOOLEAN");
 
 		updateDBVersion(dbVersion, 500);
 	}

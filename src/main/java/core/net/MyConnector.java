@@ -735,8 +735,9 @@ public class MyConnector {
 				}
 			}
 		} catch (Exception sox) {
-			HOLogger.instance().error(getClass(), sox);
+
 			if ( !silentDownload) {
+				HOLogger.instance().error(getClass(), sox);
 				JOptionPane.showMessageDialog(null,
 						sox.getMessage() + "\n\n" + "URL:" + surl + "\n",
 						HOVerwaltung.instance().getLanguageString("Fehler"),
@@ -858,10 +859,10 @@ public class MyConnector {
 			} else if ((encoding != null) && encoding.equalsIgnoreCase("deflate")) {
 				resultingInputStream = new InflaterInputStream(response.getStream(), new Inflater(
 						true));
-				HOLogger.instance().log(getClass(), " Read Deflated.");
+//				HOLogger.instance().log(getClass(), " Read Deflated.");
 			} else {
 				resultingInputStream = response.getStream();
-				HOLogger.instance().log(getClass(), " Read Normal.");
+//				HOLogger.instance().log(getClass(), " Read Normal.");
 			}
 		}
 		return resultingInputStream;

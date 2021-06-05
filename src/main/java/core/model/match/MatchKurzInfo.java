@@ -1,10 +1,13 @@
 package core.model.match;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
+import core.net.OnlineWorker;
+import core.util.HOLogger;
 import core.util.HTDatetime;
 
 import java.time.ZonedDateTime;
@@ -102,6 +105,17 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public static final int ONGOING = 3;
 	public static final int UPCOMING = 2;
 	public static final int FINISHED = 1;
+
+
+	public boolean isObsolet() {
+		return isObsolet;
+	}
+
+	public void setisObsolet(boolean obsolet) {
+		isObsolet = obsolet;
+	}
+
+	private boolean isObsolet = false;  //True if match has been deleted in HT (might happen for some hto integrated game)
 
 	/**
 	 * Setter for the ordersGiven property which indicates if orders for this
@@ -338,7 +352,31 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_iMatchTyp.
 	 */
 	public MatchType getMatchType() {
+		if((m_mtMatchTyp == null) || (m_mtMatchTyp == MatchType.NONE))
+		{
+			var m = OnlineWorker.inferMissingMatchType(this);
+			this.m_mtMatchTyp = m.getMatchType();
+			if(m_mtMatchTyp != MatchType.NONE)
+			{
+				this.m_mtMatchTyp = m.getMatchType();
+				this.iMatchContextId = m.getMatchContextId();
+				this.m_mtCupLevel = m.getCupLevel();
+				this.m_mtCupLevelIndex = m.getCupLevelIndex();
+				this.iTournamentTypeID = m.getTournamentTypeID();
+				this.isObsolet = m.isObsolet();
+				DBManager.instance().storeMatchKurzInfos(new MatchKurzInfo[]{this});
+				HOLogger.instance().debug(this.getClass(), String.format("Successfully set MatchType to %s (%s) for match: %s", m_mtMatchTyp.getName(), this.getMatchTypeExtended().getName(), this.getMatchID()));
+			}
+			else{
+				HOLogger.instance().debug(this.getClass(), String.format("Could not infer MatchType of match: %s", this.getMatchID()));
+			}
+
+		}
 		return m_mtMatchTyp;
+	}
+
+	public void setMatchTypeExtended(IMatchType _matchTypeExtended) {
+		this.m_matchTypeExtended = _matchTypeExtended;
 	}
 
 	public IMatchType getMatchTypeExtended() {
