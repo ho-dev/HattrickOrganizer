@@ -272,17 +272,19 @@ final class DBUpdater {
 		if (columnExistsInTable("HeimName", MatchLineupTable.TABLENAME)) {
 
 			HOLogger.instance().debug(getClass(), "Upgrading DB structure SourceSystem/MatchType .... ");
+			var matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
+			var matchesKurzInfoTable = dbManager.getTable(MatchesKurzInfoTable.TABLENAME);
+			var matchIFATable = dbManager.getTable(IfaMatchTable.TABLENAME);
 
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
-			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES DROP PRIMARY KEY");
-			//m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY"); there are no pk on these tables
-			//m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
+			matchesKurzInfoTable.tryDropPrimaryKey();
+			matchLineupTable.tryDropPrimaryKey();
+			matchDetailsTable.tryDropPrimaryKey();
+			matchIFATable.tryDropPrimaryKey();
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
 			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
-			var matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
 			matchLineupTable.tryDeleteColumn("SourceSystem");
 			matchLineupTable.tryDeleteColumn("HeimName");
 			matchLineupTable.tryDeleteColumn("HeimID");
