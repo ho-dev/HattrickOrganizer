@@ -117,7 +117,7 @@ public class SystemManager {
 	}
 
 	/**
-	 * Refrwsh only the data without recalculating everything
+	 * Refresh only the data without recalculating everything
 	 */
 	public static void refreshData() {
 		if (!updating) {
