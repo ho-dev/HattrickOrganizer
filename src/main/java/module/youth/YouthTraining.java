@@ -103,29 +103,29 @@ public class YouthTraining {
 
     MatchLineup getMatchLineup() {
         if (this.matchLineup == null) {
-            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
+            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchType().getId(), this.youthMatchId);
         }
         return this.matchLineup;
     }
 
     public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
-            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
-            this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
+            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchType().getId(), this.youthMatchId);
+            this.matchdetails.setMatchType(this.getMatchType());
         }
         return this.matchdetails;
     }
 
     public Timestamp getMatchDate() {
-        return this.getMatchLineup().getMatchDate();
+        return this.getMatchDetails().getMatchDate();
     }
 
     public String getHomeTeamName() {
-        return this.getMatchLineup().getHomeTeamName();
+        return this.getMatchDetails().getHomeTeamName();
     }
 
     public String getGuestTeamName() {
-        return this.getMatchLineup().getGuestTeamName();
+        return this.getMatchDetails().getGuestTeamName();
     }
 
     public MatchType getMatchType() {

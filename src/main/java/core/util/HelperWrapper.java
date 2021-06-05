@@ -157,7 +157,7 @@ public class HelperWrapper {
           String input = MyConnector.instance().downloadMatchdetails(Integer.parseInt(matchID), matchType);
           Matchdetails mdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(input, null);
           int teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-          return ((mdetails.getHeimId() == teamID) || (mdetails.getGastId() == teamID));
+          return ((mdetails.getHomeTeamId() == teamID) || (mdetails.getGuestTeamId() == teamID));
       } catch (Exception e) {
       	HOLogger.instance().warning(Helper.class, "Err: " + e);
       }

@@ -596,7 +596,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_iGastId.
      */
-    public final int getGastId() {
+    public final int getGuestTeamId() {
         return m_iGastId;
     }
 
@@ -614,7 +614,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_sGastName.
      */
-    public final java.lang.String getGastName() {
+    public final java.lang.String getGuestTeamName() {
         return m_sGastName;
     }
 
@@ -874,7 +874,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_iHeimId.
      */
-    public final int getHeimId() {
+    public final int getHomeTeamId() {
         return m_iHeimId;
     }
 
@@ -892,7 +892,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_sHeimName.
      */
-    public final java.lang.String getHeimName() {
+    public final java.lang.String getHomeTeamName() {
         return m_sHeimName;
     }
 
@@ -1261,7 +1261,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_clSpielDatum.
      */
-    public final java.sql.Timestamp getSpielDatum() {
+    public final java.sql.Timestamp getMatchDate() {
         return m_clSpielDatum;
     }
 

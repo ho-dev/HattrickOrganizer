@@ -14,7 +14,6 @@ import core.model.Team;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.MyConnector;
@@ -251,7 +250,7 @@ public class XMLExporter  {
 
 				MatchLineupTeam lineupTeam = null;
 				Matchdetails details = matchData.getDetails();
-				if (details.getHeimId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+				if (details.getHomeTeamId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 					lineupTeam = DBManager.instance().loadMatchLineup(details.getMatchType().getId(), details.getMatchID()).getHomeTeam();
 				} else {
 					lineupTeam = DBManager.instance().loadMatchLineup(details.getMatchType().getId(), details.getMatchID()).getGuestTeam();
@@ -439,43 +438,43 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.KEEPER)));
 					ele = doc.createElement("SubTorwartHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.KEEPER, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.KEEPER, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubVerteidigung");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.DEFENDING)));
 					ele = doc.createElement("SubVerteidigungHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.DEFENDING, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.DEFENDING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubPassspiel");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.PASSING)));
 					ele = doc.createElement("SubPassspielHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PASSING, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PASSING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubFluegel");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.WINGER)));
 					ele = doc.createElement("SubFluegelHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.WINGER, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.WINGER, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubTorschuss");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.SCORING)));
 					ele = doc.createElement("SubTorschussHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SCORING, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SCORING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubStandards");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.SET_PIECES)));
 					ele = doc.createElement("SubStandardsHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SET_PIECES, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SET_PIECES, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubSpielaufbau");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.PLAYMAKING)));
 					ele = doc.createElement("SubSpielaufbauHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PLAYMAKING, playerData, details.getSpielDatum())));
+					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PLAYMAKING, playerData, details.getMatchDate())));
 				}
 			}
 

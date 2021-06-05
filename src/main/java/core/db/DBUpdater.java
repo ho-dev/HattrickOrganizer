@@ -1,6 +1,8 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
+import core.model.enums.MatchType;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -271,10 +273,13 @@ final class DBUpdater {
 
 			HOLogger.instance().debug(getClass(), "Upgrading DB structure SourceSystem/MatchType .... ");
 
+			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
+			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES DROP PRIMARY KEY");
+			//m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY"); there are no pk on these tables
+			//m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
+
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO DROP PRIMARY KEY");
 			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP DROP PRIMARY KEY");
 			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			var matchLineupTable = dbManager.getTable(MatchLineupTable.TABLENAME);
@@ -295,60 +300,67 @@ final class DBUpdater {
 			dbManager.getTable(MatchDetailsTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryDeleteColumn("SourceSystem");
 
-			dbManager.getTable(IfaMatchTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchDetailsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchLineupTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchOrderTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER");
-
+			dbManager.getTable(IfaMatchTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchDetailsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchLineupTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchOrderTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
+			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 
 			// Correct history of MATCHESKURZINFO  ==============================================
 			String sql = """
-						UPDATE MATCHESKURZINFO
-						SET MATCHTYP =
-						    CASE MATCHTYP
-						        WHEN 1001 THEN 3
-						        WHEN 1002 THEN 3
-						        WHEN 1003 THEN 3
-						        WHEN 1004 THEN 3
-						        WHEN 1101 THEN 50
-						        ELSE -1
-						    END
-						WHERE
-						    MATCHTYP IN (1001, 1002, 1003, 1004, 1101)""";
+					UPDATE MATCHESKURZINFO
+					SET MATCHTYP =
+					    CASE MATCHTYP
+					        WHEN 1001 THEN 3
+					        WHEN 1002 THEN 3
+					        WHEN 1003 THEN 3
+					        WHEN 1004 THEN 3
+					        WHEN 1101 THEN 50
+					        ELSE -1
+					    END
+					WHERE
+					    MATCHTYP IN (1001, 1002, 1003, 1004, 1101)""";
 
 			m_clJDBCAdapter.executeQuery(sql);
 
-
 			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO =============================
+			// use match lineup table to fix match types, since the lineup table holds the youth matches too
+			// the types in lineup table seems to be the correct one - at least in my database (ws) - no fake types of sapphire cup and co.
+			//List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP", "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
+			//		"MATCHORDER", "MATCHSUBSTITUTION");
 
-			List<String> lTables = List.of("IFA_MATCHES", "MATCHDETAILS", "MATCHLINEUP", "MATCHHIGHLIGHTS", "MATCHLINEUPPLAYER", "MATCHLINEUPTEAM",
-					"MATCHORDER", "MATCHSUBSTITUTION");
-
-			for(String tableName : lTables){
-				sql = "UPDATE " + tableName + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM MATCHESKURZINFO MK WHERE t1.MATCHID = MK.MATCHID)";
-				m_clJDBCAdapter.executeQuery(sql);
-			}
+			copyMatchTypes("MATCHESKURZINFO", "IFA_MATCHES");		// TODO: check, what are IFA matches?
+			copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
+			copyMatchTypes("MATCHLINEUP", "MATCHDETAILS");
+			copyMatchTypes("MATCHLINEUP", "MATCHHIGHLIGHTS");
+			copyMatchTypes("MATCHLINEUP", "MATCHLINEUPPLAYER");
+			copyMatchTypes("MATCHLINEUP", "MATCHLINEUPTEAM");
+			copyMatchTypes("MATCHLINEUP", "MATCHSUBSTITUTION");
+			copyMatchTypes("MATCHLINEUP", "YOUTHTRAINING");
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES DROP PRIMARY KEY");
 			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS DROP PRIMARY KEY");
 			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			HOLogger.instance().debug(getClass(), "Upgrade of DB structure SourceSystem/MatchType is complete ! ");
 		}
 
-        if (!columnExistsInTable("LAST_MATCH_TYPE", "SPIELER")) {
-            m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
-        }
-
+		if (!columnExistsInTable("LAST_MATCH_TYPE", "SPIELER")) {
+			m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
+		}
 
 		updateDBVersion(dbVersion, 500);
+	}
+
+	private void copyMatchTypes(String fromTable, String toTable) {
+		String sql = "UPDATE " + toTable + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM " + fromTable +" MK WHERE t1.MATCHID = MK.MATCHID)";
+		m_clJDBCAdapter.executeQuery(sql);
+		sql = "UPDATE " + toTable + " SET MATCHTYP = 0 WHERE MATCHTYP IS NULL";
+		m_clJDBCAdapter.executeQuery(sql);
 	}
 
 	private void updateDBv400(int dbVersion) throws SQLException {

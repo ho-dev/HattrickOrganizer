@@ -2677,16 +2677,15 @@ public class DBManager {
 	}
 
 	/**
-	 * Delete match data.
+	 * Delete youth match data.
 	 *
-	 * @param sourcesystem the sourcesystem
 	 * @param before       the before
 	 */
-	public void deleteMatchData(int sourcesystem, Timestamp before){
+	public void deleteYouthMatchData(Timestamp before){
 		if ( before != null) {
-			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
-			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
-			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteYouthMatchHighlightsBefore(before);
+			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteYouthMatchDetailsBefore(before);
+			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteYouthMatchLineupsBefore(before);
 		}
 	}
 

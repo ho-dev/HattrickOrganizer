@@ -67,8 +67,8 @@ class TeamsRatingPanel extends LazyImagePanel {
 			return;
 		}
 
-		m_jlHomeTeamName.setText(details.getHeimName());
-		m_jlGuestTeamName.setText(details.getGastName());
+		m_jlHomeTeamName.setText(details.getHomeTeamName());
+		m_jlGuestTeamName.setText(details.getGuestTeamName());
 		setValue(leftDefense, details.getHomeLeftDef(), details.getGuestRightAtt());
 		setValue(centralDefense, details.getHomeMidDef(), details.getGuestMidAtt());
 		setValue(rightDefense, details.getHomeRightDef(), details.getGuestLeftAtt());
