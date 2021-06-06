@@ -804,7 +804,7 @@ public class OnlineWorker {
 				details = null;
 			}
 			if (details != null) {
-				if (details.getHeimId() == _match.getHomeTeamID()) {
+				if (details.getHomeTeamId() == _match.getHomeTeamID()) {
 					_match.setMatchType(details.getMatchType());
 					_match.setMatchContextId(details.getMatchContextId());
 					_match.setCupLevel(details.getCupLevel());
@@ -822,7 +822,7 @@ public class OnlineWorker {
 				details = null;
 			}
 			if (details != null) {
-				if (details.getHeimId() == _match.getHomeTeamID()) {
+				if (details.getHomeTeamId() == _match.getHomeTeamID()) {
 					_match.setMatchType(details.getMatchType());
 					_match.setMatchContextId(details.getMatchContextId());
 					_match.setCupLevel(details.getCupLevel());
@@ -840,7 +840,7 @@ public class OnlineWorker {
 				details = null;
 			}
 			if (details != null) {
-				if (details.getHeimId() == _match.getHomeTeamID()) {
+				if (details.getHomeTeamId() == _match.getHomeTeamID()) {
 					_match.setMatchType(details.getMatchType());
 					_match.setMatchContextId(details.getMatchContextId());
 					_match.setCupLevel(details.getCupLevel());
