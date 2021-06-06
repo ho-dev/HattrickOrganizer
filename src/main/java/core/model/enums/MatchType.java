@@ -3,6 +3,7 @@ package core.model.enums;
 import core.model.match.IMatchType;
 import core.model.match.SourceSystem;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
@@ -248,4 +249,11 @@ public enum MatchType implements IMatchType {
 		};
 	}
 
+	public static String getWhereClauseFromSourceSystem(int sourceSystem){
+		var lMatchType =  MatchType.fromSourceSystem(SourceSystem.valueOf(sourceSystem));
+		String res = "(";
+		res += lMatchType.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+		res += ")";
+		return res;
+	}
 }

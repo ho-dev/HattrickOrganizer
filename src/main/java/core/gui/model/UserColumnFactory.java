@@ -95,7 +95,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem) {
                 Player player = spielerCBItem.getSpieler();
-                Timestamp matchDate = spielerCBItem.getMatchdetails().getSpielDatum();
+                Timestamp matchDate = spielerCBItem.getMatchdetails().getMatchDate();
                 System.out.println(spielerCBItem.getMatchdate());
 
                 if (matchDate != null) {
@@ -136,7 +136,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
-                int einstellung = (matchdetails.getHeimId() == teamid) ? matchdetails.getHomeEinstellung() : matchdetails.getGuestEinstellung();
+                int einstellung = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeEinstellung() : matchdetails.getGuestEinstellung();
                 return new ColorLabelEntry(Matchdetails.getNameForEinstellung(einstellung), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
@@ -146,7 +146,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
-                int tactic = (matchdetails.getHeimId() == teamid) ? matchdetails.getHomeTacticType() : matchdetails.getGuestTacticType();
+                int tactic = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticType() : matchdetails.getGuestTacticType();
                 return new ColorLabelEntry(Matchdetails.getNameForTaktik(tactic), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
@@ -156,7 +156,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
-                int tacticSkill = (matchdetails.getHeimId() == teamid) ? matchdetails.getHomeTacticSkill() : matchdetails.getGuestTacticSkill();
+                int tacticSkill = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticSkill() : matchdetails.getGuestTacticSkill();
                 return new ColorLabelEntry(PlayerAbility.getNameForSkill(tacticSkill), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }

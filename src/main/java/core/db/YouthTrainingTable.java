@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.enums.MatchType;
 import core.util.HOLogger;
 import module.youth.YouthTraining;
 import module.youth.YouthTrainingType;
@@ -48,7 +49,8 @@ public class YouthTrainingTable extends AbstractTable{
 
     private YouthTraining createObject(ResultSet rs) throws SQLException {
         var matchId = rs.getInt("MatchId");
-        var ret = new YouthTraining(matchId);
+        var matchType = rs.getInt("MatchTyp");
+        var ret = new YouthTraining(matchId, MatchType.getById(matchType));
         ret.setTraining(YouthTraining.Priority.Primary, YouthTrainingType.valueOf(DBManager.getInteger(rs, "Training1")));
         ret.setTraining(YouthTraining.Priority.Secondary, YouthTrainingType.valueOf(DBManager.getInteger(rs, "Training2")));
         return ret;
@@ -59,7 +61,10 @@ public class YouthTrainingTable extends AbstractTable{
         delete( new String[]{"MatchId"}, new String[]{""+matchId});
         if ( youthTraining.getTraining(YouthTraining.Priority.Primary) != null ||
                 youthTraining.getTraining(YouthTraining.Priority.Secondary) != null) {
-            StringBuilder sql = new StringBuilder("INSERT INTO " + getTableName() + " ( MatchId, Training1, Training2 ) VALUES(" + matchId);
+            StringBuilder sql = new StringBuilder("INSERT INTO " + getTableName()
+                    + " ( MatchId, MatchTyp, Training1, Training2 ) VALUES("
+                    + matchId + ","
+                    + youthTraining.getMatchType().getId());
             for (var p : YouthTraining.Priority.values()) {
                 var tt = youthTraining.getTraining(p);
                 if (tt == null) {

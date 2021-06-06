@@ -296,10 +296,10 @@ public class OnlineWorker {
 					showWaitInformation(10);
 					details = downloadMatchDetails(matchID, info.getMatchType(), null);
 					if ( details != null) {
-						info.setHomeTeamID(details.getHeimId());
-						info.setGuestTeamID(details.getGastId());
+						info.setHomeTeamID(details.getHomeTeamId());
+						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
-						info.setMatchSchedule(details.getSpielDatum().toString());
+						info.setMatchSchedule(details.getMatchDate().toString());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);

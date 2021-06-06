@@ -50,9 +50,9 @@ public final class MatchLineupTable extends AbstractTable {
 			rs.first();
 			lineup = createMatchLineup(rs);
 
-			MatchKurzInfo match = DBManager.instance().getMatchesKurzInfoByMatchID(matchID, MatchType.getById(matchID));
-			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getHomeTeamID()));
-			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getGuestTeamID()));
+			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
+			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
+			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
 
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error " + e);
@@ -120,7 +120,7 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(MatchDate) from " + getTableName() + " WHERE MATCHTYP IN " + getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
+		var sql = "select max(MatchDate) from " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
 		try {
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -138,7 +138,7 @@ public final class MatchLineupTable extends AbstractTable {
 
 		var lineups = new ArrayList<MatchLineup>();
 		try {
-			var sql = "SELECT * FROM " + getTableName() + " WHERE MATCHTYP IN " + getWhereClauseFromSourceSystem(sourceSystem);
+			var sql = "SELECT * FROM " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(sourceSystem);
 
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -152,11 +152,10 @@ public final class MatchLineupTable extends AbstractTable {
 		return lineups;
 	}
 
-	public void deleteMatchLineupsBefore(int iMatchType, Timestamp before) {
+	public void deleteYouthMatchLineupsBefore(Timestamp before) {
 		var sql = "DELETE FROM " +
 				getTableName() +
-				" WHERE MatchTyp=" +
-				iMatchType +
+				" WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) +
 				" AND MATCHDATE<'" +
 				before.toString() + "'";
 		try {
@@ -171,13 +170,5 @@ public final class MatchLineupTable extends AbstractTable {
 		lineup.setMatchID(rs.getInt("MatchID"));
 		lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
 		return lineup;
-	}
-
-	private String getWhereClauseFromSourceSystem(int sourceSystem){
-		var lMatchType =  MatchType.fromSourceSystem(SourceSystem.valueOf(sourceSystem));
-		String res = "(";
-		res += lMatchType.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		res += ")";
-		return res;
 	}
 }

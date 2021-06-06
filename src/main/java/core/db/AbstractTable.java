@@ -182,4 +182,20 @@ public abstract class AbstractTable {
 		return false;
 	}
 
+	public boolean tryDropPrimaryKey()throws SQLException {
+		if ( primaryKeyExists() ){
+			adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+			return true;
+		}
+		return false;
+	}
+
+	public boolean primaryKeyExists() throws SQLException {
+		String sql = "SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY KEY' AND table_name = '"
+				+ getTableName().toUpperCase()
+				+ "'";
+		ResultSet rs = adapter.executeQuery(sql);
+		if ( rs != null ) return rs.next();
+		return false;
+	}
 }
