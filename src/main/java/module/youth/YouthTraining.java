@@ -25,7 +25,6 @@ public class YouthTraining {
             UserParameter.instance().youthtrainingFactorSecondary
     };
 
-    // TODO MatchKurzInfo needed to access team information. MatchLineup uses MatchKurzInfo now for teams access
     private MatchLineup matchLineup;
     private Matchdetails matchdetails;
     private int youthMatchId;
