@@ -70,7 +70,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JButton m_jbStartAssistant = new JButton();
 
 
-	private HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay>();
+	private HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<>();
 
 	// UI items for additions to the LineupPositionsPanel
 
@@ -208,7 +208,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			}
 		}
 
-		final List<Player> vPlayer = new Vector<Player>();
+		final List<Player> vPlayer = new Vector<>();
 		final List<Player> allePlayer = hoModel.getCurrentPlayers();
 
 		for ( Player player: allePlayer){
@@ -219,16 +219,12 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 							this.getGroup())) && !isSelectedGroupExcluded()) || (!player
 							.getTeamInfoSmilie().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
-
-
-//				if (m_jcbxNotLast.isSelected()
-//						&& (lastLineup != null)
-//						&& lastLineup.getAufstellung()
-//								.isPlayerInStartingEleven(player.getPlayerID())) {
-//					include = false;
-//					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
-//				}
-
+				if ( m_jcbxNotLast.isSelected()) {
+					var previousLineup = hoModel.getPreviousLineup();
+					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+						include = false;
+					}
+				}
 				if (include) {
 					vPlayer.add(player);
 				}
@@ -327,10 +323,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	private void removeGUI() {
 		// Remove overlays
-		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
-				.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
+				.entrySet()) {
 			entry.getKey().removeAssistantOverlay(entry.getValue());
 		}
 
@@ -347,7 +341,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	public Map<Integer, Boolean> getPositionStatuses() {
-		HashMap<Integer, Boolean> returnMap = new HashMap<Integer, Boolean>();
+		HashMap<Integer, Boolean> returnMap = new HashMap<>();
 		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
 				.entrySet()) {
 			returnMap.put(entry.getKey().getPositionsID(), entry.getValue().isSelected());
@@ -378,10 +372,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	}
 
 	private boolean getStatusForPosition(int position) {
-		Iterator<Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay>> it = positions
-				.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry = it.next();
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
+				.entrySet()) {
 			if (entry.getKey().getPositionsID() == position) {
 				return entry.getValue().isSelected();
 			}

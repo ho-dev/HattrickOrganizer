@@ -137,6 +137,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		boolean bGroupFiltered = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
 		String sGroup = m_clLineupPanel.getLineupAssistantPanel().getGroup();
 		boolean bSelectedGroupExcluded = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
+		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
 
 		m_weather = m_clLineupPanel.getLineupSettingsPanel().getWeather();
 
@@ -163,13 +164,12 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			if (!bGroupFiltered || (sGroup.equals(player.getTeamInfoSmilie()) && !bSelectedGroupExcluded)
 					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
-
-//TODO: do the last lineup exclusion
-//				if (bExcludeLast && (lastLineup != null) && lastLineup.getAufstellung().isPlayerInStartingEleven(player.getPlayerID())) {
-//					include = false;
-//					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
-//				}
-
+				if ( bExcludeLast) {
+					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup();
+					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+						include = false;
+					}
+				}
 				if (include) {
 					filteredPlayers.add(player);
 				}
@@ -241,8 +241,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// m_jpMatchAndLineupSelectionPanel
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.gridwidth = 3;
-		constraints.gridheight = 2;
+		constraints.gridwidth = 4;
+		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
@@ -251,8 +251,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 
 		// match banner ==================================================
-		constraints.gridx = 3;
-		constraints.gridwidth = 4;
+		constraints.gridx = 4;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
