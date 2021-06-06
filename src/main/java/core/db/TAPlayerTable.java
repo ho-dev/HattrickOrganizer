@@ -51,7 +51,7 @@ final class TAPlayerTable extends AbstractTable {
 	 * Calculate a number from current season and week numbers
 	 * @return number
 	 */
-	private int calcCurrentWeekNumber(){
+	public int calcCurrentWeekNumber(){
 		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
 	}
 

@@ -346,6 +346,13 @@ final class DBUpdater {
             m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
         }
 
+		// Delete corrupt entries (wrong week numbers) from TA_PLAYER table
+		var hrfTable = (HRFTable)dbManager.getTable(HRFTable.TABLENAME);
+		var hrf = hrfTable.getLatestHrf();
+		if ( hrf.isOK() ) {
+			m_clJDBCAdapter.executeUpdate("DELETE FROM " + TAPlayerTable.TABLENAME
+					+ " WHERE WEEK> (SELECT SAISON*16+SPIELTAG-1 FROM " + basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")");
+		}
 
 		updateDBVersion(dbVersion, 500);
 	}
