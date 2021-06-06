@@ -310,14 +310,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				// Only get lineups for own fixtures
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
-					OnlineWorker.getAllLineups(null); //TODO: revert to 10
+					OnlineWorker.getAllLineups(10);
 				}
 
 				if (model.getBasics().hasYouthTeam()){
 					var dateSince = DBManager.instance().getMinScoutingDate();
 					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
 					// delete old youth match lineups, no longer needed (no current youth player has trained then)
-					DBManager.instance().deleteMatchData(SourceSystem.YOUTH.getValue(), dateSince);
+					DBManager.instance().deleteYouthMatchData(dateSince);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {

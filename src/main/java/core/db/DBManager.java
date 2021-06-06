@@ -1269,6 +1269,18 @@ public class DBManager {
 
 
 	/**
+	 * Gets first upcoming match with team id.
+	 *
+	 * @param teamId the team id
+	 * @return the first upcoming match with team id
+	 */
+	public MatchKurzInfo getFirstUpcomingMatchWithTeamId(final int teamId) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getFirstUpcomingMatchWithTeamId(teamId);
+	}
+
+
+	/**
 	 * Get played match info array list.
 	 *
 	 * @param iNbGames the nb games
@@ -2677,16 +2689,15 @@ public class DBManager {
 	}
 
 	/**
-	 * Delete match data.
+	 * Delete youth match data.
 	 *
-	 * @param sourcesystem the sourcesystem
 	 * @param before       the before
 	 */
-	public void deleteMatchData(int sourcesystem, Timestamp before){
+	public void deleteYouthMatchData(Timestamp before){
 		if ( before != null) {
-			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteMatchHighlightsBefore(sourcesystem, before);
-			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteMatchDetailsBefore(sourcesystem, before);
-			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteMatchLineupsBefore(sourcesystem, before);
+			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteYouthMatchHighlightsBefore(before);
+			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteYouthMatchDetailsBefore(before);
+			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).deleteYouthMatchLineupsBefore(before);
 		}
 	}
 

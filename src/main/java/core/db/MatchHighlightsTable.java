@@ -1,7 +1,9 @@
 package core.db;
 
+import core.model.enums.MatchType;
 import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -66,7 +68,7 @@ final class MatchHighlightsTable extends AbstractTable {
 					sql.append("INSERT INTO ").append(getTableName());
 					sql.append(" ( MatchId, MatchDate, MatchTyp, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
 					sql.append(details.getMatchID()).append(",'");
-					sql.append(details.getSpielDatum()).append("', ");
+					sql.append(details.getMatchDate()).append("', ");
 					sql.append(details.getMatchType().getId()).append(", ");
 					sql.append(highlight.getMinute()).append(", ");
 					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
@@ -138,11 +140,10 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
-	public void deleteMatchHighlightsBefore(int iMatchType, Timestamp before) {
+	public void deleteYouthMatchHighlightsBefore(Timestamp before) {
 		var sql = "DELETE FROM " +
 				getTableName() +
-				" WHERE MatchTyp=" +
-				iMatchType +
+				" WHERE MatchTyp IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) +
 				" AND MatchDate IS NOT NULL AND MatchDate<'" +
 				before.toString() + "'";
 		try {

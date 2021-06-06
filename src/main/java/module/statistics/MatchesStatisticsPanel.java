@@ -419,7 +419,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				// Für gesamtstärke
 				double temp = 0d;
 
-				if (details.getHeimId() == teamid) {
+				if (details.getHomeTeamId() == teamid) {
 					sublevel = (details.getHomeMidfield()) % 4;
 
 					bewertungwert = ((details.getHomeMidfield() - 1) / 4) + 1;

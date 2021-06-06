@@ -15,7 +15,7 @@ public class MatchLineup {
     MatchLineupTeam homeTeam;
     private String guestTeamName = null;
     private String homeTeamName = null;
-    private String matchDate = "";
+    private Timestamp matchDate;
     private int arenaId = -1;
     private int guestTeamId = -1;
 
@@ -92,11 +92,7 @@ public class MatchLineup {
      */
     public final int getGuestTeamId() {
         if ( guestTeamId == -1) {
-            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
-            homeTeamId = match.getHomeTeamID();
-            homeTeamName = match.getHomeTeamName();
-            guestTeamId = match.getGuestTeamID();
-            guestTeamName = match.getGuestTeamName();
+            init();
         }
         return guestTeamId;
     }
@@ -117,11 +113,7 @@ public class MatchLineup {
      */
     public final String getGuestTeamName() {
         if (guestTeamName == null) {
-            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
-            homeTeamName = match.getHomeTeamName();
-            homeTeamId = match.getHomeTeamID();
-            guestTeamId = match.getGuestTeamID();
-            guestTeamName = match.getGuestTeamName();
+            init();
         }
         return guestTeamName;
     }
@@ -164,13 +156,18 @@ public class MatchLineup {
      */
     public final int getHomeTeamId() {
         if ( homeTeamId == -1) {
-            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
-            homeTeamId = match.getHomeTeamID();
-            homeTeamName = match.getHomeTeamName();
-            guestTeamId = match.getGuestTeamID();
-            guestTeamName = match.getGuestTeamName();
+            init();
         }
         return homeTeamId;
+    }
+
+    private void init() {
+        var match = DBManager.instance().loadMatchDetails(this.m_MatchTyp.getId(), this.matchId);
+        homeTeamId = match.getHomeTeamId();
+        homeTeamName = match.getHomeTeamName();
+        guestTeamId = match.getGuestTeamId();
+        guestTeamName = match.getGuestTeamName();
+        matchDate = match.getMatchDate();
     }
 
     /**
@@ -188,12 +185,8 @@ public class MatchLineup {
      * @return Value of property m_sHeimName.
      */
     public final String getHomeTeamName() {
-        if ( homeTeamName == null) {
-            var match = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, this.getMatchType());
-            homeTeamName = match.getHomeTeamName();
-            homeTeamId = match.getHomeTeamID();
-            guestTeamId = match.getGuestTeamID();
-            guestTeamName = match.getGuestTeamName();
+        if (homeTeamName == null) {
+            init();
         }
         return homeTeamName;
     }
@@ -238,29 +231,16 @@ public class MatchLineup {
         return m_MatchTyp;
     }
 
-    
-    /**
-     * Setter for property m_lDatum.
-     *
-     * @param date New value of property m_lDatum.
-     */
-    public final void setMatchDate(String date) {
-        if (date != null) {
-            matchDate = date;
-        }
-    }
-
     /**
      * Getter for property m_lDatum.
      *
      * @return Value of property m_lDatum.
      */
-    public final Timestamp getMatchDate() {
-        return Basics.parseHattrickDate(this.matchDate);
-    }
-
-    public final String getStringMatchDate() {
-        return matchDate;
+    public Timestamp getMatchDate() {
+        if ( this.matchDate == null){
+            init();
+        }
+        return this.matchDate;
     }
 
     public SourceSystem getSourceSystem() {
@@ -268,10 +248,10 @@ public class MatchLineup {
     }
 
     public MatchLineupTeam getTeam(Integer teamId) {
-        if ( teamId == this.homeTeamId){
+        if ( teamId == this.getHomeTeamId()){
             return this.getHomeTeam();
         }
-        else if ( teamId == this.guestTeamId){
+        else if ( teamId == this.getGuestTeamId()){
             return this.getGuestTeam();
         }
         return null;

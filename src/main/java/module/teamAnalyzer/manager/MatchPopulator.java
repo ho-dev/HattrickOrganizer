@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
 import core.model.player.IMatchRoleID;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.vo.Match;
@@ -157,7 +156,7 @@ public class MatchPopulator {
     private boolean isHome(Matchdetails match) {
         boolean isHome = false;
 
-        if (match.getHeimId() == SystemManager.getActiveTeamId()) {
+        if (match.getHomeTeamId() == SystemManager.getActiveTeamId()) {
             isHome = true;
         }
 

@@ -25,21 +25,17 @@ public class YouthTraining {
             UserParameter.instance().youthtrainingFactorSecondary
     };
 
+    // TODO MatchKurzInfo needed to access team information. MatchLineup uses MatchKurzInfo now for teams access
     private MatchLineup matchLineup;
     private Matchdetails matchdetails;
     private int youthMatchId;
+    private MatchType youthMatchType;
     private YouthTrainingType[] training = new YouthTrainingType[2];
     private List<YouthTrainerComment> commentList = new ArrayList<>();
 
-    public YouthTraining(int youthMatchId) {
+    public YouthTraining(int youthMatchId, MatchType matchType) {
         this.youthMatchId = youthMatchId;
-    }
-
-    public YouthTraining(MatchLineup youthMatch, YouthTrainingType t1, YouthTrainingType t2) {
-        setMatchLineup(youthMatch);
-        this.matchLineup = youthMatch;
-        this.training[Priority.Primary.ordinal()] = t1;
-        this.training[Priority.Secondary.ordinal()] = t2;
+        this.youthMatchType = matchType;
     }
 
     private void setMatchLineup(MatchLineup youthMatch) {
@@ -107,33 +103,33 @@ public class YouthTraining {
 
     MatchLineup getMatchLineup() {
         if (this.matchLineup == null) {
-            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
+            this.matchLineup = DBManager.instance().loadMatchLineup(this.getMatchType().getId(), this.youthMatchId);
         }
         return this.matchLineup;
     }
 
     public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
-            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchLineup().getMatchTyp().getId(), this.youthMatchId);
-            this.matchdetails.setMatchType(this.getMatchLineup().getMatchTyp());
+            this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchType().getId(), this.youthMatchId);
+            this.matchdetails.setMatchType(this.getMatchType());
         }
         return this.matchdetails;
     }
 
     public Timestamp getMatchDate() {
-        return this.getMatchLineup().getMatchDate();
+        return this.getMatchDetails().getMatchDate();
     }
 
     public String getHomeTeamName() {
-        return this.getMatchLineup().getHomeTeamName();
+        return this.getMatchDetails().getHomeTeamName();
     }
 
     public String getGuestTeamName() {
-        return this.getMatchLineup().getGuestTeamName();
+        return this.getMatchDetails().getGuestTeamName();
     }
 
     public MatchType getMatchType() {
-        return getMatchLineup().getMatchType();
+        return this.youthMatchType;
     }
 
     public YouthSkillInfo calcSkill(YouthSkillInfo value, YouthPlayer player, MatchLineupTeam team) {

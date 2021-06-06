@@ -2,6 +2,8 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.net.OnlineWorker;
@@ -69,6 +71,26 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private int m_iWetterId = -1;
 
     private int m_iZuschauer;
+
+    private CupLevel m_mtCupLevel = CupLevel.NONE;
+    private CupLevelIndex m_mtCupLevelIndex = CupLevelIndex.NONE;
+    /** MatchContextId */
+    private int iMatchContextId;
+    public int getMatchContextId() {
+        return iMatchContextId;
+    }
+    public void setMatchContextId(int iMatchContextId) {
+        this.iMatchContextId = iMatchContextId;
+    }
+
+    /** TournamentTypeID */
+    private int iTournamentTypeID;
+    public int getTournamentTypeID() {
+        return iTournamentTypeID;
+    }
+    public void setTournamentTypeID(int iTournamentTypeID) {
+        this.iTournamentTypeID = iTournamentTypeID;
+    }
 
     /**
      * Spectators in category Terraces, is 0 if not our home match
@@ -596,7 +618,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_iGastId.
      */
-    public final int getGastId() {
+    public final int getGuestTeamId() {
         return m_iGastId;
     }
 
@@ -614,7 +636,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_sGastName.
      */
-    public final java.lang.String getGastName() {
+    public final java.lang.String getGuestTeamName() {
         return m_sGastName;
     }
 
@@ -874,7 +896,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_iHeimId.
      */
-    public final int getHeimId() {
+    public final int getHomeTeamId() {
         return m_iHeimId;
     }
 
@@ -892,7 +914,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_sHeimName.
      */
-    public final java.lang.String getHeimName() {
+    public final java.lang.String getHomeTeamName() {
         return m_sHeimName;
     }
 
@@ -1202,6 +1224,22 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
     }
 
+    public CupLevel getCupLevel() {
+        return m_mtCupLevel;
+    }
+
+    public void setCupLevel(CupLevel _CupLevel) {
+        this.m_mtCupLevel = _CupLevel;
+    }
+
+    public CupLevelIndex getCupLevelIndex() {
+        return m_mtCupLevelIndex;
+    }
+
+    public void setCupLevelIndex(CupLevelIndex _CupLevelIndex) {
+        this.m_mtCupLevelIndex = _CupLevelIndex;
+    }
+
     /**
      * Setter for property m_iMatchID.
      *
@@ -1261,7 +1299,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_clSpielDatum.
      */
-    public final java.sql.Timestamp getSpielDatum() {
+    public final java.sql.Timestamp getMatchDate() {
         return m_clSpielDatum;
     }
 

@@ -3,6 +3,7 @@ package core.db;
 import core.model.match.MatchEvent;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -227,8 +228,8 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getArenaID() + ",'"
 						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
 						+ details.getFetchDatum().toString() + "',"
-						+ details.getGastId() + ",'"
-						+ DBManager.insertEscapeSequences(details.getGastName()) + "',"
+						+ details.getGuestTeamId() + ",'"
+						+ DBManager.insertEscapeSequences(details.getGuestTeamName()) + "',"
 						+ details.getGuestEinstellung()	+ ","
 						+ details.getGuestGoals() + ","
 						+ details.getGuestLeftAtt()	+ ","
@@ -241,8 +242,8 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getGuestHatStats() + ","
 						+ details.getGuestTacticSkill() + ","
 						+ details.getGuestTacticType() + ","
-						+ details.getHeimId() + ",'"
-						+ DBManager.insertEscapeSequences(details.getHeimName()) + "',"
+						+ details.getHomeTeamId() + ",'"
+						+ DBManager.insertEscapeSequences(details.getHomeTeamName()) + "',"
 						+ details.getHomeEinstellung() + ","
 						+ details.getHomeGoals() + ","
 						+ details.getHomeLeftAtt() + ","
@@ -255,7 +256,7 @@ final class MatchDetailsTable extends AbstractTable {
 						+ details.getHomeHatStats() + ","
 						+ details.getHomeTacticSkill() + ","
 						+ details.getHomeTacticType() + ",'"
-						+ details.getSpielDatum().toString() + "',"
+						+ details.getMatchDate().toString() + "',"
 						+ details.getWetterId()	+ ","
 						+ details.getZuschauer() + ",'"
 						+ DBManager.insertEscapeSequences(details.getMatchreport()) + "',"
@@ -311,11 +312,10 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
-	public void deleteMatchDetailsBefore(int matchTypeId, Timestamp before) {
+	public void deleteYouthMatchDetailsBefore(Timestamp before) {
 		var sql = "DELETE FROM " +
 				getTableName() +
-				" WHERE MATCHTYP=" +
-				matchTypeId +
+				" WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) +
 				" AND SPIELDATUM<'" +
 				before.toString() + "'";
 		try {

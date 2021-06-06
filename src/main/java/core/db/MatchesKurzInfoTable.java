@@ -28,7 +28,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[22];
+		columns = new ColumnDescriptor[23];
 		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false); //The globally unique identifier of the match
 		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
 		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
@@ -51,7 +51,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
-
+		columns[12] = new ColumnDescriptor("isObsolete", Types.BOOLEAN, true); //
 	}
 
 	@Override
@@ -352,6 +352,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setWeather(Weather.getById(DBManager.getInteger(rs,"Weather")));
 		match.setWeatherForecast(Weather.Forecast.getById(DBManager.getInteger(rs,"WeatherForecast")));
 		match.setDuration(DBManager.getInteger(rs, "Duration"));
+		match.setisObsolet(DBManager.getBoolean(rs, "isObsolete", false));
 		return match;
 	}
 
@@ -503,9 +504,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		// Here we order by MatchDate, which happens to be string, which is somehow risky,
 		// but it seems to be done in other places.
 		String sql = String.format(
-				"SELECT * FROM %s WHERE MATCHID=%s ORDER BY MATCHDATE DESC LIMIT 1",
+				"SELECT * FROM %s WHERE MATCHID=%s AND Status=%s ORDER BY MATCHDATE DESC LIMIT 1",
 				getTableName(),
-				matchId
+				matchId,
+				MatchKurzInfo.FINISHED
 		);
 
 		try {
@@ -516,6 +518,36 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			}
 		} catch (SQLException e) {
 			HOLogger.instance().error(getClass(), "getLastMatchWithMatchId error: " + e);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets first upcoming match with team id.
+	 *
+	 * @param teamId the team id
+	 * @return the first upcoming match with team id
+	 */
+	public MatchKurzInfo getFirstUpcomingMatchWithTeamId(int teamId) {
+
+		String sql = String.format(
+				"SELECT * FROM %s WHERE (GastID=%s OR HeimID=%s) AND Status=%s ORDER BY MATCHDATE ASC LIMIT 1",
+				getTableName(),
+				teamId,
+				teamId,
+				MatchKurzInfo.UPCOMING
+		);
+
+		try {
+			final ResultSet rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if (rs.next()) {
+				return createMatchKurzInfo(rs);
+			}
+		}
+		catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "getFirstUpcomingMatchWithTeamId error: " + e);
 		}
 
 		return null;
@@ -538,7 +570,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			try {
 				sql = "INSERT INTO "
 						+ getTableName()
-						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast, Duration ) VALUES(";
+						+ " (  MatchID, MatchContextId, TournamentTypeID, MatchTyp, CupLevel, CupLevelIndex, HeimName, HeimID, GastName, GastID, MatchDate, HeimTore, GastTore, Aufstellung, Status, ArenaId, RegionId, isDerby, isNeutral, Weather, WeatherForecast, Duration, isObsolete) VALUES(";
 				sql += (match.getMatchID()
 						+ ","
 						+ match.getMatchContextId()
@@ -568,7 +600,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ match.getIsNeutral() + ", "
 						+ match.getWeather().getId() + ", "
 						+ match.getWeatherForecast().getId() + ", "
-						+ match.getDuration()
+						+ match.getDuration() + ", "
+						+ match.isObsolet()
 						+ " )");
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
@@ -598,6 +631,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				.append(", ArenaId=").append(match.getArenaId())
 				.append(", RegionId=").append(match.getRegionId())
 				.append(", isDerby=").append(match.getIsDerby())
+				.append(", isObsolete=").append(match.isObsolet())
 				.append(", isNeutral=").append(match.isNeutral())
 				.append(", Weather=").append(match.getWeather().getId())
 				.append(", WeatherForecast=").append(match.getWeatherForecast().getId())
