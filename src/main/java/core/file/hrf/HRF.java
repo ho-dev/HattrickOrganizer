@@ -69,6 +69,10 @@ public final class HRF {
 		return hrfId;
 	}
 
+	public boolean isOK(){
+    	return hrfId>=0;
+	}
+
 	public String getName() {
 		return name;
 	}

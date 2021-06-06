@@ -1,5 +1,6 @@
 package module.teamAnalyzer.vo;
 
+import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.report.Report;
 import module.teamAnalyzer.report.SpotReport;
 import module.teamAnalyzer.report.TacticReport;
@@ -109,4 +110,9 @@ public class SpotLineup extends Report {
 
         return buffer.toString();
     }
+
+    public int getSpecialEvent() {
+        return PlayerDataManager.getLatestPlayerInfo(getPlayerId()).getSpecialEvent();
+    }
+
 }

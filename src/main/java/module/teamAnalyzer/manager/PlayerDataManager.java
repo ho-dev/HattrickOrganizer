@@ -1,6 +1,7 @@
 package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HTCalendarFactory;
 import module.teamAnalyzer.vo.PlayerInfo;
@@ -37,20 +38,18 @@ public class PlayerDataManager {
 		}
 	}
 
-	public static int getCurrentWeekNumber() {
-		return getCurrentHTWeek() + (getCurrentHTSeason() * 16);
+	public static int getCurrentHTSeason() {
+		return HOVerwaltung.instance().getModel().getBasics().getSeason();
+/*		Calendar date = Calendar.getInstance();
+		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
+		return HTCalendarFactory.getHTSeason(date.getTime());*/
 	}
 
-	private static int getCurrentHTSeason() {
-		Calendar date = Calendar.getInstance();
+	public static int getCurrentHTWeek() {
+		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+/*		Calendar date = Calendar.getInstance();
 		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTSeason(date.getTime());
-	}
-
-	private static int getCurrentHTWeek() {
-		Calendar date = Calendar.getInstance();
-		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTWeek(date.getTime());
+		return HTCalendarFactory.getHTWeek(date.getTime());*/
 	}
 
 	private static void setPlayer(PlayerInfo info) {
