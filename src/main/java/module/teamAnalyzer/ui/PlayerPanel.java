@@ -147,8 +147,8 @@ public class PlayerPanel extends JPanel {
 
 			int posCode = HelperWrapper.instance().getPosition(lineup.getPosition());
 			positionImage.setIcon(ImageUtilities.getImage4Position(posCode, (byte) 0, 0));
-			int specialEvent = PlayerDataManager.getLatestPlayerInfo(lineup.getPlayerId())
-					.getSpecialEvent();
+
+			var specialEvent = lineup.getSpecialEvent();
 
 			if (lineup.getPlayerId() == 0) {
 				jlSpecialty.setIcon(null);

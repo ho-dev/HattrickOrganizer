@@ -17,6 +17,7 @@ public class UserTeamSpotLineup extends SpotLineup {
         specialEvent = i;
     }
 
+    @Override
     public int getSpecialEvent() {
         return specialEvent;
     }
