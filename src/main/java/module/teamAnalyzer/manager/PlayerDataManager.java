@@ -38,18 +38,14 @@ public class PlayerDataManager {
 		}
 	}
 
-	public static int getCurrentWeekNumber() {
-		return getCurrentHTWeek() + (getCurrentHTSeason() * 16);
-	}
-
-	private static int getCurrentHTSeason() {
+	public static int getCurrentHTSeason() {
 		return HOVerwaltung.instance().getModel().getBasics().getSeason();
 /*		Calendar date = Calendar.getInstance();
 		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
 		return HTCalendarFactory.getHTSeason(date.getTime());*/
 	}
 
-	private static int getCurrentHTWeek() {
+	public static int getCurrentHTWeek() {
 		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
 /*		Calendar date = Calendar.getInstance();
 		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);

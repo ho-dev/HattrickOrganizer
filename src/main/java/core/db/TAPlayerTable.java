@@ -47,11 +47,17 @@ final class TAPlayerTable extends AbstractTable {
 				+ " (playerid, week)" };
 	}
 
-	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
-		int weekNumber = week + (season * 16);
+	private int calcCurrentWeekNumber(){
+		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
+	}
 
+	private int calcWeekNumber(int season, int week) {
+		return season*16 + week;
+	}
+
+	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
 		String query = "select * from " + TABLENAME + " where PLAYERID=" + playerId + " and week="
-				+ weekNumber;
+				+ calcWeekNumber(season, week);
 
 		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
 
@@ -128,7 +134,7 @@ final class TAPlayerTable extends AbstractTable {
 								+ info.getForm() + ", "
 								+ info.getAge() + ", "
 								+ info.getExperience() + ", "
-								+ PlayerDataManager.getCurrentWeekNumber() + ", "
+								+ calcCurrentWeekNumber() + ", "
 								+ info.getSalary() + ", "
 								+ info.getStamina()+ ", "
 								+ info.getMotherClubBonus() + ", "
@@ -154,12 +160,12 @@ final class TAPlayerTable extends AbstractTable {
 								+ " , LOYALTY =" + info.getLoyalty()
 								+ " , NAME ='" + DBManager.insertEscapeSequences(info.getName())
 								+ "' where PLAYERID=" + info.getPlayerId() + " and WEEK="
-								+ PlayerDataManager.getCurrentWeekNumber());
+								+ calcCurrentWeekNumber());
 	}
 
 	void deleteOldPlayers() {
 		adapter.executeUpdate("DELETE FROM " + TABLENAME + " WHERE WEEK<"
-				+ (PlayerDataManager.getCurrentWeekNumber() - 10));
+				+ (calcCurrentWeekNumber() - 10));
 	}
 
 }
