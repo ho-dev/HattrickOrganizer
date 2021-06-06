@@ -137,6 +137,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		boolean bGroupFiltered = m_clLineupPanel.getLineupAssistantPanel().isGroupFilter();
 		String sGroup = m_clLineupPanel.getLineupAssistantPanel().getGroup();
 		boolean bSelectedGroupExcluded = m_clLineupPanel.getLineupAssistantPanel().isSelectedGroupExcluded();
+		boolean bExcludeLast = m_clLineupPanel.getLineupAssistantPanel().isExcludeLastMatch();
 
 		m_weather = m_clLineupPanel.getLineupSettingsPanel().getWeather();
 
@@ -163,13 +164,12 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			if (!bGroupFiltered || (sGroup.equals(player.getTeamInfoSmilie()) && !bSelectedGroupExcluded)
 					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
-
-//TODO: do the last lineup exclusion
-//				if (bExcludeLast && (lastLineup != null) && lastLineup.getAufstellung().isPlayerInStartingEleven(player.getPlayerID())) {
-//					include = false;
-//					HOLogger.instance().log(getClass(), "Exclude: " + player.getFullName());
-//				}
-
+				if ( bExcludeLast) {
+					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup();
+					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+						include = false;
+					}
+				}
 				if (include) {
 					filteredPlayers.add(player);
 				}
