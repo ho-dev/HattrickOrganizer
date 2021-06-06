@@ -47,12 +47,40 @@ final class TAPlayerTable extends AbstractTable {
 				+ " (playerid, week)" };
 	}
 
+	/**
+	 * Calculate a number from current season and week numbers
+	 * @return number
+	 */
 	private int calcCurrentWeekNumber(){
 		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
 	}
 
+	/**
+	 * Calculate a number from season and week numbers
+	 * @param season season number [1..]
+	 * @param week week number [1..16]
+	 * @return number
+	 */
 	private int calcWeekNumber(int season, int week) {
-		return season*16 + week;
+		return season*16 + week - 1;
+	}
+
+	/**
+	 * Get number of week from weekNumber
+	 * @param weekNumber
+	 * @return number of week [1..16]
+	 */
+	private int getWeekFromWeekNumber(int weekNumber){
+		return weekNumber%16 + 1;
+	}
+
+	/**
+	 * Get number of season from weekNumber
+	 * @param weekNumber
+	 * @return number of season [1..]
+	 */
+	private int getSeasonFromWeekNumber(int weekNumber){
+		return weekNumber/16;
 	}
 
 	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
@@ -99,14 +127,14 @@ final class TAPlayerTable extends AbstractTable {
 				.instance()
 				.getAdapter()
 				.executeQuery(
-						"SELECT max(WEEK) FROM " + TABLENAME + " WHERE" + " PLAYERID=" + playerId);
+						"SELECT max(WEEK) FROM " + TABLENAME +
+								" WHERE" + " PLAYERID=" + playerId +
+								" AND WEEK<=" + calcCurrentWeekNumber()); // because of an error corrupt numbers may be in the database
 
 		try {
 			if (rs.next()) {
 				int week = rs.getInt(1);
-				int season = week / 16;
-				int wk = week % 16;
-				return getPlayerInfo(playerId, wk, season);
+				return getPlayerInfo(playerId, getWeekFromWeekNumber(week), getSeasonFromWeekNumber(week));
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
