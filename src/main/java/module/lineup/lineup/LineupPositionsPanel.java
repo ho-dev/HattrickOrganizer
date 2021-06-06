@@ -241,8 +241,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// m_jpMatchAndLineupSelectionPanel
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.gridwidth = 3;
-		constraints.gridheight = 2;
+		constraints.gridwidth = 4;
+		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
 		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
@@ -251,8 +251,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 
 		// match banner ==================================================
-		constraints.gridx = 3;
-		constraints.gridwidth = 4;
+		constraints.gridx = 4;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
