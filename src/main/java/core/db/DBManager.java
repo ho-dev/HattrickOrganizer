@@ -2643,7 +2643,7 @@ public class DBManager {
 	 * @return the last youth match date
 	 */
 	public Timestamp getLastYouthMatchDate() {
-		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
+		return ((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
 				.getLastYouthMatchDate();
 	}
 
