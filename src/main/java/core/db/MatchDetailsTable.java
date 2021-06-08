@@ -324,4 +324,19 @@ final class MatchDetailsTable extends AbstractTable {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
 	}
+	public Timestamp getLastYouthMatchDate() {
+		var sql = "select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
+		try {
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			if ( rs.next()){
+				return rs.getTimestamp(1);
+			}
+		}
+		catch (Exception ignored){
+
+		}
+		return null;
+	}
+
 }

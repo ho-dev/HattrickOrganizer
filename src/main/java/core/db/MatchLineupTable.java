@@ -119,21 +119,6 @@ public final class MatchLineupTable extends AbstractTable {
 		}
 	}
 
-	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(MatchDate) from " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
-		try {
-			var rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			if ( rs.next()){
-				return rs.getTimestamp(1);
-			}
-		}
-		catch (Exception ignored){
-
-		}
-		return null;
-	}
-
 	public List<MatchLineup> loadMatchLineups(int sourceSystem) {
 
 		var lineups = new ArrayList<MatchLineup>();
@@ -156,8 +141,8 @@ public final class MatchLineupTable extends AbstractTable {
 		var sql = "DELETE FROM " +
 				getTableName() +
 				" WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) +
-				" AND MATCHDATE<'" +
-				before.toString() + "'";
+				" AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<'" + before.toString() +
+									"' AND MATCHTYP IN "+ MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) + ")";
 		try {
 			adapter.executeUpdate(sql);
 		} catch (Exception e) {

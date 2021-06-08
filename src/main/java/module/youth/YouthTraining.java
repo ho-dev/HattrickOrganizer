@@ -25,7 +25,6 @@ public class YouthTraining {
             UserParameter.instance().youthtrainingFactorSecondary
     };
 
-    // TODO MatchKurzInfo needed to access team information. MatchLineup uses MatchKurzInfo now for teams access
     private MatchLineup matchLineup;
     private Matchdetails matchdetails;
     private int youthMatchId;
@@ -40,6 +39,7 @@ public class YouthTraining {
 
     private void setMatchLineup(MatchLineup youthMatch) {
         this.youthMatchId = youthMatch.getMatchID();
+        this.youthMatchType = youthMatch.getMatchType();
         this.matchLineup = youthMatch;
     }
 
@@ -111,7 +111,6 @@ public class YouthTraining {
     public Matchdetails getMatchDetails() {
         if (this.matchdetails == null) {
             this.matchdetails = DBManager.instance().loadMatchDetails(this.getMatchType().getId(), this.youthMatchId);
-            this.matchdetails.setMatchType(this.getMatchType());
         }
         return this.matchdetails;
     }
