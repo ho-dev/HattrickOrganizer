@@ -4,7 +4,6 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.OnlineWorker;
 
@@ -23,7 +22,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	 *
 	 */
 	private static final long serialVersionUID = -2953738895366809237L;
-	private Vector<SpielerMatchCBItem> m_vSpielerMatchCBItem;
+	private Vector<PlayerMatchCBItem> m_vSpielerMatchCBItem;
 
 
 	/**
@@ -127,7 +126,7 @@ public class PlayerAnalysisModel extends HOTableModel {
     	m_clData = new Object[m_vSpielerMatchCBItem.size()][tmpDisplayedColumns.length];
 
     	for (int i = 0; i < m_vSpielerMatchCBItem.size(); i++) {
-			final SpielerMatchCBItem spielerCBItem = m_vSpielerMatchCBItem.get(i);
+			final PlayerMatchCBItem spielerCBItem = m_vSpielerMatchCBItem.get(i);
 			final Player aktuellerPlayer = spielerCBItem.getSpieler();
 			Matchdetails matchdetails = spielerCBItem.getMatchdetails();
 
@@ -152,7 +151,7 @@ public class PlayerAnalysisModel extends HOTableModel {
     	}
     }
 
-	private Matchdetails checkMatchDetailsPresent(SpielerMatchCBItem spielerCBItem, Matchdetails matchdetails) {
+	private Matchdetails checkMatchDetailsPresent(PlayerMatchCBItem spielerCBItem, Matchdetails matchdetails) {
 		if (matchdetails.getMatchID() == -1) {
 			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), spielerCBItem.getMatchTyp(), true);
 			if (success) {
@@ -165,7 +164,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	/**
      * Player neu setzen
      */
-    public final void setValues(Vector<SpielerMatchCBItem> spielermatchCBItem) {
+    public final void setValues(Vector<PlayerMatchCBItem> spielermatchCBItem) {
         m_vSpielerMatchCBItem = spielermatchCBItem;
         initData();
     }

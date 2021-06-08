@@ -63,7 +63,7 @@ class MatchKurzInfoColumn extends UserColumn {
 	 * @param spielerCBItem
 	 * @return
 	 */
-	public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
+	public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
 		return null;
 	}
 

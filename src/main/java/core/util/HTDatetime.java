@@ -98,12 +98,10 @@ public class HTDatetime implements PropertyChangeListener{
 
 
     // non-static method           =====================
-    @Deprecated
     public Timestamp getUserLocalizedTimeAsTimestamp() {
         return m_tsLocalized;
     }
 
-    @Deprecated
     public Timestamp getHattrickTimeAsTimestamp() {
         return m_tsHT_CET;
     }

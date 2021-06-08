@@ -14,7 +14,7 @@ class PlayerColumn2 extends UserColumn {
 		preferredWidth = 80;
 	}
 
-	public IHOTableEntry getTableEntry(SpielerMatchCBItem spielerCBItem){
+	public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
 		return null;
 	}
 }

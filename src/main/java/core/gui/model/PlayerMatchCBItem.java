@@ -9,7 +9,7 @@ import core.model.player.Player;
 /**
  * Container für die SpielerMatchTable. Enthält die Daten des Spielers und des zugehörigen Matches
  */
-public class SpielerMatchCBItem {
+public class PlayerMatchCBItem {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Matchdetails m_clMatchdetails;
@@ -18,7 +18,7 @@ public class SpielerMatchCBItem {
     private String m_clHeimteam;
     private String m_clMatchdate;
     private String m_sSelbstvertrauen;
-    private String m_sStimmung;
+    private String m_sTeamSpirit;
     private float m_fRating;
     private int m_iGastID;
     private int m_iHeimID;
@@ -31,10 +31,10 @@ public class SpielerMatchCBItem {
     /**
      * Creates a new SpielerMatchCBItem object.
      */
-    public SpielerMatchCBItem(Player player, int matchid, float rating, int positionsid,
-                              String matchdate, String heimteam, int heimid, String gastteam,
-                              int gastid, MatchType matchtyp, Matchdetails matchdetails,
-                              String selbstvertrauen, String stimmung) {
+    public PlayerMatchCBItem(Player player, int matchid, float rating, int positionsid,
+                             String matchdate, String heimteam, int heimid, String gastteam,
+                             int gastid, MatchType matchtyp, Matchdetails matchdetails,
+                             String selbstvertrauen, String stimmung) {
         m_clPlayer = player;
         m_iMatchID = matchid;
         m_fRating = rating;
@@ -46,7 +46,7 @@ public class SpielerMatchCBItem {
         m_iGastID = gastid;
         m_clMatchdetails = matchdetails;
         m_sSelbstvertrauen = selbstvertrauen;
-        m_sStimmung = stimmung;
+        m_sTeamSpirit = stimmung;
         m_mtMatchTyp = matchtyp;
     }
 
@@ -237,7 +237,7 @@ public class SpielerMatchCBItem {
      *
      * @param m_sSelbstvertrauen New value of property m_sSelbstvertrauen.
      */
-    public final void setSelbstvertrauen(java.lang.String m_sSelbstvertrauen) {
+    public final void setConfidence(java.lang.String m_sSelbstvertrauen) {
         this.m_sSelbstvertrauen = m_sSelbstvertrauen;
     }
 
@@ -273,8 +273,8 @@ public class SpielerMatchCBItem {
      *
      * @param m_sStimmung New value of property m_sStimmung.
      */
-    public final void setStimmung(java.lang.String m_sStimmung) {
-        this.m_sStimmung = m_sStimmung;
+    public final void setTeamSpirit(java.lang.String m_sStimmung) {
+        this.m_sTeamSpirit = m_sStimmung;
     }
 
     /**
@@ -283,6 +283,6 @@ public class SpielerMatchCBItem {
      * @return Value of property m_sStimmung.
      */
     public final java.lang.String getStimmung() {
-        return m_sStimmung;
+        return m_sTeamSpirit;
     }
 }

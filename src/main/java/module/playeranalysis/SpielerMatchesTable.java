@@ -60,7 +60,7 @@ final class SpielerMatchesTable extends JTable {
 		if (m_clTableModel == null) {
 			m_clTableModel = (instance == 1) ? UserColumnController.instance().getAnalysis1Model()
 					: UserColumnController.instance().getAnalysis2Model();
-			m_clTableModel.setValues(DBManager.instance().getSpieler4Matches(m_iSpielerId));
+			m_clTableModel.setValues(DBManager.instance().getPlayerMatchCBItems(m_iSpielerId));
 
 			m_clTableSorter = new TableSorter(m_clTableModel, -1, -1);
 
@@ -94,7 +94,7 @@ final class SpielerMatchesTable extends JTable {
 			m_clTableModel.setColumnsSize(getColumnModel());
 		} else {
 			// Werte neu setzen
-			m_clTableModel.setValues(DBManager.instance().getSpieler4Matches(m_iSpielerId));
+			m_clTableModel.setValues(DBManager.instance().getPlayerMatchCBItems(m_iSpielerId));
 			m_clTableSorter.reallocateIndexes();
 		}
 
