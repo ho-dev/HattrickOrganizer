@@ -7,7 +7,7 @@ import core.db.user.UserManager;
 import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
-import core.gui.model.SpielerMatchCBItem;
+import core.gui.model.PlayerMatchCBItem;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
 import core.model.enums.MatchType;
@@ -18,6 +18,7 @@ import core.model.misc.Verein;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.HTDatetime;
 import module.matches.MatchLocation;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
@@ -2029,40 +2030,35 @@ public class DBManager {
 	/**
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 *
-	 * @param spielerid the spielerid
-	 * @return the spieler 4 matches
+	 * @param playerID the player ID
 	 */
-	public Vector<SpielerMatchCBItem> getSpieler4Matches(int spielerid) {
-		final Vector<SpielerMatchCBItem> spielerMatchCBItems = new Vector<>();
+	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID) {
 
-		// Get list of all matches containing the playerID
+		if(playerID == -1) return new Vector<>();
+
+		final Vector<PlayerMatchCBItem> spielerMatchCBItems = new Vector<>();
+
+		String sql = """
+				SELECT DISTINCT MatchID, MatchDate, Rating, SpielDatum, HeimName, HeimID, GastName, GastID, HoPosCode, MatchTyp
+				FROM MATCHLINEUPPLAYER
+				INNER JOIN MATCHLINEUP ON (MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID AND MATCHLINEUPPLAYER.MATCHTYP=MATCHLINEUP.MATCHTYP)
+				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
+				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
+				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0
+				ORDER BY MATCHDETAILS.SpielDatum DESC """;
+
+
+		// Get all data on the player
 		try {
-			final Vector<SpielerMatchCBItem> tempSpielerMatchCBItems = new Vector<>();
-/*
-			final String sql = "SELECT DISTINCT MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.Rating," +
-					" MATCHLINEUP.MatchDate, MATCHLINEUP.HeimName, MATCHLINEUP.HeimID, MATCHLINEUP.GastName, MATCHLINEUP.GastID," +
-					" MATCHLINEUPPLAYER.HoPosCode, MATCHLINEUP.MatchTyp FROM MATCHLINEUPPLAYER, MATCHLINEUP" +
-					" WHERE MATCHLINEUPPLAYER.SpielerID="
-					+ spielerid
-					+ " AND MATCHLINEUPPLAYER.Rating>-1 AND MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID ORDER BY MATCHLINEUP.MatchDate DESC";
-*/
+			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
 
-			final String sql = "SELECT DISTINCT MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.MatchID, MATCHLINEUPPLAYER.Rating, MATCHDETAILS.SpielDatum," +
-					" MATCHDETAILS.HeimName, MATCHDETAILS.HeimID, MATCHDETAILS.GastName, MATCHDETAILS.GastID, MATCHLINEUPPLAYER.HoPosCode, MATCHLINEUP.MatchTyp" +
-					" FROM MATCHLINEUPPLAYER, MATCHLINEUP, MATCHDETAILS" +
-					" WHERE MATCHLINEUPPLAYER.SpielerID=" +
-					spielerid +
-					" AND MATCHLINEUPPLAYER.Rating>-1" +
-					" AND MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID" +
-					" AND MATCHDETAILS.MatchID=MATCHLINEUP.MatchID" +
-					" ORDER BY MATCHDETAILS.SpielDatum DESC";
-
-			final ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
+			final ResultSet rs = m_clJDBCAdapter.executeQuery(String.format(sql, playerID));
+			PlayerMatchCBItem playerMatchCBItem;
 			rs.beforeFirst();
 
-			// Alle Daten zu dem Player holen
+			// Get all data on the player
 			while (rs.next()) {
-				final SpielerMatchCBItem temp = new SpielerMatchCBItem(null,
+				playerMatchCBItem = new PlayerMatchCBItem(null,
 						rs.getInt("MatchID"), rs.getFloat("Rating") * 2,
 						rs.getInt("HoPosCode"), rs.getString("MatchDate"),
 						DBManager.deleteEscapeSequences(rs
@@ -2070,50 +2066,36 @@ public class DBManager {
 						DBManager.deleteEscapeSequences(rs
 								.getString("GastName")), rs.getInt("GastID"),
 						MatchType.getById(rs.getInt("MatchTyp")), null, "", "");
-				tempSpielerMatchCBItems.add(temp);
+				playerMatchCBItems.add(playerMatchCBItem);
 			}
 
-			final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-			final java.text.SimpleDateFormat simpleFormat2 = new java.text.SimpleDateFormat(
-					"yyyy-MM-dd", Locale.GERMANY);
-			Timestamp filter = null;
-			Date datum = null;
 
-			// Die Spielerdaten zu den Matches holen
-			for (final SpielerMatchCBItem item : tempSpielerMatchCBItems) {
-				try {
-					datum = simpleFormat.parse(item.getMatchdate());
-				} catch (Exception ignored) {
-				}
+			Timestamp filter;
 
-				if (datum == null) {
-					datum = simpleFormat2.parse(item.getMatchdate());
-				}
 
-				if (datum != null) {
-					filter = new Timestamp(datum.getTime());
-				}
+
+			// Get the player data for the matches
+			for (final PlayerMatchCBItem item : playerMatchCBItems) {
+
+				filter = new HTDatetime(item.getMatchdate()).getHattrickTimeAsTimestamp();
 
 				// Player
-				final Player player = getSpielerAtDate(
-						spielerid, filter);
+				final Player player = getSpielerAtDate(playerID, filter);
 
 				// Matchdetails
 				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getId(), item
 						.getMatchID());
 
 				// Stimmung und Selbstvertrauen
-				final String[] stimmungSelbstvertrauen = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
+				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
 
-				// Nur wenn Spielerdaten gefunden wurden diese in den
-				// RückgabeVector übergeben
+				//Only if player data has been found, pass it into the return vector
 				if ((player != null) && (details != null)
-						&& (stimmungSelbstvertrauen != null)) {
+						&& (sTSandConfidences != null)) {
 					item.setSpieler(player);
 					item.setMatchdetails(details);
-					item.setStimmung(stimmungSelbstvertrauen[0]);
-					item.setSelbstvertrauen(stimmungSelbstvertrauen[1]);
+					item.setTeamSpirit(sTSandConfidences[0]);
+					item.setConfidence(sTSandConfidences[1]);
 					spielerMatchCBItems.add(item);
 				}
 			}
