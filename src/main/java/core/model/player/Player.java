@@ -2422,7 +2422,8 @@ public class Player {
             }
 
             // Handle skill drops that happens the monday after training date
-            if ( SkillDrops.instance().isActive() &&
+            var nextWeekTraining = TrainingManager.instance().getNextWeekTraining();
+            if ( SkillDrops.instance().isActive() && nextWeekTraining != null &&
                     TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(before.getHrfDate().toInstant(), this.getHrfDate().toInstant()))
             {
                 // calc another skill down
