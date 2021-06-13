@@ -91,16 +91,12 @@ public final class PlayerAbility {
 
 	public static String getNameForSkill(double bewertungwertfloat, boolean zahlen, boolean isMatch) {
 	    int bewertungwert = (int) bewertungwertfloat;
-
-	    //Für match
 	    int sublevel = 0;
-	    //Umrechnung für ein Spiel
 	    if (isMatch) {
 	        sublevel = (int)(bewertungwertfloat*4) % 4;
 	    }
 
 	    var bewertung = toString(bewertungwert);
-
 	    if (isMatch) {
 	        bewertung += PlayerAbility.getName4Sublevel(sublevel);
 	    }
@@ -117,7 +113,6 @@ public final class PlayerAbility {
 	             		.format(Helper.round(bewertungwertfloat, UserParameter.instance().nbDecimals)) + ")");
 	        }
 	    }
-
 	    return bewertung;
 	}
 
