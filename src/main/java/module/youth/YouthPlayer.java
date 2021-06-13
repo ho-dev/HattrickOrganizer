@@ -744,6 +744,7 @@ public class YouthPlayer {
                 skillinfo.setCurrentValue(prevSkills.getCurrentValue());
                 skillinfo.setStartValue(prevSkills.getStartValue());
             }
+            this.setSkillInfo(skillinfo);
         }
         parseScoutComments(properties);
         evaluateScoutComments();
