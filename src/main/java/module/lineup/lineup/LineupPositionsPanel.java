@@ -211,9 +211,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		lineup.checkAufgestellteSpieler();
 
 		m_jpMatchBanner.refresh();
+		// setRating is called twice => no display of change differences in rating panel
 		//m_clLineupPanel.getLineupRatingPanel().refresh();
-
-
 	}
 
 
