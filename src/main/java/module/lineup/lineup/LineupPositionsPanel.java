@@ -211,7 +211,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		lineup.checkAufgestellteSpieler();
 
 		m_jpMatchBanner.refresh();
-		m_clLineupPanel.getLineupRatingPanel().refresh();
+		//m_clLineupPanel.getLineupRatingPanel().refresh();
 
 
 	}
@@ -612,7 +612,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 
 	public ArrayList<PlayerPositionPanel> getAllPositions() {
-		ArrayList<PlayerPositionPanel> pos = new ArrayList<PlayerPositionPanel>(14);
+		ArrayList<PlayerPositionPanel> pos = new ArrayList<>(14);
 		pos.add(m_clCentralForward);
 		pos.add(m_clCentralInnerMidfielder);
 		pos.add(m_clLeftBack);
