@@ -249,10 +249,10 @@ public class YouthSkillInfo {
         return 0;
     }
 
-    // Skill Range class with inclusive minimun and exclusive maximum
+    // Skill Range class
     public static class SkillRange {
-        private double min;
-        private double max;
+        private double greaterEqual;
+        private double lessThan;
 
         public SkillRange() {
             this(null);
@@ -260,55 +260,51 @@ public class YouthSkillInfo {
 
         public SkillRange(Integer level) {
             if (level != null) {
-                min = level;
-                max = level + 1;
+                greaterEqual = level;
+                lessThan = level + 1;
             } else {
-                min = 0;
-                max = 8.3;
+                greaterEqual = 0;
+                lessThan = 8.3;
             }
         }
 
         public SkillRange(double min, double max) {
-            this.max = max;
-            this.min = min;
+            this.lessThan = max;
+            this.greaterEqual = min;
         }
 
-        public double getMin() {
-            return min;
+        public double getGreaterEqual() {
+            return greaterEqual;
         }
 
-        public void setMin(double min) {
-            this.min = min;
-            if (this.max < min) this.max = min;
+        public void setGreaterEqual(double greaterEqual) {
+            this.greaterEqual = greaterEqual;
+            if (this.lessThan < greaterEqual) this.lessThan = greaterEqual;
         }
 
-        public double getMax() {
-            return max;
+        public double getLessThan() {
+            return lessThan;
         }
 
-        public void setMax(double max) {
-            this.max = max;
-            if (this.min >= max) this.min = max;
+        public void setLessThan(double lessThan) {
+            this.lessThan = lessThan;
+            if (this.greaterEqual >= lessThan) this.greaterEqual = lessThan;
         }
 
         public void lessThan(double limit) {
-            if (this.max > limit) {
-                setMax(limit);
+            if (this.lessThan > limit) {
+                setLessThan(limit);
             }
         }
 
         public void between(double min, double max) {
-            if (this.min < min) {
-                setMin(min);
-            }
-            if (this.max>max){
-                setMax(max);
-            }
+            setGreaterEqual(min);
+            setLessThan(max);
         }
 
         public void greaterEqual(double min) {
-            if ( this.min<min){
-                setMin(min);
+            if ( this.greaterEqual <min){
+                setGreaterEqual(min);
             }
         }
     }
