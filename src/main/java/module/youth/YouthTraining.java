@@ -137,7 +137,8 @@ public class YouthTraining {
         ret.setStartValueRange(value.getStartValueRange());
         ret.setMax(value.getMax());
         ret.setIsTop3(value.isTop3());
-        ret.setCurrentLevel(value.getCurrentLevel());
+        // Current level could be changed, correct value is set in setConstraint
+        //ret.setCurrentLevel(value.getCurrentLevel());
         ret.setStartLevel(value.getStartLevel());
         ret.setMaxReached(value.isMaxReached());
         if (value.isMaxReached()) {
