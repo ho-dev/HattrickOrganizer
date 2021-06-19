@@ -171,7 +171,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 var newValue = skillInfoSlider.getSkillValue();
                 var startValue = Math.max(0, skillInfo.getStartValue() + newValue - oldValue);
                 skillInfo.setCurrentValue(newValue);
-                skillInfo.setStartValue(skillInfoSlider.getSkillValue());
+                skillInfo.setStartValue(startValue);
                 refreshYouthPlayerDevelopment();
             }
             skillInfoSlider.setValueLabel();
