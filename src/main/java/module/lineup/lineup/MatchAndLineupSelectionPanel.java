@@ -316,7 +316,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 oTeam.setHomeMatch(false);
             }
             oTeam.setTime(match.getMatchDateAsTimestamp());
-            oTeam.setMatchType(match.getMatchType().getIconArrayIndex());
+            oTeam.setMatchType(match.getMatchTypeExtended().getIconArrayIndex());
             oTeam.setMatchID(match.getMatchID());
 
             m_jcbLoadLineup.addItem(oTeam);

@@ -323,7 +323,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchType().getIconArrayIndex()]),
+                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTypeExtended().getIconArrayIndex()]),
                         match.getMatchType().getId(), ColorLabelEntry.FG_STANDARD,
                         background, SwingConstants.CENTER);
             }
@@ -741,7 +741,7 @@ final public class UserColumnFactory {
                 if (player.getLastMatchRating() > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info != null) {
-                        return new MatchDateTableEntry(info.getMatchDateAsTimestamp().toString(), info.getMatchType());
+                        return new MatchDateTableEntry(info.getMatchDateAsTimestamp().toString(), info.getMatchTypeExtended());
                     }
                 }
                 return new MatchDateTableEntry(null, MatchType.NONE);
