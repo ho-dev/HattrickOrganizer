@@ -69,7 +69,6 @@ public class TrainingPerPlayer  {
     		else
     		{
 	    		HOLogger.instance().error(getClass(), "_TrainingPair is null. Aborting addValues.");
-	    		return;
     		}
     	} else { 
 	    	_TrainingPair.addPrimary(values.getTrainingPair().getPrimary());
@@ -161,10 +160,10 @@ public class TrainingPerPlayer  {
 
 		if (_matchType instanceof MatchType){
 			p = switch ((MatchType) _matchType){
-				case CUP, NATIONALFRIENDLY, QUALIFICATION -> 2d;
+				case CUP, QUALIFICATION -> 2d;
 				case FRIENDLYNORMAL, FRIENDLYCUPRULES -> .1;
 				case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> .2;
-				case LEAGUE -> 1d;
+				case NATIONALFRIENDLY, LEAGUE -> 1d;
 				case MASTERS -> 5d;
 				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL -> 10d;
 				default -> 0d;
