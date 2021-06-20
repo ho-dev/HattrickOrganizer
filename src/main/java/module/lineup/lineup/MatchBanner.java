@@ -178,7 +178,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             Icon weatherIcon = tm.getIcon(HOIconName.WEATHER[m_clSelectedMatch.getWeather().getId()]);
             jlWeather.setIcon(weatherIcon);
 
-            Icon MatchTypeIcon = tm.getScaledIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()], 22, 22);
+            Icon MatchTypeIcon = tm.getScaledIcon(HOIconName.MATCHICONS[m_clSelectedMatch.getMatchTypeExtended().getIconArrayIndex()], 22, 22);
             jlMatchTypeIcon.setIcon(MatchTypeIcon);
 
             Icon homeTeamIcon = tm.getClubLogo(m_clSelectedMatch.getHomeTeamID());

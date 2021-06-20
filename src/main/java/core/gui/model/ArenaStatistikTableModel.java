@@ -266,7 +266,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    //Spielart
 			    m_clData[i][1] = new ColorLabelEntry(
 			    					ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),
-			    		match.getMatchTyp().getId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+			    		match.getMatchTyp().getMatchTypeId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 				colIndex++;
 			    //Gast
 			    m_clData[i][colIndex] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,

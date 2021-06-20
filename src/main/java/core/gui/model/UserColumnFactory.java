@@ -332,7 +332,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
-                        spielerCBItem.getMatchTyp().getId(),
+                        spielerCBItem.getMatchTyp().getMatchTypeId(),
                         ColorLabelEntry.FG_STANDARD, background,
                         SwingConstants.CENTER);
             }

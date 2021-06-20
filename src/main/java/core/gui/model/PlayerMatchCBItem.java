@@ -2,6 +2,7 @@
 package core.gui.model;
 
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
 
@@ -23,7 +24,7 @@ public class PlayerMatchCBItem {
     private int m_iGastID;
     private int m_iHeimID;
     private int m_iMatchID;
-    private MatchType m_mtMatchTyp;
+    private IMatchType m_mtMatchTyp;
     private int m_iPosition;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -147,7 +148,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_iMatchTyp New value of property m_iMatchTyp.
      */
-    public final void setMatchTyp(MatchType m_mtMatchTyp) {
+    public final void setMatchTyp(IMatchType m_mtMatchTyp) {
         this.m_mtMatchTyp = m_mtMatchTyp;
     }
 
@@ -156,7 +157,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_iMatchTyp.
      */
-    public final MatchType getMatchTyp() {
+    public final IMatchType getMatchTyp() {
         return m_mtMatchTyp;
     }
 

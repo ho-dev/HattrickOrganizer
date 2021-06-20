@@ -43,7 +43,11 @@ public enum MatchTypeExtended implements IMatchType {
 		}
 		return null;
 	}
-
+	
+	@Override
+	public int getMatchTypeId() {
+		return MatchType.CUP.getId();
+	}
 
 	@Override
 	public int getIconArrayIndex() {

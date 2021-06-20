@@ -42,11 +42,9 @@ public enum MatchType implements IMatchType {
 		this.id = id;
 	}
 
-
 	public int getId() {
 		return id;
 	}
-
 
 	public static Stream<MatchType> stream() {
 		return Stream.of(MatchType.values());
@@ -60,7 +58,6 @@ public enum MatchType implements IMatchType {
 		}
 		return null;
 	}
-
 
 	public String getSourceString() {
 		if (isOfficial()) return "hattrick";
@@ -209,6 +206,11 @@ public enum MatchType implements IMatchType {
 			case YOUTH -> {return getYouthMatchType();}
 			default -> { return getHTOintegratedMatchType(); }
 		}
+	}
+
+	@Override
+	public int getMatchTypeId() {
+		return id;
 	}
 
 	@Override

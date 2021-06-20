@@ -2083,8 +2083,7 @@ public class DBManager {
 				final Player player = getSpielerAtDate(playerID, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getId(), item
-						.getMatchID());
+				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getMatchTypeId(), item.getMatchID());
 
 				// Stimmung und Selbstvertrauen
 				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
