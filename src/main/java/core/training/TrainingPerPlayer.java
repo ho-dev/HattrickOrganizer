@@ -166,6 +166,13 @@ public class TrainingPerPlayer  {
 				case NATIONALFRIENDLY, LEAGUE -> 1d;
 				case MASTERS -> 5d;
 				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL -> 10d;
+				// TODO:
+				//  WM-Spiel	28 -> 8d
+				//  WM-Halbfinal, WM-Final	56 -> 16d
+				//  Kontinentalmeisterschaftsspiel	14 -> 4d
+				//  Kontinentalmeisterschaftsspiel (Viertel-, Halbfinal, Final)	21 -> 6d
+				//  Nationenpokal	7 -> 2d
+				//  Nationenpokal (K.O.)	14 ->4d
 				default -> 0d;
 			};
 		}
