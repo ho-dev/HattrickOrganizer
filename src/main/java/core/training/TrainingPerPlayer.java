@@ -1,9 +1,7 @@
 package core.training;
 
 import core.model.enums.MatchType;
-import core.model.enums.MatchTypeExtended;
 import core.model.match.IMatchType;
-import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -152,7 +150,7 @@ public class TrainingPerPlayer  {
 	 * calculate the sub skills for the player using 
 	 * the training week from this training point
 	 *  
-	 * @param trainingPoint	training point
+	 * @param trainingWeek training week info
 	 */
 	public void setTrainingWeek(TrainingPerWeek trainingWeek) {
 		this._TrainingWeek = trainingWeek;
@@ -173,6 +171,7 @@ public class TrainingPerPlayer  {
 			};
 		}
 		else{
+			//case MatchTypeExtended.EMERALDCUP, MatchTypeExtended.RUBYCUP, MatchTypeExtended.SAPPHIRECUP -> .5;
 			p = 0.5;
 		}
 		this.experienceSub += minutes * p / 90. / 28.571;
