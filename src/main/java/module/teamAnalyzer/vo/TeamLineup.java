@@ -155,9 +155,9 @@ public class TeamLineup {
             return matchType;
         }
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatch().getMatchType();
+            this.matchType = this.matchDetail.getMatch().getMatchType();
         }
-        return MatchType.NONE;
+        return this.matchType;
     }
 
     public String getResult() {

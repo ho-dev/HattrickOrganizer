@@ -2,6 +2,7 @@ package module.teamAnalyzer.manager;
 
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.model.player.IMatchRoleID;
 import core.prediction.engine.TeamData;
 import module.teamAnalyzer.report.PositionReport;
@@ -179,7 +180,7 @@ public class TeamLineupBuilder {
         return spotLineup;
     }
 
-    public TeamLineupBuilder setMatchType(MatchType matchType) {
+    public TeamLineupBuilder setMatchType(IMatchType matchType) {
         this.teamLineup.setMatchType(matchType);
         return this;
     }

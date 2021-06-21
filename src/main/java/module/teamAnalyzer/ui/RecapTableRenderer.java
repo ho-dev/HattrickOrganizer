@@ -12,7 +12,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
@@ -54,10 +54,11 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 		} else {
 			MatchType matchType = MatchType.NONE;
 			boolean isHomeMatch = true;
-
+			Icon icon;
 			try {
+				icon = (Icon) table.getValueAt(row,1);
 				matchType = MatchType.getById((Integer) table.getValueAt(row, 20));
-				isHomeMatch = ((Boolean) table.getValueAt(row, 21)).booleanValue();
+				isHomeMatch = ((Boolean) table.getValueAt(row,21)).booleanValue();
 				setBackground(MatchesColumnModel.getColor4Matchtyp(matchType));
 			} catch (Exception e) {
 				// Make the exception visible.
@@ -72,7 +73,8 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 			case 1:
 
 				// Set icon for match type.
-				setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
+				//setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
+				setIcon(icon);
 				setText(null);
 
 				StringBuffer tipText = new StringBuffer(matchType.getName());

@@ -1,6 +1,7 @@
 // %888293640:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
@@ -45,7 +46,7 @@ public class Match {
     private int matchId;
 
     /** The match type */
-    private MatchType matchType;
+    private IMatchType matchType;
 
     /** HT Season of the game */
     private int season;
@@ -58,7 +59,7 @@ public class Match {
     /**
      * Creates a new Match object.
      *
-     * @param matchInfo IMatckKurtzInfo from which a match object has to be created
+     * @param matchInfo MatchKurzInfo from which a match object has to be created
      */
     public Match(MatchKurzInfo matchInfo) {
         homeId = matchInfo.getHomeTeamID();
@@ -68,7 +69,7 @@ public class Match {
         awayTeam = matchInfo.getGuestTeamName();
         homeGoals = matchInfo.getHomeTeamGoals();
         awayGoals = matchInfo.getGuestGuestGoals();
-        matchType = matchInfo.getMatchType();
+        matchType = matchInfo.getMatchTypeExtended();
         matchDate = matchInfo.getMatchDateAsTimestamp();
 
         Date matchDate = HTCalendar.resetDay(matchInfo.getMatchDateAsTimestamp());        
@@ -168,11 +169,11 @@ public class Match {
         return matchId;
     }
 
-    public void setMatchType(MatchType i) {
+    public void setMatchType(IMatchType i) {
         matchType = i;
     }
 
-    public MatchType getMatchType() {
+    public IMatchType getMatchType() {
         return matchType;
     }
 
