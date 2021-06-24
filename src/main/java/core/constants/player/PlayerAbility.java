@@ -74,7 +74,7 @@ public final class PlayerAbility {
 			new CBItem(getNameForSkill(UTOPIAN), UTOPIAN),
 			new CBItem(getNameForSkill(DIVINE), DIVINE) };
 
-	private PlayerAbility(){};
+	private PlayerAbility(){}
 
 	public static String toString(int ability){
 		if( ability >= NON_EXISTENT && ability <= DIVINE) {
@@ -90,22 +90,13 @@ public final class PlayerAbility {
 	}
 
 	public static String getNameForSkill(double bewertungwertfloat, boolean zahlen, boolean isMatch) {
-	    String bewertung = null;
 	    int bewertungwert = (int) bewertungwertfloat;
-
-	    //Für match
 	    int sublevel = 0;
-
-	    //Umrechnung für ein Spiel
 	    if (isMatch) {
-	        sublevel = (bewertungwert) % 4;
-
-	        //(int)Math.floor ( ( (float)bewertungwert)/4f ) +1;
-	        bewertungwert = ((bewertungwert - 1) / 4) + 1;
+	        sublevel = (int)(bewertungwertfloat*4) % 4;
 	    }
 
-	    bewertung = toString(bewertungwert);
-
+	    var bewertung = toString(bewertungwert);
 	    if (isMatch) {
 	        bewertung += PlayerAbility.getName4Sublevel(sublevel);
 	    }
@@ -122,7 +113,6 @@ public final class PlayerAbility {
 	             		.format(Helper.round(bewertungwertfloat, UserParameter.instance().nbDecimals)) + ")");
 	        }
 	    }
-
 	    return bewertung;
 	}
 
@@ -154,27 +144,12 @@ public final class PlayerAbility {
 	}
 
 	private static String getName4Sublevel(int sub) {
-	    if (sub == 1) {
-	        return " ("
-	               + HOVerwaltung.instance().getLanguageString("verylow")
-	               + ")";
-	    } else if (sub == 2) {
-	        return " ("
-	               + HOVerwaltung.instance().getLanguageString("low")
-	               + ")";
-	    } else if (sub == 3) {
-	        return " ("
-	               + HOVerwaltung.instance().getLanguageString("high")
-	               + ")";
-	    } else if (sub == 0) {
-	        return " ("
-	               + HOVerwaltung.instance().getLanguageString("veryhigh")
-	               + ")";
-	    } else {
-	        return "";
-	    }
+		return switch (sub) {
+			case 0 -> " ("	+ HOVerwaltung.instance().getLanguageString("verylow")	+ ")";
+			case 1 -> " (" 	+ HOVerwaltung.instance().getLanguageString("low")	+ ")";
+			case 2 -> " ("	+ HOVerwaltung.instance().getLanguageString("high")	+ ")";
+			case 3 -> " ("	+ HOVerwaltung.instance().getLanguageString("veryhigh")	+ ")";
+			default -> "";
+		};
 	}
-
-
-
 }
