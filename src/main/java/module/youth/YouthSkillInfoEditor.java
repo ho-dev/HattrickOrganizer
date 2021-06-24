@@ -63,12 +63,12 @@ public class YouthSkillInfoEditor extends JPanel {
 
         public void set(YouthSkillInfo skillInfo, double value, YouthSkillInfo.SkillRange range) {
             this.skillInfo = skillInfo;
-            slider.setMinimum(SliderPos(range.getMin()));
-            slider.setMaximum(SliderPos(range.getMax()));
+            slider.setMinimum(SliderPos(range.getGreaterEqual()));
+            slider.setMaximum(SliderPos(range.getLessThan()));
             slider.setValue(SliderPos(value));
 
-            minLabel.setText(String.format("%.2f", range.getMin()));
-            maxLabel.setText(String.format("%.2f", range.getMax()));
+            minLabel.setText(String.format("%.2f", range.getGreaterEqual()));
+            maxLabel.setText(String.format("%.2f", range.getLessThan()));
 
             setValueLabel();
         }

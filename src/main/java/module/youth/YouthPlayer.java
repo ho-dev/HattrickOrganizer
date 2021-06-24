@@ -591,14 +591,14 @@ public class YouthPlayer {
      * @param before adjust training development before given date
      */
     public double adjustSkill(Skills.HTSkillID skillID, double adjustment, Timestamp before) {
+        // start skills are examined from current skill infos
+        var currentSkill = getSkillInfo(skillID);
+        currentSkill.addStartValue(adjustment);
+        if (currentSkill.getCurrentValue() < currentSkill.getStartValue()) {
+            currentSkill.setCurrentValue(currentSkill.getStartValue());
+        }
         if (trainingDevelopment != null && trainingDevelopment.size() > 0) {
             var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
-            // start skills are examined from current skill infos
-            var currentSkill = getSkillInfo(skillID);
-            currentSkill.addStartValue(adjustment);
-            if (currentSkill.getCurrentValue() < currentSkill.getStartValue()) {
-                currentSkill.setCurrentValue(currentSkill.getStartValue());
-            }
             var skills = getStartSkills();
             for (var trainingEntry : trainingDevelopment.values()) {
                 if (!trainingEntry.getMatchDate().before(before)) break; // stop if before date is reached
@@ -606,9 +606,8 @@ public class YouthPlayer {
                 // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
                 skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
             }
-            return currentSkill.getStartValue();
         }
-        return 0;
+        return currentSkill.getStartValue();
     }
 
     public String getSpecialtyString() {
@@ -744,6 +743,7 @@ public class YouthPlayer {
                 skillinfo.setCurrentValue(prevSkills.getCurrentValue());
                 skillinfo.setStartValue(prevSkills.getStartValue());
             }
+            this.setSkillInfo(skillinfo);
         }
         parseScoutComments(properties);
         evaluateScoutComments();
