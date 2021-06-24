@@ -255,18 +255,11 @@ public class FutureTrainingManager {
 	*/
 	private int checkSkillChange(int pos) {
 		if (finalSub[pos] >= 1) {
-//			Alternative 1: Set sub=0 after a skillup 
-//			(We will use this, until the training speed formula is optimized)
-//			finalSub[pos] = 0;
-
-//			TODO flattermann
-//			Alternative 2: Use overflow sub after a skillup
-//			(This would be more accurate. But only if the underlaying formula is exact) 
 			finalSub[pos] -= 1;
 			int v = (int)finalSkill[pos]+1;
 			finalSkill[pos] = finalSub[pos]+v;
 			return 1;
-		} else if (finalSub[pos] < 0) {
+		} else if (finalSub[pos] < -.005) { // subs between 0 and -.005 are rounded up in display
 			if (finalSkill[pos] <= 0) {
 				finalSkill[pos] = 0;
 				finalSub[pos] = 0;
