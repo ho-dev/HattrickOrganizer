@@ -1,6 +1,7 @@
 // %3124307367:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.model.enums.MatchType;
 import core.module.config.ModuleConfig;
 
 import java.util.List;
@@ -188,45 +189,51 @@ public class Filter {
     }
     
     public boolean isAcceptedMatch(Match match) {
-    	
-    	// Check home and away
-    	if ((!homeGames && match.isHome())
-    			|| (!awayGames && !match.isHome())) {
-    		return false;
-    	}
-    	
-    	// if we care about result, check result
-    	if (!draw && (match.getAwayGoals() == match.getHomeGoals())) {
-    		return false;
-    	}
 
-    	boolean homeWin = (match.getHomeGoals() > match.getAwayGoals());
-    	
-    	if (!win && ((homeWin && match.isHome()) || (!homeWin && !match.isHome()))) {
-    	   	return false;
-    	}
-    	
-    	if (!defeat && ((!homeWin && match.isHome()) || (homeWin && !match.isHome()))) {
-    		return false;
-    	}
-    	
-    	// Match types
-    	
-    	if (match.getMatchType().isFriendly()) {
-    		return friendly;
-    	}
-    	
-    	if (match.getMatchType().isTournament()) {
-    		return tournament;
-    	}
+        // Check home and away
+        if ((!homeGames && match.isHome())
+                || (!awayGames && !match.isHome())) {
+            return false;
+        }
 
-        return switch (match.getMatchType()) {
-            case LEAGUE -> league;
-            case CUP -> cup;
-            case MASTERS -> masters;
-            case QUALIFICATION -> qualifier;
-            default -> false;
-        };
+        // if we care about result, check result
+        if (!draw && (match.getAwayGoals() == match.getHomeGoals())) {
+            return false;
+        }
+
+        boolean homeWin = (match.getHomeGoals() > match.getAwayGoals());
+
+        if (!win && ((homeWin && match.isHome()) || (!homeWin && !match.isHome()))) {
+            return false;
+        }
+
+        if (!defeat && ((!homeWin && match.isHome()) || (homeWin && !match.isHome()))) {
+            return false;
+        }
+
+        // Match types
+        var _matchType = match.getMatchType();
+        if (_matchType instanceof MatchType) {
+            var matchType = (MatchType) _matchType;
+            if (matchType.isFriendly()) {
+                return friendly;
+
+            }
+            if (matchType.isTournament()) {
+                return tournament;
+            }
+
+            return switch (matchType) {
+                case LEAGUE -> league;
+                case CUP -> cup;
+                case MASTERS -> masters;
+                case QUALIFICATION -> qualifier;
+                default -> false;
+            };
+        } else {
+            // challenger cup
+            return cup;
+        }
     }
     
     public void loadFilters() {

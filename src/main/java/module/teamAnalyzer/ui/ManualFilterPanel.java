@@ -62,7 +62,7 @@ public class ManualFilterPanel extends JPanel {
 
 			rowData = new Vector<>();
 
-			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId(), element.getMatchType());
+			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId(), MatchType.getById(element.getMatchType().getMatchTypeId()));
 			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + element.getMatchId());
 
 			rowData.add(Boolean.valueOf(isSelected));
@@ -88,7 +88,7 @@ public class ManualFilterPanel extends JPanel {
 				matchIds.add(element);
 			}
 
-			rowData.add("" + element.getMatchType().getId());
+			rowData.add("" + element.getMatchType().getMatchTypeId());
 			tableModel.addRow(rowData);
 		}
 
@@ -144,8 +144,8 @@ public class ManualFilterPanel extends JPanel {
 
 					if (!status.equalsIgnoreCase("true")) {
 						int id = availableMatches.get(row).getMatchId();
-						MatchType type = availableMatches.get(row).getMatchType();
-						downloadDone = OnlineWorker.downloadMatchData(id, type, false);
+						var type = availableMatches.get(row).getMatchType();
+						downloadDone = OnlineWorker.downloadMatchData(id, MatchType.getById(type.getMatchTypeId()), false);
 					}
 
 					e.consume();

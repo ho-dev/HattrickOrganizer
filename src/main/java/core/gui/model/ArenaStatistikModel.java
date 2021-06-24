@@ -2,6 +2,7 @@
 package core.gui.model;
 
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.model.misc.Basics;
 import tool.arenasizer.ArenaSizer;
 
@@ -36,7 +37,7 @@ public class ArenaStatistikModel {
     protected int m_iMatchStatus = -1;
 
     /** Typ des Spiels */
-    protected MatchType m_mtMatchTyp = MatchType.NONE;
+    protected IMatchType m_mtMatchTyp = MatchType.NONE;
     private int m_iArenaGroesse;
     private int m_iFanZufriedenheit;
     private int m_iFans;
@@ -279,7 +280,7 @@ public class ArenaStatistikModel {
      *
      * @param m_mtMatchTyp New value of property m_iMatchTyp.
      */
-    public final void setMatchTyp(MatchType m_mtMatchTyp) {
+    public final void setMatchTyp(IMatchType m_mtMatchTyp) {
         this.m_mtMatchTyp = m_mtMatchTyp;
     }
 
@@ -288,7 +289,7 @@ public class ArenaStatistikModel {
      *
      * @return Value of property m_iMatchTyp.
      */
-    public final MatchType getMatchTyp() {
+    public final IMatchType getMatchTyp() {
         return m_mtMatchTyp;
     }
 
@@ -433,7 +434,7 @@ public class ArenaStatistikModel {
             Friendlies and qualifiers: Income is split evenly
     */
     public float getMatchTypeFactor() {
-        switch (m_mtMatchTyp) {
+        switch (MatchType.getById(m_mtMatchTyp.getMatchTypeId())) {
             case LEAGUE -> matchTypeFactor = 1;
             case CUP -> matchTypeFactor = (float) 2 / 3;
             case FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, FRIENDLYNORMAL, INTFRIENDLYNORMAL, MASTERS, QUALIFICATION -> matchTypeFactor = (float) 1 / 2;

@@ -352,13 +352,11 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_iMatchTyp.
 	 */
 	public MatchType getMatchType() {
-		if((m_mtMatchTyp == null) || (m_mtMatchTyp == MatchType.NONE))
-		{
+		if ((m_mtMatchTyp == null) || (m_mtMatchTyp == MatchType.NONE)
+				|| m_mtMatchTyp == MatchType.CUP && (m_mtCupLevel == null || m_mtCupLevel == CupLevel.NONE)) {
 			var m = OnlineWorker.inferMissingMatchType(this);
 			this.m_mtMatchTyp = m.getMatchType();
-			if(m_mtMatchTyp != MatchType.NONE)
-			{
-				this.m_mtMatchTyp = m.getMatchType();
+			if (m_mtMatchTyp != MatchType.NONE) {
 				this.iMatchContextId = m.getMatchContextId();
 				this.m_mtCupLevel = m.getCupLevel();
 				this.m_mtCupLevelIndex = m.getCupLevelIndex();
@@ -366,11 +364,9 @@ public class MatchKurzInfo implements Comparable<Object> {
 				this.isObsolet = m.isObsolet();
 				DBManager.instance().storeMatchKurzInfos(new MatchKurzInfo[]{this});
 				HOLogger.instance().debug(this.getClass(), String.format("Successfully set MatchType to %s (%s) for match: %s", m_mtMatchTyp.getName(), this.getMatchTypeExtended().getName(), this.getMatchID()));
-			}
-			else{
+			} else {
 				HOLogger.instance().debug(this.getClass(), String.format("Could not infer MatchType of match: %s", this.getMatchID()));
 			}
-
 		}
 		return m_mtMatchTyp;
 	}
@@ -380,35 +376,30 @@ public class MatchKurzInfo implements Comparable<Object> {
 	}
 
 	public IMatchType getMatchTypeExtended() {
-		if (m_matchTypeExtended == MatchType.NONE){
-
-		if (m_mtMatchTyp == MatchType.CUP) {
-			if (m_mtCupLevel == CupLevel.NATIONALorDIVISIONAL) {
-				m_matchTypeExtended = MatchType.CUP;
-			}
-			else if (m_mtCupLevel == CupLevel.CONSOLATION) {
-				m_matchTypeExtended = MatchTypeExtended.CONSOLANTECUP;
+		if (m_matchTypeExtended == MatchType.NONE) {
+			if (this.getMatchType() == MatchType.CUP) {		// reload missing type info
+				if (m_mtCupLevel == CupLevel.NATIONALorDIVISIONAL) {
+					m_matchTypeExtended = MatchType.CUP;
+				} else if (m_mtCupLevel == CupLevel.CONSOLATION) {
+					m_matchTypeExtended = MatchTypeExtended.CONSOLANTECUP;
+				} else {
+					m_matchTypeExtended = switch (m_mtCupLevelIndex) {
+						case EMERALD -> MatchTypeExtended.EMERALDCUP;
+						case RUBY -> MatchTypeExtended.RUBYCUP;
+						case SAPPHIRE -> MatchTypeExtended.SAPPHIRECUP;
+						default -> MatchType.NONE;
+					};
+				}
+			} else if (m_mtMatchTyp == MatchType.TOURNAMENTGROUP) {
+				TournamentType tournamentType = TournamentType.getById(iTournamentTypeID);
+				if (tournamentType == TournamentType.DIVISIONBATTLE) {
+					m_matchTypeExtended = MatchTypeExtended.DIVISIONBATTLE;
+				}
 			}
 			else {
-				m_matchTypeExtended = switch (m_mtCupLevelIndex) {
-					case EMERALD -> MatchTypeExtended.EMERALDCUP;
-					case RUBY -> MatchTypeExtended.RUBYCUP;
-					case SAPPHIRE -> MatchTypeExtended.SAPPHIRECUP;
-					default -> MatchType.NONE;
-				};
+				m_matchTypeExtended = m_mtMatchTyp;
 			}
 		}
-
-		else if (m_mtMatchTyp == MatchType.TOURNAMENTGROUP)
-		{
-			TournamentType tournamentType = TournamentType.getById(iTournamentTypeID);
-			if (tournamentType == TournamentType.DIVISIONBATTLE)
-			{
-				m_matchTypeExtended =  MatchTypeExtended.DIVISIONBATTLE;
-			}
-		}
-	}
-
 		return m_matchTypeExtended;
 	}
 

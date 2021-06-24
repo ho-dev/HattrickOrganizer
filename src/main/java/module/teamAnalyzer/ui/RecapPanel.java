@@ -5,6 +5,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.model.match.Matchdetails;
 import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
@@ -141,7 +142,7 @@ public class RecapPanel extends JPanel {
         rowData.add(lineup.getName());
 
         // Column 2
-        MatchType matchType = lineup.getMatchType();
+        IMatchType matchType = lineup.getMatchType();
         if ( matchType != MatchType.NONE){
             rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
         }
@@ -200,7 +201,7 @@ public class RecapPanel extends JPanel {
 
         // Columns 19-21
         rowData.add(lineup.getFormation());
-        rowData.add(matchType.getId());
+        rowData.add(matchType.getMatchTypeId());
         rowData.add(lineup.isHomeMatch());
 
         return rowData;

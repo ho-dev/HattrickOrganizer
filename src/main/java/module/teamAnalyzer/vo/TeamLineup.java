@@ -2,6 +2,7 @@
 package module.teamAnalyzer.vo;
 
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
 import core.specialevents.SpecialEventsPredictionManager;
@@ -20,11 +21,10 @@ public class TeamLineup {
 
     // average, adjusted, opponent team name
     private String name;
-    private MatchType matchType=MatchType.NONE;
+    private IMatchType matchType=MatchType.NONE;
     // adjusted values
     private Integer adjustedTacticCode;
     private Integer adjustedTacticLevel;
-
 
     private MatchDetail matchDetail;
 
@@ -148,16 +148,16 @@ public class TeamLineup {
         this.name = name;
     }
 
-    public void setMatchType(MatchType type){ this.matchType = type;}
+    public void setMatchType(IMatchType type){ this.matchType = type;}
 
-    public MatchType getMatchType() {
+    public IMatchType getMatchType() {
         if (this.matchType != MatchType.NONE){
             return matchType;
         }
         if (this.matchDetail != null) {
-            return this.matchDetail.getMatch().getMatchType();
+            this.matchType = this.matchDetail.getMatch().getMatchType();
         }
-        return MatchType.NONE;
+        return this.matchType;
     }
 
     public String getResult() {

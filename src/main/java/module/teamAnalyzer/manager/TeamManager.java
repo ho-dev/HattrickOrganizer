@@ -175,7 +175,7 @@ public class TeamManager {
 				team.setTeamId(match.getHomeTeamID());
 			}
 			team.setTime(match.getMatchDateAsTimestamp());
-			team.setMatchType(match.getMatchType().getIconArrayIndex());
+			team.setMatchType(match.getMatchTypeExtended().getIconArrayIndex());
 
 			vTeams.add(team);
 		}

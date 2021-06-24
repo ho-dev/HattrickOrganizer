@@ -99,9 +99,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 		Matchdetails details = this.matchesModel.getDetails();
 
-
-		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[info.getMatchType()
-				.getIconArrayIndex()]));
+		matchtypLabel.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[info.getMatchTypeExtended().getIconArrayIndex()]));
 		matchtypLabel.setText(info.getMatchType().getName());
 
 		// Teams

@@ -3,6 +3,7 @@ package core.gui.model;
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
+import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
 import core.net.OnlineWorker;
@@ -153,9 +154,9 @@ public class PlayerAnalysisModel extends HOTableModel {
 
 	private Matchdetails checkMatchDetailsPresent(PlayerMatchCBItem spielerCBItem, Matchdetails matchdetails) {
 		if (matchdetails.getMatchID() == -1) {
-			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), spielerCBItem.getMatchTyp(), true);
+			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), MatchType.getById(spielerCBItem.getMatchTyp().getMatchTypeId()), true);
 			if (success) {
-				matchdetails = DBManager.instance().loadMatchDetails(spielerCBItem.getMatchTyp().getId(), spielerCBItem.getMatchID());
+				matchdetails = DBManager.instance().loadMatchDetails(spielerCBItem.getMatchTyp().getMatchTypeId(), spielerCBItem.getMatchID());
 			}
 		}
 		return matchdetails;

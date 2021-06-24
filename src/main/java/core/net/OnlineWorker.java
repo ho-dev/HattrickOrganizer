@@ -277,8 +277,8 @@ public class OnlineWorker {
 
 		showWaitInformation(1);
 		// Only download if not present in the database, or if refresh is true or if match not oboslet
-		if (refresh ||
-				!DBManager.instance().isMatchInDB(matchID, info.getMatchType())
+		if (refresh
+				|| !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
 				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType(), matchID)
 		) {

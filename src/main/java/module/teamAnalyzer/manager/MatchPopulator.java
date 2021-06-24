@@ -1,6 +1,7 @@
 package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
+import core.model.enums.MatchType;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
@@ -104,14 +105,15 @@ public class MatchPopulator {
     }
 
     private MatchDetail populateMatch(Match aMatch) {
-    	Matchdetails tmpMatch = Matchdetails.getMatchdetails(aMatch.getMatchId(), aMatch.getMatchType());
+        var matchType = MatchType.getById( aMatch.getMatchType().getMatchTypeId());
+    	Matchdetails tmpMatch = Matchdetails.getMatchdetails(aMatch.getMatchId(), matchType);
         MatchDetail matchDetail = new MatchDetail(aMatch);
         MatchLineupTeam tmpLineupTeam = null;
 
         if (isHome(tmpMatch)) {
-            tmpLineupTeam =  DBManager.instance().loadMatchLineup(aMatch.getMatchType().getId(), aMatch.getMatchId()).getHomeTeam();
+            tmpLineupTeam =  DBManager.instance().loadMatchLineup(matchType.getId(), aMatch.getMatchId()).getHomeTeam();
         } else {
-            tmpLineupTeam =  DBManager.instance().loadMatchLineup(aMatch.getMatchType().getId(), aMatch.getMatchId()).getGuestTeam();
+            tmpLineupTeam =  DBManager.instance().loadMatchLineup(matchType.getId(), aMatch.getMatchId()).getGuestTeam();
         }
 
         double totStars = 0;

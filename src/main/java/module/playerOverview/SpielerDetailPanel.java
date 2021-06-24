@@ -359,7 +359,7 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId(), null);
             if (info != null) {
                 ((RatingTableEntry) m_jpLastMatchRating.getTableEntryLeft()).setRating((float)m_clPlayer.getLastMatchRating());
-                ((MatchDateTableEntry) m_jpLastMatchRating.getTableEntryRight()).setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchType());
+                ((MatchDateTableEntry) m_jpLastMatchRating.getTableEntryRight()).setMatchInfo(m_clPlayer.getLastMatchDate(), info.getMatchTypeExtended());
             }
         }
         m_jpNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));

@@ -1,9 +1,7 @@
 package core.training;
 
 import core.model.enums.MatchType;
-import core.model.enums.MatchTypeExtended;
 import core.model.match.IMatchType;
-import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -71,7 +69,6 @@ public class TrainingPerPlayer  {
     		else
     		{
 	    		HOLogger.instance().error(getClass(), "_TrainingPair is null. Aborting addValues.");
-	    		return;
     		}
     	} else { 
 	    	_TrainingPair.addPrimary(values.getTrainingPair().getPrimary());
@@ -152,7 +149,7 @@ public class TrainingPerPlayer  {
 	 * calculate the sub skills for the player using 
 	 * the training week from this training point
 	 *  
-	 * @param trainingPoint	training point
+	 * @param trainingWeek training week info
 	 */
 	public void setTrainingWeek(TrainingPerWeek trainingWeek) {
 		this._TrainingWeek = trainingWeek;
@@ -163,16 +160,24 @@ public class TrainingPerPlayer  {
 
 		if (_matchType instanceof MatchType){
 			p = switch ((MatchType) _matchType){
-				case CUP, NATIONALFRIENDLY, QUALIFICATION -> 2d;
+				case CUP, QUALIFICATION -> 2d;
 				case FRIENDLYNORMAL, FRIENDLYCUPRULES -> .1;
 				case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> .2;
-				case LEAGUE -> 1d;
+				case NATIONALFRIENDLY, LEAGUE -> 1d;
 				case MASTERS -> 5d;
 				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL -> 10d;
+				// TODO:
+				//  WM-Spiel	28 -> 8d
+				//  WM-Halbfinal, WM-Final	56 -> 16d
+				//  Kontinentalmeisterschaftsspiel	14 -> 4d
+				//  Kontinentalmeisterschaftsspiel (Viertel-, Halbfinal, Final)	21 -> 6d
+				//  Nationenpokal	7 -> 2d
+				//  Nationenpokal (K.O.)	14 ->4d
 				default -> 0d;
 			};
 		}
 		else{
+			//case MatchTypeExtended.EMERALDCUP, MatchTypeExtended.RUBYCUP, MatchTypeExtended.SAPPHIRECUP -> .5;
 			p = 0.5;
 		}
 		this.experienceSub += minutes * p / 90. / 28.571;

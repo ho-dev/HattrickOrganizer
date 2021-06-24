@@ -1,10 +1,10 @@
 package module.opponentspy.OpponentTeam;
 
-import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 
 public class PlayedPosition {
 	
-	public PlayedPosition(int positionId, byte tacticId, MatchType matchType, double ratingStart, double ratingEnd) {
+	public PlayedPosition(int positionId, byte tacticId, IMatchType matchType, double ratingStart, double ratingEnd) {
 		this.positionId = positionId;
 		this.tacticId = tacticId;
 		this.matchType = matchType;
@@ -14,7 +14,7 @@ public class PlayedPosition {
 	
 	public int positionId;
 	public byte tacticId;
-	public MatchType matchType;
+	public IMatchType matchType;
 	public double ratingStart;
 	public double ratingEnd;
 }

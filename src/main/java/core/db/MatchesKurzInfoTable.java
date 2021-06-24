@@ -1,6 +1,8 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.model.cup.CupLevel;
+import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchTypeExtended;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
@@ -73,7 +75,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		MatchKurzInfo match = null;
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs = null;
 		String column = "";
 		String column2 = "";
 		try {
@@ -100,7 +101,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(getMatchTypWhereClause(matchtyp));
 
 			sql.append(" ORDER BY DIFF DESC ");
-			rs = adapter.executeQuery(sql.toString());
+			var rs = adapter.executeQuery(sql.toString());
 
 			rs.beforeFirst();
 
@@ -343,6 +344,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setGuestTeamGoals(rs.getInt("GastTore"));
 		match.setHomeTeamGoals(rs.getInt("HeimTore"));
 		match.setMatchType(MatchType.getById(rs.getInt("MatchTyp")));
+		match.setCupLevel(CupLevel.fromInt(rs.getInt("CupLevel")));
+		match.setCupLevelIndex(CupLevelIndex.fromInt(rs.getInt("CupLevelIndex")));
 		match.setMatchStatus(rs.getInt("Status"));
 		match.setOrdersGiven(rs.getBoolean("Aufstellung"));
 		match.setArenaId(rs.getInt("ArenaId"));
