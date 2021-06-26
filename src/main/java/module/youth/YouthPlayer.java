@@ -510,6 +510,7 @@ public class YouthPlayer {
         if (!date.equals(this.youthMatchDate)) {
             var oldPlayerInfo = getOldPlayerInfo(date);
             if (oldPlayerInfo != null) {
+                setKnownMaxValues(oldPlayerInfo.currentSkills);
                 return oldPlayerInfo.currentSkills;
             } else {
                 var ret = getStartSkills();
@@ -519,10 +520,19 @@ public class YouthPlayer {
                     }
                     ret = entry.getValue().getSkills();
                 }
+                setKnownMaxValues(ret);
                 return ret;
             }
         }
         return this.currentSkills;
+    }
+
+    private void setKnownMaxValues(YouthSkillsInfo skills) {
+        for ( var currentSkill : this.currentSkills.values()){
+            if ( currentSkill.getMax() != null ){
+                skills.get(currentSkill.getSkillID()).setMax(currentSkill.getMax());
+            }
+        }
     }
 
     /**
