@@ -53,7 +53,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
 		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
 		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
-		columns[12] = new ColumnDescriptor("isObsolete", Types.BOOLEAN, true); //
+		columns[22] = new ColumnDescriptor("isObsolete", Types.BOOLEAN, true); //
 	}
 
 	@Override
