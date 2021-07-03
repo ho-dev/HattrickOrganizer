@@ -9,6 +9,7 @@ import core.model.enums.MatchTypeExtended;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
 import core.util.HTDatetime;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -582,11 +583,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/**
 	 * get experience factor of tournament natianal team matches
 	 * TODO: check if playoffs are really tagged by MatchType.TOURNAMENTPLAYOFF
-	 * @param tournamentType
-	 * @param isPlayOff
+	 * @param tournamentType tournament type of the match, null if no tournament match
+	 * @param isPlayOff boolean, true if play off tournament match
 	 * @return factor of league match experience increases (3.5)
 	 */
-	private double getTournamentExperienceFactor(TournamentType tournamentType, boolean isPlayOff) {
+	private double getTournamentExperienceFactor(@Nullable TournamentType tournamentType, boolean isPlayOff) {
+		if ( tournamentType == null) return 0d;
 		if ( tournamentType.isWorldCup()){
 			// WM-Spiel	28
 			//WM-Halbfinal, WM-Final	56
