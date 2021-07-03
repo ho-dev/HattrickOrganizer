@@ -49,9 +49,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** MatchContextId */
 	private int iMatchContextId;
 
-	/** match round of world cup and tournament matches */
-	private Integer matchRound;
-
 	public int getMatchContextId() {
 		return iMatchContextId;
 	}
@@ -624,13 +621,5 @@ public class MatchKurzInfo implements Comparable<Object> {
 			return 1d;
 		}
 		return 0d;
-	}
-
-	public void setMatchRound(Integer matchRound) {
-		this.matchRound = matchRound;
-	}
-
-	public Integer getMatchRound() {
-		return matchRound;
 	}
 }

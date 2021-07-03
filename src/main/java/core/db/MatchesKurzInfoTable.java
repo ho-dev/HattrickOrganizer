@@ -53,9 +53,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				new ColumnDescriptor("Weather", Types.INTEGER, true), // 0=rainy, ...
 				new ColumnDescriptor("WeatherForecast", Types.INTEGER, true), // 0=happened, ...
 				new ColumnDescriptor("Duration", Types.INTEGER, true), // match duration in minutes
-				new ColumnDescriptor("isObsolete", Types.BOOLEAN, true),
-				new ColumnDescriptor("MatchRound", Types.INTEGER, true) // match round of world cup and tournament matches
-		};
+				new ColumnDescriptor("isObsolete", Types.BOOLEAN, true)		};
 	}
 
 	@Override
@@ -358,7 +356,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		match.setWeatherForecast(Weather.Forecast.getById(DBManager.getInteger(rs,"WeatherForecast")));
 		match.setDuration(DBManager.getInteger(rs, "Duration"));
 		match.setisObsolet(DBManager.getBoolean(rs, "isObsolete", false));
-		match.setMatchRound(DBManager.getInteger(rs, "MatchRound"));
 		return match;
 	}
 

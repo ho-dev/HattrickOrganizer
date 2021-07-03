@@ -365,7 +365,6 @@ final class DBUpdater {
 		}
 
 		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("isObsolete", "BOOLEAN");
-		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("MatchRound", "INTEGER");
 
 		updateDBVersion(dbVersion, 500);
 	}
