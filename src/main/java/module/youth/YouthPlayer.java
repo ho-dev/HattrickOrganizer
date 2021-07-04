@@ -959,10 +959,11 @@ public class YouthPlayer {
     {
         if ( potential == null){
             calcMaxSkills17();
-            potential=0;
+            double p = 0d;
             for ( var skillId: skillIds){
-                potential += (int)(getSkillInfo(skillId).getPotential17Value() / YouthTraining.potentialNormingFactor.get(skillId));
+                p += max(0, getSkillInfo(skillId).getPotential17Value() - 4) / YouthTraining.potentialNormingFactor.get(skillId);
             }
+            potential = (int)Math.round(p);
         }
         return potential;
     }
@@ -1001,40 +1002,42 @@ public class YouthPlayer {
         else {
             // The player is younger than 17 years old
             // The possible training is divided among the unfinished skills
-            var numberOfUnfishedTrainings = this.currentSkills.values().stream()
-                    .filter(i->!i.isMaxReached())
+            var numberOfUsefulTrainings = this.currentSkills.values().stream()
+                    .filter(YouthSkillInfo::isTrainingUsefull)
                     .count();
             int age = this.getAgeYears();
             int days = this.getAgeDays();
-            while (age < 17 && numberOfUnfishedTrainings > 0) {
+            while (age < 17 && numberOfUsefulTrainings > 0) {
                 // for each week until age of 17 is reached
                 int ntrainingsMaxReached=0;
                 for (var skill : this.currentSkills.values()) {
                     // find new maximum value of each skill
                     var maxVal = skill.getCurrentValue();
-                    if (skill.getPotential17Value() != null) maxVal = skill.getPotential17Value();
-                    // limit of skill
-                    var skillLimit = 8.3;
-                    if (skill.getMax() != null && skill.getMax() < 8) {
-                        skillLimit = skill.getMax() + .99;
-                    }
-                    if (!skill.isMaxReached() && maxVal < skillLimit) { // if maximum is not beyond the given limit
-                        // maximum weekly increment of the skill
-                        double increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
-                        // increment maximum value as if the training could be distributed among the unfinished skills
-                        maxVal += increment / numberOfUnfishedTrainings;
-                        // check if limit is reached
-                        if (maxVal > skillLimit) {
-                            maxVal = skillLimit;
-                            // register newly finished skill
-                            ntrainingsMaxReached++;
+                    if ( skill.isTrainingUsefull()) {
+                        if (skill.getPotential17Value() != null) maxVal = skill.getPotential17Value();
+                        // limit of skill
+                        var skillLimit = 8.3;
+                        if (skill.getMax() != null && skill.getMax() < 8) {
+                            skillLimit = skill.getMax() + .99;
+                        }
+                        if (!skill.isMaxReached() && maxVal < skillLimit) { // if maximum is not beyond the given limit
+                            // maximum weekly increment of the skill
+                            double increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
+                            // increment maximum value as if the training could be distributed among the unfinished skills
+                            maxVal += increment / numberOfUsefulTrainings;
+                            // check if limit is reached
+                            if (maxVal > skillLimit) {
+                                maxVal = skillLimit;
+                                // register newly finished skill
+                                ntrainingsMaxReached++;
+                            }
                         }
                     }
                     // set new maximum skill value
                     skill.setPotential17Value(maxVal);
                 }
                 // decrement number of unfinished trainings
-                numberOfUnfishedTrainings-=ntrainingsMaxReached;
+                numberOfUsefulTrainings-=ntrainingsMaxReached;
                 // player's age of next week
                 days += 7;
                 if (days > 111) {

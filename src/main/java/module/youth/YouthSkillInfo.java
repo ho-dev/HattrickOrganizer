@@ -193,6 +193,10 @@ public class YouthSkillInfo {
         return isMaxReached;
     }
 
+    public boolean isTrainingUsefull(){
+        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>4);
+    }
+
     public void setMaxReached(boolean maxReached) {
         isMaxReached = maxReached;
     }
