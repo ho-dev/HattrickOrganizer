@@ -395,6 +395,9 @@ public class MatchKurzInfo implements Comparable<Object> {
 				if (tournamentType == TournamentType.DIVISIONBATTLE) {
 					m_matchTypeExtended = MatchTypeExtended.DIVISIONBATTLE;
 				}
+				else {
+					m_matchTypeExtended = m_mtMatchTyp;
+				}
 			}
 			else {
 				m_matchTypeExtended = m_mtMatchTyp;
