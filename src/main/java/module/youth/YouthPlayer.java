@@ -367,6 +367,16 @@ public class YouthPlayer {
         this.hrfid = hrfid;
     }
 
+    private Timestamp statusTime;
+    private Timestamp getStatusTime(){
+        if ( statusTime == null){
+            statusTime = DBManager.instance().getHrf(this.hrfid).getDatum();
+        }
+        return statusTime;
+    }
+
+
+
     public Timestamp getPromotionDate() {
         return promotionDate;
     }
@@ -638,6 +648,14 @@ public class YouthPlayer {
 
     public double getProgressLastMatch() {
         return progressLastMatch;
+    }
+
+    public int getAgeYearsAtDate(Timestamp matchDate) {
+        var hrfdate = this.getStatusTime().getTime();
+        long time = matchDate.getTime();
+        long diff = (hrfdate - time) / (1000 * 60 * 60 * 24);
+        long ageInDays = getAgeDays() + 112 * getAgeYears() - diff;
+        return (int)(ageInDays / 112);
     }
 
     public static class ScoutComment {
@@ -958,10 +976,12 @@ public class YouthPlayer {
     public int getPotential()
     {
         if ( potential == null){
+            //HOLogger.instance().info(this.getClass(), "getPotential " + this.getFullName() + " " + this.getAgeYears() + "," + this.getAgeDays());
             calcMaxSkills17();
             double p = 0d;
             for ( var skillId: skillIds){
                 p += max(0, getSkillInfo(skillId).getPotential17Value() - 4) / YouthTraining.potentialNormingFactor.get(skillId);
+                //HOLogger.instance().info(this.getClass(), skillId.toString() + "=" + getSkillInfo(skillId).getPotential17Value() + " p=" + p);
             }
             potential = (int)Math.round(p);
         }
@@ -980,12 +1000,9 @@ public class YouthPlayer {
             if (this.getTrainingDevelopment().size() > 0) {
                 for (var entry : this.getTrainingDevelopment().values()) {
                     // find skill when player's age skipped to 17
+                    skill17 = entry.getSkills();
                     if (entry.getPlayerAgeYears() > 16) {
-                        skill17 = entry.getSkills();
                         break;
-                    }
-                    if ( skill17 == null){
-                        skill17=entry.getSkills(); // start skills of the player (are used if player starts with age older than 17,0)
                     }
                 }
             }
