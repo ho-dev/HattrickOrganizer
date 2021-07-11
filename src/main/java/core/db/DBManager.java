@@ -2764,4 +2764,8 @@ public class DBManager {
 	public void storeTeamRatings(MatchTeamRating teamrating) {
 		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).store(teamrating);
 	}
+
+    public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
+		return ((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).load(matchId, matchtype);
+	}
 }

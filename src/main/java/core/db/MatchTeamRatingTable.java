@@ -2,8 +2,11 @@ package core.db;
 
 import core.model.match.MatchTeamRating;
 import core.util.HOLogger;
+import module.transfer.scout.ScoutEintrag;
 
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MatchTeamRatingTable extends AbstractTable {
     public final static String TABLENAME = "MATCHTEAMRATING";
@@ -33,19 +36,23 @@ public class MatchTeamRatingTable extends AbstractTable {
         return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
     }
 
-
-    MatchTeamRating load(int matchType, int matchID, int teamID) {
+    List<MatchTeamRating> load(int matchID, int matchType ) {
+        var ret = new ArrayList<MatchTeamRating>();
         try {
-            var sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + matchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
+            var sql = "SELECT * FROM " + getTableName()
+                    + " WHERE MatchTyp = " + matchType
+                    + " AND MatchID = " + matchID;
             var rs = adapter.executeQuery(sql);
             if (rs != null) {
-                rs.first();
-                return  new MatchTeamRating(rs);
+                rs.beforeFirst();
+                while (rs.next()) {
+                    ret.add(new MatchTeamRating(rs));
+                }
             }
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
+            HOLogger.instance().log(getClass(), "DB.MatchTeamRating Error" + e);
         }
-        return null;
+        return ret;
     }
 
     private String getColumnNames() {
