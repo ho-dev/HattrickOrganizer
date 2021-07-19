@@ -1,7 +1,6 @@
 // %2940960156:hoplugins.teamAnalyzer%
 package module.teamAnalyzer;
 
-import core.model.HOVerwaltung;
 import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
@@ -11,11 +10,9 @@ import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
 import module.teamAnalyzer.vo.Match;
 import module.teamAnalyzer.vo.MatchDetail;
-import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
