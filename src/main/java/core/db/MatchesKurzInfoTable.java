@@ -30,30 +30,31 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[23];
-		columns[0] = new ColumnDescriptor("MatchID", Types.INTEGER, false); //The globally unique identifier of the match
-		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
-		columns[2] = new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256); // HomeTeamName
-		columns[3] = new ColumnDescriptor("HeimID", Types.INTEGER, false);  //HomeTeamID
-		columns[4] = new ColumnDescriptor("GastName", Types.VARCHAR, false, 256); // AwayTeamName
-		columns[5] = new ColumnDescriptor("GastID", Types.INTEGER, false);  //AwayTeamID
-		columns[6] = new ColumnDescriptor("MatchDate", Types.VARCHAR, false, 256); // The start date and time (kick-off) of the match.
-		columns[7] = new ColumnDescriptor("HeimTore", Types.INTEGER, false); // The current number of goals in the match for the home team.
-		columns[8] = new ColumnDescriptor("GastTore", Types.INTEGER, false); // The current number of goals in the match for the away team
-		columns[9] = new ColumnDescriptor("Aufstellung", Types.BOOLEAN, false); // List of boolean value only supplied for upcoming matches of your own team that signifies whether you have given orders or not
-		columns[10] = new ColumnDescriptor("Status", Types.INTEGER, false); // Specifying whether the match is FINISHED, ONGOING or UPCOMING
-		columns[11] = new ColumnDescriptor("CupLevel", Types.INTEGER, false); // 1 = National/Divisional cup, 2 = Challenger cup, 3 = Consolation cup. 0 if MatchType is not 3
-		columns[12] = new ColumnDescriptor("CupLevelIndex", Types.INTEGER, false); // In Challenger cups: 1 = Emerald (start week 2), 2 = Ruby (start week 3), 3 = Sapphire (start week 4). Always 1 for National/Divisional (main cups) and Consolation cups. 0 if MatchType is not 3.
-		columns[13] = new ColumnDescriptor("MatchContextId", Types.INTEGER, true); // This will be either LeagueLevelUnitId (for League), CupId (Cup, Hattrick Masters, World Cup and U-20 World Cup), LadderId, TournamentId, or 0 for friendly, qualification, single matches and preparation matches.
-		columns[14] = new ColumnDescriptor("TournamentTypeID", Types.INTEGER, true); // 3 = League with playoffs , 4 = Cup
-		columns[15] = new ColumnDescriptor("ArenaId", Types.INTEGER, true); //  arena id
-		columns[16] = new ColumnDescriptor("RegionId", Types.INTEGER, true); // region id
-		columns[17] = new ColumnDescriptor("isDerby", Types.BOOLEAN, true); //
-		columns[18] = new ColumnDescriptor("isNeutral", Types.BOOLEAN, true); // 0=false, 1=true, -1=unknown
-		columns[19] = new ColumnDescriptor("Weather", Types.INTEGER, true); // 0=rainy, ...
-		columns[20] = new ColumnDescriptor("WeatherForecast", Types.INTEGER, true); // 0=happened, ...
-		columns[21] = new ColumnDescriptor("Duration", Types.INTEGER, true); // match duration in minutes
-		columns[12] = new ColumnDescriptor("isObsolete", Types.BOOLEAN, true); //
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("MatchID", Types.INTEGER, false), //The globally unique identifier of the match
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false), //Integer defining the type of match
+				new ColumnDescriptor("HeimName", Types.VARCHAR, false, 256), // HomeTeamName
+				new ColumnDescriptor("HeimID", Types.INTEGER, false),  //HomeTeamID
+				new ColumnDescriptor("GastName", Types.VARCHAR, false, 256), // AwayTeamName
+				new ColumnDescriptor("GastID", Types.INTEGER, false),  //AwayTeamID
+				new ColumnDescriptor("MatchDate", Types.VARCHAR, false, 256), // The start date and time (kick-off) of the match.
+				new ColumnDescriptor("HeimTore", Types.INTEGER, false), // The current number of goals in the match for the home team.
+				new ColumnDescriptor("GastTore", Types.INTEGER, false), // The current number of goals in the match for the away team
+				new ColumnDescriptor("Aufstellung", Types.BOOLEAN, false), // List of boolean value only supplied for upcoming matches of your own team that signifies whether you have given orders or not
+				new ColumnDescriptor("Status", Types.INTEGER, false), // Specifying whether the match is FINISHED, ONGOING or UPCOMING
+				new ColumnDescriptor("CupLevel", Types.INTEGER, false), // 1 = National/Divisional cup, 2 = Challenger cup, 3 = Consolation cup. 0 if MatchType is not 3
+				new ColumnDescriptor("CupLevelIndex", Types.INTEGER, false), // In Challenger cups: 1 = Emerald (start week 2), 2 = Ruby (start week 3), 3 = Sapphire (start week 4). Always 1 for National/Divisional (main cups) and Consolation cups. 0 if MatchType is not 3.
+				new ColumnDescriptor("MatchContextId", Types.INTEGER, true), // This will be either LeagueLevelUnitId (for League), CupId (Cup, Hattrick Masters, World Cup and U-20 World Cup), LadderId, TournamentId, or 0 for friendly, qualification, single matches and preparation matches.
+				new ColumnDescriptor("TournamentTypeID", Types.INTEGER, true), // 3 = League with playoffs , 4 = Cup
+				new ColumnDescriptor("ArenaId", Types.INTEGER, true),//  arena id
+				new ColumnDescriptor("RegionId", Types.INTEGER, true), // region id
+				new ColumnDescriptor("isDerby", Types.BOOLEAN, true), //
+				new ColumnDescriptor("isNeutral", Types.BOOLEAN, true), // 0=false, 1=true, -1=unknown
+				new ColumnDescriptor("Weather", Types.INTEGER, true), // 0=rainy, ...
+				new ColumnDescriptor("WeatherForecast", Types.INTEGER, true), // 0=happened, ...
+				new ColumnDescriptor("Duration", Types.INTEGER, true), // match duration in minutes
+				new ColumnDescriptor("isObsolete", Types.BOOLEAN, true)
+		};
 	}
 
 	@Override
