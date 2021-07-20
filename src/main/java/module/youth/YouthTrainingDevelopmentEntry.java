@@ -66,6 +66,7 @@ public class YouthTrainingDevelopmentEntry {
 
                     case SE_NO_GOAL_CORNER_HEAD_SPECIALIST:
                     case SE_GOAL_CORNER_HEAD_SPECIALIST:
+                    case SE_WINGER_TO_HEAD_SPEC_SCORES:
                         this.specialty = Specialty.Head;
                         break;
 
@@ -114,7 +115,6 @@ public class YouthTrainingDevelopmentEntry {
                         break;
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
-                    case SE_WINGER_TO_HEAD_SPEC_SCORES:
                         this.specialty = Specialty.Head;
                         break;
                     case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
