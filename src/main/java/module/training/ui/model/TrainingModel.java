@@ -44,10 +44,9 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	public void setActivePlayer(Player player) {
-		if ((this.activePlayer == null && player != null)
-				|| (this.activePlayer != null && player == null)
-				|| (this.activePlayer != null && player != null && this.activePlayer.getPlayerID() != player
-						.getPlayerID())) {
+		if (this.activePlayer == null && player != null ||
+				this.activePlayer != null && player == null ||
+				this.activePlayer != null && this.activePlayer.getPlayerID() != player.getPlayerID()) {
 			this.activePlayer = player;
 			this.skillupManager = null;
 			resetFutureTrainings_();
@@ -152,8 +151,9 @@ public class TrainingModel implements PropertyChangeListener {
 
 	private boolean isPartialTrainingAvailable(TrainingPerWeek t) {
 		var tt = WeeklyTrainingType.instance(t.getTrainingType());
-		return tt.getTrainingSkillPartlyTrainingPositions().length > 0 ||
+		if ( tt != null ) return tt.getTrainingSkillPartlyTrainingPositions().length > 0 ||
 				tt.getTrainingSkillBonusPositions().length > 0;
+		return false;
 	}
 
 	public boolean isOsmosisTrainingAvailable() {
@@ -164,7 +164,9 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	private boolean isOsmosisTrainingAvailable(TrainingPerWeek t) {
-		return WeeklyTrainingType.instance(t.getTrainingType()).getTrainingSkillOsmosisTrainingPositions().length > 0;
+		var tt = WeeklyTrainingType.instance(t.getTrainingType());
+		if ( tt != null ) return tt.getTrainingSkillOsmosisTrainingPositions().length > 0;
+		return false;
 	}
 
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
@@ -181,7 +183,7 @@ public class TrainingModel implements PropertyChangeListener {
 		while (newfutureTrainings.size() < requiredNBentries) {
 
 			//first iteration equals to nextWeek training then increase per one week per iteration
-			zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+			zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7L, ChronoUnit.DAYS);
 
 			ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
 			oFutureTraining = _futureTrainings.stream().filter(t -> finalZdtFutureTrainingDate.toInstant().equals(t.getTrainingDate())).findFirst();
