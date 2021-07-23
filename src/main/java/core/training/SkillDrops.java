@@ -184,6 +184,8 @@ public class SkillDrops {
 	 * @return A percentage number for the skill to drop. On return 2, a skill of 4.50 should move to 4.52.
 	 */
 	public float getSkillDrop(int skill,  int age,  int skillType) {
+		// skill losses only begin at the age of 28 years
+		if ( age < 28 ) return 0;
 		double[][] array;
 		switch (skillType) {
 			case PlayerSkill.KEEPER : {
@@ -239,7 +241,7 @@ public class SkillDrops {
 				return null;
 			}
 			
-			List<double[]> lines = new ArrayList<double[]>();
+			List<double[]> lines = new ArrayList<>();
 		
 			Scanner fileIn = new Scanner(fileIS);
 			while (fileIn.hasNextLine()) {
