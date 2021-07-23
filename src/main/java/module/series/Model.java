@@ -14,10 +14,10 @@ public class Model {
 		private int sum;
 		private int max;
 
-		public StatisticsEntry(int v){
-			count=1;
-			sum=v;
-			max=v;
+		public StatisticsEntry(int v) {
+			count = 1;
+			sum = v;
+			max = v;
 		}
 
 		public void addValue(int v) {
@@ -38,8 +38,7 @@ public class Model {
 
 	private Spielplan currentSeries;
 	private String currentTeam;
-	private Map<Integer, Map<RatingsStatistics,StatisticsEntry>> leagueStatistics;
-	private boolean isStatTypeMax;
+	private Map<Integer, Map<RatingsStatistics, StatisticsEntry>> leagueStatistics;
 
 	public Spielplan getCurrentSeries() {
 		return currentSeries;
@@ -65,17 +64,15 @@ public class Model {
 	}
 
 	private void addLeagueStatistics(int teamId, RatingsStatistics key, int value) {
-		if ( !leagueStatistics.containsKey(teamId) ){
+		if (!leagueStatistics.containsKey(teamId)) {
 			Map<RatingsStatistics, Model.StatisticsEntry> stat = new HashMap<>();
 			stat.put(key, new Model.StatisticsEntry(value));
 			leagueStatistics.put(teamId, stat);
-		}
-		else {
+		} else {
 			var stat = leagueStatistics.get(teamId);
-			if ( !stat.containsKey(key)){
+			if (!stat.containsKey(key)) {
 				stat.put(key, new Model.StatisticsEntry(value));
-			}
-			else {
+			} else {
 				stat.get(key).addValue(value);
 			}
 		}
@@ -95,13 +92,5 @@ public class Model {
 
 	public void setLeagueStatistics(Map<Integer, Map<RatingsStatistics, StatisticsEntry>> leagueStatistics) {
 		this.leagueStatistics = leagueStatistics;
-	}
-
-	public boolean isStatTypeMax() {
-		return isStatTypeMax;
-	}
-
-	public void setStatTypeMax(boolean statTypeMax) {
-		isStatTypeMax = statTypeMax;
 	}
 }

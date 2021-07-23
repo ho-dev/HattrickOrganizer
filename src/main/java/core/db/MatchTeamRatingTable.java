@@ -2,8 +2,6 @@ package core.db;
 
 import core.model.match.MatchTeamRating;
 import core.util.HOLogger;
-import module.transfer.scout.ScoutEintrag;
-
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
