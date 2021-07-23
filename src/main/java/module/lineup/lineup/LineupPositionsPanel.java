@@ -148,6 +148,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
+		// refresh lineup settings
+		m_iTactic = lineup.getTacticType();
+		Helper.setComboBoxFromID(m_jcbTactic, m_iTactic);
+		m_iAttitude = lineup.getAttitude();
+		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
+		m_iStyleOfPlay = lineup.getStyleOfPlay();
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, m_iStyleOfPlay);
+
 		for (Player player: allPlayers) {
 			// the first 11
 			if (lineup.isPlayerInStartingEleven(player.getPlayerID())) {
