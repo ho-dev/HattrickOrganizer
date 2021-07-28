@@ -370,12 +370,17 @@ public class YouthPlayer {
     private Timestamp statusTime;
     private Timestamp getStatusTime(){
         if ( statusTime == null){
-            statusTime = DBManager.instance().getHrf(this.hrfid).getDatum();
+            var hrf = DBManager.instance().getHrf(this.hrfid);
+            if ( hrf != null){
+                statusTime = hrf.getDatum();
+            }
+            else {
+                // should never happen
+                statusTime = new Timestamp(System.currentTimeMillis());
+            }
         }
         return statusTime;
     }
-
-
 
     public Timestamp getPromotionDate() {
         return promotionDate;
@@ -654,7 +659,7 @@ public class YouthPlayer {
         var hrfdate = this.getStatusTime().getTime();
         long time = matchDate.getTime();
         long diff = (hrfdate - time) / (1000 * 60 * 60 * 24);
-        long ageInDays = getAgeDays() + 112 * getAgeYears() - diff;
+        long ageInDays = getAgeDays() + 112L * getAgeYears() - diff;
         return (int)(ageInDays / 112);
     }
 
