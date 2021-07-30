@@ -31,7 +31,7 @@ public class Model {
 		}
 
 		public int getAverage() {
-			if (count > 0) return (int) ((double) sum / count + .5);
+			if (count > 0) return (int) Math.round((double) sum / count);
 			return 0;
 		}
 	}
