@@ -41,10 +41,10 @@ public class YouthTrainingView extends JScrollPane implements Refreshable {
                 tableColumnModel.getColumn(i).setIdentifier(i);
             }
 
-            for ( var c : tableModel.getColumns()){
-                if ( c.isEditable()){
+            for (var c : tableModel.getColumns()) {
+                if (c.isEditable()) {
                     var tablecol = table.getColumn(c.getIndex());
-                    if ( tablecol != null ){
+                    if (tablecol != null) {
                         var cb = new JComboBox<>(new YouthTrainingTableEntry.ComboBoxModel());
                         var editor = new DefaultCellEditor(cb);
                         editor.addCellEditorListener(table);
@@ -73,10 +73,4 @@ public class YouthTrainingView extends JScrollPane implements Refreshable {
     public void storeUserSettings() {
         this.tableModel.storeUserSettings(table);
     }
-/*
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        var youthPanel = (YouthPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.YOUTH);
-        youthPanel.refreshYouthPlayerView();
-    }*/
 }

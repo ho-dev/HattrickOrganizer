@@ -654,7 +654,7 @@ public class YouthPlayer {
         var hrfdate = this.getStatusTime().getTime();
         long time = matchDate.getTime();
         long diff = (hrfdate - time) / (1000 * 60 * 60 * 24);
-        long ageInDays = getAgeDays() + 112 * getAgeYears() - diff;
+        long ageInDays = getAgeDays() + 112L * getAgeYears() - diff;
         return (int)(ageInDays / 112);
     }
 
@@ -976,12 +976,10 @@ public class YouthPlayer {
     public int getPotential()
     {
         if ( potential == null){
-            //HOLogger.instance().info(this.getClass(), "getPotential " + this.getFullName() + " " + this.getAgeYears() + "," + this.getAgeDays());
             calcMaxSkills17();
             double p = 0d;
             for ( var skillId: skillIds){
                 p += max(0, getSkillInfo(skillId).getPotential17Value() - 4) / YouthTraining.potentialNormingFactor.get(skillId);
-                //HOLogger.instance().info(this.getClass(), skillId.toString() + "=" + getSkillInfo(skillId).getPotential17Value() + " p=" + p);
             }
             potential = (int)Math.round(p);
         }

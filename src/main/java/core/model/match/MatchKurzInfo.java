@@ -590,8 +590,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	private double getTournamentExperienceFactor(@Nullable TournamentType tournamentType, boolean isPlayOff) {
 		if ( tournamentType == null) return 0d;
 		if ( tournamentType.isWorldCup()){
-			// WM-Spiel	28
-			//WM-Halbfinal, WM-Final	56
+			// World Cup match	28
+			// World Cup (Semi and Final)	56
 				if ( isPlayOff){
 					return 56/3.5;
 				}
@@ -600,8 +600,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 				}
 		}
 		else if ( tournamentType.isNationsCup()){
-			//Nationenpokal	7
-			//Nationenpokal (K.O.)	14
+			// Nations Cup	7
+			// Nations Cup (Knockout)	14
 			if ( isPlayOff){
 				return 14/3.5;
 			}
@@ -610,8 +610,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 			}
 		}
 		else if ( tournamentType.isContinentalCup()){
-			//Kontinentalmeisterschaftsspiel	14
-			//Kontinentalmeisterschaftsspiel (Viertel-, Halbfinal, Final)	21
+			// Continental Championships	14
+			// Continental Championships (Quarter, Semi and Final)	21
 			if ( isPlayOff){
 				return 21/3.5;
 			}
@@ -620,7 +620,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 			}
 		}
 		else if ( tournamentType.isNTFriendly()){
-			//Nationalteam Freundschaftsspiel	3.5
+			// National Team friendly	3.5
 			return 1d;
 		}
 		return 0d;

@@ -207,7 +207,7 @@ public class TrainingPerWeek  {
     }
 
     /**
-     * Load matches of natial team players in own team, during training week
+     * Load matches of national team players in own team, during training week
      * (used for experience calculation)
      *
      * @param nationalTeamID id of player's national team (it is NOT own team id)
