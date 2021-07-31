@@ -65,9 +65,8 @@ layout: page
 ### Training
 - many buf fixes
 - fix training recap table's resetting scroll positions on table refresh  (#1011)
-- experience increase of new national hto matches (#1089)
 - skill losses only begin at the age of 28 years (#1080)
-
+- experience increase of new national hto matches (#1089)
 
 
 ### Misc

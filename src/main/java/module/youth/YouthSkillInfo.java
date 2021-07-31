@@ -2,6 +2,8 @@ package module.youth;
 
 import module.training.Skills;
 
+import java.util.Objects;
+
 public class YouthSkillInfo {
 
     /**
@@ -186,13 +188,21 @@ public class YouthSkillInfo {
     public boolean isMaxLevelReached() {
         return this.getCurrentLevel() != null  &&
                 ( this.getCurrentLevel()==8 ||
-                        this.isMaxAvailable() && this.getCurrentLevel() == this.getMax());
+                        this.isMaxAvailable() && Objects.equals(this.getCurrentLevel(), this.getMax()));
     }
 
     public boolean isMaxReached() {
         return isMaxReached;
     }
 
+    /**
+     * each skill of a youth player has a maximum value which is not known from the beginning,
+     * except for one skill mentioned by the scout.
+     * if this maximum value is reached, no further training of this skill is useful.
+     * if this maximum is less than 5, i think training of this skill is not useful either.
+     * @return  true, further training is useful
+     *          false, no further training of this skill is useful
+     */
     public boolean isTrainingUsefull(){
         return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>4);
     }
