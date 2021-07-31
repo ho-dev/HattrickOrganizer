@@ -7,15 +7,10 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.enums.RatingsStatistics;
 import module.series.promotion.*;
-import module.series.statistics.DataDownloader;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
-
 
 /**
  * Panel displaying the league table, as well as the series history graph.
@@ -28,15 +23,12 @@ public class SeriesPanel extends LazyImagePanel {
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
-	private Map<Integer, Map<RatingsStatistics,Integer>> leagueStatistics;
 	private PromotionInfoPanel promotionInfoPanel;
 	private LeaguePromotionHandler promotionHandler;
-	private HOModel homodel;
 
 	@Override
 	protected void initialize() {
 		initPromotionHandler();
-		initLeagueStatsData();
 		initComponents();
 		fillSaisonCB();
 		addListeners();
@@ -46,25 +38,6 @@ public class SeriesPanel extends LazyImagePanel {
 	private void initPromotionHandler() {
 		promotionHandler = new LeaguePromotionHandler();
 		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
-	}
-
-	private void initLeagueStatsData() {
-		homodel = HOVerwaltung.instance().getModel();
-
-		int iSeason = homodel.getBasics().getSeason();
-		int iMatchPlayedThisSeason = homodel.getLeague().getSpieltag();
-		int iSerieID = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
-		int iMatchRound;
-
-		if (iMatchPlayedThisSeason == 0) {
-			iSeason --;
-			iMatchRound = 14;
-		}
-		else{
-			iMatchRound = iMatchPlayedThisSeason;
-		}
-
-		leagueStatistics = DataDownloader.instance().fetchLeagueStatistics(iSerieID, iMatchRound, iSeason);
 	}
 
 	@Override
@@ -165,8 +138,6 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void initComponents() {
 		this.model = new Model();
-		model.setLeagueStatistics(leagueStatistics);
-
 		setLayout(new BorderLayout());
 
 		// ComboBox für Saisonauswahl
