@@ -97,6 +97,10 @@ sourceSets {
     }
 }
 
+task printVersion() {
+     print "version=${project.version}"
+}
+
 //  configure markdownToHtml --------------------------------
 markdownToHtml {
     markdownToHtml.tables = true  // Configuration
