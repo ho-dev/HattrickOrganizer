@@ -158,7 +158,7 @@ distributions {
 
 install4j {
     if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
-    else installDir =  System.getenv('INSTALL4J_HOME')
+    else installDir = file(System.getenv('INSTALL4J_HOME'))
     disableSigning = true
 }
 
