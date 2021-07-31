@@ -18,8 +18,10 @@ jobs:
           distribution: 'adopt'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Download and install install4j
+        run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux_8_0_7.deb && sudo dpkg -i install4j_linux_8_0_7.deb
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build media -x test
       - name: Create a Release
         uses: elgohr/Github-Release-Action@master
         env:
