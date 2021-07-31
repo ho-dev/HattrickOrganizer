@@ -26,8 +26,10 @@ jobs:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
       - name: Create a Release
-        uses: elgohr/Github-Release-Action@master
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          args: New release
+          files: ./build/artefacts/*
+          name: ${{ GITHUB_SHA }}
+          prerelease: true
