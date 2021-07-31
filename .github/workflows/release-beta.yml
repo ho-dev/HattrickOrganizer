@@ -6,7 +6,7 @@ on:
       - "v*.*.*-beta"
 
 jobs:
-  release-dev:
+  release-beta:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
