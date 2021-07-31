@@ -1,11 +1,9 @@
-name: Automated Release
+name: Automated BETA Release
 
 on:
   push:
     tags:
-      - "v*.*.*"
-      - "!v*.*.*-dev"
-      - "!v*.*.*-beta"
+      - "v*.*.*-beta"
 
 jobs:
   release-dev:
@@ -33,4 +31,5 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ github.ref }}
+          name: ${{ github.ref }}-BETA
+          prerelease: true
