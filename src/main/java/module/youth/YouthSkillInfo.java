@@ -2,6 +2,8 @@ package module.youth;
 
 import module.training.Skills;
 
+import java.util.Objects;
+
 public class YouthSkillInfo {
 
     /**
@@ -186,11 +188,23 @@ public class YouthSkillInfo {
     public boolean isMaxLevelReached() {
         return this.getCurrentLevel() != null  &&
                 ( this.getCurrentLevel()==8 ||
-                        this.isMaxAvailable() && this.getCurrentLevel() == this.getMax());
+                        this.isMaxAvailable() && Objects.equals(this.getCurrentLevel(), this.getMax()));
     }
 
     public boolean isMaxReached() {
         return isMaxReached;
+    }
+
+    /**
+     * each skill of a youth player has a maximum value which is not known from the beginning,
+     * except for one skill mentioned by the scout.
+     * if this maximum value is reached, no further training of this skill is useful.
+     * if this maximum is less than 5, i think training of this skill is not useful either.
+     * @return  true, further training is useful
+     *          false, no further training of this skill is useful
+     */
+    public boolean isTrainingUsefull(){
+        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>4);
     }
 
     public void setMaxReached(boolean maxReached) {
@@ -243,10 +257,45 @@ public class YouthSkillInfo {
         return this.isTop3Skill;
     }
 
+    /**
+     * get the minumum potential value. This is the maximum value if it is known
+     * or the current level value, if maximum is unknown
+     * @return int, 0 if neither current level nor maximum is known
+     */
     public int getMinimumPotential() {
         if (this.max != null) return this.max;
         if (this.currentLevel != null) return this.currentLevel;
         return 0;
+    }
+
+    /**
+     * Set the upper limit of skill maximum (potential).
+     * The value is not for sure and could be reduced by future trainer reports
+     * @param isKeeper Boolean
+     *                  true, players skills are keeper skills
+     *                  false, player skills are infield skills
+     *                  null, unknown
+     * @param minTop3Max int limit of potential
+     */
+    public void setMaxLimit(Boolean isKeeper, int minTop3Max) {
+        if ( this.max != null && this.max <= minTop3Max) return;  // nothing to do
+        if (  minTop3Max < 5) {
+            setMax(minTop3Max);
+        }
+        else if ( isKeeper != null){
+            if ( isKeeper) {
+                switch (this.skillID) {
+                    case Keeper, Defender, SetPieces -> setMax(minTop3Max);
+                }
+            }
+            else {
+                switch (this.skillID) {
+                    case Defender, Winger, Playmaker, Passing, Scorer, SetPieces -> setMax(minTop3Max);
+                }
+            }
+        }
+        this.currentValueRange.lessThan(minTop3Max+1);
+        this.startValueRange.lessThan(minTop3Max+1);
     }
 
     // Skill Range class

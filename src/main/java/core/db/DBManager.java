@@ -293,6 +293,7 @@ public class DBManager {
 		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
+		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
 	}
 
 	/**
@@ -926,6 +927,10 @@ public class DBManager {
 		if (m_iLatestHRFid == -1){
 			m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();}
 		return m_iLatestHRFid;
+	}
+
+	public HRF getHrf(int id) {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(id);
 	}
 
 	/**
@@ -2758,5 +2763,13 @@ public class DBManager {
 
 	public String getHrfIdPerWeekList(int nWeeks) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
+	}
+
+	public void storeTeamRatings(MatchTeamRating teamrating) {
+		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).store(teamrating);
+	}
+
+    public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
+		return ((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).load(matchId, matchtype);
 	}
 }
