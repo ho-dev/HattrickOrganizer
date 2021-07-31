@@ -29,6 +29,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ./build/artefacts/*
           name: ${{ github.sha }}
