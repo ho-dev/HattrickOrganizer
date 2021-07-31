@@ -97,6 +97,9 @@ sourceSets {
     }
 }
 
+// Returns the build version numbrt
+// This is required by the Automated build, in this format:
+//      version=<version_number>
 task printVersion() {
      print "version=${project.version}"
 }
