@@ -31,5 +31,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           files: ./build/artefacts/*
-          name: ${{ GITHUB_SHA }}
+          name: ${{ github.sha }}
           prerelease: true
