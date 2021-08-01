@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class YouthSkillInfo {
 
+    public static int UsefulTrainingTreshold=4;
+
     /**
      * Skill Id
      */
@@ -199,12 +201,12 @@ public class YouthSkillInfo {
      * each skill of a youth player has a maximum value which is not known from the beginning,
      * except for one skill mentioned by the scout.
      * if this maximum value is reached, no further training of this skill is useful.
-     * if this maximum is less than 5, i think training of this skill is not useful either.
+     * if this maximum is less than UsefulTrainingTreshold, i think training of this skill is not useful either.
      * @return  true, further training is useful
      *          false, no further training of this skill is useful
      */
     public boolean isTrainingUsefull(){
-        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>4);
+        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>=UsefulTrainingTreshold);
     }
 
     public void setMaxReached(boolean maxReached) {
