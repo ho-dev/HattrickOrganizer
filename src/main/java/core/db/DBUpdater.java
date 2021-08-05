@@ -369,6 +369,9 @@ final class DBUpdater {
 		if (!tableExists(MatchTeamRatingTable.TABLENAME)) {
 			dbManager.getTable(MatchTeamRatingTable.TABLENAME).createTable();
 		}
+
+		dbManager.getTable(XtraDataTable.TABLENAME).tryAddColumn("CountryId", "INTEGER");
+
 		updateDBVersion(dbVersion, 500);
 	}
 

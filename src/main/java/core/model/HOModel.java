@@ -635,4 +635,16 @@ public class HOModel {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Get the Country Id of user's first team. This is used to format currency of all user's teams.
+     * If this is not available, use the league id (should not happen)
+     * @return int - Country Id
+     */
+    public int getCountryId() {
+        var ret = getXtraDaten().getCountryId();
+        if ( ret == null){
+            ret = getBasics().getLiga(); // should no longer happen
+        }
+        return ret;
+    }
 }
