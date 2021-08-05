@@ -24,6 +24,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 ### Finance
   - all information relative to Finance are now stored in the database (#793)
+  - currency format of all user's teams depends on country of user's premier team (#1101)
 
 
 ### Statistics
