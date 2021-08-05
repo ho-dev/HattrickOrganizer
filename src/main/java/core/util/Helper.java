@@ -90,7 +90,7 @@ public class Helper {
 
 
 
-	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getBasics().getLiga());
+	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getCountryId());
 
     /** wird für das Parsen in parseFloat benötigt */
     public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
@@ -171,9 +171,7 @@ public class Helper {
 			// Zahlen in passenden Array kopieren
 			final int[] zahlen = new int[index];
 
-			for (int i = 0; i < index; i++) {
-				zahlen[i] = tempzahlen[i];
-			}
+			System.arraycopy(tempzahlen, 0, zahlen, 0, index);
 
 			return zahlen;
 		} catch (NumberFormatException nfe) {

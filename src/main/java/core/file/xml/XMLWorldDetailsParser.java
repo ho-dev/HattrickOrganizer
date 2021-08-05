@@ -150,7 +150,10 @@ public class XMLWorldDetailsParser {
 		
 		Element ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
 		info.setCurrencyRate(XMLManager.getFirstChildNodeValue(ele));
-		
+
+		ele = (Element) root.getElementsByTagName("CountryID").item(0);
+		info.setCountryId(XMLManager.getFirstChildNodeValue(ele));
+
 		return info;
 	}
 	
