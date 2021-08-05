@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class YouthSkillInfo {
 
-    public static int UsefulTrainingTreshold=4;
+    public static int UsefulTrainingThreshold =4;
 
     /**
      * Skill Id
@@ -206,7 +206,7 @@ public class YouthSkillInfo {
      *          false, no further training of this skill is useful
      */
     public boolean isTrainingUsefull(){
-        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>=UsefulTrainingTreshold);
+        return !isMaxReached() && (!this.isMaxAvailable() || this.getMax()>= UsefulTrainingThreshold);
     }
 
     public void setMaxReached(boolean maxReached) {
