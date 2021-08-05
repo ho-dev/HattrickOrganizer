@@ -201,7 +201,7 @@ public class YouthSkillInfo {
      * each skill of a youth player has a maximum value which is not known from the beginning,
      * except for one skill mentioned by the scout.
      * if this maximum value is reached, no further training of this skill is useful.
-     * if this maximum is less than UsefulTrainingTreshold, i think training of this skill is not useful either.
+     * if this maximum is less than UsefulTrainingThreshold, i think training of this skill is not useful either.
      * @return  true, further training is useful
      *          false, no further training of this skill is useful
      */
