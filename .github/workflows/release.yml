@@ -37,4 +37,5 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.get_version.outputs.version }}
+          name: stable
+          body: ${{ steps.get_version.outputs.version }}

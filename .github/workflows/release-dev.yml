@@ -34,5 +34,7 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.get_version.outputs.version }}-DEV
+          name: dev
+          body: ${{ steps.get_version.outputs.version }}-DEV
+          target_commitish: master
           prerelease: true

@@ -35,5 +35,7 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.get_version.outputs.version }}-BETA
+          name: beta
+          target_commitish: master
+          body: ${{ steps.get_version.outputs.version }}-BETA
           prerelease: true
