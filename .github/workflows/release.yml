@@ -30,6 +30,9 @@ jobs:
       - name: Get version
         id: get_version
         run: echo "::set-output name=version::$(./gradlew printVersion | grep 'version=' | sed 's/version=//')"
+        env:
+          INSTALL4J_HOME: /opt/install4j8
+          INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
       - name: Create a Release
         uses: softprops/action-gh-release@v1
         env:
@@ -37,5 +40,15 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: stable
+          name: tag_stable
           body: ${{ steps.get_version.outputs.version }}
+          body_path: src/main/resources/release_notes.md
+      - name: Create a Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          files: |
+            build/artefacts/**
+          name: ${{ steps.get_version.outputs.version }}
+          body_path: src/main/resources/release_notes.md

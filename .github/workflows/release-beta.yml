@@ -28,6 +28,9 @@ jobs:
       - name: Get version
         id: get_version
         run: echo "::set-output name=version::$(./gradlew printVersion | grep 'version=' | sed 's/version=//')"
+        env:
+          INSTALL4J_HOME: /opt/install4j8
+          INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
       - name: Create a Release
         uses: softprops/action-gh-release@v1
         env:
@@ -38,4 +41,5 @@ jobs:
           name: beta
           target_commitish: master
           body: ${{ steps.get_version.outputs.version }}-BETA
+          body_path: src/main/resources/release_notes.md
           prerelease: true
