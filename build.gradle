@@ -42,7 +42,7 @@ test {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '5'
 def minor = '0'
-def development_stage = '0'
+def development_stage = System.getenv("DEV_STAGE") ?:'0'
 def releaseArtefacts = true
 
 // region configuration ==============================================================================================
@@ -95,6 +95,13 @@ sourceSets {
             srcDirs = ["src/test/resources"]
         }
     }
+}
+
+// Returns the build version numbrt
+// This is required by the Automated build, in this format:
+//      version=<version_number>
+task printVersion() {
+     print "version=${project.version}"
 }
 
 //  configure markdownToHtml --------------------------------
@@ -158,8 +165,9 @@ distributions {
 
 install4j {
     if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
-    else installDir = file("foo")
+    else installDir = file(System.getenv('INSTALL4J_HOME'))
     disableSigning = true
+    license = System.getenv('INSTALL4J_LICENSE')
 }
 
 // endregion ======================================================================================================================
