@@ -97,11 +97,13 @@ sourceSets {
     }
 }
 
-// Returns the build version numbrt
+// Returns the build version number
 // This is required by the Automated build, in this format:
 //      version=<version_number>
-task printVersion() {
-     print "version=${project.version}"
+task printVersion {
+     doFirst {
+          print "version=${project.version}"
+     }
 }
 
 //  configure markdownToHtml --------------------------------
@@ -231,8 +233,8 @@ task media(type: com.install4j.gradle.Install4jTask) {
 
 task preparingBuild(dependsOn: clean) {
     group 'sub tasks'
-    if (releaseArtefacts) {
-        doLast {
+    doLast {
+        if (releaseArtefacts) {
             //     Deleting build project     ---------------------------------------------------------------------
             println("Deleting build and execution files ....")
             project.delete(files("${projectDir}/db"))
@@ -404,8 +406,8 @@ task resetDB {
     group 'tool'
     description 'copy the database from existing install into project'
 
-    try {
-	    doLast {
+    doLast {
+        try {
             println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
             copy {
                 from resetDir
@@ -414,10 +416,9 @@ task resetDB {
             }
 
             println("Resetting DB: done !")
+        } catch (Exception e) {
+            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
         }
-
-    } catch (java.lang.Exception e) {
-    	println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
     }
 }
 
@@ -431,86 +432,6 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
-
-
-task releaseDEVtoGitHub() {
-    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
-    doLast {
-        githubRelease {
-            owner = 'akasolace'
-            repo = 'HO'
-            releaseAssets = file("$target_dir").listFiles()
-            token = _token
-            tagName = "dev"
-            releaseName = "dev"
-            targetCommitish = "master"
-            body = "Latest development version aimed at developers"
-            prerelease = true
-            overwrite = true
-        }
-        println "DEVELOPMENT version is being released on GitHub"
-    }
-}
-
-task releaseBETAtoGitHub() {
-    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
-    doLast {
-        githubRelease {
-            owner = 'akasolace'
-            repo = 'HO'
-            releaseAssets = file("$target_dir").listFiles()
-            token = _token
-            tagName = "beta"
-            releaseName = "beta"
-            targetCommitish = "master"
-            body = "Latest beta release"
-            prerelease = true
-            overwrite = true
-        }
-        println "BETA version is being released on GitHub"
-    }
-}
-
-task releaseSTABLEtoGitHub() {
-    def _token = GITHUB_TOKEN  // required token for your personal access with repo permissions
-    doLast {
-        githubRelease {
-            owner = 'akasolace'
-            repo = 'HO'
-            releaseAssets = file("$target_dir").listFiles()
-            token = _token
-            tagName = "tag_stable"
-            releaseName = "stable"
-            targetCommitish = "master"
-            body = "Latest stable release"
-            prerelease = true
-            overwrite = true
-        }
-        println "BETA version is being released on GitHub, release XX.XX should still be created manually"
-    }
-}
-
-
-releaseDEVtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
-releaseBETAtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
-releaseSTABLEtoGitHub.finalizedBy(tasks.getByName('githubRelease'))
-releaseBETAtoGitHub.dependsOn releaseDEVtoGitHub
-releaseSTABLEtoGitHub.dependsOn releaseBETAtoGitHub
-
-task releaseToGitHub {
-    group 'ho'
-    if (releaseArtefacts) {
-        if (development_stage == '0') {
-            dependsOn 'releaseDEVtoGitHub'
-        } else if (development_stage == '1') {
-            dependsOn 'releaseBETAtoGitHub'
-        } else {
-            dependsOn 'releaseSTABLEtoGitHub'
-        }
-    }
-}
-
-compileJava.dependsOn preparingBuild
 installDist.dependsOn createLanguageFileList
 poeditorPull.dependsOn markdownToHtml
 markdownToHtml.dependsOn pushmd
