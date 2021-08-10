@@ -513,6 +513,7 @@ public class YouthPlayer {
 
     /**
      * Get player's skills after match at given date
+     * the skills needs to be cloned, since they would be manipulated during calculation of training
      * @param date timestamp
      * @return youth player's skills
      */
@@ -521,20 +522,20 @@ public class YouthPlayer {
             var oldPlayerInfo = getOldPlayerInfo(date);
             if (oldPlayerInfo != null) {
                 setKnownMaxValues(oldPlayerInfo.currentSkills);
-                return oldPlayerInfo.currentSkills;
+                return (YouthSkillsInfo) oldPlayerInfo.currentSkills.clone();
             } else {
                 var ret = getStartSkills();
                 for (var entry : this.trainingDevelopment.entrySet()) {
                     if (entry.getKey() == date) {
-                        return ret;
+                        return (YouthSkillsInfo) ret.clone();
                     }
                     ret = entry.getValue().getSkills();
                 }
                 setKnownMaxValues(ret);
-                return ret;
+                return (YouthSkillsInfo) ret.clone();
             }
         }
-        return this.currentSkills;
+        return (YouthSkillsInfo) this.currentSkills.clone();
     }
 
     private void setKnownMaxValues(YouthSkillsInfo skills) {

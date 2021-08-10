@@ -134,10 +134,9 @@ public class YouthTrainingDevelopmentEntry {
      * Check if downloaded hattrick skill information contradict calculated values
      * and adjust calculation accordingly
      *
-     * @param player, player to address adjustments
      * @param skillConstraints, skill information of hattrick download
      */
-    public void setSkillConstraints(YouthPlayer player, YouthSkillsInfo skillConstraints) {
+    public void setSkillConstraints(YouthSkillsInfo skillConstraints) {
         if (skillConstraints != null) {
             for (var constraint : skillConstraints.values()) {
                 var skill = this.skills.get(constraint.getSkillID());
@@ -169,7 +168,7 @@ public class YouthTrainingDevelopmentEntry {
         for (var skill : startSkills.values()) {
             this.skills.put(skill.getSkillID(), training.calcSkill(skill, player, lineupTeam));
         }
-        setSkillConstraints(player, skillConstraints);
+        setSkillConstraints(skillConstraints);
         return this.skills;
     }
 
