@@ -3,10 +3,7 @@ name: Automated Release
 on:
   push:
     tags:
-      - "v*.*.*"
-      - "!v*.*.*-dev"
-      - "!v*.*.*-beta"
-      - "tag_stable"
+      - "v*.*.*-stable"
 
 jobs:
   release:
