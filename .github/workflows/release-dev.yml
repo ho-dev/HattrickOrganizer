@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*.*.*-dev"
+      - "dev"
 
 jobs:
   release-dev:
@@ -19,14 +20,24 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Download and install install4j
         run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux_8_0_11.deb && sudo dpkg -i install4j_linux_8_0_11.deb
+      - name: Get version
+        id: get_version
+        run: echo "::set-output name=version::$(./gradlew printVersion | grep 'version=' | sed 's/version=//')"
+        env:
+          INSTALL4J_HOME: /opt/install4j8
+          INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
       - name: Build with Gradle
         run: ./gradlew build media -x test
         env:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
-      - name: Get version
-        id: get_version
-        run: echo "::set-output name=version::$(./gradlew printVersion | grep 'version=' | sed 's/version=//')"
+      - name: Delete previous tag and release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
         uses: softprops/action-gh-release@v1
         env:
@@ -35,4 +46,7 @@ jobs:
           files: |
             build/artefacts/**
           name: ${{ steps.get_version.outputs.version }}-DEV
+          tag_name: dev
+          body_path: src/main/resources/release_notes.md
+          target_commitish: master
           prerelease: true
