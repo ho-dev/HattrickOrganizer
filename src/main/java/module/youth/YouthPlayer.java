@@ -980,7 +980,7 @@ public class YouthPlayer {
             calcMaxSkills17();
             double p = 0d;
             for ( var skillId: skillIds){
-                p += max(0, getSkillInfo(skillId).getPotential17Value() - YouthSkillInfo.UsefulTrainingTreshold) / YouthTraining.potentialNormingFactor.get(skillId);
+                p += max(0, getSkillInfo(skillId).getPotential17Value() - YouthSkillInfo.UsefulTrainingThreshold) / YouthTraining.potentialNormingFactor.get(skillId);
             }
             potential = (int)Math.round(p);
         }
