@@ -164,8 +164,8 @@ public final class RatingChartData {
 	double[] getMidfield() {
 		if(midfield.length == 0) {
 			mapDD = ratings.getMidfield();
-			avgMidfield90 = mapDI.get(-90d);
-			avgMidfieldET = mapDI.get(-120d);
+			avgMidfield90 = mapDD.get(-90d);
+			avgMidfieldET = mapDD.get(-120d);
 			midfield = parseDD(mapDD);
 		}
 		if(ET) return midfield;
