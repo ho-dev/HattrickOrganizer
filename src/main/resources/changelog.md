@@ -53,6 +53,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Match orders remove substitution limit (#856)
   - complete revamp of lineup panel
   - Separate rating and match date columns for easier sorting. (#895)
+  - fix npe in rating chart (#1115)
 
 
 ### IFA
