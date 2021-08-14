@@ -57,13 +57,13 @@ layout: page
 - Match orders remove substitution limit (#856)
 - complete revamp of lineup panel
 - Separate rating and match date columns for easier sorting. (#895)
-
+- fix npe in rating chart (#1115)
 
 ### IFA
 
 
 ### Training
-- many buf fixes
+- many bug fixes
 - fix training recap table's resetting scroll positions on table refresh  (#1011)
 - skill losses only begin at the age of 28 years (#1080)
 - experience increase of new national hto matches (#1089)
