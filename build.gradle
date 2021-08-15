@@ -53,13 +53,16 @@ ext {
 }
 
 // Define build number =================
-def versionPropsFile = file('version.properties')
-Properties versionProps = new Properties()
-versionProps.load(new FileInputStream(versionPropsFile))
-def buildNumber = (versionProps['buildNumber'] as Integer) + 1
-buildNumber =  buildNumber.toString()
-versionProps['buildNumber'] = buildNumber
-versionProps.store(versionPropsFile.newWriter(), null)
+//def versionPropsFile = file('version.properties')
+//Properties versionProps = new Properties()
+//versionProps.load(new FileInputStream(versionPropsFile))
+//def gradleRunNumber = (versionProps['buildNumber'] as Integer) + 1
+//gradleRunNumber =  gradleRunNumber.toString()
+//def buildNumber = System.getenv("RUN_NUMBER") ?: gradleRunNumber
+
+def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+//versionProps['buildNumber'] = buildNumber
+//versionProps.store(versionPropsFile.newWriter(), null)
 
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
 
@@ -333,6 +336,8 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
+            new File("project.ext.target_dir/version.txt").text = "version=$version"
+
             println("artefacts have to be uploaded or it will break update process !!!")
 
             // always update latest.html
