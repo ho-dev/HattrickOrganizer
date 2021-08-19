@@ -23,11 +23,9 @@ public final class RatingUtil {
     /**
      * Utility Method that returns a string representation of the rating
      *
-     * @param rating int value of the rating
-     * @param showNumber is the numberical representation being shown
+     * @param rating int value of the rating [0..80]
+     * @param showNumber is the numerical representation being shown
      * @param showText is the textual representation being shown
-     * @param model IHOMinimodel
-     *
      * @return String with rating as configured
      */
     public static String getRating(int rating, boolean showNumber,
@@ -36,7 +34,7 @@ public final class RatingUtil {
             return "";
         }
 
-        final String value = PlayerAbility.getNameForSkill(rating, showNumber, true);
+        final String value = PlayerAbility.getNameForSkill((rating-1)/4d+1, showNumber, true);
         String level = value;
         String subLevel = "";
         final StringTokenizer st = new StringTokenizer(value, "(");
