@@ -53,29 +53,28 @@ public final class UpdateController {
         // check if version available based on channel
         switch (core.model.UserParameter.temp().ReleaseChannel) {
             case "Stable" -> {
-                if (compareToCurrentVersions(stableVersion))  updVersion = stableVersion;
+                if (stableVersion != null && compareToCurrentVersions(stableVersion))  updVersion = stableVersion;
 
             }
             case "Beta" -> {
-                if (compareTwoVersions(stableVersion, betaVersion)) {
+                if (stableVersion != null && betaVersion != null && compareTwoVersions(stableVersion, betaVersion)) {
                     if (compareToCurrentVersions(stableVersion))
                         updVersion = stableVersion;
-                } else if (compareToCurrentVersions(betaVersion)) {
+                } else if (betaVersion != null && compareToCurrentVersions(betaVersion)) {
                     updVersion = betaVersion;
                 }
 
             }
             default -> {
-                if (compareTwoVersions(stableVersion, devVersion)) {
+                if (stableVersion != null && devVersion != null && compareTwoVersions(stableVersion, devVersion)) {
                     if (compareToCurrentVersions(stableVersion))
                         updVersion = stableVersion;
-                } else if (compareTwoVersions(betaVersion, devVersion)) {
+                } else if (betaVersion != null && devVersion != null && compareTwoVersions(betaVersion, devVersion)) {
                     if (compareToCurrentVersions(betaVersion))
                         updVersion = betaVersion;
-                } else if (compareToCurrentVersions(devVersion)) {
+                } else if (devVersion != null && compareToCurrentVersions(devVersion)) {
                     updVersion = devVersion;
                 }
-
             }
         }
         return updVersion;
@@ -85,19 +84,19 @@ public final class UpdateController {
         String versionType = updVersion.getVersionType();
         String updateAvailable;
         String releaseNoteUrl;
-        switch (versionType){
-            case "DEV":
+        switch (versionType) {
+            case "DEV" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
                 releaseNoteUrl = DEV_URL;
-                break;
-            case "BETA":
+            }
+            case "BETA" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
                 releaseNoteUrl = BETA_URL;
-                break;
-            default:
+            }
+            default -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
                 releaseNoteUrl = STABLE_URL;
-                break;
+            }
         }
 
         int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
