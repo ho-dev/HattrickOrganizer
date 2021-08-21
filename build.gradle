@@ -77,6 +77,8 @@ application {
     mainClassName = 'core.HOLauncher'
 }
 
+compileJava.dependsOn 'preparingBuild'
+
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
