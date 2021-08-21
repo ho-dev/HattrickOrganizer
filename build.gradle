@@ -60,8 +60,9 @@ Properties versionProps = new Properties()
 //gradleRunNumber =  gradleRunNumber.toString()
 //def buildNumber = System.getenv("RUN_NUMBER") ?: gradleRunNumber
 
-def buildNumber = System.getenv("RUN_NUMBER") ?: 0 + 3710
-buildNumber =  buildNumber.toString()
+def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+buildNumber = buildNumber + 3710
+buildNumber = buildNumber.toString()
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
 
 versionProps['buildNumber'] = buildNumber
