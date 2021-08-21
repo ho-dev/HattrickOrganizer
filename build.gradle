@@ -52,16 +52,23 @@ ext {
     target_dir = "${buildDir}/artefacts"
 }
 
-// Define build number =================
+// Define HO version  =================
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
-versionProps.load(new FileInputStream(versionPropsFile))
-def buildNumber = (versionProps['buildNumber'] as Integer) + 1
+//versionProps.load(new FileInputStream(versionPropsFile))
+//def gradleRunNumber = (versionProps['buildNumber'] as Integer) + 1
+//gradleRunNumber =  gradleRunNumber.toString()
+//def buildNumber = System.getenv("RUN_NUMBER") ?: gradleRunNumber
+
+def buildNumber = System.getenv("RUN_NUMBER") ?: 0 + 3710
 buildNumber =  buildNumber.toString()
+project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
+
 versionProps['buildNumber'] = buildNumber
+versionProps['version'] = project.version
+
 versionProps.store(versionPropsFile.newWriter(), null)
 
-project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
 
 println "Project:  $project.name $project.version ....................."
 
@@ -333,7 +340,12 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
-            println("artefacts have to be uploaded or it will break update process !!!")
+
+            println("copy version.properties into ${project.ext.target_dir}")
+            copy {
+                from "${projectDir}\\version.properties"
+                into "${project.ext.target_dir}"
+            }
 
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version

@@ -2,8 +2,8 @@ name: Automated DEV Release
 
 on:
   push:
-    tags:
-      - "v*.*.*-dev"
+    branches:
+      - "master"
 
 jobs:
   release-dev:
