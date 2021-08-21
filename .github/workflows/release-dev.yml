@@ -25,13 +25,13 @@ jobs:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
           RUN_NUMBER: ${{ github.run_number }}
-      - name: Read version from Properties-file
+      - name: Read version
         id: read_version
         uses: christian-draeger/read-properties@1.0.1
         with:
           path: 'version.properties'
           property: 'version'
-      - name: Read version tag from Properties-file
+      - name: Read version tag
         id: read_version_tag
         uses: christian-draeger/read-properties@1.0.1
         with:
