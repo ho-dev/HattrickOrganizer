@@ -45,7 +45,6 @@ def minor = '0'
 def development_stage = 0
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
-def version_postfix = ["-dev", "-beta", ""]
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -57,23 +56,15 @@ ext {
 // Define HO version  =================
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
-//versionProps.load(new FileInputStream(versionPropsFile))
-//def gradleRunNumber = (versionProps['buildNumber'] as Integer) + 1
-//gradleRunNumber =  gradleRunNumber.toString()
-//def buildNumber = System.getenv("RUN_NUMBER") ?: gradleRunNumber
-
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+// bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
 buildNumber = (buildNumber as Integer) + 3710
 buildNumber = buildNumber.toString()
-project.version = major + '.' + minor + '.' + buildNumber + version_postfix[development_stage]
-
+project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
-
 versionProps.store(versionPropsFile.newWriter(), null)
-
-
 println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
