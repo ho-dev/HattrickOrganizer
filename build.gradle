@@ -42,8 +42,10 @@ test {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '5'
 def minor = '0'
-def development_stage = System.getenv("DEV_STAGE") ?:'0'
+def development_stage = 0
 def releaseArtefacts = true
+def development_tag = ["dev", "beta", "tag_stable"]
+def version_postfix = ["-dev", "-beta", ""]
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -63,10 +65,11 @@ Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
 buildNumber = buildNumber + 3710
 buildNumber = buildNumber.toString()
-project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
+project.version = major + '.' + minor + '.' + buildNumber + version_postfix[development_stage]
 
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
+versionProps['tag'] = development_tag[development_stage]
 
 versionProps.store(versionPropsFile.newWriter(), null)
 

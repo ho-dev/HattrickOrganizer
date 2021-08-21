@@ -25,11 +25,23 @@ jobs:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
           RUN_NUMBER: ${{ github.run_number }}
+      - name: Read version from Properties-file
+        id: read_version
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: 'version.properties'
+          property: 'version'
+      - name: Read version tag from Properties-file
+        id: read_version_tag
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: 'version.properties'
+          property: 'tag'
       - name: Delete previous tag and release
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true
-          tag_name: dev
+          tag_name: ${{ steps.read_version_tag.outputs.value }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
@@ -39,8 +51,8 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.get_version.outputs.version }}-DEV
-          tag_name: dev
+          name: ${{ steps.read_version.outputs.value }}
+          tag_name: ${{ steps.read_version_tag.outputs.value }}
           body_path: src/main/resources/release_notes.md
           target_commitish: master
           prerelease: true
