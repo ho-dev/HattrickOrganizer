@@ -19,6 +19,7 @@ import core.util.IOUtils;
 import core.util.StringUtils;
 import core.util.XMLUtils;
 import org.jetbrains.annotations.Nullable;
+import tool.updater.UpdateHelper;
 import tool.updater.VersionInfo;
 import core.HO;
 import java.io.BufferedReader;
@@ -32,10 +33,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -43,7 +41,6 @@ import javax.swing.JOptionPane;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import org.w3c.dom.Document;
-import java.util.Base64;
 
 
 public class MyConnector {
@@ -540,14 +537,6 @@ public class MyConnector {
 	}
 
 	/**
-	 * Get the content of a web page in one string.
-	 */
-	private String getWebPage(String surl, boolean showError) throws IOException {
-		final InputStream resultingInputStream = getNonCHPPWebFile(surl, showError);
-		return readStream(resultingInputStream);
-	}
-
-	/**
 	 * holt die Weltdaten
 	 */
 	public String getWorldDetails(int leagueId) throws IOException {
@@ -561,26 +550,21 @@ public class MyConnector {
 	// Update Checker
 	// //////////////////////////////////////////////////////////////////////////////
 	public VersionInfo getVersion(String url) {
-		BufferedReader br = null;
 		InputStream is = null;
+		BufferedReader reader = null;
 		try {
-			is = getNonCHPPWebFile(url, false);
+			is = getWebFile(url, false);
 			if (is != null) {
-				br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-				VersionInfo ret = new VersionInfo();
-				String line;
-
-				while ((line = br.readLine()) != null) {
-					int pos = line.indexOf("=");
-					if (pos > 0) {
-						String key = line.substring(0, pos).trim();
-						String val = line.substring(pos + 1).trim();
-						ret.setValue(key, val);
-					}
-				}
-				if (ret.isValid()) {
-					return ret;
-				}
+				reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+				var comment = reader.readLine();
+				SimpleDateFormat parser = new SimpleDateFormat("#EEE MMM d HH:mm:ss zzz yyyy", Locale.US);
+				var released = parser.parse(comment);
+				var versionProperties = new Properties();
+				versionProperties.load(reader);
+				var ret = new VersionInfo();
+				ret.setReleasedDate(released);
+				ret.setAllButReleaseDate(versionProperties.getProperty("version"));
+				return ret;
 			} else {
 				HOLogger.instance().log(getClass(), "Unable to connect to the update server (HO).");
 			}
@@ -588,23 +572,22 @@ public class MyConnector {
 			HOLogger.instance()
 					.log(getClass(), "Unable to connect to the update server (HO): " + e);
 		} finally {
-			IOUtils.closeQuietly(br);
+			IOUtils.closeQuietly(reader);
 			IOUtils.closeQuietly(is);
 		}
 		return null;
 	}
 
-
 	public VersionInfo getLatestStableVersion() {
-		return getVersion("https://akasolace.github.io/HO/lateststable.html");
+		return getVersion("https://github.com/akasolace/HO/releases/download/tag_stable/version.properties");
 	}
 
 	public VersionInfo getLatestVersion() {
-		return getVersion("https://akasolace.github.io/HO/latest.html");
+		return getVersion("https://github.com/akasolace/HO/releases/download/dev/version.properties");
 	}
 
 	public VersionInfo getLatestBetaVersion() {
-		return getVersion("https://akasolace.github.io/HO/latestbeta.html");
+		return getVersion("https://github.com/akasolace/HO/releases/download/beta/version.properties");
 	}
 
 
@@ -746,6 +729,23 @@ public class MyConnector {
 			returnString = "";
 		}
 		return returnString;
+	}
+
+	/**
+	 * Get input stream from web url (file download)
+	 */
+	private  @Nullable InputStream getWebFile(String url, boolean showErrorMessage) {
+		try {
+			return new URL(url).openStream();
+		}
+		catch (Exception sox) {
+			HOLogger.instance().error(getClass(), sox);
+			if (showErrorMessage)
+				JOptionPane.showMessageDialog(null, sox.getMessage() + "\nURL: " + url,
+						HOVerwaltung.instance().getLanguageString("Fehler"),
+						JOptionPane.ERROR_MESSAGE);
+		}
+		return null;
 	}
 
 	private @Nullable InputStream getNonCHPPWebFile(String surl, boolean showErrorMessage) {

@@ -42,8 +42,9 @@ test {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '5'
 def minor = '0'
-def development_stage = System.getenv("DEV_STAGE") ?:'0'
+def development_stage = 0
 def releaseArtefacts = true
+def development_tag = ["dev", "beta", "tag_stable"]
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -52,26 +53,26 @@ ext {
     target_dir = "${buildDir}/artefacts"
 }
 
-// Define build number =================
-//def versionPropsFile = file('version.properties')
-//Properties versionProps = new Properties()
-//versionProps.load(new FileInputStream(versionPropsFile))
-//def gradleRunNumber = (versionProps['buildNumber'] as Integer) + 1
-//gradleRunNumber =  gradleRunNumber.toString()
-//def buildNumber = System.getenv("RUN_NUMBER") ?: gradleRunNumber
-
+// Define HO version  =================
+def versionPropsFile = file('version.properties')
+Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
-//versionProps['buildNumber'] = buildNumber
-//versionProps.store(versionPropsFile.newWriter(), null)
-
-project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage
-
+// bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
+buildNumber = (buildNumber as Integer) + 3710
+buildNumber = buildNumber.toString()
+project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
+versionProps['buildNumber'] = buildNumber
+versionProps['version'] = project.version
+versionProps['tag'] = development_tag[development_stage]
+versionProps.store(versionPropsFile.newWriter(), null)
 println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
 application {
     mainClassName = 'core.HOLauncher'
 }
+
+compileJava.dependsOn 'preparingBuild'
 
 //  configure java plugin --------------------------------
 java {
@@ -336,9 +337,12 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
-            new File("project.ext.target_dir/version.txt").text = "version=$version"
 
-            println("artefacts have to be uploaded or it will break update process !!!")
+            println("copy version.properties into ${project.ext.target_dir}")
+            copy {
+                from "${projectDir}\\version.properties"
+                into "${project.ext.target_dir}"
+            }
 
             // always update latest.html
             new File("$projectDir/docs/latest.html").text = """version=$version

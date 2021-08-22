@@ -89,11 +89,19 @@ public final class PlayerAbility {
 		}
 	}
 
-	public static String getNameForSkill(double bewertungwertfloat, boolean zahlen, boolean isMatch) {
-	    int bewertungwert = (int) bewertungwertfloat;
+	/**
+	 * get string representation of rating values
+	 *
+	 * @param ratingValue double [0..20]
+	 * @param showNumbers true for numerical representation
+	 * @param isMatch true shows' sub-level representations
+	 * @return String
+	 */
+	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch) {
+	    int bewertungwert = (int) ratingValue;
 	    int sublevel = 0;
 	    if (isMatch) {
-	        sublevel = (int)(bewertungwertfloat*4) % 4;
+	        sublevel = (int)(ratingValue*4) % 4;
 	    }
 
 	    var bewertung = toString(bewertungwert);
@@ -101,7 +109,7 @@ public final class PlayerAbility {
 	        bewertung += PlayerAbility.getName4Sublevel(sublevel);
 	    }
 
-	    if (zahlen) {
+	    if (showNumbers) {
 	        if (isMatch) {
 	            bewertung += (" ("
 	            +  Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
@@ -110,7 +118,7 @@ public final class PlayerAbility {
 	        } else {
 	            bewertung += (" ("
 	            		+ Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-	             		.format(Helper.round(bewertungwertfloat, UserParameter.instance().nbDecimals)) + ")");
+	             		.format(Helper.round(ratingValue, UserParameter.instance().nbDecimals)) + ")");
 	        }
 	    }
 	    return bewertung;
