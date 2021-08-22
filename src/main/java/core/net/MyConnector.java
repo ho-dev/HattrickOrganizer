@@ -732,7 +732,7 @@ public class MyConnector {
 	}
 
 	/**
-	 * Get the content of a web page in one string.
+	 * Get input stream from web url (file download)
 	 */
 	private  @Nullable InputStream getWebFile(String url, boolean showErrorMessage) {
 		try {
