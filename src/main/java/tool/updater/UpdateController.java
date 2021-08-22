@@ -45,37 +45,30 @@ public final class UpdateController {
 
     @Nullable
     private static VersionInfo getUpdateVersion() {
-        VersionInfo devVersion = MyConnector.instance().getLatestVersion();
-        VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
-        VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
         VersionInfo updVersion = null;
 
         // check if version available based on channel
         switch (core.model.UserParameter.temp().ReleaseChannel) {
-            case "Stable" -> {
-                if (stableVersion != null && compareToCurrentVersions(stableVersion))  updVersion = stableVersion;
-
-            }
-            case "Beta" -> {
-                if (stableVersion != null && betaVersion != null && compareTwoVersions(stableVersion, betaVersion)) {
-                    if (compareToCurrentVersions(stableVersion))
-                        updVersion = stableVersion;
-                } else if (betaVersion != null && compareToCurrentVersions(betaVersion)) {
-                    updVersion = betaVersion;
-                }
-
-            }
-            default -> {
-                if (stableVersion != null && devVersion != null && compareTwoVersions(stableVersion, devVersion)) {
-                    if (compareToCurrentVersions(stableVersion))
-                        updVersion = stableVersion;
-                } else if (betaVersion != null && devVersion != null && compareTwoVersions(betaVersion, devVersion)) {
-                    if (compareToCurrentVersions(betaVersion))
+            case "Dev":
+                VersionInfo devVersion = MyConnector.instance().getLatestVersion();
+                if (compareToCurrentVersions(devVersion)) updVersion = devVersion;
+                // no break; to check if there is a newer beta release
+            case "Beta":
+                VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
+                if (compareToCurrentVersions(betaVersion)) {
+                    if (compareTwoVersions(betaVersion, updVersion)) {
                         updVersion = betaVersion;
-                } else if (devVersion != null && compareToCurrentVersions(devVersion)) {
-                    updVersion = devVersion;
+                    }
                 }
-            }
+                // no break to check if there is a newer stable release
+            default:
+            case "Stable":
+                VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
+                if (compareToCurrentVersions(stableVersion)) {
+                    if (compareTwoVersions(stableVersion, updVersion)) {
+                        updVersion = stableVersion;
+                    }
+                }
         }
         return updVersion;
     }
@@ -180,12 +173,15 @@ public final class UpdateController {
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
+        if (a == null) return false; // NO version is NOT greater than any version
+        if (b == null) return true;  // every version is greater or equal to NO version
         return a.getVersion() > b.getVersion() ||
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
     // returns true is a more recent than current version
     public static boolean compareToCurrentVersions(VersionInfo a) {
+        if (a == null) return false; // NO version is NOT greater than current version
         return a.getVersion() > HO.VERSION ||
                 ((a.getVersion() == HO.VERSION) && (a.getBuild() > HO.getRevisionNumber()));
     }
