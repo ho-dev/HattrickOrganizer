@@ -72,10 +72,11 @@ public class ConvertXml2Hrf {
 			return null;
 		}
 
-		List<TeamInfo> teamInfoList = null;
+		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
+		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
+		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
 		if (teamId <= 0 || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
-			teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 			if (teamInfoList.size() == 1) {
 				// user has only one single team
 				teamId = teamInfoList.get(0).getTeamId();
@@ -125,32 +126,19 @@ public class ConvertXml2Hrf {
 						.get("LeagueID"))), teamdetailsDataMap.get("LeagueID"));
 
 		// Currency fix
-		if (ModuleConfig.instance().containsKey("CurrencyRate")) {
+		var lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId");
+		if ( lastPremierId != null && lastPremierId == usersPremierTeamId ){
+		//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
+			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
 		} else {
 			// We need to get hold of the currency info for the primary team, no matter which team we download.
-			TeamInfo primary = null;
-			
-			if (teamInfoList == null) {
-				teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
-			}
-			for (TeamInfo info : teamInfoList) {
-				if (info.isPrimaryTeam()) {
-					primary = info;
-					break;
-				}
-			}
-			
-			if (primary != null) {
-				
-				primary = XMLWorldDetailsParser.updateTeamInfoWithCurrency(primary, mc.getWorldDetails(primary.getLeagueId()));
-				
-				ModuleConfig.instance().setString("CurrencyRate", primary.getCurrencyRate().trim());
-				
-				worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
-			} else {
-				HOLogger.instance().error(ConvertXml2Hrf.class, "ConvertXML2Hrf: No primary team found!");
-			}
+			usersPremierTeamInfo = XMLWorldDetailsParser.updateTeamInfoWithCurrency(usersPremierTeamInfo, mc.getWorldDetails(usersPremierTeamInfo.getLeagueId()));
+			ModuleConfig.instance().setString("CurrencyRate", usersPremierTeamInfo.getCurrencyRate().trim());
+			ModuleConfig.instance().setString("CountryId", usersPremierTeamInfo.getCountryId());
+			ModuleConfig.instance().setInteger("UsersPremierTeamId", usersPremierTeamInfo.getTeamId());
+			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
+			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
 		}
 
 		HOMainFrame.instance().setWaitInformation(25);
@@ -1088,6 +1076,8 @@ public class ConvertXml2Hrf {
 				.append('\n');
 		buffer.append("SeriesMatchDate=")
 				.append(worldDataMap.get("SeriesMatchDate")).append('\n');
+		buffer.append("CountryId=")
+				.append(worldDataMap.get("CountryId")).append('\n');
 		buffer.append("CurrencyRate=")
 				.append(worldDataMap.get("CurrencyRate").toString()
 						.replace(',', '.')).append('\n');

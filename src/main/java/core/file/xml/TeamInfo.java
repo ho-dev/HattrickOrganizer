@@ -10,7 +10,8 @@ public class TeamInfo {
 	private int leagueId;
 	private String currencyRate;
 	private boolean primaryTeam;
-	
+	private String countryId;
+
 	public int getTeamId() {
 		return teamId;
 	}
@@ -74,5 +75,13 @@ public class TeamInfo {
 
 	public void setYouthTeamId(Integer youthTeamId) {
 		this.youthTeamId = youthTeamId;
+	}
+
+	public void setCountryId(String countryId) {
+		this.countryId = countryId;
+	}
+
+	public String getCountryId() {
+		return countryId;
 	}
 }
