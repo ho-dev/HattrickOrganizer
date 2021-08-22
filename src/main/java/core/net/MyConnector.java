@@ -579,7 +579,7 @@ public class MyConnector {
 	}
 
 	public VersionInfo getLatestStableVersion() {
-		return getVersion("https://github.com/akasolace/HO/releases/download/tag/tag_stable/version.properties");
+		return getVersion("https://github.com/akasolace/HO/releases/download/tag_stable/version.properties");
 	}
 
 	public VersionInfo getLatestVersion() {
@@ -587,7 +587,7 @@ public class MyConnector {
 	}
 
 	public VersionInfo getLatestBetaVersion() {
-		return getVersion("https://github.com/akasolace/HO/releases/download/tag/beta/version.properties");
+		return getVersion("https://github.com/akasolace/HO/releases/download/beta/version.properties");
 	}
 
 
