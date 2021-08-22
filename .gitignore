@@ -41,7 +41,7 @@
 .idea/**/libraries
 .gradle
 /build/
-/gradle.properties
+gradle.properties
 version.properties
 
 
