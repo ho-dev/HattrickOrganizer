@@ -593,10 +593,7 @@ public class HOModel {
     }
 
     public void addYouthMatchLineup(MatchLineup lineup) {
-        if ( this.youthMatchLineups == null){
-            getYouthMatchLineups();
-        }
-        this.youthMatchLineups.add(lineup);
+        getYouthMatchLineups().add(lineup);
     }
 
     public List<MatchLineup> getYouthMatchLineups(){
@@ -626,7 +623,6 @@ public class HOModel {
             }
         }
     }
-
 
     public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
         return getYouthTrainings().stream()
