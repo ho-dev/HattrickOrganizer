@@ -535,7 +535,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
                 final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
                 final String  nameForPosition3 = "</font></html>";
-                final String nameForPosition = nameForPosition1 + MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
+                final String nameForPosition = nameForPosition1 + MatchRoleID.getShortNameForPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
@@ -559,6 +559,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 else {
                     m_jlPosition.setText(nameForPosition + " (#2)");
                 }
+
+                m_jlPosition.setToolTipText(MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()));
             }
         }
         m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));

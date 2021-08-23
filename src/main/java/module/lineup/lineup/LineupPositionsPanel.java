@@ -6,6 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Updatable;
 import core.gui.comp.panel.ComboBoxTitled;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -233,40 +234,31 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
+		var matchPanel = new JPanel(new BorderLayout());
+		// m_jpMatchAndLineupSelectionPanel
+		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
+		matchPanel.add(m_jpMatchAndLineupSelectionPanel, BorderLayout.WEST);
+		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
+		matchPanel.add(m_jpMatchBanner, BorderLayout.EAST);
+
 		centerPanel = new javax.swing.JLayeredPane();
 		centerPanel.setOpaque(false);
 
 		final GridBagLayout layout = new GridBagLayout();
+		centerPanel.setLayout(layout);
+
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
-
-
-		centerPanel.setLayout(layout);
-
-		// m_jpMatchAndLineupSelectionPanel
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.gridwidth = 4;
+		constraints.gridwidth = 7;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
-		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
-		layout.setConstraints(m_jpMatchAndLineupSelectionPanel, constraints);
-		centerPanel.add(m_jpMatchAndLineupSelectionPanel);
-
-
-		// match banner ==================================================
-		constraints.gridx = 4;
-		constraints.gridwidth = 3;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(3, 3, 3, 3);
-		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
-		layout.setConstraints(m_jpMatchBanner, constraints);
-		centerPanel.add(m_jpMatchBanner);
-
+		layout.setConstraints(matchPanel, constraints);
+		centerPanel.add(matchPanel);
 
 		// Keeper
 		constraints.gridx = 3;
@@ -274,7 +266,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.SOUTH;
+		//constraints.anchor = GridBagConstraints.SOUTH;
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper, m_weather, m_useWeatherImpact);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
@@ -352,10 +344,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// WBr ==========================================================================
 		constraints.gridx = 1;
 		constraints.gridy = 2;
-		constraints.gridwidth = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(3, 3, 3, 3);
-		constraints.anchor = GridBagConstraints.CENTER;
+		//constraints.anchor = GridBagConstraints.CENTER;
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);
