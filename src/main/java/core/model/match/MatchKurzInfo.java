@@ -355,8 +355,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * @return Value of property m_iMatchTyp.
 	 */
 	public MatchType getMatchType() {
-		if ((m_mtMatchTyp == null) || (m_mtMatchTyp == MatchType.NONE)
-				|| m_mtMatchTyp == MatchType.CUP && (m_mtCupLevel == null || m_mtCupLevel == CupLevel.NONE)) {
+		if (m_mtMatchTyp == null || m_mtMatchTyp == MatchType.NONE) {
 			var m = OnlineWorker.inferMissingMatchType(this);
 			this.m_mtMatchTyp = m.getMatchType();
 			if (m_mtMatchTyp != MatchType.NONE) {
