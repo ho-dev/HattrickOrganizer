@@ -11,6 +11,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.Matchdetails;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
@@ -262,7 +263,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Keeper
 		constraints.gridx = 3;
-		constraints.gridy = 1;
+		constraints.gridy = 1+getLineupRowNumber(0);
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -343,7 +344,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// WBr ==========================================================================
 		constraints.gridx = 1;
-		constraints.gridy = 2;
+		constraints.gridy = 1+getLineupRowNumber(1);
 		constraints.insets = new Insets(3, 3, 3, 3);
 		//constraints.anchor = GridBagConstraints.CENTER;
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack, m_weather, m_useWeatherImpact);
@@ -386,7 +387,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Midfield Line
 		constraints.gridx = 1;
-		constraints.gridy = 3;
+		constraints.gridy = 1+getLineupRowNumber(2);
 		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightWinger, constraints);
 		centerPanel.add(m_clRightWinger);
@@ -425,7 +426,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Forward line
 		constraints.gridx = 2;
-		constraints.gridy = 4;
+		constraints.gridy = 1+getLineupRowNumber(3);
 		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightForward, constraints);
 		centerPanel.add(m_clRightForward);
@@ -593,6 +594,17 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	};
 
 		addListeners();
+	}
+
+	/**
+	 * swap the lineup row numbers, if goalkeeper should be displayed at the bottom
+	 * @param i 0, goalkeeper at the top (no swap)
+	 *          1, goalkeeper at the bottom (swap)
+	 * @return int
+	 */
+	private int getLineupRowNumber(int i) {
+		if (UserParameter.instance().lineupOrientation==0) return i;
+		return 3-i;
 	}
 
 	private void addListeners() {
