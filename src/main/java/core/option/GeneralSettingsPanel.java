@@ -29,11 +29,18 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             new CBItem(HOVerwaltung.instance().getLanguageString("Gruppe"), core.model.UserParameter.SORT_GRUPPE),
             new CBItem(HOVerwaltung.instance().getLanguageString("Rating"), core.model.UserParameter.SORT_BEWERTUNG),};
 
+    private static CBItem[] lineupOrientationSetting  = {
+            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperattop"), core.model.UserParameter.GOALKEEPER_AT_TOP),
+            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperatbottom"), core.model.UserParameter.GOALKEEPER_AT_BOTTOM)
+    };
+
+
     private ComboBoxPanel m_jcbNbDecimals;
     private ComboBoxPanel m_jcbDefaultSorting;
     private ComboBoxPanel m_jcbSkin;
     private ComboBoxPanel m_jcbLanguage;
     private ComboBoxPanel m_jcbTimeZone;
+    private ComboBoxPanel m_jcbLineupOrientation;
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
@@ -58,6 +65,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             core.model.UserParameter.temp().sprachDatei = ((String) m_jcbLanguage.getSelectedItem());
             core.model.UserParameter.temp().standardsortierung = ((CBItem) m_jcbDefaultSorting.getSelectedItem()).getId();
             core.model.UserParameter.temp().skin = ((String) m_jcbSkin.getSelectedItem());
+            UserParameter.temp().lineupOrientation = ((CBItem) m_jcbLineupOrientation.getSelectedItem()).getId();
         }
         if (!core.model.UserParameter.temp().sprachDatei.equals(core.model.UserParameter.instance().sprachDatei)
                 || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference)
@@ -119,6 +127,12 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbLanguage.setSelectedItem(core.model.UserParameter.temp().sprachDatei);
         m_jcbLanguage.addItemListener(this);
         add(m_jcbLanguage);
+
+        m_jcbLineupOrientation = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.lineup.orientation"), lineupOrientationSetting, 120 );
+        m_jcbLineupOrientation.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.lineup.orientation.tooltip"));
+        m_jcbLineupOrientation.setSelectedId(UserParameter.temp().lineupOrientation);
+        m_jcbLineupOrientation.addItemListener(this);
+        add(m_jcbLineupOrientation);
 
         // TimeZone selection =========================================================
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();
@@ -182,18 +196,12 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         add(m_jcbPromotionStatusTest);
     }
 
-
     private static CBItem[] getAllZoneIdsAndItsOffSet() {
-
         Map<String, String> zones = DateTimeUtils.getAvailableZoneIds();
 
         List<CBItem> result = new ArrayList<>();
         zones.forEach((k, v) -> result.add(new CBItem(k + " " + v, k.hashCode())));
 
         return result.toArray(CBItem[]::new);
-
     }
-
-
-
 }

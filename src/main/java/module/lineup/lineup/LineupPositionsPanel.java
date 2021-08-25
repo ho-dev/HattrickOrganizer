@@ -6,10 +6,12 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Updatable;
 import core.gui.comp.panel.ComboBoxTitled;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.Matchdetails;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
@@ -233,48 +235,39 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
+		var matchPanel = new JPanel(new BorderLayout());
+		// m_jpMatchAndLineupSelectionPanel
+		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
+		matchPanel.add(m_jpMatchAndLineupSelectionPanel, BorderLayout.WEST);
+		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
+		matchPanel.add(m_jpMatchBanner, BorderLayout.EAST);
+
 		centerPanel = new javax.swing.JLayeredPane();
 		centerPanel.setOpaque(false);
 
 		final GridBagLayout layout = new GridBagLayout();
+		centerPanel.setLayout(layout);
+
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
-
-
-		centerPanel.setLayout(layout);
-
-		// m_jpMatchAndLineupSelectionPanel
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.gridwidth = 4;
+		constraints.gridwidth = 7;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(3, 3, 3, 3);
-		m_jpMatchAndLineupSelectionPanel = new MatchAndLineupSelectionPanel(this);
-		layout.setConstraints(m_jpMatchAndLineupSelectionPanel, constraints);
-		centerPanel.add(m_jpMatchAndLineupSelectionPanel);
-
-
-		// match banner ==================================================
-		constraints.gridx = 4;
-		constraints.gridwidth = 3;
-		constraints.gridheight = 1;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(3, 3, 3, 3);
-		m_jpMatchBanner = new MatchBanner(m_jpMatchAndLineupSelectionPanel);
-		layout.setConstraints(m_jpMatchBanner, constraints);
-		centerPanel.add(m_jpMatchBanner);
-
+		layout.setConstraints(matchPanel, constraints);
+		centerPanel.add(matchPanel);
 
 		// Keeper
 		constraints.gridx = 3;
-		constraints.gridy = 1;
+		constraints.gridy = 1+getLineupRowNumber(0);
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.SOUTH;
+		//constraints.anchor = GridBagConstraints.SOUTH;
 		m_clKeeper = new PlayerPositionPanel(this, IMatchRoleID.keeper, m_weather, m_useWeatherImpact);
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
@@ -351,11 +344,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// WBr ==========================================================================
 		constraints.gridx = 1;
-		constraints.gridy = 2;
-		constraints.gridwidth = 1;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.gridy = 1+getLineupRowNumber(1);
 		constraints.insets = new Insets(3, 3, 3, 3);
-		constraints.anchor = GridBagConstraints.CENTER;
+		//constraints.anchor = GridBagConstraints.CENTER;
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightBack, constraints);
 		centerPanel.add(m_clRightBack);
@@ -396,7 +387,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Midfield Line
 		constraints.gridx = 1;
-		constraints.gridy = 3;
+		constraints.gridy = 1+getLineupRowNumber(2);
 		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightWinger, constraints);
 		centerPanel.add(m_clRightWinger);
@@ -435,7 +426,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Forward line
 		constraints.gridx = 2;
-		constraints.gridy = 4;
+		constraints.gridy = 1+getLineupRowNumber(3);
 		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightForward, constraints);
 		centerPanel.add(m_clRightForward);
@@ -603,6 +594,17 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	};
 
 		addListeners();
+	}
+
+	/**
+	 * swap the lineup row numbers, if goalkeeper should be displayed at the bottom
+	 * @param i 0, goalkeeper at the top (no swap)
+	 *          1, goalkeeper at the bottom (swap)
+	 * @return int
+	 */
+	private int getLineupRowNumber(int i) {
+		if (UserParameter.instance().lineupOrientation==0) return i;
+		return 3-i;
 	}
 
 	private void addListeners() {
