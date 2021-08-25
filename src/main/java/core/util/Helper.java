@@ -129,11 +129,11 @@ public class Helper {
 
 		try {
 			int index = 0;
-			StringBuffer buffer = new StringBuffer();
+			var buffer = new StringBuilder();
 
 			for (int i = 0; i < text.length(); i++) {
 				if (text.charAt(i) != ',') {
-					buffer.append("" + text.charAt(i));
+					buffer.append(text.charAt(i));
 				} else { // Komma gefunden
 					// buffer ist nicht leer
 					if (!buffer.toString().trim().equals("")) {
@@ -150,7 +150,7 @@ public class Helper {
 						index++;
 					}
 
-					buffer = new StringBuffer();
+					buffer = new StringBuilder();
 				}
 			}
 
@@ -186,6 +186,8 @@ public class Helper {
 
 
     public static void setComboBoxFromID(JComboBox<? extends ComboItem> combobox, int id) {
+		var item = ((CBItem)(combobox.getSelectedItem()));
+		if ( item != null && item.getId() == id ) return; // nothing to do
         final javax.swing.ComboBoxModel< ? extends ComboItem> model = combobox.getModel();
         for (int i = 0; i < model.getSize(); i++) {
             if (model.getElementAt(i).getId() == id) {
@@ -343,7 +345,7 @@ public class Helper {
 	
 	    encoded = text.getBytes();
 	
-	    for (int i = 0; (encoded != null) && (i < encoded.length); ++i) {
+	    for (int i = 0; (i < encoded.length); ++i) {
 	        //check ob Zeichen gleich ~ = 126 ?
 	        if (encoded[i] == 126) {
 	            //Dann mit tilde ersetzen slash = 92
@@ -382,7 +384,7 @@ public class Helper {
 	
 	    encoded = text.getBytes();
 	
-	    for (int i = 0; (encoded != null) && (i < encoded.length); ++i) {
+	    for (int i = 0; (i < encoded.length); ++i) {
 	        if ((encoded[i] % 2) == 0) {
 	            ++encoded[i];
 	        } else {
