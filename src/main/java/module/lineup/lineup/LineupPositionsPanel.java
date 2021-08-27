@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Updatable;
 import core.gui.comp.panel.ComboBoxTitled;
-import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -603,7 +602,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	 * @return int
 	 */
 	private int getLineupRowNumber(int i) {
-		if (UserParameter.instance().lineupOrientation==0) return i;
+		if (UserParameter.instance().orientationSetting ==0) return i;
 		return 3-i;
 	}
 

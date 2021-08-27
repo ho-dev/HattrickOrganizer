@@ -29,9 +29,9 @@ import javax.swing.JTabbedPane;
  */
 public class OptionenDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
 	private FormelPanel m_jpFormeln;
 	private GeneralSettingsPanel m_jpSonstigeOptionen;
+	private LineupSettingsPanel m_jpLineupSettings;
 	private TrainingPreferencesPanel m_jpTrainingsOptionen;
 	private UserColumnsPanel m_jpUserColumns;
 	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
@@ -87,6 +87,10 @@ public class OptionenDialog extends JDialog {
 		m_jpSonstigeOptionen = new GeneralSettingsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"),
 				new JScrollPane(m_jpSonstigeOptionen));
+
+		// Lineup settings
+		m_jpLineupSettings = new LineupSettingsPanel();
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("options.tabtitle.lineup"), new JScrollPane(m_jpLineupSettings));
 
 		// Modules
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(

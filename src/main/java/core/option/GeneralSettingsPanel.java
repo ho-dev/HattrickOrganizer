@@ -29,18 +29,12 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             new CBItem(HOVerwaltung.instance().getLanguageString("Gruppe"), core.model.UserParameter.SORT_GRUPPE),
             new CBItem(HOVerwaltung.instance().getLanguageString("Rating"), core.model.UserParameter.SORT_BEWERTUNG),};
 
-    private static CBItem[] lineupOrientationSetting  = {
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperattop"), core.model.UserParameter.GOALKEEPER_AT_TOP),
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperatbottom"), core.model.UserParameter.GOALKEEPER_AT_BOTTOM)
-    };
-
 
     private ComboBoxPanel m_jcbNbDecimals;
     private ComboBoxPanel m_jcbDefaultSorting;
     private ComboBoxPanel m_jcbSkin;
     private ComboBoxPanel m_jcbLanguage;
     private ComboBoxPanel m_jcbTimeZone;
-    private ComboBoxPanel m_jcbLineupOrientation;
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
@@ -54,7 +48,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     }
 
     @Override
-    public final void itemStateChanged(ItemEvent itemEvent) {
+    public void itemStateChanged(ItemEvent itemEvent) {
         // No  Selected Event!
         core.model.UserParameter.temp().zahlenFuerSkill = m_jchShowSkillNumericalValue.isSelected();
         UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
@@ -65,7 +59,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             core.model.UserParameter.temp().sprachDatei = ((String) m_jcbLanguage.getSelectedItem());
             core.model.UserParameter.temp().standardsortierung = ((CBItem) m_jcbDefaultSorting.getSelectedItem()).getId();
             core.model.UserParameter.temp().skin = ((String) m_jcbSkin.getSelectedItem());
-            UserParameter.temp().lineupOrientation = ((CBItem) m_jcbLineupOrientation.getSelectedItem()).getId();
         }
         if (!core.model.UserParameter.temp().sprachDatei.equals(core.model.UserParameter.instance().sprachDatei)
                 || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference)
@@ -80,7 +73,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     }
 
     @Override
-    public final void stateChanged(ChangeEvent changeEvent) {
+    public void stateChanged(ChangeEvent changeEvent) {
         core.model.UserParameter.temp().fontSize = (int) m_jslFontSize.getValue();
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
 
@@ -128,17 +121,11 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbLanguage.addItemListener(this);
         add(m_jcbLanguage);
 
-        m_jcbLineupOrientation = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.lineup.orientation"), lineupOrientationSetting, 120 );
-        m_jcbLineupOrientation.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.lineup.orientation.tooltip"));
-        m_jcbLineupOrientation.setSelectedId(UserParameter.temp().lineupOrientation);
-        m_jcbLineupOrientation.addItemListener(this);
-        add(m_jcbLineupOrientation);
-
         // TimeZone selection =========================================================
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();
         m_jcbTimeZone = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, 120);
         var sZoneIDs = ZoneId.getAvailableZoneIds();
-        var sZoneIDCodes = sZoneIDs.stream().map(e -> e.hashCode()).collect(Collectors.toSet());
+        var sZoneIDCodes = sZoneIDs.stream().map(String::hashCode).collect(Collectors.toSet());
         if (sZoneIDs.size() != sZoneIDCodes.size()){
             HOLogger.instance().error(getClass(), "Error: non unique TimeZone detected, another approach should be found for initilization");
         }

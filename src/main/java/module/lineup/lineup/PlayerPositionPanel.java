@@ -12,6 +12,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -30,6 +31,9 @@ import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+
+import static core.model.UserParameter.POSITIONNAMES_SHORT;
+import static core.model.player.MatchRoleID.getNameForPosition;
 
 
 public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
@@ -535,7 +539,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
                 final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
                 final String  nameForPosition3 = "</font></html>";
-                final String nameForPosition = nameForPosition1 + MatchRoleID.getShortNameForPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
+                final String nameForPosition = nameForPosition1 + getNameForLineupPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
@@ -564,6 +568,13 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
         m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
+    }
+
+    private String getNameForLineupPosition(byte position) {
+        if (UserParameter.instance().positionNamesSetting == POSITIONNAMES_SHORT) {
+            return MatchRoleID.getShortNameForPosition(position);
+        }
+        return MatchRoleID.getNameForPosition(position);
     }
 
     private void initTaktik(@Nullable Player aktuellerPlayer) {

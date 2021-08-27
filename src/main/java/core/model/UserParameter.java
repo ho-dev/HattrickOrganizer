@@ -14,8 +14,6 @@ import java.util.Map;
  * User configuration. Loaded when HO starts and saved when HO! exits.
  */
 public final class UserParameter extends Configuration {
-    public static final int GOALKEEPER_AT_TOP = 0;
-    public static final int GOALKEEPER_AT_BOTTOM = 1;
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static UserParameter m_clUserParameter;
@@ -27,6 +25,12 @@ public final class UserParameter extends Configuration {
     public static final int SORT_AUFGESTELLT = 2;
     public static final int SORT_GRUPPE = 3;
     public static final int SORT_BEWERTUNG = 4;
+    public static final int GOALKEEPER_AT_TOP = 0;
+    public static final int GOALKEEPER_AT_BOTTOM = 1;
+    public static final int POSITIONNAMES_SHORT = 0;
+    public static final int POSITIONNAMES_LONG = 1;
+    public static final int RATINGPREDICTIONMODEL_NEW = 0;
+    public static final int RATINGPREDICTIONMODEL_OLD = 1;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -373,7 +377,9 @@ public final class UserParameter extends Configuration {
     public double youthtrainingFactorPrimary = 1.0;
     public double youthtrainingFactorSecondary = 0.66;
 
-    public int lineupOrientation = 0;
+    public int orientationSetting = GOALKEEPER_AT_TOP;
+    public int positionNamesSetting = POSITIONNAMES_SHORT;
+    public int ratingPredictionModelSetting = RATINGPREDICTIONMODEL_NEW;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -664,7 +670,9 @@ public final class UserParameter extends Configuration {
         map.put("youthtrainingFactorPrimary", String.valueOf(this.youthtrainingFactorPrimary));
         map.put("youthtrainingFactorSecondary", String.valueOf(this.youthtrainingFactorSecondary));
 
-        map.put("lineupOrientation", String.valueOf(this.lineupOrientation));
+        map.put("lineupOrientation", String.valueOf(this.orientationSetting));
+        map.put("lineupRatingPredictionModel", String.valueOf(this.ratingPredictionModelSetting));
+        map.put("lineupPositionnames", String.valueOf(this.positionNamesSetting));
 
         return map;
     }
@@ -908,7 +916,9 @@ public final class UserParameter extends Configuration {
         youthtrainingFactorPrimary = getDoubleValue(values, "youthtrainingFactorPrimary", youthtrainingFactorPrimary);
         youthtrainingFactorSecondary= getDoubleValue(values, "youthtrainingFactorSecondary", youthtrainingFactorSecondary);
 
-        lineupOrientation = getIntValue(values, "lineupOrientation");
+        orientationSetting = getIntValue(values, "lineupOrientation");
+        ratingPredictionModelSetting = getIntValue(values, "lineupRatingPredictionModel");
+        positionNamesSetting = getIntValue(values,"lineupPositionnames" );
     }
 
 }
