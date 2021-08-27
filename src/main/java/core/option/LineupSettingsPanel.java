@@ -40,16 +40,16 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-            UserParameter.temp().orientationSetting = ((CBItem) m_jcbOrientationSetting.getSelectedItem()).getId();
-            UserParameter.temp().positionNamesSetting = ((CBItem) m_jcbPositionNameSetting.getSelectedItem()).getId();
-            UserParameter.temp().ratingPredictionModelSetting = ((CBItem) m_jcbRatingPredictionModelSetting.getSelectedItem()).getId();
+            UserParameter.temp().lineupOrientationSetting = ((CBItem) m_jcbOrientationSetting.getSelectedItem()).getId();
+            UserParameter.temp().lineupPositionNamesSetting = ((CBItem) m_jcbPositionNameSetting.getSelectedItem()).getId();
+            UserParameter.temp().lineupRatingPredictionModelSetting = ((CBItem) m_jcbRatingPredictionModelSetting.getSelectedItem()).getId();
         }
-        if ((UserParameter.temp().positionNamesSetting != UserParameter.instance().positionNamesSetting)
-                || (UserParameter.temp().ratingPredictionModelSetting != UserParameter.instance().ratingPredictionModelSetting)) {
+        if ((UserParameter.temp().lineupPositionNamesSetting != UserParameter.instance().lineupPositionNamesSetting)
+                || (UserParameter.temp().lineupRatingPredictionModelSetting != UserParameter.instance().lineupRatingPredictionModelSetting)) {
             OptionManager.instance().setReInitNeeded();
         }
 
-        if ( UserParameter.temp().orientationSetting != UserParameter.instance().orientationSetting){
+        if ( UserParameter.temp().lineupOrientationSetting != UserParameter.instance().lineupOrientationSetting){
             OptionManager.instance().setRestartNeeded();
         }
     }
@@ -61,9 +61,9 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
         setLayout(new GridLayout(10, 1, 4, 4));
 
         add (new JLabel(" "));
-        m_jcbOrientationSetting = addLineupSettingComboBox("orientation", orientationSetting, UserParameter.temp().orientationSetting);
-        m_jcbPositionNameSetting = addLineupSettingComboBox("positionnames", positionNameSetting, UserParameter.temp().positionNamesSetting);
-        m_jcbRatingPredictionModelSetting = addLineupSettingComboBox( "ratingpredictionmodel", ratingPredictionModelSetting, UserParameter.temp().ratingPredictionModelSetting);
+        m_jcbOrientationSetting = addLineupSettingComboBox("orientation", orientationSetting, UserParameter.temp().lineupOrientationSetting);
+        m_jcbPositionNameSetting = addLineupSettingComboBox("positionnames", positionNameSetting, UserParameter.temp().lineupPositionNamesSetting);
+        m_jcbRatingPredictionModelSetting = addLineupSettingComboBox( "ratingpredictionmodel", ratingPredictionModelSetting, UserParameter.temp().lineupRatingPredictionModelSetting);
         add (new JLabel(" "));
         add (new JLabel(" "));
         add (new JLabel(" "));

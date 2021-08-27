@@ -377,9 +377,9 @@ public final class UserParameter extends Configuration {
     public double youthtrainingFactorPrimary = 1.0;
     public double youthtrainingFactorSecondary = 0.66;
 
-    public int orientationSetting = GOALKEEPER_AT_TOP;
-    public int positionNamesSetting = POSITIONNAMES_SHORT;
-    public int ratingPredictionModelSetting = RATINGPREDICTIONMODEL_NEW;
+    public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
+    public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
+    public int lineupRatingPredictionModelSetting = RATINGPREDICTIONMODEL_NEW;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -670,9 +670,9 @@ public final class UserParameter extends Configuration {
         map.put("youthtrainingFactorPrimary", String.valueOf(this.youthtrainingFactorPrimary));
         map.put("youthtrainingFactorSecondary", String.valueOf(this.youthtrainingFactorSecondary));
 
-        map.put("lineupOrientation", String.valueOf(this.orientationSetting));
-        map.put("lineupRatingPredictionModel", String.valueOf(this.ratingPredictionModelSetting));
-        map.put("lineupPositionnames", String.valueOf(this.positionNamesSetting));
+        map.put("lineupOrientation", String.valueOf(this.lineupOrientationSetting));
+        map.put("lineupRatingPredictionModel", String.valueOf(this.lineupRatingPredictionModelSetting));
+        map.put("lineupPositionnames", String.valueOf(this.lineupPositionNamesSetting));
 
         return map;
     }
@@ -916,9 +916,9 @@ public final class UserParameter extends Configuration {
         youthtrainingFactorPrimary = getDoubleValue(values, "youthtrainingFactorPrimary", youthtrainingFactorPrimary);
         youthtrainingFactorSecondary= getDoubleValue(values, "youthtrainingFactorSecondary", youthtrainingFactorSecondary);
 
-        orientationSetting = getIntValue(values, "lineupOrientation");
-        ratingPredictionModelSetting = getIntValue(values, "lineupRatingPredictionModel");
-        positionNamesSetting = getIntValue(values,"lineupPositionnames" );
+        lineupOrientationSetting = getIntValue(values, "lineupOrientation");
+        lineupRatingPredictionModelSetting = getIntValue(values, "lineupRatingPredictionModel");
+        lineupPositionNamesSetting = getIntValue(values,"lineupPositionnames" );
     }
 
 }

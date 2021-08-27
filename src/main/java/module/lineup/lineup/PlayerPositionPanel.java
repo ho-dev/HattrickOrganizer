@@ -33,7 +33,6 @@ import java.util.List;
 import javax.swing.*;
 
 import static core.model.UserParameter.POSITIONNAMES_SHORT;
-import static core.model.player.MatchRoleID.getNameForPosition;
 
 
 public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
@@ -370,7 +369,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             //Empty reference and reset
-            m_clCBItems = null;
             m_clCBItems = tempCB;
         }
 
@@ -461,7 +459,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             //Empty reference and reset
-            m_clCBItems = null;
             m_clCBItems = tempCB;
         }
 
@@ -571,7 +568,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     private String getNameForLineupPosition(byte position) {
-        if (UserParameter.instance().positionNamesSetting == POSITIONNAMES_SHORT) {
+        if (UserParameter.instance().lineupPositionNamesSetting == POSITIONNAMES_SHORT) {
             return MatchRoleID.getShortNameForPosition(position);
         }
         return MatchRoleID.getNameForPosition(position);
@@ -581,9 +578,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
-            case IMatchRoleID.keeper -> {
-                m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
-            }
+            case IMatchRoleID.keeper -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
             case IMatchRoleID.rightBack, IMatchRoleID.leftBack -> {
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
@@ -625,10 +620,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
             }
-            case IMatchRoleID.substCD1, IMatchRoleID.substCD2, IMatchRoleID.substFW1, IMatchRoleID.substFW2, IMatchRoleID.substIM1, IMatchRoleID.substIM2, IMatchRoleID.substGK1, IMatchRoleID.substGK2, IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> {
-                m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
-                        IMatchRoleID.NORMAL));
-            }
+            case IMatchRoleID.substCD1, IMatchRoleID.substCD2, IMatchRoleID.substFW1, IMatchRoleID.substFW2, IMatchRoleID.substIM1, IMatchRoleID.substIM2, IMatchRoleID.substGK1, IMatchRoleID.substGK2, IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
+                    IMatchRoleID.NORMAL));
             default -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
                     IMatchRoleID.NORMAL));
         }

@@ -602,7 +602,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	 * @return int
 	 */
 	private int getLineupRowNumber(int i) {
-		if (UserParameter.instance().orientationSetting ==0) return i;
+		if (UserParameter.instance().lineupOrientationSetting ==0) return i;
 		return 3-i;
 	}
 
