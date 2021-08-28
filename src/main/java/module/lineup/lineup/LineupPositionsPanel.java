@@ -32,6 +32,8 @@ import java.util.stream.IntStream;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import static core.model.UserParameter.GOALKEEPER_AT_TOP;
+
 /**
  * Create the panel allowing lineup creation
  */
@@ -261,8 +263,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(matchPanel);
 
 		// Keeper
-		constraints.gridx = 3;
-		constraints.gridy = 1+getLineupRowNumber(0);
+		constraints.gridx = 1 + getLineupColumnNumber(2); //3;
+		constraints.gridy = 1 + getLineupRowNumber(0);
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -280,7 +282,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
 						IMatchDetails.EINSTELLUNG_NORMAL),
 				new CBItem(HOVerwaltung.instance().getLanguageString(
-						"ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS) });
+						"ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS)});
 
 		m_jpTeamAttitude = new ComboBoxTitled(getLangStr("ls.team.teamattitude"), m_jcbTeamAttitude, true);
 
@@ -291,7 +293,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		var isCompetitive = m_jpMatchAndLineupSelectionPanel.getSelectedMatch() != null &&
 				m_jpMatchAndLineupSelectionPanel.getSelectedMatch().getMatchType().isCompetitive();
 
-		if ( isCompetitive) {
+		if (isCompetitive) {
 			m_iAttitude = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAttitude();
 		}
 
@@ -313,7 +315,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),
 						IMatchDetails.TAKTIK_CREATIVE),
 				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS),
-						IMatchDetails.TAKTIK_LONGSHOTS) });
+						IMatchDetails.TAKTIK_LONGSHOTS)});
 
 		m_jpTactic = new ComboBoxTitled(getLangStr("ls.team.tactic"), m_jcbTactic, true);
 
@@ -342,8 +344,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 
 		// WBr ==========================================================================
-		constraints.gridx = 1;
-		constraints.gridy = 1+getLineupRowNumber(1);
+		constraints.gridx = 1 + getLineupColumnNumber(0);
+		constraints.gridy = 1 + getLineupRowNumber(1);
 		constraints.insets = new Insets(3, 3, 3, 3);
 		//constraints.anchor = GridBagConstraints.CENTER;
 		m_clRightBack = new PlayerPositionPanel(this, IMatchRoleID.rightBack, m_weather, m_useWeatherImpact);
@@ -353,7 +355,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		assistantPanel.addToAssistant(m_clRightBack);
 
 		// Defense line
-		constraints.gridx = 2;
+		constraints.gridx = 1 + getLineupColumnNumber(1); //2;
 		m_clRightCentralDefender = new PlayerPositionPanel(this,
 				IMatchRoleID.rightCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightCentralDefender, constraints);
@@ -361,7 +363,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clRightCentralDefender);
 		assistantPanel.addToAssistant(m_clRightCentralDefender);
 
-		constraints.gridx = 3;
+		constraints.gridx = 1 + getLineupColumnNumber(2); //3;
 		m_clMiddleCentralDefender = new PlayerPositionPanel(this,
 				IMatchRoleID.middleCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clMiddleCentralDefender, constraints);
@@ -369,7 +371,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clMiddleCentralDefender);
 		assistantPanel.addToAssistant(m_clMiddleCentralDefender);
 
-		constraints.gridx = 4;
+		constraints.gridx = 1 + getLineupColumnNumber(3); //4;
 		m_clLeftCentralDefender = new PlayerPositionPanel(this,
 				IMatchRoleID.leftCentralDefender, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftCentralDefender, constraints);
@@ -377,7 +379,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftCentralDefender);
 		assistantPanel.addToAssistant(m_clLeftCentralDefender);
 
-		constraints.gridx = 5;
+		constraints.gridx = 1 + getLineupColumnNumber(4);//5;
 		m_clLeftBack = new PlayerPositionPanel(this, IMatchRoleID.leftBack, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftBack, constraints);
 		centerPanel.add(m_clLeftBack);
@@ -385,15 +387,15 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		assistantPanel.addToAssistant(m_clLeftBack);
 
 		// Midfield Line
-		constraints.gridx = 1;
-		constraints.gridy = 1+getLineupRowNumber(2);
+		constraints.gridx = 1 + getLineupColumnNumber(0); //1;
+		constraints.gridy = 1 + getLineupRowNumber(2);
 		m_clRightWinger = new PlayerPositionPanel(this, IMatchRoleID.rightWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightWinger, constraints);
 		centerPanel.add(m_clRightWinger);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightWinger);
 		assistantPanel.addToAssistant(m_clRightWinger);
 
-		constraints.gridx = 2;
+		constraints.gridx = 1 + getLineupColumnNumber(1); //2;
 		m_clRightInnerMidfielder = new PlayerPositionPanel(this,
 				IMatchRoleID.rightInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightInnerMidfielder, constraints);
@@ -401,7 +403,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clRightInnerMidfielder);
 		assistantPanel.addToAssistant(m_clRightInnerMidfielder);
 
-		constraints.gridx = 3;
+		constraints.gridx = 1 + getLineupColumnNumber(2); //3;
 		m_clCentralInnerMidfielder = new PlayerPositionPanel(this,
 				IMatchRoleID.centralInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clCentralInnerMidfielder, constraints);
@@ -409,14 +411,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralInnerMidfielder);
 		assistantPanel.addToAssistant(m_clCentralInnerMidfielder);
 
-		constraints.gridx = 4;
+		constraints.gridx = 1 + getLineupColumnNumber(3); //4;
 		m_clLeftInnerMidfielder = new PlayerPositionPanel(this, IMatchRoleID.leftInnerMidfield, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftInnerMidfielder, constraints);
 		centerPanel.add(m_clLeftInnerMidfielder);
 		swapPositionsManager.addSwapCapabilityTo(m_clLeftInnerMidfielder);
 		assistantPanel.addToAssistant(m_clLeftInnerMidfielder);
 
-		constraints.gridx = 5;
+		constraints.gridx = 1 + getLineupColumnNumber(4); //5;
 		m_clLeftWinger = new PlayerPositionPanel(this, IMatchRoleID.leftWinger, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftWinger, constraints);
 		centerPanel.add(m_clLeftWinger);
@@ -424,22 +426,22 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		assistantPanel.addToAssistant(m_clLeftWinger);
 
 		// Forward line
-		constraints.gridx = 2;
-		constraints.gridy = 1+getLineupRowNumber(3);
+		constraints.gridx = 1 + getLineupColumnNumber(1); //2;
+		constraints.gridy = 1 + getLineupRowNumber(3);
 		m_clRightForward = new PlayerPositionPanel(this, IMatchRoleID.rightForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clRightForward, constraints);
 		centerPanel.add(m_clRightForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clRightForward);
 		assistantPanel.addToAssistant(m_clRightForward);
 
-		constraints.gridx = 3;
+		constraints.gridx = 1 + getLineupColumnNumber(2); //3;
 		m_clCentralForward = new PlayerPositionPanel(this, IMatchRoleID.centralForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clCentralForward, constraints);
 		centerPanel.add(m_clCentralForward);
 		swapPositionsManager.addSwapCapabilityTo(m_clCentralForward);
 		assistantPanel.addToAssistant(m_clCentralForward);
 
-		constraints.gridx = 4;
+		constraints.gridx = 1 + getLineupColumnNumber(3); //4;
 		m_clLeftForward = new PlayerPositionPanel(this, IMatchRoleID.leftForward, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clLeftForward, constraints);
 		centerPanel.add(m_clLeftForward);
@@ -462,7 +464,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		layout.setConstraints(m_clSetPieceTaker, constraints);
 		centerPanel.add(m_clSetPieceTaker);
 
-
 		// Buttons to allocate team number to players currently on the line up
 		constraints.gridx = 0;
 		constraints.gridy = 4;
@@ -470,7 +471,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.CENTER;
 		centerPanel.add(new AllTeamsPanel(), constraints);
-
 
 		// Reserves Separation
 		constraints.gridx = 0;
@@ -516,7 +516,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstIM1);
 
 		constraints.gridx = 4;
-		m_clSubstFwd1= new PlayerPositionPanel(this, IMatchRoleID.substFW1, m_weather, m_useWeatherImpact);
+		m_clSubstFwd1 = new PlayerPositionPanel(this, IMatchRoleID.substFW1, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstFwd1, constraints);
 		centerPanel.add(m_clSubstFwd1);
 		swapPositionsManager.addSwapCapabilityTo(m_clSubstFwd1);
@@ -555,7 +555,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_clSubstIM2);
 
 		constraints.gridx = 4;
-		m_clSubstFwd2= new PlayerPositionPanel(this, IMatchRoleID.substFW2, m_weather, m_useWeatherImpact);
+		m_clSubstFwd2 = new PlayerPositionPanel(this, IMatchRoleID.substFW2, m_weather, m_useWeatherImpact);
 		layout.setConstraints(m_clSubstFwd2, constraints);
 		centerPanel.add(m_clSubstFwd2);
 
@@ -572,25 +572,23 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		add(centerPanel, BorderLayout.CENTER);
 
 		cbActionListener = e -> {
-		if (e.getSource().equals(m_jcbStyleOfPlay)) {
-			// StyleOfPlay changed (directly or indirectly)
-			m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
-			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
-			m_clLineupPanel.getLineupRatingPanel().refresh();
-		}
-		else if (e.getSource().equals(m_jcbTeamAttitude)) {
-			// Attitude changed
-			m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
-			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
-			m_clLineupPanel.getLineupRatingPanel().refresh();
-		}
-		else if (e.getSource().equals(m_jcbTactic)) {
-			// Tactic changed
-			m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
-			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
-			m_clLineupPanel.getLineupRatingPanel().refresh();
-		}
-	};
+			if (e.getSource().equals(m_jcbStyleOfPlay)) {
+				// StyleOfPlay changed (directly or indirectly)
+				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
+				m_clLineupPanel.getLineupRatingPanel().refresh();
+			} else if (e.getSource().equals(m_jcbTeamAttitude)) {
+				// Attitude changed
+				m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
+				m_clLineupPanel.getLineupRatingPanel().refresh();
+			} else if (e.getSource().equals(m_jcbTactic)) {
+				// Tactic changed
+				m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
+				m_clLineupPanel.getLineupRatingPanel().refresh();
+			}
+		};
 
 		addListeners();
 	}
@@ -602,8 +600,19 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	 * @return int
 	 */
 	private int getLineupRowNumber(int i) {
-		if (UserParameter.instance().lineupOrientationSetting ==0) return i;
-		return 3-i;
+		if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
+		return 3 - i;
+	}
+
+	/**
+	 * swap the lineup column numbers, if goalkeeper should be displayed at the bottom
+	 * @param i 0, goalkeeper at the top (no swap)
+	 *          1, goalkeeper at the bottom (swap)
+	 * @return int
+	 */
+	private int getLineupColumnNumber(int i) {
+		if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
+		return 4 - i;
 	}
 
 	private void addListeners() {

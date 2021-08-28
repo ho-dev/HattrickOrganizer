@@ -21,14 +21,17 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
             new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.positionnames.long"), UserParameter.POSITIONNAMES_LONG)
     };
 
+    /* TODO: check usability (option settings versus toggle box in lineup rating panel
+             prediction list needs to be dynamic (loaded from prediction/predictionTypes.conf)
     private static CBItem[] ratingPredictionModelSetting = {
             new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.ratingpredictionmodel.new"), UserParameter.RATINGPREDICTIONMODEL_NEW),
             new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.ratingpredictionmodel.old"), UserParameter.RATINGPREDICTIONMODEL_OLD)
     };
+    */
 
     private ComboBoxPanel m_jcbOrientationSetting;
     private ComboBoxPanel m_jcbPositionNameSetting;
-    private ComboBoxPanel m_jcbRatingPredictionModelSetting;
+    // private ComboBoxPanel m_jcbRatingPredictionModelSetting;
 
     /**
      * Creates a new SonstigeOptionenPanel object.
@@ -42,12 +45,14 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
             UserParameter.temp().lineupOrientationSetting = ((CBItem) m_jcbOrientationSetting.getSelectedItem()).getId();
             UserParameter.temp().lineupPositionNamesSetting = ((CBItem) m_jcbPositionNameSetting.getSelectedItem()).getId();
-            UserParameter.temp().lineupRatingPredictionModelSetting = ((CBItem) m_jcbRatingPredictionModelSetting.getSelectedItem()).getId();
+            //UserParameter.temp().lineupRatingPredictionModelSetting = ((CBItem) m_jcbRatingPredictionModelSetting.getSelectedItem()).getId();
         }
-        if ((UserParameter.temp().lineupPositionNamesSetting != UserParameter.instance().lineupPositionNamesSetting)
-                || (UserParameter.temp().lineupRatingPredictionModelSetting != UserParameter.instance().lineupRatingPredictionModelSetting)) {
+        if (UserParameter.temp().lineupPositionNamesSetting != UserParameter.instance().lineupPositionNamesSetting) {
             OptionManager.instance().setReInitNeeded();
         }
+        /*if ((UserParameter.temp().lineupRatingPredictionModelSetting != UserParameter.instance().lineupRatingPredictionModelSetting)) {
+            OptionManager.instance().setReInitNeeded();
+        }*/
 
         if ( UserParameter.temp().lineupOrientationSetting != UserParameter.instance().lineupOrientationSetting){
             OptionManager.instance().setRestartNeeded();
@@ -63,7 +68,8 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
         add (new JLabel(" "));
         m_jcbOrientationSetting = addLineupSettingComboBox("orientation", orientationSetting, UserParameter.temp().lineupOrientationSetting);
         m_jcbPositionNameSetting = addLineupSettingComboBox("positionnames", positionNameSetting, UserParameter.temp().lineupPositionNamesSetting);
-        m_jcbRatingPredictionModelSetting = addLineupSettingComboBox( "ratingpredictionmodel", ratingPredictionModelSetting, UserParameter.temp().lineupRatingPredictionModelSetting);
+        //m_jcbRatingPredictionModelSetting = addLineupSettingComboBox( "ratingpredictionmodel", ratingPredictionModelSetting, UserParameter.temp().lineupRatingPredictionModelSetting);
+        add (new JLabel(" "));
         add (new JLabel(" "));
         add (new JLabel(" "));
         add (new JLabel(" "));
