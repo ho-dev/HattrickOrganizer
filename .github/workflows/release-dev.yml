@@ -24,6 +24,7 @@ jobs:
         env:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
+          POEDITOR_APIKEY: ${{ secrets.POEDITOR_APIKEY }}
           RUN_NUMBER: ${{ github.run_number }}
       - name: Read version
         id: read_version
