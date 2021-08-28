@@ -90,7 +90,7 @@ public class OptionenDialog extends JDialog {
 
 		// Lineup settings
 		m_jpLineupSettings = new LineupSettingsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("options.tabtitle.lineup"), new JScrollPane(m_jpLineupSettings));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Aufstellung"), new JScrollPane(m_jpLineupSettings));
 
 		// Modules
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(

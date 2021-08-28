@@ -80,8 +80,8 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
     }
 
     private ComboBoxPanel addLineupSettingComboBox( String languageKey, CBItem[] cbItems, int settingValue) {
-        var comboBoxPanel = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.lineup."+ languageKey), cbItems, 120 );
-        comboBoxPanel.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.lineup."+ languageKey + ".tooltip"));
+        var comboBoxPanel = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.lineupsettings."+ languageKey), cbItems, 120 );
+        comboBoxPanel.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.lineupsettings."+ languageKey + ".tooltip"));
         comboBoxPanel.setSelectedId(settingValue);
         comboBoxPanel.addItemListener(this);
         add(comboBoxPanel);
