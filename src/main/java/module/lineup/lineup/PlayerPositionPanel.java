@@ -12,6 +12,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -30,6 +31,8 @@ import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+
+import static core.model.UserParameter.POSITIONNAMES_SHORT;
 
 
 public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
@@ -366,7 +369,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             //Empty reference and reset
-            m_clCBItems = null;
             m_clCBItems = tempCB;
         }
 
@@ -457,7 +459,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             //Empty reference and reset
-            m_clCBItems = null;
             m_clCBItems = tempCB;
         }
 
@@ -535,7 +536,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
                 final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
                 final String  nameForPosition3 = "</font></html>";
-                final String nameForPosition = nameForPosition1 + MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
+                final String nameForPosition = nameForPosition1 + getNameForLineupPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
                 // Players on the lineup
                 if (IMatchRoleID.aFieldMatchRoleID.contains(position.getId())) {
@@ -559,18 +560,25 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 else {
                     m_jlPosition.setText(nameForPosition + " (#2)");
                 }
+
+                m_jlPosition.setToolTipText(MatchRoleID.getNameForPositionWithoutTactic(position.getPosition()));
             }
         }
         m_jlPosition.setFont(getFont().deriveFont(Font.BOLD));
+    }
+
+    private String getNameForLineupPosition(byte position) {
+        if (UserParameter.instance().lineupPositionNamesSetting == POSITIONNAMES_SHORT) {
+            return MatchRoleID.getShortNameForPosition(position);
+        }
+        return MatchRoleID.getNameForPosition(position);
     }
 
     private void initTaktik(@Nullable Player aktuellerPlayer) {
         m_jcbTactic.removeAllItems();
 
         switch (m_iPositionID) {
-            case IMatchRoleID.keeper -> {
-                m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
-            }
+            case IMatchRoleID.keeper -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL));
             case IMatchRoleID.rightBack, IMatchRoleID.leftBack -> {
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.offensive"), IMatchRoleID.OFFENSIVE);
@@ -612,10 +620,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.normal"), IMatchRoleID.NORMAL);
                 addTactic(aktuellerPlayer, getLangStr("ls.player.behaviour.defensive"), IMatchRoleID.DEFENSIVE);
             }
-            case IMatchRoleID.substCD1, IMatchRoleID.substCD2, IMatchRoleID.substFW1, IMatchRoleID.substFW2, IMatchRoleID.substIM1, IMatchRoleID.substIM2, IMatchRoleID.substGK1, IMatchRoleID.substGK2, IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> {
-                m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
-                        IMatchRoleID.NORMAL));
-            }
+            case IMatchRoleID.substCD1, IMatchRoleID.substCD2, IMatchRoleID.substFW1, IMatchRoleID.substFW2, IMatchRoleID.substIM1, IMatchRoleID.substIM2, IMatchRoleID.substGK1, IMatchRoleID.substGK2, IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
+                    IMatchRoleID.NORMAL));
             default -> m_jcbTactic.addItem(new CBItem(getLangStr("ls.player.behaviour.normal"),
                     IMatchRoleID.NORMAL));
         }

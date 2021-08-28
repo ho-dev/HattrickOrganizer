@@ -29,6 +29,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             new CBItem(HOVerwaltung.instance().getLanguageString("Gruppe"), core.model.UserParameter.SORT_GRUPPE),
             new CBItem(HOVerwaltung.instance().getLanguageString("Rating"), core.model.UserParameter.SORT_BEWERTUNG),};
 
+
     private ComboBoxPanel m_jcbNbDecimals;
     private ComboBoxPanel m_jcbDefaultSorting;
     private ComboBoxPanel m_jcbSkin;
@@ -47,7 +48,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     }
 
     @Override
-    public final void itemStateChanged(ItemEvent itemEvent) {
+    public void itemStateChanged(ItemEvent itemEvent) {
         // No  Selected Event!
         core.model.UserParameter.temp().zahlenFuerSkill = m_jchShowSkillNumericalValue.isSelected();
         UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
@@ -72,7 +73,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     }
 
     @Override
-    public final void stateChanged(ChangeEvent changeEvent) {
+    public void stateChanged(ChangeEvent changeEvent) {
         core.model.UserParameter.temp().fontSize = (int) m_jslFontSize.getValue();
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
 
@@ -124,7 +125,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();
         m_jcbTimeZone = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, 120);
         var sZoneIDs = ZoneId.getAvailableZoneIds();
-        var sZoneIDCodes = sZoneIDs.stream().map(e -> e.hashCode()).collect(Collectors.toSet());
+        var sZoneIDCodes = sZoneIDs.stream().map(String::hashCode).collect(Collectors.toSet());
         if (sZoneIDs.size() != sZoneIDCodes.size()){
             HOLogger.instance().error(getClass(), "Error: non unique TimeZone detected, another approach should be found for initilization");
         }
@@ -182,18 +183,12 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         add(m_jcbPromotionStatusTest);
     }
 
-
     private static CBItem[] getAllZoneIdsAndItsOffSet() {
-
         Map<String, String> zones = DateTimeUtils.getAvailableZoneIds();
 
         List<CBItem> result = new ArrayList<>();
         zones.forEach((k, v) -> result.add(new CBItem(k + " " + v, k.hashCode())));
 
         return result.toArray(CBItem[]::new);
-
     }
-
-
-
 }

@@ -9,10 +9,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
-import core.model.Ratings;
-import core.model.Team;
+import core.model.*;
 import core.model.match.IMatchDetails;
 import core.rating.RatingPredictionConfig;
 import core.util.Helper;
@@ -34,10 +31,12 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 
-public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable{
+public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable {
 
     final static boolean IS_FEEDBACK_PLUGIN_ENABLED = false;
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
@@ -51,7 +50,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     double m_dCentralAttackRating, m_dRightAttackRating, m_dLeftAttackRating, m_dMidfieldRating;
     double m_dCentralDefenseRating, m_dLeftDefenseRating, m_dRightDefenseRating, loddar;
     private final ColorLabelEntry m_jlCentralAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlCentralAttackRatingNumber = new ColorLabelEntry("",  LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
+    private final ColorLabelEntry m_jlCentralAttackRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private final ColorLabelEntry m_jlRightAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlRightAttackRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private final ColorLabelEntry m_jlLeftAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
@@ -194,19 +193,18 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         iHatStats = value;
     }
 
-    protected void setTactic(int iTacticType, float iTacticSkill){
+    protected void setTactic(int iTacticType, float iTacticSkill) {
         m_jlTacticRating.setText((iTacticType == IMatchDetails.TAKTIK_NORMAL) ? "-" : PlayerAbility.getNameForSkill(iTacticSkill, false, false));
     }
 
-    protected void setFormationExperience(String sFormationDescription, int iFormationExp){
+    protected void setFormationExperience(String sFormationDescription, int iFormationExp) {
         String formationExperienceTooltip = getFormationExperienceTooltip();
         m_jlFormationExperience.setToolTipText(formationExperienceTooltip);
 
-        if (iFormationExp == -1){
+        if (iFormationExp == -1) {
             m_jlFormationExperience.setText(sFormationDescription);
             m_jlFormationExperience.setForeground(BAD_LABEL_FG);
-        }
-        else{
+        } else {
             m_jlFormationExperience.setText(sFormationDescription + " (" + PlayerAbility.toString(iFormationExp) + ")");
             m_jlFormationExperience.setForeground(LABEL_FG);
         }
@@ -219,23 +217,20 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-
     protected void calcColorBorders() {
 
         double ratingRatio;
         final double avgRating = (m_dLeftDefenseRating + m_dCentralDefenseRating + m_dRightDefenseRating + m_dMidfieldRating + m_dRightAttackRating
-                                    + m_dCentralAttackRating + m_dLeftAttackRating) / 7d;
+                + m_dCentralAttackRating + m_dLeftAttackRating) / 7d;
 
         //Left Defense ============================================
         ratingRatio = m_dLeftDefenseRating / avgRating;
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpLeftDefense.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpLeftDefense.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpLeftDefense.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -244,11 +239,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpCentralDefense.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpCentralDefense.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpCentralDefense.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -258,11 +251,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpRightDefense.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpRightDefense.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpRightDefense.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -271,11 +262,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpMidfield.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpMidfield.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpMidfield.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -285,11 +274,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpRightAttack.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpRightAttack.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpRightAttack.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -298,11 +285,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpCentalAttack.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpCentalAttack.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpCentalAttack.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -312,11 +297,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
             m_jpLeftAttack.setBorder(BORDER_RATING_BELOW_LIMIT);
-        }
-        else if (ratingRatio >= 1.0/COLOR_BORDERS_LIMIT_RATIO) {
+        } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
             m_jpLeftAttack.setBorder(BORDER_RATING_ABOVE_LIMIT);
-        }
-        else{
+        } else {
             m_jpLeftAttack.setBorder(BORDER_RATING_DEFAULT);
         }
 
@@ -362,8 +345,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpCentralDefense.add(jpSectorRating, BorderLayout.CENTER);
         m_jpCentralDefense.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 1;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
+        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(0);
         gbcMainLayout.gridwidth = 2;
         gbcMainLayout.fill = GridBagConstraints.NONE;
         mainLayout.setConstraints(m_jpCentralDefense, gbcMainLayout);
@@ -373,7 +356,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         //RIGHT DEFENSE ========================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlRightDefenseRatingNumber.setFontStyle(Font.BOLD);
-        jpRatingValueAndDelta.add( m_jlRightDefenseRatingNumber.getComponent(false));
+        jpRatingValueAndDelta.add(m_jlRightDefenseRatingNumber.getComponent(false));
         jpRatingValueAndDelta.add(m_jlRightDefenseRatingCompare.getComponent(false));
 
         jpSectorRating = new JPanel(new GridLayout(2, 1));
@@ -384,8 +367,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightDefense.add(jpSectorRating, BorderLayout.CENTER);
         m_jpRightDefense.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 2;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(0);
+        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(1);
         mainLayout.setConstraints(m_jpRightDefense, gbcMainLayout);
         mainPanel.add(m_jpRightDefense);
 
@@ -403,7 +386,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpLeftDefense.add(jpSectorRating, BorderLayout.CENTER);
         m_jpLeftDefense.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 2;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(2);
         mainLayout.setConstraints(m_jpLeftDefense, gbcMainLayout);
         mainPanel.add(m_jpLeftDefense);
 
@@ -422,8 +405,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpMidfield.add(jpSectorRating, BorderLayout.CENTER);
         m_jpMidfield.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 3;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
+        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(2);
         mainLayout.setConstraints(m_jpMidfield, gbcMainLayout);
         mainPanel.add(m_jpMidfield);
 
@@ -431,7 +414,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         //Right Attack ====================================================================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlRightAttackRatingNumber.setFontStyle(Font.BOLD);
-        jpRatingValueAndDelta.add( m_jlRightAttackRatingNumber.getComponent(false));
+        jpRatingValueAndDelta.add(m_jlRightAttackRatingNumber.getComponent(false));
         jpRatingValueAndDelta.add(m_jlRightAttackRatingCompare.getComponent(false));
 
         jpSectorRating = new JPanel(new GridLayout(2, 1));
@@ -442,17 +425,16 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightAttack.add(jpSectorRating, BorderLayout.CENTER);
         m_jpRightAttack.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 4;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(0);
+        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(3);
         mainLayout.setConstraints(m_jpRightAttack, gbcMainLayout);
         mainPanel.add(m_jpRightAttack);
-
 
 
         //Left Attack ========================================================================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlLeftAttackRatingNumber.setFontStyle(Font.BOLD);
-        jpRatingValueAndDelta.add( m_jlLeftAttackRatingNumber.getComponent(false));
+        jpRatingValueAndDelta.add(m_jlLeftAttackRatingNumber.getComponent(false));
         jpRatingValueAndDelta.add(m_jlLeftAttackRatingCompare.getComponent(false));
 
         jpSectorRating = new JPanel(new GridLayout(2, 1));
@@ -463,7 +445,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpLeftAttack.add(jpSectorRating, BorderLayout.CENTER);
         m_jpLeftAttack.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 2;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(2);
         mainLayout.setConstraints(m_jpLeftAttack, gbcMainLayout);
         mainPanel.add(m_jpLeftAttack);
 
@@ -482,8 +464,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpCentalAttack.add(jpSectorRating, BorderLayout.CENTER);
         m_jpCentalAttack.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = 1;
-        gbcMainLayout.gridy = 5;
+        gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
+        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(4);
         mainLayout.setConstraints(m_jpCentalAttack, gbcMainLayout);
         mainPanel.add(m_jpCentalAttack);
 
@@ -561,7 +543,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpGlobalRating.add(m_jlTacticRating);
 
 
-
         // Formation experience ========================================
         JLabel lbFormation = new JLabel(getLangStr("ls.team.formation"));
         lbFormation.setForeground(TITLE_FG);
@@ -570,7 +551,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         gbcGlobalRatingsLayout.gridx = 0;
         gbcGlobalRatingsLayout.gridy = 3;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
         gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
         globalRatingsLayout.setConstraints(lbFormation, gbcGlobalRatingsLayout);
         m_jpGlobalRating.add(lbFormation);
@@ -610,7 +590,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", TITLE_FG), 24, 24));
         m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
-        if(! IS_FEEDBACK_PLUGIN_ENABLED) {
+        if (!IS_FEEDBACK_PLUGIN_ENABLED) {
             m_jbFeedbackButton.setVisible(false);
         }
 
@@ -622,7 +602,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jbFeedbackButton.setBorderPainted(false);
         gbcRatingPanelLayout.gridx = 1;
         gbcRatingPanelLayout.gridheight = 1;
-        gbcRatingPanelLayout.insets = new Insets(5 , 8 , 0, 8);
+        gbcRatingPanelLayout.insets = new Insets(5, 8, 0, 8);
         ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jbFeedbackButton);
 
@@ -635,7 +615,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jbCopyRatingButton.setMinimumSize(new Dimension(24, 24));
         m_jbCopyRatingButton.setMaximumSize(new Dimension(24, 24));
         gbcRatingPanelLayout.gridy = 1;
-        gbcRatingPanelLayout.insets = new Insets(5 , 8, 5, 8);
+        gbcRatingPanelLayout.insets = new Insets(5, 8, 5, 8);
         ratingPanelLayout.setConstraints(m_jbCopyRatingButton, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jbCopyRatingButton);
 
@@ -673,41 +653,71 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         addListeners();
     }
 
-
-    private void initToolTips() {
-            m_jlLeftDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-            m_jlLeftDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-            m_jlLeftDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-            m_jlCentralDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-            m_jlCentralDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-            m_jlCentralDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-            m_jlRightDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-            m_jlRightDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-            m_jlRightDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-            m_jlMidfieldRatingText.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-            m_jlMidfieldRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-            m_jlMidfieldRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-            m_jlRightAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-            m_jlRightAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-            m_jlRightAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-            m_jlCentralAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-            m_jlCentralAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-            m_jlCentralAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-            m_jlLeftAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-            m_jlLeftAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-            m_jlLeftAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-            m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
-            m_jcbPredictionModel.setToolTipText(getLangStr("Lineup.PredictionModel.ToolTip"));
-            m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
+    private int getLineupRatingRowNumber(int i) {
+        if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
+        return 4 - i;
     }
 
-    public String getMidfieldRating() {return m_clFormat.format(m_dMidfieldRating);}
-    public String getLeftDefenseRating() {return m_clFormat.format(m_dLeftDefenseRating);}
-    public String getCentralDefenseRating() {return m_clFormat.format(m_dCentralDefenseRating);}
-    public String getRightDefenseRating() {return m_clFormat.format(m_dRightDefenseRating);}
-    public String getLeftAttackRating() { return m_clFormat.format(m_dLeftAttackRating);}
-    public String getCentralAttackRating() {return m_clFormat.format(m_dCentralAttackRating);}
-    public String getRightAttackRating() {return m_clFormat.format(m_dRightAttackRating);}
+    private int getLineupRatingColumnNumber(int i) {
+        if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
+        return 2 - i;
+    }
+
+
+    private void initToolTips() {
+        m_jlLeftDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
+        m_jlLeftDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
+        m_jlLeftDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
+        m_jlCentralDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
+        m_jlCentralDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
+        m_jlCentralDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
+        m_jlRightDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
+        m_jlRightDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
+        m_jlRightDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
+        m_jlMidfieldRatingText.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
+        m_jlMidfieldRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
+        m_jlMidfieldRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
+        m_jlRightAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
+        m_jlRightAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
+        m_jlRightAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
+        m_jlCentralAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
+        m_jlCentralAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
+        m_jlCentralAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
+        m_jlLeftAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
+        m_jlLeftAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
+        m_jlLeftAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
+        m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
+        m_jcbPredictionModel.setToolTipText(getLangStr("Lineup.PredictionModel.ToolTip"));
+        m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
+    }
+
+    public String getMidfieldRating() {
+        return m_clFormat.format(m_dMidfieldRating);
+    }
+
+    public String getLeftDefenseRating() {
+        return m_clFormat.format(m_dLeftDefenseRating);
+    }
+
+    public String getCentralDefenseRating() {
+        return m_clFormat.format(m_dCentralDefenseRating);
+    }
+
+    public String getRightDefenseRating() {
+        return m_clFormat.format(m_dRightDefenseRating);
+    }
+
+    public String getLeftAttackRating() {
+        return m_clFormat.format(m_dLeftAttackRating);
+    }
+
+    public String getCentralAttackRating() {
+        return m_clFormat.format(m_dCentralAttackRating);
+    }
+
+    public String getRightAttackRating() {
+        return m_clFormat.format(m_dRightAttackRating);
+    }
 
     private String getFormationExperienceTooltip() {
         Team team = HOVerwaltung.instance().getModel().getTeam();
@@ -748,7 +758,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         return builder.toString();
     }
 
-    private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+    private String getLangStr(String key) {
+        return HOVerwaltung.instance().getLanguageString(key);
+    }
 
     private CBItem[] getPredictionItems() {
         final ResourceBundle bundle = HOVerwaltung.instance().getResource();
@@ -773,7 +785,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
             clear();
 
-            if (currentLineup.getRatings().getLeftDefense().size() !=0) {
+            if (currentLineup.getRatings().getLeftDefense().size() != 0) {
                 setRightDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setLeftDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));

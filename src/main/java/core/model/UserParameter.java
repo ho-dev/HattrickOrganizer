@@ -25,6 +25,10 @@ public final class UserParameter extends Configuration {
     public static final int SORT_AUFGESTELLT = 2;
     public static final int SORT_GRUPPE = 3;
     public static final int SORT_BEWERTUNG = 4;
+    public static final int GOALKEEPER_AT_TOP = 0;
+    public static final int GOALKEEPER_AT_BOTTOM = 1;
+    public static final int POSITIONNAMES_SHORT = 0;
+    public static final int POSITIONNAMES_LONG = 1;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -371,6 +375,9 @@ public final class UserParameter extends Configuration {
     public double youthtrainingFactorPrimary = 1.0;
     public double youthtrainingFactorSecondary = 0.66;
 
+    public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
+    public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -660,6 +667,9 @@ public final class UserParameter extends Configuration {
         map.put("youthtrainingFactorPrimary", String.valueOf(this.youthtrainingFactorPrimary));
         map.put("youthtrainingFactorSecondary", String.valueOf(this.youthtrainingFactorSecondary));
 
+        map.put("lineupOrientation", String.valueOf(this.lineupOrientationSetting));
+        map.put("lineupPositionnames", String.valueOf(this.lineupPositionNamesSetting));
+
         return map;
     }
 
@@ -901,6 +911,9 @@ public final class UserParameter extends Configuration {
 
         youthtrainingFactorPrimary = getDoubleValue(values, "youthtrainingFactorPrimary", youthtrainingFactorPrimary);
         youthtrainingFactorSecondary= getDoubleValue(values, "youthtrainingFactorSecondary", youthtrainingFactorSecondary);
+
+        lineupOrientationSetting = getIntValue(values, "lineupOrientation");
+        lineupPositionNamesSetting = getIntValue(values,"lineupPositionnames" );
     }
 
 }

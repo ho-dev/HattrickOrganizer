@@ -54,6 +54,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - complete revamp of lineup panel
   - Separate rating and match date columns for easier sorting. (#895)
   - fix npe in rating chart (#1115)
+  - settings allow orientation swap to display goalkeeper at the bottom of the lineup grid (#1129)
 
 
 ### IFA
