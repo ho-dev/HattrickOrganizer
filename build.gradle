@@ -117,7 +117,7 @@ markdownToHtml {
 
 // Configure poeditor plugin ================================
 poeditor {
-    apiKey = POEDITOR_APIKEY
+    apiKey = System.getenv('POEDITOR_APIKEY')
     projectId = '206221'
 
     trans type:'properties', lang: 'bg',      file: 'src\\main\\resources\\sprache\\Bulgarian.properties'
@@ -444,10 +444,5 @@ markdownToHtml {
 installDist.dependsOn createLanguageFileList
 poeditorPull.dependsOn markdownToHtml
 markdownToHtml.dependsOn pushmd
-
-
-poeditorPull.onlyIf {
-    project.hasProperty('POEDITOR_APIKEY') && project.ext.properties.POEDITOR_APIKEY!=''
-}
 
 // endregion ======================================================================================================================
