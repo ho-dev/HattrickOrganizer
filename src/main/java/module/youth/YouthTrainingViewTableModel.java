@@ -6,10 +6,11 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.model.HOVerwaltung;
 import core.module.IModule;
-
 import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.ObjectUtils.compare;
 
 
 public class YouthTrainingViewTableModel extends HOTableModel {
@@ -82,7 +83,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
     protected void initData() {
         youthTrainings = HOVerwaltung.instance().getModel().getYouthTrainings()
                 .stream()
-                .sorted( (i1, i2) -> i2.getMatchDate().compareTo(i1.getMatchDate()))
+                .sorted( (i1, i2) -> compare(i2.getMatchDate(), i1.getMatchDate()))
                 .collect(Collectors.toList());
         m_clData = new Object[youthTrainings.size()][columns.length];
         int rownum=0;
