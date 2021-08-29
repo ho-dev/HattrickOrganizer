@@ -110,6 +110,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         m_clData = new Object[youthplayers.size()][columns.length];
         int playernum = 0;
         for (var player : youthplayers) {
+            player.calcTrainingDevelopment();
             int columnnum = 0;
             for (var col : displayedColumns) {
                 m_clData[playernum][columnnum] = ((YouthPlayerColumn) col).getTableEntry(player, null);
