@@ -73,10 +73,5 @@ public class YouthTrainingView extends JScrollPane implements Refreshable {
     public void storeUserSettings() {
         this.tableModel.storeUserSettings(table);
     }
-/*
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        var youthPanel = (YouthPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.YOUTH);
-        youthPanel.refreshYouthPlayerView();
-    }*/
+
 }
