@@ -32,6 +32,7 @@ import java.util.*;
 import java.util.List;
 import javax.swing.*;
 
+import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static core.model.UserParameter.POSITIONNAMES_SHORT;
 
 
@@ -694,25 +695,28 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         byte tactic = getTactic();
         int positionsID = getPositionsID();
         int playerID = getiSelectedPlayerId();
+        var orientation = UserParameter.instance().lineupOrientationSetting;
         String symbol = "";
-        if (tactic == IMatchRoleID.OFFENSIVE && playerID != -1) {
-            symbol = "▼";
-        } else if (tactic == IMatchRoleID.DEFENSIVE && playerID != -1) {
-            symbol = "▲";
-        } else if (tactic == IMatchRoleID.TOWARDS_MIDDLE && playerID != -1) {
-            if (positionsID == IMatchRoleID.rightBack
-                    || positionsID == IMatchRoleID.rightWinger) {
-                symbol = "▶";
-            } else {
-                symbol = "◀";
-            }
-        } else if (tactic == IMatchRoleID.TOWARDS_WING && playerID != -1) {
-            if (positionsID == IMatchRoleID.rightCentralDefender
-                    || positionsID == IMatchRoleID.rightInnerMidfield
-                    || positionsID == IMatchRoleID.rightForward) {
-                symbol = "◀︎";
-            } else {
-                symbol = "▶";
+        if (playerID != -1) {
+            if (tactic == IMatchRoleID.OFFENSIVE) {
+                symbol = orientation == GOALKEEPER_AT_TOP ? "▼" : "▲";
+            } else if (tactic == IMatchRoleID.DEFENSIVE) {
+                symbol = orientation == GOALKEEPER_AT_TOP ? "▲" : "▼";
+            } else if (tactic == IMatchRoleID.TOWARDS_MIDDLE) {
+                if (positionsID == IMatchRoleID.rightBack
+                        || positionsID == IMatchRoleID.rightWinger) {
+                    symbol = orientation == GOALKEEPER_AT_TOP ? "▶" : "◀";
+                } else {
+                    symbol = orientation == GOALKEEPER_AT_TOP ? "◀" : "▶";
+                }
+            } else if (tactic == IMatchRoleID.TOWARDS_WING) {
+                if (positionsID == IMatchRoleID.rightCentralDefender
+                        || positionsID == IMatchRoleID.rightInnerMidfield
+                        || positionsID == IMatchRoleID.rightForward) {
+                    symbol = orientation == GOALKEEPER_AT_TOP ? "◀" : "▶";
+                } else {
+                    symbol = orientation == GOALKEEPER_AT_TOP ? "▶" : "◀";
+                }
             }
         }
         return symbol;
