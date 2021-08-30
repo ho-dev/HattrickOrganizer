@@ -270,8 +270,8 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId, boolean home) {
 		StringBuilder sql = new StringBuilder(500);
 		switch (matchLocation) {
-			case HOME: sql.append(" AND HeimID=" + teamId); break;
-			case AWAY: sql.append(" AND GastID=" + teamId); break;
+			case HOME: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND HeimID=" + teamId); break;
+			case AWAY: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND GastID=" + teamId); break;
 			case NEUTRAL: sql.append(" AND isNeutral=true");
 			case ALL: sql.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId); break;
 		}
