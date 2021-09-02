@@ -443,7 +443,6 @@ markdownToHtml {
 
 installDist.dependsOn createLanguageFileList
 preparingBuild.dependsOn poeditorPull
-poeditorPull.dependsOn markdownToHtml
 markdownToHtml.dependsOn pushmd
 
 // endregion ======================================================================================================================
