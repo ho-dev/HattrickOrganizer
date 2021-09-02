@@ -19,7 +19,7 @@ import core.util.HOLogger;
 public class FileLoader {
 	
 	private enum FileLoadingStatus {
-		OUTISDE_JAR,
+		OUTSIDE_JAR,
 		INSIDE_JAR,
 		NOT_FOUND
 	}
@@ -64,7 +64,7 @@ public class FileLoader {
 		switch (fileStatusesCache.get(fileName)) {
 			case INSIDE_JAR:
 				return 1;
-			case OUTISDE_JAR:
+			case OUTSIDE_JAR:
 				File returnFile = new File(fileName);
 				return returnFile.lastModified();
 			default:
@@ -87,12 +87,12 @@ public class FileLoader {
 		if (fileStatusesCache.get(fileName)==FileLoadingStatus.NOT_FOUND) return null;
 		boolean fileUnknown = fileStatusesCache.get(fileName)==null;
 		
-		if (fileUnknown || fileStatusesCache.get(fileName)==FileLoadingStatus.OUTISDE_JAR) {
+		if (fileUnknown || fileStatusesCache.get(fileName)==FileLoadingStatus.OUTSIDE_JAR) {
 			File returnFile = new File(fileName);
 			try {
 				InputStream is = new FileInputStream(returnFile);
 				if (fileUnknown) {
-					fileStatusesCache.put(fileName, FileLoadingStatus.OUTISDE_JAR);
+					fileStatusesCache.put(fileName, FileLoadingStatus.OUTSIDE_JAR);
 					HOLogger.instance().debug(getClass(), "File will loaded from outside the JAR: " + fileName);
 				}
 				return is;
