@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 plugins {
     id 'java'
     id 'application'
-    id 'de.jansauer.poeditor' version '1.0.0'
+    id 'de.jansauer.poeditor' version '1.1.0'
     id 'org.kordamp.gradle.markdown' version '2.2.0'
     id "com.github.breadmoirai.github-release" version "2.2.10"
     id 'com.install4j.gradle' version '8.0.7'
