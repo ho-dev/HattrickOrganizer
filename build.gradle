@@ -217,7 +217,8 @@ task media(type: com.install4j.gradle.Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
+    //buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
+    buildIds = [60]
     String versionType
 
     switch(development_stage) {
@@ -255,8 +256,8 @@ task pushmd(dependsOn: preparingBuild)  {
     group 'sub tasks'
     doLast {
         copy {
-            from "${projectDir}\\src\\main\\resources\\changelog.md"
-            into "${projectDir}\\docs\\changelog\\md"
+            from "${projectDir}/src/main/resources/changelog.md"
+            into "${projectDir}/docs/changelog/md"
         }
     }
 }
@@ -268,7 +269,7 @@ task CreateDistribution (dependsOn: installDist) {
     doLast {
 
         copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+            from "${projectDir}/docs/changelog/html/changelog.html"
             into "${projectDir}/utils/buildResources"
         }
 
@@ -295,7 +296,7 @@ task CreateDistribution (dependsOn: installDist) {
         }
 
         copy {
-            from "${projectDir}\\src\\main\\resources\\prediction"
+            from "${projectDir}/src/main/resources/prediction"
             into "${distribDir}\\prediction"
         }
 
@@ -306,17 +307,17 @@ task CreateDistribution (dependsOn: installDist) {
         }
 
         copy {
-            from "${projectDir}\\docs\\changelog\\html\\changelog.html"
+            from "${projectDir}/docs/changelog/html/changelog.html"
             into "${distribDir}"
         }
 
         copy {
-            from "${projectDir}\\src\\main\\resources\\truststore.jks"
+            from "${projectDir}/src/main/resources/truststore.jks"
             into "${distribDir}"
         }
 
-        delete "${distribDir}\\bin"
-        delete "${distribDir}\\lib"
+        delete "${distribDir}/bin"
+        delete "${distribDir}/lib"
 
     }
 }
@@ -325,7 +326,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     group 'sub tasks'
     archiveFileName  = "HO_${project.version}.zip"
     destinationDirectory  = file("${project.ext.target_dir}")
-    from ("${buildDir}/install/${project.version}") {exclude("**\\ho.sh", "**\\HO.bat")}
+    from ("${buildDir}/install/${project.version}") {exclude("**/ho.sh", "**/HO.bat")}
     from ("${buildDir}/install/${project.version}") {
         include("**\\ho.sh")
         fileMode=0755 }
@@ -340,7 +341,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
 
             println("copy version.properties into ${project.ext.target_dir}")
             copy {
-                from "${projectDir}\\version.properties"
+                from "${projectDir}/version.properties"
                 into "${project.ext.target_dir}"
             }
 
@@ -351,7 +352,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
             println("latest.html has been updated")
 
             copy {
-                from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                from "${projectDir}/src/main/resources/release_notes.md"
                 into "$projectDir/docs/release_notes"
                 rename { filename -> filename.replace('release_notes', 'release_notes(dev)')}
             }
@@ -364,7 +365,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
                 println("latestbeta.html has been updated")
                 copy {
-                    from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                    from "${projectDir}/src/main/resources/release_notes.md"
                     into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(beta)')}
                 }
@@ -379,7 +380,7 @@ released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
 """
                 println("lateststable.html has been updated")
                 copy {
-                    from "${projectDir}\\src\\main\\resources\\release_notes.md"
+                    from "${projectDir}/src/main/resources/release_notes.md"
                     into "$projectDir/docs/release_notes"
                     rename { filename -> filename.replace('release_notes', 'release_notes(stable)')}
                 }
@@ -397,14 +398,15 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
     outputs.upToDateWhen { false }
 
     def lTranslationFiles = []
-    fileTree(dir: "${projectDir}\\src\\main\\resources\\sprache", include: '*.properties').visit {
+    fileTree(dir: "${projectDir}/src/main/resources/sprache", include: '*.properties').visit {
         FileVisitDetails details -> lTranslationFiles << details.file.name
     }
 
     doLast {
-        println("listing available translation ")
+        println("listing available translation in ${projectDir}/src/main/resources/sprache")
         lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
-        File lstFile = new File("${projectDir}\\src\\main\\resources\\sprache\\ListLanguages.txt")
+        lTranslationFiles.each {out.println it}
+        File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
         lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
     }
 
