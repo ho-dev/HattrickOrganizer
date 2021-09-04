@@ -250,7 +250,7 @@ task preparingBuild(dependsOn: clean) {
             mkdir project.ext.target_dir
 
             // logging poeditor
-            fileTree(${projectDir}/src/main/resources/sprache).visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
+            fileTree("${projectDir}/src/main/resources/sprache").visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
         }
     }
 }
@@ -407,7 +407,7 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
 
     doLast {
         // logging poeditor
-        fileTree(${projectDir}/src/main/resources/sprache).visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
+        fileTree("${projectDir}/src/main/resources/sprache").visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
 
 
         println("listing available translation in ${projectDir}/src/main/resources/sprache")
