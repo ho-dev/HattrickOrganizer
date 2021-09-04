@@ -60,12 +60,12 @@ public final class MatchesPanel extends LazyImagePanel {
 	public static final int NUR_EIGENE_FREUNDSCHAFTSSPIELE = 5;
 	/** Only league Matches of suplied team */
 	public static final int NUR_EIGENE_LIGASPIELE = 4;
-	/** Only cup Matches of suplied team */
-	public static final int NUR_EIGENE_POKALSPIELE = 3;
+	/** Only national cup Matches of suplied team */
+	public static final int ONLY_NATIONAL_CUP = 3;
 	/** Only cup +league + quali Matches of suplied team */
-	public static final int NUR_EIGENE_PFLICHTSPIELE = 2;
+	public static final int OWN_OFFICIAL_GAMES = 2;
 	/** Only Matches of suplied team */
-	public static final int NUR_EIGENE_SPIELE = 1;
+	public static final int OWN_GAMES = 1;
 	/** Only Secondary cup matchs */
 	public static final int ONLY_SECONDARY_CUP = 9;
 	/** Only Qualifification matchs */
@@ -378,7 +378,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		setLayout(new BorderLayout());
 
 		horizontalLeftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
-				initSpieleTabelle(), initSpieldetails());
+				initMatchesTable(), initSpieldetails());
 
 		linupPanel = new JPanel(new GridLayout(2, 1));
 		aufstellungHeimPanel = new AufstellungsSternePanel(true);
@@ -464,18 +464,18 @@ public final class MatchesPanel extends LazyImagePanel {
 	/**
 	 * Initialise matches panel.
 	 */
-	private Component initSpieleTabelle() {
+	private Component initMatchesTable() {
 		ImagePanel panel = new ImagePanel(new BorderLayout());
 
 		CBItem[] matchesFilter = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("AlleSpiele"),
 						MatchesPanel.ALL_MATCHS),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
-						MatchesPanel.NUR_EIGENE_SPIELE),
+						MatchesPanel.OWN_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
-						MatchesPanel.NUR_EIGENE_PFLICHTSPIELE),
+						MatchesPanel.OWN_OFFICIAL_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						MatchesPanel.NUR_EIGENE_POKALSPIELE),
+						MatchesPanel.ONLY_NATIONAL_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
 						MatchesPanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
