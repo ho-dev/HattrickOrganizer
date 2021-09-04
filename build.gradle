@@ -79,6 +79,9 @@ def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().text.trim()
 println commitsLastStable
 println commitsNow
 
+println commitsLastStable
+println commitsNow
+
 def commitCount = (commitsNow as Integer) - (commitsLastStable as Integer)
 println commitCount
 println "Project:  $project.name $project.version ....................."
