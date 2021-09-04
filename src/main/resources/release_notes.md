@@ -1,4 +1,5 @@
 
+
 ## Highlights
 - complete makeover of the statistics module (#788)
 - improving consistency of dark themes
