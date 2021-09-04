@@ -71,16 +71,6 @@ versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
 versionProps.store(versionPropsFile.newWriter(), null)
 
-def commitsLastStable = 'git rev-list HEAD --count'.execute().text
-def commitsNow = 'git rev-list HEAD --count'.execute().text
-def diff = 'git diff --shortstat release/4.1 HEAD'.execute().text
-def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().text
-
-println commitsLastStable
-println commitsNow
-
-def commitCount = (commitsNow as Integer) - (commitsLastStable as Integer)
-println commitCount
 println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
@@ -360,6 +350,17 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                 from "${projectDir}/version.properties"
                 into "${project.ext.target_dir}"
             }
+
+            def commitsLastStable = 'git rev-list HEAD --count'.execute([],project.rootDir).text
+            def commitsNow = 'git rev-list HEAD --count'.execute([],project.rootDir).text
+            def diff = 'git diff --shortstat release/4.1 HEAD'.execute([],project.rootDir).text
+            def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute([],project.rootDir).text
+
+            println commitsLastStable
+            println commitsNow
+
+            def commitCount = (commitsNow as Integer) - (commitsLastStable as Integer)
+            println commitCount
 
             println("create release-notes")
             List<String> intro = [
