@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.model.cup.CupLevel;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
@@ -174,41 +175,35 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static StringBuilder getMatchTypWhereClause(int matchtype){
 		StringBuilder sql = new StringBuilder(50);
 		switch (matchtype) {
-			case MatchesPanel.NUR_EIGENE_SPIELE :
-
-				//Nix zu tun, da die teamId die einzige Einschränkung ist
+			case MatchesPanel.OWN_GAMES:
+				//Nothing to do, as the teamId is the only restriction
 				break;
-			case MatchesPanel.NUR_EIGENE_PFLICHTSPIELE :
-				sql.append(" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
-				sql.append(" OR MatchTyp=" + MatchType.LEAGUE.getId());
-				sql.append(" OR MatchTyp=" + MatchType.CUP.getId() + " )");
-				HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter on cup level index to keep only main cup  ");
+			case MatchesPanel.OWN_OFFICIAL_GAMES:
+				sql.append(" AND (MatchTyp=").append(MatchType.QUALIFICATION.getId());
+				sql.append(" OR MatchTyp=").append(MatchType.LEAGUE.getId());
+				sql.append(" OR (MatchTyp=").append(MatchType.CUP.getId()).append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId()).append("))");
 				break;
-			case MatchesPanel.NUR_EIGENE_POKALSPIELE :
-				sql.append(" AND MatchTyp=" + MatchType.CUP.getId());
+			case MatchesPanel.ONLY_NATIONAL_CUP:
+				sql.append(" AND MatchTyp=").append(MatchType.CUP.getId());
 				break;
 			case MatchesPanel.NUR_EIGENE_LIGASPIELE :
-				sql.append(" AND MatchTyp=" + MatchType.LEAGUE.getId());
+				sql.append(" AND MatchTyp=").append(MatchType.LEAGUE.getId());
 				break;
 			case MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE :
-				sql.append(" AND ( MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
-				sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
-				sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
-				sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
+				sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId());
+				sql.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId());
+				sql.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId());
+				sql.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
 				break;
 			case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
-				sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
-				sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
+				sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId());
+				sql.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
 				break;
 			case MatchesPanel.ONLY_SECONDARY_CUP:
-//				sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-//				sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-//				sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-//				sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
-				HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter on cup level index to keep only secondary cup  ");
+				sql.append(" AND (MatchTyp=").append(MatchType.CUP.getId()).append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId()).append(")");
 				break;
 			case MatchesPanel.ONLY_QUALIF_MATCHES:
-				sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
+				sql.append(" AND MatchTyp=").append(MatchType.QUALIFICATION.getId());
 				break;
 			}
 		return sql;

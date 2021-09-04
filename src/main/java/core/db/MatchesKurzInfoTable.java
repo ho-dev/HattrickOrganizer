@@ -285,13 +285,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private StringBuilder getMatchTypWhereClause(int matchtype) {
 		StringBuilder sql = new StringBuilder(50);
-		if (matchtype == MatchesPanel.NUR_EIGENE_SPIELE) {// Nothing to do, as the teamId is the only restriction
-		} else if (matchtype == MatchesPanel.NUR_EIGENE_PFLICHTSPIELE) {
+		if (matchtype == MatchesPanel.OWN_GAMES) {// Nothing to do, as the teamId is the only restriction
+		} else if (matchtype == MatchesPanel.OWN_OFFICIAL_GAMES) {
 			sql.append(" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 			sql.append(" OR MatchTyp=" + MatchType.LEAGUE.getId());
 			sql.append(" OR MatchTyp=" + MatchType.CUP.getId() + " )");
-		} else if (matchtype == MatchesPanel.NUR_EIGENE_POKALSPIELE) {
-			sql.append(" AND MatchTyp=" + MatchType.CUP.getId());
+		} else if (matchtype == MatchesPanel.ONLY_NATIONAL_CUP) {
+			sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId());
+			sql.append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 		} else if (matchtype == MatchesPanel.NUR_EIGENE_LIGASPIELE) {
 			sql.append(" AND MatchTyp=" + MatchType.LEAGUE.getId());
 		} else if (matchtype == MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) {
@@ -300,16 +301,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
 			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
 		} else if (matchtype == MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE) {
-			sql.append(" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
-			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
-//			sql.append(" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
+			sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId());
+			sql.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
 		} else if (matchtype == MatchesPanel.ONLY_SECONDARY_CUP) {
-			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
-//			sql.append(" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-//			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-//			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-//			sql.append(" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId() + " )");
+			sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId());
+			sql.append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 		} else if (matchtype == MatchesPanel.ONLY_QUALIF_MATCHES) {
 			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 		}

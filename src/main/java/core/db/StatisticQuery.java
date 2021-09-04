@@ -121,18 +121,18 @@ public class StatisticQuery {
 
 			//Matchtypen
 			switch (matchtyp) {
-				case MatchesPanel.NUR_EIGENE_SPIELE :
+				case MatchesPanel.OWN_GAMES:
 
 					//Nix zu tun, da die teamId die einzige Einschränkung ist
 					break;
 
-				case MatchesPanel.NUR_EIGENE_PFLICHTSPIELE :
+				case MatchesPanel.OWN_OFFICIAL_GAMES:
 					sql += (" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
 					sql += (" OR MatchTyp=" + MatchType.LEAGUE.getId());
 					sql += (" OR MatchTyp=" + MatchType.CUP.getId() + " )");
 					break;
 
-				case MatchesPanel.NUR_EIGENE_POKALSPIELE :
+				case MatchesPanel.ONLY_NATIONAL_CUP:
 					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter to get only primary cup   ");
 					sql += (" AND MatchTyp=" + MatchType.CUP.getId());
 					break;

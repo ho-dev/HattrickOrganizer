@@ -73,11 +73,11 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 	private CBItem[] getMatchFilterItems() {
 		CBItem[] matchFilterItems = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
-						MatchesPanel.NUR_EIGENE_SPIELE),
+						MatchesPanel.OWN_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
-						MatchesPanel.NUR_EIGENE_PFLICHTSPIELE),
+						MatchesPanel.OWN_OFFICIAL_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						MatchesPanel.NUR_EIGENE_POKALSPIELE),
+						MatchesPanel.ONLY_NATIONAL_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
 						MatchesPanel.ONLY_SECONDARY_CUP),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
