@@ -71,10 +71,10 @@ versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
 versionProps.store(versionPropsFile.newWriter(), null)
 
-def commitsLastStable = 'git rev-list release/4.1 --count'.execute().text
-def commitsNow = 'git rev-list HEAD --count'.execute().text
-def diff = 'git diff --shortstat release/4.1 HEAD'.execute().text
-def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().text
+def commitsLastStable = 'git rev-list release/4.1 --count'.execute().text.trim()
+def commitsNow = 'git rev-list HEAD --count'.execute().text.trim()
+def diff = 'git diff --shortstat release/4.1 HEAD'.execute().text.trim()
+def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().text.trim()
 
 println commitsLastStable
 println commitsNow
