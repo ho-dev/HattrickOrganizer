@@ -248,6 +248,9 @@ task preparingBuild(dependsOn: clean) {
             project.delete(files("${projectDir}/user.xml"))
             //     Creating Target directory ...  ---------------------------------------------------------------------
             mkdir project.ext.target_dir
+
+            // logging poeditor
+            fileTree(${projectDir}/src/main/resources/sprache).visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
         }
     }
 }
@@ -297,7 +300,7 @@ task CreateDistribution (dependsOn: installDist) {
 
         copy {
             from "${projectDir}/src/main/resources/prediction"
-            into "${distribDir}\\prediction"
+            into "${distribDir}/prediction"
         }
 
         copy {
@@ -328,7 +331,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     destinationDirectory  = file("${project.ext.target_dir}")
     from ("${buildDir}/install/${project.version}") {exclude("**/ho.sh", "**/HO.bat")}
     from ("${buildDir}/install/${project.version}") {
-        include("**\\ho.sh")
+        include("**/ho.sh")
         fileMode=0755 }
     doLast {
         println("zipped folder has been created")
@@ -403,6 +406,10 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
     }
 
     doLast {
+        // logging poeditor
+        fileTree(${projectDir}/src/main/resources/sprache).visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
+
+
         println("listing available translation in ${projectDir}/src/main/resources/sprache")
         lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
         lTranslationFiles.each {out.println it}
@@ -444,7 +451,8 @@ markdownToHtml {
 }
 
 installDist.dependsOn createLanguageFileList
-preparingBuild.dependsOn poeditorPull
+compileJava.dependsOn poeditorPull
+poeditorPull.dependsOn preparingBuild
 markdownToHtml.dependsOn pushmd
 
 // endregion ======================================================================================================================
