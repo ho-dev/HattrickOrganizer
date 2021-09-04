@@ -1,7 +1,4 @@
----
-title: HO release notes
-layout: page
----
+
 
 
 # Changelist HO! 5.0
