@@ -368,6 +368,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                     "* ${commitCount} commits",
                     "* ${diff}",
                     "* Contributors: \n${contributors}",
+
                     ""
             ]
 
