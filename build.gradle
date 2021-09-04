@@ -409,7 +409,6 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
         // logging poeditor
         fileTree("${projectDir}/src/main/resources/sprache").visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
 
-
         println("listing available translation in ${projectDir}/src/main/resources/sprache")
         lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
         lTranslationFiles.each {out.println it}
