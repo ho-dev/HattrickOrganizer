@@ -45,6 +45,11 @@ def minor = '0'
 def development_stage = 0
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
+def development_message = [
+        "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
+        "Latest beta release - the version is feature complete - feedback from early users are welcome",
+        "Latest stable release"
+]
 
 // region configuration ==============================================================================================
 println "Configuration start"
@@ -65,6 +70,14 @@ versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
 versionProps.store(versionPropsFile.newWriter(), null)
+
+def commitsLastStable = 'git rev-list release/4.1 --count'.execute().waitFor().longValue()
+def commitsNow = 'git rev-list HEAD --count'.execute().waitFor().longValue()
+def diff = 'git diff --shortstat release/4.1 HEAD'.execute().waitFor().toString()
+def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().waitFor().toString()
+
+def commitCount = commitsNow - commitsLastStable
+println commitCount
 println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
@@ -348,47 +361,21 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                 into "${project.ext.target_dir}"
             }
 
-            // always update latest.html
-            new File("$projectDir/docs/latest.html").text = """version=$version
-released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-"""
-            println("latest.html has been updated")
+            println("create release-notes")
+            List<String> intro = [
+                    "#HO $major.$minor Release Notes",
+                    "",
+                    development_message[development_stage],
+                    "",
+                    "##Some numbers",
+                    "* $commitCount commits",
+                    "* $diff",
+                    "* Contributors: $contributors",
+                    ""
+            ]
 
-            copy {
-                from "${projectDir}/src/main/resources/release_notes.md"
-                into "$projectDir/docs/release_notes"
-                rename { filename -> filename.replace('release_notes', 'release_notes(dev)')}
-            }
-            println("release notes of DEV version have been updated")
+            new File("${projectDir}/docs/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
 
-            // update latestbeta.html if beta or stable has been released
-            if (development_stage != '0') {
-                new File("$projectDir/docs/latestbeta.html").text = """version=$version
-released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-"""
-                println("latestbeta.html has been updated")
-                copy {
-                    from "${projectDir}/src/main/resources/release_notes.md"
-                    into "$projectDir/docs/release_notes"
-                    rename { filename -> filename.replace('release_notes', 'release_notes(beta)')}
-                }
-                println("release notes of BETA version have been updated")
-
-            }
-
-            // update lateststable.html only if stable has been released
-            if (development_stage == '2') {
-                new File("$projectDir/docs/lateststable.html").text = """version=$version
-released=${new SimpleDateFormat("dd.MM.yyyy").format(new Date())}
-"""
-                println("lateststable.html has been updated")
-                copy {
-                    from "${projectDir}/src/main/resources/release_notes.md"
-                    into "$projectDir/docs/release_notes"
-                    rename { filename -> filename.replace('release_notes', 'release_notes(stable)')}
-                }
-                println("release notes of STABLE version have been updated")
-            }
         }
         else{
             println("html files have not been updated : artefacts should not been released, !!")
