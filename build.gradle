@@ -74,7 +74,7 @@ versionProps.store(versionPropsFile.newWriter(), null)
 def getGitCommandCommitsLastStable = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'rev-list','release/4.1','--count'
+        commandLine 'git rev-list release/4.1 --count'
         standardOutput = stdout
     }
     return stdout.toString().trim()
@@ -83,7 +83,7 @@ def getGitCommandCommitsLastStable = { ->
 def getGitCommandCommitsNow = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'rev-list','HEAD','--count'
+        commandLine 'git rev-list HEAD --count'
         standardOutput = stdout
     }
     return stdout.toString().trim()
@@ -91,7 +91,7 @@ def getGitCommandCommitsNow = { ->
 def getGitCommandDiff = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'diff','--shortstat','release/4.1','HEAD'
+        commandLine 'git diff --shortstat release/4.1 HEAD'
         standardOutput = stdout
     }
     return stdout.toString().trim()
@@ -99,7 +99,7 @@ def getGitCommandDiff = { ->
 def getGitCommandContributors = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'shortlog','-s','-n','release/4.1..HEAD'
+        commandLine 'git shortlog -s -n release/4.1..HEAD'
         standardOutput = stdout
     }
     return stdout.toString().trim()
