@@ -71,12 +71,12 @@ versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
 versionProps.store(versionPropsFile.newWriter(), null)
 
-def commitsLastStable = 'git rev-list release/4.1 --count'.execute().waitFor().longValue()
-def commitsNow = 'git rev-list HEAD --count'.execute().waitFor().longValue()
-def diff = 'git diff --shortstat release/4.1 HEAD'.execute().waitFor().toString()
-def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().waitFor().toString()
+def commitsLastStable = 'git rev-list release/4.1 --count'.execute().text
+def commitsNow = 'git rev-list HEAD --count'.execute().text
+def diff = 'git diff --shortstat release/4.1 HEAD'.execute().text
+def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute().text
 
-def commitCount = commitsNow - commitsLastStable
+def commitCount = (commitsNow as Integer) - (commitsLastStable as Integer)
 println commitCount
 println "Project:  $project.name $project.version ....................."
 
