@@ -261,9 +261,6 @@ task preparingBuild(dependsOn: clean) {
             project.delete(files("${projectDir}/user.xml"))
             //     Creating Target directory ...  ---------------------------------------------------------------------
             mkdir project.ext.target_dir
-
-            // logging poeditor
-            fileTree("${projectDir}/src/main/resources/sprache").visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
         }
     }
 }
@@ -363,14 +360,14 @@ task updatebuildreferences(dependsOn: CreateDistribution){
 
             println("create release-notes")
             List<String> intro = [
-                    "#HO $major.$minor Release Notes",
+                    "# HO $major.$minor Release Notes",
                     "",
                     development_message[development_stage],
                     "",
-                    "##Some numbers",
-                    "* $commitCount commits",
-                    "* $diff",
-                    "* Contributors: $contributors",
+                    "## Some numbers",
+                    "* ${commitCount} commits",
+                    "* ${diff}",
+                    "* Contributors: \n${contributors}",
                     ""
             ]
 
@@ -393,9 +390,6 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
     }
 
     doLast {
-        // logging poeditor
-        fileTree("${projectDir}/src/main/resources/sprache").visit {FileVisitDetails details -> println (details.name + " " + details.size + " " + details.lastModified) }
-
         println("listing available translation in ${projectDir}/src/main/resources/sprache")
         lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
         lTranslationFiles.each {out.println it}

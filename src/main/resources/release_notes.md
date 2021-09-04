@@ -1,21 +1,8 @@
 
-
-
-# Changelist HO! 5.0
-
-## Some numbers:
-- xxx commits
-- xxx files changed (xxx additions and xxx deletions)
-- xxx issues closed
-- xx contributors
-
-
 ## Highlights
 - complete makeover of the statistics module (#788)
 - improving consistency of dark themes
 - preview of new module Youth academy (#367)
-
-
 
 ## Detailed Changelog
 
