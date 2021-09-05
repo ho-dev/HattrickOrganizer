@@ -359,12 +359,15 @@ task updatebuildreferences(dependsOn: CreateDistribution){
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
             def contributors = callGit('git shortlog -s -n 4.1..HEAD')
+            def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
             println("create release-notes")
             List<String> intro = [
                     "# HO $major.$minor Release Notes",
                     "",
                     development_message[development_stage],
+                    "",
+                    "latest commit: ${latestCommit}",
                     "",
                     "## Some numbers",
                     "* ${commitCount} commits",
