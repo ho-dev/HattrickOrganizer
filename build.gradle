@@ -351,33 +351,6 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                 into "${project.ext.target_dir}"
             }
 
-            def commitsLastStable = 'git rev-list HEAD --count'.execute([],project.rootDir).text
-            def commitsNow = 'git rev-list HEAD --count'.execute([],project.rootDir).text
-            def diff = 'git diff --shortstat release/4.1 HEAD'.execute([],project.rootDir).text
-            def contributors = 'git shortlog -s -n release/4.1..HEAD'.execute([],project.rootDir).text
-
-            println commitsLastStable
-            println commitsNow
-
-            def commitCount = (commitsNow as Integer) - (commitsLastStable as Integer)
-            println commitCount
-
-            println("create release-notes")
-            List<String> intro = [
-                    "# HO $major.$minor Release Notes",
-                    "",
-                    development_message[development_stage],
-                    "",
-                    "## Some numbers",
-                    "* ${commitCount} commits",
-                    "* ${diff}",
-                    "* Contributors: \n${contributors}",
-
-                    ""
-            ]
-
-            new File("${projectDir}/docs/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
-
         }
         else{
             println("html files have not been updated : artefacts should not been released, !!")
