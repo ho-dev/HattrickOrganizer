@@ -78,8 +78,6 @@ application {
     mainClassName = 'core.HOLauncher'
 }
 
-compileJava.dependsOn 'preparingBuild'
-
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
@@ -346,7 +344,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
         def p = param.execute()
         p.waitFor()
         println "error: " + p.errorStream.text
-        return p.text
+        return p.text.trim()
     }
 
     doLast {
@@ -359,8 +357,8 @@ task updatebuildreferences(dependsOn: CreateDistribution){
             }
 
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
-            def diff = callGit('git diff --shortstat release/4.1 HEAD')
-            def contributors = callGit('git shortlog -s -n release/4.1..HEAD')
+            def diff = callGit('git diff --shortstat 4.1..HEAD')
+            def contributors = callGit('git shortlog -s -n 4.1..HEAD')
 
             println("create release-notes")
             List<String> intro = [
@@ -435,8 +433,9 @@ markdownToHtml {
 }
 
 installDist.dependsOn createLanguageFileList
-processResources.dependsOn poeditorPull
-poeditorPull.dependsOn preparingBuild
 markdownToHtml.dependsOn pushmd
+poeditorPull.dependsOn preparingBuild
+processResources.dependsOn poeditorPull
+compileJava.dependsOn processResources
 
 // endregion ======================================================================================================================
