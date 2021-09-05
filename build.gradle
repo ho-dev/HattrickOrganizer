@@ -342,6 +342,13 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 }
 
 task updatebuildreferences(dependsOn: CreateDistribution){
+    ext.callGit = { param ->
+        def p = param.execute()
+        p.waitFor()
+        println "error: " + p.errorStream.text
+        return p.text
+    }
+
     doLast {
         if (releaseArtefacts) {
 
@@ -351,9 +358,28 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                 into "${project.ext.target_dir}"
             }
 
+            def commitCount = callGit('git rev-list 4.1..HEAD --count')
+            def diff = callGit('git diff --shortstat release/4.1 HEAD')
+            def contributors = callGit('git shortlog -s -n release/4.1..HEAD')
+
+            println("create release-notes")
+            List<String> intro = [
+                    "# HO $major.$minor Release Notes",
+                    "",
+                    development_message[development_stage],
+                    "",
+                    "## Some numbers",
+                    "* ${commitCount} commits",
+                    "* ${diff}",
+                    "* Contributors: \n${contributors}",
+                    ""
+            ]
+
+            new File("${projectDir}/docs/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
+
         }
         else{
-            println("html files have not been updated : artefacts should not been released, !!")
+            println("release notes and version properties have not been updated : artefacts should not been released, !!")
         }
     }
 }
