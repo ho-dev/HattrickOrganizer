@@ -137,6 +137,11 @@ public interface HOColorName {
 	String TABLE_LEAGUE_EVEN = "table.league.even";
 	String TABLE_LEAGUE_ODD = "table.league.odd";
 
+
+	// transfer module
+	String TRANSFER_IN_COLOR = "transfer_in_color";
+	String TRANSFER_OUT_COLOR = "transfer_out_color";
+
 	//lineup
 
 	String SEL_OVERLAY_SELECTION_BG	= "selectorOverlay.selected.bg";
@@ -226,4 +231,5 @@ public interface HOColorName {
 	String GUEST_ACTION = "guest.action";
 	String NEUTRAL_ACTION = "neutral.action";
 	String BORDER_RATING_BAR = "border.rating.bar";
+
 }

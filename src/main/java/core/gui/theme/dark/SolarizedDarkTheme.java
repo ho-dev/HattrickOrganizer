@@ -57,12 +57,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.LEAGUE_FG, defaults.getColor("Table.foreground"));
             ThemeManager.instance().put(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
 
-            // Lineup
-//            ThemeManager.instance().put(HOColorName.LINEUP_POS_MIN_BG, neutralGrey);
-//            ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
-//
-//            ThemeManager.instance().put(HOColorName.TABLEENTRY_IMPROVEMENT_FG, defaulRATING_BORDER_ABOVE_LIMITts.getColor("palette.lime"));
-//
+            // Transfer module
+            ThemeManager.instance().put(HOColorName.TRANSFER_IN_COLOR, defaults.getColor("palette.lime"));
+            ThemeManager.instance().put(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
 
             // Lineup
             ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
