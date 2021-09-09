@@ -52,7 +52,7 @@ public class HTCalendar {
     private static final Calendar HT_START = new GregorianCalendar(2000, 9, 15,
             0, 0);
 
-    /** Correction factor for number of seasons */
+    /** Correction offset for number of seasons */
     private static final int SE_CORRECTION = 11;
 
     /**
