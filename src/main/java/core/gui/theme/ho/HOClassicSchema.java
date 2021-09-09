@@ -5,7 +5,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.Schema;
 import core.util.HOLogger;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -189,18 +188,18 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GRASSPANEL_BACKGROUND, "gui/bilder/Rasen_mit_Streifen.jpg");
 		put(RATINGCOMPARISON_BACKGROUND, "gui/bilder/field_cut.png");
 
-		// 1.431
+
 		put(REMOVE, "gui/bilder/remove.png");
 		put(BALL, "gui/bilder/Ball.png");
-		put(TRANSFER_IN, "gui/bilder/in.gif");
-		put(TRANSFER_OUT, "gui/bilder/out.gif");
 
 		put(TABBEDPANE_CLOSE, "gui/bilder/closetab.png");
 
 		put(ARROW_LEFT1, "gui/bilder/arrows/leftArrow1.gif");
 		put(ARROW_LEFT2, "gui/bilder/arrows/leftArrow2.gif");
+		put(ARROW_LEFT_3, "gui/bilder/arrow_left3.svg");
 		put(ARROW_RIGHT1, "gui/bilder/arrows/rightArrow1.gif");
 		put(ARROW_RIGHT2, "gui/bilder/arrows/rightArrow2.gif");
+		put(ARROW_RIGHT3, "gui/bilder/arrow_right3.svg");
 
 		put(ARROW_UP, "gui/bilder/arrows/ArrowUp.gif");
 		put(ARROW_DOWN, "gui/bilder/arrows/ArrowDown.gif");
@@ -435,7 +434,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(MATCHDETAILS_PROGRESSBAR_GREEN, new Color(0, 124, 0));
 		put(MATCHDETAILS_PROGRESSBAR_RED, new Color(124, 0, 0));
 
-		// 1.432
+		// Transfer module
+		put(TRANSFER_IN_COLOR, "green");
+		put(TRANSFER_OUT_COLOR, "red");
 
 		// Team Analyzer
 		put(TA_TEAM_LEAGUE_NEXT, Color.RED);

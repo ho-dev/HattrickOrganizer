@@ -560,7 +560,7 @@ public class ImageUtilities {
 	public static @Nullable Icon getPlayerSpecialtyIcon(String playerSpecialtyName, int size) {
 		if (Arrays.stream(HOIconName.SPECIALTIES).skip(1).anyMatch(playerSpecialtyName::equals)) {
 			String key = playerSpecialtyName + "_" + size;
-			Icon specialtyIcon = ThemeManager.instance().getIcon(key);
+			Icon specialtyIcon = ThemeManager.getIcon(key);
 			if (specialtyIcon == null) {
 			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
 			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
@@ -573,74 +573,59 @@ public class ImageUtilities {
 	}
 
 
+	public static Icon getTransferInIcon(int size) {
+		return ImageUtilities.getSvgIcon(HOIconName.ARROW_LEFT_3, Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_IN_COLOR)), size, size);
+	}
+
+	public static Icon getTransferInIcon() {
+		return getTransferInIcon(24);
+	}
+
+	public static Icon getTransferOutIcon(int size) {
+		return ImageUtilities.getSvgIcon(HOIconName.ARROW_RIGHT3, Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_OUT_COLOR)), size, size);
+	}
+
+	public static Icon getTransferOutIcon() {
+		return getTransferOutIcon(24);
+	}
+
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;
 		switch (posid) {
-			case IMatchRoleID.keeper: {
+			case IMatchRoleID.keeper -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
-				break;
 			}
-
-			case IMatchRoleID.rightCentralDefender:
-			case IMatchRoleID.leftCentralDefender:
-			case IMatchRoleID.middleCentralDefender: {
+			case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
-				break;
 			}
-
-			case IMatchRoleID.leftBack:
-			case IMatchRoleID.rightBack: {
+			case IMatchRoleID.leftBack, IMatchRoleID.rightBack -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
-				break;
 			}
-
-			case IMatchRoleID.rightInnerMidfield:
-			case IMatchRoleID.leftInnerMidfield:
-			case IMatchRoleID.centralInnerMidfield: {
+			case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
-				break;
 			}
-
-			case IMatchRoleID.leftWinger:
-			case IMatchRoleID.rightWinger: {
+			case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
-				break;
 			}
-
-			case IMatchRoleID.rightForward:
-			case IMatchRoleID.leftForward:
-			case IMatchRoleID.centralForward: {
+			case IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.centralForward -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
-				break;
 			}
-
-			case IMatchRoleID.substGK1: {
+			case IMatchRoleID.substGK1 -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
-				break;
 			}
-
-			case IMatchRoleID.substCD1: {
+			case IMatchRoleID.substCD1 -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
-				break;
 			}
-
-			case IMatchRoleID.substIM1: {
+			case IMatchRoleID.substIM1 -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
-				break;
 			}
-
-			case IMatchRoleID.substWI1: {
+			case IMatchRoleID.substWI1 -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
-				break;
 			}
-
-			case IMatchRoleID.substFW1: {
+			case IMatchRoleID.substFW1 -> {
 				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
-				break;
 			}
-
-			default:
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
+			default -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
 		}
 		return trickotfarbe;
 	}
