@@ -20,7 +20,6 @@ import javax.swing.table.TableModel;
 /**
  * Pane to show transfers for your own team.
  *
- * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 class TeamTransfersPane extends JPanel implements ListSelectionListener {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -28,7 +27,6 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 5180919662981139849L;
 	private JTable transferTable;
     private List<PlayerTransfer> transfers = new ArrayList<PlayerTransfer>();
     private PlayerDetailPanel playerDetailPanel;
@@ -49,7 +47,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         setOpaque(false);
         add(mainPanel, BorderLayout.CENTER);
 
-        final TableModel model = new TransferTableModel(new ArrayList<PlayerTransfer>());
+        final TableModel model = new TransferTableModel(new ArrayList<>());
         final TeamTransferSorter sorter = new TeamTransferSorter(model);
         transferTable = new JTable(sorter);
 
@@ -59,7 +57,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         pane.setOpaque(false);
         mainPanel.add(pane, BorderLayout.CENTER);
 
-        refresh(new Vector<PlayerTransfer>());
+        refresh(new Vector<>());
     }
 
     /**
@@ -89,7 +87,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
         transferTable.getColumnModel().getColumn(3).setPreferredWidth(150);
         transferTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
-        transferTable.getColumnModel().getColumn(4).setMaxWidth(20);
+        transferTable.getColumnModel().getColumn(4).setMaxWidth(36);
         transferTable.getColumnModel().getColumn(5).setPreferredWidth(150);
 
         transferTable.getColumnModel().getColumn(8).setCellRenderer(greenColumn);

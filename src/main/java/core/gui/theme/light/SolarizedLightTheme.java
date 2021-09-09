@@ -82,6 +82,11 @@ public class SolarizedLightTheme extends BaseTheme {
 
             ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(61,64,66));
 
+            // Transfer module
+            ThemeManager.instance().put(HOColorName.TRANSFER_IN_COLOR, defaults.getColor("palette.green"));
+            ThemeManager.instance().put(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
+
+
             return true;
 
         } catch (Exception e) {

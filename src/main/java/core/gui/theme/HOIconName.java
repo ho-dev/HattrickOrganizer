@@ -142,13 +142,13 @@ public interface HOIconName {
 	String HOMEGROWN = "homegrown";
 	String REMOVE	= "remove";
 	String BALL = "ball";
-	String TRANSFER_IN = "transfer.in";
-	String TRANSFER_OUT = "transfer.out";
 	String TABBEDPANE_CLOSE = "tabbedPane.close";
 	String ARROW_LEFT1 = "arrow_left1";
 	String ARROW_LEFT2 = "arrow_left2";
+	String ARROW_LEFT_3 = "arrow_left3";
 	String ARROW_RIGHT1 = "arrow_right1";
 	String ARROW_RIGHT2= "arrow_right2";
+	String ARROW_RIGHT3 = "arrow_right3";
 	String ARROW_UP = "arrow_up";
 	String ARROW_DOWN = "arrow_down";
 	String EXCLAMATION_RED = "exclamation-red";

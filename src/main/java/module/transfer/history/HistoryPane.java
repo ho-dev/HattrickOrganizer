@@ -1,12 +1,10 @@
-// %1126721330323:hoplugins.transfers.ui%
 package module.transfer.history;
 
 
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
+import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.Helper;
@@ -15,12 +13,10 @@ import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerTransfer;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -33,7 +29,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
-import javax.swing.JWindow;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -43,17 +38,11 @@ import javax.swing.event.ChangeListener;
 
 
 /**
- * Pane to show transfer histry information for your own team.
+ * Pane to show transfer history information for your own team.
  *
- * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 public class HistoryPane extends JSplitPane {
-    //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = 5465572622813044852L;
 	private ButtonModel spinSeason;
     private JLabel amountTransfers = new JLabel("", SwingConstants.RIGHT);
     private JLabel amountTransfersIn = new JLabel("", SwingConstants.RIGHT);
@@ -198,10 +187,10 @@ public class HistoryPane extends JSplitPane {
 
         final JLabel amTrans = new JLabel(hoV.getLanguageString("Transfers") + ":", SwingConstants.LEFT);
         final JLabel amTransIn = new JLabel(hoV.getLanguageString("In") + ":", SwingConstants.LEFT);
-        amTransIn.setIcon(ThemeManager.getIcon(HOIconName.TRANSFER_IN));
+        amTransIn.setIcon(ImageUtilities.getTransferInIcon());
 
         final JLabel amTransOut = new JLabel(hoV.getLanguageString("Out") + ":", SwingConstants.LEFT);
-        amTransOut.setIcon(ThemeManager.getIcon(HOIconName.TRANSFER_OUT));
+        amTransOut.setIcon(ImageUtilities.getTransferOutIcon());
         amountPanel.add(amTrans, "1, 1");
         amountPanel.add(amountTransfers, "2, 1");
         amountPanel.add(amTransIn, "4, 1");

@@ -7,6 +7,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
@@ -448,15 +449,11 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Button_GoTo.addActionListener(this);
 
         m_Button_Month_Forward = new JButton();
-        //Image tmp_bild_left = HelperWrapper.instance().makeColorTransparent(new ImageIcon("hoplugins/hrfExplorer/pics/arRight.gif").getImage(),gruen);
-        //m_Button_Month_Forward.setIcon(new ImageIcon(tmp_bild_left));
-        m_Button_Month_Forward.setIcon(ThemeManager.getIcon(HOIconName.TRANSFER_OUT));
+        m_Button_Month_Forward.setIcon(ImageUtilities.getTransferOutIcon());
         m_Button_Month_Forward.addActionListener(this);
 
         m_Button_Month_Back = new JButton();
-        //Image tmp_bild_right = HelperWrapper.instance().makeColorTransparent(new ImageIcon("hoplugins/hrfExplorer/pics/arLeft.gif").getImage(),gruen);
-        //m_Button_Month_Back.setIcon(new ImageIcon(tmp_bild_right));
-        m_Button_Month_Back.setIcon(ThemeManager.getIcon(HOIconName.TRANSFER_IN));
+        m_Button_Month_Back.setIcon(ImageUtilities.getTransferInIcon());
         m_Button_Month_Back.addActionListener(this);
 
         m_Button_ResetImports = new JButton(hoV.getLanguageString("btImports"));
