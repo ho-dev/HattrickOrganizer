@@ -52,7 +52,7 @@ public class HTCalendar {
     private static final Calendar HT_START = new GregorianCalendar(2000, 9, 15,
             0, 0);
 
-    /** Correction factor for number of seasons */
+    /** Correction offset for number of seasons */
     private static final int SE_CORRECTION = 11;
 
     /**
@@ -74,17 +74,9 @@ public class HTCalendar {
     public final int getHTSeason() {
         if (elapsedWeeks < MIN_ELAPSED_WEEKS) {
             return 0;
-        }
-        else {
-            final int season = ((elapsedWeeks - 1) / WEEK_IN_SEASON)
-                - this.seasonCorrection;
-
-            if (season > 0) {
-                return season;
-            }
-            else {
-                return 0;
-            }
+        } else {
+            final int season = ((elapsedWeeks - 1) / WEEK_IN_SEASON) + this.seasonCorrection;
+            return Math.max(season, 0);
         }
     }
 
