@@ -63,6 +63,7 @@
   - automatic check for new HO! version after HRF-Download (#1019)
     - configurable in File -> Preferences -> Release Channels
   - fix NT team players' name download (#1025)
+  - transfer panel fix error in league's season offset (#1172)
 
 ### League
 

@@ -74,17 +74,9 @@ public class HTCalendar {
     public final int getHTSeason() {
         if (elapsedWeeks < MIN_ELAPSED_WEEKS) {
             return 0;
-        }
-        else {
-            final int season = ((elapsedWeeks - 1) / WEEK_IN_SEASON)
-                - this.seasonCorrection;
-
-            if (season > 0) {
-                return season;
-            }
-            else {
-                return 0;
-            }
+        } else {
+            final int season = ((elapsedWeeks - 1) / WEEK_IN_SEASON) + this.seasonCorrection;
+            return Math.max(season, 0);
         }
     }
 
