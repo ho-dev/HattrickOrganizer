@@ -343,7 +343,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
     ext.callGit = { param ->
         def p = param.execute()
         p.waitFor()
-        println "error: " + p.errorStream.text
+        //println "error: " + p.errorStream.text
         return p.text.trim()
     }
 
