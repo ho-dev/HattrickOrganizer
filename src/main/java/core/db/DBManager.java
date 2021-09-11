@@ -132,7 +132,7 @@ public class DBManager {
 						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
 					}
 					if (!dbDirectoryCreated) {
-						errorMsg = "Could not create the database folder.";
+						errorMsg = "Could not create the database folder: " + dbfolder.getAbsolutePath();
 					}
 				}
 
