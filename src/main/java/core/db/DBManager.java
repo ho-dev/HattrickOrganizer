@@ -124,7 +124,7 @@ public class DBManager {
 					File parentFolder = new File(UserManager.instance().getDbParentFolder());
 
 					boolean dbDirectoryCreated = false;
-					if (parentFolder.canWrite()) {
+					if (!parentFolder.exists() || parentFolder.canWrite()) {
 						dbDirectoryCreated = dbfolder.mkdirs();
 					} else {
 						errorMsg = "Could not initialize the database folder.";
@@ -1201,7 +1201,7 @@ public class DBManager {
 	 * Check if match is available
 	 *
 	 * @param matchid the matchid
-	 * @param matchType
+	 * @param matchType type of the match
 	 * @return the boolean
 	 */
 	public boolean isMatchInDB(int matchid, MatchType matchType) {
@@ -1213,7 +1213,7 @@ public class DBManager {
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
 	 *
 	 * @param matchid The ID for the match
-	 * @param matchType
+	 * @param matchType type of the match
 	 * @return The kurz info object or null
 	 */
 	public MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
