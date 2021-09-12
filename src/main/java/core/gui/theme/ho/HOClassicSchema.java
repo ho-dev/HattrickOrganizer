@@ -436,7 +436,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		// Transfer module
 		put(TRANSFER_IN_COLOR, "green");
-		put(TRANSFER_OUT_COLOR, "red");
+		put(TRANSFER_OUT_COLOR, "default.red");
 
 		// Team Analyzer
 		put(TA_TEAM_LEAGUE_NEXT, Color.RED);
