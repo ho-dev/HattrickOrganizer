@@ -50,7 +50,10 @@ public final class Basics  {
     /** The current season number of the league. */
     private int m_iSeason;
 
-    /** The season offset to swedish's season. */
+    /**
+     * The season offset to swedish's season.
+     * (it is a negative number for leagues which started after swedish leagues)
+     */
     private int m_iSeasonOffset;
 
     /** The current match round of the league. */
