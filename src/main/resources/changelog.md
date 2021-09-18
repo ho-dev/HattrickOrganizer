@@ -20,7 +20,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 ## Detailed Changelog
 
 ### GUI
-  - theming of training bar indicators
+  - theming of training bar indicators (#803)
 
 ### Finance
   - all information relative to Finance are now stored in the database (#793)
@@ -37,12 +37,14 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Team Analyser
+  - fix download of secondary cup matches (#787)
   - tuning simulation (#865)
   - fix npe if system configurations of team analyzer are not available in database (#956)
+  - TODO check: fix analyse team selection bug (#913)
 
 
 ### Rating
-  - new default model
+  - new default model (#785)
 
 ### Matches
   - new match location filter (home/away/neutral/all) on Statistics tab (#470)
@@ -53,6 +55,7 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
   - Match orders remove substitution limit (#856)
   - complete revamp of lineup panel
   - Separate rating and match date columns for easier sorting. (#895)
+  - rating prediction considers weather (#343)
   - fix npe in rating chart (#1115)
   - settings allow orientation swap to display goalkeeper at the bottom of the lineup grid (#1129)
 
@@ -61,24 +64,28 @@ If you find a bug, please open an issue on [GitHub](https://github.com/akasolace
 
 
 ### Training
-  - many bug fixes
+  - many bug fixes (#781, #795)
   - fix training recap table's resetting scroll positions on table refresh  (#1011) 
   - skill losses only begin at the age of 28 years (#1080)
   - experience increase of new national hto matches (#1089)
+  - new training formula (#250)
+  
+### League
+  - show statistics, power rating (#857)
 
+
+### Youth
+
+- new module (#367)
 
 ### Misc
-  - fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
-  - improved handling of timezone accross the app
-  - sanitizing of preferences panel
-  - automatic check for new HO! version after HRF-Download (#1019)
+- fix issue with user preferences (incl. OAuth access token) not being saved upon exiting HO. (#811)
+- improved handling of timezone accross the app
+- sanitizing of preferences panel
+- automatic check for new HO! version after HRF-Download (#1019)
     - configurable in File -> Preferences -> Release Channels
-  - fix NT team players' name download (#1025)
-
-
-### League
-
-
+- fix NT team players' name download (#1025)
+- 32 bit installer (#928)
 
 ## Translations
   - HO! is currently available in xxx languages thanks to the work of xxx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
