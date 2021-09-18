@@ -58,7 +58,15 @@ ext {
     target_dir = "${buildDir}/artefacts"
 }
 
+ext.callGit = { param ->
+    def p = param.execute()
+    p.waitFor()
+    //println "error: " + p.errorStream.text
+    return p.text.trim()
+}
+
 // Define HO version  =================
+def currentBranch = callGit('git branch --show-current')
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
@@ -69,6 +77,7 @@ project.version = major + '.' + minor + '.' + buildNumber + '.' + development_st
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
 versionProps['tag'] = development_tag[development_stage]
+versionProps['branch'] = currentBranch
 versionProps.store(versionPropsFile.newWriter(), null)
 
 println "Project:  $project.name $project.version ....................."
@@ -340,12 +349,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 }
 
 task updatebuildreferences(dependsOn: CreateDistribution){
-    ext.callGit = { param ->
-        def p = param.execute()
-        p.waitFor()
-        //println "error: " + p.errorStream.text
-        return p.text.trim()
-    }
+
 
     doLast {
         if (releaseArtefacts) {

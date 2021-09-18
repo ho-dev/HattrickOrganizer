@@ -41,6 +41,12 @@ jobs:
         with:
           path: 'version.properties'
           property: 'tag'
+      - name: Read branch
+        id: read_version_branch
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: 'version.properties'
+          property: 'branch'
       - name: Delete previous tag and release
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
@@ -58,5 +64,5 @@ jobs:
           name: ${{ steps.read_version.outputs.value }}
           tag_name: ${{ steps.read_version_tag.outputs.value }}
           body_path: docs/release_notes.md
-          target_commitish: master
+          target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: true
