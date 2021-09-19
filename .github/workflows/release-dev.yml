@@ -23,7 +23,7 @@ jobs:
       - name: Download and install install4j
         run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux_8_0_11.deb && sudo dpkg -i install4j_linux_8_0_11.deb
       - name: Build with Gradle
-        run: ./gradlew build media -x test
+        run: ./gradlew build makeAllmedias -x test
         env:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
