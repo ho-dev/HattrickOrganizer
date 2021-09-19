@@ -197,6 +197,18 @@ install4j {
 task makeAllmedias(dependsOn: 'media') {
     doLast {
         delete "${projectDir}/build/artefacts/output.txt"
+
+        println("copy version.properties into ${project.ext.target_dir}")
+        copy {
+            from "${projectDir}/version.properties"
+            into "${project.ext.target_dir}"
+        }
+
+        println("copy release_note.html}")
+        copy {
+            from "${projectDir}/docs/release_notes/release_notes.html"
+            into "${project.ext.target_dir}"
+        }
     }
 }
 
@@ -354,12 +366,6 @@ task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
 
-            println("copy version.properties into ${project.ext.target_dir}")
-            copy {
-                from "${projectDir}/version.properties"
-                into "${project.ext.target_dir}"
-            }
-
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
             def contributors = callGit('git shortlog -s -n 4.1..HEAD')
@@ -437,7 +443,7 @@ poeditorPull {
 
 markdownToHtml {
     sourceDir = new File("${projectDir}/docs/release_notes/md")
-    outputDir = new File("${target_dir}")
+    outputDir = new File("${projectDir}/docs/release_notes")
     markdownToHtml.hardwraps = true
 }
 
