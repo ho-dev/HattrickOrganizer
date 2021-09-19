@@ -13,9 +13,9 @@ import java.io.File;
 
 public final class UpdateController {
 
-    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/akasolace/HO/releases/download/dev/release_notes.md";
-    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/akasolace/HO/releases/download/beta/release_notes.md";
-    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/akasolace/HO/releases/download/tag_stable/release_notes.md";
+    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/akasolace/HO/releases/download/dev/release_notes.html";
+    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/akasolace/HO/releases/download/beta/release_notes.html";
+    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/akasolace/HO/releases/download/tag_stable/release_notes.html";
 
     /**
      * Check the external site for the latest version according to user preference regarding release channel
