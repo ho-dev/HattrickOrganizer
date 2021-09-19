@@ -1,26 +1,9 @@
 package tool.updater;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Properties;
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import core.gui.comp.HyperLinkLabel;
 import core.net.MyConnector;
-import core.util.HOLogger;
-import core.util.IOUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
 public class UpdaterPanel extends JPanel {
 
