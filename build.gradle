@@ -203,7 +203,7 @@ task makeAllmedias(dependsOn: 'media') {
 
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
-    dependsOn 'updatebuildreferences'
+    dependsOn 'markdownToHtml'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
 
     // 60 -> Windows Setup
@@ -380,7 +380,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                     ""
             ]
 
-            new File("${projectDir}/docs/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
+            new File("${projectDir}/docs/release_notes/md/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
 
         }
         else{
@@ -434,13 +434,13 @@ poeditorPull {
 }
 
 markdownToHtml {
-    sourceDir = new File("${projectDir}/docs/changelog/md")
-    outputDir = new File("${projectDir}/docs/changelog/html")
+    sourceDir = new File("${projectDir}/docs/release_notes/md")
+    outputDir = new File("${target_dir}")
     markdownToHtml.hardwraps = true
 }
 
 installDist.dependsOn createLanguageFileList
-markdownToHtml.dependsOn pushmd
+markdownToHtml.dependsOn updatebuildreferences
 poeditorPull.dependsOn preparingBuild
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources

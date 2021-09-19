@@ -63,6 +63,6 @@ jobs:
             build/artefacts/**
           name: ${{ steps.read_version.outputs.value }}
           tag_name: ${{ steps.read_version_tag.outputs.value }}
-          body_path: docs/release_notes.md
+          body_path: ${projectDir}/docs/release_notes/md/release_notes.md
           target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: true
