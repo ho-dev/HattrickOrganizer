@@ -13,9 +13,9 @@ import java.io.File;
 
 public final class UpdateController {
 
-    private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes/release_notes(dev).html";
-    private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes/release_notes(beta).html";
-    private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes/release_notes(stable).html";
+    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/akasolace/HO/releases/download/dev/release_notes.md";
+    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/akasolace/HO/releases/download/beta/release_notes.md";
+    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/akasolace/HO/releases/download/tag_stable/release_notes.md";
 
     /**
      * Check the external site for the latest version according to user preference regarding release channel
@@ -80,15 +80,15 @@ public final class UpdateController {
         switch (versionType) {
             case "DEV" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
-                releaseNoteUrl = DEV_URL;
+                releaseNoteUrl = RELEASE_NOTES_DEV_URL;
             }
             case "BETA" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
-                releaseNoteUrl = BETA_URL;
+                releaseNoteUrl = RELEASE_NOTES_BETA_URL;
             }
             default -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
-                releaseNoteUrl = STABLE_URL;
+                releaseNoteUrl = RELEASE_NOTES_STABLE_URL;
             }
         }
 
