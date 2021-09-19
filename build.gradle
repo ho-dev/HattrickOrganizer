@@ -380,7 +380,9 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                     ""
             ]
 
-            new File("${projectDir}/docs/release_notes/md/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
+            def mdDir = new File("${projectDir}/docs/release_notes/md")
+            mdDir.mkdirs()
+            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
 
         }
         else{
