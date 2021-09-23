@@ -1021,21 +1021,62 @@ public class YouthPlayer {
             var numberOfUsefulTrainings = this.currentSkills.values().stream()
                     .filter(YouthSkillInfo::isTrainingUsefull)
                     .count();
+            var numberOfKnownTop3Skills = this.currentSkills.values().stream()
+                    .filter(s->s!=null && s.isTop3())
+                    .count();
+            var minimumTop3SkillPotential = this.currentSkills.values().stream()
+                    .filter(s->s!=null && s.isTop3() && s.getMax() != null)
+                    .min(Comparator.comparing(YouthSkillInfo::getMax))
+                    .get().getMax();
             int age = this.getAgeYears();
             int days = this.getAgeDays();
             while (age < 17 && numberOfUsefulTrainings > 0) {
                 // for each week until age of 17 is reached
                 int ntrainingsMaxReached=0;
+                var nKnownTop3Skills = numberOfKnownTop3Skills;
                 for (var skill : this.currentSkills.values()) {
                     // find new maximum value of each skill
                     var maxVal = skill.getCurrentValue();
+                    if ( skill.getPotential17Value() == null ) skill.setPotential17Value(maxVal);
                     if ( skill.isTrainingUsefull()) {
-                        if (skill.getPotential17Value() != null) maxVal = skill.getPotential17Value();
+                        // find further non useful trainings
+                        var isKeeper = this.currentSkills.areKeeperSkills();
+                        if (isKeeper != null ) {
+                            if (skill.getSkillID() == Keeper) {
+                                if (!isKeeper) {
+                                    numberOfUsefulTrainings--;
+                                    continue; // not an useful training for field player
+                                }
+                            } else if (skill.getSkillID() == Scorer
+                                    || skill.getSkillID() == Winger
+                                    || skill.getSkillID() == Passing
+                                    || skill.getSkillID() == Playmaker) {
+                                if (isKeeper) {
+                                    numberOfUsefulTrainings--;
+                                    continue; // not an useful training for keeper
+                                }
+                            }
+                        }
+
+                        maxVal = skill.getPotential17Value();
                         // limit of skill
                         var skillLimit = 8.3;
                         if (skill.getMax() != null && skill.getMax() < 8) {
                             skillLimit = skill.getMax() + .99;
                         }
+                        // further reduce of limit concerning known top3 skills
+                        var isTop3 = skill.isTop3();
+                        if ( isTop3 != null && !isTop3 || nKnownTop3Skills == 3 ){
+                            //  reduce limit if skill is not in top3 skills
+                            if ( skillLimit > minimumTop3SkillPotential){
+                                skillLimit = minimumTop3SkillPotential+.99;
+                            }
+                        }
+                        else if ( isTop3 == null && nKnownTop3Skills < 3) {
+                            // one candidate for top3 skill
+                            nKnownTop3Skills++;
+                        }
+
                         if (!skill.isMaxReached() && maxVal < skillLimit) { // if maximum is not beyond the given limit
                             // maximum weekly increment of the skill
                             double increment = YouthTraining.getMaxTrainingPerWeek(skill.getSkillID(), (int) maxVal, age);
