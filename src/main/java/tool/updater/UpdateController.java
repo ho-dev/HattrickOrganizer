@@ -3,6 +3,7 @@ package tool.updater;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.Updater;
@@ -48,7 +49,7 @@ public final class UpdateController {
         VersionInfo updVersion = null;
 
         // check if version available based on channel
-        switch (core.model.UserParameter.temp().ReleaseChannel) {
+        switch (UserParameter.temp().ReleaseChannel) {
             case "Dev":
                 VersionInfo devVersion = MyConnector.instance().getLatestVersion();
                 if (compareToCurrentVersions(devVersion)) updVersion = devVersion;
@@ -58,6 +59,7 @@ public final class UpdateController {
                 if (compareToCurrentVersions(betaVersion)) {
                     if (compareTwoVersions(betaVersion, updVersion)) {
                         updVersion = betaVersion;
+                        UserParameter.temp().ReleaseChannel = "Beta";
                     }
                 }
                 // no break to check if there is a newer stable release
@@ -67,6 +69,7 @@ public final class UpdateController {
                 if (compareToCurrentVersions(stableVersion)) {
                     if (compareTwoVersions(stableVersion, updVersion)) {
                         updVersion = stableVersion;
+                        UserParameter.temp().ReleaseChannel = "Stable";
                     }
                 }
         }
