@@ -1033,12 +1033,14 @@ public class YouthPlayer {
 
         }
 
+        /*
         var skills = new StringBuilder(this.getFullName()+": " );
         for ( var skill : this.currentSkills.values()){
             skills.append(skill.getSkillID().toString()).append("=").append(skill.getPotential17Value()).append(";");
         }
 
         HOLogger.instance().info(this.getClass(), skills.toString());
+        */
     }
 
     private void calcPotential17Value(YouthSkillInfo s, YouthTrainingContext trainingContext) {
