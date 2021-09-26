@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class YouthSkillInfo {
 
-    public static int UsefulTrainingThreshold =4;
+    public static int UsefulTrainingThreshold = 4;
 
     /**
      * Skill Id
