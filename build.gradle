@@ -204,7 +204,7 @@ task makeAllmedias(dependsOn: 'media') {
             into "${project.ext.target_dir}"
         }
 
-        println("copy release_note.html}")
+        println("copy release_note.html")
         copy {
             from "${projectDir}/docs/release_notes/release_notes.html"
             into "${project.ext.target_dir}"
