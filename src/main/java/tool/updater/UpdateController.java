@@ -177,16 +177,16 @@ public final class UpdateController {
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
         if (a == null) return false; // NO version is NOT greater than any version
-        if (b == null) return true;  // every version is greater or equal to NO version
+        if (b == null) return true;  // each not null version is greater than NO version
         return a.getVersion() > b.getVersion() ||
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
-    // returns true is a more recent than current version
-    public static boolean compareToCurrentVersions(VersionInfo a) {
-        if (a == null) return false; // NO version is NOT greater than current version
-        return a.getVersion() > HO.VERSION ||
-                ((a.getVersion() == HO.VERSION) && (a.getBuild() > HO.getRevisionNumber()));
+    // returns true if version is more recent than current version
+    public static boolean compareToCurrentVersions(VersionInfo version) {
+        if (version == null) return false; // NO version is NOT greater than current version
+        return version.getVersion() > HO.VERSION ||
+                ((version.getVersion() == HO.VERSION) && (version.getBuild() > HO.getRevisionNumber()));
     }
 
 }

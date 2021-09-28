@@ -3,6 +3,7 @@ package core.util;
 import com.install4j.api.launcher.ApplicationLauncher;
 import core.HO;
 import core.gui.HOMainFrame;
+import core.model.UserParameter;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
@@ -66,7 +67,7 @@ public class Updater {
         try {
             mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
         } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e.toString());
+            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e);
         }
     }
 
@@ -83,19 +84,26 @@ public class Updater {
             com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
         }
         catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e.toString());
+            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e);
         }
     }
 
     public void update() {
 
-        Boolean bValidregisteredMediaID = false;
+        boolean bValidregisteredMediaID = false;
 
         try {
             Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
             if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))){
                 String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
-                bValidregisteredMediaID = Arrays.stream(new String[]{DEV_UPDATE_XML_URL, BETA_UPDATE_XML_URL, STABLE_UPDATE_XML_URL}).anyMatch(registeredMediaID::equalsIgnoreCase);
+                // invalidate media id, if release channel is switched due to newer releases in higher channels
+                //bValidregisteredMediaID = Arrays.stream(new String[]{DEV_UPDATE_XML_URL, BETA_UPDATE_XML_URL, STABLE_UPDATE_XML_URL}).anyMatch(registeredMediaID::equalsIgnoreCase);
+                String comp = switch (UserParameter.instance().ReleaseChannel) {
+                    case "Stable" -> STABLE_UPDATE_XML_URL;
+                    case "Beta" -> BETA_UPDATE_XML_URL;
+                    default -> DEV_UPDATE_XML_URL;
+                };
+                bValidregisteredMediaID = comp.equalsIgnoreCase(registeredMediaID);
             }
 
             if ((vPrefsStore == null) || (! vPrefsStore.containsKey("updatesUrl")) || (! bValidregisteredMediaID))
@@ -114,7 +122,7 @@ public class Updater {
                 }
             }
         } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "error while fetching java store" + e.toString());
+            HOLogger.instance().error(Updater.class, "error while fetching java store" + e);
         }
 
         ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
