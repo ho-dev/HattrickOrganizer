@@ -1019,10 +1019,10 @@ public class YouthPlayer {
             var trainingContext = new YouthTrainingContext();
             Comparator<YouthSkillInfo> trainingUsefulnessComparator = (i1, i2) -> getTrainingUsefulness(i2).compareTo(getTrainingUsefulness(i1));
             trainingContext.numberOfKnownTop3Skills = (int) this.currentSkills.values().stream()
-                    .filter(s -> s != null && s.isTop3())
+                    .filter(s -> s != null && s.isTop3() != null && s.isTop3())
                     .count();
             trainingContext.minimumTop3SkillPotential = this.currentSkills.values().stream()
-                    .filter(s->s!=null && s.isTop3() && s.getMax() != null)
+                    .filter(s->s!=null && s.isTop3() != null && s.isTop3() && s.getMax() != null)
                     .min(Comparator.comparing(YouthSkillInfo::getMax))
                     .get().getMax();
             trainingContext.age = this.getAgeYears();
