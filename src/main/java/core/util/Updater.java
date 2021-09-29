@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.model.UserParameter;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
