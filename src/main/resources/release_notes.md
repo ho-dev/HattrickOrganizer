@@ -28,7 +28,7 @@
 - fix download of secondary cup matches (#787)
 - tuning simulation (#865)
 - fix npe if system configurations of team analyzer are not available in database (#956)
-- TODO check: fix analyse team selection bug (#913)
+- fix analyse team selection bug (#913)
 
 
 ### Rating
