@@ -1,6 +1,6 @@
 
 <div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/utils/buildResources/Logo_stable.png">
+  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/utils/buildResources/Logo_stable.png" alt="HO logo">
 </div>
 
 **Helper Tool for online-manager [Hattrick](http://www.hattrick.org)**
@@ -10,6 +10,14 @@
   <td>
     <a href="https://github.com/akasolace/HO/releases/tag/4.1">
     <img src="https://img.shields.io/badge/HO-4.1-brightgreen.svg" alt="latest release" />
+    </a>
+  </td>
+</tr>
+<tr>
+  <td>Latest Beta Version</td>
+  <td>
+    <a href="https://github.com/akasolace/HO/releases/tag/beta">
+    <img src="https://img.shields.io/badge/HO-BETA-blue.svg" alt="latest beta version" />
     </a>
   </td>
 </tr>

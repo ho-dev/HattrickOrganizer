@@ -13,6 +13,7 @@ import java.util.*;
 
 import static core.util.Helper.parseDate;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static module.training.Skills.HTSkillID.*;
 
 public class YouthPlayer {
@@ -1018,19 +1019,18 @@ public class YouthPlayer {
         else {
             var trainingContext = new YouthTrainingContext();
             Comparator<YouthSkillInfo> trainingUsefulnessComparator = (i1, i2) -> getTrainingUsefulness(i2).compareTo(getTrainingUsefulness(i1));
-            trainingContext.numberOfKnownTop3Skills = (int) this.currentSkills.values().stream()
-                    .filter(s -> s != null && s.isTop3() != null && s.isTop3())
+            trainingContext.numberOfKnownTop3Skills = this.currentSkills.values().stream()
+                    .filter(s -> s.isTop3() != null && s.isTop3())
                     .count();
             trainingContext.minimumTop3SkillPotential = this.currentSkills.values().stream()
-                    .filter(s->s!=null && s.isTop3() != null && s.isTop3() && s.getMax() != null)
+                    .filter(s -> s.isTop3() != null && s.isTop3() && s.getMax() != null)
                     .min(Comparator.comparing(YouthSkillInfo::getMax))
                     .get().getMax();
             trainingContext.age = this.getAgeYears();
             trainingContext.days = this.getAgeDays();
             this.currentSkills.values().stream()
                     .sorted(trainingUsefulnessComparator)
-                    .forEach(s->calcPotential17Value(s, trainingContext));
-
+                    .forEach(s -> calcPotential17Value(s, trainingContext));
         }
 
         /*
@@ -1049,14 +1049,14 @@ public class YouthPlayer {
         if ( s.isTop3() != null){
             if ( !s.isTop3()){
                 if ( skillLimit>trainingContext.minimumTop3SkillPotential+.99){
-                    skillLimit=trainingContext.minimumTop3SkillPotential+.99;
+                    skillLimit=min(8.3,trainingContext.minimumTop3SkillPotential+.99);
                 }
             }
         }
         else {
             if ( trainingContext.numberOfKnownTop3Skills == 3){
                 if ( skillLimit>trainingContext.minimumTop3SkillPotential+.99){
-                    skillLimit=trainingContext.minimumTop3SkillPotential+.99;
+                    skillLimit=min(8.3,trainingContext.minimumTop3SkillPotential+.99);
                 }
             }
             else {
@@ -1084,11 +1084,14 @@ public class YouthPlayer {
     }
 
     private Integer getTrainingUsefulness(YouthSkillInfo skillInfo) {
-        if (skillInfo.isTrainingUsefull()) {
+        if (this.ageYears < 17 && skillInfo.isTrainingUsefull()) {
+            var trainingDaysUntil17 = (17-this.ageYears)*112 - this.ageDays;
+            var factorMax = trainingDaysUntil17/2.24;       // [15:100..17:0]
+            var factorCurrent = (200-factorMax);     // [15:100..17:200]
             var max = 8.3;
             if (skillInfo.isMaxAvailable() && skillInfo.getMax() < 8) max = skillInfo.getMax() + .99;
-            max += skillInfo.getCurrentValue();
-            return (int)(max*100);
+            max *= factorMax;
+            return (int) (max + factorCurrent*skillInfo.getCurrentValue());
         }
         return 0;
     }
