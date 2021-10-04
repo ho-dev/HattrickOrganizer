@@ -1,9 +1,9 @@
 package module.youth;
 
 public class YouthTrainingContext {
-    public Integer age;
-    public Integer days;
-    public Integer numberOfKnownTop3Skills;
-    public Integer minimumTop3SkillPotential;
+    public int age;
+    public int days;
+    public long numberOfKnownTop3Skills;
+    public int minimumTop3SkillPotential;
 
 }
