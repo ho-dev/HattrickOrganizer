@@ -144,7 +144,6 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				int modelRow = convertRowIndexToModel(row);
-				int selectedRow = convertRowIndexToModel(super.getSelectedRow());
 				var histoTraining = TrainingManager.instance().getHistoricalTrainings();
 				var nbRows = histoTraining.size();
 				TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
@@ -154,7 +153,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
 					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
 				}
-				if (modelRow == selectedRow) {
+				if (super.isRowSelected(modelRow)) {
 					c.setBackground(SELECTION_BG);
 				}
 				else {
@@ -233,7 +232,6 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
-				int selectedRow = convertRowIndexToModel(super.getSelectedRow());
 				int modelRow = convertRowIndexToModel(row);
 				TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
 				var source = tpw.getSource();
@@ -242,7 +240,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
 					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
 				}
-				if (modelRow == selectedRow) {
+				if (super.isRowSelected(modelRow)) {
 					c.setBackground(SELECTION_BG);
 				}
 				else {
