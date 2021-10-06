@@ -135,19 +135,18 @@ public class TrainingPreviewPlayers implements Refreshable {
         boolean bEstimedStamina = false;
 
         getMatchesForTraining();
-
-        //for (int i = 0; i < lMatchStats.size(); i++) {
         for ( var ms : lMatchStats){
-
-            if (weekTrainTyp.getTrainingSkillPositions() != null) {
-                fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPositions());
-                if (fullTrain > 90)
-                    fullTrain = 90;
-            }
-            if (weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
-                partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPartlyTrainingPositions());
-                if (partialTrain > 90)
-                    partialTrain = 90;
+            if ( weekTrainTyp != null ) {
+                if (weekTrainTyp.getTrainingSkillPositions() != null) {
+                    fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPositions());
+                    if (fullTrain > 90)
+                        fullTrain = 90;
+                }
+                if (weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
+                    partialTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPartlyTrainingPositions());
+                    if (partialTrain > 90)
+                        partialTrain = 90;
+                }
             }
             // If player receive training, don't display stamina icon
             if (fullTrain == 0 && partialTrain == 0) {
@@ -157,24 +156,25 @@ public class TrainingPreviewPlayers implements Refreshable {
             }
         }
 
-        //for (int i = 0; i < lLinueupPos.size(); i++) {
         for ( var pos: lLinueupPos ){
             MatchRoleID roleId = pos.getPositionBySpielerId(playerID);
 
             if (roleId != null) {
-                if (weekTrainTyp.getTrainingSkillPositions() != null) {
-                    for (int k = 0; k < weekTrainTyp.getTrainingSkillPositions().length; k++) {
-                        if (roleId.getId() == weekTrainTyp.getTrainingSkillPositions()[k]) {
-                            fullFuturTrain = true;
-                            break;
+                if ( weekTrainTyp != null) {
+                    if (weekTrainTyp.getTrainingSkillPositions() != null) {
+                        for (int k = 0; k < weekTrainTyp.getTrainingSkillPositions().length; k++) {
+                            if (roleId.getId() == weekTrainTyp.getTrainingSkillPositions()[k]) {
+                                fullFuturTrain = true;
+                                break;
+                            }
                         }
                     }
-                }
-                if (!fullFuturTrain && weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
-                    for (int k = 0; k < weekTrainTyp.getTrainingSkillPartlyTrainingPositions().length; k++) {
-                        if (roleId.getId() == weekTrainTyp.getTrainingSkillPartlyTrainingPositions()[k]) {
-                            partialFuturTrain = true;
-                            break;
+                    if (!fullFuturTrain && weekTrainTyp.getTrainingSkillPartlyTrainingPositions() != null) {
+                        for (int k = 0; k < weekTrainTyp.getTrainingSkillPartlyTrainingPositions().length; k++) {
+                            if (roleId.getId() == weekTrainTyp.getTrainingSkillPartlyTrainingPositions()[k]) {
+                                partialFuturTrain = true;
+                                break;
+                            }
                         }
                     }
                 }
