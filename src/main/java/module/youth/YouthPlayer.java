@@ -660,6 +660,10 @@ public class YouthPlayer {
         return (int)(ageInDays / 112);
     }
 
+    public YouthSkillsInfo getCurrentSkills() {
+        return this.currentSkills;
+    }
+
     public static class ScoutComment {
         private int youthPlayerId;
         private int index;
@@ -1017,17 +1021,8 @@ public class YouthPlayer {
             }
         }
         else {
-            var trainingContext = new YouthTrainingContext();
+            var trainingContext = new YouthTrainingContext(this);
             Comparator<YouthSkillInfo> trainingUsefulnessComparator = (i1, i2) -> getTrainingUsefulness(i2).compareTo(getTrainingUsefulness(i1));
-            trainingContext.numberOfKnownTop3Skills = this.currentSkills.values().stream()
-                    .filter(s -> s.isTop3() != null && s.isTop3())
-                    .count();
-            trainingContext.minimumTop3SkillPotential = this.currentSkills.values().stream()
-                    .filter(s -> s.isTop3() != null && s.isTop3() && s.getMax() != null)
-                    .min(Comparator.comparing(YouthSkillInfo::getMax))
-                    .get().getMax();
-            trainingContext.age = this.getAgeYears();
-            trainingContext.days = this.getAgeDays();
             this.currentSkills.values().stream()
                     .sorted(trainingUsefulnessComparator)
                     .forEach(s -> calcPotential17Value(s, trainingContext));
