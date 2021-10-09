@@ -63,7 +63,7 @@ public class PluginIfaUtils {
 				break;
 			}
 			new DownloadDialog(UserManager.instance().getCurrentUser().isNtTeam());
-		} while (retry == true && !(retry = false));
+		} while (retry && !(retry = false));
 
 		//JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
 		try {
@@ -75,8 +75,7 @@ public class PluginIfaUtils {
 						.getLastIFAMatchDate(time.toString()));
 				try {
 					List<Date[]> times = getTimeIntervalsForRetrieval(from);
-					for (Iterator<Date[]> i = times.iterator(); i.hasNext();) {
-						Date[] fromTo = i.next();
+					for (Date[] fromTo : times) {
 						insertMatches(fromTo[0], fromTo[1]);
 					}
 				} catch (Exception e) {
@@ -155,9 +154,8 @@ public class PluginIfaUtils {
 		int opponentLeague = 0;
 		
 		for (int i = 0; i < matchesCount; i++) {
-			IfaMatch match = new IfaMatch();
-
 			int matchTypeId = Integer.parseInt(parseXmlElement(doc, "MatchType", i, "Match"));
+			IfaMatch match = new IfaMatch(matchTypeId);
 			MatchType matchType = MatchType.getById(matchTypeId);
 			matchDate = parseXmlElement(doc, "MatchDate", i, "Match");
 			if (matchType == MatchType.FRIENDLYCUPRULES || matchType == MatchType.FRIENDLYNORMAL
@@ -235,7 +233,7 @@ public class PluginIfaUtils {
 	}
 
 	private static List<Date[]> getTimeIntervalsForRetrieval(Date from) {
-		List<Date[]> ret = new ArrayList<Date[]>();
+		var ret = new ArrayList<Date[]>();
 		Date start = DateTimeUtils.getDateWithMinTime(from);
 		Calendar end = new GregorianCalendar();
 		end.setLenient(true);
