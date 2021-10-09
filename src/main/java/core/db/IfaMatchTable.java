@@ -20,16 +20,17 @@ public class IfaMatchTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[9];
-		columns[0] = new ColumnDescriptor("MATCHID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("MatchTyp", Types.INTEGER, false); //Integer defining the type of match
-		columns[2] = new ColumnDescriptor("PLAYEDDATE", Types.VARCHAR, false, 25);
-		columns[3] = new ColumnDescriptor("HOMETEAMID", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("AWAYTEAMID", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("HOMETEAMGOALS", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("AWAYTEAMGOALS", Types.INTEGER, false);
-		columns[7] = new ColumnDescriptor("HOME_LEAGUEID", Types.INTEGER, false);
-		columns[8] = new ColumnDescriptor("AWAY_LEAGUEID", Types.INTEGER, false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("MATCHID", Types.INTEGER, false),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false), //Integer defining the type of match
+				new ColumnDescriptor("PLAYEDDATE", Types.VARCHAR, false, 25),
+				new ColumnDescriptor("HOMETEAMID", Types.INTEGER, false),
+				new ColumnDescriptor("AWAYTEAMID", Types.INTEGER, false),
+				new ColumnDescriptor("HOMETEAMGOALS", Types.INTEGER, false),
+				new ColumnDescriptor("AWAYTEAMGOALS", Types.INTEGER, false),
+				new ColumnDescriptor("HOME_LEAGUEID", Types.INTEGER, false),
+				new ColumnDescriptor("AWAY_LEAGUEID", Types.INTEGER, false)
+		};
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class IfaMatchTable extends AbstractTable {
 	}
 
 	boolean isMatchinDB(int matchId) {
-		StringBuffer select = new StringBuffer(100);
+		var select = new StringBuilder(100);
 		select.append("SELECT * FROM ").append(getTableName());
 		select.append(" WHERE ").append("MATCHID");
 		select.append(" = ").append(matchId);
@@ -73,8 +74,8 @@ public class IfaMatchTable extends AbstractTable {
 
 	@SuppressWarnings("deprecation")
 	IfaMatch[] getMatches(boolean home) {
-		ArrayList<IfaMatch> list = new ArrayList<IfaMatch>();
-		StringBuffer select = new StringBuffer(100);
+		var list = new ArrayList<IfaMatch>();
+		var select = new StringBuilder(100);
 		select.append("SELECT * FROM ").append(getTableName());
 		select.append(" WHERE ").append(home ? "HOMETEAMID" : "AWAYTEAMID");
 		select.append(" = ").append(HOVerwaltung.instance().getModel().getBasics().getTeamId());
@@ -90,7 +91,7 @@ public class IfaMatchTable extends AbstractTable {
 			SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			while (rs.next()) {
-				IfaMatch tmp = new IfaMatch();
+				IfaMatch tmp = new IfaMatch(rs.getInt("MATCHTYP"));
 				tmp.setAwayLeagueId(rs.getInt("AWAY_LEAGUEID"));
 				tmp.setHomeLeagueId(rs.getInt("HOME_LEAGUEID"));
 				tmp.setPlayedDate(simpleFormat.parse(rs.getString("PLAYEDDATE")));
@@ -110,15 +111,11 @@ public class IfaMatchTable extends AbstractTable {
 
 	@SuppressWarnings("deprecation")
 	void insertMatch(IfaMatch match) {
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("insert into ").append(getTableName()).append("(");
-		for (int i = 0; i < columns.length; i++) {
-			statement.append(columns[i].getColumnName());
-			if (i < columns.length - 1)
-				statement.append(",");
-		}
-		statement.append(") VALUES (");
-		statement.append(match.getMatchId()).append(",'");
+		var sql = initStatement();
+		var statement = new StringBuilder(100);
+		statement.append(sql);
+		statement.append(match.getMatchId()).append(",");
+		statement.append(match.getMatchTyp()).append(",'");
 		statement.append(match.getPlayedDateString()).append("',");
 		statement.append(match.getHomeTeamId()).append(",");
 		statement.append(match.getAwayTeamId()).append(",");
@@ -128,7 +125,23 @@ public class IfaMatchTable extends AbstractTable {
 		statement.append(match.getAwayLeagueId()).append(")");
 		adapter.executeUpdate(statement.toString());
 	}
-	
+
+	static private String _sql;
+	private String initStatement() {
+		if ( _sql == null) {
+			var s = new StringBuilder();
+			s.append("insert into ").append(getTableName()).append("(");
+			for (int i = 0; i < columns.length; i++) {
+				s.append(columns[i].getColumnName());
+				if (i < columns.length - 1)
+					s.append(",");
+			}
+			s.append(") VALUES (");
+			_sql = s.toString();
+		}
+		return _sql;
+	}
+
 	void deleteAllMatches() {
 		String sql = "delete from " + getTableName();
 		adapter.executeUpdate(sql);

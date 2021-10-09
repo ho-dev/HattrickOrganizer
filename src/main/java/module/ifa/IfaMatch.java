@@ -5,6 +5,7 @@ import java.util.Date;
 public class IfaMatch {
 
 	private int matchId;
+	private int matchTyp;
 	private Date playedDate;
 	private String playedDateString;
 	private int homeTeamId;
@@ -13,6 +14,14 @@ public class IfaMatch {
 	private int awayLeagueId;
 	private int awayTeamGoals;
 	private int homeTeamGoals;
+
+	public IfaMatch(int matchTyp){
+		this.matchTyp=matchTyp;
+	}
+
+	public int getMatchTyp(){
+		return matchTyp;
+	}
 
 	public final int getMatchId() {
 		return matchId;
