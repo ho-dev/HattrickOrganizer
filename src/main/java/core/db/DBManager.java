@@ -2430,7 +2430,7 @@ public class DBManager {
 	 */
 	public boolean isIFAMatchinDB(int matchId) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-				.isMatchinDB(matchId);
+				.isMatchInDB(matchId);
 	}
 
 	/**

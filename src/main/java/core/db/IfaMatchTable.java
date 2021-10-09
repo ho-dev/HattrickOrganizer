@@ -38,7 +38,7 @@ public class IfaMatchTable extends AbstractTable {
 		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
-	boolean isMatchinDB(int matchId) {
+	boolean isMatchInDB(int matchId) {
 		var select = new StringBuilder(100);
 		select.append("SELECT * FROM ").append(getTableName());
 		select.append(" WHERE ").append("MATCHID");
@@ -111,7 +111,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	@SuppressWarnings("deprecation")
 	void insertMatch(IfaMatch match) {
-		var sql = initStatement();
+		var sql = initInsertStatement();
 		var statement = new StringBuilder(100);
 		statement.append(sql);
 		statement.append(match.getMatchId()).append(",");
@@ -126,9 +126,9 @@ public class IfaMatchTable extends AbstractTable {
 		adapter.executeUpdate(statement.toString());
 	}
 
-	static private String _sql;
-	private String initStatement() {
-		if ( _sql == null) {
+	static private String insertStatementPrefix;
+	private String initInsertStatement() {
+		if ( insertStatementPrefix == null) {
 			var s = new StringBuilder();
 			s.append("insert into ").append(getTableName()).append("(");
 			for (int i = 0; i < columns.length; i++) {
@@ -137,9 +137,9 @@ public class IfaMatchTable extends AbstractTable {
 					s.append(",");
 			}
 			s.append(") VALUES (");
-			_sql = s.toString();
+			insertStatementPrefix = s.toString();
 		}
-		return _sql;
+		return insertStatementPrefix;
 	}
 
 	void deleteAllMatches() {
