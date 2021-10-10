@@ -192,7 +192,7 @@ public class TrainingPreviewPlayers implements Refreshable {
     }
 
     /**
-     * get the matchs concerning by the training week
+     * get the matches concerning by the training week
      */
     private void getMatchesForTraining() {
 
