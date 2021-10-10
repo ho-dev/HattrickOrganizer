@@ -209,6 +209,12 @@ task makeAllmedias(dependsOn: 'media') {
             from "${projectDir}/docs/release_notes/release_notes.html"
             into "${project.ext.target_dir}"
         }
+        // compatibility to HO3 Updater (where release notes were in docs)
+        copy {
+            from "${projectDir}/docs/release_notes"
+            include "*.html"
+            into "${projectDir}/docs"
+        }
     }
 }
 
