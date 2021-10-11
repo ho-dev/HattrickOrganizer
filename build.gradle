@@ -379,7 +379,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 }
 
 
-task updatebuildreferences(dependsOn: CreateDistribution){
+task updatebuildreferences(dependsOn: ZipDistribution){
 
 
     doLast {
