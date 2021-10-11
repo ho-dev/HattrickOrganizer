@@ -72,12 +72,9 @@ ext.filter = { string, filters ->
     String res="";
     lines.each{ l->
         for ( String f in filters ) {
-            println l
-            println f
             if ( l.contains(f) ) return
         }
         res = res + l + "\n";
-        println res
     }
     return res
 }
@@ -387,6 +384,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
 
+            // list the contributors that don't want to be mentioned in release notes
             def contributorFilter = ["Che"]
 
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
