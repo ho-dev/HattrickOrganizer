@@ -65,6 +65,18 @@ ext.callGit = { param ->
     return p.text.trim()
 }
 
+ext.filter = { string, filters ->
+    def lines = string.split('\n');
+    String res="";
+    lines.each{ l->
+        for ( String f in filters ) {
+            if ( l.contains(f) ) return
+        }
+        res = res + l + "\n";
+    }
+    return res
+}
+
 // Define HO version  =================
 def currentBranch = callGit('git branch --show-current')
 def versionPropsFile = file('version.properties')
@@ -366,15 +378,18 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     }
 }
 
+
 task updatebuildreferences(dependsOn: CreateDistribution){
 
 
     doLast {
         if (releaseArtefacts) {
 
+            def contributorFilter = [" Che"]
+
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
-            def contributors = callGit('git shortlog -s -n 4.1..HEAD')
+            def contributors = filter(callGit('git shortlog -s -n 4.1..HEAD'), contributorFilter);
             def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
             println("create release-notes")
