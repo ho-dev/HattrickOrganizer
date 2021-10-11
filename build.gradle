@@ -70,10 +70,10 @@ ext.callGit = { param ->
 ext.filter = { string, filters ->
     def lines = string.split('\n');
     println string
-    println lines
     String res="";
     lines.each{ l->
         for ( String f in filters ) {
+            println f
             if ( l.contains(f) ) return
         }
         res = res + l + "\n";
@@ -230,7 +230,7 @@ task makeAllmedias(dependsOn: 'media') {
         // compatibility to HO3 Updater
         // which used other zip file name
         def versionType=version_type[development_stage]
-        println("copy HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
         copy {
             from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
             rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
