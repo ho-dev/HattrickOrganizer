@@ -45,6 +45,8 @@ def minor = '0'
 def development_stage = 1
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
+def version_type = ["-DEV", "-BETA", ""]
+
 def development_message = [
         "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
         "Latest beta release - the version is feature complete - feedback from early users are welcome",
@@ -67,12 +69,15 @@ ext.callGit = { param ->
 
 ext.filter = { string, filters ->
     def lines = string.split('\n');
+    println string
+    println lines
     String res="";
     lines.each{ l->
         for ( String f in filters ) {
             if ( l.contains(f) ) return
         }
         res = res + l + "\n";
+        println res
     }
     return res
 }
@@ -221,7 +226,17 @@ task makeAllmedias(dependsOn: 'media') {
             from "${projectDir}/docs/release_notes/release_notes.html"
             into "${project.ext.target_dir}"
         }
-        // compatibility to HO3 Updater (where release notes were in docs)
+
+        // compatibility to HO3 Updater
+        // which used other zip file name
+        def versionType=version_type[development_stage]
+        println("copy HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+        copy {
+            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
+            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
+            into "${project.ext.target_dir}"
+        }
+        // and where release notes were in docs
         copy {
             from "${projectDir}/docs/release_notes"
             include "*.html"
@@ -262,20 +277,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
 
     buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
     //buildIds = [60]
-    String versionType
-
-    switch(development_stage) {
-        case '0':
-            versionType = "-DEV"
-            break;
-        case '1':
-            versionType = "-BETA"
-            break;
-        default:
-            versionType = ""
-            break;
-    }
-
+    String versionType=version_type[development_stage]
     variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
 }
 
@@ -379,7 +381,7 @@ task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
 }
 
 
-task updatebuildreferences(dependsOn: ZipDistribution){
+task updatebuildreferences(dependsOn: CreateDistribution){
 
 
     doLast {
