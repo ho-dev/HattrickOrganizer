@@ -69,10 +69,10 @@ ext.callGit = { param ->
 
 ext.filter = { string, filters ->
     def lines = string.split('\n');
-    println string
     String res="";
     lines.each{ l->
         for ( String f in filters ) {
+            println l
             println f
             if ( l.contains(f) ) return
         }
@@ -387,7 +387,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
     doLast {
         if (releaseArtefacts) {
 
-            def contributorFilter = [" Che"]
+            def contributorFilter = ["Che"]
 
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
