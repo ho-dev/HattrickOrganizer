@@ -9,15 +9,16 @@ import core.model.player.Player;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.ratings.LineupRatingPanel;
-import module.playerOverview.PlayerTable;
 import module.playerOverview.LineupPlayersTableNameColumn;
+import module.playerOverview.PlayerTable;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * Master panel of the Lineup module
@@ -107,7 +108,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
 		horizontalSplitPane.setLeftComponent(new JScrollPane(lineupPositionsPanel));
-		horizontalSplitPane.setRightComponent(lineupRatingAssistantPanel);
+		var lineupPositionJScrollPane = new JScrollPane();
+		lineupPositionJScrollPane.getViewport().add(lineupRatingAssistantPanel);
+		horizontalSplitPane.setRightComponent(lineupPositionJScrollPane);
 
 		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 		verticalSplitPane.setTopComponent(horizontalSplitPane);
