@@ -12,10 +12,10 @@ public class CurrencyUtils {
 	private CurrencyUtils() {}
 
 
-	static NumberFormat getLeagueCurrencyFormater(int countryId) {
+	static NumberFormat getLeagueCurrencyFormater(int leagueId) {
 		Locale leagueLocale;
 		DecimalFormat formatter = null;
-		switch (countryId) {
+		switch (leagueId) {
 			case 1 -> leagueLocale = Locale.forLanguageTag("sv-SE");
 			case 2 -> leagueLocale = Locale.forLanguageTag("en-GB");
 			case 3 -> leagueLocale = Locale.forLanguageTag("de-DE");
