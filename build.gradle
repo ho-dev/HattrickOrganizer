@@ -68,13 +68,13 @@ ext.callGit = { param ->
 }
 
 ext.filter = { string, filters ->
-    def lines = string.split('\n');
-    String res="";
+    def lines = string.split('\n')
+    String res=""
     lines.each{ l->
         for ( String f in filters ) {
             if ( l.contains(f) ) return
         }
-        res = res + l + "\n";
+        res = res + l + "\n"
     }
     return res
 }
@@ -87,9 +87,11 @@ def buildNumber = System.getenv("RUN_NUMBER") ?: 0
 // bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
 buildNumber = (buildNumber as Integer) + 3710
 buildNumber = buildNumber.toString()
+project.version.short = major + '.' + minor
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
+versionProps['shortVersion'] = project.version.short
 versionProps['tag'] = development_tag[development_stage]
 versionProps['branch'] = currentBranch
 versionProps.store(versionPropsFile.newWriter(), null)
@@ -366,7 +368,7 @@ task CreateDistribution (dependsOn: installDist) {
 
 task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
     group 'sub tasks'
-    archiveFileName  = "HO_${project.version}.zip"
+    archiveFileName  = "HO_{project.version.short}.zip"
     destinationDirectory  = file("${project.ext.target_dir}")
     from ("${buildDir}/install/${project.version}") {exclude("**/ho.sh", "**/HO.bat")}
     from ("${buildDir}/install/${project.version}") {
@@ -389,7 +391,7 @@ task updatebuildreferences(dependsOn: CreateDistribution){
 
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
-            def contributors = filter(callGit('git shortlog -s -n 4.1..HEAD'), contributorFilter);
+            def contributors = filter(callGit('git shortlog -s -n 4.1..HEAD'), contributorFilter)
             def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
             println("create release-notes")
@@ -453,7 +455,7 @@ task resetDB {
 
             println("Resetting DB: done !")
         } catch (Exception e) {
-            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
+            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
         }
     }
 }
