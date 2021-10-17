@@ -34,7 +34,6 @@ public class StatsPanel extends JPanel {
 	private JLabel coolnessTotalValueLabel2;
 	private JLabel coolnessSumValueLabel;
 	private JLabel coolnessSumTotalValueLabel;
-	private static final long serialVersionUID = -263387721027188968L;
 	private final IfaModel model;
 
 	public StatsPanel(IfaModel model) {
@@ -203,7 +202,7 @@ public class StatsPanel extends JPanel {
 		doubleFormat.setMaximumFractionDigits(2);
 		doubleFormat.setMinimumFractionDigits(2);
 
-		int totalCountries = WorldDetailsManager.instance().size();
+		int totalCountries = this.model.getTotalCountries();
 		String txt = "";
 		this.visitedValueLabel.setText(String.valueOf(this.model.getVistedCountriesCount()));
 		this.hostedValueLabel.setText(String.valueOf(this.model.getHostedCountriesCount()));
