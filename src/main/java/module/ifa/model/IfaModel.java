@@ -1,7 +1,6 @@
 package module.ifa.model;
 
 import core.db.DBManager;
-import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import module.ifa.IfaMatch;
 import module.ifa.PluginIfaUtils;
@@ -14,6 +13,8 @@ import java.util.Map;
 
 public class IfaModel {
 
+	public static final int APACHE_LEAGUE_ID = 1001;
+
 	private final List<IfaMatch> visited = new ArrayList<IfaMatch>();
 	private final List<IfaMatch> hosted = new ArrayList<IfaMatch>();
 	private List<IfaStatistic> hostedStatistic;
@@ -21,6 +22,7 @@ public class IfaModel {
 	private Summary visitedSummary;
 	private Summary hostedSummary;
 	private double maxCoolness;
+	private int totalCountries;
 	private final List<ModelChangeListener> listeners = new ArrayList<ModelChangeListener>();
 
 	public IfaModel() {
@@ -34,10 +36,13 @@ public class IfaModel {
 		this.hosted.addAll(Arrays.asList(DBManager.instance().getIFAMatches(true)));
 
 		this.maxCoolness = 0.0;
-		WorldDetailLeague[] leagues = WorldDetailsManager.instance().getLeagues();
-		for (WorldDetailLeague league : leagues) {
-			this.maxCoolness += PluginIfaUtils.getCoolness(league.getCountryId());
-		}
+		this.totalCountries = 0;
+		WorldDetailsManager.instance().getLeagues().stream()
+				.filter(l -> l.getLeagueId() != APACHE_LEAGUE_ID)
+				.forEach(l -> {
+					this.maxCoolness += PluginIfaUtils.getCoolness(l.getCountryId());
+					this.totalCountries++;
+				});
 		fireModelChanged();
 	}
 
@@ -186,4 +191,7 @@ public class IfaModel {
 		this.hostedStatistic = new ArrayList<IfaStatistic>(map.values());
 	}
 
+	public int getTotalCountries() {
+		return this.totalCountries;
+	}
 }

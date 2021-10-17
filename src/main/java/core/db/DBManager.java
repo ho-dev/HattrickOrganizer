@@ -1918,7 +1918,7 @@ public class DBManager {
 	 * @return the world detail league [ ]
 	 */
 // WorldDetail
-	public WorldDetailLeague[] getAllWorldDetailLeagues() {
+	public List<WorldDetailLeague> getAllWorldDetailLeagues() {
 		return ((WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME))
 				.getAllWorldDetailLeagues();
 	}

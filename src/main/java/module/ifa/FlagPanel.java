@@ -4,6 +4,7 @@ import core.gui.theme.ImageUtilities;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import module.ifa.model.IfaModel;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,18 +12,19 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import static module.ifa.model.IfaModel.APACHE_LEAGUE_ID;
+
 public class FlagPanel extends JPanel {
 
-	private static final long serialVersionUID = 6841405207630506680L;
-	private FlagLabel[] flagLabels;
+	private List<FlagLabel> flagLabels;
 	private JLabel header;
 	private JProgressBar percentState;
 
@@ -32,7 +34,7 @@ public class FlagPanel extends JPanel {
 
 	private void initialize(boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
 		createFlagLabels(away, ifaModel, flagDisplayModel);
-		int totalCountryCount = WorldDetailsManager.instance().size();
+		int totalCountryCount = flagLabels.size();
 		int playedCountryCount = (away) ? ifaModel.getVistedCountriesCount() : ifaModel
 				.getHostedCountriesCount();
 
@@ -72,10 +74,12 @@ public class FlagPanel extends JPanel {
 		constraints.gridwidth = 1;
 
 		if (this.flagLabels != null) {
-			for (int i = 0; i < this.flagLabels.length; i++) {
+			int i=0;
+			for (var flagLabel : this.flagLabels) {
 				constraints.gridx = i % flagDisplayModel.getFlagWidth();
 				constraints.gridy = 2 + i / flagDisplayModel.getFlagWidth();
-				add(this.flagLabels[i], constraints);
+				add(flagLabel, constraints);
+				i++;
 			}
 		}
 	}
@@ -90,29 +94,26 @@ public class FlagPanel extends JPanel {
 	}
 
 	private void createFlagLabels(boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
-		WorldDetailLeague[] leagues = WorldDetailsManager.instance().getLeagues();
-		this.flagLabels = new FlagLabel[leagues.length];
-		for (int i = 0; i < leagues.length; i++) {
-			FlagLabel flagLabel = new FlagLabel(flagDisplayModel);
-			flagLabel.setCountryId(leagues[i].getCountryId());
-			flagLabel.setCountryName(leagues[i].getCountryName());
-			flagLabel.setIcon(ImageUtilities.getCountryFlagIcon(flagLabel.getCountryId()));
-			flagLabel.setToolTipText(flagLabel.getCountryName());
+		this.flagLabels = new ArrayList<FlagLabel>();
+		WorldDetailsManager.instance().getLeagues().stream()
+				.filter(l->l.getLeagueId()!=APACHE_LEAGUE_ID)
+				.sorted((l1,l2)-> ObjectUtils.compare(l1.getCountryName(),l2.getCountryName()))
+				.forEach(l->addFlagLabel(l, away, ifaModel, flagDisplayModel));
+	}
 
-			if ((away && ifaModel.isVisited(leagues[i].getCountryId()))
-					|| (!away && ifaModel.isHosted(leagues[i].getCountryId()))) {
-				flagLabel.setEnabled(true);
-			} else {
-				flagLabel.setEnabled(false);
-			}
-			this.flagLabels[i] = flagLabel;
+	private void addFlagLabel(WorldDetailLeague league, boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
+		FlagLabel flagLabel = new FlagLabel(flagDisplayModel);
+		flagLabel.setCountryId(league.getCountryId());
+		flagLabel.setCountryName(league.getCountryName());
+		flagLabel.setIcon(ImageUtilities.getCountryFlagIcon(flagLabel.getCountryId()));
+		flagLabel.setToolTipText(flagLabel.getCountryName());
+
+		if ((away && ifaModel.isVisited(league.getCountryId()))
+				|| (!away && ifaModel.isHosted(league.getCountryId()))) {
+			flagLabel.setEnabled(true);
+		} else {
+			flagLabel.setEnabled(false);
 		}
-		Arrays.sort(this.flagLabels, new Comparator<FlagLabel>() {
-
-			@Override
-			public int compare(FlagLabel l1, FlagLabel l2) {
-				return l1.getCountryName().compareTo(l2.getCountryName());
-			}
-		});
+		this.flagLabels.add(flagLabel);
 	}
 }
