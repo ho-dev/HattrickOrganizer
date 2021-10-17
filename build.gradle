@@ -197,7 +197,6 @@ distributions {
     }
 }
 
-
 install4j {
     if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
     else installDir = file(System.getenv('INSTALL4J_HOME'))
@@ -235,15 +234,8 @@ task makeAllmedias(dependsOn: 'media') {
             rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
             into "${project.ext.target_dir}"
         }
-        // and where release notes were in docs
-        copy {
-            from "${projectDir}/docs/release_notes"
-            include "*.html"
-            into "${projectDir}/docs"
-        }
     }
 }
-
 
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
@@ -366,23 +358,7 @@ task CreateDistribution (dependsOn: installDist) {
     }
 }
 
-task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
-    group 'sub tasks'
-    archiveFileName  = "HO_{project.version.short}.zip"
-    destinationDirectory  = file("${project.ext.target_dir}")
-    from ("${buildDir}/install/${project.version}") {exclude("**/ho.sh", "**/HO.bat")}
-    from ("${buildDir}/install/${project.version}") {
-        include("**/ho.sh")
-        fileMode=0755 }
-    doLast {
-        println("zipped folder has been created")
-    }
-}
-
-
 task updatebuildreferences(dependsOn: CreateDistribution){
-
-
     doLast {
         if (releaseArtefacts) {
 
@@ -436,9 +412,7 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
         File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
         lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
     }
-
 }
-
 
 task resetDB {
     group 'tool'
