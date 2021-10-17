@@ -23,7 +23,7 @@ jobs:
       - name: Download and install install4j
         run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux_8_0_11.deb && sudo dpkg -i install4j_linux_8_0_11.deb
       - name: Build with Gradle
-        run: ./gradlew build media -x test
+        run: ./gradlew build makeAllmedias -x test
         env:
           INSTALL4J_HOME: /opt/install4j8
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
@@ -35,12 +35,24 @@ jobs:
         with:
           path: 'version.properties'
           property: 'version'
+      - name: Read short version
+        id: read_short_version
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: 'version.properties'
+          property: 'shortVersion'
       - name: Read version tag
         id: read_version_tag
         uses: christian-draeger/read-properties@1.0.1
         with:
           path: 'version.properties'
           property: 'tag'
+      - name: Read branch
+        id: read_version_branch
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: 'version.properties'
+          property: 'branch'
       - name: Delete previous tag and release
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
@@ -57,6 +69,28 @@ jobs:
             build/artefacts/**
           name: ${{ steps.read_version.outputs.value }}
           tag_name: ${{ steps.read_version_tag.outputs.value }}
-          body_path: docs/release_notes.md
-          target_commitish: master
+          body_path: docs/release_notes/md/release_notes.md
+          target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: true
+      - name: If not dev-release delete previous short version tag
+        if: ${{ steps.read_version_tag.outputs.value != 'dev'}}
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: ${{ steps.read_short_version.outputs.value }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      - name: If not dev-release create a Release with short version tag
+        if: ${{ steps.read_version_tag.outputs.value != 'dev'}}
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          files: |
+            build/artefacts/**
+          name: ${{ steps.read_version.outputs.value }}
+          tag_name: ${{ steps.read_short_version.outputs.value }}
+          body_path: docs/release_notes/md/release_notes.md
+          target_commitish: ${{ steps.read_version_branch.outputs.value }}
+          prerelease: ${{ steps.read_version_tag.outputs.value != 'tag_stable'}}
+

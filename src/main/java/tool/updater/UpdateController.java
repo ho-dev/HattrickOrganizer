@@ -3,6 +3,7 @@ package tool.updater;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.net.MyConnector;
 import core.util.HOLogger;
 import core.util.Updater;
@@ -13,9 +14,9 @@ import java.io.File;
 
 public final class UpdateController {
 
-    private static final String DEV_URL = "https://akasolace.github.io/HO/release_notes/release_notes(dev).html";
-    private static final String BETA_URL = "https://akasolace.github.io/HO/release_notes/release_notes(beta).html";
-    private static final String STABLE_URL = "https://akasolace.github.io/HO/release_notes/release_notes(stable).html";
+    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/akasolace/HO/releases/download/dev/release_notes.html";
+    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/akasolace/HO/releases/download/beta/release_notes.html";
+    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/akasolace/HO/releases/download/tag_stable/release_notes.html";
 
     /**
      * Check the external site for the latest version according to user preference regarding release channel
@@ -48,7 +49,7 @@ public final class UpdateController {
         VersionInfo updVersion = null;
 
         // check if version available based on channel
-        switch (core.model.UserParameter.temp().ReleaseChannel) {
+        switch (UserParameter.temp().ReleaseChannel) {
             case "Dev":
                 VersionInfo devVersion = MyConnector.instance().getLatestVersion();
                 if (compareToCurrentVersions(devVersion)) updVersion = devVersion;
@@ -58,6 +59,7 @@ public final class UpdateController {
                 if (compareToCurrentVersions(betaVersion)) {
                     if (compareTwoVersions(betaVersion, updVersion)) {
                         updVersion = betaVersion;
+                        UserParameter.temp().ReleaseChannel = "Beta";
                     }
                 }
                 // no break to check if there is a newer stable release
@@ -67,6 +69,7 @@ public final class UpdateController {
                 if (compareToCurrentVersions(stableVersion)) {
                     if (compareTwoVersions(stableVersion, updVersion)) {
                         updVersion = stableVersion;
+                        UserParameter.temp().ReleaseChannel = "Stable";
                     }
                 }
         }
@@ -80,15 +83,15 @@ public final class UpdateController {
         switch (versionType) {
             case "DEV" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
-                releaseNoteUrl = DEV_URL;
+                releaseNoteUrl = RELEASE_NOTES_DEV_URL;
             }
             case "BETA" -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
-                releaseNoteUrl = BETA_URL;
+                releaseNoteUrl = RELEASE_NOTES_BETA_URL;
             }
             default -> {
                 updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
-                releaseNoteUrl = STABLE_URL;
+                releaseNoteUrl = RELEASE_NOTES_STABLE_URL;
             }
         }
 
@@ -174,16 +177,16 @@ public final class UpdateController {
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
         if (a == null) return false; // NO version is NOT greater than any version
-        if (b == null) return true;  // every version is greater or equal to NO version
+        if (b == null) return true;  // each not null version is greater than NO version
         return a.getVersion() > b.getVersion() ||
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
-    // returns true is a more recent than current version
-    public static boolean compareToCurrentVersions(VersionInfo a) {
-        if (a == null) return false; // NO version is NOT greater than current version
-        return a.getVersion() > HO.VERSION ||
-                ((a.getVersion() == HO.VERSION) && (a.getBuild() > HO.getRevisionNumber()));
+    // returns true if version is more recent than current version
+    public static boolean compareToCurrentVersions(VersionInfo version) {
+        if (version == null) return false; // NO version is NOT greater than current version
+        return version.getVersion() > HO.VERSION ||
+                ((version.getVersion() == HO.VERSION) && (version.getBuild() > HO.getRevisionNumber()));
     }
 
 }

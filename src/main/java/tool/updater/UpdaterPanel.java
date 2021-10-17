@@ -1,14 +1,12 @@
 package tool.updater;
 
 import java.awt.*;
-import java.io.IOException;
 import javax.swing.*;
-
 import core.gui.comp.HyperLinkLabel;
+import core.net.MyConnector;
 
 public class UpdaterPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
 	private String version;
 	private String releaseNoteUrl;
 	private String updateLink;
@@ -69,9 +67,12 @@ public class UpdaterPanel extends JPanel {
 	private void initReleaseNotesPanel() {
 
         JTextPane panel  = new JTextPane();
+        panel.setContentType("text/html;charset=UTF-8");
         try {
-            panel.setPage(releaseNoteUrl);
-        } catch (IOException e) {
+			var is = MyConnector.instance().getWebFile(releaseNoteUrl, false);
+			panel.read(is, "Release notes");
+            //panel.setPage(releaseNoteUrl);
+        } catch (Exception  e) {
             panel.setText(""+e.getCause());
         }
         JScrollPane scrollPane = new JScrollPane(panel);
@@ -79,4 +80,6 @@ public class UpdaterPanel extends JPanel {
 
 		add(scrollPane);
     }
+
+
 }

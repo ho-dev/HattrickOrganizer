@@ -126,9 +126,7 @@ public class TransferTable extends AbstractTable {
 
             final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HTCalendar.resetDay(cal.getTime()));
 
-            for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
-                PlayerTransfer transfer = iter.next();
-
+            for (PlayerTransfer transfer : transfers) {
                 final Player player = PlayerRetriever.getPlayer(transfer);
 
                 if (player != null) {
@@ -143,20 +141,20 @@ public class TransferTable extends AbstractTable {
                     if (alreadyInDB != null) {
                         if (transfer.getPlayerId() == 0) {
                             DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
-                            continue;
+//                            continue;
                         } else {
                             Player dummy = new Player();
                             dummy.setSpielerID(transfer.getPlayerId());
                             if (!players.contains(dummy)) players.add(dummy);
-                          }
+                        }
                     }
-                  }
+                }
 
                 addTransfer(transfer);
             }
 
-            for (Iterator<Player> iter = players.iterator(); iter.hasNext();) {
-                int playerID = iter.next().getPlayerID();
+            for (Player player : players) {
+                int playerID = player.getPlayerID();
                 if (!DBManager.instance().getIsSpielerFired(playerID)) {
                     updatePlayerTransfers(playerID);
                 }
@@ -179,8 +177,7 @@ public class TransferTable extends AbstractTable {
             final List<PlayerTransfer> transfers = XMLParser.getAllPlayerTransfers(playerId);
 
             if (transfers.size() > 0) {
-                for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
-                    final PlayerTransfer transfer = iter.next();
+                for (final PlayerTransfer transfer : transfers) {
                     addTransfer(transfer);
                 }
             } else DBManager.instance().saveIsSpielerFired(playerId, true);
@@ -306,9 +303,8 @@ public class TransferTable extends AbstractTable {
             e.printStackTrace();
         }
 
-        for (Iterator<PlayerTransfer> iter = results.iterator(); iter.hasNext();) {
-            PlayerTransfer transfer = iter.next();
-            final Player player = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(),transfer.getDate());
+        for (PlayerTransfer transfer : results) {
+            final Player player = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(), transfer.getDate());
 
             if (player != null) {
                 transfer.setPlayerInfo(player);

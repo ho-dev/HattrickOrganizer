@@ -215,7 +215,7 @@ public final class UserParameter extends Configuration {
     //Zahlen hinter den Bewertungen anzeigen
     public boolean zahlenFuerSkill = true;
 
-    public float TrainerFaktor = 1.0f;
+    public float TrainerFaktor = 0f;
 
 
     //Sonstiges
@@ -237,9 +237,9 @@ public final class UserParameter extends Configuration {
     public float TRAINING_OFFSET_DEFENDING = 0f;
     public float TRAINING_OFFSET_OSMOSIS = 0f;
     //Faktoren
-    public float TRAINING_OFFSET_AGE = 1.0f;
-    public float TRAINING_OFFSET_ASSISTANTS = 1.0f;
-    public float TRAINING_OFFSET_INTENSITY = 1.0f;
+    public float TRAINING_OFFSET_AGE = 0f;
+    public float TRAINING_OFFSET_ASSISTANTS = 0f;
+    public float TRAINING_OFFSET_INTENSITY = 0f;
     //Timezone
     public int TimeZoneDifference;
     public boolean TRAINING_SHOW_SKILLDROPS = true;

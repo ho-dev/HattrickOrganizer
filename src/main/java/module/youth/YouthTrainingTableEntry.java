@@ -88,4 +88,8 @@ public class YouthTrainingTableEntry implements IHOTableEntry {
     public void updateComponent() {
         label.setText(ComboBoxModel.getLabelText(trainingType));
     }
+
+    public String toString(){
+        return ComboBoxModel.getLabelText(trainingType);
+    }
 }
