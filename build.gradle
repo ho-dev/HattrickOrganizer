@@ -84,14 +84,14 @@ def currentBranch = callGit('git branch --show-current')
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+def version_short = major + '.' + minor
 // bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
 buildNumber = (buildNumber as Integer) + 3710
 buildNumber = buildNumber.toString()
-project.version.short = major + '.' + minor
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
-versionProps['shortVersion'] = project.version.short
+versionProps['shortVersion'] = version_short
 versionProps['tag'] = development_tag[development_stage]
 versionProps['branch'] = currentBranch
 versionProps.store(versionPropsFile.newWriter(), null)
