@@ -65,12 +65,22 @@ public enum YouthTrainingType {
     public static String StringValueOf(YouthTrainingType value) {
         var hov = HOVerwaltung.instance();
         if ( value == null) return hov.getLanguageString("ls.youth.trainingtype.undefined");
-        return hov.getLanguageString("ls.youth.trainingtype."+value.toString());
+        return hov.getLanguageString("ls.youth.trainingtype."+value._toString());
+    }
+
+    private String _toString() {
+        return super.toString();
+    }
+
+    @Override
+    public String toString() {
+        return StringValueOf(this);
     }
 
     public int getValue() {
         return value;
     }
+
 
     public static YouthTrainingType valueOf(Integer id) {
         if ( id != null) {

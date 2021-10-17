@@ -90,7 +90,7 @@ public class Helper {
 
 
 
-	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getCountryId());
+	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam());
 
     /** wird für das Parsen in parseFloat benötigt */
     public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");

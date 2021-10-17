@@ -590,7 +590,6 @@ public class MyConnector {
 		return getVersion("https://github.com/akasolace/HO/releases/download/beta/version.properties");
 	}
 
-
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Proxy
 	// //////////////////////////////////////////////////////////////////////////////
@@ -734,7 +733,7 @@ public class MyConnector {
 	/**
 	 * Get input stream from web url (file download)
 	 */
-	private  @Nullable InputStream getWebFile(String url, boolean showErrorMessage) {
+	public  @Nullable InputStream getWebFile(String url, boolean showErrorMessage) {
 		try {
 			return new URL(url).openStream();
 		}

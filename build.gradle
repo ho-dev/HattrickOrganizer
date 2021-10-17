@@ -42,9 +42,11 @@ test {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '5'
 def minor = '0'
-def development_stage = 0
+def development_stage = 1
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
+def version_type = ["-DEV", "-BETA", ""]
+
 def development_message = [
         "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
         "Latest beta release - the version is feature complete - feedback from early users are welcome",
@@ -58,17 +60,40 @@ ext {
     target_dir = "${buildDir}/artefacts"
 }
 
+ext.callGit = { param ->
+    def p = param.execute()
+    p.waitFor()
+    //println "error: " + p.errorStream.text
+    return p.text.trim()
+}
+
+ext.filter = { string, filters ->
+    def lines = string.split('\n')
+    String res=""
+    lines.each{ l->
+        for ( String f in filters ) {
+            if ( l.contains(f) ) return
+        }
+        res = res + l + "\n"
+    }
+    return res
+}
+
 // Define HO version  =================
+def currentBranch = callGit('git branch --show-current')
 def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+def version_short = major + '.' + minor
 // bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
 buildNumber = (buildNumber as Integer) + 3710
 buildNumber = buildNumber.toString()
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
 versionProps['buildNumber'] = buildNumber
 versionProps['version'] = project.version
+versionProps['shortVersion'] = version_short
 versionProps['tag'] = development_tag[development_stage]
+versionProps['branch'] = currentBranch
 versionProps.store(versionPropsFile.newWriter(), null)
 
 println "Project:  $project.name $project.version ....................."
@@ -172,7 +197,6 @@ distributions {
     }
 }
 
-
 install4j {
     if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
     else installDir = file(System.getenv('INSTALL4J_HOME'))
@@ -188,13 +212,34 @@ install4j {
 task makeAllmedias(dependsOn: 'media') {
     doLast {
         delete "${projectDir}/build/artefacts/output.txt"
+
+        println("copy version.properties into ${project.ext.target_dir}")
+        copy {
+            from "${projectDir}/version.properties"
+            into "${project.ext.target_dir}"
+        }
+
+        println("copy release_notes.html")
+        copy {
+            from "${projectDir}/docs/release_notes/release_notes.html"
+            into "${project.ext.target_dir}"
+        }
+
+        // compatibility to HO3 Updater
+        // which used other zip file name
+        def versionType=version_type[development_stage]
+        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+        copy {
+            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
+            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
+            into "${project.ext.target_dir}"
+        }
     }
 }
 
-
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
-    dependsOn 'updatebuildreferences'
+    dependsOn 'markdownToHtml'
     projectFile = "${projectDir}/utils/buildResources/HO.install4j"
 
     // 60 -> Windows Setup
@@ -223,20 +268,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
 
     buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
     //buildIds = [60]
-    String versionType
-
-    switch(development_stage) {
-        case '0':
-            versionType = "-DEV"
-            break;
-        case '1':
-            versionType = "-BETA"
-            break;
-        default:
-            versionType = ""
-            break;
-    }
-
+    String versionType=version_type[development_stage]
     variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
 }
 
@@ -326,39 +358,16 @@ task CreateDistribution (dependsOn: installDist) {
     }
 }
 
-task ZipDistribution(dependsOn: 'CreateDistribution', type:Zip) {
-    group 'sub tasks'
-    archiveFileName  = "HO_${project.version}.zip"
-    destinationDirectory  = file("${project.ext.target_dir}")
-    from ("${buildDir}/install/${project.version}") {exclude("**/ho.sh", "**/HO.bat")}
-    from ("${buildDir}/install/${project.version}") {
-        include("**/ho.sh")
-        fileMode=0755 }
-    doLast {
-        println("zipped folder has been created")
-    }
-}
-
 task updatebuildreferences(dependsOn: CreateDistribution){
-    ext.callGit = { param ->
-        def p = param.execute()
-        p.waitFor()
-        println "error: " + p.errorStream.text
-        return p.text.trim()
-    }
-
     doLast {
         if (releaseArtefacts) {
 
-            println("copy version.properties into ${project.ext.target_dir}")
-            copy {
-                from "${projectDir}/version.properties"
-                into "${project.ext.target_dir}"
-            }
+            // list the contributors that don't want to be mentioned in release notes
+            def contributorFilter = ["Che"]
 
             def commitCount = callGit('git rev-list 4.1..HEAD --count')
             def diff = callGit('git diff --shortstat 4.1..HEAD')
-            def contributors = callGit('git shortlog -s -n 4.1..HEAD')
+            def contributors = filter(callGit('git shortlog -s -n 4.1..HEAD'), contributorFilter)
             def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
             println("create release-notes")
@@ -376,7 +385,9 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                     ""
             ]
 
-            new File("${projectDir}/docs/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
+            def mdDir = new File("${projectDir}/docs/release_notes/md")
+            mdDir.mkdirs()
+            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
 
         }
         else{
@@ -401,9 +412,7 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
         File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
         lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
     }
-
 }
-
 
 task resetDB {
     group 'tool'
@@ -420,7 +429,7 @@ task resetDB {
 
             println("Resetting DB: done !")
         } catch (Exception e) {
-            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false;
+            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
         }
     }
 }
@@ -430,13 +439,13 @@ poeditorPull {
 }
 
 markdownToHtml {
-    sourceDir = new File("${projectDir}/docs/changelog/md")
-    outputDir = new File("${projectDir}/docs/changelog/html")
+    sourceDir = new File("${projectDir}/docs/release_notes/md")
+    outputDir = new File("${projectDir}/docs/release_notes")
     markdownToHtml.hardwraps = true
 }
 
 installDist.dependsOn createLanguageFileList
-markdownToHtml.dependsOn pushmd
+markdownToHtml.dependsOn updatebuildreferences
 poeditorPull.dependsOn preparingBuild
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources

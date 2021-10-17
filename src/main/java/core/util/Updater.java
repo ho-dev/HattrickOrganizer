@@ -3,9 +3,9 @@ package core.util;
 import com.install4j.api.launcher.ApplicationLauncher;
 import core.HO;
 import core.gui.HOMainFrame;
+import core.model.UserParameter;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +66,7 @@ public class Updater {
         try {
             mediaID = com.install4j.api.launcher.Variables.getCompilerVariable("mediaID");
         } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e.toString());
+            HOLogger.instance().error(Updater.class, "can't fetch updater variables" + e);
         }
     }
 
@@ -83,49 +83,37 @@ public class Updater {
             com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", rc.xmlURL), mediaID, true);
         }
         catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e.toString());
+            HOLogger.instance().error(Updater.class, "can't store release channel preference in java store" + e);
         }
     }
 
     public void update() {
-
-        Boolean bValidregisteredMediaID = false;
-
+        boolean bValidregisteredMediaID = false;
         try {
+            var currentReleaseChannel = ReleaseChannel.byLabel(UserParameter.temp().ReleaseChannel);
             Map<String, Object> vPrefsStore = com.install4j.api.launcher.Variables.loadFromPreferenceStore(mediaID, true);
-            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))){
+            if ((vPrefsStore != null) && (vPrefsStore.containsKey("updatesUrl"))) {
                 String registeredMediaID = vPrefsStore.get("updatesUrl").toString();
-                bValidregisteredMediaID = Arrays.stream(new String[]{DEV_UPDATE_XML_URL, BETA_UPDATE_XML_URL, STABLE_UPDATE_XML_URL}).anyMatch(registeredMediaID::equalsIgnoreCase);
+                bValidregisteredMediaID = currentReleaseChannel.xmlURL.equalsIgnoreCase(registeredMediaID);
             }
 
-            if ((vPrefsStore == null) || (! vPrefsStore.containsKey("updatesUrl")) || (! bValidregisteredMediaID))
-            {
-                // user has never changed release channel via preference tab, hence no information available in java preference store
-                switch (core.model.UserParameter.temp().ReleaseChannel) {
-                    case "Stable" -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", STABLE_UPDATE_XML_URL), mediaID, true);
-                    case "Beta" -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", BETA_UPDATE_XML_URL), mediaID, true);
-                    default -> com.install4j.api.launcher.Variables.saveToPreferenceStore(Map.of("updatesUrl", DEV_UPDATE_XML_URL), mediaID, true);
-                }
-                if (bValidregisteredMediaID) {
-                    HOLogger.instance().log(Updater.class, "release channel preference written for the first time in java store");
-                }
-                else{
-                    HOLogger.instance().error(Updater.class, "preference store was corrupted it has been reset !");
-                }
+            if (!bValidregisteredMediaID) {
+                saveReleaseChannelPreference(currentReleaseChannel);
+                HOLogger.instance().info(Updater.class, "preference store changed!");
             }
         } catch (IOException e) {
-            HOLogger.instance().error(Updater.class, "error while fetching java store" + e.toString());
+            HOLogger.instance().error(Updater.class, "error while fetching java store" + e);
         }
 
         ApplicationLauncher.launchApplicationInProcess(UPDATER_APPLICATION_ID, null, new ApplicationLauncher.Callback() {
                     public void exited(int exitValue) {
                         if (exitValue != 0) {
-                            HOLogger.instance().error(Updater.class,"installer exited with value: " + exitValue);
+                            HOLogger.instance().error(Updater.class, "installer exited with value: " + exitValue);
                         }
                     }
 
                     public void prepareShutdown() {
-                        HOLogger.instance().info(Updater.class,"prepare to shutdown !");
+                        HOLogger.instance().info(Updater.class, "prepare to shutdown !");
                         HOMainFrame.instance().shutdown();
                     }
                 }, ApplicationLauncher.WindowMode.FRAME, null

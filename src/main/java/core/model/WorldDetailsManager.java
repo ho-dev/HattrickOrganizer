@@ -3,11 +3,12 @@ package core.model;
 import core.db.DBManager;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class WorldDetailsManager {
 
 	private static WorldDetailsManager WMANAGER = null;
-	private WorldDetailLeague[] leagues;
+	private List<WorldDetailLeague> leagues;
 	private HashMap<Integer, WorldDetailLeague> countryMap = new HashMap<Integer, WorldDetailLeague>();
 	private HashMap<Integer, WorldDetailLeague> leagueMap = new HashMap<Integer, WorldDetailLeague>();
 	private int totalUsers;
@@ -28,10 +29,10 @@ public class WorldDetailsManager {
 		leagueMap.clear();
 		countryMap.clear();
 		totalUsers = 0;
-		for (int i = 0; i < leagues.length; i++) {
-			totalUsers += leagues[i].getActiveUsers();
-			countryMap.put(Integer.valueOf(leagues[i].getCountryId()), leagues[i]);
-			leagueMap.put(Integer.valueOf(leagues[i].getLeagueId()), leagues[i]);
+		for (var league : leagues) {
+			totalUsers += league.getActiveUsers();
+			countryMap.put(league.getCountryId(), league);
+			leagueMap.put(league.getLeagueId(), league);
 		}
 	}
 
@@ -39,12 +40,8 @@ public class WorldDetailsManager {
 		initialize();
 	}
 
-	public int size() {
-		return leagues.length;
-	}
-
 	public String getNameByCountryId(int countryId) {
-		return countryMap.get(Integer.valueOf(countryId)).getCountryName();
+		return countryMap.get(countryId).getCountryName();
 	}
 
 	public WorldDetailLeague getWorldDetailLeagueByLeagueId(Integer leagueId) {
@@ -60,7 +57,7 @@ public class WorldDetailsManager {
 		return countryMap.get(countryId);
 	}
 
-	public final WorldDetailLeague[] getLeagues() {
+	public final List<WorldDetailLeague> getLeagues() {
 		return leagues;
 	}
 

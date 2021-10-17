@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 
 class WorldDetailsTable extends AbstractTable {
@@ -74,19 +75,19 @@ class WorldDetailsTable extends AbstractTable {
 		return null;
 	}
 	
-	WorldDetailLeague[] getAllWorldDetailLeagues(){
-		ArrayList<WorldDetailLeague> tmp = new ArrayList<WorldDetailLeague>();
+	List<WorldDetailLeague> getAllWorldDetailLeagues(){
+		ArrayList<WorldDetailLeague> ret = new ArrayList<WorldDetailLeague>();
 		StringBuilder statement = new StringBuilder(100);
 		statement.append("select * from ").append(getTableName());
 		ResultSet rs = adapter.executeQuery(statement.toString());
 		try {
 			while(rs.next()){
-				tmp.add(createObject(rs));
+				ret.add(createObject(rs));
 			}
 		} catch (SQLException e) {
 			HOLogger.instance().error(this.getClass(), e);
 		}
-		return tmp.toArray(new WorldDetailLeague[tmp.size()]);
+		return ret;
 	}
 	
 	private WorldDetailLeague createObject(ResultSet rs){
