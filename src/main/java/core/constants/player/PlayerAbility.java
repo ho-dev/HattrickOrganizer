@@ -136,19 +136,14 @@ public final class PlayerAbility {
 	    return getNameForSkill(bewertung, UserParameter.instance().zahlenFuerSkill);
 	}
 
-
 	public static double getValue4Sublevel(int sub) {
-	    if (sub == 1) {
-	        return 0.125;
-	    } else if (sub == 2) {
-	        return 0.375;
-	    } else if (sub == 3) {
-	        return 0.625;
-	    } else if (sub == 0) {
-	        return 0.875;
-	    } else {
-	        return 0;
-	    }
+		return switch (sub) {
+			case 0 -> 0;
+			case 1 -> 0.25;
+			case 2 -> 0.5;
+			case 3 -> 0.75;
+			default -> 0;
+		};
 	}
 
 	private static String getName4Sublevel(int sub) {
