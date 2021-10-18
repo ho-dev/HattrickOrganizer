@@ -784,8 +784,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             m_jpMinuteToggler.load();
 
             clear();
+            if (currentLineup.getRatings().getLeftDefense().size() != 0 &&
+                    currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey())!=null) {
 
-            if (currentLineup.getRatings().getLeftDefense().size() != 0) {
                 setRightDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
                 setLeftDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
