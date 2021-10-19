@@ -340,6 +340,7 @@ public class SubstitutionOverview extends JPanel {
 			}
 			else {
 				restoreLineupSubstitutions();
+				refresh();
 			}
 		}
 	}
