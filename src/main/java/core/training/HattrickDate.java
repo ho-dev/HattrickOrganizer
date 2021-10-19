@@ -1,5 +1,6 @@
 package core.training;
 
+import core.model.HOVerwaltung;
 import core.util.HTDatetime;
 
 import java.time.*;
@@ -16,7 +17,7 @@ public class HattrickDate {
      */
     private Instant date;
 
-    /** season */
+    /** global hattrick season */
     private int _Season;
 
     /**
@@ -56,12 +57,16 @@ public class HattrickDate {
     }
 
     /**
-     * Get Hattrick Season
+     * Get global Hattrick Season
      *
      * @return season
      */
     public final int getSeason() {
         return _Season;
+    }
+
+    public final int getLocalSeason() {
+        return  _Season + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
     }
 
     /**
@@ -90,11 +95,10 @@ public class HattrickDate {
      */
     @Override
 	public final String toString() {
-        String buffer = "Skillup[" +
+        return "Skillup[" +
                 "week = " + _Week +
                 ", season = " + _Season +
                 "]";
-        return buffer;
     }
 
     /**
@@ -137,7 +141,6 @@ public class HattrickDate {
         this.date = toInstant();
     }
 
-
     @Override
     public boolean equals(Object o) {
 
@@ -161,10 +164,8 @@ public class HattrickDate {
         return result;
     }
 
-
     private static Instant getOrigin()
     {
-        //var orig = new HTDatetime("1997-08-22");
         var orig = new HTDatetime("1997-09-26");
         return orig.getHattrickTime().toInstant();
     }
@@ -184,6 +185,5 @@ public class HattrickDate {
 
         return new HattrickDate(season, week);
     }
-
 
 }

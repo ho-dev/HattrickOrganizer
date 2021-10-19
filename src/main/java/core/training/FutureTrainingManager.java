@@ -125,7 +125,7 @@ public class FutureTrainingManager {
 							var trainingDate = tw.getTrainingDate();
 							var hattrickDate = HattrickDate.fromInstant(trainingDate);
 							PlayerSkillChange su = new PlayerSkillChange();
-							su.setHtSeason(hattrickDate.getSeason());
+							su.setHtSeason(hattrickDate.getLocalSeason());
 							su.setHtWeek(hattrickDate.getWeek());
 							su.setType(skillIndex[i]);
 							su.setValue(finalSkill[i]);
