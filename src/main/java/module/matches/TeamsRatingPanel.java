@@ -244,7 +244,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 	private void setBarValue(int index, int value) {
 		double htValue = 1 + (value-1d)/4;
 		bars[index].setValue((int) (htValue * 100 / RATING_MAX));
-		bars[index].setString(PlayerAbility.getNameForSkill(true,value));
+		bars[index].setString(PlayerAbility.getNameForSkill(true,htValue));
 	}
 
 
