@@ -35,8 +35,6 @@ import javax.swing.SwingConstants;
  */
 class StaerkenvergleichPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = -4203763992583137178L;
-
 	private JLabel gastEinstellungLabel;
 	private JLabel gastSelbstvertrauenLabel;
 	private JLabel gastSterneLabel;
@@ -132,7 +130,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 
 			String name4matchtyp = info.getMatchType().getName();
-			if ((details.getZuschauer() <= 0) && (info.getMatchType().getSourceString() == "hattrick")) {
+			if ((details.getZuschauer() <= 0) && (info.getMatchType().getSourceString().equals("hattrick"))) {
 				name4matchtyp += (" ( " + HOVerwaltung.instance().getLanguageString("Reload_Match") + " )");
 			}
 			matchtypLabel.setText(name4matchtyp);
@@ -620,7 +618,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		for (MatchLineupPlayer player : players) {
 			if ((player.getRoleId() < IMatchRoleID.startReserves)
 					&& (player.getRoleId() >= IMatchRoleID.startLineup)) {
-				double rating = (double) player.getRating();
+				double rating = player.getRating();
 
 				if (rating > 0) {
 					stars += rating;
@@ -631,16 +629,12 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 	}
 
 	private String getEinstellungText(int einstellung) {
-		switch (einstellung) {
-		case IMatchDetails.EINSTELLUNG_NORMAL:
-			return HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
-		case IMatchDetails.EINSTELLUNG_PIC:
-			return HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
-		case IMatchDetails.EINSTELLUNG_MOTS:
-			return HOVerwaltung.instance().getLanguageString(
+		return switch (einstellung) {
+			case IMatchDetails.EINSTELLUNG_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
+			case IMatchDetails.EINSTELLUNG_PIC -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
+			case IMatchDetails.EINSTELLUNG_MOTS -> HOVerwaltung.instance().getLanguageString(
 					"ls.team.teamattitude.matchoftheseason");
-		default:
-			return "";
-		}
+			default -> "";
+		};
 	}
 }
