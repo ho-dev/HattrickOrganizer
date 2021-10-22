@@ -40,29 +40,28 @@ public class StaffTable extends AbstractTable{
 	}
 	
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
-		
-		ArrayList<StaffMember> list = new ArrayList<StaffMember>();
-		String sql = "SELECT * FROM " + getTableName() + " WHERE HrfID = " + hrfId + " ORDER BY index";
-		ResultSet rs = null;
-
-		try {
-			rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			while (rs.next()) {
-				StaffMember staff = new StaffMember();
-				staff.setName(DBManager.deleteEscapeSequences(rs.getString("Name")));
-				staff.setId(rs.getInt("id"));
-				staff.setStaffType(StaffType.getById(rs.getInt("stafftype")));
-				staff.setLevel(rs.getInt("level"));
-				staff.setCost(rs.getInt("cost"));
-				list.add(staff);
+		var list = new ArrayList<StaffMember>();
+		if ( hrfId > -1) {
+			String sql = "SELECT * FROM " + getTableName() + " WHERE HrfID = " + hrfId + " ORDER BY index";
+			try {
+				var rs = adapter.executeQuery(sql);
+				if ( rs != null) {
+					rs.beforeFirst();
+					while (rs.next()) {
+						StaffMember staff = new StaffMember();
+						staff.setName(DBManager.deleteEscapeSequences(rs.getString("Name")));
+						staff.setId(rs.getInt("id"));
+						staff.setStaffType(StaffType.getById(rs.getInt("stafftype")));
+						staff.setLevel(rs.getInt("level"));
+						staff.setCost(rs.getInt("cost"));
+						list.add(staff);
+					}
+				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DB.getStaff Error" + e);
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.getStaff Error" + e);
 		}
-
 		return list;
-		
 	}
 	
 	protected void storeStaff(int hrfId, List<StaffMember> list) {

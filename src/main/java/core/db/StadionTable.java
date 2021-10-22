@@ -11,7 +11,7 @@ import java.sql.Types;
 final class StadionTable extends AbstractTable {
 	final static String TABLENAME = "STADION";
 	
-	protected StadionTable(JDBCAdapter  adapter){
+	StadionTable(JDBCAdapter  adapter){
 		super(TABLENAME, adapter);
 	}
 
@@ -37,8 +37,8 @@ final class StadionTable extends AbstractTable {
 	/**
 	 * save Arena
 	 *
-	 * @param hrfId 
-	 * @param stadion 
+	 * @param hrfId foreign key of status info
+	 * @param stadion stadio indo to store
 	 */
 	void saveStadion(int hrfId, Stadium stadion) {
 		StringBuilder statement = new StringBuilder(200);
@@ -46,10 +46,12 @@ final class StadionTable extends AbstractTable {
 		final String[] awhereV = { String.valueOf(hrfId) };
 
 		if (stadion != null) {
-			//erst Vorhandene Aufstellung löschen
+			// delete existing record
 			delete( awhereS, awhereV );
-			//insert vorbereiten
-			statement.append("INSERT INTO "+getTableName()+" ( HRF_ID, StadionName, GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen , AusbauSteh , AusbauSitz , AusbauDach , AusbauLogen , Ausbau ,  AusbauKosten , ArenaID ) VALUES(");
+			// prepare insert statement
+			statement.append("INSERT INTO ");
+			statement.append(getTableName());
+			statement.append(" ( HRF_ID, StadionName, GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen , AusbauSteh , AusbauSitz , AusbauDach , AusbauLogen , Ausbau ,  AusbauKosten , ArenaID ) VALUES(");
 			statement.append(hrfId);
 			statement.append(",'");
 			statement.append(DBManager.insertEscapeSequences(stadion.getStadienname()));
@@ -86,21 +88,20 @@ final class StadionTable extends AbstractTable {
 	 * lädt die Finanzen zum angegeben HRF file ein
 	 */
 	Stadium getStadion(int hrfID) {
-		ResultSet rs = null;
 		Stadium stadion = null;
-		String sql = null;
-
-		sql = "SELECT * FROM "+getTableName()+" WHERE HRF_ID = " + hrfID;
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs.next()) {
-				stadion = createStadionObject(rs);
+		if ( hrfID > -1) {
+			var sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
+			var rs = adapter.executeQuery(sql);
+			if ( rs != null) {
+				try {
+					if (rs.next()) {
+						stadion = createStadionObject(rs);
+					}
+				} catch (Exception e) {
+					HOLogger.instance().log(getClass(), "DatenbankZugriff.getStadion: " + e);
+				}
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStadion: " + e);
 		}
-
 		return stadion;
 	}
 	
