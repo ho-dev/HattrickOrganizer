@@ -3,6 +3,7 @@ package core.model;
 import core.HO;
 import core.db.DBManager;
 import core.util.GUIUtils;
+import core.util.HODividerListener;
 import module.lineup.assistant.LineupAssistant;
 import module.matches.MatchLocation;
 
@@ -377,6 +378,7 @@ public final class UserParameter extends Configuration {
 
     public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
     public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
+    public HODividerListener series_tableSplitPaneDivider = new HODividerListener(-1);
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -670,6 +672,8 @@ public final class UserParameter extends Configuration {
         map.put("lineupOrientation", String.valueOf(this.lineupOrientationSetting));
         map.put("lineupPositionnames", String.valueOf(this.lineupPositionNamesSetting));
 
+        map.put("series_tableSplitPaneDivider", String.valueOf(this.series_tableSplitPaneDivider.location));
+
         return map;
     }
 
@@ -914,6 +918,8 @@ public final class UserParameter extends Configuration {
 
         lineupOrientationSetting = getIntValue(values, "lineupOrientation");
         lineupPositionNamesSetting = getIntValue(values,"lineupPositionnames" );
+
+        series_tableSplitPaneDivider.location = getIntValue(values, "series_tableSplitPaneDivider");
     }
 
 }
