@@ -40,7 +40,15 @@ public final class MinuteTogglerPanel extends JPanel {
 
 	public void load() {
 		if (toggleLabels != null) return;
-		toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
+		toggleLabels = new ArrayList<>();
+		for(double d = 0; d<=120;d+=5.0){
+			toggleLabels.add(d);
+		}
+		var EPSILON = 0.000001;
+		toggleLabels.add(45d+EPSILON);
+		toggleLabels.add(90d+EPSILON);
+		// LABELs with substitution minutes
+		//toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
 	}
 

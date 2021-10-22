@@ -230,7 +230,7 @@ public class SubstitutionEditView extends JPanel {
 		return -1;
 	}
 
-	private void ratingRecalc() {
+	public void ratingRecalc() {
 		if (substitution == null || !initDone) return;
 		this.substitution = getSubstitution(-1);
 		if (substitution.getSubjectPlayerID() !=  -1 &&
@@ -244,35 +244,17 @@ public class SubstitutionEditView extends JPanel {
 		// ChangeListener that will updates the "when" textfield with the number
 		// of minutes when slider changed
 		if ( this.whenSlider != null) {
-			this.whenSlider.addChangeListener(new ChangeListener() {
-
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					whenTextField.setValue(whenSlider.getModel().getValue());
-				}
-			});
+			this.whenSlider.addChangeListener(e -> whenTextField.setValue(whenSlider.getModel().getValue()));
 
 		// PropertyChangeListener that will update the slider when value in the
 		// "when" textfield changed
 		this.whenTextField.addPropertyChangeListener("value",
-				new PropertyChangeListener() {
-
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						Integer value = (Integer) whenTextField.getValue();
-						whenSlider.setValue(Objects.requireNonNullElse(value, -1));
-						ratingRecalc();
-					}
+				evt -> {
+					Integer value = (Integer) whenTextField.getValue();
+					whenSlider.setValue(Objects.requireNonNullElse(value, -1));
 				});
 
 		}
-
-		final ItemListener ratingRecalcListener = e -> ratingRecalc();
-
-		this.playerComboBox.addItemListener(ratingRecalcListener);
-		if (this.playerInComboBox != null)  this.playerInComboBox.addItemListener(ratingRecalcListener);
-		if (this.positionComboBox != null)  this.positionComboBox.addItemListener(ratingRecalcListener);
-		if (this.behaviourComboBox != null) this.behaviourComboBox.addItemListener(ratingRecalcListener);
 
 		if (this.orderType != MatchOrderType.POSITION_SWAP && this.orderType != MatchOrderType.MAN_MARKING) {
 			// ItemListener that will update the PositionChooser if selection in

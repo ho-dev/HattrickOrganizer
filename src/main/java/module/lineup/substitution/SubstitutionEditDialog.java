@@ -49,6 +49,8 @@ public class SubstitutionEditDialog extends JDialog {
 	}
 
 	public boolean isCanceled() {
+		// confirmed
+		if(!canceled) behaviourView.ratingRecalc();
 		return this.canceled;
 	}
 
