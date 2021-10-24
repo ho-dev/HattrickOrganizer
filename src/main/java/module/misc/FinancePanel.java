@@ -25,8 +25,6 @@ import javax.swing.SwingConstants;
  */
 final class FinancePanel extends JPanel {
 
-	private static final long serialVersionUID = 5220006612961140628L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 	private final ColorLabelEntry salariesLabel = new ColorLabelEntry("");
     private final ColorLabelEntry totalCostLabel = new ColorLabelEntry("");
@@ -41,7 +39,7 @@ final class FinancePanel extends JPanel {
     private final ColorLabelEntry attendanceLabel = new ColorLabelEntry("");
     private final ColorLabelEntry profitLossLabel = new ColorLabelEntry("");
     private final ColorLabelEntry balanceLabel = new ColorLabelEntry("");
-    private boolean currentFinance = true;
+    private boolean currentFinance;
 
     final GridBagLayout layout = new GridBagLayout();
     final GridBagConstraints constraints = new GridBagConstraints();
@@ -51,7 +49,7 @@ final class FinancePanel extends JPanel {
      * Creates a new FinancePanel object.
      *
      */
-    protected FinancePanel(boolean currentFinance) {
+    FinancePanel(boolean currentFinance) {
         this.currentFinance = currentFinance;
         initComponents();
     }

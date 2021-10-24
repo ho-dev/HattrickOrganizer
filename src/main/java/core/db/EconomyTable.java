@@ -15,7 +15,6 @@ public final class EconomyTable extends AbstractTable {
 		super(TABLENAME,adapter);
 	}
 
-	
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[40];
@@ -110,7 +109,45 @@ public final class EconomyTable extends AbstractTable {
 			try {
 				if (rs != null) {
 					rs.first();
-					economy = new Economy(rs);
+					economy = new Economy();
+					economy.setSupPopularity(rs.getInt("SupportersPopularity"));
+					economy.setSponsorsPopularity(rs.getInt("SponsorsPopularity"));
+					economy.setCash(rs.getInt("Cash"));
+					economy.setIncomeSponsors(rs.getInt("IncomeSponsors"));
+					economy.setIncomeSpectators(rs.getInt("IncomeSpectators"));
+					economy.setIncomeFinancial(rs.getInt("IncomeFinancial"));
+					economy.setIncomeTemporary(rs.getInt("IncomeTemporary"));
+					economy.setIncomeSum(rs.getInt("IncomeSum"));
+					economy.setCostsPlayers(rs.getInt("CostsPlayers"));
+					economy.setCostsStaff(rs.getInt("CostsStaff"));
+					economy.setCostsArena(rs.getInt("CostsArena"));
+					economy.setCostsYouth(rs.getInt("CostsYouth"));
+					economy.setCostsFinancial(rs.getInt("CostsFinancial"));
+					economy.setCostsTemporary(rs.getInt("CostsTemporary"));
+					economy.setCostsSum(rs.getInt("CostsSum"));
+					economy.setExpectedWeeksTotal(rs.getInt("ExpectedWeeksTotal"));
+					economy.setLastIncomeSponsors(rs.getInt("LastIncomeSponsors"));
+					economy.setLastIncomeSpectators(rs.getInt("LastIncomeSpectators"));
+					economy.setLastIncomeFinancial(rs.getInt("LastIncomeFinancial"));
+					economy.setLastIncomeTemporary(rs.getInt("LastIncomeTemporary"));
+					economy.setLastIncomeSum(rs.getInt("LastIncomeSum"));
+					economy.setLastCostsPlayers(rs.getInt("LastCostsPlayers"));
+					economy.setLastCostsStaff(rs.getInt("LastCostsStaff"));
+					economy.setLastCostsArena(rs.getInt("LastCostsArena"));
+					economy.setLastCostsYouth(rs.getInt("LastCostsYouth"));
+					economy.setLastCostsFinancial(rs.getInt("LastCostsFinancial"));
+					economy.setLastCostsTemporary(rs.getInt("LastCostsTemporary"));
+					economy.setLastCostsSum(rs.getInt("LastCostsSum"));
+					economy.setLastWeeksTotal(rs.getInt("LastWeeksTotal"));
+					economy.setExpectedCash(rs.getInt("ExpectedCash"));
+					economy.setIncomeSoldPlayers(rs.getInt("IncomeSoldPlayers"));
+					economy.setIncomeSoldPlayersCommission(rs.getInt("IncomeSoldPlayersCommission"));
+					economy.setCostsBoughtPlayers(rs.getInt("CostsBoughtPlayers"));
+					economy.setCostsArenaBuilding(rs.getInt("CostsArenaBuilding"));
+					economy.setLastIncomeSoldPlayers(rs.getInt("LastIncomeSoldPlayers"));
+					economy.setLastIncomeSoldPlayersCommission(rs.getInt("LastIncomeSoldPlayersCommission"));
+					economy.setLastCostsBoughtPlayers(rs.getInt("LastCostsBoughtPlayers"));
+					economy.setCostsArenaBuilding(rs.getInt("LastCostsArenaBuilding"));
 					rs.close();
 				}
 			} catch (Exception e) {
