@@ -165,15 +165,7 @@ public class Economy {
         }
     }
 
-
-    // Creates a new Economy object from a DB query
-    public Economy(java.sql.ResultSet rs) {
-        try {
-
-        } catch (Exception e) {
-        	HOLogger.instance().debug(Economy.class, e);
-        }
-    }
+    public Economy() {}
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -299,7 +291,7 @@ public class Economy {
         }
     }
 
-    public final void getIncomeSum(int iIncomeSum) {
+    public final void setIncomeSum(int iIncomeSum) {
         this.m_iIncomeSum = iIncomeSum;
     }
 
