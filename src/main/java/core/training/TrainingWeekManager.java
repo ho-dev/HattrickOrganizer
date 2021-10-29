@@ -6,6 +6,8 @@ import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.util.HTDatetime;
 import core.util.HOLogger;
+import module.transfer.test.HTWeek;
+
 import java.sql.ResultSet;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -78,29 +80,31 @@ public class TrainingWeekManager {
 
 				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 				final ResultSet rs = ijdbca.executeQuery(sql);
-				if (!rs.last()) {
-					HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
-					return null;
-				}
+				if ( rs != null) {
+					if (!rs.last()) {
+						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+						return null;
+					}
 
-				int numRows = rs.getRow();
+					int numRows = rs.getRow();
 
-				if (numRows != 1) {
-					HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
-					return null;
-				}
+					if (numRows != 1) {
+						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+						return null;
+					}
 
-				rs.beforeFirst();
+					rs.beforeFirst();
 
-				if (rs.next()) {
-					trainType = rs.getInt("TRAININGSART");
-					trainIntensity = rs.getInt("TRAININGSINTENSITAET");
-					trainStaminaPart = rs.getInt("STAMINATRAININGPART");
-					trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
-					coachLevel = rs.getInt("TRAINER");
-					trainingAssistantLevel = rs.getInt("COTRAINER");
-					return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-							coachLevel, DBDataSource.HRF, true);
+					if (rs.next()) {
+						trainType = rs.getInt("TRAININGSART");
+						trainIntensity = rs.getInt("TRAININGSINTENSITAET");
+						trainStaminaPart = rs.getInt("STAMINATRAININGPART");
+						trainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+						coachLevel = rs.getInt("TRAINER");
+						trainingAssistantLevel = rs.getInt("COTRAINER");
+						return new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
+								coachLevel, DBDataSource.HRF, true);
+					}
 				}
 			} catch (Exception e) {
 				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining():  " + e);
@@ -128,9 +132,9 @@ public class TrainingWeekManager {
 
 		List<TrainingPerWeek> trainings = new ArrayList<>();
 
-		if ( cl_NextTrainingDate==null) return  trainings;	// initial call (no data downloaded yet)
+		if (cl_NextTrainingDate == null) return trainings;    // initial call (no data downloaded yet)
 
-		HashMap<Instant, TrainingPerWeek> trainingsInDB = createTPWfromDBentries();
+		HashMap<Long, TrainingPerWeek> trainingsInDB = createTPWfromDBentries();
 		int trainingsSize;
 
 		if (m_StartDate.isAfter(cl_NextTrainingDate)) {
@@ -147,14 +151,16 @@ public class TrainingWeekManager {
 
 		Instant currDate = zdtCurrDate.toInstant();
 
-		while ((currDate.isBefore(cl_NextTrainingDate) || currDate.equals(cl_NextTrainingDate))) {
+		while (!currDate.isAfter(cl_NextTrainingDate)) {
 
 			if ((!m_IncludeUpcomingTrainings) && (HTDatetime.isAfterLastUpdate(zdtCurrDate))) {
 				break;
 			}
 
-			if (trainingsInDB.containsKey(currDate)) {
-				var training = trainingsInDB.get(currDate);
+			// when daylight saving time changes, the interval between two trainings is not exactly 7 days,
+			// so we need to calculate a ht week instance
+			var training = trainingsInDB.get(new HTWeek(currDate).weekSinceOrigin());
+			if (training != null) {
 				if (includeMatches) {
 					training.loadMatches();
 				}
@@ -184,9 +190,9 @@ public class TrainingWeekManager {
 	 * Fetch trainings information from database (excl. Training table)
 	 * This excludes manual entries set per user
 	 */
-	private HashMap<Instant, TrainingPerWeek> createTPWfromDBentries() {
+	private HashMap<Long, TrainingPerWeek> createTPWfromDBentries() {
 
-		HashMap<Instant, TrainingPerWeek> output = new HashMap<>();
+		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 
 		// for past trainings the first hrf after training date is the best guess
@@ -212,19 +218,20 @@ public class TrainingWeekManager {
 
 			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 			final ResultSet rs = ijdbca.executeQuery(sql);
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				trainType = rs.getInt("TRAININGSART");
-				trainIntensity = rs.getInt("TRAININGSINTENSITAET");
-				trainStaminaPart = rs.getInt("STAMINATRAININGPART");
-				// subtract one week from next training date to get the past week training date
-				trainingDate = rs.getTimestamp("TRAININGDATE").toInstant().minus(Duration.ofDays(7));
-				coachLevel = rs.getInt("TRAINER");
-				trainingAssistantLevel = rs.getInt("COTRAINER");
-				TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
-						coachLevel, DBDataSource.HRF);
-				output.put(trainingDate, tpw);
+			if ( rs != null ) {
+				rs.beforeFirst();
+				while (rs.next()) {
+					trainType = rs.getInt("TRAININGSART");
+					trainIntensity = rs.getInt("TRAININGSINTENSITAET");
+					trainStaminaPart = rs.getInt("STAMINATRAININGPART");
+					// subtract one week from next training date to get the past week training date
+					trainingDate = rs.getTimestamp("TRAININGDATE").toInstant().minus(Duration.ofDays(7));
+					coachLevel = rs.getInt("TRAINER");
+					trainingAssistantLevel = rs.getInt("COTRAINER");
+					TrainingPerWeek tpw = new TrainingPerWeek(trainingDate, trainType, trainIntensity, trainStaminaPart, trainingAssistantLevel,
+							coachLevel, DBDataSource.HRF);
+					output.put(new HTWeek(trainingDate).weekSinceOrigin(), tpw);
+				}
 			}
 		}
 		catch (Exception e) {

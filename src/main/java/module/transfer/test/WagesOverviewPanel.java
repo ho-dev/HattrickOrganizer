@@ -17,7 +17,6 @@ import javax.swing.table.AbstractTableModel;
 
 public class WagesOverviewPanel extends JPanel {
 
-	private static final long serialVersionUID = -8214198281402220881L;
 	private Player player;
 	private JTable table;
 
@@ -32,7 +31,7 @@ public class WagesOverviewPanel extends JPanel {
 
 	private void initComponents() {
 		setLayout(new BorderLayout());
-		this.table = new JTable(new MyTableModel(new ArrayList<Entry>()));
+		this.table = new JTable(new MyTableModel(new ArrayList<>()));
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
@@ -46,32 +45,31 @@ public class WagesOverviewPanel extends JPanel {
 			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, new Date());
 			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 
-			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
+			var ageWageMap = new HashMap<Integer, Wage>();
 			for (Wage wage : wagesByAge) {
-				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
+				ageWageMap.put(wage.getAge(), wage);
 			}
 
 			Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
-			List<Entry> entries = new ArrayList<Entry>();
+			var entries = new ArrayList<Entry>();
 			for (Date date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);
 				Entry entry = new Entry();
 				entry.age = ageAt;
 				entry.economyUpdate = date;
-				entry.htWeek = HTWeek.getHTWeekByDate(date);
-				entry.wage = ageWageMap.get(Integer.valueOf(ageAt)).getWage();
+				entry.htWeek = new HTWeek(date);
+				entry.wage = ageWageMap.get(ageAt).getWage();
 				entries.add(entry);
 			}
 
 			this.table.setModel(new MyTableModel(entries));
 		} else {
-			this.table.setModel(new MyTableModel(new ArrayList<Entry>()));
+			this.table.setModel(new MyTableModel(new ArrayList<>()));
 		}
 	}
 
 	private class MyTableModel extends AbstractTableModel {
 
-		private static final long serialVersionUID = 1942245265842994191L;
 		private String[] columnNames = { "Age", "Season", "Week", "Economy update", "Wage payed" };
 		private List<Entry> list;
 
@@ -92,19 +90,14 @@ public class WagesOverviewPanel extends JPanel {
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Entry entry = this.list.get(rowIndex);
-			switch (columnIndex) {
-			case 0:
-				return entry.age;
-			case 1:
-				return entry.htWeek.getSeason();
-			case 2:
-				return entry.htWeek.getWeek();
-			case 3:
-				return entry.economyUpdate;
-			case 4:
-				return entry.wage;
-			}
-			return null;
+			return switch (columnIndex) {
+				case 0 -> entry.age;
+				case 1 -> entry.htWeek.getSeason();
+				case 2 -> entry.htWeek.getWeek();
+				case 3 -> entry.economyUpdate;
+				case 4 -> entry.wage;
+				default -> null;
+			};
 		}
 
 		@Override
