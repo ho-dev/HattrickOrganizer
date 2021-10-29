@@ -16,16 +16,16 @@ import javax.swing.JOptionPane;
 
 /**
  * Singleton class that holds training information.
- * The class is initilized during startup procedure
+ * The class is initialized during startup procedure
  */
 public class TrainingManager implements PropertyChangeListener {
 
 	// singleton class
 	private static TrainingManager m_clInstance;
 
-	private TrainingPerWeek nextWeekTraining;        						// used to determine training bar, include upcoming game   => Created at initilization
-    private TrainingWeekManager recentTrainings;     						// trainings that took place (if any null otherwise) since last entry in Training table  => Created at initilization
-	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initilization
+	private TrainingPerWeek nextWeekTraining;        						// used to determine training bar, include upcoming game   => Created at initialization
+    private TrainingWeekManager recentTrainings;     						// trainings that took place (if any null otherwise) since last entry in Training table  => Created at initialization
+	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initialization
 
 
 	public static final boolean TRAINING_DEBUG = false;
@@ -71,7 +71,7 @@ public class TrainingManager implements PropertyChangeListener {
 				.filter(t->t.getTrainingDate().isBefore(endDate) && !startDate.isAfter(t.getTrainingDate()))
 				.collect(Collectors.toList());
 
-		result.forEach(t->t.addMatchesInfo());
+		result.forEach(TrainingPerWeek::addMatchesInfo);
 
     	return result;
 	}
@@ -140,7 +140,7 @@ public class TrainingManager implements PropertyChangeListener {
 			}
 		}
 		if ( changes.length() > 0){
-			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes.toString());
+			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes);
 		}
 	}
 
