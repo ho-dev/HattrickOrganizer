@@ -504,7 +504,7 @@ public class HOModel {
     }
 
     /**
-     * Caclulates the subskill of each player based on recent trainings
+     * Calculates the subskills of each player based on recent trainings
      */
     public final void calcSubskills() {
 
@@ -520,7 +520,7 @@ public class HOModel {
     }
 
     /**
-     * Caclulates the subskill of each player based on trainings that took place during a given period
+     * Calculates the subskills of each player based on trainings that took place during a given period
      */
     public final void calcSubskills(Instant from, Instant to) {
 
