@@ -1,7 +1,5 @@
 package core.training;
 
-import core.model.enums.MatchType;
-import core.model.match.IMatchType;
 import core.model.player.Player;
 import core.util.HOLogger;
 
@@ -10,8 +8,6 @@ import java.sql.Timestamp;
 
 /**
  * Holds and calculates how much skill training a player received
- *
- * @author
  */
 public class TrainingPerPlayer  {
     private Player _Player;
@@ -75,67 +71,7 @@ public class TrainingPerPlayer  {
 	    	_TrainingPair.addSecondary(values.getTrainingPair().getSecondary());
     	}
     }
-	/**
-	 * Checks if trainingDate is after the last skill up in skillType
-	 * 
-	 * @param trainingDate
-	 * @param skillType
-	 * @return
 
-	private boolean isAfterSkillup (Calendar trainingDate, int skillType) {
-		if (getTimestamp() == null) {
-			if (TrainingManager.TRAINING_DEBUG) {
-				HOLogger.instance().debug(getClass(), 
-						"isAfterSkillup: traindate NULL (" + skillType + ") is always after skillup");
-			}
-			return true;			
-		}
-		Date skillupTime = getLastSkillupDate(skillType, getTimestamp());
-		if (trainingDate.getTimeInMillis() > skillupTime.getTime()) {
-			if (TrainingManager.TRAINING_DEBUG) {
-				HOLogger.instance().debug(getClass(), 
-						"isAfterSkillup: traindate "+trainingDate.getTime().toString() 
-						+ " (" + skillType + ") is after skillup");
-			}
-			return true;	
-		} else {
-			if (TrainingManager.TRAINING_DEBUG) {
-				HOLogger.instance().debug(getClass(), 
-						"isAfterSkillup: traindate "+trainingDate.getTime().toString() 
-						+ " (" + skillType + ") is NOT after skillup");
-			}
-			return false;
-		}
-	}
-	 */
-
-   /**
-     * Calculates the last skillup for the player in the correct training
-     *
-     * @param trainskill Skill we are looking for a skillup
-     * @param trainTime Trainingtime
-     *
-     * @return Last skillup Date, or Date(0) if no skillup was found
-
-    private Date getLastSkillupDate(int trainskill, Date trainTime) {
-        //get relevant skillups for calculation period
-        final Vector<Object[]> skillUps = getPlayer().getAllLevelUp(trainskill);
-        Date skilluptime = new Date(0);
-        for (Iterator<Object[]> it = skillUps.iterator(); it.hasNext();) {
-            final Object[] aobj = it.next();
-            final Boolean bLevel = (Boolean) aobj[1];
-
-            if (bLevel.booleanValue() == true) {
-                final Date tmpTime = new Date(((Timestamp) aobj[0]).getTime());
-                if ((tmpTime.before(trainTime)) && (tmpTime.after(skilluptime))) {
-                    skilluptime = HelperWrapper.instance().getLastTrainingDate(tmpTime, 
-                    		HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()).getTime();
-                }
-            }
-        }
-        return skilluptime;
-    }
-   */
     /**
      * get the training point for this instance
      * @return	training point
@@ -175,10 +111,8 @@ public class TrainingPerPlayer  {
 
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
 		if ( wt != null ) {
-			if (skill == wt.getPrimaryTrainingSkill()) {
-				ret += wt.getTrainingAlternativeFormula(skillValue, this, true);
-			} else if (skill == wt.getSecondaryTrainingSkill()) {
-				ret += wt.getTrainingAlternativeFormula(skillValue, this, false);
+			if (skill == wt.getPrimaryTrainingSkill() || skill == wt.getSecondaryTrainingSkill()) {
+				ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
 			}
 		}
 

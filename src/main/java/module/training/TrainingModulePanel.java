@@ -1,10 +1,7 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.StaffMember;
-import core.model.StaffType;
 import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.Helper;
@@ -15,10 +12,8 @@ import module.training.ui.PlayerDetailPanel;
 import module.training.ui.TrainingDevelopmentPanel;
 import module.training.ui.TrainingPanel;
 import module.training.ui.TrainingPredictionPanel;
-import module.training.ui.comp.DividerListener;
 import module.training.ui.model.TrainingModel;
 import java.awt.BorderLayout;
-import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -29,7 +24,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void initialize() {
-		this.model = new TrainingModel();;
+		this.model = new TrainingModel();
 		initComponents();
 		registerRefreshable(true);
 	}
@@ -57,9 +52,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
-		bottomPanel.setDividerLocation(UserParameter.instance().training_bottomSplitPane);
-		bottomPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_bottomSplitPane));
+		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab(Helper.getTranslation("Training"), new OutputPanel(this.model));
@@ -68,15 +61,10 @@ public class TrainingModulePanel extends LazyPanel {
 		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), new EffectPanel());
 
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
-		splitPanel.setDividerLocation(UserParameter.instance().training_mainSplitPane);
-		splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_mainSplitPane));
+		UserParameter.instance().training_mainSplitPane.init(splitPanel);
 
-		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel,
-				new TrainingPanel(this.model));
-		mainPanel.setDividerLocation(UserParameter.instance().training_rightSplitPane);
-		mainPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_rightSplitPane));
+		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, new TrainingPanel(this.model));
+		UserParameter.instance().training_rightSplitPane.init(mainPanel);
 
 		mainPanel.setOpaque(false);
 		add(mainPanel, BorderLayout.CENTER);
