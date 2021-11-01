@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,9 +64,7 @@ public class OnlineWorker {
 	 */
 	public static boolean getHrf(JDialog parent) {
 		// Show wait dialog
-		
 		boolean ok = true;
-
 		try {
 			HOMainFrame homf = HOMainFrame.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
@@ -84,7 +83,7 @@ public class OnlineWorker {
 				String msg = getLangString("Downloadfehler")
 						+ " : Error converting xml 2 HRF. Corrupt/Missing Data : ";
 				setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-				Helper.showMessage(parent, msg + "\n" + e.toString() + "\n", getLangString("Fehler"),
+				Helper.showMessage(parent, msg + "\n" + e + "\n", getLangString("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 				ok = false;
 			}
@@ -110,9 +109,7 @@ public class OnlineWorker {
 					} else {
 						// save the model in the database
 						homodel.saveHRF();
-
 						homodel.setFixtures(hov.getModel().getFixtures());
-
 						// Add old players to the model
 						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
 						// Only update when the model is newer than existing
@@ -121,24 +118,11 @@ public class OnlineWorker {
 							DBManager.instance().checkSkillup(homodel);
 							// Show
 							hov.setModel(homodel);
-							// Recalculate Training
-							// Training->Subskill calculation
-							//TrainingManager.instance().refreshTrainingWeeks();
-							//homodel.calcSubskills(); // moved behind the download of matches
-//							LineupsComparisonHistoryPanel.setHRFAufstellung(
-//									homodel.getLineup(), homodel.getPreviousLineup());
-//							LineupsComparisonHistoryPanel
-//									.setAngezeigteAufstellung(new LineupCBItem(
-//											getLangString("AktuelleAufstellung"), homodel
-//													.getLineup()));
-
 							// reset value of TS, confidence in Lineup Settings Panel after data download
 							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().backupRealGameSettings();
-
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
-
 						saveHRFToFile(parent,hrf);
 					}
 				}
@@ -539,11 +523,11 @@ public class OnlineWorker {
 	}
 
 	/**
-	 * saugt den Spielplan
+	 * Download series data
 	 *
 	 * @param teamId
-	 *            angabe der Saison ( optinal &lt; 1 für aktuelle
-	 * @param forceRefresh
+	 *            team id (optional <1 for current team
+	 * @param forceRefresh (unused?!)
 	 * @param store
 	 *            true if the full match details are to be stored, false if not.
 	 * @param upcoming
@@ -552,8 +536,7 @@ public class OnlineWorker {
 	 * @return The list of MatchKurzInfos found or null if an exception
 	 *         occurred.
 	 */
-	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store,
-			boolean upcoming) {
+	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store, boolean upcoming) {
 		String matchesString;
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK = false;
@@ -686,14 +669,13 @@ public class OnlineWorker {
 	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
 												   int teamId2) {
 		boolean bOK = false;
-		MatchLineup lineUp1 = null;
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
 		showWaitInformation(10);
 
 		// Lineups holen
-		lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
+		var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
 			showWaitInformation(50);
 			if (teamId2 > 0)
@@ -1042,8 +1024,8 @@ public class OnlineWorker {
 	}
 
 	private static Properties getProperties(String data) throws IOException {
-		ByteArrayInputStream bis = new ByteArrayInputStream(data.getBytes("UTF-8"));
-		InputStreamReader isr = new InputStreamReader(bis, "UTF-8");
+		ByteArrayInputStream bis = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
+		InputStreamReader isr = new InputStreamReader(bis, StandardCharsets.UTF_8);
 		BufferedReader hrfReader = new BufferedReader(isr);
 		Properties properties = new Properties();
 
@@ -1071,7 +1053,6 @@ public class OnlineWorker {
 	 *
 	 * @param hrfData
 	 *            the HRF data as string
-	 * @throws IOException
 	 */
 	private static void saveHRFToFile(JDialog parent, String hrfData) {
 		setInfoMsg(getLangString("HRFSave"));
@@ -1220,7 +1201,6 @@ public class OnlineWorker {
 	 *            The content to write to the file
 	 *
 	 * @return The saved file
-	 * @throws IOException
 	 */
 	private static File saveFile(String fileName, String content) throws IOException {
 		File outFile = new File(fileName);
@@ -1228,7 +1208,7 @@ public class OnlineWorker {
 			outFile.delete();
 		}
 		outFile.createNewFile();
-		OutputStreamWriter outWrit = new OutputStreamWriter(new FileOutputStream(outFile), "UTF-8");
+		OutputStreamWriter outWrit = new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8);
 		BufferedWriter out = new BufferedWriter(outWrit);
 		out.write(content);
 		out.newLine();
