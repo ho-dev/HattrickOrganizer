@@ -271,7 +271,7 @@ public abstract class WeeklyTrainingType {
 	}
 
 	static double[] coachKoeff = {0.7343, 0.8324, 0.92, 1, 1.0375};
-	static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
+	//static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
 
 	/**
 	 * Calculate skill increase of training week (Schum's formula)
@@ -382,7 +382,7 @@ public abstract class WeeklyTrainingType {
 		if (assistantLevel < 0 || assistantLevel > 10) {
 			return trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);    // dummy return
 		}
-		var factorAssistants = assistantKoeff[assistantLevel];
+		var factorAssistants =  1. + assistantLevel * .035; //assistantKoeff[assistantLevel];
 
 		/*
 		K(int)
@@ -432,7 +432,7 @@ public abstract class WeeklyTrainingType {
 		/*
 		K(time)
 		If a player has played the full slot for 90 minutes, then K(time)=1.0
-		If the slot is 90 minutes, then K(time)=0.5
+		If the half slot is 90 minutes, then K(time)=0.5
 		if, for example, 36 minutes on the full slot and 90 minutes on the half-slot,
 		we think, remembering that the total amount of training can not be taken into account more than 90 minutes of flirtation:
 		K(time)=(1.0*36+(90-36)*0.5)/90=0.7
