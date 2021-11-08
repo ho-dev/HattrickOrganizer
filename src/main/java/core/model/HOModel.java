@@ -626,7 +626,7 @@ public class HOModel {
 
     public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
         return getYouthTrainings().stream()
-                .filter(i -> i.getMatchDate().after(date))
+                .filter(i -> i.getMatchDate() != null && i.getMatchDate().after(date))
                 .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
     }
