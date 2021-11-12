@@ -463,7 +463,7 @@ public class OnlineWorker {
 		List<MatchKurzInfo> matches = getMatches(teamId, cal.getTime());
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
-				DBManager.instance().updateMatchKurzInfo(m);
+				//DBManager.instance().updateMatchKurzInfo(m);
 				return m;
 			}
 		}
@@ -539,7 +539,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> getMatches(int teamId, boolean forceRefresh, boolean store, boolean upcoming) {
 		String matchesString;
 		List<MatchKurzInfo> matches = new ArrayList<>();
-		boolean bOK = false;
+		boolean bOK;
 		showWaitInformation(10);
 
 		try {
@@ -715,7 +715,7 @@ public class OnlineWorker {
 	 * @return true on sucess, false on failure
 	 */
 	public static boolean getSpielplan(int season, int leagueID) {
-		boolean bOK = false;
+		boolean bOK;
 		String leagueFixtures;
 		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
@@ -1236,7 +1236,7 @@ public class OnlineWorker {
 			dateSince = lastStoredYouthMatchDate;
 		}
 
-		for ( Timestamp dateUntil = null; dateSince != null; dateSince = dateUntil) {
+		for (Timestamp dateUntil; dateSince != null; dateSince = dateUntil) {
 			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
 				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
 			}

@@ -516,7 +516,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 if (refreshed != null) {
                     m_clSelectedMatch.merge(refreshed);
                 }
-                update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
+                DBManager.instance().updateMatchKurzInfo(m_clSelectedMatch);
+                refresh();
+                //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
             }
             finally {
                 CursorToolkit.stopWaitCursor(this);

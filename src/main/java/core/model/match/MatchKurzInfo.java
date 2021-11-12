@@ -478,10 +478,13 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setMatchType(match.getMatchType());
 		setCupLevel(match.getCupLevel());
 		setCupLevelIndex(match.getCupLevelIndex());
-		setWeather(match.getWeather());
-		setWeatherForecast(match.getWeatherForecast());
+		var weather = match.getWeather();
+		if (weather != null && weather != Weather.NULL)
+			setWeather(match.getWeather());
+		var weatherForecast = match.getWeatherForecast();
+		if (weatherForecast != null && weatherForecast != Weather.Forecast.NULL)
+			setWeatherForecast(match.getWeatherForecast());
 	}
-
 
 	public void copyFrom(MatchKurzInfo match) {
 		setMatchID(match.getMatchID());
