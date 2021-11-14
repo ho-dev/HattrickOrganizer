@@ -600,11 +600,14 @@ public class YouthPlayer {
             var startSkills = getSkillsBefore(since);
             for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
                 var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-                startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+                var newSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+                progressLastMatch = newSkills.getSkillSum() - startSkills.getSkillSum();
+                startSkills = newSkills;
             }
         }
     }
 
+    private boolean isAdjusting;
     /**
      * Skill start value is incremented by value adjustment. Change is propagated through all existing
      * training development entries until given before date
@@ -615,19 +618,23 @@ public class YouthPlayer {
     public double adjustSkill(Skills.HTSkillID skillID, double adjustment, Timestamp before) {
         // start skills are examined from current skill infos
         var currentSkill = getSkillInfo(skillID);
-        currentSkill.addStartValue(adjustment);
-        if (currentSkill.getCurrentValue() < currentSkill.getStartValue()) {
-            currentSkill.setCurrentValue(currentSkill.getStartValue());
-        }
-        if (trainingDevelopment != null && trainingDevelopment.size() > 0) {
-            var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
-            var skills = getStartSkills();
-            for (var trainingEntry : trainingDevelopment.values()) {
-                if (!trainingEntry.getMatchDate().before(before)) break; // stop if before date is reached
-                var constraints = trainingEntry.getSkills(); // constraints (levels) are not changed
-                // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
-                skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
+        if (!isAdjusting) {
+            isAdjusting=true;
+            currentSkill.addStartValue(adjustment);
+            if (currentSkill.getCurrentValue() < currentSkill.getStartValue()) {
+                currentSkill.setCurrentValue(currentSkill.getStartValue());
             }
+            if (trainingDevelopment != null && trainingDevelopment.size() > 0) {
+                var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+                var skills = getStartSkills();
+                for (var trainingEntry : trainingDevelopment.values()) {
+                    if (!trainingEntry.getMatchDate().before(before)) break; // stop if before date is reached
+                    var constraints = trainingEntry.getSkills(); // constraints (levels) are not changed
+                    // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
+                    skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
+                }
+            }
+            isAdjusting=false;
         }
         return currentSkill.getStartValue();
     }

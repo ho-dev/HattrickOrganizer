@@ -81,14 +81,4 @@ public class IndividualWeeklyTraining extends WeeklyTrainingType {
         }
         return 0;
     }
-
-    @Override
-    public double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel) {
-        return 0;
-    }
-
-    @Override
-    public double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel) {
-        return 0;
-    }
 }

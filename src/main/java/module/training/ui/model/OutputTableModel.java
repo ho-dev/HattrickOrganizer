@@ -165,30 +165,19 @@ public class OutputTableModel extends AbstractTableModel {
      * @return predicted training length
      */
     private double getTrainingLength(Player player, int skillIndex) {
-        double dReturn = 0;
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
             var model = HOVerwaltung.instance().getModel();
-            dReturn = wt.getTrainingLength(player,
+            return 1/wt.calculateSkillIncreaseOfTrainingWeek(
+                    player.getValue4Skill(skillIndex),
                     model.getTrainer().getTrainerSkill(),
+                    model.getClub().getCoTrainer(),
                     model.getTeam().getTrainingslevel(),
                     model.getTeam().getStaminaTrainingPart(),
-                    model.getClub().getCoTrainer());
+                    player.getAlter(),
+                    90, 0,0, 0);
         }
-        return dReturn;
-    }
-
-    /**
-     * Method that returns the offset in Training point
-     *
-     * @param player player to be considered
-     * @param skill  skill trained
-     * @return training point offset, if any
-     */
-    private double getOffset(Player player, int skill) {
-        double offset = player.getSub4Skill(skill);
-        double length = getTrainingLength(player, skill);
-        return offset * length;
+        return 0;
     }
 
     /**
@@ -199,8 +188,8 @@ public class OutputTableModel extends AbstractTableModel {
      * @return the VerticalIndicator object
      */
     private VerticalIndicator createIcon(Player player, int skillIndex) {
-        double point = getOffset(player, skillIndex);
         double trainingLength = getTrainingLength(player, skillIndex);
+        double point = trainingLength * player.getSub4Skill(skillIndex);
         return new VerticalIndicator(Helper.round(point, 1), Helper.round(
                 trainingLength, 1));
     }

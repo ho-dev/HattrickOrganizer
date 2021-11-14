@@ -114,7 +114,7 @@ public class XMLMatchdetailsParser {
      */
     private static void readHighlights(Document doc, Matchdetails md, MatchLineup lineup) {
         final ArrayList<MatchEvent> matchEvents = new ArrayList<>();
-        final Vector<Integer> broken = new Vector<Integer>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
+        final Vector<Integer> broken = new Vector<>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
         Element root, ele;
         NodeList eventList;
 		int iMinute, iSubjectPlayerID, iSubjectTeamID, iObjectPlayerID, iMatchEventID, iMatchPart, iEventVariation;
@@ -174,12 +174,12 @@ public class XMLMatchdetailsParser {
 
             			final Vector<String> tmpPlayer = homeTeamPlayers.get(i);
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iSubjectPlayerID))) {
-            				subjectplayername = tmpPlayer.get(1).toString();
+            			if (tmpPlayer.get(0).equals(String.valueOf(iSubjectPlayerID))) {
+            				subjectplayername = tmpPlayer.get(1);
             			}
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iObjectPlayerID))) {
-            				objectplayername = tmpPlayer.get(1).toString();
+            			if (tmpPlayer.get(0).equals(String.valueOf(iObjectPlayerID))) {
+            				objectplayername = tmpPlayer.get(1);
             			}
 
             			i++;
@@ -195,13 +195,13 @@ public class XMLMatchdetailsParser {
 
             			final Vector<String> tmpPlayer = awayTeamPlayers.get(i);
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iSubjectPlayerID))) {
-            				subjectplayername = tmpPlayer.get(1).toString();
+            			if (tmpPlayer.get(0).equals(String.valueOf(iSubjectPlayerID))) {
+            				subjectplayername = tmpPlayer.get(1);
             				subHome = false;
             			}
 
-            			if (tmpPlayer.get(0).toString().equals(String.valueOf(iObjectPlayerID))) {
-            				objectplayername = tmpPlayer.get(1).toString();
+            			if (tmpPlayer.get(0).equals(String.valueOf(iObjectPlayerID))) {
+            				objectplayername = tmpPlayer.get(1);
             				objHome = false;
             			}
 
@@ -251,14 +251,14 @@ public class XMLMatchdetailsParser {
             		default:
 
             			if (subjectplayername.equals("") && (iSubjectPlayerID != 0)) {
-            				if (eventtext.indexOf(String.valueOf(iSubjectPlayerID)) >= 0) {
+            				if (eventtext.contains(String.valueOf(iSubjectPlayerID))) {
             					String plname = eventtext.substring(eventtext.indexOf(String
             							.valueOf(iSubjectPlayerID)));
             					plname = plname.substring(plname.indexOf(">") + 1);
             					plname = plname.substring(0, plname.indexOf("<"));
             					subjectplayername = plname;
 
-            					final Vector<String> tmpplay = new Vector<String>();
+            					final Vector<String> tmpplay = new Vector<>();
             					tmpplay.add(String.valueOf(iSubjectPlayerID));
             					tmpplay.add(plname);
 
@@ -270,20 +270,20 @@ public class XMLMatchdetailsParser {
             					}
             				} else {
             					subjectplayername = String.valueOf(iSubjectPlayerID);
-            					broken.add(new Integer(matchEvents.size()));
+            					broken.add(matchEvents.size());
 								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d in game %s",iMatchEventID, iMinute, lineup.getMatchID()));
             				}
             			}
 
 	            		if (objectplayername.equals("") && (iObjectPlayerID != 0)) {
-	            			if (eventtext.indexOf(String.valueOf(iObjectPlayerID)) >= 0) {
+	            			if (eventtext.contains(String.valueOf(iObjectPlayerID))) {
 	            				String plname = eventtext.substring(eventtext.indexOf(String
 	            						.valueOf(iObjectPlayerID)));
 	            				plname = plname.substring(plname.indexOf(">") + 1);
 	            				plname = plname.substring(0, plname.indexOf("<"));
 	            				objectplayername = plname;
 	
-	            				final Vector<String> tmpplay = new Vector<String>();
+	            				final Vector<String> tmpplay = new Vector<>();
 	            				tmpplay.add(String.valueOf(iObjectPlayerID));
 	            				tmpplay.add(plname);
 	
@@ -293,7 +293,7 @@ public class XMLMatchdetailsParser {
 	            				homeTeamPlayers.add(tmpplay);
 	            			} else {
 	            				objectplayername = String.valueOf(iObjectPlayerID);
-	            				broken.add(Integer.valueOf(matchEvents.size()));
+	            				broken.add(matchEvents.size());
 	            			}
 	            		}
             		}
@@ -301,7 +301,7 @@ public class XMLMatchdetailsParser {
 
             	//modify eventtext
             	if (!subjectplayername.equals("")) {
-            		String subplayerColor = "#000000";
+            		String subplayerColor;
 
             		if (subHome) {
             			subplayerColor = "#000099";
@@ -309,7 +309,7 @@ public class XMLMatchdetailsParser {
             			subplayerColor = "#990000";
             		}
 
-            		String objplayerColor = "#000000";
+            		String objplayerColor;
 
             		if (objHome) {
             			objplayerColor = "#000099";
@@ -319,14 +319,14 @@ public class XMLMatchdetailsParser {
 
             		boolean replaceend = false;
 
-            		if (eventtext.indexOf(String.valueOf(iSubjectPlayerID)) >= 0) {
+            		if (eventtext.contains(String.valueOf(iSubjectPlayerID))) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
             					+ iSubjectPlayerID + ".*?>",
             					"<FONT COLOR=" + subplayerColor + "#><B>");
             			replaceend = true;
             		}
 
-            		if (eventtext.indexOf(String.valueOf(iObjectPlayerID)) >= 0) {
+            		if (eventtext.contains(String.valueOf(iObjectPlayerID))) {
             			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
             					+ iObjectPlayerID + ".*?>",
             					"<FONT COLOR=" + objplayerColor + "#><B>");
@@ -376,101 +376,101 @@ public class XMLMatchdetailsParser {
             }
 
             // check for redcarded highlights
-            for (int i = 0; i < broken.size(); i++) {
-            	final int tmpid = (broken.get(i)).intValue();
-            	final MatchEvent tmp = matchEvents.get(tmpid);
+			for (Integer integer : broken) {
+				final int tmpid = integer;
+				final MatchEvent tmp = matchEvents.get(tmpid);
 
-            	String subjectplayername = "";
-            	String objectplayername = "";
-            	boolean subHome = true;
-            	boolean objHome = true;
-            	int j = 0;
+				String subjectplayername = "";
+				String objectplayername = "";
+				boolean subHome = true;
+				boolean objHome = true;
+				int j = 0;
 
-            	while (j < homeTeamPlayers.size()) {
-            		if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
-            			break;
-            		}
+				while (j < homeTeamPlayers.size()) {
+					if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
+						break;
+					}
 
-            		final Vector<String> tmpPlayer = homeTeamPlayers.get(j);
+					final Vector<String> tmpPlayer = homeTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
-            			subjectplayername = tmpPlayer.get(1);
-            		}
+					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
+						subjectplayername = tmpPlayer.get(1);
+					}
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
-            			objectplayername = tmpPlayer.get(1);
-            		}
+					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
+						objectplayername = tmpPlayer.get(1);
+					}
 
-            		j++;
-            	}
+					j++;
+				}
 
-            	j = 0;
+				j = 0;
 
-            	while (j < awayTeamPlayers.size()) {
-            		if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
-            			break;
-            		}
+				while (j < awayTeamPlayers.size()) {
+					if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
+						break;
+					}
 
-            		final Vector<String> tmpPlayer = awayTeamPlayers.get(j);
+					final Vector<String> tmpPlayer = awayTeamPlayers.get(j);
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
-            			subjectplayername = tmpPlayer.get(1);
-            			subHome = false;
-            		}
+					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
+						subjectplayername = tmpPlayer.get(1);
+						subHome = false;
+					}
 
-            		if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
-            			objectplayername = tmpPlayer.get(1);
-            			objHome = false;
-            		}
+					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
+						objectplayername = tmpPlayer.get(1);
+						objHome = false;
+					}
 
-            		j++;
-            	}
+					j++;
+				}
 
-            	if (!subjectplayername.equals("")) {
-            		String subplayerColor = "#000000";
+				if (!subjectplayername.equals("")) {
+					String subplayerColor;
 
-            		if (subHome) {
-            			subplayerColor = "#009900";
-            		} else {
-            			subplayerColor = "#990000";
-            		}
+					if (subHome) {
+						subplayerColor = "#009900";
+					} else {
+						subplayerColor = "#990000";
+					}
 
-            		String objplayerColor = "#000000";
+					String objplayerColor;
 
-            		if (objHome) {
-            			objplayerColor = "#009900";
-            		} else {
-            			objplayerColor = "#990000";
-            		}
+					if (objHome) {
+						objplayerColor = "#009900";
+					} else {
+						objplayerColor = "#990000";
+					}
 
-            		eventtext = tmp.getEventText();
-            		boolean replaceend = false;
+					eventtext = tmp.getEventText();
+					boolean replaceend = false;
 
-            		if (eventtext.indexOf(String.valueOf(tmp.getPlayerId())) >= 0) {
-            			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?PlayerID="
-            					+ tmp.getPlayerId() + ".*?>",
-            					"<FONT COLOR=" + subplayerColor + "#><B>");
-            			replaceend = true;
-            		}
+					if (eventtext.contains(String.valueOf(tmp.getPlayerId()))) {
+						eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?PlayerID="
+										+ tmp.getPlayerId() + ".*?>",
+								"<FONT COLOR=" + subplayerColor + "#><B>");
+						replaceend = true;
+					}
 
-            		if (eventtext.indexOf(String.valueOf(tmp.getAssistingPlayerId())) >= 0) {
-            			eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
-            					+ tmp.getAssistingPlayerId() + ".*?>",
-            					"<FONT COLOR=" + objplayerColor + "#><B>");
-            			replaceend = true;
-            		}
+					if (eventtext.contains(String.valueOf(tmp.getAssistingPlayerId()))) {
+						eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
+										+ tmp.getAssistingPlayerId() + ".*?>",
+								"<FONT COLOR=" + objplayerColor + "#><B>");
+						replaceend = true;
+					}
 
-            		if (replaceend) {
-            			eventtext = eventtext.replaceAll("(?i)</A>", "</B></FONT>");
-            		}
+					if (replaceend) {
+						eventtext = eventtext.replaceAll("(?i)</A>", "</B></FONT>");
+					}
 
-            		tmp.setPlayerName(subjectplayername);
-            		tmp.setSpielerHeim(subHome);
-            		tmp.setAssistingPlayerName(objectplayername);
-            		tmp.setGehilfeHeim(objHome);
-            		tmp.setEventText(eventtext);
-            	}
-            }
+					tmp.setPlayerName(subjectplayername);
+					tmp.setSpielerHeim(subHome);
+					tmp.setAssistingPlayerName(objectplayername);
+					tmp.setGehilfeHeim(objHome);
+					tmp.setEventText(eventtext);
+				}
+			}
             md.setHighlights(matchEvents);
         } catch (Exception e) {
         	HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -483,12 +483,12 @@ public class XMLMatchdetailsParser {
      * @param lineup (of MatchLineupPlayer)		team lineup
      */
     private static Vector<Vector<String>> parseLineup (Vector<MatchLineupPlayer> lineup) {
-    	Vector<Vector<String>> players = new Vector<Vector<String>>();
-        MatchLineupPlayer player = null;
+    	Vector<Vector<String>> players = new Vector<>();
+        MatchLineupPlayer player;
 
         for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
             player = lineup.elementAt(i);
-            final Vector<String> tmpPlayer = new Vector<String>();
+            final Vector<String> tmpPlayer = new Vector<>();
             tmpPlayer.add("" + player.getPlayerId());
             tmpPlayer.add(player.getSpielerName());
             players.add(tmpPlayer);
@@ -504,21 +504,19 @@ public class XMLMatchdetailsParser {
     private static void parseMatchReport(Matchdetails md) {
         ArrayList<MatchEvent> highlights = md.getHighlights();
 
-        final StringBuffer report = new StringBuffer();
+        final StringBuilder report = new StringBuilder();
 
-        for (int k = 0; k < highlights.size(); k++) {
-            final MatchEvent tmp = (MatchEvent) highlights.get(k);
-            report.append(tmp.getEventText()+" ");
-        }
+		for (MatchEvent highlight : highlights) {
+			final MatchEvent tmp = highlight;
+			report.append(tmp.getEventText()).append(" ");
+		}
 
         md.setMatchreport(report.toString());
     }
 
     private static void readArena(Document doc, Matchdetails md) {
-        Element ele = null;
-        Element root = null;
-
-        root = doc.getDocumentElement();
+        Element ele;
+        var root = doc.getDocumentElement();
 
         try {
             //Daten füllen            
@@ -555,7 +553,6 @@ public class XMLMatchdetailsParser {
             }
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-            md = null;
         }
     }
 
@@ -576,7 +573,7 @@ public class XMLMatchdetailsParser {
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
 
-			var matchType = MatchType.getById(iMatchType);
+			var matchType = Objects.requireNonNull(MatchType.getById(iMatchType));
 			md.setSourceSystem(matchType.getSourceSystem());
 			md.setMatchType(matchType);
 
@@ -603,10 +600,6 @@ public class XMLMatchdetailsParser {
 				md.setTournamentTypeID(oTournamentDetails.getTournamentType());
 			}
 
-			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
-			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
-			md.setMatchType(Objects.requireNonNull(MatchType.getById(iMatchType)));
-
             ele = (Element) root.getElementsByTagName("MatchID").item(0);
             md.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
             ele = (Element) root.getElementsByTagName("MatchDate").item(0);
@@ -617,8 +610,8 @@ public class XMLMatchdetailsParser {
     }
 
     private static void readGuestTeam(Document doc, Matchdetails md) {
-        Element ele = null;
-        Element root = null;
+        Element ele;
+        Element root;
 
         try {
             //Daten füllen                        
@@ -670,13 +663,12 @@ public class XMLMatchdetailsParser {
 			}
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-            md = null;
         }
     }
 
     private static void readHomeTeam(Document doc, Matchdetails md) {
-        Element ele = null;
-        Element root = null;
+        Element ele;
+        Element root;
 
         try {
             //Daten füllen                        

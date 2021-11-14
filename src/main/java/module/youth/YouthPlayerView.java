@@ -252,13 +252,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         return text + "<br/>";
     }
 
-    private int getOrderByColumn() {
-        return switch (UserParameter.instance().standardsortierung) {
-            case UserParameter.SORT_NAME -> playerOverviewTableModel.getPositionInArray(0);
-            default -> playerOverviewTableModel.getPositionInArray(0);
-        };
-    }
-
     @Override
     public final void refresh() {
         refreshPlayerOverview();

@@ -15,26 +15,25 @@ public class PlayerWagesModel {
 
 	public static PlayerWagesModel create(int playerId, Date from, Date to) {
 		PlayerWagesModel model = new PlayerWagesModel();
-		model.list = new ArrayList<PlayerWage>();
+		model.list = new ArrayList<>();
 
 		List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), from, to);
 		List<Wage> wagesByAge = Wage.getWagesByAge(playerId);
 
-		Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
+		var ageWageMap = new HashMap<Integer, Wage>();
 		for (Wage wage : wagesByAge) {
-			ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
+			ageWageMap.put(wage.getAge(), wage);
 		}
 
 		Date birthDay17 = Calc.get17thBirthday(playerId);
 
-		for (int i = 0; i < updates.size(); i++) {
-			Date date = updates.get(i);
+		for (Date date : updates) {
 			PlayerWage data = new PlayerWage();
 			int ageAt = Calc.getAgeAt(birthDay17, date);
 			data.setAge(ageAt);
 			data.setFinancialUpdateDate(date);
-			data.setWeek(HTWeek.getHTWeekByDate(date));
-			data.setWage(ageWageMap.get(Integer.valueOf(ageAt)).getWage());
+			data.setWeek(new HTWeek(date));
+			data.setWage(ageWageMap.get(ageAt).getWage());
 			model.list.add(data);
 		}
 		return model;

@@ -105,7 +105,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		homodel = HOVerwaltung.instance().getModel();
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
-		if ((homodel.getTeam() != null) && (homodel.getClub() != null) && (homodel.getTrainer() != null)) {
+		if (homodel.getTeam() != null && homodel.getTrainer() != null) {
 			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
 			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
 			m_iRealConfidence = homodel.getTeam().getConfidence();
@@ -149,7 +149,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 	}
 
-	public final Weather getWeather() {
+	public Weather getWeather() {
 		int id = ((CBItem) Objects.requireNonNull(m_jcbWeather.getSelectedItem(), "Weather CB can't be null")).getId();
 		return Weather.getById(id);
 	}
@@ -255,47 +255,39 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		Helper.setComboBoxFromID(m_jcbPullBackMinute, minute);
 	}
 
-
 	@Override
 	public void itemStateChanged(ItemEvent event) {
-
-	 if (event.getStateChange() == ItemEvent.SELECTED) {
-
+		if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jcbPullBackMinute)) {
 				homodel.getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
+			} else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
 				homodel.getTeam().setTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
+			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
 				homodel.getTeam().setSubTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbTeamConfidence)) {
+			} else if (event.getSource().equals(m_jcbTeamConfidence)) {
 				homodel.getTeam().setConfidence(((CBItem) Objects.requireNonNull(m_jcbTeamConfidence.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbTrainerType)) {
-				homodel.getTrainer().setTrainerTyp(((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId());
-				int iStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
-			}
-			else if (event.getSource().equals(m_jcbLocation)) {
+			} else if (event.getSource().equals(m_jcbTrainerType)) {
+				var trainerType = ((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId();
+				homodel.getTrainer().setTrainerTyp(trainerType);
+				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
+				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
+			} else if (event.getSource().equals(m_jcbLocation)) {
 				homodel.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbTacticalAssistants)) {
-				homodel.getClub().setTacticalAssistantLevels(((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId());
-				int iStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(iStyleOfPlay);
-			}
-			else if (event.getSource().equals(m_jcbWeather))
-			{
+			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
+				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
+				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
+				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
+				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
+			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getLineupWithoutRatingRecalc();
 				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
 				lineup.setWeather(getWeather());
 				lineupPanel.getLineupPositionsPanel().refresh();
 			}
-		 refresh();
+			refresh();
 		}
-
 	}
 
 	@Override
