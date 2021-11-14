@@ -600,7 +600,9 @@ public class YouthPlayer {
             var startSkills = getSkillsBefore(since);
             for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
                 var team = entry.getTraining().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-                startSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+                var newSkills = entry.calcSkills(startSkills, getSkillsAt(entry.getMatchDate()), team);
+                progressLastMatch = newSkills.getSkillSum() - startSkills.getSkillSum();
+                startSkills = newSkills;
             }
         }
     }
