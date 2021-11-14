@@ -5,7 +5,6 @@ import core.datatype.CBItem;
 import core.db.DBManager;
 import core.file.hrf.HRFStringParser;
 import core.gui.HOMainFrame;
-import core.gui.InfoPanel;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
@@ -13,12 +12,9 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
-import core.model.match.SourceSystem;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HOLogger;
-import core.util.Helper;
-import module.nthrf.MainPanel;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import tool.updater.UpdateController;
@@ -317,7 +313,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					var dateSince = DBManager.instance().getMinScoutingDate();
 					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
 					// delete old youth match lineups, no longer needed (no current youth player has trained then)
-					DBManager.instance().deleteYouthMatchData(dateSince);
+					DBManager.instance().deleteYouthMatchDataBefore(dateSince);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {

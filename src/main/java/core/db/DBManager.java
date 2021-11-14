@@ -2533,10 +2533,10 @@ public class DBManager {
 	 */
 	public static Boolean getBoolean(ResultSet rs, String columnLabel) {
 		try {
-			return rs.getBoolean(columnLabel);
+			var ret = rs.getBoolean(columnLabel);
+			if (!rs.wasNull()) return ret;
+		} catch (Exception ignored) {
 		}
-		catch(Exception ignored)
-		{}
 		return null;
 	}
 
@@ -2694,7 +2694,7 @@ public class DBManager {
 	 *
 	 * @param before       the before
 	 */
-	public void deleteYouthMatchData(Timestamp before){
+	public void deleteYouthMatchDataBefore(Timestamp before){
 		if ( before != null) {
 			((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME)).deleteYouthMatchHighlightsBefore(before);
 			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME)).deleteYouthMatchDetailsBefore(before);
