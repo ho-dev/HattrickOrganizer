@@ -85,8 +85,6 @@ def versionPropsFile = file('version.properties')
 Properties versionProps = new Properties()
 def buildNumber = System.getenv("RUN_NUMBER") ?: 0
 def version_short = major + '.' + minor
-// bump build number to current gradle build count (needed to update current HO 5.0-dev releases, should be removed on next minor version change)
-buildNumber = (buildNumber as Integer) + 3710
 buildNumber = buildNumber.toString()
 project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
 versionProps['buildNumber'] = buildNumber
