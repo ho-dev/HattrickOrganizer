@@ -19,8 +19,6 @@ import javax.swing.JPanel;
 
 public class WagesPanel extends JPanel {
 
-	private static final long serialVersionUID = -7417813938334965612L;
-
 	WagesPanel(int playerId) {
 		initComponents(playerId);
 	}
@@ -41,7 +39,7 @@ public class WagesPanel extends JPanel {
 	}
 
 	private List<Data> getData(int playerId) {
-		List<Data> list = new ArrayList<Data>();
+		var list = new ArrayList<Data>();
 
 		Date buyingDate = Calc.getBuyingDate(playerId);
 		if (buyingDate == null) {
@@ -52,21 +50,20 @@ public class WagesPanel extends JPanel {
 				new Date());
 		List<Wage> wagesByAge = Wage.getWagesByAge(playerId);
 
-		Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
+		var ageWageMap = new HashMap<Integer, Wage>();
 		for (Wage wage : wagesByAge) {
-			ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
+			ageWageMap.put(wage.getAge(), wage);
 		}
 
 		Date birthDay17 = Calc.get17thBirthday(playerId);
 
-		for (int i = 0; i < updates.size(); i++) {
-			Date date = updates.get(i);
+		for (Date date : updates) {
 			Data data = new Data();
 			int ageAt = Calc.getAgeAt(birthDay17, date);
 			data.age = ageAt;
 			data.date = date;
-			data.htWeek = HTWeek.getHTWeekByDate(date);
-			data.wage = ageWageMap.get(Integer.valueOf(ageAt)).getWage();
+			data.htWeek = new HTWeek(date);
+			data.wage = ageWageMap.get(ageAt).getWage();
 
 			list.add(data);
 		}
@@ -75,13 +72,10 @@ public class WagesPanel extends JPanel {
 	}
 
 	private List<RowData> getRows(int playerId) {
-		List<RowData> list = new ArrayList<RowData>();
-
+		var list = new ArrayList<RowData>();
 		List<Data> dataList = getData(playerId);
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-		Map<Integer, Sum> sumMap = new HashMap<Integer, Sum>();
 		int sum = 0;
-
 		for (int i = 0; i < dataList.size(); i++) {
 			Data data = dataList.get(i);
 			RowData row = new RowData();

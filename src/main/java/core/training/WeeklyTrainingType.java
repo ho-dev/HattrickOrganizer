@@ -143,15 +143,6 @@ public abstract class WeeklyTrainingType {
 		return _SecondaryTrainingSkillBaseLength;
 	}
 
-	/*
-		public float getSecondaryTrainingSkillSecondaryLengthRate() {
-			return _SecondaryTrainingSkillPartlyLengthRate;
-		}
-
-		public float getSecondaryTrainingSkillOsmosisLengthRate() {
-			return _SecondaryTrainingSkillOsmosisLengthRate;
-		}
-	*/
 	public int[] getTrainingSkillPositions() {
 		return _PrimaryTrainingSkillPositions;
 	}
@@ -168,19 +159,6 @@ public abstract class WeeklyTrainingType {
 		return _PrimaryTrainingSkillOsmosisTrainingPositions;
 	}
 
-	/*	public int[] getSecondaryTrainingSkillPositions() {
-			return _SecondaryTrainingSkillPositions;
-		}
-		public int[] getSecondaryTrainingSkillBonusPositions() {
-			return _SecondaryTrainingSkillBonusPositions;
-		}
-		public int[] getSecondaryTrainingSkillSecondaryTrainingPositions() {
-			return _SecondaryTrainingSkillSecondaryTrainingPositions;
-		}
-		public int[] getSecondaryTrainingSkillOsmosisTrainingPositions() {
-			return _SecondaryTrainingSkillOsmosisTrainingPositions;
-		}
-	*/
 	public double getPrimaryTraining(TrainingWeekPlayer tp) {
 		double dPrimaryTraining = 0;
 		int iMinutes = 0;
@@ -243,30 +221,6 @@ public abstract class WeeklyTrainingType {
 					dSecondaryTraining += ((double) tmp / (double) 90) * _SecondaryTrainingSkillBonus;
 				}
 			}
-		/*	if (iMinutes < 90) {
-				if (_SecondaryTrainingSkillPartlyLengthRate > 0) {
-					tmp = tp.getSecondarySkillSecondaryPositionMinutes();
-					if (tmp > 0) {
-						if (iMinutes + tmp > 90) {
-							tmp = 90 - iMinutes;
-						}
-						iMinutes += tmp;
-						dSecondaryTraining += ((double) tmp / (double) 90) / _SecondaryTrainingSkillPartlyLengthRate;
-					}
-				}
-				if (iMinutes < 90) {
-					if (_SecondaryTrainingSkillOsmosisLengthRate > 0) {
-						tmp = tp.getSecondarySkillOsmosisPositionMinutes();
-						if (tmp > 0) {
-							if (iMinutes + tmp > 90) {
-								tmp = 90 - iMinutes;
-							}
-							iMinutes += tmp;
-							dSecondaryTraining += ((double) tmp / (double) 90) / _SecondaryTrainingSkillOsmosisLengthRate;
-						}
-					}
-				}
-			}*/
 		}
 		return dSecondaryTraining;
 	}
@@ -316,33 +270,81 @@ public abstract class WeeklyTrainingType {
 		return factor;
 	}
 
-	public abstract double getTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
+	static double[] coachKoeff = {0.7343, 0.8324, 0.92, 1, 1.0375};
+	//static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
 
-	static double[] coachKoeff = {0.734, 0.834, 0.92, 1, 1.04};
-	static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
-
-	public double getTrainingAlternativeFormula(int value4Skill, TrainingPerPlayer trForPlayer, boolean isPrimarySkill) {
+	/**
+	 * Calculate skill increase of training week (Schum's formula)
+	 *
+	 * Source:
+	 * https://github.com/akasolace/HO/issues/250#issuecomment-541170338
+	 * https://www87.hattrick.org/Forum/Read.aspx?t=17024376&v=4&a=1&n=5
+	 * https://www87.hattrick.org/Club/Manager/?userId=5176908 (Schum)
+	 *
+	 * @param skillLevel int skill level [0..20]
+	 * @param trForPlayer training information
+	 * @return skill increase [0..1]
+	 */
+	public double calculateSkillIncreaseOfTrainingWeek(int skillLevel, TrainingPerPlayer trForPlayer) {
 
 		if (trForPlayer.getTrainingPair() == null
 				|| trForPlayer.getTrainingPair().getTrainingDuration() == null
 				|| !trForPlayer.getTrainingPair().getTrainingDuration().hasTrainingMinutes()) {
 			return 0;
 		}
-		//return calcTraining(getPrimaryTrainingSkillBaseLength(), player.getAlter(), trainerlevel, intensity, stamina, value4Skill, staff);
 
+		return calculateSkillIncreaseOfTrainingWeek(
+				skillLevel,
+				trForPlayer.getTrainingWeek().getCoachLevel(),
+				trForPlayer.getTrainingWeek().getTrainingAssistantsLevel(),
+				trForPlayer.getTrainingWeek().getTrainingIntensity(),
+				trForPlayer.getTrainingWeek().getStaminaShare(),
+				trForPlayer.getPlayerAgeAtTrainingDate(),
+				trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes(),
+				trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes(),
+				trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes(),
+				trForPlayer.getTrainingPair().getTrainingDuration().getBonusTrainingMinutes()
+		);
+	}
+
+	/**
+	 * Calculate skill increase of training week (Schum's formula)
+	 * based on training specific factorTrainingTypeKoeff and osmosisKoeff
+	 *
+	 * @param skillLevel skill level [0..20]
+	 * @param coachLevel Coach Level [4..8]
+	 * @param assistantLevel Assistant level sum [0..10]
+	 * @param trainingIntensity training intensity [0..100]
+	 * @param staminaShare stamina share [10..100]
+	 * @param age age years [17..]
+	 * @param fullTrainingMinutes minutes with full training
+	 * @param partlyTrainingMinutes partly training
+	 * @param osmosisTrainingMinutes osmosis training
+	 * @return skill increase [0..1]
+	 */
+	public double calculateSkillIncreaseOfTrainingWeek(int skillLevel,
+													   int coachLevel,
+													   int assistantLevel,
+													   int trainingIntensity,
+													   int staminaShare,
+													   int age,
+													   int fullTrainingMinutes,
+													   int partlyTrainingMinutes,
+													   int osmosisTrainingMinutes,
+													   int bonusTrainingMinutes) {
 		/*
-		at lvl<8
-		f(lvl) = 16.282 * EXP (-0.14 * lvl)
+		at lvl<9
+		f(lvl) = 16.289 * EXP (-0.1396 * lvl)
 
-		at lvl>=8
-		f(lvl) = 52.82 / lvl - 1.29
+		at lvl>=9
+		f(lvl) = 54.676 / lvl - 1.438
 		*/
 
 		double factorSkillLevel;
-		if (value4Skill < 8) {
-			factorSkillLevel = 16.282 * Math.exp(-.14 * value4Skill);
+		if (skillLevel < 9) {
+			factorSkillLevel = 16.289 * Math.exp(-.1396 * skillLevel);
 		} else {
-			factorSkillLevel = 52.82 / value4Skill - 1.29;
+			factorSkillLevel = 54.676 / skillLevel - 1.438;
 		}
 
 		/*
@@ -356,11 +358,10 @@ public abstract class WeeklyTrainingType {
 		4 0.734
 		*/
 
-		var skillvalue = trForPlayer.getTrainingWeek().getCoachLevel();
-		if (skillvalue < 4 || skillvalue > 8) {
-			return trainingCalcError("Trainerlevel out of range [4,8]: " + skillvalue);    // dummy return
+		if (coachLevel < 4 || coachLevel > 8) {
+			return trainingCalcError("Trainerlevel out of range [4,8]: " + coachLevel);    // dummy return
 		}
-		var factorCoach = coachKoeff[skillvalue - 4];
+		var factorCoach = coachKoeff[coachLevel - 4];
 
 		/*
 		K(assist)
@@ -378,11 +379,10 @@ public abstract class WeeklyTrainingType {
 		1 1.035
 		0 1.000
 		*/
-		int assistantLevel = trForPlayer.getTrainingWeek().getTrainingAssistantsLevel();
 		if (assistantLevel < 0 || assistantLevel > 10) {
 			return trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);    // dummy return
 		}
-		var factorAssistants = assistantKoeff[assistantLevel];
+		var factorAssistants =  1. + assistantLevel * .035; //assistantKoeff[assistantLevel];
 
 		/*
 		K(int)
@@ -390,7 +390,7 @@ public abstract class WeeklyTrainingType {
 		that is, 100% is 1.0.
 		90% is 0.9
 		*/
-		double factorIntensity = trForPlayer.getTrainingWeek().getTrainingIntensity() / 100.0;
+		double factorIntensity = trainingIntensity / 100.0;
 
 		/*
 		K(stam)
@@ -398,56 +398,59 @@ public abstract class WeeklyTrainingType {
 		at 5 % of the stadium 1.0 - 5% = 0.95
 		at 15% of the stadium 1.0 - 15% = 0.85
 		*/
-		double factorStamina = 1. - (double) trForPlayer.getTrainingWeek().getStaminaShare() / 100.;
+		double factorStamina = 1. - (double) staminaShare / 100.;
 
 		/*
-		K(age) = 0.9835^(Age-17)
+		K(age) = 54 / (Age+37)
 
 		Age - Koeff
 		17 - 1.000
-		18 - 0.9835
-		19 - 0.967
-		20 - 0.951
-		21 - 0.936
-		22 - 0.920
-		23 - 0.905
-		24 - 0.890
-		25 - 0.875
-		26 - 0.861
-		27 - 0.847
-		28 - 0.833
-		29 - 0.819
-		30 - 0.806
-		31 - 0.792
-		32 - 0.779
-		33 - 0.766
-		34 - 0.754
-		35 - 0.741
+		18 - 0.9818
+		19 - 0.9643
+		20 - 0.9474
+		21 - 0.9310
+		22 - 0.9153
+		23 - 0.9000
+		24 - 0.8852
+		25 - 0.8710
+		26 - 0.8571
+		27 - 0.8438
+		28 - 0.8308
+		29 - 0.8182
+		30 - 0.8060
+		31 - 0.7941
+		32 - 0.7826
+		33 - 0.7714
+		34 - 0.7606
+		35 - 0.7500
+		36 - 0.7397
+		37 - 0.7297
 		*/
 
-		var age = trForPlayer.getPlayerAgeAtTrainingDate();
-		var factorAge = Math.pow(.9835, age - 17);
+		double factorAge = 54.0 / (age + 37);
 
 		/*
 		K(time)
 		If a player has played the full slot for 90 minutes, then K(time)=1.0
-		If the slot is 90 minutes, then K(time)=0.5
+		If the half slot is 90 minutes, then K(time)=0.5
 		if, for example, 36 minutes on the full slot and 90 minutes on the half-slot,
 		we think, remembering that the total amount of training can not be taken into account more than 90 minutes of flirtation:
 		K(time)=(1.0*36+(90-36)*0.5)/90=0.7
-		 */
+		*/
 
-		double factorTime = 1;
-		var minutes = trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes();
-		if (minutes > 0 && this.getPrimaryTrainingSkillBonus() > 0) {
-			factorTime = (1 + getPrimaryTrainingSkillBonus()) * minutes / 90.;
-		} else if (minutes < 90) {
-			var partlyMinutes = Math.min(90-minutes, trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes());
-			factorTime = minutes / 90. + partlyMinutes / 90. * .5;
+		var minutes = Math.min(90,fullTrainingMinutes);
+		double factorTime = minutes/90.;
+		if (bonusTrainingMinutes > 0 && this.getPrimaryTrainingSkillBonus() > 0) {
+			var bonusTraining = Math.min(90, bonusTrainingMinutes);
+			factorTime += this.getPrimaryTrainingSkillBonus() * bonusTraining / 90.;
+		}
+		if (minutes < 90) {
+			var partlyMinutes = Math.min(90 - minutes, partlyTrainingMinutes);
+			factorTime += .5 * partlyMinutes / 90.;
 			minutes += partlyMinutes;
 			if (minutes < 90) {
-				var osmosisMinutes = Math.min(90-minutes, trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes());
-				factorTime += osmosisMinutes / 90. * osmosisKoeff;
+				var osmosisMinutes = Math.min(90 - minutes, osmosisTrainingMinutes);
+				factorTime += osmosisKoeff * osmosisMinutes / 90.;
 			}
 		}
 
@@ -489,15 +492,13 @@ public abstract class WeeklyTrainingType {
 			Wing Att_phone - 0.40%
 		*/
 
-		return factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01;
+		return Math.min(1, factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01);
 	}
 
 	protected double trainingCalcError(String s) {
 		HOLogger.instance().error(this.getClass(), s);
 		return 1;
 	}
-
-	public abstract double getSecondaryTrainingLength(Player player, int trainerLevel, int intensity, int stamina, int assistantLevel);
 
 	/**
 	 * Training effect of youth bonus training per minute

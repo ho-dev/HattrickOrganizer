@@ -134,28 +134,28 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jlFormationExperience.clear();
     }
 
-    protected void setCentralAttack(double rating) {
+    void setCentralAttack(double rating) {
         m_jlCentralAttackRatingNumber.setText(m_clFormat.format(rating));
         m_jlCentralAttackRatingCompare.setSpecialNumber((float) (rating - m_dCentralAttackRating), false);
         m_dCentralAttackRating = rating;
         m_jlCentralAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
     }
 
-    protected void setRightAttack(double rating) {
+    void setRightAttack(double rating) {
         m_jlRightAttackRatingNumber.setText(m_clFormat.format(rating));
         m_jlRightAttackRatingCompare.setSpecialNumber((float) (rating - m_dRightAttackRating), false);
         m_dRightAttackRating = rating;
         m_jlRightAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
     }
 
-    protected void setLeftAttack(double rating) {
+    void setLeftAttack(double rating) {
         m_jlLeftAttackRatingNumber.setText(m_clFormat.format(rating));
         m_jlLeftAttackRatingCompare.setSpecialNumber((float) (rating - m_dLeftAttackRating), false);
         m_dLeftAttackRating = rating;
         m_jlLeftAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
     }
 
-    protected void setMidfield(double rating) {
+    void setMidfield(double rating) {
         m_jlMidfieldRatingNumber.setText(m_clFormat.format(rating));
         m_jlMidfieldRatingCompare.setSpecialNumber((float) (rating - m_dMidfieldRating), false);
         m_dMidfieldRating = rating;
@@ -163,7 +163,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-    protected void setCentralDefense(double rating) {
+    void setCentralDefense(double rating) {
         m_jlCentralDefenseRatingNumber.setText(m_clFormat.format(rating));
         m_jlCentralDefenseRatingCompare.setSpecialNumber((float) (rating - m_dCentralDefenseRating), false);
         m_dCentralDefenseRating = rating;
@@ -171,7 +171,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-    protected void setLeftDefense(double rating) {
+    void setLeftDefense(double rating) {
         m_jlLeftDefenseRatingNumber.setText(m_clFormat.format(rating));
         m_jlLeftDefenseRatingCompare.setSpecialNumber((float) (rating - m_dLeftDefenseRating), false);
         m_dLeftDefenseRating = rating;
@@ -179,7 +179,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-    protected void setRightDefense(double rating) {
+    void setRightDefense(double rating) {
         m_jlRightDefenseRatingNumber.setText(m_clFormat.format(rating));
         m_jlRightDefenseRatingCompare.setSpecialNumber((float) (rating - m_dRightDefenseRating), false);
         m_dRightDefenseRating = rating;
@@ -187,17 +187,17 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
 
-    protected void setiHatStats(int value) {
+    void setiHatStats(int value) {
         m_jlHatstatMain.setText(Helper.INTEGERFORMAT.format(value));
         m_jlHatstatCompare.setSpecialNumber(value - iHatStats, false);
         iHatStats = value;
     }
 
-    protected void setTactic(int iTacticType, float iTacticSkill) {
+    void setTactic(int iTacticType, float iTacticSkill) {
         m_jlTacticRating.setText((iTacticType == IMatchDetails.TAKTIK_NORMAL) ? "-" : PlayerAbility.getNameForSkill(iTacticSkill, false, false));
     }
 
-    protected void setFormationExperience(String sFormationDescription, int iFormationExp) {
+    void setFormationExperience(String sFormationDescription, int iFormationExp) {
         String formationExperienceTooltip = getFormationExperienceTooltip();
         m_jlFormationExperience.setToolTipText(formationExperienceTooltip);
 
@@ -210,14 +210,14 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         }
     }
 
-    protected void setLoddar(double value) {
+    void setLoddar(double value) {
         m_jlLoddarMain.setText(m_clFormat.format(value));
         m_jlLoddarCompare.setSpecialNumber((float) (value - loddar), false);
         loddar = value;
     }
 
 
-    protected void calcColorBorders() {
+    void calcColorBorders() {
 
         double ratingRatio;
         final double avgRating = (m_dLeftDefenseRating + m_dCentralDefenseRating + m_dRightDefenseRating + m_dMidfieldRating + m_dRightAttackRating
@@ -646,7 +646,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         cbActionListener = e -> {
             if (e.getSource().equals(m_jcbPredictionModel)) {
                 RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
-                setRatings();
+                calculateRatings();
             }
         };
 
@@ -776,7 +776,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         return allItems;
     }
 
-    public void setRatings() {
+    public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
             final Lineup currentLineup = homodel.getLineup();
@@ -833,7 +833,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     public void refresh() {
         removeListeners();
         setPredictionModel(RatingPredictionConfig.getInstancePredictionType());
-        setRatings();
+        calculateRatings();
         addListeners();
     }
 

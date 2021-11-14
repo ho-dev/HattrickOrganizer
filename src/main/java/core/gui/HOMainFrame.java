@@ -507,6 +507,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					JMenuItem item = (JMenuItem) e.getSource();
 					IModule module = (IModule) item.getClientProperty("MODULE");
 					getTabbedPane().showTab(module.getModuleId());
+					RefreshManager.instance().doRefresh();
 				});
 
 				m_jmFunctions.add(showTabMenuItem);
@@ -613,13 +614,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void showMatch(final int matchid) {
 		m_jtpTabbedPane.showTab(IModule.MATCHES);
 		final MatchesPanel matchesPanel = (MatchesPanel) getTabbedPane().getModulePanel(IModule.MATCHES);
-		SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    matchesPanel.showMatch(matchid);
-                }
-            });
+		SwingUtilities.invokeLater(() -> matchesPanel.showMatch(matchid));
 	}
 
 	// ----------------Helper methods---------------------------------

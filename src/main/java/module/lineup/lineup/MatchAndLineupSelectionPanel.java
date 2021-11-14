@@ -221,7 +221,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             }
 
             jpParent.getLineupPanel().getLineupRatingPanel().setPreviousRatings(oRatingsBefore);
-            jpParent.getLineupPanel().getLineupRatingPanel().setRatings();
+            jpParent.getLineupPanel().getLineupRatingPanel().calculateRatings();
 
         });
 
@@ -516,7 +516,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 if (refreshed != null) {
                     m_clSelectedMatch.merge(refreshed);
                 }
-                update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
+                DBManager.instance().updateMatchKurzInfo(m_clSelectedMatch);
+                refresh();
+                //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
             }
             finally {
                 CursorToolkit.stopWaitCursor(this);
@@ -538,8 +540,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         int selectedMatchID = selectedMatch.getMatchID();
 
         // Update upcomingMatchesInDB with uploaded game
-        List<MatchOrdersCBItem> copyUpcomingMatchesInDB = new ArrayList<>();
-        copyUpcomingMatchesInDB.addAll(upcomingMatchesInDB);
+        List<MatchOrdersCBItem> copyUpcomingMatchesInDB = new ArrayList<>(upcomingMatchesInDB);
         upcomingMatchesInDB = new ArrayList<>();
 
         for (MatchOrdersCBItem element : copyUpcomingMatchesInDB) {

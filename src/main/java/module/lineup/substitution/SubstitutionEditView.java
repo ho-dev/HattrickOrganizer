@@ -32,7 +32,6 @@ import static core.model.player.IMatchRoleID.aSubstitutesMatchRoleID;
  */
 public class SubstitutionEditView extends JPanel {
 
-	private static final long serialVersionUID = 6041242290064429972L;
 	private MatchOrderType orderType;
 	private JComboBox playerComboBox;
 	private JComboBox playerInComboBox;
@@ -252,8 +251,9 @@ public class SubstitutionEditView extends JPanel {
 				evt -> {
 					Integer value = (Integer) whenTextField.getValue();
 					whenSlider.setValue(Objects.requireNonNullElse(value, -1));
+					// calculate hatstat change
+					ratingRecalc();
 				});
-
 		}
 
 		if (this.orderType != MatchOrderType.POSITION_SWAP && this.orderType != MatchOrderType.MAN_MARKING) {

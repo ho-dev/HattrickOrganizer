@@ -157,7 +157,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_iAttitude = lineup.getAttitude();
 		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
 		m_iStyleOfPlay = lineup.getStyleOfPlay();
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, m_iStyleOfPlay);
+		updateStyleOfPlayComboBox(m_iStyleOfPlay);
 
 		for (Player player: allPlayers) {
 			// the first 11
@@ -680,7 +680,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	// each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
 	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-	public void updateStyleOfPlayComboBox(int oldValue)
+	public int updateStyleOfPlayComboBox(int oldValue)
 	{
 		// NT Team can select whatever Style of Play they like
 		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
@@ -694,7 +694,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 			for (int value : legalValues) {
 				CBItem cbItem;
-
 				if (value == 0) {
 					cbItem = new CBItem(neutral_sop, value);
 				} else if (value > 0) {
@@ -703,7 +702,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
 				}
 				m_jcbStyleOfPlay.addItem(cbItem);
-
 			}
 
 			addListeners();
@@ -712,10 +710,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
 			// Attempt to set the old value. If it is not possible it will do nothing.
 			setStyleOfPlay(oldValue);
-
 		}
-
-
+		var item = (CBItem)(m_jcbStyleOfPlay.getSelectedItem());
+		if ( item != null) return item.getId();
+		return 0;
 	}
 
 	public void setStyleOfPlay(int style){

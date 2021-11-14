@@ -110,9 +110,6 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 					options, options[0]);
 		});
 
-		this.splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.training_pastFutureTrainingsSplitPane));
-
 		this.model.addModelChangeListener(change -> {
 			if (change == ModelChange.FUTURE_TRAINING) {
 				reload();
@@ -289,9 +286,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		lGbc.fill = GridBagConstraints.BOTH;
 		futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel,
-				futureTrainingsPanel);
-		splitPane.setDividerLocation(UserParameter.instance().training_pastFutureTrainingsSplitPane);
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
+		UserParameter.instance().training_pastFutureTrainingsSplitPane.init(splitPane);
 		setLayout(new BorderLayout());
 		add(splitPane, BorderLayout.CENTER);
 	}

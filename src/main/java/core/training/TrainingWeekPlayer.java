@@ -10,10 +10,6 @@ public class TrainingWeekPlayer {
 	private int bonusTrainingMinutes = 0;
 	private int partlyTrainingMinutes = 0;
 	private int osmosisTrainingMinutes = 0;
-	/*	private int _SecondarySkillPositionMinutes = 0;
-		private int _SecondarySkillBonusPositionMinutes = 0;
-		private int _SecondarySkillSecondaryPositionMinutes = 0;
-		private int _SecondarySkillOsmosisPositionMinutes = 0;*/
 	private int playedMinutes = 0;
 
 	public TrainingWeekPlayer(Player player) {
@@ -63,51 +59,6 @@ public class TrainingWeekPlayer {
 	public int getOsmosisTrainingMinutes() {
 		return osmosisTrainingMinutes;
 	}
-	/*
-	public void addSecondarySkillMinutes(int minutes)
-	{
-		if ((_SecondarySkillPositionMinutes + minutes) > 90)
-			_SecondarySkillPositionMinutes = 90;
-		else
-			_SecondarySkillPositionMinutes += minutes;
-	}
-	public int getSecondarySkillPrimaryMinutes()
-	{
-		return _SecondarySkillPositionMinutes;
-	}
-	public void addSecondarySkillBonusMinutes(int minutes)
-	{
-		if ((_SecondarySkillBonusPositionMinutes + minutes) > 90)
-			_SecondarySkillBonusPositionMinutes = 90;
-		else
-			_SecondarySkillBonusPositionMinutes += minutes;
-	}
-	public int getSecondarySkillBonusMinutes()
-	{
-		return _SecondarySkillBonusPositionMinutes;
-	}
-	public void addSecondarySkillSecondaryPositionMinutes(int minutes)
-	{
-		if ((_SecondarySkillSecondaryPositionMinutes + minutes) > 90)
-			_SecondarySkillSecondaryPositionMinutes = 90;
-		else
-			_SecondarySkillSecondaryPositionMinutes += minutes;
-	}
-	public int getSecondarySkillSecondaryPositionMinutes()
-	{
-		return _SecondarySkillSecondaryPositionMinutes;
-	}
-	public void addSecondarySkillOsmosisTrainingMinutes(int minutes)
-	{
-		if ((_SecondarySkillOsmosisPositionMinutes + minutes) > 90)
-			_SecondarySkillOsmosisPositionMinutes = 90;
-		else
-			_SecondarySkillOsmosisPositionMinutes += minutes;
-	}
-	public int getSecondarySkillOsmosisPositionMinutes()
-	{
-		return _SecondarySkillOsmosisPositionMinutes;
-	}*/
 
 	public void addPlayedMinutes(int minutes) {
 		this.playedMinutes += minutes;

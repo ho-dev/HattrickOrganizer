@@ -8,7 +8,9 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import module.series.promotion.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -167,9 +169,8 @@ public class SeriesPanel extends LazyImagePanel {
 		toolbarPanel.setPreferredSize(new Dimension(240, 35));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
 
-		JPanel leagueStatsPanel = new ImagePanel(new GridLayout(1, 2));
-		leagueStatsPanel.add(initLigaTabelle());
-		leagueStatsPanel.add(initTabellenverlaufStatistik());
+		JSplitPane leagueStatsPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initLigaTabelle(), initTabellenverlaufStatistik());
+		UserParameter.instance().series_tableSplitPaneDivider.init(leagueStatsPanel);
 
 		final JPanel tablePanel = new ImagePanel(new BorderLayout());
 		tablePanel.add(leagueStatsPanel, BorderLayout.NORTH);

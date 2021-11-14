@@ -59,13 +59,13 @@ public class Lineup{
 	/** bench */
 	@SerializedName("bench")
 	@Expose
-	private Vector<IMatchRoleID> m_vBenchPositions = new Vector<IMatchRoleID>();
+	private Vector<IMatchRoleID> m_vBenchPositions = new Vector<>();
 	@SerializedName("substitutions")
 	@Expose
-	private List<Substitution> substitutions = new ArrayList<Substitution>();
+	private List<Substitution> substitutions = new ArrayList<>();
 	@SerializedName("kickers")
 	@Expose
-	private List<MatchRoleID> penaltyTakers = new ArrayList<MatchRoleID>();
+	private List<MatchRoleID> penaltyTakers = new ArrayList<>();
 
 	/** captain */
 	@SerializedName("captain")
@@ -96,9 +96,9 @@ public class Lineup{
 		//NOTE: newLineup is required by HT - do not delete even if it seems unused !
 		@SerializedName("newLineup")
 		@Expose
-		private String newLineup = new String("");
+		private String newLineup = "";
 
-	};
+	}
 
 	@SerializedName("settings")
 	@Expose
@@ -220,7 +220,7 @@ public class Lineup{
 				else {
 					break;
 				}
-			};
+			}
 
 			// Add the penalty takers
 
@@ -337,23 +337,12 @@ public class Lineup{
 	
 	public String getAttitudeName(int attitude) {
 		HOVerwaltung hov = HOVerwaltung.instance();
-		String attitudeName;
-		
-		switch(attitude) {
-		case core.model.match.IMatchDetails.EINSTELLUNG_NORMAL:
-			attitudeName = hov.getLanguageString("ls.team.teamattitude_short.normal");
-			break;
-		case core.model.match.IMatchDetails.EINSTELLUNG_PIC:
-			attitudeName = hov.getLanguageString("ls.team.teamattitude_short.playitcool");
-			break;
-		case core.model.match.IMatchDetails.EINSTELLUNG_MOTS:
-			attitudeName = hov.getLanguageString("ls.team.teamattitude_short.matchoftheseason");
-			break;
-		default:
-			attitudeName = HOVerwaltung.instance().getLanguageString("Unbestimmt");
-			break;
-		}
-		return attitudeName;
+		return switch (attitude) {
+			case IMatchDetails.EINSTELLUNG_NORMAL -> hov.getLanguageString("ls.team.teamattitude_short.normal");
+			case IMatchDetails.EINSTELLUNG_PIC -> hov.getLanguageString("ls.team.teamattitude_short.playitcool");
+			case IMatchDetails.EINSTELLUNG_MOTS -> hov.getLanguageString("ls.team.teamattitude_short.matchoftheseason");
+			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+		};
 	}
 
 	public void setStyleOfPlay(int style) {
@@ -400,7 +389,7 @@ public class Lineup{
 			players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		}
 
-		Vector<IMatchRoleID> noKeeper = new Vector<IMatchRoleID>(m_vFieldPositions);
+		Vector<IMatchRoleID> noKeeper = new Vector<>(m_vFieldPositions);
 
 		for (IMatchRoleID pos : noKeeper) {
 			MatchRoleID p = (MatchRoleID) pos;
@@ -441,10 +430,9 @@ public class Lineup{
 
 	/**
 	 * Get the average experience of all players in lineup using a specific
-	 * captain
-	 * 
-	 * @param +sId
-	 *            use this player as captain (<= 0 for current captain)
+	 *
+	 * @param captainsId use this player as captain (<= 0 for current captain)
+	 * @return float
 	 */
 	public final float getAverageExperience(int captainsId) {
 		float value = 0;
@@ -458,16 +446,16 @@ public class Lineup{
 					value += player.getErfahrung();
 					if (captainsId > 0) {
 						if (captainsId == player.getPlayerID()) {
-							captain = (Player) player;
+							captain = player;
 						}
 					} else if (m_iKapitaen == player.getPlayerID()) {
-						captain = (Player) player;
+						captain = player;
 					}
 				}
 			}
 		}
 		if (captain != null) {
-			value = ((float) (value + captain.getErfahrung()) / 12)
+			value = ((value + captain.getErfahrung()) / 12)
 					* (1f - (float) (7 - captain.getFuehrung()) * 0.05f);
 		} else {
 			// HOLogger.instance().log(getClass(),
@@ -477,8 +465,7 @@ public class Lineup{
 		return value;
 	}
 
-
-	public void setRatings(){
+	public void setRatings() {
 		final RatingPredictionManager rpManager;
 		Ratings oRatings = new Ratings();
 		boolean bForm = true;
@@ -495,9 +482,9 @@ public class Lineup{
 			oRatings.computeHatStats();
 			oRatings.computeLoddarStats();
 			this.oRatings = oRatings;
+		} else {
+			this.oRatings = new Ratings();
 		}
-		else {
-			this.oRatings = new Ratings(); }
 	}
 
 	/**
@@ -593,55 +580,19 @@ public class Lineup{
 	 * Get the short name for a formation constant.
 	 */
 	public static String getNameForSystem(byte system) {
-		String name;
-
-		switch (system) {
-		case SYS_451:
-			name = "4-5-1";
-			break;
-
-		case SYS_352:
-			name = "3-5-2";
-			break;
-
-		case SYS_442:
-			name = "4-4-2";
-			break;
-
-		case SYS_343:
-			name = "3-4-3";
-			break;
-
-		case SYS_433:
-			name = "4-3-3";
-			break;
-
-		case SYS_532:
-			name = "5-3-2";
-			break;
-
-		case SYS_541:
-			name = "5-4-1";
-			break;
-
-		case SYS_523:
-			name = "5-2-3";
-			break;
-
-		case SYS_550:
-			name = "5-5-0";
-			break;
-
-		case SYS_253:
-			name = "2-5-3";
-			break;
-
-		default:
-			name = HOVerwaltung.instance().getLanguageString("Unbestimmt");
-			break;
-		}
-
-		return name;
+		return switch (system) {
+			case SYS_451 -> "4-5-1";
+			case SYS_352 -> "3-5-2";
+			case SYS_442 -> "4-4-2";
+			case SYS_343 -> "3-4-3";
+			case SYS_433 -> "4-3-3";
+			case SYS_532 -> "5-3-2";
+			case SYS_541 -> "5-4-1";
+			case SYS_523 -> "5-2-3";
+			case SYS_550 -> "5-5-0";
+			case SYS_253 -> "2-5-3";
+			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+		};
 	}
 
 	/**
@@ -771,7 +722,7 @@ public class Lineup{
 	 * Umrechnung von double auf 1-80 int
 	 * 
 	 * @deprecated use RatingUtil.getIntValue4Rating(double rating) instead
-	 * @param rating
+	 * @rating
 	 */
 	@Deprecated
 	public final int getIntValue4Rating(double rating) {
@@ -911,7 +862,7 @@ public class Lineup{
 	 * @return Value of property m_vPositionen.
 	 */
 	public final Vector<IMatchRoleID> getPositionen() {
-		Vector<IMatchRoleID> ret = new Vector<IMatchRoleID>();
+		Vector<IMatchRoleID> ret = new Vector<>();
 		if (m_vFieldPositions!=null) ret.addAll(m_vFieldPositions);
 		if (m_vBenchPositions!=null) ret.addAll(m_vBenchPositions);
 		return ret;
@@ -946,28 +897,30 @@ public class Lineup{
 	 */
 	public final void setSpielerAtPosition(int positionID, int playerID) {
 		final MatchRoleID position = getPositionById(positionID);
-		MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
-		if(oldPlayerRole != null) {
-			if (position.isFieldMatchRoleId()) {
-				//if player changed is in starting eleven it has to be remove from previous occupied positions
-				oldPlayerRole.setSpielerId(0, this);
-				if (oldPlayerRole.isSubstitutesMatchRoleID()) {
-					removeObjectPlayerFromSubstitutions(playerID);
-					// player can occupy multiple bench positions
-					oldPlayerRole = getPositionBySpielerId(playerID);
-					while ( oldPlayerRole != null){
-						oldPlayerRole.setSpielerId(0,this);
+		if ( position != null) {
+			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
+			if (oldPlayerRole != null) {
+				if (position.isFieldMatchRoleId()) {
+					//if player changed is in starting eleven it has to be remove from previous occupied positions
+					oldPlayerRole.setSpielerId(0, this);
+					if (oldPlayerRole.isSubstitutesMatchRoleID()) {
+						removeObjectPlayerFromSubstitutions(playerID);
+						// player can occupy multiple bench positions
 						oldPlayerRole = getPositionBySpielerId(playerID);
+						while (oldPlayerRole != null) {
+							oldPlayerRole.setSpielerId(0, this);
+							oldPlayerRole = getPositionBySpielerId(playerID);
+						}
+					}
+				} else {
+					// position is on bench (or backup), remove him from field position, but not from other bench positions
+					if (oldPlayerRole.isFieldMatchRoleId()) {
+						oldPlayerRole.setSpielerId(0, this);
 					}
 				}
-			} else {
-				// position is on bench (or backup), remove him from field position, but not from other bench positions
-				if (oldPlayerRole.isFieldMatchRoleId()) {
-					oldPlayerRole.setSpielerId(0, this);
-				}
 			}
+			position.setSpielerId(playerID, this);
 		}
-		position.setSpielerId(playerID, this);
 	}
 
 	/**
@@ -1040,9 +993,9 @@ public class Lineup{
 	 */
 	public void setSubstitionList(List<Substitution> subs) {
 		if (subs == null) {
-			this.substitutions = new ArrayList<Substitution>();
+			this.substitutions = new ArrayList<>();
 		} else {
-			this.substitutions = new ArrayList<Substitution>(subs);
+			this.substitutions = new ArrayList<>(subs);
 		}
 	}
 
@@ -1088,7 +1041,7 @@ public class Lineup{
 	}
 
 	public void setPenaltyTakers(List<MatchRoleID> positions) {
-		this.penaltyTakers = new ArrayList<MatchRoleID>(positions);
+		this.penaltyTakers = new ArrayList<>(positions);
 		// chpp match order requires exactly 11 penalty takers
 		for ( int i=this.penaltyTakers.size(); i<11; i++){
 			this.penaltyTakers.add(new MatchRoleID(0,0,IMatchRoleID.NORMAL));
@@ -1115,25 +1068,13 @@ public class Lineup{
 	}
 
 	public final float getTacticLevel(int type) {
-		float value = 0.0f;
-
-		switch (type) {
-		case core.model.match.IMatchDetails.TAKTIK_PRESSING:
-			value = getTacticLevelPressing();
-			break;
-		case core.model.match.IMatchDetails.TAKTIK_KONTER:
-			value = getTacticLevelCounter();
-			break;
-		case core.model.match.IMatchDetails.TAKTIK_MIDDLE:
-		case core.model.match.IMatchDetails.TAKTIK_WINGS:
-			value = getTacticLevelAimAow();
-			break;
-		case core.model.match.IMatchDetails.TAKTIK_LONGSHOTS:
-			value = getTacticLevelLongShots();
-			break;
-		}
-
-		return value;
+		return switch (type) {
+			case IMatchDetails.TAKTIK_PRESSING -> getTacticLevelPressing();
+			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
+			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
+			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
+			default -> 0.0f;
+		};
 	}
 
 	/**
@@ -1159,45 +1100,20 @@ public class Lineup{
 	 * Get the formation xp for the current formation.
 	 */
 	public final int getExperienceForCurrentTeamFormation() {
-		int erfahrung = -1;
-
-		switch (getCurrentTeamFormationCode()) {
-		case SYS_MURKS:
-			erfahrung = -1;
-			break;
-		case SYS_451:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience451();
-			break;
-		case SYS_352:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience352();
-			break;
-		case SYS_442:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience442();
-			break;
-		case SYS_343:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience343();
-			break;
-		case SYS_433:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience433();
-			break;
-		case SYS_532:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience532();
-			break;
-		case SYS_541:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience541();
-			break;
-		case SYS_523:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience523();
-			break;
-		case SYS_550:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience550();
-			break;
-		case SYS_253:
-			erfahrung = HOVerwaltung.instance().getModel().getTeam().getFormationExperience253();
-			break;
-		}
-
-		return erfahrung;
+		return switch (getCurrentTeamFormationCode()) {
+			case SYS_MURKS -> -1;
+			case SYS_451 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience451();
+			case SYS_352 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience352();
+			case SYS_442 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience442();
+			case SYS_343 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience343();
+			case SYS_433 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience433();
+			case SYS_532 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience532();
+			case SYS_541 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience541();
+			case SYS_523 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience523();
+			case SYS_550 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience550();
+			case SYS_253 -> HOVerwaltung.instance().getModel().getTeam().getFormationExperience253();
+			default -> -1;
+		};
 	}
 
 	/**
@@ -1456,11 +1372,9 @@ public class Lineup{
 	private void swapContentAtPositions(int pos1, int pos2) {
 		int id1 = 0;
 		int id2 = 0;
-		byte tac1 = -1;
-		byte tac2 = -1;
 
-		tac1 = getTactic4PositionID(pos1);
-		tac2 = getTactic4PositionID(pos2);
+		var tac1 = getTactic4PositionID(pos1);
+		var tac2 = getTactic4PositionID(pos2);
 
 		if (getPlayerByPositionID(pos1) != null) {
 			id1 = getPlayerByPositionID(pos1).getPlayerID();
@@ -1492,16 +1406,11 @@ public class Lineup{
 	 */
 	public final void load(String name) {
 		final Lineup temp = DBManager.instance().getAufstellung(NO_HRF_VERBINDUNG, name);
-		m_vFieldPositions = null;
-		m_vBenchPositions = null;
 		m_vFieldPositions = temp.getFieldPositions();
 		m_vBenchPositions = temp.getBenchPositions();
 		m_iKicker = temp.getKicker();
 		m_iKapitaen = temp.getCaptain();
 	}
-
-
-
 
 	/**
 	 * Remove all players from all positions.
@@ -1950,6 +1859,7 @@ public class Lineup{
 			MatchRoleID mid = (MatchRoleID) pos;
 			Player p = this.getPlayerByPositionID(mid.getId());
 			if ( p != null){
+				n++;
 				teamDef += p.getDEFskill();
 				teamSP += p.getSPskill();
 			}

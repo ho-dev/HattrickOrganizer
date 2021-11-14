@@ -1857,82 +1857,6 @@ public class Player {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
 
-    @Deprecated
-    private void incrementSubskills(Player originalPlayer, int trainerlevel, int skill, double points, WeeklyTrainingType wt, TrainingPerPlayer trForPlayer) {
-        if (skill < KEEPER || points <= 0)
-            return;
-
-        var trainingLength = wt.getTrainingLength(this, trainerlevel, trForPlayer.getTrainingWeek().getTrainingIntensity(), trForPlayer.getTrainingWeek().getStaminaShare(), trForPlayer.getTrainingWeek().getTrainingAssistantsLevel());
-
-        var trainingAlternativeFormula = wt.getTrainingAlternativeFormula( getValue4Skill(skill), trForPlayer, skill==wt.getPrimaryTrainingSkill());
-
-        HOLogger.instance().info(this.getClass(),
-                this.getLastName()+ "; " + PlayerSkill.toString(skill) +
-                "; Age=" + this.getAlter() +
-                "; Skill=" + this.getValue4Skill(skill) +
-                "; Minutes=" + trForPlayer.getTrainingPair().getTrainingDuration().getFullTrainingMinutes() +
-                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getPartlyTrainingMinutes() +
-                        ";" + trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes() +
-                "; training=" + points/trainingLength + "; " + trainingAlternativeFormula);
-
-        float gain = (float) Helper.round(points / trainingLength, 3);
-
-        if (gain <= 0)
-            return;
-
-        /* Limit training to one full level max */
-        gain = Math.min(gain, 1.0f);
-
-        if (check4SkillUp(skill, originalPlayer)) {
-            /* Carry subskill over skillup */
-            gain = 0.0f;
-        }
-        setSubskill4PlayerSkill(skill, Math.min(0.99f, getSub4SkillAccurate(skill) + gain));
-    }
-
-    /*
-     * Calculates training benefit, and updates subskill for the player.
-     * Used when there is only 1 week of training to be calculated.
-     *
-     * @param originalPlayer - The player to calculate subskills on
-     * @param trainerlevel   - The trainer level
-     * @param trainingWeek
-
-    @Deprecated
-    public void calcIncrementalSubskills(Player originalPlayer, int trainerlevel, TrainingPerWeek trainingWeek) {
-
-        if (this.hasTrainingBlock()) {
-            return;
-        }
-
-        if (trainingWeek == null)
-            return;
-
-        TrainingPerPlayer trainingForPlayer = calculateWeeklyTraining(trainingWeek);
-
-        if (trainingForPlayer == null)
-            return;
-
-        TrainingPoints tp = trainingForPlayer.getTrainingPair();
-
-        if (tp == null)
-            return;
-
-        // Time to perform skill drop
-        if (SkillDrops.instance().isActive()) {
-            performSkilldrop(originalPlayer, 1);
-        }
-
-        WeeklyTrainingType wt = WeeklyTrainingType.instance(trainingWeek.getTrainingType());
-
-        incrementSubskills(originalPlayer, trainerlevel, wt.getPrimaryTrainingSkill(), tp.getPrimary(), wt, trainingForPlayer);
-
-        incrementSubskills(originalPlayer, trainerlevel, wt.getSecondaryTrainingSkill(), tp.getSecondary(), wt, trainingForPlayer);
-
-        addExperienceSub(trainingForPlayer.getExperienceSub());
-
-    }
- */
     /**
      * Training for given player for each skill
      *
@@ -2430,7 +2354,6 @@ public class Player {
                 sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;
                 if (sub < 0) {
                     if (valueAfterTraining < valueBeforeTraining) { // OK
-                        valueBeforeTraining--;
                         sub += 1.;
                     } else {                                        // No skill down from Hattrick
                         sub = 0;

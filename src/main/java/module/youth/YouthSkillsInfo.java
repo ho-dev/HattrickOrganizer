@@ -11,7 +11,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
      * Determine if skills are keeper skills
      *
      * @return true, if keeper max > 4
-     * false, if max of pm,ps,wi or sc > 4
+     * false, if max of pm,ps,wi or sc > 4 or def > 6
      * null, if decision is not possible
      */
     public Boolean areKeeperSkills() {
@@ -25,6 +25,10 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
                         skillId == Skills.HTSkillID.Playmaker ||
                         skillId == Skills.HTSkillID.Passing ||
                         skillId == Skills.HTSkillID.Scorer) return false;
+                else if (skillId == Skills.HTSkillID.Defender){
+                    if ( skill.getMax() != null && skill.getMax() > 6 ||
+                            skill.getCurrentLevel() != null && skill.getCurrentLevel() > 6) return false; // keeper max 6
+                }
             }
         }
         return null;
@@ -50,13 +54,20 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
                             skill.setMax(4);
                         }
                         break;
+                    case Defender:
+                        if ( isKeeper && (skill.getMax() == null || skill.getMax() > 6)){
+                            skill.setMax(6);
+                        }
+                        break;
                     case Keeper:
                         if (!isKeeper) {
                             skill.setMax(4);
                         }
+                        break;
                 }
             }
         }
+
     }
 
     /**

@@ -67,6 +67,7 @@ public class FutureTrainingManager {
 		trainingSpeed = 0;
 		weeksPassed = 0;
 		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
+		var trainingPerPlayer = new TrainingPerPlayer(player);
 		// Iterate thru all the future training weeks
 		for (int week = 1; week <= numberOfWeeks; week++) {
 
@@ -111,11 +112,17 @@ public class FutureTrainingManager {
 						default:
 							break;
 					}
-
-					TrainingPoints trp = new TrainingPoints(wt.getPrimaryTraining(tp), wt.getSecondaryTraining(tp));
-					processTraining(wt, trp, tw);
 					if (this.trainingSpeed < trainingSpeed) {
 						this.trainingSpeed = trainingSpeed;
+					}
+
+					trainingPerPlayer.setTrainingPair(new TrainingPoints(wt,tp));
+					trainingPerPlayer.setTrainingWeek(tw);
+					int pos = getSkillPosition(wt.getPrimaryTrainingSkill());
+					finalSub[pos]+= wt.calculateSkillIncreaseOfTrainingWeek((int)finalSkill[pos], trainingPerPlayer);
+					pos = getSkillPosition(wt.getSecondaryTrainingSkill());
+					if ( pos != -1 ){
+						finalSub[pos]+= wt.calculateSkillIncreaseOfTrainingWeek((int)finalSkill[pos], trainingPerPlayer);
 					}
 
 					for (int i = 0; i < 8; i++) {
@@ -147,8 +154,6 @@ public class FutureTrainingManager {
 		fp.setPassing(getFinalValue(PlayerSkill.PASSING));
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
 		fp.setSetpieces(getFinalValue(PlayerSkill.SET_PIECES));
-		fp.setStamina(getFinalValue(PlayerSkill.STAMINA));
-		fp.setForm(getFinalValue(PlayerSkill.FORM));
 		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7*weeksPassed)/112d)));
 		fp.setPlayerId(player.getPlayerID());
 		return fp;
@@ -204,47 +209,6 @@ public class FutureTrainingManager {
 	}
 
 	/**
-	* Calculates the number of weeks needed for a future skillup
-	* 
-	*
-	* @return	the predicted length
-	*/
-	//private double getTrainingLength(int trType, int skillIndex, int intensity, int staminaTrainingPart) {
-	private double getTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
-		int pos = getSkillPosition(wt.getPrimaryTrainingSkill());
-		//double curSkillUps = finalSkill[pos];
-		int age = player.getAlter();
-		int ageDays = player.getAgeDays();
-		int realSkill = player.getValue4Skill(wt.getPrimaryTrainingSkill());
-		// Set age and skill for simulation
-		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill(wt.getPrimaryTrainingSkill(), (int)finalSkill[pos]);
-		double limit = wt.getTrainingLength(player, tw.getCoachLevel(), tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
-//		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
-		// Undo simulation changes on player
-		player.setAlter(age);
-		player.setValue4Skill(wt.getPrimaryTrainingSkill(), realSkill);
-		return limit;
-	}
-
-	private double getSecondaryTrainingLength(WeeklyTrainingType wt, TrainingPerWeek tw) {
-		int pos = getSkillPosition(wt.getSecondaryTrainingSkill());
-		//double curSkillUps = finalSkill[pos];
-		int age = player.getAlter();
-		int ageDays = player.getAgeDays();
-		int realSkill = player.getValue4Skill(wt.getSecondaryTrainingSkill());
-		// Set age and skill for simulation
-		player.setAlter (age + (int)Math.floor((ageDays + 7*weeksPassed)/112d));
-		player.setValue4Skill(wt.getSecondaryTrainingSkill(), (int)finalSkill[pos]);
-		double limit = wt.getSecondaryTrainingLength(player, tw.getCoachLevel(), tw.getTrainingIntensity(), tw.getStaminaShare(), tw.getTrainingAssistantsLevel());
-//		HOLogger.instance().debug(getClass(), "getTrLen for "+player.getName()+": weeksPassed="+weeksPassed+", age="+player.getAlter()+", skill="+getSkillValue(player, skillIndex)+", limit="+limit);
-		// Undo simulation changes on player
-		player.setAlter(age);
-		player.setValue4Skill(wt.getSecondaryTrainingSkill(), realSkill);
-		return limit;
-	}
-
-	/**
 	* Checks if a skillup has happened
 	*
 	*
@@ -279,39 +243,6 @@ public class FutureTrainingManager {
 	}
 
 	/**
-	* Updates the training situation
-	*
-	* @param tw the training week settings for the considered week
-	 *
-	 *
-	*/
-	private void processTraining(WeeklyTrainingType wt, TrainingPoints trp, TrainingPerWeek tw) {
-		// number of weeks necessary to have a skillup
-		double primaryTrainLength = getTrainingLength(wt, tw);
-		// If invalid training (trType does not train this skill)
-		if (primaryTrainLength == -1)
-			return;
-		// calculate increase in sub
-		double primarySubForThisWeek = trp.getPrimary()/ primaryTrainLength;
-		int primaryPos = getSkillPosition(wt.getPrimaryTrainingSkill());
-		double secondaryTrainLength = 0;
-		double secondarySubForThisWeek = 0;
-		int secondaryPos = -1;
-		if (trp.getSecondary()> 0) {
-			secondaryTrainLength = getSecondaryTrainingLength(wt, tw);
-			secondarySubForThisWeek = trp.getSecondary() / secondaryTrainLength;
-			secondaryPos = getSkillPosition(wt.getSecondaryTrainingSkill());
-		}
-		
-		// add sub to skill
-		finalSub[primaryPos] += Math.min(1.0f, primarySubForThisWeek);
-		if (secondarySubForThisWeek > 0) {
-			finalSub[secondaryPos] += Math.min(1.0f, secondarySubForThisWeek);
-		}
-
-	}
-
-	/**
 	 * Gets the primary training for a specific skill
 	 * (e.g. ISpieler.SKILL_SPIELAUFBAU -> ITeam.TA_SPIELAUFBAU)
 	 *  
@@ -342,7 +273,7 @@ public class FutureTrainingManager {
 			case PlayerSkill.SCORING -> 5;
 			case PlayerSkill.SET_PIECES -> 6;
 			case PlayerSkill.STAMINA -> 7;
-			default -> 0;
+			default -> -1;
 		};
 
 	}
