@@ -68,7 +68,7 @@ ext.callGit = { param ->
 }
 
 ext.filter = { string, filters ->
-    def lines = string.split('\n' as Closure)
+    def lines = string.split('\n')
     String res=""
     lines.each{ l->
         for ( String f in filters ) {
