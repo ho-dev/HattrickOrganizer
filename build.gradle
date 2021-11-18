@@ -1,4 +1,4 @@
-import java.text.SimpleDateFormat
+import org.codehaus.groovy.runtime.GStringImpl
 
 plugins {
     id 'java'
@@ -10,27 +10,27 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven {url 'https://maven.ej-technologies.com/repository'}
 //    maven {url 'https://oss.sonatype.org/content/repositories/snapshots/'}
 }
 
 dependencies {
     implementation 'com.install4j:install4j-runtime:8.0.7'
-    implementation 'com.github.scribejava:scribejava-core:8.1.0'
-    implementation 'org.hsqldb:hsqldb:2.4.1'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.squareup.okhttp3:okhttp-tls:4.9.0'
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
-    implementation 'com.github.weisj:darklaf-core:2.6.1'               //'darklaf-core:latest.integration'
-    implementation 'com.github.weisj:darklaf-theme:2.6.1'              //'darklaf-theme:latest.integration'
-    implementation 'com.github.weisj:darklaf-property-loader:2.6.1'    //darklaf-property-loader:latest.integration'
+    implementation 'com.github.scribejava:scribejava-core:8.3.1'
+    implementation 'org.hsqldb:hsqldb:2.6.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:okhttp-tls:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+    implementation 'com.github.weisj:darklaf-core:2.7.3'               //'darklaf-core:latest.integration'
+    implementation 'com.github.weisj:darklaf-theme:2.7.3'              //'darklaf-theme:latest.integration'
+    implementation 'com.github.weisj:darklaf-property-loader:2.7.3'    //'darklaf-property-loader:latest.integration'
     implementation 'org.javatuples:javatuples:1.2'
-    implementation 'org.apache.commons:commons-text:1.8'
-    implementation 'org.jetbrains:annotations:16.0.2'
-    implementation 'org.knowm.xchart:xchart:3.6.5'
-    compile 'org.junit.jupiter:junit-jupiter:5.6.2'
+    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.knowm.xchart:xchart:3.8.0'
+    compile 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
 test {
@@ -57,7 +57,7 @@ def development_message = [
 println "Configuration start"
 
 ext {
-    target_dir = "${buildDir}/artefacts"
+    target_dir = "${buildDir}/artefacts" as GStringImpl
 }
 
 ext.callGit = { param ->
@@ -68,7 +68,7 @@ ext.callGit = { param ->
 }
 
 ext.filter = { string, filters ->
-    def lines = string.split('\n')
+    def lines = string.split('\n' as Closure)
     String res=""
     lines.each{ l->
         for ( String f in filters ) {

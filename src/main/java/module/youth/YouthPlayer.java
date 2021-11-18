@@ -376,8 +376,6 @@ public class YouthPlayer {
         return statusTime;
     }
 
-
-
     public Timestamp getPromotionDate() {
         return promotionDate;
     }
