@@ -9,6 +9,8 @@
 
 ### Finance
 
+* fix finance bug concerning missing spectators' income in misc module (#1282)
+
 
 ### Statistics
 

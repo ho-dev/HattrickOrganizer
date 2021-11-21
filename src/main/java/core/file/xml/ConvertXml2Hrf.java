@@ -382,10 +382,10 @@ public class ConvertXml2Hrf {
 		if (economyDataMap.get("SponsorsPopularity") != null) {
 			buffer.append("SupportersPopularity=").append(economyDataMap.get("SupportersPopularity")).append('\n');
 			buffer.append("SponsorsPopularity=").append(economyDataMap.get("SponsorsPopularity")).append('\n');
-			buffer.append("PlayingMatch=false");
+			buffer.append("PlayingMatch=false").append('\n');
 		}
 		else {
-			buffer.append("PlayingMatch=true");
+			buffer.append("PlayingMatch=true").append('\n');
 		}
 
 		// recreate defect IncomeTemporary field for compatibility reasons
@@ -764,12 +764,10 @@ public class ConvertXml2Hrf {
 	/**
 	 * Create the player data.
 	 */
-	private static void createPlayers(MatchLineupTeam matchLineupTeam,
-									  List<MyHashtable> playersData, StringBuilder buffer) {
-		Map ht = null;
+	private static void createPlayers(MatchLineupTeam matchLineupTeam, List<MyHashtable> playersData, StringBuilder buffer) {
 
 		for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
-			ht = playersData.get(i);
+			var ht = playersData.get(i);
 
 			buffer.append("[player").append(ht.get("PlayerID").toString())
 					.append(']').append('\n');
@@ -849,8 +847,7 @@ public class ConvertXml2Hrf {
 			buffer.append("gentlenessLabel=")
 					.append(PlayerAgreeability.toString(Integer.parseInt(ht
 							.get("Agreeability").toString()))).append('\n');
-			buffer.append("honesty=").append(
-					ht.get("Honesty").toString() + "\n");
+			buffer.append("honesty=").append(ht.get("Honesty").toString()).append('\n');
 			buffer.append("honestyLabel=")
 					.append(PlayerHonesty.toString(Integer.parseInt(ht.get(
 							"Honesty").toString()))).append('\n');
@@ -891,7 +888,7 @@ public class ConvertXml2Hrf {
 					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get(
 					"PlayerID").toString())) != null)
 					&& (matchLineupTeam.getPlayerByID(
-					Integer.parseInt(ht.get("PlayerID").toString()))
+							Integer.parseInt(ht.get("PlayerID").toString()))
 					.getRating() >= 0)) {
 				buffer.append("rating=")
 						.append((int) (matchLineupTeam
