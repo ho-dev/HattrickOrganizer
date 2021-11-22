@@ -104,25 +104,23 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		setLayout(new BorderLayout());
 
 		lineupRatingAssistantPanel = new LineupRatingAssistantPanel(this);
+
+		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
 		lineupPositionsPanel = new LineupPositionsPanel(this, lineupRatingAssistantPanel.getLineupSettingsPanel().getWeather(), true);
+		verticalSplitPane.setTopComponent(new JScrollPane(lineupPositionsPanel));
+		verticalSplitPane.setBottomComponent(initSpielerTabelle());
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
-		horizontalSplitPane.setLeftComponent(new JScrollPane(lineupPositionsPanel));
+		horizontalSplitPane.setLeftComponent(verticalSplitPane);
 		var lineupPositionJScrollPane = new JScrollPane();
 		lineupPositionJScrollPane.getViewport().add(lineupRatingAssistantPanel);
 		horizontalSplitPane.setRightComponent(lineupPositionJScrollPane);
-
-		verticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-		verticalSplitPane.setTopComponent(horizontalSplitPane);
-		verticalSplitPane.setBottomComponent(initSpielerTabelle());
-
 
 		UserParameter param = UserParameter.instance();
 		verticalSplitPane.setDividerLocation(param.lineupPanel_verticalSplitLocation);
 		horizontalSplitPane.setDividerLocation(param.lineupPanel_horizontalSplitLocation);
 
-
-		add(verticalSplitPane, BorderLayout.CENTER);
+		add(horizontalSplitPane, BorderLayout.CENTER);
 	}
 
 	private Component initSpielerTabelle() {
