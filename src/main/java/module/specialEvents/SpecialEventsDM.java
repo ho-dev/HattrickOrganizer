@@ -26,7 +26,7 @@ public class SpecialEventsDM {
 	private final DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	List<MatchRow> getRows(Filter filter) {
-		List<MatchRow> matchRows = new ArrayList<MatchRow>();
+		List<MatchRow> matchRows = new ArrayList<>();
 
 		MatchKurzInfo[] matches = getMatches(filter);
 		if (matches != null) {
@@ -35,7 +35,7 @@ public class SpecialEventsDM {
 				Matchdetails details = matchKurzInfo.getMatchdetails();
 				if (!filterOutByTactic(details, filter)) {
 					List<MatchRow> rows = getMatchRows(matchKurzInfo, details, filter);
-					if (rows != null && !rows.isEmpty()) {
+					if (!rows.isEmpty()) {
 						for (MatchRow row : rows) {
 							row.setMatchCount(matchCount);
 						}
@@ -51,29 +51,27 @@ public class SpecialEventsDM {
 
 	private boolean filterOutByTactic(Matchdetails details, Filter filter) {
 		if (filter.getTactic() != null) {
-			int id = filter.getTactic().intValue();
-			if (details.getHomeTacticType() != id && details.getGuestTacticType() != id) {
-				return true;
-			}
+			int id = filter.getTactic();
+			return details.getHomeTacticType() != id && details.getGuestTacticType() != id;
 		}
 		return false;
 	}
 
 	private MatchKurzInfo[] getMatches(Filter filter) {
-		List<MatchRow> matchRows = new ArrayList<MatchRow>();
+		List<MatchRow> matchRows = new ArrayList<>();
 		StringBuilder whereClause = new StringBuilder(" WHERE ");
 
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		whereClause.append(" (GastID=" + teamId + " OR HeimID=" + teamId + ") ");
+		whereClause.append(" (GastID=").append(teamId).append(" OR HeimID=").append(teamId).append(") ");
 		whereClause.append(" AND (Status=").append(MatchKurzInfo.FINISHED).append(")");
 
 		if (filter.getSeasonFilterValue() != SeasonFilterValue.ALL_SEASONS) {
-			Timestamp datumAb = getDatumAb(filter.getSeasonFilterValue());
+			Timestamp datumAb = getMatchDateFrom(filter.getSeasonFilterValue());
 			whereClause.append(" AND (MATCHDATE > '").append(this.dateformat.format(datumAb));
 			whereClause.append("')");
 		}
 
-		List<Integer> matchTypes = new ArrayList<Integer>();
+		List<Integer> matchTypes = new ArrayList<>();
 		if (filter.isShowFriendlies()) {
 			matchTypes.add(MatchType.FRIENDLYNORMAL.getId());
 			matchTypes.add(MatchType.FRIENDLYCUPRULES.getId());
@@ -92,8 +90,6 @@ public class SpecialEventsDM {
 		if (filter.isShowTournament()) {
 			matchTypes.add(MatchType.TOURNAMENTGROUP.getId());
 			matchTypes.add(MatchType.TOURNAMENTPLAYOFF.getId());
-			HOLogger.instance().error(SpecialEventsDM.class, "TODO: repair filter !!  ");
-//			matchTypes.add(MatchType.DIVISIONBATTLE.getId());
 		}
 		if (filter.isShowRelegation()) {
 			matchTypes.add(MatchType.QUALIFICATION.getId());
@@ -117,7 +113,7 @@ public class SpecialEventsDM {
 	}
 
 	private List<MatchRow> getMatchRows(MatchKurzInfo kurzInfos, Matchdetails details, Filter filter) {
-		List<MatchRow> matchLines = new ArrayList<MatchRow>();
+		List<MatchRow> matchLines = new ArrayList<>();
 		List<MatchEvent> highlights = getMatchHighlights(details, filter);
 
 		if (!highlights.isEmpty() || !filter.isShowMatchesWithSEOnly()) {
@@ -156,7 +152,7 @@ public class SpecialEventsDM {
 	}
 
 	private List<MatchEvent> getMatchHighlights(Matchdetails details, Filter filter) {
-		List<MatchEvent> filteredHighlights = new ArrayList<MatchEvent>();
+		List<MatchEvent> filteredHighlights = new ArrayList<>();
 		List<MatchEvent> allHighlights = details.getHighlights();
 		if ( allHighlights != null) {
 			for (MatchEvent highlight : allHighlights) {
@@ -169,15 +165,6 @@ public class SpecialEventsDM {
 			HOLogger.instance().debug(this.getClass(), "keine Match-Highlights");
 		}
 		return filteredHighlights;
-	}
-
-	public static boolean isNegativeSE(MatchEvent highlight) {
-			if (highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_TIRED_DEFENDER_MISTAKE_STRIKER_SCORES
-					|| highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_INEXPERIENCED_DEFENDER_CAUSES_GOAL
-					|| highlight.getMatchEventID() == MatchEvent.MatchEventID.SE_GOAL_UNPREDICTABLE_MISTAKE) {
-				return true;
-			}
-		return highlight.isNegativeSpecialtyWeatherSE();
 	}
 
 	@Nullable
@@ -220,8 +207,7 @@ public class SpecialEventsDM {
 		}
 
 		if (filter.isShowOwnPlayersOnly()) {
-			List<Player> players = new ArrayList<Player>();
-			players.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
+			List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
 			if (!filter.isShowCurrentOwnPlayersOnly()) {
 				players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
 			}
@@ -235,9 +221,7 @@ public class SpecialEventsDM {
 				}
 			}
 
-			if (!playerFound) {
-				return false;
-			}
+			return playerFound;
 		}
 
 		return true;
@@ -267,7 +251,7 @@ public class SpecialEventsDM {
 	}
 
 	public static String getSpielerName(MatchEvent highlight) {
-		String name = "";
+		String name;
 		// if(highlight.getTeamID() == teamId && !isNegativeSE(highlight))
 		if (highlight.getTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 			name = findName(highlight) + "|*";} // -> black
@@ -277,36 +261,24 @@ public class SpecialEventsDM {
 		return name;
 	}
 
-	private static Timestamp getDatumAb(SeasonFilterValue period) {
-		Date date = null;
+	private static Timestamp getMatchDateFrom(SeasonFilterValue period) {
+		Date date;
 		if (period.getId() == 1) {
 			return null;
 		}
 		Calendar cal = Calendar.getInstance();
-		// Date toDay = cal.getTime();
 		int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-		int tag = cal.get(7);
-		int corrTag = 0;
-		if (tag != 7) {
-			corrTag = tag;
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		int dayCorrection = 0;
+		if (dayOfWeek != 7) {
+			dayCorrection = dayOfWeek;
 		}
-		cal.add(7, -corrTag);
-		cal.add(3, -(week - 1));
+		cal.add(Calendar.DAY_OF_WEEK, -dayCorrection);
+		cal.add(Calendar.WEEK_OF_YEAR, -(week - 1));
 		if (period.getId() == 2) {
-			cal.add(3, -16);
+			cal.add(Calendar.WEEK_OF_YEAR, -16);
 		}
 		date = cal.getTime();
 		return new Timestamp(date.getTime());
-	}
-
-	/**
-	 * Convenience method for getLangStr(key)
-	 * 
-	 * @param key
-	 *            the key for the language string
-	 * @return the string for the current language
-	 */
-	private static String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
 	}
 }
