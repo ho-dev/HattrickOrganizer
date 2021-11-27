@@ -5,7 +5,7 @@ package module.transfer;
 import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.net.MyConnector;
-import core.util.HTCalendarFactory;
+import core.util.HTDatetime;
 import core.util.Helper;
 
 import java.io.IOException;
@@ -50,12 +50,11 @@ public final class XMLParser {
      *
      * @return List of transfers.
      *
-     * @throws IOException If something goes wrong.
      */
-    public static List<PlayerTransfer> getAllPlayerTransfers(int playerId) throws IOException {
+    public static List<PlayerTransfer> getAllPlayerTransfers(int playerId) {
         
     	final String xml = MyConnector.instance().getTransfersForPlayer(playerId);
-        final List<PlayerTransfer> transferList = new Vector<PlayerTransfer>();
+        final List<PlayerTransfer> transferList = new Vector<>();
 
         final Document doc = XMLManager.parseString(xml);
 
@@ -87,7 +86,7 @@ public final class XMLParser {
 
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
-                        Date transferDate = null;
+                        Date transferDate;
 
                         try {
                             transferDate = DATETIME.parse(deadline);
@@ -107,8 +106,10 @@ public final class XMLParser {
                         Timestamp time = new Timestamp(transferDate.getTime());
 
                         playerTranfer.setDate(time);
-                        playerTranfer.setSeason(HTCalendarFactory.getHTSeason(time));
-                        playerTranfer.setWeek(HTCalendarFactory.getHTWeek(time));
+
+                        var htdatetime = new HTDatetime(time);
+                        playerTranfer.setSeason(htdatetime.getHTSeasonLocalized());
+                        playerTranfer.setWeek(htdatetime.getHTWeekLocalized());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -131,7 +132,6 @@ public final class XMLParser {
                     }
                 }
             } catch (Exception e) {
-                continue;
             }
         }
 
@@ -144,14 +144,14 @@ public final class XMLParser {
      * @param teamid the team id
      * @param endDate end date for the transfers
      */
-    public static List<PlayerTransfer> getAllTeamTransfers(int teamid, Date endDate) throws IOException, ParseException, Exception {
-        final List<PlayerTransfer> transferList = new Vector<PlayerTransfer>();
+    public static List<PlayerTransfer> getAllTeamTransfers(int teamid, Date endDate) throws Exception {
+        final List<PlayerTransfer> transferList = new Vector<>();
         final String url = "/common/chppxml.axd?file=transfersTeam&teamID="+teamid+"&pageIndex=";
 
         // loop all pages 0 .. n until there are no more data avaliable
         boolean stop = false;
         int page = 0;
-        while (stop == false) {
+        while (!stop) {
 	        final String xml = MyConnector.instance().getHattrickXMLFile(url+page); 
 	        final Document doc = XMLManager.parseString(xml);
 
@@ -159,7 +159,7 @@ public final class XMLParser {
 	        final Element root = doc.getDocumentElement();
 
 	        final Element teamElement = (Element) root.getElementsByTagName("Team").item(0); //$NON-NLS-1$
-	        Date activatedDate = null;
+	        Date activatedDate;
 
 	        try {
 	            activatedDate = DATETIME.parse(getChildNodeValue(teamElement, "ActivatedDate"));
@@ -168,7 +168,7 @@ public final class XMLParser {
 	        }
 
 	        List<PlayerTransfer> transfers = parseTeamTransfers(doc, activatedDate, endDate);
-	        if (transfers == null || transfers.size()<1) {
+	        if (transfers.size()<1) {
 	        	stop = true;
 	        } else {
 	        	transferList.addAll(transfers);
@@ -187,10 +187,8 @@ public final class XMLParser {
      *
      * @return Value of the child node
      *
-     * @throws Exception If something goes wrong
      */
-    private static String getChildNodeValue(Element element, String childnode)
-      throws Exception {
+    private static String getChildNodeValue(Element element, String childnode) {
         try {
             String retval = ""; //$NON-NLS-1$
 
@@ -223,7 +221,7 @@ public final class XMLParser {
      * @return List of transfers.
      */
     public static List<PlayerTransfer> parseTeamTransfers(Document doc, Date activatedDate, Date endDate) {
-        final List<PlayerTransfer> transferList = new Vector<PlayerTransfer>();
+        final List<PlayerTransfer> transferList = new Vector<>();
 
         //get Root element ('HattrickData') :
         final Element root = doc.getDocumentElement();
@@ -253,7 +251,7 @@ public final class XMLParser {
 
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
-                        Date transferDate = null;
+                        Date transferDate;
 
                         try {
                             transferDate = DATETIME.parse(deadline);
@@ -275,9 +273,9 @@ public final class XMLParser {
                         Timestamp time = new Timestamp(transferDate.getTime());
 
                         playerTranfer.setDate(time);
-                        playerTranfer.setSeason(HTCalendarFactory.getHTSeason(time));
-                        playerTranfer.setWeek(HTCalendarFactory.getHTWeek(time));
-
+                        var htdatetime = new HTDatetime(time);
+                        playerTranfer.setSeason(htdatetime.getHTSeasonLocalized());
+                        playerTranfer.setWeek(htdatetime.getHTWeekLocalized());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -300,7 +298,6 @@ public final class XMLParser {
                     }
                 }
             } catch (Exception e) {
-                continue;
             }
         }
 

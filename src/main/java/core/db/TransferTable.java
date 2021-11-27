@@ -2,7 +2,7 @@ package core.db;
 
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.util.HTCalendar;
+import core.util.HTDatetime;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -82,13 +81,13 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers.
      */
     public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-        final StringBuffer sqlStmt = new StringBuffer("SELECT * FROM " + getTableName()); 
-        sqlStmt.append(" WHERE playerid = " + playerid); 
+        final StringBuilder sqlStmt = new StringBuilder("SELECT * FROM " + getTableName());
+        sqlStmt.append(" WHERE playerid = ").append(playerid);
 
         if (!allTransfers) {
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            sqlStmt.append(" AND (buyerid = " + teamid); 
-            sqlStmt.append(" OR sellerid = " + teamid + ")"); 
+            sqlStmt.append(" AND (buyerid = ").append(teamid);
+            sqlStmt.append(" OR sellerid = ").append(teamid).append(")");
         }
 
         sqlStmt.append(" ORDER BY date DESC"); 
@@ -119,12 +118,12 @@ public class TransferTable extends AbstractTable {
      */
     public boolean updateTeamTransfers(int teamid) {
         try {
-            final List<Player> players = new Vector<Player>();
+            final List<Player> players = new Vector<>();
 
             final Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, 1);
 
-            final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HTCalendar.resetDay(cal.getTime()));
+            final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HTDatetime.resetDay(cal.getTime()));
 
             for (PlayerTransfer transfer : transfers) {
                 final Player player = PlayerRetriever.getPlayer(transfer);
@@ -199,18 +198,18 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers.
      */
     public List<PlayerTransfer> getTransfers(int teamid, int season, boolean bought, boolean sold) {
-        final StringBuffer sqlStmt = new StringBuffer("SELECT * FROM " + getTableName()); //$NON-NLS-1$
+        final StringBuilder sqlStmt = new StringBuilder("SELECT * FROM " + getTableName()); //$NON-NLS-1$
         sqlStmt.append(" WHERE 1=1"); //$NON-NLS-1$
 
         if (season != 0) {
-            sqlStmt.append(" AND season = " + season); //$NON-NLS-1$
+            sqlStmt.append(" AND season = ").append(season); //$NON-NLS-1$
         }
 
         if (bought || sold) {
             sqlStmt.append(" AND ("); //$NON-NLS-1$
 
             if (bought) {
-                sqlStmt.append(" buyerid = " + teamid); //$NON-NLS-1$
+                sqlStmt.append(" buyerid = ").append(teamid); //$NON-NLS-1$
             }
 
             if (bought && sold) {
@@ -218,7 +217,7 @@ public class TransferTable extends AbstractTable {
             }
 
             if (sold) {
-                sqlStmt.append(" sellerid = " + teamid); //$NON-NLS-1$
+                sqlStmt.append(" sellerid = ").append(teamid); //$NON-NLS-1$
             }
 
             sqlStmt.append(")"); //$NON-NLS-1$
@@ -237,21 +236,21 @@ public class TransferTable extends AbstractTable {
      */
     private boolean addTransfer(PlayerTransfer transfer) {
     	removeTransfer(transfer.getTransferID());
-        final StringBuffer sqlStmt = new StringBuffer("INSERT INTO " + getTableName()); 
+        final StringBuilder sqlStmt = new StringBuilder("INSERT INTO " + getTableName());
         sqlStmt.append("(transferid, date, week, season, playerid, playername, buyerid, buyername, sellerid, sellername, price, marketvalue, tsi)"); 
         sqlStmt.append(" VALUES ("); 
-        sqlStmt.append(transfer.getTransferID() + ","); 
-        sqlStmt.append("'" + transfer.getDate().toString() + "',"); 
-        sqlStmt.append(transfer.getWeek() + ","); 
-        sqlStmt.append(transfer.getSeason() + ","); 
-        sqlStmt.append(transfer.getPlayerId() + ",");
-        sqlStmt.append("'"+ DBManager.insertEscapeSequences(transfer.getPlayerName())+ "',"); 
-        sqlStmt.append(transfer.getBuyerid() + ","); 
-        sqlStmt.append("'"+ DBManager.insertEscapeSequences(transfer.getBuyerName())+ "',"); 
-        sqlStmt.append(transfer.getSellerid() + ","); 
-        sqlStmt.append("'"+ DBManager.insertEscapeSequences(transfer.getSellerName())+ "',"); 
-        sqlStmt.append(transfer.getPrice() + ","); 
-        sqlStmt.append(transfer.getMarketvalue() + ","); 
+        sqlStmt.append(transfer.getTransferID()).append(",");
+        sqlStmt.append("'").append(transfer.getDate().toString()).append("',");
+        sqlStmt.append(transfer.getWeek()).append(",");
+        sqlStmt.append(transfer.getSeason()).append(",");
+        sqlStmt.append(transfer.getPlayerId()).append(",");
+        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getPlayerName())).append("',");
+        sqlStmt.append(transfer.getBuyerid()).append(",");
+        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getBuyerName())).append("',");
+        sqlStmt.append(transfer.getSellerid()).append(",");
+        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getSellerName())).append("',");
+        sqlStmt.append(transfer.getPrice()).append(",");
+        sqlStmt.append(transfer.getMarketvalue()).append(",");
         sqlStmt.append(transfer.getTsi());
         sqlStmt.append(" )"); 
 
@@ -273,11 +272,11 @@ public class TransferTable extends AbstractTable {
     private List<PlayerTransfer> loadTransfers(String sqlStmt) {
         final double curr_rate = HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
 
-        final List<PlayerTransfer> results = new Vector<PlayerTransfer>();
-        final ResultSet rs = DBManager.instance().getAdapter().executeQuery(sqlStmt.toString());
+        final List<PlayerTransfer> results = new Vector<>();
+        final ResultSet rs = DBManager.instance().getAdapter().executeQuery(sqlStmt);
 
         if (rs == null) {
-            return new Vector<PlayerTransfer>();
+            return new Vector<>();
         }
 
         try {

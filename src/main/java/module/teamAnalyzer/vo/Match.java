@@ -5,8 +5,7 @@ import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
-import core.util.HTCalendar;
-import core.util.HTCalendarFactory;
+import core.util.HTDatetime;
 import module.teamAnalyzer.SystemManager;
 
 import java.util.Date;
@@ -72,10 +71,9 @@ public class Match {
         matchType = matchInfo.getMatchTypeExtended();
         matchDate = matchInfo.getMatchDateAsTimestamp();
 
-        Date matchDate = HTCalendar.resetDay(matchInfo.getMatchDateAsTimestamp());        
-       
-        week = HTCalendarFactory.getHTWeek(matchDate);
-        season = HTCalendarFactory.getHTSeason(matchDate);
+        var htdatetime = new HTDatetime(matchInfo.getMatchDateAsTimestamp());
+        week = htdatetime.getHTWeekLocalized();
+        season = htdatetime.getHTSeasonLocalized();
     }
 
     /**
@@ -200,23 +198,19 @@ public class Match {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
-
-        buffer.append("Match[");
-        buffer.append("homeId = " + homeId);
-        buffer.append(", awayId = " + awayId);
-        buffer.append(", matchId = " + matchId);
-        buffer.append(", homeTeam = " + homeTeam);
-        buffer.append(", awayTeam = " + awayTeam);
-        buffer.append(", homeGoals = " + homeGoals);
-        buffer.append(", awayGoals = " + awayGoals);
-        buffer.append(", season = " + season);
-        buffer.append(", week = " + week);
-        buffer.append(", matchType = " + matchType);
-        buffer.append(", matchDate = " + matchDate);
-        buffer.append("]");
-
-        return buffer.toString();
+        return "Match[" +
+                "homeId = " + homeId +
+                ", awayId = " + awayId +
+                ", matchId = " + matchId +
+                ", homeTeam = " + homeTeam +
+                ", awayTeam = " + awayTeam +
+                ", homeGoals = " + homeGoals +
+                ", awayGoals = " + awayGoals +
+                ", season = " + season +
+                ", week = " + week +
+                ", matchType = " + matchType +
+                ", matchDate = " + matchDate +
+                "]";
     }
     
     public boolean isHome() {

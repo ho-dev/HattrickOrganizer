@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.util.HTDatetime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
 import java.sql.Timestamp;
@@ -14,8 +15,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import javax.swing.*;
 
-import static core.util.HTCalendarFactory.getHTSeason;
-import static core.util.HTCalendarFactory.getHTWeek;
 
 public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Team> {
 
@@ -78,8 +77,9 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
                 LocalDateTime matchSchedule = value.getTime().toLocalDateTime();
                 if (matchSchedule.getYear() > 1100) {
                     sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
-                    int iHTSeason = getHTSeason(value.getTime(), true);
-                    int iHTWeek = getHTWeek(value.getTime(), true);
+                    var htdatetime = new HTDatetime(value.getTime());
+                    int iHTSeason = htdatetime.getHTSeasonLocalized();
+                    int iHTWeek = htdatetime.getHTWeekLocalized();
                     sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
                 }
             }

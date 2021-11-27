@@ -10,7 +10,6 @@ import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
 import core.util.HOLogger;
-import core.util.HTCalendarFactory;
 import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
