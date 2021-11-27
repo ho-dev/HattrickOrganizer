@@ -7,7 +7,7 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-import core.util.HTCalendarFactory;
+import core.util.HTDatetime;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -38,7 +38,7 @@ public class DBCleanupTool {
 	/**
 	 * Remove old HRFs
 	 * 
-	 * @param removeDate remove HRFs older than x weeks (-1=keep All, 0=remove All)
+	 * @param keepWeeks remove HRFs older than x weeks (-1=keep All, 0=remove All)
 	 * @param autoRemove if true, automatically remove all HRFs except the first per training week  
 	 */
 	public void cleanupHRFs (int keepWeeks, boolean autoRemove) {
@@ -60,8 +60,8 @@ public class DBCleanupTool {
 	 * @param autoRemove if true, automatically remove all HRFs except the first per training week  
 	 */
 	public void cleanupHRFs (Timestamp removeDate, boolean autoRemove) {
-		HOLogger.instance().debug(getClass(), 
-				"Removing old HRFs: removeDate=" + removeDate + ", autoRemove="+autoRemove);
+		HOLogger.instance().debug(getClass(),
+				"Removing old HRFs: removeDate=" + removeDate + ", autoRemove=" + autoRemove);
 		HRF[] allHrfs = DBManager.instance().getAllHRFs(-1, -1, true);
 		int latestHrf = DBManager.instance().getLatestHrfId();
 		int lastSeason = -1;
@@ -71,8 +71,9 @@ public class DBCleanupTool {
 			int curId = curHrf.getHrfId();
 //			String curName = curHrf.getName();
 			Timestamp curDate = curHrf.getDatum();
-			int curHtSeasonTraining = HTCalendarFactory.getHTSeason(curDate, true);
-			int curHtWeekTraining = HTCalendarFactory.getHTWeek(curDate, true);
+			var htdatetime = new HTDatetime(curDate);
+			int curHtSeasonTraining = htdatetime.getHTSeasonLocalized();
+			int curHtWeekTraining = htdatetime.getHTWeekLocalized();
 			boolean remove = false;
 			if (removeDate != null && removeDate.after(curDate)) {
 				remove = true;
@@ -90,10 +91,11 @@ public class DBCleanupTool {
 						"Removing Hrf: " + curId + " @ " + curDate + " (" + curHtSeasonTraining + "/" + curHtWeekTraining + ")");
 				DBManager.instance().deleteHRF(curId);
 				counter++;
-			} else {
+			}
+//			else {
 //				HOLogger.instance().debug(getClass(),
 //						"Keeping Hrf: " + curId + " @ " + curDate + " (" + curHtSeasonTraining + "/" + curHtWeekTraining + ")");				
-			}
+//			}
 		}
 		HOLogger.instance().debug(getClass(), "Removed " + counter + "/" + allHrfs.length + " HRFs from DB!");
 		if (counter > 0) {

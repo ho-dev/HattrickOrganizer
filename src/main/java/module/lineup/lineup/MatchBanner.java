@@ -10,7 +10,6 @@ import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
 import core.util.HOLogger;
-import core.util.HTCalendarFactory;
 import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
@@ -175,10 +174,10 @@ public class MatchBanner extends JPanel implements Refreshable {
                 HOLogger.instance().error(this.getClass(), "Weather for the selected game is null !");
             }
 
-            Icon weatherIcon = tm.getIcon(HOIconName.WEATHER[m_clSelectedMatch.getWeather().getId()]);
+            Icon weatherIcon = ThemeManager.getIcon(HOIconName.WEATHER[m_clSelectedMatch.getWeather().getId()]);
             jlWeather.setIcon(weatherIcon);
 
-            Icon MatchTypeIcon = tm.getScaledIcon(HOIconName.MATCHICONS[m_clSelectedMatch.getMatchTypeExtended().getIconArrayIndex()], 22, 22);
+            Icon MatchTypeIcon = ThemeManager.getScaledIcon(HOIconName.MATCHICONS[m_clSelectedMatch.getMatchTypeExtended().getIconArrayIndex()], 22, 22);
             jlMatchTypeIcon.setIcon(MatchTypeIcon);
 
             Icon homeTeamIcon = tm.getClubLogo(m_clSelectedMatch.getHomeTeamID());
@@ -191,7 +190,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             jlAwayTeam.setText(m_clSelectedMatch.getGuestTeamName());
 
             ZonedDateTime matchSchedule = m_clSelectedMatch.getMatchSchedule(true);
-            Long nbDays = ChronoUnit.DAYS.between(ZonedDateTime.now(), matchSchedule);
+            var nbDays = ChronoUnit.DAYS.between(ZonedDateTime.now(), matchSchedule);
 
             DateTimeFormatter dtf;
             if (nbDays<7) {
@@ -204,7 +203,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             String sDate = matchSchedule.format(dtf);
             String sLabel = "<html><div style='text-align: center;'>" + sDate + "\n";
             if (matchType == MatchType.LEAGUE) {
-                int iHTWeek = HTCalendarFactory.getHTWeek(m_clSelectedMatch.getMatchDateAsTimestamp(), true);
+                int iHTWeek = m_clSelectedMatch.getHTWeek();
                 sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), iHTWeek, HOVerwaltung.instance().getModel().getLeague().getLiga());
             }
             else if (matchType.isFriendly()) {

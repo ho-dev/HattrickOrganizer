@@ -298,6 +298,15 @@ public class MatchKurzInfo implements Comparable<Object> {
 	}
 
 	/**
+	 * get ht week of season
+	 *
+	 * @return 1..16
+	 */
+	public int getHTWeek(){
+		return m_matchSchedule.getHTWeekLocalized();
+	}
+
+	/**
 	 * Setter for property m_iMatchID.
 	 * 
 	 * @param m_iMatchID

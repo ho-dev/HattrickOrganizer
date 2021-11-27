@@ -5,7 +5,7 @@ import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
-import core.util.HTCalendarFactory;
+import core.util.HTDatetime;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -25,14 +25,14 @@ import java.util.Vector;
 public class EffectDAO {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static List<TrainWeekEffect> trainWeeks = new Vector<TrainWeekEffect>();
+    private static List<TrainWeekEffect> trainWeeks = new Vector<>();
 
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Return list of TrainingEffects for each week
      *
-     * @return
+     * @return List<TrainWeekEffect>
      */
     public static List<TrainWeekEffect> getTrainEffect() {
         return trainWeeks;
@@ -44,26 +44,24 @@ public class EffectDAO {
      */
     public static void reload() {
         try {
-            Map<String,List<ISkillChange>> weeklySkillups = new HashMap<String,List<ISkillChange>>();
+            Map<String,List<ISkillChange>> weeklySkillups = new HashMap<>();
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
-            List<Player> players = new Vector<Player>(HOVerwaltung.instance().getModel().getCurrentPlayers());
+            List<Player> players = new Vector<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
 
             players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
 
-            for (Iterator<Player> iterPlayers = players.iterator(); iterPlayers.hasNext();) {
-                Player player = (Player) iterPlayers.next();
+            for (Player player : players) {
                 PastTrainingManager otm = new PastTrainingManager(player);
                 List<ISkillChange> skillups = otm.getTrainedSkillups();
 
-                for (Iterator<ISkillChange> iterSkillups = skillups.iterator(); iterSkillups.hasNext();) {
-                    ISkillChange skillup = (ISkillChange) iterSkillups.next();
+                for (ISkillChange skillup : skillups) {
                     String key = skillup.getHtSeason() + "-" + skillup.getHtWeek(); //$NON-NLS-1$
                     List<ISkillChange> collectedSkillups = weeklySkillups.get(key);
 
                     if (collectedSkillups == null) {
-                        collectedSkillups = new Vector<ISkillChange>();
+                        collectedSkillups = new Vector<>();
                         weeklySkillups.put(key, collectedSkillups);
                     }
 
@@ -82,7 +80,7 @@ public class EffectDAO {
                         " GROUP BY trainingdate) AS X" +
                         " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC");
 
-            List<TrainWeekEffect> trainingDates = new Vector<TrainWeekEffect>();
+            List<TrainWeekEffect> trainingDates = new Vector<>();
 
             try {
                 int first_in_week = 0;
@@ -91,8 +89,9 @@ public class EffectDAO {
                 }
                 while (tDateset.next()) {
                     Timestamp trainDate = tDateset.getTimestamp(3);
-                    int HTWeek = HTCalendarFactory.getHTWeek(trainDate);
-                    int HTSeason = HTCalendarFactory.getHTSeason(trainDate);
+                    var htdatetime = new HTDatetime(trainDate);
+                    int HTWeek = htdatetime.getHTWeekLocalized();
+                    int HTSeason = htdatetime.getHTSeasonLocalized();
                     trainingDates.add(new TrainWeekEffect(HTWeek, HTSeason, tDateset.getInt(1), first_in_week));
                     first_in_week = tDateset.getInt(1);
                 }
@@ -101,11 +100,9 @@ public class EffectDAO {
             } catch (Exception e) {
             }
 
-            for (Iterator<TrainWeekEffect> iter = trainingDates.iterator(); iter.hasNext();) {
-                TrainWeekEffect week = iter.next();
-
+            for (TrainWeekEffect week : trainingDates) {
                 ResultSet set = db.executeQuery("SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = " //$NON-NLS-1$
-                    + Integer.toString(week.getHRFafterUpdate()));
+                        + week.getHRFafterUpdate());
 
                 if (set != null) {
                     set.next();
@@ -122,31 +119,31 @@ public class EffectDAO {
                     set.close();
                 }
 
-                Map<Integer,PlayerValues> valuesBeforeUpdate = new HashMap<Integer,PlayerValues>();
+                Map<Integer, PlayerValues> valuesBeforeUpdate = new HashMap<>();
 
                 set = db.executeQuery("SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = " //$NON-NLS-1$
-                        + Integer.toString(week.getHRFbeforeUpdate()));
+                        + week.getHRFbeforeUpdate());
 
                 if (set != null) {
                     while (set.next()) {
                         PlayerValues result = new PlayerValues(set.getInt("marktwert"), //$NON-NLS-1$
                                 set.getInt("form")); //$NON-NLS-1$
 
-                        valuesBeforeUpdate.put(new Integer(set.getInt("spielerid")), result); //$NON-NLS-1$
+                        valuesBeforeUpdate.put(set.getInt("spielerid"), result); //$NON-NLS-1$
                     }
 
                     set.close();
                 }
 
                 set = db.executeQuery("SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = " //$NON-NLS-1$
-                        + Integer.toString(week.getHRFafterUpdate()));
+                        + week.getHRFafterUpdate());
 
                 if (set != null) {
                     while (set.next()) {
-                        Integer playerID = new Integer(set.getInt("spielerid")); //$NON-NLS-1$
+                        Integer playerID = set.getInt("spielerid"); //$NON-NLS-1$
 
                         if (valuesBeforeUpdate.containsKey(playerID)) {
-                            PlayerValues before = (PlayerValues) valuesBeforeUpdate.get(playerID);
+                            PlayerValues before = valuesBeforeUpdate.get(playerID);
 
                             week.addTSI(set.getInt("marktwert") - before.getTsi()); //$NON-NLS-1$
                             week.addForm(set.getInt("form") - before.getForm()); //$NON-NLS-1$
@@ -165,14 +162,12 @@ public class EffectDAO {
                     week.setAmountSkillups(wsList.size());
 
                     if (wsList.size() > 0) {
-                        ISkillChange su = (ISkillChange) wsList.get(0);
+                        ISkillChange su = wsList.get(0);
                         week.setTrainingType(su.getType());
                     }
                 }
 
-                if (week != null) {
-                    trainWeeks.add(week);
-                }
+                trainWeeks.add(week);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,12 +2,7 @@ package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.util.HTCalendarFactory;
 import module.teamAnalyzer.vo.PlayerInfo;
-
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 public class PlayerDataManager {

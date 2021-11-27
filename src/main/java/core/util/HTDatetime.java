@@ -8,6 +8,10 @@ import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import static core.util.HTDatetimeBase.cl_DateFormatter;
 import static core.util.HTDatetimeBase.cl_DatetimeFormatter;
 import static core.util.HTDatetimeBase.cl_LastUpdate;
@@ -42,8 +46,8 @@ public class HTDatetime implements PropertyChangeListener{
         m_HTDatetimeBase = HTDatetimeBase.instance();
         m_sHT_CET = cleanDateTimeString(sDateTime);
         LocalDateTime _htDateTimeNonLocalized = LocalDateTime.parse(m_sHT_CET, cl_DatetimeFormatter);
-        m_zdtHT_CET = ZonedDateTime.of(_htDateTimeNonLocalized, m_HTDatetimeBase.getHTZoneID());
-        m_zdtLocalized = m_zdtHT_CET.withZoneSameInstant(m_HTDatetimeBase.getUserZoneID());
+        m_zdtHT_CET = ZonedDateTime.of(_htDateTimeNonLocalized, HTDatetimeBase.getHTZoneID());
+        m_zdtLocalized = m_zdtHT_CET.withZoneSameInstant(HTDatetimeBase.getUserZoneID());
         m_iHT_CET = m_zdtHT_CET.toInstant();
         m_iLocalized = m_zdtLocalized.toInstant();
         m_tsHT_CET = Timestamp.from(m_iHT_CET);
@@ -52,12 +56,12 @@ public class HTDatetime implements PropertyChangeListener{
         // This is a bit unclear from HT side but latest discussion suggest that HTweeks are calculated as if ORIGIN_HT_DATE happened
         // at different time accross the world, i.e. no timezone attached
 //        ZonedDateTime origin_ht_date_localized = ORIGIN_HT_DATE.withZoneSameInstant(m_UserZoneID);
-        ZonedDateTime origin_ht_date_localized = m_HTDatetimeBase.getHT_Birthdate().atStartOfDay(m_HTDatetimeBase.getUserZoneID());
+        ZonedDateTime origin_ht_date_localized = HTDatetimeBase.getHT_Birthdate().atStartOfDay(HTDatetimeBase.getUserZoneID());
 
         long nbDays = ChronoUnit.DAYS.between(origin_ht_date_localized.toLocalDate(), m_zdtLocalized.toLocalDate());
         long nbWeeks = nbDays / 7;
 
-        m_HTseasonLocalized = (int)Math.floorDiv(nbWeeks, 16) + 1 + m_HTDatetimeBase.getUserSeasonOffset();
+        m_HTseasonLocalized = (int)Math.floorDiv(nbWeeks, 16) + 1 + HTDatetimeBase.getUserSeasonOffset();
         m_HTweekLocalized = (int)(nbWeeks % 16) + 1;
 
         HTDatetimeBase.instance().addPropertyChangeListener(this);
@@ -127,7 +131,7 @@ public class HTDatetime implements PropertyChangeListener{
     }
 
     public boolean isInTheFuture(){
-        ZonedDateTime zdt = ZonedDateTime.now(m_HTDatetimeBase.getHTZoneID());
+        ZonedDateTime zdt = ZonedDateTime.now(HTDatetimeBase.getHTZoneID());
         return m_zdtHT_CET.isAfter(zdt);
     }
 
@@ -159,5 +163,16 @@ public class HTDatetime implements PropertyChangeListener{
 
     }
 
+    public static Date resetDay(Date date) {
+        final Calendar cal = new GregorianCalendar();
+
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        return cal.getTime();
+    }
 
 }

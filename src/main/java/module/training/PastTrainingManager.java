@@ -5,7 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
-import core.util.HTCalendarFactory;
+import core.util.HTDatetime;
 import core.util.HelperWrapper;
 
 import java.text.ParseException;
@@ -21,22 +21,22 @@ import java.util.List;
 public class PastTrainingManager {
 
 	/** List of all skill up */
-	private List<ISkillChange> allSkillups = new ArrayList<ISkillChange>();
+	private List<ISkillChange> allSkillups = new ArrayList<>();
 	/** List of trained skill up */
-	private List<ISkillChange> trainSkillups = new ArrayList<ISkillChange>();
+	private List<ISkillChange> trainSkillups = new ArrayList<>();
 
 	/**
 	 * Calculates data for the player
 	 * 
-	 * @param player
+	 * @param player Player
 	 */
 	public PastTrainingManager(Player player) {
 		if (player == null) {
 			return;
 		}
 
-		allSkillups = new ArrayList<ISkillChange>();
-		trainSkillups = new ArrayList<ISkillChange>();
+		allSkillups = new ArrayList<>();
+		trainSkillups = new ArrayList<>();
 
 		for (int skill = 0; skill < 10; skill++) {
 			// Skip Form ups
@@ -48,7 +48,7 @@ public class PastTrainingManager {
 			int count = 0;
 
 			for (Object[] element : levelUps) {
-				PastSkillChange su = null;
+				PastSkillChange su;
 
 				try {
 					Date htDate = HelperWrapper.instance().getHattrickDate(
@@ -119,8 +119,9 @@ public class PastTrainingManager {
 
 		PastSkillChange skillup = new PastSkillChange();
 
-		skillup.setHtSeason(HTCalendarFactory.getHTSeason(skillupDate));
-		skillup.setHtWeek(HTCalendarFactory.getHTWeek(skillupDate));
+		var htdatetime = new HTDatetime(skillupDate.toInstant());
+		skillup.setHtSeason(htdatetime.getHTSeasonLocalized());
+		skillup.setHtWeek(htdatetime.getHTWeekLocalized());
 		skillup.setDate(skillupDate);
 
 		return skillup;
@@ -133,22 +134,18 @@ public class PastTrainingManager {
 		 */
 		@Override
 		public int compare(ISkillChange o1, ISkillChange o2) {
-			ISkillChange skillup1 = o1;
-			ISkillChange skillup2 = o2;
-
-			if (skillup1.getDate().before(skillup2.getDate())) {
+			if (o1.getDate().before(o2.getDate())) {
 				return -1;
-			} else if (skillup1.getDate().after(skillup2.getDate())) {
+			} else if (o1.getDate().after(o2.getDate())) {
 				return 1;
 			} else {
-				if (skillup1.getType() == skillup2.getType()) {
-					if (skillup1.getValue() > skillup2.getValue()) {
+				if (o1.getType() == o2.getType()) {
+					if (o1.getValue() > o2.getValue()) {
 						return 1;
 					} else {
 						return -1;
 					}
 				}
-
 				return 0;
 			}
 		}
