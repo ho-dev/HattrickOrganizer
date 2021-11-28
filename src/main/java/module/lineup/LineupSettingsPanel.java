@@ -4,6 +4,7 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.datatype.CBItem;
 import core.gui.Refreshable;
+import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
@@ -13,6 +14,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
+import core.rating.RatingPredictionConfig;
 import core.util.Helper;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.ratings.LineupRatingPanel;
@@ -21,6 +23,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javax.swing.*;
 import static core.util.Helper.getTranslation;
 import static module.lineup.LineupPanel.TITLE_FG;
@@ -78,6 +81,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	private final JComboBox<CBItem> m_jcbPullBackMinute = new JComboBox<>(PULLBACK_MINUTE);
 
+	private JComboBox<CBItem> m_jcbPredictionModel;
+
 	private final CBItem[] TACTICAL_ASSISTANTS = {
 			new CBItem("0", 0),
 			new CBItem("1", 1),
@@ -105,7 +110,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		homodel = HOVerwaltung.instance().getModel();
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
-		if (homodel.getTeam() != null && homodel.getTrainer() != null) {
+		if (homodel.getTeam() != null) {
 			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
 			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
 			m_iRealConfidence = homodel.getTeam().getConfidence();
@@ -209,7 +214,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				setTrainerType(homodel.getTrainer().getTrainerTyp());
 			}
 			else{
-				if (((CBItem)m_jcbLocation.getSelectedItem()).getId() == IMatchDetails.LOCATION_TOURNAMENT){
+
+				if (m_jcbLocation.getSelectedItem() != null &&
+						((CBItem)m_jcbLocation.getSelectedItem()).getId() == IMatchDetails.LOCATION_TOURNAMENT){
 					setTeamSpirit(6, 2);
 					setConfidence(6);
 				}
@@ -286,6 +293,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				lineup.setWeather(getWeather());
 				lineupPanel.getLineupPositionsPanel().refresh();
 			}
+			else if (event.getSource().equals(this.m_jcbPredictionModel)){
+				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
+			}
 			refresh();
 		}
 	}
@@ -359,7 +369,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbWeather, constraints);
 		add(m_jcbWeather);
 
-
 		yPos++;
 		initLabel(constraints, layout, new JLabel(getTranslation("ls.team.teamspirit")), yPos);
 		constraints.gridx = 2;
@@ -414,6 +423,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
+		m_jcbPredictionModel = new JComboBox<>(getPredictionItems());
+		yPos++;
+		initLabel(constraints, layout, new JLabel(getTranslation("PredictionType")), yPos);
+		constraints.gridx = 2;
+		constraints.gridy = yPos;
+		constraints.gridwidth = 1;
+		m_jcbPredictionModel.setToolTipText(getTranslation("Lineup.PredictionModel.ToolTip"));
+		m_jcbPredictionModel.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+		layout.setConstraints(m_jcbPredictionModel, constraints);
+		add(m_jcbPredictionModel);
+
 		yPos++;
 		initLabel(constraints, layout, new JLabel(""), yPos);
 		constraints.gridx = 2;
@@ -436,6 +456,20 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		addItemListeners();
 	}
 
+	private CBItem[] getPredictionItems() {
+		final ResourceBundle bundle = HOVerwaltung.instance().getResource();
+		String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
+		CBItem[] allItems = new CBItem[allPredictionNames.length];
+		for (int i = 0; i < allItems.length; i++) {
+			String predictionName = allPredictionNames[i];
+			if (bundle.containsKey("prediction." + predictionName))
+				predictionName = HOVerwaltung.instance().getLanguageString(
+						"prediction." + predictionName);
+			allItems[i] = new CBItem(predictionName, i);
+		}
+		return allItems;
+	}
+
 	public void resetSettings() {
 		homodel.getTeam().setTeamSpirit(m_iRealTeamSpirit);
 		homodel.getTeam().setSubTeamSpirit(m_iRealSubTeamSpirit);
@@ -456,6 +490,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTrainerType.addItemListener(this);
 		m_jcbPullBackMinute.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
+		m_jcbPredictionModel.addItemListener(this);
 	}
 
 	/**
@@ -470,8 +505,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbTrainerType.removeItemListener(this);
 		m_jcbPullBackMinute.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
+		m_jcbPredictionModel.removeItemListener(this);
 	}
-
 
 	private void initLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label, int y) {
 		label.setForeground(TITLE_FG);
@@ -482,6 +517,4 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(label, constraints);
 		add(label);
 	}
-
-
 }

@@ -3,7 +3,6 @@ package module.lineup.ratings;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.comp.panel.RasenPanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
@@ -24,10 +23,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 import java.util.Map;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -69,7 +66,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final ColorLabelEntry m_jlLoddarCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlTacticRating = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlFormationExperience = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.LEFT);
-    private JComboBox<CBItem> m_jcbPredictionModel;
     private JLabel m_jlCentralAttackRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlRightAttackRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlLeftAttackRatingText = new JLabel("", SwingConstants.CENTER);
@@ -84,14 +80,15 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private JPanel m_jpCentralDefense = new JPanel(new BorderLayout());
     private JPanel m_jpLeftDefense = new JPanel(new BorderLayout());
     private JPanel m_jpRightDefense = new JPanel(new BorderLayout());
-    private JPanel m_jpGlobalRating = new JPanel(new BorderLayout());
+    private JPanel m_jpHatStats = new JPanel(new BorderLayout());
+    private JPanel m_jpLoddarStats = new JPanel(new BorderLayout());
+    private JPanel m_jpTacticStats = new JPanel(new BorderLayout());
+    private JPanel m_jpFormationStats = new JPanel(new BorderLayout());
     private NumberFormat m_clFormat;
     private final JButton m_jbCopyRatingButton = new JButton();
     private final JButton m_jbFeedbackButton = new JButton();
-    private Dimension SIZE = new Dimension(Helper.calcCellWidth(160), Helper.calcCellWidth(40));
+    private Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
     private final Double COLOR_BORDERS_LIMIT_RATIO = 0.85;
-    private static ActionListener cbActionListener;
-
 
     public LineupRatingPanel() {
         initComponents();
@@ -502,123 +499,106 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainLayout.setConstraints(m_jpCentralAttack, gbcMainLayout);
         mainPanel.add(m_jpCentralAttack);
 
-        //HatStats + Loddar + Tactic    ===============================
-        GridBagLayout globalRatingsLayout = new GridBagLayout();
-        GridBagConstraints gbcGlobalRatingsLayout = new GridBagConstraints();
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
-        gbcGlobalRatingsLayout.gridwidth = 1;
-        gbcGlobalRatingsLayout.insets = new Insets(5, 5, 0, 5);
-        m_jpGlobalRating = new JPanel(globalRatingsLayout);
-
-
         //HATSTATS  ========================
+        jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
+        m_jlHatstatMain.setFontStyle(Font.BOLD);
+        jpRatingValueAndDelta.add(m_jlHatstatMain.getComponent(false));
+        jpRatingValueAndDelta.add(m_jlHatstatCompare.getComponent(false));
+
+        jpSectorRating = new JPanel(new GridLayout(2, 1));
+        jpSectorRating.setBackground(LABEL_BG);
         JLabel lblHatStat = new JLabel(getLangStr("ls.match.ratingtype.hatstats"));
         lblHatStat.setForeground(TITLE_FG);
         lblHatStat.setFont(getFont().deriveFont(Font.BOLD));
         lblHatStat.setHorizontalAlignment(SwingConstants.LEFT);
+        jpSectorRating.add(lblHatStat);
+        jpSectorRating.add(jpRatingValueAndDelta);
 
-        gbcGlobalRatingsLayout.gridx = 0;
-        gbcGlobalRatingsLayout.gridy = 0;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
-        globalRatingsLayout.setConstraints(lblHatStat, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(lblHatStat);
+        m_jpHatStats.add(jpSectorRating, BorderLayout.CENTER);
+        m_jpHatStats.setPreferredSize(SIZE);
 
-        m_jlHatstatMain.setFontStyle(Font.BOLD);
-        gbcGlobalRatingsLayout.gridx = 1;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
-        globalRatingsLayout.setConstraints(m_jlHatstatMain, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlHatstatMain);
-
-        gbcGlobalRatingsLayout.gridx = 2;
-        globalRatingsLayout.setConstraints(m_jlHatstatCompare, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlHatstatCompare);
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 7;
+        gbcMainLayout.insets = new Insets(5, 5, 0, 5);
+        mainLayout.setConstraints(m_jpHatStats, gbcMainLayout);
+        mainPanel.add(m_jpHatStats);
 
         // LODDAR ========================================
-        JLabel lblLoddar = new JLabel(getLangStr("ls.match.ratingtype.loddarstats"));
-        lblLoddar.setForeground(TITLE_FG);
-        lblLoddar.setFont(getFont().deriveFont(Font.BOLD));
-        lblHatStat.setHorizontalAlignment(SwingConstants.LEFT);
-
-
-        gbcGlobalRatingsLayout.gridx = 0;
-        gbcGlobalRatingsLayout.gridy = 1;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
-        globalRatingsLayout.setConstraints(lblLoddar, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(lblLoddar);
-
+        jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlLoddarMain.setFontStyle(Font.BOLD);
-        gbcGlobalRatingsLayout.gridx = 1;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
-        globalRatingsLayout.setConstraints(m_jlLoddarMain, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlLoddarMain);
+        jpRatingValueAndDelta.add(m_jlLoddarMain.getComponent(false));
+        jpRatingValueAndDelta.add(m_jlLoddarCompare.getComponent(false));
 
-        gbcGlobalRatingsLayout.gridx = 2;
-        globalRatingsLayout.setConstraints(m_jlLoddarCompare, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlLoddarCompare);
+        jpSectorRating = new JPanel(new GridLayout(2, 1));
+        jpSectorRating.setBackground(LABEL_BG);
+        JLabel lblLoddarStat = new JLabel(getLangStr("ls.match.ratingtype.loddarstats"));
+        lblLoddarStat.setForeground(TITLE_FG);
+        lblLoddarStat.setFont(getFont().deriveFont(Font.BOLD));
+        lblLoddarStat.setHorizontalAlignment(SwingConstants.LEFT);
+        jpSectorRating.add(lblLoddarStat);
+        jpSectorRating.add(jpRatingValueAndDelta);
 
+        m_jpLoddarStats.add(jpSectorRating, BorderLayout.CENTER);
+        m_jpLoddarStats.setPreferredSize(SIZE);
+
+        gbcMainLayout.gridx = 1;
+        gbcMainLayout.gridy = 7;
+        mainLayout.setConstraints(m_jpLoddarStats, gbcMainLayout);
+        mainPanel.add(m_jpLoddarStats);
 
         // Tactic ========================================
-        JLabel lbTactic = new JLabel(getLangStr("ls.team.tactic"));
-        lbTactic.setForeground(TITLE_FG);
-        lbTactic.setFont(getFont().deriveFont(Font.BOLD));
-        lbTactic.setHorizontalAlignment(SwingConstants.LEFT);
+        jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
+        m_jlTacticRating.setFontStyle(Font.BOLD);
+        jpRatingValueAndDelta.add(m_jlTacticRating.getComponent(false));
 
-        gbcGlobalRatingsLayout.gridx = 0;
-        gbcGlobalRatingsLayout.gridy = 2;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.WEST;
-        globalRatingsLayout.setConstraints(lbTactic, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(lbTactic);
+        jpSectorRating = new JPanel(new GridLayout(2, 1));
+        jpSectorRating.setBackground(LABEL_BG);
+        JLabel lblTactic = new JLabel(getLangStr("ls.team.tactic"));
+        lblTactic.setForeground(TITLE_FG);
+        lblTactic.setFont(getFont().deriveFont(Font.BOLD));
+        lblTactic.setHorizontalAlignment(SwingConstants.LEFT);
+        jpSectorRating.add(lblTactic);
+        jpSectorRating.add(jpRatingValueAndDelta);
 
-        gbcGlobalRatingsLayout.gridx = 1;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
-        globalRatingsLayout.setConstraints(m_jlTacticRating, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlTacticRating);
+        m_jpTacticStats.add(jpSectorRating, BorderLayout.CENTER);
+        m_jpTacticStats.setPreferredSize(SIZE);
 
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 8;
+        mainLayout.setConstraints(m_jpTacticStats, gbcMainLayout);
+        mainPanel.add(m_jpTacticStats);
 
         // Formation experience ========================================
+        jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
+        m_jlFormationExperience.setFontStyle(Font.BOLD);
+        jpRatingValueAndDelta.add(m_jlFormationExperience.getComponent(false));
+
+        jpSectorRating = new JPanel(new GridLayout(2, 1));
+        jpSectorRating.setBackground(LABEL_BG);
         JLabel lbFormation = new JLabel(getLangStr("ls.team.formation"));
         lbFormation.setForeground(TITLE_FG);
         lbFormation.setFont(getFont().deriveFont(Font.BOLD));
         lbFormation.setHorizontalAlignment(SwingConstants.LEFT);
 
-        gbcGlobalRatingsLayout.gridx = 0;
-        gbcGlobalRatingsLayout.gridy = 3;
-        gbcGlobalRatingsLayout.anchor = GridBagConstraints.CENTER;
-        globalRatingsLayout.setConstraints(lbFormation, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(lbFormation);
+        jpSectorRating.add(lbFormation);
+        jpSectorRating.add(jpRatingValueAndDelta);
 
-        gbcGlobalRatingsLayout.gridx = 1;
-        gbcGlobalRatingsLayout.gridwidth = 2;
-        globalRatingsLayout.setConstraints(m_jlFormationExperience, gbcGlobalRatingsLayout);
-        m_jpGlobalRating.add(m_jlFormationExperience);
+        m_jpFormationStats.add(jpSectorRating, BorderLayout.CENTER);
+        m_jpFormationStats.setPreferredSize(SIZE);
 
-        // Add the box
-        m_jpGlobalRating.setBackground(LABEL_BG);
-        m_jpGlobalRating.setBorder(BORDER_RATING_DEFAULT);
-        gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 7;
-        gbcMainLayout.insets = new Insets(5, 5, 0, 5);
-        mainLayout.setConstraints(m_jpGlobalRating, gbcMainLayout);
-        mainPanel.add(m_jpGlobalRating);
+        gbcMainLayout.gridx = 1;
+        gbcMainLayout.gridy = 8;
+        mainLayout.setConstraints(m_jpFormationStats, gbcMainLayout);
+        mainPanel.add(m_jpFormationStats);
 
-        //Panel for Rating model selection =====================================================
+        //Panel for rating sharing button=====================================================
         GridBagLayout ratingPanelLayout = new GridBagLayout();
         GridBagConstraints gbcRatingPanelLayout = new GridBagConstraints();
         gbcRatingPanelLayout.anchor = GridBagConstraints.CENTER;
         gbcRatingPanelLayout.insets = new Insets(0, 0, 0, 0);
-        JPanel jpRatingModelAndSharing = new JPanel(ratingPanelLayout);
-        jpRatingModelAndSharing.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
-        jpRatingModelAndSharing.setBorder(BORDER_RATING_DEFAULT);
-
-
-        m_jcbPredictionModel = new JComboBox<>(getPredictionItems());
-        JPanel m_jpPredictionModel = new ComboBoxTitled(getLangStr("PredictionType"), m_jcbPredictionModel, true);
-        m_jpPredictionModel.setBorder(null);
-        gbcRatingPanelLayout.gridx = 0;
-        gbcRatingPanelLayout.gridy = 0;
-        gbcRatingPanelLayout.gridheight = 2;
-        ratingPanelLayout.setConstraints(m_jpPredictionModel, gbcRatingPanelLayout);
-        jpRatingModelAndSharing.add(m_jpPredictionModel);
+        JPanel jpSharing = new JPanel(ratingPanelLayout);
+        jpSharing.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+        jpSharing.setBorder(BORDER_RATING_DEFAULT);
 
         m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", TITLE_FG), 24, 24));
         m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
@@ -636,7 +616,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         gbcRatingPanelLayout.gridheight = 1;
         gbcRatingPanelLayout.insets = new Insets(5, 8, 0, 8);
         ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
-        jpRatingModelAndSharing.add(m_jbFeedbackButton);
+        jpSharing.add(m_jbFeedbackButton);
 
         m_jbCopyRatingButton.setIcon(ImageUtilities.getCopyIcon(22, TITLE_FG));
         m_jbCopyRatingButton.addActionListener(new CopyListener(this));
@@ -649,12 +629,12 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         gbcRatingPanelLayout.gridy = 1;
         gbcRatingPanelLayout.insets = new Insets(5, 8, 5, 8);
         ratingPanelLayout.setConstraints(m_jbCopyRatingButton, gbcRatingPanelLayout);
-        jpRatingModelAndSharing.add(m_jbCopyRatingButton);
+        jpSharing.add(m_jbCopyRatingButton);
 
         gbcMainLayout.gridx = 2;
-        gbcMainLayout.gridy = 7;
-        mainLayout.setConstraints(jpRatingModelAndSharing, gbcMainLayout);
-        mainPanel.add(jpRatingModelAndSharing);
+        //gbcMainLayout.gridy = 7;
+        mainLayout.setConstraints(jpSharing, gbcMainLayout);
+        mainPanel.add(jpSharing);
 
         //create final panel =============================================
         add(mainPanel);
@@ -670,15 +650,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jlLeftAttackRatingCompare.setSpecialNumber(0f, false);
         m_jlHatstatCompare.setSpecialNumber(0, false);
         m_jlLoddarCompare.setSpecialNumber(0f, false);
-
-        cbActionListener = e -> {
-            if (e.getSource().equals(m_jcbPredictionModel)) {
-                RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
-                calculateRatings();
-            }
-        };
-
-        addListeners();
     }
 
     private int getLineupRatingLabelRowNumber(int i) {
@@ -694,7 +665,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
         return 2 - i;
     }
-
 
     private void initToolTips() {
         m_jlLeftDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
@@ -719,7 +689,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jlLeftAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
         m_jlLeftAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
         m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
-        m_jcbPredictionModel.setToolTipText(getLangStr("Lineup.PredictionModel.ToolTip"));
         m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
     }
 
@@ -852,21 +821,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_dLeftAttackRating = previousRatings.getLeftAttack().get(t);
     }
 
-
-    private void addListeners() {
-        m_jcbPredictionModel.addActionListener(cbActionListener);
-    }
-
-    private void removeListeners() {
-        m_jcbPredictionModel.removeActionListener(cbActionListener);
-    }
-
     @Override
     public void refresh() {
-        removeListeners();
-        setPredictionModel(RatingPredictionConfig.getInstancePredictionType());
         calculateRatings();
-        addListeners();
     }
 
     @Override
@@ -874,7 +831,4 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         refresh();
     }
 
-    private void setPredictionModel(int newPredictionType) {
-        core.util.Helper.setComboBoxFromID(m_jcbPredictionModel, newPredictionType);
-    }
 }
