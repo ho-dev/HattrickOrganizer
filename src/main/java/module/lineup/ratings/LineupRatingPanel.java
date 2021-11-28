@@ -77,7 +77,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private JLabel m_jlCentralDefenseRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlLeftDefenseRatingText = new JLabel("", SwingConstants.CENTER);
     private JLabel m_jlRightDefenseRatingText = new JLabel("", SwingConstants.CENTER);
-    private JPanel m_jpCentalAttack = new JPanel(new BorderLayout());
+    private JPanel m_jpCentralAttack = new JPanel(new BorderLayout());
     private JPanel m_jpRightAttack = new JPanel(new BorderLayout());
     private JPanel m_jpLeftAttack = new JPanel(new BorderLayout());
     private JPanel m_jpMidfield = new JPanel(new BorderLayout());
@@ -284,11 +284,11 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         ratingRatio = m_dCentralAttackRating / avgRating;
 
         if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
-            m_jpCentalAttack.setBorder(BORDER_RATING_BELOW_LIMIT);
+            m_jpCentralAttack.setBorder(BORDER_RATING_BELOW_LIMIT);
         } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
-            m_jpCentalAttack.setBorder(BORDER_RATING_ABOVE_LIMIT);
+            m_jpCentralAttack.setBorder(BORDER_RATING_ABOVE_LIMIT);
         } else {
-            m_jpCentalAttack.setBorder(BORDER_RATING_DEFAULT);
+            m_jpCentralAttack.setBorder(BORDER_RATING_DEFAULT);
         }
 
 
@@ -322,7 +322,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainPanel = new JPanel(mainLayout);
         mainPanel.setOpaque(false);
 
-
         gbcMainLayout.gridx = 0;
         gbcMainLayout.gridy = 0;
         gbcMainLayout.gridwidth = 3;
@@ -330,6 +329,18 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainLayout.setConstraints(m_jpMinuteToggler, gbcMainLayout);
         mainPanel.add(m_jpMinuteToggler);
 
+        // DEFENSE
+        var defenseLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.defense"));
+        defenseLabel.setFont(defenseLabel.getFont().deriveFont(Font.BOLD));
+
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(0);
+        gbcMainLayout.gridwidth = 3;
+        //gbcMainLayout.fill = GridBagConstraints.HORIZONTAL;
+        var defenseLabelPanel = new JPanel();
+        defenseLabelPanel.add(defenseLabel);
+        mainLayout.setConstraints(defenseLabelPanel, gbcMainLayout);
+        mainPanel.add(defenseLabelPanel);
 
         //CENTRAL DEFENSE ========================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
@@ -346,12 +357,11 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpCentralDefense.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
-        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(0);
-        gbcMainLayout.gridwidth = 2;
-        gbcMainLayout.fill = GridBagConstraints.NONE;
+        gbcMainLayout.gridy = 1 + getLineupRatingValueRowNumber(0);
+        gbcMainLayout.gridwidth = 1;
+        gbcMainLayout.insets = new Insets(0, 5, 0, 5);
         mainLayout.setConstraints(m_jpCentralDefense, gbcMainLayout);
         mainPanel.add(m_jpCentralDefense);
-
 
         //RIGHT DEFENSE ========================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
@@ -368,7 +378,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightDefense.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = getLineupRatingColumnNumber(0);
-        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(1);
+        //gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(0);
         mainLayout.setConstraints(m_jpRightDefense, gbcMainLayout);
         mainPanel.add(m_jpRightDefense);
 
@@ -390,8 +400,18 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainLayout.setConstraints(m_jpLeftDefense, gbcMainLayout);
         mainPanel.add(m_jpLeftDefense);
 
-
         //Midfield ==================================================
+        var midfieldLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"));
+        midfieldLabel.setFont(midfieldLabel.getFont().deriveFont(Font.BOLD));
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(1);
+        gbcMainLayout.gridwidth = 3;
+        gbcMainLayout.insets = new Insets(5, 5, 0, 5);
+        var midfieldLabelPanel = new JPanel();
+        midfieldLabelPanel.add(midfieldLabel);
+        mainLayout.setConstraints(midfieldLabelPanel, gbcMainLayout);
+        mainPanel.add(midfieldLabelPanel);
+
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlMidfieldRatingNumber.setFontStyle(Font.BOLD);
         jpRatingValueAndDelta.add(m_jlMidfieldRatingNumber.getComponent(false));
@@ -405,11 +425,24 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpMidfield.add(jpSectorRating, BorderLayout.CENTER);
         m_jpMidfield.setPreferredSize(SIZE);
 
-        gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
-        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(2);
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 1 + getLineupRatingValueRowNumber(1);
+        //gbcMainLayout.gridwidth = 1;
+        gbcMainLayout.insets = new Insets(0, 5, 0, 5);
         mainLayout.setConstraints(m_jpMidfield, gbcMainLayout);
         mainPanel.add(m_jpMidfield);
 
+        // Attack
+        var attackLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.attack"));
+        attackLabel.setFont(attackLabel.getFont().deriveFont(Font.BOLD));
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(2);
+        gbcMainLayout.gridwidth = 3;
+        gbcMainLayout.insets = new Insets(5, 5, 0, 5);
+        var attackLabelPanel = new JPanel();
+        attackLabelPanel.add(attackLabel);
+        mainLayout.setConstraints(attackLabelPanel, gbcMainLayout);
+        mainPanel.add(attackLabelPanel);
 
         //Right Attack ====================================================================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
@@ -426,10 +459,11 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpRightAttack.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = getLineupRatingColumnNumber(0);
-        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(3);
+        gbcMainLayout.gridy = 1 + getLineupRatingValueRowNumber(2);
+        gbcMainLayout.gridwidth = 1;
+        gbcMainLayout.insets = new Insets(0, 5, 0, 5);
         mainLayout.setConstraints(m_jpRightAttack, gbcMainLayout);
         mainPanel.add(m_jpRightAttack);
-
 
         //Left Attack ========================================================================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
@@ -449,7 +483,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainLayout.setConstraints(m_jpLeftAttack, gbcMainLayout);
         mainPanel.add(m_jpLeftAttack);
 
-
         //Central Attack ==============================================================
         jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
         m_jlCentralAttackRatingNumber.setFontStyle(Font.BOLD);
@@ -461,14 +494,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         jpSectorRating.add(m_jlCentralAttackRatingText);
         jpSectorRating.add(jpRatingValueAndDelta);
 
-        m_jpCentalAttack.add(jpSectorRating, BorderLayout.CENTER);
-        m_jpCentalAttack.setPreferredSize(SIZE);
+        m_jpCentralAttack.add(jpSectorRating, BorderLayout.CENTER);
+        m_jpCentralAttack.setPreferredSize(SIZE);
 
         gbcMainLayout.gridx = getLineupRatingColumnNumber(1);
-        gbcMainLayout.gridy = 1 + getLineupRatingRowNumber(4);
-        mainLayout.setConstraints(m_jpCentalAttack, gbcMainLayout);
-        mainPanel.add(m_jpCentalAttack);
-
+        //gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(4);
+        mainLayout.setConstraints(m_jpCentralAttack, gbcMainLayout);
+        mainPanel.add(m_jpCentralAttack);
 
         //HatStats + Loddar + Tactic    ===============================
         GridBagLayout globalRatingsLayout = new GridBagLayout();
@@ -564,10 +596,10 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jpGlobalRating.setBackground(LABEL_BG);
         m_jpGlobalRating.setBorder(BORDER_RATING_DEFAULT);
         gbcMainLayout.gridx = 0;
-        gbcMainLayout.gridy = 6;
+        gbcMainLayout.gridy = 7;
+        gbcMainLayout.insets = new Insets(5, 5, 0, 5);
         mainLayout.setConstraints(m_jpGlobalRating, gbcMainLayout);
         mainPanel.add(m_jpGlobalRating);
-
 
         //Panel for Rating model selection =====================================================
         GridBagLayout ratingPanelLayout = new GridBagLayout();
@@ -619,17 +651,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         ratingPanelLayout.setConstraints(m_jbCopyRatingButton, gbcRatingPanelLayout);
         jpRatingModelAndSharing.add(m_jbCopyRatingButton);
 
-
         gbcMainLayout.gridx = 2;
-        gbcMainLayout.gridy = 6;
+        gbcMainLayout.gridy = 7;
         mainLayout.setConstraints(jpRatingModelAndSharing, gbcMainLayout);
         mainPanel.add(jpRatingModelAndSharing);
 
-
         //create final panel =============================================
-
         add(mainPanel);
-
         initToolTips();
 
         //initialize all rating compare to 0
@@ -653,9 +681,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         addListeners();
     }
 
-    private int getLineupRatingRowNumber(int i) {
-        if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return i;
-        return 4 - i;
+    private int getLineupRatingLabelRowNumber(int i) {
+        if (UserParameter.instance().lineupOrientationSetting == GOALKEEPER_AT_TOP) return 2 * i;
+        return 4 - 2 * i;
+    }
+
+    private int getLineupRatingValueRowNumber(int i) {
+        return getLineupRatingLabelRowNumber(i)+1;
     }
 
     private int getLineupRatingColumnNumber(int i) {
