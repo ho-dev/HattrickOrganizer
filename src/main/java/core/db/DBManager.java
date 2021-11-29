@@ -354,6 +354,7 @@ public class DBManager {
 	 * @return boolean
 	 */
 	private boolean checkIfDBExists() {
+		if ( m_clJDBCAdapter==null) return false;
 		boolean exists;
 		try {
 			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
@@ -945,28 +946,6 @@ public class DBManager {
 		}
 		return m_lLatestUpdateTime;
 	}
-
-	/**
-	 * check if latest update is older than @periodInMS
-	 *
-	 * @param periodInMS the period in ms
-	 * @return the boolean
-	 */
-	public boolean areDataTooOld(long periodInMS) {
-		long dateNow = new Date().getTime();
-		return m_lLatestUpdateTime + periodInMS <= dateNow;
-	}
-
-	/**
-	 * Are data too old boolean.
-	 *
-	 * @return the boolean
-	 */
-// default to 1 hour
-	public boolean areDataTooOld() {
-		return areDataTooOld(1000 * 60 * 60);
-	}
-
 
 	/**
 	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
@@ -2050,7 +2029,7 @@ public class DBManager {
 				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0
-				ORDER BY MATCHDETAILS.SpielDatum DESC """;
+				ORDER BY MATCHDETAILS.SpielDatum DESC""";
 
 
 		// Get all data on the player

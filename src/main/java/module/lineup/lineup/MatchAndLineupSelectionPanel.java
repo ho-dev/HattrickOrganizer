@@ -46,7 +46,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private JButton m_jbDownloadLineup;
     private JButton m_jbGetRatingsPrediction;
     private @Nullable MatchOrdersCBItem m_clSelectedMatch;
-    private Boolean bDataTooOld;
     private String sWarningDataTooOld;
     private Long lLastUpdateTime;
     private ArrayList<MatchKurzInfo> previousPlayedMatchesAll = null;
@@ -158,15 +157,13 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void  updateComponents() {
 
         setUpcomingMatchesFromDB();
-
-        lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
-        bDataTooOld = DBManager.instance().areDataTooOld();
-        sWarningDataTooOld = String.format(Helper.getTranslation("ls.module.lineup.dataTooOld.tt"), java.text.DateFormat.getDateTimeInstance().format(lLastUpdateTime));
-
         update_jcbUpcomingGames();
         update_jcbLoadLineup();
 
-        if (bDataTooOld){
+        if (upcomingMatchesInDB.size()==0){
+            lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
+            sWarningDataTooOld = String.format(Helper.getTranslation("ls.module.lineup.dataTooOld.tt"), java.text.DateFormat.getDateTimeInstance().format(lLastUpdateTime));
+
             m_jcbUpcomingGames.setEnabled(false);
             m_jcbUpcomingGames.setToolTipText(sWarningDataTooOld);
 
@@ -328,7 +325,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     }
 
-
     private void setUpcomingMatchesFromDB(){
         MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
         Arrays.sort(matches, Collections.reverseOrder());
@@ -355,9 +351,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 upcomingMatches.add(new MatchOrdersCBItem(match, location));
             }
         }
-
         upcomingMatchesInDB = upcomingMatches;
-
     }
 
     /*
@@ -370,7 +364,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
 
         // put them back only of data are recent enough and Lineup Simulator is not checked
-        if(bDataTooOld || (m_jcbxLineupSimulation.isSelected())){
+        if(m_jcbxLineupSimulation.isSelected()){
             upcomingMatches.add(null);
             m_clSelectedMatch = null;
         }
