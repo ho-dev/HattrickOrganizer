@@ -20,13 +20,9 @@ public class LineupAssistant {
 	public static final byte MF_AW_ST = 3;
 	public static final byte ST_AW_MF = 4;
 	public static final byte ST_MF_AW = 5;
-	private float m_weatherBonus = -1f;
 	private Weather weather = Weather.PARTIALLY_CLOUDY;
 
 	public LineupAssistant() {
-		if (m_weatherBonus == -1f){
-			m_weatherBonus = new RatingPredictionManager().getWeatherBonus();
-		}
 	}
 
 	/**
@@ -275,11 +271,9 @@ public class LineupAssistant {
 			// break;
 		}
 
-		if (order != null) {
-			for (int i = 0; i < order.length; i++) {
-				doSpielerAufstellen(order[i], bForm, bInjured, bSuspended, lPlayers,
-						lPositions);
-			}
+		for (byte b : order) {
+			doSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers,
+					lPositions);
 		}
 
 		// Fill subs ========
@@ -422,8 +416,8 @@ public class LineupAssistant {
 	protected final void doReserveSpielerAufstellen(byte position, boolean mitForm,
 			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
 			List<IMatchRoleID> positionen) {
-		MatchRoleID pos = null;
-		Player player = null;
+		MatchRoleID pos;
+		Player player;
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.get(i);
@@ -452,8 +446,8 @@ public class LineupAssistant {
 	protected final void doReserveSpielerAufstellenIdealPos(byte position, boolean mitForm,
 			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
 			List<IMatchRoleID> positionen) {
-		MatchRoleID pos = null;
-		Player player = null;
+		MatchRoleID pos;
+		Player player;
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
 			pos = (MatchRoleID) positionen.get(i);
@@ -522,7 +516,7 @@ public class LineupAssistant {
 													 List<IMatchRoleID> positions) {
 		MatchRoleID pos;
 		Player player;
-		final Vector<IMatchRoleID> zusPos = new Vector<IMatchRoleID>();
+		final Vector<IMatchRoleID> zusPos = new Vector<>();
 
 		for (int i = 0; (positions != null) && (players != null) && (i < positions.size()); i++) {
 			pos = (MatchRoleID) positions.get(i);
@@ -569,14 +563,13 @@ public class LineupAssistant {
 
 	private Vector<IMatchRoleID> filterPositions(List<IMatchRoleID> positions) {
 		// Remove "red" positions from the position selection of the AssistantPanel.
-		Vector<IMatchRoleID> returnVec = new Vector<IMatchRoleID>();
+		Vector<IMatchRoleID> returnVec = new Vector<>();
 		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
-				.getLineupPanel().getLineupAssistantPanel().getPositionStatuses();
-		for (int i = 0; i < positions.size(); i++) {
-			MatchRoleID pos = (MatchRoleID) positions.get(i);
+				.getLineupPanel().getAssistantPositionsStatus();
+		for (IMatchRoleID position : positions) {
+			MatchRoleID pos = (MatchRoleID) position;
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
 				returnVec.add(pos);
-			} else {
 			}
 		}
 		return returnVec;

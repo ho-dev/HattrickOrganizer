@@ -269,7 +269,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (m_clHOMainFrame == null) {
 			return Weather.PARTIALLY_CLOUDY;
 		}
-		return instance().getLineupPanel().getLineupSettingsPanel().getWeather();
+		return instance().getLineupPanel().getWeather();
 	}
 
 	/**
@@ -645,17 +645,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		parameter.hoMainFrame_height = Math.min(getSize().height,
 				getToolkit().getScreenSize().height-parameter.hoMainFrame_PositionY+currentDevice.getDefaultConfiguration().getBounds().y);
 
-		final LineupAssistantPanel lineupAssistantPanel = getLineupPanel().getLineupAssistantPanel();
+		final var lineupPanel = getLineupPanel();
 
-		parameter.aufstellungsAssistentPanel_gruppe = lineupAssistantPanel.getGroup();
-		parameter.aufstellungsAssistentPanel_reihenfolge = lineupAssistantPanel.getOrder();
-		parameter.lineupAssistentPanel_include_group = !lineupAssistantPanel.isSelectedGroupExcluded();
-		parameter.aufstellungsAssistentPanel_cbfilter = lineupAssistantPanel.isGroupFilter();
-		parameter.aufstellungsAssistentPanel_idealPosition = lineupAssistantPanel.isIdealPositionZuerst();
-		parameter.aufstellungsAssistentPanel_form = lineupAssistantPanel.isConsiderForm();
-		parameter.aufstellungsAssistentPanel_verletzt = lineupAssistantPanel.isIgnoreInjured();
-		parameter.aufstellungsAssistentPanel_gesperrt = lineupAssistantPanel.isIgnoreSuspended();
-		parameter.aufstellungsAssistentPanel_notLast = lineupAssistantPanel.isExcludeLastMatch();
+		parameter.aufstellungsAssistentPanel_gruppe = lineupPanel.getAssistantGroup();
+		parameter.aufstellungsAssistentPanel_reihenfolge = lineupPanel.getAssistantOrder();
+		parameter.lineupAssistentPanel_include_group = !lineupPanel.isAssistantSelectedGroupExcluded();
+		parameter.aufstellungsAssistentPanel_cbfilter = lineupPanel.isAssistantGroupFilter();
+		parameter.aufstellungsAssistentPanel_idealPosition = lineupPanel.isAssistantBestPositionFirst();
+		parameter.aufstellungsAssistentPanel_form = lineupPanel.isAssistantConsiderForm();
+		parameter.aufstellungsAssistentPanel_verletzt = lineupPanel.isAssistantIgnoreInjured();
+		parameter.aufstellungsAssistentPanel_gesperrt = lineupPanel.isAssistantIgnoreSuspended();
+		parameter.aufstellungsAssistentPanel_notLast = lineupPanel.isAssistantExcludeLastMatch();
 
 		// PlayerOverviewPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.PLAYEROVERVIEW)) {

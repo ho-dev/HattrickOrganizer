@@ -139,12 +139,12 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			displayGUI();
 		}
 		else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB) || actionEvent.getSource().equals(m_jcbxNotLast)) {
-			mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
+			mainFrame.getLineupPanel().refreshLineupPositionsPanel();
 		}
 		else if (actionEvent.getSource().equals(m_jcbGroups) || actionEvent.getSource().equals(m_jcbIncludeExclude)) {
 			// Only if filter active
 			if (m_jcbxFilterPlayerPositionCB.isSelected()) {
-				mainFrame.getLineupPanel().getLineupPositionsPanel().refresh();
+				mainFrame.getLineupPanel().refreshLineupPositionsPanel();
 			}
 		}
 		else if (actionEvent.getSource().equals(overlayOk)) {
@@ -272,8 +272,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		// Add two buttons and a label
 
-		JLayeredPane posPanel = HOMainFrame.instance().getLineupPanel()
-				.getLineupPositionsPanel().getCenterPanel();
+		var posPanel = HOMainFrame.instance().getLineupPanel();
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
@@ -291,7 +290,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			infoLabel.setHorizontalAlignment(JLabel.CENTER);
 			infoLabel.setFont(getFont().deriveFont(Font.BOLD));
 		}
-		posPanel.add(infoLabel, constraints, 2);
+		posPanel.addPositionComponent(infoLabel, constraints, 2);
 
 		constraints.gridx = 6;
 		constraints.gridy = 3;
@@ -305,7 +304,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			overlayOk.setForeground(ImageUtilities.getColorForContrast(HOColorName.BUTTON_ASSIST_OK_BG));
 			overlayOk.addActionListener(this);
 		}
-		posPanel.add(overlayOk, constraints, 2);
+		posPanel.addPositionComponent(overlayOk, constraints, 2);
 
 		constraints.gridy = 2;
 		if (overlayCancel == null) {
@@ -315,9 +314,9 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			overlayCancel.setBackground(ThemeManager.getColor(HOColorName.BUTTON_ASSIST_CANCEL_BG));
 			overlayCancel.setForeground(ImageUtilities.getColorForContrast(HOColorName.BUTTON_ASSIST_CANCEL_BG));
 		}
-		posPanel.add(overlayCancel, constraints, 2);
+		posPanel.addPositionComponent(overlayCancel, constraints, 2);
 
-		posPanel.revalidate();
+		posPanel.revalidatePositionComponents();
 
 	}
 
@@ -329,18 +328,17 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 
 		// Remove buttons and labels
-		JLayeredPane pane = HOMainFrame.instance().getLineupPanel()
-				.getLineupPositionsPanel().getCenterPanel();
+		var pane = HOMainFrame.instance().getLineupPanel();
 
-		pane.remove(infoLabel);
-		pane.remove(overlayCancel);
-		pane.remove(overlayOk);
+		pane.removePositionComponent(infoLabel);
+		pane.removePositionComponent(overlayCancel);
+		pane.removePositionComponent(overlayOk);
 
 		HOMainFrame.instance().getLineupPanel().repaint();
 
 	}
 
-	public Map<Integer, Boolean> getPositionStatuses() {
+	public Map<Integer, Boolean> getPositionsStatus() {
 		HashMap<Integer, Boolean> returnMap = new HashMap<>();
 		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
 				.entrySet()) {
@@ -555,4 +553,5 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	@Override
 	public void refresh() {
 		reInit();
-	}}
+	}
+}

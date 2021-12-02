@@ -119,7 +119,7 @@ public class OnlineWorker {
 							// Show
 							hov.setModel(homodel);
 							// reset value of TS, confidence in Lineup Settings Panel after data download
-							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().backupRealGameSettings();
+							HOMainFrame.instance().getLineupPanel().backupRealGameSettings();
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
@@ -1065,7 +1065,8 @@ public class OnlineWorker {
 			file = askForHRFPath(parent, file);
 		}
 
-		if ((file != null) && (file.getPath() != null)) {
+		if ((file != null)) {
+			file.getPath();
 			// Save Path
 			UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
 
@@ -1082,7 +1083,7 @@ public class OnlineWorker {
 					saveFile(file.getPath(), hrfData);
 				} catch (IOException e) {
 					Helper.showMessage(HOMainFrame.instance(),
-							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile()  +".\nError: " + e.getMessage(),
+							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: " + e.getMessage(),
 							getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 				}
 			} else {

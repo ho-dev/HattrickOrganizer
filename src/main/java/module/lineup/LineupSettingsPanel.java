@@ -31,7 +31,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
 	private LineupRatingPanel ratingPanel;
-	private MatchAndLineupSelectionPanel matchAndLineupPanel;
+	//private MatchAndLineupSelectionPanel matchAndLineupPanel;
 	private final LineupPanel lineupPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
@@ -133,17 +133,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
 
-	private void refreshRatingPanel(){
-		if (ratingPanel == null){
-			ratingPanel = lineupPanel.getLineupRatingPanel();
-		}
-		if (ratingPanel != null) {
-			ratingPanel.refresh();
-		}
-	}
-
 	private boolean isLineupSimulator(){
-		if (matchAndLineupPanel == null){
+/*		if (matchAndLineupPanel == null){
 			matchAndLineupPanel = lineupPanel.getLineupPositionsPanel().getMatchAndLineupSelectionPanel();
 		}
 		if (matchAndLineupPanel != null) {
@@ -151,7 +142,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 		else{
 			return false;
-		}
+		}*/
+		return true;
 	}
 
 	public Weather getWeather() {
@@ -277,7 +269,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				var trainerType = ((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId();
 				homodel.getTrainer().setTrainerTyp(trainerType);
 				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox(oldStyleOfPlay);
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				homodel.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
@@ -285,13 +277,13 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
 				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
 				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox(oldStyleOfPlay);
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getLineupWithoutRatingRecalc();
 				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
 				lineup.setWeather(getWeather());
-				lineupPanel.getLineupPositionsPanel().refresh();
+				lineupPanel.refreshLineupPositionsPanel();
 			}
 			else if (event.getSource().equals(this.m_jcbPredictionModel)){
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
@@ -309,7 +301,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void refresh() {
 		removeItemListeners();
 		setLabels();
-		refreshRatingPanel();
+		lineupPanel.refreshLineupRatingPanel();
 		addItemListeners();
 	}
 

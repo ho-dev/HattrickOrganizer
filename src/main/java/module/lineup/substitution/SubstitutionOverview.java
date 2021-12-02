@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -51,7 +52,6 @@ import javax.swing.table.TableColumn;
  */
 public class SubstitutionOverview extends JPanel {
 
-	private static final long serialVersionUID = -625638866350314110L;
 	private JTable substitutionTable;
 	private MessageBox messageBox;
 	private DetailsView detailsView;
@@ -294,7 +294,7 @@ public class SubstitutionOverview extends JPanel {
 			updateOrderIDs();
 			refresh();
 			selectSubstitution(newSub);
-			HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().setLabels();
+			HOMainFrame.instance().getLineupPanel().setLineupSettingsLabels();
 		}
 		else {
 			restoreLineupSubstitutions();
@@ -403,7 +403,6 @@ public class SubstitutionOverview extends JPanel {
 		// number of columns
 		public static final int COLUMN_COUNT = 8;
 
-		private static final long serialVersionUID = 6969656858380680460L;
 		private List<TableRow> rows = new ArrayList<>();
 		private String[] columnNames;
 		private Comparator<TableRow> rowComparator;
@@ -535,8 +534,6 @@ public class SubstitutionOverview extends JPanel {
 
 	private class BehaviorAction extends AbstractAction {
 
-		private static final long serialVersionUID = 3753611559396928213L;
-
 		public BehaviorAction() {
 			super(HOVerwaltung.instance().getLanguageString("subs.Behavior"));
 		}
@@ -548,8 +545,6 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private class PositionSwapAction extends AbstractAction {
-
-		private static final long serialVersionUID = 3753611559396928213L;
 
 		public PositionSwapAction() {
 			super(HOVerwaltung.instance().getLanguageString("subs.TypeSwap"));
@@ -563,8 +558,6 @@ public class SubstitutionOverview extends JPanel {
 
 	private class SubstitutionAction extends AbstractAction {
 
-		private static final long serialVersionUID = 2005264416271904159L;
-
 		public SubstitutionAction() {
 			super(HOVerwaltung.instance().getLanguageString("subs.TypeSub"));
 		}
@@ -577,8 +570,6 @@ public class SubstitutionOverview extends JPanel {
 
 	private class ManMarkingAction extends AbstractAction {
 
-		private static final long serialVersionUID = 2005264416271904159L;
-
 		public ManMarkingAction() {
 			super(HOVerwaltung.instance().getLanguageString("subs.TypeManMarking"));
 		}
@@ -590,8 +581,6 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private class RemoveAction extends AbstractAction {
-
-		private static final long serialVersionUID = 715531467612457L;
 
 		public RemoveAction() {
 			super(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
@@ -609,8 +598,6 @@ public class SubstitutionOverview extends JPanel {
 
 	private class RemoveAllAction extends AbstractAction {
 
-		private static final long serialVersionUID = 715531467617L;
-
 		public RemoveAllAction() {
 			super(HOVerwaltung.instance().getLanguageString("ls.button.deleteall"));
 		}
@@ -625,8 +612,6 @@ public class SubstitutionOverview extends JPanel {
 
 	private class EditAction extends AbstractAction {
 
-		private static final long serialVersionUID = 715531467677812457L;
-
 		public EditAction() {
 			super(HOVerwaltung.instance().getLanguageString("ls.button.edit"));
 		}
@@ -638,9 +623,6 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private class OrderTypeRenderer extends DefaultTableCellRenderer {
-
-		private static final long serialVersionUID = 5422073852994253027L;
-
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
 													   boolean isSelected, boolean hasFocus, int row, int column) {
@@ -661,8 +643,6 @@ public class SubstitutionOverview extends JPanel {
 	}
 
 	private class WarningRenderer extends DefaultTableCellRenderer {
-
-		private static final long serialVersionUID = 7013869782046646283L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
