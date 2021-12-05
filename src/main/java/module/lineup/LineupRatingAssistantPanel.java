@@ -53,7 +53,6 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         RefreshManager.instance().registerRefreshable(this);
     }
 
-
     private void initComponents() {
         var lineupRatingPanel = getLineupRatingPanel();
         var lineupSettingsPanel = getLineupSettingsPanel();
@@ -69,7 +68,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
         var matchPanel = new JPanel(new BorderLayout());
         this.matchAndLineupPanel = new MatchAndLineupSelectionPanel(m_clLineupPanel);
-        matchPanel.add(matchAndLineupPanel, BorderLayout.WEST);
+        matchPanel.add(matchAndLineupPanel);
         matchBanner = new MatchBanner(matchAndLineupPanel);
         matchPanel.add(matchBanner, BorderLayout.EAST);
 

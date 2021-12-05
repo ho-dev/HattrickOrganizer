@@ -18,11 +18,11 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
 
     private JComponent m_jpComponent;
     private short m_clLocation;
+    private int attitude;
 
     public short getLocation() {return m_clLocation;}
 
     public void setLocation(short location) {this.m_clLocation = location; }
-
 
     /**
      * Constructor
@@ -36,7 +36,6 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         if (m_jpComponent == null) createComponent();
         return m_jpComponent;
     }
-
 
     public final void createComponent() {
         m_jpComponent = new JPanel();
@@ -120,5 +119,11 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
     }
 
 
+    public int getAttitude() {
+        return attitude;
+    }
 
+    public void setAttitude(int attitude) {
+        this.attitude = attitude;
+    }
 }

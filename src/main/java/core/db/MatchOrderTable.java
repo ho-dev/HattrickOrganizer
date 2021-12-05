@@ -14,7 +14,7 @@ import java.sql.Types;
 
 /**
  *
- * Table to save players position for futur matchs: used by training preview
+ * Table to save players position for future matches: used by training preview
  * Save only: matchid, playerid and position id
  *
  * @author yaute

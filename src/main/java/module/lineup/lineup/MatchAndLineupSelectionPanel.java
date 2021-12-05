@@ -45,7 +45,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private JCheckBox m_jcbxOfficialOnly;
     private JButton m_jbUploadLineup;
     private JButton m_jbDownloadLineup;
-    private JButton m_jbGetRatingsPrediction;
+    //private JButton m_jbGetRatingsPrediction;
     private @Nullable MatchOrdersCBItem m_clSelectedMatch;
     private String sWarningDataTooOld;
     private Long lLastUpdateTime;
@@ -83,7 +83,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbUpcomingGames = new JComboBox<>();
         m_jcbUpcomingGames.setRenderer(new MatchOrdersRenderer());
-        m_jcbUpcomingGames.setPreferredSize(new Dimension(325, 25));
+        m_jcbUpcomingGames.setPreferredSize(new Dimension(160, 25));
         layout.setConstraints(m_jcbUpcomingGames, gbc);
 
         add(m_jcbUpcomingGames);
@@ -112,16 +112,16 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.download"));
         m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
-
+/*
         m_jbGetRatingsPrediction = new JButton(Helper.getTranslation("lineup.getRatingsPrediction.btn.label"));
         m_jbGetRatingsPrediction.setToolTipText(Helper.getTranslation("lineup.getRatingsPrediction.btn.tooltip"));
         m_jbGetRatingsPrediction.setEnabled(false);
-
-        GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup, m_jbGetRatingsPrediction);
+*/
+        GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup/*, m_jbGetRatingsPrediction*/);
 
         jpButtons.add(m_jbUploadLineup);
         jpButtons.add(m_jbDownloadLineup);
-        jpButtons.add(m_jbGetRatingsPrediction);
+//        jpButtons.add(m_jbGetRatingsPrediction);
 
         layout.setConstraints(jpButtons, gbc);
         add(jpButtons);

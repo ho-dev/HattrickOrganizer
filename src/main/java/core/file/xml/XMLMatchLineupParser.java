@@ -190,7 +190,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung, new StyleOfPlay(styleOfPlay));
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);

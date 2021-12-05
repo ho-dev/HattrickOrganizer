@@ -13,6 +13,9 @@ import module.lineup.substitution.model.Substitution;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class MatchLineupTeam {
 
 	private SourceSystem sourceSystem;
@@ -22,7 +25,9 @@ public class MatchLineupTeam {
 
 	private int experience;
 	private int teamId;
-	private int styleOfPlay;
+	private StyleOfPlay styleOfPlay;
+	private MatchTacticType matchTacticType;
+	private MatchTeamAttitude matchTeamAttitude;
 	// null player to fill empty spots
 	private final static MatchLineupPlayer NULLPLAYER = new MatchLineupPlayer(MatchType.NONE, -1, 0, -1, -1d, "", 0);
 	private MatchType matchType = MatchType.NONE;
@@ -35,7 +40,7 @@ public class MatchLineupTeam {
 	/**
 	 * Creates a new instance of MatchLineupTeam
 	 */
-	public MatchLineupTeam(MatchType matchType, int matchId, String teamName, int teamID, int erfahrung, int styleOfPlay) {
+	public MatchLineupTeam(MatchType matchType, int matchId, String teamName, int teamID, int erfahrung, StyleOfPlay styleOfPlay) {
 		this.matchType = matchType;
 		this.teamName = teamName;
 		experience = erfahrung;
@@ -177,8 +182,29 @@ public class MatchLineupTeam {
 	 * @param m_iStyleOfPlay
 	 *            New value of property m_iStyleOfPlay.
 	 */
-	public final void setStyleOfPlay(int m_iStyleOfPlay) {
+	public final void setStyleOfPlay(StyleOfPlay m_iStyleOfPlay) {
 		this.styleOfPlay = m_iStyleOfPlay;
+	}
+
+	public void calcStyleOfPlay (StyleOfPlay coachModifier) {
+		var trainerType = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+		var tacticAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+		switch (trainerType) {
+			case Defensive:
+				this.styleOfPlay = new StyleOfPlay(min(-10 + 2 * tacticAssistants, coachModifier.val));
+				break;
+			case Offensive:
+				this.styleOfPlay = new StyleOfPlay(max(10 - 2 * tacticAssistants, coachModifier.val));
+				break;
+			default:
+			case Balanced:
+				if (coachModifier.val >= 0) {
+					this.styleOfPlay = new StyleOfPlay(min(tacticAssistants, coachModifier.val));
+				} else {
+					this.styleOfPlay = new StyleOfPlay(max(tacticAssistants, coachModifier.val));
+				}
+				break;
+		}
 	}
 
 	/**
@@ -186,7 +212,7 @@ public class MatchLineupTeam {
 	 * 
 	 * @return Value of property m_iStyleOfPlay.
 	 */
-	public final int getStyleOfPlay() {
+	public final StyleOfPlay getStyleOfPlay() {
 		return styleOfPlay;
 	}
 	
@@ -699,6 +725,22 @@ public class MatchLineupTeam {
 			lastMatchAppearances.remove(entry.getKey());
 		}
 		return ret;
+	}
+
+	public MatchTacticType getMatchTacticType() {
+		return matchTacticType;
+	}
+
+	public void setMatchTacticType(MatchTacticType matchTacticType) {
+		this.matchTacticType = matchTacticType;
+	}
+
+	public MatchTeamAttitude getMatchTeamAttitude() {
+		return matchTeamAttitude;
+	}
+
+	public void setMatchTeamAttitude(MatchTeamAttitude matchTeamAttitude) {
+		this.matchTeamAttitude = matchTeamAttitude;
 	}
 
 	private class MatchAppearance {

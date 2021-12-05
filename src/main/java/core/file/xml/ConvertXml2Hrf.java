@@ -17,11 +17,8 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineup;
-import core.model.match.MatchLineupTeam;
+import core.model.match.*;
 import core.model.enums.MatchType;
-import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
 import module.youth.YouthPlayer;
@@ -217,6 +214,8 @@ public class ConvertXml2Hrf {
 					lastTactic = md.getGuestTacticType();
 				}
 			}
+			matchLineupTeam.setMatchTeamAttitude(MatchTeamAttitude.fromInt(lastAttitude));
+			matchLineupTeam.setMatchTacticType(MatchTacticType.fromInt(lastTactic));
 		}
 
 		// Abschnitte erstellen
@@ -268,8 +267,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(99);
 
 		// lineup from the last match
-		createLastLineUp(teamdetailsDataMap, matchLineupTeam, lastAttitude,
-				lastTactic, buffer);
+		createLastLineUp(teamdetailsDataMap, matchLineupTeam, buffer);
 		
 		// staff
 		createStaff(staffData, buffer);
@@ -434,15 +432,15 @@ public class ConvertXml2Hrf {
 	 * Create last lineup section.
 	 */
 	private static void createLastLineUp(Map<String, String> teamdetailsDataMap,
-			MatchLineupTeam matchLineupTeam, int lastAttitude, int lastTactic,
-			StringBuilder buffer) {
+										 MatchLineupTeam matchLineupTeam,
+										 StringBuilder buffer) {
 		buffer.append("[lastlineup]").append('\n');
 		buffer.append("trainer=").append(teamdetailsDataMap.get("TrainerID"))
 				.append('\n');
 
 		try {
-			buffer.append("installning=").append(lastAttitude).append('\n');
-			buffer.append("tactictype=").append(lastTactic).append('\n');
+			buffer.append("installning=").append(matchLineupTeam.getMatchTeamAttitude().toInt()).append('\n');
+			buffer.append("tactictype=").append(matchLineupTeam.getMatchTacticType().toInt()).append('\n');
 			// The field is coachmodifier in matchOrders and StyleOfPlay in MatchLineup
 			// but we both named it styleOfPlay
 			buffer.append("styleOfPlay=").append(matchLineupTeam.getStyleOfPlay()).append('\n');

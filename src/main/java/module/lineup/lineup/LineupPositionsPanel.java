@@ -11,11 +11,10 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.Matchdetails;
-import core.model.match.IMatchDetails;
-import core.model.match.Weather;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.model.player.TrainerType;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.lineup.AllTeamsPanel;
@@ -76,7 +75,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 	//private final LineupAssistantPanel assistantPanel;
-	private int m_iStyleOfPlay, m_iTactic, m_iAttitude;
+	// TODO move to MatchSelectionPanel
+	private StyleOfPlay m_iStyleOfPlay;
+	private MatchTacticType m_iTactic;
+	private MatchTeamAttitude m_iAttitude;
 	private ComboBoxTitled m_jpTeamAttitude;
 	private JComboBox<CBItem> m_jcbTeamAttitude;
 	private ComboBoxTitled m_jpTactic;
@@ -86,6 +88,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
 	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
 	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
+
 	private static ActionListener cbActionListener;
 	private Weather m_weather;
 	private boolean m_useWeatherImpact;
@@ -105,9 +108,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	public void setEnabledTeamAttitudeCB(boolean enabled) {
 		if (!enabled){
-			m_iAttitude = core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
+			m_iAttitude = MatchTeamAttitude.Normal; // core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
 		}
-		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
+		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude.toInt());
 		m_jcbTeamAttitude.setEnabled(enabled);
 	}
 
@@ -627,14 +630,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	private List<Integer> getValidStyleOfPlayValues()
 	{
-		int trainer;
+		TrainerType trainer;
 		int tacticalAssistants;
 		try {
 			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
 			tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
 
 		} catch (Exception e) {
-			trainer = 2;
+			trainer = TrainerType.Balanced;
 			tacticalAssistants = 0;
 			HOLogger.instance().error(getClass(), "Model not ready, put default value " + trainer + " for trainer and "  + tacticalAssistants + " for tactical Assistants.");
 		}
@@ -642,9 +645,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		int min=-10, max=10;
 
 		switch (trainer) {
-			case 0 -> max = -10 + 2 * tacticalAssistants;  // Defensive
-			case 1 -> min = 10 - 2 * tacticalAssistants;   // Offensive
-			case 2 -> {     			                   // Neutral
+			case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
+			case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive
+			case Balanced -> {     			                   // Neutral
 				min = - tacticalAssistants;
 				max = tacticalAssistants;
 			}
@@ -656,7 +659,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 	// each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
 	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-	public int updateStyleOfPlayComboBox(int oldValue)
+	public int updateStyleOfPlayComboBox(StyleOfPlay oldValue)
 	{
 		// NT Team can select whatever Style of Play they like
 		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
@@ -692,28 +695,23 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return 0;
 	}
 
-	public void setStyleOfPlay(int style){
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style);
+	public void setStyleOfPlay(StyleOfPlay style){
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style.val);
 	}
 
-	private int getDefaultTrainerStyleOfPlay() {
-		int result, trainer;
-
+	private StyleOfPlay getDefaultTrainerStyleOfPlay() {
+		TrainerType trainer;
 		try {
 			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-		}
-		catch (Exception e) {
-			return 0;  // Happens for instance with empty db
+		} catch (Exception e) {
+			return StyleOfPlay.Neutral();  // Happens for instance with empty db
 		}
 
-		switch (trainer) {
-			case 0 -> result = -10; // Defensive
-			case 1 -> result = 10; // Offensive
-			case 2 -> result = 0;  // Neutral
-			default -> {HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer); result = 0;}
-			}
-
-			return result;
+		return switch (trainer) {
+			case Defensive -> StyleOfPlay.Defensive(); // Defensive
+			case Offensive -> StyleOfPlay.Offensive(); // Offensive
+			default -> StyleOfPlay.Neutral();  // Neutral
+		};
 	}
 
 	public boolean is_jcbTeamAttitudeInitialized() {

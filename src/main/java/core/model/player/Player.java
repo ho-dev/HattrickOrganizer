@@ -283,7 +283,7 @@ public class Player {
     /**
      * Trainertyp
      */
-    private int m_iTrainerTyp = -1;
+    private TrainerType m_iTrainerTyp;
 
     /**
      * Transferlisted
@@ -424,7 +424,7 @@ public class Player {
         String temp = properties.getProperty("trainertype", "-1");
 
         if ((temp != null) && !temp.equals("")) {
-            m_iTrainerTyp = Integer.parseInt(temp);
+            m_iTrainerTyp = TrainerType.fromInt(Integer.parseInt(temp));
         }
 
         temp = properties.getProperty("trainerskill", "0");
@@ -1620,7 +1620,7 @@ public class Player {
      * gibt an ob der Player Trainer ist
      */
     public boolean isTrainer() {
-        return ((m_iTrainer > 0) && (m_iTrainerTyp >= 0));
+        return ((m_iTrainer > 0) && (m_iTrainerTyp != null));
     }
 
     /**
@@ -1628,7 +1628,7 @@ public class Player {
      *
      * @param m_iTrainerTyp New value of property m_iTrainerTyp.
      */
-    public void setTrainerTyp(int m_iTrainerTyp) {
+    public void setTrainerTyp(TrainerType m_iTrainerTyp) {
         this.m_iTrainerTyp = m_iTrainerTyp;
     }
 
@@ -1637,7 +1637,7 @@ public class Player {
      *
      * @return Value of property m_iTrainerTyp.
      */
-    public int getTrainerTyp() {
+    public TrainerType getTrainerTyp() {
         return m_iTrainerTyp;
     }
 

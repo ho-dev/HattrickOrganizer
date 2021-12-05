@@ -3,6 +3,7 @@ package core.db;
 import core.model.match.MatchLineupPlayer;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
+import core.model.match.StyleOfPlay;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;
@@ -26,7 +27,9 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				new ColumnDescriptor("Erfahrung",Types.INTEGER,false),
 				new ColumnDescriptor("TeamName",Types.VARCHAR,false,256),
 				new ColumnDescriptor("TeamID",Types.INTEGER,false),
-				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false)
+				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false),
+				new ColumnDescriptor("Attitude", Types.INTEGER, true),
+				new ColumnDescriptor("Tactic", Types.INTEGER, true)
 		};
 	}
 
@@ -43,7 +46,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			rs.first();
 
 			team = new MatchLineupTeam(MatchType.getById(iMatchType), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
-										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
+										teamID, rs.getInt("Erfahrung"), new StyleOfPlay(rs.getInt("StyleOfPlay")));
 			team.setLineup(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
 			
 			team.setSubstitutions(new ArrayList<>(DBManager.instance().getMatchSubstitutionsByMatchTeam(iMatchType, teamID, matchID)));
