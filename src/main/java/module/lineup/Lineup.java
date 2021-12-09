@@ -9,6 +9,7 @@ import core.model.Ratings;
 import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
+import core.model.match.MatchLineupPosition;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -23,7 +24,7 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-import java.sql.Timestamp;
+
 import java.util.*;
 
 import com.google.gson.annotations.Expose;
@@ -49,6 +50,7 @@ public class Lineup{
 	public static final String DEFAULT_NAMELAST = "HO!LastLineup";
 	public static final int NO_HRF_VERBINDUNG = -1;
 
+	// TODO: remove assistant from Lineup class
 	/** Aufstellungsassistent */
 	private LineupAssistant m_clAssi = new LineupAssistant();
 
@@ -76,6 +78,31 @@ public class Lineup{
 	@SerializedName("setPieces")
 	@Expose
 	private int m_iKicker = -1;
+
+	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
+		for ( var position : matchLineupPositions){
+			addPosition(position);
+		}
+		this.substitutions = substitutions;
+	}
+
+	public void addPosition(MatchLineupPosition position) {
+		if ( position.isFieldMatchRoleId()){
+			this.m_vFieldPositions.add(position);
+		}
+		else if (position.isSubstitutesMatchRoleId() || position.isBackupsMatchRoleId()){
+			this.m_vBenchPositions.add(position);
+		}
+		else if ( position.isPenaltyTakerMatchRoleId()){
+			this.penaltyTakers.add(position);
+		}
+		else if ( position.getId() == IMatchRoleID.setPieces){
+			this.m_iKicker = position.getPlayerId();
+		}
+		else if ( position.getId() == IMatchRoleID.captain){
+			this.m_iKapitaen = position.getPlayerId();
+		}
+	}
 
 	private class Settings {
 		/** Attitude */
@@ -107,6 +134,7 @@ public class Lineup{
 	/** PullBackMinute **/
 	private int pullBackMinute = 90; // no pull back
 
+	// TODO -> MatchKurzInfo
 	/** Home/Away/AwayDerby */
 	private short m_sLocation = -1;
 
@@ -791,7 +819,7 @@ public class Lineup{
 	/**
 	 * Get the position object by player id.
 	 */
-	public final MatchRoleID getPositionBySpielerId(int playerid) {
+	public final MatchRoleID getPositionByPlayerId(int playerid) {
 		MatchRoleID ret = getPositionByPlayerId(playerid, m_vFieldPositions);
 		if ( ret == null ) ret = getPositionByPlayerId(playerid, m_vBenchPositions);
 		return ret;
@@ -898,18 +926,18 @@ public class Lineup{
 	public final void setSpielerAtPosition(int positionID, int playerID) {
 		final MatchRoleID position = getPositionById(positionID);
 		if ( position != null) {
-			MatchRoleID oldPlayerRole = getPositionBySpielerId(playerID);
+			MatchRoleID oldPlayerRole = getPositionByPlayerId(playerID);
 			if (oldPlayerRole != null) {
 				if (position.isFieldMatchRoleId()) {
 					//if player changed is in starting eleven it has to be remove from previous occupied positions
 					oldPlayerRole.setSpielerId(0, this);
-					if (oldPlayerRole.isSubstitutesMatchRoleID()) {
+					if (oldPlayerRole.isSubstitutesMatchRoleId()) {
 						removeObjectPlayerFromSubstitutions(playerID);
 						// player can occupy multiple bench positions
-						oldPlayerRole = getPositionBySpielerId(playerID);
+						oldPlayerRole = getPositionByPlayerId(playerID);
 						while (oldPlayerRole != null) {
 							oldPlayerRole.setSpielerId(0, this);
-							oldPlayerRole = getPositionBySpielerId(playerID);
+							oldPlayerRole = getPositionByPlayerId(playerID);
 						}
 					}
 				} else {
@@ -942,7 +970,7 @@ public class Lineup{
 	 */
 	public final boolean isPlayerInLineup(int spielerId) {
 		//return m_clAssi.isPlayerInLineup(spielerId, m_vPositionen);
-		return getPositionBySpielerId(spielerId) != null;
+		return getPositionByPlayerId(spielerId) != null;
 	}
 
 	/**
@@ -959,7 +987,7 @@ public class Lineup{
 	public final boolean isPlayerASub(int spielerId) {
 		//return m_clAssi.isPlayerASub(spielerId, m_vPositionen);
 		final MatchRoleID role = getPositionByPlayerId(spielerId, m_vBenchPositions);
-		return role != null && !role.isBackupsMatchRoleID();
+		return role != null && !role.isBackupsMatchRoleId();
 	}
 
 	/**
@@ -1669,14 +1697,14 @@ public class Lineup{
 		Player ObjectPlayer;
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
-				matchRoleIDaffectedPlayer = this.getPositionBySpielerId(sub.getSubjectPlayerID());
+				matchRoleIDaffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
 				if (matchRoleIDaffectedPlayer == null)
 				{
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
 
-				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
+				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
 				if (matchRoleIDPlayer==null)
 				{
 					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
@@ -1710,8 +1738,8 @@ public class Lineup{
 				break;
 
 			case POSITION_SWAP:
-				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
-				matchRoleIDPlayer = getPositionBySpielerId(sub.getObjectPlayerID());
+				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
+				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
 				if ( matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null ){
 					matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
 					matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
@@ -1728,7 +1756,7 @@ public class Lineup{
 
 			case NEW_BEHAVIOUR:
 				newRoleId = sub.getRoleId();
-				matchRoleIDaffectedPlayer = getPositionBySpielerId(sub.getSubjectPlayerID());
+				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
 				if (matchRoleIDaffectedPlayer == null)
 				{
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));

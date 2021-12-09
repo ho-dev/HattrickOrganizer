@@ -16,7 +16,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.module.IModule;
@@ -155,15 +155,15 @@ public final class MatchesPanel extends LazyImagePanel {
 		if ((matchesModel.getMatch() != null)
 				&& (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			List<MatchLineupPlayer> teamspieler = DBManager.instance().getMatchLineupPlayers(
-					matchesModel.getMatch().getMatchID(), teamid);
+			List<MatchLineupPosition> teamspieler = DBManager.instance().getMatchLineupPlayers(
+					matchesModel.getMatch().getMatchID(), this.matchType, teamid);
 			Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
 
 			aufstellung.clearLineup(); // To make sure the old one is
 			// gone.
 
 			if (teamspieler != null) {
-				for (MatchLineupPlayer player : teamspieler) {
+				for (MatchLineupPosition player : teamspieler) {
 					if (player.getRoleId() == IMatchRoleID.setPieces) {
 						aufstellung.setKicker(player.getPlayerId());
 					} else if (player.getRoleId() == IMatchRoleID.captain) {

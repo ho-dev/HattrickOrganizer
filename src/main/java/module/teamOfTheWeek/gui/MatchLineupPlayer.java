@@ -92,7 +92,7 @@ class MatchLineupPlayer {
     @Override
 	public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("MatchLineupPlayer[");
+        buffer.append("MatchLineupPosition[");
         buffer.append("TeamID = ").append(TeamID);
         buffer.append(", PositionCode = ").append(PositionCode);
         buffer.append(", SpielerID = ").append(SpielerID);

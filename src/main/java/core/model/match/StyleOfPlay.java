@@ -29,10 +29,19 @@ public class StyleOfPlay {
 10	100% offensive
 */
 
-   public int val;
+   private int val;
 
-   public StyleOfPlay(int styleOfPlay) {
-      this.val = min(10,max(-10,styleOfPlay));
+   private StyleOfPlay(int styleOfPlay){
+      this.val = styleOfPlay;
+   }
+
+   public static StyleOfPlay fromInt(int styleOfPlay) {
+      if ( styleOfPlay < -10) return null; // old matches has -1000
+      return new StyleOfPlay(min(10,max(-10,styleOfPlay)));
+   }
+
+   public int toInt(){
+      return val;
    }
 
    public static StyleOfPlay Neutral() {

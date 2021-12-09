@@ -27,7 +27,8 @@ Value	Description
         this.id = i;
     }
 
-    public static MatchTacticType fromInt(int tactic) {
+    public static MatchTacticType fromInt(Integer tactic) {
+        if (tactic == null) return null;
         return switch (tactic) {
             default -> Normal;
             case 1 -> Pressing;

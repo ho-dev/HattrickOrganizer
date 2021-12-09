@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -177,15 +177,15 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 
 	@Deprecated
-	void storeMatchLineupPlayer(MatchLineupPlayer matchLineupPlayer, int matchID, int teamID) {
-		if (matchLineupPlayer != null) {
+	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, int matchID, int teamID) {
+		if (matchLineupPosition != null) {
 			
 			// Need to check for spieler, there may now be multiple players with -1 role.
 			// Should we delete here, anyways? Isn't that for update?
 
 
 			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchLineupPlayer.getMatchType().getId(), "" + matchID, "" + teamID, "" + matchLineupPlayer.getRoleId(), "" + matchLineupPlayer.getPlayerId()};
+			final String[] werte = { "" + matchLineupPosition.getMatchType().getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId(), "" + matchLineupPosition.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -196,22 +196,22 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
-						matchLineupPlayer.getMatchType().getId() + "," +
-						matchLineupPlayer.getPlayerId() + ","	+
-						matchLineupPlayer.getRoleId() + "," +
-						matchLineupPlayer.getBehaviour()	+ ","	+
-						matchLineupPlayer.getRoleId() + ",'" +
-						DBManager.insertEscapeSequences(matchLineupPlayer.getSpielerVName()) + "', '" +
-						DBManager.insertEscapeSequences(matchLineupPlayer.getNickName()) + "', '" +
-						DBManager.insertEscapeSequences(matchLineupPlayer.getSpielerName())+ "'," +
-						matchLineupPlayer.getRating() + "," +
-						matchLineupPlayer.getPosition() + "," +
+						matchLineupPosition.getMatchType().getId() + "," +
+						matchLineupPosition.getPlayerId() + ","	+
+						matchLineupPosition.getRoleId() + "," +
+						matchLineupPosition.getBehaviour()	+ ","	+
+						matchLineupPosition.getRoleId() + ",'" +
+						DBManager.insertEscapeSequences(matchLineupPosition.getSpielerVName()) + "', '" +
+						DBManager.insertEscapeSequences(matchLineupPosition.getNickName()) + "', '" +
+						DBManager.insertEscapeSequences(matchLineupPosition.getSpielerName())+ "'," +
+						matchLineupPosition.getRating() + "," +
+						matchLineupPosition.getPosition() + "," +
 						"0," + // Status
-						matchLineupPlayer.getRoleId() + "," +
-						matchLineupPlayer.getRatingStarsEndOfMatch() + "," +
-						matchLineupPlayer.getStartPosition() + "," +
-						matchLineupPlayer.getStartBehavior() +  "," +
-						matchLineupPlayer.isStartSetPiecesTaker() + " )";
+						matchLineupPosition.getRoleId() + "," +
+						matchLineupPosition.getRatingStarsEndOfMatch() + "," +
+						matchLineupPosition.getStartPosition() + "," +
+						matchLineupPosition.getStartBehavior() +  "," +
+						matchLineupPosition.isStartSetPiecesTaker() + " )";
 				adapter.executeUpdate(sql);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
@@ -220,9 +220,12 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		}
 	}	
 
-	Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID, int teamID) {
+	Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID) {
 		try {
-			var sql = "SELECT * FROM "+getTableName()+" WHERE MatchID = " + matchID + " AND TeamID = " + teamID;
+			var sql = "SELECT * FROM "+getTableName() +
+					" WHERE MatchID = "	+ matchID +
+					" AND MatchTyp = " + matchType.getId() +
+					" AND TeamID = " + teamID;
 			return createMatchLineups(sql);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
@@ -230,7 +233,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return new Vector<>();
 	}
 
-	public List<MatchLineupPlayer> getMatchInserts(int objectPlayerID)
+	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID)
 	{
 		try {
 			var sql = "SELECT * FROM "+getTableName()+" WHERE SpielerID = " + objectPlayerID;
@@ -241,8 +244,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return new Vector<>();
 	}
 
-	private Vector<MatchLineupPlayer> createMatchLineups(String sql) throws SQLException {
-		var vec = new Vector<MatchLineupPlayer>();
+	private Vector<MatchLineupPosition> createMatchLineups(String sql) throws SQLException {
+		var vec = new Vector<MatchLineupPosition>();
 		var rs = adapter.executeQuery(sql);
 		rs.beforeFirst();
 
@@ -279,7 +282,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPlayer(matchType, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
+			var player = new MatchLineupPosition(matchType, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
 			vec.add(player);
 		}
 

@@ -115,9 +115,9 @@ public class AufstellungsSternePanel extends RasenPanel {
 
 		if (lineupteam != null) {
 			m_jlTeamName.setText(lineupteam.getTeamName() + " (" + lineupteam.getTeamID() + ")");
-			List<MatchLineupPlayer> aufstellung = lineupteam.getLineup();
+			List<MatchLineupPosition> aufstellung = lineupteam.getLineup();
 
-			for (MatchLineupPlayer player : aufstellung) {
+			for (MatchLineupPosition player : aufstellung) {
 				switch (player.getRoleId()) {
 				case IMatchRoleID.keeper: {
 					m_clKeeper.refresh(lineup, player);

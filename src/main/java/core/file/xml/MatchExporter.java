@@ -64,14 +64,14 @@ public class MatchExporter {
 					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
-				Vector<MatchLineupPlayer> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(),teamId);
+				Vector<MatchLineupPosition> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), this.matchType, teamId);
 				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<Integer, Player>();
 
 				boolean dataOK = true;
 
 				for (int k = 0;(aufstellung != null) && (k < aufstellung.size()); k++) {
 					//MatchDaten zum Player holen
-					MatchLineupPlayer player = aufstellung.get(k);
+					MatchLineupPosition player = aufstellung.get(k);
 
 					//Alte Werte zum Player holen fï¿½r das Matchdate
 					Player formerPlayerData = null;

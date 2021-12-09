@@ -2,6 +2,7 @@ package module.lineup;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.match.StyleOfPlay;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.model.match.MatchLineupTeam;
@@ -230,7 +231,7 @@ public class CopyListener implements ActionListener {
 		String level = (tacticLevel != 0) ? " (" + tacticLevel + ")" : "";
 		int attitude = lineupData.getAttitude();
 		String attitudeName = lineupData.getAttitudeName(attitude);
-		int styleOfPlay = lineupData.getStyleOfPlay();
+		var styleOfPlay = StyleOfPlay.fromInt(lineupData.getStyleOfPlay());
 		String styleOfPlayName = MatchLineupTeam.getStyleOfPlayName(styleOfPlay);
 		
 		String header = "[table][tr][th colspan=8 align=center]" + hov.getLanguageString("Aufstellung") + 

@@ -7,13 +7,13 @@ import core.gui.HOMainFrame;
 import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
+import core.model.match.MatchLineupPosition;
 import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
@@ -519,12 +519,12 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				statistikWerte[13][i] = matchkurzinfos[matchkurzinfos.length - i - 1]
 						.getMatchDateAsTimestamp().getTime();
 
-				List<MatchLineupPlayer> team = DBManager.instance().getMatchLineupPlayers(
-						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchID(), teamid);
+				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(
+						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchID(), this.matchType, teamid);
 				float sterne = 0;
 
 				// Sterne
-				for (final MatchLineupPlayer player : team) {
+				for (final MatchLineupPosition player : team) {
 					if (player.getRoleId() < IMatchRoleID.startReserves
 							&& player.getRoleId() >= IMatchRoleID.startLineup) {
 						float rating = (float) player.getRating();

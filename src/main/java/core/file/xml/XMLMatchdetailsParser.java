@@ -480,11 +480,11 @@ public class XMLMatchdetailsParser {
     /**
      * convert the existing team lineup into a Vector of Vectors (of playerId, playerName)
      *
-     * @param lineup (of MatchLineupPlayer)		team lineup
+     * @param lineup (of MatchLineupPosition)		team lineup
      */
-    private static Vector<Vector<String>> parseLineup (Vector<MatchLineupPlayer> lineup) {
+    private static Vector<Vector<String>> parseLineup (Vector<MatchLineupPosition> lineup) {
     	Vector<Vector<String>> players = new Vector<>();
-        MatchLineupPlayer player;
+        MatchLineupPosition player;
 
         for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
             player = lineup.elementAt(i);

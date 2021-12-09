@@ -18,7 +18,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -202,7 +202,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	};
 
-	public SpielerDetailDialog(JFrame owner, MatchLineupPlayer matchplayer, MatchLineup matchlineup) {
+	public SpielerDetailDialog(JFrame owner, MatchLineupPosition matchplayer, MatchLineup matchlineup) {
 		super(owner);
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
 		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getPlayerId(),
@@ -253,13 +253,13 @@ final class SpielerDetailDialog extends JDialog {
 		if (HOVerwaltung.instance().getModel().getLineup()
 				.isPlayerInLineup(m_clPlayer.getPlayerID())
 				&& (HOVerwaltung.instance().getModel().getLineup()
-						.getPositionBySpielerId(m_clPlayer.getPlayerID()) != null)) {
+						.getPositionByPlayerId(m_clPlayer.getPlayerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
 					HOVerwaltung.instance().getModel().getLineup()
-							.getPositionBySpielerId(m_clPlayer.getPlayerID()),
+							.getPositionByPlayerId(m_clPlayer.getPlayerID()),
 					m_clPlayer.getTrikotnummer()));
 			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(HOVerwaltung.instance()
-					.getModel().getLineup().getPositionBySpielerId(m_clPlayer.getPlayerID())
+					.getModel().getLineup().getPositionByPlayerId(m_clPlayer.getPlayerID())
 					.getPosition()));
 		} else {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(null,
@@ -441,7 +441,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	}
 
-	private void initComponents(Player player, MatchLineupPlayer matchplayer) {
+	private void initComponents(Player player, MatchLineupPosition matchplayer) {
 		JComponent component = null;
 
 		getContentPane().setLayout(new BorderLayout());

@@ -231,7 +231,7 @@ final public class UserColumnFactory {
                 return new PlayerLabelEntry(player,
                         HOVerwaltung.instance().getModel()
                                 .getLineupWithoutRatingRecalc()
-                                .getPositionBySpielerId(player.getPlayerID()),
+                                .getPositionByPlayerId(player.getPlayerID()),
                         0f, false, false);
             }
 
@@ -606,7 +606,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 final MatchRoleID positionBySpielerId = model.getLineupWithoutRatingRecalc()
-                        .getPositionBySpielerId(player.getPlayerID());
+                        .getPositionByPlayerId(player.getPlayerID());
                 if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getPlayerID())
                         && (positionBySpielerId != null)) {
                     final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(

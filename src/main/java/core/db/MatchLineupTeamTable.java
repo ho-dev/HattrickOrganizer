@@ -1,13 +1,10 @@
 package core.db;
 
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
+import core.model.match.*;
 import core.model.enums.MatchType;
-import core.model.match.StyleOfPlay;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.ArrayList;
 
 
 public final class MatchLineupTeamTable extends AbstractTable {
@@ -45,12 +42,21 @@ public final class MatchLineupTeamTable extends AbstractTable {
 
 			rs.first();
 
-			team = new MatchLineupTeam(MatchType.getById(iMatchType), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
-										teamID, rs.getInt("Erfahrung"), new StyleOfPlay(rs.getInt("StyleOfPlay")));
-			team.setLineup(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
-			
-			team.setSubstitutions(new ArrayList<>(DBManager.instance().getMatchSubstitutionsByMatchTeam(iMatchType, teamID, matchID)));
-			
+			team = new MatchLineupTeam(MatchType.getById(iMatchType),
+					matchID,
+					DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+					teamID,
+					rs.getInt("Erfahrung"));
+
+			var styleOfPlay = new StyleOfPlay(rs.getInt("StyleOfPlay"));
+			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
+			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"MatchTeamAttitude"));
+
+			team.loadLineup();
+			team.setStyleOfPlay(styleOfPlay);
+			team.setMatchTacticType(matchTacticType);
+			team.setMatchTeamAttitude(matchTeamAttitude);
+
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
 			team = null;
@@ -83,7 +89,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 					
 					((MatchLineupPlayerTable) DBManager.instance().getTable(
 							MatchLineupPlayerTable.TABLENAME)).storeMatchLineupPlayer(
-									(MatchLineupPlayer) team.getLineup().elementAt(i),
+									(MatchLineupPosition) team.getLineup().elementAt(i),
 									matchID, team.getTeamID());
 				}
 				

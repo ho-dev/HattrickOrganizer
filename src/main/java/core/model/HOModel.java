@@ -8,6 +8,7 @@ import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.model.player.TrainerType;
 import core.training.TrainingWeekManager;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
@@ -440,7 +441,7 @@ public class HOModel {
         if (trainer == null) {
             trainer = new Player();
             trainer.setTrainerSkill(7);
-            trainer.setTrainerTyp(2); // neutral;
+            trainer.setTrainerTyp(TrainerType.Balanced); // neutral;
         }
 
         return trainer;

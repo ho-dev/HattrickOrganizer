@@ -1,6 +1,6 @@
 package module.teamAnalyzer.vo;
 
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.player.MatchRoleID;
 import module.teamAnalyzer.manager.PlayerDataManager;
 
@@ -14,7 +14,7 @@ public class PlayerPerformance {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Wrapped object */
-    private MatchLineupPlayer mlp;
+    private MatchLineupPosition mlp;
 
     /** Status of the player on the team. injured, sold etc */
     private int status;
@@ -29,7 +29,7 @@ public class PlayerPerformance {
      *
      * @param _mlp The IMatchLineupPlayer object to be wrapped
      */
-    public PlayerPerformance(MatchLineupPlayer _mlp) {
+    public PlayerPerformance(MatchLineupPosition _mlp) {
         mlp = _mlp;
     }
 

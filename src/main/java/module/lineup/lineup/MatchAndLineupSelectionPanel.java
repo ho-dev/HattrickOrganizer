@@ -391,9 +391,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         if (m_jcbLoadLineup.getSelectedItem() != null){
             lineupPanel.setAssistantGroupFilter(false);
             int iMatchID = ((Team)(m_jcbLoadLineup.getSelectedItem())).getMatchID();
-            Vector<MatchLineupPlayer> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, OWN_TEAM_ID);
+            Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, this.matchType, OWN_TEAM_ID);
             if (lineupPlayers != null) {
-                for (MatchLineupPlayer lineupPlayer : lineupPlayers) {
+                for (MatchLineupPosition lineupPlayer : lineupPlayers) {
                     if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
                         lineup.setKicker(lineupPlayer.getPlayerId());
                     }

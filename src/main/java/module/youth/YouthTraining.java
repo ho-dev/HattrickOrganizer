@@ -201,7 +201,7 @@ public class YouthTraining {
                     // Calc Individual training
                     var matchLineupPlayer = lineupTeam.getPlayerByID(player.getId());
                     if (matchLineupPlayer != null) {
-                        List<MatchLineupPlayer.SectorAppearance> appearances = matchLineupPlayer.getMinutesInSectors();
+                        List<MatchLineupPosition.SectorAppearance> appearances = matchLineupPlayer.getMinutesInSectors();
                         for (var appearance : appearances) {
                             ret += trainingFactor * appearance.getMinutes() * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), appearance.getSector(), player.getAgeYears());
                         }

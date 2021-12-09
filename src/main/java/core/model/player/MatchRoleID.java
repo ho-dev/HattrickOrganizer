@@ -70,8 +70,9 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 
 	public static boolean isFieldMatchRoleId(int pos){return pos>=keeper && pos <=leftForward;}
 	public boolean isFieldMatchRoleId(){ return isFieldMatchRoleId(this.m_iId); }
-	public boolean isSubstitutesMatchRoleID () { return m_iId>=substGK1 && m_iId<= substXT1;}
-	public boolean isBackupsMatchRoleID(){ return m_iId>=substGK2 && m_iId<= substXT2;}
+	public boolean isSubstitutesMatchRoleId() { return m_iId>=substGK1 && m_iId<= substXT1;}
+	public boolean isBackupsMatchRoleId(){ return m_iId>=substGK2 && m_iId<= substXT2;}
+	public boolean isPenaltyTakerMatchRoleId(){ return m_iId>=penaltyTaker1 && m_iId<=penaltyTaker11;}
 
 	// It is much safer to have "empty" as 0, as it appears temp-players may
 	// get ID -1 - Blaghaid

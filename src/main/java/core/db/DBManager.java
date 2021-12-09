@@ -716,13 +716,14 @@ public class DBManager {
 	 * Gets match lineup players.
 	 *
 	 * @param matchID the match id
+	 * @param matchType
 	 * @param teamID  the team id
 	 * @return the match lineup players
 	 */
-	public Vector<MatchLineupPlayer> getMatchLineupPlayers(int matchID,
-			int teamID) {
+	public Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID,
+                                                             MatchType matchType, int teamID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
-				.getMatchLineupPlayers(matchID, teamID);
+				.getMatchLineupPlayers(matchID, matchType, teamID);
 	}
 
 	/**
@@ -731,7 +732,7 @@ public class DBManager {
 	 * @param objectPlayerID id of the player
 	 * @return stored lineup positions of the player
 	 */
-	public List<MatchLineupPlayer> getMatchInserts(int objectPlayerID) {
+	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.getMatchInserts(objectPlayerID);
 	}
@@ -1443,15 +1444,15 @@ public class DBManager {
 	/**
 	 * Returns an array with substitution belonging to the match-team.
 	 *
-	 * @param sourceSystem the source system
+	 * @param matchType  match type
 	 * @param teamId       The teamId for the team in question
 	 * @param matchId      The matchId for the match in question
 	 * @return the match substitutions by match team
 	 */
-	public List<Substitution> getMatchSubstitutionsByMatchTeam(int sourceSystem, int teamId,
-			int matchId) {
+	public List<Substitution> getMatchSubstitutionsByMatchTeam(int matchId, MatchType matchType,
+															   int teamId) {
 		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.getMatchSubstitutionsByMatchTeam(sourceSystem, teamId, matchId);
+				.getMatchSubstitutionsByMatchTeam(matchType.getId(), teamId, matchId);
 	}
 
 	/**

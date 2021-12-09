@@ -7,7 +7,7 @@ import core.model.player.MatchRoleID;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchLineupPlayer {
+public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private MatchType m_matchType;
@@ -24,16 +24,13 @@ public class MatchLineupPlayer {
     private int m_iStartBehavior = -1;
     private boolean startSetPiecesTaker = false;
 
-    // (final) lineup match role
-    private MatchRoleID matchRoleId;
-
 
     /**
-     * Creates a new instance of MatchLineupPlayer
+     * Creates a new instance of MatchLineupPosition
      */
-    public MatchLineupPlayer(MatchType matchType, int roleID, int behavior, int spielerID, double rating, String name,
-                             int status) {
-        this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
+    public MatchLineupPosition(MatchType matchType, int roleID, int behavior, int spielerID, double rating, String name,
+                               int status) {
+        super(roleID, spielerID, (byte) behavior);
 
         //erst mit neuer Version Namen aufsplitten
         //setName( name );
@@ -44,22 +41,22 @@ public class MatchLineupPlayer {
     }
 
     /**
-     * Creates a new instance of MatchLineupPlayer
+     * Creates a new instance of MatchLineupPosition
      */
-    public MatchLineupPlayer(MatchType matchType,
-                             int roleID,
-                             int behavior,
-                             int spielerID,
-                             double rating,
-                             String vname,
-                             String nickName,
-                             String name,
-                             int status,
-                             double ratingStarsEndOfMatch,
-                             int startPos,
-                             int startBeh,
-                             boolean startSetPieces) {
-        this.matchRoleId = new MatchRoleID(roleID, spielerID, (byte) behavior);
+    public MatchLineupPosition(MatchType matchType,
+                               int roleID,
+                               int behavior,
+                               int spielerID,
+                               double rating,
+                               String vname,
+                               String nickName,
+                               String name,
+                               int status,
+                               double ratingStarsEndOfMatch,
+                               int startPos,
+                               int startBeh,
+                               boolean startSetPieces) {
+        super(roleID, spielerID, (byte) behavior);
 
         m_matchType = matchType;
         m_sSpielerName = name;
@@ -74,22 +71,16 @@ public class MatchLineupPlayer {
     }
 
     public final int getRoleId() {
-        return this.matchRoleId.getId();
+        return this.getId();
     }
 
     public  void setRoleId(int roleId) {
-        this.matchRoleId.setId(roleId);
-    }
-
-    public final int getPlayerId(){
-        return this.matchRoleId.getPlayerId();
+        this.setId(roleId);
     }
 
     public final byte getBehaviour(){
-        return  this.matchRoleId.getTactic();
+        return  this.getTactic();
     }
-
-    public final int getSortId() { return this.matchRoleId.getSortId();}
 
     /**
      * Setter for property m_sNickName.
@@ -107,22 +98,6 @@ public class MatchLineupPlayer {
      */
     public final java.lang.String getNickName() {
         return m_sNickName;
-    }
-
-    /**
-     * Position information is a combination of role and behaviour
-     * @return MatchRoleId position info
-     */
-	public final byte getPosition() {
-        byte ret = this.matchRoleId.getPosition();
-
-        ///wenn pos nicht bestimmt werden kann dann die roleID zurückwerfen
-        if (ret == IMatchRoleID.UNKNOWN) {
-            //m_iId;
-            ret = (byte) getRoleId();
-        }
-
-        return ret;
     }
 
     /**
@@ -264,20 +239,12 @@ public class MatchLineupPlayer {
         }
     }
 
-    public SourceSystem getSourceSystem() {
-        return m_matchType.getSourceSystem();
-    }
-
     public MatchType getMatchType() {
         return m_matchType;
     }
 
     public void setMatchType(MatchType matchType) {
         m_matchType = matchType;
-    }
-
-    public MatchRoleID getMatchRole() {
-        return this.matchRoleId;
     }
 
     public boolean isStartSetPiecesTaker(){
@@ -288,55 +255,4 @@ public class MatchLineupPlayer {
         this.startSetPiecesTaker = b;
      }
 
-    private List<SectorAppearance> minutesInSectors;
-    public void addMinutesInSector(int minutes, Integer role) {
-        var minutesInSectors = getMinutesInSectors();
-        var size = minutesInSectors.size();
-        var sector = MatchRoleID.getSector(role);
-
-        if (size > 0) {
-            var last = minutesInSectors.get(minutesInSectors.size() - 1);
-            if (last.sector == sector) {
-                // prolong last entry
-                last.minutes += minutes;
-                return;
-            }
-        }
-        minutesInSectors.add(new SectorAppearance(minutes, sector));
-    }
-
-    public List<SectorAppearance> getMinutesInSectors() {
-        if ( minutesInSectors ==null){
-            minutesInSectors =new ArrayList<>();
-        }
-        return minutesInSectors;
-    }
-
-    public int getTrainingMinutesInAcceptedSectors(List<MatchRoleID.Sector> accepted){
-        int ret = 0;
-        for ( var app : getMinutesInSectors()){
-            if ( accepted == null || accepted.contains(app.sector)){
-                ret += app.minutes;
-                if ( ret >= 90){
-                    ret = 90;
-                    break;
-                }
-            }
-        }
-        return ret;
-    }
-
-
-    public class SectorAppearance {
-        MatchRoleID.Sector sector;
-        private int minutes;
-
-        public SectorAppearance(int minutes, MatchRoleID.Sector sector) {
-            this.sector=sector;
-            this.minutes=minutes;
-        }
-
-        public int getMinutes(){return minutes;}
-        public MatchRoleID.Sector getSector(){return sector;}
-    }
 }

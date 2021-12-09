@@ -14,8 +14,8 @@ public class MatchStatistics {
 		if (isOldie()) {
 			// Old match with no start lineup. Set start position like end
 			// position for all players.
-			Vector<MatchLineupPlayer> mlps = teamLineup.getLineup();
-			for (MatchLineupPlayer mlp : mlps) {
+			Vector<MatchLineupPosition> mlps = teamLineup.getLineup();
+			for (MatchLineupPosition mlp : mlps) {
 				mlp.setStartPosition(mlp.getRoleId());
 			}
 		}
@@ -55,8 +55,8 @@ public class MatchStatistics {
 	 */
 
 	private boolean isOldie() {
-		Vector<MatchLineupPlayer> mlps = teamLineup.getLineup();
-		for (MatchLineupPlayer mlp : mlps) {
+		Vector<MatchLineupPosition> mlps = teamLineup.getLineup();
+		for (MatchLineupPosition mlp : mlps) {
 			if (mlp.getStartPosition() > 0) {
 				return false;
 			}

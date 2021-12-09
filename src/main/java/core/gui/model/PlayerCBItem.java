@@ -1,7 +1,6 @@
 package core.gui.model;
 
 import core.datatype.ComboItem;
-import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.PlayerLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
@@ -53,7 +52,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
         if (player != null) {
             m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-                            .getPositionBySpielerId(player.getPlayerID()), getPositionsEvaluation(), m_bSetInBestPosition,
+                            .getPositionByPlayerId(player.getPlayerID()), getPositionsEvaluation(), m_bSetInBestPosition,
                     m_sText);
 
             JComponent comp = m_clEntry.getComponent(isSelected, index==-1);

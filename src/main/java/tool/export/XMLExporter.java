@@ -11,7 +11,7 @@ import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.Team;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
@@ -356,7 +356,7 @@ public class XMLExporter  {
 
 				//Player schreiben
 				for (int k = 0; (lineupTeam.getLineup() != null) && (k < lineupTeam.getLineup().size()); k++) {
-					MatchLineupPlayer playerMatch = lineupTeam.getLineup().get(k);
+					MatchLineupPosition playerMatch = lineupTeam.getLineup().get(k);
 					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
 
 					//Bank + verletzte überspringen
