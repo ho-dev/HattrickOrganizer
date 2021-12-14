@@ -61,6 +61,8 @@ final class DBUpdater {
 					case 499:
 						updateDBv500(DBVersion);
 					case 500:
+						updateDBv600(DBVersion);
+					case 600:
 				}
 
 			} catch (Exception e) {
@@ -69,6 +71,10 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv600(int dbVersion) throws SQLException {
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS MATCHLINEUPTEAM_IDX ON MATCHLINEUPTEAM (MatchID,TeamID,MatchTyp)");
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {

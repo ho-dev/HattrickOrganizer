@@ -175,9 +175,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return starsStatistics;
 	}
 
-
-	@Deprecated
-	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, int matchID, int teamID) {
+	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType,  int matchID, int teamID) {
 		if (matchLineupPosition != null) {
 			
 			// Need to check for spieler, there may now be multiple players with -1 role.
@@ -185,7 +183,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 
 			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchLineupPosition.getMatchType().getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId(), "" + matchLineupPosition.getPlayerId()};
+			final String[] werte = { "" + matchType.getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId(), "" + matchLineupPosition.getPlayerId()};
 			delete(where, werte);
 
 			//saven
@@ -196,7 +194,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
 						matchID + "," +
 						teamID	+ "," +
-						matchLineupPosition.getMatchType().getId() + "," +
+						matchType.getId() + "," +
 						matchLineupPosition.getPlayerId() + ","	+
 						matchLineupPosition.getRoleId() + "," +
 						matchLineupPosition.getBehaviour()	+ ","	+
@@ -282,7 +280,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			roleID = MatchRoleID.convertOldRoleToNew(roleID);
 
 			// Position code and field position was removed from constructor below.
-			var player = new MatchLineupPosition(matchType, roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
+			var player = new MatchLineupPosition(roleID, behavior, spielerID, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
 			vec.add(player);
 		}
 

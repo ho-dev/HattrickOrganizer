@@ -19,6 +19,36 @@ import static java.lang.Math.min;
 
 public class MatchLineupTeam {
 
+	/*
+	* usages:
+	* 1. in match details of played matches
+	* 2. match orders of upcoming matches
+	* 3. user stored lineups (matchId = -1, matchType=None, teamId=count (starting with -1 and decremented by 1)
+	 */
+
+	/**
+	 * match id
+	 * in case of played matches or match orders
+	 * -1 for user stored lineups
+	 */
+	private int matchId;
+	/**
+	 * lineup Id
+	 * equal to team Id in played matches or match orders
+	 * negative counter in user stored lineups
+	 */
+	private int teamId;
+	/**
+	 * match type
+	 * in case of played matches or match orders
+	 */
+	private MatchType matchType;
+
+	/**
+	 * team name
+	 * in case of played matches or match orders (own team name)
+	 * lineup name edited by user in case of user stored matches
+	 */
 	private String teamName;
 	//private Vector<MatchLineupPosition> lineup;
 	//private ArrayList<Substitution> substitutions;
@@ -26,16 +56,13 @@ public class MatchLineupTeam {
 	private Lineup lineup;
 
 	private int experience;
-	private int teamId;
 	// TODO move to Lineup
 	//  private StyleOfPlay styleOfPlay;
 	//private MatchTacticType matchTacticType;
 	//private MatchTeamAttitude matchTeamAttitude;
 
 	// null player to fill empty spots
-	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition(MatchType.NONE, -1, 0, -1, -1d, "", 0);
-	private MatchType matchType = MatchType.NONE;
-	private int matchId;
+	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition( -1, 0, -1, -1d, "", 0);
 	private Matchdetails matchdetails;
 
 	// ~ Constructors
@@ -56,10 +83,9 @@ public class MatchLineupTeam {
 	// ------------------------------------------------------------------------------------
 
 	/**
-	 * Setter for property m_vAufstellung.
+	 * Setter for property lineup.
 	 * 
-	 * @param m_vAufstellung
-	 *            New value of property m_vAufstellung.
+	 * @param lineup
 	 */
 	public final void setLineup(Lineup lineup) {
 		this.lineup = lineup;
@@ -154,18 +180,11 @@ public class MatchLineupTeam {
 	 * 
 	 * @return The object matching the criteria, or null if none found
 	 */
+	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeReplacedPlayers) {
+		return  (MatchLineupPosition)this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
+	}
 	public final MatchLineupPosition getPlayerByID(int playerId) {
-
-		MatchLineupPosition ret = (MatchLineupPosition)this.lineup.getPositionByPlayerId(playerId);
-/*		for (MatchLineupPosition player : getLineup()) {
-			if (player.getPlayerId() == playerId) {
-				if (player.getRoleId() != IMatchRoleID.captain && (player.getRoleId() != IMatchRoleID.setPieces)) {
-					return player;
-				}
-			}
-		}*/
-
-		return null;
+		return  (MatchLineupPosition)this.lineup.getPositionByPlayerId(playerId);
 	}
 
 	/**
@@ -188,25 +207,26 @@ public class MatchLineupTeam {
 	 *            New value of property m_iStyleOfPlay.
 	 */
 	public final void setStyleOfPlay(StyleOfPlay m_iStyleOfPlay) {
-		this.lineup.setStyleOfPlay(m_iStyleOfPlay.toInt());
+		this.lineup.setStyleOfPlay(StyleOfPlay.toInt(m_iStyleOfPlay));
 	}
 
 	public void calcStyleOfPlay (StyleOfPlay coachModifier) {
 		var trainerType = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
 		var tacticAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+		var styleOfPlay = StyleOfPlay.toInt(coachModifier);
 		switch (trainerType) {
 			case Defensive:
-				this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, coachModifier.toInt()));
+				this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, styleOfPlay));
 				break;
 			case Offensive:
-				this.lineup.setStyleOfPlay(max(10 - 2 * tacticAssistants, coachModifier.toInt()));
+				this.lineup.setStyleOfPlay(max(10 - 2 * tacticAssistants, styleOfPlay));
 				break;
 			default:
 			case Balanced:
-				if (coachModifier.toInt() >= 0) {
-					this.lineup.setStyleOfPlay(min(tacticAssistants, coachModifier.toInt()));
+				if (styleOfPlay >= 0) {
+					this.lineup.setStyleOfPlay(min(tacticAssistants, styleOfPlay));
 				} else {
-					this.lineup.setStyleOfPlay(max(tacticAssistants, coachModifier.toInt()));
+					this.lineup.setStyleOfPlay(max(tacticAssistants, styleOfPlay));
 				}
 				break;
 		}
@@ -226,14 +246,14 @@ public class MatchLineupTeam {
 	public static String getStyleOfPlayName(StyleOfPlay styleOfPlay) {
 		HOVerwaltung hov = HOVerwaltung.instance();
 		String s;
-		
-		if (styleOfPlay.toInt() == 0) {
+		var style = StyleOfPlay.toInt(styleOfPlay);
+		if (style == 0) {
 			return hov.getLanguageString("ls.team.styleofplay.neutral");
 		} else {
-			s = (styleOfPlay.toInt() > 0) ? hov.getLanguageString("ls.team.styleofplay.offensive") :
+			s = (style > 0) ? hov.getLanguageString("ls.team.styleofplay.offensive") :
 				hov.getLanguageString("ls.team.styleofplay.defensive"); 
 		}
-		return Math.abs(styleOfPlay.toInt() * 10) + "% " + s;
+		return Math.abs(style * 10) + "% " + s;
 	}
 	
 	/**
@@ -643,13 +663,7 @@ public class MatchLineupTeam {
 			playersMinutesInSector.put(playerId, minutesInSector);
 		}
 		else {
-			var m = minutesInSector.get(sector);
-			if ( m == null){
-				minutesInSector.put(sector, minutes);
-			}
-			else {
-				minutesInSector.put(sector, m+minutes);
-			}
+			minutesInSector.merge(sector, minutes, Integer::sum);
 		}
 	}
 
@@ -743,7 +757,7 @@ public class MatchLineupTeam {
 	}
 
 	public void setMatchTacticType(MatchTacticType matchTacticType) {
-		this.lineup.setTacticType(matchTacticType.toInt());
+		this.lineup.setTacticType(MatchTacticType.toInt(matchTacticType));
 	}
 
 	public MatchTeamAttitude getMatchTeamAttitude() {
@@ -751,7 +765,7 @@ public class MatchLineupTeam {
 	}
 
 	public void setMatchTeamAttitude(MatchTeamAttitude matchTeamAttitude) {
-		this.lineup.setAttitude(matchTeamAttitude.toInt());
+		this.lineup.setAttitude(MatchTeamAttitude.toInt(matchTeamAttitude));
 	}
 
 	public void loadLineup() {

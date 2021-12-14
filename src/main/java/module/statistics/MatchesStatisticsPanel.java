@@ -409,15 +409,15 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			// Infos zusammenstellen
 			for (int i = 0; i < anzahl; i++) {
-				Matchdetails details = matchkurzinfos[matchkurzinfos.length - i - 1].getMatchdetails();
+				var match = matchkurzinfos[matchkurzinfos.length - i - 1];
+				Matchdetails details = match.getMatchdetails();
 
-				int bewertungwert = 0;
-				double loddarStats = 0;
+				int bewertungwert;
 				// Für match
-				int sublevel = 0;
+				int sublevel;
 
 				// Für gesamtstärke
-				double temp = 0d;
+				double temp;
 
 				if (details.getHomeTeamId() == teamid) {
 					sublevel = calcSublevel(details.getHomeMidfield());
@@ -508,19 +508,15 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				}
 
 				// Stimmung, Selbstvertrauen
-				int hrfid = DBManager.instance().getHRFID4Date(
-						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchDateAsTimestamp());
-				int[] stimmungSelbstvertrauen = DBManager.instance()
-						.getStimmmungSelbstvertrauenValues(hrfid);
+				int hrfid = DBManager.instance().getHRFID4Date(match.getMatchDateAsTimestamp());
+				int[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauenValues(hrfid);
 
 				statistikWerte[9][i] = stimmungSelbstvertrauen[0];
 				statistikWerte[10][i] = stimmungSelbstvertrauen[1];
 
-				statistikWerte[13][i] = matchkurzinfos[matchkurzinfos.length - i - 1]
-						.getMatchDateAsTimestamp().getTime();
+				statistikWerte[13][i] = match.getMatchDateAsTimestamp().getTime();
 
-				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(
-						matchkurzinfos[matchkurzinfos.length - i - 1].getMatchID(), this.matchType, teamid);
+				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(match.getMatchID(), match.getMatchType(), teamid);
 				float sterne = 0;
 
 				// Sterne
@@ -540,36 +536,32 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length];
 
-			if (statistikWerte.length > 0) {
-				models[0] = new LinesChartDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(),
-
-						Colors.getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
-				models[1] = new LinesChartDataModel(statistikWerte[1], "ls.match.ratingsector.midfield", c_jcbMidfield.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_MID), Helper.DEFAULTDEZIMALFORMAT);
-				models[2] = new LinesChartDataModel(statistikWerte[2],"ls.match.ratingsector.rightdefence", c_jcbRightDefence.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_RD),	Helper.DEFAULTDEZIMALFORMAT);
-				models[3] = new LinesChartDataModel(statistikWerte[3], 	"ls.match.ratingsector.centraldefence", c_jcbCentralDefence.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_CD),	Helper.DEFAULTDEZIMALFORMAT);
-				models[4] = new LinesChartDataModel(statistikWerte[4],"ls.match.ratingsector.leftdefence", c_jcbRightDefence.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_LD),	Helper.DEFAULTDEZIMALFORMAT);
-				models[5] = new LinesChartDataModel(statistikWerte[5],"ls.match.ratingsector.rightattack", c_jcbRightAttack.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_RA),	Helper.DEFAULTDEZIMALFORMAT);
-				models[6] = new LinesChartDataModel(statistikWerte[6],"ls.match.ratingsector.centralattack", c_jcbCentralAttack.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_CA),	Helper.DEFAULTDEZIMALFORMAT);
-				models[7] = new LinesChartDataModel(statistikWerte[7],"ls.match.ratingsector.leftattack", c_jcbLeftAttack.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_LA), Helper.DEFAULTDEZIMALFORMAT);
-				models[8] = new LinesChartDataModel(statistikWerte[8], "Gesamtstaerke", c_jcbTotalStrength.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH),	Helper.DEZIMALFORMAT_2STELLEN);
-				models[9] = new LinesChartDataModel(statistikWerte[9], "ls.team.teamspirit", c_jcbTeamSpirit.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_TS),	Helper.INTEGERFORMAT);
-				models[10] = new LinesChartDataModel(statistikWerte[10], "ls.team.confidence",	c_jcbConfidence.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_CONFIDENCE), Helper.INTEGERFORMAT);
-				models[11] = new LinesChartDataModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
-						c_jcbHatStats.isSelected(),	Colors.getColor(Colors.COLOR_TEAM_HATSTATS), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
-				models[12] = new LinesChartDataModel(statistikWerte[12],	"ls.match.ratingtype.loddarstats", c_jcbLoddarStats.isSelected(),
-						Colors.getColor(Colors.COLOR_TEAM_LODDAR),	SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
-			}
-
+			models[0] = new LinesChartDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
+			models[1] = new LinesChartDataModel(statistikWerte[1], "ls.match.ratingsector.midfield", c_jcbMidfield.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_MID), Helper.DEFAULTDEZIMALFORMAT);
+			models[2] = new LinesChartDataModel(statistikWerte[2],"ls.match.ratingsector.rightdefence", c_jcbRightDefence.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_RD),	Helper.DEFAULTDEZIMALFORMAT);
+			models[3] = new LinesChartDataModel(statistikWerte[3], 	"ls.match.ratingsector.centraldefence", c_jcbCentralDefence.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_CD),	Helper.DEFAULTDEZIMALFORMAT);
+			models[4] = new LinesChartDataModel(statistikWerte[4],"ls.match.ratingsector.leftdefence", c_jcbRightDefence.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_LD),	Helper.DEFAULTDEZIMALFORMAT);
+			models[5] = new LinesChartDataModel(statistikWerte[5],"ls.match.ratingsector.rightattack", c_jcbRightAttack.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_RA),	Helper.DEFAULTDEZIMALFORMAT);
+			models[6] = new LinesChartDataModel(statistikWerte[6],"ls.match.ratingsector.centralattack", c_jcbCentralAttack.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_CA),	Helper.DEFAULTDEZIMALFORMAT);
+			models[7] = new LinesChartDataModel(statistikWerte[7],"ls.match.ratingsector.leftattack", c_jcbLeftAttack.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_LA), Helper.DEFAULTDEZIMALFORMAT);
+			models[8] = new LinesChartDataModel(statistikWerte[8], "Gesamtstaerke", c_jcbTotalStrength.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH),	Helper.DEZIMALFORMAT_2STELLEN);
+			models[9] = new LinesChartDataModel(statistikWerte[9], "ls.team.teamspirit", c_jcbTeamSpirit.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_TS),	Helper.INTEGERFORMAT);
+			models[10] = new LinesChartDataModel(statistikWerte[10], "ls.team.confidence",	c_jcbConfidence.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_CONFIDENCE), Helper.INTEGERFORMAT);
+			models[11] = new LinesChartDataModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
+					c_jcbHatStats.isSelected(),	Colors.getColor(Colors.COLOR_TEAM_HATSTATS), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
+			models[12] = new LinesChartDataModel(statistikWerte[12],	"ls.match.ratingtype.loddarstats", c_jcbLoddarStats.isSelected(),
+					Colors.getColor(Colors.COLOR_TEAM_LODDAR),	SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, Helper.DEFAULTDEZIMALFORMAT, 0d, true);
 
 			c_jpChart.setAllValues(models, statistikWerte[13], Helper.DEFAULTDEZIMALFORMAT,
 					getLangStr("Spiele"), null, false, c_jcbHelpLines.isSelected());
@@ -584,7 +576,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 	}
 
 	private CBItem[] getMatchFilterItems() {
-		CBItem[] items = {
+		return new CBItem[]{
 				new CBItem(getLangStr("NurEigeneSpiele"), MatchesPanel.OWN_GAMES
 						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(getLangStr("NurEigenePflichtspiele"),
@@ -603,7 +595,6 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 								+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
 				new CBItem(getLangStr("NurEigeneTournamentsspiele"),
 						MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE + MatchesPanel.NUR_GESPIELTEN_SPIELE) };
-		return items;
 	}
 
 	private String getLangStr(String key) {

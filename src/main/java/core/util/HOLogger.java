@@ -1,6 +1,5 @@
 package core.util;
 
-import core.db.user.User;
 import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
 import java.io.File;
@@ -34,7 +33,7 @@ public class HOLogger {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String fileName = "HO-" + dateFormat.format(new Date()) + ".log";
 		String errorMsg;
-		Boolean logFolderExist = true;
+		boolean logFolderExist = true;
 
 		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
 		logsFolder = new File(logsFolderName);
@@ -53,7 +52,7 @@ public class HOLogger {
 			File logFile = new File(logsFolder, fileName);
 
 			if (logFile.exists()) {
-				if (! logFile.delete()) {System.err.println("Unable to delete " + logFile.toString());}
+				if (! logFile.delete()) {System.err.println("Unable to delete " + logFile);}
 			}
 
 			logWriter = new FileWriter(logFile);
@@ -70,11 +69,11 @@ public class HOLogger {
 		ExampleFileFilter filter = new ExampleFileFilter("log");
 		filter.setIgnoreDirectories(true);
 		File[] files = dir.listFiles(filter);
-		for (File file : files) {
+		for (var file : files) {
 			long diff = System.currentTimeMillis() - file.lastModified();
 			long days = (diff / (1000 * 60 * 60 * 24));
 			if (days > 90)
-				if (! file.delete()) {System.err.println("Unable to delete " + file.toString());}
+				if (! file.delete()) {System.err.println("Unable to delete " + file);}
 		}
 	}
 	
@@ -135,19 +134,12 @@ public class HOLogger {
 			text = String.valueOf(obj);
 		}
 
-		switch (level) {
-		case DEBUG:
-			msg = " [Debug]   ";
-			break;
-		case WARNING:
-			msg = " [Warning] ";
-			break;
-		case ERROR:
-			msg = " [Error]   ";
-			break;
-		default:
-			msg = " [Info]    ";
-		}
+		msg = switch (level) {
+			case DEBUG -> " [Debug]   ";
+			case WARNING -> " [Warning] ";
+			case ERROR -> " [Error]   ";
+			default -> " [Info]    ";
+		};
 
 		if (level < logLevel) {
 			return;

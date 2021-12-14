@@ -110,7 +110,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		if (!enabled){
 			m_iAttitude = MatchTeamAttitude.Normal; // core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
 		}
-		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude.toInt());
+		Helper.setComboBoxFromID(m_jcbTeamAttitude, MatchTeamAttitude.toInt(m_iAttitude));
 		m_jcbTeamAttitude.setEnabled(enabled);
 	}
 
@@ -151,11 +151,11 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		// refresh lineup settings
-		m_iTactic = lineup.getTacticType();
-		Helper.setComboBoxFromID(m_jcbTactic, m_iTactic);
-		m_iAttitude = lineup.getAttitude();
-		Helper.setComboBoxFromID(m_jcbTeamAttitude, m_iAttitude);
-		m_iStyleOfPlay = lineup.getStyleOfPlay();
+		m_iTactic = MatchTacticType.fromInt(lineup.getTacticType());
+		Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
+		m_iAttitude = MatchTeamAttitude.fromInt(lineup.getAttitude());
+		Helper.setComboBoxFromID(m_jcbTeamAttitude, lineup.getAttitude());
+		m_iStyleOfPlay = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
 		updateStyleOfPlayComboBox(m_iStyleOfPlay);
 
 		for (Player player: allPlayers) {
@@ -272,8 +272,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_jpTeamAttitude);
 		// Initialize attitude CB
 		var isCompetitive = this.m_clLineupPanel.isSelectedMatchCompetitive();
+		var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		if (isCompetitive) {
-			m_iAttitude = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAttitude();
+			m_iAttitude = MatchTeamAttitude.fromInt(lineup.getAttitude());
 		}
 
 		//After initialization this is set via listener on MatchAndLineupSelectionPanel.m_jcbUpcomingGames
@@ -303,12 +304,12 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_jpTactic);
 
 		// Initialize tactic CB
-		m_iTactic = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getTacticType();
-		Helper.setComboBoxFromID(m_jcbTactic, m_iTactic);
+		m_iTactic = MatchTacticType.fromInt(lineup.getTacticType());
+		Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
 
 		// Style of Play ================================================================
 		m_jcbStyleOfPlay = new JComboBox<>();
-		m_iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
+		m_iStyleOfPlay = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
 		updateStyleOfPlayComboBox(m_iStyleOfPlay);
 
 		m_jpStyleOfPlay = new ComboBoxTitled(getLangStr("ls.team.styleofPlay"), m_jcbStyleOfPlay, true);
@@ -318,8 +319,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		centerPanel.add(m_jpStyleOfPlay);
 
 		// Initialize Style of play CB
-		m_iStyleOfPlay = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getStyleOfPlay();
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, m_iStyleOfPlay);
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, lineup.getStyleOfPlay());
 
 
 		// WBr ==========================================================================
@@ -553,18 +553,21 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		cbActionListener = e -> {
 			if (e.getSource().equals(m_jcbStyleOfPlay)) {
 				// StyleOfPlay changed (directly or indirectly)
-				m_iStyleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setStyleOfPlay(m_iStyleOfPlay);
+				var styleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
+				this.m_iStyleOfPlay = StyleOfPlay.fromInt(styleOfPlay);
+				lineup.setStyleOfPlay(styleOfPlay);
 				m_clLineupPanel.refreshLineupRatingPanel();
 			} else if (e.getSource().equals(m_jcbTeamAttitude)) {
 				// Attitude changed
-				m_iAttitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setAttitude(m_iAttitude);
+				var attitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
+				m_iAttitude = MatchTeamAttitude.fromInt(attitude);
+				lineup.setAttitude(attitude);
 				m_clLineupPanel.refreshLineupRatingPanel();
 			} else if (e.getSource().equals(m_jcbTactic)) {
 				// Tactic changed
-				m_iTactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(m_iTactic);
+				var tactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
+				this.m_iTactic = MatchTacticType.fromInt(tactic);
+				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(tactic);
 				m_clLineupPanel.refreshLineupRatingPanel();
 			}
 		};
@@ -696,7 +699,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	}
 
 	public void setStyleOfPlay(StyleOfPlay style){
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, style.val);
+		Helper.setComboBoxFromID(m_jcbStyleOfPlay, StyleOfPlay.toInt(style));
 	}
 
 	private StyleOfPlay getDefaultTrainerStyleOfPlay() {

@@ -143,17 +143,17 @@ public class MatchOrderTable extends AbstractTable {
 	/**
 	 * Insert match order
 	 *
-	 * @param linueup:		match lineup
+	 * @param lineup:		match lineup
 	 * @param matchId:		match id
 	 *
 	 * output:
 	 * @param lineupPos:	match lineup position
 	 */
-	private void insertMatchOrder(Lineup linueup, int matchId, int iMatchType, LineupPosition lineupPos) {
-		for (int i = 0;(linueup.getPositionen() != null) && (i < linueup.getPositionen().size()); i++) {
-
-			int m_iId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getId();
-			int m_iSpielerId = ((MatchRoleID) linueup.getPositionen().elementAt(i)).getPlayerId();
+	private void insertMatchOrder(Lineup lineup, int matchId, int iMatchType, LineupPosition lineupPos) {
+		for ( var pos : lineup.getAllPositions() ){
+			var matchRoleId = (MatchRoleID)pos;
+			int m_iId = matchRoleId.getId();
+			int m_iSpielerId = matchRoleId.getPlayerId();
 
 			String statement = "INSERT INTO " + getTableName() + " ( MatchID, MatchTyp, SpielerID, PositionCode) VALUES(";
 			statement += ("" + matchId + "," + iMatchType + "," + m_iSpielerId + "," + m_iId + ")");

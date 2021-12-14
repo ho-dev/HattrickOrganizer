@@ -154,9 +154,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 			// Sterneanzahl
 			double heimSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), this.matchType, info.getHomeTeamID()));
+					info.getMatchID(), info.getMatchType(), info.getHomeTeamID()));
 			double gastSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), this.matchType, info.getGuestTeamID()));
+					info.getMatchID(), info.getMatchType(), info.getGuestTeamID()));
 			heimSterneLabel.setText(Helper.round(heimSterne, 1) + " ");
 			gastSterneLabel.setText(Helper.round(gastSterne, 1) + " ");
 

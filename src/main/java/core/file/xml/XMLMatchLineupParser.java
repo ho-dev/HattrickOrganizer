@@ -166,15 +166,13 @@ public class XMLMatchLineupParser {
 			}
 		}
 
-		MatchLineupPosition player = new MatchLineupPosition(matchType, roleID, behavior, spielerID, rating, name, 0);
+		MatchLineupPosition player = new MatchLineupPosition(roleID, behavior, spielerID, rating, name, 0);
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
 
 	/**
 	 * Get string content of ELement. If content is empty an empty string is returned.
-	 * @param tmp
-	 * @return String content of Element
 	 */
 	private static String getStringValue(Element tmp) {
 		if ( tmp.getFirstChild()!=null) return tmp.getFirstChild().getNodeValue();
@@ -262,12 +260,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Lineup(new MatchLineupPosition(matchType, -1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Lineup(new MatchLineupPosition(matchType, -1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}

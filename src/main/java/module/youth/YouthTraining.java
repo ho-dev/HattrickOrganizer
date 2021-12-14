@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.*;
+import core.model.player.MatchRoleID;
 import module.lineup.substitution.model.MatchOrderType;
 import module.training.Skills;
 
@@ -58,7 +59,8 @@ public class YouthTraining {
     public void recalcSkills() {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
 
-        for (var player : team.getLineup()) {
+        for (var matchRoleId : team.getLineup().getFieldPositions()) {
+            var player = (MatchRoleID)matchRoleId;
             recalcSkills(player.getPlayerId());
         }
         for (var subs : team.getSubstitutions()) {
@@ -199,12 +201,9 @@ public class YouthTraining {
                     if (primaryTraining == null) primaryTraining = train;
                 } else {
                     // Calc Individual training
-                    var matchLineupPlayer = lineupTeam.getPlayerByID(player.getId());
-                    if (matchLineupPlayer != null) {
-                        List<MatchLineupPosition.SectorAppearance> appearances = matchLineupPlayer.getMinutesInSectors();
-                        for (var appearance : appearances) {
-                            ret += trainingFactor * appearance.getMinutes() * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), appearance.getSector(), player.getAgeYears());
-                        }
+                    var minutesInSectors = lineupTeam.getTrainMinutesPlayedInSectors(player.getId());
+                    for ( var s : minutesInSectors.entrySet()){
+                        ret += trainingFactor * s.getValue() * train.calcSkillIncrementPerMinute(value.getSkillID(), (int) value.getCurrentValue(), s.getKey(), player.getAgeYears());
                     }
                 }
             }
@@ -226,20 +225,15 @@ public class YouthTraining {
         var ret = new StringBuilder();
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
-        //var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
-        var player = lineupTeam.getPlayerByID(playerId);
-        if (player != null) {
-            var sectors = player.getMinutesInSectors();
-            for (var s : sectors) {
-                ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getSector()))
-                        .append(":")
-                        .append(s.getMinutes())
-                        .append(" ");
-            }
+        var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
+        for ( var s : sectors.entrySet()){
+            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
+                    .append(":")
+                    .append(s.getValue())
+                    .append(" ");
         }
         return ret.toString();
     }
-
 
     static final double fullTrainingsPerWeek = (6 * 21 + 44 * TRAINING_FRIENDLYFACTOR) / (21 * 44) * 7;
     static final double equalTrainings = 1.33;

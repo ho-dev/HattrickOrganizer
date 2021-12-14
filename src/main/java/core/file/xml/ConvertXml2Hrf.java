@@ -49,10 +49,6 @@ public class ConvertXml2Hrf {
 
 	/**
 	 * Create the HRF data and return it in one string.
-	 *
-	 * <p>The HRF file is built using data downloaded from various CHPP endpoints.
-	 * 
-	 * @throws IOException
 	 */
 	public static @Nullable String createHrf() throws IOException {
 		// init
@@ -439,8 +435,8 @@ public class ConvertXml2Hrf {
 				.append('\n');
 
 		try {
-			buffer.append("installning=").append(matchLineupTeam.getMatchTeamAttitude().toInt()).append('\n');
-			buffer.append("tactictype=").append(matchLineupTeam.getMatchTacticType().toInt()).append('\n');
+			buffer.append("installning=").append(MatchTeamAttitude.toInt(matchLineupTeam.getMatchTeamAttitude())).append('\n');
+			buffer.append("tactictype=").append(MatchTacticType.toInt(matchLineupTeam.getMatchTacticType())).append('\n');
 			// The field is coachmodifier in matchOrders and StyleOfPlay in MatchLineup
 			// but we both named it styleOfPlay
 			buffer.append("styleOfPlay=").append(matchLineupTeam.getStyleOfPlay()).append('\n');
@@ -664,8 +660,6 @@ public class ConvertXml2Hrf {
 	 *            The playerId of the trainer of the club.
 	 * @param nextLineup
 	 *            The lineup info hashmap from the parser.
-	 * @return
-	 * @throws Exception
 	 */
 	public static String createLineUp(String trainerId, Map<String, String> nextLineup) {
 		StringBuilder buffer = new StringBuilder();
@@ -767,99 +761,99 @@ public class ConvertXml2Hrf {
 		for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
 			var ht = playersData.get(i);
 
-			buffer.append("[player").append(ht.get("PlayerID").toString())
+			buffer.append("[player").append(ht.get("PlayerID"))
 					.append(']').append('\n');
 
-			if (ht.get("NickName").toString().length() > 0) {
+			if (ht.get("NickName").length() > 0) {
 				buffer.append("name=");
-				buffer.append(ht.get("FirstName").toString()).append(" '");
-				buffer.append(ht.get("NickName").toString()).append("' ");
-				buffer.append(ht.get("LastName").toString()).append('\n');
+				buffer.append(ht.get("FirstName")).append(" '");
+				buffer.append(ht.get("NickName")).append("' ");
+				buffer.append(ht.get("LastName")).append('\n');
 			} else {
 				buffer.append("name=");
-				buffer.append(ht.get("FirstName").toString()).append(' ');
-				buffer.append(ht.get("LastName").toString()).append('\n');
+				buffer.append(ht.get("FirstName")).append(' ');
+				buffer.append(ht.get("LastName")).append('\n');
 			}
-			buffer.append("firstname=").append(ht.get("FirstName").toString())
+			buffer.append("firstname=").append(ht.get("FirstName"))
 					.append('\n');
-			buffer.append("nickname=").append(ht.get("NickName").toString())
+			buffer.append("nickname=").append(ht.get("NickName"))
 					.append('\n');
-			buffer.append("lastname=").append(ht.get("LastName").toString())
+			buffer.append("lastname=").append(ht.get("LastName"))
 					.append('\n');
-			buffer.append("ald=").append(ht.get("Age").toString()).append('\n');
-			buffer.append("agedays=").append(ht.get("AgeDays").toString())
+			buffer.append("ald=").append(ht.get("Age")).append('\n');
+			buffer.append("agedays=").append(ht.get("AgeDays"))
 					.append('\n');
-			buffer.append("ska=").append(ht.get("InjuryLevel").toString())
+			buffer.append("ska=").append(ht.get("InjuryLevel"))
 					.append('\n');
-			buffer.append("for=").append(ht.get("PlayerForm").toString())
+			buffer.append("for=").append(ht.get("PlayerForm"))
 					.append('\n');
-			buffer.append("uth=").append(ht.get("StaminaSkill").toString())
+			buffer.append("uth=").append(ht.get("StaminaSkill"))
 					.append('\n');
-			buffer.append("spe=").append(ht.get("PlaymakerSkill").toString())
+			buffer.append("spe=").append(ht.get("PlaymakerSkill"))
 					.append('\n');
-			buffer.append("mal=").append(ht.get("ScorerSkill").toString())
+			buffer.append("mal=").append(ht.get("ScorerSkill"))
 					.append('\n');
-			buffer.append("fra=").append(ht.get("PassingSkill").toString())
+			buffer.append("fra=").append(ht.get("PassingSkill"))
 					.append('\n');
-			buffer.append("ytt=").append(ht.get("WingerSkill").toString())
+			buffer.append("ytt=").append(ht.get("WingerSkill"))
 					.append('\n');
-			buffer.append("fas=").append(ht.get("SetPiecesSkill").toString())
+			buffer.append("fas=").append(ht.get("SetPiecesSkill"))
 					.append('\n');
-			buffer.append("bac=").append(ht.get("DefenderSkill").toString())
+			buffer.append("bac=").append(ht.get("DefenderSkill"))
 					.append('\n');
-			buffer.append("mlv=").append(ht.get("KeeperSkill").toString())
+			buffer.append("mlv=").append(ht.get("KeeperSkill"))
 					.append('\n');
-			buffer.append("rut=").append(ht.get("Experience").toString())
+			buffer.append("rut=").append(ht.get("Experience"))
 					.append('\n');
-			buffer.append("loy=").append(ht.get("Loyalty").toString())
+			buffer.append("loy=").append(ht.get("Loyalty"))
 					.append('\n');
 			buffer.append("homegr=")
-					.append(ht.get("MotherClubBonus").toString()).append('\n');
-			buffer.append("led=").append(ht.get("Leadership").toString())
+					.append(ht.get("MotherClubBonus")).append('\n');
+			buffer.append("led=").append(ht.get("Leadership"))
 					.append('\n');
-			buffer.append("sal=").append(ht.get("Salary").toString())
+			buffer.append("sal=").append(ht.get("Salary"))
 					.append('\n');
-			buffer.append("mkt=").append(ht.get("MarketValue").toString())
+			buffer.append("mkt=").append(ht.get("MarketValue"))
 					.append('\n');
-			buffer.append("gev=").append(ht.get("CareerGoals").toString())
+			buffer.append("gev=").append(ht.get("CareerGoals"))
 					.append('\n');
-			buffer.append("gtl=").append(ht.get("LeagueGoals").toString())
+			buffer.append("gtl=").append(ht.get("LeagueGoals"))
 					.append('\n');
-			buffer.append("gtc=").append(ht.get("CupGoals").toString())
+			buffer.append("gtc=").append(ht.get("CupGoals"))
 					.append('\n');
-			buffer.append("gtt=").append(ht.get("FriendliesGoals").toString())
+			buffer.append("gtt=").append(ht.get("FriendliesGoals"))
 					.append('\n');
-			buffer.append("hat=").append(ht.get("CareerHattricks").toString())
+			buffer.append("hat=").append(ht.get("CareerHattricks"))
 					.append('\n');
-			buffer.append("CountryID=").append(ht.get("CountryID").toString())
+			buffer.append("CountryID=").append(ht.get("CountryID"))
 					.append('\n');
-			buffer.append("warnings=").append(ht.get("Cards").toString())
+			buffer.append("warnings=").append(ht.get("Cards"))
 					.append('\n');
-			buffer.append("speciality=").append(ht.get("Specialty").toString())
+			buffer.append("speciality=").append(ht.get("Specialty"))
 					.append('\n');
 			buffer.append("specialityLabel=")
 					.append(PlayerSpeciality.toString(Integer.parseInt(ht.get(
-							"Specialty").toString()))).append('\n');
+							"Specialty")))).append('\n');
 			buffer.append("gentleness=")
-					.append(ht.get("Agreeability").toString()).append('\n');
+					.append(ht.get("Agreeability")).append('\n');
 			buffer.append("gentlenessLabel=")
 					.append(PlayerAgreeability.toString(Integer.parseInt(ht
-							.get("Agreeability").toString()))).append('\n');
-			buffer.append("honesty=").append(ht.get("Honesty").toString()).append('\n');
+							.get("Agreeability")))).append('\n');
+			buffer.append("honesty=").append(ht.get("Honesty")).append('\n');
 			buffer.append("honestyLabel=")
 					.append(PlayerHonesty.toString(Integer.parseInt(ht.get(
-							"Honesty").toString()))).append('\n');
+							"Honesty")))).append('\n');
 			buffer.append("Aggressiveness=")
-					.append(ht.get("Aggressiveness").toString()).append('\n');
+					.append(ht.get("Aggressiveness")).append('\n');
 			buffer.append("AggressivenessLabel=")
 					.append(PlayerAggressiveness.toString(Integer.parseInt(ht
-							.get("Aggressiveness").toString()))).append('\n');
+							.get("Aggressiveness")))).append('\n');
 
 			if (ht.get("TrainerSkill") != null) {
 				buffer.append("TrainerType=")
-						.append(ht.get("TrainerType").toString()).append('\n');
+						.append(ht.get("TrainerType")).append('\n');
 				buffer.append("TrainerSkill=")
-						.append(ht.get("TrainerSkill").toString()).append('\n');
+						.append(ht.get("TrainerSkill")).append('\n');
 			} else {
 				buffer.append("TrainerType=").append('\n');
 				buffer.append("TrainerSkill=").append('\n');
@@ -868,31 +862,28 @@ public class ConvertXml2Hrf {
 				buffer.append("LastMatch_Date=")
 						.append(ht.get("LastMatch_Date")).append('\n');
 				buffer.append("LastMatch_Rating=")
-						.append(ht.get("LastMatch_Rating").toString()).append('\n');
+						.append(ht.get("LastMatch_Rating")).append('\n');
 				buffer.append("LastMatch_id=")
-						.append(ht.get("LastMatch_id").toString()).append('\n');
+						.append(ht.get("LastMatch_id")).append('\n');
 			} else {
 				buffer.append("LastMatch_Date=").append('\n');
 				buffer.append("LastMatch_Rating=").append('\n');
 				buffer.append("LastMatch_id=0").append('\n');
 			}
 
-			String lastMatchType = (String) ht.getOrDefault("LastMatch_Type", "0");
+			String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");
 			buffer.append("LastMatch_Type=")
 					.append(lastMatchType)
 					.append('\n');
 
 			if ((matchLineupTeam != null)
-					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get(
-					"PlayerID").toString())) != null)
-					&& (matchLineupTeam.getPlayerByID(
-							Integer.parseInt(ht.get("PlayerID").toString()))
+					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))) != null)
+					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID")))
 					.getRating() >= 0)) {
 				buffer.append("rating=")
 						.append((int) (matchLineupTeam
 								.getPlayerByID(
-										Integer.parseInt(ht.get("PlayerID")
-												.toString())).getRating() * 2))
+										Integer.parseInt(ht.get("PlayerID"))).getRating() * 2))
 						.append('\n');
 			} else {
 				buffer.append("rating=0").append('\n');

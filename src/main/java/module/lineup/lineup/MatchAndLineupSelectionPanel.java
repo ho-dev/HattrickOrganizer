@@ -311,7 +311,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 oTeam.setHomeMatch(false);
             }
             oTeam.setTime(match.getMatchDateAsTimestamp());
-            oTeam.setMatchType(match.getMatchTypeExtended().getIconArrayIndex());
+            oTeam.setMatchType(match.getMatchType()); // TODO: was iconArrayIndex
             oTeam.setMatchID(match.getMatchID());
 
             m_jcbLoadLineup.addItem(oTeam);
@@ -388,19 +388,17 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         lineup.clearLineup();
 
-        if (m_jcbLoadLineup.getSelectedItem() != null){
+        if (m_jcbLoadLineup.getSelectedItem() != null) {
             lineupPanel.setAssistantGroupFilter(false);
-            int iMatchID = ((Team)(m_jcbLoadLineup.getSelectedItem())).getMatchID();
-            Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(iMatchID, this.matchType, OWN_TEAM_ID);
+            var team = (Team) m_jcbLoadLineup.getSelectedItem();
+            Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(team.getMatchID(), team.getMatchType(), OWN_TEAM_ID);
             if (lineupPlayers != null) {
                 for (MatchLineupPosition lineupPlayer : lineupPlayers) {
                     if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
                         lineup.setKicker(lineupPlayer.getPlayerId());
-                    }
-                    else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
+                    } else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
                         lineup.setCaptain(lineupPlayer.getPlayerId());
-                    }
-                    else {
+                    } else {
                         lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
                     }
                 }
@@ -409,7 +407,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         lineupPanel.update();
 
-        }
+    }
 
     private void downloadLineupFromHT() {
 

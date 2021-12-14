@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.util.HTDatetime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
@@ -64,8 +65,8 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
 
 
 
-        if (value.getMatchType() != -1) {
-           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType()]));
+        if (value.getMatchType() != MatchType.NONE) {
+           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType().getId()-1]));
         }
         else {
             setIcon(ThemeManager.getIcon(HOIconName.EMPTY));

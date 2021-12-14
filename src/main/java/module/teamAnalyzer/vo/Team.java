@@ -1,6 +1,8 @@
 // %193722072:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.model.enums.MatchType;
+
 /**
  * Team Object Class
  *
@@ -20,7 +22,8 @@ public class Team implements Comparable<Team> {
     // A hack for custom coloring of tournament teams in a renderer
     private boolean tournament = false;
 
-    private int matchType = -1;
+    private MatchType matchType;
+
     // Timestamp when next match is played
     private java.sql.Timestamp time;
 
@@ -51,11 +54,11 @@ public class Team implements Comparable<Team> {
         return teamId;
     }
 
-    public void setMatchType(int matchType) {
+    public void setMatchType(MatchType matchType) {
         this.matchType = matchType;
     }
 
-    public int getMatchType() {
+    public MatchType getMatchType() {
         return matchType;
     }
 

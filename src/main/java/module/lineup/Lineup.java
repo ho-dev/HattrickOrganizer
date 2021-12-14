@@ -7,10 +7,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.Team;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPosition;
-import core.model.match.Weather;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -79,6 +76,10 @@ public class Lineup{
 	@Expose
 	private int m_iKicker = -1;
 
+	private Vector<IMatchRoleID> replacedPositions = new Vector<>();
+	IMatchRoleID captain;
+	IMatchRoleID setPiecesTaker;
+
 	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
 		for ( var position : matchLineupPositions){
 			addPosition(position);
@@ -101,6 +102,9 @@ public class Lineup{
 		}
 		else if ( position.getId() == IMatchRoleID.captain){
 			this.m_iKapitaen = position.getPlayerId();
+		}
+		else if ( position.isReplacedMatchRoleId()){
+			this.replacedPositions.add(position);
 		}
 	}
 
@@ -517,8 +521,6 @@ public class Lineup{
 
 	/**
 	 * This version of the function is called during HOModel creation to avoid back looping
-	 *
-	 * @param hrfID
 	 */
 	 public void setRatings(int hrfID) {
 		 final RatingPredictionManager rpManager;
@@ -750,7 +752,6 @@ public class Lineup{
 	 * Umrechnung von double auf 1-80 int
 	 * 
 	 * @deprecated use RatingUtil.getIntValue4Rating(double rating) instead
-	 * @rating
 	 */
 	@Deprecated
 	public final int getIntValue4Rating(double rating) {
@@ -820,8 +821,13 @@ public class Lineup{
 	 * Get the position object by player id.
 	 */
 	public final MatchRoleID getPositionByPlayerId(int playerid) {
+		return getPositionByPlayerId(playerid, false);
+	}
+
+	public final MatchRoleID getPositionByPlayerId(int playerid, boolean includeReplacedPlayers) {
 		MatchRoleID ret = getPositionByPlayerId(playerid, m_vFieldPositions);
 		if ( ret == null ) ret = getPositionByPlayerId(playerid, m_vBenchPositions);
+		if ( ret == null & includeReplacedPlayers) ret = getPositionByPlayerId(playerid, replacedPositions);
 		return ret;
 	}
 
@@ -889,10 +895,13 @@ public class Lineup{
 	 * 
 	 * @return Value of property m_vPositionen.
 	 */
-	public final Vector<IMatchRoleID> getPositionen() {
+	public final Vector<IMatchRoleID> getAllPositions() {
 		Vector<IMatchRoleID> ret = new Vector<>();
-		if (m_vFieldPositions!=null) ret.addAll(m_vFieldPositions);
-		if (m_vBenchPositions!=null) ret.addAll(m_vBenchPositions);
+		if (m_vFieldPositions != null) ret.addAll(m_vFieldPositions);
+		if (m_vBenchPositions != null) ret.addAll(m_vBenchPositions);
+		if (replacedPositions != null) ret.addAll(replacedPositions);
+		if (captain != null) ret.add(captain);
+		if (setPiecesTaker != null) ret.add(setPiecesTaker);
 		return ret;
 	}
 
@@ -1157,7 +1166,7 @@ public class Lineup{
 	public final void checkAufgestellteSpieler() {
 
 		//if (m_vPositionen != null) {
-			for (IMatchRoleID pos : getPositionen()) {
+			for (IMatchRoleID pos : getAllPositions()) {
 				MatchRoleID position = (MatchRoleID) pos;
 				// existiert Player noch ?
 				if ((HOVerwaltung.instance().getModel() != null)
@@ -1174,7 +1183,7 @@ public class Lineup{
 	 */
 	public final void optimizeLineup(List<Player> players, byte sectorsStrengthPriority, boolean withForm,
 									 boolean idealPosFirst, boolean considerInjured, boolean considereSuspended) {
-		m_clAssi.doLineup(getPositionen(), players, sectorsStrengthPriority, withForm, idealPosFirst,
+		m_clAssi.doLineup(getAllPositions(), players, sectorsStrengthPriority, withForm, idealPosFirst,
 				considerInjured, considereSuspended, getWeather());
 		setAutoKicker(null);
 		setAutoKapitaen(null);
@@ -1444,7 +1453,7 @@ public class Lineup{
 	 * Remove all players from all positions.
 	 */
 	public final void resetStartingLineup() {
-		m_clAssi.resetPositionsbesetzungen(getPositionen());
+		m_clAssi.resetPositionsbesetzungen(getAllPositions());
 	}
 
 	/**
@@ -1487,7 +1496,7 @@ public class Lineup{
 	 * Save the current system in the DB.
 	 */
 	public final void saveAufstellungsSystem(String name) {
-		DBManager.instance().saveSystemPositionen(NO_HRF_VERBINDUNG, getPositionen(), name);
+		DBManager.instance().saveSystemPositionen(NO_HRF_VERBINDUNG, getAllPositions(), name);
 	}
 
 	/**

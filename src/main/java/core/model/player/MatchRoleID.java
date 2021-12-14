@@ -7,6 +7,8 @@ import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.Lineup;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -73,6 +75,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	public boolean isSubstitutesMatchRoleId() { return m_iId>=substGK1 && m_iId<= substXT1;}
 	public boolean isBackupsMatchRoleId(){ return m_iId>=substGK2 && m_iId<= substXT2;}
 	public boolean isPenaltyTakerMatchRoleId(){ return m_iId>=penaltyTaker1 && m_iId<=penaltyTaker11;}
+	public boolean isReplacedMatchRoleId() { return m_iId>=FirstPlayerReplaced && m_iId<=ThirdPlayerReplaced; }
 
 	// It is much safer to have "empty" as 0, as it appears temp-players may
 	// get ID -1 - Blaghaid
@@ -627,40 +630,26 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	}
 
 	@Override
-	public final int compareTo(IMatchRoleID obj) {
+	public final int compareTo(@NotNull IMatchRoleID obj) {
 		if (obj instanceof MatchRoleID) {
 			final MatchRoleID position = (MatchRoleID) obj;
 
 			// Beide aufgestellt ?
 			if ((this.getId() < IMatchRoleID.startReserves)
 					&& (position.getId() < IMatchRoleID.startReserves)) {
-				if (this.getPosition() < position.getPosition()) {
-					return -1;
-				} else if (this.getPosition() == position.getPosition()) {
-					return 0;
-				} else {
-					return 1;
-				}
+				return Byte.compare(this.getPosition(), position.getPosition());
 			}
 			// this aufgestellt ?
-			else if ((this.getId() < IMatchRoleID.startReserves)
-					&& (position.getId() >= IMatchRoleID.startReserves)) {
+			else if (this.getId() < IMatchRoleID.startReserves) {
 				return -1;
 			}
 			// position aufgestellt
-			else if ((this.getId() >= IMatchRoleID.startReserves)
-					&& (position.getId() < IMatchRoleID.startReserves)) {
+			else if (position.getId() < IMatchRoleID.startReserves) {
 				return 1;
 			}
 			// keiner aufgestellt
 			else {
-				if (this.getPosition() < position.getPosition()) {
-					return -1;
-				} else if (this.getPosition() == position.getPosition()) {
-					return 0;
-				} else {
-					return 1;
-				}
+				return Byte.compare(this.getPosition(), position.getPosition());
 			}
 		}
 

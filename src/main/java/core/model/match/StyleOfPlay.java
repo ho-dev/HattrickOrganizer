@@ -37,15 +37,16 @@ public class StyleOfPlay {
 
    public static StyleOfPlay fromInt(int styleOfPlay) {
       if ( styleOfPlay < -10) return null; // old matches has -1000
-      return new StyleOfPlay(min(10,max(-10,styleOfPlay)));
-   }
-
-   public int toInt(){
-      return val;
+      return new StyleOfPlay(min(10,styleOfPlay));
    }
 
    public static StyleOfPlay Neutral() {
       return new StyleOfPlay(0);
+   }
+
+   public static Integer toInt(StyleOfPlay in){
+      if ( in != null) return in.val;
+      return null;
    }
 
    public static StyleOfPlay Defensive() {

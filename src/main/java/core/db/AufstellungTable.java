@@ -92,7 +92,7 @@ final class AufstellungTable extends AbstractTable {
 			adapter.executeUpdate(statement);
 
 			// Standard sys saven
-			DBManager.instance().saveSystemPositionen(hrfId, lineup.getPositionen(), name);
+			DBManager.instance().saveSystemPositionen(hrfId, lineup.getAllPositions(), name);
 
 			// Save Substitutions
 			((MatchSubstitutionTable)(DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME)))

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
+import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -194,7 +195,7 @@ public class FeedbackPanel extends JFrame {
         }
 
         // language is not English and translation does not exist, we will try to parse using a proxy
-        if (term == "ls.team.tactics") {
+        if (term.equals("ls.team.tactics")) {
             String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.tactic").toLowerCase().substring(0, 5);
             String short_key;
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -206,7 +207,7 @@ public class FeedbackPanel extends JFrame {
         }
 
         // language is not English and translation does not exist, we will try to parse using a proxy
-        if (term == "ls.team.teamattitude") {
+        if (term.equals("ls.team.teamattitude")) {
             String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude").toLowerCase().substring(0, 5);
             String short_key;
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -242,7 +243,7 @@ public class FeedbackPanel extends JFrame {
         if ((HOLineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
 
         // return false if HOLineup not fully included in required Lineup
-        for (IMatchRoleID obj : HOLineup.getPositionen()) {
+        for (IMatchRoleID obj : HOLineup.getAllPositions()) {
             positionHO = ((MatchRoleID) obj).getId();
             orderHO = ((MatchRoleID) obj).getTactic();
             isAligned = (((MatchRoleID) obj).getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
@@ -611,8 +612,8 @@ public class FeedbackPanel extends JFrame {
             int iAttitude = MatchRating.AttitudeStringToInt(requirementsAttitude);
 
             core.model.match.Matchdetails md = new core.model.match.Matchdetails();
-            jlTactics_message = start + jlTactics_message + ":</u></b> " + md.getNameForEinstellung(iTactic) + "</html>";
-            jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + md.getNameForEinstellung(iAttitude) + "</html>";
+            jlTactics_message = start + jlTactics_message + ":</u></b> " + Matchdetails.getNameForEinstellung(iTactic) + "</html>";
+            jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + Matchdetails.getNameForEinstellung(iAttitude) + "</html>";
         } else {
             jlTactics_message += "?</html>";
             jlTeamAttitude_message += "?</html>";

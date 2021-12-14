@@ -10,6 +10,8 @@ import core.util.HOLogger;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Vector;
+
+import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -114,7 +116,7 @@ public class XMLMatchdetailsParser {
      */
     private static void readHighlights(Document doc, Matchdetails md, MatchLineup lineup) {
         final ArrayList<MatchEvent> matchEvents = new ArrayList<>();
-        final Vector<Integer> broken = new Vector<>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
+        //final Vector<Integer> broken = new Vector<>(); // TODO: I guess this one can be deleted if things are done properly (akasolace)
         Element root, ele;
         NodeList eventList;
 		int iMinute, iSubjectPlayerID, iSubjectTeamID, iObjectPlayerID, iMatchEventID, iMatchPart, iEventVariation;
@@ -127,8 +129,8 @@ public class XMLMatchdetailsParser {
             //get both teams
             ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
             final String homeTeamID = XMLManager.getFirstChildNodeValue((Element) ele.getElementsByTagName("HomeTeamID").item(0));
-            final Vector<Vector<String>> homeTeamPlayers = parseLineup (lineup.getHomeTeam().getLineup());
-            final Vector<Vector<String>> awayTeamPlayers = parseLineup (lineup.getGuestTeam().getLineup());
+            //var homeTeamPlayers = parseLineup (lineup.getHomeTeam().getLineup());
+            //var awayTeamPlayers = parseLineup (lineup.getGuestTeam().getLineup());
 			ele = (Element) root.getElementsByTagName("EventList").item(0);
 
 			eventList = ele.getElementsByTagName("Event");
@@ -157,58 +159,25 @@ public class XMLMatchdetailsParser {
             	MatchEvent me = new MatchEvent();
             	me.setMatchEventID(iMatchEventID);
 
-            	//get names for players
-            	String subjectplayername = "";
-            	String objectplayername = "";
+            	//get players
             	boolean subHome = true;
             	boolean objHome = true;
-
+            	MatchLineupPosition subjectPlayer=null;
+				MatchLineupPosition objectPlayer=null;
             	if (iMinute > 0) {
-            		int i = 0;
 
-            		while (i < homeTeamPlayers.size()) {
-            			if ((!subjectplayername.equals(""))
-            					&& (!objectplayername.equals(""))) {
-            				break;
-            			}
-
-            			final Vector<String> tmpPlayer = homeTeamPlayers.get(i);
-
-            			if (tmpPlayer.get(0).equals(String.valueOf(iSubjectPlayerID))) {
-            				subjectplayername = tmpPlayer.get(1);
-            			}
-
-            			if (tmpPlayer.get(0).equals(String.valueOf(iObjectPlayerID))) {
-            				objectplayername = tmpPlayer.get(1);
-            			}
-
-            			i++;
-            		}
-
-            		i = 0;
-
-            		while (i < awayTeamPlayers.size()) {
-            			if ((!subjectplayername.equals(""))
-            					&& (!objectplayername.equals(""))) {
-            				break;
-            			}
-
-            			final Vector<String> tmpPlayer = awayTeamPlayers.get(i);
-
-            			if (tmpPlayer.get(0).equals(String.valueOf(iSubjectPlayerID))) {
-            				subjectplayername = tmpPlayer.get(1);
-            				subHome = false;
-            			}
-
-            			if (tmpPlayer.get(0).equals(String.valueOf(iObjectPlayerID))) {
-            				objectplayername = tmpPlayer.get(1);
-            				objHome = false;
-            			}
-
-            			i++;
-            		}
+					subjectPlayer = lineup.getHomeTeam().getPlayerByID(iSubjectPlayerID, true);
+					objectPlayer = lineup.getHomeTeam().getPlayerByID(iObjectPlayerID, true);
+					if ( subjectPlayer == null){
+						subjectPlayer = lineup.getGuestTeam().getPlayerByID(iSubjectPlayerID, true);
+						subHome=false;
+					}
+					if ( objectPlayer == null){
+						objectPlayer = lineup.getGuestTeam().getPlayerByID(iObjectPlayerID, true);
+						objHome=false;
+					}
             	}
-
+/*
             	//ignored events
             	if (iMinute > 0) {
             		switch (iMatchEventID) {
@@ -250,7 +219,7 @@ public class XMLMatchdetailsParser {
 
             		default:
 
-            			if (subjectplayername.equals("") && (iSubjectPlayerID != 0)) {
+            			if (subjectPlayer == null && (iSubjectPlayerID != 0)) {
             				if (eventtext.contains(String.valueOf(iSubjectPlayerID))) {
             					String plname = eventtext.substring(eventtext.indexOf(String
             							.valueOf(iSubjectPlayerID)));
@@ -298,9 +267,9 @@ public class XMLMatchdetailsParser {
 	            		}
             		}
             	}
-
+*/
             	//modify eventtext
-            	if (!subjectplayername.equals("")) {
+            	if (subjectPlayer != null) {
             		String subplayerColor;
 
             		if (subHome) {
@@ -344,11 +313,11 @@ public class XMLMatchdetailsParser {
             	myHighlight.setMatchEventID(iMatchEventID);
             	myHighlight.setMinute(iMinute);
             	myHighlight.setPlayerId(iSubjectPlayerID);
-            	myHighlight.setPlayerName(subjectplayername);
+            	myHighlight.setPlayerName(subjectPlayer!=null?subjectPlayer.getSpielerName():"");
             	myHighlight.setSpielerHeim(subHome);
             	myHighlight.setTeamID(iSubjectTeamID);
             	myHighlight.setAssistingPlayerId(iObjectPlayerID);
-            	myHighlight.setAssistingPlayerName(objectplayername);
+            	myHighlight.setAssistingPlayerName(objectPlayer!=null?objectPlayer.getSpielerName():"");
             	myHighlight.setGehilfeHeim(objHome);
             	myHighlight.setEventText(eventtext);
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
@@ -374,7 +343,7 @@ public class XMLMatchdetailsParser {
 //            	if (myHighlight.getMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED) {break;}
 
             }
-
+/*
             // check for redcarded highlights
 			for (Integer integer : broken) {
 				final int tmpid = integer;
@@ -470,7 +439,7 @@ public class XMLMatchdetailsParser {
 					tmp.setGehilfeHeim(objHome);
 					tmp.setEventText(eventtext);
 				}
-			}
+			}*/
             md.setHighlights(matchEvents);
         } catch (Exception e) {
         	HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -482,12 +451,11 @@ public class XMLMatchdetailsParser {
      *
      * @param lineup (of MatchLineupPosition)		team lineup
      */
-    private static Vector<Vector<String>> parseLineup (Vector<MatchLineupPosition> lineup) {
+    private static Vector<Vector<String>> parseLineup (Lineup lineup) {
     	Vector<Vector<String>> players = new Vector<>();
-        MatchLineupPosition player;
 
-        for (int i = 0; (lineup != null) && (i < lineup.size()); i++) {
-            player = lineup.elementAt(i);
+        for ( var p : lineup.getFieldPositions()){
+        	var player = (MatchLineupPosition) p;
             final Vector<String> tmpPlayer = new Vector<>();
             tmpPlayer.add("" + player.getPlayerId());
             tmpPlayer.add(player.getSpielerName());
@@ -507,8 +475,7 @@ public class XMLMatchdetailsParser {
         final StringBuilder report = new StringBuilder();
 
 		for (MatchEvent highlight : highlights) {
-			final MatchEvent tmp = highlight;
-			report.append(tmp.getEventText()).append(" ");
+			report.append(highlight.getEventText()).append(" ");
 		}
 
         md.setMatchreport(report.toString());

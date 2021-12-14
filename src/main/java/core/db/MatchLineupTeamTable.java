@@ -20,13 +20,19 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				new ColumnDescriptor("MatchID",Types.INTEGER,false),
+				new ColumnDescriptor("TeamID",Types.INTEGER,false),
 				new ColumnDescriptor("MatchTyp",Types.INTEGER,false),
 				new ColumnDescriptor("Erfahrung",Types.INTEGER,false),
 				new ColumnDescriptor("TeamName",Types.VARCHAR,false,256),
-				new ColumnDescriptor("TeamID",Types.INTEGER,false),
 				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false),
 				new ColumnDescriptor("Attitude", Types.INTEGER, true),
 				new ColumnDescriptor("Tactic", Types.INTEGER, true)
+		};
+	}
+	@Override
+	protected String[] getCreateIndexStatement() {
+		return new String[]{
+				"CREATE INDEX MATCHLINEUPTEAM_IDX ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
 		};
 	}
 
@@ -37,18 +43,17 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		
 		try {
 			sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + iMatchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
-			
+
 			rs = adapter.executeQuery(sql);
 
 			rs.first();
-
 			team = new MatchLineupTeam(MatchType.getById(iMatchType),
 					matchID,
 					DBManager.deleteEscapeSequences(rs.getString("TeamName")),
 					teamID,
 					rs.getInt("Erfahrung"));
 
-			var styleOfPlay = new StyleOfPlay(rs.getInt("StyleOfPlay"));
+			var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
 			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
 			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"MatchTeamAttitude"));
 
@@ -75,28 +80,27 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay ) VALUES(";
+				sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay, Attitude, Tactic ) VALUES(";
 				sql += (team.getMatchType().getId() + "," +
 						matchID + "," +
 						team.getExperience() + ", '" +
 						DBManager.insertEscapeSequences(team.getTeamName()) + "'," +
 						team.getTeamID() + "," +
-						team.getStyleOfPlay() + " )");
+						team.getStyleOfPlay()+ "," +
+						MatchTeamAttitude.toInt(team.getMatchTeamAttitude()) + "," +
+						MatchTacticType.toInt(team.getMatchTacticType()) + " )");
 				adapter.executeUpdate(sql);
 
 				//Store players
-				for (int i = 0; i < team.getLineup().size(); i++) {
-					
-					((MatchLineupPlayerTable) DBManager.instance().getTable(
-							MatchLineupPlayerTable.TABLENAME)).storeMatchLineupPlayer(
-									(MatchLineupPosition) team.getLineup().elementAt(i),
-									matchID, team.getTeamID());
+				var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance().getTable(MatchLineupPlayerTable.TABLENAME);
+				for ( var p : team.getLineup().getAllPositions()) {
+					var matchLineupPosition = (MatchLineupPosition)p;
+					matchLineupPlayerTable.storeMatchLineupPlayer(matchLineupPosition, team.getMatchType(), matchID, team.getTeamID());
 				}
 				
 				// Store Substitutions
-				
-				((MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME))
-						.storeMatchSubstitutionsByMatchTeam(team.getMatchType().getId(), matchID, team.getTeamID(), team.getSubstitutions());
+				var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
+				matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(team.getMatchType().getId(), matchID, team.getTeamID(), team.getSubstitutions());
 				
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupTeam Error" + e);

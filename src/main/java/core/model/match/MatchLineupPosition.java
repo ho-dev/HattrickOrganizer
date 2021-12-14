@@ -10,7 +10,6 @@ import java.util.List;
 public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private MatchType m_matchType;
     private String m_sNickName = "";
     private String m_sSpielerName;
     private String m_sSpielerVName = "";
@@ -28,23 +27,17 @@ public class MatchLineupPosition  extends MatchRoleID {
     /**
      * Creates a new instance of MatchLineupPosition
      */
-    public MatchLineupPosition(MatchType matchType, int roleID, int behavior, int spielerID, double rating, String name,
-                               int status) {
+    public MatchLineupPosition(int roleID, int behavior, int spielerID, double rating, String name, int status) {
         super(roleID, spielerID, (byte) behavior);
-
-        //erst mit neuer Version Namen aufsplitten
-        //setName( name );
-        m_matchType = matchType;
         m_sSpielerName = name;
         m_dRating = rating;
-       m_iStatus = status;
+        m_iStatus = status;
     }
 
     /**
      * Creates a new instance of MatchLineupPosition
      */
-    public MatchLineupPosition(MatchType matchType,
-                               int roleID,
+    public MatchLineupPosition(int roleID,
                                int behavior,
                                int spielerID,
                                double rating,
@@ -58,7 +51,6 @@ public class MatchLineupPosition  extends MatchRoleID {
                                boolean startSetPieces) {
         super(roleID, spielerID, (byte) behavior);
 
-        m_matchType = matchType;
         m_sSpielerName = name;
         m_sNickName = nickName;
         m_sSpielerVName = vname;
@@ -237,14 +229,6 @@ public class MatchLineupPosition  extends MatchRoleID {
             m_sSpielerVName = name.substring(0, index);
             m_sSpielerName = name.substring(index + 2);
         }
-    }
-
-    public MatchType getMatchType() {
-        return m_matchType;
-    }
-
-    public void setMatchType(MatchType matchType) {
-        m_matchType = matchType;
     }
 
     public boolean isStartSetPiecesTaker(){
