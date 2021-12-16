@@ -2,7 +2,6 @@ package core.specialevents;
 
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -231,7 +230,7 @@ public class SpecialEventsPredictionManager {
         this.opponentLineup.setKicker(opponentMatch.getSetPiecesTaker());
         for (PlayerPerformance playerPerformance : opponentMatch.getPerformances()) {
             if (playerPerformance.getStatus() <= PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
-                this.opponentLineup.setPosition(playerPerformance.getMatchRoleID());
+                this.opponentLineup.setPosition(playerPerformance.getMatchLineupPosition());
                 // playerPerformance -> Player
                 OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player == null) {
@@ -242,7 +241,7 @@ public class SpecialEventsPredictionManager {
                     double form = latestPlayerInfo.getForm();
                     double stamina = latestPlayerInfo.getStamina();
                     int spec = latestPlayerInfo.getSpecialEvent();
-                    int role = playerPerformance.getMatchRoleID().getPosition();
+                    int role = playerPerformance.getMatchLineupPosition().getPosition();
                     player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
                     player.setSpielerID(playerPerformance.getSpielerId());
                     player.setLastName(playerPerformance.getSpielerName());

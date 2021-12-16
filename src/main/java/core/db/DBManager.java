@@ -15,7 +15,6 @@ import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
-import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HTDatetime;
@@ -252,8 +251,6 @@ public class DBManager {
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
 		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));
 		tables.put(FaktorenTable.TABLENAME, new FaktorenTable(adapter));
-		tables.put(PositionenTable.TABLENAME, new PositionenTable(adapter));
-		tables.put(AufstellungTable.TABLENAME, new AufstellungTable(adapter));
 		tables.put(HRFTable.TABLENAME, new HRFTable(adapter));
 		tables.put(StadionTable.TABLENAME, new StadionTable(adapter));
 		tables.put(VereinTable.TABLENAME, new VereinTable(adapter));
@@ -738,39 +735,6 @@ public class DBManager {
 	}
 
 
-	// ------------------------------- AufstellungTable
-	// -------------------------------------------------
-
-	/**
-	 * lädt System Positionen
-	 *
-	 * @param hrfID the hrf id
-	 * @param name  the name
-	 * @return the aufstellung
-	 */
-	public Lineup getAufstellung(int hrfID, String name) {
-		return ((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-				.getLineup(hrfID, name);
-	}
-
-
-	/**
-	 * speichert die Aufstellung und die aktuelle Aufstellung als STANDARD
-	 *
-	 * @param sourceSystem the source system
-	 * @param hrfId        the hrf id
-	 * @param aufstellung  the aufstellung
-	 * @param name         the name
-	 */
-	public void saveAufstellung(int sourceSystem, int hrfId, Lineup aufstellung, String name) {
-		try {
-			((AufstellungTable) getTable(AufstellungTable.TABLENAME))
-					.saveAufstellung(sourceSystem, hrfId, aufstellung, name);
-		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
 	// ------------------------------- BasicsTable
 	// -------------------------------------------------
 
@@ -1223,6 +1187,11 @@ public class DBManager {
 				.getLastMatchesKurzInfo(teamId);
 	}
 
+	public MatchKurzInfo getNextMatchesKurzInfo(int teamId) {
+		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getNextMatchesKurzInfo(teamId);
+	}
+
 	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME))
 				.getLastMatchWithMatchId(matchId);
@@ -1529,51 +1498,6 @@ public class DBManager {
 	public void saveTeam(int hrfId, Team team) {
 		((TeamTable) getTable(TeamTable.TABLENAME)).saveTeam(hrfId, team);
 	}
-
-	// ------------------------------- PositionenTable
-	// -------------------------------------------------
-
-	/**
-	 * lädt System Positionen
-	 *
-	 * @param hrfID   the hrf id
-	 * @param sysName the sys name
-	 * @return the system positionen
-	 */
-	public Vector<IMatchRoleID> getSystemPositionen(int hrfID,
-                                                    String sysName) {
-		return ((PositionenTable) getTable(PositionenTable.TABLENAME))
-				.getSystemPositionen(hrfID, sysName);
-	}
-
-	/**
-	 * speichert System Positionen
-	 *
-	 * @param hrfId      the hrf id
-	 * @param positionen the positionen
-	 * @param sysName    the sys name
-	 */
-	public void saveSystemPositionen(int hrfId,
-                                     Vector<IMatchRoleID> positionen, String sysName) {
-		((PositionenTable) getTable(PositionenTable.TABLENAME))
-				.saveSystemPositionen(hrfId, positionen, sysName);
-	}
-
-	/**
-	 * delete das System
-	 *
-	 * @param hrfId   the hrf id
-	 * @param sysName the sys name
-	 */
-	public void deleteSystem(int hrfId, String sysName) {
-		final String[] whereS = { "Aufstellungsname", "HRF_ID" };
-		final String[] whereV = { "'" + sysName + "'", "" + hrfId };
-
-		// erst vorhandene einträge für diesen Posnamen entfernen
-		getTable(PositionenTable.TABLENAME).delete(whereS, whereV);
-	}
-
-
 
 	/**
 	 * Gets the content of TrainingsTable as a vector of TrainingPerWeek objects
@@ -2106,11 +2030,6 @@ public class DBManager {
 		getTable(HRFTable.TABLENAME).delete(where, value);
 		getTable(LigaTable.TABLENAME).delete(where, value);
 		getTable(VereinTable.TABLENAME).delete(where, value);
-		getTable(AufstellungTable.TABLENAME).delete(where, value);
-		((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.deleteAllMatchSubstitutionsByHrfId(hrfid);
-
-		getTable(PositionenTable.TABLENAME).delete(where, value);
 		getTable(TeamTable.TABLENAME).delete(where, value);
 		getTable(EconomyTable.TABLENAME).delete(where, value);
 		getTable(BasicsTable.TABLENAME).delete(where, value);
@@ -2118,8 +2037,6 @@ public class DBManager {
 		getTable(SpielerSkillupTable.TABLENAME).delete(where, value);
 		getTable(XtraDataTable.TABLENAME).delete(where, value);
 		((StaffTable) getTable(StaffTable.TABLENAME)).deleteAllStaffByHrfId(hrfid);
-		
-		
 	}
 
 	/**
@@ -2194,29 +2111,7 @@ public class DBManager {
 		((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.update(match);
 	}
-
-	/**
-	 * delete eine Aufstellung + Positionen
-	 *
-	 * @param hrfId the hrf id
-	 * @param name  the name
-	 */
-	public void deleteAufstellung(int hrfId, String name) {
-		String[] whereS = { "HRF_ID", "Aufstellungsname" };
-		String[] whereV = { "" + hrfId, "'" + name + "'" };
-
-		// erst Vorhandene Aufstellung löschen
-		getTable(AufstellungTable.TABLENAME).delete(whereS, whereV);
-
-		// Standard sys resetten
-		getTable(PositionenTable.TABLENAME).delete(whereS, whereV);
-
-		whereS = new String[] { "LineupName" };
-		whereV = new String[] { "'" + name + "'" };
-		getTable(MatchSubstitutionTable.TABLENAME).delete(whereS, whereV);
-		getTable(PenaltyTakersTable.TABLENAME).delete(whereS, whereV);
-	}
-
+	
 	private void createAllTables() throws SQLException {
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
@@ -2751,5 +2646,16 @@ public class DBManager {
 
     public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
 		return ((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).load(matchId, matchtype);
+	}
+
+	public Lineup loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
+	public Lineup loadNextMatchLineup(int teamID) { return loadLineup(getNextMatchesKurzInfo(teamID), teamID);}
+
+	private Lineup loadLineup(MatchKurzInfo match, int teamID) {
+		if (match != null) {
+			var team = getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), teamID);
+			if (team != null) return team.getLineup();
+		}
+		return null;
 	}
 }

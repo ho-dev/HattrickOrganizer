@@ -103,5 +103,5 @@ public class PlayerPerformance {
         return mlp.getBehaviour();
     }
 
-    public MatchRoleID getMatchRoleID() { return this.mlp;}
+    public MatchLineupPosition getMatchLineupPosition() { return this.mlp;}
 }

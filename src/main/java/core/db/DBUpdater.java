@@ -74,6 +74,8 @@ final class DBUpdater {
 	}
 
 	private void updateDBv600(int dbVersion) throws SQLException {
+		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS MATCHLINEUPTEAM_IDX ON MATCHLINEUPTEAM (MatchID,TeamID,MatchTyp)");
 	}
 
@@ -302,7 +304,6 @@ final class DBUpdater {
 			matchLineupTable.tryDeleteColumn("ArenaID");
 			matchLineupTable.tryDeleteColumn("ArenaName");
 
-			dbManager.getTable(AufstellungTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryDeleteColumn("SourceSystem");

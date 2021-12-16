@@ -23,11 +23,14 @@ public class MatchLineupPosition  extends MatchRoleID {
     private int m_iStartBehavior = -1;
     private boolean startSetPiecesTaker = false;
 
-
     /**
      * Creates a new instance of MatchLineupPosition
      */
-    public MatchLineupPosition(int roleID, int behavior, int spielerID, double rating, String name, int status) {
+    public MatchLineupPosition(int roleID, int spielerID, int behavior) {
+        super(roleID, spielerID, (byte) behavior);
+    }
+
+    public MatchLineupPosition(int roleID, int spielerID, int behavior, double rating, String name, int status) {
         super(roleID, spielerID, (byte) behavior);
         m_sSpielerName = name;
         m_dRating = rating;
@@ -38,8 +41,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * Creates a new instance of MatchLineupPosition
      */
     public MatchLineupPosition(int roleID,
-                               int behavior,
                                int spielerID,
+                               int behavior,
                                double rating,
                                String vname,
                                String nickName,

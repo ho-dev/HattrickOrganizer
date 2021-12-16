@@ -1,6 +1,7 @@
 package module.pluginFeedback;
 
 import core.HO;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import module.teamAnalyzer.vo.MatchRating;
@@ -15,9 +16,9 @@ public class Feedback {
     private Map<String, String> systemInfo;
     private List<Player> playerList;
     private MatchRating rating;
-    private Vector<IMatchRoleID> m_vPositionen;
+    private Vector<MatchLineupPosition> m_vPositionen;
 
-    public Feedback(Vector<IMatchRoleID> m_vPositionen, MatchRating rating, List<Player> playerList, String hoToken, String lineupName) {
+    public Feedback(Vector<MatchLineupPosition> m_vPositionen, MatchRating rating, List<Player> playerList, String hoToken, String lineupName) {
         this.systemInfo = new HashMap();
         this.systemInfo.put("OS", System.getProperty("os.name") + " on "
                 + System.getProperty("os.arch") + " (" + System.getProperty("os.version")

@@ -2,6 +2,7 @@ package module.lineup.assistant;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineupPosition;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -28,10 +29,10 @@ public class LineupAssistant {
 	/**
 	 * indicates if the player is already installed. Also ReserveBank counts
 	 */
-	public final boolean isPlayerInLineup(int spielerId, List<IMatchRoleID> positions) {
+	public final boolean isPlayerInLineup(int spielerId, List<MatchLineupPosition> positions) {
 		if (positions != null) {
-			for (IMatchRoleID position : positions) {
-				if (((MatchRoleID) position).getPlayerId() == spielerId) {
+			for (var position : positions) {
+				if ( position.getPlayerId() == spielerId) {
 					return true;
 				}
 			}
@@ -40,17 +41,12 @@ public class LineupAssistant {
 		return false;
 	}
 
-    public final boolean isPlayerInStartingEleven(int spielerId, Vector<IMatchRoleID> positionen) {
-        for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
-            if (IMatchRoleID.aFieldMatchRoleID.contains(((MatchRoleID) positionen.elementAt(i)).getId()) &&
-                    (((MatchRoleID) positionen.elementAt(i)).getPlayerId() == spielerId)) {
-                return true;
-            }
-        }
-
+    public final boolean isPlayerInStartingEleven(int spielerId, Vector<MatchLineupPosition> lineupPositions) {
+		for ( var pos : lineupPositions){
+			if ( pos.getPlayerId() == spielerId ) return true;
+		}
         return false;
     }
-
 
 	/**
 	 * Assitant to create automatic lineup
@@ -64,7 +60,7 @@ public class LineupAssistant {
 	 * @param bSuspended: whether or not to advanced suspended player
 	 * @param weather: Actual weather
 	 */
-	public final void doLineup(List<IMatchRoleID> lPositions, List<Player> lPlayers,
+	public final void doLineup(List<MatchLineupPosition> lPositions, List<Player> lPlayers,
 							   byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean bInjured,
 							   boolean bSuspended, Weather weather) {
 
@@ -95,8 +91,7 @@ public class LineupAssistant {
 		}
 
 		// set Goalkeeper
-		doSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured, bSuspended,
-                lPlayers, lPositions);
+		doSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured, bSuspended,lPlayers, lPositions);
 
 		byte[] order;
 		// nun reihenfolge beachten und unbesetzte füllen
@@ -272,8 +267,7 @@ public class LineupAssistant {
 		}
 
 		for (byte b : order) {
-			doSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers,
-					lPositions);
+			doSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
 		// Fill subs ========
@@ -332,9 +326,9 @@ public class LineupAssistant {
 	 * @param positionen
 	 *            a vector of player positions
 	 */
-	public final void resetPositionsbesetzungen(Vector<IMatchRoleID> positionen) {
-		for (int i = 0; (positionen != null) && (i < positionen.size()); i++) {
-			((MatchRoleID) positionen.elementAt(i)).setSpielerId(0);
+	public final void resetPositionsbesetzungen(Vector<MatchLineupPosition> positionen) {
+		for ( var pos: positionen){
+			pos.setSpielerId(0);
 		}
 	}
 	
@@ -343,11 +337,10 @@ public class LineupAssistant {
 	 * @param positions
 	 * 		a vector of player positions
 	 */
-	public final void resetPositionOrders(Vector<IMatchRoleID> positions) {
-		if (positions != null) {
-			for (int i = 0; i < positions.size(); i++) {
-				((MatchRoleID) positions.elementAt(i)).setTaktik((byte) 0);
-			}
+	public final void resetPositionOrders(Vector<MatchLineupPosition> positions) {
+		if ( positions==null) return;
+		for  ( var pos : positions){
+			pos.setTaktik((byte)0);
 		}
 	}
 
@@ -374,7 +367,7 @@ public class LineupAssistant {
 	 */
 	protected final Player getBestPlayerForPosition(byte position, boolean considerForm,
 													boolean ignoredInjury, boolean ignoreRedCarded, List<Player> players,
-													List<IMatchRoleID> positions) {
+													List<MatchLineupPosition> positions) {
 		Player player;
 		Player bestPlayer = null;
 		float maxRating = -1.0f;
@@ -404,7 +397,7 @@ public class LineupAssistant {
 	 */
 	protected final Player getBestPlayerIdealPosOnly(byte position, boolean considerForm,
 													 boolean ignoredInjury, boolean ignoreRedCarded, List<Player> players,
-													 List<IMatchRoleID> positions) {
+													 List<MatchLineupPosition> positions) {
 
 		List<Player> playersIdealPositionOnly = players.stream().filter(p -> p.isAnAlternativeBestPosition(position)).collect(Collectors.toList());
 		return getBestPlayerForPosition(position, considerForm, ignoredInjury, ignoreRedCarded, playersIdealPositionOnly, positions);
@@ -415,7 +408,7 @@ public class LineupAssistant {
 	 */
 	protected final void doReserveSpielerAufstellen(byte position, boolean mitForm,
 			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<IMatchRoleID> positionen) {
+			List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
 
@@ -445,7 +438,7 @@ public class LineupAssistant {
 	 */
 	protected final void doReserveSpielerAufstellenIdealPos(byte position, boolean mitForm,
 			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<IMatchRoleID> positionen) {
+			List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
 
@@ -482,7 +475,7 @@ public class LineupAssistant {
 	 */
 	protected final void doSpielerAufstellen(byte position, boolean mitForm,
 			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<IMatchRoleID> positionen) {
+			List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
 //		final Vector<IMatchRoleID> zusPos = new Vector<IMatchRoleID>();
@@ -513,7 +506,7 @@ public class LineupAssistant {
 	 */
 	protected final void doPlayerLineupIdealPosition(byte position, boolean considerForm,
 													 boolean ignoreInjury, boolean ignoreRedCarded, List<Player> players,
-													 List<IMatchRoleID> positions) {
+													 List<MatchLineupPosition> positions) {
 		MatchRoleID pos;
 		Player player;
 		final Vector<IMatchRoleID> zusPos = new Vector<>();
@@ -560,14 +553,12 @@ public class LineupAssistant {
 		}
 	}
 
-
-	private Vector<IMatchRoleID> filterPositions(List<IMatchRoleID> positions) {
+	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions) {
 		// Remove "red" positions from the position selection of the AssistantPanel.
-		Vector<IMatchRoleID> returnVec = new Vector<>();
+		Vector<MatchLineupPosition> returnVec = new Vector<>();
 		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
 				.getLineupPanel().getAssistantPositionsStatus();
-		for (IMatchRoleID position : positions) {
-			MatchRoleID pos = (MatchRoleID) position;
+		for (var pos : positions) {
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
 				returnVec.add(pos);
 			}

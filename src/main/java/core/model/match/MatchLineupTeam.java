@@ -62,7 +62,7 @@ public class MatchLineupTeam {
 	//private MatchTeamAttitude matchTeamAttitude;
 
 	// null player to fill empty spots
-	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition( -1, 0, -1, -1d, "", 0);
+	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition( -1, -1, 0, -1d, "", 0);
 	private Matchdetails matchdetails;
 
 	// ~ Constructors
@@ -77,6 +77,7 @@ public class MatchLineupTeam {
 		experience = erfahrung;
 		teamId = teamID;
 		this.matchId = matchId;
+		this.lineup = new Lineup();
 	}
 
 	// ~ Methods

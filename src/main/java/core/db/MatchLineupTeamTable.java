@@ -3,6 +3,8 @@ package core.db;
 import core.model.match.*;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
+import module.lineup.Lineup;
+
 import java.sql.ResultSet;
 import java.sql.Types;
 
@@ -107,5 +109,6 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				HOLogger.instance().log(getClass(),e);
 			}
 		}
-	}		
+	}
+
 }

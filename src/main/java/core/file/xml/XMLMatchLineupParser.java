@@ -166,7 +166,7 @@ public class XMLMatchLineupParser {
 			}
 		}
 
-		MatchLineupPosition player = new MatchLineupPosition(roleID, behavior, spielerID, rating, name, 0);
+		MatchLineupPosition player = new MatchLineupPosition(roleID, spielerID, behavior, rating, name, 0);
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
