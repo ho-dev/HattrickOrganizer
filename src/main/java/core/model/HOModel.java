@@ -9,10 +9,8 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
-import core.training.TrainingWeekManager;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
-import core.training.TrainingPerWeek;
 import core.training.TrainingManager;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -25,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -84,16 +81,16 @@ public class HOModel {
             }
         }
 
+        setClub(DBManager.instance().getVerein(id));
         setCurrentPlayers(DBManager.instance().getSpieler(id));
         setFormerPlayers(DBManager.instance().getAllSpieler());
         setTeam(DBManager.instance().getTeam(id));
-        setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-        setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
+        setLineup(DBManager.instance().loadNextMatchLineup(getClub().getTeamID()));
+        setPreviousLineup(DBManager.instance().loadPreviousMatchLineup(getClub().getTeamID()));
         setBasics(DBManager.instance().getBasics(id));
         setEconomy(DBManager.instance().getEconomy(id));
         setLeague(DBManager.instance().getLiga(id));
         setStadium(DBManager.instance().getStadion(id));
-        setClub(DBManager.instance().getVerein(id));
         setFixtures(DBManager.instance().getSpielplan(-1, -1));
         setXtraDaten(DBManager.instance().getXtraDaten(id));
         setStaff(DBManager.instance().getStaffByHrfId(id));
@@ -115,12 +112,6 @@ public class HOModel {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-
-
-    public void setLineups(int id) {
-        this.setLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAME));
-        this.setPreviousLineup(DBManager.instance().getAufstellung(id, Lineup.DEFAULT_NAMELAST));
-    }
 
     /**
      * Sets the list of former players of the club
@@ -191,7 +182,7 @@ public class HOModel {
      */
     public final Lineup getLineup() {
         if (m_clAufstellung == null) {
-            m_clAufstellung = DBManager.instance().getAufstellung(this.o_hrf.getHrfId(), Lineup.DEFAULT_NAME);
+            m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
         }
         m_clAufstellung.setRatings();
         return m_clAufstellung;
@@ -202,7 +193,7 @@ public class HOModel {
      */
     public final Lineup getCurrentLineup() {
         if (m_clAufstellung == null) {
-            m_clAufstellung = DBManager.instance().getAufstellung(this.o_hrf.getHrfId(), Lineup.DEFAULT_NAME);
+            m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
         }
         return m_clAufstellung;
     }
@@ -279,7 +270,7 @@ public class HOModel {
      */
     public final Lineup getPreviousLineup() {
         if (m_clLastAufstellung == null) {
-            m_clLastAufstellung = DBManager.instance().getAufstellung(this.getID(), Lineup.DEFAULT_NAMELAST);
+            m_clLastAufstellung = DBManager.instance().loadPreviousMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
         }
         return m_clLastAufstellung;
     }
@@ -566,10 +557,6 @@ public class HOModel {
         DBManager.instance().saveStadion(getID(), getStadium());
         //Liga
         DBManager.instance().saveLiga(getID(), getLeague());
-        //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), getID(), getCurrentLineup(), Lineup.DEFAULT_NAME);
-        //Aufstellung + aktu Sys als Standard saven
-        DBManager.instance().saveAufstellung(SourceSystem.HATTRICK.getValue(), getID(), getPreviousLineup(), Lineup.DEFAULT_NAMELAST);
         //Xtra Daten
         DBManager.instance().saveXtraDaten(getID(), getXtraDaten());
         //Player
