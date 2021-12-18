@@ -21,8 +21,8 @@ public enum MatchTeamAttitude {
         };
     }
 
-    static public Integer toInt( MatchTeamAttitude in){
+    static public int toInt( MatchTeamAttitude in){
         if ( in != null ) return in.id;
-        return null;
+        return Normal.id;
     }
 }

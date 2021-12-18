@@ -98,9 +98,11 @@ public class Lineup{
 			this.penaltyTakers.add(position);
 		}
 		else if ( position.getId() == IMatchRoleID.setPieces){
+			this.setPiecesTaker = position;
 			this.m_iKicker = position.getPlayerId();
 		}
 		else if ( position.getId() == IMatchRoleID.captain){
+			this.captain = position;
 			this.m_iKapitaen = position.getPlayerId();
 		}
 		else if ( position.isReplacedMatchRoleId()){
@@ -422,10 +424,8 @@ public class Lineup{
 		}
 
 		Vector<MatchLineupPosition> noKeeper = new Vector<>(m_vFieldPositions);
-
-		for (IMatchRoleID pos : noKeeper) {
-			MatchRoleID p = (MatchRoleID) pos;
-			if (p.getId() == IMatchRoleID.keeper) {
+		for (var pos : noKeeper) {
+			if (pos.getId() == IMatchRoleID.keeper) {
 				noKeeper.remove(pos);
 				break;
 			}
@@ -819,7 +819,7 @@ public class Lineup{
 	 * Get the position object by player id.
 	 */
 	public final MatchLineupPosition getPositionByPlayerId(int playerid) {
-		return getPositionByPlayerId(playerid, false);
+		return getPositionByPlayerId(playerid, true);
 	}
 
 	public final MatchLineupPosition getPositionByPlayerId(int playerid, boolean includeReplacedPlayers) {
@@ -872,7 +872,7 @@ public class Lineup{
 
 	private void setPosition(Vector<MatchLineupPosition> m_vPositionen, MatchLineupPosition spos) {
 		for (int j = 0; j < m_vPositionen.size(); j++) {
-			if (((MatchRoleID) m_vPositionen.get(j)).getId() == spos.getId()) {
+			if (m_vPositionen.get(j).getId() == spos.getId()) {
 				m_vPositionen.setElementAt(spos, j);
 				return;
 			}
@@ -1154,18 +1154,14 @@ public class Lineup{
 	 * Check if the players are still in the team (not sold or fired).
 	 */
 	public final void checkAufgestellteSpieler() {
-
-		//if (m_vPositionen != null) {
-			for (IMatchRoleID pos : getAllPositions()) {
-				MatchRoleID position = (MatchRoleID) pos;
-				// existiert Player noch ?
-				if ((HOVerwaltung.instance().getModel() != null)
-						&& (HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId()) == null)) {
-					// nein dann zuweisung aufheben
-					position.setSpielerId(0, this);
-				}
+		for (var pos : getAllPositions()) {
+			// existiert Player noch ?
+			if ((HOVerwaltung.instance().getModel() != null)
+					&& (HOVerwaltung.instance().getModel().getCurrentPlayer(pos.getPlayerId()) == null)) {
+				// nein dann zuweisung aufheben
+				pos.setSpielerId(0, this);
 			}
-		//}
+		}
 	}
 
 	/**
@@ -1520,16 +1516,13 @@ public class Lineup{
 	 */
 	private int getAnzPosImSystem(byte positionId) {
 		int anzahl = 0;
-
-		for (IMatchRoleID pos : m_vFieldPositions) {
-			MatchRoleID position = (MatchRoleID) pos;
-			if ((positionId == position.getPosition())
-					&& (position.getId() < IMatchRoleID.startReserves)
-					&& (position.getPlayerId() > 0)) {
+		for (var pos : m_vFieldPositions) {
+			if ((positionId == pos.getPosition())
+					&& (pos.getId() < IMatchRoleID.startReserves)
+					&& (pos.getPlayerId() > 0)) {
 				++anzahl;
 			}
 		}
-
 		return anzahl;
 	}
 
@@ -1539,13 +1532,10 @@ public class Lineup{
 	 */
 	public boolean hasFreePosition() {
 		int numPlayers = 0;
-
-		for (IMatchRoleID pos : m_vFieldPositions) {
-			MatchRoleID position = (MatchRoleID) pos;
-			if (position.getPlayerId() != 0) numPlayers++;
-		    }
+		for (var pos : m_vFieldPositions) {
+			if (pos.getPlayerId() != 0) numPlayers++;
+		}
 		return numPlayers != 11;
-
 	}
 
 	/**
@@ -1568,17 +1558,14 @@ public class Lineup{
 	private float calcTeamStrength(List<Player> players, byte positionId, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
 		float stk = 0.0f;
 		if (players != null) {
-			for (IMatchRoleID pos : m_vFieldPositions) {
-				MatchRoleID position = (MatchRoleID) pos;
-				if (position.getPosition() == positionId) {
-					stk += calcPlayerStrength(players, position.getPlayerId(), positionId, useForm, weather, useWeatherImpact);
+			for (var pos : m_vFieldPositions) {
+				if (pos.getPosition() == positionId) {
+					stk += calcPlayerStrength(players, pos.getPlayerId(), positionId, useForm, weather, useWeatherImpact);
 				}
 			}
 		}
 		return Helper.round(stk, 1);
 	}
-
-
 
 	/**
 	 * Initializes the 553 lineup
@@ -1809,9 +1796,8 @@ public class Lineup{
 		double spSP = 0;    // set pieces taker set pieces
 		int n = 0;
 
-		for (IMatchRoleID pos : m_vFieldPositions) {
-			MatchRoleID mid = (MatchRoleID) pos;
-			Player p = this.getPlayerByPositionID(mid.getId());
+		for (var pos : m_vFieldPositions) {
+			Player p = this.getPlayerByPositionID(pos.getId());
 			if ( p != null){
 				teamAtt += p.getSCskill();
 				teamSP += p.getSPskill();
@@ -1841,9 +1827,8 @@ public class Lineup{
 			gkGK = keeper.getGKskill();
 		}
 
-		for (IMatchRoleID pos : m_vFieldPositions) {
-			MatchRoleID mid = (MatchRoleID) pos;
-			Player p = this.getPlayerByPositionID(mid.getId());
+		for (var pos : m_vFieldPositions) {
+			Player p = this.getPlayerByPositionID(pos.getId());
 			if ( p != null){
 				n++;
 				teamDef += p.getDEFskill();

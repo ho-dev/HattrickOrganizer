@@ -181,9 +181,7 @@ public class HOModel {
      * returns the lineup (setRatings is called)
      */
     public final Lineup getLineup() {
-        if (m_clAufstellung == null) {
-            m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
-        }
+        getCurrentLineup();
         m_clAufstellung.setRatings();
         return m_clAufstellung;
     }
@@ -193,7 +191,10 @@ public class HOModel {
      */
     public final Lineup getCurrentLineup() {
         if (m_clAufstellung == null) {
-            m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
+            m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+            if ( m_clAufstellung == null){
+                m_clAufstellung = new Lineup();
+            }
         }
         return m_clAufstellung;
     }

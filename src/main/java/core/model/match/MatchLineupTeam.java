@@ -86,7 +86,7 @@ public class MatchLineupTeam {
 	/**
 	 * Setter for property lineup.
 	 * 
-	 * @param lineup
+	 * @param lineup new Lineup
 	 */
 	public final void setLineup(Lineup lineup) {
 		this.lineup = lineup;
@@ -182,23 +182,17 @@ public class MatchLineupTeam {
 	 * @return The object matching the criteria, or null if none found
 	 */
 	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeReplacedPlayers) {
-		return  (MatchLineupPosition)this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
+		return this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
 	}
 	public final MatchLineupPosition getPlayerByID(int playerId) {
-		return  (MatchLineupPosition)this.lineup.getPositionByPlayerId(playerId);
+		return getPlayerByID(playerId, true);
 	}
 
 	/**
 	 * Liefert Einen Player per PositionsID aus der Aufstellung
 	 */
 	public final MatchLineupPosition getPlayerByPosition(int roleId) {
-		return (MatchLineupPosition) this.lineup.getPositionById(roleId);
-/*		for ( var player : getLineup()){
-			if (player.getRoleId() == roleId) {
-				return player;
-			}
-		}
-		return NULLPLAYER;*/
+		return this.lineup.getPositionById(roleId);
 	}
 
 	/**
@@ -308,9 +302,8 @@ public class MatchLineupTeam {
 		short st = 0;
 
 		for (var matchRoleId : getLineup().getFieldPositions()) {
-			MatchRoleID player = (MatchRoleID) matchRoleId;
-			if (player != null) {
-				switch (player.getSector()) {
+			if (matchRoleId != null) {
+				switch (matchRoleId.getSector()) {
 					case None:
 					default:
 						break;
@@ -573,7 +566,7 @@ public class MatchLineupTeam {
 
 	public Map<MatchRoleID.Sector, Integer> getTrainMinutesPlayedInSectors(int playerId) {
 		var ret = new HashMap<MatchRoleID.Sector, Integer>();
-		var player = this.getPlayerByID(playerId);
+		var player = this.getPlayerByID(playerId, true);
 		if (player == null) return ret;
 
 		int startminute = 0;
@@ -592,11 +585,11 @@ public class MatchLineupTeam {
 			if (subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION) {
 				var subSector = changedPositions.get(subs.getSubjectPlayerID());
 				if (subSector == null) {
-					subSector = MatchRoleID.getSector(this.getPlayerByID(subs.getSubjectPlayerID()).getStartPosition());
+					subSector = MatchRoleID.getSector(this.getPlayerByID(subs.getSubjectPlayerID(),true).getStartPosition());
 				}
 				var objSector = changedPositions.get(subs.getObjectPlayerID());
 				if (objSector == null) {
-					objSector = MatchRoleID.getSector(this.getPlayerByID(subs.getObjectPlayerID()).getStartPosition());
+					objSector = MatchRoleID.getSector(this.getPlayerByID(subs.getObjectPlayerID(), true).getStartPosition());
 				}
 				if (subSector != objSector) {
 					changedPositions.put(subs.getSubjectPlayerID(), objSector);
@@ -676,12 +669,11 @@ public class MatchLineupTeam {
 		lastMatchAppearances=new HashMap<>();
 		// get the starting positions
 		for (var iMatchRole : this.lineup.getFieldPositions()) {
-			MatchLineupPosition lineupPlayer = (MatchLineupPosition) iMatchRole;
-			if (lineupPlayer.getStartPosition() >= 0) {
-				lastMatchAppearances.put(lineupPlayer.getStartPosition(), new MatchAppearance(lineupPlayer, 0));
+			if (iMatchRole.getStartPosition() >= 0) {
+				lastMatchAppearances.put(iMatchRole.getStartPosition(), new MatchAppearance(iMatchRole, 0));
 			}
-			if (lineupPlayer.isStartSetPiecesTaker()) {
-				lastMatchAppearances.put(IMatchRoleID.setPieces, new MatchAppearance(lineupPlayer, 0));
+			if (iMatchRole.isStartSetPiecesTaker()) {
+				lastMatchAppearances.put(IMatchRoleID.setPieces, new MatchAppearance(iMatchRole, 0));
 			}
 		}
 
@@ -703,7 +695,7 @@ public class MatchLineupTeam {
 	}
 
 	private void examineSubstitution(Substitution substitution) {
-		var leavingplayer = this.getPlayerByID(substitution.getSubjectPlayerID());
+		var leavingplayer = this.getPlayerByID(substitution.getSubjectPlayerID(),true);
 		switch (substitution.getOrderType()) {
 			case NEW_BEHAVIOUR -> {
 				removeMatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria());
@@ -713,7 +705,7 @@ public class MatchLineupTeam {
 				var setPiecesTaker = lastMatchAppearances.get(MatchRoleID.setPieces);
 				var leavingPlayerIsSetPiecesTaker = setPiecesTaker != null && setPiecesTaker.player == leavingplayer;
 				removeMatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria());
-				var enteringplayer = this.getPlayerByID(substitution.getObjectPlayerID());
+				var enteringplayer = this.getPlayerByID(substitution.getObjectPlayerID(), true);
 				lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(enteringplayer, substitution.getMatchMinuteCriteria()));
 				if (leavingPlayerIsSetPiecesTaker) {
 					// Find the new set pieces taker
@@ -721,13 +713,13 @@ public class MatchLineupTeam {
 							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
 									i.getMinute() == substitution.getMatchMinuteCriteria()).collect(Collectors.toList());
 					for (var event : matchEvents) {
-						var newSetPiecesTaker = this.getPlayerByID(event.getAssistingPlayerId());
+						var newSetPiecesTaker = this.getPlayerByID(event.getAssistingPlayerId(), true);
 						lastMatchAppearances.put(MatchRoleID.setPieces, new MatchAppearance(newSetPiecesTaker, substitution.getMatchMinuteCriteria()));
 					}
 				}
 			}
 			case POSITION_SWAP -> {
-				var player = this.getPlayerByID(substitution.getObjectPlayerID());
+				var player = this.getPlayerByID(substitution.getObjectPlayerID(), true);
 				var leavingRole = removeMatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria());
 				var playerRole = removeMatchAppearance(player, substitution.getMatchMinuteCriteria());
 				lastMatchAppearances.put(playerRole, new MatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria()));

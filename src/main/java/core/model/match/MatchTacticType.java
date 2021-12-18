@@ -40,8 +40,8 @@ Value	Description
         };
     }
 
-    public static Integer toInt(MatchTacticType in) {
+    public static int toInt(MatchTacticType in) {
         if (in != null ) return in.id;
-        return null;
+        return Normal.id;
     }
 }
