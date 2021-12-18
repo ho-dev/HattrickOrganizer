@@ -15,7 +15,6 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
-import core.prediction.engine.TeamRatings;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -683,13 +682,13 @@ public class OnlineWorker {
 
 			// Merge the two
 			if ((lineUp2 != null)) {
-				if (!lineUp1.isHomeTeamLoaded())
+				if (lineUp1.isHomeTeamNotLoaded())
 					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
 				else if (!lineUp1.isGuestTeamLoaded())
 					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
-				if (!lineUp1.isHomeTeamLoaded()) {
+				if (lineUp1.isHomeTeamNotLoaded()) {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
 					if (lineUp2 != null)
 						lineUp1.setHomeTeam(lineUp2.getHomeTeam());

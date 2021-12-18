@@ -177,7 +177,7 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getToreGesamt()).append(",");
 		statement.append(player.getHattrick()).append(",");
 		statement.append(player.getBewertung()).append(",");
-		statement.append(player.getTrainerTyp()).append(",");
+		statement.append(TrainerType.toInt(player.getTrainerTyp())).append(",");
 		statement.append(player.getTrainerSkill()).append(",");
 		statement.append(hrfId).append(",");
 		statement.append("'").append(date.toString()).append("',");

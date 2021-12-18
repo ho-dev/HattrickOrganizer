@@ -52,7 +52,7 @@ import java.util.*;
 public class DBManager {
 
 	/** database versions */
-	private static final int DBVersion = 500; // HO 5.0 version
+	private static final int DBVersion = 600; // HO 5.0 version
 	private static final double DBConfigVersion = 5d; // HO 5.0 version
 
 	/** 2004-06-14 11:00:00.0 */
@@ -355,6 +355,7 @@ public class DBManager {
 		boolean exists;
 		try {
 			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
+			assert rs != null;
 			rs.next();
 			exists = rs.getInt(1) > 0;
 		} catch(SQLException e) {
@@ -713,7 +714,7 @@ public class DBManager {
 	 * Gets match lineup players.
 	 *
 	 * @param matchID the match id
-	 * @param matchType
+	 * @param matchType MatchType
 	 * @param teamID  the team id
 	 * @return the match lineup players
 	 */

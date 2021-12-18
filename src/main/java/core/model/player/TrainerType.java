@@ -23,6 +23,11 @@ public enum TrainerType {
         };
     }
 
+    public static int toInt(TrainerType trainerTyp) {
+        if ( trainerTyp != null) return trainerTyp.toInt();
+        return None.id;
+    }
+
     public int toInt(){
         return this.id;
     }

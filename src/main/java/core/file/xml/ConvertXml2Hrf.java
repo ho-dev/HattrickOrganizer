@@ -439,7 +439,7 @@ public class ConvertXml2Hrf {
 			buffer.append("tactictype=").append(MatchTacticType.toInt(matchLineupTeam.getMatchTacticType())).append('\n');
 			// The field is coachmodifier in matchOrders and StyleOfPlay in MatchLineup
 			// but we both named it styleOfPlay
-			buffer.append("styleOfPlay=").append(matchLineupTeam.getStyleOfPlay()).append('\n');
+			buffer.append("styleOfPlay=").append(StyleOfPlay.toInt(matchLineupTeam.getStyleOfPlay())).append('\n');
 			buffer.append("keeper=")
 					.append(matchLineupTeam.getPlayerByPosition(
 							IMatchRoleID.keeper).getPlayerId())
@@ -517,12 +517,10 @@ public class ConvertXml2Hrf {
 							IMatchRoleID.substFW1).getPlayerId())
 					.append('\n');
 			buffer.append("captain=")
-					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.captain).getPlayerId())
+					.append(matchLineupTeam.getLineup().getCaptain())
 					.append('\n');
 			buffer.append("kicker1=")
-					.append(matchLineupTeam.getPlayerByPosition(
-							IMatchRoleID.setPieces).getPlayerId())
+					.append(matchLineupTeam.getLineup().getKicker())
 					.append('\n');
 
 			buffer.append("behrightBack=")
@@ -999,7 +997,7 @@ public class ConvertXml2Hrf {
 				.append(trainingDataMap.get("TrainingType")).append('\n');
 		buffer.append("trType=")
 				.append(TrainingType.toString(Integer.parseInt(trainingDataMap
-						.get("TrainingType").toString()))).append('\n');
+						.get("TrainingType")))).append('\n');
 
 		if ((trainingDataMap.get("Morale") != null)
 				&& (trainingDataMap.get("SelfConfidence") != null)) {
@@ -1007,14 +1005,13 @@ public class ConvertXml2Hrf {
 					.append(trainingDataMap.get("Morale")).append('\n');
 			buffer.append("stamning=")
 					.append(TeamSpirit.toString(Integer
-							.parseInt(trainingDataMap.get("Morale").toString())))
+							.parseInt(trainingDataMap.get("Morale"))))
 					.append('\n');
 			buffer.append("sjalvfortroendeValue=")
 					.append(trainingDataMap.get("SelfConfidence")).append('\n');
 			buffer.append("sjalvfortroende=")
 					.append(TeamConfidence.toString(Integer
-							.parseInt(trainingDataMap.get("SelfConfidence")
-									.toString()))).append('\n');
+							.parseInt(trainingDataMap.get("SelfConfidence")))).append('\n');
 		} else {
 			buffer.append("playingMatch=true");
 		}
@@ -1065,7 +1062,7 @@ public class ConvertXml2Hrf {
 		buffer.append("CountryId=")
 				.append(worldDataMap.get("CountryId")).append('\n');
 		buffer.append("CurrencyRate=")
-				.append(worldDataMap.get("CurrencyRate").toString()
+				.append(worldDataMap.get("CurrencyRate")
 						.replace(',', '.')).append('\n');
 		buffer.append("LogoURL=").append(teamdetailsDataMap.get("LogoURL"))
 				.append('\n');
