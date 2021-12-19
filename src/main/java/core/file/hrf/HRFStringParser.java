@@ -5,6 +5,7 @@ import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.Team;
 import core.model.XtraData;
+import core.model.match.MatchLineupTeam;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
@@ -173,7 +174,7 @@ public class HRFStringParser {
 				}
 				// lineup
 				else if (entity.toString().equalsIgnoreCase(LINEUP)) {
-					hoModel.setLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.storeLineup(new MatchLineupTeam(MatchRoleID.convertOldRoleToNew(properties)));
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
@@ -202,7 +203,7 @@ public class HRFStringParser {
 
 
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
-					hoModel.setPreviousLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.setPreviousLineup(new MatchLineupTeam(MatchRoleID.convertOldRoleToNew(properties)));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {
 					hoModel.setStaff(parseStaff(properties));
 				}

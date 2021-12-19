@@ -21,6 +21,7 @@ import core.model.match.*;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.net.OnlineWorker;
+import module.teamAnalyzer.vo.Match;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
@@ -173,8 +174,10 @@ public class ConvertXml2Hrf {
 
 		// Automatisch alle MatchLineups runterladen
 		Map<String, String> nextLineupDataMap = null;
-		for (MatchKurzInfo match : matches) {
+		MatchKurzInfo upcomingMatch = null;
+		for (var match : matches) {
 			if ((match.getMatchStatus() == MatchKurzInfo.UPCOMING)){
+				upcomingMatch = match;
 				HOMainFrame.instance().setWaitInformation(58);
 				// Match is always from the normal system, and league will do
 				// the trick as the type.
@@ -234,9 +237,14 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(80);
 
 		// lineup
-		buffer.append(createLineUp(
-				String.valueOf(teamdetailsDataMap.get("TrainerID")),
-				nextLineupDataMap));
+		var trainerId = String.valueOf(teamdetailsDataMap.get("TrainerID"));
+		int matchId = -1;
+		int matchType = 0;
+		if ( upcomingMatch != null){
+			matchId = upcomingMatch.getMatchID();
+			matchType = upcomingMatch.getMatchType().getId();
+		}
+		buffer.append(createLineUp(trainerId, teamId, matchType, matchId, nextLineupDataMap));
 		HOMainFrame.instance().setWaitInformation(85);
 
 		// economy
@@ -653,19 +661,26 @@ public class ConvertXml2Hrf {
 
 	/**
 	 * Creates the lineup data.
-	 *
-	 * @param trainerId
+	 *  @param trainerId
 	 *            The playerId of the trainer of the club.
+	 * @param teamId
+	 * 			team id (-1 for lineup templates)
+	 * @param matchtype
+	 * 			match type (None for lineup templates)
+	 * @param matchId
+	 * 			match id (negative value for lineup templates)
 	 * @param nextLineup
-	 *            The lineup info hashmap from the parser.
 	 */
-	public static String createLineUp(String trainerId, Map<String, String> nextLineup) {
+	public static String createLineUp(String trainerId, int teamId, int matchtype, int matchId, Map<String, String> nextLineup) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("[lineup]").append('\n');
 
 		if (nextLineup != null) {
 			
 			try {
+				buffer.append("teamid=").append(teamId).append('\n');
+				buffer.append("matchid=").append(matchId).append('\n');
+				buffer.append("matchtyp=").append(matchtype).append('\n');
 				buffer.append("trainer=").append(trainerId).append('\n');
 				buffer.append("installning=").append(nextLineup.get("Attitude")).append('\n');
 				buffer.append("styleOfPlay=").append(nextLineup.get("StyleOfPlay")).append('\n');

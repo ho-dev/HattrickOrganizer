@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import static core.model.player.IMatchRoleID.*;
@@ -169,7 +168,7 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		Lineup lineupData = hov.getModel().getLineup();
+		var lineupData = hov.getModel().getCurrentLineupTeamRecalculated().getLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();
@@ -222,7 +221,7 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		Lineup lineupData = hov.getModel().getLineup();
+		Lineup lineupData = hov.getModel().getCurrentLineupTeamRecalculated().getLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();

@@ -157,7 +157,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			List<MatchLineupPosition> teamspieler = DBManager.instance().getMatchLineupPlayers(
 					matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), teamid);
-			Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
+			Lineup aufstellung = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 
 			aufstellung.clearLineup(); // To make sure the old one is
 			// gone.
@@ -296,7 +296,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Get the team data for the own team (current linep).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 		TeamRatings teamRatings = manager.generateTeamRatings(
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getMidfield().get(-90d))),
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftDefense().get(-90d))),

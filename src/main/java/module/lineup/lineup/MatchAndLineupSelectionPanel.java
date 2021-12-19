@@ -208,7 +208,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
 
         m_jcbxLineupSimulation.addActionListener( e -> {
-            Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+            Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
             Ratings oRatingsBefore = lineup.getRatings();
 
             update_jcbUpcomingGames();
@@ -412,17 +412,17 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void downloadLineupFromHT() {
 
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-        Lineup lineup;
 
         try {
             if(matchOrder != null) {
                 CursorToolkit.startWaitCursor(this);
-                lineup = OnlineWorker.getLineupbyMatchId(matchOrder.getMatchID(), matchOrder.getMatchType());
-                if (lineup != null) {
+                var matchLineupTeam = OnlineWorker.getLineupbyMatchId(matchOrder.getMatchID(), matchOrder.getMatchType());
+                if (matchLineupTeam != null) {
+                    var lineup = matchLineupTeam.getLineup();
                     lineup.setLocation(matchOrder.getLocation());
                     lineup.setWeather(matchOrder.getWeather());
                     lineup.setWeatherForecast(matchOrder.getWeatherForecast());
-                    HOVerwaltung.instance().getModel().setLineup(lineup);
+                    HOVerwaltung.instance().getModel().storeLineup(matchLineupTeam);
                 }
             }
         }

@@ -73,8 +73,10 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		return team;
 	}
 
-	void storeMatchLineupTeam(MatchLineupTeam team, int matchID) {
+	void storeMatchLineupTeam(MatchLineupTeam team) {
+
 		if (team != null) {
+			var matchID = team.getMatchId();
 			final String[] where = { "MatchTyp", "MatchID" , "TeamID"};
 			final String[] werte = { "" + team.getMatchType().getId(), "" + matchID, "" +team.getTeamID()};
 			delete(where, werte);

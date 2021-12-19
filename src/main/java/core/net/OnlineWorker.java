@@ -957,10 +957,11 @@ public class OnlineWorker {
 	 *            The matchTyp for the match to download
 	 * @return The Lineup object with the downloaded match data
 	 */
-	public static Lineup getLineupbyMatchId(int matchId, MatchType matchType) {
+	public static MatchLineupTeam getLineupbyMatchId(int matchId, MatchType matchType) {
 
 		try {
-			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, HOVerwaltung.instance().getModel().getBasics().getTeamId());
+			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, teamId);
 			
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
@@ -975,8 +976,8 @@ public class OnlineWorker {
 				{	
 					//It is possible that NTs struggle here.
 				}
-				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, map);
-				return new Lineup(getProperties(lineupData));
+				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
+				return new MatchLineupTeam(getProperties(lineupData));
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";

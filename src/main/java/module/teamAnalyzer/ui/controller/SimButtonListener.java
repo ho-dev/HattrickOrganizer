@@ -39,15 +39,13 @@ public class SimButtonListener implements ActionListener {
 
     /** The opponent team */
     TeamLineupData opponentTeam;
-    private RecapPanel recapPanel = null;
+    private RecapPanel recapPanel;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new SimButtonListener object.
      *
-     * @param panel user team
-     * @param panel2 opponent team
      */
     public SimButtonListener(TeamLineupData myTeam, TeamLineupData opponentTeam, RecapPanel recapPanel) {
         this.myTeam = myTeam;
@@ -83,8 +81,9 @@ public class SimButtonListener implements ActionListener {
                                                                    myTeam.getMiddleAttack(),
                                                                    myTeam.getRightAttack());
 
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
         TeamData myTeamValues = manager.generateTeamData(myTeam.getTeamPanel().getText(),
-        		myTeamRatings, HOVerwaltung.instance().getModel().getLineup().getTacticType(), getTacticLevel());
+        		myTeamRatings, lineup.getTacticType(), getTacticLevel());
 
         TeamRatings opponentTeamRatings = manager.generateTeamRatings(opponentTeam.getMidfield(),
                                                                          opponentTeam.getLeftDefence(),
@@ -99,9 +98,9 @@ public class SimButtonListener implements ActionListener {
         		getTacticSkill(recapPanel.getSelectedTacticSkill()));
 
         MatchEnginePanel matchPredictionPanel;
-        String match = "";
+        String match;
 
-        if (HOVerwaltung.instance().getModel().getLineup().getLocation() == 1) {
+        if (lineup.getLocation() == 1) {
             matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues);
             match = myTeamValues.getTeamName() + " - " + opponentTeamValues.getTeamName();
         } else {
@@ -119,27 +118,14 @@ public class SimButtonListener implements ActionListener {
      */
     private int getTacticLevel() {
         double tacticLevel = 1d;
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 
-        switch (HOVerwaltung.instance().getModel().getLineup().getTacticType()) {
-            case IMatchDetails.TAKTIK_KONTER:
-                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelCounter();
-                break;
-
-            case IMatchDetails.TAKTIK_MIDDLE:
-                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelAimAow();
-                break;
-
-            case IMatchDetails.TAKTIK_PRESSING:
-                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelPressing();
-                break;
-
-            case IMatchDetails.TAKTIK_WINGS:
-                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelAimAow();
-                break;
-
-            case IMatchDetails.TAKTIK_LONGSHOTS:
-                tacticLevel = HOVerwaltung.instance().getModel().getLineup().getTacticLevelLongShots();
-                break;
+        switch (lineup.getTacticType()) {
+            case IMatchDetails.TAKTIK_KONTER -> tacticLevel = lineup.getTacticLevelCounter();
+            case IMatchDetails.TAKTIK_MIDDLE -> tacticLevel = lineup.getTacticLevelAimAow();
+            case IMatchDetails.TAKTIK_PRESSING -> tacticLevel = lineup.getTacticLevelPressing();
+            case IMatchDetails.TAKTIK_WINGS -> tacticLevel = lineup.getTacticLevelAimAow();
+            case IMatchDetails.TAKTIK_LONGSHOTS -> tacticLevel = lineup.getTacticLevelLongShots();
         }
         // Re-Scale to HT ratings (...,solid=6,...,divine=19)
         tacticLevel -= 1;

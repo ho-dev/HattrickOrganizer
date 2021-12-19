@@ -98,16 +98,24 @@ public class Lineup{
 			this.penaltyTakers.add(position);
 		}
 		else if ( position.getId() == IMatchRoleID.setPieces){
-			this.setPiecesTaker = position;
-			this.m_iKicker = position.getPlayerId();
+			setSetPiecesTaker(position);
 		}
 		else if ( position.getId() == IMatchRoleID.captain){
-			this.captain = position;
-			this.m_iKapitaen = position.getPlayerId();
+			setCaptain(position);
 		}
 		else if ( position.isReplacedMatchRoleId()){
 			this.replacedPositions.add(position);
 		}
+	}
+
+	private void setCaptain(MatchLineupPosition position) {
+		this.captain = position;
+		this.m_iKapitaen = position.getPlayerId();
+	}
+
+	private void setSetPiecesTaker(MatchLineupPosition position) {
+		this.setPiecesTaker = position;
+		this.m_iKicker = position.getPlayerId();
 	}
 
 	private class Settings {
@@ -272,8 +280,8 @@ public class Lineup{
 		}
 
 		try { // captain + set pieces taker
-			m_iKicker = Integer.parseInt(properties.getProperty("kicker1", "0"));
-			m_iKapitaen = Integer.parseInt(properties.getProperty("captain", "0"));
+			setKicker(Integer.parseInt(properties.getProperty("kicker1", "0")));
+			setCaptain(Integer.parseInt(properties.getProperty("captain", "0")));
 		} catch (Exception e) {
 			HOLogger.instance().warning(getClass(), "Aufstellung.<init2>: " + e);
 			HOLogger.instance().log(getClass(), e);
@@ -401,7 +409,7 @@ public class Lineup{
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
 					int curPlayerId = player.getPlayerID();
-					float curCaptainsValue = HOVerwaltung.instance().getModel().getLineup()
+					float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup()
 							.getAverageExperience(curPlayerId);
 					if (maxValue < curCaptainsValue) {
 						maxValue = curCaptainsValue;
@@ -564,7 +572,7 @@ public class Lineup{
 	 *            New value of property m_iKapitaen.
 	 */
 	public final void setCaptain(int m_iKapitaen) {
-		this.m_iKapitaen = m_iKapitaen;
+		this.setCaptain(new MatchLineupPosition(IMatchRoleID.captain, m_iKapitaen,0));
 	}
 
 	/**
@@ -583,7 +591,7 @@ public class Lineup{
 	 *            New value of property m_iKicker.
 	 */
 	public final void setKicker(int m_iKicker) {
-		this.m_iKicker = m_iKicker;
+		this.setSetPiecesTaker(new MatchLineupPosition(IMatchRoleID.setPieces, m_iKicker,0));
 	}
 
 	/**

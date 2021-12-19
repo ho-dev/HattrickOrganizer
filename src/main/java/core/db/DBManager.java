@@ -287,7 +287,6 @@ public class DBManager {
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
 		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
-		tables.put(MatchOrderTable.TABLENAME, new MatchOrderTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
@@ -1616,21 +1615,6 @@ public class DBManager {
 				hrfId, xtra);
 	}
 
-	/**
-	 * Gets match lineup team.
-	 *
-	 * @param iMatchType  the type of match
-	 * @param matchID      the match id
-	 * @param teamID       the team id
-	 * @return the match lineup team
-	 */
-// ------------------------------- MatchLineupTeamTable
-	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(iMatchType, matchID, teamID);
-	}
-
 	// ------------------------------- UserParameterTable
 	// -------------------------------------------------
 
@@ -2349,41 +2333,6 @@ public class DBManager {
 
 
 	/**
-	 * Gets match order.
-	 *
-	 * @param matchId  the match id
-	 * @param matchTyp the match typ
-	 * @return the match order
-	 */
-	public LineupPosition getMatchOrder(int matchId,
-										MatchType matchTyp) {
-		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
-				.getMatchOrder(matchId, matchTyp);
-	}
-
-	/**
-	 * Gets match order.
-	 *
-	 * @param matchId  the match id
-	 * @param matchTyp the match typ
-	 * @return the match order
-	 */
-	public LineupPosition getMatchOrder(int matchId,
-										MatchType matchTyp, boolean verifyInternetAccess) {
-		return ((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
-				.getMatchOrder(matchId, matchTyp, verifyInternetAccess);
-	}
-
-
-	/**
-	 * Remove match order.
-	 */
-	public void removeMatchOrder() {
-		((MatchOrderTable) getTable(MatchOrderTable.TABLENAME))
-				.removeMatchOrder();
-	}
-
-	/**
 	 * Gets integer.
 	 *
 	 * @param rs          the rs
@@ -2649,14 +2598,24 @@ public class DBManager {
 		return ((MatchTeamRatingTable) getTable(MatchTeamRatingTable.TABLENAME)).load(matchId, matchtype);
 	}
 
-	public Lineup loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
-	public Lineup loadNextMatchLineup(int teamID) { return loadLineup(getNextMatchesKurzInfo(teamID), teamID);}
+	// ------------------------------- MatchLineupTeamTable
+	// -------------------------------------------------
+	public MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
+		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
+				.getMatchLineupTeam(iMatchType, matchID, teamID);
+	}
 
-	private Lineup loadLineup(MatchKurzInfo match, int teamID) {
+	public MatchLineupTeam loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
+	public MatchLineupTeam loadNextMatchLineup(int teamID) { return loadLineup(getNextMatchesKurzInfo(teamID), teamID);}
+
+	private MatchLineupTeam loadLineup(MatchKurzInfo match, int teamID) {
 		if (match != null) {
-			var team = getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), teamID);
-			if (team != null) return team.getLineup();
+			return getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), teamID);
 		}
 		return null;
+	}
+
+	public void storeMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
+		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
 	}
 }

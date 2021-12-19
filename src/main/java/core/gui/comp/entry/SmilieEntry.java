@@ -71,12 +71,12 @@ public class SmilieEntry extends DoubleLabelEntries {
                 if (ergebnis == 0) {
                     final MatchRoleID entrySort = core.model.HOVerwaltung.instance()
                             .getModel()
-                            .getCurrentLineup()
+                            .getCurrentLineupTeam().getLineup()
                             .getPositionByPlayerId(entry.getPlayer()
                                     .getPlayerID());
                     final MatchRoleID sort = core.model.HOVerwaltung.instance()
                             .getModel()
-                            .getCurrentLineup()
+                            .getCurrentLineupTeam().getLineup()
                             .getPositionByPlayerId(getPlayer()
                                     .getPlayerID());
 
@@ -86,13 +86,7 @@ public class SmilieEntry extends DoubleLabelEntries {
                         ergebnis = -1;
                     } else if (entrySort == null) {
                         ergebnis = 1;
-                    } else if (sort.getSortId() > entrySort.getSortId()) {
-                        ergebnis = -1;
-                    } else if (sort.getSortId() < entrySort.getSortId()) {
-                        ergebnis = 1;
-                    } else {
-                        ergebnis = 0;
-                    }
+                    } else ergebnis = Integer.compare(entrySort.getSortId(), sort.getSortId());
                 }
 
                 return ergebnis;

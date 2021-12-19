@@ -221,7 +221,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 				boolean include = true;
 				if ( m_jcbxNotLast.isSelected()) {
 					var previousLineup = hoModel.getPreviousLineup();
-					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+					if (previousLineup != null && previousLineup.getLineup().isPlayerInStartingEleven(player.getPlayerID())) {
 						include = false;
 					}
 				}
@@ -231,7 +231,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			}
 		}
 
-		hoModel.getLineup().optimizeLineup(vPlayer,
+		hoModel.getCurrentLineupTeamRecalculated().getLineup().optimizeLineup(vPlayer,
 				(byte) ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId(),
 				m_jcbxConsiderForm.isSelected(), m_jcbxIdealPositionFirst.isSelected(),
 				m_jcbxConsiderInjuredPlayers.isSelected(), m_jcbxConsiderSuspendedPlayers.isSelected());

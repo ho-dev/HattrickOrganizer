@@ -80,6 +80,18 @@ public class MatchLineupTeam {
 		this.lineup = new Lineup();
 	}
 
+	public MatchLineupTeam(){
+		this(MatchType.NONE, -1, "", -1, 0);
+	}
+
+	public MatchLineupTeam(Properties properties) {
+		this.matchType = MatchType.getById(Integer.parseInt(properties.getProperty("matchtyp", "0")));
+		this.matchId = Integer.parseInt(properties.getProperty("matchid", "-1"));
+		this.teamId = Integer.parseInt(properties.getProperty("teamid", "-1"));
+		this.teamName = properties.getProperty("name", "");
+		this.lineup=new Lineup(properties);
+	}
+
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
 
@@ -765,6 +777,10 @@ public class MatchLineupTeam {
 		var players = DBManager.instance().getMatchLineupPlayers(this.matchId, this.matchType, this.teamId);
 		var substitutions = DBManager.instance().getMatchSubstitutionsByMatchTeam(this.matchId, this.matchType, this.teamId);
 		this.lineup = new Lineup(players, substitutions);
+	}
+
+	public int getMatchId() {
+		return this.matchId;
 	}
 
 	private class MatchAppearance {

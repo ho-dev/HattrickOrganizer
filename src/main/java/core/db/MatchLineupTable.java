@@ -106,11 +106,11 @@ public final class MatchLineupTable extends AbstractTable {
 
 				if (teamId == null || teamId == lineup.getHomeTeamId()) {
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getHomeTeam(), lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getHomeTeam());
 				}
 				if (teamId == null || teamId == lineup.getGuestTeamId()) {
 					((MatchLineupTeamTable) DBManager.instance().getTable(MatchLineupTeamTable.TABLENAME))
-							.storeMatchLineupTeam(lineup.getGuestTeam(), lineup.getMatchID());
+							.storeMatchLineupTeam(lineup.getGuestTeam());
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DB.storeMatchLineup Error" + e);

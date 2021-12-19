@@ -3,6 +3,7 @@ package core.model;
 import core.db.DBManager;
 import core.file.hrf.HRF;
 import core.model.match.MatchLineup;
+import core.model.match.MatchLineupTeam;
 import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
@@ -33,8 +34,8 @@ import java.util.stream.Collectors;
 public class HOModel {
     private HRF o_previousHRF;
     private HRF o_hrf;
-    private Lineup m_clAufstellung;
-    private Lineup m_clLastAufstellung;
+    private MatchLineupTeam m_clAufstellung;
+    private MatchLineupTeam m_clLastAufstellung;
     private Basics m_clBasics;
     private Economy m_clEconomy;
     private Liga m_clLiga;
@@ -171,8 +172,17 @@ public class HOModel {
     /**
      * Set a new lineup
      */
-    public final void setLineup(@Nullable Lineup lineup) {
+    public final void setLineup(@Nullable MatchLineupTeam lineup) {
+        if ( lineup != null ) {
+            if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
+            if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
+        }
         m_clAufstellung = lineup;
+    }
+
+    public void storeLineup(MatchLineupTeam matchLineupTeam) {
+        setLineup(matchLineupTeam);
+        DBManager.instance().storeMatchLineupTeam(matchLineupTeam);
     }
 
     //--------- Lineup ----------------------------------
@@ -180,20 +190,20 @@ public class HOModel {
     /**
      * returns the lineup (setRatings is called)
      */
-    public final Lineup getLineup() {
-        getCurrentLineup();
-        m_clAufstellung.setRatings();
+    public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
+        getCurrentLineupTeam();
+        m_clAufstellung.getLineup().setRatings();
         return m_clAufstellung;
     }
 
     /**
      * returns the lineup (setRatings is NOT called)
      */
-    public final Lineup getCurrentLineup() {
+    public final MatchLineupTeam getCurrentLineupTeam() {
         if (m_clAufstellung == null) {
             m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
             if ( m_clAufstellung == null){
-                m_clAufstellung = new Lineup();
+                m_clAufstellung = new MatchLineupTeam();
             }
         }
         return m_clAufstellung;
@@ -203,7 +213,7 @@ public class HOModel {
      * returns the lineup (redundant to getCurrentLineup)
      */
     public final Lineup getLineupWithoutRatingRecalc() {
-        return getCurrentLineup();
+        return getCurrentLineupTeam().getLineup();
     }
 
     /**
@@ -262,14 +272,14 @@ public class HOModel {
     /**
      * Set the previous lineup
      */
-    public final void setPreviousLineup(Lineup aufstellung) {
+    public final void setPreviousLineup(MatchLineupTeam aufstellung) {
         m_clLastAufstellung = aufstellung;
     }
 
     /**
      * Returns previous lineup
      */
-    public final Lineup getPreviousLineup() {
+    public final MatchLineupTeam getPreviousLineup() {
         if (m_clLastAufstellung == null) {
             m_clLastAufstellung = DBManager.instance().loadPreviousMatchLineup(HOVerwaltung.instance().getModel().getClub().getTeamID());
         }

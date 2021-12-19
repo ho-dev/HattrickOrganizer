@@ -175,7 +175,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 				if ( bExcludeLast) {
-					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup();
+					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup().getLineup();
 					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
 						include = false;
 					}

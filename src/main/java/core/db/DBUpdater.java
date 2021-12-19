@@ -73,12 +73,13 @@ final class DBUpdater {
 
 	private void updateDBv600(int dbVersion) throws SQLException {
 		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
+
 		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS MATCHLINEUPTEAM_IDX ON MATCHLINEUPTEAM (MatchID,TeamID,MatchTyp)");
 
 		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("ATTITUDE", "INTEGER");
 		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("TACTIC", "INTEGER");
-
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {
@@ -318,7 +319,6 @@ final class DBUpdater {
 			dbManager.getTable(MatchLineupTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
-			dbManager.getTable(MatchOrderTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 
