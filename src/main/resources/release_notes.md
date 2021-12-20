@@ -35,7 +35,7 @@
 ### Training
 
 ### League
-
+* fix download of power rating (not only one team per match) (#1293)
   
 ### Youth
 
