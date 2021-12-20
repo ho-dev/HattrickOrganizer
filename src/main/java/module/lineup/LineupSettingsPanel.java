@@ -270,16 +270,14 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				var trainerType = ((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId();
 				homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(trainerType));
-				var oldStyleOfPlay = StyleOfPlay.fromInt(homodel.getLineupWithoutRatingRecalc().getStyleOfPlay());
-				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox(oldStyleOfPlay);
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox();
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				homodel.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
 				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
-				var oldStyleOfPlay = StyleOfPlay.fromInt(homodel.getLineupWithoutRatingRecalc().getStyleOfPlay());
-				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox(oldStyleOfPlay);
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox();
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getLineupWithoutRatingRecalc();

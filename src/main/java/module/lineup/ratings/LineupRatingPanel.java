@@ -29,22 +29,33 @@ import static module.lineup.LineupPanel.TITLE_FG;
 public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable {
 
     class RatingPanel extends JPanel {
-        private Color color;
 
-        public RatingPanel(ColorLabelEntry ratingNumber, ColorLabelEntry ratingCompare, JLabel ratingText ) {
+        private final ColorLabelEntry compare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
+        private final ColorLabelEntry number = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
+        private JLabel text = new JLabel("", SwingConstants.CENTER);
+        private Color color;
+        private Double rating=0.;
+
+        public RatingPanel(String tooltipText) {
             super(new BorderLayout());
             var jpRatingValueAndDelta = new JPanel(new GridLayout(1, 2));
-            ratingNumber.setFontStyle(Font.BOLD);
-            jpRatingValueAndDelta.add(ratingNumber.getComponent(false));
-            jpRatingValueAndDelta.add(ratingCompare.getComponent(false));
+            number.setFontStyle(Font.BOLD);
+            jpRatingValueAndDelta.add(number.getComponent(false));
+            jpRatingValueAndDelta.add(compare.getComponent(false));
 
             var jpSectorRating = new JPanel(new GridLayout(2, 1));
             jpSectorRating.setBackground(LABEL_BG);
-            jpSectorRating.add(ratingText);
+            jpSectorRating.add(text);
             jpSectorRating.add(jpRatingValueAndDelta);
 
             add(jpSectorRating, BorderLayout.CENTER);
             setPreferredSize(SIZE);
+
+            compare.setSpecialNumber(0f, false);
+
+            text.setToolTipText(tooltipText);
+            number.setToolTipText(tooltipText);
+            compare.setToolTipText(tooltipText);
         }
 
         @Override
@@ -69,6 +80,26 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
                 setColor(RATING_DEFAULT);
             }
         }
+
+        public void clear() {
+            text.setText("");
+            number.clear();
+            compare.clear();
+        }
+
+        public void setRating(Double rating) {
+            if(rating!=null ) {
+                number.setText(m_clFormat.format(rating));
+                compare.setSpecialNumber((float) (rating - this.rating), false);
+                this.rating = rating;
+                text.setText(PlayerAbility.getNameForSkill(rating, false, true));
+            }
+        }
+
+        public double getRating(){
+            if ( rating!=null) return rating;
+            return 0.;
+        }
     }
 
     final static boolean IS_FEEDBACK_PLUGIN_ENABLED = false;
@@ -80,35 +111,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final static Color RATING_BELOW_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT);
     private final static Color RATING_ABOVE_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT);
     int iHatStats;
-    double m_dCentralAttackRating, m_dRightAttackRating, m_dLeftAttackRating, m_dMidfieldRating;
-    double m_dCentralDefenseRating, m_dLeftDefenseRating, m_dRightDefenseRating, loddar;
-    private final ColorLabelEntry m_jlCentralAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlCentralAttackRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlRightAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlRightAttackRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlLeftAttackRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlLeftAttackRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlMidfieldRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlMidfieldRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlCentralDefenseRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlCentralDefenseRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlLeftDefenseRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlLeftDefenseRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-    private final ColorLabelEntry m_jlRightDefenseRatingCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jlRightDefenseRatingNumber = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
+    double loddar;
     private final ColorLabelEntry m_jlHatstatMain = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private final ColorLabelEntry m_jlLoddarMain = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
     private final ColorLabelEntry m_jlHatstatCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlLoddarCompare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlTacticRating = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
     private final ColorLabelEntry m_jlFormationExperience = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.LEFT);
-    private JLabel m_jlCentralAttackRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlRightAttackRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlLeftAttackRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlMidfieldRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlCentralDefenseRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlLeftDefenseRatingText = new JLabel("", SwingConstants.CENTER);
-    private JLabel m_jlRightDefenseRatingText = new JLabel("", SwingConstants.CENTER);
     private RatingPanel m_jpCentralAttack;
     private RatingPanel m_jpRightAttack;
     private RatingPanel m_jpLeftAttack;
@@ -138,27 +147,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
 
     public void clear() {
-        m_jlLeftDefenseRatingText.setText("");
-        m_jlLeftDefenseRatingNumber.clear();
-        m_jlLeftDefenseRatingCompare.clear();
-        m_jlCentralDefenseRatingText.setText("");
-        m_jlCentralDefenseRatingNumber.clear();
-        m_jlCentralDefenseRatingCompare.clear();
-        m_jlRightDefenseRatingText.setText("");
-        m_jlRightDefenseRatingNumber.clear();
-        m_jlRightDefenseRatingCompare.clear();
-        m_jlMidfieldRatingText.setText("");
-        m_jlMidfieldRatingNumber.clear();
-        m_jlMidfieldRatingCompare.clear();
-        m_jlRightAttackRatingText.setText("");
-        m_jlRightAttackRatingNumber.clear();
-        m_jlRightAttackRatingCompare.clear();
-        m_jlCentralAttackRatingText.setText("");
-        m_jlCentralAttackRatingNumber.clear();
-        m_jlCentralAttackRatingCompare.clear();
-        m_jlLeftAttackRatingText.setText("");
-        m_jlLeftAttackRatingNumber.clear();
-        m_jlLeftAttackRatingCompare.clear();
+        m_jpCentralAttack.clear();
+        m_jpRightAttack.clear();
+        m_jpLeftAttack.clear();
+        m_jpMidfield.clear();
+        m_jpCentralDefense.clear();
+        m_jpLeftDefense.clear();
+        m_jpRightDefense.clear();
         m_jlHatstatMain.clear();
         m_jlHatstatCompare.clear();
         m_jlLoddarMain.clear();
@@ -166,59 +161,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         m_jlTacticRating.clear();
         m_jlFormationExperience.clear();
     }
-
-    void setCentralAttack(double rating) {
-        m_jlCentralAttackRatingNumber.setText(m_clFormat.format(rating));
-        m_jlCentralAttackRatingCompare.setSpecialNumber((float) (rating - m_dCentralAttackRating), false);
-        m_dCentralAttackRating = rating;
-        m_jlCentralAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-    void setRightAttack(double rating) {
-        m_jlRightAttackRatingNumber.setText(m_clFormat.format(rating));
-        m_jlRightAttackRatingCompare.setSpecialNumber((float) (rating - m_dRightAttackRating), false);
-        m_dRightAttackRating = rating;
-        m_jlRightAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-    void setLeftAttack(double rating) {
-        m_jlLeftAttackRatingNumber.setText(m_clFormat.format(rating));
-        m_jlLeftAttackRatingCompare.setSpecialNumber((float) (rating - m_dLeftAttackRating), false);
-        m_dLeftAttackRating = rating;
-        m_jlLeftAttackRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-    void setMidfield(double rating) {
-        m_jlMidfieldRatingNumber.setText(m_clFormat.format(rating));
-        m_jlMidfieldRatingCompare.setSpecialNumber((float) (rating - m_dMidfieldRating), false);
-        m_dMidfieldRating = rating;
-        m_jlMidfieldRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-
-    void setCentralDefense(double rating) {
-        m_jlCentralDefenseRatingNumber.setText(m_clFormat.format(rating));
-        m_jlCentralDefenseRatingCompare.setSpecialNumber((float) (rating - m_dCentralDefenseRating), false);
-        m_dCentralDefenseRating = rating;
-        m_jlCentralDefenseRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-
-    void setLeftDefense(double rating) {
-        m_jlLeftDefenseRatingNumber.setText(m_clFormat.format(rating));
-        m_jlLeftDefenseRatingCompare.setSpecialNumber((float) (rating - m_dLeftDefenseRating), false);
-        m_dLeftDefenseRating = rating;
-        m_jlLeftDefenseRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
-
-    void setRightDefense(double rating) {
-        m_jlRightDefenseRatingNumber.setText(m_clFormat.format(rating));
-        m_jlRightDefenseRatingCompare.setSpecialNumber((float) (rating - m_dRightDefenseRating), false);
-        m_dRightDefenseRating = rating;
-        m_jlRightDefenseRatingText.setText(PlayerAbility.getNameForSkill(rating, false, true));
-    }
-
 
     void setiHatStats(int value) {
         m_jlHatstatMain.setText(Helper.INTEGERFORMAT.format(value));
@@ -251,17 +193,21 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
     void calcRatingRatio() {
 
-        double ratingRatio;
-        final double avgRating = (m_dLeftDefenseRating + m_dCentralDefenseRating + m_dRightDefenseRating + m_dMidfieldRating + m_dRightAttackRating
-                + m_dCentralAttackRating + m_dLeftAttackRating) / 7d;
+        final double avgRating = (m_jpLeftDefense.getRating() +
+                m_jpCentralDefense.getRating() +
+                m_jpRightDefense.getRating() +
+                m_jpMidfield.getRating() +
+                m_jpRightAttack.getRating() +
+                m_jpCentralAttack.getRating() +
+                m_jpLeftAttack.getRating()) / 7d;
 
-        m_jpLeftDefense.setRatingRatio( m_dLeftDefenseRating / avgRating );
-        m_jpCentralDefense.setRatingRatio( m_dCentralDefenseRating / avgRating );
-        m_jpRightDefense.setRatingRatio( m_dRightDefenseRating / avgRating );
-        m_jpMidfield.setRatingRatio( m_dMidfieldRating / avgRating );
-        m_jpRightAttack.setRatingRatio( m_dRightAttackRating / avgRating );
-        m_jpCentralAttack.setRatingRatio( m_dCentralAttackRating / avgRating );
-        m_jpLeftAttack.setRatingRatio( m_dLeftAttackRating / avgRating );
+        m_jpLeftDefense.setRatingRatio(m_jpLeftDefense.getRating() / avgRating);
+        m_jpCentralDefense.setRatingRatio(m_jpCentralDefense.getRating() / avgRating);
+        m_jpRightDefense.setRatingRatio(m_jpRightDefense.getRating() / avgRating);
+        m_jpMidfield.setRatingRatio(m_jpMidfield.getRating() / avgRating);
+        m_jpRightAttack.setRatingRatio(m_jpRightAttack.getRating() / avgRating);
+        m_jpCentralAttack.setRatingRatio(m_jpCentralAttack.getRating() / avgRating);
+        m_jpLeftAttack.setRatingRatio(m_jpLeftAttack.getRating() / avgRating);
     }
 
     /**
@@ -269,13 +215,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
      */
     private void initComponents() {
 
-        m_jpCentralAttack = new RatingPanel(m_jlCentralAttackRatingNumber, m_jlCentralAttackRatingCompare, m_jlCentralAttackRatingText);
-        m_jpRightAttack = new RatingPanel(m_jlRightAttackRatingNumber, m_jlRightAttackRatingCompare, m_jlRightAttackRatingText);
-        m_jpLeftAttack = new RatingPanel(m_jlLeftAttackRatingNumber, m_jlLeftAttackRatingCompare, m_jlLeftAttackRatingText);
-        m_jpMidfield = new RatingPanel(m_jlMidfieldRatingNumber, m_jlMidfieldRatingCompare, m_jlMidfieldRatingText);
-        m_jpCentralDefense = new RatingPanel(m_jlCentralDefenseRatingNumber, m_jlCentralDefenseRatingCompare, m_jlCentralDefenseRatingText);
-        m_jpLeftDefense = new RatingPanel(m_jlLeftDefenseRatingNumber, m_jlLeftDefenseRatingCompare, m_jlLeftDefenseRatingText);
-        m_jpRightDefense = new RatingPanel(m_jlRightDefenseRatingNumber, m_jlRightDefenseRatingCompare, m_jlRightDefenseRatingText);
+        m_jpCentralAttack = new RatingPanel(getLangStr("ls.match.ratingsector.centralattack"));
+        m_jpRightAttack = new RatingPanel(getLangStr("ls.match.ratingsector.rightattack"));
+        m_jpLeftAttack = new RatingPanel(getLangStr("ls.match.ratingsector.leftattack"));
+        m_jpMidfield = new RatingPanel(getLangStr("ls.match.ratingsector.midfield"));
+        m_jpCentralDefense = new RatingPanel(getLangStr("ls.match.ratingsector.centraldefence"));
+        m_jpLeftDefense = new RatingPanel(getLangStr("ls.match.ratingsector.leftdefence"));
+        m_jpRightDefense = new RatingPanel(getLangStr("ls.match.ratingsector.rightdefence"));
 
         JPanel mainPanel;
 
@@ -517,13 +463,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         initToolTips();
 
         //initialize all rating compare to 0
-        m_jlLeftDefenseRatingCompare.setSpecialNumber(0f, false);
-        m_jlCentralDefenseRatingCompare.setSpecialNumber(0f, false);
-        m_jlRightDefenseRatingCompare.setSpecialNumber(0f, false);
-        m_jlMidfieldRatingCompare.setSpecialNumber(0f, false);
-        m_jlRightAttackRatingCompare.setSpecialNumber(0f, false);
-        m_jlCentralAttackRatingCompare.setSpecialNumber(0f, false);
-        m_jlLeftAttackRatingCompare.setSpecialNumber(0f, false);
         m_jlHatstatCompare.setSpecialNumber(0, false);
         m_jlLoddarCompare.setSpecialNumber(0f, false);
     }
@@ -543,57 +482,36 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
     private void initToolTips() {
-        m_jlLeftDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-        m_jlLeftDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-        m_jlLeftDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftdefence"));
-        m_jlCentralDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-        m_jlCentralDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-        m_jlCentralDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centraldefence"));
-        m_jlRightDefenseRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-        m_jlRightDefenseRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-        m_jlRightDefenseRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightdefence"));
-        m_jlMidfieldRatingText.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-        m_jlMidfieldRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-        m_jlMidfieldRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.midfield"));
-        m_jlRightAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-        m_jlRightAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-        m_jlRightAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.rightattack"));
-        m_jlCentralAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-        m_jlCentralAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-        m_jlCentralAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.centralattack"));
-        m_jlLeftAttackRatingText.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-        m_jlLeftAttackRatingNumber.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
-        m_jlLeftAttackRatingCompare.setToolTipText(getLangStr("ls.match.ratingsector.leftattack"));
         m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
         m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
     }
 
     public String getMidfieldRating() {
-        return m_clFormat.format(m_dMidfieldRating);
+        return m_clFormat.format(m_jpMidfield.getRating());
     }
 
     public String getLeftDefenseRating() {
-        return m_clFormat.format(m_dLeftDefenseRating);
+        return m_clFormat.format(m_jpLeftDefense.getRating());
     }
 
     public String getCentralDefenseRating() {
-        return m_clFormat.format(m_dCentralDefenseRating);
+        return m_clFormat.format(m_jpCentralDefense.getRating());
     }
 
     public String getRightDefenseRating() {
-        return m_clFormat.format(m_dRightDefenseRating);
+        return m_clFormat.format(m_jpRightDefense.getRating());
     }
 
     public String getLeftAttackRating() {
-        return m_clFormat.format(m_dLeftAttackRating);
+        return m_clFormat.format(m_jpLeftAttack.getRating());
     }
 
     public String getCentralAttackRating() {
-        return m_clFormat.format(m_dCentralAttackRating);
+        return m_clFormat.format(m_jpCentralAttack.getRating());
     }
 
     public String getRightAttackRating() {
-        return m_clFormat.format(m_dRightAttackRating);
+        return m_clFormat.format(m_jpRightAttack.getRating());
     }
 
     private String getFormationExperienceTooltip() {
@@ -664,13 +582,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             if (currentLineup.getRatings().getLeftDefense().size() != 0 &&
                     currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey())!=null) {
 
-                setRightDefense(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                setCentralDefense(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                setLeftDefense(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                setMidfield(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-                setLeftAttack(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                setCentralAttack(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                setRightAttack(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpRightDefense.setRating(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpCentralDefense.setRating(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpLeftDefense.setRating(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpMidfield.setRating(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpLeftAttack.setRating(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpCentralAttack.setRating(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                m_jpRightAttack.setRating(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
                 setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
                 setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
                 int iTacticType = currentLineup.getTacticType();
@@ -686,15 +604,15 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     public void setPreviousRatings(Ratings previousRatings) {
         final double t = m_jpMinuteToggler.getCurrentKey();
 
-        m_dRightDefenseRating = previousRatings.getRightDefense().get(t);
-        m_dCentralDefenseRating = previousRatings.getCentralDefense().get(t);
-        m_dLeftDefenseRating = previousRatings.getLeftDefense().get(t);
+        m_jpRightDefense.setRating(previousRatings.getRightDefense().get(t));
+        m_jpCentralDefense.setRating(previousRatings.getCentralDefense().get(t));
+        m_jpLeftDefense.setRating(previousRatings.getLeftDefense().get(t));
 
-        m_dMidfieldRating = previousRatings.getMidfield().get(m_jpMinuteToggler.getCurrentKey());
+        m_jpMidfield.setRating(previousRatings.getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
 
-        m_dRightAttackRating = previousRatings.getRightAttack().get(t);
-        m_dCentralAttackRating = previousRatings.getCentralAttack().get(t);
-        m_dLeftAttackRating = previousRatings.getLeftAttack().get(t);
+        m_jpRightAttack.setRating(previousRatings.getRightAttack().get(t));
+        m_jpCentralAttack.setRating(previousRatings.getCentralAttack().get(t));
+        m_jpLeftAttack.setRating(previousRatings.getLeftAttack().get(t));
     }
 
     @Override

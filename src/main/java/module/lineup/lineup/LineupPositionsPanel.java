@@ -74,20 +74,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private PlayerPositionPanel m_clSetPieceTaker;
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
-	//private final LineupAssistantPanel assistantPanel;
-	// TODO move to MatchSelectionPanel
-	private StyleOfPlay m_iStyleOfPlay;
-	private MatchTacticType m_iTactic;
-	private MatchTeamAttitude m_iAttitude;
-	private ComboBoxTitled m_jpTeamAttitude;
-	private JComboBox<CBItem> m_jcbTeamAttitude;
-	private ComboBoxTitled m_jpTactic;
-	private JComboBox<CBItem> m_jcbTactic;
-	private ComboBoxTitled m_jpStyleOfPlay;
-	private JComboBox<CBItem> m_jcbStyleOfPlay;
-	final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
-	final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
-	final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 
 	private static ActionListener cbActionListener;
 	private Weather m_weather;
@@ -104,14 +90,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_useWeatherImpact = useWeatherImpact;
 		initComponents();
 		RefreshManager.instance().registerRefreshable(this);
-	}
-
-	public void setEnabledTeamAttitudeCB(boolean enabled) {
-		if (!enabled){
-			m_iAttitude = MatchTeamAttitude.Normal; // core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
-		}
-		Helper.setComboBoxFromID(m_jcbTeamAttitude, MatchTeamAttitude.toInt(m_iAttitude));
-		m_jcbTeamAttitude.setEnabled(enabled);
 	}
 
 	public javax.swing.JLayeredPane getCenterPanel() {
@@ -149,14 +127,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-
-		// refresh lineup settings
-		m_iTactic = MatchTacticType.fromInt(lineup.getTacticType());
-		Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
-		m_iAttitude = MatchTeamAttitude.fromInt(lineup.getAttitude());
-		Helper.setComboBoxFromID(m_jcbTeamAttitude, lineup.getAttitude());
-		m_iStyleOfPlay = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
-		updateStyleOfPlayComboBox(m_iStyleOfPlay);
 
 		for (Player player: allPlayers) {
 			// the first 11
@@ -254,73 +224,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		swapPositionsManager.addSwapCapabilityTo(m_clKeeper);
 		layout.setConstraints(m_clKeeper, constraints);
 		centerPanel.add(m_clKeeper);
-
-		// TEAM ATTITUDE ================================================================
-		m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
-				new CBItem(
-						HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
-						IMatchDetails.EINSTELLUNG_PIC),
-				new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
-						IMatchDetails.EINSTELLUNG_NORMAL),
-				new CBItem(HOVerwaltung.instance().getLanguageString(
-						"ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS)});
-
-		m_jpTeamAttitude = new ComboBoxTitled(getLangStr("ls.team.teamattitude"), m_jcbTeamAttitude, true);
-
-		constraints.gridx = 4;
-		layout.setConstraints(m_jpTeamAttitude, constraints);
-		centerPanel.add(m_jpTeamAttitude);
-		// Initialize attitude CB
-		var isCompetitive = this.m_clLineupPanel.isSelectedMatchCompetitive();
-		var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-		if (isCompetitive) {
-			m_iAttitude = MatchTeamAttitude.fromInt(lineup.getAttitude());
-		}
-
-		//After initialization this is set via listener on MatchAndLineupSelectionPanel.m_jcbUpcomingGames
-		setEnabledTeamAttitudeCB(isCompetitive);
-
-		// TACTIC ================================================================
-		m_jcbTactic = new JComboBox<>(new CBItem[]{
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),
-						IMatchDetails.TAKTIK_NORMAL),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),
-						IMatchDetails.TAKTIK_PRESSING),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_KONTER),
-						IMatchDetails.TAKTIK_KONTER),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_MIDDLE),
-						IMatchDetails.TAKTIK_MIDDLE),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS),
-						IMatchDetails.TAKTIK_WINGS),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),
-						IMatchDetails.TAKTIK_CREATIVE),
-				new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS),
-						IMatchDetails.TAKTIK_LONGSHOTS)});
-
-		m_jpTactic = new ComboBoxTitled(getLangStr("ls.team.tactic"), m_jcbTactic, true);
-
-		constraints.gridx = 5;
-		layout.setConstraints(m_jpTactic, constraints);
-		centerPanel.add(m_jpTactic);
-
-		// Initialize tactic CB
-		m_iTactic = MatchTacticType.fromInt(lineup.getTacticType());
-		Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
-
-		// Style of Play ================================================================
-		m_jcbStyleOfPlay = new JComboBox<>();
-		m_iStyleOfPlay = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
-		updateStyleOfPlayComboBox(m_iStyleOfPlay);
-
-		m_jpStyleOfPlay = new ComboBoxTitled(getLangStr("ls.team.styleofPlay"), m_jcbStyleOfPlay, true);
-
-		constraints.gridx = 6;
-		layout.setConstraints(m_jpStyleOfPlay, constraints);
-		centerPanel.add(m_jpStyleOfPlay);
-
-		// Initialize Style of play CB
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, lineup.getStyleOfPlay());
-
 
 		// WBr ==========================================================================
 		constraints.gridx = 1 + getLineupColumnNumber(0);
@@ -550,29 +453,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		add(centerPanel, BorderLayout.CENTER);
 
-		cbActionListener = e -> {
-			if (e.getSource().equals(m_jcbStyleOfPlay)) {
-				// StyleOfPlay changed (directly or indirectly)
-				var styleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
-				this.m_iStyleOfPlay = StyleOfPlay.fromInt(styleOfPlay);
-				lineup.setStyleOfPlay(styleOfPlay);
-				m_clLineupPanel.refreshLineupRatingPanel();
-			} else if (e.getSource().equals(m_jcbTeamAttitude)) {
-				// Attitude changed
-				var attitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
-				m_iAttitude = MatchTeamAttitude.fromInt(attitude);
-				lineup.setAttitude(attitude);
-				m_clLineupPanel.refreshLineupRatingPanel();
-			} else if (e.getSource().equals(m_jcbTactic)) {
-				// Tactic changed
-				var tactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
-				this.m_iTactic = MatchTacticType.fromInt(tactic);
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setTacticType(tactic);
-				m_clLineupPanel.refreshLineupRatingPanel();
-			}
-		};
-
-		addListeners();
 	}
 
 	/**
@@ -597,19 +477,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return 4 - i;
 	}
 
-	private void addListeners() {
-		m_jcbStyleOfPlay.addActionListener(cbActionListener);
-		m_jcbTeamAttitude.addActionListener(cbActionListener);
-		m_jcbTactic.addActionListener(cbActionListener);
-	}
-
-	private void removeListeners() {
-		m_jcbStyleOfPlay.removeActionListener(cbActionListener);
-		m_jcbTeamAttitude.removeActionListener(cbActionListener);
-		m_jcbTactic.removeActionListener(cbActionListener);
-	}
-
-
 	public ArrayList<PlayerPositionPanel> getAllPositions() {
 		ArrayList<PlayerPositionPanel> pos = new ArrayList<>(14);
 		pos.add(m_clCentralForward);
@@ -629,95 +496,4 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		return pos;
 	}
 
-	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
-
-	private List<Integer> getValidStyleOfPlayValues()
-	{
-		TrainerType trainer;
-		int tacticalAssistants;
-		try {
-			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-			tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
-
-		} catch (Exception e) {
-			trainer = TrainerType.Balanced;
-			tacticalAssistants = 0;
-			HOLogger.instance().error(getClass(), "Model not ready, put default value " + trainer + " for trainer and "  + tacticalAssistants + " for tactical Assistants.");
-		}
-
-		int min=-10, max=10;
-
-		switch (trainer) {
-			case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
-			case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive
-			case Balanced -> {     			                   // Neutral
-				min = - tacticalAssistants;
-				max = tacticalAssistants;
-			}
-			default -> HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
-		}
-
-		return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
-	}
-
-	// each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
-	// so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-	public int updateStyleOfPlayComboBox(StyleOfPlay oldValue)
-	{
-		// NT Team can select whatever Style of Play they like
-		if (!UserManager.instance().getCurrentUser().isNtTeam()) {
-
-			removeListeners();
-
-			// remove all combo box items and add new ones.
-			List<Integer> legalValues = getValidStyleOfPlayValues();
-
-			m_jcbStyleOfPlay.removeAllItems();
-
-			for (int value : legalValues) {
-				CBItem cbItem;
-				if (value == 0) {
-					cbItem = new CBItem(neutral_sop, value);
-				} else if (value > 0) {
-					cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
-				} else {
-					cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
-				}
-				m_jcbStyleOfPlay.addItem(cbItem);
-			}
-
-			addListeners();
-
-			// Set trainer default value
-			setStyleOfPlay(getDefaultTrainerStyleOfPlay());
-			// Attempt to set the old value. If it is not possible it will do nothing.
-			setStyleOfPlay(oldValue);
-		}
-		var item = (CBItem)(m_jcbStyleOfPlay.getSelectedItem());
-		if ( item != null) return item.getId();
-		return 0;
-	}
-
-	public void setStyleOfPlay(StyleOfPlay style){
-		Helper.setComboBoxFromID(m_jcbStyleOfPlay, StyleOfPlay.toInt(style));
-	}
-
-	private StyleOfPlay getDefaultTrainerStyleOfPlay() {
-		TrainerType trainer;
-		try {
-			trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-		} catch (Exception e) {
-			return StyleOfPlay.Neutral();  // Happens for instance with empty db
-		}
-
-		return switch (trainer) {
-			case Defensive -> StyleOfPlay.Defensive(); // Defensive
-			case Offensive -> StyleOfPlay.Offensive(); // Offensive
-			default -> StyleOfPlay.Neutral();  // Neutral
-		};
-	}
-
-	public boolean is_jcbTeamAttitudeInitialized() {
-		return m_jcbTeamAttitude != null;
-	}
 }

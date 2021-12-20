@@ -5,7 +5,6 @@ import core.db.DBManager;
 import core.db.user.UserManager;
 import core.gui.CursorToolkit;
 import core.gui.Refreshable;
-import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
@@ -83,7 +82,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         setLayout(layout);
 
-        gbc.insets = new Insets(3,3 ,3 ,3 );
+        gbc.insets = new Insets(3, 3, 3, 3);
         gbc.weightx = 1.0;
         gbc.weighty = 0.0;
 
@@ -210,18 +209,17 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER)));
 
         //updateComponents();
-
         addListeners();
     }
 
-    private void  updateComponents() {
+    private void updateComponents() {
 
         setUpcomingMatchesFromDB();
         update_jcbUpcomingGames();
         update_jcbLoadLineup();
         //TODO: updateStyleOfPlayComboBox();
 
-        if (upcomingMatchesInDB.size()==0){
+        if (upcomingMatchesInDB.size() == 0) {
             lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
             sWarningDataTooOld = String.format(Helper.getTranslation("ls.module.lineup.dataTooOld.tt"), java.text.DateFormat.getDateTimeInstance().format(lLastUpdateTime));
 
@@ -231,8 +229,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             m_jcbxLineupSimulation.setSelected(true);
             m_jcbxLineupSimulation.setEnabled(false);
             m_jcbxLineupSimulation.setToolTipText(sWarningDataTooOld);
-        }
-        else{
+        } else {
             m_jcbxLineupSimulation.setSelected(false);
             m_jcbxLineupSimulation.setEnabled(true);
 
@@ -241,8 +238,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         update_jcbUpcomingGames();
         m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-        if (lineupPanel.isTeamAttitudeInitialized()) {
-            lineupPanel.setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
+        if (m_jcbTeamAttitude!=null) {
+            setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
 
             MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
@@ -258,6 +255,22 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+
+        // refresh lineup settings
+        Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
+        Helper.setComboBoxFromID(m_jcbTeamAttitude, lineup.getAttitude());
+        updateStyleOfPlayComboBox();
+
+        boolean isCompetitive;
+        var match = getSelectedMatch();
+        if ( match != null){
+            isCompetitive = match.getMatchType().isCompetitive();
+        }
+        else {
+            isCompetitive=false;
+        }
+        setEnabledTeamAttitudeCB(isCompetitive);
     }
 
     private void addListeners() {
@@ -268,12 +281,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
 
-        m_jcbxLineupSimulation.addActionListener( e -> {
+        m_jcbxLineupSimulation.addActionListener(e -> {
             Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
             Ratings oRatingsBefore = lineup.getRatings();
 
             update_jcbUpcomingGames();
-            if(! isLineupSimulator()) {
+            if (!isLineupSimulator()) {
                 lineupPanel.resetSettings();
                 lineupPanel.updateLineupPositions();
             }
@@ -287,15 +300,38 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         m_jcbUpcomingGames.addActionListener(e -> {
             m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-            lineupPanel.setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
+            setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
             adjustLineupSettings();
             m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
             m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
         });
 
+        m_jcbStyleOfPlay.addActionListener(e -> {
+            // StyleOfPlay changed (directly or indirectly)
+            var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            var styleOfPlay = ((CBItem) Objects.requireNonNull(m_jcbStyleOfPlay.getSelectedItem(), "ERROR: Style Of Play is null")).getId();
+            lineup.setStyleOfPlay(styleOfPlay);
+            lineupPanel.refreshLineupRatingPanel();
+        });
+
+        m_jcbTeamAttitude.addActionListener(e -> {
+            // Attitude changed
+            var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            var attitude = ((CBItem) Objects.requireNonNull(m_jcbTeamAttitude.getSelectedItem(), "ERROR: Attitude is null")).getId();
+            lineup.setAttitude(attitude);
+            lineupPanel.refreshLineupRatingPanel();
+        });
+
+        m_jcbTactic.addActionListener(e -> {
+            // Tactic changed
+            var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            var tactic = ((CBItem) Objects.requireNonNull(m_jcbTactic.getSelectedItem(), "ERROR: Tactic type is null")).getId();
+            lineup.setTacticType(tactic);
+            lineupPanel.refreshLineupRatingPanel();
+        });
     }
 
-    private void removeItemListeners() {
+    private void removeListeners() {
 
         for( ActionListener al : m_jcbLoadLineup.getActionListeners() ) {
             m_jcbLoadLineup.removeActionListener(al);
@@ -315,6 +351,18 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         for( ActionListener al : m_jcbUpcomingGames.getActionListeners() ) {
             m_jcbUpcomingGames.removeActionListener(al);
+        }
+
+        for( ActionListener al : m_jcbStyleOfPlay.getActionListeners() ) {
+            m_jcbStyleOfPlay.removeActionListener(al);
+        }
+
+        for( ActionListener al : m_jcbTactic.getActionListeners() ) {
+            m_jcbTactic.removeActionListener(al);
+        }
+
+        for( ActionListener al : m_jcbTeamAttitude.getActionListeners() ) {
+            m_jcbTeamAttitude.removeActionListener(al);
         }
     }
 
@@ -584,7 +632,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
          */
     private void update_jcbUpcomingGamesAfterSendingMatchOrders(MatchOrdersCBItem selectedMatch) {
 
-        removeItemListeners();
+        removeListeners();
 
 
         int selectedMatchID = selectedMatch.getMatchID();
@@ -628,7 +676,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     @Override
     public void refresh() {
 //        HOLogger.instance().log(getClass(), " refresh() has been called");
-        removeItemListeners();
+        removeListeners();
         updateComponents();
         addListeners();
     }
@@ -641,8 +689,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());;
         // NT Team can select whatever Style of Play they like
         if (!UserManager.instance().getCurrentUser().isNtTeam()) {
-
-            removeItemListeners();
 
             // remove all combo box items and add new ones.
             List<Integer> legalValues = getValidStyleOfPlayValues();
@@ -660,8 +706,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 }
                 m_jcbStyleOfPlay.addItem(cbItem);
             }
-
-            addListeners();
 
             // Set trainer default value
             setStyleOfPlay(getDefaultTrainerStyleOfPlay());
@@ -721,6 +765,22 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         };
     }
 
-
+    public void setEnabledTeamAttitudeCB(boolean enabled) {
+        int attitude;
+        if (!enabled){
+            attitude = MatchTeamAttitude.toInt(MatchTeamAttitude.Normal); // core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
+        }
+        else {
+            var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            if ( lineup != null){
+                attitude = lineup.getAttitude();
+            }
+            else{
+                attitude = MatchTeamAttitude.toInt(MatchTeamAttitude.Normal);
+            }
+        }
+        Helper.setComboBoxFromID(m_jcbTeamAttitude, attitude);
+        m_jcbTeamAttitude.setEnabled(enabled);
+    }
 
 }

@@ -47,6 +47,13 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         return lineupAssistantPanel;
     }
 
+    public MatchAndLineupSelectionPanel getMatchAndLineupSelectionPanel() {
+        if ( matchAndLineupPanel == null){
+            new MatchAndLineupSelectionPanel(m_clLineupPanel);
+        }
+        return matchAndLineupPanel;
+    }
+
     public LineupRatingAssistantPanel(LineupPanel parent) {
         m_clLineupPanel = parent;
         initComponents();
@@ -96,4 +103,5 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         var selectedMatch = this.matchAndLineupPanel.getSelectedMatch();
         return selectedMatch != null && selectedMatch.getMatchType().isCompetitive();
     }
+
 }

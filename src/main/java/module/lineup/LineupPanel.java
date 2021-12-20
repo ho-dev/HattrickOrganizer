@@ -11,6 +11,7 @@ import core.model.match.Weather;
 import core.model.player.Player;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.lineup.LineupPositionsPanel;
+import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import module.playerOverview.LineupPlayersTableNameColumn;
@@ -58,6 +59,10 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private LineupSettingsPanel getLineupSettingsPanel() {return lineupRatingAssistantPanel.getLineupSettingsPanel();}
 
 	private LineupRatingPanel getLineupRatingPanel(){ return lineupRatingAssistantPanel.getLineupRatingPanel();}
+
+	private MatchAndLineupSelectionPanel getMatchAndLineupSelectionPanel() {
+		return lineupRatingAssistantPanel.getMatchAndLineupSelectionPanel();
+	}
 
 	private LineupPositionsPanel getLineupPositionsPanel() {
 		if ( lineupPositionsPanel == null){
@@ -249,14 +254,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		this.getLineupSettingsPanel().refresh();
 	}
 
-	public boolean isTeamAttitudeInitialized() {
-		return this.getLineupPositionsPanel().is_jcbTeamAttitudeInitialized();
-	}
-
-	public void setEnabledTeamAttitudeCB(boolean b) {
-		this.getLineupPositionsPanel().setEnabledTeamAttitudeCB(b);
-	}
-
 	public void resetSettings() {
 		this.getLineupSettingsPanel().resetSettings();
 	}
@@ -277,9 +274,11 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		this.getLineupAssistantPanel().setGroupFilter(b);
 	}
 
-	public int updateStyleOfPlayComboBox(StyleOfPlay oldStyleOfPlay) {
-		return this.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+	public int updateStyleOfPlayComboBox() {
+		return this.getMatchAndLineupSelectionPanel().updateStyleOfPlayComboBox();
 	}
+
+
 
 	public void refreshLineupPositionsPanel() {
 		this.getLineupPositionsPanel().refresh();
