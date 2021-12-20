@@ -9,6 +9,8 @@
 
 ### Finance
 
+* fix finance bug concerning missing spectators' income in misc module (#1282)
+
 
 ### Statistics
 
@@ -33,7 +35,7 @@
 
 
 ### League
-
+* fix download of power rating (not only one team per match) (#1293)
   
 ### Youth
 * fix escaping of youth team names (#1295) 
