@@ -142,7 +142,7 @@ public final class Basics  {
             m_iRegionId = rs.getInt("Region");
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = rs.getTimestamp("ActivationDate");
-            m_sYouthTeamName = rs.getString("YouthTeamName");
+            m_sYouthTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("YouthTeamName"));
             setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
