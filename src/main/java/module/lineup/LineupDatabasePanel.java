@@ -1,0 +1,197 @@
+package module.lineup;
+
+import core.db.DBManager;
+import core.gui.Refreshable;
+import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
+import core.model.match.MatchKurzInfo;
+import core.model.match.MatchLineupPosition;
+import core.model.match.MatchLineupTeam;
+import core.model.player.IMatchRoleID;
+import core.util.Helper;
+import module.teamAnalyzer.ui.MatchComboBoxRenderer;
+import module.teamAnalyzer.vo.Team;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import static module.lineup.LineupPanel.TITLE_FG;
+
+public class LineupDatabasePanel extends JPanel implements Refreshable {
+    private final int MAX_PREVIOUS_LINEUP = 10;
+
+    private LineupPanel lineupPanel;
+    private JComboBox<Team> m_jcbLoadLineup;
+    private JCheckBox includeHTIntegrated;
+    private JCheckBox includeTemplates;
+
+    private ArrayList<MatchKurzInfo> previousPlayedMatches = null;
+    private ArrayList<MatchLineupTeam> templateLineups = null;
+
+    public LineupDatabasePanel(LineupPanel parent) {
+        lineupPanel = parent;
+        initComponents();
+        core.gui.RefreshManager.instance().registerRefreshable(this);
+    }
+
+    private void initComponents() {
+        final GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints gbc = new GridBagConstraints();
+
+        setLayout(layout);
+
+        gbc.insets = new Insets(2, 2, 2, 2);
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.0;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.LINE_START;
+
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
+
+        gbc.gridx = 1;
+        m_jcbLoadLineup = new JComboBox<>();
+        m_jcbLoadLineup.setRenderer(new MatchComboBoxRenderer(MatchComboBoxRenderer.RenderType.TYPE_2));
+        layout.setConstraints(m_jcbLoadLineup, gbc);
+        add(m_jcbLoadLineup);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.official_game_only"));
+        gbc.gridx = 1;
+        includeHTIntegrated = new JCheckBox();
+        includeHTIntegrated.setSelected(false);
+        layout.setConstraints(includeHTIntegrated, gbc);
+        add(includeHTIntegrated);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.templates"));
+        gbc.gridx = 1;
+        includeTemplates = new JCheckBox();
+        includeTemplates.setSelected(false);
+        layout.setConstraints(includeTemplates, gbc);
+        add(includeTemplates);
+
+        addListeners();
+    }
+
+    private void addListeners() {
+        m_jcbLoadLineup.addActionListener(e -> adoptLineup());
+        includeHTIntegrated.addActionListener(e -> update_jcbLoadLineup(false));
+        includeTemplates.addActionListener(e -> update_jcbLoadLineup(false));
+    }
+
+    private void removeListeners() {
+
+        for (ActionListener al : m_jcbLoadLineup.getActionListeners()) {
+            m_jcbLoadLineup.removeActionListener(al);
+        }
+
+        for (ActionListener al : includeTemplates.getActionListeners()) {
+            includeTemplates.removeActionListener(al);
+        }
+        for (ActionListener al : includeHTIntegrated.getActionListeners()) {
+            includeHTIntegrated.removeActionListener(al);
+        }
+    }
+
+    private void addLabel(GridBagConstraints constraints, GridBagLayout layout, String sLabel) {
+        JLabel label = new JLabel(sLabel);
+        label.setForeground(TITLE_FG);
+        label.setFont(getFont().deriveFont(Font.BOLD));
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        layout.setConstraints(label, constraints);
+        add(label);
+    }
+
+    @Override
+    public void refresh() {
+        removeListeners();
+        update_jcbLoadLineup();
+        addListeners();
+    }
+
+    @Override
+    public void reInit() {
+        refresh();
+    }
+
+    private void update_jcbLoadLineup(){
+        update_jcbLoadLineup(true);
+    }
+
+    private void update_jcbLoadLineup(boolean bForceRefresh) {
+        m_jcbLoadLineup.removeAllItems();
+        Team oTeam;
+        if (previousPlayedMatches == null || bForceRefresh) {
+            previousPlayedMatches = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP, !includeHTIntegrated.isSelected());
+        }
+        if (templateLineups == null || bForceRefresh) {
+            templateLineups = DBManager.instance().getTemplateMatchLineupTeam();
+        }
+
+        m_jcbLoadLineup.addItem(null);
+        int i = 1;
+        for (var team : templateLineups) {
+            oTeam = new Team();
+            oTeam.setName(team.getTeamName());
+            oTeam.setTeamId(team.getTeamID());
+            oTeam.setMatchType(MatchType.NONE);
+            oTeam.setMatchID(-1);
+            m_jcbLoadLineup.addItem(oTeam);
+            i++;
+        }
+
+        for (MatchKurzInfo match : previousPlayedMatches) {
+            oTeam = new Team();
+            if (match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
+                oTeam.setName(match.getGuestTeamName());
+                oTeam.setTeamId(match.getGuestTeamID());
+                oTeam.setHomeMatch(true);
+            } else {
+                oTeam.setName(match.getHomeTeamName());
+                oTeam.setTeamId(match.getHomeTeamID());
+                oTeam.setHomeMatch(false);
+            }
+            oTeam.setTime(match.getMatchDateAsTimestamp());
+            oTeam.setMatchType(match.getMatchType());
+            oTeam.setMatchID(match.getMatchID());
+            m_jcbLoadLineup.addItem(oTeam);
+            i++;
+        }
+        m_jcbLoadLineup.setMaximumRowCount(i);
+    }
+
+    private void adoptLineup() {
+
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        lineup.clearLineup();
+
+        if (m_jcbLoadLineup.getSelectedItem() != null) {
+            lineupPanel.setAssistantGroupFilter(false);
+            var team = (Team) m_jcbLoadLineup.getSelectedItem();
+            Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(team.getMatchID(), team.getMatchType(), HOVerwaltung.instance().getModel().getBasics().getTeamId());
+            if (lineupPlayers != null) {
+                for (MatchLineupPosition lineupPlayer : lineupPlayers) {
+                    if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
+                        lineup.setKicker(lineupPlayer.getPlayerId());
+                    } else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
+                        lineup.setCaptain(lineupPlayer.getPlayerId());
+                    } else {
+                        lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
+                    }
+                }
+            }
+        }
+        lineupPanel.update();
+    }
+}

@@ -32,8 +32,6 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private LineupRatingPanel ratingPanel;
-	//private MatchAndLineupSelectionPanel matchAndLineupPanel;
 	private final LineupPanel lineupPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);

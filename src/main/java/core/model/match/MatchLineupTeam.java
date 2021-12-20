@@ -50,16 +50,8 @@ public class MatchLineupTeam {
 	 * lineup name edited by user in case of user stored matches
 	 */
 	private String teamName;
-	//private Vector<MatchLineupPosition> lineup;
-	//private ArrayList<Substitution> substitutions;
-
 	private Lineup lineup;
-
 	private int experience;
-	// TODO move to Lineup
-	//  private StyleOfPlay styleOfPlay;
-	//private MatchTacticType matchTacticType;
-	//private MatchTeamAttitude matchTeamAttitude;
 
 	// null player to fill empty spots
 	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition( -1, -1, 0, -1d, "", 0);

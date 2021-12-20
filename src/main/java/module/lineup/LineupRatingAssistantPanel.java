@@ -22,6 +22,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     private final LineupPanel m_clLineupPanel;
     private LineupRatingPanel lineupRatingPanel;
     private LineupSettingsPanel lineupSettingsPanel;
+    private LineupDatabasePanel lineupDatabasePanel;
     private LineupAssistantPanel lineupAssistantPanel;
     private MatchAndLineupSelectionPanel matchAndLineupPanel;
     private MatchBanner matchBanner;
@@ -65,12 +66,15 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         var lineupSettingsPanel = getLineupSettingsPanel();
         var lineupAssistantPanel = getLineupAssistantPanel();
 
+        this.lineupDatabasePanel = new LineupDatabasePanel(m_clLineupPanel);
+
         // steff 1217
         setLayout(new BorderLayout());
         add(lineupRatingPanel, BorderLayout.NORTH);
         var tabView = new JTabbedPane();
         tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.assistant"), new JScrollPane(lineupAssistantPanel));
         tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.lineup_simulator"), new JScrollPane(lineupSettingsPanel));
+        tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"), new JScrollPane(lineupDatabasePanel));
         add(tabView, BorderLayout.CENTER);
 
         var matchPanel = new JPanel(new BorderLayout());

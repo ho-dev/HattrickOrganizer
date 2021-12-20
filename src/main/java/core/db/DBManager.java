@@ -28,8 +28,6 @@ import module.youth.YouthTrainerComment;
 import core.util.HOLogger;
 import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
-import module.lineup.Lineup;
-import module.lineup.LineupPosition;
 import module.lineup.substitution.model.Substitution;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.PlayerInfo;
@@ -2617,5 +2615,9 @@ public class DBManager {
 
 	public void storeMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
+	}
+
+	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeam() {
+		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeam();
 	}
 }

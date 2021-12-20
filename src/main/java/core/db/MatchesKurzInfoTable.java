@@ -116,7 +116,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return match;
 	}
 
-
 	/**
 	 * Return the list of n latest played matches (own team)
 	 */

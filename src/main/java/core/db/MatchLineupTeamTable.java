@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
@@ -7,6 +8,7 @@ import module.lineup.Lineup;
 
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
 
 
 public final class MatchLineupTeamTable extends AbstractTable {
@@ -113,4 +115,33 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		}
 	}
 
+	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeam() {
+		ArrayList<MatchLineupTeam> ret = new ArrayList<>();
+		var teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		try {
+			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 ";
+
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			while (rs.next()) {
+				var team = new MatchLineupTeam(
+						MatchType.getById(rs.getInt("MATCHTYP")),
+						rs.getInt("MATCHID"),
+						DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+						rs.getInt("TEAMID"),
+						rs.getInt("Erfahrung"));
+
+				var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
+				var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
+				var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "MatchTeamAttitude"));
+				team.setStyleOfPlay(styleOfPlay);
+				team.setMatchTacticType(matchTacticType);
+				team.setMatchTeamAttitude(matchTeamAttitude);
+				ret.add(team);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
+		}
+		return ret;
+	}
 }
