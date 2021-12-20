@@ -63,10 +63,8 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
             return m_jlBlank;
         }
 
-
-
         if (value.getMatchType() != MatchType.NONE) {
-           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType().getId()-1]));
+           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType().getIconArrayIndex()]));
         }
         else {
             setIcon(ThemeManager.getIcon(HOIconName.EMPTY));

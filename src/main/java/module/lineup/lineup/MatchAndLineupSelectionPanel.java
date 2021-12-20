@@ -1,8 +1,11 @@
 package module.lineup.lineup;
 
+import core.datatype.CBItem;
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.gui.CursorToolkit;
 import core.gui.Refreshable;
+import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
@@ -11,6 +14,7 @@ import core.model.HOVerwaltung;
 import core.model.Ratings;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
+import core.model.player.TrainerType;
 import core.net.OnlineWorker;
 import core.util.GUIUtils;
 import core.util.HOLogger;
@@ -28,6 +32,8 @@ import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static core.gui.HOMainFrame.instance;
 import static module.lineup.LineupPanel.TITLE_FG;
@@ -46,11 +52,19 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private JButton m_jbUploadLineup;
     private JButton m_jbDownloadLineup;
     //private JButton m_jbGetRatingsPrediction;
+    private JComboBox<CBItem> m_jcbTeamAttitude;
+    private JComboBox<CBItem> m_jcbTactic;
+    private JComboBox<CBItem> m_jcbStyleOfPlay;
+
     private @Nullable MatchOrdersCBItem m_clSelectedMatch;
     private String sWarningDataTooOld;
     private Long lLastUpdateTime;
     private ArrayList<MatchKurzInfo> previousPlayedMatchesAll = null;
     private ArrayList<MatchKurzInfo> previousPlayedMatchesOfficialOnly = null;
+
+    final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
+    final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
+    final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
 
     public MatchOrdersCBItem getSelectedMatch() {
         return m_clSelectedMatch;
@@ -85,12 +99,58 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jcbUpcomingGames.setRenderer(new MatchOrdersRenderer());
         m_jcbUpcomingGames.setPreferredSize(new Dimension(160, 25));
         layout.setConstraints(m_jcbUpcomingGames, gbc);
-
         add(m_jcbUpcomingGames);
 
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.lineup_simulator"));
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.team.teamattitude"));
+
+        gbc.gridx = 1;
+        m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
+                new CBItem(
+                        HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
+                        IMatchDetails.EINSTELLUNG_PIC),
+                new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
+                        IMatchDetails.EINSTELLUNG_NORMAL),
+                new CBItem(HOVerwaltung.instance().getLanguageString(
+                        "ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS)});
+        layout.setConstraints(m_jcbTeamAttitude, gbc);
+        add(m_jcbTeamAttitude);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.team.tactic"));
+
+        gbc.gridx = 1;
+        m_jcbTactic = new JComboBox<>(new CBItem[]{
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),
+                        IMatchDetails.TAKTIK_NORMAL),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),
+                        IMatchDetails.TAKTIK_PRESSING),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_KONTER),
+                        IMatchDetails.TAKTIK_KONTER),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_MIDDLE),
+                        IMatchDetails.TAKTIK_MIDDLE),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_WINGS),
+                        IMatchDetails.TAKTIK_WINGS),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_CREATIVE),
+                        IMatchDetails.TAKTIK_CREATIVE),
+                new CBItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_LONGSHOTS),
+                        IMatchDetails.TAKTIK_LONGSHOTS)});
+        layout.setConstraints(m_jcbTactic, gbc);
+        add(m_jcbTactic);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.team.styleofPlay"));
+
+        gbc.gridx = 1;
+        m_jcbStyleOfPlay = new JComboBox<>();
+        //updateStyleOfPlayComboBox();
+        layout.setConstraints(m_jcbStyleOfPlay, gbc);
+        add(m_jcbStyleOfPlay);
+
+        //addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.lineup_simulator"));
 
         gbc.gridx = 1;
         m_jcbxLineupSimulation = new JCheckBox();
@@ -100,7 +160,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         // Panel with the 3 buttons
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JPanel jpButtons = new JPanel(new FlowLayout());
@@ -129,7 +189,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         // ===============================================
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy++;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
 
         gbc.gridx = 1;
@@ -139,7 +199,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         add(m_jcbLoadLineup);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy++;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.official_game_only"));
         gbc.gridx = 1;
         m_jcbxOfficialOnly = new JCheckBox();
@@ -159,6 +219,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         setUpcomingMatchesFromDB();
         update_jcbUpcomingGames();
         update_jcbLoadLineup();
+        //TODO: updateStyleOfPlayComboBox();
 
         if (upcomingMatchesInDB.size()==0){
             lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
@@ -233,7 +294,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         });
 
     }
-
 
     private void removeItemListeners() {
 
@@ -542,7 +602,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             }
         }
 
-
         // update all elements in m_jcbUpcomingGames
         m_jcbUpcomingGames.removeAllItems();
 
@@ -573,5 +632,95 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         updateComponents();
         addListeners();
     }
+
+    // each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
+    // so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
+    public int updateStyleOfPlayComboBox()
+    {
+        var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());;
+        // NT Team can select whatever Style of Play they like
+        if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+
+            removeItemListeners();
+
+            // remove all combo box items and add new ones.
+            List<Integer> legalValues = getValidStyleOfPlayValues();
+
+            m_jcbStyleOfPlay.removeAllItems();
+
+            for (int value : legalValues) {
+                CBItem cbItem;
+                if (value == 0) {
+                    cbItem = new CBItem(neutral_sop, value);
+                } else if (value > 0) {
+                    cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
+                } else {
+                    cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
+                }
+                m_jcbStyleOfPlay.addItem(cbItem);
+            }
+
+            addListeners();
+
+            // Set trainer default value
+            setStyleOfPlay(getDefaultTrainerStyleOfPlay());
+            // Attempt to set the old value. If it is not possible it will do nothing.
+            setStyleOfPlay(oldValue);
+        }
+        var item = (CBItem)(m_jcbStyleOfPlay.getSelectedItem());
+        if ( item != null) return item.getId();
+        return 0;
+    }
+
+    private List<Integer> getValidStyleOfPlayValues()
+    {
+        TrainerType trainer;
+        int tacticalAssistants;
+        try {
+            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+            tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+
+        } catch (Exception e) {
+            trainer = TrainerType.Balanced;
+            tacticalAssistants = 0;
+            HOLogger.instance().error(getClass(), "Model not ready, put default value " + trainer + " for trainer and "  + tacticalAssistants + " for tactical Assistants.");
+        }
+
+        int min=-10, max=10;
+
+        switch (trainer) {
+            case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
+            case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive
+            case Balanced -> {     			                   // Neutral
+                min = - tacticalAssistants;
+                max = tacticalAssistants;
+            }
+            default -> HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
+        }
+
+        return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
+    }
+
+    public void setStyleOfPlay(StyleOfPlay style){
+        Helper.setComboBoxFromID(m_jcbStyleOfPlay, StyleOfPlay.toInt(style));
+    }
+
+    private StyleOfPlay getDefaultTrainerStyleOfPlay() {
+        TrainerType trainer;
+        try {
+            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+        } catch (Exception e) {
+            return StyleOfPlay.Neutral();  // Happens for instance with empty db
+        }
+
+        return switch (trainer) {
+            case Defensive -> StyleOfPlay.Defensive(); // Defensive
+            case Offensive -> StyleOfPlay.Offensive(); // Offensive
+            default -> StyleOfPlay.Neutral();  // Neutral
+        };
+    }
+
+
 
 }

@@ -84,7 +84,7 @@ final class DBUpdater {
 
 	private void updateDBv500(int dbVersion) throws SQLException {
 		// Upgrade legacy FINANZEN table to new ECONOMY Table (since HO 5.0)
-		if (noTableExists(EconomyTable.TABLENAME)) {
+		if (!tableExists(EconomyTable.TABLENAME)) {
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Datum RENAME TO FetchedDate");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
 			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Sponsoren RENAME TO SponsorsPopularity");
@@ -141,7 +141,7 @@ final class DBUpdater {
 		AbstractTable matchHighlightsTable = dbManager.getTable(MatchHighlightsTable.TABLENAME);
 		matchHighlightsTable.tryAddColumn("MatchDate", "TIMESTAMP");
 
-		if (noTableExists(YouthTrainingTable.TABLENAME)) {
+		if (!tableExists(YouthTrainingTable.TABLENAME)) {
 			dbManager.getTable(YouthTrainingTable.TABLENAME).createTable();
 			dbManager.getTable(YouthPlayerTable.TABLENAME).createTable();
 			dbManager.getTable(YouthScoutCommentTable.TABLENAME).createTable();
@@ -152,7 +152,7 @@ final class DBUpdater {
 			youthplayerTable.tryAddColumn(skill + "Top3", "BOOLEAN");
 		}
 
-		if (noTableExists(TeamsLogoTable.TABLENAME)) {
+		if (!tableExists(TeamsLogoTable.TABLENAME)) {
 			dbManager.getTable(TeamsLogoTable.TABLENAME).createTable();
 		}
 
@@ -346,7 +346,7 @@ final class DBUpdater {
 			//		"MATCHORDER", "MATCHSUBSTITUTION");
 
 			copyMatchTypes("MATCHESKURZINFO", "IFA_MATCHES");
-			copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
+			if (tableExists("MATCHORDER") && dbVersion<600 ) copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
 			copyMatchTypes("MATCHLINEUP", "MATCHDETAILS");
 			copyMatchTypes("MATCHLINEUP", "MATCHHIGHLIGHTS");
 			copyMatchTypes("MATCHLINEUP", "MATCHLINEUPPLAYER");
@@ -375,7 +375,7 @@ final class DBUpdater {
 
 		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("isObsolete", "BOOLEAN");
 
-		if (noTableExists(MatchTeamRatingTable.TABLENAME)) {
+		if (!tableExists(MatchTeamRatingTable.TABLENAME)) {
 			dbManager.getTable(MatchTeamRatingTable.TABLENAME).createTable();
 		}
 
@@ -442,7 +442,7 @@ final class DBUpdater {
 		resetUserColumns();
 
 		//create FuturePlayerTrainingTable
-		if (noTableExists(FuturePlayerTrainingTable.TABLENAME)) {
+		if (!tableExists(FuturePlayerTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerTrainingTable.TABLENAME).createTable();
 		}
 
@@ -679,12 +679,12 @@ final class DBUpdater {
 		return false;
 	}
 
-	private boolean noTableExists(String tableName) throws SQLException {
+	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '"
 				+ tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
-		if (rs != null) return !rs.next();
-		return true;
+		if (rs != null) return rs.next();
+		return false;
 	}
 
 	private void resetUserColumns() {
