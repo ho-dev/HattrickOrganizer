@@ -27,6 +27,7 @@
 
 
 ### Lineup
+* Fixed a bug when downloading team logos (#1300)
 
 ### IFA
 
