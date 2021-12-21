@@ -255,6 +255,4 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         return HOVerwaltung.instance().getLanguageString("ls.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
     }
 
-
-
 }

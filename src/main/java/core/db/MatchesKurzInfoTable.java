@@ -330,18 +330,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
 		}
 		else if ( matchtype == MatchTypeExtended.GROUP_OFFICIAL.getId()) {
-			sql.append(" AND ( MatchTyp=" + MatchType.LEAGUE.getId());
-			sql.append(" OR MatchTyp=" + MatchType.QUALIFICATION.getId());
-			HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: repair filter !!  ");
-//			sql.append(" OR MatchTyp=" + MatchType.EMERALDCUP.getId());
-//			sql.append(" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-//			sql.append(" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.CUP.getId());
-			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
-			sql.append(" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
-			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId());
-			sql.append(" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
-			sql.append(" OR MatchTyp=" + MatchType.MASTERS.getId() + " )");
+			var officialTypes = MatchType.getOfficialMatchTypes();
+			sql.append(" AND MatchTyp IN (");
+			char sep=' ';
+			for ( var t : officialTypes ) {
+				sql.append(sep).append(t.getId());
+				sep = ',';
+			}
+			sql.append(" )");
 		}
 		return sql;
 	}

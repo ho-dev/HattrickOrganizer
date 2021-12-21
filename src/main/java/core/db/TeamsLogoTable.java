@@ -5,6 +5,7 @@ import core.net.MyConnector;
 import core.util.HOLogger;
 import module.youth.YouthTraining;
 import module.youth.YouthTrainingType;
+import okhttp3.HttpUrl;
 import tool.updater.UpdateController;
 import tool.updater.UpdateHelper;
 
@@ -111,8 +112,10 @@ public class TeamsLogoTable extends AbstractTable{
         }
         else{
             if (logoURI.contains(".")) {
-                fileName = teamID + logoURI.substring(logoURI.lastIndexOf("."));
                 logoURL = "https:" + logoURI;
+                HttpUrl url = HttpUrl.parse(logoURL);
+                fileName = url.pathSegments().get(url.pathSize()-1);
+                //fileName = teamID + file.substring(file.lastIndexOf("."));
             }
             else{
                 HOLogger.instance().error(this.getClass(), "storeTeamLogoInfo: logo URI not recognized " + logoURI);
