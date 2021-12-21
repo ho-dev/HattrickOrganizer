@@ -3,6 +3,7 @@ package module.lineup;
 import core.db.DBManager;
 import core.gui.Refreshable;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPosition;
@@ -27,6 +28,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     private JComboBox<Team> m_jcbLoadLineup;
     private JCheckBox includeHTIntegrated;
     private JCheckBox includeTemplates;
+    private JTextField templateName;
+    private JButton store;
 
     private ArrayList<MatchKurzInfo> previousPlayedMatches = null;
     private ArrayList<MatchLineupTeam> templateLineups = null;
@@ -51,24 +54,22 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
-
-
-        gbc.gridx = 0;
-        gbc.gridy++;
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
 
         gbc.gridx = 1;
         m_jcbLoadLineup = new JComboBox<>();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbLoadLineup.setRenderer(new MatchComboBoxRenderer(MatchComboBoxRenderer.RenderType.TYPE_2));
         layout.setConstraints(m_jcbLoadLineup, gbc);
         add(m_jcbLoadLineup);
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.official_game_only"));
+        gbc.fill = GridBagConstraints.NONE;
+        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.includeHTO"));
         gbc.gridx = 1;
         includeHTIntegrated = new JCheckBox();
-        includeHTIntegrated.setSelected(false);
+        includeHTIntegrated.setSelected(UserParameter.instance().includeHTOLineups);
         layout.setConstraints(includeHTIntegrated, gbc);
         add(includeHTIntegrated);
 
@@ -77,9 +78,23 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.templates"));
         gbc.gridx = 1;
         includeTemplates = new JCheckBox();
-        includeTemplates.setSelected(false);
+        includeTemplates.setSelected(UserParameter.instance().includeLineupTemplates);
         layout.setConstraints(includeTemplates, gbc);
         add(includeTemplates);
+
+        gbc.gridx = 0;
+        gbc.gridy++;
+        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.store.template"));
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        templateName = new JTextField(getTemplateDefaultName());
+        layout.setConstraints(templateName, gbc);
+        add(templateName);
+
+        gbc.gridy++;
+        store = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+        layout.setConstraints(store, gbc);
+        add(store);
 
         addListeners();
     }
@@ -88,19 +103,21 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         m_jcbLoadLineup.addActionListener(e -> adoptLineup());
         includeHTIntegrated.addActionListener(e -> update_jcbLoadLineup(false));
         includeTemplates.addActionListener(e -> update_jcbLoadLineup(false));
+        store.addActionListener(e->storeTemplate());
     }
 
     private void removeListeners() {
-
         for (ActionListener al : m_jcbLoadLineup.getActionListeners()) {
             m_jcbLoadLineup.removeActionListener(al);
         }
-
         for (ActionListener al : includeTemplates.getActionListeners()) {
             includeTemplates.removeActionListener(al);
         }
         for (ActionListener al : includeHTIntegrated.getActionListeners()) {
             includeHTIntegrated.removeActionListener(al);
+        }
+        for (ActionListener al : store.getActionListeners()) {
+            store.removeActionListener(al);
         }
     }
 
@@ -130,25 +147,39 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     }
 
     private void update_jcbLoadLineup(boolean bForceRefresh) {
+
+        boolean refreshMatchlist=false;
+        if ( UserParameter.instance().includeHTOLineups != includeHTIntegrated.isSelected()){
+            refreshMatchlist=true;
+            UserParameter.instance().includeHTOLineups = includeHTIntegrated.isSelected();
+        }
+        boolean refreshTemplates=false;
+        if ( UserParameter.instance().includeLineupTemplates != includeTemplates.isSelected() ){
+            refreshTemplates=true;
+            UserParameter.instance().includeLineupTemplates=includeTemplates.isSelected();
+        }
+
         m_jcbLoadLineup.removeAllItems();
         Team oTeam;
-        if (previousPlayedMatches == null || bForceRefresh) {
+        if (previousPlayedMatches == null || bForceRefresh || refreshMatchlist) {
             previousPlayedMatches = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP, !includeHTIntegrated.isSelected());
         }
-        if (templateLineups == null || bForceRefresh) {
-            templateLineups = DBManager.instance().getTemplateMatchLineupTeam();
+        if (includeTemplates.isSelected() && (templateLineups == null || bForceRefresh || refreshTemplates)) {
+            templateLineups = DBManager.instance().getTemplateMatchLineupTeams();
         }
 
         m_jcbLoadLineup.addItem(null);
         int i = 1;
-        for (var team : templateLineups) {
-            oTeam = new Team();
-            oTeam.setName(team.getTeamName());
-            oTeam.setTeamId(team.getTeamID());
-            oTeam.setMatchType(MatchType.NONE);
-            oTeam.setMatchID(-1);
-            m_jcbLoadLineup.addItem(oTeam);
-            i++;
+        if ( includeTemplates.isSelected()) {
+            for (var team : templateLineups) {
+                oTeam = new Team();
+                oTeam.setName(team.getTeamName());
+                oTeam.setTeamId(team.getTeamID());
+                oTeam.setMatchType(MatchType.NONE);
+                oTeam.setMatchID(-1);
+                m_jcbLoadLineup.addItem(oTeam);
+                i++;
+            }
         }
 
         for (MatchKurzInfo match : previousPlayedMatches) {
@@ -172,26 +203,58 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     }
 
     private void adoptLineup() {
-
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        lineup.clearLineup();
-
         if (m_jcbLoadLineup.getSelectedItem() != null) {
+            Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            lineup.clearLineup();
             lineupPanel.setAssistantGroupFilter(false);
             var team = (Team) m_jcbLoadLineup.getSelectedItem();
-            Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(team.getMatchID(), team.getMatchType(), HOVerwaltung.instance().getModel().getBasics().getTeamId());
-            if (lineupPlayers != null) {
-                for (MatchLineupPosition lineupPlayer : lineupPlayers) {
-                    if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
-                        lineup.setKicker(lineupPlayer.getPlayerId());
-                    } else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
-                        lineup.setCaptain(lineupPlayer.getPlayerId());
-                    } else {
-                        lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
+            if (isMatchTeam(team)) {
+                Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(team.getMatchID(), team.getMatchType(), HOVerwaltung.instance().getModel().getBasics().getTeamId());
+                if (lineupPlayers != null) {
+                    for (MatchLineupPosition lineupPlayer : lineupPlayers) {
+                        if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
+                            lineup.setKicker(lineupPlayer.getPlayerId());
+                        } else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
+                            lineup.setCaptain(lineupPlayer.getPlayerId());
+                        } else {
+                            lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
+                        }
                     }
                 }
             }
+            else {
+                templateName.setText(team.getName());
+                var matchLineupTeam = DBManager.instance().getMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), team.getTeamId());
+                if ( matchLineupTeam != null){
+                    HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
+                }
+            }
+            lineupPanel.update();
         }
-        lineupPanel.update();
     }
+
+    private boolean isMatchTeam(Team team) {
+        return team.getTeamId() >= 0 || team.getMatchID() >= 0 || team.getMatchType() != MatchType.NONE;
+    }
+
+    private void storeTemplate() {
+        var team = (Team) m_jcbLoadLineup.getSelectedItem();
+        int templateId;
+        if (team==null || isMatchTeam(team)) {
+            templateId = DBManager.instance().getTemplateMatchLineupTeamNextNumber();
+        } else {
+            templateId = team.getTeamId();
+        }
+        var name = templateName.getText();
+        var lineupTeam = new MatchLineupTeam(MatchType.NONE, -1, name, templateId, 0);
+        lineupTeam.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
+        DBManager.instance().storeMatchLineupTeam(lineupTeam);
+    }
+
+    private String getTemplateDefaultName() {
+        return HOVerwaltung.instance().getLanguageString("ls.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
+    }
+
+
+
 }

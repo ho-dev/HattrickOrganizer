@@ -379,6 +379,8 @@ public final class UserParameter extends Configuration {
     public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
     public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
     public HODividerListener series_tableSplitPaneDivider = new HODividerListener(-1);
+    public boolean includeHTOLineups=false;
+    public boolean includeLineupTemplates=false;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -671,6 +673,8 @@ public final class UserParameter extends Configuration {
 
         map.put("lineupOrientation", String.valueOf(this.lineupOrientationSetting));
         map.put("lineupPositionnames", String.valueOf(this.lineupPositionNamesSetting));
+        map.put("lineupIncludeHTO", String.valueOf(this.includeHTOLineups));
+        map.put("lineupIncludeTemplates", String.valueOf(this.includeLineupTemplates));
 
         map.put("series_tableSplitPaneDivider", String.valueOf(this.series_tableSplitPaneDivider.location));
 
@@ -918,6 +922,8 @@ public final class UserParameter extends Configuration {
 
         lineupOrientationSetting = getIntValue(values, "lineupOrientation");
         lineupPositionNamesSetting = getIntValue(values,"lineupPositionnames" );
+        includeHTOLineups = getBooleanValue(values, "lineupIncludeHTO");
+        includeLineupTemplates = getBooleanValue(values,"lineupIncludeTemplates");
 
         series_tableSplitPaneDivider.location = getIntValue(values, "series_tableSplitPaneDivider");
     }

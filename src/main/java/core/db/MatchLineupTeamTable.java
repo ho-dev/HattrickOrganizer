@@ -115,11 +115,10 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		}
 	}
 
-	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeam() {
+	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeams() {
 		ArrayList<MatchLineupTeam> ret = new ArrayList<>();
-		var teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		try {
-			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 ";
+			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1";
 
 			var rs = adapter.executeQuery(sql);
 			rs.beforeFirst();
@@ -143,5 +142,22 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
 		}
 		return ret;
+	}
+
+	public int getTemplateMatchLineupTeamNextNumber() {
+		try {
+			var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
+			var rs = adapter.executeQuery(sql);
+			if (rs != null) {
+				rs.beforeFirst();
+				if (rs.next()) {
+					return Math.min(-1,rs.getInt(1));
+				}
+			}
+		}
+		catch (Exception e){
+			HOLogger.instance().log(getClass(),e);
+		}
+		return -1;
 	}
 }

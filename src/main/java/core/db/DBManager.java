@@ -2617,7 +2617,11 @@ public class DBManager {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
 	}
 
-	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeam() {
-		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeam();
+	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeams() {
+		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
+	}
+
+	public int getTemplateMatchLineupTeamNextNumber() {
+		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeamNextNumber();
 	}
 }
