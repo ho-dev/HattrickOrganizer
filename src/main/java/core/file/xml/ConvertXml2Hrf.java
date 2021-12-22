@@ -391,9 +391,13 @@ public class ConvertXml2Hrf {
 		}
 
 		// recreate defect IncomeTemporary field for compatibility reasons
-		int iIncomeTemporary =  Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
+		int iIncomeTemporary =  Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) +
+				Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) +
+				Integer.parseInt(economyDataMap.get("IncomeTemporary"));
 		int iCostsTemporary =  Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("CostsArenaBuilding"));
-		int iLastIncomeTemporary =  Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
+		int iLastIncomeTemporary =  Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) +
+				Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")) +
+				Integer.parseInt(economyDataMap.get("LastIncomeTemporary"));
 		int iLastCostsTemporary =  Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("LastCostsArenaBuilding"));
 
 		buffer.append("IncomeSpectators=").append(economyDataMap.get("IncomeSpectators")).append('\n');
