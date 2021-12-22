@@ -94,7 +94,10 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
         }
         else if (renderType == RenderType.TYPE_2) {
             String sMatch;
-            if (value.isHomeMatch()) {
+            if ( value.isTemplate()){
+                sMatch = value.getName();
+            }
+            else if (value.isHomeMatch()) {
                 sMatch = OWN_TEAM_NAME + " - " + value.getName();
             } else {
                 sMatch = value.getName() + " - " + OWN_TEAM_NAME;

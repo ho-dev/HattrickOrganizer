@@ -62,6 +62,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
 			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"MatchTeamAttitude"));
 
+			rs.close();
+
 			team.loadLineup();
 			team.setStyleOfPlay(styleOfPlay);
 			team.setMatchTacticType(matchTacticType);
@@ -151,7 +153,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			if (rs != null) {
 				rs.beforeFirst();
 				if (rs.next()) {
-					return Math.min(-1,rs.getInt(1));
+					return Math.min(-1,rs.getInt(1)-1);
 				}
 			}
 		}

@@ -208,28 +208,23 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
             lineup.clearLineup();
             lineupPanel.setAssistantGroupFilter(false);
             var team = (Team) m_jcbLoadLineup.getSelectedItem();
+            int teamId;
             if (isMatchTeam(team)) {
-                Vector<MatchLineupPosition> lineupPlayers = DBManager.instance().getMatchLineupPlayers(team.getMatchID(), team.getMatchType(), HOVerwaltung.instance().getModel().getBasics().getTeamId());
-                if (lineupPlayers != null) {
-                    for (MatchLineupPosition lineupPlayer : lineupPlayers) {
-                        if (lineupPlayer.getRoleId() == IMatchRoleID.setPieces) {
-                            lineup.setKicker(lineupPlayer.getPlayerId());
-                        } else if (lineupPlayer.getRoleId() == IMatchRoleID.captain) {
-                            lineup.setCaptain(lineupPlayer.getPlayerId());
-                        } else {
-                            lineup.setSpielerAtPosition(lineupPlayer.getRoleId(), lineupPlayer.getPlayerId(), lineupPlayer.getBehaviour());
-                        }
-                    }
-                }
-            }
-            else {
+                teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                templateName.setText(getTemplateDefaultName());
+            } else {
                 templateName.setText(team.getName());
-                var matchLineupTeam = DBManager.instance().getMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), team.getTeamId());
-                if ( matchLineupTeam != null){
-                    HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
-                }
+                teamId = team.getTeamId();
             }
+
+            var matchLineupTeam = DBManager.instance().getMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), teamId);
+            if (matchLineupTeam != null) {
+                HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
+            }
+
             lineupPanel.update();
+        } else {
+            templateName.setText(getTemplateDefaultName());
         }
     }
 
@@ -240,7 +235,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     private void storeTemplate() {
         var team = (Team) m_jcbLoadLineup.getSelectedItem();
         int templateId;
-        if (team==null || isMatchTeam(team)) {
+        boolean isNewTemplate = team==null || isMatchTeam(team);
+        if (isNewTemplate) {
             templateId = DBManager.instance().getTemplateMatchLineupTeamNextNumber();
         } else {
             templateId = team.getTeamId();
@@ -249,10 +245,18 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         var lineupTeam = new MatchLineupTeam(MatchType.NONE, -1, name, templateId, 0);
         lineupTeam.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
         DBManager.instance().storeMatchLineupTeam(lineupTeam);
+
+        if ( isNewTemplate) {
+            templateDefaultName=null;
+            this.update_jcbLoadLineup();
+        }
     }
 
+    private String templateDefaultName=null;
     private String getTemplateDefaultName() {
-        return HOVerwaltung.instance().getLanguageString("ls.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
+        if ( templateDefaultName==null){
+            templateDefaultName = HOVerwaltung.instance().getLanguageString("ls.module.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
+        }
+        return templateDefaultName;
     }
-
 }

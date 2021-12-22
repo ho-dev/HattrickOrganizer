@@ -64,7 +64,7 @@ public class Lineup{
 	private List<Substitution> substitutions = new ArrayList<>();
 	@SerializedName("kickers")
 	@Expose
-	private List<MatchLineupPosition> penaltyTakers = new ArrayList<>();
+	private Vector<MatchLineupPosition> penaltyTakers = new Vector<>();
 
 	/** captain */
 	@SerializedName("captain")
@@ -81,7 +81,7 @@ public class Lineup{
 	MatchLineupPosition setPiecesTaker;
 
 	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
-		for ( var position : matchLineupPositions){
+		for (var position : matchLineupPositions){
 			addPosition(position);
 		}
 		this.substitutions = substitutions;
@@ -89,13 +89,13 @@ public class Lineup{
 
 	public void addPosition(MatchLineupPosition position) {
 		if ( position.isFieldMatchRoleId()){
-			this.m_vFieldPositions.add(position);
+			addPosition(this.m_vFieldPositions,position);
 		}
 		else if (position.isSubstitutesMatchRoleId() || position.isBackupsMatchRoleId()){
-			this.m_vBenchPositions.add(position);
+			addPosition(this.m_vBenchPositions,position);
 		}
 		else if ( position.isPenaltyTakerMatchRoleId()){
-			this.penaltyTakers.add(position);
+			addPosition(this.penaltyTakers,position);
 		}
 		else if ( position.getId() == IMatchRoleID.setPieces){
 			setSetPiecesTaker(position);
@@ -104,7 +104,7 @@ public class Lineup{
 			setCaptain(position);
 		}
 		else if ( position.isReplacedMatchRoleId()){
-			this.replacedPositions.add(position);
+			addPosition(this.replacedPositions,position);
 		}
 	}
 
@@ -887,6 +887,16 @@ public class Lineup{
 		}
 	}
 
+	private void addPosition(Vector<MatchLineupPosition> positions, MatchLineupPosition pos){
+		for ( var p: positions){
+			if ( p.getId() == pos.getId()) {
+				positions.remove(p);
+				break;
+			}
+		}
+		positions.add(pos);
+	}
+
 	/**
 	 * Clears all positions of content by creating a new, empty lineup.
 	 */
@@ -939,28 +949,32 @@ public class Lineup{
 	public final void setSpielerAtPosition(int positionID, int playerID) {
 		final MatchRoleID position = getPositionById(positionID);
 		if ( position != null) {
-			MatchRoleID oldPlayerRole = getPositionByPlayerId(playerID);
-			if (oldPlayerRole != null) {
-				if (position.isFieldMatchRoleId()) {
-					//if player changed is in starting eleven it has to be remove from previous occupied positions
-					oldPlayerRole.setSpielerId(0, this);
-					if (oldPlayerRole.isSubstitutesMatchRoleId()) {
-						removeObjectPlayerFromSubstitutions(playerID);
-						// player can occupy multiple bench positions
-						oldPlayerRole = getPositionByPlayerId(playerID);
-						while (oldPlayerRole != null) {
+			if ( position.getPlayerId() != playerID) {
+				if ( playerID != 0 ) {
+					MatchRoleID oldPlayerRole = getPositionByPlayerId(playerID);
+					if (oldPlayerRole != null) {
+						if (position.isFieldMatchRoleId()) {
+							//if player changed is in starting eleven it has to be remove from previous occupied positions
 							oldPlayerRole.setSpielerId(0, this);
-							oldPlayerRole = getPositionByPlayerId(playerID);
+							if (oldPlayerRole.isSubstitutesMatchRoleId()) {
+								removeObjectPlayerFromSubstitutions(playerID);
+								// player can occupy multiple bench positions
+								oldPlayerRole = getPositionByPlayerId(playerID);
+								while (oldPlayerRole != null) {
+									oldPlayerRole.setSpielerId(0, this);
+									oldPlayerRole = getPositionByPlayerId(playerID);
+								}
+							}
+						} else {
+							// position is on bench (or backup), remove him from field position, but not from other bench positions
+							if (oldPlayerRole.isFieldMatchRoleId()) {
+								oldPlayerRole.setSpielerId(0, this);
+							}
 						}
 					}
-				} else {
-					// position is on bench (or backup), remove him from field position, but not from other bench positions
-					if (oldPlayerRole.isFieldMatchRoleId()) {
-						oldPlayerRole.setSpielerId(0, this);
-					}
 				}
+				position.setSpielerId(playerID, this);
 			}
-			position.setSpielerId(playerID, this);
 		}
 	}
 
@@ -1082,7 +1096,7 @@ public class Lineup{
 	}
 
 	public void setPenaltyTakers(List<MatchLineupPosition> positions) {
-		this.penaltyTakers = new ArrayList<>(positions);
+		this.penaltyTakers = new Vector<>(positions);
 		// chpp match order requires exactly 11 penalty takers
 		for ( int i=this.penaltyTakers.size(); i<11; i++){
 			this.penaltyTakers.add(new MatchLineupPosition(0,0,IMatchRoleID.NORMAL));

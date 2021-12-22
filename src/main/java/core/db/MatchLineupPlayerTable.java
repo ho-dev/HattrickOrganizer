@@ -177,18 +177,11 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType,  int matchID, int teamID) {
 		if (matchLineupPosition != null) {
-			
-			// Need to check for spieler, there may now be multiple players with -1 role.
-			// Should we delete here, anyways? Isn't that for update?
-
-
-			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID", "SpielerID"};
-			final String[] werte = { "" + matchType.getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId(), "" + matchLineupPosition.getPlayerId()};
+			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID"};
+			final String[] werte = { "" + matchType.getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId()};
 			delete(where, werte);
 
-			//saven
 			try {
-				//insert vorbereiten
 				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,MatchTyp,SpielerID,RoleID,Taktik," +
 						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
 						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +

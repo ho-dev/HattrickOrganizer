@@ -109,6 +109,11 @@ public class XMLMatchLineupParser {
 			if ( name.length()>0 && lastName.length()>0) name = name + " ";
 			name = name + lastName;
 
+			// shift lineup ids to match order ids
+			if ( roleID >= IMatchRoleID.startReserves && roleID < IMatchRoleID.substGK1) {
+				roleID += IMatchRoleID.substGK1 - IMatchRoleID.startReserves;
+			}
+
 			// tactic is only set for those in the lineup (and not for the keeper).
 			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
 				// Diese Werte sind von HT vorgegeben aber nicht garantiert

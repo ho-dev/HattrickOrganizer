@@ -91,4 +91,8 @@ public class Team implements Comparable<Team> {
     public int compareTo(Team team) {
         return this.getTime().compareTo(team.getTime());
     }
+
+    public boolean isTemplate() {
+        return teamId < 0 && matchType == MatchType.NONE && iMatchID == -1;
+    }
 }

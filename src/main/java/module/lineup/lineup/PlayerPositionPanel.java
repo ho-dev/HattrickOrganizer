@@ -662,20 +662,21 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             } else {
                 final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
 
-                assert position != null;
-                float value = player.calcPosValue(position.getPosition(), true, weather, useWeatherImpact);
+                if ( position != null ){
+                    float value = player.calcPosValue(position.getPosition(), true, weather, useWeatherImpact);
 
-                byte[] alternativePositions = player.getAlternativeBestPositions();
-                boolean bestPosition = false;
-                for (byte altPos : alternativePositions) {
-                    if (altPos == position.getPosition()) {
-                        bestPosition = true;
-                        break;
+                    byte[] alternativePositions = player.getAlternativeBestPositions();
+                    boolean bestPosition = false;
+                    for (byte altPos : alternativePositions) {
+                        if (altPos == position.getPosition()) {
+                            bestPosition = true;
+                            break;
+                        }
                     }
-                }
 
-                item.setValues(spielerName, value, player, bestPosition);
-                return item;
+                    item.setValues(spielerName, value, player, bestPosition);
+                    return item;
+                }
 
             }
         }

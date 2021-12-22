@@ -769,6 +769,7 @@ public class MatchLineupTeam {
 		var players = DBManager.instance().getMatchLineupPlayers(this.matchId, this.matchType, this.teamId);
 		var substitutions = DBManager.instance().getMatchSubstitutionsByMatchTeam(this.matchId, this.matchType, this.teamId);
 		this.lineup = new Lineup(players, substitutions);
+		resetMinutesOfPlayersInSectors();
 	}
 
 	public int getMatchId() {
