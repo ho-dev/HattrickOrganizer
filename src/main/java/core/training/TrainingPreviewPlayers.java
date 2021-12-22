@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchStatistics;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
@@ -207,7 +206,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                 weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());
                 for (var matchInfo : lastTraining.getMatches()) {
                     if (matchInfo.getMatchStatus() == MatchKurzInfo.FINISHED) {
-                        var mlt = matchInfo.getMatchdetails().getTeamLineup();
+                        var mlt = matchInfo.getMatchdetails().getOwnTeamLineup();
                         if ( mlt != null ) {
                             lMatchStats.add(new MatchStatistics(matchInfo, mlt));
                         }

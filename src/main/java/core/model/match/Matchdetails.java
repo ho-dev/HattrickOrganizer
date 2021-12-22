@@ -1360,9 +1360,10 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return MatchLineupTeam
      */
-    public MatchLineupTeam getTeamLineup() {
+    public MatchLineupTeam getOwnTeamLineup() {
         if (teamLineup == null) {
-            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.getMatchID(), MatchKurzInfo.user_team_id);
+            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            teamLineup = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.getMatchID(), teamId);
         }
         return teamLineup;
     }
