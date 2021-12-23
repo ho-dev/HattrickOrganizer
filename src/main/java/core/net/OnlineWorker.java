@@ -15,7 +15,6 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
-import core.prediction.engine.TeamRatings;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -119,7 +118,7 @@ public class OnlineWorker {
 							// Show
 							hov.setModel(homodel);
 							// reset value of TS, confidence in Lineup Settings Panel after data download
-							HOMainFrame.instance().getLineupPanel().getLineupSettingsPanel().backupRealGameSettings();
+							HOMainFrame.instance().getLineupPanel().backupRealGameSettings();
 						}
 						// Info
 						setInfoMsg(getLangString("HRFErfolg"));
@@ -683,13 +682,13 @@ public class OnlineWorker {
 
 			// Merge the two
 			if ((lineUp2 != null)) {
-				if (!lineUp1.isHomeTeamLoaded())
+				if (lineUp1.isHomeTeamNotLoaded())
 					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
 				else if (!lineUp1.isGuestTeamLoaded())
 					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
 			} else {
 				// Get the 2nd lineup
-				if (!lineUp1.isHomeTeamLoaded()) {
+				if (lineUp1.isHomeTeamNotLoaded()) {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
 					if (lineUp2 != null)
 						lineUp1.setHomeTeam(lineUp2.getHomeTeam());
@@ -958,10 +957,11 @@ public class OnlineWorker {
 	 *            The matchTyp for the match to download
 	 * @return The Lineup object with the downloaded match data
 	 */
-	public static Lineup getLineupbyMatchId(int matchId, MatchType matchType) {
+	public static MatchLineupTeam getLineupbyMatchId(int matchId, MatchType matchType) {
 
 		try {
-			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, HOVerwaltung.instance().getModel().getBasics().getTeamId());
+			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, teamId);
 			
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
@@ -976,8 +976,8 @@ public class OnlineWorker {
 				{	
 					//It is possible that NTs struggle here.
 				}
-				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, map);
-				return new Lineup(getProperties(lineupData));
+				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
+				return new MatchLineupTeam(getProperties(lineupData));
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";
@@ -1065,7 +1065,8 @@ public class OnlineWorker {
 			file = askForHRFPath(parent, file);
 		}
 
-		if ((file != null) && (file.getPath() != null)) {
+		if ((file != null)) {
+			file.getPath();
 			// Save Path
 			UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
 
@@ -1082,7 +1083,7 @@ public class OnlineWorker {
 					saveFile(file.getPath(), hrfData);
 				} catch (IOException e) {
 					Helper.showMessage(HOMainFrame.instance(),
-							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile()  +".\nError: " + e.getMessage(),
+							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: " + e.getMessage(),
 							getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 				}
 			} else {

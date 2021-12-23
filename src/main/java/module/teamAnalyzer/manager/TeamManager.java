@@ -43,7 +43,7 @@ public class TeamManager {
 					t.setName(element.getGastName());
 					t.setTeamId(element.getGastId());
 					t.setTime(element.getDatum());
-					t.setMatchType(MatchType.LEAGUE.getIconArrayIndex());
+					t.setMatchType(MatchType.LEAGUE);
 
 					lteams.add(t);
 				}
@@ -54,7 +54,7 @@ public class TeamManager {
 					t.setName(element.getHeimName());
 					t.setTeamId(element.getHeimId());
 					t.setTime(element.getDatum());
-					t.setMatchType(MatchType.LEAGUE.getIconArrayIndex());
+					t.setMatchType(MatchType.LEAGUE);
 
 					lteams.add(t);
 				}
@@ -68,7 +68,7 @@ public class TeamManager {
 			t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
 			t.setTeamId(ownTeamID);
 			t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("2200-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear last
-			t.setMatchType(-1);
+			t.setMatchType(MatchType.NONE);
 
 			lteams.add(t);
 		}
@@ -101,7 +101,7 @@ public class TeamManager {
 	public static void addFavouriteTeam(Team team) {
 		if (!isTeamInList(team.getTeamId())) {
 			System.out.println(team.getMatchType());
-			team.setMatchType(-1);
+			team.setMatchType(MatchType.NONE);
 			getTeamsMap().put(team.getTeamId(), team);
 		}
 
@@ -135,9 +135,7 @@ public class TeamManager {
 			for ( var team : vLMatch){
 
 				if (team.getTime().compareTo(refTS) >= 0) {
-					if (teams.get(team.getTeamId()) == null) {
-						teams.put(team.getTeamId(), team);
-					}
+					teams.putIfAbsent(team.getTeamId(), team);
 				}
 			}
 		}
@@ -157,9 +155,7 @@ public class TeamManager {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		MatchKurzInfo[] dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
 
-		List<MatchKurzInfo> l = new ArrayList<>();
-
-		l.addAll(Arrays.asList(dbMatches));
+		List<MatchKurzInfo> l = new ArrayList<>(Arrays.asList(dbMatches));
 
 		Object[] matches = l.toArray();
 
@@ -175,7 +171,7 @@ public class TeamManager {
 				team.setTeamId(match.getHomeTeamID());
 			}
 			team.setTime(match.getMatchDateAsTimestamp());
-			team.setMatchType(match.getMatchTypeExtended().getIconArrayIndex());
+			team.setMatchType(match.getMatchType());
 
 			vTeams.add(team);
 		}

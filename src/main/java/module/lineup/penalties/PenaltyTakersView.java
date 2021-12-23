@@ -6,6 +6,7 @@ import core.gui.comp.table.RowNumberTable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
 import core.model.player.MatchRoleID;
 import core.util.GUIUtils;
@@ -87,7 +88,7 @@ public class PenaltyTakersView extends JPanel {
 		reset();
 
 		// get positions already set as penalty takers in the lineup
-		List<MatchRoleID> positions = this.lineup.getPenaltyTakers();
+		List<MatchLineupPosition> positions = this.lineup.getPenaltyTakers();
 		List<PenaltyTaker> takers = new ArrayList<PenaltyTaker>();
 		for (MatchRoleID pos : positions) {
 			if (pos.getPlayerId() != 0) {

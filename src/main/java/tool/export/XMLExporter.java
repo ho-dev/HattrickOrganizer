@@ -11,7 +11,7 @@ import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.Team;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
@@ -81,13 +81,10 @@ public class XMLExporter  {
             dialog.getContentPane().add(m_jsSpinner, BorderLayout.CENTER);
 
             JButton button = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
-            button.addActionListener(new ActionListener() {
-                    @Override
-					public void actionPerformed(ActionEvent e) {
-                        dialog.setVisible(false);
-                        dialog.dispose();
-                    }
-                });
+            button.addActionListener(e -> {
+				dialog.setVisible(false);
+				dialog.dispose();
+			});
             dialog.getContentPane().add(button, BorderLayout.SOUTH);
             dialog.pack();
             dialog.setLocation((owner.getLocation().x + (owner.getWidth() / 2))
@@ -172,10 +169,10 @@ public class XMLExporter  {
 		
 		//XML schreiben
 		try {
-			Document doc = null;
-			Element ele = null;
-			Element tmpEle = null;
-			Element root = null;
+			Document doc;
+			Element ele;
+			Element tmpEle;
+			Element root;
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -196,9 +193,7 @@ public class XMLExporter  {
 			root.appendChild(tmpEle);
 			tmpEle.appendChild(doc.createTextNode("1.05"));
 
-			for (Iterator<ExportMatchData> iter = matches.iterator(); iter.hasNext();) {
-				ExportMatchData matchData = (ExportMatchData) iter.next();
-
+			for (ExportMatchData matchData : matches) {
 				//Matchdaten
 				tmpEle = doc.createElement("Match");
 				root.appendChild(tmpEle);
@@ -223,7 +218,7 @@ public class XMLExporter  {
 				ele = doc.createElement("Heimspiel");
 				tmpEle.appendChild(ele);
 
-				boolean heimspiel = true;
+				boolean heimspiel;
 				if (matchData.getInfo().getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 					ele.appendChild(doc.createTextNode("1"));
 					heimspiel = true;
@@ -248,7 +243,7 @@ public class XMLExporter  {
 				tmpEle.appendChild(ele);
 				ele.appendChild(doc.createTextNode("" + hrfID));
 
-				MatchLineupTeam lineupTeam = null;
+				MatchLineupTeam lineupTeam;
 				Matchdetails details = matchData.getDetails();
 				if (details.getHomeTeamId() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 					lineupTeam = DBManager.instance().loadMatchLineup(details.getMatchType().getId(), details.getMatchID()).getHomeTeam();
@@ -351,13 +346,10 @@ public class XMLExporter  {
 				Element lineupEle = doc.createElement("Lineup");
 				tmpEle.appendChild(lineupEle);
 
-				//tmpRoot wechseln
-				tmpEle = lineupEle;
-
 				//Player schreiben
-				for (int k = 0; (lineupTeam.getLineup() != null) && (k < lineupTeam.getLineup().size()); k++) {
-					MatchLineupPlayer playerMatch = lineupTeam.getLineup().get(k);
-					Player playerData = matchData.getPlayers().get(Integer.valueOf(playerMatch.getPlayerId()));
+				for (var p : lineupTeam.getLineup().getAllPositions()) {
+					var playerMatch = (MatchLineupPosition) p;
+					Player playerData = matchData.getPlayers().get(playerMatch.getPlayerId());
 
 					//Bank + verletzte überspringen
 					if (playerMatch.getRoleId() >= IMatchRoleID.startReserves) {
@@ -503,7 +495,7 @@ public class XMLExporter  {
 		Object[] value = player.getLastLevelUp(skill);
 
 		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
-			if ((((Boolean) value[1]).booleanValue()) && ((Timestamp) value[0]).before(matchdate)) {
+			if (((Boolean) value[1]) && ((Timestamp) value[0]).before(matchdate)) {
 				return "1";
 			}
 		}
@@ -537,42 +529,20 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		switch (system) {
-			case Lineup.SYS_MURKS :
-				return -1;
-
-			case Lineup.SYS_451 :
-				return team.getFormationExperience451();
-
-			case Lineup.SYS_352 :
-				return team.getFormationExperience352();
-
-			case Lineup.SYS_442 :
-				return team.getFormationExperience442();
-
-			case Lineup.SYS_343 :
-				return team.getFormationExperience343();
-
-			case Lineup.SYS_433 :
-				return team.getFormationExperience433();
-
-			case Lineup.SYS_532 :
-				return team.getFormationExperience532();
-
-			case Lineup.SYS_541 :
-				return team.getFormationExperience541();
-				
-			case Lineup.SYS_523 :
-				return team.getFormationExperience523();
-				
-			case Lineup.SYS_550 :
-				return team.getFormationExperience550();
-				
-			case Lineup.SYS_253 :
-				return team.getFormationExperience253();
-
-		}
-		return -1;
+		return switch (system) {
+			case Lineup.SYS_MURKS -> -1;
+			case Lineup.SYS_451 -> team.getFormationExperience451();
+			case Lineup.SYS_352 -> team.getFormationExperience352();
+			case Lineup.SYS_442 -> team.getFormationExperience442();
+			case Lineup.SYS_343 -> team.getFormationExperience343();
+			case Lineup.SYS_433 -> team.getFormationExperience433();
+			case Lineup.SYS_532 -> team.getFormationExperience532();
+			case Lineup.SYS_541 -> team.getFormationExperience541();
+			case Lineup.SYS_523 -> team.getFormationExperience523();
+			case Lineup.SYS_550 -> team.getFormationExperience550();
+			case Lineup.SYS_253 -> team.getFormationExperience253();
+			default -> -1;
+		};
 	}
 
 	/**

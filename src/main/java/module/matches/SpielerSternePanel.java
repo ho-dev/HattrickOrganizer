@@ -8,7 +8,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -47,7 +47,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	private final JLabel m_jlPosition = new JLabel();
 	private final JLabel m_jlSpecial = new JLabel();
 	private MatchLineup m_clMatchLineup;
-	private MatchLineupPlayer m_clMatchPlayer;
+	private MatchLineupPosition m_clMatchPlayer;
 	private RatingTableEntry m_jpSterne = new RatingTableEntry();
 	private Box m_jpDummy = new Box(BoxLayout.X_AXIS);
 	private JPanel m_jpParent;
@@ -191,7 +191,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public final void refresh(MatchLineup lineup, MatchLineupPlayer player) {
+	public final void refresh(MatchLineup lineup, MatchLineupPosition player) {
 		m_clMatchLineup = lineup;
 		m_clMatchPlayer = player;
 

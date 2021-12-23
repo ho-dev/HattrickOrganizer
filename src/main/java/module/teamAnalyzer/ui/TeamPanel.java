@@ -5,7 +5,6 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.module.config.ModuleConfig;
-import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -123,7 +122,7 @@ public class TeamPanel extends JPanel {
                 var manMarkingOrder = ownLineup.getManMarkingOrder();
                 if (manMarkingOrder != null) {
                     var manMarker = manMarkingOrder.getSubjectPlayerID();
-                    var manMarkerPos = ownLineup.getPositionBySpielerId(manMarker).getId();
+                    var manMarkerPos = ownLineup.getPositionByPlayerId(manMarker).getId();
                     var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
                     var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
                     if (manMarkingOrderDisplay == null) {

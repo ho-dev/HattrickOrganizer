@@ -5,11 +5,13 @@ import core.model.StaffMember;
 import core.model.StaffType;
 import core.model.Team;
 import core.model.XtraData;
+import core.model.match.MatchLineupTeam;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.TrainerType;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.util.HOLogger;
@@ -20,6 +22,7 @@ import tool.arenasizer.Stadium;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,13 +62,13 @@ public class HRFStringParser {
 			Properties properties = null;
 
 			// Load hrf string into a stream
-			final ByteArrayInputStream bis = new ByteArrayInputStream(hrf.getBytes("UTF-8"));
-			final InputStreamReader isr = new InputStreamReader(bis, "UTF-8");
+			final ByteArrayInputStream bis = new ByteArrayInputStream(hrf.getBytes(StandardCharsets.UTF_8));
+			final InputStreamReader isr = new InputStreamReader(bis, StandardCharsets.UTF_8);
 			BufferedReader hrfReader = new BufferedReader(isr);
-			String lineString = "";
-			Object entity = null;
-			String datestring = "";
-			int indexEqualsSign = -1;
+			String lineString;
+			Object entity;
+			String datestring;
+			int indexEqualsSign;
 			// While there is still data to process
 			while (hrfReader.ready()) {
 				// Read a line
@@ -171,7 +174,7 @@ public class HRFStringParser {
 				}
 				// lineup
 				else if (entity.toString().equalsIgnoreCase(LINEUP)) {
-					hoModel.setLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.storeLineup(new MatchLineupTeam(MatchRoleID.convertOldRoleToNew(properties)));
 				}
 				// economy
 				else if (entity.toString().equalsIgnoreCase(ECONOMY)) {
@@ -200,7 +203,7 @@ public class HRFStringParser {
 
 
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
-					hoModel.setPreviousLineup(new Lineup(MatchRoleID.convertOldRoleToNew(properties)));
+					hoModel.setPreviousLineup(new MatchLineupTeam(MatchRoleID.convertOldRoleToNew(properties)));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {
 					hoModel.setStaff(parseStaff(properties));
 				}
@@ -208,7 +211,7 @@ public class HRFStringParser {
 				else {
 					// Ignorieren!
 					HOLogger.instance().log(HRFStringParser.class,
-							"Unbekannte Entity: " + entity.toString());
+							"Unbekannte Entity: " + entity);
 				}
 			} else {
 				HOLogger.instance().log(HRFStringParser.class,
@@ -225,7 +228,7 @@ public class HRFStringParser {
 			for (Player player : players) {
 				if (player.isTrainer() && player.getPlayerID() != trainerID) {
 					player.setTrainerSkill(-1);
-					player.setTrainerTyp(-1);
+					player.setTrainerTyp(TrainerType.None);
 				}
 			}
 		}

@@ -87,7 +87,7 @@ final class BasicsTable extends AbstractTable {
 					+ ",'"
 					+ basics.isHasSupporter()
 					+ "','"
-					+ basics.getYouthTeamName()
+					+ core.db.DBManager.insertEscapeSequences(basics.getYouthTeamName() )
 					+ "',"
 					+ basics.getYouthTeamId()
 					+ ","

@@ -1,8 +1,6 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
-import core.model.enums.MatchType;
-import core.model.match.SourceSystem;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -61,6 +59,8 @@ final class DBUpdater {
 					case 499:
 						updateDBv500(DBVersion);
 					case 500:
+						updateDBv600(DBVersion);
+					case 600:
 				}
 
 			} catch (Exception e) {
@@ -69,6 +69,17 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv600(int dbVersion) throws SQLException {
+		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
+
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS MATCHLINEUPTEAM_IDX ON MATCHLINEUPTEAM (MatchID,TeamID,MatchTyp)");
+
+		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("ATTITUDE", "INTEGER");
+		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("TACTIC", "INTEGER");
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {
@@ -296,7 +307,6 @@ final class DBUpdater {
 			matchLineupTable.tryDeleteColumn("ArenaID");
 			matchLineupTable.tryDeleteColumn("ArenaName");
 
-			dbManager.getTable(AufstellungTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchHighlightsTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryDeleteColumn("SourceSystem");
 			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryDeleteColumn("SourceSystem");
@@ -309,7 +319,6 @@ final class DBUpdater {
 			dbManager.getTable(MatchLineupTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchLineupPlayerTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
-			dbManager.getTable(MatchOrderTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(MatchSubstitutionTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 			dbManager.getTable(YouthTrainingTable.TABLENAME).tryAddColumn("MATCHTYP", "INTEGER DEFAULT 0");
 
@@ -337,7 +346,7 @@ final class DBUpdater {
 			//		"MATCHORDER", "MATCHSUBSTITUTION");
 
 			copyMatchTypes("MATCHESKURZINFO", "IFA_MATCHES");
-			copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
+			if (tableExists("MATCHORDER") && dbVersion<600 ) copyMatchTypes("MATCHESKURZINFO", "MATCHORDER");		// no lineup available yet for match orders
 			copyMatchTypes("MATCHLINEUP", "MATCHDETAILS");
 			copyMatchTypes("MATCHLINEUP", "MATCHHIGHLIGHTS");
 			copyMatchTypes("MATCHLINEUP", "MATCHLINEUPPLAYER");

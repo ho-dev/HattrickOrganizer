@@ -39,6 +39,13 @@ public interface IMatchRoleID {
     List<Integer> aOutfieldMatchRoleID = IntStream.rangeClosed(101, 113).boxed().collect(Collectors.toList());
 
     // Subs
+    // used in match lineup file
+    int substitutionKeeper = 114;
+    int substitutionDefender = 115;
+    int substitutionInnerMidfield = 116;
+    int substitutionWinger = 117;
+    int substitutionForward = 118;
+    // used in match order
     int substGK1 = 200; // 	Substitution (Keeper)
     int substCD1 = 201; // Substitution (Central defender)
     int substWB1 = 202; // Substitution (WB)
@@ -84,10 +91,10 @@ public interface IMatchRoleID {
 //    /** ab welccher PositionsID gehört Pos zur Reserve Bank */
 //
     //First id of the reserves
-    int startReserves = 200;
+    int startReserves = substitutionKeeper;
 
     // Start of player list is not a good idea to hard code at 0 either
-    int startLineup = 100;
+    int startLineup = keeper;
 //
 
 

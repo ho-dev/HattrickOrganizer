@@ -13,7 +13,9 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
+import core.model.match.StyleOfPlay;
 import core.model.match.Weather;
+import core.model.player.TrainerType;
 import core.rating.RatingPredictionConfig;
 import core.util.Helper;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
@@ -30,8 +32,6 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
 
-	private LineupRatingPanel ratingPanel;
-	private MatchAndLineupSelectionPanel matchAndLineupPanel;
 	private final LineupPanel lineupPanel;
 
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
@@ -114,7 +114,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
 			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
 			m_iRealConfidence = homodel.getTeam().getConfidence();
-			m_iRealTrainerType = homodel.getTrainer().getTrainerTyp();
+			m_iRealTrainerType = homodel.getTrainer().getTrainerTyp().toInt();
 			m_iRealTacticalAssistantsLevel = homodel.getClub().getTacticalAssistantLevels();
 		}
 		else{
@@ -133,17 +133,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
 
-	private void refreshRatingPanel(){
-		if (ratingPanel == null){
-			ratingPanel = lineupPanel.getLineupRatingPanel();
-		}
-		if (ratingPanel != null) {
-			ratingPanel.refresh();
-		}
-	}
-
 	private boolean isLineupSimulator(){
-		if (matchAndLineupPanel == null){
+/*		if (matchAndLineupPanel == null){
 			matchAndLineupPanel = lineupPanel.getLineupPositionsPanel().getMatchAndLineupSelectionPanel();
 		}
 		if (matchAndLineupPanel != null) {
@@ -151,7 +142,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 		else{
 			return false;
-		}
+		}*/
+		return true;
 	}
 
 	public Weather getWeather() {
@@ -211,7 +203,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			if(bLineupSimulation) {
 				setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
 				setConfidence(team.getConfidence());
-				setTrainerType(homodel.getTrainer().getTrainerTyp());
+				setTrainerType(homodel.getTrainer().getTrainerTyp().toInt());
 			}
 			else{
 
@@ -275,23 +267,21 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				homodel.getTeam().setConfidence(((CBItem) Objects.requireNonNull(m_jcbTeamConfidence.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbTrainerType)) {
 				var trainerType = ((CBItem) Objects.requireNonNull(m_jcbTrainerType.getSelectedItem())).getId();
-				homodel.getTrainer().setTrainerTyp(trainerType);
-				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(trainerType));
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox();
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbLocation)) {
 				homodel.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
 				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
-				int oldStyleOfPlay = homodel.getLineupWithoutRatingRecalc().getStyleOfPlay();
-				var newStyleOfPlay = lineupPanel.getLineupPositionsPanel().updateStyleOfPlayComboBox(oldStyleOfPlay);
+				var newStyleOfPlay = lineupPanel.updateStyleOfPlayComboBox();
 				homodel.getLineupWithoutRatingRecalc().setStyleOfPlay(newStyleOfPlay);
 			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getLineupWithoutRatingRecalc();
 				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
 				lineup.setWeather(getWeather());
-				lineupPanel.getLineupPositionsPanel().refresh();
+				lineupPanel.refreshLineupPositionsPanel();
 			}
 			else if (event.getSource().equals(this.m_jcbPredictionModel)){
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
@@ -309,7 +299,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void refresh() {
 		removeItemListeners();
 		setLabels();
-		refreshRatingPanel();
+		lineupPanel.refreshLineupRatingPanel();
 		addItemListeners();
 	}
 
@@ -474,7 +464,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		homodel.getTeam().setTeamSpirit(m_iRealTeamSpirit);
 		homodel.getTeam().setSubTeamSpirit(m_iRealSubTeamSpirit);
 		homodel.getTeam().setConfidence(m_iRealConfidence);
-		homodel.getTrainer().setTrainerTyp(m_iRealTrainerType);
+		homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(m_iRealTrainerType));
 		homodel.getClub().setTacticalAssistantLevels(m_iRealTacticalAssistantsLevel);
 	}
 

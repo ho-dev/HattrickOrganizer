@@ -2,7 +2,7 @@ package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
 import core.model.enums.MatchType;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
@@ -119,7 +119,7 @@ public class MatchPopulator {
         double totStars = 0;
 
         for (int spot = IMatchRoleID.startLineup; spot < IMatchRoleID.startReserves; spot++) {
-            MatchLineupPlayer mlp = tmpLineupTeam.getPlayerByPosition(spot);
+            MatchLineupPosition mlp = tmpLineupTeam.getPlayerByPosition(spot);
 
             if (mlp != null && mlp.getPlayerId() > 0) {
                 totStars += mlp.getRating();
@@ -132,7 +132,7 @@ public class MatchPopulator {
             }
         }
 
-        MatchLineupPlayer setPieces = tmpLineupTeam.getPlayerByPosition(IMatchRoleID.setPieces);
+        MatchLineupPosition setPieces = tmpLineupTeam.getPlayerByPosition(IMatchRoleID.setPieces);
         if ( setPieces != null){
             matchDetail.setSetPiecesTaker(setPieces.getPlayerId());
         }

@@ -5,6 +5,7 @@ import core.net.MyConnector;
 import core.util.HOLogger;
 import module.youth.YouthTraining;
 import module.youth.YouthTrainingType;
+import okhttp3.HttpUrl;
 import tool.updater.UpdateController;
 import tool.updater.UpdateHelper;
 
@@ -48,16 +49,14 @@ public class TeamsLogoTable extends AbstractTable{
         String logoURL, logoFileName;
 
         // 1. Get logoFileName from the database
-        StringBuilder sql = new StringBuilder("SELECT * from " + getTableName()) ;
-        sql.append(" WHERE TEAM_ID=").append(teamID);
-        var rs= adapter.executeQuery(sql.toString());
+        var rs= adapter.executeQuery("SELECT * from " + getTableName() + " WHERE TEAM_ID=" + teamID);
         if (rs == null) {
             HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
             return null;
         }
 
         try {
-            if (rs.next() == false) {
+            if (!rs.next()) {
                 HOLogger.instance().error(this.getClass(), "logo information not available in database for team ID=" + teamID);
                 return null;
             }
@@ -101,32 +100,33 @@ public class TeamsLogoTable extends AbstractTable{
 
 
     public void storeTeamLogoInfo(int teamID, String logoURI, Timestamp lastAccess){
-        String logoURL, fileName;
+        String logoURL=null, fileName=null;
 
         if(logoURI == null) {
             // case of bot team ?
             HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: logo URI was null for team " + teamID);
-            fileName = null;
-            logoURL = null;
         }
         else{
             if (logoURI.contains(".")) {
-                fileName = teamID + logoURI.substring(logoURI.lastIndexOf("."));
                 logoURL = "https:" + logoURI;
+                HttpUrl url = HttpUrl.parse(logoURL);
+                if ( url != null ) {
+                    fileName = url.pathSegments().get(url.pathSize() - 1);
+                }
             }
-            else{
+
+            if ( fileName == null){
                 HOLogger.instance().error(this.getClass(), "storeTeamLogoInfo: logo URI not recognized " + logoURI);
                 return;
             }
         }
 
-        StringBuilder sql = new StringBuilder("MERGE INTO " + getTableName() + " AS t USING (VALUES(") ;
-        sql.append(teamID).append(", '").append(logoURL).append("', '").append(fileName).append("', ").append(lastAccess).append(")) AS vals(a, b, c, d) ");
-        sql.append("ON t.TEAM_ID=vals.a \n");
-        sql.append("WHEN MATCHED THEN UPDATE SET t.URL=vals.b, t.FILENAME=vals.c, t.LAST_ACCESS=vals.d \n");
-        sql.append("WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b, vals.c, vals.d");
+        String sql = "MERGE INTO " + getTableName() + " AS t USING (VALUES(" + teamID + ", '" + logoURL + "', '" + fileName + "', " + lastAccess + ")) AS vals(a, b, c, d) " +
+                "ON t.TEAM_ID=vals.a \n" +
+                "WHEN MATCHED THEN UPDATE SET t.URL=vals.b, t.FILENAME=vals.c, t.LAST_ACCESS=vals.d \n" +
+                "WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b, vals.c, vals.d";
 
-        adapter.executeUpdate(sql.toString());
+        adapter.executeUpdate(sql);
 //        HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
     }
 
@@ -134,7 +134,7 @@ public class TeamsLogoTable extends AbstractTable{
 
     public void updateLastAccessTime(int teamID){
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now.toString() + "' WHERE TEAM_ID = " + teamID;
+        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now + "' WHERE TEAM_ID = " + teamID;
         adapter.executeUpdate(sql);
 //        HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
     }

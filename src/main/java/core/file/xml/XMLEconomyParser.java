@@ -80,6 +80,9 @@ public class XMLEconomyParser {
 			ele = (Element) root.getElementsByTagName("IncomeFinancial").item(0);
 			map.put("IncomeFinancial",(XMLManager.getFirstChildNodeValue(ele)));
 
+			ele = (Element) root.getElementsByTagName("IncomeTemporary").item(0);
+			map.put("IncomeTemporary",(XMLManager.getFirstChildNodeValue(ele)));
+
 			ele = (Element) root.getElementsByTagName("IncomeSoldPlayers").item(0);
 			map.put("IncomeSoldPlayers",(XMLManager.getFirstChildNodeValue(ele)));
 
@@ -130,6 +133,9 @@ public class XMLEconomyParser {
 
 			ele = (Element) root.getElementsByTagName("LastIncomeSoldPlayersCommission").item(0);
 			map.put("LastIncomeSoldPlayersCommission",(XMLManager.getFirstChildNodeValue(ele)));
+
+			ele = (Element) root.getElementsByTagName("LastIncomeTemporary").item(0);
+			map.put("LastIncomeTemporary",(XMLManager.getFirstChildNodeValue(ele)));
 
 			ele = (Element) root.getElementsByTagName("LastIncomeSum").item(0);
 			map.put("LastIncomeSum", (XMLManager.getFirstChildNodeValue(ele)));

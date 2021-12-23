@@ -73,7 +73,7 @@ public class XMLMatchLineupParser {
 		return ml;
 	}
 
-	private static MatchLineupPlayer createPlayer(MatchType matchType, Element ele) {
+	private static MatchLineupPosition createPlayer(MatchType matchType, Element ele) {
 		int roleID = -1;
 		int behavior = 0;
 		double rating = -1.0d;
@@ -108,6 +108,11 @@ public class XMLMatchLineupParser {
 			var lastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
 			if ( name.length()>0 && lastName.length()>0) name = name + " ";
 			name = name + lastName;
+
+			// shift lineup ids to match order ids
+			if ( roleID >= IMatchRoleID.startReserves && roleID < IMatchRoleID.substGK1) {
+				roleID += IMatchRoleID.substGK1 - IMatchRoleID.startReserves;
+			}
 
 			// tactic is only set for those in the lineup (and not for the keeper).
 			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
@@ -166,15 +171,13 @@ public class XMLMatchLineupParser {
 			}
 		}
 
-		MatchLineupPlayer player = new MatchLineupPlayer(matchType, roleID, behavior, spielerID, rating, name, 0);
+		MatchLineupPosition player = new MatchLineupPosition(roleID, spielerID, behavior, rating, name, 0);
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
 
 	/**
 	 * Get string content of ELement. If content is empty an empty string is returned.
-	 * @param tmp
-	 * @return String content of Element
 	 */
 	private static String getStringValue(Element tmp) {
 		if ( tmp.getFirstChild()!=null) return tmp.getFirstChild().getNodeValue();
@@ -190,7 +193,7 @@ public class XMLMatchLineupParser {
 		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung, styleOfPlay);
+		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung);
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -209,7 +212,7 @@ public class XMLMatchLineupParser {
 			// substituted
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
-			MatchLineupPlayer player = createPlayer(matchType, (Element) list.item(i));
+			MatchLineupPosition player = createPlayer(matchType, (Element) list.item(i));
 			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getRoleId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getRoleId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -226,13 +229,13 @@ public class XMLMatchLineupParser {
 		list = starting.getElementsByTagName("Player");
 
 		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-			MatchLineupPlayer startPlayer = createPlayer(matchType, (Element) list.item(i));
+			MatchLineupPosition startPlayer = createPlayer(matchType, (Element) list.item(i));
 			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
 			startPlayer.setStartBehavior(startPlayer.getBehaviour());
 
 			// Merge with the existing player, but ignore captain
 			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup || startPlayer.getStartPosition() == IMatchRoleID.setPieces) {
-				MatchLineupPlayer lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
+				MatchLineupPosition lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
 				if (lineupPlayer != null) {
 					if ( startPlayer.getStartPosition() == IMatchRoleID.setPieces){
 						lineupPlayer.setStartSetPiecesTaker(true);
@@ -262,12 +265,12 @@ public class XMLMatchLineupParser {
 			if ((s.getObjectPlayerID() > 0) &&
 					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
 					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Lineup(new MatchLineupPlayer(matchType, -1, -1, s.getObjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getObjectPlayerID(), -1d, "",
 						-1));
 			}
 			if ((s.getSubjectPlayerID() > 0)
 					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Lineup(new MatchLineupPlayer(matchType, -1, -1, s.getSubjectPlayerID(), -1d, "",
+				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getSubjectPlayerID(), -1d, "",
 						-1));
 			}
 		}
@@ -326,8 +329,8 @@ public class XMLMatchLineupParser {
 				GoalDiffCriteria.getById(standing));
 	}
 /*
-	private static MatchLineupPlayer createStartPlayer(Element ele) {
-		MatchLineupPlayer player = null;
+	private static MatchLineupPosition createStartPlayer(Element ele) {
+		MatchLineupPosition player = null;
 		int roleID = -1;
 		int behavior = 0;
 		String name = "";
@@ -384,7 +387,7 @@ public class XMLMatchLineupParser {
 			}
 
 			}
-		player = new MatchLineupPlayer(-1, -1, spielerID, 0, name, 0);
+		player = new MatchLineupPosition(-1, -1, spielerID, 0, name, 0);
 		player.setStartBehavior(behavior);
 		player.setStartPosition(roleID);
 		return player;

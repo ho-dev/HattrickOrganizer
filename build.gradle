@@ -20,9 +20,9 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-core:8.3.1'
     implementation 'org.hsqldb:hsqldb:2.6.1'
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
-    implementation 'com.squareup.okhttp3:okhttp-tls:4.9.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:okhttp-tls:4.9.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     implementation 'com.github.weisj:darklaf-core:2.7.3'               //'darklaf-core:latest.integration'
     implementation 'com.github.weisj:darklaf-theme:2.7.3'              //'darklaf-theme:latest.integration'
     implementation 'com.github.weisj:darklaf-property-loader:2.7.3'    //'darklaf-property-loader:latest.integration'
@@ -30,7 +30,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.jetbrains:annotations:22.0.0'
     implementation 'org.knowm.xchart:xchart:3.8.0'
-    compile 'org.junit.jupiter:junit-jupiter:5.8.1'
+    compile 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
 test {

@@ -448,7 +448,7 @@ public class YouthPlayer {
                 this.currentSkills.setPlayerMaxSkills(keeper);
             }
             var team = training.getTeam(teamId);
-            if (team.hasPlayerPlayed(this.id)) {
+            if (team != null && team.hasPlayerPlayed(this.id)) {
                 var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
                 var oldSkills = skills;
                 skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);

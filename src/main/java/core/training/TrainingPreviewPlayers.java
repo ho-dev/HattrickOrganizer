@@ -7,9 +7,8 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchStatistics;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import module.lineup.LineupPosition;
+import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
@@ -32,7 +31,7 @@ public class TrainingPreviewPlayers implements Refreshable {
     private boolean isFuturMatchInit =false;
     private WeeklyTrainingType weekTrainTyp = null;
     private List<MatchStatistics> lMatchStats = null;
-    private List<LineupPosition> lLinueupPos = null;
+    private List<Lineup> lineups = null;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -65,11 +64,13 @@ public class TrainingPreviewPlayers implements Refreshable {
      * @return TrainingPreviewPlayer
      */
     public TrainingPreviewPlayer getTrainPreviewPlayer(@Nullable Player player) {
-
-        if (players.get(player) == null) {
-            calculateWeeklyTrainingForPlayer(player);
+        if ( player != null) {
+            if (players.get(player) == null) {
+                calculateWeeklyTrainingForPlayer(player);
+            }
+            return players.get(player);
         }
-        return players.get(player);
+        return null;
     }
 
     /**
@@ -77,7 +78,6 @@ public class TrainingPreviewPlayers implements Refreshable {
      */
     public void reInit() {
         refresh();
-        DBManager.instance().removeMatchOrder();
     }
 
     /**
@@ -88,8 +88,8 @@ public class TrainingPreviewPlayers implements Refreshable {
             players.clear();
         if (lMatchStats != null)
             lMatchStats.clear();
-        if (lLinueupPos != null)
-            lLinueupPos.clear();
+        if (lineups != null)
+            lineups.clear();
         nextWeekTraining = -1;
         weekTrainTyp = null;
         isFuturMatchInit = false;
@@ -156,9 +156,8 @@ public class TrainingPreviewPlayers implements Refreshable {
             }
         }
 
-        for ( var pos: lLinueupPos ){
-            MatchRoleID roleId = pos.getPositionBySpielerId(playerID);
-
+        for ( var lineup: lineups){
+            var roleId = lineup.getPositionByPlayerId(playerID);
             if (roleId != null) {
                 if ( weekTrainTyp != null) {
                     if (weekTrainTyp.getTrainingSkillPositions() != null) {
@@ -199,22 +198,24 @@ public class TrainingPreviewPlayers implements Refreshable {
         if (!isFuturMatchInit) {
             var lastTraining = TrainingManager.instance().getNextWeekTraining();
 
-            lMatchStats = new ArrayList<>();
-            lLinueupPos = new ArrayList<>();
-            isFuturMatchInit = true;
+            this.lMatchStats = new ArrayList<>();
+            this.lineups = new ArrayList<>();
+            this.isFuturMatchInit = true;
 
             if (lastTraining != null) {
                 weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());
                 for (var matchInfo : lastTraining.getMatches()) {
                     if (matchInfo.getMatchStatus() == MatchKurzInfo.FINISHED) {
-                        var mlt = matchInfo.getMatchdetails().getTeamLineup();
+                        var mlt = matchInfo.getMatchdetails().getOwnTeamLineup();
                         if ( mlt != null ) {
                             lMatchStats.add(new MatchStatistics(matchInfo, mlt));
                         }
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
-                        LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType(), true);
-                        if (lineuppos != null)
-                            lLinueupPos.add(lineuppos);
+                        var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+                        //LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType(), true);
+                        var team = DBManager.instance().loadMatchLineupTeam(matchInfo.getMatchType().getId(), matchInfo.getMatchID(), teamId);
+                        if (team != null)
+                            lineups.add(team.getLineup());
                     }
                 }
             }

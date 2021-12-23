@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* refactoring of lineup panel
 
 ## Detailed Changelog
 
@@ -28,19 +29,21 @@
 ### Matches
 
 ### Lineup
-
+* refactoring, including loading and storing of lineup templates (#1267)
+* Fixed a bug when downloading team logos (#1300)
 
 ### IFA
 
 ### Training
 
 ### League
-
+* fix download of power rating (not only one team per match) (#1293)
   
 ### Youth
 
 * fix bug in potential calculation due to wrong isTop3 skill tagging (#1278)
 
+* fix escaping of youth team names (#1295) 
 
 ### Misc
 

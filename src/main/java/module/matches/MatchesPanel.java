@@ -16,7 +16,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.module.IModule;
@@ -133,7 +133,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			}
 		});
 
-		HOMainFrame.instance().addApplicationClosingListener(() -> saveSettings());
+		HOMainFrame.instance().addApplicationClosingListener(this::saveSettings);
 
 		m_jcbSpieleFilter.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -155,15 +155,15 @@ public final class MatchesPanel extends LazyImagePanel {
 		if ((matchesModel.getMatch() != null)
 				&& (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			List<MatchLineupPlayer> teamspieler = DBManager.instance().getMatchLineupPlayers(
-					matchesModel.getMatch().getMatchID(), teamid);
-			Lineup aufstellung = HOVerwaltung.instance().getModel().getLineup();
+			List<MatchLineupPosition> teamspieler = DBManager.instance().getMatchLineupPlayers(
+					matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), teamid);
+			Lineup aufstellung = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 
 			aufstellung.clearLineup(); // To make sure the old one is
 			// gone.
 
 			if (teamspieler != null) {
-				for (MatchLineupPlayer player : teamspieler) {
+				for (MatchLineupPosition player : teamspieler) {
 					if (player.getRoleId() == IMatchRoleID.setPieces) {
 						aufstellung.setKicker(player.getPlayerId());
 					} else if (player.getRoleId() == IMatchRoleID.captain) {
@@ -194,14 +194,14 @@ public final class MatchesPanel extends LazyImagePanel {
 		StringBuilder text = new StringBuilder(100);
 		text.append(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
 		if (infos.length > 1) {
-			text.append(" (" + infos.length + " ");
+			text.append(" (").append(infos.length).append(" ");
 			text.append(HOVerwaltung.instance().getLanguageString("Spiele"));
 			text.append(")");
 		}
 		text.append(":");
 
 		for (int i = 0; (i < infos.length) && (i < 11); i++) {
-			text.append("\n" + infos[i].getHomeTeamName() + " - " + infos[i].getGuestTeamName());
+			text.append("\n").append(infos[i].getHomeTeamName()).append(" - ").append(infos[i].getGuestTeamName());
 			if (i == 10) {
 				text.append("\n ... ");
 			}
@@ -211,8 +211,8 @@ public final class MatchesPanel extends LazyImagePanel {
 				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 		if (value == JOptionPane.YES_OPTION) {
-			for (int i = 0; i < infos.length; i++) {
-				DBManager.instance().deleteMatch(infos[i].getMatchID());
+			for (MatchKurzInfo info : infos) {
+				DBManager.instance().deleteMatch(info.getMatchID());
 			}
 			RefreshManager.instance().doReInit();
 		}
@@ -223,10 +223,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			Matchdetails details = matchesModel.getDetails();
 			MatchPredictionManager manager = MatchPredictionManager.instance();
 			int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			boolean homeMatch = false;
-			if (teamId == matchesModel.getMatch().getHomeTeamID()) {
-				homeMatch = true;
-			}
+			boolean homeMatch = teamId == matchesModel.getMatch().getHomeTeamID();
 
 			TeamRatings homeTeamRatings = manager.generateTeamRatings(
 					details != null ? getRatingValue(details.getHomeMidfield()) : 1,
@@ -299,7 +296,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Get the team data for the own team (current linep).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 		TeamRatings teamRatings = manager.generateTeamRatings(
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getMidfield().get(-90d))),
 				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftDefense().get(-90d))),
@@ -318,22 +315,13 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Get the tactic strength of the given lineup.
 	 */
 	private int getTacticStrength(Lineup lineup, int tacticType) {
-		double tacticLevel = 1d;
-		switch (tacticType) {
-			case IMatchDetails.TAKTIK_KONTER:
-				tacticLevel = lineup.getTacticLevelCounter();
-				break;
-			case IMatchDetails.TAKTIK_MIDDLE:
-			case IMatchDetails.TAKTIK_WINGS:
-				tacticLevel = lineup.getTacticLevelAimAow();
-				break;
-			case IMatchDetails.TAKTIK_PRESSING:
-				tacticLevel = lineup.getTacticLevelPressing();
-				break;
-			case IMatchDetails.TAKTIK_LONGSHOTS:
-				tacticLevel = lineup.getTacticLevelLongShots();
-				break;
-		}
+		double tacticLevel = switch (tacticType) {
+			case IMatchDetails.TAKTIK_KONTER -> lineup.getTacticLevelCounter();
+			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> lineup.getTacticLevelAimAow();
+			case IMatchDetails.TAKTIK_PRESSING -> lineup.getTacticLevelPressing();
+			case IMatchDetails.TAKTIK_LONGSHOTS -> lineup.getTacticLevelLongShots();
+			default -> 1d;
+		};
 		tacticLevel -= 1;
 		return (int) Math.max(tacticLevel, 0);
 	}
@@ -626,12 +614,8 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
 			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			if ((matchesModel.getMatch().getHomeTeamID() == teamid)
-					|| (matchesModel.getMatch().getGuestTeamID() == teamid)) {
-				adoptLineupButton.setEnabled(true);
-			} else {
-				adoptLineupButton.setEnabled(false);
-			}
+			adoptLineupButton.setEnabled((matchesModel.getMatch().getHomeTeamID() == teamid)
+					|| (matchesModel.getMatch().getGuestTeamID() == teamid));
 		} else {
 			adoptLineupButton.setEnabled(false);
 		}

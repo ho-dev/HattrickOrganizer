@@ -9,6 +9,7 @@ import core.model.enums.MatchTypeExtended;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
 import core.util.HTDatetime;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
@@ -67,9 +68,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	/** Status des Spiels */
 	private int m_iMatchStatus = -1;
-	
-	/** HO user team ID */
-	public static int user_team_id = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 	private int m_iArenaId = -1;
 	private int m_iRegionId = -1;
@@ -435,7 +433,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	// --------------------------------------------------------------
 	@Override
-	public final int compareTo(Object obj) {
+	public final int compareTo(@NotNull Object obj) {
 		if (obj instanceof MatchKurzInfo) {
 			final MatchKurzInfo info = (MatchKurzInfo) obj;
 
@@ -500,7 +498,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 
 	public final boolean isHomeMatch()
 	{
-		return m_iHomeTeamID == user_team_id;
+		return m_iHomeTeamID == HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	}
 
 	// Return duration of the match in minutes

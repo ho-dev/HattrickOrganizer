@@ -9,6 +9,7 @@ import module.lineup.Lineup;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class PluginFeedback {
             //    playerList.remove(i);
             //}
 
-            Feedback feedback = new Feedback(lineup.getPositionen(), rating, playerList, hoToken, lineupName);
+            Feedback feedback = new Feedback(lineup.getAllPositions(), rating, playerList, hoToken, lineupName);
             // Create a JsonObject
             GsonBuilder builder = new GsonBuilder();
             builder.setPrettyPrinting();
@@ -89,7 +90,7 @@ public class PluginFeedback {
 
         // For POST only - START
         con.setDoOutput(true);
-        Writer os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+        Writer os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), StandardCharsets.UTF_8));
         os.write(postParams);
         os.flush();
         os.close();
@@ -98,11 +99,9 @@ public class PluginFeedback {
         int responseCode = con.getResponseCode();
         System.out.println("POST Response Code :: " + responseCode);
 
-        // accepted response code: success || created
-        //if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-        BufferedReader in = null;
+        BufferedReader in;
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         try {
             in = new BufferedReader(new InputStreamReader(
                     con.getInputStream()));
@@ -114,7 +113,7 @@ public class PluginFeedback {
             }
             in.close();
             HOLogger.instance().error(getClass(), "Error Response:" + response);
-            System.out.println("Error Response:" + response.toString());
+            System.out.println("Error Response:" + response);
             throw e;
         }
 
@@ -124,7 +123,7 @@ public class PluginFeedback {
         in.close();
 
         // print result
-        System.out.println(response.toString());
+        System.out.println(response);
 
         return response.toString();
     }

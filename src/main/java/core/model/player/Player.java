@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -283,7 +282,7 @@ public class Player {
     /**
      * Trainertyp
      */
-    private int m_iTrainerTyp = -1;
+    private TrainerType m_iTrainerTyp;
 
     /**
      * Transferlisted
@@ -424,7 +423,7 @@ public class Player {
         String temp = properties.getProperty("trainertype", "-1");
 
         if ((temp != null) && !temp.equals("")) {
-            m_iTrainerTyp = Integer.parseInt(temp);
+            m_iTrainerTyp = TrainerType.fromInt(Integer.parseInt(temp));
         }
 
         temp = properties.getProperty("trainerskill", "0");
@@ -1620,7 +1619,7 @@ public class Player {
      * gibt an ob der Player Trainer ist
      */
     public boolean isTrainer() {
-        return ((m_iTrainer > 0) && (m_iTrainerTyp >= 0));
+        return ((m_iTrainer > 0) && (m_iTrainerTyp != null));
     }
 
     /**
@@ -1628,7 +1627,7 @@ public class Player {
      *
      * @param m_iTrainerTyp New value of property m_iTrainerTyp.
      */
-    public void setTrainerTyp(int m_iTrainerTyp) {
+    public void setTrainerTyp(TrainerType m_iTrainerTyp) {
         this.m_iTrainerTyp = m_iTrainerTyp;
     }
 
@@ -1637,7 +1636,7 @@ public class Player {
      *
      * @return Value of property m_iTrainerTyp.
      */
-    public int getTrainerTyp() {
+    public TrainerType getTrainerTyp() {
         return m_iTrainerTyp;
     }
 
@@ -1878,10 +1877,10 @@ public class Player {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
-                int minutes=0;
+                int minutes;
                 for (var match : matches) {
                     //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
+                    MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
                     //MatchStatistics ms = new MatchStatistics(match, mlt);
                     MatchType type = mlt.getMatchType();
                     boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
@@ -1902,7 +1901,7 @@ public class Player {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.loadMatchesOfNTPlayers(this.getNationalTeamID());
                     for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
+                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
                             ret.addExperience(match.getExperienceIncrease(min(90,tp.getPlayedMinutes())));

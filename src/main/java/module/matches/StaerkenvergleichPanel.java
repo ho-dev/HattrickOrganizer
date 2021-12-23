@@ -10,11 +10,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
-import core.model.match.Matchdetails;
+import core.model.match.*;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
@@ -157,9 +154,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 			// Sterneanzahl
 			double heimSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), info.getHomeTeamID()));
+					info.getMatchID(), info.getMatchType(), info.getHomeTeamID()));
 			double gastSterne = getStars(DBManager.instance().getMatchLineupPlayers(
-					info.getMatchID(), info.getGuestTeamID()));
+					info.getMatchID(), info.getMatchType(), info.getGuestTeamID()));
 			heimSterneLabel.setText(Helper.round(heimSterne, 1) + " ");
 			gastSterneLabel.setText(Helper.round(gastSterne, 1) + " ");
 
@@ -183,17 +180,17 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			gastTaktikLabel.setText(Matchdetails.getNameForTaktik(details.getGuestTacticType()));
 			
 			// style of play
-			int homeStyleOfPlay = matchesModel.getHomeTeamInfo().getStyleOfPlay();
-			int awayStyleOfPlay = matchesModel.getAwayTeamInfo().getStyleOfPlay();
+			StyleOfPlay homeStyleOfPlay = matchesModel.getHomeTeamInfo().getStyleOfPlay();
+			StyleOfPlay awayStyleOfPlay = matchesModel.getAwayTeamInfo().getStyleOfPlay();
 			
 			// old matches don't have style of play, use string output method from Lineup
-			if (homeStyleOfPlay != -1000) {
+			if (homeStyleOfPlay != null) {
 				homeStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(homeStyleOfPlay));
 			} else {
 				homeStyleOfPlayLabel.setText("");
 			}
 			
-			if (awayStyleOfPlay != -1000) {
+			if (awayStyleOfPlay != null) {
 				awayStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(awayStyleOfPlay));
 			} else {
 				awayStyleOfPlayLabel.setText("");
@@ -613,9 +610,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		gastSelbstvertrauenLabel.setText("");
 	}
 
-	private double getStars(List<MatchLineupPlayer> players) {
+	private double getStars(List<MatchLineupPosition> players) {
 		double stars = 0;
-		for (MatchLineupPlayer player : players) {
+		for (MatchLineupPosition player : players) {
 			if ((player.getRoleId() < IMatchRoleID.startReserves)
 					&& (player.getRoleId() >= IMatchRoleID.startLineup)) {
 				double rating = player.getRating();

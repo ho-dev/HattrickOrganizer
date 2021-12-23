@@ -2,7 +2,6 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.enums.MatchType;
-import core.model.misc.Basics;
 
 import java.sql.Timestamp;
 
@@ -71,7 +70,7 @@ public class MatchLineup {
      */
     public MatchLineupTeam getGuestTeam() {
         if ( guestTeam == null){
-            guestTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.guestTeamId);
+            guestTeam = DBManager.instance().loadMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.getGuestTeamId());
         }
         return guestTeam;
     }
@@ -135,7 +134,7 @@ public class MatchLineup {
      */
     public final MatchLineupTeam getHomeTeam() {
         if ( homeTeam == null){
-            homeTeam = DBManager.instance().getMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.getHomeTeamId());
+            homeTeam = DBManager.instance().loadMatchLineupTeam(this.getMatchType().getId(), this.matchId, this.getHomeTeamId());
         }
         return homeTeam;
     }
@@ -266,8 +265,8 @@ public class MatchLineup {
         }
     }
 
-    public boolean isHomeTeamLoaded() {
-        return this.homeTeam != null;
+    public boolean isHomeTeamNotLoaded() {
+        return this.homeTeam == null;
     }
 
     public boolean isGuestTeamLoaded() {

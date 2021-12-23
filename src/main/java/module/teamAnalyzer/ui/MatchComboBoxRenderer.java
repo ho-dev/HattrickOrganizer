@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.util.HTDatetime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
@@ -62,10 +63,8 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
             return m_jlBlank;
         }
 
-
-
-        if (value.getMatchType() != -1) {
-           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType()]));
+        if (value.getMatchType() != MatchType.NONE) {
+           setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[value.getMatchType().getIconArrayIndex()]));
         }
         else {
             setIcon(ThemeManager.getIcon(HOIconName.EMPTY));
@@ -95,7 +94,10 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
         }
         else if (renderType == RenderType.TYPE_2) {
             String sMatch;
-            if (value.isHomeMatch()) {
+            if ( value.isTemplate()){
+                sMatch = value.getName();
+            }
+            else if (value.isHomeMatch()) {
                 sMatch = OWN_TEAM_NAME + " - " + value.getName();
             } else {
                 sMatch = value.getName() + " - " + OWN_TEAM_NAME;

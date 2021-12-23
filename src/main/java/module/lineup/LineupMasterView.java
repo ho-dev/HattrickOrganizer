@@ -4,6 +4,7 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.Updatable;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.penalties.PenaltyTaker;
@@ -100,10 +101,10 @@ public class LineupMasterView extends JPanel {
 	
 	private void updatePenaltyTakersInLineup() {
 		List<PenaltyTaker> takers = this.penaltyTakersView.getPenaltyTakers();
-		List<MatchRoleID>  list = new ArrayList<MatchRoleID>(takers.size());
+		List<MatchLineupPosition>  list = new ArrayList<>(takers.size());
 
 		for (int i = 0; i < takers.size(); i++) {
-			list.add(new MatchRoleID(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getPlayerID(), IMatchRoleID.NORMAL));
+			list.add(new MatchLineupPosition(IMatchRoleID.penaltyTaker1 + i, takers.get(i).getPlayer().getPlayerID(), IMatchRoleID.NORMAL));
 		}
 		HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().setPenaltyTakers(list);
 	}

@@ -27,10 +27,20 @@ public class Substitution {
 	private int subjectPlayerID = -1;
 	@SerializedName("orderType")
 	@Expose
-	private MatchOrderType orderType = MatchOrderType.SUBSTITUTION;
+	private MatchOrderType orderType;
 	@SerializedName("min")
 	@Expose
 	private byte matchMinuteCriteria = -1;
+	/**
+	 * pos
+	 *
+	 * the position the player should take after the substitution,
+	 * 0-13, see positions above for the order.
+	 * -1 means no change.
+	 *
+	 * Attention: intellij claims that pos is never used.
+	 * this is wrong. serialization of the json order (should) use it.
+	 */
 	@SerializedName("pos")
 	@Expose
 	private byte pos = -1;			// json attribute 0-13

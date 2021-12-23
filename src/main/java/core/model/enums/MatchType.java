@@ -132,7 +132,7 @@ public enum MatchType implements IMatchType {
 	}
 
 
-	public static List<MatchType> getOfficialMatchType() {
+	public static List<MatchType> getOfficialMatchTypes() {
 		if (cl_officialMatchType == null){
 			cl_officialMatchType = MatchType.stream().filter(m -> m.isOfficial()).collect(toList());
 		}
@@ -202,7 +202,7 @@ public enum MatchType implements IMatchType {
 
 	public static List<MatchType> fromSourceSystem(SourceSystem sourceSystem){
 		switch (sourceSystem) {
-			case HATTRICK -> {return getOfficialMatchType();}
+			case HATTRICK -> {return getOfficialMatchTypes();}
 			case YOUTH -> {return getYouthMatchType();}
 			default -> { return getHTOintegratedMatchType(); }
 		}

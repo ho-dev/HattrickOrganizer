@@ -369,10 +369,10 @@ public final class SpielerDetailPanel extends ImagePanel implements Refreshable,
             m_jpMotherClub.clear();
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
-                && (lineup.getPositionBySpielerId(m_clPlayer.getPlayerID()) != null)) {
-            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionBySpielerId(m_clPlayer.getPlayerID()),
+                && (lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()) != null)) {
+            m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()),
                     m_clPlayer.getTrikotnummer()));
-            m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionBySpielerId(m_clPlayer.getPlayerID())
+            m_jpPositioned.setText(MatchRoleID.getNameForPosition(lineup.getPositionByPlayerId(m_clPlayer.getPlayerID())
                     .getPosition()));
         } else {
             m_jpPositioned.setIcon(ImageUtilities.getJerseyIcon(null, m_clPlayer.getTrikotnummer()));

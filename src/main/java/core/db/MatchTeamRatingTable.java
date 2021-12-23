@@ -67,8 +67,8 @@ public class MatchTeamRatingTable extends AbstractTable {
 
     void store(MatchTeamRating teamRating) {
         if (teamRating != null) {
-            final String[] where = { "MatchTyp", "MatchID" };
-            final String[] werte = { "" + teamRating.getMatchTyp().getId(), "" + teamRating.getMatchId() };
+            final String[] where = { "MatchTyp", "MatchID", "TEAMID" };
+            final String[] werte = { "" + teamRating.getMatchTyp().getId(), "" + teamRating.getMatchId(), "" + teamRating.getTeamId() };
 
             // Remove existing entry
             delete(where, werte);

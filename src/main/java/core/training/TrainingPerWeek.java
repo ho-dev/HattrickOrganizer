@@ -92,7 +92,7 @@ public class TrainingPerWeek  {
     private MatchKurzInfo[] fetchMatches(String firstMatchDate, String lastMatchDate) {
 
 
-        var matchTypes= MatchType.getOfficialMatchType();
+        var matchTypes= MatchType.getOfficialMatchTypes();
         String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
 
         final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",

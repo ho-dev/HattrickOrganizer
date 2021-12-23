@@ -48,7 +48,7 @@ public class SwapPositionsManager {
 	private void swapPositionsInLineup(SwapPositionFeature swapPositionA,
 			SwapPositionFeature swapPositionB) {
 		Lineup lineup = HOVerwaltung.instance().getModel()
-				.getLineup();
+				.getCurrentLineupTeamRecalculated().getLineup();
 
 		// Changed to allow swapping players to empty positions - Blaghaid
 

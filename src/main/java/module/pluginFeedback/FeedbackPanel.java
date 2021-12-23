@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
+import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -26,14 +27,12 @@ import java.util.regex.Pattern;
 
 public class FeedbackPanel extends JFrame {
 
-    static Lineup HOLineup;
     GridBagLayout layout;
     JLabel lineupRecommendation;
     JLabel GK, WBr, CDr, CDc, CDl, WBl, WIr, IMr, IMc, IMl, WIl, FWr, FWc, FWl;
     JTextArea jtaCopyPaste;
     JButton jbRefresh, jbSend;
     SimpleLineup requirements;
-    Ratings HORatings;
     MatchRating HTRatings;
     Boolean bFetchLineupSuccess;
     Boolean areLineupsValid = false;
@@ -51,8 +50,6 @@ public class FeedbackPanel extends JFrame {
 
             JOptionPane.showMessageDialog(null, message, "", JOptionPane.ERROR_MESSAGE);
         } else {
-            HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
-            HOLineup = HOVerwaltung.instance().getModel().getLineup();
             HTRatings = new MatchRating();
             bFetchLineupSuccess = fetchRequiredLineup();
 
@@ -163,7 +160,8 @@ public class FeedbackPanel extends JFrame {
         String style_of_play = getTerms(otherAttributes, "ls.team.styleofPlay");
 
         int iTacticType = MatchRating.TacticTypeStringToInt(tacticType);
-        int iTacticlevel = MatchRating.float2HTint(HOLineup.getTacticLevel(iTacticType));
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+        int iTacticlevel = MatchRating.float2HTint(lineup.getTacticLevel(iTacticType));
         int iAttitude = MatchRating.AttitudeStringToInt(attitude);
         int iStyle_of_play = MatchRating.StyleOfPlayStringToInt(style_of_play);
 
@@ -194,7 +192,7 @@ public class FeedbackPanel extends JFrame {
         }
 
         // language is not English and translation does not exist, we will try to parse using a proxy
-        if (term == "ls.team.tactics") {
+        if (term.equals("ls.team.tactics")) {
             String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.tactic").toLowerCase().substring(0, 5);
             String short_key;
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -206,7 +204,7 @@ public class FeedbackPanel extends JFrame {
         }
 
         // language is not English and translation does not exist, we will try to parse using a proxy
-        if (term == "ls.team.teamattitude") {
+        if (term.equals("ls.team.teamattitude")) {
             String local_proxy_term = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude").toLowerCase().substring(0, 5);
             String short_key;
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -229,23 +227,24 @@ public class FeedbackPanel extends JFrame {
         // return false if attitude not properly set
         String requirementsAttitude = HOVerwaltung.instance().getLanguageString("ls.team.teamattitude." + requirements.attitude.toLowerCase()).toLowerCase();
         int iAttitude = MatchRating.AttitudeStringToInt(requirementsAttitude);
-        if ((HOLineup.getAttitude() != HTRatings.getAttitude()) ||
-                (HOLineup.getAttitude() != MatchRating.AttitudeStringToInt(requirementsAttitude))) return false;
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+        if ((lineup.getAttitude() != HTRatings.getAttitude()) ||
+                (lineup.getAttitude() != MatchRating.AttitudeStringToInt(requirementsAttitude))) return false;
 
         // return false if tactic not properly set
         String requirementsTacticType = HOVerwaltung.instance().getLanguageString("ls.team.tactic." + requirements.tactic.toLowerCase()).toLowerCase();
         int iTactic = MatchRating.TacticTypeStringToInt(requirementsTacticType);
-        if ((HOLineup.getTacticType() != HTRatings.getTacticType()) ||
-                (HOLineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
+        if ((lineup.getTacticType() != HTRatings.getTacticType()) ||
+                (lineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
 
         // return false if style of play not properly set
-        if ((HOLineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
+        if ((lineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
 
         // return false if HOLineup not fully included in required Lineup
-        for (IMatchRoleID obj : HOLineup.getPositionen()) {
-            positionHO = ((MatchRoleID) obj).getId();
-            orderHO = ((MatchRoleID) obj).getTactic();
-            isAligned = (((MatchRoleID) obj).getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
+        for (var obj : lineup.getAllPositions()) {
+            positionHO = obj.getId();
+            orderHO = obj.getTactic();
+            isAligned = (obj.getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(positionHO);
 
 
             if (isAligned) {
@@ -258,9 +257,9 @@ public class FeedbackPanel extends JFrame {
 
         // return false if required Lineup not fully included in HO Lineup
         for (Map.Entry<Integer, Byte> entry : requirements.lineup.entrySet()) {
-            MatchRoleID HOposition = HOLineup.getPositionById(entry.getKey());
-            orderHO = HOposition.getTactic();
-            isAligned = (HOposition.getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(HOposition.getId());
+            var position = lineup.getPositionById(entry.getKey());
+            orderHO = position.getTactic();
+            isAligned = (position.getPlayerId() != 0) && IMatchRoleID.aFieldMatchRoleID.contains(position.getId());
             if ((!isAligned) || (orderHO!=entry.getValue())) {return false;}
         }
 
@@ -276,6 +275,7 @@ public class FeedbackPanel extends JFrame {
         PluginFeedback pluginFeedback = new PluginFeedback(requirements.server_url);
         String message = "[" + pluginFeedback.getHoToken() + "] ";
         try {
+            var HOLineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
             String result = pluginFeedback.sendFeedbackToServer(HOLineup, HTRatings, requirements.lineupName);
             message += m_hov.getLanguageString("feedbackplugin.success");
             HOLogger.instance().info(getClass(), message);
@@ -383,8 +383,7 @@ public class FeedbackPanel extends JFrame {
     private void refresh() {
 
         // Refresh HO Lineup and ratings
-        HORatings = HOVerwaltung.instance().getModel().getLineup().getRatings();
-        HOLineup = HOVerwaltung.instance().getModel().getLineup();
+        var HORatings = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup().getRatings();
         bFetchLineupSuccess = parseHTRating(jtaCopyPaste.getText());
         HOPredictionRating.setMatchRating(HORatings);
         HTPredictionRating.setMatchRating(HTRatings);
@@ -611,8 +610,8 @@ public class FeedbackPanel extends JFrame {
             int iAttitude = MatchRating.AttitudeStringToInt(requirementsAttitude);
 
             core.model.match.Matchdetails md = new core.model.match.Matchdetails();
-            jlTactics_message = start + jlTactics_message + ":</u></b> " + md.getNameForEinstellung(iTactic) + "</html>";
-            jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + md.getNameForEinstellung(iAttitude) + "</html>";
+            jlTactics_message = start + jlTactics_message + ":</u></b> " + Matchdetails.getNameForEinstellung(iTactic) + "</html>";
+            jlTeamAttitude_message = start + jlTeamAttitude_message + ":</u></b> " + Matchdetails.getNameForEinstellung(iAttitude) + "</html>";
         } else {
             jlTactics_message += "?</html>";
             jlTeamAttitude_message += "?</html>";

@@ -1,9 +1,11 @@
 package core.db;
 
-import core.model.match.MatchLineupPlayer;
-import core.model.match.MatchLineupTeam;
+import core.model.HOVerwaltung;
+import core.model.match.*;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
+import module.lineup.Lineup;
+
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -22,11 +24,19 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				new ColumnDescriptor("MatchID",Types.INTEGER,false),
+				new ColumnDescriptor("TeamID",Types.INTEGER,false),
 				new ColumnDescriptor("MatchTyp",Types.INTEGER,false),
 				new ColumnDescriptor("Erfahrung",Types.INTEGER,false),
 				new ColumnDescriptor("TeamName",Types.VARCHAR,false,256),
-				new ColumnDescriptor("TeamID",Types.INTEGER,false),
-				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false)
+				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false),
+				new ColumnDescriptor("Attitude", Types.INTEGER, true),
+				new ColumnDescriptor("Tactic", Types.INTEGER, true)
+		};
+	}
+	@Override
+	protected String[] getCreateIndexStatement() {
+		return new String[]{
+				"CREATE INDEX MATCHLINEUPTEAM_IDX ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
 		};
 	}
 
@@ -37,17 +47,28 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		
 		try {
 			sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + iMatchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
-			
+
 			rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.first();
+			team = new MatchLineupTeam(MatchType.getById(iMatchType),
+					matchID,
+					DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+					teamID,
+					rs.getInt("Erfahrung"));
 
-			team = new MatchLineupTeam(MatchType.getById(iMatchType), matchID, DBManager.deleteEscapeSequences(rs.getString("TeamName")),
-										teamID, rs.getInt("Erfahrung"), rs.getInt("StyleOfPlay"));
-			team.setLineup(DBManager.instance().getMatchLineupPlayers(matchID, teamID));
-			
-			team.setSubstitutions(new ArrayList<>(DBManager.instance().getMatchSubstitutionsByMatchTeam(iMatchType, teamID, matchID)));
-			
+			var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
+			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"Attitude"));
+
+			rs.close();
+
+			team.loadLineup();
+			team.setStyleOfPlay(styleOfPlay);
+			team.setMatchTacticType(matchTacticType);
+			team.setMatchTeamAttitude(matchTeamAttitude);
+
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
 			team = null;
@@ -56,8 +77,10 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		return team;
 	}
 
-	void storeMatchLineupTeam(MatchLineupTeam team, int matchID) {
+	void storeMatchLineupTeam(MatchLineupTeam team) {
+
 		if (team != null) {
+			var matchID = team.getMatchId();
 			final String[] where = { "MatchTyp", "MatchID" , "TeamID"};
 			final String[] werte = { "" + team.getMatchType().getId(), "" + matchID, "" +team.getTeamID()};
 			delete(where, werte);
@@ -66,33 +89,77 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			//saven
 			try {
 				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay ) VALUES(";
+				sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay, Attitude, Tactic ) VALUES(";
 				sql += (team.getMatchType().getId() + "," +
 						matchID + "," +
 						team.getExperience() + ", '" +
 						DBManager.insertEscapeSequences(team.getTeamName()) + "'," +
 						team.getTeamID() + "," +
-						team.getStyleOfPlay() + " )");
+						StyleOfPlay.toInt(team.getStyleOfPlay()) + "," +
+						MatchTeamAttitude.toInt(team.getMatchTeamAttitude()) + "," +
+						MatchTacticType.toInt(team.getMatchTacticType()) + " )");
 				adapter.executeUpdate(sql);
 
 				//Store players
-				for (int i = 0; i < team.getLineup().size(); i++) {
-					
-					((MatchLineupPlayerTable) DBManager.instance().getTable(
-							MatchLineupPlayerTable.TABLENAME)).storeMatchLineupPlayer(
-									(MatchLineupPlayer) team.getLineup().elementAt(i),
-									matchID, team.getTeamID());
+				var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance().getTable(MatchLineupPlayerTable.TABLENAME);
+				for ( var p : team.getLineup().getAllPositions()) {
+					matchLineupPlayerTable.storeMatchLineupPlayer(p, team.getMatchType(), matchID, team.getTeamID());
 				}
 				
 				// Store Substitutions
-				
-				((MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME))
-						.storeMatchSubstitutionsByMatchTeam(team.getMatchType().getId(), matchID, team.getTeamID(), team.getSubstitutions());
+				var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
+				matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(team.getMatchType().getId(), matchID, team.getTeamID(), team.getSubstitutions());
 				
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeMatchLineupTeam Error" + e);
 				HOLogger.instance().log(getClass(),e);
 			}
 		}
-	}		
+	}
+
+	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeams() {
+		ArrayList<MatchLineupTeam> ret = new ArrayList<>();
+		try {
+			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1";
+
+			var rs = adapter.executeQuery(sql);
+			rs.beforeFirst();
+			while (rs.next()) {
+				var team = new MatchLineupTeam(
+						MatchType.getById(rs.getInt("MATCHTYP")),
+						rs.getInt("MATCHID"),
+						DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+						rs.getInt("TEAMID"),
+						rs.getInt("Erfahrung"));
+
+				var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
+				var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+				var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "Attitude"));
+				team.setStyleOfPlay(styleOfPlay);
+				team.setMatchTacticType(matchTacticType);
+				team.setMatchTeamAttitude(matchTeamAttitude);
+				ret.add(team);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
+		}
+		return ret;
+	}
+
+	public int getTemplateMatchLineupTeamNextNumber() {
+		try {
+			var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
+			var rs = adapter.executeQuery(sql);
+			if (rs != null) {
+				rs.beforeFirst();
+				if (rs.next()) {
+					return Math.min(-1,rs.getInt(1)-1);
+				}
+			}
+		}
+		catch (Exception e){
+			HOLogger.instance().log(getClass(),e);
+		}
+		return -1;
+	}
 }

@@ -52,7 +52,7 @@ public class MatchExporter {
 	 */
 	public static List<ExportMatchData> getDataUsefullMatches(Date startingDate, Date startingDateForFriendlies, boolean strict, boolean skipPullBack) {		
 		HOLogger.instance().log(MatchExporter.class, "Collecting MatchData");		
-		List<ExportMatchData> export = new ArrayList<ExportMatchData>();
+		List<ExportMatchData> export = new ArrayList<>();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId);
 
@@ -64,17 +64,17 @@ public class MatchExporter {
 					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
-				Vector<MatchLineupPlayer> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(),teamId);
-				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<Integer, Player>();
+				Vector<MatchLineupPosition> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), details.getMatchType(), teamId);
+				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<>();
 
 				boolean dataOK = true;
 
 				for (int k = 0;(aufstellung != null) && (k < aufstellung.size()); k++) {
 					//MatchDaten zum Player holen
-					MatchLineupPlayer player = aufstellung.get(k);
+					MatchLineupPosition player = aufstellung.get(k);
 
 					//Alte Werte zum Player holen fï¿½r das Matchdate
-					Player formerPlayerData = null;
+					Player formerPlayerData;
 
 					//Bankl + verlketzte ï¿½berspringen
 					if (player.getRoleId() >= IMatchRoleID.startReserves) {
@@ -92,7 +92,7 @@ public class MatchExporter {
 					}
 
 					//ISpieler in ht ablegen
-					lineUpISpieler.put(Integer.valueOf(player.getPlayerId()), formerPlayerData);
+					lineUpISpieler.put(player.getPlayerId(), formerPlayerData);
 				} //end for aufstellung
 
 				//Matchdaten ablegen da einwandfrei

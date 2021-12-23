@@ -18,7 +18,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineup;
-import core.model.match.MatchLineupPlayer;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -202,7 +202,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	};
 
-	public SpielerDetailDialog(JFrame owner, MatchLineupPlayer matchplayer, MatchLineup matchlineup) {
+	public SpielerDetailDialog(JFrame owner, MatchLineupPosition matchplayer, MatchLineup matchlineup) {
 		super(owner);
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
 		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getPlayerId(),
@@ -222,7 +222,7 @@ final class SpielerDetailDialog extends JDialog {
 		setTitle(player.getFullName() + " (" + player.getPlayerID() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
-			public final void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) {
 				UserParameter.instance().spielerDetails_PositionX = getLocation().x;
 				UserParameter.instance().spielerDetails_PositionY = getLocation().y;
 			}
@@ -250,16 +250,13 @@ final class SpielerDetailDialog extends JDialog {
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
 
-		if (HOVerwaltung.instance().getModel().getLineup()
-				.isPlayerInLineup(m_clPlayer.getPlayerID())
-				&& (HOVerwaltung.instance().getModel().getLineup()
-						.getPositionBySpielerId(m_clPlayer.getPlayerID()) != null)) {
+		var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
+				&& (lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
-					HOVerwaltung.instance().getModel().getLineup()
-							.getPositionBySpielerId(m_clPlayer.getPlayerID()),
+					lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()),
 					m_clPlayer.getTrikotnummer()));
-			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(HOVerwaltung.instance()
-					.getModel().getLineup().getPositionBySpielerId(m_clPlayer.getPlayerID())
+			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(lineup.getPositionByPlayerId(m_clPlayer.getPlayerID())
 					.getPosition()));
 		} else {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(null,
@@ -441,8 +438,8 @@ final class SpielerDetailDialog extends JDialog {
 
 	}
 
-	private void initComponents(Player player, MatchLineupPlayer matchplayer) {
-		JComponent component = null;
+	private void initComponents(Player player, MatchLineupPosition matchplayer) {
+		JComponent component;
 
 		getContentPane().setLayout(new BorderLayout());
 

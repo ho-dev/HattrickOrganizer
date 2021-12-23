@@ -71,11 +71,8 @@ public class SwapPositionFeature {
 		}
 
 		private boolean playerIsSelectedOnThisPosition() {
-			Lineup lineup = HOVerwaltung.instance().getModel().getLineup();
-			if (lineup.getPlayerByPositionID(getPositionsID()) != null) {
-				return true;
-			}
-			return false;
+			Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+			return lineup.getPlayerByPositionID(getPositionsID()) != null;
 		}
 	}
 

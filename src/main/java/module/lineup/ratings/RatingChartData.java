@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 public final class RatingChartData {
 
-	private Ratings ratings = HOVerwaltung.instance().getModel().getLineup().getRatings();
+	private Ratings ratings = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup().getRatings();
 	private double[] leftDefense = {};
 	private double avgLeftDefense90, avgLeftDefenseET, avgCentralDefense90, avgCentralDefenseET, avgRightDefense90, avgRightDefenseET;
 	private double avgLeftAttack90, avgLeftAttackET, avgCentralAttack90, avgCentralAttackET, avgRightAttack90, avgRightAttackET;
@@ -38,25 +38,25 @@ public final class RatingChartData {
 
 	private void parsePrepare() {
 		if(mapKeys == null) {
-			mapKeys = new ArrayList(ratings.getMidfield().keySet());
+			mapKeys = new ArrayList<>(ratings.getMidfield().keySet());
 			mapKeys.remove(-90d);  //remove 90' and 120'
 			mapKeys.remove(-120d); //average placeholder labels
-			Collections.sort(mapKeys, Collections.reverseOrder());
+			mapKeys.sort(Collections.reverseOrder());
 			RTstartIdx = mapKeys.indexOf(90d);
 			RTendIdx = mapKeys.size();
 		}
 		if(chartCaptions == null) {
-			ArrayList<Integer> captionList = new ArrayList();
+			ArrayList<Integer> captionList = new ArrayList<>();
 			for(Double key : mapKeys) {
 				captionList.add(key.intValue());
 			}
-			chartCaptions = captionList.stream().toArray(Integer[]::new);
+			chartCaptions = captionList.toArray(Integer[]::new);
 		}
 	}
 
 	private double[] parseDD(Hashtable<Double, Double> source) {
 		parsePrepare();
-		ArrayList<Double> valueList = new ArrayList();
+		ArrayList<Double> valueList = new ArrayList<>();
 		for(Double key : mapKeys) {
 			valueList.add(source.get(key));
 		}
@@ -65,7 +65,7 @@ public final class RatingChartData {
 
 	private double[] parseDI(Hashtable<Double, Integer> source) {
 		parsePrepare();
-		ArrayList<Double> valueList = new ArrayList();
+		ArrayList<Double> valueList = new ArrayList<>();
 		for(Double key : mapKeys) {
 			valueList.add(source.get(key).doubleValue());
 		}

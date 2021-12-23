@@ -15,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 
 /**
@@ -67,7 +66,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     private void setGroup(String sGroup) {
         final HOModel model = HOVerwaltung.instance().getModel();
         final List<Player> lPlayers = model.getCurrentPlayers();
-        final Lineup lineup = model.getLineup();
+        final Lineup lineup = model.getCurrentLineupTeamRecalculated().getLineup();
 
         //Remove all players on the group and put the new ones in
         for (Player player : lPlayers) {
