@@ -169,6 +169,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         }
 
         m_jcbLoadLineup.addItem(null);
+        int select = 0;
         int i = 1;
         if ( includeTemplates.isSelected()) {
             for (var team : templateLineups) {
@@ -178,6 +179,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 oTeam.setMatchType(MatchType.NONE);
                 oTeam.setMatchID(-1);
                 m_jcbLoadLineup.addItem(oTeam);
+                if ( team.getTeamName() == templateName.getText()) select=i;
                 i++;
             }
         }
@@ -200,6 +202,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
             i++;
         }
         m_jcbLoadLineup.setMaximumRowCount(i);
+        m_jcbLoadLineup.setSelectedIndex(select);
     }
 
     private void adoptLineup() {

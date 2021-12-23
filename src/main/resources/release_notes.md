@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* refactoring of lineup panel
 
 ## Detailed Changelog
 
@@ -28,6 +29,7 @@
 ### Matches
 
 ### Lineup
+* refactoring, including loading and storing of lineup templates (#1267)
 * Fixed a bug when downloading team logos (#1300)
 
 ### IFA
