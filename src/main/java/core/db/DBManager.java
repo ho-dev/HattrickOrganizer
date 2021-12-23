@@ -1182,12 +1182,12 @@ public class DBManager {
 	 */
 	public MatchKurzInfo getLastMatchesKurzInfo(int teamId) {
 		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getLastMatchesKurzInfo(teamId);
+				.loadLastMatchesKurzInfo(teamId);
 	}
 
 	public MatchKurzInfo getNextMatchesKurzInfo(int teamId) {
 		return  ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getNextMatchesKurzInfo(teamId);
+				.loadNextMatchesKurzInfo(teamId);
 	}
 
 	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
@@ -2598,7 +2598,7 @@ public class DBManager {
 
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
-	public MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
+	public MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
 				.getMatchLineupTeam(iMatchType, matchID, teamID);
 	}
@@ -2608,7 +2608,7 @@ public class DBManager {
 
 	private MatchLineupTeam loadLineup(MatchKurzInfo match, int teamID) {
 		if (match != null) {
-			return getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), teamID);
+			return loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), teamID);
 		}
 		return null;
 	}
@@ -2617,7 +2617,7 @@ public class DBManager {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
 	}
 
-	public ArrayList<MatchLineupTeam> getTemplateMatchLineupTeams() {
+	public ArrayList<MatchLineupTeam> loadTemplateMatchLineupTeams() {
 		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
 	}
 

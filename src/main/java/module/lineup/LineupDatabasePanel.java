@@ -6,9 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
-import core.model.player.IMatchRoleID;
 import core.util.Helper;
 import module.teamAnalyzer.ui.MatchComboBoxRenderer;
 import module.teamAnalyzer.vo.Team;
@@ -17,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Objects;
 
 import static module.lineup.LineupPanel.TITLE_FG;
 
@@ -165,7 +163,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
             previousPlayedMatches = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP, !includeHTIntegrated.isSelected());
         }
         if (includeTemplates.isSelected() && (templateLineups == null || bForceRefresh || refreshTemplates)) {
-            templateLineups = DBManager.instance().getTemplateMatchLineupTeams();
+            templateLineups = DBManager.instance().loadTemplateMatchLineupTeams();
         }
 
         m_jcbLoadLineup.addItem(null);
@@ -179,7 +177,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 oTeam.setMatchType(MatchType.NONE);
                 oTeam.setMatchID(-1);
                 m_jcbLoadLineup.addItem(oTeam);
-                if ( team.getTeamName() == templateName.getText()) select=i;
+                if (Objects.equals(team.getTeamName(), templateName.getText())) select=i;
                 i++;
             }
         }
@@ -220,7 +218,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 teamId = team.getTeamId();
             }
 
-            var matchLineupTeam = DBManager.instance().getMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), teamId);
+            var matchLineupTeam = DBManager.instance().loadMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), teamId);
             if (matchLineupTeam != null) {
                 HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
             }

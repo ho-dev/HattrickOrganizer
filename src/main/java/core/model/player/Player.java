@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -1878,10 +1877,10 @@ public class Player {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
-                int minutes=0;
+                int minutes;
                 for (var match : matches) {
                     //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
+                    MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
                     //MatchStatistics ms = new MatchStatistics(match, mlt);
                     MatchType type = mlt.getMatchType();
                     boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
@@ -1902,7 +1901,7 @@ public class Player {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.loadMatchesOfNTPlayers(this.getNationalTeamID());
                     for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().getMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
+                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
                             ret.addExperience(match.getExperienceIncrease(min(90,tp.getPlayedMinutes())));

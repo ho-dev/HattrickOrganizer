@@ -213,7 +213,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
                         var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                         //LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType(), true);
-                        var team = DBManager.instance().getMatchLineupTeam(matchInfo.getMatchType().getId(), matchInfo.getMatchID(), teamId);
+                        var team = DBManager.instance().loadMatchLineupTeam(matchInfo.getMatchType().getId(), matchInfo.getMatchID(), teamId);
                         if (team != null)
                             lineups.add(team.getLineup());
                     }

@@ -1,6 +1,5 @@
 package core.db;
 
-import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.enums.MatchType;
 import core.model.match.SourceSystem;
@@ -11,7 +10,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public final class MatchLineupTable extends AbstractTable {
@@ -51,8 +49,8 @@ public final class MatchLineupTable extends AbstractTable {
 			lineup = createMatchLineup(rs);
 
 			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
-			lineup.setHomeTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
-			lineup.setGuestTeam(DBManager.instance().getMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
+			lineup.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
+			lineup.setGuestTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
 
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error " + e);

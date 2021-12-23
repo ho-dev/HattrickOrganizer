@@ -15,7 +15,7 @@ public class MatchesModel {
 	private Matchdetails details;
 	private MatchLineupTeam home;
 	private MatchLineupTeam away;
-	private List<MatchModelChangeListener> listeners = new ArrayList<MatchModelChangeListener>();
+	private List<MatchModelChangeListener> listeners = new ArrayList<>();
 
 	public void setMatch(MatchKurzInfo match) {
 		if (this.match != match) {
@@ -40,12 +40,12 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
-			home = DBManager.instance().getMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getHomeTeamID());
+			home = DBManager.instance().loadMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getHomeTeamID());
 
 			if ( home == null){
 				// Lineup team was not stored (Verlegenheitstruppe)
 				var ok = OnlineWorker.downloadMatchData(match, true);
-				home = DBManager.instance().getMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHomeTeamID());
+				home = DBManager.instance().loadMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHomeTeamID());
 			}
 		}
 		return home;
@@ -53,7 +53,7 @@ public class MatchesModel {
 	
 	public MatchLineupTeam getAwayTeamInfo() {
 		if (away == null && match != null) {
-			away = DBManager.instance().getMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getGuestTeamID());
+			away = DBManager.instance().loadMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getGuestTeamID());
 		}
 		return away;
 	}
