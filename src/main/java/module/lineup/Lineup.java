@@ -26,6 +26,7 @@ import java.util.*;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -1200,148 +1201,63 @@ public class Lineup{
 	/**
 	 * Clone this lineup, creates and returns a new Lineup object.
 	 */
-	public final @Nullable Lineup duplicate() {
-		final Properties properties = new Properties();
-		Lineup clone = null;
+	public final @NotNull Lineup duplicate() {
 
-		try {
-			properties.setProperty("keeper",
-					String.valueOf(getPositionById(IMatchRoleID.keeper).getPlayerId()));
-			properties.setProperty("rightback",
-					String.valueOf(getPositionById(IMatchRoleID.rightBack).getPlayerId()));
-			properties.setProperty("rightcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.rightCentralDefender).getPlayerId()));
-			properties.setProperty("middlecentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.middleCentralDefender).getPlayerId()));
-			properties.setProperty("leftcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.leftCentralDefender).getPlayerId()));
-			properties.setProperty("leftback",
-					String.valueOf(getPositionById(IMatchRoleID.leftBack).getPlayerId()));
-			properties.setProperty("rightwinger",
-					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getPlayerId()));
-			properties.setProperty("rightinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.rightInnerMidfield).getPlayerId()));
-			properties.setProperty("middleinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.centralInnerMidfield).getPlayerId()));
-			properties.setProperty("leftinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.leftInnerMidfield).getPlayerId()));
-			properties.setProperty("leftwinger",
-					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getPlayerId()));
-			properties.setProperty("rightforward",
-					String.valueOf(getPositionById(IMatchRoleID.rightForward).getPlayerId()));
-			properties.setProperty("centralforward", String.valueOf(getPositionById(
-					IMatchRoleID.centralForward).getPlayerId()));
-			properties.setProperty("leftforward",
-					String.valueOf(getPositionById(IMatchRoleID.leftForward).getPlayerId()));
+		Lineup clone = new Lineup();
+		clone.setPenaltyTakers(getPenaltyTakers());
+		clone.setLocation(getLocation());
+		clone.setPullBackMinute(getPullBackMinute());
+		clone.setWeather(getWeather());
+		clone.setWeatherForecast(getWeatherForecast());
+		clone.setArenaId(getArenaId());
+		clone.setRegionId(getRegionId());
 
-			properties.setProperty("substgk1",
-					String.valueOf(getPositionById(IMatchRoleID.substGK1).getPlayerId()));
-			properties.setProperty("substgk2",
-					String.valueOf(getPositionById(IMatchRoleID.substGK2).getPlayerId()));
+		clone.m_vFieldPositions = copyPositions(m_vFieldPositions);
+		clone.m_vBenchPositions = copyPositions(m_vBenchPositions);
+		clone.setKicker(this.getKicker());
+		clone.setCaptain(this.getCaptain());
+		clone.setTacticType(this.getTacticType());
+		clone.setAttitude(this.getAttitude());
+		clone.setStyleOfPlay(this.getStyleOfPlay());
 
-			properties.setProperty("substcd1",
-					String.valueOf(getPositionById(IMatchRoleID.substCD1).getPlayerId()));
-			properties.setProperty("substcd2",
-					String.valueOf(getPositionById(IMatchRoleID.substCD2).getPlayerId()));
-
-			properties.setProperty("substwb1",
-					String.valueOf(getPositionById(IMatchRoleID.substWB1).getPlayerId()));
-			properties.setProperty("substwb2",
-					String.valueOf(getPositionById(IMatchRoleID.substWB2).getPlayerId()));
-
-			properties.setProperty("substim1", String.valueOf(getPositionById(
-					IMatchRoleID.substIM1).getPlayerId()));
-			properties.setProperty("substim2", String.valueOf(getPositionById(
-					IMatchRoleID.substIM2).getPlayerId()));
-
-			properties.setProperty("substfw1",
-					String.valueOf(getPositionById(IMatchRoleID.substFW1).getPlayerId()));
-			properties.setProperty("substfw2",
-					String.valueOf(getPositionById(IMatchRoleID.substFW2).getPlayerId()));
-
-			properties.setProperty("substwi1",
-					String.valueOf(getPositionById(IMatchRoleID.substWI1).getPlayerId()));
-			properties.setProperty("substwi2",
-					String.valueOf(getPositionById(IMatchRoleID.substWI2).getPlayerId()));
-
-			properties.setProperty("substxt1",
-					String.valueOf(getPositionById(IMatchRoleID.substXT1).getPlayerId()));
-			properties.setProperty("substxt2",
-					String.valueOf(getPositionById(IMatchRoleID.substXT2).getPlayerId()));
-
-
-			properties.setProperty("order_rightback",
-					String.valueOf(getPositionById(IMatchRoleID.rightBack).getTactic()));
-			properties.setProperty("order_rightcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.rightCentralDefender).getTactic()));
-			properties.setProperty("order_leftcentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.leftCentralDefender).getTactic()));
-			properties.setProperty("order_middlecentraldefender", String.valueOf(getPositionById(
-					IMatchRoleID.middleCentralDefender).getTactic()));
-			properties.setProperty("order_leftback",
-					String.valueOf(getPositionById(IMatchRoleID.leftBack).getTactic()));
-			properties.setProperty("order_rightwinger",
-					String.valueOf(getPositionById(IMatchRoleID.rightWinger).getTactic()));
-			properties.setProperty("order_rightinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.rightInnerMidfield).getTactic()));
-			properties
-					.setProperty("order_leftinnermidfield", String.valueOf(getPositionById(
-							IMatchRoleID.leftInnerMidfield).getTactic()));
-			properties.setProperty("order_centralinnermidfield", String.valueOf(getPositionById(
-					IMatchRoleID.centralInnerMidfield).getTactic()));
-			properties.setProperty("order_leftwinger",
-					String.valueOf(getPositionById(IMatchRoleID.leftWinger).getTactic()));
-			properties.setProperty("order_rightforward",
-					String.valueOf(getPositionById(IMatchRoleID.rightForward).getTactic()));
-			properties.setProperty("order_leftforward",
-					String.valueOf(getPositionById(IMatchRoleID.leftForward).getTactic()));
-			properties.setProperty("order_centralforward",
-					String.valueOf(getPositionById(IMatchRoleID.centralForward).getTactic()));
-
-
-			properties.setProperty("kicker1", String.valueOf(getKicker()));
-			properties.setProperty("captain", String.valueOf(getCaptain()));
-			properties.setProperty("tactictype", String.valueOf(getTacticType()));
-			properties.setProperty("installning", String.valueOf(getAttitude()));
-			properties.setProperty("styleofplay", String.valueOf(getStyleOfPlay()));
-			for (int i = 0; i < this.substitutions.size(); i++) {
-				Substitution sub = this.substitutions.get(i);
-				if (sub != null) {
-					properties.setProperty("subst" + i + "playerorderid",
-							String.valueOf(sub.getPlayerOrderId()));
-					properties.setProperty("subst" + i + "playerin",
-							String.valueOf(sub.getObjectPlayerID()));
-					properties.setProperty("subst" + i + "playerout",
-							String.valueOf(sub.getSubjectPlayerID()));
-					properties.setProperty("subst" + i + "ordertype",
-							String.valueOf(sub.getOrderType().getId()));
-					properties.setProperty("subst" + i + "matchminutecriteria",
-							String.valueOf(sub.getMatchMinuteCriteria()));
-					properties.setProperty("subst" + i + "pos", String.valueOf(sub.getRoleId()));
-					properties.setProperty("subst" + i + "behaviour",
-							String.valueOf(sub.getBehaviour()));
-					properties.setProperty("subst" + i + "card",
-							String.valueOf(sub.getRedCardCriteria().getId()));
-					properties.setProperty("subst" + i + "standing",
-							String.valueOf(sub.getStanding().getId()));
-				}
-			}
-
-			clone = new Lineup(properties);
-			clone.setPenaltyTakers(getPenaltyTakers());
-			clone.setLocation(getLocation());
-			clone.setPullBackMinute(getPullBackMinute());
-			clone.setWeather(getWeather());
-			clone.setWeatherForecast(getWeatherForecast());
-			clone.setArenaId(getArenaId());
-			clone.setRegionId(getRegionId());
-
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "Aufstellung.duplicate: " + e);
-		}
+		clone.substitutions = copySubstitutions();
 		return clone;
 	}
 
+	private Vector<MatchLineupPosition> copyPositions(Vector<MatchLineupPosition> positions) {
+		Vector<MatchLineupPosition> ret = new Vector<>();
+		for (var p : positions) {
+			ret.add(new MatchLineupPosition(p.getRoleId(),
+					p.getPlayerId(),
+					p.getBehaviour(),
+					p.getRating(),
+					p.getSpielerVName(),
+					p.getNickName(),
+					p.getSpielerName(),
+					p.getStatus(),
+					p.getRatingStarsEndOfMatch(),
+					p.getStartPosition(),
+					p.getStartBehavior(),
+					p.isStartSetPiecesTaker()));
+		}
+		return ret;
+	}
+
+	private List<Substitution> copySubstitutions() {
+		var ret = new ArrayList<Substitution>();
+		for ( var s: this.substitutions) {
+			ret.add(new Substitution(s.getPlayerOrderId(),
+					s.getObjectPlayerID(),
+					s.getSubjectPlayerID(),
+					s.getOrderType().getId(),
+					s.getMatchMinuteCriteria(),
+					s.getRoleId(),
+					s.getBehaviour(),
+					s.getRedCardCriteria(),
+					s.getStanding()));
+		}
+		return ret;
+	}
 
 	public final String getCurrentTeamFormationString() {
 		final int iNbDefs = getNbDefenders();

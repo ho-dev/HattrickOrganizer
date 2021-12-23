@@ -51,6 +51,14 @@ public class XMLMatchdetailsParser {
 					// Match lineup needs to be available, if not -> ignore match highlights/report
 					readHighlights(doc, md, matchLineup);
 					parseMatchReport(md);
+
+					var guest = matchLineup.getGuestTeam();
+					guest.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getGuestEinstellung()));
+					guest.setMatchTacticType(MatchTacticType.fromInt(md.getGuestTacticType()));
+
+					var home = matchLineup.getHomeTeam();
+					home.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getHomeEinstellung()));
+					home.setMatchTacticType(MatchTacticType.fromInt(md.getHomeTacticType()));
 				}
 
                 md.setStatisics();
@@ -455,10 +463,9 @@ public class XMLMatchdetailsParser {
     	Vector<Vector<String>> players = new Vector<>();
 
         for ( var p : lineup.getFieldPositions()){
-        	var player = (MatchLineupPosition) p;
-            final Vector<String> tmpPlayer = new Vector<>();
-            tmpPlayer.add("" + player.getPlayerId());
-            tmpPlayer.add(player.getSpielerName());
+			final Vector<String> tmpPlayer = new Vector<>();
+            tmpPlayer.add("" + p.getPlayerId());
+            tmpPlayer.add(p.getSpielerName());
             players.add(tmpPlayer);
         }
     	return players;
@@ -624,9 +631,9 @@ public class XMLMatchdetailsParser {
 			NodeList teamAttitude = root.getElementsByTagName("TeamAttitude");
 			if (teamAttitude.getLength() > 0) {
 				ele = (Element) teamAttitude.item(0);
-				md.setHomeEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+				md.setGuestEinstellung(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 			} else {
-				md.setHomeEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
+				md.setGuestEinstellung(Matchdetails.EINSTELLUNG_UNBEKANNT);
 			}
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);

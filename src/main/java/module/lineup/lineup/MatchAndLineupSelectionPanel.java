@@ -226,8 +226,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 lineup.setWeather(matchOrder.getWeather());
                 lineup.setWeatherForecast(matchOrder.getWeatherForecast());
             }
-            lineupPanel.refreshLineupSettingsPanel();
-            lineupPanel.refreshLineupRatingPanel();
+            //lineupPanel.refreshLineupSettingsPanel();
         }
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
@@ -575,7 +574,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     public int updateStyleOfPlayComboBox()
     {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());;
+        var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
         // NT Team can select whatever Style of Play they like
         if (!UserManager.instance().getCurrentUser().isNtTeam()) {
 

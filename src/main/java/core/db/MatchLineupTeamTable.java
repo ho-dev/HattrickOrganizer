@@ -59,8 +59,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 					rs.getInt("Erfahrung"));
 
 			var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
-			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
-			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"MatchTeamAttitude"));
+			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"Attitude"));
 
 			rs.close();
 
@@ -133,8 +133,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 						rs.getInt("Erfahrung"));
 
 				var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
-				var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "MatchTacticType"));
-				var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "MatchTeamAttitude"));
+				var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+				var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "Attitude"));
 				team.setStyleOfPlay(styleOfPlay);
 				team.setMatchTacticType(matchTacticType);
 				team.setMatchTeamAttitude(matchTeamAttitude);

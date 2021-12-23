@@ -91,6 +91,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         lineupSettingsPanel.refresh(false);
         lineupRatingPanel.refresh();
         matchBanner.refresh();
+        getMatchAndLineupSelectionPanel().refresh();
     }
 
     @Override
