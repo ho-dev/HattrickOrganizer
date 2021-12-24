@@ -145,8 +145,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         layout.setConstraints(m_jcbStyleOfPlay, gbc);
         add(m_jcbStyleOfPlay);
 
-        //addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.lineup_simulator"));
-
         gbc.gridx = 1;
         m_jcbxLineupSimulation = new JCheckBox();
         m_jcbxLineupSimulation.setSelected(false);
@@ -167,26 +165,16 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.download"));
         m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
-/*
-        m_jbGetRatingsPrediction = new JButton(Helper.getTranslation("lineup.getRatingsPrediction.btn.label"));
-        m_jbGetRatingsPrediction.setToolTipText(Helper.getTranslation("lineup.getRatingsPrediction.btn.tooltip"));
-        m_jbGetRatingsPrediction.setEnabled(false);
-*/
+
         GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup/*, m_jbGetRatingsPrediction*/);
 
         jpButtons.add(m_jbUploadLineup);
         jpButtons.add(m_jbDownloadLineup);
-//        jpButtons.add(m_jbGetRatingsPrediction);
-
         layout.setConstraints(jpButtons, gbc);
         add(jpButtons);
 
-        // ===============================================
-
-
         setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER)));
 
-        //updateComponents();
         addListeners();
     }
 
@@ -194,7 +182,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         setUpcomingMatchesFromDB();
         update_jcbUpcomingGames();
-        //TODO: updateStyleOfPlayComboBox();
 
         if (upcomingMatchesInDB.size() == 0) {
             lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
@@ -343,7 +330,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         add(label);
     }
 
-
     private void setUpcomingMatchesFromDB(){
         MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
         Arrays.sort(matches, Collections.reverseOrder());
@@ -404,11 +390,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
     }
 
-
     private void downloadLineupFromHT() {
-
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-
         try {
             if(matchOrder != null) {
                 CursorToolkit.startWaitCursor(this);
@@ -571,7 +554,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     // each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
     // so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-    public int updateStyleOfPlayComboBox()
+    private void updateStyleOfPlayComboBox()
     {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
@@ -601,8 +584,10 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             setStyleOfPlay(oldValue);
         }
         var item = (CBItem)(m_jcbStyleOfPlay.getSelectedItem());
-        if ( item != null) return item.getId();
-        return 0;
+        var ret = 0;
+        if ( item != null) ret = item.getId();
+
+        lineup.setStyleOfPlay(ret);
     }
 
     private List<Integer> getValidStyleOfPlayValues()
