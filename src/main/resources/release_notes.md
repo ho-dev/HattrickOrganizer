@@ -7,24 +7,17 @@
 
 ### GUI
 
-
 ### Finance
-
 * fix finance bug concerning missing spectators' income in misc module (#1282)
-
-
 
 ### Statistics
 
-
 ### Squad
-
 
 ### Team Analyser
 
 ### Rating
-
-
+* Initial calculation of the ratings takes into account the trainer type (#1281)
 
 ### Matches
 
@@ -40,9 +33,7 @@
 * fix download of power rating (not only one team per match) (#1293)
   
 ### Youth
-
 * fix bug in potential calculation due to wrong isTop3 skill tagging (#1278)
-
 * fix escaping of youth team names (#1295) 
 
 ### Misc
