@@ -176,6 +176,7 @@ public class HOModel {
         if ( lineup != null ) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
             if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
+            lineup.calcStyleOfPlay();
         }
         m_clAufstellung = lineup;
     }
@@ -204,6 +205,9 @@ public class HOModel {
             m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
             if ( m_clAufstellung == null){
                 m_clAufstellung = new MatchLineupTeam();
+            }
+            else {
+                m_clAufstellung.calcStyleOfPlay();
             }
         }
         return m_clAufstellung;

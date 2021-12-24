@@ -209,10 +209,10 @@ public class MatchLineupTeam {
 		this.lineup.setStyleOfPlay(StyleOfPlay.toInt(m_iStyleOfPlay));
 	}
 
-	public void calcStyleOfPlay (StyleOfPlay coachModifier) {
+	public void calcStyleOfPlay () {
 		var trainerType = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
 		var tacticAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
-		var styleOfPlay = StyleOfPlay.toInt(coachModifier);
+		var styleOfPlay = this.lineup.getStyleOfPlay();
 		switch (trainerType) {
 			case Defensive:
 				this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, styleOfPlay));

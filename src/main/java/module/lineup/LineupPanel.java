@@ -273,11 +273,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		this.getLineupAssistantPanel().setGroupFilter(b);
 	}
 
-	public int updateStyleOfPlayComboBox() {
-		return this.getMatchAndLineupSelectionPanel().updateStyleOfPlayComboBox();
+	public void updateStyleOfPlayComboBox() {
+		this.getMatchAndLineupSelectionPanel().refresh();
 	}
-
-
 
 	public void refreshLineupPositionsPanel() {
 		this.getLineupPositionsPanel().refresh();
