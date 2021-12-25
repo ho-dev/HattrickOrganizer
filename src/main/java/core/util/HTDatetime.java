@@ -79,6 +79,9 @@ public class HTDatetime implements PropertyChangeListener{
         this(DateTimeUtils.InstantToSQLtimeStamp(instant));
     }
 
+    static public HTDatetime now(){
+        return  new HTDatetime(Instant.now());
+    }
 
     public void propertyChange(PropertyChangeEvent evt) {
         HOLogger.instance().debug(this.getClass(), "HTDateTimeBase model changed => HTDateTime is reinitialized");
