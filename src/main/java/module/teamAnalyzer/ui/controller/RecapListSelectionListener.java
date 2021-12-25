@@ -57,9 +57,7 @@ public class RecapListSelectionListener implements ListSelectionListener {
                 week = lineup.getWeek();
                 season = lineup.getSeason();
                 if (week < 0) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-                    var htdatetime = new HTDatetime(calendar.getTime().toInstant());
+                    var htdatetime = HTDatetime.now();
                     week = htdatetime.getHTWeekLocalized();
                     season = htdatetime.getHTSeasonLocalized();
                 }
