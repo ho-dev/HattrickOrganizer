@@ -194,7 +194,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 oTeam.setHomeMatch(false);
             }
             oTeam.setTime(match.getMatchDateAsTimestamp());
-            oTeam.setMatchType(match.getMatchType());
+            oTeam.setMatchType(match.getMatchTypeExtended());
             oTeam.setMatchID(match.getMatchID());
             m_jcbLoadLineup.addItem(oTeam);
             i++;
@@ -218,7 +218,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 teamId = team.getTeamId();
             }
 
-            var matchLineupTeam = DBManager.instance().loadMatchLineupTeam(team.getMatchType().getId(), team.getMatchID(), teamId);
+            var matchLineupTeam = DBManager.instance().loadMatchLineupTeam(team.getMatchType().getMatchTypeId(), team.getMatchID(), teamId);
             if (matchLineupTeam != null) {
                 HOVerwaltung.instance().getModel().setLineup(matchLineupTeam);
             }
