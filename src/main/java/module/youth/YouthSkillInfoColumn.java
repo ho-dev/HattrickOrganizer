@@ -42,14 +42,15 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         var hov = HOVerwaltung.instance();
         var unknown = hov.getLanguageString("unknown");
         return "<html>" +
-                    this.skillInfo.getSkillID().toString() + "<br>" +
-                    String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>",this.skillInfo.getStartValue() ) +
-                    String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue() ) +
-                    hov.getLanguageString("ls.youth.skill.max") + ": " + (this.skillInfo.getMax()!=null?this.skillInfo.getMax():unknown) + "<br>" +
-                    (this.skillInfo.isMaxReached()?hov.getLanguageString("ls.youth.skill.ismaxreached")+ "<br>": "") +
-                    hov.getLanguageString("ls.youth.skill.startlevel") + ": " + (this.skillInfo.getStartLevel()!=null?this.skillInfo.getStartLevel():unknown) + "<br>" +
-                    hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + (this.skillInfo.getCurrentLevel() !=null?this.skillInfo.getCurrentLevel():unknown)+
-                    (this.skillInfo.isTop3()!=null&&this.skillInfo.isTop3()?"<br>" + hov.getLanguageString("ls.youth.skill.istop3"): "") +
+                this.skillInfo.getSkillID().toString() + "<br>" +
+                String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>", this.skillInfo.getStartValue()) +
+                String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue()) +
+                (this.skillInfo.getPotential17Value() != null ? String.format(hov.getLanguageString("ls.youth.skill.17") + ": %.2f<br>", this.skillInfo.getPotential17Value()) : "") +
+                hov.getLanguageString("ls.youth.skill.max") + ": " + (this.skillInfo.getMax() != null ? this.skillInfo.getMax() : unknown) + "<br>" +
+                (this.skillInfo.isMaxReached() ? hov.getLanguageString("ls.youth.skill.ismaxreached") + "<br>" : "") +
+                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + (this.skillInfo.getStartLevel() != null ? this.skillInfo.getStartLevel() : unknown) + "<br>" +
+                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + (this.skillInfo.getCurrentLevel() != null ? this.skillInfo.getCurrentLevel() : unknown) +
+                (this.skillInfo.isTop3() != null && this.skillInfo.isTop3() ? "<br>" + hov.getLanguageString("ls.youth.skill.istop3") : "") +
                 "</html>";
     }
 
