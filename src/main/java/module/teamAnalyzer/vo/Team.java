@@ -2,6 +2,7 @@
 package module.teamAnalyzer.vo;
 
 import core.model.enums.MatchType;
+import core.model.match.IMatchType;
 
 /**
  * Team Object Class
@@ -22,7 +23,7 @@ public class Team implements Comparable<Team> {
     // A hack for custom coloring of tournament teams in a renderer
     private boolean tournament = false;
 
-    private MatchType matchType;
+    private IMatchType matchType;
 
     // Timestamp when next match is played
     private java.sql.Timestamp time;
@@ -54,11 +55,11 @@ public class Team implements Comparable<Team> {
         return teamId;
     }
 
-    public void setMatchType(MatchType matchType) {
+    public void setMatchType(IMatchType matchType) {
         this.matchType = matchType;
     }
 
-    public MatchType getMatchType() {
+    public IMatchType getMatchType() {
         return matchType;
     }
 
