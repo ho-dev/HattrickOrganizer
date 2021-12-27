@@ -23,7 +23,8 @@
 
 ### Lineup
 * refactoring, including loading and storing of lineup templates (#1267)
-* Fixed a bug when downloading team logos (#1300)
+* fixed a bug when downloading team logos (#1300)
+* substitutions of the same minute can be ordered (#1039)
 
 ### IFA
 
