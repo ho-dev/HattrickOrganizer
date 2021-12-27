@@ -27,9 +27,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -56,6 +54,8 @@ public class SubstitutionOverview extends JPanel {
 	private MessageBox messageBox;
 	private DetailsView detailsView;
 	private EditAction editAction;
+	private MoveUpAction moveUpAction;
+	private MoveDownAction moveDownAction;
 	private RemoveAction removeAction;
 	private RemoveAllAction removeAllAction;
 	private BehaviorAction behaviorAction;
@@ -83,6 +83,10 @@ public class SubstitutionOverview extends JPanel {
 	private void createActions() {
 		this.editAction = new EditAction();
 		this.editAction.setEnabled(false);
+		this.moveUpAction = new MoveUpAction();
+		this.moveUpAction.setEnabled(false);
+		this.moveDownAction = new MoveDownAction();
+		this.moveDownAction.setEnabled(false);
 		this.removeAction = new RemoveAction();
 		this.removeAction.setEnabled(false);
 		this.removeAllAction = new RemoveAllAction();
@@ -126,6 +130,8 @@ public class SubstitutionOverview extends JPanel {
 		this.positionSwapAction.setEnabled(enableNewMatchOrders);
 		this.substitutionAction.setEnabled(enableNewMatchOrders);
 		this.manMarkingAction.setEnabled(nManMarkings<1);
+		this.moveUpAction.setEnabled(isMoveEnabled(true));
+		this.moveDownAction.setEnabled(isMoveEnabled(false));
 	}
 
 	private void addListeners() {
@@ -162,6 +168,8 @@ public class SubstitutionOverview extends JPanel {
 			enable = true;
 		}
 		this.editAction.setEnabled(enable);
+		this.moveUpAction.setEnabled(isMoveEnabled(true));
+		this.moveDownAction.setEnabled(isMoveEnabled(false));
 		this.removeAction.setEnabled(enable);
 		if (tableRow != null) {
 			this.detailsView.setSubstitution(tableRow.getSubstitution());
@@ -236,6 +244,18 @@ public class SubstitutionOverview extends JPanel {
 		gbc.insets = new Insets(10, 10, 2, 10);
 		editButton.setAction(this.editAction);
 		buttonPanel.add(editButton, gbc);
+
+		JButton moveUpButton = new JButton();
+		gbc.gridy++;
+		gbc.insets = new Insets(2, 10, 2, 10);
+		moveUpButton.setAction(this.moveUpAction);
+		buttonPanel.add(moveUpButton, gbc);
+
+		JButton moveDownButton = new JButton();
+		gbc.gridy++;
+		gbc.insets = new Insets(2, 10, 2, 10);
+		moveDownButton.setAction(this.moveDownAction);
+		buttonPanel.add(moveDownButton, gbc);
 
 		JButton removeButton = new JButton();
 		gbc.gridy++;
@@ -620,6 +640,58 @@ public class SubstitutionOverview extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			editSelectedSubstitution();
 		}
+	}
+
+	private class MoveUpAction extends AbstractAction {
+
+		public MoveUpAction() {
+			super(null, ThemeManager.getIcon(HOIconName.MOVE_UP));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			moveSelectedSubstitution(true);
+		}
+	}
+
+	private class MoveDownAction extends AbstractAction {
+
+		public MoveDownAction() {
+			super(null, ThemeManager.getIcon(HOIconName.MOVE_DOWN));
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			moveSelectedSubstitution(false);
+		}
+	}
+
+	private void moveSelectedSubstitution(boolean up) {
+		var rownum = substitutionTable.getSelectedRow();
+		int newPos = up?rownum-1:rownum+1;
+		Collections.swap(lineup.getSubstitutionList(), rownum, newPos);
+		int i = 0;
+		for ( var s : lineup.getSubstitutionList()){
+			s.setPlayerOrderId(i++);
+		}
+		refresh();
+		this.substitutionTable.getSelectionModel().setSelectionInterval(newPos, newPos);
+	}
+
+	private boolean isMoveEnabled(boolean up) {
+		SubstitutionsTableModel model = (SubstitutionsTableModel) substitutionTable.getModel();
+		var rownum = substitutionTable.getSelectedRow();
+		if (  up && rownum > 0){
+			var selectedSubstitution = model.getRow(rownum).getSubstitution();
+			var previousSubstitution = model.getRow(rownum-1).getSubstitution();
+			return selectedSubstitution.getMatchMinuteCriteria() == previousSubstitution.getMatchMinuteCriteria();
+		}
+		else if ( !up && rownum>=0 && rownum<model.getRowCount()-1){
+			var selectedSubstitution = model.getRow(rownum).getSubstitution();
+			var nextSubstitution = model.getRow(rownum+1).getSubstitution();
+			return selectedSubstitution.getMatchMinuteCriteria() == nextSubstitution.getMatchMinuteCriteria();
+		}
+		return false;
 	}
 
 	private class OrderTypeRenderer extends DefaultTableCellRenderer {
