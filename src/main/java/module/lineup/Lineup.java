@@ -915,6 +915,7 @@ public class Lineup{
 		if (m_vFieldPositions != null) ret.addAll(m_vFieldPositions);
 		if (m_vBenchPositions != null) ret.addAll(m_vBenchPositions);
 		if (replacedPositions != null) ret.addAll(replacedPositions);
+		if (penaltyTakers != null) ret.addAll(penaltyTakers);
 		if (captain != null) ret.add(captain);
 		if (setPiecesTaker != null) ret.add(setPiecesTaker);
 		return ret;
