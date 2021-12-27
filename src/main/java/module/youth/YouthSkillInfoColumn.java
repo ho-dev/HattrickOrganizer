@@ -42,7 +42,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         var hov = HOVerwaltung.instance();
         var unknown = hov.getLanguageString("unknown");
         return "<html>" +
-                this.skillInfo.getSkillID().toString() + "<br>" +
+                hov.getLanguageString("ls.youth.player."+this.skillInfo.getSkillID().toString()) + "<br>" +
                 String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>", this.skillInfo.getStartValue()) +
                 String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue()) +
                 (this.skillInfo.getPotential17Value() != null ? String.format(hov.getLanguageString("ls.youth.skill.17") + ": %.2f<br>", this.skillInfo.getPotential17Value()) : "") +
