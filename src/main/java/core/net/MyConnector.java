@@ -376,7 +376,7 @@ public class MyConnector {
 	 * @return the result xml from the upload
 	 * @throws IOException
 	 */
-	public String setMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
+	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder();
 		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
