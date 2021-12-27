@@ -770,7 +770,7 @@ public class OnlineWorker {
 		String result;
 		String orders = lineup.toJson();
 		try {
-			result = MyConnector.instance().setMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
+			result = MyConnector.instance().uploadMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

@@ -97,6 +97,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         // Those skills are marked as top3 skills
         var notTop3Yet = new ArrayList<YouthSkillInfo>();   // list skill that are not surely in top3
         for (var skill : this.values()) {
+            if ( skill.getSkillID() == Skills.HTSkillID.SetPieces) continue;
             if (skill.isMaxAvailable() && skill.getMax() > minTop3Max ||
                     skill.isCurrentLevelAvailable() && skill.getCurrentLevel() > minTop3Max) {
                 if (skill.isTop3() == null || !skill.isTop3()) {
@@ -140,8 +141,9 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         } else {
             var isKeeper = this.areKeeperSkills();
             // three skills are marked as top3 skill
-            // mark 4 other skills and set maximum to lowest top3 max
+            // mark other skills and set maximum to lowest top3 max
             for (var skill : this.values()) {
+                if ( skill.getSkillID() == Skills.HTSkillID.SetPieces) continue; // set pieces is not part of the top3 rules
                 if (skill.isTop3() == null || !skill.isTop3()) {
                     skill.setIsTop3(false);
                     if (!skill.isMaxAvailable()) {
