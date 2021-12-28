@@ -162,7 +162,6 @@ public class MatchBanner extends JPanel implements Refreshable {
         if (m_clSelectedMatch == null){
             this.setVisible(false);
         }
-
         else{
             this.setVisible(true);
             MatchType matchType = m_clSelectedMatch.getMatchType();

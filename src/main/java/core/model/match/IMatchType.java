@@ -6,4 +6,7 @@ public interface IMatchType {
 
     int getIconArrayIndex();
     String getName();
+    default boolean isCompetitive() {
+        return false;
+    }
 }
