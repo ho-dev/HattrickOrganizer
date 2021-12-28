@@ -433,7 +433,7 @@ public class ConvertXml2Hrf {
 		buffer.append("LastCostsTemporary=").append(iLastCostsTemporary).append('\n'); // recreate defect LastCostsTemporary field for compatibility reasons
 		buffer.append("LastCostsYouth=").append(economyDataMap.get("LastCostsYouth")).append('\n');
 		buffer.append("LastCostsSum=").append(economyDataMap.get("LastCostsSum")).append('\n');
-		buffer.append("lastTotal=").append(economyDataMap.get("LastWeeksTotal")).append('\n');
+		buffer.append("LastWeeksTotal=").append(economyDataMap.get("LastWeeksTotal")).append('\n');
 	}
 
 	/**
