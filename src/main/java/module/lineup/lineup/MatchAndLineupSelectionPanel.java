@@ -44,13 +44,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     LineupPanel lineupPanel;
     private JComboBox<MatchOrdersCBItem> m_jcbUpcomingGames;
     private List<MatchOrdersCBItem> upcomingMatchesInDB;
-    private JCheckBox m_jcbxLineupSimulation;
     private JButton m_jbUploadLineup;
     private JButton m_jbDownloadLineup;
-    private String sWarningDataTooOld;
-    private Long lLastUpdateTime;
 
-    //private JButton m_jbGetRatingsPrediction;
     private JComboBox<CBItem> m_jcbTeamAttitude;
     private JComboBox<CBItem> m_jcbTactic;
     private JComboBox<CBItem> m_jcbStyleOfPlay;
@@ -141,15 +137,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 1;
         m_jcbStyleOfPlay = new JComboBox<>();
-        //updateStyleOfPlayComboBox();
         layout.setConstraints(m_jcbStyleOfPlay, gbc);
         add(m_jcbStyleOfPlay);
-
-        gbc.gridx = 1;
-        m_jcbxLineupSimulation = new JCheckBox();
-        m_jcbxLineupSimulation.setSelected(false);
-        layout.setConstraints(m_jcbxLineupSimulation, gbc);
-        add(m_jcbxLineupSimulation);
 
         // Panel with the 3 buttons
         gbc.gridx = 0;
@@ -183,27 +172,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         setUpcomingMatchesFromDB();
         update_jcbUpcomingGames();
 
-        if (upcomingMatchesInDB.size() == 0) {
-            lLastUpdateTime = DBManager.instance().getLatestUpdateTime();
-            sWarningDataTooOld = String.format(Helper.getTranslation("ls.module.lineup.dataTooOld.tt"), java.text.DateFormat.getDateTimeInstance().format(lLastUpdateTime));
-
-            m_jcbUpcomingGames.setEnabled(false);
-            m_jcbUpcomingGames.setToolTipText(sWarningDataTooOld);
-
-            m_jcbxLineupSimulation.setSelected(true);
-            m_jcbxLineupSimulation.setEnabled(false);
-            m_jcbxLineupSimulation.setToolTipText(sWarningDataTooOld);
-        } else {
-            m_jcbxLineupSimulation.setSelected(false);
-            m_jcbxLineupSimulation.setEnabled(true);
-
-            m_jcbUpcomingGames.setEnabled(true);
-        }
-
-        update_jcbUpcomingGames();
         m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
         if (m_jcbTeamAttitude!=null) {
-            setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
+            setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchTypeExtended().isCompetitive());
 
             MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
@@ -213,7 +184,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 lineup.setWeather(matchOrder.getWeather());
                 lineup.setWeatherForecast(matchOrder.getWeatherForecast());
             }
-            //lineupPanel.refreshLineupSettingsPanel();
         }
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
@@ -222,18 +192,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         // refresh lineup settings
         Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
-        Helper.setComboBoxFromID(m_jcbTeamAttitude, lineup.getAttitude());
         updateStyleOfPlayComboBox();
 
-        boolean isCompetitive;
-        var match = getSelectedMatch();
-        if ( match != null){
-            isCompetitive = match.getMatchType().isCompetitive();
-        }
-        else {
-            isCompetitive=false;
-        }
-        setEnabledTeamAttitudeCB(isCompetitive);
     }
 
     private void addListeners() {
@@ -241,21 +201,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup.addActionListener(e -> downloadLineupFromHT());
 
         m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
-
-        m_jcbxLineupSimulation.addActionListener(e -> {
-            Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
-            Ratings oRatingsBefore = lineup.getRatings();
-
-            update_jcbUpcomingGames();
-            if (!isLineupSimulator()) {
-                lineupPanel.resetSettings();
-                lineupPanel.updateLineupPositions();
-            }
-
-            lineupPanel.setPreviousRatings(oRatingsBefore);
-            lineupPanel.calculateRatings();
-
-        });
 
         m_jcbUpcomingGames.addActionListener(e -> {
             m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
@@ -298,10 +243,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         for( ActionListener al : m_jbUploadLineup.getActionListeners() ) {
             m_jbUploadLineup.removeActionListener(al);
-        }
-
-        for( ActionListener al : m_jcbxLineupSimulation.getActionListeners() ) {
-            m_jcbxLineupSimulation.removeActionListener(al);
         }
 
         for( ActionListener al : m_jcbUpcomingGames.getActionListeners() ) {
@@ -366,25 +307,19 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         // remove all elements
         m_jcbUpcomingGames.removeAllItems();
-        List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
+        var upcomingMatches = upcomingMatchesInDB;
 
-        // put them back only of data are recent enough and Lineup Simulator is not checked
-        if(m_jcbxLineupSimulation.isSelected()){
-            upcomingMatches.add(null);
-            m_clSelectedMatch = null;
+        int i = 0;
+        int selected = 0;
+        for (MatchOrdersCBItem element : upcomingMatches) {
+            m_jcbUpcomingGames.addItem(element);
+            if (m_clSelectedMatch != null && element.getMatchID() == m_clSelectedMatch.getMatchID()) selected = i;
+            i++;
         }
-        else {
-            upcomingMatches = upcomingMatchesInDB;
 
-            int i = 0;
-            for (MatchOrdersCBItem element : upcomingMatches) {
-                m_jcbUpcomingGames.addItem(element);
-                i++;
-            }
-
-            m_jcbUpcomingGames.setMaximumRowCount(i);
-            m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-        }
+        m_jcbUpcomingGames.setMaximumRowCount(i);
+        m_jcbUpcomingGames.setSelectedIndex(selected);
+        m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
@@ -423,11 +358,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
         lineupPanel.update();
     }
-
-    public boolean isLineupSimulator(){
-        return m_jcbxLineupSimulation.isSelected();
-    }
-
 
     private void uploadLineupToHT() {
 

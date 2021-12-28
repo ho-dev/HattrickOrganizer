@@ -66,28 +66,18 @@ public enum MatchType implements IMatchType {
 	}
 
 	private boolean isYouth() {
-		switch (this){
-			case YOUTHFRIENDLY:
-			case YOUTHFRIENDLYCUPRULES:
-			case YOUTHINTERNATIONALFRIENDLY:
-			case YOUTHINTERNATIONALFRIENDLYCUPRULES:
-			case YOUTHLEAGUE:
-				return true;
-		}
-		return false;
+		return switch (this) {
+			case YOUTHFRIENDLY, YOUTHFRIENDLYCUPRULES, YOUTHINTERNATIONALFRIENDLY, YOUTHINTERNATIONALFRIENDLYCUPRULES, YOUTHLEAGUE -> true;
+			default -> false;
+		};
 	}
 
 	public boolean isCupRules() {
 		switch (this) {
-			case CUP :
-			case FRIENDLYCUPRULES :
-			case INTFRIENDLYCUPRULES :
-			case LADDER:
-			case NATIONALCOMPCUPRULES :
-			case TOURNAMENTPLAYOFF : {
+			case CUP, FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, LADDER, NATIONALCOMPCUPRULES, TOURNAMENTPLAYOFF -> {
 				return true;
 			}
-			default: {
+			default -> {
 				return false;
 			}
 		}
@@ -95,13 +85,10 @@ public enum MatchType implements IMatchType {
 
 	public boolean isFriendly() {
 		switch (this) {
-			case FRIENDLYNORMAL :
-			case FRIENDLYCUPRULES :
-			case INTFRIENDLYNORMAL :
-			case INTFRIENDLYCUPRULES : {
+			case FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES -> {
 				return true;
 			}
-			default : {
+			default -> {
 				return false;
 			}
 		}
@@ -113,35 +100,22 @@ public enum MatchType implements IMatchType {
 	 * @return true if the match is official
 	 */
 	public boolean isOfficial() {
-		switch (this) {
-			case LEAGUE :
-			case QUALIFICATION :
-			case CUP :
-			case FRIENDLYNORMAL:
-			case FRIENDLYCUPRULES :
-			case INTFRIENDLYNORMAL :
-			case INTFRIENDLYCUPRULES :
-			case MASTERS :
-			case NATIONALCOMPNORMAL:
-			case NATIONALCOMPCUPRULES:
-			case NATIONALFRIENDLY:
-				return true;
-			default:
-				return false;
-		}
+		return switch (this) {
+			case LEAGUE, QUALIFICATION, CUP, FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES, MASTERS, NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY -> true;
+			default -> false;
+		};
 	}
-
 
 	public static List<MatchType> getOfficialMatchTypes() {
 		if (cl_officialMatchType == null){
-			cl_officialMatchType = MatchType.stream().filter(m -> m.isOfficial()).collect(toList());
+			cl_officialMatchType = MatchType.stream().filter(MatchType::isOfficial).collect(toList());
 		}
 		return cl_officialMatchType;
 	}
 
 	public static List<MatchType> getYouthMatchType() {
 		if (cl_YouthMatchType == null){
-			cl_YouthMatchType = MatchType.stream().filter(m -> m.isYouth()).collect(toList());
+			cl_YouthMatchType = MatchType.stream().filter(MatchType::isYouth).collect(toList());
 		}
 		return cl_YouthMatchType;
 	}
@@ -152,7 +126,6 @@ public enum MatchType implements IMatchType {
 		}
 		return cl_HTOintegratedMatchType;
 	}
-
 
 	/**
 	 * Returns true for all NT matches.
@@ -169,14 +142,12 @@ public enum MatchType implements IMatchType {
 		}
 	}
 
-
 	public static List<MatchType> getNTMatchType() {
 		if (cl_NTMatchType == null){
-			cl_NTMatchType = MatchType.stream().filter(m -> m.isNationalMatch()).collect(toList());
+			cl_NTMatchType = MatchType.stream().filter(MatchType::isNationalMatch).collect(toList());
 		}
 		return cl_NTMatchType;
 	}
-
 
 	public boolean isTournament() {
 		return switch (this) {
@@ -192,7 +163,6 @@ public enum MatchType implements IMatchType {
 			default -> false;
 		};
 	}
-
 
     public SourceSystem getSourceSystem() {
 		if (isOfficial()) return SourceSystem.HATTRICK;
