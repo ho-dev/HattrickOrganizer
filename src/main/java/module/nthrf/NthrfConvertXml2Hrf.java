@@ -10,7 +10,6 @@ import core.constants.player.PlayerSpeciality;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLMatchArchivParser;
 import core.file.xml.XMLWorldDetailsParser;
-import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
@@ -48,7 +47,7 @@ class NthrfConvertXml2Hrf {
 
 			// nt team detail
 			String xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalteamdetails&version=1.9&teamid=" + teamId);
-			NtTeamDetailsParser details = new NtTeamDetailsParser(xml);
+			NtTeamDetails details = new NtTeamDetails(xml);
 			debug("Got team details");
 
 			// world details
@@ -112,7 +111,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Erstellt die Arena Daten
 	 */
-	final void createArena(NtTeamDetailsParser details) throws Exception {
+	final void createArena(NtTeamDetails details) throws Exception {
 		m_sHRFBuffer.append("[arena]" + "\n");
 		m_sHRFBuffer.append("arenaname=" + details.getTeamName() + " Arena\n");
 		m_sHRFBuffer.append("arenaid=0\n"); 		// ArenaID
@@ -133,7 +132,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * basic data
 	 */
-	final void createBasics(NtTeamDetailsParser details, Map<String, String> world) throws Exception {
+	final void createBasics(NtTeamDetails details, Map<String, String> world) throws Exception {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
 		m_sHRFBuffer.append("appversion=" + HO.VERSION + "\n");
@@ -155,7 +154,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Club Data
 	 */
-	final void createClub(NtTeamDetailsParser details) throws Exception {
+	final void createClub(NtTeamDetails details) throws Exception {
 		m_sHRFBuffer.append("[club]\n");
 		m_sHRFBuffer.append("hjTranare=0\n");		// AssistantTrainers
 		m_sHRFBuffer.append("psykolog=0\n");		// Psychologists
@@ -424,7 +423,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Erstellt die Team Daten
 	 */
-	final void createTeam(NtTeamDetailsParser details) throws Exception {
+	final void createTeam(NtTeamDetails details) throws Exception {
 		m_sHRFBuffer.append("[team]" + "\n");
 		m_sHRFBuffer.append("trLevel=100\n");			// TrainingLevel
 		m_sHRFBuffer.append("staminaTrainingPart=5\n"); //StaminaTrainingPart
@@ -473,7 +472,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Creates the world details for the current user / country.
 	 */
-	final void createWorld(Map<String, String> world, NtTeamDetailsParser details, NtPlayer trainer) throws Exception {
+	final void createWorld(Map<String, String> world, NtTeamDetails details, NtPlayer trainer) throws Exception {
 		m_sHRFBuffer.append("[xtra]\n");
 
 		m_sHRFBuffer.append("TrainingDate=" + world.get("TrainingDate") + "\n");

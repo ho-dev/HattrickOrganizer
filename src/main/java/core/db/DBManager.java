@@ -19,6 +19,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HTDatetime;
 import module.matches.MatchLocation;
+import module.nthrf.NtTeamDetails;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
@@ -248,6 +249,7 @@ public class DBManager {
 	private void initAllTables(JDBCAdapter adapter) {
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
 		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));
+		tables.put(NtTeamTable.TABLENAME, new NtTeamTable(adapter));
 		tables.put(FaktorenTable.TABLENAME, new FaktorenTable(adapter));
 		tables.put(HRFTable.TABLENAME, new HRFTable(adapter));
 		tables.put(StadionTable.TABLENAME, new StadionTable(adapter));
@@ -2329,6 +2331,23 @@ public class DBManager {
 		((IfaMatchTable) getTable(IfaMatchTable.TABLENAME)).deleteAllMatches();
 	}
 
+	public static Timestamp getTimestamp(ResultSet rs, String columnLabel){
+		try {
+			var ret = rs.getTimestamp(columnLabel);
+			if (!rs.wasNull()) return ret;
+		} catch (Exception ignored) {
+		}
+		return null;
+	}
+
+	public static String getString(ResultSet rs, String columnLabel){
+		try {
+			var ret = rs.getString(columnLabel);
+			if (!rs.wasNull()) return deleteEscapeSequences(ret);
+		} catch (Exception ignored) {
+		}
+		return "";
+	}
 
 	/**
 	 * Gets integer.
@@ -2623,5 +2642,9 @@ public class DBManager {
 
 	public int getTemplateMatchLineupTeamNextNumber() {
 		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeamNextNumber();
+	}
+
+	public NtTeamDetails loadNtTeamDetails(int teamId, Timestamp matchDate) {
+		return ((NtTeamTable)getTable(TeamTable.TABLENAME)).load(teamId, matchDate);
 	}
 }

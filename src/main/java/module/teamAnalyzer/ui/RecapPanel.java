@@ -87,7 +87,7 @@ public class RecapPanel extends JPanel {
         if ( teamReport.size() < 2 ) return; // no matches loaded
 
         for ( int i =0; i < teamReport.size(); i++){
-            tableModel.addRow(AddLineup(teamReport.getLineup(i)));
+            tableModel.addRow(AddLineup(teamReport.getTeamMatchReport(i)));
         }
         teamReport.setSelection(selection); // restore selection
 

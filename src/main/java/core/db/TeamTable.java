@@ -41,11 +41,6 @@ final class TeamTable extends AbstractTable {
 		columns[18]= new ColumnDescriptor("iErfahrung253",Types.INTEGER,false);
 	}
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX ITEAM_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}
 	/**
 	 * Save the team data for the given HRF id.
 	 */
