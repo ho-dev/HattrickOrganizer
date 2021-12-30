@@ -1242,12 +1242,12 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         		{
         			//Holen der HRF_ID
         			Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(i);
-        			int deleteHRF_ID = (Integer) tmpV.elementAt(tmpV.size() - 1);
+        			var deleteHRF_ID = (Integer) tmpV.elementAt(tmpV.size() - 1);
         			//int deleteHRF_ID = ((Integer)(m_TableModel_Filelist.getValueAt(i,m_TableModel_Filelist.getDataVector().capacity()))).intValue();
 
         			//Tabelle und die Zählwerte anpassen
         			m_TableModel_Filelist.removeRow(i);
-					m_V_Filelist_Keys.remove(new Integer(deleteHRF_ID));
+					m_V_Filelist_Keys.remove(deleteHRF_ID);
         			anzRows = m_TableModel_Filelist.getRowCount();
    					i--;
    					DBManager.instance().deleteHRF(deleteHRF_ID);

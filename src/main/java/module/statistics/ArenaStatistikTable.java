@@ -91,37 +91,37 @@ public class ArenaStatistikTable extends JTable {
         final TableColumnModel tableColumnModel = getColumnModel();
 
         for (int i = 0; i < tableColumnModel.getColumnCount(); i++) {
-            tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+            tableColumnModel.getColumn(i).setIdentifier(i);
         }
 
         m_clTableSorter.addMouseListenerToHeaderInTable(this);
 
         setAutoResizeMode(AUTO_RESIZE_OFF);
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(85));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setMinWidth(Helper.calcCellWidth(70));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0)).setPreferredWidth(Helper.calcCellWidth(85));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0)).setMinWidth(Helper.calcCellWidth(70));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setPreferredWidth(Helper.calcCellWidth(20));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setMinWidth(Helper.calcCellWidth(20));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1)).setPreferredWidth(Helper.calcCellWidth(20));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1)).setMinWidth(Helper.calcCellWidth(20));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setMinWidth(Helper.calcCellWidth(55));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setPreferredWidth(Helper.calcCellWidth(120));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2)).setMinWidth(Helper.calcCellWidth(55));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2)).setPreferredWidth(Helper.calcCellWidth(120));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setMinWidth(Helper.calcCellWidth(55));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3))).setPreferredWidth(Helper.calcCellWidth(60));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(3)).setMinWidth(Helper.calcCellWidth(55));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(3)).setPreferredWidth(Helper.calcCellWidth(60));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setMinWidth(Helper.calcCellWidth(25));
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(4))).setPreferredWidth(Helper.calcCellWidth(25));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(4)).setMinWidth(Helper.calcCellWidth(25));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(4)).setPreferredWidth(Helper.calcCellWidth(25));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(5))).setPreferredWidth(Helper.calcCellWidth(85));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(5)).setPreferredWidth(Helper.calcCellWidth(85));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(6))).setPreferredWidth(Helper.calcCellWidth(150));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(6)).setPreferredWidth(Helper.calcCellWidth(150));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(7))).setPreferredWidth(Helper.calcCellWidth(150));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(7)).setPreferredWidth(Helper.calcCellWidth(150));
 
-        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(8))).setPreferredWidth(Helper.calcCellWidth(110));
+        tableColumnModel.getColumn(tableColumnModel.getColumnIndex(8)).setPreferredWidth(Helper.calcCellWidth(110));
 
         for (int i = 9; i < tableColumnModel.getColumnCount(); i++) {
-            tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(i))).setPreferredWidth(Helper.calcCellWidth(90));
+            tableColumnModel.getColumn(tableColumnModel.getColumnIndex(i)).setPreferredWidth(Helper.calcCellWidth(90));
         }
 
         setSelectionMode(0);

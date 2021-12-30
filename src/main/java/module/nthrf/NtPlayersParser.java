@@ -17,8 +17,8 @@ class NtPlayersParser {
 	private String fetchedDate;
 	private long teamId;
 	private String teamName;
-	private List<Long> playerIds = new ArrayList<Long>();
-	private List<NtPlayer> players = new ArrayList<NtPlayer>();
+	private List<Long> playerIds = new ArrayList<>();
+	private List<NtPlayer> players = new ArrayList<>();
 	private boolean parsingSuccess;
 
 	/**
@@ -31,21 +31,20 @@ class NtPlayersParser {
 
 	private void parsePlayerDetails(MyConnector dh, HashMap<Integer, Integer> countryMapping) {
 		try {
-			for (Iterator<Long> i = playerIds.iterator(); i.hasNext(); ) {
-				Long playerId = i.next();
+			for (Long playerId : playerIds) {
 				String xmlData = dh.getHattrickXMLFile("/chppxml.axd?file=playerdetails&version=2.8&playerId=" + playerId);
 				Document doc = XMLManager.parseString(xmlData);
 				Element root = doc.getDocumentElement();
-				Element ele = (Element)root.getElementsByTagName("Player").item(0);
-                players.add(createPlayer(ele, countryMapping));
-            }
+				Element ele = (Element) root.getElementsByTagName("Player").item(0);
+				players.add(createPlayer(ele, countryMapping));
+			}
 		} catch (Exception e) {
         	parsingSuccess = false;
         	e.printStackTrace();
         }
 	}
 
-	protected final NtPlayer createPlayer(Element ele, HashMap<Integer, Integer> countryMapping) throws Exception {
+	protected final NtPlayer createPlayer(Element ele, HashMap<Integer, Integer> countryMapping) {
 		Element tmp = null;
 		final NtPlayer player = new NtPlayer();
 
@@ -162,7 +161,7 @@ class NtPlayersParser {
         	for (int m=0; (playersNode != null && m<playersNode.getLength()); m++) {
         		ele = (Element)playersNode.item(m);
         		ele = (Element)ele.getElementsByTagName("PlayerID").item(0);
-        		playerIds.add(new Long(Long.parseLong(XMLManager.getFirstChildNodeValue(ele))));
+        		playerIds.add(Long.parseLong(XMLManager.getFirstChildNodeValue(ele)));
         	}
         	parsingSuccess = true;
         } catch (Exception e) {
@@ -197,17 +196,17 @@ class NtPlayersParser {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("NtPlayers (from "+fetchedDate+"), parsingSuccess: " + parsingSuccess);
-		sb.append("\n\tTeam: " + teamName + " (" + teamId + ")");
-		sb.append("\n\tPlayer IDs("+playerIds.size()+"):");
+		StringBuilder sb = new StringBuilder("NtPlayers (from "+fetchedDate+"), parsingSuccess: " + parsingSuccess);
+		sb.append("\n\tTeam: ").append(teamName).append(" (").append(teamId).append(")");
+		sb.append("\n\tPlayer IDs(").append(playerIds.size()).append("):");
 		int m = 1;
 		for (Iterator<Long> i=playerIds.iterator(); i.hasNext(); m++) {
-			sb.append("\n\t\t" + m + ". " + i.next());
+			sb.append("\n\t\t").append(m).append(". ").append(i.next());
 		}
 		sb.append("\n---------------------------------------------");
 		m = 1;
 		for (Iterator<NtPlayer> i=players.iterator(); i.hasNext(); m++) {
-			sb.append("\n\t" + m + ". " + i.next());
+			sb.append("\n\t").append(m).append(". ").append(i.next());
 		}
 		return sb.toString();
 	}

@@ -15,7 +15,7 @@ package module.tsforecast;
  *01.10.09  Version 0.5  improve forcast formula
  */
 
-/**
+/*
  *
  * @author  michael.roux
  */
@@ -34,6 +34,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Properties;
+
+import static java.lang.Integer.parseInt;
 
 // Referenced classes of package hoplugins.tsforecast:
 //            Curve
@@ -71,15 +73,14 @@ abstract class ForecastCurve extends Curve {
 	}
 
 	public void setAttitudes(Properties properties) {
-		for (int i = 0; i < m_clPoints.size(); i++) {
-			if ((m_clPoints.get(i)).m_mtMatchType != UNKNOWN_MATCH) {
+		for (Point m_clPoint : m_clPoints) {
+			if (m_clPoint.m_mtMatchType != UNKNOWN_MATCH) {
 				String str = "Match_"
 						+ DateFormat.getDateInstance(DateFormat.SHORT).format(
-								(m_clPoints.get(i)).m_dDate);
+						m_clPoint.m_dDate);
 				String value = properties.getProperty(str);
 				if (value != null)
-					(m_clPoints.get(i)).m_iAttitude = (new Integer(value))
-							.intValue();
+					m_clPoint.m_iAttitude = parseInt(value);
 			}
 		}
 	}
@@ -113,7 +114,7 @@ abstract class ForecastCurve extends Curve {
 	public void forecast(int pos) throws Exception {
 		if (m_clPoints.size() > pos) {
 			Curve.Point point1 = m_clPoints.get(pos);
-			Curve.Point point2 = null;
+			Curve.Point point2;
 
 			for (int i = pos + 1; i < m_clPoints.size(); i++) {
 				point2 = m_clPoints.get(i);
@@ -189,7 +190,7 @@ abstract class ForecastCurve extends Curve {
 
 			if (resultset != null && resultset.first()) {
 				short start = 0;
-				Curve.Point point = null;
+				Curve.Point point;
 
 				GregorianCalendar calendar = new GregorianCalendar();
 				calendar.setTime(resultset.getTimestamp("MATCHDATE"));
@@ -220,30 +221,27 @@ abstract class ForecastCurve extends Curve {
 						calendar.add(Calendar.DATE, Calendar.SATURDAY
 								- Calendar.TUESDAY - 1);
 						switch (ibasics.getSpieltag() + s) {
-						case 16:
-							point = new Curve.Point(calendar.getTime(),
+							case 16 -> point = new Point(calendar.getTime(),
 									TEAM_SPIRIT_RESET, RESET_PT);
-							break;
-						case 15:
-							point = new Curve.Point(calendar.getTime(),
-									IMatchDetails.EINSTELLUNG_NORMAL,
-									ibasics.getSpieltag() + s,
-									MatchType.QUALIFICATION);
-							point.m_strTooltip = new String(HOVerwaltung
-									.instance().getLanguageString(
-											"ls.match.matchtype.qualification"));
-							break;
-						default:
-							point = new Curve.Point(calendar.getTime(),
-									IMatchDetails.EINSTELLUNG_NORMAL,
-									ibasics.getSpieltag() + s, MatchType.LEAGUE);
-							point.m_strTooltip = new String(
-									(ibasics.getSpieltag() + s)
-											+ ". "
-											+ HOVerwaltung.instance()
-													.getLanguageString(
-															"ls.match.matchtype.league"));
-							break;
+							case 15 -> {
+								point = new Point(calendar.getTime(),
+										IMatchDetails.EINSTELLUNG_NORMAL,
+										ibasics.getSpieltag() + s,
+										MatchType.QUALIFICATION);
+								point.m_strTooltip = HOVerwaltung
+										.instance().getLanguageString(
+												"ls.match.matchtype.qualification");
+							}
+							default -> {
+								point = new Point(calendar.getTime(),
+										IMatchDetails.EINSTELLUNG_NORMAL,
+										ibasics.getSpieltag() + s, MatchType.LEAGUE);
+								point.m_strTooltip = (ibasics.getSpieltag() + s)
+										+ ". "
+										+ HOVerwaltung.instance()
+										.getLanguageString(
+												"ls.match.matchtype.league");
+							}
 						}
 						m_clPoints.add(point);
 						addUpdatePoints(point);
@@ -253,10 +251,10 @@ abstract class ForecastCurve extends Curve {
 					point = new Curve.Point(calendar.getTime(),
 							IMatchDetails.EINSTELLUNG_NORMAL,
 							ibasics.getSpieltag() + s, MatchType.CUP);
-					point.m_strTooltip = new String((ibasics.getSpieltag() + s)
+					point.m_strTooltip = (ibasics.getSpieltag() + s)
 							+ ". "
 							+ HOVerwaltung.instance().getLanguageString(
-									"ls.match.matchtype.cup"));
+							"ls.match.matchtype.cup");
 					m_clPoints.add(point);
 					addUpdatePoints(point);
 					lastMatchType = MatchType.CUP;
@@ -359,8 +357,8 @@ abstract class ForecastCurve extends Curve {
 			// this function reads only league, cup and qualification matches,
 			// therefor has to add all Updatepoints
 			int iEnd = m_clPoints.size();
-			for (int i = 0; i < iEnd; i++) {
-				point = m_clPoints.get(i);
+			for (Point m_clPoint : m_clPoints) {
+				point = m_clPoint;
 				if (point.m_mtMatchType == MatchType.LEAGUE) {
 					addUpdatePoints(point, true);
 					if (point.m_iMatchDay == 14) {

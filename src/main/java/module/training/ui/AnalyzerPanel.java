@@ -227,11 +227,11 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 			List<ISkillChange> skillups = otm.getAllSkillups();
 
 			for (ISkillChange skillup : skillups) {
-				Integer skillType = new Integer(skillup.getType());
+				Integer skillType = skillup.getType();
 				List<PlayerSkillChange> playerSkillChanges = skillupsByType.get(skillType);
 
 				if (playerSkillChanges == null) {
-					playerSkillChanges = new ArrayList<PlayerSkillChange>();
+					playerSkillChanges = new ArrayList<>();
 					skillupsByType.put(skillType, playerSkillChanges);
 				}
 
@@ -251,7 +251,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * @return a panel
 	 */
 	private JPanel createSkillSelector(int skill) {
-		Integer skillType = new Integer(skill);
+		Integer skillType = skill;
 
 		int change = 0;
 

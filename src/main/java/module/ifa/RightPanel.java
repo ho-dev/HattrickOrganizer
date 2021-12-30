@@ -38,6 +38,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
+import static java.lang.Double.parseDouble;
+
 public class RightPanel extends JPanel {
 
 	private static final long serialVersionUID = -5038012557489983903L;
@@ -200,8 +202,8 @@ public class RightPanel extends JPanel {
 
 			Dimension size1 = panel1.getSize();
 			Dimension size2 = panel2.getSize();
-			int maxW = size1.width > size2.width ? size1.width : size2.width;
-			int maxH = size1.height > size2.height ? size1.height : size2.height;
+			int maxW = Math.max(size1.width, size2.width);
+			int maxH = Math.max(size1.height, size2.height);
 			panel1.setBounds(0, 0, size1.width, size1.height);
 			panel2.setBounds(maxW, 0, size2.width, size2.height);
 
@@ -219,8 +221,8 @@ public class RightPanel extends JPanel {
 			encoder.addFrame(bufIma.getSubimage(0, 0, maxW, maxH));
 			encoder.addFrame(bufIma.getSubimage(maxW, 0, maxW, maxH));
 			encoder.setLoopCount(0);
-			encoder.setUniformDelay((int) (100.0D * new Double(this.imageDesignPanel
-					.getDelaySpinner().getValue().toString()).doubleValue()));
+			encoder.setUniformDelay((int) (100.0D * parseDouble(this.imageDesignPanel
+					.getDelaySpinner().getValue().toString())));
 			encoder.encode(out);
 			dialog.dispose();
 
