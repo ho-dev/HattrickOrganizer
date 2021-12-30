@@ -8,6 +8,7 @@ import core.model.series.Paarung;
 import core.util.HTDatetime;
 import module.teamAnalyzer.SystemManager;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -21,7 +22,7 @@ public class Match {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** The match playing date */
-    private Date matchDate;
+    private Timestamp matchDate;
 
     /** The away team name */
     private String awayTeam;
@@ -151,11 +152,11 @@ public class Match {
         return homeTeam;
     }
 
-    public void setMatchDate(Date date) {
+    public void setMatchDate(Timestamp date) {
         matchDate = date;
     }
 
-    public Date getMatchDate() {
+    public Timestamp getMatchDate() {
         return matchDate;
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.7" transformSequenceNumber="8">
+<install4j version="9.0.4" transformSequenceNumber="9">
   <directoryPresets config="." />
   <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="14">
     <languages skipLanguageSelection="true">
@@ -30,14 +30,14 @@
       </additionalLanguages>
     </languages>
     <variables>
-      <variable name="HO_version" value="4.0" />
+      <variable name="HO_version" value="6.0" />
       <variable name="projectDir" value="D:/Perso/Code/HO" />
       <variable name="versionType" />
       <variable name="mediaID" value="${compiler:sys.mediaId}" />
     </variables>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk15/jdk-15.0.1+9" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.1+12" />
   </application>
-  <files defaultFileMode="666" defaultDirMode="777">
+  <files defaultFileMode="666" defaultDirMode="777" preserveSymlinks="false">
     <mountPoints>
       <mountPoint id="58" />
     </mountPoints>
@@ -127,11 +127,19 @@ Categories=Game</desktopFile>
                 <group id="174" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
                   <serializedBean>
                     <property name="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>49</int>
+                          <int>52</int>
+                          <int>53</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="borderSides">
@@ -140,11 +148,19 @@ Categories=Game</desktopFile>
                       </object>
                     </property>
                     <property name="imageEdgeBackgroundColor">
-                      <object class="java.awt.Color">
-                        <int>25</int>
-                        <int>143</int>
-                        <int>220</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>25</int>
+                          <int>143</int>
+                          <int>220</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>0</int>
+                          <int>74</int>
+                          <int>151</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -303,11 +319,19 @@ return console.askOkCancel(message, true);
                 <group id="175" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
                   <serializedBean>
                     <property name="backgroundColor">
-                      <object class="java.awt.Color">
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>49</int>
+                          <int>52</int>
+                          <int>53</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="borderSides">
@@ -316,11 +340,19 @@ return console.askOkCancel(message, true);
                       </object>
                     </property>
                     <property name="imageEdgeBackgroundColor">
-                      <object class="java.awt.Color">
-                        <int>25</int>
-                        <int>143</int>
-                        <int>220</int>
-                        <int>255</int>
+                      <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                        <object class="java.awt.Color">
+                          <int>25</int>
+                          <int>143</int>
+                          <int>220</int>
+                          <int>255</int>
+                        </object>
+                        <object class="java.awt.Color">
+                          <int>0</int>
+                          <int>74</int>
+                          <int>151</int>
+                          <int>255</int>
+                        </object>
                       </object>
                     </property>
                     <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -851,11 +883,19 @@ return true;</property>
           <group id="42" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
             <serializedBean>
               <property name="backgroundColor">
-                <object class="java.awt.Color">
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>49</int>
+                    <int>52</int>
+                    <int>53</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="borderSides">
@@ -864,11 +904,19 @@ return true;</property>
                 </object>
               </property>
               <property name="imageEdgeBackgroundColor">
-                <object class="java.awt.Color">
-                  <int>25</int>
-                  <int>143</int>
-                  <int>220</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>25</int>
+                    <int>143</int>
+                    <int>220</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>0</int>
+                    <int>74</int>
+                    <int>151</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -922,11 +970,19 @@ return true;</property>
               <group id="49" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
                 <serializedBean>
                   <property name="backgroundColor">
-                    <object class="java.awt.Color">
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
+                    <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                      <object class="java.awt.Color">
+                        <int>49</int>
+                        <int>52</int>
+                        <int>53</int>
+                        <int>255</int>
+                      </object>
                     </object>
                   </property>
                   <property name="borderSides">
@@ -1035,6 +1091,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
     </windowsArchive>
     <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
@@ -1042,7 +1099,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
     </windowsArchive>
     <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}">
       <excludedLaunchers>
@@ -1050,7 +1106,7 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle usePack200="false" />
+      <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
     <windows name="Windows - JRE" id="485" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}-JRE">
       <excludedLaunchers>
@@ -1058,7 +1114,7 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle usePack200="false" jreBundleSource="generated" />
+      <jreBundle usePack200="false" />
     </windows>
     <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
       <excludedLaunchers>
@@ -1066,6 +1122,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
     <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
@@ -1074,7 +1131,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
     <linuxRPM name="Linux RPM" id="62" dependencies="openjdk-11-jre">
@@ -1083,6 +1139,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxRPM>
     <linuxRPM name="Linux RPM - JRE" id="464" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE">
@@ -1091,7 +1148,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxRPM>
     <unixArchive name="Unix Archive" id="173" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-unix${compiler:versionType}" installDir=".">
@@ -1100,6 +1156,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
     </unixArchive>
     <unixArchive name="Unix Archive - JRE" id="477" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-unix${compiler:versionType}-JRE" installDir=".">
       <excludedLaunchers>
@@ -1107,13 +1164,12 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
     </unixArchive>
     <macos name="macOS Single Bundle" id="172" customInstallBaseDir="/Applications" launcherId="606">
-      <jreBundle usePack200="false" />
+      <jreBundle usePack200="false" jreBundleSource="none" />
     </macos>
     <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" customInstallBaseDir="/Applications" launcherId="606">
-      <jreBundle usePack200="false" jreBundleSource="generated" />
+      <jreBundle usePack200="false" />
     </macos>
     <unixInstaller name="Unix Installer" id="1062" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".ho" includeAllDownloadableComponents="true">
       <excludedLaunchers>
@@ -1121,6 +1177,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
     </unixInstaller>
     <unixInstaller name="Unix Installer - JRE" id="1064" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}-JRE" installDir=".ho" includeAllDownloadableComponents="true">
       <excludedLaunchers>
@@ -1128,7 +1185,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
     </unixInstaller>
     <windows name="Windows (32bits)" id="1203" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}" jreBitType="32">
       <excludedLaunchers>
@@ -1136,7 +1192,7 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle usePack200="false" />
+      <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
     <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE" jreBitType="32">
       <excludedLaunchers>
@@ -1144,7 +1200,7 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle usePack200="false" jreBundleSource="generated" />
+      <jreBundle usePack200="false" />
     </windows>
     <windowsArchive name="Windows (32bits) Archive" id="1208" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win-32bits-${compiler:versionType}" installDir="." jreBitType="32">
       <excludedLaunchers>
@@ -1152,6 +1208,7 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <jreBundle jreBundleSource="none" />
     </windowsArchive>
     <windowsArchive name="Windows (32bits) Archive - JRE" id="1211" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win(32bits)${compiler:versionType}-JRE" installDir="." jreBitType="32">
       <excludedLaunchers>
@@ -1159,7 +1216,6 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
-      <jreBundle jreBundleSource="generated" />
     </windowsArchive>
   </mediaSets>
   <buildIds buildAll="false">

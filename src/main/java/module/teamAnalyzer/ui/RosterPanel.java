@@ -28,19 +28,23 @@ public class RosterPanel extends JPanel {
     private Map<String,RosterPlayerData> players = new HashMap<String,RosterPlayerData>();
     private UiRosterTableModel tableModel;
     private String[] columns = {
-    		HOVerwaltung.instance().getLanguageString("ls.player.name"),
-    		HOVerwaltung.instance().getLanguageString("Role"),
-    		HOVerwaltung.instance().getLanguageString("Position"),
-    		HOVerwaltung.instance().getLanguageString("Secondary"),
-    		HOVerwaltung.instance().getLanguageString("ls.match.id"),
-    		HOVerwaltung.instance().getLanguageString("ls.player.age"),
-    		HOVerwaltung.instance().getLanguageString("ls.player.form"),
-    		HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
-    		HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
-    		HOVerwaltung.instance().getLanguageString("SpecialEvent"),
-    		HOVerwaltung.instance().getLanguageString("Maximal"), HOVerwaltung.instance().getLanguageString("Durchschnitt"),
-    		HOVerwaltung.instance().getLanguageString("Minimal"), "Status", "PlayerId"
-                               };
+            HOVerwaltung.instance().getLanguageString("ls.player.name"),
+            HOVerwaltung.instance().getLanguageString("Role"),
+            HOVerwaltung.instance().getLanguageString("Position"),
+            HOVerwaltung.instance().getLanguageString("Secondary"),
+            HOVerwaltung.instance().getLanguageString("ls.match.id"),
+            HOVerwaltung.instance().getLanguageString("ls.player.age"),
+            HOVerwaltung.instance().getLanguageString("ls.player.form"),
+            HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
+            HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
+            HOVerwaltung.instance().getLanguageString("SpecialEvent"),
+            HOVerwaltung.instance().getLanguageString("Maximal"),
+            HOVerwaltung.instance().getLanguageString("Durchschnitt"),
+            HOVerwaltung.instance().getLanguageString("Minimal"),
+            "Status",
+            "PlayerId"
+    };
+
     //private boolean reloading = false;
 
     //~ Constructors -------------------------------------------------------------------------------

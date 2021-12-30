@@ -1,11 +1,13 @@
 // %3625019770:hoplugins.teamAnalyzer.report%
 package module.teamAnalyzer.report;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.module.config.ModuleConfig;
 import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
+import module.nthrf.NtTeamDetails;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.manager.TeamLineupBuilder;
@@ -24,12 +26,22 @@ import java.util.*;
  */
 public class TeamReport {
 
+    private int teamId;
     private TeamLineup adjustedRatingsLineup;
     private TeamLineup averageRatingslineup;
     private List<MatchDetail> matchDetails = new ArrayList<>();
+    /**
+     * NT team details
+     * are used to show team spirit (morale) and confidence info in match table for nt team users
+     */
+    private NtTeamDetails ntTeamDetails = null;
     private SpecialEventsPredictionManager specialEventsPredictionManager;
 
+    /**
+     * handle match selection
+     */
     private int selection=0;
+    private TeamReport selectedMatchReport;
 
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -54,12 +66,17 @@ public class TeamReport {
      *
      * @param matchDetails list of matches of the team report
      */
-    public TeamReport(List<MatchDetail> matchDetails) {
+    public TeamReport(int teamId, List<MatchDetail> matchDetails) {
+        this.teamId=teamId;
         for (MatchDetail m:matchDetails ) {
             addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
+
+        if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
+            this.ntTeamDetails = DBManager.instance().loadNtTeamDetails(this.teamId, null);
+        }
     }
 
     /**
@@ -67,9 +84,13 @@ public class TeamReport {
      *
      * @param matchDetail The match of the report is stored in averageRatingslineup
      */
-    private TeamReport(MatchDetail matchDetail) {
+    private TeamReport(int teamId, MatchDetail matchDetail) {
+        this.teamId = teamId;
         addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
+        if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
+            this.ntTeamDetails = DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate());
+        }
     }
 
     /**
@@ -89,7 +110,7 @@ public class TeamReport {
      * @param selection index of the required lineup
      * @return selected team lineup
      */
-    public TeamLineup getLineup(int selection)
+    public TeamLineup getTeamMatchReport(int selection)
     {
         if (this.matchDetails == null || this.matchDetails.size()==0)return null;
         if ( selection == 0 ){
@@ -105,8 +126,8 @@ public class TeamReport {
             }
             int matchNumber = selection - offset;
             // create a team report of one single match
-            TeamReport report = new TeamReport(matchDetails.get(matchNumber));
-            return report.getLineup(0);
+            selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber));
+            return selectedMatchReport.getTeamMatchReport(0);
         }
     }
 
@@ -123,8 +144,8 @@ public class TeamReport {
                     .setTeamData(newRatings)
                     .build();
         } else {
-            MatchDetail matchDetail = getLineup(selection).getMatchDetail();
-            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(matchDetail))
+            MatchDetail matchDetail = getTeamMatchReport(selection).getMatchDetail();
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
                     .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
@@ -240,11 +261,11 @@ public class TeamReport {
 
     public TeamLineup selectLineup(int i) {
         this.selection=i;
-        return getLineup(i);
+        return getTeamMatchReport(i);
     }
 
     public TeamLineup getSelectedLineup() {
-        return getLineup(this.selection);
+        return getTeamMatchReport(this.selection);
     }
 
     public int getSelection(){
