@@ -1,9 +1,11 @@
 package core.db;
 
+import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -76,10 +78,16 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
 
-		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS MATCHLINEUPTEAM_IDX ON MATCHLINEUPTEAM (MatchID,TeamID,MatchTyp)");
+		var matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
+		matchLineupTeamTable.tryAddIndex("MATCHLINEUPTEAM_IDX", "MatchID,TeamID,MatchTyp");
+		matchLineupTeamTable.tryAddColumn("ATTITUDE", "INTEGER");
+		matchLineupTeamTable.tryAddColumn("TACTIC", "INTEGER");
 
-		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("ATTITUDE", "INTEGER");
-		dbManager.getTable(MatchLineupTeamTable.TABLENAME).tryAddColumn("TACTIC", "INTEGER");
+		if (!tableExists(NtTeamTable.TABLENAME)) {
+			dbManager.getTable(NtTeamTable.TABLENAME).createTable();
+		}
+		dbManager.getTable(TeamTable.TABLENAME).tryDropIndex("ITEAM_1");
+
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {
