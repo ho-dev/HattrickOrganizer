@@ -21,7 +21,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Download and install install4j
-        run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux_9_0_5.deb && sudo dpkg -i install4j_linux_9_0_5.deb
+        run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux-x64_9_0_5.deb && sudo dpkg -i install4j_linux-x64_9_0_5.deb
       - name: Build with Gradle
         run: ./gradlew build makeAllmedias -x test
         env:
