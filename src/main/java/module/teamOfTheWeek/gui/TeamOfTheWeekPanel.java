@@ -233,7 +233,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	}
 
 	private int toInt(float i) {
-		return (new Float(i * 2.0F)).intValue();
+		return (int) (i * 2.0F);
 	}
 
 	@Override

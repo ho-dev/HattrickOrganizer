@@ -32,10 +32,7 @@ public class SubstitutionDataProvider {
 		for (Integer i : aFieldAndSubsMatchRoleID) {
 			Player player = lineup.getPlayerByPositionID(i);
 			if (player != null) {
-				positionMap
-						.put(new Integer(i),
-								new PlayerPositionItem(Integer.valueOf(i), lineup
-										.getPlayerByPositionID(i)));
+				positionMap.put(i,	new PlayerPositionItem(Integer.valueOf(i), lineup.getPlayerByPositionID(i)));
 			}
 		}
 		return positionMap;

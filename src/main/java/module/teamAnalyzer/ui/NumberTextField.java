@@ -6,6 +6,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+import static java.lang.Double.parseDouble;
+
 /**
  * configurable JLabel that handles numeric values
  *
@@ -111,17 +113,14 @@ public class NumberTextField extends JTextField {
 
         if (!newString.equals("") && !newString.equals(".")) {
             try {
-                new Double(newString);
+                var r = parseDouble(newString);
             }
             catch (NumberFormatException e) {
                 return false;
             }
-
             return true;
         }
-        
         return false;
-       
     }
 
     /**

@@ -113,8 +113,8 @@ class MyTableCellRenderer  implements TableCellRenderer{
 
 			} catch(Exception e){}
 
-			int skillWertNew = new Double(skillwert).intValue();
-			int skillWertOld = new Double((skillwert - skillWertNew) * 100 + 0.1).intValue();
+			int skillWertNew = (int) skillwert;
+			int skillWertOld = (int) ((skillwert - skillWertNew) * 100 + 0.1);
 			int changeWert = skillWertNew - skillWertOld;
 			if (skillwert == 2 || skillWertNew == 2 || skillWertOld == 2)
 			{
@@ -152,8 +152,8 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			}
 			catch(Exception e){}
 
-			int skillWertNew = new Double(skillwert).intValue();
-			int skillWertOld = new Double((skillwert - skillWertNew) * 100 + 0.1).intValue();
+			int skillWertNew = (int) skillwert;
+			int skillWertOld = (int) ((skillwert - skillWertNew) * 100 + 0.1);
 			int changeWert = skillWertNew - skillWertOld;
 
 			Icon ii =  ImageUtilities.getImageIcon4Veraenderung(changeWert,true);
