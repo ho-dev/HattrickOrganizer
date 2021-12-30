@@ -5,7 +5,7 @@ plugins {
     id 'de.jansauer.poeditor' version '1.1.0'
     id 'org.kordamp.gradle.markdown' version '2.2.0'
     id "com.github.breadmoirai.github-release" version "2.2.10"
-    id 'com.install4j.gradle' version '8.0.7'
+    id 'com.install4j.gradle' version '9.0.5'
 }
 
 repositories {
@@ -237,8 +237,6 @@ task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
     dependsOn 'markdownToHtml'
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
-    variables = []
-    variableFiles = []
 
     // 60 -> Windows Setup
     // 1203  -> Windows Setup (32 bits)
