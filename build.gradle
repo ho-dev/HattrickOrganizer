@@ -1,4 +1,3 @@
-import org.codehaus.groovy.runtime.GStringImpl
 
 plugins {
     id 'java'
@@ -12,7 +11,6 @@ plugins {
 repositories {
     mavenCentral()
     maven {url 'https://maven.ej-technologies.com/repository'}
-//    maven {url 'https://oss.sonatype.org/content/repositories/snapshots/'}
 }
 
 dependencies {
@@ -30,7 +28,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.jetbrains:annotations:22.0.0'
     implementation 'org.knowm.xchart:xchart:3.8.0'
-    compile 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
 test {
@@ -57,7 +55,7 @@ def development_message = [
 println "Configuration start"
 
 ext {
-    target_dir = "${buildDir}/artefacts" as GStringImpl
+    target_dir = "${buildDir}/artefacts"
 }
 
 ext.callGit = { param ->
@@ -98,14 +96,14 @@ println "Project:  $project.name $project.version ....................."
 
 //  configure application plugin --------------------------------
 application {
-    mainClassName = 'core.HOLauncher'
+    mainClass = 'core.HOLauncher'
 }
 
 //  configure java plugin --------------------------------
 java {
     compileJava.options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_15
-    targetCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 //    modularity.inferModulePath.set(true)
 }
 
@@ -183,7 +181,7 @@ jar {
     manifest {
         attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
                    'Main-Class': 'core.HOLauncher',
-                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+                    "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
     }
     exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
 }
@@ -238,7 +236,7 @@ task makeAllmedias(dependsOn: 'media') {
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
     dependsOn 'markdownToHtml'
-    projectFile = "${projectDir}/utils/buildResources/HO.install4j"
+    projectFile = "${projectDir}/utils/buildResources/HO.install4j" as Object
 
     // 60 -> Windows Setup
     // 1203  -> Windows Setup (32 bits)
