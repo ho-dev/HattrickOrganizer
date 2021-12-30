@@ -1,11 +1,21 @@
 package module.nthrf;
 
+import core.db.ColumnDescriptor;
+import core.db.DBManager;
 import core.file.xml.XMLManager;
 
+import core.model.misc.Basics;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-class NtTeamDetailsParser {
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.sql.Types;
+
+public class NtTeamDetails {
+
+	private int hrfId;
+
 
 	private int teamId;
 	private String teamName;
@@ -17,22 +27,167 @@ class NtTeamDetailsParser {
 	private long trainerId;
 	private String trainerName;
 	private String homePageUrl;
-	private int xp433;
-	private int xp451;
-	private int xp352;
-	private int xp532;
+	private int xp253;
 	private int xp343;
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public void setTeamNameShort(String teamNameShort) {
+		this.teamNameShort = teamNameShort;
+	}
+
+	public void setCoachId(long coachId) {
+		this.coachId = coachId;
+	}
+
+	public void setCoachName(String coachName) {
+		this.coachName = coachName;
+	}
+
+	public void setLeagueId(int leagueId) {
+		this.leagueId = leagueId;
+	}
+
+	public void setLeagueName(String leagueName) {
+		this.leagueName = leagueName;
+	}
+
+	public void setTrainerId(long trainerId) {
+		this.trainerId = trainerId;
+	}
+
+	public void setTrainerName(String trainerName) {
+		this.trainerName = trainerName;
+	}
+
+	public void setHomePageUrl(String homePageUrl) {
+		this.homePageUrl = homePageUrl;
+	}
+
+	public int getXp253() {
+		return xp253;
+	}
+
+	public void setXp253(int xp253) {
+		this.xp253 = xp253;
+	}
+
+	public void setXp343(int xp343) {
+		this.xp343 = xp343;
+	}
+
+	public void setXp352(int xp352) {
+		this.xp352 = xp352;
+	}
+
+	public void setXp433(int xp433) {
+		this.xp433 = xp433;
+	}
+
+	public int getXp442() {
+		return xp442;
+	}
+
+	public void setXp442(int xp442) {
+		this.xp442 = xp442;
+	}
+
+	public void setXp451(int xp451) {
+		this.xp451 = xp451;
+	}
+
+	public void setXp532(int xp532) {
+		this.xp532 = xp532;
+	}
+
+	public void setXp541(int xp541) {
+		this.xp541 = xp541;
+	}
+
+	public int getXp550() {
+		return xp550;
+	}
+
+	public void setXp550(int xp550) {
+		this.xp550 = xp550;
+	}
+
+	public void setMorale(int morale) {
+		this.morale = morale;
+	}
+
+	public void setSelfConfidence(int selfConfidence) {
+		this.selfConfidence = selfConfidence;
+	}
+
+	public void setSupportersPopularity(int supportersPopularity) {
+		this.supportersPopularity = supportersPopularity;
+	}
+
+	public void setRatingScore(int ratingScore) {
+		this.ratingScore = ratingScore;
+	}
+
+	public void setFanclubSize(int fanclubSize) {
+		this.fanclubSize = fanclubSize;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public void setFetchedDate(Timestamp fetchedDate) {
+		this.fetchedDate = fetchedDate;
+	}
+
+	private int xp352;
+	private int xp433;
+	private int xp442;
+	private int xp451;
+	private int xp532;
 	private int xp541;
+	private int xp550;
 	private int morale;
 	private int selfConfidence;
 	private int supportersPopularity;
 	private int ratingScore;
 	private int fanclubSize;
 	private int rank;
-	private String fetchedDate;
+	private Timestamp fetchedDate;
 	private boolean parsingSuccess;
 
-	NtTeamDetailsParser(String xmlData) {
+	public NtTeamDetails(ResultSet rs){
+		this.teamId = DBManager.getInteger(rs, "TEAM_ID");
+		this.hrfId = DBManager.getInteger(rs, "HRF_ID");
+		this.morale = DBManager.getInteger(rs, "MORALE");
+		this.selfConfidence = DBManager.getInteger(rs, "SELFCONFIDENCE");
+		this.xp253 = DBManager.getInteger(rs, "XP253");
+		this.xp343 = DBManager.getInteger(rs, "XP343");
+		this.xp352 = DBManager.getInteger(rs, "XP352");
+		this.xp433 = DBManager.getInteger(rs, "XP433");
+		this.xp442 = DBManager.getInteger(rs, "XP442");
+		this.xp451 = DBManager.getInteger(rs, "XP451");
+		this.xp532 = DBManager.getInteger(rs, "XP532");
+		this.xp541 = DBManager.getInteger(rs, "XP541");
+		this.xp550 = DBManager.getInteger(rs, "XP550");
+		this.teamName = DBManager.getString(rs,"NAME");
+		this.teamNameShort = DBManager.getString(rs,"SHORTNAME");
+		this.coachId = DBManager.getInteger(rs, "COACHID");
+		this.coachName = DBManager.getString(rs,"COACHNAME");
+		this.leagueId = DBManager.getInteger(rs, "LEAGUEID");
+		this.leagueName = DBManager.getString(rs,"LEAGUENAME");
+		this.trainerId = DBManager.getInteger(rs, "TRAINERID");
+		this.trainerName = DBManager.getString(rs,"TRAINERNAME");
+		this.supportersPopularity = DBManager.getInteger(rs, "SUPPORTERPOPULARITY");
+		this.ratingScore = DBManager.getInteger(rs, "RATING");
+		this.fanclubSize = DBManager.getInteger(rs, "FANCLUBSIZE");
+		this.rank = DBManager.getInteger(rs, "RANK");
+		this.fetchedDate = DBManager.getTimestamp(rs, "FETCHEDDATE");
+	}
+
+	NtTeamDetails(String xmlData) {
 	    parseDetails(XMLManager.parseString(xmlData));
 	}
 
@@ -45,7 +200,7 @@ class NtTeamDetailsParser {
             Element root = doc.getDocumentElement();
             Element teamRoot;
             Element ele = (Element)root.getElementsByTagName("FetchedDate").item(0);
-            fetchedDate = XMLManager.getFirstChildNodeValue(ele);
+            fetchedDate = Basics.parseHattrickDate(XMLManager.getFirstChildNodeValue(ele));
 
             // root Team
             teamRoot = (Element) root.getElementsByTagName("Team").item(0);
@@ -116,95 +271,99 @@ class NtTeamDetailsParser {
         }
 	}
 
-	int getTeamId() {
+	public int getTeamId() {
 		return teamId;
 	}
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
+	}
 
-	String getTeamName() {
+
+	public String getTeamName() {
 		return teamName;
 	}
 
-	long getCoachId() {
+	public long getCoachId() {
 		return coachId;
 	}
 
-	String getCoachName() {
+	public String getCoachName() {
 		return coachName;
 	}
 
-	int getLeagueId() {
+	public int getLeagueId() {
 		return leagueId;
 	}
 
-	String getLeagueName() {
+	public String getLeagueName() {
 		return leagueName;
 	}
 
-	long getTrainerId() {
+	public long getTrainerId() {
 		return trainerId;
 	}
 
-	String getTrainerName() {
+	public String getTrainerName() {
 		return trainerName;
 	}
 
-	String getHomePageUrl() {
+	public String getHomePageUrl() {
 		return homePageUrl;
 	}
 
-	int getXp433() {
+	public int getXp433() {
 		return xp433;
 	}
 
-	int getXp451() {
+	public int getXp451() {
 		return xp451;
 	}
 
-	int getXp352() {
+	public int getXp352() {
 		return xp352;
 	}
 
-	int getXp532() {
+	public int getXp532() {
 		return xp532;
 	}
 
-	int getXp343() {
+	public int getXp343() {
 		return xp343;
 	}
 
-	int getXp541() {
+	public int getXp541() {
 		return xp541;
 	}
 
-	int getMorale() {
+	public int getMorale() {
 		return morale;
 	}
 
-	int getSelfConfidence() {
+	public int getSelfConfidence() {
 		return selfConfidence;
 	}
 
-	int getSupportersPopularity() {
+	public int getSupportersPopularity() {
 		return supportersPopularity;
 	}
 
-	int getRatingScore() {
+	public int getRatingScore() {
 		return ratingScore;
 	}
 
-	int getFanclubSize() {
+	public int getFanclubSize() {
 		return fanclubSize;
 	}
 
-	int getRank() {
+	public int getRank() {
 		return rank;
 	}
 
-	String getTeamNameShort() {
+	public String getTeamNameShort() {
 		return teamNameShort;
 	}
 
-	String getFetchedDate() {
+	public Timestamp getFetchedDate() {
 		return fetchedDate;
 	}
 
@@ -233,5 +392,13 @@ class NtTeamDetailsParser {
 		sb.append("\n\tfanclubSize:          " + fanclubSize);
 		sb.append("\n\trank:                 " + rank);
 		return sb.toString();
+	}
+
+	public int getHrfId() {
+		return hrfId;
+	}
+
+	public void setHrfId(int hrfId) {
+		this.hrfId = hrfId;
 	}
 }

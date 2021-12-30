@@ -133,8 +133,7 @@ public class SystemManager {
 		updating = true;
 		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
 		if (MatchPopulator.getAnalyzedMatch().size() > 0) {
-				teamReport = new TeamReport(matchDetails);
-				setReportedTeamId(getActiveTeamId());
+				teamReport = new TeamReport(getActiveTeamId(), matchDetails);
 		} else {
 			teamReport = null;
 		}
@@ -161,7 +160,7 @@ public class SystemManager {
 
 	public static TeamReport getTeamReport() {
 		if ( teamReport == null){
-			teamReport = new TeamReport(new ArrayList<>()); // create an empty team report
+			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>()); // create an empty team report
 		}
 		return teamReport;
 	}
@@ -169,13 +168,5 @@ public class SystemManager {
 	public static void adjustRatingsLineup(TeamData newRatings) {
 		getTeamReport().adjustRatingsLineup(newRatings);
 		updateUI();
-	}
-
-	public static int getReportedTeamId() {
-		return reportedTeamId;
-	}
-
-	public static void setReportedTeamId(int reportedTeamId) {
-		SystemManager.reportedTeamId = reportedTeamId;
 	}
 }

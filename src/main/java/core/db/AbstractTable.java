@@ -182,12 +182,16 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	public boolean tryDropPrimaryKey()throws SQLException {
-		if ( primaryKeyExists() ){
-			adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
-			return true;
-		}
-		return false;
+	public void tryDropPrimaryKey()throws SQLException {
+		adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY IF EXISTS");
+	}
+
+	public void tryDropIndex(String index)throws SQLException {
+		adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP INDEX (" + index + ") IF EXISTS");
+	}
+
+	public void tryAddIndex(String indexName, String columns)throws SQLException {
+		adapter.executeQuery("ALTER TABLE " + getTableName() + " ADD INDEX " + indexName + " (" + columns + ") IF NOT EXISTS");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {

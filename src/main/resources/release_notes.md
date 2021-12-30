@@ -7,9 +7,6 @@
 
 ### GUI
 
-### Finance
-* fix finance bug concerning missing spectators' income in misc module (#1282)
-
 ### Statistics
 
 ### Squad
@@ -39,6 +36,7 @@
 * fix set pieces is not limited by top3 skill rules (#1309)
 
 ### Misc
+* fix finance bug concerning missing spectators' income in misc module (#1282)
 * fix last weeks profit/loss and temporary income sum (#1301)
 
 ## Translations
