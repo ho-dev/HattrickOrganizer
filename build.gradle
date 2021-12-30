@@ -236,7 +236,9 @@ task makeAllmedias(dependsOn: 'media') {
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
     dependsOn 'markdownToHtml'
-    projectFile = "${projectDir}/utils/buildResources/HO.install4j" as Object
+    projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
+    variables = []
+    variableFiles = []
 
     // 60 -> Windows Setup
     // 1203  -> Windows Setup (32 bits)
