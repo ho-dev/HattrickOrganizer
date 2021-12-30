@@ -73,7 +73,7 @@ public class HOZip extends File {
      * @throws Exception
      */
     @Override
-	public void finalize() throws Exception {
+    protected void finalize() throws Exception {
         if (zOut != null) {
             zOut.finish();
             zOut.close();
