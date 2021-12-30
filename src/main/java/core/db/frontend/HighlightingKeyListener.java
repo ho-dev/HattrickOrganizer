@@ -32,7 +32,7 @@ final class HighlightingKeyListener extends KeyAdapter{
         try
         {
             if(keyEvent.getKeyCode() == 86 && keyEvent.isControlDown() || keyEvent.getKeyCode() == 17)
-                coloringWords(caretPastePosition, new Integer(textPane.getCaretPosition() - caretPastePosition));
+                coloringWords(caretPastePosition, textPane.getCaretPosition() - caretPastePosition);
             if(keyEvent.getKeyCode() != 10) {
                 coloringWords(textPane.getCaretPosition(), null);
                 if(keyEvent.getKeyCode() == 32)
@@ -70,7 +70,7 @@ final class HighlightingKeyListener extends KeyAdapter{
                     doc.setCharacterAttributes(word[0], word[1], doc.getStyle("regular"), true);
             }
         } else {
-            for(int pos = initPos; pos < initPos + length.intValue(); pos = pos + word[1] + 1) {
+            for(int pos = initPos; pos < initPos + length; pos = pos + word[1] + 1) {
                 word = getNextWord(pos);
                 coloringWords(pos, null);
             }

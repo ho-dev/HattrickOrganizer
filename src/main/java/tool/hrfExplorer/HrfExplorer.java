@@ -216,7 +216,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		m_kurzInfo = DBManager.instance().getMatchesKurzInfo(m_TeamID);
 		for(int ii = 0; ii < m_kurzInfo.length; ii++)
 		{
-			m_HashTable_MatchTyp.put(new Integer(m_kurzInfo[ii].getMatchID()),new Integer(m_kurzInfo[ii].getMatchType().getId()));
+			m_HashTable_MatchTyp.put(m_kurzInfo[ii].getMatchID(), m_kurzInfo[ii].getMatchType().getId());
 		}
 
         // Namen der Tage in m_Ar_days schreiben
@@ -737,17 +737,17 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					int id = m_queryResult.getInt("HRF_ID");
 					int tag = Integer.parseInt((datum.toString()).substring(8,10));
 					String strDatum = datum.toString().substring(0,19);
-					if(m_HashTable_DayInDB.containsKey(new Integer(tag)))
+					if(m_HashTable_DayInDB.containsKey(tag))
 					{
-						Hashtable tmp = (Hashtable)m_HashTable_DayInDB.get(new Integer(tag));
-						tmp.put(new Integer(id),strDatum);
-						m_HashTable_DayInDB.put(new Integer(tag),tmp);
+						Hashtable tmp = (Hashtable)m_HashTable_DayInDB.get(tag);
+						tmp.put(id,strDatum);
+						m_HashTable_DayInDB.put(tag,tmp);
 					}
 					else
 					{
 						Hashtable tmp = new Hashtable();
-						tmp.put(new Integer(id),strDatum);
-						m_HashTable_DayInDB.put(new Integer(tag),tmp);
+						tmp.put(id,strDatum);
+						m_HashTable_DayInDB.put(tag,tmp);
 					}
 				}
 			}
@@ -782,29 +782,29 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					int match_id = m_queryResult.getInt("MATCHID");
 					int tag = Integer.parseInt((datum.toString()).substring(8,10));
 					String strDatum = datum.toString().substring(0,19);
-					int matchTyp = ((Integer)m_HashTable_MatchTyp.get(new Integer(match_id))).intValue();
+					int matchTyp = (Integer) m_HashTable_MatchTyp.get(match_id);
 
 					if(matchTyp == MatchType.LEAGUE.getId())
 					{
-						m_HashTable_isEvent.put(new Integer(tag),"L");
+						m_HashTable_isEvent.put(tag,"L");
 					}
 					else if(matchTyp == MatchType.CUP.getId())
 					{
-						m_HashTable_isEvent.put(new Integer(tag),"P");
+						m_HashTable_isEvent.put(tag,"P");
 					}
 					else if(matchTyp == MatchType.FRIENDLYNORMAL.getId()
 							|| matchTyp == MatchType.FRIENDLYCUPRULES.getId())
 					{
-						m_HashTable_isEvent.put(new Integer(tag),"F");
+						m_HashTable_isEvent.put(tag,"F");
 					}
 					else if(matchTyp == MatchType.INTFRIENDLYNORMAL.getId()
 							|| matchTyp == MatchType.INTFRIENDLYCUPRULES.getId())
 					{
-						m_HashTable_isEvent.put(new Integer(tag),"I");
+						m_HashTable_isEvent.put(tag,"I");
 					}
 					else if(matchTyp == MatchType.QUALIFICATION.getId())
 					{
-						m_HashTable_isEvent.put(new Integer(tag),"Q");
+						m_HashTable_isEvent.put(tag,"Q");
 					}
 					m_kurzInfo = null;
 				}
@@ -869,7 +869,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	public void createDetailTable(String hashwert)
 	{
 		HrfDetails selectedObject = (HrfDetails)m_HashTable_Details.get((String)hashwert);
-    	if(m_HashTable_Details_ColHeader.containsKey(selectedObject.getStr_Datum()) == false)
+    	if(!m_HashTable_Details_ColHeader.containsKey(selectedObject.getStr_Datum()))
     	{
     		m_HashTable_Details_ColHeader.put(selectedObject.getStr_Datum(),selectedObject);
 			//erstellen der Detailtabelle
@@ -999,7 +999,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	public static boolean hrfForDay(int tag)
 	{
 		boolean return_value = false;
-		if(m_HashTable_DayInDB.containsKey(new Integer(tag)))
+		if(m_HashTable_DayInDB.containsKey(tag))
 		{
 			return_value = true;
 		}
@@ -1014,7 +1014,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	public static boolean isSpecialEvent(int tag)
 	{
 		boolean return_value = false;
-		if(m_HashTable_isEvent.containsKey(new Integer(tag)))
+		if(m_HashTable_isEvent.containsKey(tag))
 		{
 			return_value = true;
 		}
@@ -1028,7 +1028,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public static String getSpecialEvent(int tag)
 	{
-		return m_HashTable_isEvent.get(new Integer(tag)).toString();
+		return m_HashTable_isEvent.get(tag).toString();
 	}
 
 	/******************
@@ -1117,7 +1117,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					HrfFileDetails tmp = new HrfFileDetails(m_files[ii].getPath());
 					tmp_Datum = tmp.getStr_Datum().substring(0,10);
 					tmp_Pfad = tmp.getPfad();
-					if(m_V_Filelist_Keys.contains(tmp_Pfad) == false)
+					if(!m_V_Filelist_Keys.contains(tmp_Pfad))
 					{
 						m_TableModel_Filelist.addRow(tmp.getDatenVector());
 						m_HashTable_Details.put(tmp_Pfad,tmp);
@@ -1146,9 +1146,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(ii);
 					String dateiPfad = tmpV.elementAt(tmpV.size()-1).toString();
 					//String dateiPfad = m_TableModel_Filelist.getValueAt(ii,m_TableModel_Filelist.getColumnCount()).toString();
-					if(((Boolean)m_TableModel_Filelist.getValueAt(ii,0)).booleanValue() == true
+					if((Boolean) m_TableModel_Filelist.getValueAt(ii, 0)
 							&& m_HashTable_DatumKey.containsValue(dateiPfad)
-							&& m_HashTable_Import.containsKey((String)dateiPfad) == false)
+							&& !m_HashTable_Import.containsKey((String) dateiPfad))
 					{
 						Vector tmp = new Vector();
 						tmp.add(dateiPfad);
@@ -1171,7 +1171,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 			for(int ii = 0; ii < anzRows; ii++)
 			{
-				if(((Boolean)m_TableModel_Filelist.getValueAt(ii,0)).booleanValue() == true)
+				if((Boolean) m_TableModel_Filelist.getValueAt(ii, 0))
 				{
 					Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(ii);
 					String delete_key = tmpV.elementAt(tmpV.size()-1).toString();
@@ -1202,7 +1202,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 			for(int i = 0; i < anzRows; i++)
         	{
-        		if(((Boolean)m_TableModel_Filelist.getValueAt(i,0)).booleanValue() == true && m_TableModel_Filelist.getValueAt(i,1).equals("---") == false)
+        		if((Boolean) m_TableModel_Filelist.getValueAt(i, 0) && !m_TableModel_Filelist.getValueAt(i, 1).equals("---"))
         		{
         			Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(i);
         			String deletePath = tmpV.elementAt(tmpV.size()-1).toString();
@@ -1237,12 +1237,12 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			//int anzCols = m_TableModel_Filelist.getDataVector().capacity();
 			for(int i = 0; i < anzRows; i++)
         	{
-        		if(((Boolean)m_TableModel_Filelist.getValueAt(i,0)).booleanValue() == true
-        				&& m_TableModel_Filelist.getValueAt(i,1).equals("---") == true)
+        		if((Boolean) m_TableModel_Filelist.getValueAt(i, 0)
+        				&& m_TableModel_Filelist.getValueAt(i, 1).equals("---"))
         		{
         			//Holen der HRF_ID
         			Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(i);
-        			int deleteHRF_ID = ((Integer)tmpV.elementAt(tmpV.size()-1)).intValue();
+        			int deleteHRF_ID = (Integer) tmpV.elementAt(tmpV.size() - 1);
         			//int deleteHRF_ID = ((Integer)(m_TableModel_Filelist.getValueAt(i,m_TableModel_Filelist.getDataVector().capacity()))).intValue();
 
         			//Tabelle und die Zählwerte anpassen
@@ -1266,7 +1266,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			{
 				Vector tmpV = (Vector)(m_TableModel_Filelist.getDataVector()).elementAt(ii);
 				String hashKey = tmpV.elementAt(tmpV.size()-1).toString();
-				m_TableModel_Filelist.setValueAt(new Boolean(true),ii,0);
+				m_TableModel_Filelist.setValueAt(Boolean.TRUE,ii,0);
 				createDetailTable(hashKey);
 			}
 		}
@@ -1376,7 +1376,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					tag = Integer.parseInt(tmpObj.toString());
 					// id =((Integer)m_HashTable_DayInDB.get(new
 					// Integer(tag))).intValue();
-					Hashtable tmp = (Hashtable) m_HashTable_DayInDB.get(new Integer(tag));
+					Hashtable tmp = (Hashtable) m_HashTable_DayInDB.get(tag);
 					Enumeration enu = (tmp != null ? tmp.keys() : null);
 					while (enu != null && enu.hasMoreElements()) {
 						TagesIDs.add(enu.nextElement());
@@ -1385,16 +1385,16 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			}
     		for(int ii = 0; ii < TagesIDs.size(); ii++)
     		{
-    			id = ((Integer)TagesIDs.elementAt(ii)).intValue();
+    			id = (Integer) TagesIDs.elementAt(ii);
 	    		if(id != 0)
 	    		{
 	    			//doSelect("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,TWTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
 		    		HrfDbDetails dbDetail = new HrfDbDetails(id);
-		    		if(m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()) == false)
+		    		if(!m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()))
 		    		{
 		    			m_TableModel_Filelist.addRow(dbDetail.getDatenVector());
 		    			m_HashTable_Details.put("" + dbDetail.getHrf_ID(),dbDetail);
-		    			m_V_Filelist_Keys.add(new Integer(id));
+		    			m_V_Filelist_Keys.add(id);
 		    			m_Table_Filelist.revalidate();
 		    			m_Table_Filelist.repaint();
 		    		}
@@ -1527,7 +1527,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			{
 				int tmp_id = Integer.parseInt(m_V_Filelist_Keys.elementAt(ii).toString());
 				HrfDbDetails dbDetail = new HrfDbDetails(tmp_id);
-	    		if(m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()) == false)
+	    		if(!m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()))
 	    		{
 	    			m_TableModel_Filelist.addRow(dbDetail.getDatenVector());
 	    			m_HashTable_Details.put("" + dbDetail.getHrf_ID(),dbDetail);

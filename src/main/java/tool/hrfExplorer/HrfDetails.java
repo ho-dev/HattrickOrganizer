@@ -181,15 +181,15 @@ class HrfDetails {
 	Vector<Object> getTeamData() {
 		Vector<Object> teamData = new Vector<Object>();
 		teamData.add(getTeamName());
-		teamData.add(Integer.valueOf(getTeamID()));
+		teamData.add(getTeamID());
 		teamData.add(getStimmung());
 		teamData.add(getSelbstvertrauen());
-		teamData.add(Integer.valueOf(getAnzSpieler()));
-		teamData.add(Integer.valueOf(getAnzCoTrainer()));
-		teamData.add(Integer.valueOf(getAnzTwTrainer()));
+		teamData.add(getAnzSpieler());
+		teamData.add(getAnzCoTrainer());
+		teamData.add(getAnzTwTrainer());
 		teamData.add(getTrArt());
-		teamData.add(Integer.valueOf(getTrInt()));
-		teamData.add(Integer.valueOf(getFans()));
+		teamData.add(getTrInt());
+		teamData.add(getFans());
 		return teamData;
 	}
 
@@ -198,13 +198,13 @@ class HrfDetails {
 	 */
 	Vector<Object> getLigaData() {
 		Vector<Object> ligaData = new Vector<Object>();
-		ligaData.add(new Integer(getSaison()));
+		ligaData.add(getSaison());
 		ligaData.add(getLiga());
-		ligaData.add(new Integer(getSpieltag()));
-		ligaData.add(new Integer(getPunkte()));
-		ligaData.add(new Integer(getToreFuer()));
-		ligaData.add(new Integer(getToreGegen()));
-		ligaData.add(new Integer(getPlatz()));
+		ligaData.add(getSpieltag());
+		ligaData.add(getPunkte());
+		ligaData.add(getToreFuer());
+		ligaData.add(getToreGegen());
+		ligaData.add(getPlatz());
 		return ligaData;
 	}
 

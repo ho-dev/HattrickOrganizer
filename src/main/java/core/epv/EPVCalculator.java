@@ -26,29 +26,29 @@ class EPVCalculator
     }
 
     private void normalize (Map<String,Double> inputMap) {
-    	double age = inputMap.get("age").doubleValue();
-    	inputMap.put("age", new Double(age-17));
+    	double age = inputMap.get("age");
+    	inputMap.put("age", age - 17);
     }
 
     final double getPrice (EPVData iepvdata, int week, double currencyRate) {
     	Map<String,Double> inputMap = new HashMap<String,Double>();
-    	inputMap.put("age", new Double(iepvdata.getAge() + iepvdata.getAgeDays()/112d));
-    	inputMap.put("fo", new Double(iepvdata.getForm()));
-    	inputMap.put("xp", new Double(iepvdata.getExperience()));
-    	inputMap.put("lead", new Double(iepvdata.getLeadership()));
-    	inputMap.put("st", new Double(iepvdata.getStamina()));
-    	inputMap.put("gk", new Double(iepvdata.getGoalKeeping()));
-    	inputMap.put("pm", new Double(iepvdata.getPlayMaking()));
-    	inputMap.put("ps", new Double(iepvdata.getPassing()));
-    	inputMap.put("wi", new Double(iepvdata.getWing()));
-    	inputMap.put("de", new Double(iepvdata.getDefense()));
-    	inputMap.put("sc", new Double(iepvdata.getAttack()));
-    	inputMap.put("sp", new Double(iepvdata.getSetPieces()));
-    	inputMap.put("spec", new Double(iepvdata.getSpeciality()));
-    	inputMap.put("agg", new Double(iepvdata.getAggressivity()));
-    	inputMap.put("pop", new Double(iepvdata.getPopularity()));
-    	inputMap.put("hon", new Double(iepvdata.getHonesty()));
-    	inputMap.put("week", new Double(week));
+    	inputMap.put("age", iepvdata.getAge() + iepvdata.getAgeDays() / 112d);
+    	inputMap.put("fo", (double) iepvdata.getForm());
+    	inputMap.put("xp", (double) iepvdata.getExperience());
+    	inputMap.put("lead", (double) iepvdata.getLeadership());
+    	inputMap.put("st", iepvdata.getStamina());
+    	inputMap.put("gk", iepvdata.getGoalKeeping());
+    	inputMap.put("pm", iepvdata.getPlayMaking());
+    	inputMap.put("ps", iepvdata.getPassing());
+    	inputMap.put("wi", iepvdata.getWing());
+    	inputMap.put("de", iepvdata.getDefense());
+    	inputMap.put("sc", iepvdata.getAttack());
+    	inputMap.put("sp", iepvdata.getSetPieces());
+    	inputMap.put("spec", (double) iepvdata.getSpeciality());
+    	inputMap.put("agg", (double) iepvdata.getAggressivity());
+    	inputMap.put("pop", (double) iepvdata.getPopularity());
+    	inputMap.put("hon", (double) iepvdata.getHonesty());
+    	inputMap.put("week", (double) week);
 
     	normalize (inputMap); // Normalize
 

@@ -84,7 +84,7 @@ public class PlayerConverter {
             skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(java.util.Locale.ENGLISH));
 
             for (int k = 0; k < skills.size(); k++) {
-                skillvalues.add(new Integer(k));
+                skillvalues.add(k);
             }
 
             // Sort skills by length (shortest first)
@@ -1029,9 +1029,9 @@ public class PlayerConverter {
 
                 if (k >= 0) {
                     final List<Object> pair = new ArrayList<Object>();
-                    pair.add(new Integer(k));
+                    pair.add(k);
                     pair.add(singleskill);
-                    pair.add(new Integer(p));
+                    pair.add(p);
                     foundskills.add(pair);
 
                     final char[] ct = new char[singleskill.length()];
@@ -1060,7 +1060,7 @@ public class PlayerConverter {
                     final List<Object> ts1 = foundskills.get(k - 1);
                     final List<Object> ts2 = foundskills.get(k);
 
-                    if (((Integer) ts1.get(0)).intValue() > ((Integer) ts2.get(0)).intValue()) {
+                    if ((Integer) ts1.get(0) > (Integer) ts2.get(0)) {
                         foundskills.set(k - 1, ts2);
                         foundskills.set(k, ts1);
                         k++;
@@ -1107,9 +1107,9 @@ public class PlayerConverter {
                 	}
                 	if (!skip) {
                 		final List<Object> pair = new ArrayList<Object>();
-                		pair.add(Integer.valueOf(k));
+                		pair.add(k);
                 		pair.add(singlespeciality);
-                		pair.add(Integer.valueOf(p));
+                		pair.add(p);
                 		foundspecialities.add(pair);
                 	}
 
@@ -1147,7 +1147,7 @@ public class PlayerConverter {
                     final List<Object> ts1 = foundspecialities.get(k - 1);
                     final List<Object> ts2 = foundspecialities.get(k);
 
-                    if (((Integer) ts1.get(0)).intValue() > ((Integer) ts2.get(0)).intValue()) {
+                    if ((Integer) ts1.get(0) > (Integer) ts2.get(0)) {
                         foundspecialities.set(k - 1, ts2);
                         foundspecialities.set(k, ts1);
                         k++;
@@ -1160,7 +1160,7 @@ public class PlayerConverter {
             }
 
             if (foundspecialities.size() > 0) {
-                player.setSpeciality((specialitiesvalues.get(((Integer) (foundspecialities.get(0)).get(2)).intValue())).intValue());
+                player.setSpeciality(specialitiesvalues.get((Integer) (foundspecialities.get(0)).get(2)));
             } else {
                 player.setSpeciality(0);
             }
@@ -1177,18 +1177,18 @@ public class PlayerConverter {
      */
     private void setSkillsBarStyle(Player player, final List<List<Object>> foundskills) throws Exception {
     	// player skills (long default format with bars)
-    	player.setForm((skillvalues.get(((Integer) (foundskills.get(0)).get(2)).intValue())).intValue());
-    	player.setStamina((skillvalues.get(((Integer) (foundskills.get(1)).get(2)).intValue())).intValue());
-    	player.setExperience((skillvalues.get(((Integer) (foundskills.get(2)).get(2)).intValue())).intValue());
-    	player.setLeadership((skillvalues.get(((Integer) (foundskills.get(3)).get(2)).intValue())).intValue());
+    	player.setForm(skillvalues.get((Integer) (foundskills.get(0)).get(2)));
+    	player.setStamina(skillvalues.get((Integer) (foundskills.get(1)).get(2)));
+    	player.setExperience(skillvalues.get((Integer) (foundskills.get(2)).get(2)));
+    	player.setLeadership(skillvalues.get((Integer) (foundskills.get(3)).get(2)));
 
-    	player.setGoalKeeping((skillvalues.get(((Integer) (foundskills.get(5)).get(2)).intValue())).intValue());
-    	player.setDefense((skillvalues.get(((Integer) (foundskills.get(6)).get(2)).intValue())).intValue());
-    	player.setPlayMaking((skillvalues.get(((Integer) (foundskills.get(7)).get(2)).intValue())).intValue());
-    	player.setWing((skillvalues.get(((Integer) (foundskills.get(8)).get(2)).intValue())).intValue());
-    	player.setPassing((skillvalues.get(((Integer) (foundskills.get(9)).get(2)).intValue())).intValue());
-    	player.setAttack((skillvalues.get(((Integer) (foundskills.get(10)).get(2)).intValue())).intValue());
-    	player.setSetPieces((skillvalues.get(((Integer) (foundskills.get(11)).get(2)).intValue())).intValue());
+    	player.setGoalKeeping(skillvalues.get((Integer) (foundskills.get(5)).get(2)));
+    	player.setDefense(skillvalues.get((Integer) (foundskills.get(6)).get(2)));
+    	player.setPlayMaking(skillvalues.get((Integer) (foundskills.get(7)).get(2)));
+    	player.setWing(skillvalues.get((Integer) (foundskills.get(8)).get(2)));
+    	player.setPassing(skillvalues.get((Integer) (foundskills.get(9)).get(2)));
+    	player.setAttack(skillvalues.get((Integer) (foundskills.get(10)).get(2)));
+    	player.setSetPieces(skillvalues.get((Integer) (foundskills.get(11)).get(2)));
     }
 
     /**
@@ -1196,18 +1196,18 @@ public class PlayerConverter {
      */
     private void setSkillsClassicStyle(Player player, final List<List<Object>> foundskills) throws Exception {
     	// player skills (2er format without bars)
-	    player.setForm((skillvalues.get(((Integer) (foundskills.get(0)).get(2)).intValue())).intValue());
-	    player.setStamina((skillvalues.get(((Integer) (foundskills.get(1)).get(2)).intValue())).intValue());
-	    player.setExperience((skillvalues.get(((Integer) (foundskills.get(2)).get(2)).intValue())).intValue());
-	    player.setLeadership((skillvalues.get(((Integer) (foundskills.get(3)).get(2)).intValue())).intValue());
+	    player.setForm(skillvalues.get((Integer) (foundskills.get(0)).get(2)));
+	    player.setStamina(skillvalues.get((Integer) (foundskills.get(1)).get(2)));
+	    player.setExperience(skillvalues.get((Integer) (foundskills.get(2)).get(2)));
+	    player.setLeadership(skillvalues.get((Integer) (foundskills.get(3)).get(2)));
 
-   	    player.setGoalKeeping(((Integer) skillvalues.get(((Integer) (foundskills.get(6)).get(2)).intValue())).intValue());
-	    player.setDefense(((Integer) skillvalues.get(((Integer) (foundskills.get(10)).get(2)).intValue())).intValue());
-	    player.setPlayMaking(((Integer) skillvalues.get(((Integer) (foundskills.get(7)).get(2)).intValue())).intValue());
-	    player.setWing(((Integer) skillvalues.get(((Integer) (foundskills.get(9)).get(2)).intValue())).intValue());
-	    player.setPassing(((Integer) skillvalues.get(((Integer) (foundskills.get(8)).get(2)).intValue())).intValue());
-	    player.setAttack(((Integer) skillvalues.get(((Integer) (foundskills.get(11)).get(2)).intValue())).intValue());
-	    player.setSetPieces(((Integer) skillvalues.get(((Integer) (foundskills.get(12)).get(2)).intValue())).intValue());
+   	    player.setGoalKeeping((Integer) skillvalues.get((Integer) (foundskills.get(6)).get(2)));
+	    player.setDefense((Integer) skillvalues.get((Integer) (foundskills.get(10)).get(2)));
+	    player.setPlayMaking((Integer) skillvalues.get((Integer) (foundskills.get(7)).get(2)));
+	    player.setWing((Integer) skillvalues.get((Integer) (foundskills.get(9)).get(2)));
+	    player.setPassing((Integer) skillvalues.get((Integer) (foundskills.get(8)).get(2)));
+	    player.setAttack((Integer) skillvalues.get((Integer) (foundskills.get(11)).get(2)));
+	    player.setSetPieces((Integer) skillvalues.get((Integer) (foundskills.get(12)).get(2)));
     }
 
     public static int getPrice(String bid, String curbid) {

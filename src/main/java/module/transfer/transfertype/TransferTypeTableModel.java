@@ -107,7 +107,7 @@ class TransferTypeTableModel extends AbstractTableModel {
 
         switch (columnIndex) {
             case 0:
-                return new Integer(transfer.getPlayerId());
+                return transfer.getPlayerId();
 
             case 1:
                 return transfer.getPlayerName();
@@ -116,7 +116,7 @@ class TransferTypeTableModel extends AbstractTableModel {
                 return TransferTypes.getTransferDesc(transfer.getTransferType());
 
             case 3:
-                return new Integer(transfer.getIncome());
+                return transfer.getIncome();
 
             default:
                 return ""; //$NON-NLS-1$

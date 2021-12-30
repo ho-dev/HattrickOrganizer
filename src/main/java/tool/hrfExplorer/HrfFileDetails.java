@@ -141,15 +141,15 @@ public class HrfFileDetails extends HrfDetails
 	public Vector getDatenVector()
 	{
 		Vector daten = new Vector();
-		daten.add(new Boolean(false));
+		daten.add(Boolean.FALSE);
 		daten.add(getName());
 		daten.add(getStr_Datum());
 		daten.add(getWochentag());
-		daten.add(new Integer(getKw()));
-		daten.add(new Integer(getSaison()));
+		daten.add(getKw());
+		daten.add(getSaison());
 		daten.add(getLiga());
 		daten.add(getTrArt());
-		daten.add(new Integer(getTrInt()));
+		daten.add(getTrInt());
 		daten.add(getBild());
 		daten.add(getPfad());
 		
