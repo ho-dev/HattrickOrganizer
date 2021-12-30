@@ -16,7 +16,7 @@ import java.util.Vector;
 class HrfDbDetails extends HrfDetails {
 	String m_name;
 	int m_hrf_ID;
-	private ResultSet m_result = null;
+	private ResultSet m_result;
 	
 	HrfDbDetails(int id) {
 		super();
@@ -69,17 +69,17 @@ class HrfDbDetails extends HrfDetails {
 	Vector<Object> getDatenVector()
 	{
 		Vector<Object> daten = new Vector<Object>();
-		daten.add(new Boolean(false));
+		daten.add(Boolean.FALSE);
 		daten.add(getName());
 		daten.add(getStr_Datum());
 		daten.add(getWochentag());
-		daten.add(new Integer(getKw()));
-		daten.add(new Integer(getSaison()));
+		daten.add(getKw());
+		daten.add(getSaison());
 		daten.add(getLiga());
 		daten.add(getTrArt());
-		daten.add(new Integer(getTrInt()));
+		daten.add(getTrInt());
 		daten.add(getBild());
-		daten.add(new Integer(getHrf_ID()));
+		daten.add(getHrf_ID());
 		
 		return daten;
 	}

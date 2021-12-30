@@ -72,7 +72,7 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
                                                  int row, int column) {
-        editor = editors.get(Integer.valueOf(row));
+        editor = editors.get(row);
 
         if (editor == null) {
             editor = defaultEditor;
@@ -110,7 +110,7 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
     }
 
     public void add(int row, TableCellEditor teditor) {
-        editors.put(new Integer(row), teditor);
+        editors.put(row, teditor);
     }
 
     @Override

@@ -50,7 +50,7 @@ class MatchScoreTable extends JTable {
 			final TableColumnModel tableColumnModel = getColumnModel();
 
 			for (int i = 0; i < 3; i++) {
-				tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+				tableColumnModel.getColumn(i).setIdentifier(i);
 			}
 
 			m_clTableSorter.addMouseListenerToHeaderInTable(this);
@@ -63,12 +63,12 @@ class MatchScoreTable extends JTable {
 		setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
 		final TableColumnModel tableColumnModel = getColumnModel();
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setMaxWidth(Helper.calcCellWidth(100));		
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0))).setPreferredWidth(Helper.calcCellWidth(100));		
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setMaxWidth(Helper.calcCellWidth(200));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1))).setPreferredWidth(Helper.calcCellWidth(200));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setMaxWidth(Helper.calcCellWidth(200));		
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2))).setPreferredWidth(Helper.calcCellWidth(200));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0)).setMaxWidth(Helper.calcCellWidth(100));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0)).setPreferredWidth(Helper.calcCellWidth(100));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1)).setMaxWidth(Helper.calcCellWidth(200));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1)).setPreferredWidth(Helper.calcCellWidth(200));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2)).setMaxWidth(Helper.calcCellWidth(200));
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2)).setPreferredWidth(Helper.calcCellWidth(200));
 
 		setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		setRowSelectionAllowed(true);

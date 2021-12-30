@@ -88,25 +88,25 @@ class PlayerTransferTableModel extends AbstractTableModel {
                 return FORMAT.format(transfer.getDate());
 
             case 1:
-                return new Integer(transfer.getSeason());
+                return transfer.getSeason();
 
             case 2:
-                return new Integer(transfer.getWeek());
+                return transfer.getWeek();
 
             case 3:
                 return transfer.getBuyerName();
 
             case 4:
-                return new Integer(PlayerTransfer.BUY);
+                return PlayerTransfer.BUY;
 
             case 5:
                 return transfer.getSellerName();
 
             case 6:
-                return new Integer(transfer.getPrice());
+                return transfer.getPrice();
 
             case 7:
-                return new Integer(transfer.getTsi());
+                return transfer.getTsi();
 
             case 8:
                 return new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));

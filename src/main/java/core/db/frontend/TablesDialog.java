@@ -78,7 +78,7 @@ final class TablesDialog extends JDialog implements MouseListener {
         {
             columnData[i][0] = rs.getMetaData().getColumnName(i + 1);
             columnData[i][1] = rs.getMetaData().getColumnTypeName(i + 1);
-            columnData[i][2] = new Integer(rs.getMetaData().getColumnDisplaySize(i + 1));
+            columnData[i][2] = rs.getMetaData().getColumnDisplaySize(i + 1);
         }
 
         rs.close();

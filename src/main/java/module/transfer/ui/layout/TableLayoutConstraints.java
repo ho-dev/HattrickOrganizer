@@ -37,6 +37,8 @@ package module.transfer.ui.layout;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * TableLayoutConstraints binds components to their constraints.
  *
@@ -105,13 +107,13 @@ public class TableLayoutConstraints implements TableLayoutConstants {
             // Get the first column (assume component is in only one column)
             String tokenA = st.nextToken();
 
-            col1 = new Integer(tokenA).intValue();
+            col1 = parseInt(tokenA);
             col2 = col1;
 
             // Get the first row (assume component is in only one row)
             String tokenB = st.nextToken();
 
-            row1 = new Integer(tokenB).intValue();
+            row1 = parseInt(tokenB);
             row2 = row1;
 
             // Get next two tokens
@@ -120,8 +122,8 @@ public class TableLayoutConstraints implements TableLayoutConstants {
 
             try {
                 // Attempt to use tokens A and B as col2 and row2
-                col2 = new Integer(tokenA).intValue();
-                row2 = new Integer(tokenB).intValue();
+                col2 = parseInt(tokenA);
+                row2 = parseInt(tokenB);
 
                 // Get next two tokens
                 tokenA = st.nextToken();

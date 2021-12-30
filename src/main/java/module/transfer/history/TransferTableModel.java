@@ -91,10 +91,10 @@ class TransferTableModel extends AbstractTableModel {
                 return FORMAT.format(transfer.getDate());
 
             case 1:
-                return new Integer(transfer.getSeason());
+                return transfer.getSeason();
 
             case 2:
-                return new Integer(transfer.getWeek());
+                return transfer.getWeek();
 
             case 3:
 
@@ -105,7 +105,7 @@ class TransferTableModel extends AbstractTableModel {
                 }
 
             case 4:
-                return new Integer(transfer.getType());
+                return transfer.getType();
 
             case 5:
 
@@ -116,97 +116,97 @@ class TransferTableModel extends AbstractTableModel {
                 }
 
             case 6:
-                return new Integer(transfer.getPrice());
+                return transfer.getPrice();
 
             case 7:
-                return new Integer(transfer.getTsi());
+                return transfer.getTsi();
 
             case 8:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getFuehrung());
+                    return transfer.getPlayerInfo().getFuehrung();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 9:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getErfahrung());
+                    return transfer.getPlayerInfo().getErfahrung();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 10:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getForm());
+                    return transfer.getPlayerInfo().getForm();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 11:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getKondition());
+                    return transfer.getPlayerInfo().getKondition();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 12:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getGKskill());
+                    return transfer.getPlayerInfo().getGKskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 13:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getDEFskill());
+                    return transfer.getPlayerInfo().getDEFskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 14:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getPMskill());
+                    return transfer.getPlayerInfo().getPMskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 15:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getPSskill());
+                    return transfer.getPlayerInfo().getPSskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 16:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getWIskill());
+                    return transfer.getPlayerInfo().getWIskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 17:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getSCskill());
+                    return transfer.getPlayerInfo().getSCskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             case 18:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return new Integer(transfer.getPlayerInfo().getSPskill());
+                    return transfer.getPlayerInfo().getSPskill();
                 } else {
-                    return new Integer(-1);
+                    return -1;
                 }
 
             default:

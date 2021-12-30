@@ -62,7 +62,7 @@ final class SpielerPositionTable extends JTable {
 			final TableColumnModel tableColumnModel = getColumnModel();
 
 			for (int i = 0; i < 4; i++) {
-				tableColumnModel.getColumn(i).setIdentifier(new Integer(i));
+				tableColumnModel.getColumn(i).setIdentifier(i);
 			}
 
 			m_clTableSorter.addMouseListenerToHeaderInTable(this);
@@ -76,21 +76,21 @@ final class SpielerPositionTable extends JTable {
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
 		final TableColumnModel tableColumnModel = getColumnModel();
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0))
 				.setPreferredWidth(Helper.calcCellWidth(200));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(0)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(0))
 				.setMinWidth(Helper.calcCellWidth(20));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1))
 				.setMinWidth(Helper.calcCellWidth(20));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(1)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(1))
 				.setPreferredWidth(Helper.calcCellWidth(180));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2))
 				.setMinWidth(Helper.calcCellWidth(20));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(2)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(2))
 				.setPreferredWidth(Helper.calcCellWidth(180));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(3))
 				.setMinWidth(Helper.calcCellWidth(20));
-		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(Integer.valueOf(3)))
+		tableColumnModel.getColumn(tableColumnModel.getColumnIndex(3))
 				.setPreferredWidth(Helper.calcCellWidth(180));
 		setSelectionMode(0);
 		setRowSelectionAllowed(true);
