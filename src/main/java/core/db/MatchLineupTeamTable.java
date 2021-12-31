@@ -33,10 +33,11 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				new ColumnDescriptor("Tactic", Types.INTEGER, true)
 		};
 	}
+
 	@Override
-	protected String[] getCreateIndexStatement() {
+	protected  String[] getConstraintStatements() {
 		return new String[]{
-				"CREATE INDEX MATCHLINEUPTEAM_IDX ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
+				"  PRIMARY KEY (" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
 		};
 	}
 

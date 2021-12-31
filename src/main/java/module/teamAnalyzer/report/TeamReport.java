@@ -93,6 +93,20 @@ public class TeamReport {
         }
     }
 
+    public Integer getSelfConfidence() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getSelfConfidence();
+        }
+        return null;
+    }
+
+    public Integer getMorale() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getMorale();
+        }
+        return null;
+    }
+
     /**
      * Number of existing lineups in the team report
      *

@@ -796,7 +796,7 @@ public class MatchLineupTeam {
 		var minutesInSectors = playersMinutesInSector.get(playerId);
 		if ( minutesInSectors != null) {
 			for (var sector : minutesInSectors.entrySet()) {
-				if (accepted.contains(sector.getKey())) {
+				if (accepted==null  || accepted.contains(sector.getKey())) {
 					ret += sector.getValue();
 					if (ret >= 90) {
 						ret = 90;
