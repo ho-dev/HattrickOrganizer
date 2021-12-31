@@ -2,6 +2,7 @@
 
 ## Highlights
 * refactoring of lineup panel
+* tracking confidence and team spirit of nt teams
 
 ## Detailed Changelog
 
@@ -12,6 +13,7 @@
 ### Squad
 
 ### Team Analyser
+* display confidence and team spirit of nt team opponents (#1305)
 
 ### Rating
 * Initial calculation of the ratings takes into account the trainer type (#1281)

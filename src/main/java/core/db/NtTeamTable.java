@@ -7,14 +7,17 @@ import core.util.HOLogger;
 import module.nthrf.NtTeamDetails;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 final class NtTeamTable extends AbstractTable {
 	public final static String TABLENAME = "NTTEAM";
 
-	protected NtTeamTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
+	protected NtTeamTable(JDBCAdapter adapter) {
+		super(TABLENAME, adapter);
 	}
 
 	@Override
@@ -34,24 +37,24 @@ final class NtTeamTable extends AbstractTable {
 				new ColumnDescriptor("xp532", Types.INTEGER, false),
 				new ColumnDescriptor("xp541", Types.INTEGER, false),
 				new ColumnDescriptor("xp550", Types.INTEGER, false),
-				new ColumnDescriptor("NAME",Types.VARCHAR,true,127),
-				new ColumnDescriptor("SHORTNAME",Types.VARCHAR,true,127),
-				new ColumnDescriptor("COACHID",Types.INTEGER,true),
-				new ColumnDescriptor("COACHNAME",Types.VARCHAR,true,127),
-				new ColumnDescriptor("LEAGUEID",Types.INTEGER,true),
-				new ColumnDescriptor("LEAGUENAME",Types.VARCHAR,true,127),
-				new ColumnDescriptor("TRAINERID",Types.INTEGER,true),
-				new ColumnDescriptor("TRAINERNAME",Types.VARCHAR,true,127),
-				new ColumnDescriptor("SUPPORTERPOPULARITY",Types.INTEGER,true),
-				new ColumnDescriptor("RATING",Types.INTEGER,true),
-				new ColumnDescriptor("FANCLUBSIZE",Types.INTEGER,true),
-				new ColumnDescriptor("RANK",Types.INTEGER,true),
-				new ColumnDescriptor("FETCHEDDATE",Types.TIMESTAMP,true)
+				new ColumnDescriptor("NAME", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("SHORTNAME", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("COACHID", Types.INTEGER, true),
+				new ColumnDescriptor("COACHNAME", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("LEAGUEID", Types.INTEGER, true),
+				new ColumnDescriptor("LEAGUENAME", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("TRAINERID", Types.INTEGER, true),
+				new ColumnDescriptor("TRAINERNAME", Types.VARCHAR, true, 127),
+				new ColumnDescriptor("SUPPORTERPOPULARITY", Types.INTEGER, true),
+				new ColumnDescriptor("RATING", Types.INTEGER, true),
+				new ColumnDescriptor("FANCLUBSIZE", Types.INTEGER, true),
+				new ColumnDescriptor("RANK", Types.INTEGER, true),
+				new ColumnDescriptor("FETCHEDDATE", Types.TIMESTAMP, true)
 		};
 	}
 
 	@Override
-	protected  String[] getConstraintStatements() {
+	protected String[] getConstraintStatements() {
 		return new String[]{
 				"  PRIMARY KEY (HRF_ID, TEAM_ID)"
 		};
@@ -104,18 +107,67 @@ final class NtTeamTable extends AbstractTable {
 		try {
 			var sql = new StringBuilder();
 			sql.append("SELECT * FROM ").append(TABLENAME).append(" WHERE TEAM_ID=").append(teamId);
-			if ( matchDate != null ) sql.append(" AND FETCHEDDATE<'").append(matchDate).append("'");
+			if (matchDate != null) sql.append(" AND FETCHEDDATE<'").append(matchDate).append("'");
 			sql.append(" ORDER BY HRF_ID DESC LIMIT 1");
 			var rs = adapter.executeQuery(sql.toString());
 			if (rs != null) {
 				rs.first();
-				var team = new NtTeamDetails(rs);
+				var team = createNtTeamDetails(rs);
 				rs.close();
 				return team;
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			HOLogger.instance().error(getClass(), "Error while loading NT team details: " + e);
 		}
 		return null;
+	}
+
+	private NtTeamDetails createNtTeamDetails(ResultSet rs) {
+		var team = new NtTeamDetails();
+		team.setTeamId(DBManager.getInteger(rs, "TEAM_ID"));
+		team.setHrfId(DBManager.getInteger(rs, "HRF_ID"));
+		team.setMorale(DBManager.getInteger(rs, "MORALE"));
+		team.setSelfConfidence(DBManager.getInteger(rs, "SELFCONFIDENCE"));
+		team.setXp253(DBManager.getInteger(rs, "XP253"));
+		team.setXp343(DBManager.getInteger(rs, "XP343"));
+		team.setXp352(DBManager.getInteger(rs, "XP352"));
+		team.setXp433(DBManager.getInteger(rs, "XP433"));
+		team.setXp442(DBManager.getInteger(rs, "XP442"));
+		team.setXp451(DBManager.getInteger(rs, "XP451"));
+		team.setXp532(DBManager.getInteger(rs, "XP532"));
+		team.setXp541(DBManager.getInteger(rs, "XP541"));
+		team.setXp550(DBManager.getInteger(rs, "XP550"));
+		team.setTeamName(DBManager.getString(rs, "NAME"));
+		team.setTeamNameShort(DBManager.getString(rs, "SHORTNAME"));
+		team.setCoachId(DBManager.getInteger(rs, "COACHID"));
+		team.setCoachName(DBManager.getString(rs, "COACHNAME"));
+		team.setLeagueId(DBManager.getInteger(rs, "LEAGUEID"));
+		team.setLeagueName(DBManager.getString(rs, "LEAGUENAME"));
+		team.setTrainerId(DBManager.getInteger(rs, "TRAINERID"));
+		team.setTrainerName(DBManager.getString(rs, "TRAINERNAME"));
+		team.setSupportersPopularity(DBManager.getInteger(rs, "SUPPORTERPOPULARITY"));
+		team.setRatingScore(DBManager.getInteger(rs, "RATING"));
+		team.setFanclubSize(DBManager.getInteger(rs, "FANCLUBSIZE"));
+		team.setRank(DBManager.getInteger(rs, "RANK"));
+		team.setFetchedDate(DBManager.getTimestamp(rs, "FETCHEDDATE"));
+		return team;
+	}
+
+	public List<NtTeamDetails> load(int hrfId) {
+		var ret = new ArrayList<NtTeamDetails>();
+		try {
+			var rs = adapter.executeQuery("SELECT * FROM " + TABLENAME + " WHERE HRF_ID=" + hrfId);
+			if ( rs!=null) {
+				rs.beforeFirst();
+				while (rs.next()) {
+					var ntTeamDetails = createNtTeamDetails(rs);
+					ret.add(ntTeamDetails);
+				}
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().error(getClass(), "Error while loading NT team details: " + e);
+			return null;
+		}
+		return ret;
 	}
 }

@@ -61,6 +61,8 @@ public class RecapPanel extends JPanel {
             HOVerwaltung.instance().getLanguageString("ls.team.tactic"),
             HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"),
             HOVerwaltung.instance().getLanguageString("ls.team.formation"),
+            HOVerwaltung.instance().getLanguageString("ls.team.teamspirit"),
+            HOVerwaltung.instance().getLanguageString("ls.team.confidence"),
             "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
             "" //$NON-NLS-1$
     };
@@ -128,8 +130,8 @@ public class RecapPanel extends JPanel {
         }
 
         // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
-        setColumnInvisible(20);
-        setColumnInvisible(21);
+        setColumnInvisible(22);
+        setColumnInvisible(23);
 
     }
 
@@ -199,8 +201,10 @@ public class RecapPanel extends JPanel {
             rowData.add(PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false));
         }
 
-        // Columns 19-21
+        // Columns 19-23
         rowData.add(lineup.getFormation());
+        rowData.add(lineup.getMorale());
+        rowData.add(lineup.getSelfConfidence());
         rowData.add(matchType.getMatchTypeId());
         rowData.add(lineup.isHomeMatch());
 
@@ -274,8 +278,8 @@ public class RecapPanel extends JPanel {
         add(scrollPane);
 
         // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
-        setColumnInvisible(20);
-        setColumnInvisible(21);
+        setColumnInvisible(22);
+        setColumnInvisible(23);
     }
 
     public String getSelectedTacticType() {

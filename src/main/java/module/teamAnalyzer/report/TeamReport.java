@@ -30,11 +30,6 @@ public class TeamReport {
     private TeamLineup adjustedRatingsLineup;
     private TeamLineup averageRatingslineup;
     private List<MatchDetail> matchDetails = new ArrayList<>();
-    /**
-     * NT team details
-     * are used to show team spirit (morale) and confidence info in match table for nt team users
-     */
-    private NtTeamDetails ntTeamDetails = null;
     private SpecialEventsPredictionManager specialEventsPredictionManager;
 
     /**
@@ -75,7 +70,7 @@ public class TeamReport {
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
 
         if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
-            this.ntTeamDetails = DBManager.instance().loadNtTeamDetails(this.teamId, null);
+            this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, null));
         }
     }
 
@@ -89,22 +84,8 @@ public class TeamReport {
         addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
         if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
-            this.ntTeamDetails = DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate());
+            this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate()));
         }
-    }
-
-    public Integer getSelfConfidence() {
-        if (ntTeamDetails != null) {
-            return ntTeamDetails.getSelfConfidence();
-        }
-        return null;
-    }
-
-    public Integer getMorale() {
-        if (ntTeamDetails != null) {
-            return ntTeamDetails.getMorale();
-        }
-        return null;
     }
 
     /**

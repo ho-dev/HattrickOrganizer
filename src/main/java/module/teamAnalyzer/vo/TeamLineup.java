@@ -6,6 +6,7 @@ import core.model.match.IMatchType;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
 import core.specialevents.SpecialEventsPredictionManager;
+import module.nthrf.NtTeamDetails;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,12 @@ public class TeamLineup {
     private double stars;
 
     private SpecialEventsPredictionManager specialEventsPrediction;
+
+    /**
+     * NT team details
+     * are used to show team spirit (morale) and confidence info in match table for nt team users
+     */
+    private NtTeamDetails ntTeamDetails = null;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -109,7 +116,7 @@ public class TeamLineup {
         if (spotLineups == null) {
             buffer.append("spotLineups = " + "null");
         } else {
-            buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups).toString());
+            buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups));
         }
 
         buffer.append("]");
@@ -252,4 +259,23 @@ public class TeamLineup {
         }
         return 0;
     }
+
+    public void setNtTeamDetails(NtTeamDetails ntTeamDetails) {
+        this.ntTeamDetails=ntTeamDetails;
+    }
+
+    public Integer getSelfConfidence() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getSelfConfidence();
+        }
+        return null;
+    }
+
+    public Integer getMorale() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getMorale();
+        }
+        return null;
+    }
+
 }
