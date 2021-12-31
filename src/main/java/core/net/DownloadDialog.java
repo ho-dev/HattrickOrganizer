@@ -318,8 +318,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
-				allmatches = OnlineWorker.FilterUserSelection(allmatches);
 				if ( allmatches != null) {
+					allmatches = OnlineWorker.FilterUserSelection(allmatches);
 					for (MatchKurzInfo i : allmatches) {
 						OnlineWorker.downloadMatchData(i, true);
 					}
@@ -378,6 +378,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			if ( !hrf.isEmpty()) {
 				HOModel homodel = HRFStringParser.parse(hrf);
 				if (homodel != null) {
+					var ntTeams = DBManager.instance().loadAllNtTeamDetails();
 					// save the model in the database
 					homodel.saveHRF();
 					// Only update when the model is newer than existing
@@ -385,12 +386,11 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						hov.setModel(homodel);
 					}
 
-					var bOK = (OnlineWorker.getMatches((int)teamId, false, true, true) != null);
-					if (bOK) {
+					var matches = OnlineWorker.getMatches((int)teamId, false, true, true);
+					if (matches!= null) {
 						OnlineWorker.getAllLineups(null);
+						OnlineWorker.downloadNtTeams(ntTeams, matches);
 					}
-
-
 					DBManager.instance().updateLatestData();
 				}
 				else {

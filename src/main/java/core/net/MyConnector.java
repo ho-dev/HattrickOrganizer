@@ -952,7 +952,6 @@ public class MyConnector {
 		}
 	}
 
-
 	public boolean isSilentDownload() {
 		return silentDownload;
 	}
@@ -961,14 +960,8 @@ public class MyConnector {
 		this.silentDownload = silentDownload;
 	}
 
-    public String getYouthMatchesSince(Timestamp dateOfLastMatchInDb) {
-
-		try {
-			return getMatchesArchive(SourceSystem.YOUTH, HOVerwaltung.instance().getModel().getBasics().getYouthTeamId(), dateOfLastMatchInDb, null);
-		}
-		catch ( Exception e){
-
-		}
-		return null;
-    }
+	public String downloadNtTeamDetails(int teamId) {
+		String url = htUrl + "?file=nationalteamdetails&version=1.9&teamid=" + teamId;
+		return getCHPPWebFile(url);
+	}
 }

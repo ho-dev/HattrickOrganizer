@@ -2645,6 +2645,14 @@ public class DBManager {
 	}
 
 	public NtTeamDetails loadNtTeamDetails(int teamId, Timestamp matchDate) {
-		return ((NtTeamTable)getTable(TeamTable.TABLENAME)).load(teamId, matchDate);
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(teamId, matchDate);
+	}
+
+	public List<NtTeamDetails> loadAllNtTeamDetails() {
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(getLatestHrfId());
+	}
+
+	public void storeNtTeamDetails(NtTeamDetails details) {
+		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
 	}
 }

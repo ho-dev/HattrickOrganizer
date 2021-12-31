@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static core.util.StringUtils.getResultString;
 
@@ -631,5 +633,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 			return 1d;
 		}
 		return 0d;
+	}
+
+	public List<Integer> getTeamIds() {
+		var ret = new ArrayList<Integer>();
+		ret.add(this.getHomeTeamID());
+		ret.add(this.getGuestTeamID());
+		return ret;
 	}
 }

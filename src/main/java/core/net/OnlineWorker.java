@@ -19,6 +19,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
+import module.nthrf.NtTeamDetails;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -1264,5 +1265,33 @@ public class OnlineWorker {
 			}
 
 		}
+	}
+
+	public static List<NtTeamDetails> downloadNtTeams(List<NtTeamDetails> ntTeams, List<MatchKurzInfo> matches) {
+		var ret = new ArrayList<NtTeamDetails>();
+		for ( var team : ntTeams){
+			ret.add(downloadNtTeam(team.getTeamId()));
+		}
+		for ( var match : matches){
+			for ( var teamid: match.getTeamIds()) {
+				if ( teamid != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
+					// not the own team
+					var found = ret.stream().anyMatch(t->t.getTeamId()==teamid);
+					if (!found){
+						// new team in match found
+						ret.add(downloadNtTeam(teamid));
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+	private static NtTeamDetails downloadNtTeam(int teamId) {
+		var xml = MyConnector.instance().downloadNtTeamDetails(teamId);
+		NtTeamDetails details = new NtTeamDetails(xml);
+		details.setHrfId(DBManager.instance().getLatestHrfId());
+		DBManager.instance().storeNtTeamDetails(details);
+		return details;
 	}
 }
