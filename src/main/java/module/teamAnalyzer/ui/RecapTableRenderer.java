@@ -52,13 +52,13 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 			setBackground(ThemeManager.getColor(HOColorName.PLAYER_POS_BG)); 
 			setIcon(null);
 		} else {
-			MatchType matchType = MatchType.NONE;
-			boolean isHomeMatch = true;
+			MatchType matchType;
+			boolean isHomeMatch;
 			Icon icon;
 			try {
 				icon = (Icon) table.getValueAt(row,1);
-				matchType = MatchType.getById((Integer) table.getValueAt(row, 20));
-				isHomeMatch = ((Boolean) table.getValueAt(row,21)).booleanValue();
+				matchType = MatchType.getById((Integer) table.getValueAt(row, 22));
+				isHomeMatch = (Boolean) table.getValueAt(row, 23);
 				setBackground(MatchesColumnModel.getColor4Matchtyp(matchType));
 			} catch (Exception e) {
 				// Make the exception visible.
@@ -69,15 +69,12 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 				return this;
 			}
 
-			switch (column) {
-			case 1:
-
-				// Set icon for match type.
+			if (column == 1) {// Set icon for match type.
 				//setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
 				setIcon(icon);
 				setText(null);
 
-				StringBuffer tipText = new StringBuffer(matchType.getName());
+				StringBuilder tipText = new StringBuilder(matchType.getName());
 
 				tipText.append(" - "); //$NON-NLS-1$
 
@@ -88,10 +85,7 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 				}
 
 				setToolTipText(tipText.toString());
-
-				break;
-
-			default:
+			} else {
 				setToolTipText(null);
 				setIcon(null);
 			}

@@ -43,9 +43,9 @@ public class RecapTableSorter extends AbstractTableSorter {
      */
     public RecapTableSorter(TableModel tableModel) {
         super(tableModel);
-        skills = new ArrayList<String>();
+        skills = new ArrayList<>();
 
-        for (int i = 1; i < 21; i++) {
+        for (int i = 1; i < 23; i++) {
             skills.add(PlayerAbility.getNameForSkill(i, false, false));
         }
     }
@@ -56,127 +56,127 @@ public class RecapTableSorter extends AbstractTableSorter {
     		return new NaturalNumericComparator();
     	}
         if ((column > 4) && (column < 12)) {
-            return new Comparator<String>() {
-                    @Override
-					public boolean equals(Object arg0) {
-                        return false;
-                    }
+            return new Comparator<>() {
+                @Override
+                public boolean equals(Object arg0) {
+                    return false;
+                }
 
-                    @Override
-					public int compare(String arg0, String arg1) {
-                        try {
-                            double d1 = RatingUtil.getRating(arg0 + "",
-                            		ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-                            		ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
-                                                             skills);
-                            double d2 = RatingUtil.getRating(arg1 + "",
-                            		ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-                            		ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
-                                                             skills);
+                @Override
+                public int compare(String arg0, String arg1) {
+                    try {
+                        double d1 = RatingUtil.getRating(arg0 + "",
+                                ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
+                                ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
+                                skills);
+                        double d2 = RatingUtil.getRating(arg1 + "",
+                                ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
+                                ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
+                                skills);
 
-                            if (d1 > d2) {
-                                return 1;
-                            }
-
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        } catch (Exception e) {
+                        if (d1 > d2) {
+                            return 1;
                         }
 
-                        return 0;
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    } catch (Exception ignored) {
                     }
-                };
+
+                    return 0;
+                }
+            };
         }
 
         if ((column > 11) && (column < 16)) {
-            return new Comparator<String>() {
-                    private DecimalFormat df = new DecimalFormat("###.#");
+            return new Comparator<>() {
+                private DecimalFormat df = new DecimalFormat("###.#");
 
-                    @Override
-					public boolean equals(Object arg0) {
-                        return false;
-                    }
+                @Override
+                public boolean equals(Object arg0) {
+                    return false;
+                }
 
-                    @Override
-					public int compare(String arg0, String arg1) {
-                        try {
-                            double d1 = df.parse(arg0 + "").doubleValue();
-                            double d2 = df.parse(arg1 + "").doubleValue();
+                @Override
+                public int compare(String arg0, String arg1) {
+                    try {
+                        double d1 = df.parse(arg0 + "").doubleValue();
+                        double d2 = df.parse(arg1 + "").doubleValue();
 
-                            if (d1 > d2) {
-                                return 1;
-                            }
-
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (d1 > d2) {
+                            return 1;
                         }
 
-                        return 0;
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                };
+
+                    return 0;
+                }
+            };
         }
 
         if (column == 16) {
-            return new Comparator<String>() {
-                    private DecimalFormat df = new DecimalFormat("###.##");
+            return new Comparator<>() {
+                private DecimalFormat df = new DecimalFormat("###.##");
 
-                    @Override
-					public boolean equals(Object arg0) {
-                        return false;
-                    }
+                @Override
+                public boolean equals(Object arg0) {
+                    return false;
+                }
 
-                    @Override
-					public int compare(String arg0, String arg1) {
-                        try {
-                            double d1 = df.parse(arg0 + "").doubleValue();
-                            double d2 = df.parse(arg1 + "").doubleValue();
+                @Override
+                public int compare(String arg0, String arg1) {
+                    try {
+                        double d1 = df.parse(arg0 + "").doubleValue();
+                        double d2 = df.parse(arg1 + "").doubleValue();
 
-                            if (d1 > d2) {
-                                return 1;
-                            }
-
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        if (d1 > d2) {
+                            return 1;
                         }
 
-                        return 0;
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                };
+
+                    return 0;
+                }
+            };
         }
 
         if (column == 18) {
-            return new Comparator<String>() {
-                    @Override
-					public boolean equals(Object arg0) {
-                        return false;
-                    }
+            return new Comparator<>() {
+                @Override
+                public boolean equals(Object arg0) {
+                    return false;
+                }
 
-                    @Override
-					public int compare(String arg0, String arg1) {
-                        try {
-                            double d1 = RatingUtil.getRating(arg0 + "", false, true, skills);
-                            double d2 = RatingUtil.getRating(arg1 + "", false, true, skills);
+                @Override
+                public int compare(String arg0, String arg1) {
+                    try {
+                        double d1 = RatingUtil.getRating(arg0 + "", false, true, skills);
+                        double d2 = RatingUtil.getRating(arg1 + "", false, true, skills);
 
-                            if (d1 > d2) {
-                                return 1;
-                            }
-
-                            if (d1 < d2) {
-                                return -1;
-                            }
-                        } catch (Exception e) {
+                        if (d1 > d2) {
+                            return 1;
                         }
 
-                        return 0;
+                        if (d1 < d2) {
+                            return -1;
+                        }
+                    } catch (Exception ignored) {
                     }
-                };
+
+                    return 0;
+                }
+            };
         }
 
         return null;
