@@ -11,17 +11,17 @@ import java.sql.SQLException;
 public abstract class AbstractTable {
 	
 	/** tableName**/
-	private String tableName = "";
+	private String tableName;
 	
 	/** describes a tableColumn (name, datatype, nullable ..) **/
 	protected ColumnDescriptor[] columns;
 	
 	/** Database connection **/
-	protected  JDBCAdapter  adapter 	= null;
+	protected  JDBCAdapter  adapter;
 	
 	/**
 	 * constructor
-	 * @param tableName
+	 * @param tableName String table name
 	 */
 	public AbstractTable(String tableName,JDBCAdapter  adapter){
 		this.tableName = tableName;
@@ -55,15 +55,15 @@ public abstract class AbstractTable {
 	
 	protected int delete(String[] whereColumns, String[] whereValues) {
 		
-		final StringBuffer sql = new StringBuffer("DELETE FROM ");
+		final StringBuilder sql = new StringBuilder("DELETE FROM ");
 		sql.append(getTableName());
 
 		//Where bedingungen beachten
 		if ((whereValues != null) && (whereColumns != null) && (whereColumns.length == whereValues.length) && (whereValues.length > 0)) {
-			sql.append(" WHERE " + whereColumns[0] + " = " + whereValues[0]);
+			sql.append(" WHERE ").append(whereColumns[0]).append(" = ").append(whereValues[0]);
 
 			for (int i = 1; i < whereValues.length; i++) {
-				sql.append(" AND " + whereColumns[i] + " = " + whereValues[i]);
+				sql.append(" AND ").append(whereColumns[i]).append(" = ").append(whereValues[i]);
 			}
 		}
 		return adapter.executeUpdate(sql.toString());
@@ -72,7 +72,7 @@ public abstract class AbstractTable {
 	public void createTable() throws SQLException {
 		if(!tableExists(getTableName())){
 			ColumnDescriptor[] columns = getColumns();
-			StringBuffer sql = new StringBuffer(500);
+			StringBuilder sql = new StringBuilder(500);
 			sql.append("CREATE ").append(getTableType());
 			sql.append(" TABLE ").append(getTableName());
 			sql.append("(");
@@ -90,10 +90,10 @@ public abstract class AbstractTable {
 					sql.append(" ");
 			}
 		
-			String[] contraints = getConstraintStatements();
-			for (int i = 0; i < contraints.length; i++) {
+			String[] constraintStatements = getConstraintStatements();
+			for (String constraint : constraintStatements) {
 				sql.append(",");
-				sql.append(contraints[i]);
+				sql.append(constraint);
 			}
 			sql.append(" ) ");
 		
@@ -104,11 +104,10 @@ public abstract class AbstractTable {
 	}
 	
 	protected ResultSet getSelectByHrfID(int hrfID) {
-		final StringBuffer sql = new StringBuffer("SELECT * FROM ");
-		sql.append(tableName);
-		sql.append(" WHERE HRF_ID = ");
-		sql.append(hrfID);
-		return adapter.executeQuery(sql.toString());
+		String sql = "SELECT * FROM " + tableName +
+				" WHERE HRF_ID = " +
+				hrfID;
+		return adapter.executeQuery(sql);
 	}
 
 	protected void insertDefaultValues(){
@@ -118,7 +117,7 @@ public abstract class AbstractTable {
 	/** 
 	 * Drop the current table
 	 */
-	protected void dropTable() {
+	protected void tryDropTable() {
 		adapter.executeUpdate("DROP TABLE IF EXISTS "+getTableName());
 	}
 	
@@ -182,16 +181,22 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	public void tryDropPrimaryKey()throws SQLException {
-		adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY IF EXISTS");
+	public void addPrimaryKey(String columns) {
+		adapter.executeQuery("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
 	}
 
-	public void tryDropIndex(String index)throws SQLException {
-		adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP INDEX (" + index + ") IF EXISTS");
+	public void tryDropPrimaryKey() throws SQLException {
+		if (primaryKeyExists()) {
+			adapter.executeQuery("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+		}
 	}
 
-	public void tryAddIndex(String indexName, String columns)throws SQLException {
-		adapter.executeQuery("ALTER TABLE " + getTableName() + " ADD INDEX " + indexName + " (" + columns + ") IF NOT EXISTS");
+	public void tryDropIndex(String index) {
+		adapter.executeQuery("DROP INDEX " + index + " IF EXISTS");
+	}
+
+	public void tryAddIndex(String indexName, String columns) {
+		adapter.executeQuery("CREATE INDEX IF NOT EXISTS " + indexName +  " ON " + tableName + " (" + columns + ")");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {

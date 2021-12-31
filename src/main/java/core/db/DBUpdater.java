@@ -1,11 +1,9 @@
 package core.db;
 
-import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -79,9 +77,12 @@ final class DBUpdater {
 		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
 
 		var matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
-		matchLineupTeamTable.tryAddIndex("MATCHLINEUPTEAM_IDX", "MatchID,TeamID,MatchTyp");
-		matchLineupTeamTable.tryAddColumn("ATTITUDE", "INTEGER");
-		matchLineupTeamTable.tryAddColumn("TACTIC", "INTEGER");
+		if ( !matchLineupTeamTable.primaryKeyExists() ) {
+			matchLineupTeamTable.tryAddColumn("ATTITUDE", "INTEGER");
+			matchLineupTeamTable.tryAddColumn("TACTIC", "INTEGER");
+			matchLineupTeamTable.tryDropIndex("MATCHLINEUPTEAM_IDX");
+			matchLineupTeamTable.addPrimaryKey("MATCHID,TEAMID,MATCHTYP");
+		}
 
 		if (!tableExists(NtTeamTable.TABLENAME)) {
 			dbManager.getTable(NtTeamTable.TABLENAME).createTable();
@@ -438,7 +439,7 @@ final class DBUpdater {
 		try {
 			AbstractTable faktorenTab = dbManager.getTable(FaktorenTable.TABLENAME);
 			if (faktorenTab != null) {
-				faktorenTab.dropTable();
+				faktorenTab.tryDropTable();
 				faktorenTab.createTable();
 			}
 		} catch (SQLException throwables) {
