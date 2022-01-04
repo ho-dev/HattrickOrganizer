@@ -33,12 +33,7 @@ import module.matches.statistics.MatchesOverviewTable;
 import module.teamAnalyzer.ui.RatingUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.util.Date;
 import java.util.List;
@@ -453,8 +448,10 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Initialise matches panel.
 	 */
 	private Component initMatchesTable() {
-		ImagePanel panel = new ImagePanel(new BorderLayout());
+		ImagePanel panel = new ImagePanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+		// Combobox matchesFilter =============================
 		CBItem[] matchesFilter = {
 				new CBItem(HOVerwaltung.instance().getLanguageString("AlleSpiele"),
 						MatchesPanel.ALL_MATCHS),
@@ -481,21 +478,26 @@ public final class MatchesPanel extends LazyImagePanel {
 		m_jcbSpieleFilter = new JComboBox(matchesFilter);
 		Helper.setComboBoxFromID(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
 		m_jcbSpieleFilter.setFont(m_jcbSpieleFilter.getFont().deriveFont(Font.BOLD));
-		panel.add(m_jcbSpieleFilter, BorderLayout.NORTH);
+		panel.add(m_jcbSpieleFilter);
 
+
+		// Add Match Location filtering =======
+		var jpMatchLocation = new JPanel(new BorderLayout());
+		jpMatchLocation.add(getMatchesLocationButtonsPanel());
+		panel.add(jpMatchLocation);
+
+		// Matches tab ===================================
 		matchesTable = new MatchesTable(UserParameter.instance().spieleFilter);
 		matchesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane scrollpane = new JScrollPane(matchesTable);
 
+		// Statistics tab ===================================
 		matchesOverviewTable = new MatchesOverviewTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane1 = new JScrollPane(matchesOverviewTable);
-
-		matchesLocationButtonsPanel = getMatchesLocationButtonsPanel();
-
 		matchesOverviewPanel = new JPanel(new BorderLayout());
-		matchesOverviewPanel.add(scrollpane1, BorderLayout.CENTER);
-		matchesOverviewPanel.add(matchesLocationButtonsPanel, BorderLayout.EAST);
+		matchesOverviewPanel.add(scrollpane1, BorderLayout.SOUTH);
 
+		// Statistics Goals tab ===================================
 		matchesHighlightsTable = new MatchesHighlightsTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane3 = new JScrollPane(matchesHighlightsTable);
 
@@ -507,11 +509,10 @@ public final class MatchesPanel extends LazyImagePanel {
 						+ hov.getLanguageString("SerieAuswaertsSieg") + "-"
 						+ hov.getLanguageString("SerieAuswaertsUnendschieden") + "-"
 						+ hov.getLanguageString("SerieAuswaertsNiederlage") + ")", matchesOverviewPanel);
-//		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Allgemein")
-//				+ ")", scrollpane2);
+
 		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Tore")
 				+ ")", scrollpane3);
-		panel.add(pane, BorderLayout.CENTER);
+		panel.add(pane);
 
 		return panel;
 	}
@@ -519,22 +520,22 @@ public final class MatchesPanel extends LazyImagePanel {
 	@NotNull
 	private JPanel getMatchesLocationButtonsPanel() {
 
-		JRadioButton all = new JRadioButton(MatchLocation.getText(MatchLocation.ALL), MatchLocation.ALL == UserParameter.instance().matchLocation);
+		JRadioButton all = new JRadioButton(MatchLocation.getText(MatchLocation.ALL) + "  ", MatchLocation.ALL == UserParameter.instance().matchLocation);
 		all.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.ALL);
 		});
 
-		JRadioButton home = new JRadioButton(MatchLocation.getText(MatchLocation.HOME), MatchLocation.HOME == UserParameter.instance().matchLocation);
+		JRadioButton home = new JRadioButton(MatchLocation.getText(MatchLocation.HOME) + "  ", MatchLocation.HOME == UserParameter.instance().matchLocation);
 		home.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.HOME);
 		});
 
-		JRadioButton away = new JRadioButton(MatchLocation.getText(MatchLocation.AWAY), MatchLocation.AWAY == UserParameter.instance().matchLocation);
+		JRadioButton away = new JRadioButton(MatchLocation.getText(MatchLocation.AWAY) + "  ", MatchLocation.AWAY == UserParameter.instance().matchLocation);
 		away.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.AWAY);
 		});
 
-		JRadioButton neutral = new JRadioButton(MatchLocation.getText(MatchLocation.NEUTRAL), MatchLocation.NEUTRAL == UserParameter.instance().matchLocation);
+		JRadioButton neutral = new JRadioButton(MatchLocation.getText(MatchLocation.NEUTRAL) + "  ", MatchLocation.NEUTRAL == UserParameter.instance().matchLocation);
 		neutral.addChangeListener(e -> {
 			refreshOnButtonSelected(e, MatchLocation.NEUTRAL);
 		});
@@ -546,10 +547,10 @@ public final class MatchesPanel extends LazyImagePanel {
 		matchesLocationButtons.add(neutral);
 
 		JPanel matchesLocationButtonsPanel = new JPanel();
-		matchesLocationButtonsPanel.setLayout(new BoxLayout(matchesLocationButtonsPanel, BoxLayout.PAGE_AXIS));
-		matchesLocationButtonsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,0,10));
+		matchesLocationButtonsPanel.setLayout(new BoxLayout(matchesLocationButtonsPanel, BoxLayout.X_AXIS));
+		matchesLocationButtonsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-		JLabel label = new JLabel(getTranslation("ls.module.lineup.matchlocation.label"));
+		JLabel label = new JLabel(getTranslation("ls.module.lineup.matchlocation.label") + ": ");
 		label.setFont(new Font(this.getFont().getFontName(), Font.BOLD, this.getFont().getSize()));
 		matchesLocationButtonsPanel.add(label);
 

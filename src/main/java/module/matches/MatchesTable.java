@@ -1,4 +1,3 @@
-// %3884409028:de.hattrickorganizer.gui.matches%
 package module.matches;
 
 import core.db.DBManager;
