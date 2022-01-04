@@ -37,413 +37,413 @@ test {
 
 
 //  Version ============================================================
-// Development_stage (DEV:0  BETA:1  STABLE:2)
-def major = '6'
-def minor = '0'
-def development_stage = 0
-def releaseArtefacts = true
-def development_tag = ["dev", "beta", "tag_stable"]
-def version_type = ["-DEV", "-BETA", ""]
-
-def development_message = [
-        "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
-        "Latest beta release - the version is feature complete - feedback from early users are welcome",
-        "Latest stable release"
-]
-
-// region configuration ==============================================================================================
-println "Configuration start"
-
-ext {
-    target_dir = "${buildDir}/artefacts"
-}
-
-ext.callGit = { param ->
-    def p = param.execute()
-    p.waitFor()
-    //println "error: " + p.errorStream.text
-    return p.text.trim()
-}
-
-ext.filter = { string, filters ->
-    def lines = string.split('\n')
-    String res=""
-    lines.each{ l->
-        for ( String f in filters ) {
-            if ( l.contains(f) ) return
-        }
-        res = res + l + "\n"
-    }
-    return res
-}
-
-// Define HO version  =================
-def currentBranch = callGit('git branch --show-current')
-def versionPropsFile = file('version.properties')
-Properties versionProps = new Properties()
-def buildNumber = System.getenv("RUN_NUMBER") ?: 0
-def version_short = major + '.' + minor
-buildNumber = buildNumber.toString()
-project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
-versionProps['buildNumber'] = buildNumber
-versionProps['version'] = project.version
-versionProps['shortVersion'] = version_short
-versionProps['tag'] = development_tag[development_stage]
-versionProps['branch'] = currentBranch
-versionProps.store(versionPropsFile.newWriter(), null)
-
-println "Project:  $project.name $project.version ....................."
-
-//  configure application plugin --------------------------------
-application {
-    mainClass = 'core.HOLauncher'
-}
-
-//  configure java plugin --------------------------------
-java {
-    compileJava.options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-//    modularity.inferModulePath.set(true)
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs = ["src/main/java"]
-        }
-        resources {
-            srcDirs = ["src/main/java", "src/main/resources"]
-        }
-    }
-    test {
-        java {
-            srcDirs = ["src/test/java"]
-        }
-        resources {
-            srcDirs = ["src/test/resources"]
-        }
-    }
-}
-
-// Returns the build version number
-// This is required by the Automated build, in this format:
-//      version=<version_number>
-task printVersion {
-     doFirst {
-          print "version=${project.version}"
-     }
-}
-
-//  configure markdownToHtml --------------------------------
-markdownToHtml {
-    markdownToHtml.tables = true  // Configuration
-}
-
-// Configure poeditor plugin ================================
-poeditor {
-    apiKey = System.getenv('POEDITOR_APIKEY')
-    projectId = '206221'
-
-    trans type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/sprache/Bulgarian.properties"
-    trans type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/sprache/Catalan.properties"
-    trans type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/sprache/Hrvatski(Croatian).properties"
-    trans type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/sprache/Czech.properties"
-    trans type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/sprache/Danish.properties"
-    trans type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/sprache/Nederlands.properties"
-    trans type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/sprache/Finnish.properties"
-    trans type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/sprache/French.properties"
-    trans type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/sprache/Deutsch.properties"
-    trans type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/sprache/Greeklish.properties"
-    trans type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/sprache/Hebrew.properties" //Hebrew
-    trans type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/sprache/Magyar.properties"  //Hungarian
-    trans type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/sprache/Italiano.properties"
-    trans type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/sprache/Hangul(Korean).properties"
-    trans type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/sprache/Latvija.properties" //Lettonie
-    trans type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/sprache/Lithuanian.properties"
-    trans type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/sprache/Persian.properties"
-    trans type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/sprache/Polish.properties"
-    trans type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/sprache/Portugues.properties"
-    trans type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/sprache/PortuguesBrasil.properties"
-    trans type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/sprache/Romanian.properties"
-    trans type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/sprache/Russian.properties"
-    trans type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/sprache/Serbian(Cyrillic).properties"
-    trans type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/sprache/Slovak.properties" //Slovak
-    trans type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
-    trans type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
-    trans type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
-}
-
-
-// Configure jar task ================================
-jar {
-    archiveFileName = "HO.jar"
-    manifest {
-        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
-                   'Main-Class': 'core.HOLauncher',
-                    "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
-    }
-    exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
-}
-
-// Configure distribution task =======================
-distributions {
-    main {
-        distributionBaseName = 'XXX'
-    }
-}
-
-install4j {
-    if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
-    else installDir = file(System.getenv('INSTALL4J_HOME'))
-    disableSigning = true
-    license = System.getenv('INSTALL4J_LICENSE')
-}
-
-// endregion ======================================================================================================================
-
-
-// region my tasks ================================================================================================
-
-task makeAllmedias(dependsOn: 'media') {
-    doLast {
-        delete "${projectDir}/build/artefacts/output.txt"
-
-        println("copy version.properties into ${project.ext.target_dir}")
-        copy {
-            from "${projectDir}/version.properties"
-            into "${project.ext.target_dir}"
-        }
-
-        println("copy release_notes.html")
-        copy {
-            from "${projectDir}/docs/release_notes/release_notes.html"
-            into "${project.ext.target_dir}"
-        }
-
-        // compatibility to HO3 Updater
-        // which used other zip file name
-        def versionType=version_type[development_stage]
-        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
-        copy {
-            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
-            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
-            into "${project.ext.target_dir}"
-        }
-    }
-}
-
-task media(type: com.install4j.gradle.Install4jTask) {
-    group 'sub tasks'
-    dependsOn 'markdownToHtml'
-    projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
-
-    // 60 -> Windows Setup
-    // 1203  -> Windows Setup (32 bits)
-    // 485 -> Windows JRE
-    // 1206 -> Windows JRE (32 bits)
-
-    // 64 -> Windows archive
-    // 481 -> Windows archive JRE
-    // 1208 -> Windows archive (32bits)
-    // 1211 -> Windows archive JRE (32bits)
-
-    // 172 -> macOS Single Bundle
-    // 473 -> macOS Single Bundle JRE
-
-    // 173 -> Unix Archive
-    // 477 -> Unix Archive JRE
-
-    // 1062 -> Unix installer
-    // 1064 -> Unix installer JRE
-
-    // 62  -> Linux rpm
-    // 63 -> Linux deb
-    // 464  -> Linux rpm JRE
-    // 471 -> Linux deb JRE
-
-    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
-    //buildIds = [60]
-    String versionType=version_type[development_stage]
-    variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
-}
-
-task preparingBuild(dependsOn: clean) {
-    group 'sub tasks'
-    doLast {
-        if (releaseArtefacts) {
-            //     Deleting build project     ---------------------------------------------------------------------
-            println("Deleting build and execution files ....")
-            project.delete(files("${projectDir}/db"))
-            project.delete(files("${projectDir}/logs"))
-            project.delete(files("${projectDir}/themes"))
-            project.delete(files("${projectDir}/user.xml"))
-            //     Creating Target directory ...  ---------------------------------------------------------------------
-            mkdir project.ext.target_dir
-        }
-    }
-}
-
-task pushmd(dependsOn: preparingBuild)  {
-    group 'sub tasks'
-    doLast {
-        copy {
-            from "${projectDir}/src/main/resources/changelog.md"
-            into "${projectDir}/docs/changelog/md"
-        }
-    }
-}
-
-task CreateDistribution (dependsOn: installDist) {
-    group 'sub tasks'
-    outputs.upToDateWhen { false }
-    def distribDir = file("${buildDir}/install/XXX")
-    doLast {
-
-        copy {
-            from "${projectDir}/docs/changelog/html/changelog.html"
-            into "${projectDir}/utils/buildResources"
-        }
-
-        if (development_stage == '0') {
-            copy {
-                from "${projectDir}/utils/buildResources/Logo_dev.png"
-                into "${projectDir}/utils/buildResources"
-                rename "Logo_dev.png", "Logo.png"
-            }
-        }
-        else if (development_stage == '1') {
-            copy {
-                from "${projectDir}/utils/buildResources/Logo_beta.png"
-                into "${projectDir}/utils/buildResources"
-                rename "Logo_beta.png", "Logo.png"
-            }
-        }
-        else {
-            copy {
-                from "${projectDir}/utils/buildResources/Logo_stable.png"
-                into distribDir
-                rename "Logo_stable.png", "Logo.png"
-            }
-        }
-
-        copy {
-            from "${projectDir}/src/main/resources/prediction"
-            into "${distribDir}/prediction"
-        }
-
-        copy {
-            from "${distribDir}/lib"
-            include "**/*.jar"
-            into "${distribDir}"
-        }
-
-        copy {
-            from "${projectDir}/docs/changelog/html/changelog.html"
-            into "${distribDir}"
-        }
-
-        copy {
-            from "${projectDir}/src/main/resources/truststore.jks"
-            into "${distribDir}"
-        }
-
-        delete "${distribDir}/bin"
-        delete "${distribDir}/lib"
-
-    }
-}
-
-task updatebuildreferences(dependsOn: CreateDistribution){
-    doLast {
-        if (releaseArtefacts) {
-
-            // list the contributors that don't want to be mentioned in release notes
-            def contributorFilter = ["Che"]
-
-            def commitCount = callGit('git rev-list 5.0..HEAD --count')
-            def diff = callGit('git diff --shortstat 5.0..HEAD')
-            def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
-            def latestCommit = callGit('git log -1 --pretty=format:"%s"')
-
-            println("create release-notes")
-            List<String> intro = [
-                    "# HO $major.$minor Release Notes",
-                    "",
-                    development_message[development_stage],
-                    "",
-                    "latest commit: ${latestCommit}",
-                    "",
-                    "## Some numbers",
-                    "* ${commitCount} commits",
-                    "* ${diff}",
-                    "* Contributors: \n${contributors}",
-                    ""
-            ]
-
-            def mdDir = new File("${projectDir}/docs/release_notes/md")
-            mdDir.mkdirs()
-            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
-
-        }
-        else{
-            println("release notes and version properties have not been updated : artefacts should not been released, !!")
-        }
-    }
-}
-
-task createLanguageFileList(dependsOn: poeditorPull)  {
-    group 'sub tasks'
-    outputs.upToDateWhen { false }
-
-    def lTranslationFiles = []
-    fileTree(dir: "${projectDir}/src/main/resources/sprache", include: '*.properties').visit {
-        FileVisitDetails details -> lTranslationFiles << details.file.name
-    }
-
-    doLast {
-        println("listing available translation in ${projectDir}/src/main/resources/sprache")
-        lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
-        lTranslationFiles.each {out.println it}
-        File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
-        lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
-    }
-}
-
-task resetDB {
-    group 'tool'
-    description 'copy the database from existing install into project'
-
-    doLast {
-        try {
-            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
-            copy {
-                from resetDir
-                into "${projectDir}/"
-                exclude "**/logs/**"
-            }
-
-            println("Resetting DB: done !")
-        } catch (Exception e) {
-            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
-        }
-    }
-}
-
-poeditorPull {
-    outputs.upToDateWhen { false }
-}
-
-markdownToHtml {
-    sourceDir = new File("${projectDir}/docs/release_notes/md")
-    outputDir = new File("${projectDir}/docs/release_notes")
-    markdownToHtml.hardwraps = true
-}
-
-installDist.dependsOn createLanguageFileList
-markdownToHtml.dependsOn updatebuildreferences
-poeditorPull.dependsOn preparingBuild
-processResources.dependsOn poeditorPull
-compileJava.dependsOn processResources
-
-// endregion ======================================================================================================================
+//// Development_stage (DEV:0  BETA:1  STABLE:2)
+//def major = '6'
+//def minor = '0'
+//def development_stage = 0
+//def releaseArtefacts = true
+//def development_tag = ["dev", "beta", "tag_stable"]
+//def version_type = ["-DEV", "-BETA", ""]
+//
+//def development_message = [
+//        "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
+//        "Latest beta release - the version is feature complete - feedback from early users are welcome",
+//        "Latest stable release"
+//]
+//
+//// region configuration ==============================================================================================
+//println "Configuration start"
+//
+//ext {
+//    target_dir = "${buildDir}/artefacts"
+//}
+//
+//ext.callGit = { param ->
+//    def p = param.execute()
+//    p.waitFor()
+//    //println "error: " + p.errorStream.text
+//    return p.text.trim()
+//}
+//
+//ext.filter = { string, filters ->
+//    def lines = string.split('\n')
+//    String res=""
+//    lines.each{ l->
+//        for ( String f in filters ) {
+//            if ( l.contains(f) ) return
+//        }
+//        res = res + l + "\n"
+//    }
+//    return res
+//}
+//
+//// Define HO version  =================
+//def currentBranch = callGit('git branch --show-current')
+//def versionPropsFile = file('version.properties')
+//Properties versionProps = new Properties()
+//def buildNumber = System.getenv("RUN_NUMBER") ?: 0
+//def version_short = major + '.' + minor
+//buildNumber = buildNumber.toString()
+//project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
+//versionProps['buildNumber'] = buildNumber
+//versionProps['version'] = project.version
+//versionProps['shortVersion'] = version_short
+//versionProps['tag'] = development_tag[development_stage]
+//versionProps['branch'] = currentBranch
+//versionProps.store(versionPropsFile.newWriter(), null)
+//
+//println "Project:  $project.name $project.version ....................."
+//
+////  configure application plugin --------------------------------
+//application {
+//    mainClass = 'core.HOLauncher'
+//}
+//
+////  configure java plugin --------------------------------
+//java {
+//    compileJava.options.encoding = 'UTF-8'
+//    sourceCompatibility = JavaVersion.VERSION_17
+//    targetCompatibility = JavaVersion.VERSION_17
+////    modularity.inferModulePath.set(true)
+//}
+//
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ["src/main/java"]
+//        }
+//        resources {
+//            srcDirs = ["src/main/java", "src/main/resources"]
+//        }
+//    }
+//    test {
+//        java {
+//            srcDirs = ["src/test/java"]
+//        }
+//        resources {
+//            srcDirs = ["src/test/resources"]
+//        }
+//    }
+//}
+//
+//// Returns the build version number
+//// This is required by the Automated build, in this format:
+////      version=<version_number>
+//task printVersion {
+//     doFirst {
+//          print "version=${project.version}"
+//     }
+//}
+//
+////  configure markdownToHtml --------------------------------
+//markdownToHtml {
+//    markdownToHtml.tables = true  // Configuration
+//}
+//
+//// Configure poeditor plugin ================================
+//poeditor {
+//    apiKey = System.getenv('POEDITOR_APIKEY')
+//    projectId = '206221'
+//
+//    trans type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/sprache/Bulgarian.properties"
+//    trans type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/sprache/Catalan.properties"
+//    trans type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/sprache/Hrvatski(Croatian).properties"
+//    trans type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/sprache/Czech.properties"
+//    trans type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/sprache/Danish.properties"
+//    trans type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/sprache/Nederlands.properties"
+//    trans type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/sprache/Finnish.properties"
+//    trans type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/sprache/French.properties"
+//    trans type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/sprache/Deutsch.properties"
+//    trans type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/sprache/Greeklish.properties"
+//    trans type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/sprache/Hebrew.properties" //Hebrew
+//    trans type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/sprache/Magyar.properties"  //Hungarian
+//    trans type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/sprache/Italiano.properties"
+//    trans type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/sprache/Hangul(Korean).properties"
+//    trans type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/sprache/Latvija.properties" //Lettonie
+//    trans type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/sprache/Lithuanian.properties"
+//    trans type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/sprache/Persian.properties"
+//    trans type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/sprache/Polish.properties"
+//    trans type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/sprache/Portugues.properties"
+//    trans type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/sprache/PortuguesBrasil.properties"
+//    trans type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/sprache/Romanian.properties"
+//    trans type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/sprache/Russian.properties"
+//    trans type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/sprache/Serbian(Cyrillic).properties"
+//    trans type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/sprache/Slovak.properties" //Slovak
+//    trans type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
+//    trans type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
+//    trans type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
+//}
+//
+//
+//// Configure jar task ================================
+//jar {
+//    archiveFileName = "HO.jar"
+//    manifest {
+//        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
+//                   'Main-Class': 'core.HOLauncher',
+//                    "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+//    }
+//    exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
+//}
+//
+//// Configure distribution task =======================
+//distributions {
+//    main {
+//        distributionBaseName = 'XXX'
+//    }
+//}
+//
+//install4j {
+//    if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
+//    else installDir = file(System.getenv('INSTALL4J_HOME'))
+//    disableSigning = true
+//    license = System.getenv('INSTALL4J_LICENSE')
+//}
+//
+//// endregion ======================================================================================================================
+//
+//
+//// region my tasks ================================================================================================
+//
+//task makeAllmedias(dependsOn: 'media') {
+//    doLast {
+//        delete "${projectDir}/build/artefacts/output.txt"
+//
+//        println("copy version.properties into ${project.ext.target_dir}")
+//        copy {
+//            from "${projectDir}/version.properties"
+//            into "${project.ext.target_dir}"
+//        }
+//
+//        println("copy release_notes.html")
+//        copy {
+//            from "${projectDir}/docs/release_notes/release_notes.html"
+//            into "${project.ext.target_dir}"
+//        }
+//
+//        // compatibility to HO3 Updater
+//        // which used other zip file name
+//        def versionType=version_type[development_stage]
+//        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+//        copy {
+//            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
+//            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
+//            into "${project.ext.target_dir}"
+//        }
+//    }
+//}
+//
+//task media(type: com.install4j.gradle.Install4jTask) {
+//    group 'sub tasks'
+//    dependsOn 'markdownToHtml'
+//    projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
+//
+//    // 60 -> Windows Setup
+//    // 1203  -> Windows Setup (32 bits)
+//    // 485 -> Windows JRE
+//    // 1206 -> Windows JRE (32 bits)
+//
+//    // 64 -> Windows archive
+//    // 481 -> Windows archive JRE
+//    // 1208 -> Windows archive (32bits)
+//    // 1211 -> Windows archive JRE (32bits)
+//
+//    // 172 -> macOS Single Bundle
+//    // 473 -> macOS Single Bundle JRE
+//
+//    // 173 -> Unix Archive
+//    // 477 -> Unix Archive JRE
+//
+//    // 1062 -> Unix installer
+//    // 1064 -> Unix installer JRE
+//
+//    // 62  -> Linux rpm
+//    // 63 -> Linux deb
+//    // 464  -> Linux rpm JRE
+//    // 471 -> Linux deb JRE
+//
+//    buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
+//    //buildIds = [60]
+//    String versionType=version_type[development_stage]
+//    variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
+//}
+//
+//task preparingBuild(dependsOn: clean) {
+//    group 'sub tasks'
+//    doLast {
+//        if (releaseArtefacts) {
+//            //     Deleting build project     ---------------------------------------------------------------------
+//            println("Deleting build and execution files ....")
+//            project.delete(files("${projectDir}/db"))
+//            project.delete(files("${projectDir}/logs"))
+//            project.delete(files("${projectDir}/themes"))
+//            project.delete(files("${projectDir}/user.xml"))
+//            //     Creating Target directory ...  ---------------------------------------------------------------------
+//            mkdir project.ext.target_dir
+//        }
+//    }
+//}
+//
+//task pushmd(dependsOn: preparingBuild)  {
+//    group 'sub tasks'
+//    doLast {
+//        copy {
+//            from "${projectDir}/src/main/resources/changelog.md"
+//            into "${projectDir}/docs/changelog/md"
+//        }
+//    }
+//}
+//
+//task CreateDistribution (dependsOn: installDist) {
+//    group 'sub tasks'
+//    outputs.upToDateWhen { false }
+//    def distribDir = file("${buildDir}/install/XXX")
+//    doLast {
+//
+//        copy {
+//            from "${projectDir}/docs/changelog/html/changelog.html"
+//            into "${projectDir}/utils/buildResources"
+//        }
+//
+//        if (development_stage == '0') {
+//            copy {
+//                from "${projectDir}/utils/buildResources/Logo_dev.png"
+//                into "${projectDir}/utils/buildResources"
+//                rename "Logo_dev.png", "Logo.png"
+//            }
+//        }
+//        else if (development_stage == '1') {
+//            copy {
+//                from "${projectDir}/utils/buildResources/Logo_beta.png"
+//                into "${projectDir}/utils/buildResources"
+//                rename "Logo_beta.png", "Logo.png"
+//            }
+//        }
+//        else {
+//            copy {
+//                from "${projectDir}/utils/buildResources/Logo_stable.png"
+//                into distribDir
+//                rename "Logo_stable.png", "Logo.png"
+//            }
+//        }
+//
+//        copy {
+//            from "${projectDir}/src/main/resources/prediction"
+//            into "${distribDir}/prediction"
+//        }
+//
+//        copy {
+//            from "${distribDir}/lib"
+//            include "**/*.jar"
+//            into "${distribDir}"
+//        }
+//
+//        copy {
+//            from "${projectDir}/docs/changelog/html/changelog.html"
+//            into "${distribDir}"
+//        }
+//
+//        copy {
+//            from "${projectDir}/src/main/resources/truststore.jks"
+//            into "${distribDir}"
+//        }
+//
+//        delete "${distribDir}/bin"
+//        delete "${distribDir}/lib"
+//
+//    }
+//}
+//
+//task updatebuildreferences(dependsOn: CreateDistribution){
+//    doLast {
+//        if (releaseArtefacts) {
+//
+//            // list the contributors that don't want to be mentioned in release notes
+//            def contributorFilter = ["Che"]
+//
+//            def commitCount = callGit('git rev-list 5.0..HEAD --count')
+//            def diff = callGit('git diff --shortstat 5.0..HEAD')
+//            def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
+//            def latestCommit = callGit('git log -1 --pretty=format:"%s"')
+//
+//            println("create release-notes")
+//            List<String> intro = [
+//                    "# HO $major.$minor Release Notes",
+//                    "",
+//                    development_message[development_stage],
+//                    "",
+//                    "latest commit: ${latestCommit}",
+//                    "",
+//                    "## Some numbers",
+//                    "* ${commitCount} commits",
+//                    "* ${diff}",
+//                    "* Contributors: \n${contributors}",
+//                    ""
+//            ]
+//
+//            def mdDir = new File("${projectDir}/docs/release_notes/md")
+//            mdDir.mkdirs()
+//            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
+//
+//        }
+//        else{
+//            println("release notes and version properties have not been updated : artefacts should not been released, !!")
+//        }
+//    }
+//}
+//
+//task createLanguageFileList(dependsOn: poeditorPull)  {
+//    group 'sub tasks'
+//    outputs.upToDateWhen { false }
+//
+//    def lTranslationFiles = []
+//    fileTree(dir: "${projectDir}/src/main/resources/sprache", include: '*.properties').visit {
+//        FileVisitDetails details -> lTranslationFiles << details.file.name
+//    }
+//
+//    doLast {
+//        println("listing available translation in ${projectDir}/src/main/resources/sprache")
+//        lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
+//        lTranslationFiles.each {out.println it}
+//        File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
+//        lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
+//    }
+//}
+//
+//task resetDB {
+//    group 'tool'
+//    description 'copy the database from existing install into project'
+//
+//    doLast {
+//        try {
+//            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
+//            copy {
+//                from resetDir
+//                into "${projectDir}/"
+//                exclude "**/logs/**"
+//            }
+//
+//            println("Resetting DB: done !")
+//        } catch (Exception e) {
+//            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
+//        }
+//    }
+//}
+//
+//poeditorPull {
+//    outputs.upToDateWhen { false }
+//}
+//
+//markdownToHtml {
+//    sourceDir = new File("${projectDir}/docs/release_notes/md")
+//    outputDir = new File("${projectDir}/docs/release_notes")
+//    markdownToHtml.hardwraps = true
+//}
+//
+//installDist.dependsOn createLanguageFileList
+//markdownToHtml.dependsOn updatebuildreferences
+//poeditorPull.dependsOn preparingBuild
+//processResources.dependsOn poeditorPull
+//compileJava.dependsOn processResources
+//
+//// endregion ======================================================================================================================
