@@ -410,25 +410,25 @@ test {
 //    }
 //}
 //
-//task resetDB {
-//    group 'tool'
-//    description 'copy the database from existing install into project'
-//
-//    doLast {
-//        try {
-//            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
-//            copy {
-//                from resetDir
-//                into "${projectDir}/"
-//                exclude "**/logs/**"
-//            }
-//
-//            println("Resetting DB: done !")
-//        } catch (Exception e) {
-//            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
-//        }
-//    }
-//}
+task resetDB {
+    group 'tool'
+    description 'copy the database from existing install into project'
+
+    doLast {
+        try {
+            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
+            copy {
+                from "${resetDir}/"
+                into "${projectDir}/db/"
+                exclude "**/logs/**"
+            }
+
+            println("Resetting DB: done !")
+        } catch (Exception e) {
+            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
+        }
+    }
+}
 //
 //poeditorPull {
 //    outputs.upToDateWhen { false }
