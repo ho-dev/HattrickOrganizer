@@ -8,6 +8,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.util.HOLogger;
+import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 import org.jetbrains.annotations.Nullable;
@@ -197,6 +198,74 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				matchtyp = matchtyp - 10;
 
 				sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+			}
+			sql.append(getMatchTypWhereClause(matchtyp));
+
+			// nicht desc
+			sql.append(" ORDER BY MatchDate");
+
+			if (!asc) {
+				sql.append(" DESC");
+			}
+
+			rs = adapter.executeQuery(sql.toString());
+
+			rs.beforeFirst();
+
+			while (rs.next()) {
+				liste.add(createMatchKurzInfo(rs));
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DB.getMatchesKurzInfo Error" + e);
+		}
+
+		// matches = new MatchKurzInfo[liste.size()];
+		// Helper.copyVector2Array(liste, matches);
+
+		return liste.toArray(new MatchKurzInfo[liste.size()]);
+	}
+
+
+	/**
+	 * Important: If the teamid = -1 the match type must be ALL_GAMES!
+	 * @param teamId The Teamid or -1 for all
+	 * @param matchtyp Which matches? Constants in the GamesPanel!
+	 * @param matchLocation Home, Away, Neutral
+	 *
+	 */
+	MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, MatchLocation matchLocation, boolean asc) {
+		StringBuilder sql = new StringBuilder(100);
+		ResultSet rs;
+		final ArrayList<MatchKurzInfo> liste = new ArrayList<>();
+
+		// Without TeamID ino only All_Match possible
+		if ((teamId < 0) && (matchtyp != MatchesPanel.ALL_MATCHS)) {
+			return new MatchKurzInfo[0];
+		}
+
+		try {
+			sql.append("SELECT * FROM ").append(getTableName());
+
+			// show my matches ========================================================
+			if ((teamId > -1) && (matchtyp != MatchesPanel.ALL_MATCHS) && (matchtyp != MatchesPanel.OTHER_TEAM_MATCHS)) {
+				switch (matchLocation) {
+					case HOME -> sql.append(" WHERE HeimID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+					case AWAY -> sql.append(" WHERE GastID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+					case NEUTRAL -> sql.append(" WHERE (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") AND (isNeutral=true) ");
+					case ALL -> sql.append(" WHERE (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") ");
+				}
+			}
+
+			if ((teamId > -1) && (matchtyp == MatchesPanel.OTHER_TEAM_MATCHS)) {
+				sql.append(" WHERE ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
+			}
+
+			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
+
+			// Filter matchType
+			if (matchtyp >= 10) {
+				matchtyp = matchtyp - 10;
 			}
 			sql.append(getMatchTypWhereClause(matchtyp));
 

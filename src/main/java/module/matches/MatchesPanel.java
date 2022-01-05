@@ -327,7 +327,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			try {
 				// Update tables
 				int id = ((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId();
-				matchesTable.refresh(id);
+				matchesTable.refresh(id, UserParameter.instance().matchLocation);
 				matchesOverviewTable.refresh(id, UserParameter.instance().matchLocation);
 				matchesHighlightsTable.refresh(id);
 				UserParameter.instance().spieleFilter = id;

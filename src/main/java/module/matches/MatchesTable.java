@@ -8,6 +8,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.util.Helper;
 
 import javax.swing.JTable;
@@ -22,13 +23,13 @@ final class MatchesTable extends JTable {
 
 	protected MatchesTable(int matchtyp) {
 		super();
-		initModel(matchtyp);
+		initModel(matchtyp, UserParameter.instance().matchLocation);
 		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
-	public final void saveColumnOrder() {
+	public void saveColumnOrder() {
 		final UserColumn[] columns = m_clTableModel.getDisplayedColumns();
 		final TableColumnModel tableColumnModel = getColumnModel();
 		for (int i = 0; i < columns.length; i++) {
@@ -40,8 +41,8 @@ final class MatchesTable extends JTable {
 		DBManager.instance().saveHOColumnModel(m_clTableModel);
 	}
 
-	public void refresh(int matchtypen) {
-		initModel(matchtypen);
+	public void refresh(int iMatchType, MatchLocation matchLocation) {
+		initModel(iMatchType, matchLocation);
 	}
 
 	protected TableSorter getSorter() {
@@ -58,12 +59,12 @@ final class MatchesTable extends JTable {
 		}
 	}
 
-	private void initModel(int matchtyp) {
+	private void initModel(int iMatchType, MatchLocation matchLocation) {
 		setOpaque(false);
 
 		if (m_clTableModel == null) {
 			m_clTableModel = UserColumnController.instance().getMatchesModel();
-			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchtyp, false));
+			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation, false));
 			m_clTableSorter = new TableSorter(m_clTableModel,
 					m_clTableModel.getDisplayedColumns().length - 1, -1);
 
@@ -98,7 +99,7 @@ final class MatchesTable extends JTable {
 		} else {
 			// Reset Values of the matches table in matches module after selection change
 			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(
-					HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchtyp, false));
+					HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation,false));
 			m_clTableSorter.reallocateIndexes();
 		}
 
