@@ -1732,12 +1732,12 @@ public class DBManager {
 	 * Get chances stat matches highlights stat [ ].
 	 *
 	 * @param ownTeam   the own team
-	 * @param matchtype the matchtype
+	 * @param iMatchType the matchtype
+	 * @param matchLocation Home, Away, Neutral
 	 * @return the matches highlights stat [ ]
 	 */
-	public MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype) {
-		return MatchesOverviewQuery.getChancesStat(ownTeam, matchtype);
-
+	public MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType, MatchLocation matchLocation) {
+		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
 	/**

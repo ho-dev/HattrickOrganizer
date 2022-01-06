@@ -120,7 +120,8 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	 * @return
 	 */
 
-	public static MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype ){
+	public static MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType, MatchLocation matchLocation){
+
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[9];
@@ -133,26 +134,24 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEventsIDListToString(MatchEvent.LSME));
 		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEventsIDListToString(MatchEvent.CounterAttackME));
 		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEventsIDListToString(MatchEvent.specialME));
-//		rows[9] = new MatchesHighlightsStat("highlight_yellowcard", MatchEventsIDListToString(MatchEvent.yellowCardME));
-//		rows[10] = new MatchesHighlightsStat("highlight_redcard", MatchEventsIDListToString(MatchEvent.redCardME));
-//		rows[11] = new MatchesHighlightsStat("ls.player.injurystatus.injured","0","90,91,92,93,94,95,96,97");
 
 		for (int i = 0; i < rows.length; i++) {
 			if(!rows[i].isTitle())
-				fillMatchesOverviewChanceRow(ownTeam, teamId, rows[i], matchtype);
+				fillMatchesOverviewChanceRow(ownTeam, teamId, rows[i], iMatchType, matchLocation);
 		}
 		return rows;
 	}
 
 
-	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int matchtype){
+	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int iMatchType, MatchLocation matchLocation){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
 		sql.append("SELECT MATCH_EVENT_ID, COUNT(*) AS C FROM MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID WHERE TEAMID");
 		if(!ownTeam) {sql.append("!");}
 		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
 		sql.append(row.getSubtyps()).append(")");
-		sql.append(getMatchTypWhereClause(matchtype));
+		sql.append(getMatchTypWhereClause(iMatchType));
+		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
 		try {
@@ -170,6 +169,17 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 			catch (SQLException e) {
 			HOLogger.instance().log(MatchesOverviewQuery.class, e);
 		}
+	}
+
+	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId) {
+		StringBuilder sql = new StringBuilder(50);
+		switch (matchLocation) {
+			case HOME -> sql.append(" AND HeimID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+			case AWAY -> sql.append(" AND GastID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+			case NEUTRAL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") AND (isNeutral=true) ");
+			case ALL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") ");
+		}
+		return sql;
 	}
 
 	private static StringBuilder getMatchTypWhereClause(int matchtype){
