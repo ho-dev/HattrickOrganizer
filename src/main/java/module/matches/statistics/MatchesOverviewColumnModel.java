@@ -6,8 +6,7 @@ import core.util.StringUtils;
 
 
 public final class MatchesOverviewColumnModel extends HOTableModel {
-		
-	private static final long serialVersionUID = 1L;
+
 	private MatchesOverviewRow[] rows;
 	
 	public MatchesOverviewColumnModel(int id){
@@ -36,12 +35,12 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 			m_clData[i][2] = title?"":Integer.valueOf(rows[i].getWin());
 			m_clData[i][3] = title?"":Integer.valueOf(rows[i].getDraw());
 			m_clData[i][4] = title?"":Integer.valueOf(rows[i].getLoss());
-			m_clData[i][5] = title?"":String.valueOf(StringUtils.getResultString(rows[i].getHomeGoals(),rows[i].getAwayGoals(), ""));
+			m_clData[i][5] = title?"": StringUtils.getResultString(rows[i].getHomeGoals(), rows[i].getAwayGoals(), "");
 		}
 		fireTableDataChanged();						
 	}
 
-    public final void setValues(MatchesOverviewRow[] rows) {
+    public void setValues(MatchesOverviewRow[] rows) {
     	this.rows = rows;
         initData();
     }

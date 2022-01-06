@@ -6,17 +6,13 @@ import core.gui.theme.ThemeManager;
 import core.model.match.MatchesHighlightsStat;
 import core.model.match.MatchesOverviewRow;
 import core.util.StringUtils;
-
 import java.awt.Component;
-
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 
 class MatchesOverviewRenderer extends DefaultTableCellRenderer {
-
-	private static final long serialVersionUID = 1L;
 
 
 	@Override

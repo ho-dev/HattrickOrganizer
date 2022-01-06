@@ -2,6 +2,7 @@ package module.matches;
 
 import core.db.DBManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.renderer.TableHeaderRenderer1;
 import core.gui.comp.table.TableSorter;
 import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
@@ -14,10 +15,10 @@ import core.util.Helper;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
+import java.awt.*;
 
 final class MatchesTable extends JTable {
 
-	private static final long serialVersionUID = -8724051830928497450L;
 	private MatchesColumnModel m_clTableModel;
 	private TableSorter m_clTableSorter;
 
@@ -25,6 +26,8 @@ final class MatchesTable extends JTable {
 		super();
 		initModel(matchtyp, UserParameter.instance().matchLocation);
 		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+		getTableHeader().setDefaultRenderer(new TableHeaderRenderer1(this));
+		getTableHeader().setFont(getTableHeader().getFont().deriveFont(Font.BOLD));
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
