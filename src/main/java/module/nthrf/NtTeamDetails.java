@@ -16,8 +16,6 @@ public class NtTeamDetails {
 	private String coachName;
 	private int leagueId;
 	private String leagueName;
-	private int trainerId;
-	private String trainerName;
 	private String homePageUrl;
 	private int xp253;
 	private int xp343;
@@ -54,12 +52,6 @@ public class NtTeamDetails {
 	}
 	public void setLeagueName(String leagueName) {
 		this.leagueName = leagueName;
-	}
-	public void setTrainerId(Integer trainerId) {
-		if ( trainerId!=null) this.trainerId = trainerId;
-	}
-	public void setTrainerName(String trainerName) {
-		this.trainerName = trainerName;
 	}
 	public void setHomePageUrl(String homePageUrl) {
 		this.homePageUrl = homePageUrl;
@@ -145,12 +137,6 @@ public class NtTeamDetails {
 	}
 	public String getLeagueName() {
 		return leagueName;
-	}
-	public long getTrainerId() {
-		return trainerId;
-	}
-	public String getTrainerName() {
-		return trainerName;
 	}
 	public String getHomePageUrl() {
 		return homePageUrl;
@@ -242,13 +228,6 @@ public class NtTeamDetails {
             ele = (Element) root.getElementsByTagName("LeagueName").item(0);
             leagueName = XMLManager.getFirstChildNodeValue(ele);
 
-            // root Trainer
-            root = (Element) teamRoot.getElementsByTagName("Trainer").item(0);
-            ele = (Element) root.getElementsByTagName("PlayerID").item(0);
-            trainerId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele));
-            ele = (Element) root.getElementsByTagName("PlayerName").item(0);
-            trainerName = XMLManager.getFirstChildNodeValue(ele);
-
             // root HomePage
             root = (Element) teamRoot.getElementsByTagName("HomePage").item(0);
             homePageUrl = XMLManager.getFirstChildNodeValue(root);
@@ -297,7 +276,6 @@ public class NtTeamDetails {
 		return "NtTeamDetails (from " + fetchedDate + "), parsingSuccess: " + parsingSuccess + "\n\tteam:    " + teamName + " (" + teamId + ") - short: " + teamNameShort +
 				"\n\tcoach:   " + coachName + " (" + coachId + ")" +
 				"\n\tleague : " + leagueName + " (" + leagueId + ")" +
-				"\n\ttrainer: " + trainerName + " (" + trainerId + ")" +
 				"\n\thomePageUrl: " + homePageUrl +
 				"\n\txp433: " + xp433 +
 				"\txp451: " + xp451 +

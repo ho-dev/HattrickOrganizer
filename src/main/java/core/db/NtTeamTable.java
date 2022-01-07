@@ -16,7 +16,7 @@ import java.util.List;
 final class NtTeamTable extends AbstractTable {
 	public final static String TABLENAME = "NTTEAM";
 
-	protected NtTeamTable(JDBCAdapter adapter) {
+	NtTeamTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -43,8 +43,6 @@ final class NtTeamTable extends AbstractTable {
 				new ColumnDescriptor("COACHNAME", Types.VARCHAR, true, 127),
 				new ColumnDescriptor("LEAGUEID", Types.INTEGER, true),
 				new ColumnDescriptor("LEAGUENAME", Types.VARCHAR, true, 127),
-				new ColumnDescriptor("TRAINERID", Types.INTEGER, true),
-				new ColumnDescriptor("TRAINERNAME", Types.VARCHAR, true, 127),
 				new ColumnDescriptor("SUPPORTERPOPULARITY", Types.INTEGER, true),
 				new ColumnDescriptor("RATING", Types.INTEGER, true),
 				new ColumnDescriptor("FANCLUBSIZE", Types.INTEGER, true),
@@ -71,7 +69,7 @@ final class NtTeamTable extends AbstractTable {
 			var statement = "INSERT INTO " +
 					getTableName() +
 					" (HRF_ID,TEAM_ID,MORALE,SELFCONFIDENCE,xp253,xp343,xp352,xp433,xp442,xp451,xp523,xp532,xp541,xp550," +
-					"NAME,SHORTNAME,COACHID,COACHNAME,LEAGUEID,LEAGUENAME,TRAINERID,TRAINERNAME,SUPPORTERPOPULARITY," +
+					"NAME,SHORTNAME,COACHID,COACHNAME,LEAGUEID,LEAGUENAME,SUPPORTERPOPULARITY," +
 					"RATING,FANCLUBSIZE,RANK,FETCHEDDATE) VALUES (" +
 					ntTeamDetails.getHrfId() + "," +
 					ntTeamDetails.getTeamId() + "," +
@@ -92,8 +90,6 @@ final class NtTeamTable extends AbstractTable {
 					ntTeamDetails.getCoachName() + "'," +
 					ntTeamDetails.getLeagueId() + ",'" +
 					ntTeamDetails.getLeagueName() + "'," +
-					ntTeamDetails.getTrainerId() + ",'" +
-					ntTeamDetails.getTrainerName() + "'," +
 					ntTeamDetails.getSupportersPopularity() + "," +
 					ntTeamDetails.getRatingScore() + "," +
 					ntTeamDetails.getFanclubSize() + "," +
@@ -143,8 +139,6 @@ final class NtTeamTable extends AbstractTable {
 		team.setCoachName(DBManager.getString(rs, "COACHNAME"));
 		team.setLeagueId(DBManager.getInteger(rs, "LEAGUEID"));
 		team.setLeagueName(DBManager.getString(rs, "LEAGUENAME"));
-		team.setTrainerId(DBManager.getInteger(rs, "TRAINERID"));
-		team.setTrainerName(DBManager.getString(rs, "TRAINERNAME"));
 		team.setSupportersPopularity(DBManager.getInteger(rs, "SUPPORTERPOPULARITY"));
 		team.setRatingScore(DBManager.getInteger(rs, "RATING"));
 		team.setFanclubSize(DBManager.getInteger(rs, "FANCLUBSIZE"));
