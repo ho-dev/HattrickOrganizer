@@ -303,11 +303,11 @@ final public class UserColumnFactory {
         matchesArray[0] = new MatchKurzInfoColumn(450, "Datum", 70) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
                         java.text.DateFormat.getDateTimeInstance().format(match
                                 .getMatchDateAsTimestamp()),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
             }
 
@@ -322,18 +322,18 @@ final public class UserColumnFactory {
         matchesArray[1] = new MatchKurzInfoColumn(460, "Spielart", 20) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTypeExtended().getIconArrayIndex()]),
                         match.getMatchType().getId(), ColorLabelEntry.FG_STANDARD,
-                        background, SwingConstants.CENTER);
+                        ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
                         spielerCBItem.getMatchTyp().getMatchTypeId(),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
         };
@@ -358,9 +358,9 @@ final public class UserColumnFactory {
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHeimteam() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
@@ -395,9 +395,9 @@ final public class UserColumnFactory {
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGastteam() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
@@ -414,17 +414,17 @@ final public class UserColumnFactory {
         matchesArray[4] = new MatchKurzInfoColumn(490, "ls.match.result", 45) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getResultLong(),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry(spielerCBItem.getMatchdetails().getResultEx(),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
 
@@ -433,17 +433,17 @@ final public class UserColumnFactory {
         matchesArray[5] = new MatchKurzInfoColumn(494, "ls.match.hatstats.me", 80) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats()),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry("not implemented 123456789",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
 
@@ -452,17 +452,17 @@ final public class UserColumnFactory {
         matchesArray[6] = new MatchKurzInfoColumn(498, "ls.match.hatstats.opp", 80) {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats()),
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry("not implemented 123456789",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
 
@@ -473,17 +473,17 @@ final public class UserColumnFactory {
 
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
                 return new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
+//                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
                 return new ColorLabelEntry(spielerCBItem.getMatchID()+"",
-                        ColorLabelEntry.FG_STANDARD, background,
+                        ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
         };
