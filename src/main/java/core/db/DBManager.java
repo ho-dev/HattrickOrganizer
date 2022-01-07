@@ -1287,6 +1287,25 @@ public class DBManager {
 	}
 
 	/**
+	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
+	 * and of type <code>matchtyp</code>.
+	 *
+	 * Important: if teamId is -1, <code>matchtype</code> must be set to
+	 * <code>MatchesPanel.ALL_MATCHS</code>.
+	 *
+	 * @param teamId   The ID of the team, or -1 for all.
+	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
+	 * @param matchLocation Home, Away, Neutral
+	 * @param asc      Ascending if true, descending otherwise.
+	 *
+	 * @return MatchKurzInfo[] – Array of match info.
+	 */
+	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, boolean asc) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getMatchesKurzInfo(teamId, iMatchType, matchLocation, asc);
+	}
+
+	/**
 	 * Get matches kurz info up coming match kurz info [ ].
 	 *
 	 * @param teamId the team id
@@ -1713,12 +1732,12 @@ public class DBManager {
 	 * Get chances stat matches highlights stat [ ].
 	 *
 	 * @param ownTeam   the own team
-	 * @param matchtype the matchtype
+	 * @param iMatchType the matchtype
+	 * @param matchLocation Home, Away, Neutral
 	 * @return the matches highlights stat [ ]
 	 */
-	public MatchesHighlightsStat[] getChancesStat(boolean ownTeam, int matchtype) {
-		return MatchesOverviewQuery.getChancesStat(ownTeam, matchtype);
-
+	public MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType, MatchLocation matchLocation) {
+		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
 	/**
@@ -1868,7 +1887,7 @@ public class DBManager {
 	 * @return the arena statistik model
 	 */
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
-		return StatisticQuery.getArenaStatistikModel(matchtyp);
+		return StatisticQuery.getArenaStatisticsModel(matchtyp);
 	}
 
 	/**

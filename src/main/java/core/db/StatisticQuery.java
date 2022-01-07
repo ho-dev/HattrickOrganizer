@@ -6,7 +6,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-import module.matches.MatchesPanel;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -100,13 +99,13 @@ public class StatisticQuery {
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 */
-	public static ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
-		ArenaStatistikTableModel tablemodel = null;
+	public static ArenaStatistikTableModel getArenaStatisticsModel(int iMatchType) {
+		ArenaStatistikTableModel tablemodel;
 
-		ArenaStatistikModel[] arenamodels = new ArenaStatistikModel[0];
-		ArenaStatistikModel arenamodel = null;
-		String sql = null;
-		ResultSet rs = null;
+		ArenaStatistikModel[] arenamodels;
+		ArenaStatistikModel arenamodel;
+		String sql;
+		ResultSet rs;
 		final ArrayList<ArenaStatistikModel> liste = new ArrayList<ArenaStatistikModel>();
 		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		int maxFans = 0;
@@ -119,51 +118,7 @@ public class StatisticQuery {
 			sql += " FROM " + MatchesKurzInfoTable.TABLENAME + " INNER JOIN  " + MatchDetailsTable.TABLENAME + " on " + MatchesKurzInfoTable.TABLENAME + ".matchid = " + MatchDetailsTable.TABLENAME + ".matchid ";
 			sql += " WHERE  Arenaname in (SELECT DISTINCT Stadionname as Arenaname FROM " + StadionTable.TABLENAME + ") AND " + MatchDetailsTable.TABLENAME + ".HeimID = " + teamId + " AND Status=" + MatchKurzInfo.FINISHED;
 
-			//Matchtypen
-			switch (matchtyp) {
-				case MatchesPanel.OWN_GAMES:
-
-					//Nix zu tun, da die teamId die einzige Einschränkung ist
-					break;
-
-				case MatchesPanel.OWN_OFFICIAL_GAMES:
-					sql += (" AND ( MatchTyp=" + MatchType.QUALIFICATION.getId());
-					sql += (" OR MatchTyp=" + MatchType.LEAGUE.getId());
-					sql += (" OR MatchTyp=" + MatchType.CUP.getId() + " )");
-					break;
-
-				case MatchesPanel.ONLY_NATIONAL_CUP:
-					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter to get only primary cup   ");
-					sql += (" AND MatchTyp=" + MatchType.CUP.getId());
-					break;
-
-				case MatchesPanel.NUR_EIGENE_LIGASPIELE :
-					sql += (" AND MatchTyp=" + MatchType.LEAGUE.getId());
-					break;
-
-				case MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE :
-					sql += (" AND ( MatchTyp=" + MatchType.FRIENDLYNORMAL.getId());
-					sql += (" OR MatchTyp=" + MatchType.FRIENDLYCUPRULES.getId());
-					sql += (" OR MatchTyp=" + MatchType.INTFRIENDLYCUPRULES.getId());
-					sql += (" OR MatchTyp=" + MatchType.INTFRIENDLYNORMAL.getId() + " )");
-					break;
-				case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
-					sql += (" AND ( MatchTyp=" + MatchType.TOURNAMENTGROUP.getId());
-					sql += (" OR MatchTyp=" + MatchType.TOURNAMENTPLAYOFF.getId());
-					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter resinstate filter on DIVISIONBATTLE   ");
-//					sql += (" OR MatchTyp=" + MatchType.DIVISIONBATTLE.getId() + " )");
-					break;
-				case MatchesPanel.ONLY_SECONDARY_CUP:
-					HOLogger.instance().error(MatchesOverviewQuery.class, "TODO: Add filter resinstate filter on secondary cup   ");
-//					sql += (" AND ( MatchTyp=" + MatchType.EMERALDCUP.getId());
-//					sql += (" OR MatchTyp=" + MatchType.RUBYCUP.getId());
-//					sql += (" OR MatchTyp=" + MatchType.SAPPHIRECUP.getId());
-//					sql += (" OR MatchTyp=" + MatchType.CONSOLANTECUP.getId()+ " )");
-					break;
-				case MatchesPanel.ONLY_QUALIF_MATCHES:
-					sql += (" AND MatchTyp=" + MatchType.QUALIFICATION.getId());
-					break;
-			}
+			sql += MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType).toString();
 
 			sql += " ORDER BY MatchDate DESC";
 

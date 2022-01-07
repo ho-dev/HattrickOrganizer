@@ -59,7 +59,7 @@ class DistributionStatisticsPanel extends JPanel {
 					hoV.getLanguageString("ls.club.arena.basicseating")+" ( %)",hoV.getLanguageString("ls.club.arena.seatsunderroof")+" ( %)",hoV.getLanguageString("ls.club.arena.seatsinvipboxes")+" ( %)",
 					hoV.getLanguageString("Fans")+" ( )"};
 
-		ArenaStatistikModel[] matches=  DBManager.instance().getArenaStatistikModel(MatchesPanel.NUR_EIGENE_LIGASPIELE).getMatches();
+		ArenaStatistikModel[] matches=  DBManager.instance().getArenaStatistikModel(MatchesPanel.OWN_LEAGUE_GAMES).getMatches();
 		IHOTableEntry[][] value = new IHOTableEntry[matches.length][columnNames.length];
         for (int i = 0; i < matches.length; i++) {
         	 value[i][0] = new ColorLabelEntry(matches[i].getMatchID()+"",

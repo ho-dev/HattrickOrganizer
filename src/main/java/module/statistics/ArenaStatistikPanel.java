@@ -77,16 +77,16 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
 						MatchesPanel.OWN_OFFICIAL_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						MatchesPanel.ONLY_NATIONAL_CUP),
+						MatchesPanel.OWN_NATIONAL_CUP_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						MatchesPanel.ONLY_SECONDARY_CUP),
+						MatchesPanel.OWN_SECONDARY_CUP_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
-						MatchesPanel.NUR_EIGENE_LIGASPIELE),
+						MatchesPanel.OWN_LEAGUE_GAMES),
 				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						MatchesPanel.ONLY_QUALIF_MATCHES),
+						MatchesPanel.OWN_QUALIF_GAMES),
 				new CBItem(HOVerwaltung.instance()
 						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE) };
+						MatchesPanel.OWN_FRIENDLY_GAMES) };
 		return matchFilterItems;
 	}
 }

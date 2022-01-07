@@ -194,13 +194,14 @@ distributions {
 }
 
 install4j {
+    install4jHomeDir="${install4jHomeDir}/"
     if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
     else installDir = file(System.getenv('INSTALL4J_HOME'))
     disableSigning = true
     license = System.getenv('INSTALL4J_LICENSE')
 }
 
-// endregion ======================================================================================================================
+//endregion ======================================================================================================================
 
 
 // region my tasks ================================================================================================
@@ -418,8 +419,8 @@ task resetDB {
         try {
             println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
             copy {
-                from resetDir
-                into "${projectDir}/"
+                from "${resetDir}/"
+                into "${projectDir}/db/"
                 exclude "**/logs/**"
             }
 

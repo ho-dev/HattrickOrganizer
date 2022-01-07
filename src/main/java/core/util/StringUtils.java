@@ -52,20 +52,6 @@ public class StringUtils {
 		return (str == null || str.length() == 0);
 	}
 
-	/**
-	 * Returns a specified default if the given string is <code>null</code>.
-	 * 
-	 * @param string
-	 *            a string
-	 * @param defaultStr
-	 *            the default to return
-	 * @return the defaultStr if the given string is <code>null</code>, the
-	 *         string itself otherwise.
-	 */
-	public static String defaultIfNull(String string, String defaultStr) {
-		return (string == null) ? defaultStr : string;
-	}
-
 	private static String separator = " " + HOVerwaltung.instance().getLanguageString("ls.match.result.separation") + " ";
 
 	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {

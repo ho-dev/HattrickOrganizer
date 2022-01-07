@@ -13,7 +13,6 @@ import java.awt.Color;
 
 public final class MatchesColumnModel extends HOTableModel {
 
-	private static final long serialVersionUID = -2148644586671286752L;
 	private MatchKurzInfo[] m_clMatches;
 
 	protected MatchesColumnModel(int id) {
@@ -28,7 +27,7 @@ public final class MatchesColumnModel extends HOTableModel {
 			initData();
 	}
 
-	public final MatchKurzInfo getMatch(int id) {
+	public MatchKurzInfo getMatch(int id) {
 		if (id > 0) {
 			for (int i = 0; i < m_clMatches.length; i++) {
 				if (m_clMatches[i].getMatchID() == id) {
@@ -43,7 +42,7 @@ public final class MatchesColumnModel extends HOTableModel {
 		return false;
 	}
 
-	public final void setValues(MatchKurzInfo[] matches) {
+	public void setValues(MatchKurzInfo[] matches) {
 		m_clMatches = matches;
 		initData();
 	}
