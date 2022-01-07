@@ -16,7 +16,7 @@ import java.util.List;
 final class NtTeamTable extends AbstractTable {
 	public final static String TABLENAME = "NTTEAM";
 
-	protected NtTeamTable(JDBCAdapter adapter) {
+	NtTeamTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
