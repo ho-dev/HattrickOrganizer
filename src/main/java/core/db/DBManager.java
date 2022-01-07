@@ -1887,7 +1887,7 @@ public class DBManager {
 	 * @return the arena statistik model
 	 */
 	public ArenaStatistikTableModel getArenaStatistikModel(int matchtyp) {
-		return StatisticQuery.getArenaStatistikModel(matchtyp);
+		return StatisticQuery.getArenaStatisticsModel(matchtyp);
 	}
 
 	/**

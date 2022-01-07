@@ -10,6 +10,7 @@ import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.util.HOLogger;
 import core.util.Helper;
 
 import javax.swing.JTable;

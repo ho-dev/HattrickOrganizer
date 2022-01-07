@@ -59,7 +59,7 @@ class MatchesOverviewQuery  {
 		}
 		sql.append(" ((HEIMID = ").append(teamId).append(whereHomeClause);
 		sql.append(" OR (GASTID = ").append(teamId).append(whereAwayClause);
-		sql.append(getMatchTypWhereClause(matchtype));
+		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
 		try {
@@ -150,24 +150,32 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		if(!ownTeam) {sql.append("!");}
 		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
 		sql.append(row.getSubtyps()).append(")");
-		sql.append(getMatchTypWhereClause(iMatchType));
+		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
 		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
-		try {
-			int iConverted = 0;
-			int iMissed = 0;
-			while(rs.next()) {
-				int iMatchEventID = rs.getInt("MATCH_EVENT_ID");
-				if (isGoalEvent(iMatchEventID)) {iConverted += rs.getInt("C");}
-				else {iMissed += rs.getInt("C"); }
-			         }
-			rs.close();
-			row.setGoals(iConverted);
-			row.setNoGoals(iMissed);
+		if(rs == null){
+			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
+		else {
+			try {
+				int iConverted = 0;
+				int iMissed = 0;
+				while (rs.next()) {
+					int iMatchEventID = rs.getInt("MATCH_EVENT_ID");
+					if (isGoalEvent(iMatchEventID)) {
+						iConverted += rs.getInt("C");
+					} else {
+						iMissed += rs.getInt("C");
+					}
+				}
+				rs.close();
+				row.setGoals(iConverted);
+				row.setNoGoals(iMissed);
+			}
 			catch (SQLException e) {
-			HOLogger.instance().log(MatchesOverviewQuery.class, e);
+				HOLogger.instance().log(MatchesOverviewQuery.class, e);
+		}
 		}
 	}
 
@@ -182,45 +190,9 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		return sql;
 	}
 
-	private static StringBuilder getMatchTypWhereClause(int matchtype){
-		StringBuilder sql = new StringBuilder(50);
-		switch (matchtype) {
-			case MatchesPanel.OWN_GAMES:
-				//Nothing to do, as the teamId is the only restriction
-				break;
-			case MatchesPanel.OWN_OFFICIAL_GAMES:
-				sql.append(" AND (MatchTyp=").append(MatchType.QUALIFICATION.getId());
-				sql.append(" OR MatchTyp=").append(MatchType.LEAGUE.getId());
-				sql.append(" OR (MatchTyp=").append(MatchType.CUP.getId()).append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId()).append("))");
-				break;
-			case MatchesPanel.ONLY_NATIONAL_CUP:
-				sql.append(" AND MatchTyp=").append(MatchType.CUP.getId());
-				break;
-			case MatchesPanel.NUR_EIGENE_LIGASPIELE :
-				sql.append(" AND MatchTyp=").append(MatchType.LEAGUE.getId());
-				break;
-			case MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE :
-				sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId());
-				sql.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId());
-				sql.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId());
-				sql.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
-				break;
-			case MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE :
-				sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId());
-				sql.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
-				break;
-			case MatchesPanel.ONLY_SECONDARY_CUP:
-				sql.append(" AND (MatchTyp=").append(MatchType.CUP.getId()).append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId()).append(")");
-				break;
-			case MatchesPanel.ONLY_QUALIF_MATCHES:
-				sql.append(" AND MatchTyp=").append(MatchType.QUALIFICATION.getId());
-				break;
-			}
-		return sql;
-	}
 
 	static MatchesOverviewRow[] getMatchesOverviewValues(int matchtype, MatchLocation matchLocation){
-		ArrayList<MatchesOverviewRow> rows = new ArrayList<MatchesOverviewRow>(20);
+		ArrayList<MatchesOverviewRow> rows = new ArrayList<>(20);
 		rows.add(new MatchesOverviewRow(HOVerwaltung.instance().getLanguageString("AlleSpiele"), MatchesOverviewRow.TYPE_ALL));
 		rows.add(new MatchesOverviewRow(HOVerwaltung.instance().getLanguageString("ls.team.formation"), MatchesOverviewRow.TYPE_TITLE));
 		rows.add(new MatchesOverviewRow("5-5-0", MatchesOverviewRow.TYPE_SYSTEM));
@@ -264,9 +236,8 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		StringBuilder whereClause = new StringBuilder(100);
-//		whereClause.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId);
 		whereClause.append(getMatchLocationWhereClause(matchLocation, teamId, home));
-		whereClause.append(getMatchTypWhereClause(matchtype));
+		whereClause.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 		setMatchesOverviewRow(rows.get(0), whereClause.toString(),home);
 		setFormationRows(rows,whereClause, home);
 		setRows(rows, whereClause, home);
@@ -369,6 +340,10 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(")");
 		try{
 		ResultSet rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		if(rs == null){
+			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
+		}
+
 		if(rs.next()){
 			row.setCount(rs.getInt("A1"));
 			row.setWin(rs.getInt("G"));

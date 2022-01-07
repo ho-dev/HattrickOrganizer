@@ -19,7 +19,6 @@ import java.awt.*;
 public class MatchesOverviewTable extends JTable {
 	
 	private MatchesOverviewColumnModel tableModel;
-	// private TableSorter m_clTableSorter;
 	 
 	public MatchesOverviewTable(int iMatchType){
 		super();
@@ -36,7 +35,7 @@ public class MatchesOverviewTable extends JTable {
 
         if (tableModel == null) {
         	tableModel = UserColumnController.instance().getMatchesOverview1ColumnModel();
-        	if(iMatchType == MatchesPanel.ALL_MATCHS || iMatchType == MatchesPanel.OTHER_TEAM_MATCHS){
+        	if(iMatchType == MatchesPanel.ALL_GAMES || iMatchType == MatchesPanel.OTHER_TEAM_GAMES){
             	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
             	tableModel.setValues(tmp);
             } else {
@@ -91,12 +90,12 @@ public class MatchesOverviewTable extends JTable {
     	DBManager.instance().saveHOColumnModel(tableModel);
     }
     
-    public void refresh(int matchtypen, MatchLocation matchLocation) {
-        if(matchtypen == MatchesPanel.ALL_MATCHS || matchtypen == MatchesPanel.OTHER_TEAM_MATCHS){
+    public void refresh(int iMatchType, MatchLocation matchLocation) {
+        if(iMatchType == MatchesPanel.ALL_GAMES || iMatchType == MatchesPanel.OTHER_TEAM_GAMES){
         	MatchesOverviewRow[] tmp = new MatchesOverviewRow[0];
         	tableModel.setValues(tmp);
         } else {
-        	initModel(matchtypen, matchLocation);
+        	initModel(iMatchType, matchLocation);
         }
     }
  

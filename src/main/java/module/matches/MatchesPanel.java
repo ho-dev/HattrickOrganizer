@@ -45,28 +45,34 @@ import static core.util.Helper.getTranslation;
 
 public final class MatchesPanel extends LazyImagePanel {
 
-	/** Only played Matches of suplied team (unsupported for now) */
-	public static final int NUR_GESPIELTEN_SPIELE = 10;
-	/** Only tournament matches of supplied team */
-	public static final int NUR_EIGENE_TOURNAMENTSPIELE = 7;
-	/** Only Other Team Matches*/
-	public static final int OTHER_TEAM_MATCHS = 6;
-	/** Only friendly Matches of suplied team */
-	public static final int NUR_EIGENE_FREUNDSCHAFTSSPIELE = 5;
-	/** Only league Matches of suplied team */
-	public static final int NUR_EIGENE_LIGASPIELE = 4;
-	/** Only national cup Matches of suplied team */
-	public static final int ONLY_NATIONAL_CUP = 3;
-	/** Only cup +league + quali Matches of suplied team */
-	public static final int OWN_OFFICIAL_GAMES = 2;
-	/** Only Matches of suplied team */
+	public static final int ALL_GAMES = 0;
 	public static final int OWN_GAMES = 1;
-	/** Only Secondary cup matchs */
-	public static final int ONLY_SECONDARY_CUP = 9;
-	/** Only Qualifification matchs */
-	public static final int ONLY_QUALIF_MATCHES = 8;
-	public static final int ALL_MATCHS = 0;
-	private static final long serialVersionUID = -6337569355347545083L;
+	public static final int OWN_OFFICIAL_GAMES = 2; //own cup + league + qualif
+	public static final int OWN_CUP_GAMES = 3;
+	public static final int OWN_NATIONAL_CUP_GAMES = 4;
+	public static final int OWN_SECONDARY_CUP_GAMES = 5;
+	public static final int OWN_LEAGUE_GAMES = 6;
+	public static final int OWN_QUALIF_GAMES = 7;
+	public static final int OWN_FRIENDLY_GAMES = 8;
+	public static final int OWN_TOURNAMENT_GAMES = 9;
+	public static final int OTHER_TEAM_GAMES = 10;
+
+
+	// Combobox matchesFilter =============================
+	public static final CBItem[] matchesTypeCBItems = {
+			new CBItem(Helper.getTranslation("AlleSpiele"), MatchesPanel.ALL_GAMES),
+			new CBItem(Helper.getTranslation("NurEigeneSpiele"), MatchesPanel.OWN_GAMES),
+			new CBItem(Helper.getTranslation("NurEigenePflichtspiele"), MatchesPanel.OWN_OFFICIAL_GAMES),
+			new CBItem(Helper.getTranslation("AllCupMatches"), MatchesPanel.OWN_CUP_GAMES),
+			new CBItem(Helper.getTranslation("NurEigenePokalspiele"), MatchesPanel.OWN_NATIONAL_CUP_GAMES),
+			new CBItem(Helper.getTranslation("OnlySecondaryCup"), MatchesPanel.OWN_SECONDARY_CUP_GAMES),
+			new CBItem(Helper.getTranslation("NurEigeneLigaspiele"), MatchesPanel.OWN_LEAGUE_GAMES),
+			new CBItem(Helper.getTranslation("OnlyQualificationMatches"), MatchesPanel.OWN_QUALIF_GAMES),
+			new CBItem(Helper.getTranslation("NurEigeneFreundschaftsspiele"), MatchesPanel.OWN_FRIENDLY_GAMES),
+			new CBItem(Helper.getTranslation("NurEigeneTournamentsspiele"), MatchesPanel.OWN_TOURNAMENT_GAMES),
+			new CBItem(Helper.getTranslation("NurFremdeSpiele"), MatchesPanel.OTHER_TEAM_GAMES)
+	};
+
 	private AufstellungsSternePanel aufstellungGastPanel;
 	private AufstellungsSternePanel aufstellungHeimPanel;
 	private JButton adoptLineupButton;
@@ -74,10 +80,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private JButton reloadMatchButton;
 	private JButton simulateMatchButton;
 	private JComboBox m_jcbSpieleFilter;
-
 	private JPanel matchesOverviewPanel;
-	private JPanel matchesLocationButtonsPanel;
-
 	private JPanel linupPanel;
 	private JSplitPane horizontalLeftSplitPane;
 	private JSplitPane verticalSplitPane;
@@ -90,8 +93,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private StaerkenvergleichPanel teamsComparePanel;
 	private MatchesModel matchesModel;
-	private boolean initialized = false;
-	private boolean needsRefresh = false;
+
 
 	@Override
 	protected void initialize() {
@@ -169,9 +171,8 @@ public final class MatchesPanel extends LazyImagePanel {
 					}
 				}
 			}
-			// Alles Updaten
+
 			HOMainFrame.instance().getLineupPanel().update();
-			// Aufstellung zeigen
 			HOMainFrame.instance().showTab(IModule.LINEUP);
 		}
 	}
@@ -337,7 +338,6 @@ public final class MatchesPanel extends LazyImagePanel {
 			} finally {
 				CursorToolkit.stopWaitCursor(this);
 			}
-			this.needsRefresh = false;
 		}
 	}
 
@@ -451,31 +451,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		ImagePanel panel = new ImagePanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		// Combobox matchesFilter =============================
-		CBItem[] matchesFilter = {
-				new CBItem(HOVerwaltung.instance().getLanguageString("AlleSpiele"),
-						MatchesPanel.ALL_MATCHS),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
-						MatchesPanel.OWN_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
-						MatchesPanel.OWN_OFFICIAL_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
-						MatchesPanel.ONLY_NATIONAL_CUP),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						MatchesPanel.ONLY_SECONDARY_CUP),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
-						MatchesPanel.NUR_EIGENE_LIGASPIELE),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						MatchesPanel.ONLY_QUALIF_MATCHES),
-				new CBItem(HOVerwaltung.instance()
-						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneTournamentsspiele"),
-						MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurFremdeSpiele"),
-						MatchesPanel.OTHER_TEAM_MATCHS) };
-
-		m_jcbSpieleFilter = new JComboBox(matchesFilter);
+		m_jcbSpieleFilter = new JComboBox(matchesTypeCBItems);
 		Helper.setComboBoxFromID(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
 		m_jcbSpieleFilter.setFont(m_jcbSpieleFilter.getFont().deriveFont(Font.BOLD));
 		panel.add(m_jcbSpieleFilter);

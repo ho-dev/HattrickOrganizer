@@ -37,7 +37,7 @@ public class MatchesHighlightsTable extends JTable {
     }
     
     private Object[][] getValues(int iMatchType, MatchLocation matchLocation){
-    	if(iMatchType == MatchesPanel.ALL_MATCHS || iMatchType == MatchesPanel.OTHER_TEAM_MATCHS){
+    	if(iMatchType == MatchesPanel.ALL_GAMES || iMatchType == MatchesPanel.OTHER_TEAM_GAMES){
          	return new Object[0][0];
          }
     	MatchesHighlightsStat[] rows = DBManager.instance().getGoalsByActionType(true, iMatchType, matchLocation);

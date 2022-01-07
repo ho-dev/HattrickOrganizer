@@ -577,24 +577,18 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 	private CBItem[] getMatchFilterItems() {
 		return new CBItem[]{
-				new CBItem(getLangStr("NurEigeneSpiele"), MatchesPanel.OWN_GAMES
-						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(getLangStr("NurEigenePflichtspiele"),
-						MatchesPanel.OWN_OFFICIAL_GAMES + MatchesPanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(getLangStr("NurEigenePokalspiele"), MatchesPanel.ONLY_NATIONAL_CUP
-						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
-						MatchesPanel.ONLY_SECONDARY_CUP),
-				new CBItem(getLangStr("NurEigeneLigaspiele"), MatchesPanel.NUR_EIGENE_LIGASPIELE
-						+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
-						MatchesPanel.ONLY_QUALIF_MATCHES),
-				new CBItem(HOVerwaltung.instance()
-						.getLanguageString("NurEigeneFreundschaftsspiele"),
-						MatchesPanel.NUR_EIGENE_FREUNDSCHAFTSSPIELE
-								+ MatchesPanel.NUR_GESPIELTEN_SPIELE),
-				new CBItem(getLangStr("NurEigeneTournamentsspiele"),
-						MatchesPanel.NUR_EIGENE_TOURNAMENTSPIELE + MatchesPanel.NUR_GESPIELTEN_SPIELE) };
+				new CBItem(Helper.getTranslation("AlleSpiele"), MatchesPanel.ALL_GAMES),
+				new CBItem(Helper.getTranslation("NurEigeneSpiele"), MatchesPanel.OWN_GAMES),
+				new CBItem(Helper.getTranslation("NurEigenePflichtspiele"), MatchesPanel.OWN_OFFICIAL_GAMES),
+				new CBItem(Helper.getTranslation("AllCupMatches"), MatchesPanel.OWN_CUP_GAMES),
+				new CBItem(Helper.getTranslation("NurEigenePokalspiele"), MatchesPanel.OWN_NATIONAL_CUP_GAMES),
+				new CBItem(Helper.getTranslation("OnlySecondaryCup"), MatchesPanel.OWN_SECONDARY_CUP_GAMES),
+				new CBItem(Helper.getTranslation("NurEigeneLigaspiele"), MatchesPanel.OWN_LEAGUE_GAMES),
+				new CBItem(Helper.getTranslation("OnlyQualificationMatches"), MatchesPanel.OWN_QUALIF_GAMES),
+				new CBItem(Helper.getTranslation("NurEigeneFreundschaftsspiele"), MatchesPanel.OWN_FRIENDLY_GAMES),
+				new CBItem(Helper.getTranslation("NurEigeneTournamentsspiele"), MatchesPanel.OWN_TOURNAMENT_GAMES),
+				new CBItem(Helper.getTranslation("NurFremdeSpiele"), MatchesPanel.OTHER_TEAM_GAMES)
+		};
 	}
 
 	private String getLangStr(String key) {
