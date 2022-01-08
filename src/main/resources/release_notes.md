@@ -25,7 +25,8 @@
 * fixed a bug when downloading team logos (#1300)
 * substitutions of the same minute can be ordered (#1039)
 
-### IFA
+### NT
+* fix download xml parse errors (#1305)
 
 ### Training
 
