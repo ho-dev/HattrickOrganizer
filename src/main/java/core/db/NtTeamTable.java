@@ -81,6 +81,7 @@ final class NtTeamTable extends AbstractTable {
 					ntTeamDetails.getXp433() + "," +
 					ntTeamDetails.getXp442() + "," +
 					ntTeamDetails.getXp451() + "," +
+					ntTeamDetails.getXp523() + "," +
 					ntTeamDetails.getXp532() + "," +
 					ntTeamDetails.getXp541() + "," +
 					ntTeamDetails.getXp550() + ",'" +
@@ -130,6 +131,7 @@ final class NtTeamTable extends AbstractTable {
 		team.setXp433(DBManager.getInteger(rs, "XP433"));
 		team.setXp442(DBManager.getInteger(rs, "XP442"));
 		team.setXp451(DBManager.getInteger(rs, "XP451"));
+		team.setXp523(DBManager.getInteger(rs, "XP523"));
 		team.setXp532(DBManager.getInteger(rs, "XP532"));
 		team.setXp541(DBManager.getInteger(rs, "XP541"));
 		team.setXp550(DBManager.getInteger(rs, "XP550"));
