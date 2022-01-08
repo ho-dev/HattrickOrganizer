@@ -13,6 +13,7 @@ import core.file.xml.XMLWorldDetailsParser;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
+import core.util.HTDatetime;
 import core.util.HelperWrapper;
 import core.HO;
 
@@ -20,6 +21,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -136,7 +138,8 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
 		m_sHRFBuffer.append("appversion=").append(HO.VERSION).append("\n");
-		m_sHRFBuffer.append("date=").append(details.getFetchedDate()).append("\n");
+		var fetched = new HTDatetime(details.getFetchedDate());
+		m_sHRFBuffer.append("date=").append(fetched.getHattrickTimeAsString()).append("\n");
 		m_sHRFBuffer.append("season=" + "38" + "\n"); 		//TODO: Season
 		m_sHRFBuffer.append("matchround=" + "7" + "\n"); 	//TODO: MatchRound
 		m_sHRFBuffer.append("teamID=").append(details.getTeamId()).append("\n");
@@ -348,12 +351,10 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Erstellt die Player Daten
 	 */
-	final void createPlayers(NtPlayersParser players) throws Exception {
+	final void createPlayers(NtPlayersParser players) {
 		List<NtPlayer> pls = players.getAllPlayers();
 
-		for (Iterator<NtPlayer> i = pls.iterator(); i.hasNext(); ) {
-			NtPlayer pl = i.next();
-
+		for (NtPlayer pl : pls) {
 			m_sHRFBuffer.append("[player").append(pl.getPlayerId()).append("]").append("\n");
 			m_sHRFBuffer.append("name=").append(pl.getName()).append("\n");
 			m_sHRFBuffer.append("firstname=").append(pl.getFirstName()).append("\n");
@@ -405,7 +406,7 @@ class NthrfConvertXml2Hrf {
 			//		&& (m_clTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID").toString())).getRating() >= 0)) {
 			//	m_sHRFBuffer.append("rating=" + (int) (m_clTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID").toString())) .getRating() * 2) + "\n");
 			//} else {
-				m_sHRFBuffer.append("rating=0" + "\n");
+			m_sHRFBuffer.append("rating=0" + "\n");
 			//}
 
 			//Bonus
@@ -423,7 +424,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Erstellt die Team Daten
 	 */
-	final void createTeam(NtTeamDetails details) throws Exception {
+	final void createTeam(NtTeamDetails details) {
 		m_sHRFBuffer.append("[team]" + "\n");
 		m_sHRFBuffer.append("trLevel=100\n");			// TrainingLevel
 		m_sHRFBuffer.append("staminaTrainingPart=5\n"); //StaminaTrainingPart
@@ -472,7 +473,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Creates the world details for the current user / country.
 	 */
-	final void createWorld(Map<String, String> world, NtTeamDetails details, NtPlayer trainer) throws Exception {
+	final void createWorld(Map<String, String> world, NtTeamDetails details, NtPlayer trainer) {
 		m_sHRFBuffer.append("[xtra]\n");
 
 		m_sHRFBuffer.append("TrainingDate=").append(world.get("TrainingDate")).append("\n");
@@ -494,7 +495,7 @@ class NthrfConvertXml2Hrf {
 	 * Parse all leagues and (nativeLeagueId) and their countryId.
 	 */
 	HashMap<Integer, Integer> getCountryMapping(MyConnector dh) {
-		HashMap<Integer, Integer> ret = new HashMap<Integer, Integer>(100);
+		HashMap<Integer, Integer> ret = new HashMap<>(100);
 		try {
 			String str = getWorldDetailString(dh);
 			if (str == null || str.equals("")) {
@@ -502,9 +503,9 @@ class NthrfConvertXml2Hrf {
 			}
 			Document doc = XMLManager.parseString(str);
 
-			Element ele = null;
-			Element root = null;
-			NodeList list = null;
+			Element ele;
+			Element root;
+			NodeList list;
 			if (doc == null) {
 				return ret;
 			}
@@ -528,7 +529,7 @@ class NthrfConvertXml2Hrf {
 		return ret;
 	}
 
-    private String getWorldDetailString(MyConnector dh) throws Exception {
+    private String getWorldDetailString(MyConnector dh) {
         return dh.getHattrickXMLFile("/chppxml.axd?file=worlddetails&version=1.8");
     }
 
@@ -547,10 +548,10 @@ class NthrfConvertXml2Hrf {
 		debug("Create NT HRF file: " + (file != null ? file.getAbsolutePath() : "null"));
 		if (file == null) return;
 
-		BufferedWriter out = null;
+		BufferedWriter out;
 		final String text = m_sHRFBuffer.toString();
 		//utf-8
-		OutputStreamWriter outWrit = null;
+		OutputStreamWriter outWrit;
 
 		try {
 			if (file.exists()) {
@@ -558,11 +559,9 @@ class NthrfConvertXml2Hrf {
 			}
 			file.createNewFile();
 
-			outWrit = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+			outWrit = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 			out = new BufferedWriter(outWrit);
-			if (text != null) {
-				out.write(text);
-			}
+			out.write(text);
 			out.close();
 		} catch (Exception e) {
 			e.printStackTrace();
