@@ -17,17 +17,17 @@ public class NtTeamDetails {
 	private int leagueId;
 	private String leagueName;
 	private String homePageUrl;
-	private int xp253;
-	private int xp343;
-	private int xp352;
-	private int xp433;
-	private int xp442;
-	private int xp451;
-	private int xp532;
-	private int xp541;
-	private int xp550;
-	private int morale;
-	private int selfConfidence;
+	private int xp253=0;
+	private int xp343=0;
+	private int xp352=0;
+	private int xp433=0;
+	private int xp442=0;
+	private int xp451=0;
+	private int xp532=0;
+	private int xp541=0;
+	private int xp550=0;
+	private Integer morale;
+	private Integer selfConfidence;
 	private int supportersPopularity;
 	private int ratingScore;
 	private int fanclubSize;
@@ -92,12 +92,8 @@ public class NtTeamDetails {
 	public void setXp550(Integer xp550) {
 		if ( xp550!= null) this.xp550 = xp550;
 	}
-	public void setMorale(Integer morale) {
-		if ( morale != null) this.morale = morale;
-	}
-	public void setSelfConfidence(Integer selfConfidence) {
-		if ( selfConfidence!=null) this.selfConfidence = selfConfidence;
-	}
+	public void setMorale(Integer morale) { this.morale = morale; }
+	public void setSelfConfidence(Integer selfConfidence) { this.selfConfidence = selfConfidence; }
 	public void setSupportersPopularity(Integer supportersPopularity) {
 		if ( supportersPopularity!= null) this.supportersPopularity = supportersPopularity;
 	}
@@ -159,10 +155,10 @@ public class NtTeamDetails {
 	public int getXp541() {
 		return xp541;
 	}
-	public int getMorale() {
+	public Integer getMorale() {
 		return morale;
 	}
-	public int getSelfConfidence() {
+	public Integer getSelfConfidence() {
 		return selfConfidence;
 	}
 	public int getSupportersPopularity() {
@@ -200,65 +196,47 @@ public class NtTeamDetails {
         try {
 
             Element root = doc.getDocumentElement();
-            Element teamRoot;
             Element ele = (Element)root.getElementsByTagName("FetchedDate").item(0);
             fetchedDate = Basics.parseHattrickDate(XMLManager.getFirstChildNodeValue(ele));
 
             // root Team
-            teamRoot = (Element) root.getElementsByTagName("Team").item(0);
-            root = teamRoot;
-            ele = (Element) root.getElementsByTagName("TeamID").item(0);
-            teamId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele));
-            ele = (Element) root.getElementsByTagName("TeamName").item(0);
-            teamName = XMLManager.getFirstChildNodeValue(ele);
-            ele = (Element) root.getElementsByTagName("ShortTeamName").item(0);
-            teamNameShort = XMLManager.getFirstChildNodeValue(ele);
+            var teamRoot = (Element) root.getElementsByTagName("Team").item(0);
+
+			teamId = getInteger(teamRoot, "TeamID", -1);
+			teamName = getString(teamRoot, "TeamName");
+			teamNameShort = getString(teamRoot, "ShortTeamName");
 
             // root national coach
             root = (Element) teamRoot.getElementsByTagName("NationalCoach").item(0);
-            ele = (Element) root.getElementsByTagName("NationalCoachUserID").item(0);
-            coachId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele));
-            ele = (Element) root.getElementsByTagName("NationalCoachLoginname").item(0);
-            coachName = XMLManager.getFirstChildNodeValue(ele);
+			coachId = getInteger(root, "NationalCoachUserID");
+			coachName = getString(root, "NationalCoachLoginname");
 
             // root League
             root = (Element) teamRoot.getElementsByTagName("League").item(0);
-            ele = (Element) root.getElementsByTagName("LeagueID").item(0);
-            leagueId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele));
-            ele = (Element) root.getElementsByTagName("LeagueName").item(0);
-            leagueName = XMLManager.getFirstChildNodeValue(ele);
+			leagueId = getInteger(root, "LeagueID", -1);
+			leagueName = getString(root, "LeagueName");
 
             // root HomePage
-            root = (Element) teamRoot.getElementsByTagName("HomePage").item(0);
-            homePageUrl = XMLManager.getFirstChildNodeValue(root);
+			homePageUrl = getString(teamRoot, "HomePage");
 
             // formation XP
-            root = (Element) teamRoot.getElementsByTagName("Experience433").item(0);
-            xp433 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Experience451").item(0);
-            xp451 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Experience352").item(0);
-            xp352 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Experience532").item(0);
-            xp532 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Experience343").item(0);
-            xp343 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Experience541").item(0);
-            xp541 = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
+			xp253 = getInteger(teamRoot, "Experience253", 0);
+			xp352 = getInteger(teamRoot, "Experience352",0);
+			xp451 = getInteger(teamRoot, "Experience451",0);
+			xp442 = getInteger(teamRoot, "Experience442",0);
+			xp433 = getInteger(teamRoot, "Experience433",0);
+			xp532 = getInteger(teamRoot, "Experience532",0);
+			xp541 = getInteger(teamRoot, "Experience541",0);
+			xp550 = getInteger(teamRoot, "Experience550",0);
 
-            // morale etc.
-            root = (Element) teamRoot.getElementsByTagName("Morale").item(0);
-            morale = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("SelfConfidence").item(0);
-            selfConfidence = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("SupportersPopularity").item(0);
-            supportersPopularity = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("RatingScore").item(0);
-            ratingScore = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("FanClubSize").item(0);
-            fanclubSize = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
-            root = (Element) teamRoot.getElementsByTagName("Rank").item(0);
-            rank = Integer.parseInt(XMLManager.getFirstChildNodeValue(root));
+			// morale etc.
+			morale = getInteger(teamRoot, "Morale");
+			selfConfidence = getInteger(teamRoot, "SelfConfidence");
+			supportersPopularity = getInteger(teamRoot, "SupportersPopularity",0);
+			ratingScore = getInteger(teamRoot, "RatingScore",0);
+			fanclubSize = getInteger(teamRoot, "FanClubSize",0);
+			rank = getInteger(teamRoot, "Rank",0);
+
             parsingSuccess = true;
         } catch (Exception e) {
         	parsingSuccess = false;
@@ -266,6 +244,25 @@ public class NtTeamDetails {
         }
 	}
 
+	private int getInteger(Element root, String tag, int def) {
+		var ret = getInteger(root, tag);
+		if ( ret != null) return ret;
+		return def;
+	}
+
+	private String getString(Element root, String tag) {
+		var ele = (Element) root.getElementsByTagName(tag).item(0);
+		return XMLManager.getFirstChildNodeValue(ele);
+	}
+
+	private Integer getInteger(Element root, String tag) {
+		try {
+			return Integer.parseInt(getString(root, tag));
+		} catch (NumberFormatException ignored) {
+			//e.printStackTrace();
+		}
+		return null;
+	}
 
 	boolean isParsingSuccess() {
 		return parsingSuccess;
