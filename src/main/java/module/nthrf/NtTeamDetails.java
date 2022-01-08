@@ -150,6 +150,9 @@ public class NtTeamDetails {
 	public int getXp352() {
 		return xp352;
 	}
+	public int getXp523() {
+		return this.xp523;
+	}
 	public int getXp532() {
 		return xp532;
 	}
@@ -293,7 +296,5 @@ public class NtTeamDetails {
 				"\n\trank:                 " + rank;
 	}
 
-	public int getXp523() {
-		return this.xp523;
-	}
+
 }
