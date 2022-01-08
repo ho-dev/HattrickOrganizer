@@ -103,7 +103,9 @@ final class NtTeamTable extends AbstractTable {
 	public NtTeamDetails load(int teamId, Timestamp matchDate) {
 		try {
 			var sql = new StringBuilder();
-			sql.append("SELECT * FROM ").append(TABLENAME).append(" WHERE TEAM_ID=").append(teamId);
+			sql.append("SELECT * FROM ").append(TABLENAME)
+					.append(" WHERE TEAM_ID=").append(teamId)
+					.append(" AND MORALE IS NOT NULL");
 			if (matchDate != null) sql.append(" AND FETCHEDDATE<'").append(matchDate).append("'");
 			sql.append(" ORDER BY HRF_ID DESC LIMIT 1");
 			var rs = adapter.executeQuery(sql.toString());
