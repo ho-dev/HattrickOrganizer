@@ -23,6 +23,7 @@ public class NtTeamDetails {
 	private int xp433=0;
 	private int xp442=0;
 	private int xp451=0;
+	private int xp523=0;
 	private int xp532=0;
 	private int xp541=0;
 	private int xp550=0;
@@ -79,6 +80,9 @@ public class NtTeamDetails {
 	}
 	public void setXp451(Integer xp451) {
 		if ( xp451!=null) this.xp451 = xp451;
+	}
+	public void setXp523(Integer xp523) {
+		if ( xp523!= null) this.xp523 = xp523;
 	}
 	public void setXp532(Integer xp532) {
 		if ( xp532!= null) this.xp532 = xp532;
@@ -145,6 +149,9 @@ public class NtTeamDetails {
 	}
 	public int getXp352() {
 		return xp352;
+	}
+	public int getXp523() {
+		return this.xp523;
 	}
 	public int getXp532() {
 		return xp532;
@@ -225,6 +232,7 @@ public class NtTeamDetails {
 			xp451 = getInteger(teamRoot, "Experience451",0);
 			xp442 = getInteger(teamRoot, "Experience442",0);
 			xp433 = getInteger(teamRoot, "Experience433",0);
+			xp523 = getInteger(teamRoot, "Experience523",0);
 			xp532 = getInteger(teamRoot, "Experience532",0);
 			xp541 = getInteger(teamRoot, "Experience541",0);
 			xp550 = getInteger(teamRoot, "Experience550",0);
@@ -287,5 +295,6 @@ public class NtTeamDetails {
 				"\n\tfanclubSize:          " + fanclubSize +
 				"\n\trank:                 " + rank;
 	}
+
 
 }

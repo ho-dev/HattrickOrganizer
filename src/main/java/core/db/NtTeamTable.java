@@ -81,6 +81,7 @@ final class NtTeamTable extends AbstractTable {
 					ntTeamDetails.getXp433() + "," +
 					ntTeamDetails.getXp442() + "," +
 					ntTeamDetails.getXp451() + "," +
+					ntTeamDetails.getXp523() + "," +
 					ntTeamDetails.getXp532() + "," +
 					ntTeamDetails.getXp541() + "," +
 					ntTeamDetails.getXp550() + ",'" +
@@ -102,7 +103,9 @@ final class NtTeamTable extends AbstractTable {
 	public NtTeamDetails load(int teamId, Timestamp matchDate) {
 		try {
 			var sql = new StringBuilder();
-			sql.append("SELECT * FROM ").append(TABLENAME).append(" WHERE TEAM_ID=").append(teamId);
+			sql.append("SELECT * FROM ").append(TABLENAME)
+					.append(" WHERE TEAM_ID=").append(teamId)
+					.append(" AND MORALE IS NOT NULL");
 			if (matchDate != null) sql.append(" AND FETCHEDDATE<'").append(matchDate).append("'");
 			sql.append(" ORDER BY HRF_ID DESC LIMIT 1");
 			var rs = adapter.executeQuery(sql.toString());
@@ -130,6 +133,7 @@ final class NtTeamTable extends AbstractTable {
 		team.setXp433(DBManager.getInteger(rs, "XP433"));
 		team.setXp442(DBManager.getInteger(rs, "XP442"));
 		team.setXp451(DBManager.getInteger(rs, "XP451"));
+		team.setXp523(DBManager.getInteger(rs, "XP523"));
 		team.setXp532(DBManager.getInteger(rs, "XP532"));
 		team.setXp541(DBManager.getInteger(rs, "XP541"));
 		team.setXp550(DBManager.getInteger(rs, "XP550"));
