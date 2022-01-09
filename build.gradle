@@ -215,10 +215,17 @@ task makeAllmedias(dependsOn: 'media') {
             into "${project.ext.target_dir}"
         }
 
-        println("copy release_notes.html")
+        println("copy release_notes.md")
         copy {
-            from "${projectDir}/docs/release_notes/release_notes.html"
+            from "${projectDir}/docs/release_notes/release_notes.md"
             into "${project.ext.target_dir}"
+        }
+
+        File changelogFile = new File("${project.ext.target_dir}/release_notes.md")
+        if ( changelogFile.isFile() ) {
+            println "Changelog file found in ${project.ext.target_dir}/release_notes.md"
+        } else {
+            println "ERROR: Changelog file not found in ${project.ext.target_dir}/release_notes.md"
         }
 
         // compatibility to HO3 Updater
@@ -320,6 +327,26 @@ task CreateDistribution (dependsOn: installDist) {
             from "${projectDir}/docs/changelog/html/changelog.html"
             into "${projectDir}/utils/buildResources"
         }
+
+        changelogFile = new File("${projectDir}/docs/changelog/html/changelog.html");
+        if ( changelogFile.isFile() ) {
+            println "Changelog file succesully copied in ${projectDir}/docs/changelog/html/changelog.html"
+        } else {
+            println "ERROR:   Changelog file not copied in ${projectDir}/docs/changelog/html/changelog.html"
+        }
+
+        copy {
+            from "${projectDir}/docs/changelog/html/changelog.html"
+            into "${distribDir}"
+        }
+
+        changelogFile = new File("${distribDir}/changelog.html");
+        if ( changelogFile.isFile() ) {
+            println "Changelog file succesully copied in ${distribDir}/changelog.html"
+        } else {
+            println "ERROR:   Changelog file not copied in ${distribDir}/changelog.html"
+        }
+
 
         if (development_stage == '0') {
             copy {
