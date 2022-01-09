@@ -458,7 +458,7 @@ markdownToHtml {
 
 installDist.dependsOn createLanguageFileList
 markdownToHtml.dependsOn updatebuildreferences
-poeditorPull.dependsOn preparingBuild
+poeditorPull.dependsOn pushmd
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources
 
