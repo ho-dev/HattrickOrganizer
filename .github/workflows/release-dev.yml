@@ -28,7 +28,10 @@ jobs:
           FILE_NAME: "docs/latest.html"
           FILE_DATA: "version=test\nreleased=$TODAY"
       - name: List files
-        run: ls -a
+        run: |
+          ls -a
+          cd docs/
+          ls -a
       - name: Show file content
         run: cat /docs/latest.html
       - name: Validate Gradle wrapper
