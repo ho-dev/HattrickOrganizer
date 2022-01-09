@@ -287,10 +287,26 @@ task preparingBuild(dependsOn: clean) {
 task pushmd(dependsOn: preparingBuild)  {
     group 'sub tasks'
     doLast {
+
+        File changelogFile = new File("${projectDir}/src/main/resources/changelog.md");
+        if ( changelogFile.isFile() ) {
+            println "Changelog file found in ${projectDir}/src/main/resources/changelog.md"
+        } else {
+            println "ERROR:   Changelog file not found in ${projectDir}/src/main/resources/changelog.md"
+        }
+
         copy {
             from "${projectDir}/src/main/resources/changelog.md"
             into "${projectDir}/docs/changelog/md"
         }
+
+        changelogFile = new File("${projectDir}/docs/changelog/md/changelog.md");
+        if ( changelogFile.isFile() ) {
+            println "Changelog file succesully copied in ${projectDir}/docs/changelog/md/changelog.md"
+        } else {
+            println "ERROR:   Changelog file not copied in ${projectDir}/docs/changelog/md/changelog.md"
+        }
+
     }
 }
 
