@@ -18,22 +18,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Set current date as env variable
-        run: echo "TODAY=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
-      - name: Echo current date
-        run: echo "version=aaa \n released=$TODAY"
-      - name: Update latest.html file for automatic upgrade of dev version
-        uses: finnp/create-file-action@master
-        env:
-          FILE_NAME: "docs/latest.html"
-          FILE_DATA: "version=test\nreleased=${{env.TODAY}}"
-      - name: List files
-        run: |
-          ls -a
-          cd docs/
-          ls -a
-      - name: Show file content
-        run: cat ./docs/latest.html
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Download and install install4j
@@ -110,25 +94,23 @@ jobs:
           target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: ${{ steps.read_version_tag.outputs.value != 'tag_stable'}}
       - name: Set current date as env variable
-        run: echo "TODAY::$(date +'%y-%m-%d')" >> $GITHUB_ENV
-      - name: Echo current date
-        run: echo "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+        run: echo "TODAY=$(date +'%d.%m.%Y')" >> $GITHUB_ENV
       - name: Update latest.html file for automatic upgrade of dev version
         if: ${{ steps.read_version_tag.outputs.value == 'dev'}}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/latest.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
       - name: Update latestbeta.html file for automatic upgrade of beta version
         if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value != 'tag_stable'}}}}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/latestbeta.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
       - name: Update lateststable.html file for automatic upgrade of stable version
         if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value == 'tag_stable'}}}}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/lateststable.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
 
