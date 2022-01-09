@@ -328,7 +328,7 @@ task CreateDistribution (dependsOn: installDist) {
             into "${projectDir}/utils/buildResources"
         }
 
-        changelogFile = new File("${projectDir}/docs/changelog/html/changelog.html");
+        File changelogFile = new File("${projectDir}/docs/changelog/html/changelog.html");
         if ( changelogFile.isFile() ) {
             println "Changelog file succesully copied in ${projectDir}/docs/changelog/html/changelog.html"
         } else {
