@@ -2,6 +2,8 @@ package core.util;
 
 
 import core.HO;
+import core.file.xml.XMLManager;
+import core.model.misc.Basics;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import core.model.HOVerwaltung;
@@ -20,6 +22,11 @@ public class HTDatetimeTest {
         HOVerwaltung.instance().loadLatestHoModel();
         HOVerwaltung.instance().setResource("English");
 
+        var fetchedDate = Basics.parseHattrickDate("2022-01-08 14:33:58");
+
+        var fetched = new HTDatetime(fetchedDate);
+        var fetchedAsString = fetched.getHattrickTimeAsString();
+        Assertions.assertEquals("2022-01-08 14:33:58", fetchedAsString);
 
         HTDatetime dti = new HTDatetime("2021-02-14 23:11:00");
         Assertions.assertEquals(dti.getHTSeasonLocalized(), 77);

@@ -5,6 +5,7 @@ import core.util.HOLogger;
 import java.io.File;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,12 +61,11 @@ public class XMLManager  {
 
     public static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
         var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
-        hash.put(hashKey, (XMLManager.getFirstChildNodeValue(ele)));
+        hash.put(hashKey, XMLManager.getFirstChildNodeValue(ele));
     }
 
     public static void xmlValue2Hash(Map<String, String> hash, Element element, String key) {
-        var ele = (Element) element.getElementsByTagName(key).item(0);
-        hash.put(key, (XMLManager.getFirstChildNodeValue(ele)));
+        xmlValue2Hash(hash, element, key, key);
     }
 
     public static void xmlAttribute2Hash(Map<String, String> hash, Element root, String xmlElementname, String xmlAttributename) {
@@ -73,13 +73,12 @@ public class XMLManager  {
         hash.put(xmlElementname+xmlAttributename, ele.getAttribute(xmlAttributename));
     }
 
-
     /**
      * Parse XM from file name.
      */
     public static Document parseFile(String fileName) {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         Document doc = null;
 
         try {
@@ -99,7 +98,7 @@ public class XMLManager  {
      */
 	public static Document parseFile(InputStream xmlStream) {
 		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
+		DocumentBuilder builder;
 		Document doc = null;
 
 		try {
@@ -118,7 +117,7 @@ public class XMLManager  {
      */
     public static Document parseFile(File datei) {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         Document doc = null;
 
         try {
@@ -153,9 +152,9 @@ public class XMLManager  {
         Document doc = null;
 
         try {
-            final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes("UTF-8"));
+            final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = null;
+            DocumentBuilder builder;
 
             //Validierung, Namensräume einschalten
             //factory.setValidating ( false );
@@ -182,10 +181,10 @@ public class XMLManager  {
      */
     public static void writeXML(Document doc, String dateiname) {
         //Transformer creation for DOM rewriting into XML file
-        Transformer serializer = null;
-        DOMSource source = null;
-        File datei = null;
-        StreamResult result = null;
+        Transformer serializer;
+        DOMSource source;
+        File datei;
+        StreamResult result;
 
         try {
             //You can do any modification to the document here
@@ -207,9 +206,9 @@ public class XMLManager  {
 	 */
 	public static String getXML(Document doc) {
 		//Transformer creation for DOM rewriting into XML String
-		Transformer serializer = null;
-		DOMSource source = null;
-		StreamResult result = null;
+		Transformer serializer;
+		DOMSource source;
+		StreamResult result;
 		String xml = "";
 		try {
 			//You can do any modification to the document here
