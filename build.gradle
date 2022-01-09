@@ -295,23 +295,16 @@ task pushmd(dependsOn: preparingBuild)  {
     group 'sub tasks'
     doLast {
 
-        File changelogFile = new File("${projectDir}/src/main/resources/changelog.md");
-        if ( changelogFile.isFile() ) {
-            println "Changelog file found in ${projectDir}/src/main/resources/changelog.md"
-        } else {
-            println "ERROR:   Changelog file not found in ${projectDir}/src/main/resources/changelog.md"
-        }
-
         copy {
             from "${projectDir}/src/main/resources/changelog.md"
             into "${projectDir}/docs/changelog/md"
         }
 
-        changelogFile = new File("${projectDir}/docs/changelog/md/changelog.md");
+        File changelogFile = new File("${projectDir}/docs/changelog/md/changelog.md");
         if ( changelogFile.isFile() ) {
-            println "Changelog file succesully copied in ${projectDir}/docs/changelog/md/changelog.md"
+            println "Changelog file succesully copied from ${projectDir}/src/main/resources/changelog.md into ${projectDir}/docs/changelog/md/changelog.md"
         } else {
-            println "ERROR:   Changelog file not copied in ${projectDir}/docs/changelog/md/changelog.md"
+            println "ERROR:   Changelog file not copied from ${projectDir}/src/main/resources/changelog.md into ${projectDir}/docs/changelog/md/changelog.md"
         }
 
     }
@@ -323,28 +316,21 @@ task CreateDistribution (dependsOn: installDist) {
     def distribDir = file("${buildDir}/install/XXX")
     doLast {
 
-        copy {
-            from "${projectDir}/docs/changelog/html/changelog.html"
-            into "${projectDir}/utils/buildResources"
-        }
-
-        File changelogFile = new File("${projectDir}/docs/changelog/html/changelog.html");
-        if ( changelogFile.isFile() ) {
-            println "Changelog file succesully copied in ${projectDir}/docs/changelog/html/changelog.html"
-        } else {
-            println "ERROR:   Changelog file not copied in ${projectDir}/docs/changelog/html/changelog.html"
-        }
-
+//        copy {
+//            from "${projectDir}/docs/changelog/html/changelog.html"
+//            into "${projectDir}/utils/buildResources"
+//        }
+        
         copy {
             from "${projectDir}/docs/changelog/html/changelog.html"
             into "${distribDir}"
         }
 
-        changelogFile = new File("${distribDir}/changelog.html");
+        File changelogFile = new File("${distribDir}/changelog.html");
         if ( changelogFile.isFile() ) {
-            println "Changelog file succesully copied in ${distribDir}/changelog.html"
+            println "Changelog file succesully copied from ${projectDir}/docs/changelog/html/changelog.html into ${distribDir}/changelog.html"
         } else {
-            println "ERROR:   Changelog file not copied in ${distribDir}/changelog.html"
+            println "ERROR:   Changelog file not copied from ${projectDir}/docs/changelog/html/changelog.html into ${distribDir}/changelog.html"
         }
 
 
@@ -484,9 +470,7 @@ markdownToHtml {
 }
 
 installDist.dependsOn createLanguageFileList
-//markdownToHtml.dependsOn updatebuildreferences
 markdownToHtml.dependsOn pushmd
-//poeditorPull.dependsOn pushmd
 poeditorPull.dependsOn markdownToHtml
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources
