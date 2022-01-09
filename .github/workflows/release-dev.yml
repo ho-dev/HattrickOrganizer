@@ -100,7 +100,7 @@ jobs:
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/latest.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}}$'\nreleased'=${{env.TODAY}}"
       - name: Update latestbeta.html file for automatic upgrade of beta version
         if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value != 'tag_stable') }}
         uses: finnp/create-file-action@master
@@ -112,7 +112,7 @@ jobs:
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/lateststable.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}}$'\nreleased'=${{env.TODAY}}"
       - name: commiting latest html files for automatic upgrade
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
