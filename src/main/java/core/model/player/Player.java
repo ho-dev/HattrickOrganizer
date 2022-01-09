@@ -1877,7 +1877,6 @@ public class Player {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
-                //int minutes;
                 for (var match : matches) {
                     //Get the MatchLineup by id
                     MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
