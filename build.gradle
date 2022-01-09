@@ -242,7 +242,7 @@ task makeAllmedias(dependsOn: 'media') {
 
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
-    dependsOn 'markdownToHtml'
+    dependsOn 'updatebuildreferences'
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
 
     // 60 -> Windows Setup
@@ -484,8 +484,10 @@ markdownToHtml {
 }
 
 installDist.dependsOn createLanguageFileList
-markdownToHtml.dependsOn updatebuildreferences
-poeditorPull.dependsOn pushmd
+//markdownToHtml.dependsOn updatebuildreferences
+markdownToHtml.dependsOn pushmd
+//poeditorPull.dependsOn pushmd
+poeditorPull.dependsOn markdownToHtml
 processResources.dependsOn poeditorPull
 compileJava.dependsOn processResources
 
