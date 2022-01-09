@@ -451,8 +451,8 @@ poeditorPull {
 }
 
 markdownToHtml {
-    sourceDir = new File("${projectDir}/docs/release_notes/md")
-    outputDir = new File("${projectDir}/docs/release_notes")
+    sourceDir = new File("${projectDir}/docs/changelog/md")
+    outputDir = new File("${projectDir}/docs/changelog/html")
     markdownToHtml.hardwraps = true
 }
 
