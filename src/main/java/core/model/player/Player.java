@@ -1877,7 +1877,6 @@ public class Player {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
-                int minutes;
                 for (var match : matches) {
                     //Get the MatchLineup by id
                     MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
@@ -1890,21 +1889,21 @@ public class Player {
                         tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
                         tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
                     }
-                    tp.addPlayedMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin));
-                    ret.addExperience(match.getExperienceIncrease(min(90,tp.getPlayedMinutes())));
-                    minutes = tp.getPlayedMinutes();
+                    var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
+                    tp.addPlayedMinutes(minutes);
+                    ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
-                // get experience increase of national matches
+                // get experience increase of national team matches
                 if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.loadMatchesOfNTPlayers(this.getNationalTeamID());
                     for (var match : nationalMatches){
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
-                        minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
+                        var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
-                            ret.addExperience(match.getExperienceIncrease(min(90,tp.getPlayedMinutes())));
+                            ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                         }
                     }
                 }
