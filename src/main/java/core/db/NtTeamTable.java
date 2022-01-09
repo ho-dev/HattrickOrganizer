@@ -85,12 +85,12 @@ final class NtTeamTable extends AbstractTable {
 					ntTeamDetails.getXp532() + "," +
 					ntTeamDetails.getXp541() + "," +
 					ntTeamDetails.getXp550() + ",'" +
-					ntTeamDetails.getTeamName() + "','" +
-					ntTeamDetails.getTeamNameShort() + "'," +
+					DBManager.insertEscapeSequences(ntTeamDetails.getTeamName()) + "','" +
+					DBManager.insertEscapeSequences(ntTeamDetails.getTeamNameShort()) + "'," +
 					ntTeamDetails.getCoachId() + ",'" +
-					ntTeamDetails.getCoachName() + "'," +
+					DBManager.insertEscapeSequences(ntTeamDetails.getCoachName()) + "'," +
 					ntTeamDetails.getLeagueId() + ",'" +
-					ntTeamDetails.getLeagueName() + "'," +
+					DBManager.insertEscapeSequences(ntTeamDetails.getLeagueName()) + "'," +
 					ntTeamDetails.getSupportersPopularity() + "," +
 					ntTeamDetails.getRatingScore() + "," +
 					ntTeamDetails.getFanclubSize() + "," +

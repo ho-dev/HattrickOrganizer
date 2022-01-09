@@ -170,39 +170,39 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
-		Optional<TrainingPerWeek> oFutureTraining;
-		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
-		HTDatetime oTrainingDate = new HTDatetime(previousTraining.getTrainingDate());
-		ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
+		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
+		if ( previousTraining != null) {
+			HTDatetime oTrainingDate = new HTDatetime(previousTraining.getTrainingDate());
+			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 
-		int nbWeek = 0;
-		ZonedDateTime zdtFutureTrainingDate;
-		TrainingPerWeek futureTraining;
+			int nbWeek = 0;
+			ZonedDateTime zdtFutureTrainingDate;
+			TrainingPerWeek futureTraining;
 
-		while (newfutureTrainings.size() < requiredNBentries) {
+			while (newfutureTrainings.size() < requiredNBentries) {
 
-			//first iteration equals to nextWeek training then increase per one week per iteration
-			zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7L, ChronoUnit.DAYS);
+				//first iteration equals to nextWeek training then increase per one week per iteration
+				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7L, ChronoUnit.DAYS);
 
-			ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
-			oFutureTraining = _futureTrainings.stream().filter(t -> finalZdtFutureTrainingDate.toInstant().equals(t.getTrainingDate())).findFirst();
+				ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
+				var oFutureTraining = _futureTrainings.stream().filter(t -> finalZdtFutureTrainingDate.toInstant().equals(t.getTrainingDate())).findFirst();
 
-			if (oFutureTraining.isPresent()) {
-				// training present in Future Training table => we keep it
-				futureTraining = oFutureTraining.get();
-			} else {
-				// training not present in Future Training table => we create a new one from previous training
-				futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
-						previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
+				if (oFutureTraining.isPresent()) {
+					// training present in Future Training table => we keep it
+					futureTraining = oFutureTraining.get();
+				} else {
+					// training not present in Future Training table => we create a new one from previous training
+					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
+							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
+				}
+
+				newfutureTrainings.add(futureTraining);
+				previousTraining = futureTraining;
+
+				nbWeek++;
 			}
-
-			newfutureTrainings.add(futureTraining);
-			previousTraining = futureTraining;
-
-			nbWeek++;
 		}
-
 		return newfutureTrainings;
 
 	}

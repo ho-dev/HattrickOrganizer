@@ -144,7 +144,7 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("matchround=" + "7" + "\n"); 	//TODO: MatchRound
 		m_sHRFBuffer.append("teamID=").append(details.getTeamId()).append("\n");
 		m_sHRFBuffer.append("teamName=").append(details.getTeamName()).append("\n");
-		m_sHRFBuffer.append("activationDate=0\n");
+		m_sHRFBuffer.append("activationDate=\n");
 		m_sHRFBuffer.append("owner=").append(details.getCoachName()).append("\n");
 		m_sHRFBuffer.append("ownerEmail=0\n");
 		m_sHRFBuffer.append("ownerICQ=0\n");
@@ -180,7 +180,7 @@ class NthrfConvertXml2Hrf {
 			m_sHRFBuffer.append("supporters=1\n");// TODO
 			m_sHRFBuffer.append("sponsors=1\n");
 		} else {
-			m_sHRFBuffer.append("playingMatch=true");
+			m_sHRFBuffer.append("playingMatch=true\n");
 		}
 
 		m_sHRFBuffer.append("cash=0\n");
@@ -426,14 +426,14 @@ class NthrfConvertXml2Hrf {
 	 */
 	final void createTeam(NtTeamDetails details) {
 		m_sHRFBuffer.append("[team]" + "\n");
-		m_sHRFBuffer.append("trLevel=100\n");			// TrainingLevel
+		m_sHRFBuffer.append("trLevel=100\n");            // TrainingLevel
 		m_sHRFBuffer.append("staminaTrainingPart=5\n"); //StaminaTrainingPart
-		m_sHRFBuffer.append("trTypeValue=8\n");			// TrainingType
+		m_sHRFBuffer.append("trTypeValue=8\n");            // TrainingType
 		m_sHRFBuffer.append("trType=").append(TrainingType.toString(8)).append("\n");
 
 		// TODO: imports de.hattrickorganizer.model.Team. (get though helper from Team)
 
-		if (details.getMorale()>-1 && details.getSelfConfidence()>-1) {
+		if (details.getMorale() > -1 && details.getSelfConfidence() > -1) {
 			m_sHRFBuffer.append("stamningValue=").append(details.getMorale()).append("\n");
 			try {
 				m_sHRFBuffer.append("stamning=").append(TeamSpirit.toString(details.getMorale())).append("\n");
@@ -445,29 +445,22 @@ class NthrfConvertXml2Hrf {
 			try {
 				m_sHRFBuffer.append("sjalvfortroende=").append(TeamConfidence.toString(details.getSelfConfidence())).append("\n");
 			} catch (Exception e) {
-				System.out.println("Cant get text for self confidence " + details.getMorale() + "\n" + e);
+				System.out.println("Cant get text for self confidence " + details.getSelfConfidence() + "\n" + e);
 				m_sHRFBuffer.append("sjalvfortroende=\n");
 			}
 		} else {
-			m_sHRFBuffer.append("playingMatch=true");
+			m_sHRFBuffer.append("playingMatch=true\n");
 		}
 
-		try {
-			m_sHRFBuffer.append("exper433=").append(details.getXp433()).append("\n");
-			m_sHRFBuffer.append("exper451=").append(details.getXp451()).append("\n");
-			m_sHRFBuffer.append("exper352=").append(details.getXp352()).append("\n");
-			m_sHRFBuffer.append("exper532=").append(details.getXp532()).append("\n");
-			m_sHRFBuffer.append("exper343=").append(details.getXp343()).append("\n");
-			m_sHRFBuffer.append("exper541=").append(details.getXp541()).append("\n");
-		} catch (Exception e) {
-			System.out.println("Cant get text for self confidence " + e);
-			m_sHRFBuffer.append("exper433=7\n");
-			m_sHRFBuffer.append("exper451=7\n");
-			m_sHRFBuffer.append("exper352=7\n");
-			m_sHRFBuffer.append("exper532=7\n");
-			m_sHRFBuffer.append("exper343=7\n");
-			m_sHRFBuffer.append("exper541=7\n");
-		}
+		m_sHRFBuffer.append("exper253=").append(details.getXp253()).append("\n");
+		m_sHRFBuffer.append("exper343=").append(details.getXp343()).append("\n");
+		m_sHRFBuffer.append("exper352=").append(details.getXp352()).append("\n");
+		m_sHRFBuffer.append("exper433=").append(details.getXp433()).append("\n");
+		m_sHRFBuffer.append("exper442=").append(details.getXp442()).append("\n");
+		m_sHRFBuffer.append("exper451=").append(details.getXp451()).append("\n");
+		m_sHRFBuffer.append("exper532=").append(details.getXp532()).append("\n");
+		m_sHRFBuffer.append("exper541=").append(details.getXp541()).append("\n");
+		m_sHRFBuffer.append("exper550=").append(details.getXp550()).append("\n");
 	}
 
 	/**
