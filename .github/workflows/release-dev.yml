@@ -114,5 +114,5 @@ jobs:
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/lateststable.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY""
+          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
 
