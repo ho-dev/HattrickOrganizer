@@ -24,16 +24,16 @@ jobs:
         run: echo "version=aaa \n released=$TODAY"
       - name: Update latest.html file for automatic upgrade of dev version
         uses: finnp/create-file-action@master
-        env:
-          FILE_NAME: "docs/latest.html"
-          FILE_DATA: "version=test\nreleased=$TODAY"
+          env:
+            FILE_NAME: "docs/latestPPPP.html"
+            FILE_DATA: "version=test\nreleased=$TODAY"
       - name: List files
         run: |
           ls -a
           cd docs/
           ls -a
       - name: Show file content
-        run: cat /docs/latest.html
+        run: cat ./docs/latest.html
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Download and install install4j
