@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Set current date as env variable
-        run: echo "TODAY::$(date +'%y-%m-%d')" >> $GITHUB_ENV
+        run: echo "TODAY=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
       - name: Echo current date
         run: echo "version=aaa \n released=$TODAY"
       - name: Update latest.html file for automatic upgrade of dev version
