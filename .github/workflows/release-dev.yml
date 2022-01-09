@@ -96,19 +96,19 @@ jobs:
       - name: Set current date as env variable
         run: echo "TODAY=$(date +'%d.%m.%Y')" >> $GITHUB_ENV
       - name: Update latest.html file for automatic upgrade of dev version
-        if: ${{ steps.read_version_tag.outputs.value == 'dev'}}
+        if: ${{ steps.read_version_tag.outputs.value == 'dev' }}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/latest.html"
           FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
       - name: Update latestbeta.html file for automatic upgrade of beta version
-        if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value != 'tag_stable'}}}}
+        if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value != 'tag_stable') }}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/latestbeta.html"
           FILE_DATA: "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}"
       - name: Update lateststable.html file for automatic upgrade of stable version
-        if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value == 'tag_stable'}}}}
+        if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value == 'tag_stable') }}
         uses: finnp/create-file-action@master
         env:
           FILE_NAME: "docs/lateststable.html"
