@@ -145,7 +145,7 @@ public final class Basics  {
             m_sYouthTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("YouthTeamName"));
             setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Constructor Basics: " + e.toString());
+            HOLogger.instance().log(getClass(),"Constructor Basics: " + e);
         }
     }
 
@@ -193,21 +193,17 @@ public final class Basics  {
                 ZonedDateTime userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
 
                 return Timestamp.valueOf(userLocalDateTime.toLocalDateTime());
-            }
-            else{
+            } else {
                 return Timestamp.valueOf(htDateTimeNonLocalized);
             }
-        }
-        else
-        {
+        } else if (sDate.length() > 0) {
             try {
                 //Hattrick
                 final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
                         java.util.Locale.GERMANY);
 
                 return new Timestamp(simpleFormat.parse(sDate).getTime());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 HOLogger.instance().log(Basics.class, e);
             }
         }
