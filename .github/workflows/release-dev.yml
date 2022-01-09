@@ -93,4 +93,26 @@ jobs:
           body_path: docs/release_notes/md/release_notes.md
           target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: ${{ steps.read_version_tag.outputs.value != 'tag_stable'}}
+      - name: Set current date as env variable
+        run: echo "TODAY::$(date +'%d-%m-%Y')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+      - name: Update latest.html file for automatic upgrade of dev version
+        if: ${{ steps.read_version_tag.outputs.value == 'dev'}}
+        uses: finnp/create-file-action@master
+        env:
+          FILE_NAME: "docs/latest.html"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+      - name: Update latestbeta.html file for automatic upgrade of beta version
+        if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value != 'tag_stable'}}}}
+        uses: finnp/create-file-action@master
+        env:
+          FILE_NAME: "docs/latestbeta.html"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY"
+      - name: Update lateststable.html file for automatic upgrade of stable version
+        if: ${{ steps.read_version_tag.outputs.value != 'dev' && steps.read_version_tag.outputs.value == 'tag_stable'}}}}
+        uses: finnp/create-file-action@master
+        env:
+          FILE_NAME: "docs/lateststable.html"
+          FILE_DATA: "version=${{steps.read_version.outputs.value}} \n released=$TODAY""
 

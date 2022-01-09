@@ -320,7 +320,7 @@ task CreateDistribution (dependsOn: installDist) {
 //            from "${projectDir}/docs/changelog/html/changelog.html"
 //            into "${projectDir}/utils/buildResources"
 //        }
-        
+
         copy {
             from "${projectDir}/docs/changelog/html/changelog.html"
             into "${distribDir}"
