@@ -19,9 +19,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Set current date as env variable
-          run: echo "TODAY::$(date +'%y-%m-%d')" >> $GITHUB_ENV
-            - name: Echo current date
-              run: echo "version=aaa \n released=$TODAY"
+        run: echo "TODAY::$(date +'%y-%m-%d')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo "version=aaa \n released=$TODAY"
       - name: Update latest.html file for automatic upgrade of dev version
         if: ${{ steps.read_version_tag.outputs.value == 'dev'}}
         uses: finnp/create-file-action@master
