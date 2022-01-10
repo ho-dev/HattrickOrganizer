@@ -104,9 +104,7 @@ jobs:
       - name: Update lateststable.html file for automatic upgrade of stable version
         if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value == 'tag_stable') }}
         uses: finnp/create-file-action@master
-        env:
-          FILE_NAME: "docs/lateststable.html"
-          FILE_DATA: "version=${{steps.read_version.outputs.value}}$'\nreleased'=${{env.TODAY}}"
+        run: echo -e "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}" > "./docs/lateststable.html"
       - name: commiting latest html files for automatic upgrade
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
