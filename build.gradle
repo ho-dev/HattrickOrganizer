@@ -289,15 +289,8 @@ task pushmd(dependsOn: preparingBuild)  {
     doLast {
 
         copy {
-            from "${projectDir}/src/main/resources/changelog.md"
-            into "${projectDir}/docs/changelog/md"
-        }
-
-        File changelogFile = new File("${projectDir}/docs/changelog/md/changelog.md");
-        if ( changelogFile.isFile() ) {
-            println "Changelog file succesully copied from ${projectDir}/src/main/resources/changelog.md into ${projectDir}/docs/changelog/md/changelog.md"
-        } else {
-            println "ERROR:   Changelog file not copied from ${projectDir}/src/main/resources/changelog.md into ${projectDir}/docs/changelog/md/changelog.md"
+            from "${projectDir}/src/main/resources/release_notes.md"
+            into "${projectDir}/docs/release_notes/md"
         }
 
     }
