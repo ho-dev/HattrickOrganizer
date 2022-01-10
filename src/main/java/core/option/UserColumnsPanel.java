@@ -10,12 +10,10 @@ import core.model.HOVerwaltung;
 import tool.updater.TableEditor;
 import tool.updater.TableModel;
 import tool.updater.UpdaterCellRenderer;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 

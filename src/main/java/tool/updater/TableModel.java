@@ -1,4 +1,3 @@
-// %390576536:de.hattrickorganizer.tools.updater%
 package tool.updater;
 
 import javax.swing.JButton;
@@ -17,7 +16,6 @@ import javax.swing.table.DefaultTableModel;
 public final class TableModel extends DefaultTableModel {
     //~ Constructors -------------------------------------------------------------------------------
 
-	private static final long serialVersionUID = -3901370941644100246L;
 
 	/**
      * Creates a new TableModel object.

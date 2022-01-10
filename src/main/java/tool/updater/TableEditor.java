@@ -36,8 +36,6 @@ import javax.swing.table.TableCellEditor;
 public final class TableEditor extends AbstractCellEditor implements TableCellEditor {
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 204969955618566382L;
-
     protected HashMap<Integer,TableCellEditor> editors;
 
     protected TableCellEditor defaultEditor;
@@ -51,7 +49,7 @@ public final class TableEditor extends AbstractCellEditor implements TableCellEd
      * Creates a new TableEditor object.
      */
 	public TableEditor() {
-		editors = new HashMap<Integer, TableCellEditor>();
+		editors = new HashMap<>();
 
 		textField = new JTextField();
 		textField.setBorder(null);

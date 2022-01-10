@@ -31,16 +31,8 @@ public final class UpdateController {
 
         // no update available
         else if (showNoUpdateAvailableDialog) {
-//            if (updVersion == null){
-            // This condition is always true
             showNoUpdateAvailableDialog();
 
-            // This part can be never reached
-//            } else {
-//                    JOptionPane.showMessageDialog(HOMainFrame.instance(), "auto update not possible, a fresh install is required !",    // TODO: put this as a language string
-//                            HOVerwaltung.instance().getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"),
-//                            JOptionPane.INFORMATION_MESSAGE);
-//            }
         }
     }
 

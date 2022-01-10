@@ -1,11 +1,8 @@
-// %2709500570:de.hattrickorganizer.tools.updater%
 package tool.updater;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-
 import java.awt.Component;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -57,7 +54,7 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 			return b;
 		}
 
-		JLabel label = null;
+		JLabel label;
 		if (value instanceof JLabel) {
 			label = (JLabel) value;
 		} else {

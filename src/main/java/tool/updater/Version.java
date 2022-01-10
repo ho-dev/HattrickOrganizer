@@ -1,10 +1,5 @@
 package tool.updater;
 
-/**
- * major.minor.minimus
- * 
- * 
- */
 
 public class Version implements Comparable<Version> {
 
@@ -16,17 +11,6 @@ public class Version implements Comparable<Version> {
 		init(version);
 	}
 
-	public int getMajor() {
-		return major;
-	}
-
-	public int getMinor() {
-		return minor;
-	}
-
-	public int getBuildNumber() {
-		return buildNumber;
-	}
 
 	@Override
 	public boolean equals(Object other) {
@@ -75,19 +59,6 @@ public class Version implements Comparable<Version> {
 
 		result = this.buildNumber - other.buildNumber;
 		return result;
-	}
-
-	/**
-	 * Checks if this version is before an other version.
-	 * 
-	 * @param other
-	 *            an other version
-	 * @return <code>true</code> if this version is before the given version,
-	 *         <code>false</code> if this version is after (or the same) the
-	 *         other version.
-	 */
-	public boolean isBefore(Version other) {
-		return this.compareTo(other) < 0;
 	}
 
 	/**
