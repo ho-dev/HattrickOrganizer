@@ -209,15 +209,16 @@ task makeAllmedias(dependsOn: 'media') {
     doLast {
         delete "${projectDir}/build/artefacts/output.txt"
 
-        println("copy version.properties into ${project.ext.target_dir}")
+        println("copy version.properties into ${project.ext.target_dir}")  // ensures version.properties.html en up with the artefacts in the release
         copy {
             from "${projectDir}/version.properties"
             into "${project.ext.target_dir}"
         }
 
-        println("copy release_notes.html")
+        // to ensure changelog.html ends up within the distribution
+        println("copy release_notes.html")   // ensures release_notes.html en up with the artefacts in the release
         copy {
-            from "${projectDir}/docs/release_notes/release_notes.html"
+            from "${projectDir}/docs/html/release_notes.html"
             into "${project.ext.target_dir}"
         }
 
@@ -288,9 +289,10 @@ task pushmd(dependsOn: preparingBuild)  {
     group 'sub tasks'
     doLast {
 
+        // changelog copied in md source folder
         copy {
-            from "${projectDir}/src/main/resources/release_notes.md"
-            into "${projectDir}/docs/release_notes/md"
+            from "${projectDir}/src/main/resources/changelog.md"
+            into "${projectDir}/docs/md"
         }
 
     }
@@ -302,13 +304,9 @@ task CreateDistribution (dependsOn: installDist) {
     def distribDir = file("${buildDir}/install/XXX")
     doLast {
 
-//        copy {
-//            from "${projectDir}/docs/changelog/html/changelog.html"
-//            into "${projectDir}/utils/buildResources"
-//        }
-
+        // to ensure changelog.html ends up within the distribution
         copy {
-            from "${projectDir}/docs/changelog/html/changelog.html"
+            from "${projectDir}/docs/html/changelog.html"
             into "${distribDir}"
         }
 
@@ -388,11 +386,11 @@ task updatebuildreferences(dependsOn: CreateDistribution){
                     ""
             ]
 
-            def mdDir = new File("${projectDir}/docs/release_notes/md")
+            def mdDir = new File("${projectDir}/docs/md") // create directory for MD source
             mdDir.mkdirs()
-            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText()
-
+            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
         }
+
         else{
             println("release notes and version properties have not been updated : artefacts should not been released, !!")
         }
@@ -442,8 +440,9 @@ poeditorPull {
 }
 
 markdownToHtml {
-    sourceDir = new File("${projectDir}/docs/release_notes/md")
-    outputDir = new File("${projectDir}/docs/release_notes/html")
+    // create html from md sources for both release notes and changelog
+    sourceDir = new File("${projectDir}/docs/md")
+    outputDir = new File("${projectDir}/docs/html")
     markdownToHtml.hardwraps = true
 }
 
