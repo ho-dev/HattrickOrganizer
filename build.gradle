@@ -236,7 +236,7 @@ task makeAllmedias(dependsOn: 'media') {
 
 task media(type: com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
-    dependsOn 'updatebuildreferences'
+    dependsOn 'CreateDistribution'
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
 
     // 60 -> Windows Setup
@@ -295,7 +295,36 @@ task pushmd(dependsOn: preparingBuild)  {
             into "${projectDir}/docs/md"
         }
 
+
+        // create release notes ========
+        // list the contributors that don't want to be mentioned in release notes
+        def contributorFilter = ["Che"]
+
+        def commitCount = callGit('git rev-list 5.0..HEAD --count')
+        def diff = callGit('git diff --shortstat 5.0..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
+        def latestCommit = callGit('git log -1 --pretty=format:"%s"')
+
+        println("create release-notes")
+        List<String> intro = [
+                "# HO $major.$minor Release Notes",
+                "",
+                development_message[development_stage],
+                "",
+                "latest commit: ${latestCommit}",
+                "",
+                "## Some numbers",
+                "* ${commitCount} commits",
+                "* ${diff}",
+                "* Contributors: \n${contributors}",
+                ""
+        ]
+
+        def mdDir = new File("${projectDir}/docs/md") // create directory for MD source
+        mdDir.mkdirs()
+        new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
     }
+
 }
 
 task CreateDistribution (dependsOn: installDist) {
@@ -356,44 +385,6 @@ task CreateDistribution (dependsOn: installDist) {
         delete "${distribDir}/bin"
         delete "${distribDir}/lib"
 
-    }
-}
-
-task updatebuildreferences(dependsOn: CreateDistribution){
-    doLast {
-        if (releaseArtefacts) {
-
-            // list the contributors that don't want to be mentioned in release notes
-            def contributorFilter = ["Che"]
-
-            def commitCount = callGit('git rev-list 5.0..HEAD --count')
-            def diff = callGit('git diff --shortstat 5.0..HEAD')
-            def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
-            def latestCommit = callGit('git log -1 --pretty=format:"%s"')
-
-            println("create release-notes")
-            List<String> intro = [
-                    "# HO $major.$minor Release Notes",
-                    "",
-                    development_message[development_stage],
-                    "",
-                    "latest commit: ${latestCommit}",
-                    "",
-                    "## Some numbers",
-                    "* ${commitCount} commits",
-                    "* ${diff}",
-                    "* Contributors: \n${contributors}",
-                    ""
-            ]
-
-            def mdDir = new File("${projectDir}/docs/md") // create directory for MD source
-            mdDir.mkdirs()
-            new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
-        }
-
-        else{
-            println("release notes and version properties have not been updated : artefacts should not been released, !!")
-        }
     }
 }
 
