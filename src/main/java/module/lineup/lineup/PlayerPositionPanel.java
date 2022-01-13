@@ -226,11 +226,12 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
     /**
      *  Update the list of player in the ComboBox except for backup
-     * @param plCandidates   the list of players answering all filters criteria
+     * @param inCandidates   the list of players answering all filters criteria
      * @param plStartingLineup  the players in the starting 11
      * @param plSubstitutes the substitute players (not the backup)
      */
-    public void refresh(List<Player> plCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact) {
+    public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact) {
+        var plCandidates = new ArrayList<>(inCandidates);
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
         Lineup lineup = model.getLineupWithoutRatingRecalc();
@@ -728,7 +729,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      *
      * @return the player {@link JComboBox}.
      */
-    protected JComboBox getPlayerComboBox() {
+    protected JComboBox<PlayerCBItem> getPlayerComboBox() {
         return m_jcbPlayer;
     }
 
