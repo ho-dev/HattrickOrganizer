@@ -24,6 +24,7 @@
 * refactoring, including loading and storing of lineup templates (#1267)
 * fixed a bug when downloading team logos (#1300)
 * substitutions of the same minute can be ordered (#1039)
+* fixed goalkeeper could not be selected as team captain (#1340)
 
 ### NT
 * fix download xml parse errors (#1305)

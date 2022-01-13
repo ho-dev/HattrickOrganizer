@@ -429,9 +429,8 @@ public class YouthPlayer {
      * Calculate the player's training development and store current skills in the database.
      * Player's potential based on prior calculation is reset.
      * Player's training of last match is set.
-     * @return map of match date to training development entry
      */
-    public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> calcTrainingDevelopment() {
+    public void calcTrainingDevelopment() {
         this.potential=null;    // trigger potential recalc
         // init from models match list
         trainingDevelopment = new TreeMap<>();
@@ -463,7 +462,6 @@ public class YouthPlayer {
         this.currentSkills = skills;
         DBManager.instance().storeYouthPlayer(this.hrfid, this);
 
-        return trainingDevelopment;
     }
 
     /**
