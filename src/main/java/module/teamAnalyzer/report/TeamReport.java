@@ -64,7 +64,7 @@ public class TeamReport {
     public TeamReport(int teamId, List<MatchDetail> matchDetails) {
         this.teamId=teamId;
         for (MatchDetail m:matchDetails ) {
-            addMatch(m, ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
+            addMatch(m, SystemManager.isShowUnavailable.isSet());
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
@@ -81,9 +81,9 @@ public class TeamReport {
      */
     private TeamReport(int teamId, MatchDetail matchDetail) {
         this.teamId = teamId;
-        addMatch(matchDetail,ModuleConfig.instance().getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
+        addMatch(matchDetail, SystemManager.isShowUnavailable.isSet());
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
-        if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
+        if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate()));
         }
     }

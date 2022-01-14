@@ -66,12 +66,12 @@ public class RecapTableSorter extends AbstractTableSorter {
                 public int compare(String arg0, String arg1) {
                     try {
                         double d1 = RatingUtil.getRating(arg0 + "",
-                                ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-                                ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
+                                SystemManager.isNumericRating.isSet(),
+                                SystemManager.isDescriptionRating.isSet(),
                                 skills);
                         double d2 = RatingUtil.getRating(arg1 + "",
-                                ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-                                ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING),
+                                SystemManager.isNumericRating.isSet(),
+                                SystemManager.isDescriptionRating.isSet(),
                                 skills);
 
                         if (d1 > d2) {

@@ -80,7 +80,7 @@ public class MatchManager {
                 temp = match.getAwayTeam();
             }
 
-            if (ModuleConfig.instance().getBoolean(SystemManager.ISCHECKTEAMNAME)) {
+            if (SystemManager.isCheckTeamName.isSet()) {
                 // Fix for missing last dot!
                 String oldShort = oldName.substring(0, oldName.length() - 1);
 

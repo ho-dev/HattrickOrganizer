@@ -44,7 +44,7 @@ public class RatingPanel extends JPanel {
         tableModel = new UiRatingTableModel(new Vector<>(), new Vector<>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
-        if ((lineup == null) || (!ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP))) {
+        if ((lineup == null) || (!SystemManager.isLineup.isSet())) {
             return;
         }
 
@@ -74,8 +74,7 @@ public class RatingPanel extends JPanel {
     }
 
     private String getRating(int rating) {
-        return RatingUtil.getRating(rating, ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-        		ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING));
+        return RatingUtil.getRating(rating, SystemManager.isNumericRating.isSet(), SystemManager.isDescriptionRating.isSet());
     }
 
     private Vector<Object> getRow(String label, double myRating, double opponentRating) {

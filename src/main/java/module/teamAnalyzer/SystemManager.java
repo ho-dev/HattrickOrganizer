@@ -1,6 +1,7 @@
 // %2940960156:hoplugins.teamAnalyzer%
 package module.teamAnalyzer;
 
+import core.module.config.ModuleConfig;
 import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
@@ -14,6 +15,7 @@ import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
@@ -21,19 +23,61 @@ import java.util.List;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class SystemManager {
-	public final static String ISNUMERICRATING = "TA_numericRating";
-	public final static String ISLINEUP = "TA_lineupCompare";
-	public final static String ISTACTICDETAIL = "TA_tacticDetail";
-	public final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
-	public final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
-	public final static String ISMIXEDLINEUP = "TA_mixedLineup";
-	public final static String ISSTARS = "TA_isStars";
-	public final static String ISTOTALSTRENGTH = "TA_isTotalStrength";
-	public final static String ISSQUAD = "TA_isSquad";
-	public final static String ISSMARTSQUAD = "TA_isSmartSquad";
-	public final static String ISLODDARSTATS = "TA_isLoddarStats";
-	public final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
-	public final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
+	private final static String ISNUMERICRATING = "TA_numericRating";
+	private final static String ISLINEUP = "TA_lineupCompare";
+	private final static String ISTACTICDETAIL = "TA_tacticDetail";
+	private final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
+	private final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
+	private final static String ISMIXEDLINEUP = "TA_mixedLineup";
+	private final static String ISSTARS = "TA_isStars";
+	private final static String ISTOTALSTRENGTH = "TA_isTotalStrength";
+	private final static String ISSQUAD = "TA_isSquad";
+	private final static String ISSMARTSQUAD = "TA_isSmartSquad";
+	private final static String ISLODDARSTATS = "TA_isLoddarStats";
+	private final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
+	private final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
+
+	public static class Setting {
+		Boolean is;
+		boolean def;
+		String configKey;
+
+		public Setting(String configKey){
+			this(configKey,true);
+		}
+
+		public Setting(String configKey, boolean def){
+			this.def = def;
+			this.configKey=configKey;
+		}
+
+		public boolean isSet(){
+			if ( is == null){
+				is = ModuleConfig.instance().getBoolean(configKey);
+				if ( is == null) is = def; // default
+			}
+			return is;
+		}
+
+		public void set(boolean selected) {
+			is = selected;
+			ModuleConfig.instance().setBoolean(configKey,is);
+		}
+	}
+
+	public static Setting isNumericRating = new Setting(ISNUMERICRATING, false);
+	public static Setting isLineup = new Setting(ISLINEUP);
+	public static Setting isTacticDetail = new Setting(ISTACTICDETAIL, false);
+	public static Setting isDescriptionRating = new Setting(ISDESCRIPTIONRATING);
+	public static Setting isShowUnavailable = new Setting(ISSHOWUNAVAILABLE);
+	public static Setting isMixedLineup = new Setting(ISMIXEDLINEUP, false);
+	public static Setting isStars = new Setting(ISSTARS);
+	public static Setting isTotalStrength = new Setting(ISTOTALSTRENGTH);
+	public static Setting isSquad = new Setting(ISSQUAD);
+	public static Setting isSmartSquad = new Setting(ISSMARTSQUAD);
+	public static Setting isLoddarStats = new Setting(ISLODDARSTATS);
+	public static Setting isShowPlayerInfo = new Setting(ISSHOWPLAYERINFO, false);
+	public static Setting isCheckTeamName = new Setting(ISCHECKTEAMNAME);
 
 	/**
 	 * The Selected Team
@@ -58,8 +102,8 @@ public class SystemManager {
 
 	/**
 	 * Get the active team ID
-	 * 
-	 * @return
+	 *
+	 * @return int
 	 */
 	public static int getActiveTeamId() {
 		if ( selectedTeam == null){
@@ -71,7 +115,7 @@ public class SystemManager {
 	/**
 	 * Get the active team Name
 	 * 
-	 * @return
+	 * @return String
 	 */
 	public static String getActiveTeamName() {
 		return selectedTeam.getName();
@@ -80,7 +124,7 @@ public class SystemManager {
 	/**
 	 * Returns the main Plugin class
 	 * 
-	 * @return
+	 * @return TeamAnalyzerPanel
 	 */
 	public static TeamAnalyzerPanel getPlugin() {
 		return plugin;

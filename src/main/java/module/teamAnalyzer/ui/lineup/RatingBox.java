@@ -29,10 +29,8 @@ class RatingBox extends JPanel {
     }
 
     void reload(int r1, int r2) {
-        myValue.setText(RatingUtil.getRating(r1, ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-        		ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING)));
-        opponentValue.setText(RatingUtil.getRating(r2, ModuleConfig.instance().getBoolean(SystemManager.ISNUMERICRATING),
-        		ModuleConfig.instance().getBoolean(SystemManager.ISDESCRIPTIONRATING)));
+        myValue.setText(RatingUtil.getRating(r1, SystemManager.isNumericRating.isSet(), SystemManager.isDescriptionRating.isSet()));
+        opponentValue.setText(RatingUtil.getRating(r2, SystemManager.isNumericRating.isSet(), SystemManager.isDescriptionRating.isSet()));
         arrow.setIcon( ImageUtilities.getImageIcon4Veraenderung(r1 - r2,true));
     }
 
