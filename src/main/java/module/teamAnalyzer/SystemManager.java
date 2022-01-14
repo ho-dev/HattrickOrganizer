@@ -15,7 +15,6 @@ import module.teamAnalyzer.vo.Team;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
