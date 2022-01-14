@@ -92,7 +92,7 @@ public final class EconomyTable extends AbstractTable {
 							+ economy.getCash() + ", " + economy.getIncomeSponsors() + ", " + economy.getIncomeSponsorsBonus() + ", "+ economy.getIncomeSpectators() + ", " + economy.getIncomeFinancial() + ", "
 							+ economy.getIncomeTemporary() + ", " + economy.getIncomeSum() + ", " + economy.getCostsPlayers() + ", " + economy.getCostsStaff() + ", "
 							+ economy.getCostsArena() + ", " + economy.getCostsYouth() + ", " + economy.getCostsFinancial() + ", " + economy.getCostsTemporary() + ","
-							+ economy.getCostsSum() + ", " + economy.getExpectedWeeksTotal() + ", " + economy.getLastIncomeSponsors() + economy.getLastIncomeSponsorsBonus() + ", " + "," + economy.getLastIncomeSpectators() + ", "
+							+ economy.getCostsSum() + ", " + economy.getExpectedWeeksTotal() + ", " + economy.getLastIncomeSponsors() + ", " + economy.getLastIncomeSponsorsBonus() + "," + economy.getLastIncomeSpectators() + ", "
 							+ economy.getLastIncomeFinancial() + ", " + economy.getLastIncomeTemporary() + ", " + economy.getLastIncomeSum() + ", " + economy.getLastCostsPlayers() + ","
 							+ economy.getLastCostsStaff() + ", " + economy.getLastCostsArena() + ", " + economy.getLastCostsYouth() + ", " + economy.getLastCostsFinancial() + ", "
 							+ economy.getLastCostsTemporary() + ", " + economy.getLastCostsSum() + ", " + economy.getLastWeeksTotal() + ", " + economy.getExpectedCash() + ", "
