@@ -25,12 +25,8 @@ import javax.swing.SwingConstants;
  */
 public class SettingPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-	public static ModuleConfig config = ModuleConfig.instance();
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = -5721035453587068724L;
-	private JCheckBox checkName = new JCheckBox();
+
+    private JCheckBox checkName = new JCheckBox();
     private JCheckBox descRating = new JCheckBox();
     private JCheckBox loddarStats = new JCheckBox();
     private JCheckBox mixedLineup = new JCheckBox();
@@ -51,31 +47,31 @@ public class SettingPanel extends JPanel {
      */
     public SettingPanel() {
         super();
-        numberRating.setSelected(config.getBoolean(SystemManager.ISNUMERICRATING));
+        numberRating.setSelected(SystemManager.isNumericRating.isSet());
         numberRating.setOpaque(false);
-        descRating.setSelected(config.getBoolean(SystemManager.ISDESCRIPTIONRATING));
+        descRating.setSelected(SystemManager.isDescriptionRating.isSet());
         descRating.setOpaque(false);
-        myLineup.setSelected(config.getBoolean(SystemManager.ISLINEUP));
+        myLineup.setSelected(SystemManager.isLineup.isSet());
         myLineup.setOpaque(false);
-        tacticDetail.setSelected(config.getBoolean(SystemManager.ISTACTICDETAIL));
+        tacticDetail.setSelected(SystemManager.isTacticDetail.isSet());
         tacticDetail.setOpaque(false);
-        unavailable.setSelected(config.getBoolean(SystemManager.ISSHOWUNAVAILABLE, true));
+        unavailable.setSelected(SystemManager.isShowUnavailable.isSet());
         unavailable.setOpaque(false);
-        playerInfo.setSelected(config.getBoolean(SystemManager.ISSHOWPLAYERINFO));
+        playerInfo.setSelected(SystemManager.isShowPlayerInfo.isSet());
         playerInfo.setOpaque(false);
-        mixedLineup.setSelected(config.getBoolean(SystemManager.ISMIXEDLINEUP));
+        mixedLineup.setSelected(SystemManager.isMixedLineup.isSet());
         mixedLineup.setOpaque(false);
-        stars.setSelected(config.getBoolean(SystemManager.ISSTARS));
+        stars.setSelected(SystemManager.isStars.isSet());
         stars.setOpaque(false);
-        smartSquad.setSelected(config.getBoolean(SystemManager.ISSMARTSQUAD));
+        smartSquad.setSelected(SystemManager.isSmartSquad.isSet());
         smartSquad.setOpaque(false);
-        loddarStats.setSelected(config.getBoolean(SystemManager.ISLODDARSTATS));
+        loddarStats.setSelected(SystemManager.isLoddarStats.isSet());
         loddarStats.setOpaque(false);
-        squad.setSelected(config.getBoolean(SystemManager.ISSQUAD));
+        squad.setSelected(SystemManager.isSquad.isSet());
         squad.setOpaque(false);
-        totalStrength.setSelected(config.getBoolean(SystemManager.ISTOTALSTRENGTH));
+        totalStrength.setSelected(SystemManager.isTotalStrength.isSet());
         totalStrength.setOpaque(false);
-        checkName.setSelected(config.getBoolean(SystemManager.ISCHECKTEAMNAME));
+        checkName.setSelected(SystemManager.isCheckTeamName.isSet());
         checkName.setOpaque(false);
         jbInit();
     }
@@ -111,118 +107,79 @@ public class SettingPanel extends JPanel {
      * Initialize listeners
      */
     private void initListeners() {
-        numberRating.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                    if (numberRating.isSelected() || descRating.isSelected()) {
-                    	config.setBoolean(SystemManager.ISNUMERICRATING,numberRating.isSelected());
-                        SystemManager.updateUI();
-                    } else {
-                        numberRating.setSelected(true);
-                    }
-                }
-            });
+        numberRating.addActionListener(e -> {
+            if (numberRating.isSelected() || descRating.isSelected()) {
+                SystemManager.isNumericRating.set(numberRating.isSelected());
+                SystemManager.updateUI();
+            } else {
+                numberRating.setSelected(true);
+            }
+        });
 
-        descRating.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                    if (numberRating.isSelected() || descRating.isSelected()) {
-                    	config.setBoolean(SystemManager.ISDESCRIPTIONRATING,descRating.isSelected());
-                        SystemManager.updateUI();
-                    } else {
-                        descRating.setSelected(true);
-                    }
-                }
-            });
+        descRating.addActionListener(e -> {
+            if (numberRating.isSelected() || descRating.isSelected()) {
+                SystemManager.isDescriptionRating.set(descRating.isSelected());
+                SystemManager.updateUI();
+            } else {
+                descRating.setSelected(true);
+            }
+        });
 
-        stars.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISSTARS,stars.isSelected());
-                    SystemManager.updateUI();
+        stars.addActionListener(e -> {
+            SystemManager.isStars.set(stars.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
-        totalStrength.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISTOTALSTRENGTH,totalStrength.isSelected());
-                    SystemManager.updateUI();
+        });
+        totalStrength.addActionListener(e -> {
+            SystemManager.isTotalStrength.set(totalStrength.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
-        checkName.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISCHECKTEAMNAME,checkName.isSelected());
-                    SystemManager.updateUI();
+        });
+        checkName.addActionListener(e -> {
+            SystemManager.isCheckTeamName.set(checkName.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
+        });
 
-        squad.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISSQUAD,squad.isSelected());
-                    SystemManager.updateUI();
+        squad.addActionListener(e -> {
+            SystemManager.isSquad.set(squad.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
-        smartSquad.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISSMARTSQUAD,smartSquad.isSelected());
-                    SystemManager.updateUI();
+        });
+        smartSquad.addActionListener(e -> {
+            SystemManager.isSmartSquad.set(smartSquad.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
+        });
 
-        loddarStats.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISLODDARSTATS,loddarStats.isSelected());
-                    SystemManager.updateUI();
+        loddarStats.addActionListener(e -> {
+            SystemManager.isLoddarStats.set(loddarStats.isSelected());
+            SystemManager.updateUI();
 
-                }
-            });
+        });
 
-        myLineup.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISLINEUP,myLineup.isSelected());
-                    SystemManager.updateUI();
-                }
-            });
+        myLineup.addActionListener(e -> {
+            SystemManager.isLineup.set(myLineup.isSelected());
+            SystemManager.updateUI();
+        });
 
-        tacticDetail.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISTACTICDETAIL,tacticDetail.isSelected());
-                    SystemManager.updateUI();
-                }
-            });
+        tacticDetail.addActionListener(e -> {
+            SystemManager.isTacticDetail.set(tacticDetail.isSelected());
+            SystemManager.updateUI();
+        });
 
-        unavailable.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISSHOWUNAVAILABLE,unavailable.isSelected());
-                    SystemManager.updateUI();
-                }
-            });
-        playerInfo.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISSHOWPLAYERINFO,playerInfo.isSelected());
-                    SystemManager.updateUI();
-                }
-            });
-        mixedLineup.addActionListener(new java.awt.event.ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                	config.setBoolean(SystemManager.ISMIXEDLINEUP,mixedLineup.isSelected());
-                    SystemManager.updateUI();
-                }
-            });
+        unavailable.addActionListener(e -> {
+            SystemManager.isShowUnavailable.set(unavailable.isSelected());
+            SystemManager.updateUI();
+        });
+        playerInfo.addActionListener(e -> {
+            SystemManager.isShowPlayerInfo.set(playerInfo.isSelected());
+            SystemManager.updateUI();
+        });
+        mixedLineup.addActionListener(e -> {
+            SystemManager.isMixedLineup.set(mixedLineup.isSelected());
+            SystemManager.updateUI();
+        });
     }
 
     /**

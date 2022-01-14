@@ -50,15 +50,11 @@ public class FormationPanel extends JPanel {
     }
 
     private boolean displayMixedLineup() {
-        var ret = ModuleConfig.instance().getBoolean(SystemManager.ISMIXEDLINEUP);
-        if ( ret != null) return ret;
-        return false;
+        return SystemManager.isMixedLineup.isSet();
     }
 
     public boolean displayBothTeams() {
-        var ret = ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP);
-        if ( ret != null) return ret;
-        return false;
+        return SystemManager.isLineup.isSet();
     }
 
     //~ Methods ------------------------------------------------------------------------------------

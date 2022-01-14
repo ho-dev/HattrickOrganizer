@@ -126,6 +126,6 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 		getSpecialEventsPanel().reload(teamReport.getSelectedLineup());
 
-		this.simButton.setVisible(ModuleConfig.instance().getBoolean(SystemManager.ISLINEUP));
+		this.simButton.setVisible(SystemManager.isLineup.isSet());
 	}
 }

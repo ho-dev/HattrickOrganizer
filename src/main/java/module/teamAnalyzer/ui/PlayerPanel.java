@@ -104,12 +104,12 @@ public class PlayerPanel extends JPanel {
 		int height = 70;
 
 		if (!(this instanceof UserTeamPlayerPanel)) {
-			if (ModuleConfig.instance().getBoolean(SystemManager.ISSHOWPLAYERINFO)) {
+			if (SystemManager.isShowPlayerInfo.isSet()) {
 				height = height + 50;
 			}
 		}
 
-		if (ModuleConfig.instance().getBoolean(SystemManager.ISTACTICDETAIL)) {
+		if (SystemManager.isTacticDetail.isSet()) {
 			height = height + 50;
 		}
 
@@ -124,7 +124,7 @@ public class PlayerPanel extends JPanel {
 	 * Reload and refresh data for a certain spot/player.
 	 */
 	public void reload(SpotLineup lineup, int week, int season) {
-		tacticPanel.setVisible(ModuleConfig.instance().getBoolean(SystemManager.ISTACTICDETAIL));
+		tacticPanel.setVisible(SystemManager.isTacticDetail.isSet());
 		mainPanel.setPreferredSize(getDefaultSize());
 
 		if (lineup != null) {
@@ -133,7 +133,7 @@ public class PlayerPanel extends JPanel {
 			nameField.setText(lineup.getName());
 			appearanceField.setText("" + lineup.getAppearance());
 
-			if (ModuleConfig.instance().getBoolean(SystemManager.ISSHOWPLAYERINFO)) {
+			if (SystemManager.isShowPlayerInfo.isSet()) {
 				PlayerInfo pi = PlayerDataManager.getPlayerInfo(lineup.getPlayerId(), week, season);
 
 				if (pi.getAge() != 0) {
@@ -168,7 +168,6 @@ public class PlayerPanel extends JPanel {
 			tacticPanel.reload(lineup.getTactics());
 		} else {
 			containsPlayer = false;
-
 			nameField.setText(" ");
 			appearanceField.setText(" ");
 			positionField.setText(" ");
@@ -185,29 +184,21 @@ public class PlayerPanel extends JPanel {
 	}
 
 	protected Icon getInjuryStatusIcon(int injuryStatus) {
-		switch (injuryStatus) {
-			case PlayerDataManager.BRUISED:
-				return ImageUtilities.getPlasterIcon(12, 12);
-			case PlayerDataManager.INJURED:
-				return ImageUtilities.getInjuryIcon(12, 12);
-			default:
-				return null;
-		}
+		return switch (injuryStatus) {
+			case PlayerDataManager.BRUISED -> ImageUtilities.getPlasterIcon(12, 12);
+			case PlayerDataManager.INJURED -> ImageUtilities.getInjuryIcon(12, 12);
+			default -> null;
+		};
 	}
 
 	protected Icon getBookingStatusIcon(int bookingStatus) {
-		switch (bookingStatus) {
-			case PlayerDataManager.YELLOW:
-				return ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12);
-			case PlayerDataManager.DOUBLE_YELLOW:
-				return ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12);
-			case PlayerDataManager.SUSPENDED:
-				return ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12);
-			default:
-				return null;
-		}
+		return switch (bookingStatus) {
+			case PlayerDataManager.YELLOW -> ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12);
+			case PlayerDataManager.DOUBLE_YELLOW -> ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12);
+			case PlayerDataManager.SUSPENDED -> ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12);
+			default -> null;
+		};
 	}
-
 
 	protected Icon getTransferListedStatusIcon(int transferStatus) {
 		if(transferStatus == PlayerDataManager.TRANSFER_LISTED) {
