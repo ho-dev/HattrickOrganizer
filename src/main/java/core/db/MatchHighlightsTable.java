@@ -31,7 +31,6 @@ final class MatchHighlightsTable extends AbstractTable {
 				new ColumnDescriptor("Minute", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerId", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("TeamId", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false),
 				new ColumnDescriptor("GehilfeID", Types.INTEGER, false),
 				new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256),
