@@ -55,7 +55,7 @@ public final class HRFTable extends AbstractTable {
 	 * liefert die aktuelle Id des neuesten HRF-Files
 	 */
 	private HRF loadLatestHrf() {
-		ResultSet rs = null;
+		ResultSet rs;
 
 		rs = adapter.executeQuery("SELECT HRF_ID FROM " + getTableName() + " Order By Datum DESC");
 
@@ -106,7 +106,7 @@ public final class HRFTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e.toString());
+			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e);
 		}
 
 		return previousHrfId;
@@ -169,8 +169,8 @@ public final class HRFTable extends AbstractTable {
 	 * Gibt die HRFId vor dem Datum zurück, wenn möglich
 	 */
 	int getHrfId4Date(Timestamp time) {
-		ResultSet rs = null;
-		String sql = null;
+		ResultSet rs;
+		String sql;
 		int hrfID = 0;
 
 		// Die passende HRF-ID besorgen
@@ -187,7 +187,7 @@ public final class HRFTable extends AbstractTable {
 				// sonst HRF nach dem Datum nehmen
 				else {
 					sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum>'"
-							+ time.toString() + "' ORDER BY Datum";
+							+ time + "' ORDER BY Datum";
 					rs = adapter.executeQuery(sql);
 
 					if (rs.first()) {
@@ -206,22 +206,20 @@ public final class HRFTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	HRF getHRF(int hrfID) {
-		ResultSet rs = null;
-		HRF hrf = null;
 
-		rs = getSelectByHrfID(hrfID);
+		var rs = getSelectByHrfID(hrfID);
 
 		try {
 			if (rs != null) {
 				rs.first();
-				hrf = new HRF(rs);
+				var hrf = new HRF(rs);
 				rs.close();
+				return hrf;
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getHrf: " + e);
 		}
-
-		return hrf;
+		return new HRF();
 	}
 
 	/**
@@ -237,9 +235,9 @@ public final class HRFTable extends AbstractTable {
 	 * @return all matching HRFs
 	 */
 	HRF[] getAllHRFs(int minId, int maxId, boolean asc) {
-		Vector<HRF> liste = new Vector<HRF>();
-		ResultSet rs = null;
-		String sql = null;
+		Vector<HRF> liste = new Vector<>();
+		ResultSet rs;
+		String sql;
 		sql = "SELECT * FROM " + getTableName();
 		sql += " WHERE 1=1";
 		if (minId >= 0)
@@ -264,8 +262,7 @@ public final class HRFTable extends AbstractTable {
 		}
 
 		// Convert to array
-		HRF[] allHrfs = liste.toArray(new HRF[0]);
-		return allHrfs;
+		return liste.toArray(new HRF[0]);
 	}
 
 	public List<HRF> getHRFsSince(Timestamp from) {
@@ -300,7 +297,7 @@ public final class HRFTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e.toString());
+			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e);
 		}
 
 		return null;
