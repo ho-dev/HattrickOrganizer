@@ -72,6 +72,12 @@ final class DBUpdater {
 	}
 
 	private void updateDBv600(int dbVersion) throws SQLException {
+		// reduce data base file's disk space
+		m_clJDBCAdapter.executeUpdate("CHECKPOINT DEFRAG");
+		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHHIGHLIGHTS NEW SPACE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHLINEUPPLAYER NEW SPACE");
+
 		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
