@@ -102,6 +102,19 @@ final class DBUpdater {
 		dbManager.getTable(TeamTable.TABLENAME).tryDropIndex("ITEAM_1");
 		dbManager.getTable(VereinTable.TABLENAME).tryDropIndex("IVEREIN_1");
 		dbManager.getTable(XtraDataTable.TABLENAME).tryDropIndex("IXTRADATA_1");
+
+		if (!columnExistsInTable("IncomeSponsorsBonus", EconomyTable.TABLENAME)) {
+			try {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN LastIncomeSponsorsBonus INTEGER DEFAULT 0");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN IncomeSponsorsBonus INTEGER DEFAULT 0");
+				HOLogger.instance().info(getClass(), "Sponsor Bonus columns have been added to Economy table");
+			}
+			catch (Exception e) {
+				HOLogger.instance().error(getClass(), "Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
+			}
+		}
+
+		updateDBVersion(dbVersion, 600);
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {

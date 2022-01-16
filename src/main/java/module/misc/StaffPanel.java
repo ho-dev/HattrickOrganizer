@@ -18,6 +18,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static core.util.Helper.getTranslation;
+
 
 /**
  * Zeigt die Vereininformationen an
@@ -69,8 +71,10 @@ final class StaffPanel extends JPanel {
 		this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
 		HOVerwaltung hoV = HOVerwaltung.instance();
-		setBorder(BorderFactory.createTitledBorder(hoV.getLanguageString("Trainerstab")));
-
+		var title = getTranslation("Trainerstab");
+		var titledBorder = BorderFactory.createTitledBorder(title);
+		titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+		setBorder(titledBorder);
 
 		JLabel label;
 

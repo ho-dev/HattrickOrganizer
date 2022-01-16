@@ -1,6 +1,5 @@
 package core.model.misc;
 
-import core.util.HOLogger;
 import java.sql.Timestamp;
 
 /**
@@ -41,6 +40,7 @@ public class Economy {
     protected int m_iIncomeSum;
     protected int m_iIncomeTemporary;
     protected int m_iIncomeSponsors;
+    protected int m_iIncomeSponsorsBonus;
     protected int m_iIncomeFinancial;
     protected int m_iIncomeSpectators;
     protected int m_iCash;
@@ -55,6 +55,7 @@ public class Economy {
     protected int m_iLastIncomeSum;
     protected int m_iLastIncomeTemporary;
     protected int m_iLastIncomeSponsors;
+    protected int m_iLastIncomeSponsorsBonus;
     protected int m_iLastIncomeFinancial;
     protected int m_iLastIncomeSpectators;
     protected int m_iLastWeeksTotal;
@@ -90,6 +91,7 @@ public class Economy {
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporters", "0"));
             m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomepublik", "0"));
             m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsorer", "0"));
+            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
             m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinansiella", "0"));
             m_iIncomeSoldPlayers = 0;
             m_iIncomeSoldPlayersCommission = 0;
@@ -107,6 +109,7 @@ public class Economy {
             m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("total", "0"));
             m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomepublik", "0"));
             m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsorer", "0"));
+            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
             m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinansiella", "0"));
             m_iLastIncomeSoldPlayers = 0;
             m_iLastIncomeSoldPlayersCommission = 0;
@@ -130,6 +133,7 @@ public class Economy {
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporterspopularity", "0"));
             m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomespectators", "0"));
             m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsors", "0"));
+            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
             m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinancial", "0"));
             m_iIncomeSoldPlayers = Integer.parseInt(properties.getProperty("incomesoldplayers", "0"));
             m_iIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("incomesoldplayerscommission", "0"));
@@ -147,6 +151,7 @@ public class Economy {
             m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("expectedweekstotal", "0"));
             m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomespectators", "0"));
             m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsors", "0"));
+            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
             m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinancial", "0"));
             m_iLastIncomeSoldPlayers = Integer.parseInt(properties.getProperty("lastincomesoldplayers", "0"));
             m_iLastIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("lastincomesoldplayerscommission", "0"));
@@ -305,7 +310,11 @@ public class Economy {
 
     public final void setIncomeSponsors(int iIncomeSponsors) {this.m_iIncomeSponsors = iIncomeSponsors; }
 
+    public final void setIncomeSponsorsBonus(int iIncomeSponsorsBonus) {this.m_iIncomeSponsorsBonus = iIncomeSponsorsBonus; }
+
     public final int getIncomeSponsors() {return m_iIncomeSponsors;}
+
+    public final int getIncomeSponsorsBonus() {return m_iIncomeSponsorsBonus;}
 
     public final void setIncomeFinancial(int iIncomeFinancial) {
         this.m_iIncomeFinancial = iIncomeFinancial;
@@ -379,7 +388,11 @@ public class Economy {
 
     public final void setLastIncomeSponsors(int iLastIncomeSponsors) {this.m_iLastIncomeSponsors = iLastIncomeSponsors;}
 
+    public final void setLastIncomeSponsorsBonus(int iLastIncomeSponsorsBonus) {this.m_iLastIncomeSponsorsBonus = iLastIncomeSponsorsBonus;}
+
     public final int getLastIncomeSponsors() {return m_iLastIncomeSponsors;}
+
+    public final int getLastIncomeSponsorsBonus() {return m_iLastIncomeSponsorsBonus;}
 
     public final void setLastIncomeFinancial(int iLastIncomeFinancial) {this.m_iLastIncomeFinancial = iLastIncomeFinancial;}
 

@@ -1,24 +1,15 @@
-// %2960699267:de.hattrickorganizer.logik.xml%
-/*
- * xmlEconomyParser.java
- *
- * Created on 7. Mai 2004, 16:29
- */
 package core.file.xml;
 
-import core.model.HOVerwaltung;
+
 import core.util.HOLogger;
-
 import java.util.Map;
-
+import core.util.HTDatetime;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import static core.net.MyConnector.VERSION_ECONOMY;
 
-/**
- * 
- * @author thetom
- */
+
 public class XMLEconomyParser {
 
 	/**
@@ -28,7 +19,39 @@ public class XMLEconomyParser {
 	}
 
 	public static Map<String, String> parseEconomyFromString(String inputStream) {
-		return parseDetails(XMLManager.parseString(inputStream));
+		var mapEconomy = parseDetails(XMLManager.parseString(inputStream));
+
+		// Manually add SponsorsBonus which is missing in version <= 1.3
+		HTDatetime fetchedDate = new HTDatetime(mapEconomy.get("FetchedDate"));
+		var season = fetchedDate.getHTSeason();
+		if ((Float.parseFloat(VERSION_ECONOMY) >= 1.3f ) && (season >= 80)){
+			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"IncomeSpectators", "IncomeSponsors", "IncomeFinancial", "IncomeTemporary", "IncomeSoldPlayers",
+					"IncomeSoldPlayersCommission"}, "IncomeSum");
+			mapEconomy.put("IncomeSponsorsBonus", iSponsorBonusIncome.toString());
+			var iLastSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"LastIncomeSpectators", "LastIncomeSponsors", "LastIncomeFinancial", "LastIncomeTemporary", "LastIncomeSoldPlayers",
+					"LastIncomeSoldPlayersCommission"}, "LastIncomeSum");
+			mapEconomy.put("LastIncomeSponsorsBonus", iLastSponsorBonusIncome.toString());
+		}
+		return mapEconomy;
+	}
+
+	/**
+	 * A method to fix the issue that as of January 2022, the economy CHPP file is still
+	 * in version 1.3 and does not include yet the newly introduced (season 80) sponsors bonus information
+	 * This method will derive the bonus information by spotting the mismatch between the total income and the individual elements
+	 *
+	 * @return the assessed sponsor bonus income
+	 */
+	private static Integer assessSponsorBonusIncome(Map<String, String> mapEconomy, String[] incomeSources, String totalIncomeSources){
+		var calculatedTotalIncome = 0;
+		for (String incomeSource : incomeSources)
+		{
+			calculatedTotalIncome += Integer.parseInt(mapEconomy.get(incomeSource));
+//			System.out.println("%s: %s".formatted(incomeSource, Integer.parseInt(mapEconomy.get(incomeSource))));
+		}
+//		System.out.println("%s: %s".formatted(calculatedTotalIncome, Integer.parseInt(mapEconomy.get(totalIncomeSources))));
+//		System.out.println("============================");
+		return Integer.parseInt(mapEconomy.get(totalIncomeSources)) - calculatedTotalIncome;
 	}
 
 	private static Map<String, String> parseDetails(@Nullable Document doc) {

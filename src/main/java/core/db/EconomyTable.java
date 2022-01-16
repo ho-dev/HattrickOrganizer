@@ -17,7 +17,7 @@ public final class EconomyTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[40];
+		columns = new ColumnDescriptor[42];
 		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false,true);
 		columns[1]= new ColumnDescriptor("FetchedDate",Types.TIMESTAMP,false);
 		columns[2]= new ColumnDescriptor("SupportersPopularity",Types.INTEGER,false);
@@ -58,6 +58,8 @@ public final class EconomyTable extends AbstractTable {
 		columns[37]= new ColumnDescriptor("LastIncomeSoldPlayersCommission",Types.INTEGER,false);
 		columns[38]= new ColumnDescriptor("LastCostsBoughtPlayers",Types.INTEGER,false);
 		columns[39]= new ColumnDescriptor("LastCostsArenaBuilding",Types.INTEGER,false);
+		columns[40]= new ColumnDescriptor("IncomeSponsorsBonus",Types.INTEGER,false);
+		columns[41]= new ColumnDescriptor("LastIncomeSponsorsBonus",Types.INTEGER,false);
 	}
 
 	@Override
@@ -82,12 +84,15 @@ public final class EconomyTable extends AbstractTable {
 			var statement =
 					"INSERT INTO "
 							+ getTableName()
-							+ " ( HRF_ID, FetchedDate, SupportersPopularity, SponsorsPopularity, Cash, IncomeSponsors, IncomeSpectators, IncomeFinancial, IncomeTemporary, IncomeSum, CostsPlayers, CostsStaff, CostsArena, CostsYouth, CostsFinancial, CostsTemporary, CostsSum, ExpectedWeeksTotal, LastIncomeSponsors, LastIncomeSpectators, LastIncomeFinancial, LastIncomeTemporary, LastIncomeSum, LastCostsPlayers, LastCostsStaff, LastCostsArena, LastCostsYouth, LastCostsFinancial, LastCostsTemporary, LastCostsSum, LastWeeksTotal, ExpectedCash, IncomeSoldPlayers, IncomeSoldPlayersCommission, CostsBoughtPlayers, CostsArenaBuilding, LastIncomeSoldPlayers, LastIncomeSoldPlayersCommission, LastCostsBoughtPlayers, LastCostsArenaBuilding) VALUES("
+							+ " ( HRF_ID, FetchedDate, SupportersPopularity, SponsorsPopularity, Cash, IncomeSponsors, IncomeSponsorsBonus, IncomeSpectators, IncomeFinancial, IncomeTemporary, IncomeSum, CostsPlayers, " +
+							"CostsStaff, CostsArena, CostsYouth, CostsFinancial, CostsTemporary, CostsSum, ExpectedWeeksTotal, LastIncomeSponsors, LastIncomeSponsorsBonus, LastIncomeSpectators, LastIncomeFinancial, " +
+							"LastIncomeTemporary, LastIncomeSum, LastCostsPlayers, LastCostsStaff, LastCostsArena, LastCostsYouth, LastCostsFinancial, LastCostsTemporary, LastCostsSum, LastWeeksTotal, ExpectedCash, " +
+							"IncomeSoldPlayers, IncomeSoldPlayersCommission, CostsBoughtPlayers, CostsArenaBuilding, LastIncomeSoldPlayers, LastIncomeSoldPlayersCommission, LastCostsBoughtPlayers, LastCostsArenaBuilding) VALUES("
 							+ hrfId + ", '" + date.toString() + "', " + economy.getSupportersPopularity() + ", " + economy.getSponsorsPopularity() + ", "
-							+ economy.getCash() + ", " + economy.getIncomeSponsors() + ", " + economy.getIncomeSpectators() + ", " + economy.getIncomeFinancial() + ", "
+							+ economy.getCash() + ", " + economy.getIncomeSponsors() + ", " + economy.getIncomeSponsorsBonus() + ", "+ economy.getIncomeSpectators() + ", " + economy.getIncomeFinancial() + ", "
 							+ economy.getIncomeTemporary() + ", " + economy.getIncomeSum() + ", " + economy.getCostsPlayers() + ", " + economy.getCostsStaff() + ", "
 							+ economy.getCostsArena() + ", " + economy.getCostsYouth() + ", " + economy.getCostsFinancial() + ", " + economy.getCostsTemporary() + ","
-							+ economy.getCostsSum() + ", " + economy.getExpectedWeeksTotal() + ", " + economy.getLastIncomeSponsors() + "," + economy.getLastIncomeSpectators() + ", "
+							+ economy.getCostsSum() + ", " + economy.getExpectedWeeksTotal() + ", " + economy.getLastIncomeSponsors() + ", " + economy.getLastIncomeSponsorsBonus() + "," + economy.getLastIncomeSpectators() + ", "
 							+ economy.getLastIncomeFinancial() + ", " + economy.getLastIncomeTemporary() + ", " + economy.getLastIncomeSum() + ", " + economy.getLastCostsPlayers() + ","
 							+ economy.getLastCostsStaff() + ", " + economy.getLastCostsArena() + ", " + economy.getLastCostsYouth() + ", " + economy.getLastCostsFinancial() + ", "
 							+ economy.getLastCostsTemporary() + ", " + economy.getLastCostsSum() + ", " + economy.getLastWeeksTotal() + ", " + economy.getExpectedCash() + ", "
@@ -114,6 +119,7 @@ public final class EconomyTable extends AbstractTable {
 					economy.setSponsorsPopularity(rs.getInt("SponsorsPopularity"));
 					economy.setCash(rs.getInt("Cash"));
 					economy.setIncomeSponsors(rs.getInt("IncomeSponsors"));
+					economy.setIncomeSponsorsBonus(rs.getInt("IncomeSponsorsBonus"));
 					economy.setIncomeSpectators(rs.getInt("IncomeSpectators"));
 					economy.setIncomeFinancial(rs.getInt("IncomeFinancial"));
 					economy.setIncomeTemporary(rs.getInt("IncomeTemporary"));
@@ -127,6 +133,7 @@ public final class EconomyTable extends AbstractTable {
 					economy.setCostsSum(rs.getInt("CostsSum"));
 					economy.setExpectedWeeksTotal(rs.getInt("ExpectedWeeksTotal"));
 					economy.setLastIncomeSponsors(rs.getInt("LastIncomeSponsors"));
+					economy.setLastIncomeSponsorsBonus(rs.getInt("LastIncomeSponsorsBonus"));
 					economy.setLastIncomeSpectators(rs.getInt("LastIncomeSpectators"));
 					economy.setLastIncomeFinancial(rs.getInt("LastIncomeFinancial"));
 					economy.setLastIncomeTemporary(rs.getInt("LastIncomeTemporary"));

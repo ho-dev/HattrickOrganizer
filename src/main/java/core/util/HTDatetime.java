@@ -35,6 +35,7 @@ public class HTDatetime implements PropertyChangeListener{
     private String m_sHT_CET; // String as provided by Hattrick in xml files
     private int m_HTweekLocalized;
     private int m_HTseasonLocalized;
+    private int m_HTseason;
 
 
 
@@ -61,7 +62,8 @@ public class HTDatetime implements PropertyChangeListener{
         long nbDays = ChronoUnit.DAYS.between(origin_ht_date_localized.toLocalDate(), m_zdtLocalized.toLocalDate());
         long nbWeeks = nbDays / 7;
 
-        m_HTseasonLocalized = (int)Math.floorDiv(nbWeeks, 16) + 1 + HTDatetimeBase.getUserSeasonOffset();
+        m_HTseason =  (int)Math.floorDiv(nbWeeks, 16) + 1;
+        m_HTseasonLocalized = m_HTseason + HTDatetimeBase.getUserSeasonOffset();
         m_HTweekLocalized = (int)(nbWeeks % 16) + 1;
 
         HTDatetimeBase.instance().addPropertyChangeListener(this);
@@ -127,6 +129,10 @@ public class HTDatetime implements PropertyChangeListener{
 
     public int getHTSeasonLocalized() {
         return m_HTseasonLocalized;
+    }
+
+    public int getHTSeason(){
+        return m_HTseason;
     }
 
     public int getHTWeekLocalized() {

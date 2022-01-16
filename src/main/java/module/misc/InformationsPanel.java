@@ -1,24 +1,21 @@
-// %1451261274:de.hattrickorganizer.gui.info%
 package module.misc;
 
+import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
+import javax.swing.*;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import static core.util.Helper.getTranslation;
 
 /**
  * Zeigt die allgemeinen Informationen
  */
 public class InformationsPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = 1218148161116371590L;
 	private TeamPanel m_jpBasics;
 	private FinancePanel m_jpAktuelleFinanzen;
 	private FinancePanel m_jpVorwochenFinanzen;
@@ -88,13 +85,24 @@ public class InformationsPanel extends LazyImagePanel {
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
+		constraints.gridwidth = 2;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		JLabel label = new JLabel(getTranslation("Finanzen"),SwingConstants.CENTER);
+		label.setFont(label.getFont().deriveFont(Font.BOLD));
+		label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
+		label.setOpaque(true);
+		label.setForeground(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+		panel.add(label, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
 		constraints.gridwidth = 1;
+		constraints.fill = GridBagConstraints.NONE;
 		m_jpAktuelleFinanzen = new FinancePanel(true);
 		layout.setConstraints(m_jpAktuelleFinanzen, constraints);
 		panel.add(m_jpAktuelleFinanzen);
 
 		constraints.gridx = 1;
-		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		m_jpVorwochenFinanzen = new FinancePanel(false);
 		layout.setConstraints(m_jpVorwochenFinanzen, constraints);

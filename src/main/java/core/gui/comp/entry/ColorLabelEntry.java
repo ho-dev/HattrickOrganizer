@@ -262,6 +262,11 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                 true);
     }
 
+    public final void setSpecialNumber(float number, boolean currencyformat, boolean showDecimal) {
+        var nbDec = showDecimal ? core.model.UserParameter.instance().nbDecimals : 0;
+        setValueAsText(number, null, currencyformat, false, nbDec, true);
+    }
+
     public final double getNumber() {
         return number;
     }
