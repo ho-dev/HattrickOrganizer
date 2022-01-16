@@ -25,8 +25,8 @@ public class XMLEconomyParser {
 		HTDatetime fetchedDate = new HTDatetime(mapEconomy.get("FetchedDate"));
 		var season = fetchedDate.getHTSeason();
 		if ((Float.parseFloat(VERSION_ECONOMY) >= 1.3f ) && (season >= 80)){
-			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"LastIncomeSpectators", "LastIncomeSponsors", "LastIncomeFinancial", "LastIncomeTemporary", "LastIncomeSoldPlayers",
-					"LastIncomeSoldPlayersCommission"}, "IncomeSum");
+			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"IncomeSpectators", "IncomeSponsors", "IncomeFinancial", "IncomeTemporary", "IncomeSoldPlayers",
+					"IncomeSoldPlayersCommission"}, "IncomeSum");
 			mapEconomy.put("IncomeSponsorsBonus", iSponsorBonusIncome.toString());
 			var iLastSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"LastIncomeSpectators", "LastIncomeSponsors", "LastIncomeFinancial", "LastIncomeTemporary", "LastIncomeSoldPlayers",
 					"LastIncomeSoldPlayersCommission"}, "LastIncomeSum");
@@ -47,8 +47,10 @@ public class XMLEconomyParser {
 		for (String incomeSource : incomeSources)
 		{
 			calculatedTotalIncome += Integer.parseInt(mapEconomy.get(incomeSource));
-//			System.out.println("%s: %s".formatted(incomeSource, Integer.parseInt(mapEconomy.get(incomeSource))));
+			System.out.println("%s: %s".formatted(incomeSource, Integer.parseInt(mapEconomy.get(incomeSource))));
 		}
+		System.out.println("%s: %s".formatted(calculatedTotalIncome, Integer.parseInt(mapEconomy.get(totalIncomeSources))));
+		System.out.println("============================");
 		return Integer.parseInt(mapEconomy.get(totalIncomeSources)) - calculatedTotalIncome;
 	}
 

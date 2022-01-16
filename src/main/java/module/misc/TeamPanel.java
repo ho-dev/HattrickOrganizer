@@ -17,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static core.util.Helper.getTranslation;
 
 
 /**
@@ -78,7 +79,11 @@ class TeamPanel extends JPanel {
         constraints.insets = new Insets(4, 4, 4, 4);
 
         this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
-        setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Allgemein")));
+        var title = getTranslation("Allgemein");
+        var titledBorder = BorderFactory.createTitledBorder(title);
+        titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+        setBorder(titledBorder);
+
         setLayout(layout);
         HOVerwaltung hoV = HOVerwaltung.instance();
 

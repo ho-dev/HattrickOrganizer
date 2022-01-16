@@ -21,14 +21,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import static core.util.Helper.getTranslation;
+
 
 /**
  * Zeigt die Sonstige Informationen an
  */
 final class MiscPanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = -6838769293704726932L;
 	private final ColorLabelEntry m_jpAnzahlSpieler = new ColorLabelEntry("");
     private final ColorLabelEntry m_jpDAlter = new ColorLabelEntry("");
     private final ColorLabelEntry m_jpDErfahrung = new ColorLabelEntry("");
@@ -87,7 +87,10 @@ final class MiscPanel extends JPanel {
 
         this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-        setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Verschiedenes")));
+        var title = getTranslation("Verschiedenes");
+        var titledBorder = BorderFactory.createTitledBorder(title);
+        titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+        setBorder(titledBorder);
 
         JLabel label;
 
