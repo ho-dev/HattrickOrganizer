@@ -47,10 +47,10 @@ public class XMLEconomyParser {
 		for (String incomeSource : incomeSources)
 		{
 			calculatedTotalIncome += Integer.parseInt(mapEconomy.get(incomeSource));
-			System.out.println("%s: %s".formatted(incomeSource, Integer.parseInt(mapEconomy.get(incomeSource))));
+//			System.out.println("%s: %s".formatted(incomeSource, Integer.parseInt(mapEconomy.get(incomeSource))));
 		}
-		System.out.println("%s: %s".formatted(calculatedTotalIncome, Integer.parseInt(mapEconomy.get(totalIncomeSources))));
-		System.out.println("============================");
+//		System.out.println("%s: %s".formatted(calculatedTotalIncome, Integer.parseInt(mapEconomy.get(totalIncomeSources))));
+//		System.out.println("============================");
 		return Integer.parseInt(mapEconomy.get(totalIncomeSources)) - calculatedTotalIncome;
 	}
 
