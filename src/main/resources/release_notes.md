@@ -41,7 +41,7 @@
 
 ### Misc
 * fix finance bug concerning missing spectators' income in misc module (#1282)
-* fix last weeks profit/loss and temporary income sum (#1301)
+* fix last weeks profit/loss, temporary income sum and missing sponsors bonus (#1301)
 
 ## Translations
 - HO! is currently available in 36 languages thanks to the work of 57 translators: : _KOHb_, Adrian, akasolace, André Oliveira, Andreas, Ante, asteins, Baler0, Bartosz Fenski, beri84, Bogux, Boy van der Werf, brokenelevator, Bruno Nascimento, Cris, Csaba, DavidatorusF, Dinko, dzsoo, Fresty di Lot, Globe96, Gokmen, GreenHattrick, h3t3r0, Hakkarainen, imikacic, Juan Manuel, karelant. cd, Kimmo, LA-Dzigo, LEOSCHUMY, LeSchmuh, Lidegand, Manny, Massimo, Mauro Aranda, mondstern, Moorhuhninho, Motavali, murko, Philipp, QueenF, Raffael, RaV, Ricardo Salgueiro, Saleh, Sebas90, Sergejs Harkovs, sich, silvio, Stef Migchielsen, Sumame. esta, taimikko, TeamBMW, Volker, wsbrenk, Zigmas

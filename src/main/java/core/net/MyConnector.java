@@ -48,6 +48,7 @@ public class MyConnector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
+	public final static String VERSION_ECONOMY = "1.3";
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
 	private final static String VERSION_MATCHORDERS_NT = "2.1";
@@ -183,7 +184,7 @@ public class MyConnector {
 	 * holt die Finanzen
 	 */
 	public String getEconomy(int teamId){
-		String url = htUrl + "?file=economy&version=1.3&teamId=" + teamId;
+		final String url = htUrl + "?file=economy&version=" + VERSION_ECONOMY + "&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
 

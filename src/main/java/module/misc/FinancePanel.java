@@ -1,4 +1,3 @@
-// %1645621351:de.hattrickorganizer.gui.info%
 package module.misc;
 
 import core.gui.comp.entry.ColorLabelEntry;
@@ -12,12 +11,12 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import static core.util.Helper.getTranslation;
 
 
 /**
@@ -29,16 +28,21 @@ final class FinancePanel extends JPanel {
 	private final ColorLabelEntry salariesLabel = new ColorLabelEntry("");
     private final ColorLabelEntry totalCostLabel = new ColorLabelEntry("");
     private final ColorLabelEntry youthLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry newSigningsLabel = new ColorLabelEntry("");
     private final ColorLabelEntry otherCostsLabel = new ColorLabelEntry("");
-    private final ColorLabelEntry stadiumLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry stadiumMaintenanceLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry stadiumBuildingLabel = new ColorLabelEntry("");
     private final ColorLabelEntry staffLabel = new ColorLabelEntry("");
     private final ColorLabelEntry interestExpensesLabel = new ColorLabelEntry("");
     private final ColorLabelEntry revenueTotalLabel = new ColorLabelEntry("");
     private final ColorLabelEntry otherIncomeLabel = new ColorLabelEntry("");
     private final ColorLabelEntry sponsorsLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry sponsorsBonusLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry playerSalesIncomeLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry commissionIncomeLabel = new ColorLabelEntry("");
     private final ColorLabelEntry attendanceLabel = new ColorLabelEntry("");
     private final ColorLabelEntry profitLossLabel = new ColorLabelEntry("");
-    private final ColorLabelEntry balanceLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry cashFundsLabel = new ColorLabelEntry("");
     private boolean currentFinance;
 
     final GridBagLayout layout = new GridBagLayout();
@@ -59,34 +63,42 @@ final class FinancePanel extends JPanel {
         final float factor = core.model.UserParameter.instance().faktorGeld;
 
         if (currentFinance) {
-            balanceLabel.setSpecialNumber((finances.getCash() / factor)
-                                            + (finances.getExpectedWeeksTotal() / factor), true);
-            attendanceLabel.setSpecialNumber(finances.getIncomeSpectators() / factor, true);
-            stadiumLabel.setSpecialNumber(-finances.getCostsArena() / factor, true);
-            sponsorsLabel.setSpecialNumber(finances.getIncomeSponsors() / factor, true);
-            salariesLabel.setSpecialNumber(-finances.getCostsPlayers() / factor, true);
-            otherIncomeLabel.setSpecialNumber(finances.getIncomeTemporary() / factor, true);
-            otherCostsLabel.setSpecialNumber(-finances.getCostsTemporary() / factor, true);
-            staffLabel.setSpecialNumber(-finances.getCostsStaff() / factor, true);
-            youthLabel.setSpecialNumber(-finances.getCostsYouth() / factor, true);
-            interestExpensesLabel.setSpecialNumber(-finances.getCostsFinancial() / factor, true);
-            revenueTotalLabel.setSpecialNumber(finances.getIncomeSum() / factor, true);
-            totalCostLabel.setSpecialNumber(-finances.getCostsSum() / factor, true);
-            profitLossLabel.setSpecialNumber(finances.getExpectedWeeksTotal() / factor, true);
+            cashFundsLabel.setSpecialNumber((finances.getCash() / factor)
+                                            + (finances.getExpectedWeeksTotal() / factor), true, false);
+            attendanceLabel.setSpecialNumber(finances.getIncomeSpectators() / factor, true, false);
+            sponsorsLabel.setSpecialNumber(finances.getIncomeSponsors() / factor, true, false);
+            sponsorsBonusLabel.setSpecialNumber(finances.getIncomeSponsorsBonus() / factor, true, false);
+            otherIncomeLabel.setSpecialNumber(finances.getIncomeTemporary() / factor, true, false);
+
+            salariesLabel.setSpecialNumber(-finances.getCostsPlayers() / factor, true, false);
+            stadiumMaintenanceLabel.setSpecialNumber(-finances.getCostsArena() / factor, true, false);
+            stadiumBuildingLabel.setSpecialNumber(-finances.getCostsArenaBuilding() / factor, true, false);
+            otherCostsLabel.setSpecialNumber(-finances.getCostsTemporary() / factor, true, false);
+            staffLabel.setSpecialNumber(-finances.getCostsStaff() / factor, true, false);
+            youthLabel.setSpecialNumber(-finances.getCostsYouth() / factor, true, false);
+            newSigningsLabel.setSpecialNumber(-finances.getCostsBoughtPlayers() / factor, true, false);
+            interestExpensesLabel.setSpecialNumber(-finances.getCostsFinancial() / factor, true, false);
+            revenueTotalLabel.setSpecialNumber(finances.getIncomeSum() / factor, true, false);
+            totalCostLabel.setSpecialNumber(-finances.getCostsSum() / factor, true, false);
+            profitLossLabel.setSpecialNumber(finances.getExpectedWeeksTotal() / factor, true, false);
         } else {
-            balanceLabel.setSpecialNumber(finances.getCash() / factor, true);
-            attendanceLabel.setSpecialNumber(finances.getLastIncomeSpectators() / factor, true);
-            stadiumLabel.setSpecialNumber(-finances.getLastCostsArena() / factor, true);
-            sponsorsLabel.setSpecialNumber(finances.getLastIncomeSponsors() / factor, true);
-            salariesLabel.setSpecialNumber(-finances.getLastCostsPlayers() / factor, true);
-            otherIncomeLabel.setSpecialNumber(finances.getLastIncomeTemporary() / factor, true);
-            otherCostsLabel.setSpecialNumber(-finances.getLastCostsTemporary() / factor, true);
-            staffLabel.setSpecialNumber(-finances.getLastCostsStaff() / factor, true);
-            youthLabel.setSpecialNumber(-finances.getLastCostsYouth() / factor, true);
-            interestExpensesLabel.setSpecialNumber(-finances.getLastCostsFinancial() / factor, true);
-            revenueTotalLabel.setSpecialNumber(finances.getLastIncomeSum() / factor, true);
-            totalCostLabel.setSpecialNumber(-finances.getLastCostsSum() / factor, true);
-            profitLossLabel.setSpecialNumber(finances.getLastWeeksTotal() / factor, true);
+            cashFundsLabel.setSpecialNumber(finances.getCash() / factor, true, false);
+            attendanceLabel.setSpecialNumber(finances.getLastIncomeSpectators() / factor, true, false);
+            sponsorsLabel.setSpecialNumber(finances.getLastIncomeSponsors() / factor, true, false);
+            sponsorsBonusLabel.setSpecialNumber(finances.getLastIncomeSponsorsBonus() / factor, true, false);
+            otherIncomeLabel.setSpecialNumber(finances.getLastIncomeTemporary() / factor, true, false);
+
+            salariesLabel.setSpecialNumber(-finances.getLastCostsPlayers() / factor, true, false);
+            stadiumMaintenanceLabel.setSpecialNumber(-finances.getLastCostsArena() / factor, true, false);
+            stadiumBuildingLabel.setSpecialNumber(-finances.getLastCostsArenaBuilding() / factor, true, false);
+            otherCostsLabel.setSpecialNumber(-finances.getLastCostsTemporary() / factor, true, false);
+            staffLabel.setSpecialNumber(-finances.getLastCostsStaff() / factor, true, false);
+            youthLabel.setSpecialNumber(-finances.getLastCostsYouth() / factor, true, false);
+            newSigningsLabel.setSpecialNumber(-finances.getCostsBoughtPlayers() / factor, true, false);
+            interestExpensesLabel.setSpecialNumber(-finances.getLastCostsFinancial() / factor, true, false);
+            revenueTotalLabel.setSpecialNumber(finances.getLastIncomeSum() / factor, true, false);
+            totalCostLabel.setSpecialNumber(-finances.getLastCostsSum() / factor, true, false);
+            profitLossLabel.setSpecialNumber(finances.getLastWeeksTotal() / factor, true, false);
         }
     }
 
@@ -99,87 +111,120 @@ final class FinancePanel extends JPanel {
 
         setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-        if (currentFinance) {
-            setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("DieseWoche")));
-        } else {
-            setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Vorwoche")));
-        }
+
+        var title = currentFinance ? getTranslation("DieseWoche") : getTranslation("Vorwoche"); //This week / next week
+        var titledBorder = BorderFactory.createTitledBorder(title);
+        titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+        setBorder(titledBorder);
 
         JLabel label;
 
         setLayout(layout);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Kontostand"));
-        add(label,balanceLabel.getComponent(false),0,0);
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Einnahmen"),SwingConstants.CENTER);
+        label = new JLabel(getTranslation("ls.finance.cash"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
+        add(label, cashFundsLabel.getComponent(false),0,0);
+
+        label = new JLabel(" ",SwingConstants.CENTER);
         constraints.anchor = GridBagConstraints.WEST;
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 2;
-        layout.setConstraints(label, constraints);
         add(label);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Ausgaben"),SwingConstants.CENTER);
+        label = new JLabel(getTranslation("ls.finance.revenue"),SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.BOLD));
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.gridwidth = 2;
+        label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
+        label.setOpaque(true);
+        constraints.gridy = 2;;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         layout.setConstraints(label, constraints);
         add(label);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Zuschauer"));
-        add(label,attendanceLabel.getComponent(false),0,2);
+        label = new JLabel(getTranslation("ls.finance.revenue.match_takings"));  //Match takings
+        constraints.fill = GridBagConstraints.NONE;
+        add(label,attendanceLabel.getComponent(false),0,3);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Stadion"));
-        add(label,stadiumLabel.getComponent(false),2,2);
+        label = new JLabel(getTranslation("ls.finance.revenue.sponsors"));  //Sponsors
+        add(label,sponsorsLabel.getComponent(false),0,4);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Sponsoren"));
-        add(label,sponsorsLabel.getComponent(false),0,3);
+        label = new JLabel(getTranslation("ls.finance.revenue.sponsors_bonuses"));  //Sponsors Bonus
+        add(label,sponsorsBonusLabel.getComponent(false),0,5);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Spielergehaelter"));
+        label = new JLabel(getTranslation("ls.finance.revenue.player_sales"));
+        add(label,playerSalesIncomeLabel.getComponent(false),0,6);
+
+        label = new JLabel(getTranslation("ls.finance.revenue.commission"));
+        add(label,commissionIncomeLabel.getComponent(false),0,7);
+
+        label = new JLabel(getTranslation("ls.finance.other"));
+        add(label,otherIncomeLabel.getComponent(false),0,8);
+
+        label = new JLabel(getTranslation("Gesamteinnahmen"));  // Total Revenue
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        add(label,revenueTotalLabel.getComponent(false),0,11);
+
+
+        label = new JLabel(getTranslation("ls.finance.expenses"),SwingConstants.CENTER);
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
+        label.setOpaque(true);
+        constraints.gridx = 2;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        layout.setConstraints(label, constraints);
+        add(label);
+
+        label = new JLabel(getTranslation("ls.finance.expenses.wages"));  // Wages
+        constraints.fill = GridBagConstraints.NONE;
         add(label,salariesLabel.getComponent(false),2,3);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Sonstiges"));
-        add(label,otherIncomeLabel.getComponent(false),0,4);
+        label = new JLabel(getTranslation("ls.finance.expenses.stadium_maintenance"));
+        add(label, stadiumMaintenanceLabel.getComponent(false),2,4);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Sonstiges"));
-        add(label,otherCostsLabel.getComponent(false),2,4);
+        label = new JLabel(getTranslation("ls.finance.expenses.stadium_building"));
+        add(label, stadiumMaintenanceLabel.getComponent(false),2,5);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Trainerstab"));
-        add(label,staffLabel.getComponent(false),2,5);
+        label = new JLabel(getTranslation("ls.finance.expenses.staf"));
+        add(label,staffLabel.getComponent(false),2,6);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Jugend"));
-        add(label,youthLabel.getComponent(false),2,6);
+        label = new JLabel(getTranslation("ls.finance.expenses.youth_scouting"));
+        add(label,youthLabel.getComponent(false),2,7);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Zinsaufwendungen"));
-        add(label,interestExpensesLabel.getComponent(false),2,7);
+        label = new JLabel(getTranslation("ls.finance.expenses.new_signings"));
+        add(label,newSigningsLabel.getComponent(false),2,8);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Gesamteinnahmen"));
-        add(label,revenueTotalLabel.getComponent(false),0,8);
+        label = new JLabel(getTranslation("ls.finance.other"));
+        add(label,otherCostsLabel.getComponent(false),2,9);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Gesamtausgaben"));
-        add(label,totalCostLabel.getComponent(false),2,8);
+        label = new JLabel(getTranslation("ls.finance.expenses.interest"));
+        add(label,interestExpensesLabel.getComponent(false),2,10);
+
+        label = new JLabel(getTranslation("Gesamtausgaben"));
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
+        add(label,totalCostLabel.getComponent(false),2,11);
 
         if (currentFinance) {
-            label = new JLabel(HOVerwaltung.instance().getLanguageString("ErwarteterGewinnVerlust"));
+            label = new JLabel(getTranslation("ErwarteterGewinnVerlust"));
         } else {
-            label = new JLabel(HOVerwaltung.instance().getLanguageString("VorwocheGewinnVerlust"));
+            label = new JLabel(getTranslation("VorwocheGewinnVerlust"));
         }
 
         constraints.anchor = GridBagConstraints.WEST;
         constraints.gridx = 0;
-        constraints.gridy = 9;
+        constraints.gridy = 12;
         constraints.gridwidth = 3;
         layout.setConstraints(label, constraints);
+        label.setFont(label.getFont().deriveFont(Font.BOLD));
         add(label);
 
         constraints.anchor = GridBagConstraints.EAST;
         constraints.gridx = 3;
-        constraints.gridy = 9;
+        constraints.gridy = 12;
         constraints.gridwidth = 1;
         layout.setConstraints(profitLossLabel.getComponent(false), constraints);
+        profitLossLabel.setFont(profitLossLabel.getFont().deriveFont(Font.BOLD));
         add(profitLossLabel.getComponent(false));
     }
 
