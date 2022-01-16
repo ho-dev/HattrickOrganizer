@@ -30,7 +30,7 @@ public class XMLEconomyParser {
 			mapEconomy.put("IncomeSponsorsBonus", iSponsorBonusIncome.toString());
 			var iLastSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"LastIncomeSpectators", "LastIncomeSponsors", "LastIncomeFinancial", "LastIncomeTemporary", "LastIncomeSoldPlayers",
 					"LastIncomeSoldPlayersCommission"}, "LastIncomeSum");
-			mapEconomy.put("IncomeSponsorsBonus", iSponsorBonusIncome.toString());
+			mapEconomy.put("LastIncomeSponsorsBonus", iLastSponsorBonusIncome.toString());
 		}
 		return mapEconomy;
 	}

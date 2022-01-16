@@ -425,6 +425,26 @@ task resetDB {
     }
 }
 
+task pushDB {
+    group 'tool'
+    description 'copy the database from project to temp folder for analysis'
+
+    doLast {
+        try {
+            println("Pushing DB: copying DB from ${projectDir} into `${tempDir}`/db/`")
+            copy {
+                from "${projectDir}/db/"
+                into "${tempDir}/db/"
+                exclude "**/logs/**"
+            }
+
+            println("Pushing DB: done !")
+        } catch (Exception e) {
+            println("Pushing DB: CANNOT copy DB from ${projectDir} into `${tempDir}db/"); return false
+        }
+    }
+}
+
 poeditorPull {
     outputs.upToDateWhen { false }
 }

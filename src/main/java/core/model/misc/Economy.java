@@ -91,6 +91,7 @@ public class Economy {
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporters", "0"));
             m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomepublik", "0"));
             m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsorer", "0"));
+            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
             m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinansiella", "0"));
             m_iIncomeSoldPlayers = 0;
             m_iIncomeSoldPlayersCommission = 0;
@@ -108,6 +109,7 @@ public class Economy {
             m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("total", "0"));
             m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomepublik", "0"));
             m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsorer", "0"));
+            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
             m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinansiella", "0"));
             m_iLastIncomeSoldPlayers = 0;
             m_iLastIncomeSoldPlayersCommission = 0;
@@ -131,6 +133,7 @@ public class Economy {
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporterspopularity", "0"));
             m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomespectators", "0"));
             m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsors", "0"));
+            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
             m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinancial", "0"));
             m_iIncomeSoldPlayers = Integer.parseInt(properties.getProperty("incomesoldplayers", "0"));
             m_iIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("incomesoldplayerscommission", "0"));
@@ -148,6 +151,7 @@ public class Economy {
             m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("expectedweekstotal", "0"));
             m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomespectators", "0"));
             m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsors", "0"));
+            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
             m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinancial", "0"));
             m_iLastIncomeSoldPlayers = Integer.parseInt(properties.getProperty("lastincomesoldplayers", "0"));
             m_iLastIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("lastincomesoldplayerscommission", "0"));

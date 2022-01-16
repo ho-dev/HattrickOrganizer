@@ -402,6 +402,7 @@ public class ConvertXml2Hrf {
 
 		buffer.append("IncomeSpectators=").append(economyDataMap.get("IncomeSpectators")).append('\n');
 		buffer.append("IncomeSponsors=").append(economyDataMap.get("IncomeSponsors")).append('\n');
+		buffer.append("IncomeSponsorsBonus=").append(economyDataMap.get("IncomeSponsorsBonus")).append('\n');
 		buffer.append("IncomeFinancial=").append(economyDataMap.get("IncomeFinancial")).append('\n');
 		buffer.append("IncomeSoldPlayers=").append(economyDataMap.get("IncomeSoldPlayers")).append('\n');
 		buffer.append("IncomeSoldPlayersCommission=").append(economyDataMap.get("IncomeSoldPlayersCommission")).append('\n');
@@ -419,6 +420,7 @@ public class ConvertXml2Hrf {
 		buffer.append("ExpectedWeeksTotal=").append(economyDataMap.get("ExpectedWeeksTotal")).append('\n');
 		buffer.append("LastIncomeSpectators=").append(economyDataMap.get("LastIncomeSpectators")).append('\n');
 		buffer.append("LastIncomeSponsors=").append(economyDataMap.get("LastIncomeSponsors")).append('\n');
+		buffer.append("LastIncomeSponsorsBonus=").append(economyDataMap.get("LastIncomeSponsorsBonus")).append('\n');
 		buffer.append("LastIncomeFinancial=").append(economyDataMap.get("LastIncomeFinancial")).append('\n');
 		buffer.append("LastIncomeSoldPlayers=").append(economyDataMap.get("LastIncomeSoldPlayers")).append('\n');
 		buffer.append("LastIncomeSoldPlayersCommission=").append(economyDataMap.get("LastIncomeSoldPlayersCommission")).append('\n');
