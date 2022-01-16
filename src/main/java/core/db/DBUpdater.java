@@ -93,8 +93,15 @@ final class DBUpdater {
 		if (!tableExists(NtTeamTable.TABLENAME)) {
 			dbManager.getTable(NtTeamTable.TABLENAME).createTable();
 		}
-		dbManager.getTable(TeamTable.TABLENAME).tryDropIndex("ITEAM_1");
 
+		// drop indexes where corresponding primary key exists
+		dbManager.getTable(BasicsTable.TABLENAME).tryDropIndex("IBASICS_1");
+		dbManager.getTable(EconomyTable.TABLENAME).tryDropIndex("ECONOMY_2");
+		dbManager.getTable(LigaTable.TABLENAME).tryDropIndex("ILIGA_1");
+		dbManager.getTable(SpielerNotizenTable.TABLENAME).tryDropIndex("ISPIELERNOTIZ_1");
+		dbManager.getTable(TeamTable.TABLENAME).tryDropIndex("ITEAM_1");
+		dbManager.getTable(VereinTable.TABLENAME).tryDropIndex("IVEREIN_1");
+		dbManager.getTable(XtraDataTable.TABLENAME).tryDropIndex("IXTRADATA_1");
 	}
 
 	private void updateDBv500(int dbVersion) throws SQLException {

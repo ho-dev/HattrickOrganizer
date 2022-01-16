@@ -63,8 +63,8 @@ public final class EconomyTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-			"CREATE INDEX ECONOMY_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")",
-			"CREATE INDEX ECONOMY_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
+			"CREATE INDEX ECONOMY_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")"
+		};
 	}
 	
 	/**

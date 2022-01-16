@@ -33,11 +33,8 @@ final class SpielerNotizenTable extends AbstractTable {
 			return IMatchRoleID.UNKNOWN;
 		}
 
-		ResultSet rs = null;
-		String sql = null;
-
-		sql = "SELECT userPos FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT userPos FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -56,11 +53,9 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	
 	String getManuellerSmilie(int spielerId) {
-		ResultSet rs = null;
-		String sql = null;
 
-		sql = "SELECT ManuellerSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT ManuellerSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -78,11 +73,9 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	String getSpielerNotiz(int spielerId) {
-		ResultSet rs = null;
-		String sql = null;
 
-		sql = "SELECT Notiz FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT Notiz FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -100,11 +93,9 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	
 	boolean getSpielerSpielberechtigt(int spielerId) {
-		ResultSet rs = null;
-		String sql = null;
 
-		sql = "SELECT Spielberechtigt FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT Spielberechtigt FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -122,11 +113,9 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	String getTeamInfoSmilie(int spielerId) {
-		ResultSet rs = null;
-		String sql = null;
 
-		sql = "SELECT TeamInfoSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT TeamInfoSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -142,11 +131,9 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	boolean getIsSpielerFired(int spielerId) {
-		ResultSet rs = null;
-		String sql = null;
 
-		sql = "SELECT isFired FROM " + getTableName() + " WHERE SpielerID = " + spielerId;
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT isFired FROM " + getTableName() + " WHERE SpielerID = " + spielerId;
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -164,14 +151,13 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	
 	void saveManuellerSmilie(int spielerId, String smilie) {
-		String statement = null;
 
 		//        String[]                awhereS     =   { "SpielerID" };
 		//        String[]                awhereV     =   { "" + spielerId };
 		if (spielerId > 0) {
 			//erst UPdate versuchen
 			try {
-				statement = "UPDATE "+getTableName()+" SET ManuellerSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE "+getTableName()+" SET ManuellerSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -187,12 +173,11 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	void saveSpielerNotiz(int spielerId, String notiz) {
-		String statement = null;
 
 		if (spielerId > 0) {
 			//erst UPdate versuchen
 			try {
-				statement = "UPDATE " + getTableName() + " SET Notiz='" + core.db.DBManager.insertEscapeSequences(notiz) + "' WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE " + getTableName() + " SET Notiz='" + core.db.DBManager.insertEscapeSequences(notiz) + "' WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -208,14 +193,13 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	
 	void saveSpielerSpielberechtigt(int spielerId, boolean spielberechtigt) {
-		String statement = null;
 
 		//       String[]                awhereS     =   { "SpielerID" };
 		//       String[]                awhereV     =   { "" + spielerId };
 		if (spielerId > 0) {
 			try {
 				//erst UPdate versuchen
-				statement = "UPDATE " + getTableName() + " SET Spielberechtigt=" + spielberechtigt + " WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE " + getTableName() + " SET Spielberechtigt=" + spielberechtigt + " WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -231,12 +215,11 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	void saveSpielerUserPosFlag(int spielerId, byte flag) {
-		String statement = null;
 
 		if (spielerId > 0) {
 			//erst UPdate versuchen
 			try {
-				statement = "UPDATE " + getTableName() + " SET userPos=" + flag + " WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE " + getTableName() + " SET userPos=" + flag + " WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -248,12 +231,11 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	void saveTeamInfoSmilie(int spielerId, String smilie) {
-		String statement = null;
 
 		if (spielerId > 0) {
 			//erst UPdate versuchen
 			try {
-				statement = "UPDATE " + getTableName() + " SET TeamInfoSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE " + getTableName() + " SET TeamInfoSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -269,12 +251,11 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	void saveIsSpielerFired(int spielerId, boolean isFired) {
-		String statement = null;
 
 		if (spielerId > 0) {
 			try {
 				//erst UPdate versuchen
-				statement = "UPDATE " + getTableName() + " SET isFired=" + isFired + " WHERE SpielerID = " + spielerId;
+				var statement = "UPDATE " + getTableName() + " SET isFired=" + isFired + " WHERE SpielerID = " + spielerId;
 
 				//Insert falls kein passender Eintrag gefunden wurde
 				if (adapter.executeUpdate(statement) < 1) {
@@ -294,12 +275,5 @@ final class SpielerNotizenTable extends AbstractTable {
 		statement += ("" + spielerId + ",'" + core.db.DBManager.insertEscapeSequences(notiz) + "' ," + "'" + teamSmilie + "'," + "'" + manualSmilie + "'," + spielberechtigt + "," + flag + "," + isFired + ")");
 		adapter.executeUpdate(statement);
 	}
-	
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX ISPIELERNOTIZ_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}
-	
 	
 }
