@@ -48,6 +48,7 @@ public class MyConnector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
+	public final static String VERSION_AVATARS = "1.1";
 	public final static String VERSION_ECONOMY = "1.3";
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
@@ -510,6 +511,19 @@ public class MyConnector {
 
 		return getCHPPWebFile(url);
 	}
+
+	/**
+	 * holt die Teamdetails
+	 */
+	public String getAvatars(int teamId) throws IOException {
+		String url = htUrl + "?file=avatars&version=" + VERSION_AVATARS +"&actionType=players";
+		if (teamId > 0) {
+			url += ("&teamID=" + teamId);
+		}
+
+		return getCHPPWebFile(url);
+	}
+
 
 	/**
 	 * Get the training XML data.
