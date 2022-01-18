@@ -24,18 +24,18 @@ final class MatchHighlightsTable extends AbstractTable {
 		columns = new ColumnDescriptor[] {
 				new ColumnDescriptor("MatchID", Types.INTEGER, false),
 				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
+				new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false),
+				new ColumnDescriptor("TeamId", Types.INTEGER, false),
+				new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false),
 				new ColumnDescriptor("MatchDate", Types.TIMESTAMP, true),
 				new ColumnDescriptor("Minute", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerId", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("TeamId", Types.INTEGER, false),
 				new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false),
 				new ColumnDescriptor("GehilfeID", Types.INTEGER, false),
 				new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256),
 				new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false),
 				new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000),
-				new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false),
-				new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false),
 				new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false),
 				new ColumnDescriptor("MatchPart", Types.INTEGER, true),
 				new ColumnDescriptor("EventVariation", Types.INTEGER, true)
@@ -48,6 +48,7 @@ final class MatchHighlightsTable extends AbstractTable {
 				"CREATE INDEX iMATCHHIGHLIGHTS_1 ON " + getTableName() + " (MatchID)",
 				"CREATE INDEX matchhighlights_teamid_idx ON " + getTableName() + " (TeamId)",
 				"CREATE INDEX matchhighlights_eventid_idx ON " + getTableName() + " (MATCH_EVENT_ID)",
+				"SET TABLE " + getTableName() + " NEW SPACE"
 		};
 	}
 
@@ -63,28 +64,27 @@ final class MatchHighlightsTable extends AbstractTable {
 			try {
 				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
 				for (final MatchEvent highlight : vHighlights) {
-					StringBuilder sql = new StringBuilder(100);
 
-					sql.append("INSERT INTO ").append(getTableName());
-					sql.append(" ( MatchId, MatchDate, MatchTyp, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (");
-					sql.append(details.getMatchID()).append(",'");
-					sql.append(details.getMatchDate()).append("', ");
-					sql.append(details.getMatchType().getId()).append(", ");
-					sql.append(highlight.getMinute()).append(", ");
-					sql.append(highlight.getM_iMatchEventIndex()).append(", ");
-					sql.append(highlight.getPlayerId()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getPlayerName())).append("', ");
-					sql.append(highlight.getTeamID()).append(", ");
-					sql.append(highlight.getiMatchEventID()).append(", ");
-					sql.append(highlight.getSpielerHeim()).append(", ");
-					sql.append(highlight.getAssistingPlayerId()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getAssistingPlayerName())).append("', ");
-					sql.append(highlight.getGehilfeHeim()).append(", ");
-					sql.append(highlight.getM_eInjuryType().getValue()).append(", ");
-					sql.append(highlight.getMatchPartId().getValue()).append(", ");
-					sql.append(highlight.getEventVariation()).append(", '");
-					sql.append(DBManager.insertEscapeSequences(highlight.getEventText())).append("') ");
-					adapter.executeUpdate(sql.toString());
+					String sql = "INSERT INTO " + getTableName() +
+							" ( MatchId, MatchDate, MatchTyp, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (" +
+							details.getMatchID() + ",'" +
+							details.getMatchDate() + "', " +
+							details.getMatchType().getId() + ", " +
+							highlight.getMinute() + ", " +
+							highlight.getM_iMatchEventIndex() + ", " +
+							highlight.getPlayerId() + ", '" +
+							DBManager.insertEscapeSequences(highlight.getPlayerName()) + "', " +
+							highlight.getTeamID() + ", " +
+							highlight.getiMatchEventID() + ", " +
+							highlight.getSpielerHeim() + ", " +
+							highlight.getAssistingPlayerId() + ", '" +
+							DBManager.insertEscapeSequences(highlight.getAssistingPlayerName()) + "', " +
+							highlight.getGehilfeHeim() + ", " +
+							highlight.getM_eInjuryType().getValue() + ", " +
+							highlight.getMatchPartId().getValue() + ", " +
+							highlight.getEventVariation() + ", '" +
+							DBManager.insertEscapeSequences(highlight.getEventText()) + "') ";
+					adapter.executeUpdate(sql);
 				}
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DB.storeMatchHighlights Error" + e);

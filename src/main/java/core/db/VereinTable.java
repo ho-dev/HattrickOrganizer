@@ -34,11 +34,6 @@ final class VereinTable extends AbstractTable {
 		columns[15]	= new ColumnDescriptor( "PowerRating",	Types.INTEGER,false );
 	}
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX IVEREIN_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}
 	/**
 	 * speichert das Verein
 	 */

@@ -35,22 +35,15 @@ public final class TournamentDetailsTable extends AbstractTable {
 		columns[13]= new ColumnDescriptor("Creator_Loginname",Types.VARCHAR,true, 256);
 	}
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX ITOURNAMENTDETAILS_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}
-
-
 	public TournamentDetails getTournamentDetails(int TournamentId)
 	{
 		TournamentDetails oTournamentDetails = null;
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs = null;
+
         sql.append("SELECT * FROM ").append(getTableName());
 		sql.append(" WHERE TOURNAMENTID = ").append(TournamentId);
 		try {
-			rs = adapter.executeQuery(sql.toString());
+			var rs = adapter.executeQuery(sql.toString());
 			rs.beforeFirst();
 			if (rs.next()) {
 				oTournamentDetails = new TournamentDetails();
@@ -88,24 +81,24 @@ public final class TournamentDetailsTable extends AbstractTable {
 			sql.append("INSERT INTO ").append(getTableName());
 			sql.append(" (TOURNAMENTID, NAME, TOURNAMENTTYPE, SEASON, LOGOURL, TROPHYTYPE, NUMBEROFTEAMS, NUMBEROFGROUPS, " +
 					"LASTMATCHROUND, FIRSTMATCHROUNDDATE, NEXTMATCHROUNDDATE, ISMATCHESONGOING, CREATOR_USERID, CREATOR_LOGINNAME) VALUES (");
-			sql.append(oTournamentDetails.getTournamentId() + ", '");
-			sql.append(oTournamentDetails.getName() + "', ");
-			sql.append(oTournamentDetails.getTournamentType() +", ");
-			sql.append(oTournamentDetails.getSeason() +", ");
+			sql.append(oTournamentDetails.getTournamentId()).append(", '");
+			sql.append(oTournamentDetails.getName()).append("', ");
+			sql.append(oTournamentDetails.getTournamentType()).append(", ");
+			sql.append(oTournamentDetails.getSeason()).append(", ");
 			if (oTournamentDetails.getLogoUrl() == null)
 			{
 				sql.append("null, ");
 			}
 			else
 			{
-				sql.append("'" + oTournamentDetails.getLogoUrl() +"', ");
+				sql.append("'").append(oTournamentDetails.getLogoUrl()).append("', ");
 			}
-			sql.append(oTournamentDetails.getTrophyType() +", ");
-			sql.append(oTournamentDetails.getNumberOfTeams() +", ");
-			sql.append(oTournamentDetails.getNumberOfGroups() +", ");
-			sql.append(oTournamentDetails.getLastMatchRound() +", ");
-			sql.append(DateToSQLtimeStamp(oTournamentDetails.getFirstMatchRoundDate())+", ");
-			sql.append(DateToSQLtimeStamp(oTournamentDetails.getNextMatchRoundDate())+", ");
+			sql.append(oTournamentDetails.getTrophyType()).append(", ");
+			sql.append(oTournamentDetails.getNumberOfTeams()).append(", ");
+			sql.append(oTournamentDetails.getNumberOfGroups()).append(", ");
+			sql.append(oTournamentDetails.getLastMatchRound()).append(", ");
+			sql.append(DateToSQLtimeStamp(oTournamentDetails.getFirstMatchRoundDate())).append(", ");
+			sql.append(DateToSQLtimeStamp(oTournamentDetails.getNextMatchRoundDate())).append(", ");
 
 			if (oTournamentDetails.getMatchesOngoing())
 			{
@@ -115,7 +108,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 			{
 				sql.append("false, ");
 			}
-			sql.append(oTournamentDetails.getCreator_UserId() +", ");
+			sql.append(oTournamentDetails.getCreator_UserId()).append(", ");
 
 			if (oTournamentDetails.getCreator_Loginname() == null)
 			{
@@ -123,7 +116,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 			}
 			else
 			{
-				sql.append("'" + oTournamentDetails.getCreator_Loginname() +"')");
+				sql.append("'").append(oTournamentDetails.getCreator_Loginname()).append("')");
 			}
 			adapter.executeUpdate(sql.toString());
 			} catch (Exception e) {

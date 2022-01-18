@@ -6,7 +6,8 @@
 
 ## Detailed Changelog
 
-### GUI
+### Database
+* reducing data base file's disk space accelerates HO startup duration (#958)
 
 ### Statistics
 

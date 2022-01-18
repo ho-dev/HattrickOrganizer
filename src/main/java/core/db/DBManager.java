@@ -199,6 +199,7 @@ public class DBManager {
 			// Do we need to create the database from scratch?
 			if (!existsDB) {
 				try {
+					tempInstance.executeSQL("SET FILES SPACE TRUE");
 					tempInstance.createAllTables();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -218,6 +219,10 @@ public class DBManager {
 		}
 
 		return m_clInstance;
+	}
+
+	private void executeSQL(String sql) {
+		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executeUpdate(sql);
 	}
 
 	public static double getDBConfigVersion() {

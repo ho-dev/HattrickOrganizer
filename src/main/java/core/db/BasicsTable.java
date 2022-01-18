@@ -41,7 +41,6 @@ final class BasicsTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-			"CREATE INDEX IBASICS_1 ON " + getTableName() + "(HRF_ID)",
 			"CREATE INDEX IBASICS_2 ON " + getTableName() + "(Datum)"
 		};
 	}
@@ -51,7 +50,7 @@ final class BasicsTable extends AbstractTable {
 	 *
 	 */
 	void saveBasics(int hrfId, core.model.misc.Basics basics) {
-		String statement = null;
+
 		final String[] awhereS = { "HRF_ID" };
 		final String[] awhereV = { "" + hrfId };
 
@@ -60,7 +59,7 @@ final class BasicsTable extends AbstractTable {
 			delete( awhereS, awhereV );
 
 			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, YouthTeamName , YouthTeamID, ActivationDate) VALUES(";
+			var statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, YouthTeamName , YouthTeamID, ActivationDate) VALUES(";
 			statement
 				+= (""
 					+ basics.getTeamId()
@@ -129,12 +128,12 @@ final class BasicsTable extends AbstractTable {
 	 *
 	 */
 	Vector<CBItem> getCBItemHRFListe(Timestamp datum) {
-		ResultSet rs = null;
+
 		final String statement = "SELECT * FROM "+getTableName()+" WHERE Datum >='" + datum.toString() + "' ORDER BY Datum DESC";
 		final Vector<CBItem> hrfs = new Vector<>();
 
 		try {
-			rs = adapter.executeQuery(statement);
+			var rs = adapter.executeQuery(statement);
 
 			if (rs != null) {
 				rs.beforeFirst();
@@ -166,16 +165,15 @@ final class BasicsTable extends AbstractTable {
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
 	 */
 	int getHrfIDSameTraining(Timestamp time) {
-		ResultSet rs = null;
-		String sql = null;
+
 		int hrfID = -1;
 //		Timestamp mintime = new Timestamp(time.getTime() - 259200000); //72 Std
 		Timestamp hrfDate = null;
 
 		//Die passende HRF-ID besorgen
 //		sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' AND Datum>='" + mintime.toString() + "' ORDER BY Datum DESC";
-		sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' ORDER BY Datum DESC LIMIT 1";
-		rs = adapter.executeQuery(sql);
+		var sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' ORDER BY Datum DESC LIMIT 1";
+		var rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {

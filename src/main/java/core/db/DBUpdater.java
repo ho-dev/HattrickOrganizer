@@ -72,6 +72,12 @@ final class DBUpdater {
 	}
 
 	private void updateDBv600(int dbVersion) throws SQLException {
+		// reduce data base file's disk space
+		m_clJDBCAdapter.executeUpdate("CHECKPOINT DEFRAG");
+		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHHIGHLIGHTS NEW SPACE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHLINEUPPLAYER NEW SPACE");
+
 		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
 		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
@@ -87,7 +93,15 @@ final class DBUpdater {
 		if (!tableExists(NtTeamTable.TABLENAME)) {
 			dbManager.getTable(NtTeamTable.TABLENAME).createTable();
 		}
+
+		// drop indexes where corresponding primary key exists
+		dbManager.getTable(BasicsTable.TABLENAME).tryDropIndex("IBASICS_1");
+		dbManager.getTable(EconomyTable.TABLENAME).tryDropIndex("ECONOMY_2");
+		dbManager.getTable(LigaTable.TABLENAME).tryDropIndex("ILIGA_1");
+		dbManager.getTable(SpielerNotizenTable.TABLENAME).tryDropIndex("ISPIELERNOTIZ_1");
 		dbManager.getTable(TeamTable.TABLENAME).tryDropIndex("ITEAM_1");
+		dbManager.getTable(VereinTable.TABLENAME).tryDropIndex("IVEREIN_1");
+		dbManager.getTable(XtraDataTable.TABLENAME).tryDropIndex("IXTRADATA_1");
 
 		if (!columnExistsInTable("IncomeSponsorsBonus", EconomyTable.TABLENAME)) {
 			try {

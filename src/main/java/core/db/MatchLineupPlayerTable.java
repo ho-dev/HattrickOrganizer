@@ -51,7 +51,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	protected String[] getCreateIndexStatement(){
 		return new String[]{
 			"CREATE INDEX iMATCHLINEUPPLAYER_1 ON "+getTableName()+"(SpielerID)",
-			"CREATE INDEX iMATCHLINEUPPLAYER_2 ON "+getTableName()+"(MatchID,TeamID)"
+			"CREATE INDEX iMATCHLINEUPPLAYER_2 ON "+getTableName()+"(MatchID,TeamID)",
+			"SET TABLE " + getTableName() + " NEW SPACE"
 		};
 	}
 	

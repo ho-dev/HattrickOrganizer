@@ -28,12 +28,7 @@ final class XtraDataTable extends AbstractTable {
 				new ColumnDescriptor("CountryId", Types.INTEGER, true)
 		};
 	}
-	
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX IXTRADATA_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
-	}	
+
 	
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
