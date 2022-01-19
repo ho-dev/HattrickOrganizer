@@ -31,7 +31,7 @@ public class PlayerAvatars {
 
     final MyConnector mc = MyConnector.instance();
     int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-    Map<String, String> arenaDataMap = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
+//    Map<String, String> arenaDataMap = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 
     URL url  = new URL("https://www84.hattrick.org/Img/Avatar/backgrounds/card1.png");
     BufferedImage bg = ImageIO.read(url.openStream());

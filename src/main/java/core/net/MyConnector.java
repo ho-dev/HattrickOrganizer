@@ -515,7 +515,7 @@ public class MyConnector {
 	/**
 	 * holt die Teamdetails
 	 */
-	public String getAvatars(int teamId) throws IOException {
+	public String getAvatars(int teamId) {
 		String url = htUrl + "?file=avatars&version=" + VERSION_AVATARS +"&actionType=players";
 		if (teamId > 0) {
 			url += ("&teamID=" + teamId);

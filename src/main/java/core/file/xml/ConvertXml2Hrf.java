@@ -16,10 +16,13 @@ import core.constants.player.PlayerSpeciality;
 import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
+import core.model.player.PlayerAvatar;
+import core.net.DownloadDialog;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.vo.Match;
 import module.youth.YouthPlayer;
@@ -54,6 +57,8 @@ public class ConvertXml2Hrf {
 	public static @Nullable String createHrf() throws IOException {
 		// init
 		StringBuilder buffer = new StringBuilder();
+
+		DownloadDialog.instance().setInformation("Establishing connection ...", 5);
 		final MyConnector mc = MyConnector.instance();
 		HOMainFrame.instance().setWaitInformation(5);
 
@@ -107,14 +112,22 @@ public class ConvertXml2Hrf {
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
 		if (teamdetailsDataMap.size() == 0) return null;
 
+		DownloadDialog.instance().setInformation("Downloading Team Logo ingo", 5);
 		DBManager.instance().storeTeamLogoInfo(teamId, OnlineWorker.getLogoURL(teamdetailsDataMap), null);
 
 		HOMainFrame.instance().setWaitInformation(10);
+
+
+		DownloadDialog.instance().setInformation("Downloading club information ...", 10);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
 		HOMainFrame.instance().setWaitInformation(15);
+
+		DownloadDialog.instance().setInformation("Downloading league details information ...", 15);
 		Map<String, String> ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(mc.getLeagueDetails(teamdetailsDataMap.get("LeagueLevelUnitID")),
 				String.valueOf(teamId));
 		HOMainFrame.instance().setWaitInformation(20);
+
+		DownloadDialog.instance().setInformation("Downloading world details information ...", 20);
 		Map<String, String> worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
 				mc.getWorldDetails(Integer.parseInt(teamdetailsDataMap
 						.get("LeagueID"))), teamdetailsDataMap.get("LeagueID"));
@@ -136,20 +149,32 @@ public class ConvertXml2Hrf {
 		}
 
 		HOMainFrame.instance().setWaitInformation(25);
+		DownloadDialog.instance().setInformation("Downloading match lineup information ...", 25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
 						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
+		DownloadDialog.instance().setInformation("Downloading players information ...", 30);
 		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
+
+		// Download players' avatar
+		DownloadDialog.instance().setInformation("Downloading player's avatars ...", 35);
+		List<PlayerAvatar> playersAvatar = new XMLAvatarsParser().parseAvatarsFromString(mc.getAvatars(teamId));
+		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 35);
+
 		List<MyHashtable> youthplayers=null;
 		if ( youthTeamId != null && youthTeamId > 0 ){
 			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
 		HOMainFrame.instance().setWaitInformation(35);
+		DownloadDialog.instance().setInformation("Downloading economy information ...", 40);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
 
 		HOMainFrame.instance().setWaitInformation(40);
+		DownloadDialog.instance().setInformation("Downloading training information ...", 45);
 		Map<String, String> trainingDataMap = XMLTrainingParser
 				.parseTrainingFromString(mc.getTraining(teamId));
+
+		DownloadDialog.instance().setInformation("Downloading staff information ...", 50);
 		HOMainFrame.instance().setWaitInformation(45);
 		List<MyHashtable> staffData = XMLStaffParser
 				.parseStaffFromString(mc.getStaff(teamId));
@@ -165,11 +190,14 @@ public class ConvertXml2Hrf {
 				.parseArenaFromString(mc.downloadArena(arenaId));
 
 		// MatchOrder
+		DownloadDialog.instance().setInformation("Downloading match orders ...", 55);
 		HOMainFrame.instance().setWaitInformation(55);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
 						.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
+
+		DownloadDialog.instance().setInformation("Downloading next match info ...", 57);
 		HOMainFrame.instance().setWaitInformation(57);
 
 		// Automatisch alle MatchLineups runterladen
@@ -178,6 +206,7 @@ public class ConvertXml2Hrf {
 		for (var match : matches) {
 			if ((match.getMatchStatus() == MatchKurzInfo.UPCOMING)){
 				upcomingMatch = match;
+				DownloadDialog.instance().setInformation("Downloading next match info ...", 58);
 				HOMainFrame.instance().setWaitInformation(58);
 				// Match is always from the normal system, and league will do
 				// the trick as the type.
@@ -188,6 +217,7 @@ public class ConvertXml2Hrf {
 			}
 		}
 
+		DownloadDialog.instance().setInformation("Downloading match details ...", 60);
 		HOMainFrame.instance().setWaitInformation(59);
 
 		MatchLineupTeam matchLineupTeam = null;
@@ -221,18 +251,22 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setWaitInformation(60);
 
 		// basics
+		DownloadDialog.instance().setInformation("Create basics...", 65);
 		createBasics(teamdetailsDataMap, worldDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(65);
 
 		// Liga
 		createLeague(ligaDataMap, buffer);
+		DownloadDialog.instance().setInformation("Create league...", 70);
 		HOMainFrame.instance().setWaitInformation(70);
 
 		// Club
+		DownloadDialog.instance().setInformation("Create club...", 75);
 		createClub(clubDataMap, economyDataMap, teamdetailsDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(75);
 
 		// team
+		DownloadDialog.instance().setInformation("Create team...", 80);
 		createTeam(trainingDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(80);
 
@@ -244,38 +278,47 @@ public class ConvertXml2Hrf {
 			matchId = upcomingMatch.getMatchID();
 			matchType = upcomingMatch.getMatchType().getId();
 		}
+		DownloadDialog.instance().setInformation("Create lineup...", 85);
 		buffer.append(createLineUp(trainerId, teamId, matchType, matchId, nextLineupDataMap));
 		HOMainFrame.instance().setWaitInformation(85);
 
 		// economy
+		DownloadDialog.instance().setInformation("Create economy...", 87);
 		createEconomy(economyDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(90);
 
 		// Arena
+		DownloadDialog.instance().setInformation("Create Arena...", 90);
 		createArena(arenaDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(93);
 
 		// players
+		DownloadDialog.instance().setInformation("Create Players...", 93);
 		createPlayers(matchLineupTeam, playersData, buffer);
 		HOMainFrame.instance().setWaitInformation(96);
 
 		// youth players
 		if ( youthplayers != null){
+			DownloadDialog.instance().setInformation("Create Youth Players...", 95);
 			appendYouthPlayers(youthplayers, buffer);
 			HOMainFrame.instance().setWaitInformation(97);
 		}
 
 		// xtra Data
+		DownloadDialog.instance().setInformation("Create World...", 97);
 		createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap,
 				worldDataMap, buffer);
 		HOMainFrame.instance().setWaitInformation(99);
 
 		// lineup from the last match
+		DownloadDialog.instance().setInformation("Create Last lineup...", 98);
 		createLastLineUp(teamdetailsDataMap, matchLineupTeam, buffer);
 		
 		// staff
+		DownloadDialog.instance().setInformation("Createstaff...", 99);
 		createStaff(staffData, buffer);
 
+		DownloadDialog.instance().setInformation("Complete ...", 100);
 		HOMainFrame.instance().setWaitInformation(100);
 
 		return buffer.toString();
