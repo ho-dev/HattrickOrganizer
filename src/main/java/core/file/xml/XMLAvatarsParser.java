@@ -48,15 +48,9 @@ public class XMLAvatarsParser {
 
                 while (i < players.getLength()) {
                     node = players.item(i);
-                    System.out.println("");
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
-                        //Print each employee's detail
                         player = (Element) node;
-//                        System.out.println("Employee id : "    + player.getAttribute("PlayerID"));
-                        System.out.println("Player ID: "  + player.getElementsByTagName("PlayerID").item(0).getTextContent());
                         playerID = Integer.parseInt(player.getElementsByTagName("PlayerID").item(0).getTextContent());
-
-                        System.out.println("Background image: "  + player.getElementsByTagName("BackgroundImage").item(0).getTextContent());
                         bgImage = player.getElementsByTagName("BackgroundImage").item(0).getTextContent();
 
                         // Get all layers ====================
@@ -66,9 +60,6 @@ public class XMLAvatarsParser {
                             node2 = nlLayers.item(j);
                             if (node2.getNodeType() == Node.ELEMENT_NODE) {
                                 layer = (Element) node2;
-                                System.out.println("x: "  + layer.getAttribute("x"));
-                                System.out.println("y: "  + layer.getAttribute("y"));
-                                System.out.println("img: "  + layer.getElementsByTagName("Image").item(0).getTextContent());
                                 x = Integer.parseInt(layer.getAttribute("x"));
                                 y = Integer.parseInt(layer.getAttribute("y"));
                                 urlImage = layer.getElementsByTagName("Image").item(0).getTextContent();
