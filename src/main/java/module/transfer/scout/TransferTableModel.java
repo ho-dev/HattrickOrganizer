@@ -414,10 +414,10 @@ public class TransferTableModel extends AbstractTableModel {
             home.setPlayer(aktuellerPlayer);
             m_clData[i][7] = home;
             //Leadershio
-            m_clData[i][8] = new ColorLabelEntry(aktuellerPlayer.getFuehrung()+"",
+            m_clData[i][8] = new ColorLabelEntry(aktuellerPlayer.getLeadership()+"",
                     ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Erfahrung
-            m_clData[i][9] = new ColorLabelEntry(aktuellerPlayer.getErfahrung()+"",
+            m_clData[i][9] = new ColorLabelEntry(aktuellerPlayer.getExperience()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Form
             m_clData[i][10] = new ColorLabelEntry(aktuellerPlayer.getForm()+"",

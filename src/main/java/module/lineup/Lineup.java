@@ -484,7 +484,7 @@ public class Lineup{
 		if (players != null) {
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
-					value += player.getErfahrung();
+					value += player.getExperience();
 					if (captainsId > 0) {
 						if (captainsId == player.getPlayerID()) {
 							captain = player;
@@ -496,8 +496,8 @@ public class Lineup{
 			}
 		}
 		if (captain != null) {
-			value = ((value + captain.getErfahrung()) / 12)
-					* (1f - (float) (7 - captain.getFuehrung()) * 0.05f);
+			value = ((value + captain.getExperience()) / 12)
+					* (1f - (float) (7 - captain.getLeadership()) * 0.05f);
 		} else {
 			// HOLogger.instance().log(getClass(),
 			// "Can't calc average experience, captain not set.");

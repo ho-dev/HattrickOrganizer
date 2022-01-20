@@ -160,8 +160,8 @@ public class CsvPlayerExport {
 						"" + PlayerHonesty.toString(curPlayer.getAnsehen()),
 						//
 						"" + PlayerSpeciality.toString(curPlayer.getPlayerSpecialty()),
-						"" + curPlayer.getErfahrung(),
-						"" + curPlayer.getFuehrung(),
+						"" + curPlayer.getExperience(),
+						"" + curPlayer.getLeadership(),
 						"" + curPlayer.getForm(),
 						// ls.player.skill_short
 						"" + curPlayer.getKondition(),

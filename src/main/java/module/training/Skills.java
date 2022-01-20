@@ -2,13 +2,11 @@ package module.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.constants.player.PlayerSpeciality;
 import core.model.player.Player;
 
 import java.awt.Color;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class that manages all the relation of Skills
@@ -206,7 +204,7 @@ public class Skills {
             case PlayerSkill.SET_PIECES -> player.getSPskill() + player.getSub4Skill(skillIndex);
             case PlayerSkill.STAMINA -> player.getKondition() + player.getSub4Skill(skillIndex);
             case PlayerSkill.FORM -> player.getForm() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.EXPERIENCE -> player.getErfahrung() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);
             default -> 0;
         };
     }

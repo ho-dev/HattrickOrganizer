@@ -18,7 +18,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
-	private SpielerDetailPanel spielerDetailPanel;
+	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
 	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
 	private LineupPlayersTableNameColumn spielerUebersichtTableName;
@@ -42,7 +42,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	public void setPlayer(Player player) {
 		spielerUebersichtTableName.setPlayer(player.getPlayerID());
 		playerOverviewTable.setSpieler(player.getPlayerID());
-		spielerDetailPanel.setSpieler(player);
+		playerDetailsPanel.setSpieler(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
 
@@ -74,7 +74,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 * Refresh, if a player is changed in the lineup
 	 */
 	public final void refresh() {
-		spielerDetailPanel.refresh();
+		playerDetailsPanel.refresh();
 		playerOverviewTable.refresh();
 	}
 
@@ -86,7 +86,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		playerOverviewTable.refreshHRFVergleich();
 
 		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
-		spielerDetailPanel.setSpieler(player);
+		playerDetailsPanel.setSpieler(player);
 	}
 
 	/**
@@ -123,9 +123,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		spielerDetailPanel = new SpielerDetailPanel();
+		playerDetailsPanel = new PlayerDetailsPanel();
 
-		JScrollPane scrollPane = new JScrollPane(spielerDetailPanel);
+		JScrollPane scrollPane = new JScrollPane(playerDetailsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("SpielerDetails"), scrollPane);

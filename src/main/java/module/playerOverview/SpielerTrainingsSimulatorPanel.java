@@ -245,7 +245,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         m_jlName.setText(m_clPlayer.getFullName());
         jtfAge.setText(m_clPlayer.getAlter() + "." + m_clPlayer.getAgeDays());
         Helper.setComboBoxFromID(m_jcbForm, m_clPlayer.getForm());
-        Helper.setComboBoxFromID(m_jcbErfahrung, m_clPlayer.getErfahrung());
+        Helper.setComboBoxFromID(m_jcbErfahrung, m_clPlayer.getExperience());
         Helper.setComboBoxFromID(m_jcbKondition, m_clPlayer.getKondition());
         Helper.setComboBoxFromID(m_jcbSpielaufbau, m_clPlayer.getPMskill());
         Helper.setComboBoxFromID(m_jcbFluegel, m_clPlayer.getWIskill());
@@ -303,7 +303,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
         m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm() - m_clPlayer.getForm(), true));
         m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getKondition() - m_clPlayer.getKondition(), true));
-        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getErfahrung() - m_clPlayer.getErfahrung(), true));
+        m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getExperience() - m_clPlayer.getExperience(), true));
         m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPMskill() - m_clPlayer.getPMskill(), true));
         m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWIskill() - m_clPlayer.getWIskill(), true));
         m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSCskill() - m_clPlayer.getSCskill(), true));
@@ -331,7 +331,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
         tempPlayer.setAlter(getAge());
         tempPlayer.setAgeDays(getAgeDays());
-        tempPlayer.setFuehrung(m_clPlayer.getFuehrung());
+        tempPlayer.setFuehrung(m_clPlayer.getLeadership());
         tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
     }
 

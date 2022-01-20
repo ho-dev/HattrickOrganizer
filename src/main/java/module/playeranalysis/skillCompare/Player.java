@@ -457,14 +457,14 @@ public class Player
 		setWages(m_Player.getGehalt());
 		setTSI(m_Player.getTSI());
 		setNationality(m_Player.getNationalitaet());
-		setLeadership(m_Player.getFuehrung());
+		setLeadership(m_Player.getLeadership());
 		setGroup(m_Player.getTeamInfoSmilie());
 		setSpeciality(m_Player.getPlayerSpecialty());
 	}
 	
 	public void setOldSkillValues()
 	{
-		setOldExperience(m_Player.getErfahrung());
+		setOldExperience(m_Player.getExperience());
 		setOldForm(m_Player.getForm());
 		setOldStamina(m_Player.getKondition());
 		setOldKeeping(m_Player.getGKskill());
@@ -497,7 +497,7 @@ public class Player
 	}
 	public void setNewSkillValues()
 	{
-		setExperience(m_Player.getErfahrung());
+		setExperience(m_Player.getExperience());
 		setForm(m_Player.getForm());
 		setStamina(m_Player.getKondition());
 		setKeeping(m_Player.getGKskill());

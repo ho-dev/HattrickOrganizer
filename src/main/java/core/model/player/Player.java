@@ -729,7 +729,7 @@ public class Player {
      *
      * @return Value of property m_iErfahrung.
      */
-    public int getErfahrung() {
+    public int getExperience() {
         return m_iErfahrung;
     }
 
@@ -808,7 +808,7 @@ public class Player {
      *
      * @return Value of property m_iFuehrung.
      */
-    public int getFuehrung() {
+    public int getLeadership() {
         return m_iFuehrung;
     }
 
@@ -1992,7 +1992,7 @@ public class Player {
                 + Helper.round(getSCskill() + getSub4Skill(SCORING) + loy, 2) + "|"
                 + getForm() + "|"
                 + getKondition() + "|"
-                + getErfahrung() + "|"
+                + getExperience() + "|"
                 + getPlayerSpecialty(); // used for Technical DefFW
 
         // Check if the key already exists in cache
@@ -2297,7 +2297,7 @@ public class Player {
 
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
-        boolean experienceSubDone = this.getErfahrung() > before.getErfahrung(); // Do not calculate sub on experience skill up
+        boolean experienceSubDone = this.getExperience() > before.getExperience(); // Do not calculate sub on experience skill up
         var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = before.getSub4Skill(skill);

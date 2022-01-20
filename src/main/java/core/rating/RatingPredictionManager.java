@@ -8,7 +8,6 @@ import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -17,7 +16,6 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 import static core.util.MathUtils.fuzzyEquals;
@@ -898,7 +896,7 @@ public class RatingPredictionManager {
 
 
             retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
-            		getSkillName(skillType), player.getKondition(), player.getErfahrung(), skill, player.getForm(), useForm);
+            		getSkillName(skillType), player.getKondition(), player.getExperience(), skill, player.getForm(), useForm);
 //            System.out.println("calcPlayerStrength for "+player.getSpielerID()
 //            		+", st="+skillType+", s="+skill+", k="+player.getKondition()
 //            		+", xp="+player.getErfahrung()+", f="+player.getForm()+": "+retVal);

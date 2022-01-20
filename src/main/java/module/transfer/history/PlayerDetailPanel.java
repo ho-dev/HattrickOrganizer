@@ -278,7 +278,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 skill_scoring.setText(SKILL_SCORING + " (" + player.getSCskill() + ")");
                 skill_setpieces.setText(SKILL_SETPIECES + " (" + player.getSPskill() + ")");
                 skill_stamina.setText(SKILL_STAMINA + " (" + player.getKondition() + ")");
-                skill_experience.setText(SKILL_EXPERIENCE + " (" + player.getErfahrung() + ")");
+                skill_experience.setText(SKILL_EXPERIENCE + " (" + player.getExperience() + ")");
 
 
                 arrow_keeper.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.KEEPER).size(),true));

@@ -105,10 +105,10 @@ class PlayerSkillColumn extends PlayerColumn {
 		case PlayerSkill.PLAYMAKING: 	return player.getPMskill();
 		case PlayerSkill.SET_PIECES: 		return player.getSPskill();
 		case PlayerSkill.SCORING: 		return player.getSCskill();
-		case PlayerSkill.EXPERIENCE: 	return player.getErfahrung();
+		case PlayerSkill.EXPERIENCE: 	return player.getExperience();
 		case PlayerSkill.FORM: 			return player.getForm();
 		case PlayerSkill.STAMINA: 		return player.getKondition();
-		case PlayerSkill.LEADERSHIP:		return player.getFuehrung();
+		case PlayerSkill.LEADERSHIP:		return player.getLeadership();
 		case PlayerSkill.LOYALTY: 		return player.getLoyalty();
 		
 		}
