@@ -227,9 +227,6 @@ public class TeamPanel extends JPanel {
                 int transferListedStatus  = player.getTransferlisted() * PlayerDataManager.TRANSFER_LISTED;
 
                 int status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
-
-                System.out.println(player.getFullName() + "  " + status);
-
                 spotLineup.setStatus(status);
                 spotLineup.setSpot(spot);
                 spotLineup.setTactics(new ArrayList<>());
