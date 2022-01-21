@@ -328,7 +328,10 @@ task pushmd(dependsOn: preparingBuild)  {
                 "# Changelist HO! $major.$minor",
                 ""
         ]
-        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md").text=changelogIntro.join("\n") + files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md").collect{it.getText()}.join("\n")
+
+        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md").text=changelogIntro.join("\n")
+        def toConcatenate = files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md")
+        toConcatenate.each { f -> changeLog << f.text }
 
         // debug
         println changeLog.getAbsolutePath();
