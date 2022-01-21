@@ -320,8 +320,7 @@ task pushmd(dependsOn: preparingBuild)  {
 
         def mdDir = new File("${projectDir}/docs/md") // create directory for MD source
         mdDir.mkdirs()
-        new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n")
-                + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
+        new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
 
         // create changelog
         println("create changelog")
@@ -329,9 +328,7 @@ task pushmd(dependsOn: preparingBuild)  {
                 "# Changelist HO! $major.$minor",
                 ""
         ]
-        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md").text=changelogIntro.join("\n")
-                + file("${projectDir}/src/main/resources/release_notes.md").getText()
-                + file("${projectDir}/src/main/resources/changelog.md").getText()
+        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md").text=changelogIntro.join("\n") + files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md").collect{it.getText()}.join("\n")
 
         // debug
         println changeLog.getAbsolutePath();
