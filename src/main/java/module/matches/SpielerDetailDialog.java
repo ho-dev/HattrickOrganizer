@@ -274,7 +274,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		if (m_clVergleichsPlayer == null) {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
 			if (m_clPlayer.getBonus() > 0) {
@@ -329,9 +329,9 @@ final class SpielerDetailDialog extends JDialog {
 			}
 		} else {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
-			int gehalt2 = (int) (m_clVergleichsPlayer.getGehalt() / core.model.UserParameter
-					.instance().faktorGeld);
+			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+			int gehalt2 = (int) (m_clVergleichsPlayer.getSalary() / core.model.UserParameter
+					.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
 			if (m_clPlayer.getBonus() > 0) {

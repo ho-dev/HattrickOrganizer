@@ -221,7 +221,7 @@ public final class UserParameter extends Configuration {
 
     //Sonstiges
     //currency factor
-    public float faktorGeld = 1f;
+    public float FXrate = 1f;
     //Faktor für Zeilenbreite in den Tabellen, Wird nicht gespeichert, sondern berechnet
     public float zellenbreitenFaktor = 1.0f;
 
@@ -576,7 +576,7 @@ public final class UserParameter extends Configuration {
         map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
         map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
         map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
-        map.put("faktorGeld", String.valueOf(faktorGeld));
+        map.put("faktorGeld", String.valueOf(FXrate));
         map.put("zellenbreitenFaktor", String.valueOf(zellenbreitenFaktor));
         map.put("DAUER_CHANCENVERWERTUNG", String.valueOf(TRAINING_OFFSET_SCORING));
         map.put("DAUER_FLUEGELSPIEL", String.valueOf(TRAINING_OFFSET_WINGER));
@@ -821,7 +821,7 @@ public final class UserParameter extends Configuration {
         TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
         TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
         TrainerFaktor = getFloatValue(values, "TrainerFaktor");
-        faktorGeld = getFloatValue(values, "faktorGeld");
+        FXrate = getFloatValue(values, "faktorGeld");
         zellenbreitenFaktor = getFloatValue(values, "zellenbreitenFaktor");
         TRAINING_OFFSET_SCORING = getFloatValue(values, "DAUER_CHANCENVERWERTUNG");
         TRAINING_OFFSET_WINGER = getFloatValue(values, "DAUER_FLUEGELSPIEL");

@@ -826,7 +826,7 @@ public class Player {
      *
      * @return Value of property m_iGehalt.
      */
-    public int getGehalt() {
+    public int getSalary() {
         return m_iGehalt;
     }
 

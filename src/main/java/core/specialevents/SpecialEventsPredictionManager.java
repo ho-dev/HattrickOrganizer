@@ -259,7 +259,7 @@ public class SpecialEventsPredictionManager {
                             player.getFullName(),
                             player.getAlter(),
                             player.getTSI(),
-                            player.getGehalt(),
+                            player.getSalary(),
                             player.getForm(),
                             player.getKondition(),
                             player.getExperience(),

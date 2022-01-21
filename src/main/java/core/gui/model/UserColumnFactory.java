@@ -652,7 +652,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
-                final int gehalt = (int) (player.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+                final int gehalt = (int) (player.getSalary() / core.model.UserParameter.instance().FXrate);
                 final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
@@ -666,8 +666,8 @@ final public class UserColumnFactory {
                                     SwingConstants.RIGHT));
                 }
 
-                final int gehalt2 = (int) (playerCompare.getGehalt() / core.model.UserParameter
-                        .instance().faktorGeld);
+                final int gehalt2 = (int) (playerCompare.getSalary() / core.model.UserParameter
+                        .instance().FXrate);
                 return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                         gehalttext + bonus,
                         ColorLabelEntry.FG_STANDARD,

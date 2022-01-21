@@ -16,7 +16,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 16;
-		final float faktor = core.model.UserParameter.instance().faktorGeld;
+		final float faktor = core.model.UserParameter.instance().FXrate;
 
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<double[]>();
@@ -226,7 +226,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		final float factor = core.model.UserParameter.instance().faktorGeld;
+		final float factor = core.model.UserParameter.instance().FXrate;
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
 		final int nbColumns = 29;
@@ -404,7 +404,7 @@ public class StatisticQuery {
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberHRF) {
 
 		final int iNumberColumns = 18;
-		final float fxRate = core.model.UserParameter.instance().faktorGeld;
+		final float fxRate = core.model.UserParameter.instance().FXrate;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 
@@ -465,7 +465,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 3;
-		final float faktor = core.model.UserParameter.instance().faktorGeld;
+		final float faktor = core.model.UserParameter.instance().FXrate;
 
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<double[]>();

@@ -454,7 +454,7 @@ public class Player
 		setNickName(m_Player.getNickName());
 		setLastName(m_Player.getLastName());
 		setAge(m_Player.getAlter());
-		setWages(m_Player.getGehalt());
+		setWages(m_Player.getSalary());
 		setTSI(m_Player.getTSI());
 		setNationality(m_Player.getNationalitaet());
 		setLeadership(m_Player.getLeadership());

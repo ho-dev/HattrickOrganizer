@@ -166,7 +166,7 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getAgressivitaet()).append(",");
 		statement.append(player.getLeadership()).append(",");
 		statement.append(player.getExperience()).append(",");
-		statement.append(player.getGehalt()).append(",");
+		statement.append(player.getSalary()).append(",");
 		statement.append(player.getBonus()).append(",");
 		statement.append(player.getNationalitaet()).append(",");
 		statement.append(player.getSaveMarktwert()).append(",");

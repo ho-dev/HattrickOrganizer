@@ -39,7 +39,7 @@ public class ArenaSizer {
     //SUPPORTER-DISTRIBUTION
     static final Integer SUPPORTER_NORMAL = Integer.valueOf(20);
 
-    float currencyFactor = core.model.UserParameter.instance().faktorGeld;
+    float currencyFactor = core.model.UserParameter.instance().FXrate;
 
     ArenaSizer() {
 

@@ -45,6 +45,9 @@ import static core.model.player.IMatchRoleID.UNSELECTABLE;
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
 
+    private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
+    private Color FGcolor = ColorLabelEntry.FG_STANDARD;
+
     //~ Static fields/initializers -----------------------------------------------------------------
 
     public static final Dimension COMPONENTENSIZE = new Dimension(Helper.calcCellWidth(150),
@@ -59,9 +62,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    // Top ROW
-    private JLabel jlPlayerDescription1 = new JLabel("");
-    private JLabel jlPlayerDescription2 = new JLabel("");
+    // Row 1
+    private JLabel jlPlayerDescription = new JLabel("");
+
+    // Row 2
+    private final JPanel jpPlayer = new JPanel();
+
 
     // Top Row, column 1
     private final ColorLabelEntry m_jpName = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
@@ -85,24 +91,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
     private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
-    private final DoubleLabelEntries m_jpSalary = new DoubleLabelEntries(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
-    private final DoubleLabelEntries m_jpTSI = new DoubleLabelEntries(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT));
+    private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
+    private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
 
     // Top Row, column 3
-    private final ColorLabelEntry m_jpLeadership = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpSpeciality = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpAggressivity = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpAgreeability = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpHonesty = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final ColorLabelEntry m_jpInTeamSince = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -375,19 +369,14 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final int salary = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+        final int salary = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
         final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
         final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTSI());
         if (m_clComparisonPlayer == null) {
-            String bonus = "";
-            if (m_clPlayer.getBonus() > 0) {
-                bonus = " (" + m_clPlayer.getBonus() + "% "
-                        + HOVerwaltung.instance().getLanguageString("Bonus") + ")";
-            }
-            m_jpSalary.getLeft().setText(salarytext + bonus);
-            m_jpSalary.getRight().clear();
-            m_jpTSI.getLeft().setText(tsitext);
-            m_jpTSI.getRight().clear();
+            m_jllWage.getLeft().setText(salarytext);
+            m_jllWage.getRight().clear();
+            m_jllTSI.getLeft().setText(tsitext);
+            m_jllTSI.getRight().clear();
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.clear();
             m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
@@ -416,7 +405,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jpExperience.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()
                     + m_clPlayer.getSub4Skill(PlayerSkill.EXPERIENCE)) + "");
             m_jpExperienceChange.clear();
-            m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.clear();
             m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
@@ -429,16 +417,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             }
 
         } else {
-            String bonus = "";
-            final int gehalt2 = (int) (m_clComparisonPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
-            if (m_clPlayer.getBonus() > 0) {
-                bonus = " (" + m_clPlayer.getBonus() + "% "
-                        + HOVerwaltung.instance().getLanguageString("Bonus") + ")";
-            }
-            m_jpSalary.getLeft().setText(salarytext + bonus);
-            m_jpSalary.getRight().setSpecialNumber(salary - gehalt2, true);
-            m_jpTSI.getLeft().setText(tsitext);
-            m_jpTSI.getRight().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
+            final int previousSalary = (int) (m_clComparisonPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+            m_jllWage.getLeft().setText(salarytext);
+            m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
+            m_jllTSI.getLeft().setText(tsitext);
+            m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
                     - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
@@ -501,7 +484,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     m_clPlayer.getSub4Skill(PlayerSkill.EXPERIENCE)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.EXPERIENCE),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpLeadership.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
             m_jpLoyalty.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty()) + "");
             m_jpLoyaltyChange.setGraphicalChangeValue(m_clPlayer.getLoyalty()
                             - m_clComparisonPlayer.getLoyalty(),
@@ -521,11 +503,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpHattricks.setText(m_clPlayer.getHattrick() + "");
         m_jpSpeciality.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
         m_jpSpeciality.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getPlayerSpecialty()]));
-        m_jpAggressivity.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
-        jlPlayerDescription1.setText(Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getCharakter()), PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()), PlayerHonesty.toString(m_clPlayer.getAnsehen())));
-        jlPlayerDescription2.setText(Helper.getTranslation("ls.player_details.desc2", PlayerAbility.getNameForSkill(m_clPlayer.getExperience(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLeadership(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty(), true, false, 0)));
-        m_jpHonesty.setText(PlayerAgreeability.toString(m_clPlayer.getCharakter()));
-        m_jpAgreeability.setText(PlayerHonesty.toString(m_clPlayer.getAnsehen()));
+
+        String playerDescription = "<html>" + Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getCharakter()), PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()), PlayerHonesty.toString(m_clPlayer.getAnsehen()));
+        playerDescription += "<br>";
+        playerDescription += Helper.getTranslation("ls.player_details.desc2", PlayerAbility.getNameForSkill(m_clPlayer.getExperience(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLeadership(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty(), true, false, 0));
+        playerDescription += "</html>";
+        jlPlayerDescription.setText(playerDescription);
+
 
         String temp = "";
         final java.sql.Timestamp time = m_clPlayer.getTimestamp4FirstPlayerHRF();
@@ -640,16 +624,88 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         panel.add(label);
         constraints.gridheight = 1;
 
-        // Player description block =====================
+        // Player description  =====================
         constraints.gridwidth = 10;
-
         setPosition(constraints, 0, 0);
-        layout.setConstraints(jlPlayerDescription1, constraints);
-        panel.add(jlPlayerDescription1);
+        layout.setConstraints(jlPlayerDescription, constraints);
+        panel.add(jlPlayerDescription);
+
+        // create player panel =======================================================
+        final GridBagLayout layoutInnerPanel = new GridBagLayout();
+        final GridBagConstraints constraintsInnerPanel = new GridBagConstraints();
+        constraintsInnerPanel.fill = GridBagConstraints.BOTH;
+//        constraints.weightx = 0.0;
+//        constraints.weighty = 1.0;
+//        constraintsInnerPanel.insets = new Insets(1, 2, 1, 1);
+        jpPlayer.setLayout(layoutInnerPanel);
+
+
+        label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 0;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        constraintsInnerPanel.gridx = 2;
+        constraintsInnerPanel.gridy = 0;
+        constraintsInnerPanel.insets = new Insets(0, 10, 0, 0);
+        layoutInnerPanel.setConstraints(m_jllTSI.getComponent(false), constraintsInnerPanel);
+        jpPlayer.add(m_jllTSI.getComponent(false));
+
+
+        label = new JLabel(Helper.getTranslation("ls.player.wage"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 1;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        constraintsInnerPanel.gridx = 2;
+        constraintsInnerPanel.gridy = 1;
+        constraintsInnerPanel.insets = new Insets(0, 10, 0, 0);
+        layoutInnerPanel.setConstraints(m_jllWage.getComponent(false), constraintsInnerPanel);
+        jpPlayer.add(m_jllWage.getComponent(false));
+
+        label = new JLabel(Helper.getTranslation("ls.player.speciality"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 2;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        label = new JLabel(Helper.getTranslation("ls.player.form"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 3;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        label = new JLabel(Helper.getTranslation("ls.player.skill.stamina"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 4;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+
+//        JLabel label;
+        ;
+//
+//        // Empty row
+//        label = new JLabel("  ");
+//        setPosition(constraints, 3, 0);
+//        constraints.weightx = 0.0;
+//        constraints.gridheight = 11;
+//        layout.setConstraints(label, constraints);
+//        panel.add(label);
+//        constraints.gridheight = 1;
+
+
 
         setPosition(constraints, 0, 1);
-        layout.setConstraints(jlPlayerDescription2, constraints);
-        panel.add(jlPlayerDescription2);
+        layout.setConstraints(jpPlayer, constraints);
+        panel.add(jpPlayer);
 
         // ***** Block 1
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"));
@@ -723,13 +779,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         initNormalLabel(4, 4, constraints, layout, panel, label);
         initNormalField(5, 4, constraints, layout, panel, m_jpStatus.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.wage"));
-        initNormalLabel(4, 5, constraints, layout, panel, label);
-        initNormalField(5, 5, constraints, layout, panel, m_jpSalary.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
-        initNormalLabel(4, 6, constraints, layout, panel, label);
-        initNormalField(5, 6, constraints, layout, panel, m_jpTSI.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
         initNormalLabel(4, 7, constraints, layout, panel, label);
@@ -822,30 +871,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         panel.add(label);
         constraints.gridheight = 1;
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
-        initNormalLabel(8, 0, constraints, layout, panel, label);
-        setPosition(constraints, 9, 3);
-        constraints.weightx = 1.0;
-        component = m_jpLeadership.getComponent(false);
-        component.setPreferredSize(COMPONENTENSIZE3);
-        layout.setConstraints(component, constraints);
-        panel.add(component);
+
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
         initNormalLabel(8, 3, constraints, layout, panel, label);
         initNormalField(9, 3, constraints, layout, panel, m_jpSpeciality.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.aggressiveness"));
-        initNormalLabel(8, 4, constraints, layout, panel, label);
-        initNormalField(9, 4, constraints, layout, panel, m_jpAggressivity.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.agreeability"));
-        initNormalLabel(8, 5, constraints, layout, panel, label);
-        initNormalField(9, 5, constraints, layout, panel, m_jpHonesty.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.honesty"));
-        initNormalLabel(8, 6, constraints, layout, panel, label);
-        initNormalField(9, 6, constraints, layout, panel, m_jpAgreeability.getComponent(false));
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ImTeamSeit"));
         initNormalLabel(8, 7, constraints, layout, panel, label);
@@ -1056,8 +1087,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jcbSquad.setSelectedItem("");
         m_jcbInformation.setSelectedItem("");
         m_jpRating.clear();
-        m_jpSalary.clear();
-        m_jpTSI.clear();
+        m_jllWage.clear();
+        m_jllTSI.clear();
         m_jpForm.clear();
         m_jpStamina.clear();
         m_jpKeeper.clear();
@@ -1068,7 +1099,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpSetPieces.clear();
         m_jpScoring.clear();
         m_jpExperience.clear();
-        m_jpLeadership.clear();
         m_jpFormChange.clear();
         m_jpStaminaChange.clear();
         m_jpKeeperChange.clear();
@@ -1092,12 +1122,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpGoalsCup.clear();
         m_jpGoalsTotal.clear();
         m_jpHattricks.clear();
-        m_jpSpeciality.clear();
-        m_jpAggressivity.clear();
-        jlPlayerDescription1.setText("");
-        jlPlayerDescription2.setText("");
-        m_jpHonesty.clear();
-        m_jpAgreeability.clear();
+        m_jpSpeciality.clear();;
+        jlPlayerDescription.setText("");
         m_jpInTeamSince.clear();
         m_jbStatistics.setEnabled(false);
         m_jbAnalysisTop.setEnabled(false);
