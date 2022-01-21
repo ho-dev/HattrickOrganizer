@@ -305,7 +305,7 @@ task pushmd(dependsOn: preparingBuild)  {
 
         println("create release-notes")
         List<String> intro = [
-                "# HO $major.$minor Release Notes",
+                "# HO! $major.$minor Release Notes",
                 "",
                 development_message[development_stage],
                 "",
@@ -329,7 +329,8 @@ task pushmd(dependsOn: preparingBuild)  {
                 ""
         ]
 
-        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md").text=changelogIntro.join("\n")
+        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md")
+        changeLog.text=changelogIntro.join("\n")
         def toConcatenate = files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md")
         toConcatenate.each { f -> changeLog << f.text }
 
