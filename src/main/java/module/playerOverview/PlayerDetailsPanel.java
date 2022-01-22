@@ -67,6 +67,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     // Row 2
     private final JPanel jpPlayer = new JPanel();
+    private JLabel jlPlayerAvatar = new JLabel();
 
 
     // Top Row, column 1
@@ -323,6 +324,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      * set values of the player to fields
      */
     private void setLabels() {
+        Icon playerAvatar = ThemeManager.instance().getPlayerAvatar(m_clPlayer.getPlayerID());
+        jlPlayerAvatar.setIcon(playerAvatar);
         m_jpName.setText(m_clPlayer.getShortName());
         m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpLastMatchRating.clear();
@@ -416,7 +419,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 showNormal(playerPositionValues[i], playerPosition[i]);
             }
 
-        } else {
+        }
+        else {
             final int previousSalary = (int) (m_clComparisonPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
             m_jllWage.getLeft().setText(salarytext);
             m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
@@ -639,11 +643,19 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 //        constraintsInnerPanel.insets = new Insets(1, 2, 1, 1);
         jpPlayer.setLayout(layoutInnerPanel);
 
+        jlPlayerAvatar = new JLabel("");
+        constraintsInnerPanel.gridx = 0;
+        constraintsInnerPanel.gridy = 0;
+        constraintsInnerPanel.gridheight = 5;
+        layoutInnerPanel.setConstraints(jlPlayerAvatar, constraintsInnerPanel);
+        jpPlayer.add(jlPlayerAvatar);
+
 
         label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
         constraintsInnerPanel.gridy = 0;
+        constraintsInnerPanel.gridheight = 1;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
@@ -1079,6 +1091,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      * clears all labels
      */
     private void resetLabels() {
+        jlPlayerAvatar.setIcon(null);
         m_jpName.clear();
         m_jpAge.clear();
         m_jpNationality.clear();

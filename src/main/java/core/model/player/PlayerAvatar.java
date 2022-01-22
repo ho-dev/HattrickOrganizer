@@ -71,7 +71,10 @@ public class PlayerAvatar {
 
     public void generateAvatar(Path pathAvatar) throws IOException {
 
-        URL url  = new URL(this.m_bgImage);
+        var FirstLayer = m_layers.get(0);
+        int x0, y0;
+
+        URL url  = new URL(FirstLayer.urlElement());
         BufferedImage img = ImageIO.read(url.openStream());
 
         BufferedImage avatar = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -79,10 +82,13 @@ public class PlayerAvatar {
 
         g.drawImage(img, 0, 0, null);
 
-        for (Layer layer : this.m_layers) {
+        x0 = FirstLayer.x();
+        y0 = FirstLayer.y();
+
+        for (Layer layer : m_layers.stream().skip(1).collect(Collectors.toList())) {
             url = new URL(layer.urlElement());
             img = ImageIO.read(url.openStream());
-            g.drawImage(img, layer.x(), layer.y(), null);
+            g.drawImage(img, layer.x() - x0, layer.y() - y0, null);
         }
 
         // Save as new image

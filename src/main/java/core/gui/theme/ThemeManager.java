@@ -262,11 +262,11 @@ public final class ThemeManager {
 	}
 
 	public Icon getPlayerAvatar(int playerID){
-		return getPlayerAvatar(playerID, 36);
+		return getPlayerAvatar(playerID, 92);
 	}
 
 	public Icon getPlayerAvatar(int playerID, int width) {
-		int height = Math.round(width * 260f / 210f);
+		int height = Math.round(width * 123f / 92f);
 
 		String avatarPath = playerAvatarPath.resolve(playerID + ".png").toString();
 		File avatarImg = new File(avatarPath);

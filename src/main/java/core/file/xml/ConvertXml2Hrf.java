@@ -150,15 +150,15 @@ public class ConvertXml2Hrf {
 		}
 
 		HOMainFrame.instance().setWaitInformation(25);
-		DownloadDialog.instance().setInformation(Helper.getTranslation("Downloading match lineup information ..."), 25);
+		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), 25);
 		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
 						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
-		DownloadDialog.instance().setInformation(Helper.getTranslation("Downloading players information ..."), 30);
+		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), 30);
 		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
 
 		// Download players' avatar
-		DownloadDialog.instance().setInformation(Helper.getTranslation("Downloading player's avatars ..."), 35);
+		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), 35);
 		List<PlayerAvatar> playersAvatar = new XMLAvatarsParser().parseAvatarsFromString(mc.getAvatars(teamId));
 		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 35);
 
@@ -167,7 +167,7 @@ public class ConvertXml2Hrf {
 			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
 		HOMainFrame.instance().setWaitInformation(35);
-		DownloadDialog.instance().setInformation(Helper.getTranslation("Downloading economy information ..."), 40);
+		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.economy"), 40);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
 
 		HOMainFrame.instance().setWaitInformation(40);
