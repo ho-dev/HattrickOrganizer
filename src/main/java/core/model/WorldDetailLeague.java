@@ -9,13 +9,7 @@ public class WorldDetailLeague {
 	public WorldDetailLeague(){
 		
 	}
-	
-	public WorldDetailLeague(int leagueId, String countryName){
-		this.leagueId = leagueId;
-		this.countryId = leagueId;
-		this.countryName = countryName;
-	}
-	
+
 	public WorldDetailLeague(int leagueId, int countryId, String countryName){
 		this.leagueId = leagueId;
 		this.countryId = countryId;

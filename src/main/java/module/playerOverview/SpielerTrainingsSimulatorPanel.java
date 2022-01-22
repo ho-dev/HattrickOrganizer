@@ -194,7 +194,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         if (e.getSource().equals(m_jbAddTempSpieler)) {
             final Player tempPlayer = new Player();
             tempPlayer.setHrfDate();
-            tempPlayer.setNationalitaet(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
             tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));

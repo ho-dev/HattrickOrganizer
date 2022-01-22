@@ -456,7 +456,7 @@ public class Player
 		setAge(m_Player.getAlter());
 		setWages(m_Player.getSalary());
 		setTSI(m_Player.getTSI());
-		setNationality(m_Player.getNationalitaet());
+		setNationality(m_Player.getNationalityAsInt());
 		setLeadership(m_Player.getLeadership());
 		setGroup(m_Player.getTeamInfoSmilie());
 		setSpeciality(m_Player.getPlayerSpecialty());

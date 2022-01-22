@@ -42,7 +42,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	public void setPlayer(Player player) {
 		spielerUebersichtTableName.setPlayer(player.getPlayerID());
 		playerOverviewTable.setSpieler(player.getPlayerID());
-		playerDetailsPanel.setSpieler(player);
+		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
 
@@ -86,7 +86,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		playerOverviewTable.refreshHRFVergleich();
 
 		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
-		playerDetailsPanel.setSpieler(player);
+		playerDetailsPanel.setPlayer(player);
 	}
 
 	/**

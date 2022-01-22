@@ -4,9 +4,7 @@ import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
-import core.model.FactorObject;
-import core.model.FormulaFactors;
-import core.model.HOVerwaltung;
+import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
@@ -208,7 +206,7 @@ public class Player {
 
     /* bonus in Prozent */
 
-    //protected int       m_iBonus            =   0;
+    private String m_sNationality;
 
     /**
      * Aus welchem Land kommt der Player
@@ -1210,7 +1208,7 @@ public class Player {
      *
      * @param m_iNationalitaet New value of property m_iNationalitaet.
      */
-    public void setNationalitaet(int m_iNationalitaet) {
+    public void setNationalityAsInt(int m_iNationalitaet) {
         this.m_iNationalitaet = m_iNationalitaet;
     }
 
@@ -1219,9 +1217,25 @@ public class Player {
      *
      * @return Value of property m_iNationalitaet.
      */
-    public int getNationalitaet() {
+    public int getNationalityAsInt() {
         return m_iNationalitaet;
     }
+
+
+    public String getNationalityAsString() {
+        if (m_sNationality != null){
+            return m_sNationality;
+        }
+        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(m_iNationalitaet);
+        if ( leagueDetail != null ) {
+            m_sNationality = leagueDetail.getCountryName();
+        }
+        else{
+            m_sNationality = "";
+        }
+        return  m_sNationality;
+    }
+
 
     /**
      * Setter for property m_bOld.

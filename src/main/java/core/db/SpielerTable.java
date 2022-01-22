@@ -168,7 +168,7 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getExperience()).append(",");
 		statement.append(player.getSalary()).append(",");
 		statement.append(player.getBonus()).append(",");
-		statement.append(player.getNationalitaet()).append(",");
+		statement.append(player.getNationalityAsInt()).append(",");
 		statement.append(player.getSaveMarktwert()).append(",");
 		statement.append(player.getInjuryWeeks()).append(",");
 		statement.append(player.getToreFreund()).append(",");
@@ -547,7 +547,7 @@ final class SpielerTable extends AbstractTable {
             player.setHomeGrown(rs.getBoolean("HomeGrown"));
             player.setFuehrung(rs.getInt("Fuehrung"));
             player.setGehalt(rs.getInt("Gehalt"));
-            player.setNationalitaet(rs.getInt("Land"));
+            player.setNationalityAsInt(rs.getInt("Land"));
             player.setTSI(rs.getInt("Marktwert"));
 
             //TSI, alles vorher durch 1000 teilen
