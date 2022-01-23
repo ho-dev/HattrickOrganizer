@@ -91,7 +91,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     // Top Row, column 2
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMSMILIES);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
-    private SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
+    private PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
@@ -611,7 +611,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jlPlayerAvatar = new JLabel("");
         constraintsInnerPanel.gridx = 0;
         constraintsInnerPanel.gridy = 0;
-        constraintsInnerPanel.gridheight = 7;
+        constraintsInnerPanel.gridheight = 8;
         layoutInnerPanel.setConstraints(jlPlayerAvatar, constraintsInnerPanel);
         jpPlayer.add(jlPlayerAvatar);
 
@@ -623,18 +623,28 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
-        label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("Status"),  SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
         constraintsInnerPanel.gridy = 1;
-        constraintsInnerPanel.gridheight = 1;
         constraintsInnerPanel.weighty = 0.0;
         constraintsInnerPanel.insets = new Insets(0,10,5,0);
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 1;
+        JComponent jcPlayerStatus = m_jpStatus.getComponent(false);
+        layoutInnerPanel.setConstraints(jcPlayerStatus, constraintsInnerPanel);
+        jpPlayer.add(jcPlayerStatus);
+
+        label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
+        label.setFont(Helper.getLabelFontAsBold(label));
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 2;
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        constraintsInnerPanel.gridx = 2;
+        constraintsInnerPanel.gridy = 2;
         layoutInnerPanel.setConstraints(m_jllTSI.getComponent(false), constraintsInnerPanel);
         jpPlayer.add(m_jllTSI.getComponent(false));
 
@@ -642,44 +652,44 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         label = new JLabel(Helper.getTranslation("ls.player.wage"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 2;
+        constraintsInnerPanel.gridy = 3;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 2;
+        constraintsInnerPanel.gridy = 3;
         layoutInnerPanel.setConstraints(m_jllWage.getComponent(false), constraintsInnerPanel);
         jpPlayer.add(m_jllWage.getComponent(false));
 
         label = new JLabel(Helper.getTranslation("ls.player.speciality"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 3;
+        constraintsInnerPanel.gridy = 4;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 3;
+        constraintsInnerPanel.gridy = 4;
         layoutInnerPanel.setConstraints(jlSpecialty, constraintsInnerPanel);
         jpPlayer.add(jlSpecialty);
 
         label = new JLabel(Helper.getTranslation("ls.player.form"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 4;
+        constraintsInnerPanel.gridy = 5;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         label = new JLabel(Helper.getTranslation("ls.player.skill.stamina"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 5;
+        constraintsInnerPanel.gridy = 6;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         label = new JLabel("");
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 6;
+        constraintsInnerPanel.gridy = 7;
         constraintsInnerPanel.gridheight = 1;
         constraintsInnerPanel.weighty = 0.5;   //force centering elements
         constraintsInnerPanel.insets = new Insets(0,10,0,0);
@@ -747,11 +757,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         layout.setConstraints(m_jcbInformation, constraints);
         panel.add(m_jcbInformation);
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Status"));
-        initNormalLabel(4, 6, constraints, layout, panel, label);
-        initNormalField(5, 6, constraints, layout, panel, m_jpStatus.getComponent(false));
-
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
         initNormalLabel(4, 7, constraints, layout, panel, label);

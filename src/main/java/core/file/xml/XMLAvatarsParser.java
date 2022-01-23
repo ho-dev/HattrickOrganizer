@@ -9,6 +9,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class XMLAvatarsParser {
@@ -39,12 +41,13 @@ public class XMLAvatarsParser {
             if (players != null) {
                 int i = 0;
                 String bgImage = "";
-                List<Layer> layers = new ArrayList<>();
+                List<Layer> layers;
                 Element player, layer;
                 Node node, node2;
                 NodeList nlLayers;
                 int x, y, playerID;
                 String urlImage;
+                Pattern pattern = Pattern.compile("t[1-6]\\.png");
 
                 while (i < players.getLength()) {
                     node = players.item(i);
@@ -55,6 +58,7 @@ public class XMLAvatarsParser {
 
                         // Get all layers ====================
                         nlLayers = player.getElementsByTagName("Layer");
+                        layers = new ArrayList<>();
                         int j = 0;
                         while (j < nlLayers.getLength()) {
                             node2 = nlLayers.item(j);
@@ -63,7 +67,10 @@ public class XMLAvatarsParser {
                                 x = Integer.parseInt(layer.getAttribute("x"));
                                 y = Integer.parseInt(layer.getAttribute("y"));
                                 urlImage = layer.getElementsByTagName("Image").item(0).getTextContent();
-                                layers.add(new Layer(x, y, urlImage));
+
+                                if(! pattern.matcher(urlImage).find()) {
+                                    layers.add(new Layer(x, y, urlImage));
+                                }
                             }
                             j++;
                         }

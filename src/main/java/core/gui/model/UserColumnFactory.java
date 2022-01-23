@@ -17,7 +17,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
-import module.playerOverview.SpielerStatusLabelEntry;
+import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.*;
 import java.sql.Timestamp;
@@ -641,7 +641,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[6] = new PlayerColumn(70, "Status", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                SpielerStatusLabelEntry entry = new SpielerStatusLabelEntry();
+                PlayerStatusLabelEntry entry = new PlayerStatusLabelEntry();
                 entry.setPlayer(player);
                 return entry;
             }

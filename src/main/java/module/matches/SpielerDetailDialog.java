@@ -25,7 +25,7 @@ import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.playerOverview.PlayerDetailsPanel;
-import module.playerOverview.SpielerStatusLabelEntry;
+import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -181,7 +181,7 @@ final class SpielerDetailDialog extends JDialog {
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
 	private final RatingTableEntry m_jpAktuellRating = new RatingTableEntry();
 	private final RatingTableEntry m_jpRating = new RatingTableEntry();
-	private final SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
+	private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry();
 
 	private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[] { m_jpWertTor,
 			m_jpWertInnenVert, m_jpWertInnenVertAus, m_jpWertInnenVertOff, m_jpWertAussenVert,
