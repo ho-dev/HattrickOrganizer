@@ -47,13 +47,6 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	}
 
 	/**
-	 * Returns Width of the best position column
-	 */
-	public final int getBestPosWidth() {
-		return playerOverviewTable.getBestPosWidth();
-	}
-
-	/**
 	 * Returns the current Divider Locations so they can be stored.
 	 */
 	public final int[] getDividerLocations() {
@@ -101,7 +94,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		Component tabelle = initSpielerTabelle();
+		Component tabelle = initPlayersTable();
 		horizontalRightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
 		horizontalRightSplitPane.setLeftComponent(initSpielerDetail());
 		horizontalRightSplitPane.setRightComponent(initSpielerHistory());
@@ -123,7 +116,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		playerDetailsPanel = new PlayerDetailsPanel();
+		playerDetailsPanel = new PlayerDetailsPanel(playerOverviewTable);
 
 		JScrollPane scrollPane = new JScrollPane(playerDetailsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
@@ -163,7 +156,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	/*
 	 * Initialise the players tables
 	 */
-	private Component initSpielerTabelle() {
+	private Component initPlayersTable() {
 
 		JPanel overviewPanel = new JPanel();
 		overviewPanel.setLayout(new BorderLayout());
@@ -237,16 +230,14 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
 				e -> {
-					final int row = spielerUebersichtTableName.getSelectedRow();
+					int row = spielerUebersichtTableName.getSelectedRow();
+					if (row == -1) row = 0;
+
 					selectRow(playerOverviewTable, row);
 
 					// Set player on HOMainFrame to notify other tabs.
-					if (row > -1) {
-						Player player = playerOverviewTable.getSorter().getSpieler(row);
-						if (player != null) {
-							HOMainFrame.instance().setActualSpieler(player);
-						}
-					}
-				});
+					Player player = playerOverviewTable.getSorter().getSpieler(row);
+					if (player != null) HOMainFrame.instance().setActualSpieler(player);
+					});
 	}
 }

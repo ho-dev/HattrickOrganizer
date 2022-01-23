@@ -47,6 +47,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
     private Color FGcolor = ColorLabelEntry.FG_STANDARD;
+    private PlayerOverviewTable m_playerOverviewTable;
 
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -230,7 +231,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     /**
      * Creates a new SpielerDetailPanel object.
      */
-    protected PlayerDetailsPanel() {
+    protected PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
+        m_playerOverviewTable = playerOverviewTable;
         initComponents();
         RefreshManager.instance().registerRefreshable(this);
     }
@@ -240,7 +242,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     /**
      * Set the player to be shown
      */
-    public final void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         m_clPlayer = player;
         if (m_clPlayer != null) {
             findComparisonPlayer();
@@ -254,7 +256,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     }
 
     @Override
-    public final void actionPerformed(java.awt.event.ActionEvent actionevent) {
+    public void actionPerformed(java.awt.event.ActionEvent actionevent) {
         if (actionevent.getSource().equals(m_jbStatistics)) {
             HOMainFrame.instance().showTab(IModule.STATISTICS);
             ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
@@ -291,7 +293,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      * set the player to compare and refresh the display
      */
     @Override
-    public final void reInit() {
+    public void reInit() {
         if (m_clPlayer != null) {
             findComparisonPlayer();
         }
@@ -580,17 +582,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraints.insets = new Insets(1, 2, 1, 1);
         panel.setLayout(layout);
 
-//        JLabel label;
-
-        // Empty row
-//        label = new JLabel("  ");
-//        setPosition(constraints, 3, 0);
-//        constraints.weightx = 0.0;
-//        constraints.gridheight = 11;
-//        layout.setConstraints(label, constraints);
-//        panel.add(label);
-//        constraints.gridheight = 1;
-
         constraints.gridwidth = 10;
         setPosition(constraints, 0, 0);
         layout.setConstraints(jlName, constraints);
@@ -620,22 +611,30 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jlPlayerAvatar = new JLabel("");
         constraintsInnerPanel.gridx = 0;
         constraintsInnerPanel.gridy = 0;
-        constraintsInnerPanel.gridheight = 5;
+        constraintsInnerPanel.gridheight = 7;
         layoutInnerPanel.setConstraints(jlPlayerAvatar, constraintsInnerPanel);
         jpPlayer.add(jlPlayerAvatar);
 
 
-        JLabel label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
+        JLabel label = new JLabel("");
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridheight = 1;
+        constraintsInnerPanel.weighty = 0.5;   //force centering elements
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
+
+        label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 0;
+        constraintsInnerPanel.gridy = 1;
         constraintsInnerPanel.gridheight = 1;
+        constraintsInnerPanel.weighty = 0.0;
+        constraintsInnerPanel.insets = new Insets(0,10,5,0);
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 0;
-        constraintsInnerPanel.insets = new Insets(0, 10, 0, 0);
+        constraintsInnerPanel.gridy = 1;
         layoutInnerPanel.setConstraints(m_jllTSI.getComponent(false), constraintsInnerPanel);
         jpPlayer.add(m_jllTSI.getComponent(false));
 
@@ -643,45 +642,49 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         label = new JLabel(Helper.getTranslation("ls.player.wage"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 1;
+        constraintsInnerPanel.gridy = 2;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 1;
-        constraintsInnerPanel.insets = new Insets(0, 10, 0, 0);
+        constraintsInnerPanel.gridy = 2;
         layoutInnerPanel.setConstraints(m_jllWage.getComponent(false), constraintsInnerPanel);
         jpPlayer.add(m_jllWage.getComponent(false));
 
         label = new JLabel(Helper.getTranslation("ls.player.speciality"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 2;
+        constraintsInnerPanel.gridy = 3;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 2;
+        constraintsInnerPanel.gridy = 3;
         layoutInnerPanel.setConstraints(jlSpecialty, constraintsInnerPanel);
         jpPlayer.add(jlSpecialty);
 
         label = new JLabel(Helper.getTranslation("ls.player.form"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 3;
+        constraintsInnerPanel.gridy = 4;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
         label = new JLabel(Helper.getTranslation("ls.player.skill.stamina"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
         constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 4;
+        constraintsInnerPanel.gridy = 5;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
 
-
-
-
+        label = new JLabel("");
+        constraintsInnerPanel.gridx = 1;
+        constraintsInnerPanel.gridy = 6;
+        constraintsInnerPanel.gridheight = 1;
+        constraintsInnerPanel.weighty = 0.5;   //force centering elements
+        constraintsInnerPanel.insets = new Insets(0,10,0,0);
+        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
+        jpPlayer.add(label);
 
         setPosition(constraints, 0, 4);
         layout.setConstraints(jpPlayer, constraints);
@@ -885,6 +888,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             initBlueField(i, constraints, layout, panel, playerPositionValues[i].getComponent(false));
         }
         add(panel, BorderLayout.CENTER);
+
+        // at initialisation select first player to ensure clean display =====
+        m_clPlayer = m_playerOverviewTable.getSorter().getSpieler(0);
     }
 
     /**
