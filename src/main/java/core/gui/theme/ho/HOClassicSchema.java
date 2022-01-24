@@ -263,6 +263,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put("gray", Color.GRAY);
 		put("green", Color.GREEN);
 		put("yellow", Color.YELLOW);
+		put("red", Color.RED);
+		put("blue", Color.BLUE);
+		put("orange", Color.ORANGE);
 		put("dark_gray", Color.DARK_GRAY);
 		put("light_gray", Color.LIGHT_GRAY);
 		put("lightGreen", new Color(220, 255, 220));
@@ -277,8 +280,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	 */
 	private void initColors() {
 		// basic color;
-		put(RED, new Color(255, 0, 0));
-		put(BLUE, new Color(0, 0, 255));
+		put(RED, "blue");
+		put(BLUE, "red");
+		put(GREEN, "green");
+		put(YELLOW, "yellow");
+		put(ORANGE, "orange");
 
 
 		put(PANEL_BG, new Color(214,217,223));

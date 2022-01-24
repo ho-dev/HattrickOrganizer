@@ -12,6 +12,9 @@ public interface HOColorName {
 	// DEFAULT COLOR
     String RED 							= "default.red";
 	String BLUE 						= "default.blue";
+	String GREEN 						= "default.green";
+	String ORANGE 						= "default.orange";
+	String YELLOW 						= "default.yellow";
 
 	String PANEL_BG 					= "panel.bg";
 	String PANEL_BORDER					= "panel.border";

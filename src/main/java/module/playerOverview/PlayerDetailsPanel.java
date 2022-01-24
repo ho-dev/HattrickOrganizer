@@ -34,6 +34,8 @@ import module.statistics.StatistikMainPanel;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicProgressBarUI;
+
 import static core.gui.theme.HOIconName.*;
 import static core.gui.theme.ImageUtilities.getSvgIcon;
 import static core.model.player.IMatchRoleID.UNKNOWN;
@@ -48,6 +50,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
     private Color FGcolor = ColorLabelEntry.FG_STANDARD;
     private PlayerOverviewTable m_playerOverviewTable;
+    private Font f;
 
     //~ Static fields/initializers -----------------------------------------------------------------
 
@@ -71,6 +74,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private JLabel jlNationality = new JLabel();
     private JLabel jlSpecialty = new JLabel();
     private final JLabel jlInTeamSince = new JLabel();
+    private JProgressBar jpbForm;
 
 
 
@@ -495,6 +499,21 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisTop.setEnabled(true);
         m_jbAnalysisBottom.setEnabled(true);
         m_jbOffsets.setEnabled(true);
+
+        int iForm = m_clPlayer.getForm();
+
+        jpbForm.setEnabled(true);
+
+        jpbForm.setStringPainted(true);
+        jpbForm.setString(PlayerAbility.getNameForSkill(iForm, true, false, 0));
+
+        jpbForm.setValue(iForm);
+//        jpbForm.setForeground(Color.RED);
+        jpbForm.setForeground(getColorForSkill(iForm));
+//        jpbForm.setBackground(BGcolor.darker());
+        jpbForm.setBorderPainted(true);
+        jpbForm.setBorder(BorderFactory.createLineBorder(Color.black));
+
     }
 
     private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition) {
@@ -572,6 +591,18 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      */
     private void initComponents() {
         setLayout(new BorderLayout());
+
+        f =  new JLabel("").getFont();
+        f = f.deriveFont(f.getStyle() | Font.BOLD);
+
+        jpbForm = new JProgressBar(0, 8);
+        jpbForm.setUI(new MyProgressUI());
+        jpbForm.setStringPainted(true);
+//        for (int i = 0; i < 14; i++) {
+//            ratings[i] = new JProgressBar(0, 100);
+////            ratings[i].setPreferredSize(new Dimension(200, 20)); //25 if nimbus
+//            ratings[i].setStringPainted(true);
+//        }
 
         final JPanel panel = new ImagePanel();
         final GridBagLayout layout = new GridBagLayout();
@@ -679,6 +710,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsInnerPanel.gridy = 5;
         layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
         jpPlayer.add(label);
+
+        constraintsInnerPanel.gridx = 2;
+        constraintsInnerPanel.gridy = 5;
+        layoutInnerPanel.setConstraints(jpbForm, constraintsInnerPanel);
+        jpPlayer.add(jpbForm);
 
         label = new JLabel(Helper.getTranslation("ls.player.skill.stamina"), SwingConstants.RIGHT);
         label.setFont(Helper.getLabelFontAsBold(label));
@@ -1118,4 +1154,53 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         return positions;
     }
+
+    private Color getColorForSkill(int iSkill){
+       var bgColor =  switch (iSkill){
+            case 7, 8 -> ThemeManager.getColor(HOColorName.GREEN);
+            case 5, 6 -> ThemeManager.getColor(HOColorName.YELLOW);
+            case 3, 4 -> ThemeManager.getColor(HOColorName.ORANGE);
+            default -> ThemeManager.getColor(HOColorName.RED);
+        };
+        return bgColor;
+    }
+
+    private static class MyProgressUI extends BasicProgressBarUI {
+
+        private Color aColor;
+        private Color bColor;
+
+        @Override
+        protected void paintDeterminate(Graphics g, JComponent c) {
+            Color saved = g.getColor();
+            aColor = saved;
+            bColor = c.getForeground();
+
+            Rectangle vr = SwingUtilities.calculateInnerArea(c, new Rectangle());
+            Rectangle or = progressBar.getBounds();
+            Insets insets = c.getInsets();
+
+            int amountFull = getAmountFull(insets, or.width, or.height);
+
+
+             g.setColor(c.getForeground());
+             g.fillRect(vr.x, vr.y, amountFull, vr.height);
+
+             if (progressBar.isStringPainted() && !progressBar.getString().equals("")) {
+                 paintString(g, 0, 0, or.width, or.height, amountFull, insets);
+             }
+            g.setColor(saved);
+        }
+
+        @Override
+        protected Color getSelectionBackground() {
+            return ImageUtilities.getColorForContrast(this.aColor);
+        }
+
+        @Override
+        protected Color getSelectionForeground() {
+            return ImageUtilities.getColorForContrast(this.bColor);
+        }
+    }
+
 }
