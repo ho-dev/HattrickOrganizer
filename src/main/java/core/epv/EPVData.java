@@ -63,7 +63,7 @@ public class EPVData implements Cloneable {
         setAgeDays(s.getAgeDays());
         setTSI(s.getTSI());
         setForm(s.getForm());
-        setStamina(s.getKondition() + s.getSub4Skill(PlayerSkill.STAMINA));
+        setStamina(s.getStamina() + s.getSub4Skill(PlayerSkill.STAMINA));
         setGoalKeeping(s.getGKskill() + s.getSub4Skill(PlayerSkill.KEEPER));
         setPlayMaking(s.getPMskill()
                       + s.getSub4Skill(PlayerSkill.PLAYMAKING));

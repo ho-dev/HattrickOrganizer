@@ -288,7 +288,7 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpMartwert.getRight().clear();
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.clear();
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
 			m_jpKondition2.clear();
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
 					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
@@ -348,9 +348,9 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpForm2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isOld(),
 					true);
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
-			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getKondition()
-					- m_clPlayer.getKondition(), !m_clVergleichsPlayer.isOld(), true);
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
+			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getStamina()
+					- m_clPlayer.getStamina(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
 					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
 					+ "");

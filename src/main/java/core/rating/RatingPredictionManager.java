@@ -896,7 +896,7 @@ public class RatingPredictionManager {
 
 
             retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
-            		getSkillName(skillType), player.getKondition(), player.getExperience(), skill, player.getForm(), useForm);
+            		getSkillName(skillType), player.getStamina(), player.getExperience(), skill, player.getForm(), useForm);
 //            System.out.println("calcPlayerStrength for "+player.getSpielerID()
 //            		+", st="+skillType+", s="+skill+", k="+player.getKondition()
 //            		+", xp="+player.getErfahrung()+", f="+player.getForm()+": "+retVal);
@@ -906,8 +906,8 @@ public class RatingPredictionManager {
         }
 
 		double StaminaEffect = 1;
-        if (t >= 0) StaminaEffect = GetStaminaEffect(player.getKondition(),player.getGameStartingTime(), t, isPressing);
-        else if (t==-2) StaminaEffect = getAvg90StaminaEffect(player.getKondition()); //average contribution of stamina over a 90 minutes game, this is used to compare player at given position
+        if (t >= 0) StaminaEffect = GetStaminaEffect(player.getStamina(),player.getGameStartingTime(), t, isPressing);
+        else if (t==-2) StaminaEffect = getAvg90StaminaEffect(player.getStamina()); //average contribution of stamina over a 90 minutes game, this is used to compare player at given position
         return (float)(retVal * StaminaEffect);
     }
 

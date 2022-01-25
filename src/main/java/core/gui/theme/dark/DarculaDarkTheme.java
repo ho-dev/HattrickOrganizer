@@ -146,6 +146,9 @@ public class DarculaDarkTheme extends DarkTheme {
             //players
             ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
 
+            //players details
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
+
             // League Details
             ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
             ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));

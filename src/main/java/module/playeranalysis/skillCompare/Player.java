@@ -466,7 +466,7 @@ public class Player
 	{
 		setOldExperience(m_Player.getExperience());
 		setOldForm(m_Player.getForm());
-		setOldStamina(m_Player.getKondition());
+		setOldStamina(m_Player.getStamina());
 		setOldKeeping(m_Player.getGKskill());
 		setOldDefending(m_Player.getDEFskill());
 		setOldPlaymaking(m_Player.getPMskill());
@@ -499,7 +499,7 @@ public class Player
 	{
 		setExperience(m_Player.getExperience());
 		setForm(m_Player.getForm());
-		setStamina(m_Player.getKondition());
+		setStamina(m_Player.getStamina());
 		setKeeping(m_Player.getGKskill());
 		setDefending(m_Player.getDEFskill());
 		setPlaymaking(m_Player.getPMskill());

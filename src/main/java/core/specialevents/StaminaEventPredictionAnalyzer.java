@@ -43,7 +43,7 @@ public class StaminaEventPredictionAnalyzer implements ISpecialEventPredictionAn
             if ( op != null){
                 SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.STAMINA,
                         .3, 4, 1,
-                        p.getKondition() - op.getKondition());
+                        p.getStamina() - op.getStamina());
                 if ( se != null ){
                     se.addInvolvedOpponentPosition(analyse.getOpponentPosition(i));
                     se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(position));

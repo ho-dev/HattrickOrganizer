@@ -1,6 +1,7 @@
 package core.model.player;
 
 import core.constants.TrainingType;
+import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -1022,7 +1023,7 @@ public class Player {
      *
      * @return Value of property m_iKondition.
      */
-    public int getKondition() {
+    public int getStamina() {
         return m_iKondition;
     }
 
@@ -1424,6 +1425,17 @@ public class Player {
         return Math.min(0.99f, Helper.round(getSub4SkillAccurate(skill), 2));
     }
 
+    public float getSkill(int iSkill, boolean inclSubSkill) {
+        if(inclSubSkill) {
+            return getValue4Skill(iSkill) + getSub4Skill(iSkill);
+        }
+        else{
+            return getValue4Skill(iSkill);
+
+        }
+    }
+
+
     /**
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
@@ -1797,6 +1809,7 @@ public class Player {
         };
     }
 
+
     public float getSkillValue(int skill){
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
@@ -2005,7 +2018,7 @@ public class Player {
                 + Helper.round(getSPskill() + getSub4Skill(SET_PIECES) + loy, 2) + "|"
                 + Helper.round(getSCskill() + getSub4Skill(SCORING) + loy, 2) + "|"
                 + getForm() + "|"
-                + getKondition() + "|"
+                + getStamina() + "|"
                 + getExperience() + "|"
                 + getPlayerSpecialty(); // used for Technical DefFW
 

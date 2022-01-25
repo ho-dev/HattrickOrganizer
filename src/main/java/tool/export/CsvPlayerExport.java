@@ -164,7 +164,7 @@ public class CsvPlayerExport {
 						"" + curPlayer.getLeadership(),
 						"" + curPlayer.getForm(),
 						// ls.player.skill_short
-						"" + curPlayer.getKondition(),
+						"" + curPlayer.getStamina(),
 						"" + (curPlayer.getLoyalty()),
 						df3.format(curPlayer.getGKskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.KEEPER)),
 						df3.format(curPlayer.getDEFskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.DEFENDING)),

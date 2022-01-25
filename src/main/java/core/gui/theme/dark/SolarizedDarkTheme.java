@@ -141,6 +141,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             //players
             ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
 
+            //players details
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
+
             // League Details
             ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
             ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
@@ -151,6 +154,8 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(226,236,248));
+
+
 
             return super.enableTheme();
         } catch (Exception e) {

@@ -202,7 +202,7 @@ public class Skills {
             case PlayerSkill.DEFENDING -> player.getDEFskill() + player.getSub4Skill(skillIndex);
             case PlayerSkill.SCORING -> player.getSCskill() + player.getSub4Skill(skillIndex);
             case PlayerSkill.SET_PIECES -> player.getSPskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.STAMINA -> player.getKondition() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.STAMINA -> player.getStamina() + player.getSub4Skill(skillIndex);
             case PlayerSkill.FORM -> player.getForm() + player.getSub4Skill(skillIndex);
             case PlayerSkill.EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);
             default -> 0;

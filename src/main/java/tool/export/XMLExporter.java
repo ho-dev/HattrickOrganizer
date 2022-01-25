@@ -397,7 +397,7 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode("" + playerData.getForm()));
 					ele = doc.createElement("Kondition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getKondition()));
+					ele.appendChild(doc.createTextNode("" + playerData.getStamina()));
 					ele = doc.createElement("Erfahrung");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getExperience()));

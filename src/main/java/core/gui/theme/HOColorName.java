@@ -235,4 +235,6 @@ public interface HOColorName {
 	String NEUTRAL_ACTION = "neutral.action";
 	String BORDER_RATING_BAR = "border.rating.bar";
 
+	//Player details
+	String PLAYER_DETAILS_BAR_BORDER_COLOR = "player_details_bar.border.color";
 }

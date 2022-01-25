@@ -148,7 +148,7 @@ class TransferTableModel extends AbstractTableModel {
             case 11:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return transfer.getPlayerInfo().getKondition();
+                    return transfer.getPlayerInfo().getStamina();
                 } else {
                     return -1;
                 }

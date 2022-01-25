@@ -423,7 +423,7 @@ public class TransferTableModel extends AbstractTableModel {
             m_clData[i][10] = new ColorLabelEntry(aktuellerPlayer.getForm()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.RIGHT);
             //Kondition
-            m_clData[i][11] = new ColorLabelEntry(aktuellerPlayer.getKondition()+"",
+            m_clData[i][11] = new ColorLabelEntry(aktuellerPlayer.getStamina()+"",
             		ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.RIGHT);
             // Loyalty
             m_clData[i][12] = new ColorLabelEntry(aktuellerPlayer.getLoyalty()+"",

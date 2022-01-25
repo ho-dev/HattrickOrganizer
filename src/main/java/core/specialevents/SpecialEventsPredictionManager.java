@@ -261,7 +261,7 @@ public class SpecialEventsPredictionManager {
                             player.getTSI(),
                             player.getSalary(),
                             player.getForm(),
-                            player.getKondition(),
+                            player.getStamina(),
                             player.getExperience(),
                             player.getGKskill(),
                             player.getDEFskill(),

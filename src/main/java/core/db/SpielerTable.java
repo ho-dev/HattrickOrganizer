@@ -136,7 +136,7 @@ final class SpielerTable extends AbstractTable {
 		statement.append("'").append(DBManager.insertEscapeSequences(player.getLastName())).append("',");
 		statement.append(player.getAlter()).append(",");
 		statement.append(player.getAgeDays()).append(",");
-		statement.append(player.getKondition()).append(",");
+		statement.append(player.getStamina()).append(",");
 		statement.append(player.getForm()).append(",");
 		statement.append(player.getGKskill()).append(",");
 		statement.append(player.getDEFskill()).append(",");

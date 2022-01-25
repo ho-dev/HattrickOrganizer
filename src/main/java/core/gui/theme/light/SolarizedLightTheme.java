@@ -32,6 +32,9 @@ public class SolarizedLightTheme extends BaseTheme {
             setFont(UserParameter.instance().fontSize);
             ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
+            //players details
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
+
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));

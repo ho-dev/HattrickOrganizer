@@ -49,6 +49,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
     private Color FGcolor = ColorLabelEntry.FG_STANDARD;
+    private Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
     private PlayerOverviewTable m_playerOverviewTable;
     private Font f;
 
@@ -69,12 +70,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private JLabel jlName = new JLabel("");
     private JLabel jlPlayerDescription = new JLabel("");
-    private final JPanel jpPlayer = new JPanel();
+    private final JPanel jpPlayerGeneral = new JPanel();
+    private final JPanel jpPlayerSkill = new JPanel();
     private JLabel jlPlayerAvatar = new JLabel();
     private JLabel jlNationality = new JLabel();
     private JLabel jlSpecialty = new JLabel();
     private final JLabel jlInTeamSince = new JLabel();
-    private JProgressBar jpbForm;
+    private JProgressBar jpbForm, jpbStamina, jpbGK, jpbDE, jpbPM, jpbWI, jpbPS, jpbSC, jpbSP;
 
 
 
@@ -371,7 +373,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jllTSI.getRight().clear();
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.clear();
-            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
+            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
             m_jpStaminaChange.clear();
             m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)) + "");
@@ -413,9 +415,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
             m_jpFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
                     - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
-            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
-            m_jpStaminaChange.setGraphicalChangeValue(m_clPlayer.getKondition()
-                    - m_clComparisonPlayer.getKondition(), !m_clComparisonPlayer.isOld(), true);
+            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
+            m_jpStaminaChange.setGraphicalChangeValue(m_clPlayer.getStamina()
+                    - m_clComparisonPlayer.getStamina(), !m_clComparisonPlayer.isOld(), true);
             m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)) + "");
             m_jpKeeperChange.setGraphicalChangeValue(m_clPlayer.getGKskill()
@@ -480,8 +482,15 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpGoalsCup.setText(m_clPlayer.getTorePokal() + "");
         m_jpGoalsTotal.setText(m_clPlayer.getToreGesamt() + "");
         m_jpHattricks.setText(m_clPlayer.getHattrick() + "");
-        jlSpecialty.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
-        jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getPlayerSpecialty()]));
+
+        int iSpecialty = m_clPlayer.getPlayerSpecialty();
+        if (iSpecialty == 0) {
+            jlSpecialty.setText("-");
+        }
+        else{
+            jlSpecialty.setText(PlayerSpeciality.toString(iSpecialty));
+        }
+        jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[iSpecialty]));
 
         String playerDescription = "<html>" + Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getCharakter()), PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()), PlayerHonesty.toString(m_clPlayer.getAnsehen()));
         playerDescription += "<br>";
@@ -500,19 +509,16 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisBottom.setEnabled(true);
         m_jbOffsets.setEnabled(true);
 
-        int iForm = m_clPlayer.getForm();
+        formatBar(jpbForm, m_clPlayer.getForm(), true);
+        formatBar(jpbStamina, m_clPlayer.getStamina(), true);
 
-        jpbForm.setEnabled(true);
-
-        jpbForm.setStringPainted(true);
-        jpbForm.setString(PlayerAbility.getNameForSkill(iForm, true, false, 0));
-
-        jpbForm.setValue(iForm);
-//        jpbForm.setForeground(Color.RED);
-        jpbForm.setForeground(getColorForSkill(iForm));
-//        jpbForm.setBackground(BGcolor.darker());
-        jpbForm.setBorderPainted(true);
-        jpbForm.setBorder(BorderFactory.createLineBorder(Color.black));
+        formatBar(jpbGK, m_clPlayer.getSkill(PlayerSkill.KEEPER, true));
+        formatBar(jpbDE, m_clPlayer.getSkill(PlayerSkill.DEFENDING, true));
+        formatBar(jpbPM, m_clPlayer.getSkill(PlayerSkill.PLAYMAKING, true));
+        formatBar(jpbWI, m_clPlayer.getSkill(PlayerSkill.WINGER, true));
+        formatBar(jpbPS, m_clPlayer.getSkill(PlayerSkill.PASSING, true));
+        formatBar(jpbSC, m_clPlayer.getSkill(PlayerSkill.SCORING, true));
+        formatBar(jpbSP, m_clPlayer.getSkill(PlayerSkill.SET_PIECES, true));
 
     }
 
@@ -595,15 +601,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         f =  new JLabel("").getFont();
         f = f.deriveFont(f.getStyle() | Font.BOLD);
 
-        jpbForm = new JProgressBar(0, 8);
-        jpbForm.setUI(new MyProgressUI());
-        jpbForm.setStringPainted(true);
-//        for (int i = 0; i < 14; i++) {
-//            ratings[i] = new JProgressBar(0, 100);
-////            ratings[i].setPreferredSize(new Dimension(200, 20)); //25 if nimbus
-//            ratings[i].setStringPainted(true);
-//        }
-
         final JPanel panel = new ImagePanel();
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -633,108 +630,206 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layout.setConstraints(jlInTeamSince, constraints);
         panel.add(jlInTeamSince);
 
-        // create player panel ====================================================================
-        final GridBagLayout layoutInnerPanel = new GridBagLayout();
-        final GridBagConstraints constraintsInnerPanel = new GridBagConstraints();
-        constraintsInnerPanel.fill = GridBagConstraints.BOTH;
-        jpPlayer.setLayout(layoutInnerPanel);
+        // create player general panel ====================================================================
+        final GridBagLayout layoutPlayerGeneralPanel = new GridBagLayout();
+        final GridBagConstraints constraintsPlayerGeneralPanel = new GridBagConstraints();
+        constraintsPlayerGeneralPanel.fill = GridBagConstraints.BOTH;
+        jpPlayerGeneral.setBackground(Color.ORANGE);
+        jpPlayerGeneral.setLayout(layoutPlayerGeneralPanel);
 
         jlPlayerAvatar = new JLabel("");
-        constraintsInnerPanel.gridx = 0;
-        constraintsInnerPanel.gridy = 0;
-        constraintsInnerPanel.gridheight = 8;
-        layoutInnerPanel.setConstraints(jlPlayerAvatar, constraintsInnerPanel);
-        jpPlayer.add(jlPlayerAvatar);
+        constraintsPlayerGeneralPanel.gridx = 0;
+        constraintsPlayerGeneralPanel.gridy = 0;
+        constraintsPlayerGeneralPanel.gridheight = 8;
+        layoutPlayerGeneralPanel.setConstraints(jlPlayerAvatar, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(jlPlayerAvatar);
 
 
-        JLabel label = new JLabel("");
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridheight = 1;
-        constraintsInnerPanel.weighty = 0.5;   //force centering elements
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+//        JLabel label = new JLabel("");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridheight = 1;
+//        constraintsPlayerGeneralPanel.weighty = 0.5;   //force centering elements
+//        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+//        jpPlayerGeneral.add(label);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Status"),  SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridy = 1;
-        constraintsInnerPanel.weighty = 0.0;
-        constraintsInnerPanel.insets = new Insets(0,10,5,0);
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        JLabel label = createLabel("Status");
+        constraintsPlayerGeneralPanel.gridy = 1;
+        constraintsPlayerGeneralPanel.weighty = 0.0;
+        constraintsPlayerGeneralPanel.insets = new Insets(0,10,5,0);
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        constraintsInnerPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridx = 2;
         JComponent jcPlayerStatus = m_jpStatus.getComponent(false);
-        layoutInnerPanel.setConstraints(jcPlayerStatus, constraintsInnerPanel);
-        jpPlayer.add(jcPlayerStatus);
+        layoutPlayerGeneralPanel.setConstraints(jcPlayerStatus, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(jcPlayerStatus);
 
-        label = new JLabel(Helper.getTranslation("ls.player.tsi"), SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 2;
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        label = createLabel("ls.player.tsi");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 2;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 2;
-        layoutInnerPanel.setConstraints(m_jllTSI.getComponent(false), constraintsInnerPanel);
-        jpPlayer.add(m_jllTSI.getComponent(false));
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 2;
+        layoutPlayerGeneralPanel.setConstraints(m_jllTSI.getComponent(false), constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(m_jllTSI.getComponent(false));
 
+        label = createLabel("ls.player.wage");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 3;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        label = new JLabel(Helper.getTranslation("ls.player.wage"), SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 3;
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 3;
+        layoutPlayerGeneralPanel.setConstraints(m_jllWage.getComponent(false), constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(m_jllWage.getComponent(false));
 
-        constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 3;
-        layoutInnerPanel.setConstraints(m_jllWage.getComponent(false), constraintsInnerPanel);
-        jpPlayer.add(m_jllWage.getComponent(false));
+        label = createLabel("ls.player.speciality");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 4;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        label = new JLabel(Helper.getTranslation("ls.player.speciality"), SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 4;
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 4;
+        layoutPlayerGeneralPanel.setConstraints(jlSpecialty, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(jlSpecialty);
 
-        constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 4;
-        layoutInnerPanel.setConstraints(jlSpecialty, constraintsInnerPanel);
-        jpPlayer.add(jlSpecialty);
+        label = createLabel("ls.player.form");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 5;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        label = new JLabel(Helper.getTranslation("ls.player.form"), SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 5;
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        jpbForm = createBar(8);
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 5;
+        layoutPlayerGeneralPanel.setConstraints(jpbForm, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(jpbForm);
 
-        constraintsInnerPanel.gridx = 2;
-        constraintsInnerPanel.gridy = 5;
-        layoutInnerPanel.setConstraints(jpbForm, constraintsInnerPanel);
-        jpPlayer.add(jpbForm);
+        constraintsPlayerGeneralPanel.insets = new Insets(0,10,0,0);
 
-        label = new JLabel(Helper.getTranslation("ls.player.skill.stamina"), SwingConstants.RIGHT);
-        label.setFont(Helper.getLabelFontAsBold(label));
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 6;
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        label = createLabel("ls.player.skill.stamina");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 6;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
 
-        label = new JLabel("");
-        constraintsInnerPanel.gridx = 1;
-        constraintsInnerPanel.gridy = 7;
-        constraintsInnerPanel.gridheight = 1;
-        constraintsInnerPanel.weighty = 0.5;   //force centering elements
-        constraintsInnerPanel.insets = new Insets(0,10,0,0);
-        layoutInnerPanel.setConstraints(label, constraintsInnerPanel);
-        jpPlayer.add(label);
+        jpbStamina = createBar(9);
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 6;
+        layoutPlayerGeneralPanel.setConstraints(jpbStamina, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(jpbStamina);
 
+        constraints.gridwidth = 6;
         setPosition(constraints, 0, 4);
-        layout.setConstraints(jpPlayer, constraints);
-        panel.add(jpPlayer);
+        layout.setConstraints(jpPlayerGeneral, constraints);
+        panel.add(jpPlayerGeneral);
+
+
+        // create player skill panel ====================================================================
+        final GridBagLayout layoutPlayerSkilllPanel = new GridBagLayout();
+        final GridBagConstraints constraintsPlayerSkillPanel = new GridBagConstraints();
+        constraintsPlayerSkillPanel.fill = GridBagConstraints.BOTH;
+        jpPlayerSkill.setLayout(layoutPlayerSkilllPanel);
+        jpPlayerSkill.setBackground(Color.RED);
+
+        constraintsPlayerSkillPanel.insets = new Insets(0,10,5,0);
+
+        label = createLabel("ls.player.skill.keeper");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 0;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbGK = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 0;
+        layoutPlayerSkilllPanel.setConstraints(jpbGK, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbGK);
+
+        label = createLabel("ls.player.skill.defending");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 1;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbDE = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 1;
+        layoutPlayerSkilllPanel.setConstraints(jpbDE, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbDE);
+
+
+        label = createLabel("ls.player.skill.playmaking");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 2;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbPM = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 2;
+        layoutPlayerSkilllPanel.setConstraints(jpbPM, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbPM);
+
+
+        label = createLabel("ls.player.skill.winger");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 3;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbWI = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 3;
+        layoutPlayerSkilllPanel.setConstraints(jpbWI, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbWI);
+
+        label = createLabel("ls.player.skill.passing");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 4;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbPS = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 4;
+        layoutPlayerSkilllPanel.setConstraints(jpbPS, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbPS);
+
+
+        label = createLabel("ls.player.skill.scoring");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 5;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbSC = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 5;
+        layoutPlayerSkilllPanel.setConstraints(jpbSC, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbSC);
+
+        constraintsPlayerSkillPanel.insets = new Insets(0,10,0,0);
+
+        label = createLabel("ls.player.skill.setpieces");
+        constraintsPlayerSkillPanel.gridx = 0;
+        constraintsPlayerSkillPanel.gridy = 6;
+        layoutPlayerSkilllPanel.setConstraints(label, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(label);
+
+        jpbSP = createBar(20);
+        constraintsPlayerSkillPanel.gridx = 1;
+        constraintsPlayerSkillPanel.gridy = 6;
+        layoutPlayerSkilllPanel.setConstraints(jpbSP, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(jpbSP);
+
+        setPosition(constraints, 6, 4);
+        layout.setConstraints(jpPlayerSkill, constraints);
+        panel.add(jpPlayerSkill);
 
         // ***** Block 1
 
@@ -898,7 +993,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         //Buttons
         final JPanel buttonpanel = new JPanel();
-        buttonpanel.setOpaque(false);
+        buttonpanel.setBackground(Color.GREEN);
+        buttonpanel.setOpaque(true);
         initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), buttonpanel);
         initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), buttonpanel);
         initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), buttonpanel);
@@ -1164,6 +1260,37 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         };
         return bgColor;
     }
+
+
+    private JProgressBar createBar(int iMax){
+        JProgressBar bar = new JProgressBar(0, iMax);
+        bar.setUI(new MyProgressUI());
+        bar.setStringPainted(true);
+        return bar;
+    }
+
+    private void formatBar(JProgressBar bar, float value){
+        formatBar(bar, value, false);
+    }
+
+    private void formatBar(JProgressBar bar, float value, boolean varyingColor) {
+
+        int nbDecimal = (value - (int)value) == 0f ? 0 : 2 ;
+        bar.setString(PlayerAbility.getNameForSkill(value, true, false, nbDecimal));
+
+        bar.setValue((int) value);
+        Color _fgColor = varyingColor ? getColorForSkill((int) value) : ThemeManager.getColor(HOColorName.GREEN);
+        bar.setForeground(_fgColor);
+        bar.setBorderPainted(true);
+        bar.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
+    }
+
+    private JLabel createLabel(String i18nText){
+        JLabel _label = new JLabel(Helper.getTranslation(i18nText), SwingConstants.RIGHT);
+        _label.setFont(Helper.getLabelFontAsBold(_label));
+        return _label;
+    }
+
 
     private static class MyProgressUI extends BasicProgressBarUI {
 
