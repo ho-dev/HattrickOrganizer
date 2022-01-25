@@ -79,6 +79,7 @@ public class HO {
 		if (platform == OSUtils.OS.MAC) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("apple.awt.showGroupBox", "true");
+			System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
 		}
 
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
