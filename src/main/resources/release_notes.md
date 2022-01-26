@@ -9,13 +9,9 @@
 
 ### Finance
 
-* fix finance bug concerning missing spectators' income in misc module (#1282)
-
-
 ### Statistics
 
 ### Squad
-
 
 
 ### Team Analyser
@@ -27,7 +23,7 @@
 
 
 ### Lineup
-* Fixed a bug when downloading team logos (#1300)
+* Fixed a bug of disabled lineup up- and download in eastern time zones (#1350)
 
 ### IFA
 
@@ -36,10 +32,10 @@
 
 
 ### League
-* fix download of power rating (not only one team per match) (#1293)
+
   
 ### Youth
-* fix escaping of youth team names (#1295) 
+
 
 ### Misc
 
