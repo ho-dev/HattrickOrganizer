@@ -131,8 +131,8 @@ public class HTDatetime implements PropertyChangeListener{
         return m_zdtHT_CET.isAfter(zdt);
     }
 
-    public boolean isAfter(Instant refTimne){
-        return m_iHT_CET.isAfter(refTimne);
+    public boolean isAfter(Instant refTime){
+        return m_iHT_CET.isAfter(refTime);
     }
 
     public boolean isPassed(){

@@ -962,9 +962,9 @@ public class DBManager {
 	 *
 	 * @return the boolean
 	 */
-// default to 1 hour
+// default to 2 days
 	public boolean areDataTooOld() {
-		return areDataTooOld(1000 * 60 * 60);
+		return areDataTooOld(1000 * 60 * 60 * 24 * 2);
 	}
 
 
