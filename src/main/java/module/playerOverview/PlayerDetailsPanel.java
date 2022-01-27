@@ -77,8 +77,15 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private JLabel jlSpecialty = new JLabel();
     private final JLabel jlInTeamSince = new JLabel();
     private JProgressBar jpbForm, jpbStamina, jpbGK, jpbDE, jpbPM, jpbWI, jpbPS, jpbSC, jpbSP;
-
-
+    private final ColorLabelEntry m_jclPMchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclSCchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclWIchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclDEchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclGKchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclPSchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclSPchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclFormChange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
+    private final ColorLabelEntry m_jclStaminaChange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
 
     // Top Row, column 1
 
@@ -105,43 +112,15 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     // Top Row, column 3
 
     // Second Row, Column 1
-    private final ColorLabelEntry m_jpStamina = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpStaminaChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpPlaymaking = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpPlaymakingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpWinger = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpWingerChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpScoring = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpScoringChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+
+
+
+
+
+
     // Second Row, Column 2
-    private final ColorLabelEntry m_jpForm = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpFormChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_PLAYERSPECIALVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpKeeper = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpKeeperChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpPassing = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpPassingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpDefending = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpDefendingChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpSetPieces = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.LEFT);
-    private final ColorLabelEntry m_jpSetPiecesChange = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_SINGLEPLAYERVALUES, SwingConstants.CENTER);
+
+
     // Second Row, Column 3
     private final ColorLabelEntry m_jpGoalsFriendly = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
@@ -371,31 +350,19 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jllWage.getRight().clear();
             m_jllTSI.getLeft().setText(tsitext);
             m_jllTSI.getRight().clear();
-            m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
-            m_jpFormChange.clear();
-            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
-            m_jpStaminaChange.clear();
-            m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)) + "");
-            m_jpKeeperChange.clear();
-            m_jpDefending.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)) + "");
-            m_jpDefendingChange.clear();
-            m_jpPlaymaking.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)) + "");
-            m_jpPlaymakingChange.clear();
-            m_jpPassing.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)) + "");
-            m_jpPassingChange.clear();
-            m_jpWinger.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)) + "");
-            m_jpWingerChange.clear();
-            m_jpSetPieces.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)) + "");
-            m_jpSetPiecesChange.clear();
-            m_jpScoring.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)) + "");
-            m_jpScoringChange.clear();
+            m_jclFormChange.clear();
+
+            m_jclStaminaChange.clear();
+            m_jclGKchange.clear();
+            m_jclDEchange.clear();
+
+            m_jclPMchange.clear();
+            m_jclPSchange.clear();
+
+            m_jclWIchange.clear();
+            m_jclSPchange.clear();
+
+            m_jclSCchange.clear();
             m_jpBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
                     + " ("
                     + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
@@ -412,57 +379,45 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
             m_jllTSI.getLeft().setText(tsitext);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
-            m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
-            m_jpFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
+            m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
                     - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
-            m_jpStamina.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
-            m_jpStaminaChange.setGraphicalChangeValue(m_clPlayer.getStamina()
+
+            m_jclStaminaChange.setGraphicalChangeValue(m_clPlayer.getStamina()
                     - m_clComparisonPlayer.getStamina(), !m_clComparisonPlayer.isOld(), true);
-            m_jpKeeper.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)) + "");
-            m_jpKeeperChange.setGraphicalChangeValue(m_clPlayer.getGKskill()
+            m_jclGKchange.setGraphicalChangeValue(m_clPlayer.getGKskill()
                             - m_clComparisonPlayer.getGKskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.KEEPER),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpDefending.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)) + "");
-            m_jpDefendingChange.setGraphicalChangeValue(m_clPlayer.getDEFskill()
+            m_jclDEchange.setGraphicalChangeValue(m_clPlayer.getDEFskill()
                             - m_clComparisonPlayer.getDEFskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.DEFENDING),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpPlaymaking.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)) + "");
-            m_jpPlaymakingChange.setGraphicalChangeValue(m_clPlayer.getPMskill()
+
+            m_jclPMchange.setGraphicalChangeValue(m_clPlayer.getPMskill()
                             - m_clComparisonPlayer.getPMskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.PLAYMAKING),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpPassing.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)) + "");
-            m_jpPassingChange.setGraphicalChangeValue(m_clPlayer.getPSskill()
+            m_jclPSchange.setGraphicalChangeValue(m_clPlayer.getPSskill()
                             - m_clComparisonPlayer.getPSskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.PASSING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.PASSING),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpWinger.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)) + "");
-            m_jpWingerChange.setGraphicalChangeValue(m_clPlayer.getWIskill()
+
+            m_jclWIchange.setGraphicalChangeValue(m_clPlayer.getWIskill()
                             - m_clComparisonPlayer.getWIskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.WINGER)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.WINGER),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpSetPieces.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)) + "");
-            m_jpSetPiecesChange.setGraphicalChangeValue(m_clPlayer.getSPskill()
+            m_jclSPchange.setGraphicalChangeValue(m_clPlayer.getSPskill()
                             - m_clComparisonPlayer.getSPskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
                     !m_clComparisonPlayer.isOld(), true);
-            m_jpScoring.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)) + "");
-            m_jpScoringChange.setGraphicalChangeValue(m_clPlayer.getSCskill()
+
+            m_jclSCchange.setGraphicalChangeValue(m_clPlayer.getSCskill()
                             - m_clComparisonPlayer.getSCskill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.SCORING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SCORING),
@@ -634,7 +589,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagLayout layoutPlayerGeneralPanel = new GridBagLayout();
         final GridBagConstraints constraintsPlayerGeneralPanel = new GridBagConstraints();
         constraintsPlayerGeneralPanel.fill = GridBagConstraints.BOTH;
-        jpPlayerGeneral.setBackground(Color.ORANGE);
+//        jpPlayerGeneral.setBackground(Color.ORANGE);
         jpPlayerGeneral.setLayout(layoutPlayerGeneralPanel);
 
         jlPlayerAvatar = new JLabel("");
@@ -644,13 +599,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerGeneralPanel.setConstraints(jlPlayerAvatar, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(jlPlayerAvatar);
 
-
-//        JLabel label = new JLabel("");
         constraintsPlayerGeneralPanel.gridx = 1;
         constraintsPlayerGeneralPanel.gridheight = 1;
-//        constraintsPlayerGeneralPanel.weighty = 0.5;   //force centering elements
-//        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
-//        jpPlayerGeneral.add(label);
 
         JLabel label = createLabel("Status");
         constraintsPlayerGeneralPanel.gridy = 1;
@@ -734,7 +684,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagConstraints constraintsPlayerSkillPanel = new GridBagConstraints();
         constraintsPlayerSkillPanel.fill = GridBagConstraints.BOTH;
         jpPlayerSkill.setLayout(layoutPlayerSkilllPanel);
-        jpPlayerSkill.setBackground(Color.RED);
+//        jpPlayerSkill.setBackground(Color.RED);
 
         constraintsPlayerSkillPanel.insets = new Insets(0,10,5,0);
 
@@ -746,9 +696,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         jpbGK = createBar(20);
         constraintsPlayerSkillPanel.gridx = 1;
-        constraintsPlayerSkillPanel.gridy = 0;
         layoutPlayerSkilllPanel.setConstraints(jpbGK, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbGK);
+
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclGKchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclGKchange);
 
         label = createLabel("ls.player.skill.defending");
         constraintsPlayerSkillPanel.gridx = 0;
@@ -758,9 +711,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         jpbDE = createBar(20);
         constraintsPlayerSkillPanel.gridx = 1;
-        constraintsPlayerSkillPanel.gridy = 1;
         layoutPlayerSkilllPanel.setConstraints(jpbDE, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbDE);
+
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclDEchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclDEchange);
 
 
         label = createLabel("ls.player.skill.playmaking");
@@ -775,6 +731,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerSkilllPanel.setConstraints(jpbPM, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbPM);
 
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclPMchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclPMchange);
 
         label = createLabel("ls.player.skill.winger");
         constraintsPlayerSkillPanel.gridx = 0;
@@ -784,9 +743,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         jpbWI = createBar(20);
         constraintsPlayerSkillPanel.gridx = 1;
-        constraintsPlayerSkillPanel.gridy = 3;
         layoutPlayerSkilllPanel.setConstraints(jpbWI, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbWI);
+
+        constraintsPlayerSkillPanel.gridx = 2;;
+        layoutPlayerSkilllPanel.setConstraints(m_jclWIchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclWIchange);
 
         label = createLabel("ls.player.skill.passing");
         constraintsPlayerSkillPanel.gridx = 0;
@@ -796,9 +758,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         jpbPS = createBar(20);
         constraintsPlayerSkillPanel.gridx = 1;
-        constraintsPlayerSkillPanel.gridy = 4;
         layoutPlayerSkilllPanel.setConstraints(jpbPS, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbPS);
+
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclPSchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclPSchange);
 
 
         label = createLabel("ls.player.skill.scoring");
@@ -809,9 +774,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         jpbSC = createBar(20);
         constraintsPlayerSkillPanel.gridx = 1;
-        constraintsPlayerSkillPanel.gridy = 5;
         layoutPlayerSkilllPanel.setConstraints(jpbSC, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbSC);
+
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclSCchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclSCchange);
+
 
         constraintsPlayerSkillPanel.insets = new Insets(0,10,0,0);
 
@@ -826,6 +795,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerSkillPanel.gridy = 6;
         layoutPlayerSkilllPanel.setConstraints(jpbSP, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbSP);
+
+        constraintsPlayerSkillPanel.gridx = 2;
+        layoutPlayerSkilllPanel.setConstraints(m_jclSPchange, constraintsPlayerSkillPanel);
+        jpPlayerSkill.add(m_jclSPchange);
+
 
         setPosition(constraints, 6, 4);
         layout.setConstraints(jpPlayerSkill, constraints);
@@ -912,40 +886,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         constraints.gridwidth = 1;
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
-        initNormalLabel(4, 9, constraints, layout, panel, label);
-        initYellowMainField(5, 9, constraints, layout, panel, m_jpKeeper.getComponent(false));
-        initYellowChangesField(6, 9, constraints, layout, panel, m_jpKeeperChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
-        initNormalLabel(0, 10, constraints, layout, panel, label);
-        initYellowMainField(1, 10, constraints, layout, panel, m_jpPlaymaking.getComponent(false));
-        initYellowChangesField(2, 10, constraints, layout, panel, m_jpPlaymakingChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
-        initNormalLabel(4, 10, constraints, layout, panel, label);
-        initYellowMainField(5, 10, constraints, layout, panel, m_jpPassing.getComponent(false));
-        initYellowChangesField(6, 10, constraints, layout, panel, m_jpPassingChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
-        initNormalLabel(0, 11, constraints, layout, panel, label);
-        initYellowMainField(1, 11, constraints, layout, panel, m_jpWinger.getComponent(false));
-        initYellowChangesField(2, 11, constraints, layout, panel, m_jpWingerChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
-        initNormalLabel(4, 11, constraints, layout, panel, label);
-        initYellowMainField(5, 11, constraints, layout, panel, m_jpDefending.getComponent(false));
-        initYellowChangesField(6, 11, constraints, layout, panel, m_jpDefendingChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
-        initNormalLabel(0, 12, constraints, layout, panel, label);
-        initYellowMainField(1, 12, constraints, layout, panel, m_jpScoring.getComponent(false));
-        initYellowChangesField(2, 12, constraints, layout, panel, m_jpScoringChange.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
-        initNormalLabel(4, 12, constraints, layout, panel, label);
-        initYellowMainField(5, 12, constraints, layout, panel, m_jpSetPieces.getComponent(false));
-        initYellowChangesField(6, 12, constraints, layout, panel, m_jpSetPiecesChange.getComponent(false));
 
         //empty row
         label = new JLabel("  ");
@@ -1177,25 +1117,17 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpRating.clear();
         m_jllWage.clear();
         m_jllTSI.clear();
-        m_jpForm.clear();
-        m_jpStamina.clear();
-        m_jpKeeper.clear();
-        m_jpDefending.clear();
-        m_jpPlaymaking.clear();
-        m_jpPassing.clear();
-        m_jpWinger.clear();
-        m_jpSetPieces.clear();
-        m_jpScoring.clear();
 
-        m_jpFormChange.clear();
-        m_jpStaminaChange.clear();
-        m_jpKeeperChange.clear();
-        m_jpDefendingChange.clear();
-        m_jpPlaymakingChange.clear();
-        m_jpPassingChange.clear();
-        m_jpWingerChange.clear();
-        m_jpSetPiecesChange.clear();
-        m_jpScoringChange.clear();
+
+        m_jclFormChange.clear();
+        m_jclStaminaChange.clear();
+        m_jclGKchange.clear();
+        m_jclDEchange.clear();
+        m_jclPMchange.clear();
+        m_jclPSchange.clear();
+        m_jclWIchange.clear();
+        m_jclSPchange.clear();
+        m_jclSCchange.clear();
 
         m_jpBestPosition.clear();
         m_jcbUserBestPosition.setSelectedItem("");
