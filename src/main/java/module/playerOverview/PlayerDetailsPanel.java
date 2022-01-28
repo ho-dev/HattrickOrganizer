@@ -46,7 +46,6 @@ import static core.model.player.IMatchRoleID.UNSELECTABLE;
  */
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
-
     private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
     private Color FGcolor = ColorLabelEntry.FG_STANDARD;
     private Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
@@ -80,8 +79,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JLabel m_jlBestPosition = new JLabel("");
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
-
-
+    
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private DoubleLabelEntries m_jpLastMatchRating = new DoubleLabelEntries(
             new RatingTableEntry(),
@@ -89,94 +87,21 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             new GridBagLayout());
     private JLabel m_lastMatchLink = null;
 
-    // Top Row, column 2
-
     private PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
 
-
-    // Third Row, Column 3
     private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
     private final JButton m_jbAnalysisTop = new JButton(getSvgIcon(GOTOANALYSETOP));
     private final JButton m_jbAnalysisBottom = new JButton(getSvgIcon(GOTOANALYSEBOTTOM));
     private final JButton m_jbOffsets = new JButton(getSvgIcon(HOIconName.OFFSET));
 
-    // Ratings Column
-    private final DoubleLabelEntries m_jpRatingKeeper = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingCentralDefender = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingCentralDefenderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingCentralDefenderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingback = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingbackDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingbackTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingbackOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingeMidfielder = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingeMidfielderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingeMidfielderDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingeMidfielderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWinger = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingerDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingerTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingWingerOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingForward = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingForwardTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private final DoubleLabelEntries m_jpRatingForwardDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-
-    // Players
     private Player m_clPlayer;
     private Player m_clComparisonPlayer;
 
-    private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[]{
-            m_jpRatingKeeper,
-            m_jpRatingCentralDefender,
-            m_jpRatingCentralDefenderTowardsWing,
-            m_jpRatingCentralDefenderOffensive,
-            m_jpRatingWingback,
-            m_jpRatingWingbackTowardsMiddle,
-            m_jpRatingWingbackOffensive,
-            m_jpRatingWingbackDefensive,
-            m_jpRatingeMidfielder,
-            m_jpRatingeMidfielderTowardsWing,
-            m_jpRatingeMidfielderOffensive,
-            m_jpRatingeMidfielderDefensive,
-            m_jpRatingWinger,
-            m_jpRatingWingerTowardsMiddle,
-            m_jpRatingWingerOffensive,
-            m_jpRatingWingerDefensive,
-            m_jpRatingForward,
-            m_jpRatingForwardTowardsWing,
-            m_jpRatingForwardDefensive
-    };
-
-    private final byte[] playerPosition = new byte[]{
-            IMatchRoleID.KEEPER,
-            IMatchRoleID.CENTRAL_DEFENDER,
-            IMatchRoleID.CENTRAL_DEFENDER_TOWING,
-            IMatchRoleID.CENTRAL_DEFENDER_OFF,
-            IMatchRoleID.BACK,
-            IMatchRoleID.BACK_TOMID,
-            IMatchRoleID.BACK_OFF,
-            IMatchRoleID.BACK_DEF,
-            IMatchRoleID.MIDFIELDER,
-            IMatchRoleID.MIDFIELDER_TOWING,
-            IMatchRoleID.MIDFIELDER_OFF,
-            IMatchRoleID.MIDFIELDER_DEF,
-            IMatchRoleID.WINGER,
-            IMatchRoleID.WINGER_TOMID,
-            IMatchRoleID.WINGER_OFF,
-            IMatchRoleID.WINGER_DEF,
-            IMatchRoleID.FORWARD,
-            IMatchRoleID.FORWARD_TOWING,
-            IMatchRoleID.FORWARD_DEF
-
-    };
-
-    //~ Constructors -------------------------------------------------------------------------------
-
     /**
-     * Creates a new SpielerDetailPanel object.
+     * Constructor
      */
     protected PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
         m_playerOverviewTable = playerOverviewTable;
@@ -184,7 +109,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         RefreshManager.instance().registerRefreshable(this);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Set the player to be shown
@@ -247,21 +171,15 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         setPlayer(null);
     }
 
-    /**
-     * refresh the display
-     */
+
     @Override
     public void refresh() {
         setPlayer(m_clPlayer);
     }
 
-    /**
-     * set values of the player to fields
-     */
     private void setLabels() {
         Icon playerAvatar = ThemeManager.instance().getPlayerAvatar(m_clPlayer.getPlayerID());
         jlPlayerAvatar.setIcon(playerAvatar);
-//        m_jpAge.setText(m_clPlayer.getAgeStringFull());
         m_jpLastMatchRating.clear();
         if (m_clPlayer.getLastMatchRating() > 0) {
             MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(m_clPlayer.getLastMatchId(), null);
@@ -317,10 +235,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
             m_jclSCchange.clear();
 
-            for (int i = 0; i < playerPositionValues.length; i++) {
-                showNormal(playerPositionValues[i], playerPosition[i]);
-            }
-
         }
         else {
             final int previousSalary = (int) (m_clComparisonPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
@@ -372,13 +286,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SCORING),
                     !m_clComparisonPlayer.isOld(), true);
 
-//            m_jlBestPosition.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
-//                    + " ("
-//                    + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false)
-//                    + ")");
-            for (int i = 0; i < playerPositionValues.length; i++) {
-                showWithCompare(playerPositionValues[i], playerPosition[i]);
-            }
         }
 
         m_jlCareerGoals.setText(m_clPlayer.getAllOfficialGoals() + "");
@@ -432,55 +339,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     }
 
-    private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition) {
-        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-                .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true, null, false)));
-
-        byte[] alternativePosition = m_clPlayer.getAlternativeBestPositions();
-        for (byte altPos : alternativePosition) {
-            if (altPos == playerPosition) {
-                labelEntry.getLeft().setBold(true);
-                break;
-            } else {
-                labelEntry.getLeft().setBold(false);
-            }
-        }
-
-        labelEntry.getRight().clear();
-    }
-
-    private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
-        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance()
-                .nbDecimals).format(m_clPlayer.calcPosValue(playerPosition, true, null, false)));
-
-        byte[] alternativePosition = m_clPlayer.getAlternativeBestPositions();
-        for (byte altPos : alternativePosition) {
-            if (altPos == playerPosition) {
-                labelEntry.getLeft().setBold(true);
-                break;
-            } else {
-                labelEntry.getLeft().setBold(false);
-            }
-        }
-
-        labelEntry.getRight().setSpecialNumber(m_clPlayer.calcPosValue(playerPosition, true, null, false)
-                - m_clComparisonPlayer.calcPosValue(playerPosition, true, null, false), false);
-    }
-
-    /**
-     * return first player who is find in db
-     *
-     * @param player
-     * @return player
-     */
     private Player getComparisonPlayerFirstHRF(Player player) {
         return core.db.DBManager.instance()
                 .getSpielerFirstHRF(player.getPlayerID());
     }
 
-    /**
-     * search player to compare
-     */
     private void findComparisonPlayer() {
         final int id = m_clPlayer.getPlayerID();
         for (int i = 0;
@@ -502,9 +365,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_clComparisonPlayer = null;
     }
 
-    /**
-     * initialize all fields
-     */
     private void initComponents() {
         setLayout(new BorderLayout());
 
@@ -544,7 +404,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagLayout layoutPlayerGeneralPanel = new GridBagLayout();
         final GridBagConstraints constraintsPlayerGeneralPanel = new GridBagConstraints();
         constraintsPlayerGeneralPanel.fill = GridBagConstraints.BOTH;
-//        jpPlayerGeneral.setBackground(Color.ORANGE);
         jpPlayerGeneral.setLayout(layoutPlayerGeneralPanel);
 
         jlPlayerAvatar = new JLabel("");
@@ -639,7 +498,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagConstraints constraintsPlayerSkillPanel = new GridBagConstraints();
         constraintsPlayerSkillPanel.fill = GridBagConstraints.BOTH;
         jpPlayerSkill.setLayout(layoutPlayerSkilllPanel);
-//        jpPlayerSkill.setBackground(Color.RED);
 
         constraintsPlayerSkillPanel.insets = new Insets(0,10,5,0);
 
@@ -944,74 +802,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         });
 
 
-
-        //empty row
-        label = new JLabel();
-        setPosition(constraints, 0, 8);
-        constraints.weightx = 0.0;
-        constraints.gridwidth = 4;
-        layout.setConstraints(label, constraints);
-        panel.add(label);
-
-        constraints.gridwidth = 1;
-
-
-        //empty row
-        label = new JLabel("  ");
-        setPosition(constraints, 7, 1);
-        constraints.weightx = 0.0;
-        constraints.gridheight = 11;
-        layout.setConstraints(label, constraints);
-        panel.add(label);
-        constraints.gridheight = 1;
-
-
-        label = new JLabel();
-        setPosition(constraints, 11, 8);
-        constraints.weightx = 0.0;
-        constraints.gridwidth = 3;
-        constraints.gridheight = 1;
-        layout.setConstraints(label, constraints);
-        panel.add(label);
-        constraints.gridwidth = 1;
-        constraints.gridheight = 1;
-
-
-
-        constraints.gridheight = 1;
-        constraints.gridwidth = 1;
-
-        // Empty row
-        label = new JLabel("  ");
-        setPosition(constraints, 11, 1);
-        constraints.weightx = 0.0;
-        constraints.gridheight = 18;
-        layout.setConstraints(label, constraints);
-        panel.add(label);
-
-        constraints.gridheight = 1;
-        for (int i = 0; i < playerPositionValues.length; i++) {
-            label = new JLabel(MatchRoleID.getShortNameForPosition(playerPosition[i]));
-            label.setToolTipText(MatchRoleID.getNameForPosition(playerPosition[i]));
-            initBlueLabel(i, constraints, layout, panel, label);
-            initBlueField(i, constraints, layout, panel, playerPositionValues[i].getComponent(false));
-        }
         add(panel, BorderLayout.CENTER);
 
         // at initialisation select first player to ensure clean display =====
         m_clPlayer = m_playerOverviewTable.getSorter().getSpieler(0);
     }
 
-    /**
-     * init a label
-     *
-     * @param x
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param label
-     */
     private void initNormalLabel(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JLabel label) {
         constraints.gridwidth = 1;
         setPosition(constraints, x, y);
@@ -1020,16 +816,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         panel.add(label);
     }
 
-    /**
-     * init a value field
-     *
-     * @param x
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param component
-     */
     private void initNormalField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
         setPosition(constraints, x, y);
         constraints.weightx = 1.0;
@@ -1038,49 +824,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         panel.add(component);
     }
 
-    /**
-     * init a label
-     *
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param label
-     */
-    private void initBlueLabel(int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JLabel label) {
-        setPosition(constraints, 12, y);
-        constraints.weightx = 0.0;
-        layout.setConstraints(label, constraints);
-        panel.add(label);
-    }
-
-    /**
-     * init a value field
-     *
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param component
-     */
-    private void initBlueField(int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
-        setPosition(constraints, 13, y);
-        constraints.weightx = 1.0;
-        layout.setConstraints(component, constraints);
-        panel.add(component);
-    }
-
-
-
-
-
-    /**
-     * set position in gridBag
-     *
-     * @param c
-     * @param x
-     * @param y
-     */
     private void setPosition(GridBagConstraints c, int x, int y) {
         c.gridx = x;
         c.gridy = y;
@@ -1094,7 +837,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         buttonpanel.add(button);
     }
 
-
     private void resetLabel(JLabel thisLabel){
         thisLabel.setIcon(null);
         thisLabel.setToolTipText(null);
@@ -1107,10 +849,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         thisCB.addItemListener(this);
     }
 
-
-    /**
-     * clears all labels
-     */
     private void resetLabels() {
         jlPlayerAvatar.setIcon(null);
         jlNationality.setIcon(null);
@@ -1132,11 +870,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jclSPchange.clear();
         m_jclSCchange.clear();
         m_jcbUserBestPosition.setSelectedItem("");
-
-        for (int i = 0; i < playerPositionValues.length; i++) {
-            playerPositionValues[i].clear();
-        }
-
         resetLabel(m_jlCareerGoals);
         resetLabel(m_jlTeamGoals);
         resetLabel(m_jlSeasonSeriesGoals);
@@ -1196,7 +929,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         return bgColor;
     }
 
-
     private JProgressBar createBar(int iMax){
         JProgressBar bar = new JProgressBar(0, iMax);
         bar.setUI(new MyProgressUI());
@@ -1225,7 +957,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         _label.setFont(Helper.getLabelFontAsBold(_label));
         return _label;
     }
-
 
     private static class MyProgressUI extends BasicProgressBarUI {
 
