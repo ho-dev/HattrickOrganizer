@@ -574,7 +574,7 @@ final class SpielerTable extends AbstractTable {
             player.setToreFreund(rs.getInt("ToreFreund"));
             player.setToreLiga(rs.getInt("ToreLiga"));
             player.setTorePokal(rs.getInt("TorePokal"));
-            player.setToreGesamt(rs.getInt("ToreGesamt"));
+            player.setAllOfficialGoals(rs.getInt("ToreGesamt"));
             player.setHattrick(rs.getInt("Hattrick"));
             player.setBewertung(rs.getInt("Bewertung"));
             player.setTrainerTyp(TrainerType.fromInt(rs.getInt("TrainerTyp")));

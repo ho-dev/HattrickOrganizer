@@ -168,29 +168,36 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createGoalsColumnsArray() {
-        final PlayerColumn[] playerGoalsArray = new PlayerColumn[4];
-        playerGoalsArray[0] = new PlayerColumn(380, "TG", "ToreGesamt", 20) {
+        final PlayerColumn[] playerGoalsArray = new PlayerColumn[5];
+        playerGoalsArray[0] = new PlayerColumn(380, "TG", "ls.player.career_goals", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getAllOfficialGoals();
             }
         };
 
-        playerGoalsArray[1] = new PlayerColumn(390, "TF", "ToreFreund", 20) {
+        playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreFreund();
+                return player.getGoalsForTheTeam();
             }
         };
 
-        playerGoalsArray[2] = new PlayerColumn(400, "TL", "ToreLiga", 20) {
+        playerGoalsArray[2] = new PlayerColumn(390, "HT", "ls.player.hattricks", 20) {
+            @Override
+            public int getValue(Player player) {
+                return player.getHattrick();
+            }
+        };
+
+        playerGoalsArray[3] = new PlayerColumn(400, "TL", "ls.player.season_series_goals", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getSeasonSeriesGoal();
             }
         };
 
-        playerGoalsArray[3] = new PlayerColumn(410, "TP", "TorePokal", 20) {
+        playerGoalsArray[4] = new PlayerColumn(410, "TP", "ls.player.season_cup_goals", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getSeasonCupGoal();

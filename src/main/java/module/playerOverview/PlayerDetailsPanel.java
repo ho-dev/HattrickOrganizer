@@ -79,7 +79,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JLabel m_jlBestPosition = new JLabel("");
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
-    
+
     private RatingTableEntry m_jpRating = new RatingTableEntry();
     private DoubleLabelEntries m_jpLastMatchRating = new DoubleLabelEntries(
             new RatingTableEntry(),
@@ -289,7 +289,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
 
         m_jlCareerGoals.setText(m_clPlayer.getAllOfficialGoals() + "");
-        m_jlTeamGoals.setText("XML !");
+        m_jlTeamGoals.setText(m_clPlayer.getGoalsForTheTeam() +"");
         m_jlHattricks.setText(m_clPlayer.getHattrick() + "");
         m_jlSeasonSeriesGoals.setText(m_clPlayer.getSeasonSeriesGoal() + "");
         m_jlSeasonCupGoals.setText(m_clPlayer.getSeasonCupGoal() + "");
@@ -709,7 +709,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerOtherInfos.insets = new Insets(0,10,5,0);
         jpPlayerOtherInfos.setLayout(layoutPlayerOtherInfos);
 
-
         label = createLabel("Gruppe");
         constraintsPlayerOtherInfos.gridx = 0;
         constraintsPlayerOtherInfos.gridy = 0;
@@ -737,9 +736,20 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jpPlayerOtherInfos.add(m_jcbInformation);
 
 
-        label = createLabel("ls.module.player_analysis.override_best_position");
+        label = createLabel("BestePosition");
         constraintsPlayerOtherInfos.gridx = 2;
         constraintsPlayerOtherInfos.gridy = 0;
+        layoutPlayerOtherInfos.setConstraints(label, constraintsPlayerOtherInfos);
+        jpPlayerOtherInfos.add(label);
+
+        constraintsPlayerOtherInfos.gridx = 3;
+        layoutPlayerOtherInfos.setConstraints(m_jlBestPosition, constraintsPlayerOtherInfos);
+        jpPlayerOtherInfos.add(m_jlBestPosition);
+
+
+        label = createLabel("ls.module.player_analysis.override_best_position");
+        constraintsPlayerOtherInfos.gridx = 2;
+        constraintsPlayerOtherInfos.gridy = 1;
         layoutPlayerOtherInfos.setConstraints(label, constraintsPlayerOtherInfos);
         jpPlayerOtherInfos.add(label);
 
@@ -750,29 +760,24 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerOtherInfos.setConstraints(m_jcbUserBestPosition, constraintsPlayerOtherInfos);
         jpPlayerOtherInfos.add(m_jcbUserBestPosition);
 
-        label = createLabel("BestePosition");
-        constraintsPlayerOtherInfos.gridx = 2;
-        constraintsPlayerOtherInfos.gridy = 1;
-        layoutPlayerOtherInfos.setConstraints(label, constraintsPlayerOtherInfos);
-        jpPlayerOtherInfos.add(label);
-
-        constraintsPlayerOtherInfos.gridx = 3;
-        layoutPlayerOtherInfos.setConstraints(m_jlBestPosition, constraintsPlayerOtherInfos);
-        jpPlayerOtherInfos.add(m_jlBestPosition);
-
-
         //Buttons
-        final JPanel buttonpanel = new JPanel();
-        initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), buttonpanel);
-        initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), buttonpanel);
-        initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), buttonpanel);
-        initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), buttonpanel);
+        final JPanel jpButtonsPanel = new JPanel();
+        final GridBagLayout layoutButtonPanel = new GridBagLayout();
+        final GridBagConstraints constraintsButtonsPanel = new GridBagConstraints();
+        constraintsButtonsPanel.fill = GridBagConstraints.BOTH;
+        jpButtonsPanel.setLayout(layoutButtonPanel);
+
+        initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), jpButtonsPanel);
+        initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), jpButtonsPanel);
+        initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), jpButtonsPanel);
+        initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), jpButtonsPanel);
 
         constraintsPlayerOtherInfos.gridy = 0;
         constraintsPlayerOtherInfos.gridx = 4;
         constraintsPlayerOtherInfos.gridheight = 2;
-        layoutPlayerOtherInfos.setConstraints(buttonpanel, constraintsPlayerOtherInfos);
-        jpPlayerOtherInfos.add(buttonpanel);
+
+        layoutPlayerOtherInfos.setConstraints(jpButtonsPanel, constraintsPlayerOtherInfos);
+        jpPlayerOtherInfos.add(jpButtonsPanel);
 
         setPosition(constraints, 0, 5);
         constraints.gridwidth = 12;

@@ -1004,7 +1004,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreGesamt"));
+		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.career_goals"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 10;

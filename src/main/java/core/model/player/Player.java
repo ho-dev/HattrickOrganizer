@@ -1537,7 +1537,7 @@ public class Player {
      *
      * @param m_iToreGesamt New value of property m_iToreGesamt.
      */
-    public void setToreGesamt(int m_iToreGesamt) {
+    public void setAllOfficialGoals(int m_iToreGesamt) {
         this.m_iToreGesamt = m_iToreGesamt;
     }
 
@@ -1548,6 +1548,11 @@ public class Player {
      */
     public int getAllOfficialGoals() {
         return m_iToreGesamt;
+    }
+
+    public int getGoalsForTheTeam() {
+        HOLogger.instance().error(this.getClass(), "goals for the team information need to be recover from XML and store in DB!");
+        return -1;
     }
 
     /**
