@@ -56,17 +56,13 @@ public class Player {
     private String m_sFirstName = "";
     private String m_sNickName = "";
     private String m_sLastName = "";
+    private String m_arrivalDate;
 
     /**
      * TeamInfo Smilie Filename
      */
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
-
-    /**
-     * Date of the first HRF referencing that player
-     */
-    private Timestamp m_tsTime4FirstHRF;
 
     /**
      * The player is no longer available in the current HRF
@@ -172,6 +168,7 @@ public class Player {
      */
     private int m_iHattrick;
 
+    private int m_iGoalsCurrentTeam;
     /**
      * Home Grown
      */
@@ -366,6 +363,7 @@ public class Player {
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
         m_sLastName = properties.getProperty("lastname", "");
+        m_arrivalDate =  properties.getProperty("arrivaldate");
         m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
         m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
         m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
@@ -413,6 +411,8 @@ public class Player {
         m_iTorePokal = Integer.parseInt(properties.getProperty("gtc", "0"));
         m_iToreGesamt = Integer.parseInt(properties.getProperty("gev", "0"));
         m_iHattrick = Integer.parseInt(properties.getProperty("hat", "0"));
+        m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
+
 
         if (properties.get("rating") != null) {
             m_iBewertung = Integer.parseInt(properties.getProperty("rating", "0"));
@@ -704,6 +704,14 @@ public class Player {
         this.m_iCharakter = m_iCharakter;
     }
 
+    public String getArrivalDate() {
+        return m_arrivalDate;
+    }
+
+    public void setArrivalDate(String m_arrivalDate) {
+        this.m_arrivalDate = m_arrivalDate;
+    }
+
     /**
      * Getter for property m_iCharackter.
      *
@@ -731,30 +739,6 @@ public class Player {
         return m_iErfahrung;
     }
 
-    /**
-     * get the experience bonus
-     *
-     * @param experience effective experience to calculate the bonus, use the xp from the player if set to 0
-     * @return experience bonus in percent
-     */
-    public float getErfahrungsBonus(float experience) {
-        if (experience <= 0)
-            // take xp from player (use medium xp sub, i.e. add 0.5)
-            experience = m_iErfahrung + 0.5f;
-
-        // normalize xp [1,20] -> [0,19]
-        experience -= 1;
-
-        if (experience <= 0)
-            return 0; /*If experience is non-existent, the bonus is zero!*/
-
-        // Use hardcorded values here,
-        // make sure to apply the same values as in prediction/*/playerStrength.dat
-        //
-        // We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
-
-        return (float) (0.0716 * Math.sqrt(experience));
-    }
 
     /**
      * Setter for property m_iFluegelspiel.
@@ -853,22 +837,23 @@ public class Player {
         return (m_iCards > 2);
     }
 
-    /**
-     * Setter for property m_iHattrick.
-     *
-     * @param m_iHattrick New value of property m_iHattrick.
-     */
+
     public void setHattrick(int m_iHattrick) {
         this.m_iHattrick = m_iHattrick;
     }
 
-    /**
-     * Getter for property m_iHattrick.
-     *
-     * @return Value of property m_iHattrick.
-     */
+
     public int getHattrick() {
         return m_iHattrick;
+    }
+
+
+    public int getGoalsCurrentTeam() {
+        return m_iGoalsCurrentTeam;
+    }
+
+    public void setGoalsCurrentTeam(int m_iGoalsCurrentTeam) {
+        this.m_iGoalsCurrentTeam = m_iGoalsCurrentTeam;
     }
 
     /**
@@ -1504,17 +1489,6 @@ public class Player {
     }
 
     /**
-     * Gibt das Datum des ersten HRFs mit dem Player zurück
-     */
-    public Timestamp getTimestamp4FirstPlayerHRF() {
-        if (m_tsTime4FirstHRF == null) {
-            m_tsTime4FirstHRF = DBManager.instance().getTimestamp4FirstPlayerHRF(m_iSpielerID);
-        }
-
-        return m_tsTime4FirstHRF;
-    }
-
-    /**
      * Setter for property m_iToreFreund.
      *
      * @param m_iToreFreund New value of property m_iToreFreund.
@@ -1548,11 +1522,6 @@ public class Player {
      */
     public int getAllOfficialGoals() {
         return m_iToreGesamt;
-    }
-
-    public int getGoalsForTheTeam() {
-        HOLogger.instance().error(this.getClass(), "goals for the team information need to be recover from XML and store in DB!");
-        return -1;
     }
 
     /**

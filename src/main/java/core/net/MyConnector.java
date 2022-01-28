@@ -482,11 +482,11 @@ public class MyConnector {
 	 * Get Players
 	 */
 	public String getPlayers(int teamId) throws IOException {
-		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS+"&includeMatchInfo=true&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS + "&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 
-	public String downloadYouthPlayers(int youthteamId) throws IOException {
+	public String downloadYouthPlayers(int youthteamId) {
 		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST +"&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
 		return getCHPPWebFile(url);
 	}

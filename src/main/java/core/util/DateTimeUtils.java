@@ -2,11 +2,13 @@ package core.util;
 
 import core.model.UserParameter;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +53,19 @@ public class DateTimeUtils {
 		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, locale);
 		return simpleDateFormat.format(date);
+	}
+
+	/**
+	 Format a datetime with HO! language interface
+	 */
+	public static String FormatLongDate(Timestamp ts) {
+
+		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
+
+		DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+		FORMATTER.withLocale(locale);
+
+		return ts.toLocalDateTime().format(FORMATTER);
 	}
 
 

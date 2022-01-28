@@ -413,6 +413,7 @@ task resetDB {
     doLast {
         try {
             println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
+            project.delete(files("${projectDir}/db"))
             copy {
                 from "${resetDir}/"
                 into "${projectDir}/db/"
@@ -433,6 +434,7 @@ task pushDB {
     doLast {
         try {
             println("Pushing DB: copying DB from ${projectDir} into `${tempDir}`/db/`")
+            project.delete(files("${tempDir}/db"))
             copy {
                 from "${projectDir}/db/"
                 into "${tempDir}/db/"

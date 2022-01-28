@@ -179,7 +179,7 @@ final public class UserColumnFactory {
         playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getGoalsForTheTeam();
+                return player.getGoalsCurrentTeam();
             }
         };
 

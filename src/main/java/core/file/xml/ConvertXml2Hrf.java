@@ -846,6 +846,8 @@ public class ConvertXml2Hrf {
 			buffer.append("ald=").append(ht.get("Age")).append('\n');
 			buffer.append("agedays=").append(ht.get("AgeDays"))
 					.append('\n');
+			buffer.append("arrivaldate=").append(ht.get("ArrivalDate"))
+					.append('\n');
 			buffer.append("ska=").append(ht.get("InjuryLevel"))
 					.append('\n');
 			buffer.append("for=").append(ht.get("PlayerForm"))
@@ -885,6 +887,8 @@ public class ConvertXml2Hrf {
 			buffer.append("gtc=").append(ht.get("CupGoals"))
 					.append('\n');
 			buffer.append("gtt=").append(ht.get("FriendliesGoals"))
+					.append('\n');
+			buffer.append("GoalsCurrentTeam=").append(ht.get("GoalsCurrentTeam"))
 					.append('\n');
 			buffer.append("hat=").append(ht.get("CareerHattricks"))
 					.append('\n');

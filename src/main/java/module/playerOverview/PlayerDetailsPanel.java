@@ -28,6 +28,8 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.module.IModule;
 import core.net.HattrickLink;
+import core.util.DateTimeUtils;
+import core.util.HTDatetime;
 import core.util.Helper;
 import module.statistics.StatistikMainPanel;
 import java.awt.*;
@@ -289,7 +291,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
 
         m_jlCareerGoals.setText(m_clPlayer.getAllOfficialGoals() + "");
-        m_jlTeamGoals.setText(m_clPlayer.getGoalsForTheTeam() +"");
+        m_jlTeamGoals.setText(m_clPlayer.getGoalsCurrentTeam() +"");
         m_jlHattricks.setText(m_clPlayer.getHattrick() + "");
         m_jlSeasonSeriesGoals.setText(m_clPlayer.getSeasonSeriesGoal() + "");
         m_jlSeasonCupGoals.setText(m_clPlayer.getSeasonCupGoal() + "");
@@ -318,7 +320,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         String playerName = "<html><B><span style='font-size:16px'>" + m_clPlayer.getFullName() + "</span></html></B></html>";
         jlName.setText(playerName);
 
-        m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + "  !!!! to fetch from XML !!!!!");
+        HTDatetime dtArrivalDate = new HTDatetime(m_clPlayer.getArrivalDate());
+        String arrivalDate = DateTimeUtils.FormatLongDate(dtArrivalDate.getUserLocalizedTimeAsTimestamp());
+
+        m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
         if (m_clPlayer.isHomeGrown()) m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
 
         m_jbStatistics.setEnabled(true);
