@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -677,7 +676,7 @@ public class Player {
      *
      * @return Value of property m_iBewertung.
      */
-    public int getBewertung() {
+    public int getRating() {
         return m_iBewertung;
     }
 
@@ -1077,7 +1076,7 @@ public class Player {
     /**
      * Gibt die Letzte Bewertung zurück, die der Player bekommen hat
      */
-    public int getLetzteBewertung() {
+    public int getPreviousRating() {
         if (m_iLastBewertung < 0) {
             m_iLastBewertung = DBManager.instance().getLetzteBewertung4Spieler(m_iSpielerID);
         }
@@ -1120,7 +1119,7 @@ public class Player {
      *
      * @return Value of property m_sManuellerSmilie.
      */
-    public java.lang.String getManuellerSmilie() {
+    public java.lang.String getInfoSmiley() {
         if (m_sManuellerSmilie == null) {
             m_sManuellerSmilie = DBManager.instance().getManuellerSmilie(m_iSpielerID);
 
@@ -1491,7 +1490,7 @@ public class Player {
      *
      * @return Value of property m_sTeamInfoSmilie.
      */
-    public String getTeamInfoSmilie() {
+    public String getTeamGroup() {
         if (m_sTeamInfoSmilie == null) {
             m_sTeamInfoSmilie = DBManager.instance().getTeamInfoSmilie(m_iSpielerID);
 
@@ -1547,7 +1546,7 @@ public class Player {
      *
      * @return Value of property m_iToreGesamt.
      */
-    public int getToreGesamt() {
+    public int getAllOfficialGoals() {
         return m_iToreGesamt;
     }
 
@@ -1565,7 +1564,7 @@ public class Player {
      *
      * @return Value of property m_iToreLiga.
      */
-    public int getToreLiga() {
+    public int getSeasonSeriesGoal() {
         return m_iToreLiga;
     }
 
@@ -1583,7 +1582,7 @@ public class Player {
      *
      * @return Value of property m_iTorePokal.
      */
-    public int getTorePokal() {
+    public int getSeasonCupGoal() {
         return m_iTorePokal;
     }
 

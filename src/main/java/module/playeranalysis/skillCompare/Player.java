@@ -458,7 +458,7 @@ public class Player
 		setTSI(m_Player.getTSI());
 		setNationality(m_Player.getNationalityAsInt());
 		setLeadership(m_Player.getLeadership());
-		setGroup(m_Player.getTeamInfoSmilie());
+		setGroup(m_Player.getTeamGroup());
 		setSpeciality(m_Player.getPlayerSpecialty());
 	}
 	

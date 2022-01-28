@@ -359,7 +359,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
 
 
     private void showGroupIcon() {
-        String teamInfoSmilie = Objects.requireNonNull(m_clPlayer).getTeamInfoSmilie();
+        String teamInfoSmilie = Objects.requireNonNull(m_clPlayer).getTeamGroup();
 
         if (teamInfoSmilie.trim().equals(""))
             m_jlTeam.setIcon(ImageUtilities.MINILEER);

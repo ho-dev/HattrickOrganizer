@@ -172,7 +172,7 @@ final public class UserColumnFactory {
         playerGoalsArray[0] = new PlayerColumn(380, "TG", "ToreGesamt", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreGesamt();
+                return player.getAllOfficialGoals();
             }
         };
 
@@ -186,14 +186,14 @@ final public class UserColumnFactory {
         playerGoalsArray[2] = new PlayerColumn(400, "TL", "ToreLiga", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreLiga();
+                return player.getSeasonSeriesGoal();
             }
         };
 
         playerGoalsArray[3] = new PlayerColumn(410, "TP", "TorePokal", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getTorePokal();
+                return player.getSeasonCupGoal();
             }
         };
         return playerGoalsArray;

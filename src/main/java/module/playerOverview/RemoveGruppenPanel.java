@@ -29,46 +29,46 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
     private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN, Map.of("fillColor", HOColorName.TABLEENTRY_DECLINE_FG)));
 
     private final JToggleButton aGruppe = new JToggleButton(
-            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[1])
+            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[1])
     );
 	private final JToggleButton aGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[1])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[1])
     );
 	private final JToggleButton bGruppe = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[2])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[2])
     );
 	private final JToggleButton bGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[2])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[2])
     );
 	private final JToggleButton cGruppe = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[3])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[3])
     );
 	private final JToggleButton cGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[3])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[3])
     );
 	private final JToggleButton dGruppe = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[4])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[4])
     );
 	private final JToggleButton dGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[4])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[4])
     );
 	private final JToggleButton eGruppe = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[5])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[5])
     );
 	private final JToggleButton eGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[5])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[5])
     );
     private final JToggleButton fGruppe = new JToggleButton(
-            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[6])
+            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[6])
     );
 	private final JToggleButton fGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[6])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[6])
     );
     private final JToggleButton noGruppe = new JToggleButton(
-            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[0])
+            GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[0])
     );
 	private final JToggleButton noGruppe2 = new JToggleButton(
-	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMSMILIES[0])
+	        GroupTeamFactory.instance().getGreyedGroupIcon(GroupTeamFactory.TEAMS_GROUPS[0])
     );
 
     // ~ Constructors
@@ -97,17 +97,17 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         if (button.equals(noGruppe) || button.equals(noGruppe2)) {
             return "";
         } else if (button.equals(aGruppe) || button.equals(aGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[1];
+            return GroupTeamFactory.TEAMS_GROUPS[1];
         } else if (button.equals(bGruppe) || button.equals(bGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[2];
+            return GroupTeamFactory.TEAMS_GROUPS[2];
         } else if (button.equals(cGruppe) || button.equals(cGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[3];
+            return GroupTeamFactory.TEAMS_GROUPS[3];
         } else if (button.equals(dGruppe) || button.equals(dGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[4];
+            return GroupTeamFactory.TEAMS_GROUPS[4];
         } else if (button.equals(eGruppe) || button.equals(eGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[5];
+            return GroupTeamFactory.TEAMS_GROUPS[5];
         } else if (button.equals(fGruppe) || button.equals(fGruppe2)) {
-            return GroupTeamFactory.TEAMSMILIES[6];
+            return GroupTeamFactory.TEAMS_GROUPS[6];
         } else {
             return "";
         }
@@ -159,7 +159,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         boolean update = false;
 
         for (Player player : allePlayer) {
-            if (!player.getTeamInfoSmilie().equals("")) {
+            if (!player.getTeamGroup().equals("")) {
                 player.setTeamInfoSmilie("");
                 update = true;
             }
@@ -180,7 +180,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
 
             for (Player player : allePlayer){
                 // Put player in the group.
-                if (player.getTeamInfoSmilie().equals(suchName)) {
+                if (player.getTeamGroup().equals(suchName)) {
                     player.setTeamInfoSmilie(ersatzName);
                 }
             }
@@ -210,37 +210,37 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         layout.setConstraints(noGruppe, constraints);
         bg.add(noGruppe);
         add(noGruppe);
-        initButton(aGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[1]);
+        initButton(aGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[1]);
         constraints.gridx = 1;
         constraints.gridy = 0;
         layout.setConstraints(aGruppe, constraints);
         bg.add(aGruppe);
         add(aGruppe);
-        initButton(bGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[2]);
+        initButton(bGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[2]);
         constraints.gridx = 2;
         constraints.gridy = 0;
         layout.setConstraints(bGruppe, constraints);
         bg.add(bGruppe);
         add(bGruppe);
-        initButton(cGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[3]);
+        initButton(cGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[3]);
         constraints.gridx = 3;
         constraints.gridy = 0;
         layout.setConstraints(cGruppe, constraints);
         bg.add(cGruppe);
         add(cGruppe);
-        initButton(dGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[4]);
+        initButton(dGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[4]);
         constraints.gridx = 4;
         constraints.gridy = 0;
         layout.setConstraints(dGruppe, constraints);
         bg.add(dGruppe);
         add(dGruppe);
-        initButton(eGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[5]);
+        initButton(eGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[5]);
         constraints.gridx = 5;
         constraints.gridy = 0;
         layout.setConstraints(eGruppe, constraints);
         bg.add(eGruppe);
         add(eGruppe);
-        initButton(fGruppe,tooltipFrom, GroupTeamFactory.TEAMSMILIES[6]);
+        initButton(fGruppe,tooltipFrom, GroupTeamFactory.TEAMS_GROUPS[6]);
         constraints.gridx = 6;
         constraints.gridy = 0;
         layout.setConstraints(fGruppe, constraints);
@@ -255,37 +255,37 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         layout.setConstraints(noGruppe2, constraints);
         bg2.add(noGruppe2);
         add(noGruppe2);
-        initButton(aGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[1]);
+        initButton(aGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[1]);
         constraints.gridx = 1;
         constraints.gridy = 1;
         layout.setConstraints(aGruppe2, constraints);
         bg2.add(aGruppe2);
         add(aGruppe2);
-        initButton(bGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[2]);
+        initButton(bGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[2]);
         constraints.gridx = 2;
         constraints.gridy = 1;
         layout.setConstraints(bGruppe2, constraints);
         bg2.add(bGruppe2);
         add(bGruppe2);
-        initButton(cGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[3]);
+        initButton(cGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[3]);
         constraints.gridx = 3;
         constraints.gridy = 1;
         layout.setConstraints(cGruppe2, constraints);
         bg2.add(cGruppe2);
         add(cGruppe2);
-        initButton(dGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[4]);
+        initButton(dGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[4]);
         constraints.gridx = 4;
         constraints.gridy = 1;
         layout.setConstraints(dGruppe2, constraints);
         bg2.add(dGruppe2);
         add(dGruppe2);
-        initButton(eGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[5]);
+        initButton(eGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[5]);
         constraints.gridx = 5;
         constraints.gridy = 1;
         layout.setConstraints(eGruppe2, constraints);
         bg2.add(eGruppe2);
         add(eGruppe2);
-        initButton(fGruppe2,tooltipTo, GroupTeamFactory.TEAMSMILIES[6]);
+        initButton(fGruppe2,tooltipTo, GroupTeamFactory.TEAMS_GROUPS[6]);
         constraints.gridx = 6;
         constraints.gridy = 1;
         layout.setConstraints(fGruppe2, constraints);

@@ -172,11 +172,11 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getSaveMarktwert()).append(",");
 		statement.append(player.getInjuryWeeks()).append(",");
 		statement.append(player.getToreFreund()).append(",");
-		statement.append(player.getToreLiga()).append(",");
-		statement.append(player.getTorePokal()).append(",");
-		statement.append(player.getToreGesamt()).append(",");
+		statement.append(player.getSeasonSeriesGoal()).append(",");
+		statement.append(player.getSeasonCupGoal()).append(",");
+		statement.append(player.getAllOfficialGoals()).append(",");
 		statement.append(player.getHattrick()).append(",");
-		statement.append(player.getBewertung()).append(",");
+		statement.append(player.getRating()).append(",");
 		statement.append(TrainerType.toInt(player.getTrainerTyp())).append(",");
 		statement.append(player.getTrainerSkill()).append(",");
 		statement.append(hrfId).append(",");
