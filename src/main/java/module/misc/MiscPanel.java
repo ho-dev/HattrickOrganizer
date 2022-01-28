@@ -212,7 +212,7 @@ final class MiscPanel extends JPanel {
 
             //Trainer nicht berücksichtigen
             if (!p.isTrainer()) {
-                summe += p.getErfahrung();
+                summe += p.getExperience();
             }
         }
 

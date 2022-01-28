@@ -75,7 +75,7 @@ public class ExperienceEventPredictionAnalyzer implements ISpecialEventPredictio
                     position,
                     SpecialEventType.EXPERIENCE,
                     .5, 10, 5,
-                    p.getErfahrung() - oppDefender.getErfahrung());
+                    p.getExperience() - oppDefender.getExperience());
             if ( se != null){
                 se.addInvolvedOpponentPosition(analyse.getOpponentPosition(i));
                 se.setGoalProbability(analyse.getGoalProbability(position)*se.getChanceCreationProbability());

@@ -488,7 +488,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
 						.getIdealPosition();
 				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
-						.getTeamInfoSmilie();
+						.getTeamGroup();
 				// System.out.println(cbType +":"+group);
 				if (cbType == 1 && pos == 0 || cbType == 2 && (pos > 0 && pos < 8) || cbType == 3
 						&& (pos > 7 && pos < 12) || cbType == 4 && (pos > 11 && pos < 16)
@@ -603,16 +603,16 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			spielerID = ((Integer) m_playerTableModelTop.getValueAt(i,
 					m_playerTableModelTop.getColumnCount() - 1)).intValue();
 			core.model.player.Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID);
-			m_playerTableModelTop.setValueAt(player.getTeamInfoSmilie(), i, 5);
-			if (player.getTeamInfoSmilie().equals("A-Team")
+			m_playerTableModelTop.setValueAt(player.getTeamGroup(), i, 5);
+			if (player.getTeamGroup().equals("A-Team")
 					&& m_CB_type.getSelectedIndex() == 6
-					|| player.getTeamInfoSmilie().equals("B-Team")
+					|| player.getTeamGroup().equals("B-Team")
 					&& m_CB_type.getSelectedIndex() == 7
-					|| player.getTeamInfoSmilie().equals("C-Team")
+					|| player.getTeamGroup().equals("C-Team")
 					&& m_CB_type.getSelectedIndex() == 8
-					|| player.getTeamInfoSmilie().equals("D-Team")
+					|| player.getTeamGroup().equals("D-Team")
 					&& m_CB_type.getSelectedIndex() == 9
-					|| player.getTeamInfoSmilie().equals("E-Team")
+					|| player.getTeamGroup().equals("E-Team")
 					&& m_CB_type.getSelectedIndex() == 10
 					|| m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 				m_playerTableModelTop.setValueAt(Boolean.TRUE, i, 0);

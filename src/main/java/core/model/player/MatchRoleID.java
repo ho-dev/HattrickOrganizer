@@ -8,7 +8,6 @@ import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -291,7 +290,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
 			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
 			case UNSELECTABLE -> getLangStr("Unselectable");
-			default -> getLangStr("Unbestimmt");
+			default -> getLangStr("ls.player.position.no_override");
 		};
 	}
 

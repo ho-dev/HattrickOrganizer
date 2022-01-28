@@ -1,11 +1,8 @@
 package module.lineup.lineup;
 
-import core.datatype.CBItem;
-import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Updatable;
-import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -14,20 +11,15 @@ import core.model.UserParameter;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.model.player.TrainerType;
 import core.util.HOLogger;
-import core.util.Helper;
 import module.lineup.AllTeamsPanel;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
-import module.lineup.assistant.LineupAssistantPanel;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -141,8 +133,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		// Apply the Group Filter
 		for (Player player: allPlayers) {
 			// No Filter
-			if (!bGroupFiltered || (sGroup.equals(player.getTeamInfoSmilie()) && !bSelectedGroupExcluded)
-					|| (!sGroup.equals(player.getTeamInfoSmilie()) && bSelectedGroupExcluded)) {
+			if (!bGroupFiltered || (sGroup.equals(player.getTeamGroup()) && !bSelectedGroupExcluded)
+					|| (!sGroup.equals(player.getTeamGroup()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 				if ( bExcludeLast) {
 					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup().getLineup();

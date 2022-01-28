@@ -124,7 +124,7 @@ class TransferTableModel extends AbstractTableModel {
             case 8:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return transfer.getPlayerInfo().getFuehrung();
+                    return transfer.getPlayerInfo().getLeadership();
                 } else {
                     return -1;
                 }
@@ -132,7 +132,7 @@ class TransferTableModel extends AbstractTableModel {
             case 9:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return transfer.getPlayerInfo().getErfahrung();
+                    return transfer.getPlayerInfo().getExperience();
                 } else {
                     return -1;
                 }
@@ -148,7 +148,7 @@ class TransferTableModel extends AbstractTableModel {
             case 11:
 
                 if (transfer.getPlayerInfo() != null) {
-                    return transfer.getPlayerInfo().getKondition();
+                    return transfer.getPlayerInfo().getStamina();
                 } else {
                     return -1;
                 }

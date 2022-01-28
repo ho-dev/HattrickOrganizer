@@ -26,12 +26,12 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private final JButton aGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[1]));
-    private final JButton bGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[2]));
-    private final JButton cGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[3]));
-    private final JButton dGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[4]));
-    private final JButton eGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[5]));
-    private final JButton fGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMSMILIES[6]));
+	private final JButton aGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[1]));
+    private final JButton bGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[2]));
+    private final JButton cGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[3]));
+    private final JButton dGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[4]));
+    private final JButton eGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[5]));
+    private final JButton fGroup = new JButton(GroupTeamFactory.instance().getActiveGroupIcon(GroupTeamFactory.TEAMS_GROUPS[6]));
     private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN, Map.of("fillColor", HOColorName.TABLEENTRY_DECLINE_FG)));
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -46,17 +46,17 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     @Override
 	public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(aGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[1]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[1]);
         } else if (e.getSource().equals(bGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[2]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[2]);
         } else if (e.getSource().equals(cGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[3]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[3]);
         } else if (e.getSource().equals(dGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[4]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[4]);
         } else if (e.getSource().equals(eGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[5]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[5]);
         } else if (e.getSource().equals(fGroup)) {
-            setGroup(GroupTeamFactory.TEAMSMILIES[6]);
+            setGroup(GroupTeamFactory.TEAMS_GROUPS[6]);
         }
         else if (e.getSource().equals(m_jbClean)) {
             setGroup("");
@@ -75,7 +75,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
                 player.setTeamInfoSmilie(sGroup);
             }
             // all other players are not part of that group
-            else if (player.getTeamInfoSmilie().equals(sGroup)) {
+            else if (player.getTeamGroup().equals(sGroup)) {
                 player.setTeamInfoSmilie("");
             }
         }

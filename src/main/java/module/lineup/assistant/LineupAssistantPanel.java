@@ -38,7 +38,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	private final JComboBox<CBItem> m_jcbIncludeExclude = new JComboBox<>(INCLUDE_EXCLUDE);
 
-	private final JComboBox<String> m_jcbGroups = new JComboBox<>(GroupTeamFactory.TEAMSMILIES);
+	private final JComboBox<String> m_jcbGroups = new JComboBox<>(GroupTeamFactory.TEAMS_GROUPS);
 	private final JCheckBox m_jcbxFilterPlayerPositionCB = new JCheckBox("", userParameter.aufstellungsAssistentPanel_cbfilter);
 	private final JCheckBox m_jcbxConsiderForm = new JCheckBox("", userParameter.aufstellungsAssistentPanel_form);
 	private final JCheckBox m_jcbxConsiderInjuredPlayers = new JCheckBox("", userParameter.aufstellungsAssistentPanel_verletzt);
@@ -215,9 +215,9 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()
-					&& (((this.getGroup().trim().equals("") || player.getTeamInfoSmilie().equals(
+					&& (((this.getGroup().trim().equals("") || player.getTeamGroup().equals(
 							this.getGroup())) && !isSelectedGroupExcluded()) || (!player
-							.getTeamInfoSmilie().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
+							.getTeamGroup().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
 				if ( m_jcbxNotLast.isSelected()) {
 					var previousLineup = hoModel.getPreviousLineup();

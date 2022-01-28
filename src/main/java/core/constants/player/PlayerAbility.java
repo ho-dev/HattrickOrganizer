@@ -89,6 +89,43 @@ public final class PlayerAbility {
 		}
 	}
 
+
+	/**
+	 * get string representation of rating values
+	 *
+	 * @param ratingValue double [0..20]
+	 * @param showNumbers true for numerical representation
+	 * @param isMatch true shows' sub-level representations
+	 * @param nbDecimal nbDecimalDisplayed
+	 * @return String
+	 */
+	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch, int nbDecimal) {
+		int bewertungwert = (int) ratingValue;
+		int sublevel = 0;
+		if (isMatch) {
+			sublevel = (int)(ratingValue*4) % 4;
+		}
+
+		var bewertung = toString(bewertungwert);
+		if (isMatch) {
+			bewertung += PlayerAbility.getName4Sublevel(sublevel);
+		}
+
+		if (showNumbers) {
+			if (isMatch) {
+				bewertung += (" ("
+						+  Helper.getNumberFormat(false, nbDecimal)
+						.format(Helper.round(bewertungwert + PlayerAbility.getValue4Sublevel(sublevel), 2))
+						+ ")");
+			} else {
+				bewertung += (" ("
+						+ Helper.getNumberFormat(false, nbDecimal)
+						.format(Helper.round(ratingValue, nbDecimal)) + ")");
+			}
+		}
+		return bewertung;
+	}
+
 	/**
 	 * get string representation of rating values
 	 *
@@ -98,30 +135,7 @@ public final class PlayerAbility {
 	 * @return String
 	 */
 	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch) {
-	    int bewertungwert = (int) ratingValue;
-	    int sublevel = 0;
-	    if (isMatch) {
-	        sublevel = (int)(ratingValue*4) % 4;
-	    }
-
-	    var bewertung = toString(bewertungwert);
-	    if (isMatch) {
-	        bewertung += PlayerAbility.getName4Sublevel(sublevel);
-	    }
-
-	    if (showNumbers) {
-	        if (isMatch) {
-	            bewertung += (" ("
-	            +  Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-	    		.format(Helper.round(bewertungwert + PlayerAbility.getValue4Sublevel(sublevel), 2))
-	             + ")");
-	        } else {
-	            bewertung += (" ("
-	            		+ Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-	             		.format(Helper.round(ratingValue, UserParameter.instance().nbDecimals)) + ")");
-	        }
-	    }
-	    return bewertung;
+	   return getNameForSkill(ratingValue, showNumbers, isMatch, UserParameter.instance().nbDecimals);
 	}
 
 	public static String getNameForSkill(boolean isMatch, double bewertungwert) {

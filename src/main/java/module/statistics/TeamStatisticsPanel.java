@@ -516,7 +516,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		constraints2.gridx = 1;
 		constraints2.gridwidth = 2;
 		constraints2.insets = new Insets(20,5,0,0);  //top padding
-		jcbTeam = new JComboBox(GroupTeamFactory.TEAMSMILIES);
+		jcbTeam = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
 		jcbTeam.setRenderer(new core.gui.comp.renderer.SmilieListCellRenderer());
 		jcbTeam.setBackground(ThemeManager.getColor(TABLEENTRY_BG));
 		layout2.setConstraints(jcbTeam, constraints2);

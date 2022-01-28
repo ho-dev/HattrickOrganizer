@@ -18,7 +18,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
-	private SpielerDetailPanel spielerDetailPanel;
+	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
 	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
 	private LineupPlayersTableNameColumn spielerUebersichtTableName;
@@ -42,15 +42,8 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	public void setPlayer(Player player) {
 		spielerUebersichtTableName.setPlayer(player.getPlayerID());
 		playerOverviewTable.setSpieler(player.getPlayerID());
-		spielerDetailPanel.setSpieler(player);
+		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
-	}
-
-	/**
-	 * Returns Width of the best position column
-	 */
-	public final int getBestPosWidth() {
-		return playerOverviewTable.getBestPosWidth();
 	}
 
 	/**
@@ -74,7 +67,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 * Refresh, if a player is changed in the lineup
 	 */
 	public final void refresh() {
-		spielerDetailPanel.refresh();
+		playerDetailsPanel.refresh();
 		playerOverviewTable.refresh();
 	}
 
@@ -86,7 +79,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		playerOverviewTable.refreshHRFVergleich();
 
 		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
-		spielerDetailPanel.setSpieler(player);
+		playerDetailsPanel.setPlayer(player);
 	}
 
 	/**
@@ -101,7 +94,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		Component tabelle = initSpielerTabelle();
+		Component tabelle = initPlayersTable();
 		horizontalRightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
 		horizontalRightSplitPane.setLeftComponent(initSpielerDetail());
 		horizontalRightSplitPane.setRightComponent(initSpielerHistory());
@@ -123,9 +116,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		spielerDetailPanel = new SpielerDetailPanel();
+		playerDetailsPanel = new PlayerDetailsPanel(playerOverviewTable);
 
-		JScrollPane scrollPane = new JScrollPane(spielerDetailPanel);
+		JScrollPane scrollPane = new JScrollPane(playerDetailsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("SpielerDetails"), scrollPane);
@@ -163,7 +156,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	/*
 	 * Initialise the players tables
 	 */
-	private Component initSpielerTabelle() {
+	private Component initPlayersTable() {
 
 		JPanel overviewPanel = new JPanel();
 		overviewPanel.setLayout(new BorderLayout());
@@ -237,16 +230,14 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
 				e -> {
-					final int row = spielerUebersichtTableName.getSelectedRow();
+					int row = spielerUebersichtTableName.getSelectedRow();
+					if (row == -1) row = 0;
+
 					selectRow(playerOverviewTable, row);
 
 					// Set player on HOMainFrame to notify other tabs.
-					if (row > -1) {
-						Player player = playerOverviewTable.getSorter().getSpieler(row);
-						if (player != null) {
-							HOMainFrame.instance().setActualSpieler(player);
-						}
-					}
-				});
+					Player player = playerOverviewTable.getSorter().getSpieler(row);
+					if (player != null) HOMainFrame.instance().setActualSpieler(player);
+					});
 	}
 }

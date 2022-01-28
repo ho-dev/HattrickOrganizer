@@ -17,7 +17,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
-import module.playerOverview.SpielerStatusLabelEntry;
+import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.*;
 import java.sql.Timestamp;
@@ -168,32 +168,39 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createGoalsColumnsArray() {
-        final PlayerColumn[] playerGoalsArray = new PlayerColumn[4];
-        playerGoalsArray[0] = new PlayerColumn(380, "TG", "ToreGesamt", 20) {
+        final PlayerColumn[] playerGoalsArray = new PlayerColumn[5];
+        playerGoalsArray[0] = new PlayerColumn(380, "TG", "ls.player.career_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreGesamt();
+                return player.getAllOfficialGoals();
             }
         };
 
-        playerGoalsArray[1] = new PlayerColumn(390, "TF", "ToreFreund", 20) {
+        playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreFreund();
+                return player.getGoalsCurrentTeam();
             }
         };
 
-        playerGoalsArray[2] = new PlayerColumn(400, "TL", "ToreLiga", 20) {
+        playerGoalsArray[2] = new PlayerColumn(390, "HT", "ls.player.hattricks", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getToreLiga();
+                return player.getHattrick();
             }
         };
 
-        playerGoalsArray[3] = new PlayerColumn(410, "TP", "TorePokal", 20) {
+        playerGoalsArray[3] = new PlayerColumn(400, "TL", "ls.player.season_series_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getTorePokal();
+                return player.getSeasonSeriesGoal();
+            }
+        };
+
+        playerGoalsArray[4] = new PlayerColumn(410, "TP", "ls.player.season_cup_goals", 20) {
+            @Override
+            public int getValue(Player player) {
+                return player.getSeasonCupGoal();
             }
         };
         return playerGoalsArray;
@@ -526,8 +533,8 @@ final public class UserColumnFactory {
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalitaet()),
-                        player.getNationalitaet(),
+                return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalityAsInt()),
+                        player.getNationalityAsInt(),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
@@ -641,7 +648,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[6] = new PlayerColumn(70, "Status", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                SpielerStatusLabelEntry entry = new SpielerStatusLabelEntry();
+                PlayerStatusLabelEntry entry = new PlayerStatusLabelEntry();
                 entry.setPlayer(player);
                 return entry;
             }
@@ -652,7 +659,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
-                final int gehalt = (int) (player.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+                final int gehalt = (int) (player.getSalary() / core.model.UserParameter.instance().FXrate);
                 final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
@@ -666,8 +673,8 @@ final public class UserColumnFactory {
                                     SwingConstants.RIGHT));
                 }
 
-                final int gehalt2 = (int) (playerCompare.getGehalt() / core.model.UserParameter
-                        .instance().faktorGeld);
+                final int gehalt2 = (int) (playerCompare.getSalary() / core.model.UserParameter
+                        .instance().FXrate);
                 return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                         gehalttext + bonus,
                         ColorLabelEntry.FG_STANDARD,

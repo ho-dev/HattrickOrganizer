@@ -4,9 +4,7 @@ import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
-import core.model.FactorObject;
-import core.model.FormulaFactors;
-import core.model.HOVerwaltung;
+import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
@@ -58,17 +56,13 @@ public class Player {
     private String m_sFirstName = "";
     private String m_sNickName = "";
     private String m_sLastName = "";
+    private String m_arrivalDate;
 
     /**
      * TeamInfo Smilie Filename
      */
     private String m_sTeamInfoSmilie;
     private java.sql.Timestamp m_clhrfDate;
-
-    /**
-     * Date of the first HRF referencing that player
-     */
-    private Timestamp m_tsTime4FirstHRF;
 
     /**
      * The player is no longer available in the current HRF
@@ -174,6 +168,7 @@ public class Player {
      */
     private int m_iHattrick;
 
+    private int m_iGoalsCurrentTeam;
     /**
      * Home Grown
      */
@@ -208,7 +203,7 @@ public class Player {
 
     /* bonus in Prozent */
 
-    //protected int       m_iBonus            =   0;
+    private String m_sNationality;
 
     /**
      * Aus welchem Land kommt der Player
@@ -368,6 +363,7 @@ public class Player {
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
         m_sLastName = properties.getProperty("lastname", "");
+        m_arrivalDate =  properties.getProperty("arrivaldate");
         m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
         m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
         m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
@@ -415,6 +411,8 @@ public class Player {
         m_iTorePokal = Integer.parseInt(properties.getProperty("gtc", "0"));
         m_iToreGesamt = Integer.parseInt(properties.getProperty("gev", "0"));
         m_iHattrick = Integer.parseInt(properties.getProperty("hat", "0"));
+        m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
+
 
         if (properties.get("rating") != null) {
             m_iBewertung = Integer.parseInt(properties.getProperty("rating", "0"));
@@ -678,7 +676,7 @@ public class Player {
      *
      * @return Value of property m_iBewertung.
      */
-    public int getBewertung() {
+    public int getRating() {
         return m_iBewertung;
     }
 
@@ -706,6 +704,14 @@ public class Player {
         this.m_iCharakter = m_iCharakter;
     }
 
+    public String getArrivalDate() {
+        return m_arrivalDate;
+    }
+
+    public void setArrivalDate(String m_arrivalDate) {
+        this.m_arrivalDate = m_arrivalDate;
+    }
+
     /**
      * Getter for property m_iCharackter.
      *
@@ -729,34 +735,10 @@ public class Player {
      *
      * @return Value of property m_iErfahrung.
      */
-    public int getErfahrung() {
+    public int getExperience() {
         return m_iErfahrung;
     }
 
-    /**
-     * get the experience bonus
-     *
-     * @param experience effective experience to calculate the bonus, use the xp from the player if set to 0
-     * @return experience bonus in percent
-     */
-    public float getErfahrungsBonus(float experience) {
-        if (experience <= 0)
-            // take xp from player (use medium xp sub, i.e. add 0.5)
-            experience = m_iErfahrung + 0.5f;
-
-        // normalize xp [1,20] -> [0,19]
-        experience -= 1;
-
-        if (experience <= 0)
-            return 0; /*If experience is non-existent, the bonus is zero!*/
-
-        // Use hardcorded values here,
-        // make sure to apply the same values as in prediction/*/playerStrength.dat
-        //
-        // We return the experience bonus in percent (0% = no bonus, 100% = doubled player strength...)
-
-        return (float) (0.0716 * Math.sqrt(experience));
-    }
 
     /**
      * Setter for property m_iFluegelspiel.
@@ -808,7 +790,7 @@ public class Player {
      *
      * @return Value of property m_iFuehrung.
      */
-    public int getFuehrung() {
+    public int getLeadership() {
         return m_iFuehrung;
     }
 
@@ -826,7 +808,7 @@ public class Player {
      *
      * @return Value of property m_iGehalt.
      */
-    public int getGehalt() {
+    public int getSalary() {
         return m_iGehalt;
     }
 
@@ -855,22 +837,23 @@ public class Player {
         return (m_iCards > 2);
     }
 
-    /**
-     * Setter for property m_iHattrick.
-     *
-     * @param m_iHattrick New value of property m_iHattrick.
-     */
+
     public void setHattrick(int m_iHattrick) {
         this.m_iHattrick = m_iHattrick;
     }
 
-    /**
-     * Getter for property m_iHattrick.
-     *
-     * @return Value of property m_iHattrick.
-     */
+
     public int getHattrick() {
         return m_iHattrick;
+    }
+
+
+    public int getGoalsCurrentTeam() {
+        return m_iGoalsCurrentTeam;
+    }
+
+    public void setGoalsCurrentTeam(int m_iGoalsCurrentTeam) {
+        this.m_iGoalsCurrentTeam = m_iGoalsCurrentTeam;
     }
 
     /**
@@ -1024,7 +1007,7 @@ public class Player {
      *
      * @return Value of property m_iKondition.
      */
-    public int getKondition() {
+    public int getStamina() {
         return m_iKondition;
     }
 
@@ -1078,7 +1061,7 @@ public class Player {
     /**
      * Gibt die Letzte Bewertung zurück, die der Player bekommen hat
      */
-    public int getLetzteBewertung() {
+    public int getPreviousRating() {
         if (m_iLastBewertung < 0) {
             m_iLastBewertung = DBManager.instance().getLetzteBewertung4Spieler(m_iSpielerID);
         }
@@ -1121,7 +1104,7 @@ public class Player {
      *
      * @return Value of property m_sManuellerSmilie.
      */
-    public java.lang.String getManuellerSmilie() {
+    public java.lang.String getInfoSmiley() {
         if (m_sManuellerSmilie == null) {
             m_sManuellerSmilie = DBManager.instance().getManuellerSmilie(m_iSpielerID);
 
@@ -1210,7 +1193,7 @@ public class Player {
      *
      * @param m_iNationalitaet New value of property m_iNationalitaet.
      */
-    public void setNationalitaet(int m_iNationalitaet) {
+    public void setNationalityAsInt(int m_iNationalitaet) {
         this.m_iNationalitaet = m_iNationalitaet;
     }
 
@@ -1219,9 +1202,25 @@ public class Player {
      *
      * @return Value of property m_iNationalitaet.
      */
-    public int getNationalitaet() {
+    public int getNationalityAsInt() {
         return m_iNationalitaet;
     }
+
+
+    public String getNationalityAsString() {
+        if (m_sNationality != null){
+            return m_sNationality;
+        }
+        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(m_iNationalitaet);
+        if ( leagueDetail != null ) {
+            m_sNationality = leagueDetail.getCountryName();
+        }
+        else{
+            m_sNationality = "";
+        }
+        return  m_sNationality;
+    }
+
 
     /**
      * Setter for property m_bOld.
@@ -1410,6 +1409,17 @@ public class Player {
         return Math.min(0.99f, Helper.round(getSub4SkillAccurate(skill), 2));
     }
 
+    public float getSkill(int iSkill, boolean inclSubSkill) {
+        if(inclSubSkill) {
+            return getValue4Skill(iSkill) + getSub4Skill(iSkill);
+        }
+        else{
+            return getValue4Skill(iSkill);
+
+        }
+    }
+
+
     /**
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
@@ -1465,7 +1475,7 @@ public class Player {
      *
      * @return Value of property m_sTeamInfoSmilie.
      */
-    public String getTeamInfoSmilie() {
+    public String getTeamGroup() {
         if (m_sTeamInfoSmilie == null) {
             m_sTeamInfoSmilie = DBManager.instance().getTeamInfoSmilie(m_iSpielerID);
 
@@ -1476,17 +1486,6 @@ public class Player {
         }
 
         return m_sTeamInfoSmilie.replaceAll("\\.png$", "");
-    }
-
-    /**
-     * Gibt das Datum des ersten HRFs mit dem Player zurück
-     */
-    public Timestamp getTimestamp4FirstPlayerHRF() {
-        if (m_tsTime4FirstHRF == null) {
-            m_tsTime4FirstHRF = DBManager.instance().getTimestamp4FirstPlayerHRF(m_iSpielerID);
-        }
-
-        return m_tsTime4FirstHRF;
     }
 
     /**
@@ -1512,7 +1511,7 @@ public class Player {
      *
      * @param m_iToreGesamt New value of property m_iToreGesamt.
      */
-    public void setToreGesamt(int m_iToreGesamt) {
+    public void setAllOfficialGoals(int m_iToreGesamt) {
         this.m_iToreGesamt = m_iToreGesamt;
     }
 
@@ -1521,7 +1520,7 @@ public class Player {
      *
      * @return Value of property m_iToreGesamt.
      */
-    public int getToreGesamt() {
+    public int getAllOfficialGoals() {
         return m_iToreGesamt;
     }
 
@@ -1539,7 +1538,7 @@ public class Player {
      *
      * @return Value of property m_iToreLiga.
      */
-    public int getToreLiga() {
+    public int getSeasonSeriesGoal() {
         return m_iToreLiga;
     }
 
@@ -1557,7 +1556,7 @@ public class Player {
      *
      * @return Value of property m_iTorePokal.
      */
-    public int getTorePokal() {
+    public int getSeasonCupGoal() {
         return m_iTorePokal;
     }
 
@@ -1783,6 +1782,7 @@ public class Player {
         };
     }
 
+
     public float getSkillValue(int skill){
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
@@ -1991,8 +1991,8 @@ public class Player {
                 + Helper.round(getSPskill() + getSub4Skill(SET_PIECES) + loy, 2) + "|"
                 + Helper.round(getSCskill() + getSub4Skill(SCORING) + loy, 2) + "|"
                 + getForm() + "|"
-                + getKondition() + "|"
-                + getErfahrung() + "|"
+                + getStamina() + "|"
+                + getExperience() + "|"
                 + getPlayerSpecialty(); // used for Technical DefFW
 
         // Check if the key already exists in cache
@@ -2297,7 +2297,7 @@ public class Player {
 
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
-        boolean experienceSubDone = this.getErfahrung() > before.getErfahrung(); // Do not calculate sub on experience skill up
+        boolean experienceSubDone = this.getExperience() > before.getExperience(); // Do not calculate sub on experience skill up
         var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = before.getSub4Skill(skill);

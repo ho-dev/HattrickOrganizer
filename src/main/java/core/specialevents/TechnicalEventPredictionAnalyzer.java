@@ -59,7 +59,7 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.TECHNICAL_HEAD,
                     1., 20, -20,
-                    p.getSCskill() + p.getErfahrung() - opp.getDEFskill() - opp.getErfahrung()
+                    p.getSCskill() + p.getExperience() - opp.getDEFskill() - opp.getExperience()
             );
             if (se != null) {
                 se.addInvolvedOpponentPosition(analyse.getOpponentPosition(opponentPosition));

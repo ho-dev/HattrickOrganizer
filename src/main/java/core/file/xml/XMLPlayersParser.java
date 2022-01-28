@@ -2,16 +2,13 @@ package core.file.xml;
 
 import java.util.List;
 import java.util.Vector;
-
 import core.model.match.MatchKurzInfo;
 import module.youth.YouthPlayer;
 import module.training.Skills;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import core.db.DBManager;
-
 import static core.file.xml.XMLManager.xmlAttribute2Hash;
 import static core.file.xml.XMLManager.xmlValue2Hash;
 
@@ -78,7 +75,7 @@ public class XMLPlayersParser {
                 hash.put("Age", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("AgeDays").item(0);
                 hash.put("AgeDays", (XMLManager.getFirstChildNodeValue(ele)));
-
+                xmlValue2Hash(hash, root, "ArrivalDate");
                 //TSI löste Marktwert ab!
                 ele = (Element) root.getElementsByTagName("TSI").item(0);
                 hash.put("MarketValue", (XMLManager.getFirstChildNodeValue(ele)));
@@ -112,6 +109,7 @@ public class XMLPlayersParser {
                 hash.put("CareerGoals", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("CareerHattricks").item(0);
                 hash.put("CareerHattricks", (XMLManager.getFirstChildNodeValue(ele)));
+                xmlValue2Hash(hash, root, "GoalsCurrentTeam");
                 ele = (Element) root.getElementsByTagName("Specialty").item(0);
                 hash.put("Specialty", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("TransferListed").item(0);
