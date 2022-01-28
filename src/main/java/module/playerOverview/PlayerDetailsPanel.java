@@ -72,6 +72,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private JLabel jlPlayerDescription = new JLabel("");
     private final JPanel jpPlayerGeneral = new JPanel();
     private final JPanel jpPlayerSkill = new JPanel();
+    private final JPanel jpPlayerGoalsStats = new JPanel();
     private JLabel jlPlayerAvatar = new JLabel();
     private JLabel jlNationality = new JLabel();
     private JLabel jlSpecialty = new JLabel();
@@ -86,7 +87,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final ColorLabelEntry m_jclSPchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
     private final ColorLabelEntry m_jclFormChange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
     private final ColorLabelEntry m_jclStaminaChange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
-
+    private final JLabel m_jlCareerGoals = new JLabel("");
+    private final JLabel m_jlTeamGoals = new JLabel("");
     // Top Row, column 1
 
 
@@ -128,8 +130,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpGoalsCup = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
-    private final ColorLabelEntry m_jpGoalsTotal = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-            ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
+
     private final ColorLabelEntry m_jpHattricks = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
     private final ColorLabelEntry m_jpMarketValue = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
@@ -435,7 +436,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jpGoalsFriendly.setText(m_clPlayer.getToreFreund() + "");
         m_jpGoalsLeague.setText(m_clPlayer.getToreLiga() + "");
         m_jpGoalsCup.setText(m_clPlayer.getTorePokal() + "");
-        m_jpGoalsTotal.setText(m_clPlayer.getToreGesamt() + "");
+        m_jlCareerGoals.setText(m_clPlayer.getToreGesamt() + "");
+        m_jlTeamGoals.setText("To be fetched from XML !!!!");
         m_jpHattricks.setText(m_clPlayer.getHattrick() + "");
 
         int iSpecialty = m_clPlayer.getPlayerSpecialty();
@@ -673,7 +675,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerGeneralPanel.setConstraints(jpbStamina, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(jpbStamina);
 
-        constraints.gridwidth = 6;
+        constraints.gridwidth = 4;
         setPosition(constraints, 0, 4);
         layout.setConstraints(jpPlayerGeneral, constraints);
         panel.add(jpPlayerGeneral);
@@ -801,11 +803,72 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jpPlayerSkill.add(m_jclSPchange);
 
 
-        setPosition(constraints, 6, 4);
+        setPosition(constraints, 4, 4);
         layout.setConstraints(jpPlayerSkill, constraints);
         panel.add(jpPlayerSkill);
 
-        // ***** Block 1
+        // Create goals statistics panel =============================================
+        final GridBagLayout layoutPlayerGoalsStatsPanel = new GridBagLayout();
+        final GridBagConstraints constraintsPlayerGoalsStatsPanel = new GridBagConstraints();
+        constraintsPlayerGoalsStatsPanel.fill = GridBagConstraints.BOTH;
+        constraintsPlayerGoalsStatsPanel.insets = new Insets(0,10,5,0);
+
+        jpPlayerGoalsStats.setLayout(layoutPlayerGoalsStatsPanel);
+
+
+        label = createLabel("ls.player.career_goals");
+        constraintsPlayerGoalsStatsPanel.gridx = 0;
+        constraintsPlayerGoalsStatsPanel.gridy = 0;
+        layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(label);
+
+        constraintsPlayerGoalsStatsPanel.gridx = 1;
+        layoutPlayerGoalsStatsPanel.setConstraints(m_jlCareerGoals, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(m_jlCareerGoals);
+
+
+        label = createLabel("ls.player.team_goals");
+        constraintsPlayerGoalsStatsPanel.gridx = 0;
+        constraintsPlayerGoalsStatsPanel.gridy = 1;
+        layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(label);
+
+        constraintsPlayerGoalsStatsPanel.gridx = 1;
+        layoutPlayerGoalsStatsPanel.setConstraints(m_jlTeamGoals, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(m_jlTeamGoals);
+
+        //        label = new JLabel(Helper.getTranslation("ls.player.team_goals"));
+//        initNormalLabel(8, 13, constraints, layout, panel, label);
+//        initNormalField(9, 13, constraints, layout, panel, m_jpHattricks.getComponent(false));
+
+
+
+
+        
+//        label = new JLabel(Helper.getTranslation("Only official matches count"));
+//        initNormalLabel(8, 9, constraints, layout, panel, label);
+//        initNormalField(9, 9, constraints, layout, panel, m_jpGoalsFriendly.getComponent(false));
+//
+//        label = new JLabel(Helper.getTranslation("ls.player.season_series_goals"));
+//        initNormalLabel(8, 10, constraints, layout, panel, label);
+//        initNormalField(9, 10, constraints, layout, panel, m_jpGoalsLeague.getComponent(false));
+//
+//        label = new JLabel(Helper.getTranslation("ls.player.season_cup_goals"));
+//        initNormalLabel(8, 11, constraints, layout, panel, label);
+//        initNormalField(9, 11, constraints, layout, panel, m_jpGoalsCup.getComponent(false));
+//
+//
+//        label = new JLabel(Helper.getTranslation("ls.player.hattricks"));
+//        initNormalLabel(8, 13, constraints, layout, panel, label);
+//        initNormalField(9, 13, constraints, layout, panel, m_jpHattricks.getComponent(false));
+//
+
+
+        setPosition(constraints, 8, 4);
+        layout.setConstraints(jpPlayerGoalsStats, constraints);
+        panel.add(jpPlayerGoalsStats);
+
+        // ==========================================================================
 
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Aufgestellt"));
@@ -907,29 +970,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreFreund"));
-        initNormalLabel(8, 9, constraints, layout, panel, label);
-        initNormalField(9, 9, constraints, layout, panel, m_jpGoalsFriendly.getComponent(false));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreLiga"));
-        initNormalLabel(8, 10, constraints, layout, panel, label);
-        initNormalField(9, 10, constraints, layout, panel, m_jpGoalsLeague.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("TorePokal"));
-        initNormalLabel(8, 11, constraints, layout, panel, label);
-        initNormalField(9, 11, constraints, layout, panel, m_jpGoalsCup.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreGesamt"));
-        initNormalLabel(8, 12, constraints, layout, panel, label);
-        initNormalField(9, 12, constraints, layout, panel, m_jpGoalsTotal.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Hattricks"));
-        initNormalLabel(8, 13, constraints, layout, panel, label);
-        initNormalField(9, 13, constraints, layout, panel, m_jpHattricks.getComponent(false));
-
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Marktwert"));
-        initNormalLabel(8, 14, constraints, layout, panel, label);
-        initNormalField(9, 14, constraints, layout, panel, m_jpMarketValue.getComponent(false));
 
         //Buttons
         final JPanel buttonpanel = new JPanel();
@@ -1040,39 +1081,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         panel.add(component);
     }
 
-    /**
-     * init a value field
-     *
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param component
-     */
-    private void initYellowMainField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
-        setPosition(constraints, x, y);
-        constraints.weightx = 1.0;
-        component.setPreferredSize(COMPONENTENSIZE3);
-        layout.setConstraints(component, constraints);
-        panel.add(component);
-    }
 
-    /**
-     * init a value field
-     *
-     * @param y
-     * @param constraints
-     * @param layout
-     * @param panel
-     * @param component
-     */
-    private void initYellowChangesField(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JComponent component) {
-        setPosition(constraints, x, y);
-        constraints.weightx = 1.0;
-        component.setPreferredSize(COMPONENTENSIZE4);
-        layout.setConstraints(component, constraints);
-        panel.add(component);
-    }
+
+
 
     /**
      * set position in gridBag
@@ -1137,8 +1148,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         m_jpGoalsFriendly.clear();
         m_jpGoalsLeague.clear();
-        m_jpGoalsCup.clear();
-        m_jpGoalsTotal.clear();
+        m_jpGoalsCup.clear();;
+        resetLabel(m_jlCareerGoals);
+        resetLabel(m_jlTeamGoals);
         m_jpHattricks.clear();
         jlSpecialty.setText("");
         jlSpecialty.setIcon(null);
