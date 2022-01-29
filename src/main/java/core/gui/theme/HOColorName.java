@@ -12,6 +12,9 @@ public interface HOColorName {
 	// DEFAULT COLOR
     String RED 							= "default.red";
 	String BLUE 						= "default.blue";
+	String GREEN 						= "default.green";
+	String ORANGE 						= "default.orange";
+	String YELLOW 						= "default.yellow";
 
 	String PANEL_BG 					= "panel.bg";
 	String PANEL_BORDER					= "panel.border";
@@ -232,4 +235,6 @@ public interface HOColorName {
 	String NEUTRAL_ACTION = "neutral.action";
 	String BORDER_RATING_BAR = "border.rating.bar";
 
+	//Player details
+	String PLAYER_DETAILS_BAR_BORDER_COLOR = "player_details_bar.border.color";
 }

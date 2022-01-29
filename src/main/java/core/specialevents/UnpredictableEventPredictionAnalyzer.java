@@ -146,20 +146,20 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         if (opp != null) {
             n++;
             opponentDefenceSkill += opp.getDEFskill();
-            opponentExperience += opp.getErfahrung();
+            opponentExperience += opp.getExperience();
         }
         opp = analyse.getOpponentPlayerByPosition(middleCentralDefender);
         if (opp != null) {
             n++;
             opponentDefenceSkill += opp.getDEFskill();
-            opponentExperience += opp.getErfahrung();
+            opponentExperience += opp.getExperience();
         }
         if (rightCentralDefender != 0) {
             opp = analyse.getOpponentPlayerByPosition(rightCentralDefender);
             if (opp != null) {
                 n++;
                 opponentDefenceSkill += opp.getDEFskill();
-                opponentExperience += opp.getErfahrung();
+                opponentExperience += opp.getExperience();
             }
         }
         if (n > 1) {
@@ -169,7 +169,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.UNPREDICTABLE,
                 .5, 10, -10,
-                p.getPSskill() + p.getErfahrung() - opponentDefenceSkill - opponentExperience);
+                p.getPSskill() + p.getExperience() - opponentDefenceSkill - opponentExperience);
         if (se != null) {
             getPassReceivers(se);
         }
@@ -199,7 +199,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.UNPREDICTABLE_MISTAKE,
                     -.5,10, -10,
-                    op.getSCskill()+op.getErfahrung()-p.getDEFskill()-p.getErfahrung()
+                    op.getSCskill()+op.getExperience()-p.getDEFskill()-p.getExperience()
                     );
 
             if ( se != null){

@@ -1,4 +1,3 @@
-// %222653727:de.hattrickorganizer.gui.playeranalysis%
 package module.playeranalysis;
 
 import core.gui.ApplicationClosingListener;
@@ -7,22 +6,19 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-public class SpielerAnalyseMainPanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = 5384638406362299060L;
+public class PlayerAnalyseMainPanel extends LazyImagePanel {
+
 	private JButton arrangeButton;
 	private JSplitPane splitPane;
 	private SpielerAnalysePanel playersPanel1;

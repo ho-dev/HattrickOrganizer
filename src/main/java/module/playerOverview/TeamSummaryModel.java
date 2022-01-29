@@ -68,8 +68,8 @@ public class TeamSummaryModel {
         stats.totalTsi = players.stream().mapToLong(Player::getTSI).sum();
         stats.averageTsi = players.stream().mapToDouble(Player::getTSI).average().orElse(0.0);
         stats.averageAge = players.stream().mapToDouble(Player::getAlterWithAgeDays).average().orElse(0.0);
-        stats.averageSalary = players.stream().mapToDouble(Player::getGehalt).average().orElse(0.0) / UserParameter.instance().faktorGeld;
-        stats.averageStamina = players.stream().mapToDouble(Player::getKondition).average().orElse(0.0);
+        stats.averageSalary = players.stream().mapToDouble(Player::getSalary).average().orElse(0.0) / UserParameter.instance().FXrate;
+        stats.averageStamina = players.stream().mapToDouble(Player::getStamina).average().orElse(0.0);
         stats.averageForm = players.stream().mapToDouble(Player::getForm).average().orElse(0.0);
 
         return stats;

@@ -178,8 +178,8 @@ final class SpielerSkillupTable extends AbstractTable {
 				checkNewSkillup(nPlayer, nPlayer.getDEFskill(), oPlayer.getDEFskill(), PlayerSkill.DEFENDING, homodel.getID());
 				checkNewSkillup(nPlayer, nPlayer.getSCskill(), oPlayer.getSCskill(), PlayerSkill.SCORING, homodel.getID());
 				checkNewSkillup(nPlayer, nPlayer.getSPskill(), oPlayer.getSPskill(), PlayerSkill.SET_PIECES, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getKondition(), oPlayer.getKondition(), PlayerSkill.STAMINA, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getErfahrung(), oPlayer.getErfahrung(), PlayerSkill.EXPERIENCE, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getStamina(), oPlayer.getStamina(), PlayerSkill.STAMINA, homodel.getID());
+				checkNewSkillup(nPlayer, nPlayer.getExperience(), oPlayer.getExperience(), PlayerSkill.EXPERIENCE, homodel.getID());
 			}
 		}
 	}

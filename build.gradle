@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'org.jetbrains:annotations:22.0.0'
     implementation 'org.knowm.xchart:xchart:3.8.0'
+    implementation 'org.jsoup:jsoup:1.14.3'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
@@ -419,6 +420,7 @@ task resetDB {
     doLast {
         try {
             println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
+            project.delete(files("${projectDir}/db"))
             copy {
                 from "${resetDir}/"
                 into "${projectDir}/db/"
@@ -439,6 +441,7 @@ task pushDB {
     doLast {
         try {
             println("Pushing DB: copying DB from ${projectDir} into `${tempDir}`/db/`")
+            project.delete(files("${tempDir}/db"))
             copy {
                 from "${projectDir}/db/"
                 into "${tempDir}/db/"

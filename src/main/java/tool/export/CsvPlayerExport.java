@@ -149,7 +149,7 @@ public class CsvPlayerExport {
 						"" + curPlayer.getAlter(),
 						"" + curPlayer.getAgeDays(),
 						"" + curPlayer.getTSI(),
-						"" + (int)(curPlayer.getGehalt() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
+						"" + (int)(curPlayer.getSalary() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
 						"" + curPlayer.getCards(),
 						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
 						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks()>9 ? "∞" : curPlayer.getInjuryWeeks()),
@@ -160,11 +160,11 @@ public class CsvPlayerExport {
 						"" + PlayerHonesty.toString(curPlayer.getAnsehen()),
 						//
 						"" + PlayerSpeciality.toString(curPlayer.getPlayerSpecialty()),
-						"" + curPlayer.getErfahrung(),
-						"" + curPlayer.getFuehrung(),
+						"" + curPlayer.getExperience(),
+						"" + curPlayer.getLeadership(),
 						"" + curPlayer.getForm(),
 						// ls.player.skill_short
-						"" + curPlayer.getKondition(),
+						"" + curPlayer.getStamina(),
 						"" + (curPlayer.getLoyalty()),
 						df3.format(curPlayer.getGKskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.KEEPER)),
 						df3.format(curPlayer.getDEFskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.DEFENDING)),

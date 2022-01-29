@@ -42,7 +42,7 @@ public class PenaltyTaker {
 	}
 
 	public double getExperience() {
-		return ((double) this.player.getErfahrung())
+		return ((double) this.player.getExperience())
 				+ this.player.getSub4Skill(PlayerSkill.EXPERIENCE);
 	}
 }

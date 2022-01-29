@@ -13,7 +13,7 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
-	private SpielerAnalyseMainPanel spielerAnalyseMainPanel;
+	private PlayerAnalyseMainPanel playerAnalyseMainPanel;
 	private PlayerComparePanel playerComparePanel;
 	private boolean initialized = false;
 
@@ -48,10 +48,10 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 		return tabbedPane;
 	}
 
-	private SpielerAnalyseMainPanel getSpielerAnalyseMainPanel() {
-		if (spielerAnalyseMainPanel == null)
-			spielerAnalyseMainPanel = new SpielerAnalyseMainPanel();
-		return spielerAnalyseMainPanel;
+	private PlayerAnalyseMainPanel getSpielerAnalyseMainPanel() {
+		if (playerAnalyseMainPanel == null)
+			playerAnalyseMainPanel = new PlayerAnalyseMainPanel();
+		return playerAnalyseMainPanel;
 	}
 
 	private PlayerComparePanel getPlayerComparePanel() {

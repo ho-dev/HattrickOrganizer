@@ -454,19 +454,19 @@ public class Player
 		setNickName(m_Player.getNickName());
 		setLastName(m_Player.getLastName());
 		setAge(m_Player.getAlter());
-		setWages(m_Player.getGehalt());
+		setWages(m_Player.getSalary());
 		setTSI(m_Player.getTSI());
-		setNationality(m_Player.getNationalitaet());
-		setLeadership(m_Player.getFuehrung());
-		setGroup(m_Player.getTeamInfoSmilie());
+		setNationality(m_Player.getNationalityAsInt());
+		setLeadership(m_Player.getLeadership());
+		setGroup(m_Player.getTeamGroup());
 		setSpeciality(m_Player.getPlayerSpecialty());
 	}
 	
 	public void setOldSkillValues()
 	{
-		setOldExperience(m_Player.getErfahrung());
+		setOldExperience(m_Player.getExperience());
 		setOldForm(m_Player.getForm());
-		setOldStamina(m_Player.getKondition());
+		setOldStamina(m_Player.getStamina());
 		setOldKeeping(m_Player.getGKskill());
 		setOldDefending(m_Player.getDEFskill());
 		setOldPlaymaking(m_Player.getPMskill());
@@ -497,9 +497,9 @@ public class Player
 	}
 	public void setNewSkillValues()
 	{
-		setExperience(m_Player.getErfahrung());
+		setExperience(m_Player.getExperience());
 		setForm(m_Player.getForm());
-		setStamina(m_Player.getKondition());
+		setStamina(m_Player.getStamina());
 		setKeeping(m_Player.getGKskill());
 		setDefending(m_Player.getDEFskill());
 		setPlaymaking(m_Player.getPMskill());

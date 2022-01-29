@@ -22,10 +22,7 @@ import core.util.HOLogger;
 import module.lineup.Lineup;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Timestamp;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -400,10 +397,10 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode("" + playerData.getForm()));
 					ele = doc.createElement("Kondition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getKondition()));
+					ele.appendChild(doc.createTextNode("" + playerData.getStamina()));
 					ele = doc.createElement("Erfahrung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getErfahrung()));
+					ele.appendChild(doc.createTextNode("" + playerData.getExperience()));
 					ele = doc.createElement("Torwart");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getGKskill()));

@@ -26,7 +26,7 @@ public class GroupTeamFactory {
 
     private static final Icon GREYED_ICON = ImageUtilities.getSvgIcon(HOIconName.GREYED_OUT, DEFAULT_SIZE, DEFAULT_SIZE);
 
-    public static final String[] TEAMSMILIES = { "", "A-Team","B-Team", "C-Team", "D-Team", "E-Team", "F-Team" };
+    public static final String[] TEAMS_GROUPS = { "", "A-Team","B-Team", "C-Team", "D-Team", "E-Team", "F-Team" };
     public static final String NO_TEAM = "No-Team";
 
     static {

@@ -62,7 +62,7 @@ public class PluginIfaUtils {
 			if (time != null && time.getTime() > 100) {
 				break;
 			}
-			new DownloadDialog(UserManager.instance().getCurrentUser().isNtTeam());
+			DownloadDialog.instance();
 		} while (retry && !(retry = false));
 
 		//JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());

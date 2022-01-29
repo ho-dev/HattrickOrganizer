@@ -1,9 +1,6 @@
 package core.gui.theme.ho;
 
-import core.gui.theme.HOBooleanName;
-import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.Schema;
+import core.gui.theme.*;
 import core.util.HOLogger;
 import javax.swing.*;
 import java.awt.*;
@@ -263,6 +260,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put("gray", Color.GRAY);
 		put("green", Color.GREEN);
 		put("yellow", Color.YELLOW);
+		put("red", Color.RED);
+		put("blue", Color.BLUE);
+		put("orange", Color.ORANGE);
 		put("dark_gray", Color.DARK_GRAY);
 		put("light_gray", Color.LIGHT_GRAY);
 		put("lightGreen", new Color(220, 255, 220));
@@ -277,8 +277,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 	 */
 	private void initColors() {
 		// basic color;
-		put(RED, new Color(255, 0, 0));
-		put(BLUE, new Color(0, 0, 255));
+		put(RED, "red");
+		put(BLUE, "blue");
+		put(GREEN, "green");
+		put(YELLOW, "yellow");
+		put(ORANGE, "orange");
 
 
 		put(PANEL_BG, new Color(214,217,223));
@@ -488,6 +491,9 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(HOColorName.FG_RED_CARD, new Color(200, 20, 20));
 		put(HOColorName.INJURY, new Color(255, 0, 0));
 		put(HOColorName.PLASTER, new Color(247, 195, 176));
+
+		//players details
+		put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, Color.BLACK);
 
 		// Promotion
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));

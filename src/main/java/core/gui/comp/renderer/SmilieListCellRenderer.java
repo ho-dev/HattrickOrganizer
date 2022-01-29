@@ -1,11 +1,9 @@
 package core.gui.comp.renderer;
 
-import com.github.weisj.darklaf.icons.IconLoader;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.*;
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.Map;
 
 import static core.gui.theme.HOIconName.SMILEYS;
 
@@ -34,7 +32,7 @@ public final class SmilieListCellRenderer implements javax.swing.ListCellRendere
                 // smiley icon
                 m_clEntry.setIcon(ImageUtilities.getSmileyIcon(obj.toString()));
                 return m_clEntry.getComponent(isSelected);
-            } else if (Arrays.stream(GroupTeamFactory.TEAMSMILIES).anyMatch(obj::equals)) {
+            } else if (Arrays.stream(GroupTeamFactory.TEAMS_GROUPS).anyMatch(obj::equals)) {
                 // jersey icon
                 m_clEntry.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(obj.toString()));
                 return m_clEntry.getComponent(isSelected);
