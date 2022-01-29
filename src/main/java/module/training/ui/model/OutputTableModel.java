@@ -13,6 +13,7 @@ import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
+import java.time.Instant;
 import java.util.*;
 
 import javax.swing.*;
@@ -114,8 +115,9 @@ public class OutputTableModel extends AbstractTableModel {
     public Object getToolTipAt(int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
             return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
-        } else
+        } else {
             return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
+        }
     }
 
     /*
@@ -151,8 +153,8 @@ public class OutputTableModel extends AbstractTableModel {
      */
     public void fillWithData() {
         this.data = new ArrayList<>();
-        for ( var p : HOVerwaltung.instance().getModel().getCurrentPlayers()){
-            this.data.add(new FutureTrainingManager(p, this.model.getFutureTrainings()));
+        for (var player : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
+            this.data.add(new FutureTrainingManager(player, this.model.getFutureTrainings()));
         }
         fireTableDataChanged();
     }
@@ -199,7 +201,10 @@ public class OutputTableModel extends AbstractTableModel {
     }
 
     private TrainingPriorityCell createBestPositionCell(Player player) {
-        return new TrainingPriorityCell(player, HattrickDate.fromInstant( model.getFutureTrainings().get(0).getTrainingDate()));
+        HattrickDate firstTrainingDate = model.getFutureTrainings().isEmpty() ?
+                HattrickDate.fromInstant(Instant.now()) :
+                HattrickDate.fromInstant(model.getFutureTrainings().get(0).getTrainingDate());
+        return new TrainingPriorityCell(player, firstTrainingDate);
     }
 
 }

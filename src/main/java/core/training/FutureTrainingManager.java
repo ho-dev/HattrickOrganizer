@@ -6,6 +6,7 @@ import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.util.HOLogger;
 import core.util.HelperWrapper;
 import module.training.Skills;
 import java.util.*;
@@ -20,6 +21,17 @@ public class FutureTrainingManager {
 
 	/** Number of skill ups with maximum training */
 	public double[] finalSkill = new double[8];
+
+	private static final int[] SKILL_INDEX = {
+			PlayerSkill.KEEPER,
+			PlayerSkill.PLAYMAKING,
+			PlayerSkill.PASSING,
+			PlayerSkill.WINGER,
+			PlayerSkill.DEFENDING,
+			PlayerSkill.SCORING,
+			PlayerSkill.SET_PIECES,
+			PlayerSkill.STAMINA
+	};
 
 	/** Active player */
 	private Player player;
@@ -41,111 +53,109 @@ public class FutureTrainingManager {
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
-	private static int[] skillIndex = {
-			PlayerSkill.KEEPER,
-			PlayerSkill.PLAYMAKING,
-			PlayerSkill.PASSING,
-			PlayerSkill.WINGER,
-			PlayerSkill.DEFENDING,
-			PlayerSkill.SCORING,
-			PlayerSkill.SET_PIECES,
-			PlayerSkill.STAMINA
-	};
-
 	public FuturePlayer previewPlayer(int numberOfWeeks) {
 
 		this.futureSkillups = new ArrayList<>();
 				
-		for ( int i=0; i<8; i++){
+		for (int i=0; i<8; i++) {
 			// Sets the actual training levels
-			actual[i] = getOffset(skillIndex[i]);
+			actual[i] = getOffset(SKILL_INDEX[i]);
 			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
-			finalSkill[i] = Skills.getSkillValue(this.player,skillIndex[i]);
+			finalSkill[i] = Skills.getSkillValue(this.player, SKILL_INDEX[i]);
 		}
 
 		trainingSpeed = 0;
 		weeksPassed = 0;
-		int position = HelperWrapper.instance().getPosition(player.getIdealPosition());
+
 		var trainingPerPlayer = new TrainingPerPlayer(player);
-		// Iterate thru all the future training weeks
-		for (int week = 1; week <= numberOfWeeks; week++) {
 
-			// process skill drops
-			int age = this.player.getAlter() + (this.player.getAgeDays() + week*7)/112;
-			for ( int i=0; i<8; i++){
-				finalSub[i] -= SkillDrops.instance().getSkillDrop((int)finalSkill[i], age, skillIndex[i])/100;
-			}
+		if (this.futureTrainings.size() >= numberOfWeeks) {
+			// Iterate through all the future training weeks
+			for (int week = 1; week <= numberOfWeeks; week++) {
 
-			double trainingSpeed=0;
-			weeksPassed++;
-			TrainingPerWeek tw = this.futureTrainings.get(week-1);
-			int trType = tw.getTrainingType();
-			TrainingWeekPlayer tp = new TrainingWeekPlayer(player);
+				// process skill drops
+				int ageInDays = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
+				for (int i = 0; i < SKILL_INDEX.length; i++) {
+					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInDays, SKILL_INDEX[i]) / 100;
+				}
 
-			WeeklyTrainingType wt = WeeklyTrainingType.instance(trType);
-			if (wt != null) {
+				double trainingSpeed = 0;
+				weeksPassed++;
 
-				var trainingPrio = tp.getFutureTrainingPrio(wt, tw.getTrainingDate());
+				TrainingPerWeek trainingPerWeek = this.futureTrainings.get(week - 1);
+				int trainingType = trainingPerWeek.getTrainingType();
+				final WeeklyTrainingType weeklyTrainingType = WeeklyTrainingType.instance(trainingType);
 
-				if ( trainingPrio != null ) {
-					switch (trainingPrio) {
-						case FULL_TRAINING:
-							tp.addFullTrainingMinutes(90);
-							tp.addBonusTrainingMinutes(90);
-							trainingSpeed = 1;
-							break;
-						case PARTIAL_TRAINING:
-							if ( wt.getTrainingType() == TrainingType.SET_PIECES){
-								tp.addFullTrainingMinutes(90);
+				final TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(player);
+
+				if (weeklyTrainingType != null) {
+
+					var trainingPriority = trainingWeekPlayer.getFutureTrainingPrio(weeklyTrainingType, trainingPerWeek.getTrainingDate());
+
+					if (trainingPriority != null) {
+						switch (trainingPriority) {
+							case FULL_TRAINING:
+								trainingWeekPlayer.addFullTrainingMinutes(90);
+								trainingWeekPlayer.addBonusTrainingMinutes(90);
 								trainingSpeed = 1;
-							}
-							else {
-								tp.addPartlyTrainingMinutes(90);
-								trainingSpeed = 1.0 / wt.getPrimaryTrainingSkillPartlyBaseLengthRate();
-							}
-							break;
-						case OSMOSIS_TRAINING:
-							tp.addOsmosisTrainingMinutes(90);
-							trainingSpeed += 1.0 / wt.getPrimaryTrainingSkillOsmosisBaseLengthRate();
-							break;
-						default:
-							break;
-					}
-					if (this.trainingSpeed < trainingSpeed) {
-						this.trainingSpeed = trainingSpeed;
-					}
+								break;
+							case PARTIAL_TRAINING:
+								if (weeklyTrainingType.getTrainingType() == TrainingType.SET_PIECES) {
+									trainingWeekPlayer.addFullTrainingMinutes(90);
+									trainingSpeed = 1;
+								} else {
+									trainingWeekPlayer.addPartlyTrainingMinutes(90);
+									trainingSpeed = 1.0 / weeklyTrainingType.getPrimaryTrainingSkillPartlyBaseLengthRate();
+								}
+								break;
+							case OSMOSIS_TRAINING:
+								trainingWeekPlayer.addOsmosisTrainingMinutes(90);
+								trainingSpeed += 1.0 / weeklyTrainingType.getPrimaryTrainingSkillOsmosisBaseLengthRate();
+								break;
+							default:
+								break;
+						}
+						if (this.trainingSpeed < trainingSpeed) {
+							this.trainingSpeed = trainingSpeed;
+						}
 
-					trainingPerPlayer.setTrainingPair(new TrainingPoints(wt,tp));
-					trainingPerPlayer.setTrainingWeek(tw);
-					int pos = getSkillPosition(wt.getPrimaryTrainingSkill());
-					finalSub[pos]+= wt.calculateSkillIncreaseOfTrainingWeek((int)finalSkill[pos], trainingPerPlayer);
-					pos = getSkillPosition(wt.getSecondaryTrainingSkill());
-					if ( pos != -1 ){
-						finalSub[pos]+= wt.calculateSkillIncreaseOfTrainingWeek((int)finalSkill[pos], trainingPerPlayer);
-					}
+						trainingPerPlayer.setTrainingPair(new TrainingPoints(weeklyTrainingType, trainingWeekPlayer));
+						trainingPerPlayer.setTrainingWeek(trainingPerWeek);
+						int pos = getSkillPosition(weeklyTrainingType.getPrimaryTrainingSkill());
+						finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
+						pos = getSkillPosition(weeklyTrainingType.getSecondaryTrainingSkill());
+						if (pos != -1) {
+							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
+						}
 
-					for (int i = 0; i < 8; i++) {
-						int change = checkSkillChange(i);
-						if (change != 0) {
-							if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
-							var trainingDate = tw.getTrainingDate();
-							var hattrickDate = HattrickDate.fromInstant(trainingDate);
-							PlayerSkillChange su = new PlayerSkillChange();
-							su.setHtSeason(hattrickDate.getLocalSeason());
-							su.setHtWeek(hattrickDate.getWeek());
-							su.setType(skillIndex[i]);
-							su.setValue(finalSkill[i]);
-							su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-							su.setDate(Date.from(trainingDate));
-							su.setAge(player.getAgeWithDaysAsString(su.getDate()));
-							su.setChange(change);
-							futureSkillups.add(su);
+						for (int i = 0; i < SKILL_INDEX.length; i++) {
+							int change = checkSkillChange(i);
+							if (change != 0) {
+								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
+								var trainingDate = trainingPerWeek.getTrainingDate();
+								var hattrickDate = HattrickDate.fromInstant(trainingDate);
+								PlayerSkillChange su = new PlayerSkillChange();
+								su.setHtSeason(hattrickDate.getLocalSeason());
+								su.setHtWeek(hattrickDate.getWeek());
+								su.setType(SKILL_INDEX[i]);
+								su.setValue(finalSkill[i]);
+								su.setTrainType(ISkillChange.SKILLUP_FUTURE);
+								su.setDate(Date.from(trainingDate));
+								su.setAge(player.getAgeWithDaysAsString(su.getDate()));
+								su.setChange(change);
+								futureSkillups.add(su);
+							}
 						}
 					}
 				}
 			}
+		} else {
+			HOLogger.instance().warning(FutureTrainingManager.class, "training weeks computed: "
+					+ futureTrainings.size() + " not matching number of weeks: " + numberOfWeeks
+			);
 		}
+
 		FuturePlayer fp = new FuturePlayer();
 		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
 		fp.setCross(getFinalValue(PlayerSkill.WINGER));
