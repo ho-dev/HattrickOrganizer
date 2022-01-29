@@ -249,7 +249,7 @@ public final class ThemeManager {
 
 		for (var avatar:missingAvatars){
 			HOLogger.instance().info(this.getClass(), "Donwloading player's avatar: %s/%s".formatted(i, iMax));
-			DownloadDialog.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
+			HOMainFrame.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try{
 				avatar.generateAvatar(playerAvatarPath);
 				}
