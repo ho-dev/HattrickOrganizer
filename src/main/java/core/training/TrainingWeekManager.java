@@ -55,10 +55,10 @@ public class TrainingWeekManager {
 		cl_NextTrainingDate = null;
 	}
 
-	public static TrainingPerWeek getNextWeekTraining(){
+	public static TrainingPerWeek getNextWeekTraining() {
 
 		var nextTrainingDate = getNextTrainingDate();
-		if ( nextTrainingDate != null) {
+		if (nextTrainingDate != null) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
 			String refDate = formatter.format(nextTrainingDate);
 			String sql = String.format("""
@@ -72,7 +72,7 @@ public class TrainingWeekManager {
 					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
 					WHERE XTRADATA.TRAININGDATE > '%s'""", refDate);
 
-
+			HOLogger.instance().debug(TrainingWeekManager.class, "Next week training date: " + nextTrainingDate);
 			int trainType, trainIntensity, trainStaminaPart, coachLevel, trainingAssistantLevel;
 			Instant trainingDate;
 
@@ -80,16 +80,16 @@ public class TrainingWeekManager {
 
 				final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
 				final ResultSet rs = ijdbca.executeQuery(sql);
-				if ( rs != null) {
+				if (rs != null) {
 					if (!rs.last()) {
-						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining(): empty result set");
 						return null;
 					}
 
 					int numRows = rs.getRow();
 
 					if (numRows != 1) {
-						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining()");
+						HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining(): numRows: " + numRows);
 						return null;
 					}
 

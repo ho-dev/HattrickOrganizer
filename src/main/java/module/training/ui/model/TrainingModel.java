@@ -9,6 +9,7 @@ import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.training.WeeklyTrainingType;
+import core.util.HOLogger;
 import core.util.HTDatetime;
 import module.training.PastTrainingManager;
 
@@ -66,11 +67,11 @@ public class TrainingModel implements PropertyChangeListener {
 			var _futureTrainings = DBManager.instance().getFutureTrainingsVector();
 
 			// remove old entries and add new to make sure the vector size match user preference settings
-			_futureTrainings = adjustFutureTrainingsVector(_futureTrainings, UserParameter.instance().futureWeeks);
+			List<TrainingPerWeek> adjustedFutureTrainings = adjustFutureTrainingsVector(_futureTrainings, UserParameter.instance().futureWeeks);
 
 			DBManager.instance().clearFutureTrainingsTable();
-			DBManager.instance().saveFutureTrainings(_futureTrainings);
-			futureTrainings = _futureTrainings;
+			DBManager.instance().saveFutureTrainings(adjustedFutureTrainings);
+			futureTrainings = adjustedFutureTrainings;
 		}
 		return futureTrainings;
 	}
@@ -172,7 +173,9 @@ public class TrainingModel implements PropertyChangeListener {
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
 		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
 		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
-		if ( previousTraining != null) {
+		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
+
+		if (previousTraining != null) {
 			HTDatetime oTrainingDate = new HTDatetime(previousTraining.getTrainingDate());
 			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 
@@ -204,6 +207,5 @@ public class TrainingModel implements PropertyChangeListener {
 			}
 		}
 		return newfutureTrainings;
-
 	}
 }
