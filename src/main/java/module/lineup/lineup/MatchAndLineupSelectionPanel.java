@@ -370,7 +370,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         try {
             CursorToolkit.startWaitCursor(this);
-            assert m_clSelectedMatch != null : "Cann't push a lineup if selected game is null !";
+            assert m_clSelectedMatch != null : "Can't push a lineup if selected game is null !";
             result = OnlineWorker.uploadMatchOrder(m_clSelectedMatch.getMatchID(), m_clSelectedMatch.getMatchType(), lineup);
         }
         finally {
