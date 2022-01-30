@@ -18,7 +18,7 @@ public class HTDatetimeBase implements PropertyChangeListener {
     private static final LocalDate cl_HT_Birthdate = LocalDate.of(1997, 9, 22);
 
     // This is a bit unclear from HT side but latest discussion suggest that HTweeks are calculated as if ORIGIN_HT_DATE happened
-    // at different time accross the world, i.e. no timezone attached
+    // at different time across the world, i.e. no timezone attached
     //private static ZonedDateTime ORIGIN_HT_DATE = ZonedDateTime.of(1997, 9, 22, 0, 0, 0, 0, m_HTzoneID);
 
     private static final ZoneId cl_HTzoneID = ZoneId.of("Europe/Stockholm");
@@ -33,9 +33,15 @@ public class HTDatetimeBase implements PropertyChangeListener {
     public HTDatetimeBase() {
         cl_UserSeasonOffset = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
         cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
-        if (cl_UserZoneID == null){
-            HOLogger.instance().error(getClass(), "ZoneID could not be identified, reverting to System defaults !");
+        if (cl_UserZoneID == null) {
+            HOLogger.instance().error(getClass(), "ZoneID could not be identified, reverting to System defaults: " + cl_UserSystemZoneID);
             cl_UserZoneID = cl_UserSystemZoneID;
+
+            // Reverting to HT timezine as a last resort.
+            if (cl_UserZoneID == null) {
+                HOLogger.instance().info(getClass(), "Reverting to HT default zone ID: " + cl_HTzoneID);
+                cl_UserZoneID = cl_HTzoneID;
+            }
         }
         support = new PropertyChangeSupport(this);
         HOVerwaltung.instance().addPropertyChangeListener(this);
