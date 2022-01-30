@@ -47,7 +47,7 @@ public class XMLAvatarsParser {
                 NodeList nlLayers;
                 int x, y, playerID;
                 String urlImage;
-                Pattern pattern = Pattern.compile("t[1-6]\\.png");
+                Pattern pattern = Pattern.compile("t[1-6]\\.png|injury\\.png");
 
                 while (i < players.getLength()) {
                     node = players.item(i);
