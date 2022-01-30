@@ -1,6 +1,12 @@
 
 # Changelist HO! 5.1
 
+## Some numbers:
+* 5 commits
+* 8 files changed, 51 insertions(+), 77 deletions(-)
+* Contributors:
+  * 5 wsbrenk
+
 ## Highlights
 - only bug fixes
 
@@ -28,19 +34,20 @@
 # Changelist HO! 5.0
 
 ## Some numbers:
-  - xxx commits
-  - xxx files changed (xxx additions and xxx deletions)
-  - xxx issues closed
-  - xx contributors
-
+* 430 commits
+* 687 files changed, 40472 insertions(+), 29906 deletions(-)
+* Contributors:
+  * 210 akasolace
+  * 199 wsbrenk
+  * 13 Sébastien Le Callonnec
+  * 5 MaSedlacek
+  * 1 Goran Stefanovic
 
 ## Highlights
   - complete makeover of the statistics module (#788)
   - improving consistency of dark themes
   - preview of new module youth academy (#367)
-
-
-
+  
 ## Detailed Changelog
 
 ### GUI
@@ -114,9 +121,7 @@
 ## Translations
   - HO! is currently available in xxx languages thanks to the work of xxx translators. The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl):
   - Translators contribution since the previous release (number of translated terms):
-
-
-
+  
 
 # Changelist HO! 4.1
 

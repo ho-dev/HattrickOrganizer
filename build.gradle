@@ -335,9 +335,6 @@ task pushmd(dependsOn: preparingBuild)  {
         def toConcatenate = files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md")
         toConcatenate.each { f -> changeLog << f.text }
 
-        // debug
-        println changeLog.getAbsolutePath();
-        println changeLog.text
     }
 
 }
