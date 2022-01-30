@@ -95,12 +95,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			RefreshManager.instance().doReInit();
 			setVisible(false);
 			dispose();
+			m_clDownloadDialog = null;
 			if (UserParameter.instance().updateCheck) {
 				UpdateController.check4update(false);
 			}
 		} else if (e.getSource().equals(m_jbAbort)) {
 			setVisible(false);
 			dispose();
+			m_clDownloadDialog = null;
 		} else if (e.getSource().equals(m_jbProxy)) {
 			new ProxyDialog(HOMainFrame.instance());
 		}
@@ -265,14 +267,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));
 		}
 
-//		addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowOpened(WindowEvent e) {
-//				HOLogger.instance().log(getClass(), "Request focus 1");
-//				boolean succ = m_jbDownload.requestFocusInWindow();
-//				HOLogger.instance().log(getClass(), "Request success 1: " + succ);
-//			}
-//		});
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				m_jbDownload.requestFocusInWindow();
+			}
+		});
 
 		setVisible(true);
 	}
