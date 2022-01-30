@@ -205,8 +205,6 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
     private void adoptLineup() {
         if (m_jcbLoadLineup.getSelectedItem() != null) {
-//            Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-//            lineup.clearLineup();
             lineupPanel.setAssistantGroupFilter(false);
             var team = (Team) m_jcbLoadLineup.getSelectedItem();
             int teamId;
