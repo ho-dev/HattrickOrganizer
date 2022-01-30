@@ -41,6 +41,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	// ~ Instance fields--/
 	private static DownloadDialog m_clDownloadDialog;
 	private static HOVerwaltung hov = HOVerwaltung.instance();
+	private static InfoPanel m_jpInfoPanel;
 	private JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
 	private JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
@@ -57,12 +58,28 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
 	private boolean isNtTeam;
 
-	public DownloadDialog() {
+
+	/**
+	 * Getter for the singleton HOMainFrame instance.
+	 */
+	public static DownloadDialog instance() {
+		if (m_clDownloadDialog == null) {
+			m_clDownloadDialog = new DownloadDialog();
+		}
+
+		return m_clDownloadDialog;
+	}
+
+	/**
+	 * Singleton
+	 */
+	private DownloadDialog() {
 		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), ModalityType.MODELESS);
 		this.isNtTeam = UserManager.instance().getCurrentUser().isNtTeam();
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 	}
+
 
 	@Override
 	public final void actionPerformed(ActionEvent e) {
@@ -187,6 +204,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			specialDownload.setSize(260, 280);
 			specialDownload.setLocation(260, 10);
 			getContentPane().add(specialDownload);
+;
 		}
 		else {
 			// isNtTeam
@@ -233,7 +251,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jbAbort.setLocation(380, 300);
 		getContentPane().add(m_jbAbort);
 
-		setSize(550, 380);
+		m_jpInfoPanel = new InfoPanel();
+		m_jpInfoPanel.setSize(510, 40);
+		m_jpInfoPanel.setLocation(10, 340);
+		getContentPane().add(m_jpInfoPanel);
+
+		setSize(530, 430);
 
 		final Dimension size = getToolkit().getScreenSize();
 
@@ -242,14 +265,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));
 		}
 
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowOpened(WindowEvent e) {
-				HOLogger.instance().log(getClass(), "Request focus 1");
-				boolean succ = m_jbDownload.requestFocusInWindow();
-				HOLogger.instance().log(getClass(), "Request success 1: " + succ);
-			}
-		});
+//		addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowOpened(WindowEvent e) {
+//				HOLogger.instance().log(getClass(), "Request focus 1");
+//				boolean succ = m_jbDownload.requestFocusInWindow();
+//				HOLogger.instance().log(getClass(), "Request success 1: " + succ);
+//			}
+//		});
 
 		setVisible(true);
 	}
@@ -343,6 +366,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		DBManager.instance().updateLatestData();
 		model.calcSubskills();
 	}
+
+	public void setWaitInformation( int progress){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), progress);}
+	public void resetInformation(){setInformation("",0);}
+	public void setInformation( String information) { setInformation(information,0);}
+	public void setInformation( String information, int progress){m_jpInfoPanel.setInformation(information, progress);}
+	public void setInformation( String information, Color color){m_jpInfoPanel.setInformation(information, color);}
 
 	private void startNtDownload() {
 		try {
