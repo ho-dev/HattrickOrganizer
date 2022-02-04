@@ -116,6 +116,16 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      * Set the player to be shown
      */
     public void setPlayer(Player player) {
+        if (player == null) {
+            if (HOMainFrame.isHOMainFrame_initialized()) {
+                player = HOMainFrame.instance().getSelectedPlayer();
+            }
+            else {
+                // at initialisation select first player to ensure clean display =====
+                player = m_playerOverviewTable.getSorter().getSpieler(0);
+            }
+        }
+
         m_clPlayer = player;
         if (m_clPlayer != null) {
             findComparisonPlayer();
@@ -813,9 +823,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
 
         add(panel, BorderLayout.CENTER);
-
-        // at initialisation select first player to ensure clean display =====
-        m_clPlayer = m_playerOverviewTable.getSorter().getSpieler(0);
     }
 
     private void initNormalLabel(int x, int y, GridBagConstraints constraints, GridBagLayout layout, JPanel panel, JLabel label) {

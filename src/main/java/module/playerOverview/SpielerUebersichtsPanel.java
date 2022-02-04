@@ -25,6 +25,11 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
 
+
+	public PlayerOverviewTable getPlayerOverviewTable() {
+		return playerOverviewTable;
+	}
+
 	/**
 	 * Creates a new SpielerUebersichtsPanel object. (Players view panel)
 	 */
