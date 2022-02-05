@@ -85,7 +85,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_clGastteam.
      */
-    public final java.lang.String getGastteam() {
+    public final java.lang.String getGuestTeamName() {
         return m_clGastteam;
     }
 
@@ -121,7 +121,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_clHeimteam.
      */
-    public final java.lang.String getHeimteam() {
+    public final java.lang.String getHomeTeamName() {
         return m_clHeimteam;
     }
 
@@ -157,7 +157,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_iMatchTyp.
      */
-    public final IMatchType getMatchTyp() {
+    public final IMatchType getMatchType() {
         return m_mtMatchTyp;
     }
 
