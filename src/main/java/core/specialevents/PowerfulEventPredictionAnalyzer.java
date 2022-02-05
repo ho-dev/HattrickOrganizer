@@ -65,7 +65,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         Player op = analyse.getOpponentPlayer(opponentScorer.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PDIM,
                 -.1, 10, -10,
-                p.getDEFskill() + p.getKondition() - op.getSCskill() - op.getKondition()
+                p.getDEFskill() + p.getStamina() - op.getSCskill() - op.getStamina()
         );
         if (se != null) {
             double goalP = analyse.getOpponentGoalProbability(opponentScorer);

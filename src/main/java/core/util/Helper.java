@@ -11,8 +11,7 @@ import core.model.misc.Basics;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
-import java.awt.Component;
-import java.awt.Window;
+import java.awt.*;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
@@ -446,5 +445,24 @@ public class Helper {
 	public static String getTranslation(String key, Object... messageArguments){
 		return 	core.model.HOVerwaltung.instance().getLanguageString(key, messageArguments);
 	}
+
+
+	public static Font getLabelFontAsBold(JLabel label){
+		Font f = label.getFont();
+		return getLabelFontAsBold(f);
+	}
+
+	public static Font getLabelFontAsBold(Font f){
+		return f.deriveFont(f.getStyle() | Font.BOLD);
+	}
+
+//	// bold
+//label.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+//
+//// unbold
+//label.setFont(f.deriveFont(f.getStyle() & ~Font.BOLD));
+//
+//// toggle bold
+//label.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
 
 }

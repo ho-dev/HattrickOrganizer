@@ -24,7 +24,7 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[64];
+		columns = new ColumnDescriptor[66];
 		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
 		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
 		columns[2] = new ColumnDescriptor("GelbeKarten", Types.INTEGER, false);
@@ -89,7 +89,8 @@ final class SpielerTable extends AbstractTable {
 		columns[61] = new ColumnDescriptor("LastMatchRating", Types.INTEGER, true);
 		columns[62] = new ColumnDescriptor("LastMatchId", Types.INTEGER, true);
 		columns[63] = new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true);
-
+		columns[64] = new ColumnDescriptor("ArrivalDate", Types.VARCHAR, true, 100);
+		columns[65] = new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true);
 	}
 
 	@Override
@@ -115,14 +116,14 @@ final class SpielerTable extends AbstractTable {
 
 		//insert vorbereiten
 		statement.append("INSERT INTO ").append(getTableName());
-		statement.append(" ( GelbeKarten , SpielerID , FirstName , NickName, LastName , Age , AgeDays , ");
+		statement.append(" ( GelbeKarten , SpielerID , ArrivalDate, FirstName , NickName, LastName , Age , AgeDays , ");
 		statement.append("Kondition , Form , Torwart , Verteidigung , Spielaufbau , Fluegel , ");
 		statement.append("Torschuss , Passpiel , Standards , SubTorwart , SubVerteidigung , ");
 		statement.append( "SubSpielaufbau , SubFluegel , SubTorschuss , SubPasspiel , SubStandards , ");
 		statement.append( "OffsetTorwart , OffsetVerteidigung , OffsetSpielaufbau , OffsetFluegel , ");
 		statement.append( "OffsetTorschuss , OffsetPasspiel , OffsetStandards , iSpezialitaet , ");
 		statement.append( "iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , ");
-		statement.append( "Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , ");
+		statement.append( "Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , GoalsCurrentTeam , ");
 		statement.append( "ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, ");
 		statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, ");
 		statement.append( "SubExperience, NationalTeamID, ");
@@ -131,12 +132,13 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getCards()).append(",");
 
 		statement.append(player.getPlayerID()).append(",");
+		statement.append("'").append(DBManager.insertEscapeSequences(player.getArrivalDate())).append("',");
 		statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
 		statement.append("'").append(DBManager.insertEscapeSequences(player.getNickName())).append("',");
 		statement.append("'").append(DBManager.insertEscapeSequences(player.getLastName())).append("',");
 		statement.append(player.getAlter()).append(",");
 		statement.append(player.getAgeDays()).append(",");
-		statement.append(player.getKondition()).append(",");
+		statement.append(player.getStamina()).append(",");
 		statement.append(player.getForm()).append(",");
 		statement.append(player.getGKskill()).append(",");
 		statement.append(player.getDEFskill()).append(",");
@@ -164,19 +166,20 @@ final class SpielerTable extends AbstractTable {
 		statement.append(player.getCharakter()).append(",");
 		statement.append(player.getAnsehen()).append(",");
 		statement.append(player.getAgressivitaet()).append(",");
-		statement.append(player.getFuehrung()).append(",");
-		statement.append(player.getErfahrung()).append(",");
-		statement.append(player.getGehalt()).append(",");
+		statement.append(player.getLeadership()).append(",");
+		statement.append(player.getExperience()).append(",");
+		statement.append(player.getSalary()).append(",");
 		statement.append(player.getBonus()).append(",");
-		statement.append(player.getNationalitaet()).append(",");
+		statement.append(player.getNationalityAsInt()).append(",");
 		statement.append(player.getSaveMarktwert()).append(",");
 		statement.append(player.getInjuryWeeks()).append(",");
 		statement.append(player.getToreFreund()).append(",");
-		statement.append(player.getToreLiga()).append(",");
-		statement.append(player.getTorePokal()).append(",");
-		statement.append(player.getToreGesamt()).append(",");
+		statement.append(player.getSeasonSeriesGoal()).append(",");
+		statement.append(player.getSeasonCupGoal()).append(",");
+		statement.append(player.getGoalsCurrentTeam()).append(",");
+		statement.append(player.getAllOfficialGoals()).append(",");
 		statement.append(player.getHattrick()).append(",");
-		statement.append(player.getBewertung()).append(",");
+		statement.append(player.getRating()).append(",");
 		statement.append(TrainerType.toInt(player.getTrainerTyp())).append(",");
 		statement.append(player.getTrainerSkill()).append(",");
 		statement.append(hrfId).append(",");
@@ -419,34 +422,6 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
-	Player getSpielerBeforeDate(Timestamp time, int spielerid) {
-		ResultSet rs;
-		Player player = null;
-		String sql;
-
-		if (time == null) {
-			return null;
-		}
-
-		//HOLogger.instance().log(getClass(),"Time : " + time + " : vor 14 Tage : " + time2 );
-		sql = "SELECT * from "+getTableName()+" WHERE Datum<'" + time + "' AND SpielerID=" + spielerid + " ORDER BY Datum DESC";
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					player = createObject(rs);
-
-					//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DBZugriff.getSpielerBeforeDate: Keine HRF mit dem Player vor dem Datum gefunden");
-		}
-
-		return player;
-	}
-
 	/**
 	 * Gibt einen Player zurück aus dem ersten HRF
 	 */
@@ -527,6 +502,7 @@ final class SpielerTable extends AbstractTable {
             player.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
 			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
 			player.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
+			player.setArrivalDate(DBManager.deleteEscapeSequences(rs.getString("ArrivalDate")));
             player.setAlter(rs.getInt("Age"));
             player.setAgeDays(rs.getInt("AgeDays"));
             player.setKondition(rs.getInt("Kondition"));
@@ -547,7 +523,7 @@ final class SpielerTable extends AbstractTable {
             player.setHomeGrown(rs.getBoolean("HomeGrown"));
             player.setFuehrung(rs.getInt("Fuehrung"));
             player.setGehalt(rs.getInt("Gehalt"));
-            player.setNationalitaet(rs.getInt("Land"));
+            player.setNationalityAsInt(rs.getInt("Land"));
             player.setTSI(rs.getInt("Marktwert"));
 
             //TSI, alles vorher durch 1000 teilen
@@ -574,8 +550,9 @@ final class SpielerTable extends AbstractTable {
             player.setToreFreund(rs.getInt("ToreFreund"));
             player.setToreLiga(rs.getInt("ToreLiga"));
             player.setTorePokal(rs.getInt("TorePokal"));
-            player.setToreGesamt(rs.getInt("ToreGesamt"));
+            player.setAllOfficialGoals(rs.getInt("ToreGesamt"));
             player.setHattrick(rs.getInt("Hattrick"));
+			player.setGoalsCurrentTeam(rs.getInt("GoalsCurrentTeam"));
             player.setBewertung(rs.getInt("Bewertung"));
             player.setTrainerTyp(TrainerType.fromInt(rs.getInt("TrainerTyp")));
             player.setTrainerSkill(rs.getInt("Trainer"));

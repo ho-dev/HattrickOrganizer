@@ -79,6 +79,7 @@ public class HO {
 		if (platform == OSUtils.OS.MAC) {
 			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			System.setProperty("apple.awt.showGroupBox", "true");
+			System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
 		}
 
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
@@ -188,7 +189,7 @@ public class HO {
 
 		// Set the currency from HRF
 		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
-		if (fxRate > -1) UserParameter.instance().faktorGeld = fxRate;
+		if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
 
 		// Upgrade database configuration
 		if (!DBManager.instance().isFirstStart()) {

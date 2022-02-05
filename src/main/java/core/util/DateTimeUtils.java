@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.zone.ZoneRules;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,19 @@ public class DateTimeUtils {
 
 		// Add current offset for time in default timezone (Europe/Stockholm), and parse as an Instant.
 		return Instant.parse(str + rules.getOffset(LocalDateTime.now()));
+	}
+
+  /**
+	 Format a datetime with HO! language interface
+	 */
+	public static String FormatLongDate(Timestamp ts) {
+
+		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
+
+		DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
+		FORMATTER.withLocale(locale);
+
+		return ts.toLocalDateTime().format(FORMATTER);
 	}
 
 	/**

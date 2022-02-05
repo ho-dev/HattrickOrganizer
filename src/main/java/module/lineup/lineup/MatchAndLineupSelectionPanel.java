@@ -11,6 +11,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.Ratings;
+import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.TrainerType;
@@ -370,7 +371,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         try {
             CursorToolkit.startWaitCursor(this);
-            assert m_clSelectedMatch != null : "Cann't push a lineup if selected game is null !";
+            assert m_clSelectedMatch != null : "Can't push a lineup if selected game is null !";
             result = OnlineWorker.uploadMatchOrder(m_clSelectedMatch.getMatchID(), m_clSelectedMatch.getMatchType(), lineup);
         }
         finally {
@@ -418,6 +419,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 DBManager.instance().updateMatchKurzInfo(m_clSelectedMatch);
                 refresh();
                 //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
+
+                // store lineup in database
+                var lineupTeam = new MatchLineupTeam( m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
+                        HOVerwaltung.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
+                lineupTeam.setLineup(lineup);
+                DBManager.instance().storeMatchLineupTeam(lineupTeam);
             }
             finally {
                 CursorToolkit.stopWaitCursor(this);

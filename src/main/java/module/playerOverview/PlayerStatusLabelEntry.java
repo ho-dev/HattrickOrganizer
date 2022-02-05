@@ -20,22 +20,28 @@ import java.awt.*;
  *     <li>On the right, injury details.</li>
  * </ul>
  */
-public class SpielerStatusLabelEntry extends DoubleLabelEntries {
+public class PlayerStatusLabelEntry extends DoubleLabelEntries {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Player player;
+    private Boolean m_isLarge;
 
 
-    public SpielerStatusLabelEntry() {
+    public PlayerStatusLabelEntry(Color colorBG, Boolean isLarge) {
         super();
+        m_isLarge = isLarge;
         ColorLabelEntry jlInjury = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-                ColorLabelEntry.BG_STANDARD,
+                colorBG,
                 SwingConstants.RIGHT);
         ColorLabelEntry warnings = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-                ColorLabelEntry.BG_STANDARD,
+                colorBG,
                 SwingConstants.LEFT);
         this.setLabels(warnings, jlInjury);
+    }
+
+    public PlayerStatusLabelEntry() {
+        this(ColorLabelEntry.BG_STANDARD, false);
     }
 
     public final void setPlayer(Player player) {
@@ -49,8 +55,8 @@ public class SpielerStatusLabelEntry extends DoubleLabelEntries {
 
     @Override
 	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof SpielerStatusLabelEntry) {
-            final SpielerStatusLabelEntry entry = (SpielerStatusLabelEntry) obj;
+        if (obj instanceof PlayerStatusLabelEntry) {
+            final PlayerStatusLabelEntry entry = (PlayerStatusLabelEntry) obj;
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {
                 if (entry.getPlayer().getInjuryWeeks() > getPlayer().getInjuryWeeks()) {
@@ -70,7 +76,7 @@ public class SpielerStatusLabelEntry extends DoubleLabelEntries {
 	public final void updateComponent() {
         if (player != null) {
             getLeft().clear();
-            getLeft().setIcon(new StatusIcon(player));
+            getLeft().setIcon(new StatusIcon(player, m_isLarge));
 
             if (player.getInjuryWeeks() == 0) {
                 getRight().setText("");

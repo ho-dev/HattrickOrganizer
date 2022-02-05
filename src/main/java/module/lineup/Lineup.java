@@ -82,31 +82,11 @@ public class Lineup{
 	MatchLineupPosition setPiecesTaker;
 
 	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
+		initPositionen553(); // reset all
 		for (var position : matchLineupPositions){
-			addPosition(position);
+			setPosition(position);
 		}
 		this.substitutions = substitutions;
-	}
-
-	public void addPosition(MatchLineupPosition position) {
-		if ( position.isFieldMatchRoleId()){
-			addPosition(this.m_vFieldPositions,position);
-		}
-		else if (position.isSubstitutesMatchRoleId() || position.isBackupsMatchRoleId()){
-			addPosition(this.m_vBenchPositions,position);
-		}
-		else if ( position.isPenaltyTakerMatchRoleId()){
-			addPosition(this.penaltyTakers,position);
-		}
-		else if ( position.getId() == IMatchRoleID.setPieces){
-			setSetPiecesTaker(position);
-		}
-		else if ( position.getId() == IMatchRoleID.captain){
-			setCaptain(position);
-		}
-		else if ( position.isReplacedMatchRoleId()){
-			addPosition(this.replacedPositions,position);
-		}
 	}
 
 	private void setCaptain(MatchLineupPosition position) {
@@ -484,7 +464,7 @@ public class Lineup{
 		if (players != null) {
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
-					value += player.getErfahrung();
+					value += player.getExperience();
 					if (captainsId > 0) {
 						if (captainsId == player.getPlayerID()) {
 							captain = player;
@@ -496,8 +476,8 @@ public class Lineup{
 			}
 		}
 		if (captain != null) {
-			value = ((value + captain.getErfahrung()) / 12)
-					* (1f - (float) (7 - captain.getFuehrung()) * 0.05f);
+			value = ((value + captain.getExperience()) / 12)
+					* (1f - (float) (7 - captain.getLeadership()) * 0.05f);
 		} else {
 			// HOLogger.instance().log(getClass(),
 			// "Can't calc average experience, captain not set.");
@@ -869,13 +849,25 @@ public class Lineup{
 		}
 	}
 
-	public final void setPosition(MatchLineupPosition pos)
+	public final void setPosition(MatchLineupPosition position)
 	{
-		if ( pos.isFieldMatchRoleId() ){
-			setPosition(m_vFieldPositions, pos);
+		if ( position.isFieldMatchRoleId()){
+			setPosition(this.m_vFieldPositions, position);
 		}
-		else{
-			setPosition(m_vBenchPositions, pos);
+		else if (position.isSubstitutesMatchRoleId() || position.isBackupsMatchRoleId()){
+			setPosition(this.m_vBenchPositions,position);
+		}
+		else if ( position.isPenaltyTakerMatchRoleId()){
+			setPosition(this.penaltyTakers,position);
+		}
+		else if ( position.getId() == IMatchRoleID.setPieces){
+			setSetPiecesTaker(position);
+		}
+		else if ( position.getId() == IMatchRoleID.captain){
+			setCaptain(position);
+		}
+		else if ( position.isReplacedMatchRoleId()){
+			setPosition(this.replacedPositions,position);
 		}
 	}
 
@@ -886,16 +878,6 @@ public class Lineup{
 				return;
 			}
 		}
-	}
-
-	private void addPosition(Vector<MatchLineupPosition> positions, MatchLineupPosition pos){
-		for ( var p: positions){
-			if ( p.getId() == pos.getId()) {
-				positions.remove(p);
-				break;
-			}
-		}
-		positions.add(pos);
 	}
 
 	/**
@@ -1510,46 +1492,22 @@ public class Lineup{
 	 * Initializes the 553 lineup
 	 */
 	private void initPositionen553() {
-		if (m_vFieldPositions != null) {
-			m_vFieldPositions.removeAllElements();
-		} else m_vFieldPositions = new Vector<>();
-		if (m_vBenchPositions != null) {
-			m_vBenchPositions.removeAllElements();
-		} else m_vBenchPositions = new Vector<>();
 
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.keeper, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.rightBack, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.rightCentralDefender, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.middleCentralDefender, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.leftCentralDefender, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.leftBack, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.rightWinger, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.rightInnerMidfield, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.centralInnerMidfield, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.leftInnerMidfield, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.leftWinger, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.rightForward, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.centralForward, 0, (byte) 0));
-		m_vFieldPositions.add(new MatchLineupPosition(IMatchRoleID.leftForward, 0, (byte) 0));
-
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substGK1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substCD1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substWB1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substIM1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substFW1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substWI1, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substXT1, 0, (byte) 0));
-
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substGK2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substCD2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substWB2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substIM2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substFW2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substWI2, 0, (byte) 0));
-		m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substXT2, 0, (byte) 0));
-
-		for (int i = 0; i < 10; i++) {
-			penaltyTakers.add(new MatchLineupPosition(IMatchRoleID.penaltyTaker1 + i, 0, (byte) 0));
+		m_vFieldPositions = new Vector<>();
+		for ( int i=IMatchRoleID.keeper; i<= IMatchRoleID.leftForward; i++) {
+			m_vFieldPositions.add(new MatchLineupPosition(i, 0, (byte)0 ));
+		}
+		m_vBenchPositions = new Vector<>();
+		for ( int i=IMatchRoleID.substGK1; i<= IMatchRoleID.substXT2; i++) {
+			m_vBenchPositions.add(new MatchLineupPosition(i, 0, (byte)0 ));
+		}
+		penaltyTakers = new Vector<>();
+		for (int i = IMatchRoleID.penaltyTaker1; i <= IMatchRoleID.penaltyTaker11; i++) {
+			penaltyTakers.add(new MatchLineupPosition( i, 0, (byte) 0));
+		}
+		replacedPositions = new Vector<>();
+		for (int i = IMatchRoleID.FirstPlayerReplaced; i <= IMatchRoleID.ThirdPlayerReplaced; i++) {
+			replacedPositions.add(new MatchLineupPosition( i, 0, (byte) 0));
 		}
 	}
 

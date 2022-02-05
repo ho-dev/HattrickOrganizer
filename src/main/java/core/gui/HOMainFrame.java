@@ -2,7 +2,6 @@ package core.gui;
 
 import core.HO;
 import core.db.DBManager;
-import core.db.user.UserManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
@@ -25,9 +24,7 @@ import core.option.db.DatabaseOptionsDialog;
 import core.util.*;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
-import module.lineup.assistant.LineupAssistantPanel;
 import module.matches.MatchesPanel;
-import module.nthrf.MainPanel;
 import module.playerOverview.SpielerUebersichtsPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
@@ -55,6 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class HOMainFrame extends JFrame implements Refreshable, ActionListener {
 
 	private static HOMainFrame m_clHOMainFrame;
+	private static boolean m_HOMainFrame_initialized=false;
 	private InfoPanel m_jpInfoPanel;
 	private final JMenuBar m_jmMenuBar = new JMenuBar();
 	// Top level Menu
@@ -105,6 +103,15 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// Menu color depending of version
 	private final Color c_beta = new Color(162, 201, 255);
 	private final Color c_dev = new Color(235, 170, 170);
+
+	public Player getSelectedPlayer() {
+		if(m_selectedPlayer == null) {
+			setActualSpieler(getSpielerUebersichtPanel().getPlayerOverviewTable().getSorter().getSpieler(0));
+		}
+		return m_selectedPlayer;
+	}
+
+	private Player m_selectedPlayer;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -193,10 +200,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 	}
 
-	public void removeApplicationClosingListener(ApplicationClosingListener listener) {
-		this.applicationClosingListener.remove(listener);
-	}
-
 	private void fireApplicationClosing() {
 		for (int i = this.applicationClosingListener.size() - 1; i >= 0; i--) {
 			try {
@@ -216,10 +219,17 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			m_clHOMainFrame = new HOMainFrame();
 		}
 
+		m_HOMainFrame_initialized = true;
 		return m_clHOMainFrame;
 	}
 
+	public static boolean isHOMainFrame_initialized(){
+		return m_HOMainFrame_initialized;
+	}
+
+
 	public void setActualSpieler(Player player) {
+		m_selectedPlayer = player;
 		getLineupPanel().setPlayer(player.getPlayerID());
 		getSpielerUebersichtPanel().setPlayer(player);
 	}
@@ -289,7 +299,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
 		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-				new DownloadDialog(UserManager.instance().getCurrentUser().isNtTeam());
+				DownloadDialog.instance();
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(databaseOptionsMenu)) {
@@ -595,7 +605,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
                 .getCurrencyRate();
 
 			if (faktorgeld > -1) {
-				UserParameter.instance().faktorGeld = faktorgeld;
+				UserParameter.instance().FXrate = faktorgeld;
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(HOMainFrame.class, "Currency changed failed! " + e.getMessage());

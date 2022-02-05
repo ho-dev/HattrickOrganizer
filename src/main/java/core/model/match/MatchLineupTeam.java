@@ -294,7 +294,7 @@ public class MatchLineupTeam {
 	}
 
 	public final void add2Lineup(MatchLineupPosition player) {
-		lineup.addPosition(player);
+		lineup.setPosition(player);
 	}
 
 	/**

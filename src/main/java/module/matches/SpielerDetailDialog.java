@@ -24,8 +24,8 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
-import module.playerOverview.SpielerDetailPanel;
-import module.playerOverview.SpielerStatusLabelEntry;
+import module.playerOverview.PlayerDetailsPanel;
+import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -181,7 +181,7 @@ final class SpielerDetailDialog extends JDialog {
 			ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
 	private final RatingTableEntry m_jpAktuellRating = new RatingTableEntry();
 	private final RatingTableEntry m_jpRating = new RatingTableEntry();
-	private final SpielerStatusLabelEntry m_jpStatus = new SpielerStatusLabelEntry();
+	private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry();
 
 	private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[] { m_jpWertTor,
 			m_jpWertInnenVert, m_jpWertInnenVertAus, m_jpWertInnenVertOff, m_jpWertAussenVert,
@@ -248,7 +248,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
-		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalitaet()));
+		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityAsInt()));
 
 		var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
 		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
@@ -266,15 +266,15 @@ final class SpielerDetailDialog extends JDialog {
 
 		m_jpGruppeSmilie.getLeft().setAlignment(SwingConstants.CENTER);
 		m_jpGruppeSmilie.getRight().setAlignment(SwingConstants.CENTER);
-		m_jpGruppeSmilie.getLeft().setIcon(ThemeManager.getIcon(m_clPlayer.getTeamInfoSmilie()));
+		m_jpGruppeSmilie.getLeft().setIcon(ThemeManager.getIcon(m_clPlayer.getTeamGroup()));
 		m_jpGruppeSmilie.getRight()
-				.setIcon(ThemeManager.getIcon(m_clPlayer.getManuellerSmilie()));
+				.setIcon(ThemeManager.getIcon(m_clPlayer.getInfoSmiley()));
 
 		m_jpStatus.setPlayer(m_clPlayer);
 
 		if (m_clVergleichsPlayer == null) {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
+			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
 			if (m_clPlayer.getBonus() > 0) {
@@ -288,7 +288,7 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpMartwert.getRight().clear();
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
 			m_jpForm2.clear();
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
 			m_jpKondition2.clear();
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
 					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
@@ -318,9 +318,9 @@ final class SpielerDetailDialog extends JDialog {
 					+ m_clPlayer.getSub4Skill(PlayerSkill.SCORING))
 					+ "");
 			m_jpTorschuss2.clear();
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()) + "");
 			m_jpErfahrung2.clear();
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
 			m_jpFuehrung2.clear();
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
 					+ " (" + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false) + ")");
@@ -329,9 +329,9 @@ final class SpielerDetailDialog extends JDialog {
 			}
 		} else {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getGehalt() / core.model.UserParameter.instance().faktorGeld);
-			int gehalt2 = (int) (m_clVergleichsPlayer.getGehalt() / core.model.UserParameter
-					.instance().faktorGeld);
+			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+			int gehalt2 = (int) (m_clVergleichsPlayer.getSalary() / core.model.UserParameter
+					.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
 			if (m_clPlayer.getBonus() > 0) {
@@ -348,9 +348,9 @@ final class SpielerDetailDialog extends JDialog {
 			m_jpForm2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isOld(),
 					true);
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getKondition()) + "");
-			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getKondition()
-					- m_clPlayer.getKondition(), !m_clVergleichsPlayer.isOld(), true);
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
+			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getStamina()
+					- m_clPlayer.getStamina(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
 					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
 					+ "");
@@ -407,12 +407,12 @@ final class SpielerDetailDialog extends JDialog {
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SCORING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.SCORING),
 					!m_clVergleichsPlayer.isOld(), true);
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getErfahrung()) + "");
-			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getErfahrung()
-					- m_clPlayer.getErfahrung(), !m_clPlayer.isOld(), true);
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getFuehrung()) + "");
-			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getFuehrung()
-					- m_clPlayer.getFuehrung(), !m_clVergleichsPlayer.isOld(), true);
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()) + "");
+			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getExperience()
+					- m_clPlayer.getExperience(), !m_clPlayer.isOld(), true);
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
+			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getLeadership()
+					- m_clPlayer.getLeadership(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer
 					.getIdealPosition())
 					+ " ("
@@ -424,9 +424,9 @@ final class SpielerDetailDialog extends JDialog {
 			}
 		}
 		m_jpToreFreund.setText(m_clPlayer.getToreFreund() + "");
-		m_jpToreLiga.setText(m_clPlayer.getToreLiga() + "");
-		m_jpTorePokal.setText(m_clPlayer.getTorePokal() + "");
-		m_jpToreGesamt.setText(m_clPlayer.getToreGesamt() + "");
+		m_jpToreLiga.setText(m_clPlayer.getSeasonSeriesGoal() + "");
+		m_jpTorePokal.setText(m_clPlayer.getSeasonCupGoal() + "");
+		m_jpToreGesamt.setText(m_clPlayer.getAllOfficialGoals() + "");
 		m_jpHattriks.setText(m_clPlayer.getHattrick() + "");
 		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
 		m_jpSpezialitaet.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getPlayerSpecialty()]));
@@ -477,7 +477,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 0;
 		constraints.gridwidth = 2;
 		component = m_jpName.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -493,7 +492,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 1;
 		constraints.gridwidth = 2;
 		component = m_jpAlter.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -509,7 +507,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 2;
 		constraints.gridwidth = 2;
 		component = m_jpNationalitaet.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -525,7 +522,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 3;
 		constraints.gridwidth = 2;
 		component = m_jpAufgestellt.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -542,7 +538,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 4;
 		constraints.gridwidth = 2;
 		component = m_jpAktuellRating.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -558,7 +553,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 5;
 		constraints.gridwidth = 2;
 		component = m_jpBestPos.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -571,7 +565,6 @@ final class SpielerDetailDialog extends JDialog {
 		panel.add(label);
 
 		component = m_jpGruppeSmilie.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		constraints.gridx = 5;
 		constraints.weightx = 1.0;
 		constraints.gridy = 0;
@@ -592,7 +585,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 1;
 		constraints.gridwidth = 2;
 		component = m_jpStatus.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -608,7 +600,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 2;
 		constraints.gridwidth = 2;
 		component = m_jpGehalt.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -624,7 +615,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 3;
 		constraints.gridwidth = 2;
 		component = m_jpMartwert.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -640,7 +630,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 4;
 		constraints.gridwidth = 2;
 		component = m_jpRating.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -910,7 +899,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 1;
 		constraints.gridwidth = 2;
 		component = m_jpSpezialitaet.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -926,7 +914,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 2;
 		constraints.gridwidth = 2;
 		component = m_jpAggressivitaet.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -942,7 +929,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 3;
 		constraints.gridwidth = 2;
 		component = m_jpAnsehen.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -958,7 +944,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 4;
 		constraints.gridwidth = 2;
 		component = m_jpCharakter.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -985,8 +970,7 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.weightx = 1.0;
 		constraints.gridy = 7;
 		constraints.gridwidth = 2;
-		component = m_jpToreFreund.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
+		component = m_jpToreFreund.getComponent(false);;
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -1002,7 +986,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 8;
 		constraints.gridwidth = 2;
 		component = m_jpToreLiga.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -1018,11 +1001,10 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 9;
 		constraints.gridwidth = 2;
 		component = m_jpTorePokal.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreGesamt"));
+		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.career_goals"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 10;
@@ -1033,8 +1015,7 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.weightx = 1.0;
 		constraints.gridy = 10;
 		constraints.gridwidth = 2;
-		component = m_jpToreGesamt.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
+		component = m_jpToreGesamt.getComponent(false);;
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -1050,7 +1031,6 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridy = 11;
 		constraints.gridwidth = 2;
 		component = m_jpHattriks.getComponent(false);
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -1311,7 +1291,6 @@ final class SpielerDetailDialog extends JDialog {
 			JPanel panel, JComponent component) {
 		setPosition(constraints, 13, y);
 		constraints.weightx = 1.0;
-		component.setPreferredSize(SpielerDetailPanel.COMPONENTENSIZE2);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 	}

@@ -34,6 +34,9 @@ public class DarculaDarkTheme extends DarkTheme {
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
+            ThemeManager.instance().put(HOColorName.GREEN, defaults.getColor("palette.green"));
+            ThemeManager.instance().put(HOColorName.YELLOW, defaults.getColor("palette.yelllow"));
+            ThemeManager.instance().put(HOColorName.ORANGE, defaults.getColor("palette.orange"));
 
             // Use defaults from LAF
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
@@ -142,6 +145,9 @@ public class DarculaDarkTheme extends DarkTheme {
 
             //players
             ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
+
+            //players details
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
 
             // League Details
             ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));

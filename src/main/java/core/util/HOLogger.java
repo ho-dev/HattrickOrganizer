@@ -141,11 +141,11 @@ public class HOLogger {
 			default -> " [Info]    ";
 		};
 
+		System.out.println(msg + ((caller != null) ? caller.getSimpleName() : "?") + ": " + text);
+
 		if (level < logLevel) {
 			return;
 		}
-
-		System.out.println(msg + ((caller != null) ? caller.getSimpleName() : "?") + ": " + text);
 
 		if (logWriter != null) {
 			try {

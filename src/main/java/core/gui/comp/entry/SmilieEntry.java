@@ -52,19 +52,19 @@ public class SmilieEntry extends DoubleLabelEntries {
                 int ergebnis = 0;
 
                 //Beide null -> Der ManuelleSmilie entscheidet
-                if (((entry.getPlayer().getTeamInfoSmilie() == null)
-                        || entry.getPlayer().getTeamInfoSmilie().equals(""))
-                        && ((getPlayer().getTeamInfoSmilie() == null)
-                        || getPlayer().getTeamInfoSmilie().equals(""))) {
-                } else if ((entry.getPlayer().getTeamInfoSmilie() == null)
-                        || entry.getPlayer().getTeamInfoSmilie().equals("")) {
+                if (((entry.getPlayer().getTeamGroup() == null)
+                        || entry.getPlayer().getTeamGroup().equals(""))
+                        && ((getPlayer().getTeamGroup() == null)
+                        || getPlayer().getTeamGroup().equals(""))) {
+                } else if ((entry.getPlayer().getTeamGroup() == null)
+                        || entry.getPlayer().getTeamGroup().equals("")) {
                     ergebnis = 1;
-                } else if ((getPlayer().getTeamInfoSmilie() == null)
-                        || getPlayer().getTeamInfoSmilie().equals("")) {
+                } else if ((getPlayer().getTeamGroup() == null)
+                        || getPlayer().getTeamGroup().equals("")) {
                     ergebnis = -1;
                 } else {
-                    ergebnis = entry.getPlayer().getTeamInfoSmilie().compareTo(getPlayer()
-                            .getTeamInfoSmilie());
+                    ergebnis = entry.getPlayer().getTeamGroup().compareTo(getPlayer()
+                            .getTeamGroup());
                 }
 
                 //Bei "Gleichstand" die Aufstellung beachten
@@ -99,14 +99,14 @@ public class SmilieEntry extends DoubleLabelEntries {
     @Override
 	public final void updateComponent() {
         if (player != null) {
-            if ((player.getTeamInfoSmilie() != null) && !player.getTeamInfoSmilie().equals("")) {
-                team.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(player.getTeamInfoSmilie()));
+            if ((player.getTeamGroup() != null) && !player.getTeamGroup().equals("")) {
+                team.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(player.getTeamGroup()));
             } else {
                 team.clear();
             }
 
-            if ((player.getManuellerSmilie() != null) && !player.getManuellerSmilie().equals("")) {
-                manuell.setIcon(ImageUtilities.getSmileyIcon(player.getManuellerSmilie()));
+            if ((player.getInfoSmiley() != null) && !player.getInfoSmiley().equals("")) {
+                manuell.setIcon(ImageUtilities.getSmileyIcon(player.getInfoSmiley()));
             } else {
                 manuell.clear();
             }

@@ -114,6 +114,17 @@ final class DBUpdater {
 			}
 		}
 
+		if (!columnExistsInTable("GoalsCurrentTeam", SpielerTable.TABLENAME)) {
+			try {
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN GoalsCurrentTeam INTEGER DEFAULT 0");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN ArrivalDate VARCHAR (100)");
+				HOLogger.instance().info(getClass(), "SPIELER table structure has been updated");
+			}
+			catch (Exception e) {
+				HOLogger.instance().error(getClass(), "Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
+			}
+		}
+
 		updateDBVersion(dbVersion, 600);
 	}
 
@@ -671,19 +682,21 @@ final class DBUpdater {
 			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update to " + version + " done. Updating DBVersion");
 				dbManager.saveUserParameter("DBVersion", version);
-			} else {
+			}
+			else {
 				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " done but this is a development version so DBVersion will remain unchanged");
 			}
-		} else if (version == DBVersion) {
+		}
+		else if (version == DBVersion) {
 			if (!HO.isDevelopment()) {
 				HOLogger.instance().info(DBUpdater.class, "Update complete, setting DBVersion to " + version);
 				dbManager.saveUserParameter("DBVersion", version);
 			} else {
 				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " complete but this is a development version so DBVersion will remain unchanged");
 			}
-		} else {
-			HOLogger.instance().error(DBUpdater.class,
-					"Error trying to set DB version to unidentified value:  " + version
+		}
+		else {
+			HOLogger.instance().error(DBUpdater.class, "Error trying to set DB version to unidentified value:  " + version
 							+ " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}

@@ -66,8 +66,11 @@ public class BackupHelper {
 	private static File[] getFilesToBackup(File dbDirectory) {
 		return dbDirectory.listFiles(file -> {
 			String name = file.getName();
-			return (name.endsWith(".script") || name.endsWith(".data")
-					|| name.endsWith(".backup") || name.endsWith(".properties"));
+			return (name.endsWith(".script") ||
+					name.endsWith(".data") ||
+					name.endsWith(".backup") ||
+					name.endsWith(".log") ||
+					name.endsWith(".properties"));
 		});
 	}
 
