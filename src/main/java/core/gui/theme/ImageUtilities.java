@@ -855,19 +855,25 @@ public class ImageUtilities {
 		return captainIcon;
 	}
 
+	public static Icon getStarIcon(Color fillColor) {
+		return getStarIcon(16, 16, fillColor);
+	}
+
 	public static Icon getStarIcon() {
 		return getStarIcon(16, 16);
 	}
 
 	public static Icon getStarIcon(int width, int height) {
+		return getStarIcon(width, height, getColor(HOColorName.PLAYER_STAR_COLOR));
+	}
 
-		String key = "star_" + width + "x" + height;
+	public static Icon getStarIcon(int width, int height, Color fillColor) {
+
+		String key = "star_" + width + "x" + height + "color" + fillColor.toString();
 
 		Icon starIcon = ThemeManager.getIcon(key);
 
 		if (starIcon == null) {
-
-			Color fillColor = getColor(HOColorName.PLAYER_STAR_COLOR);
 
 			Map<Object, Object> colorMap = Map.of("fillColor", fillColor);
 
