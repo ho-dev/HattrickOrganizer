@@ -27,6 +27,7 @@ public class TrainingManager implements PropertyChangeListener {
     private TrainingWeekManager recentTrainings;     						// trainings that took place (if any null otherwise) since last entry in Training table  => Created at initialization
 	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initialization
 
+	private Instant lastTrainingDate;
 
 	public static final boolean TRAINING_DEBUG = false;
 
@@ -34,7 +35,9 @@ public class TrainingManager implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		HOLogger.instance().debug(this.getClass(), "HOVerwaltung model changed => TrainingManager and TrainingWeekManager are reinitialized");
 		m_clInstance = null;
-		TrainingWeekManager.reset();
+		if (recentTrainings != null) {
+			recentTrainings.reset();
+		}
 	}
 
     /**
@@ -42,15 +45,15 @@ public class TrainingManager implements PropertyChangeListener {
      */
     private TrainingManager() {
 
-		if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
-			historicalTrainings=null;
-			nextWeekTraining=null;
-			recentTrainings=null;
+		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			historicalTrainings = null;
+			nextWeekTraining = null;
+			recentTrainings = null;
 			return;
 		}
 
     	// Load historical trainings from 'trainings' table
-		historicalTrainings =  DBManager.instance().getTrainingList();
+		historicalTrainings = DBManager.instance().getTrainingList();
 
 		// Create recent training history from other tables in database
 		if (!historicalTrainings.isEmpty()) {
@@ -66,7 +69,8 @@ public class TrainingManager implements PropertyChangeListener {
 			}
 		}
 		// Load next week training
-		nextWeekTraining = TrainingWeekManager.getNextWeekTraining();
+		nextWeekTraining = recentTrainings.getNextWeekTraining();
+		lastTrainingDate = recentTrainings.getLastUpdateDate();
 		HOVerwaltung.instance().addPropertyChangeListener(this);
     }
 
@@ -106,6 +110,10 @@ public class TrainingManager implements PropertyChangeListener {
 
 	public TrainingPerWeek getNextWeekTraining() {
 		return nextWeekTraining;
+	}
+
+	public Instant getLastTrainingDate() {
+		return lastTrainingDate;
 	}
 
 	public List<TrainingPerWeek> getHistoricalTrainings() {

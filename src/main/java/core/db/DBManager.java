@@ -43,6 +43,7 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -1536,14 +1537,12 @@ public class DBManager {
 				.getTrainingList(fromDate, toDate);
 	}
 
-	public void saveTraining(TrainingPerWeek training, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
-				.saveTraining(training, force);
+	public void saveTraining(TrainingPerWeek training, Instant lastTrainingDate, boolean force) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate, force);
 	}
 
-	public void saveTrainings(List<TrainingPerWeek> trainings, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME))
-				.saveTrainings(trainings, force);
+	public void saveTrainings(List<TrainingPerWeek> trainings, Instant lastTrainingDate, boolean force) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate, force);
 	}
 
 	// ------------------------------- FutureTrainingTable

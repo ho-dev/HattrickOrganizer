@@ -1,11 +1,15 @@
 package core.model;
 
 import core.db.DBManager;
+import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import core.util.Helper;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class XtraData  {
@@ -194,6 +198,19 @@ public class XtraData  {
         return m_TrainingDate;
     }
 
+    /**
+     * Returns the next training date as a {@link Instant}.
+     *
+     * <p>The training date is stored as a Timestamp with timezone CET/CEST (depending on DST).</p>
+     * @return Instant – Next training date.
+     */
+    public final Instant getNextTrainingDateAsInstant() {
+        if (m_TrainingDate != null) {
+            return DateTimeUtils.getCESTTimestampToInstant(m_TrainingDate);
+        }
+
+        return null;
+    }
 
     public Integer getCountryId() {
         return m_iCountryId;

@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.db.DBManager;
 import core.gui.RefreshManager;
 import core.model.enums.DBDataSource;
+import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
 import module.training.TrainingType;
@@ -76,10 +77,9 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
         tpw.setSource(DBDataSource.MANUAL);
         fireTableCellUpdated(iRow, iCol);
 
-        if(o_trainingType == TrainingType.PAST_TRAINING) {
-            DBManager.instance().saveTraining(tpw, true);
-        }
-        else{
+        if (o_trainingType == TrainingType.PAST_TRAINING) {
+            DBManager.instance().saveTraining(tpw, TrainingManager.instance().getLastTrainingDate(), true);
+        } else{
             ((FutureTrainingsTableModel)this).getTrainingModel().saveFutureTraining(tpw);
             RefreshManager.instance().doRefresh();
         }
