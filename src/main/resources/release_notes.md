@@ -35,6 +35,7 @@
 
 ### League
 * fix download of power rating (not only one team per match) (#1293)
+* download all matches of latest league match day (#1373)
   
 ### Youth
 * fix bug in potential calculation due to wrong isTop3 skill tagging (#1278)
