@@ -31,6 +31,7 @@
 * fix download xml parse errors (#1305)
 
 ### Training
+* fix NPE in training tab in America-based timezones (#1296)
 
 ### League
 * fix download of power rating (not only one team per match) (#1293)

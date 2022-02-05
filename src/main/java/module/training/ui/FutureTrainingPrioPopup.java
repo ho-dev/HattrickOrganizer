@@ -4,12 +4,14 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.training.FuturePlayerTraining;
 import core.training.HattrickDate;
+import core.util.HOLogger;
 import module.training.ui.model.TrainingModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Instant;
+import java.util.Collection;
 
 public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListener {
 
@@ -47,9 +49,15 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
         if (player == null) return;
 
         Instant from;
-        Instant to=null;   // forever
+        Instant to = null;   // forever
         var futureTrainings = model.getFutureTrainings();
-        if (cols == null ){
+
+        if (futureTrainings == null || futureTrainings.isEmpty()) {
+            HOLogger.instance().warning(FutureTrainingPrioPopup.class, "Empty future trainings.");
+            return;
+        }
+
+        if (cols == null) {
             from = futureTrainings.get(0).getTrainingDate();
         }
         else {

@@ -8,23 +8,27 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.zone.ZoneRules;
 import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class DateTimeUtils {
 
-	private static DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("Europe/Stockholm"));
-	private static Map<String, String> cl_availableZoneIds ;
+	public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
+
+	private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+	private static Map<String, String> cl_availableZoneIds;
 
 	/**
-	 * Utility class - private constructor enforces noninstantiability.
+	 * Utility class - private constructor enforces non-instantiability.
 	 */
 	private DateTimeUtils() {
 	}
 
-
-	public static Map<String, String>  getAvailableZoneIds(){
+	public static Map<String, String> getAvailableZoneIds() {
 
 		LocalDateTime localDateTime = LocalDateTime.now();
 
@@ -56,6 +60,22 @@ public class DateTimeUtils {
 	}
 
 	/**
+	 * Converts a {@link Timestamp}, presumably stored as CET/CEST in the database (Hattrick default),
+	 * and converts into an {@link Instant}.
+	 *
+	 * @param timestamp Timestamp to be converted to {@link Instant}.  The timestamp is presumed to be
+	 *                  in CET/CEST timezone (depending on daylight savings time).
+	 * @return Instant – Timestamp as an instant.
+	 */
+	public static Instant getCESTTimestampToInstant(final Timestamp timestamp) {
+		ZoneRules rules = DEFAULT_TIMEZONE.getRules();
+		String str = dateFormat.format(timestamp);
+
+		// Add current offset for time in default timezone (Europe/Stockholm), and parse as an Instant.
+		return Instant.parse(str + rules.getOffset(LocalDateTime.now()));
+	}
+
+  /**
 	 Format a datetime with HO! language interface
 	 */
 	public static String FormatLongDate(Timestamp ts) {
@@ -68,14 +88,12 @@ public class DateTimeUtils {
 		return ts.toLocalDateTime().format(FORMATTER);
 	}
 
-
 	/**
         converts a Date into a SQL timestamp
 	 */
 	public static String DateToSQLtimeStamp(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String res = "TIMESTAMP '" + sdf.format(date) + "'";
-		return res;
+		return "TIMESTAMP '" + sdf.format(date) + "'";
 	}
 
 	/**

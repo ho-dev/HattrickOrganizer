@@ -2,7 +2,6 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
-import core.training.TrainingWeekManager;
 import core.util.HTDatetime;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
@@ -16,10 +15,9 @@ import java.util.List;
 
 
 /**
- * This table is different than others because it does not hold data from XML/HRFs but is a mixed of computed data and data entered
+ * This table is different from others because it does not hold data from XML/HRFs but is a mixed of computed data and data entered
  * directly by Users. Hence, there is a method recalculateEntries() that will force refresh of entries.
  * This method will be called automatically after table creation and during upgrade to v5.0
- * TODO: decide whehter or not to expose that method to users
  */
 final class TrainingsTable extends AbstractTable {
 	final static String TABLENAME = "TRAINING";
@@ -45,14 +43,14 @@ final class TrainingsTable extends AbstractTable {
 	 * @param training training to be saved
 	 * @param force if true will replace the training if it exists, otherwise will do nothing
 	 */
-	void saveTraining(TrainingPerWeek training, boolean force) {
+	void saveTraining(TrainingPerWeek training, Instant lastTrainingDate, boolean force) {
 
 		if (training != null) {
 
 			HTDatetime trainingDateAsDTI = new HTDatetime(training.getTrainingDate());
 			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
 
-			if (trainingDateAsDTI.isAfter(TrainingWeekManager.getLastUpdateDate())){
+			if (trainingDateAsDTI.isAfter(lastTrainingDate)) {
 //				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
 				return;
 			}
@@ -89,7 +87,7 @@ final class TrainingsTable extends AbstractTable {
 			}
 
 			catch (Exception e) {
-			HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " +e);
+				HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " +e);
 			}
 		}
 	}
@@ -98,31 +96,49 @@ final class TrainingsTable extends AbstractTable {
 	/**
 	 * apply the function saveTraining() to all elements of the provided vector
 	 */
-	void saveTrainings(List<TrainingPerWeek> trainings, boolean force) {
-		for (var training:trainings){
-			saveTraining(training, force);
+	void saveTrainings(List<TrainingPerWeek> trainings, Instant lastTrainingDate, boolean force) {
+		for (var training:trainings) {
+			saveTraining(training, lastTrainingDate, force);
 		}
+	}
+
+	private TrainingPerWeek getTrainingPerWeek(ResultSet rs) throws SQLException {
+		Instant trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+		int trainingType = rs.getInt("TRAINING_TYPE");
+		int trainingIntensity = rs.getInt("TRAINING_INTENSITY");
+		int staminaShare = rs.getInt("STAMINA_SHARE");
+		int trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
+		int coachLevel = rs.getInt("COACH_LEVEL");
+		DBDataSource source = DBDataSource.getCode(rs.getInt("SOURCE"));
+
+		return new TrainingPerWeek(trainingDate,
+				trainingType,
+				trainingIntensity,
+				staminaShare,
+				trainingAssistantsLevel,
+				coachLevel,
+				source);
 	}
 
 	private boolean isTrainingDateInDB(String trainingDate){
 		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAINING_DATE = '%s' LIMIT 1", trainingDate);
 
 		try {
-			ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = adapter.executeQuery(sql);
 			if (rs != null) {
 				if (rs.next()) {
 					return true;
 				}
 			}
 		}
-		catch (SQLException throwables) {
-			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate);
+		catch (SQLException e) {
+			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate + ": " + e.getMessage());
 			return false;
 		}
 		return false;
 	}
 
-
+	// FIXME This method and the next one can be collapsed into one.
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
@@ -130,31 +146,15 @@ final class TrainingsTable extends AbstractTable {
 
 		try {
 			final ResultSet rs = adapter.executeQuery(statement);
-			TrainingPerWeek tpw;
-			Instant trainingDate;
-			Integer training_type, training_intensity, staminaShare, trainingAssistantsLevel, coachLevel;
-			DBDataSource source;
 
 			if (rs != null) {
 				rs.beforeFirst();
-
 				while (rs.next()) {
-					trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
-					training_type = rs.getInt("TRAINING_TYPE");
-					training_intensity = rs.getInt("TRAINING_INTENSITY");
-					staminaShare = rs.getInt("STAMINA_SHARE");
-					trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
-					coachLevel = rs.getInt("COACH_LEVEL");
-					source = DBDataSource.getCode(rs.getInt("SOURCE"));
-
-					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, source);
-
-					vTrainings.add(tpw);
+					vTrainings.add(getTrainingPerWeek(rs));
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+			HOLogger.instance().error(getClass(),"TrainingsTable.getTrainingList " + e.getMessage());
 		}
 
 		return vTrainings;
@@ -178,34 +178,17 @@ final class TrainingsTable extends AbstractTable {
 
 		try {
 			final ResultSet rs = adapter.executeQuery(statement.toString());
-			TrainingPerWeek tpw;
-			Instant trainingDate;
-			Integer training_type, training_intensity, staminaShare, trainingAssistantsLevel, coachLevel;
-			DBDataSource source;
 
 			if (rs != null) {
 				rs.beforeFirst();
-
 				while (rs.next()) {
-					trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
-					training_type = rs.getInt("TRAINING_TYPE");
-					training_intensity = rs.getInt("TRAINING_INTENSITY");
-					staminaShare = rs.getInt("STAMINA_SHARE");
-					trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
-					coachLevel = rs.getInt("COACH_LEVEL");
-					source = DBDataSource.getCode(rs.getInt("SOURCE"));
-
-					tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
-							coachLevel, source);
-
-					vTrainings.add(tpw);
+					vTrainings.add(getTrainingPerWeek(rs));
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTraining " + e);
+			HOLogger.instance().error(getClass(),"TrainingsTable.getTrainingList " + e.getMessage());
 		}
 
 		return vTrainings;
 	}
-
 }
