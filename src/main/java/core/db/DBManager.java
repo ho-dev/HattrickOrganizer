@@ -1951,6 +1951,16 @@ public class DBManager {
 	 * @param playerID the player ID
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID) {
+		return getPlayerMatchCBItems(playerID, false);
+	}
+
+	/**
+	 * Returns a list of PlayerMatchCBItems for given playerID
+	 *
+	 * @param playerID the player ID
+	 * @param officialOnly whether or not to select official game only
+	 */
+	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
 
 		if(playerID == -1) return new Vector<>();
 
@@ -1962,8 +1972,13 @@ public class DBManager {
 				INNER JOIN MATCHLINEUP ON (MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID AND MATCHLINEUPPLAYER.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
-				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0
-				ORDER BY MATCHDETAILS.SpielDatum DESC""";
+				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0""";
+
+		if(officialOnly){
+			sql += " AND MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.HATTRICK.getValue());
+		}
+
+		sql += " ORDER BY MATCHDETAILS.SpielDatum DESC";
 
 
 		// Get all data on the player
@@ -2001,7 +2016,7 @@ public class DBManager {
 				final Player player = getSpielerAtDate(playerID, filter);
 
 				// Matchdetails
-				final Matchdetails details = loadMatchDetails(item.getMatchTyp().getMatchTypeId(), item.getMatchID());
+				final Matchdetails details = loadMatchDetails(item.getMatchType().getMatchTypeId(), item.getMatchID());
 
 				// Stimmung und Selbstvertrauen
 				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));

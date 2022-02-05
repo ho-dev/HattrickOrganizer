@@ -338,8 +338,8 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchTyp().getIconArrayIndex()]),
-                        spielerCBItem.getMatchTyp().getMatchTypeId(),
+                return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchType().getIconArrayIndex()]),
+                        spielerCBItem.getMatchType().getMatchTypeId(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
@@ -366,7 +366,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHeimteam() + "",
+                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHomeTeamName() + "",
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
@@ -403,7 +403,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGastteam() + "",
+                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGuestTeamName() + "",
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()

@@ -154,9 +154,9 @@ public class PlayerAnalysisModel extends HOTableModel {
 
 	private Matchdetails checkMatchDetailsPresent(PlayerMatchCBItem spielerCBItem, Matchdetails matchdetails) {
 		if (matchdetails.getMatchID() == -1) {
-			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), MatchType.getById(spielerCBItem.getMatchTyp().getMatchTypeId()), true);
+			boolean success = OnlineWorker.downloadMatchData(spielerCBItem.getMatchID(), MatchType.getById(spielerCBItem.getMatchType().getMatchTypeId()), true);
 			if (success) {
-				matchdetails = DBManager.instance().loadMatchDetails(spielerCBItem.getMatchTyp().getMatchTypeId(), spielerCBItem.getMatchID());
+				matchdetails = DBManager.instance().loadMatchDetails(spielerCBItem.getMatchType().getMatchTypeId(), spielerCBItem.getMatchID());
 			}
 		}
 		return matchdetails;

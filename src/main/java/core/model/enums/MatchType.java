@@ -1,7 +1,11 @@
 package core.model.enums;
 
+import core.gui.theme.HOIconName;
+import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
 import core.model.match.SourceSystem;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
