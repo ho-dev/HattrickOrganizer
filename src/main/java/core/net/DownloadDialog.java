@@ -12,6 +12,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
@@ -206,7 +207,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			specialDownload.setSize(260, 280);
 			specialDownload.setLocation(260, 10);
 			getContentPane().add(specialDownload);
-;
 		}
 		else {
 			// isNtTeam
@@ -320,7 +320,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					OnlineWorker.getAllLineups(10);
 				}
 
-				if (model.getBasics().hasYouthTeam()){
+				if (model.getBasics().hasYouthTeam()) {
 					var dateSince = DBManager.instance().getMinScoutingDate();
 					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
 					// delete old youth match lineups, no longer needed (no current youth player has trained then)
@@ -329,7 +329,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
-				if ( allmatches != null) {
+				if (allmatches != null) {
 					allmatches = OnlineWorker.FilterUserSelection(allmatches);
 					for (MatchKurzInfo i : allmatches) {
 						OnlineWorker.downloadMatchData(i, true);
@@ -339,8 +339,35 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			if (bOK && m_jchFixtures.isSelected()) {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
-				if ( model.getBasics().getSpieltag()<16) {
-					OnlineWorker.getSpielplan(-1, model.getXtraDaten().getLeagueLevelUnitID());
+				if (model.getBasics().getSpieltag() < 16) {
+					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, model.getXtraDaten().getLeagueLevelUnitID());
+					if (fixtures != null) {
+						// state of previous download
+						var oldDownloadedFixtures = hov.getModel().getFixtures().getMatches();
+						// extract played matches of foreign teams
+						var newPlayedMatchesOfOtherTeams = fixtures.getMatches().stream()
+								.filter(i -> i.getToreHeim() >= 0 && i.getHeimId() != teamId && i.getGastId() != teamId)
+								.toList();
+						if (oldDownloadedFixtures != null) {
+							// matches that were not played on previous download
+							var notPlayedYet = oldDownloadedFixtures.stream()
+									.filter(i -> i.getToreHeim() < 0)
+									.toList();
+							// intersection of both lists gives the list of played matches since previous download
+							var latestPlayedMatches = newPlayedMatchesOfOtherTeams.stream()
+									.filter(i -> notPlayedYet.stream().anyMatch(j -> j.getMatchId() == i.getMatchId()))
+									.toList();
+							for (var m : latestPlayedMatches) {
+								if (!OnlineWorker.downloadMatchData(m.getMatchId(), MatchType.LEAGUE, true)) {
+									HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + m.getMatchId());
+									break;
+								}
+							}
+						}
+						hov.getModel().saveFixtures(fixtures);
+					} else {
+						bOK = false;
+					}
 				}
 			}
 
@@ -353,10 +380,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						final int leagueId = auswahlDialog.getLigaID();
 
 						if (leagueId > -2) {
-							bOK = OnlineWorker.getSpielplan(seasonId, leagueId);
-						}
-						if (!bOK) {
-							break;
+							var fixtures = OnlineWorker.downloadLeagueFixtures(seasonId, leagueId);
+							if (fixtures != null) {
+								hov.getModel().saveFixtures(fixtures);
+							} else {
+								break;
+							}
 						}
 					}
 				}

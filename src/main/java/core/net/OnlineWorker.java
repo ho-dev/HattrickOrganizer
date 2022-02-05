@@ -20,6 +20,7 @@ import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
+import module.series.Spielplan;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -714,7 +715,7 @@ public class OnlineWorker {
 	 *
 	 * @return true on sucess, false on failure
 	 */
-	public static boolean getSpielplan(int season, int leagueID) {
+	public static Spielplan downloadLeagueFixtures(int season, int leagueID) {
 		boolean bOK;
 		String leagueFixtures;
 		HOVerwaltung hov = HOVerwaltung.instance();
@@ -723,6 +724,7 @@ public class OnlineWorker {
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
 			bOK = (leagueFixtures != null && leagueFixtures.length() > 0);
 			showWaitInformation(50);
+			return XMLSpielplanParser.parseSpielplanFromString(leagueFixtures);
 		} catch (Exception e) {
 			HOLogger.instance().log(OnlineWorker.class, e);
 			String msg = getLangString("Downloadfehler") + " : Error fetching leagueFixture: "
@@ -731,20 +733,9 @@ public class OnlineWorker {
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			showWaitInformation(0);
-			return false;
 		}
-		if (bOK) {
-			HOModel hom = hov.getModel();
-			hom.setFixtures(XMLSpielplanParser.parseSpielplanFromString(leagueFixtures));
-			showWaitInformation(70);
-			// Save to DB
-			hom.saveFixtures();
-			showWaitInformation(90);
-		}
-		showWaitInformation(0);
-		return bOK;
+		return null;
 	}
-
 	protected static void showWaitInformation(int i) {
 		if (HOMainFrame.launching.get()) return;
 		String info;

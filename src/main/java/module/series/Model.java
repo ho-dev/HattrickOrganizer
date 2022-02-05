@@ -48,7 +48,7 @@ public class Model {
 		this.currentSeries = currentSeries;
 		this.leagueStatistics = new HashMap<>();
 		if (currentSeries == null) return;
-		for (var f : this.currentSeries.getEintraege()) {
+		for (var f : this.currentSeries.getMatches()) {
 			if (f.isGameOver()) {
 				var matchDetails = DBManager.instance().loadMatchDetails(MatchType.LEAGUE.getId(), f.getMatchId());
 				var teamratings = DBManager.instance().loadMatchTeamRating(MatchType.LEAGUE.getId(), f.getMatchId());

@@ -33,21 +33,18 @@ final class SpielplanTable extends AbstractTable {
 	 */
 	Spielplan[] getAllSpielplaene(boolean withFixtures) {
 		final List<Spielplan> gameSchedules = new ArrayList<>();
-		Spielplan plan = null;
-		String sql = null;
-		ResultSet rs = null;
 
 		try {
-			sql = "SELECT * FROM "+getTableName();
+			var sql = "SELECT * FROM "+getTableName();
 			sql += " ORDER BY Saison DESC ";
 
-			rs = adapter.executeQuery(sql);
+			var rs = adapter.executeQuery(sql);
 
 			rs.beforeFirst();
 
 			while (rs.next()) {
 				// Plan auslesen
-				plan = new Spielplan();
+				var plan = new Spielplan();
 
 				plan.setFetchDate(rs.getTimestamp("FetchDate"));
 				plan.setLigaId(rs.getInt("LigaID"));
@@ -76,12 +73,8 @@ final class SpielplanTable extends AbstractTable {
 	 * @param saison Season number.
 	 */
 	Spielplan getSpielplan(int ligaId, int saison) {
-		Spielplan plan = null;
-		String sql = null;
-		ResultSet rs = null;
-
 		try {
-			sql = "SELECT * FROM "+getTableName();
+			var sql = "SELECT * FROM "+getTableName();
 
 			if ((ligaId > -1) && (saison > -1)) {
 				sql += (" WHERE LigaID = " + ligaId + " AND Saison = " + saison);
@@ -89,10 +82,10 @@ final class SpielplanTable extends AbstractTable {
 
 			sql += " ORDER BY FetchDate DESC ";
 
-			rs = adapter.executeQuery(sql);
+			var rs = adapter.executeQuery(sql);
 
 			if (rs.first()) {
-				plan = new Spielplan();
+				var plan = new Spielplan();
 
 				plan.setFetchDate(rs.getTimestamp("FetchDate"));
 				plan.setLigaId(rs.getInt("LigaID"));
@@ -100,15 +93,15 @@ final class SpielplanTable extends AbstractTable {
 				plan.setSaison(rs.getInt("Saison"));
 
 				DBManager.instance().getPaarungen(plan);
+				return plan;
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getSpielplan Error" + e);
 
 			HOLogger.instance().log(getClass(),e);
-			plan = null;
 		}
 
-		return plan;
+		return null;
 	}
 
 	/**
@@ -188,7 +181,7 @@ final class SpielplanTable extends AbstractTable {
 					adapter.executeUpdate(sql);
 				}
 
-				DBManager.instance().storePaarung(plan.getEintraege(), plan.getLigaId(), plan.getSaison());
+				DBManager.instance().storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(),"DB.storeSpielplan Error" + e);
 				HOLogger.instance().log(getClass(),e);
