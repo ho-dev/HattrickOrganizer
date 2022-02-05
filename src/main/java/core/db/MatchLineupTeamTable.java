@@ -42,44 +42,34 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	}
 
 	MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		MatchLineupTeam team;
-		String sql;
-		ResultSet rs;
-		
 		try {
-			sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + iMatchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
-
-			rs = adapter.executeQuery(sql);
-
-			assert rs != null;
-			rs.first();
-			team = new MatchLineupTeam(MatchType.getById(iMatchType),
-					matchID,
-					DBManager.deleteEscapeSequences(rs.getString("TeamName")),
-					teamID,
-					rs.getInt("Erfahrung"));
-
-			var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
-			var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
-			var matchTeamAttitude =	MatchTeamAttitude.fromInt(DBManager.getInteger(rs,"Attitude"));
-
-			rs.close();
-
-			team.loadLineup();
-			team.setStyleOfPlay(styleOfPlay);
-			team.setMatchTacticType(matchTacticType);
-			team.setMatchTeamAttitude(matchTeamAttitude);
-
+			var sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + iMatchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
+			var rs = adapter.executeQuery(sql);
+			if (rs != null) {
+				if (rs.first()) {
+					var team = new MatchLineupTeam(MatchType.getById(iMatchType),
+							matchID,
+							DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+							teamID,
+							rs.getInt("Erfahrung"));
+					var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
+					var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+					var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "Attitude"));
+					team.loadLineup();
+					team.setStyleOfPlay(styleOfPlay);
+					team.setMatchTacticType(matchTacticType);
+					team.setMatchTeamAttitude(matchTeamAttitude);
+					return team;
+				}
+				rs.close();
+			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
-			team = null;
+			HOLogger.instance().log(getClass(), "DB.getMatchLineupTeam Error " + e);
 		}
-
-		return team;
+		return null;
 	}
 
 	void storeMatchLineupTeam(MatchLineupTeam team) {
-
 		if (team != null) {
 			var matchID = team.getMatchId();
 			final String[] where = { "MatchTyp", "MatchID" , "TeamID"};
@@ -124,22 +114,24 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1";
 
 			var rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			while (rs.next()) {
-				var team = new MatchLineupTeam(
-						MatchType.getById(rs.getInt("MATCHTYP")),
-						rs.getInt("MATCHID"),
-						DBManager.deleteEscapeSequences(rs.getString("TeamName")),
-						rs.getInt("TEAMID"),
-						rs.getInt("Erfahrung"));
+			if ( rs != null) {
+				rs.beforeFirst();
+				while (rs.next()) {
+					var team = new MatchLineupTeam(
+							MatchType.getById(rs.getInt("MATCHTYP")),
+							rs.getInt("MATCHID"),
+							DBManager.deleteEscapeSequences(rs.getString("TeamName")),
+							rs.getInt("TEAMID"),
+							rs.getInt("Erfahrung"));
 
-				var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
-				var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
-				var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "Attitude"));
-				team.setStyleOfPlay(styleOfPlay);
-				team.setMatchTacticType(matchTacticType);
-				team.setMatchTeamAttitude(matchTeamAttitude);
-				ret.add(team);
+					var styleOfPlay = StyleOfPlay.fromInt(rs.getInt("StyleOfPlay"));
+					var matchTacticType = MatchTacticType.fromInt(DBManager.getInteger(rs, "Tactic"));
+					var matchTeamAttitude = MatchTeamAttitude.fromInt(DBManager.getInteger(rs, "Attitude"));
+					team.setStyleOfPlay(styleOfPlay);
+					team.setMatchTacticType(matchTacticType);
+					team.setMatchTeamAttitude(matchTeamAttitude);
+					ret.add(team);
+				}
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DB.getMatchLineupTeam Error" + e);
