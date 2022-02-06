@@ -1105,11 +1105,28 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
 
         public void reset(){
-            for (var jlMatchDate : lMatchDate){
-                jlMatchDate.setText(" ");
+            for (var _temp: lMatchDate){
+                _temp.setText(" ");
             }
-//            m_jlMatchDate.setText("");
-//            m_jlMatchLabel.setText("");
+
+            for (var _temp : lMatchLabel){
+                _temp.setText(" ");
+                _temp.setIcon(null);
+            }
+
+            for (var _temp : lMatchPosition){
+                _temp.setText(" ");
+            }
+
+            for (var _temp : lMatchRating){
+                _temp.setText(" ");
+                _temp.setIcon(null);
+            }
+
+            for (int i=0; i < lMatchIDs.size(); i++){
+                lMatchIDs.set(i, -1);
+            }
+
         }
 
     }
