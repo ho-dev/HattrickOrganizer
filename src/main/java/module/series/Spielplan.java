@@ -30,7 +30,7 @@ public class Spielplan  {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final List<Paarung> getEintraege() {
+    public final List<Paarung> getMatches() {
         return m_vEintraege;
     }
 
@@ -195,25 +195,20 @@ public class Spielplan  {
      * @param tabelle Current series table for which the previous positions are being set.
      */
     protected final void berechneAltePositionen(LigaTabelle tabelle) {
-        LigaTabelle compare = null;
-        SerieTableEntry tmp = null;
-        SerieTableEntry tmp2 = null;
-
-        int spieltag = 1;
 
         if (tabelle.getEntries().size() <= 0) {
             return;
         }
 
-        spieltag = (tabelle.getEntries().elementAt(0)).getAnzSpiele() - 1;
+        var spieltag = (tabelle.getEntries().elementAt(0)).getAnzSpiele() - 1;
 
         if (spieltag > 0) {
-            compare = berechneTabelle(spieltag);
+            var compare = berechneTabelle(spieltag);
             compare.sort();
 
             for (int i = 0; i < tabelle.getEntries().size(); i++) {
-                tmp = tabelle.getEntries().elementAt(i);
-                tmp2 = compare.getEintragByTeamId(tmp.getTeamId());
+                var tmp = tabelle.getEntries().elementAt(i);
+                var tmp2 = compare.getEintragByTeamId(tmp.getTeamId());
 
                 if (tmp2 != null) {
                     tmp.setAltePosition(tmp2.getPosition());
@@ -235,16 +230,16 @@ public class Spielplan  {
         tmp.setLigaId(m_iLigaId);
         tmp.setLigaName(m_sLigaName);
 
-        for (int i = 0; i < spieltag.size(); i++) {
+        for (Paarung paarung : spieltag) {
             // Create table entries for home and away games.
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(spieltag.get(i).getHeimId()),
-                                                   spieltag.get(i).getHeimId(),
-                                                   spieltag.get(i).getHeimName(),
-                                                   maxMatchDay));
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(spieltag.get(i).getGastId()),
-                                                   spieltag.get(i).getGastId(),
-                                                   spieltag.get(i).getGastName(),
-                                                   maxMatchDay));
+            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getHeimId()),
+                    paarung.getHeimId(),
+                    paarung.getHeimName(),
+                    maxMatchDay));
+            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getGastId()),
+                    paarung.getGastId(),
+                    paarung.getGastName(),
+                    maxMatchDay));
         }
 
         tmp.sort();
@@ -382,14 +377,13 @@ public class Spielplan  {
      * @return Tabellenverlauf – Table position history.
      */
     protected final Tabellenverlauf generateTabellenVerlauf() {
-        int spieltag = -1;
-        LigaTabelle[] tabelle = null;
+
         final Tabellenverlauf verlauf = new Tabellenverlauf();
         TabellenVerlaufEintrag[] eintraege = null;
 
         try {
-        	spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
-            tabelle = new LigaTabelle[spieltag];
+        	var spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
+            var tabelle = new LigaTabelle[spieltag];
 
             for (int i = spieltag; i > 0; i--) {
                 tabelle[i - 1] = berechneTabelle(i);
@@ -397,8 +391,6 @@ public class Spielplan  {
 
             // Create history entries
             if (tabelle.length > 0) {
-                SerieTableEntry tmp = null;
-
                 eintraege = new TabellenVerlaufEintrag[tabelle[spieltag - 1].getEntries().size()];
 
                 for (int j = 0; j < tabelle[spieltag - 1].getEntries().size(); j++) {
@@ -409,7 +401,7 @@ public class Spielplan  {
                     eintraege[j].setTeamName(tabelle[spieltag - 1].getEntries().elementAt(j).getTeamName());
 
                     for (int i = 0; i < tabelle.length; i++) {
-                        tmp = tabelle[i].getEintragByTeamId(eintraege[j].getTeamId());
+                        var tmp = tabelle[i].getEintragByTeamId(eintraege[j].getTeamId());
 
                         if (tmp != null) {
                             positionen[i] = tmp.getPosition();

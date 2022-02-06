@@ -29,7 +29,7 @@ public class TeamManager {
 		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		if (league != null) {
-			List<?> matches = league.getEintraege();
+			List<?> matches = league.getMatches();
 
 			for (Object match : matches) {
 				Paarung element = (Paarung) match;

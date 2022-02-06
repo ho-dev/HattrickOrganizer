@@ -584,8 +584,10 @@ public class HOModel {
 
     /**
      * Save match schedule in database
+     * @param fixtures
      */
-    public final synchronized void saveFixtures() {
+    public final synchronized void saveFixtures(Spielplan fixtures) {
+        setFixtures(fixtures);
         if (m_clSpielplan != null)
             DBManager.instance().storeSpielplan(m_clSpielplan);
     }

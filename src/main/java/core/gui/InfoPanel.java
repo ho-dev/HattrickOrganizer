@@ -83,6 +83,10 @@ public class InfoPanel extends ImagePanel {
         paintComponentImmediately(m_jpbProgressBar);
     }
 
+    public int getProgress(){
+        return m_jpbProgressBar.getValue();
+    }
+
     private void paintComponentImmediately(JComponent component){
         var rect = component.getBounds();
         rect.x=0;
