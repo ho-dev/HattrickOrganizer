@@ -496,6 +496,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 
 		//players details
 		put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, Color.BLACK);
+		put(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN, Color.GREEN);
+		put(HOColorName.PLAYER_DETAILS_STARS_FILL, Color.YELLOW);
 
 		// Promotion
 		put(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
