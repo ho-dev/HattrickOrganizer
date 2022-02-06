@@ -89,24 +89,14 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JLabel m_jlBestPosition = new JLabel("");
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
-
-//    private RatingTableEntry m_jpRating = new RatingTableEntry();
-//    private DoubleLabelEntries m_jpLastMatchRating = new DoubleLabelEntries(
-//            new RatingTableEntry(),
-//            new MatchDateTableEntry(null, MatchType.NONE),
-//            new GridBagLayout());
-//    private JLabel m_lastMatchLink = null;
-
     private PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
-
     private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
     private final JButton m_jbAnalysisTop = new JButton(getSvgIcon(GOTOANALYSETOP));
     private final JButton m_jbAnalysisBottom = new JButton(getSvgIcon(GOTOANALYSEBOTTOM));
     private final JButton m_jbOffsets = new JButton(getSvgIcon(HOIconName.OFFSET));
-
     private Player m_clPlayer;
     private Player m_clComparisonPlayer;
 
@@ -356,7 +346,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 var _MatchPosition = MatchRoleID.getNameForPosition((byte) match.getPosition());
                 var _rating = match.getRating() / 2.0f ;
                 var ratingText = (_rating == (int) _rating) ? INTEGERFORMAT.format(_rating) : DEFAULTDEZIMALFORMAT.format(_rating);
-                jpMatchHistory.update(i, _MatchDate, _MatchLabel, _MatchTypeIcon, _MatchPosition, ratingText);
+                jpMatchHistory.update(i, _MatchDate, _MatchLabel, _MatchTypeIcon, _MatchPosition, ratingText, match.getMatchID());
         }
 
     }
@@ -777,6 +767,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jcbUserBestPosition.setToolTipText("override best position: has impact if option 'best position first' is selected in Lineup tool");
         m_jcbUserBestPosition.setMaximumRowCount(20);
         m_jcbUserBestPosition.addItemListener(this);
+        m_jcbUserBestPosition.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
         constraintsPlayerOtherInfos.gridx = 3;
         layoutPlayerOtherInfos.setConstraints(m_jcbUserBestPosition, constraintsPlayerOtherInfos);
         jpPlayerOtherInfos.add(m_jcbUserBestPosition);
@@ -1010,7 +1001,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         ArrayList<JLabel> lMatchDate = new ArrayList<>();
         ArrayList<JLabel> lMatchLabel = new ArrayList<>();
         ArrayList<JLabel> lMatchPosition = new ArrayList<>();
-        ArrayList<JLabel> lMatchRating= new ArrayList<>();
+        ArrayList<JLabel> lMatchRating = new ArrayList<>();
+        ArrayList<Integer> lMatchIDs = new ArrayList<>();
 
         MatchHistoryPanel() {
             super();
@@ -1048,13 +1040,27 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (m_clPlayer != null) {
-                            if (e.isShiftDown()) {
-                                int matchId = m_clPlayer.getLastMatchId();
-                                MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-                                HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
-                            } else {
-                                HOMainFrame.instance().showMatch(m_clPlayer.getLastMatchId());
+
+                            int match_index = -1;
+
+                            for (int i = 0; i < 10; i++) {
+                                if (e.getSource() == lMatchLabel.get(i)) {
+                                    match_index = i;
+                                    break;
+                                }
                             }
+
+                            if (match_index != -1){
+                                int matchId = lMatchIDs.get(match_index);
+                                if (e.isShiftDown()) {
+                                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
+                                    HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+                                } else {
+                                    HOMainFrame.instance().showMatch(matchId);
+                                }
+                            }
+
+
                         }
                     }
                 });
@@ -1077,12 +1083,14 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 add(label);
                 lMatchRating.add(label);
 
+                lMatchIDs.add(-1);
+
             }
 
         }
 
         public void update(int i, String matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
-                           String matchRating){
+                           String matchRating, int matchID){
             lMatchDate.get(i).setText(matchDate);
 
             lMatchLabel.get(i).setText(matchLabel);
@@ -1092,6 +1100,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
             lMatchRating.get(i).setText(matchRating);
             lMatchRating.get(i).setIcon(iconStar);
+
+            lMatchIDs.set(i, matchID);
         }
 
         public void reset(){

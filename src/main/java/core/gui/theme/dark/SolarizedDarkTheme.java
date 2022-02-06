@@ -36,6 +36,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.GREEN, defaults.getColor("palette.green"));
             ThemeManager.instance().put(HOColorName.YELLOW, defaults.getColor("palette.yellow"));
             ThemeManager.instance().put(HOColorName.ORANGE, defaults.getColor("palette.orange"));
+            ThemeManager.instance().put(HOColorName.URL_PANEL_BG, new Color(230, 174, 239));
 
             // Use defaults from LAF
             ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
@@ -142,7 +143,9 @@ public class SolarizedDarkTheme extends DarkTheme {
             ThemeManager.instance().put(HOColorName.TABLEENTRY_DECLINE_FG, new Color(231, 144, 60));
 
             //players details
-            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN, new Color(0, 255, 0));
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_STARS_FILL, new Color(255, 215, 0));
 
             // League Details
             ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));

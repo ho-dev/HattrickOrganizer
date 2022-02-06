@@ -32,9 +32,6 @@ public class SolarizedLightTheme extends BaseTheme {
             setFont(UserParameter.instance().fontSize);
             ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
-            //players details
-            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, new Color(231, 144, 60));
-
             // DEFAULT COLOR
             ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
             ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
@@ -91,6 +88,11 @@ public class SolarizedLightTheme extends BaseTheme {
             // Transfer module
             ThemeManager.instance().put(HOColorName.TRANSFER_IN_COLOR, defaults.getColor("palette.green"));
             ThemeManager.instance().put(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
+
+            //players details
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, defaults.getColor("Label.foreground"));
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN, new Color(0, 255, 0));
+            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_STARS_FILL, defaults.getColor("palette.yellow"));
 
 
             return true;
