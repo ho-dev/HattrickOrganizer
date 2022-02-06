@@ -1,8 +1,6 @@
 package core.gui.theme;
 
 
-import javax.print.DocFlavor;
-
 /**
  * Constants for Colors used in HO.
  * Modules can use them too.
@@ -16,6 +14,7 @@ public interface HOColorName {
 	String ORANGE 						= "default.orange";
 	String YELLOW 						= "default.yellow";
 
+	String URL_PANEL_BG = "default.url";
 	String PANEL_BG 					= "panel.bg";
 	String PANEL_BORDER					= "panel.border";
 	String PLAYER_POSITION_PANEL_BORDER = "player_position_panel_border";
@@ -237,4 +236,6 @@ public interface HOColorName {
 
 	//Player details
 	String PLAYER_DETAILS_BAR_BORDER_COLOR = "player_details_bar.border.color";
+	String PLAYER_DETAILS_BAR_FILL_GREEN = "player_details_bar_fill_green";
+	String PLAYER_DETAILS_STARS_FILL = "player_details_stars_fill";
 }

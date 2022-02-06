@@ -284,6 +284,8 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(ORANGE, "orange");
 
 
+		put(URL_PANEL_BG, new Color(9, 9, 167));
+
 		put(PANEL_BG, new Color(214,217,223));
 		put(PANEL_BORDER, "dark_gray");
 		put(PLAYER_POSITION_PANEL_BORDER, "light_gray");

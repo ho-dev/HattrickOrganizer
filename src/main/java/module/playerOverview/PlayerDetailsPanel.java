@@ -30,7 +30,6 @@ import core.net.HattrickLink;
 import core.util.DateTimeUtils;
 import core.util.HTDatetime;
 import core.util.Helper;
-import core.util.StringUtils;
 import module.statistics.StatistikMainPanel;
 import java.awt.*;
 import java.awt.event.*;
@@ -53,9 +52,10 @@ import static core.util.Helper.INTEGERFORMAT;
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
     private final int MATCH_HISTORY_LENGTH = 3;
-    private final static Icon iconStar = ImageUtilities.getStarIcon(Color.BLACK);
+    private final static Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
 
     private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
+    private Color URL = ThemeManager.getColor(HOColorName.URL_PANEL_BG);
     private Color FGcolor = ColorLabelEntry.FG_STANDARD;
     private Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
     private PlayerOverviewTable m_playerOverviewTable;
@@ -930,7 +930,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private Color getColorForSkill(int iSkill){
        var bgColor =  switch (iSkill){
-            case 7, 8 -> ThemeManager.getColor(HOColorName.GREEN);
+            case 7, 8 -> ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN);
             case 5, 6 -> ThemeManager.getColor(HOColorName.YELLOW);
             case 3, 4 -> ThemeManager.getColor(HOColorName.ORANGE);
             default -> ThemeManager.getColor(HOColorName.RED);
@@ -955,7 +955,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         bar.setString(PlayerAbility.getNameForSkill(value, true, false, nbDecimal));
 
         bar.setValue((int) value);
-        Color _fgColor = varyingColor ? getColorForSkill((int) value) : ThemeManager.getColor(HOColorName.GREEN);
+        Color _fgColor = varyingColor ? getColorForSkill((int) value) : ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN);
         bar.setForeground(_fgColor);
         bar.setBorderPainted(true);
         bar.setBorder(BorderFactory.createLineBorder(BORDER_COLOR));
@@ -1041,7 +1041,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 constraints.weightx = 1.0;
                 constraints.fill = GridBagConstraints.HORIZONTAL;
                 label = new JLabel("", SwingConstants.LEFT);
-                label.setForeground(Color.BLUE.darker());
+                label.setForeground(URL);
                 label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 label.addMouseListener(new MouseAdapter()
                 {
