@@ -1,4 +1,25 @@
 
+# Changelist HO! 5.2
+
+## Some numbers
+* 2 commits
+* 5 files changed, 50 insertions(+), 19 deletions(-)
+* Contributors:
+  * 2 wsbrenk
+
+## Highlights
+- only bug fixes
+
+## Detailed Changelog
+
+### Lineup
+* Fixed a bug of disabled lineup up- and download in eastern time zones (#1350)
+
+## Translations
+HO! is currently available in 36 languages thanks to the work of 57 translators: : KOHb, Adrian, akasolace, André Oliveira, Andreas, Ante, asteins, Baler0, Bartosz Fenski, beri84, Bogux, Boy van der Werf, brokenelevator, Bruno Nascimento, Cris, Csaba, DavidatorusF, Dinko, dzsoo, Fresty di Lot, Globe96, Gokmen, GreenHattrick, h3t3r0, Hakkarainen, imikacic, Juan Manuel, karelant. cd, Kimmo, LA-Dzigo, LEOSCHUMY, LeSchmuh, Lidegand, Manny, Massimo, Mauro Aranda, mondstern, Moorhuhninho, Motavali, murko, Philipp, QueenF, Raffael, RaV, Ricardo Salgueiro, Saleh, Sebas90, Sergejs Harkovs, sich, silvio, Stef Migchielsen, Sumame. esta, taimikko, TeamBMW, Volker, wsbrenk, Zigmas
+The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on POeditor
+
+
 # Changelist HO! 5.1
 
 ## Some numbers:
