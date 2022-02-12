@@ -30,10 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.Properties;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -333,7 +330,7 @@ abstract class ForecastCurve extends Curve {
 
 			Curve.Point point;
 			if (resultset != null) {
-				for (boolean flag = resultset != null && resultset.first(); flag; flag = resultset
+				for (boolean flag = resultset.first(); flag; flag = resultset
 						.next()) {
 					if (resultset.getInt("SPIELTAG") > 0) {
 						iMatchDay = resultset.getInt("SPIELTAG");
@@ -356,9 +353,9 @@ abstract class ForecastCurve extends Curve {
 			// Add update points
 			// this function reads only league, cup and qualification matches,
 			// therefor has to add all Updatepoints
-			int iEnd = m_clPoints.size();
-			for (Point m_clPoint : m_clPoints) {
-				point = m_clPoint;
+			var points = new ArrayList<Point>(m_clPoints);
+			for ( var p : points){
+				point = p;
 				if (point.m_mtMatchType == MatchType.LEAGUE) {
 					addUpdatePoints(point, true);
 					if (point.m_iMatchDay == 14) {
