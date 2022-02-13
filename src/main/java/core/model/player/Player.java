@@ -26,8 +26,7 @@ import static core.constants.player.PlayerSkill.*;
 
 public class Player {
 
-
-    /**
+     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
     private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
@@ -726,7 +725,7 @@ public class Player {
      *
      * @param m_iErfahrung New value of property m_iErfahrung.
      */
-    public void setErfahrung(int m_iErfahrung) {
+    public void setExperience(int m_iErfahrung) {
         this.m_iErfahrung = m_iErfahrung;
     }
 
@@ -781,7 +780,7 @@ public class Player {
      *
      * @param m_iFuehrung New value of property m_iFuehrung.
      */
-    public void setFuehrung(int m_iFuehrung) {
+    public void setLeadership(int m_iFuehrung) {
         this.m_iFuehrung = m_iFuehrung;
     }
 
@@ -994,7 +993,7 @@ public class Player {
      *
      * @param m_iKondition New value of property m_iKondition.
      */
-    public void setKondition(int m_iKondition) {
+    public void setStamina(int m_iKondition) {
         this.m_iKondition = m_iKondition;
     }
 
@@ -1371,7 +1370,7 @@ public class Player {
      *
      * @param m_iSpielerID New value of property m_iSpielerID.
      */
-    public void setSpielerID(int m_iSpielerID) {
+    public void setPlayerID(int m_iSpielerID) {
         this.m_iSpielerID = m_iSpielerID;
     }
 
@@ -1786,6 +1785,11 @@ public class Player {
     public float getSkillValue(int skill){
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
+    public void setSkillValue(int skill, float value){
+        int intVal = (int)value;
+        setValue4Skill(skill, intVal);
+        setSubskill4PlayerSkill(skill, value - intVal);
+    }
 
     /**
      * set Skillvalue 4 skill
@@ -1802,10 +1806,10 @@ public class Player {
             case DEFENDING -> setVerteidigung(value);
             case SCORING -> setTorschuss(value);
             case SET_PIECES -> setStandards(value);
-            case STAMINA -> setKondition(value);
-            case EXPERIENCE -> setErfahrung(value);
+            case STAMINA -> setStamina(value);
+            case EXPERIENCE -> setExperience(value);
             case FORM -> setForm(value);
-            case LEADERSHIP -> setFuehrung(value);
+            case LEADERSHIP -> setLeadership(value);
             case LOYALTY -> setLoyalty(value);
         }
     }
@@ -1816,7 +1820,7 @@ public class Player {
      *
      * @param m_iVerletzt New value of property m_iVerletzt.
      */
-    public void setVerletzt(int m_iVerletzt) {
+    public void setInjuryWeeks(int m_iVerletzt) {
         this.m_iInjuryWeeks = m_iVerletzt;
     }
 
@@ -2378,7 +2382,7 @@ public class Player {
     private Player CloneWithoutSubskills() {
         var ret = new Player();
         ret.copySkills(this);
-        ret.setSpielerID(getPlayerID());
+        ret.setPlayerID(getPlayerID());
         ret.setAlter(getAlter());
         ret.setLastName(getLastName());
         return ret;
@@ -2402,6 +2406,91 @@ public class Player {
         return clPositionID;
     }
 
-}
 
+    }
+
+    /**
+     * Create a clone of the player with modified skill values if man marking is switched on.
+     * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced depending of the distance
+     * between man marker and opponent man marked player
+     *
+     * @param manMarkingPosition
+     *          null - no man marking changes
+     *          Opposite - reduce skills by 50%
+     *          NotOpposite - reduce skills by 65%
+     *          NotInLineup - reduce skills by 10%
+     * @return
+     *          this player, if no man marking changes are selected
+     *          New modified player, if man marking changes are selected
+     */
+    public Player createManMarker(ManMarkingPosition manMarkingPosition) {
+        if ( manMarkingPosition == null) return this;
+        var ret = new Player();
+        var skillFactor = (float)(1 - manMarkingPosition.value / 100.);
+        ret.setPlayerSpecialty(this.getPlayerSpecialty());
+        ret.setAgeDays(this.getAgeDays());
+        ret.setAlter(this.getAlter());
+        ret.setAgressivitaet(this.getAgressivitaet());
+        ret.setAnsehen(this.getAnsehen());
+        ret.setCharakter(this.getCharakter());
+        ret.setExperience(this.getExperience());
+        ret.setSubExperience(this.getSubExperience());
+        ret.setFirstName(this.getFirstName());
+        ret.setLastName(this.getLastName());
+        ret.setForm(this.getForm());
+        ret.setLeadership(this.getLeadership());
+        ret.setStamina(this.getStamina());
+        ret.setLoyalty(this.getLoyalty());
+        ret.setHomeGrown(this.isHomeGrown());
+        ret.setPlayerID(this.getPlayerID());
+        ret.setInjuryWeeks(this.getInjuryWeeks());
+
+        ret.setSkillValue(KEEPER, this.getSkillValue(KEEPER));
+        ret.setSkillValue(DEFENDING, skillFactor * this.getSkillValue(DEFENDING));
+        ret.setSkillValue(WINGER, skillFactor * this.getSkillValue(WINGER));
+        ret.setSkillValue(PLAYMAKING, skillFactor * this.getSkillValue(PLAYMAKING));
+        ret.setSkillValue(SCORING, skillFactor * this.getSkillValue(SCORING));
+        ret.setSkillValue(PASSING, skillFactor * this.getSkillValue(PASSING));
+        ret.setSkillValue(STAMINA, this.getSkillValue(STAMINA));
+        ret.setSkillValue(FORM, this.getSkillValue(FORM));
+        ret.setSkillValue(SET_PIECES, this.getSkillValue(SET_PIECES));
+        ret.setSkillValue(LEADERSHIP, this.getSkillValue(LEADERSHIP));
+        ret.setSkillValue(LOYALTY, this.getSkillValue(LOYALTY));
+        return ret;
+    }
+
+    public enum ManMarkingPosition {
+        /**
+         * central defender versus attack
+         * wingback versus winger
+         * central midfield versus central midfield
+         */
+        Opposite(50),
+        /**
+         * central defender versus winger, central midfield
+         * wingback versus attack, central midfield
+         * central midfield versus central attack, winger
+         */
+        NotOpposite(65),
+        /**
+         * opponent player is not in lineup or
+         * any other combination
+         */
+        NotInLineup(10);
+
+        private int value;
+
+        ManMarkingPosition(int v){this.value=v;}
+
+        public static ManMarkingPosition fromId(int id) {
+            return switch (id) {
+                case 50 -> Opposite;
+                case 65 -> NotOpposite;
+                case 10 -> NotInLineup;
+                default -> null;
+            };
+        }
+
+        public int getValue() {return value;}
+    }
 }

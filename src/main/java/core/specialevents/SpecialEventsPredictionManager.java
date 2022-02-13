@@ -46,8 +46,8 @@ public class SpecialEventsPredictionManager {
         public void analyzeLineup() {
             this.specialEventsPredictions = new ArrayList<>();
             for (ISpecialEventPredictionAnalyzer analyzer : analyzers) {
-                for (IMatchRoleID position : lineup.getFieldPositions()) {
-                    MatchRoleID mid = (MatchRoleID) position;
+                for (MatchRoleID position : lineup.getFieldPositions()) {
+                    MatchRoleID mid = position;
                     if (mid.getPlayerId() == 0) continue;
                     analyzer.analyzePosition(this, mid);
                 }
@@ -210,8 +210,8 @@ public class SpecialEventsPredictionManager {
     public void setLineup(Lineup m_cLineup) {
         this.lineup = m_cLineup;
         HOModel model = HOVerwaltung.instance().getModel();
-        for (IMatchRoleID matchRoleID : this.lineup.getFieldPositions()) {
-            MatchRoleID mid = (MatchRoleID) matchRoleID;
+        for (MatchRoleID matchRoleID : this.lineup.getFieldPositions()) {
+            MatchRoleID mid = matchRoleID;
             if (mid.getPlayerId() == 0) continue;
             if (!this.playerInLineup.containsKey(mid.getPlayerId())) {
                 Player player = model.getCurrentPlayer(mid.getPlayerId());
@@ -243,11 +243,11 @@ public class SpecialEventsPredictionManager {
                     int spec = latestPlayerInfo.getSpecialEvent();
                     int role = playerPerformance.getMatchLineupPosition().getPosition();
                     player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
-                    player.setSpielerID(playerPerformance.getSpielerId());
+                    player.setPlayerID(playerPerformance.getSpielerId());
                     player.setLastName(playerPerformance.getSpielerName());
                     player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
-                    player.setErfahrung(latestPlayerInfo.getExperience());
+                    player.setExperience(latestPlayerInfo.getExperience());
                     player.setAlter(age);
                     player.setGehalt(wage);
                     player.setTSI(tsi);

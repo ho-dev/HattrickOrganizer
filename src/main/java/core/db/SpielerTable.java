@@ -486,7 +486,7 @@ final class SpielerTable extends AbstractTable {
 					return rs.getInt("TrainerTyp");
 				}
 			}
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 
 		return -99;
@@ -498,14 +498,14 @@ final class SpielerTable extends AbstractTable {
     private Player createObject(ResultSet rs) {
     	Player player = new Player();
         try {
-        	player.setSpielerID(rs.getInt("SpielerID"));
+        	player.setPlayerID(rs.getInt("SpielerID"));
             player.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
 			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
 			player.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
 			player.setArrivalDate(DBManager.deleteEscapeSequences(rs.getString("ArrivalDate")));
             player.setAlter(rs.getInt("Age"));
             player.setAgeDays(rs.getInt("AgeDays"));
-            player.setKondition(rs.getInt("Kondition"));
+            player.setStamina(rs.getInt("Kondition"));
             player.setForm(rs.getInt("Form"));
             player.setTorwart(rs.getInt("Torwart"));
             player.setVerteidigung(rs.getInt("Verteidigung"));
@@ -518,10 +518,10 @@ final class SpielerTable extends AbstractTable {
             player.setCharakter(rs.getInt("iCharakter"));
             player.setAnsehen(rs.getInt("iAnsehen"));
             player.setAgressivitaet(rs.getInt("iAgressivitaet"));
-            player.setErfahrung(rs.getInt("Erfahrung"));
+            player.setExperience(rs.getInt("Erfahrung"));
             player.setLoyalty(rs.getInt("Loyalty"));
             player.setHomeGrown(rs.getBoolean("HomeGrown"));
-            player.setFuehrung(rs.getInt("Fuehrung"));
+            player.setLeadership(rs.getInt("Fuehrung"));
             player.setGehalt(rs.getInt("Gehalt"));
             player.setNationalityAsInt(rs.getInt("Land"));
             player.setTSI(rs.getInt("Marktwert"));
@@ -546,7 +546,7 @@ final class SpielerTable extends AbstractTable {
 			player.setNationalTeamId(rs.getInt("NationalTeamID"));
 
             player.setGelbeKarten(rs.getInt("GelbeKarten"));
-            player.setVerletzt(rs.getInt("Verletzt"));
+            player.setInjuryWeeks(rs.getInt("Verletzt"));
             player.setToreFreund(rs.getInt("ToreFreund"));
             player.setToreLiga(rs.getInt("ToreLiga"));
             player.setTorePokal(rs.getInt("TorePokal"));

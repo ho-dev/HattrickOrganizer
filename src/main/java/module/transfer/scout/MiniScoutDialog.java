@@ -185,7 +185,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
-        List<String> errorFields = new ArrayList<String>();
+        List<String> errorFields = new ArrayList<>();
 
         try {
             final module.transfer.scout.Player player;
@@ -258,7 +258,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         if (message.equals("")) {
             switch (pc.getStatus()) {
-                case PlayerConverter.WARNING:
+                case PlayerConverter.WARNING -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
@@ -266,38 +266,37 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
-                    break;
-                case PlayerConverter.ERROR:
+                }
+                case PlayerConverter.ERROR -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    break;
-                case PlayerConverter.EMPTY_INPUT_ERROR:
-                    message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
-                    break;
-                default:
+                }
+                case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
+                default -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
                     if (pc.getNotSupportedFields().size() > 0) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
+                }
             }
         }
         jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
     }
 
     private String getFieldsTextList(List<String> fields){
-        String errorFieldsTxt = "";
+        StringBuilder errorFieldsTxt = new StringBuilder();
         if (fields.size()>0){
             //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
-                    errorFieldsTxt += ", ";
+                    errorFieldsTxt.append(", ");
                 }
-                errorFieldsTxt += fields.get(i);
+                errorFieldsTxt.append(fields.get(i));
             }
             // errorFieldsTxt += ")";
         }
-        return errorFieldsTxt;
+        return errorFieldsTxt.toString();
     }
 
     private void close() {
@@ -581,10 +580,10 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void spielervalueChanged() {
         final Player tempPlayer = new Player();
         tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
-        tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
-		tempPlayer.setFuehrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
+        tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
+		tempPlayer.setLeadership(((CBItem) jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
-        tempPlayer.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
+        tempPlayer.setStamina(((CBItem) jcbStamina.getSelectedItem()).getId());
         tempPlayer.setVerteidigung(((CBItem) jcbDefense.getSelectedItem()).getId());
         tempPlayer.setTorschuss(((CBItem) jcbAttacking.getSelectedItem()).getId());
         tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());

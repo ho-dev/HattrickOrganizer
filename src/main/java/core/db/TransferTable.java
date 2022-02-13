@@ -143,7 +143,7 @@ public class TransferTable extends AbstractTable {
 //                            continue;
                         } else {
                             Player dummy = new Player();
-                            dummy.setSpielerID(transfer.getPlayerId());
+                            dummy.setPlayerID(transfer.getPlayerId());
                             if (!players.contains(dummy)) players.add(dummy);
                         }
                     }

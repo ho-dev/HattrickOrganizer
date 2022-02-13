@@ -180,7 +180,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final core.model.player.Player tempPlayer = new core.model.player.Player();
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempPlayer.setSpielerID(getNextTempSpielerID());
+            tempPlayer.setPlayerID(getNextTempSpielerID());
             if (jtfName.getText().trim().equals("")) {
                 tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             } else {
@@ -190,9 +190,9 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
             tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-            tempPlayer.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
+            tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
-            tempPlayer.setKondition(((CBItem) jcbStamina.getSelectedItem()).getId());
+            tempPlayer.setStamina(((CBItem) jcbStamina.getSelectedItem()).getId());
             tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
             tempPlayer.setTorschuss(((CBItem) jcbScoring.getSelectedItem()).getId());
             tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
@@ -201,7 +201,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
             tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
             tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
-            tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
+            tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
@@ -352,10 +352,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private void setLabels() {
         final core.model.player.Player tempPlayer = new core.model.player.Player();
         tempPlayer.setPlayerSpecialty(((CBItem)jcbSpeciality.getSelectedItem()).getId());
-        tempPlayer.setErfahrung(((CBItem)jcbExperience.getSelectedItem()).getId());
-        tempPlayer.setFuehrung(((CBItem)jcbLeadership.getSelectedItem()).getId());
+        tempPlayer.setExperience(((CBItem)jcbExperience.getSelectedItem()).getId());
+        tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem)jcbForm.getSelectedItem()).getId());
-        tempPlayer.setKondition(((CBItem)jcbStamina.getSelectedItem()).getId());
+        tempPlayer.setStamina(((CBItem)jcbStamina.getSelectedItem()).getId());
         tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
         tempPlayer.setTorschuss(((CBItem)jcbScoring.getSelectedItem()).getId());
         tempPlayer.setTorwart(((CBItem)jcbKeeper.getSelectedItem()).getId());
@@ -459,7 +459,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void copyPaste() {
         String message = "";
-        List<String> errorFields = new ArrayList<String>();
 
         final PlayerConverter pc = new PlayerConverter();
 
@@ -534,46 +533,45 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         if (message.equals("")) {
             switch (pc.getStatus()) {
-                case PlayerConverter.WARNING:
+                case PlayerConverter.WARNING -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    if(pc.getNotSupportedFields().size()>0) {
+                    if (pc.getNotSupportedFields().size() > 0) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
-                    break;
-                case PlayerConverter.ERROR:
+                }
+                case PlayerConverter.ERROR -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_error");
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    break;
-                case PlayerConverter.EMPTY_INPUT_ERROR:
-                    message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
-                    break;
-                default:
+                }
+                case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
+                default -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
-                    if(pc.getNotSupportedFields().size()>0) {
+                    if (pc.getNotSupportedFields().size() > 0) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
+                }
             }
         }
         jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
     }
 
     private String getFieldsTextList(List<String> fields){
-        String errorFieldsTxt = "";
+        StringBuilder errorFieldsTxt = new StringBuilder();
         if (fields.size()>0){
             //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
-                    errorFieldsTxt += ", ";
+                    errorFieldsTxt.append(", ");
                 }
-                errorFieldsTxt += fields.get(i);
+                errorFieldsTxt.append(fields.get(i));
             }
             // errorFieldsTxt += ")";
         }
-        return errorFieldsTxt;
+        return errorFieldsTxt.toString();
     }
 
     /**
