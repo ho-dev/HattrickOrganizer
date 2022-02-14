@@ -80,6 +80,7 @@ public class Lineup{
 	private Vector<MatchLineupPosition> replacedPositions = new Vector<>();
 	MatchLineupPosition captain;
 	MatchLineupPosition setPiecesTaker;
+	private Player.ManMarkingPosition manMarkingPosition;
 
 	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
 		initPositionen553(); // reset all
@@ -97,6 +98,14 @@ public class Lineup{
 	private void setSetPiecesTaker(MatchLineupPosition position) {
 		this.setPiecesTaker = position;
 		this.m_iKicker = position.getPlayerId();
+	}
+
+	public Player.ManMarkingPosition getManMarkingPosition() {
+		return this.manMarkingPosition;
+	}
+
+	public void setManMarkingPosition(Player.ManMarkingPosition manMarkingPosition) {
+		this.manMarkingPosition = manMarkingPosition;
 	}
 
 	private class Settings {
@@ -303,8 +312,7 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelAimAow() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),	settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance()).getTacticLevelAowAim());
+		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelAowAim());
 	}
 
 	/**
@@ -313,8 +321,7 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelCounter() {
-		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(), settings.m_iStyleOfPlay,
-				RatingPredictionConfig.getInstance())).getTacticLevelCounter();
+		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam())).getTacticLevelCounter();
 	}
 
 	/**
@@ -323,9 +330,7 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelPressing() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(),settings.m_iStyleOfPlay,
-				RatingPredictionConfig.getInstance()).getTacticLevelPressing());
+		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelPressing());
 	}
 
 	/**
@@ -334,9 +339,7 @@ public class Lineup{
 	 * @return tactic level
 	 */
 	public final float getTacticLevelLongShots() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel()
-				.getTeam(), settings.m_iStyleOfPlay,
-				RatingPredictionConfig.getInstance()).getTacticLevelLongShots());
+		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
 	}
 
 	/**
@@ -492,7 +495,7 @@ public class Lineup{
 		boolean bForm = true;
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
-			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam(), settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
+			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam());
 			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
 			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
 			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
@@ -518,7 +521,7 @@ public class Lineup{
 
 		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
 			Team _team = DBManager.instance().getTeam(hrfID);
-			rpManager = new RatingPredictionManager(this, _team, settings.m_iStyleOfPlay, RatingPredictionConfig.getInstance());
+			rpManager = new RatingPredictionManager(this, _team);
 			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
 			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
 			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));

@@ -8,6 +8,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 
+import java.util.Objects;
 import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -231,11 +232,7 @@ public class TransferTableModel extends AbstractTableModel {
     @Override
 	public final Class<?> getColumnClass(int columnIndex) {
         final Object obj = getValueAt(0, columnIndex);
-        if (obj != null) {
-            return obj.getClass();
-        } else {
-            return "".getClass();
-        }
+        return Objects.requireNonNullElse(obj, "").getClass();
     }
 
     //-----Access methods----------------------------------------
@@ -274,9 +271,9 @@ public class TransferTableModel extends AbstractTableModel {
     }
 
     public final ScoutEintrag getScoutEintrag(int playerID) {
-        for (int i = 0; i < m_vScoutEintraege.size(); i++) {
-            if ((m_vScoutEintraege.get(i)).getPlayerID() == playerID) {
-                return (m_vScoutEintraege.get(i)).duplicate();
+        for (ScoutEintrag scoutEintrag : m_vScoutEintraege) {
+            if (scoutEintrag.getPlayerID() == playerID) {
+                return scoutEintrag.duplicate();
             }
         }
         return null;
@@ -365,10 +362,10 @@ public class TransferTableModel extends AbstractTableModel {
             aktuellerPlayer.setNickName(" "); //TODO: fix this
             aktuellerPlayer.setLastName(aktuellerScoutEintrag.getName());
             aktuellerPlayer.setPlayerSpecialty(aktuellerScoutEintrag.getSpeciality());
-            aktuellerPlayer.setErfahrung(aktuellerScoutEintrag.getErfahrung());
-            aktuellerPlayer.setFuehrung(aktuellerScoutEintrag.getLeadership());
+            aktuellerPlayer.setExperience(aktuellerScoutEintrag.getErfahrung());
+            aktuellerPlayer.setLeadership(aktuellerScoutEintrag.getLeadership());
             aktuellerPlayer.setForm(aktuellerScoutEintrag.getForm());
-            aktuellerPlayer.setKondition(aktuellerScoutEintrag.getKondition());
+            aktuellerPlayer.setStamina(aktuellerScoutEintrag.getKondition());
             aktuellerPlayer.setVerteidigung(aktuellerScoutEintrag.getVerteidigung());
             aktuellerPlayer.setTorschuss(aktuellerScoutEintrag.getTorschuss());
             aktuellerPlayer.setTorwart(aktuellerScoutEintrag.getTorwart());

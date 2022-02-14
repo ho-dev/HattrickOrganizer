@@ -18,6 +18,7 @@
 
 ### Rating
 * Initial calculation of the ratings takes into account the trainer type (#1281)
+* calculate effect of man marking on ratings (#682)
 
 ### Matches
 
@@ -48,5 +49,14 @@
 * fix CHPP token not being saved when exiting HO on macos (#1291)
 
 ## Translations
-- HO! is currently available in 36 languages thanks to the work of 57 translators: : _KOHb_, Adrian, akasolace, André Oliveira, Andreas, Ante, asteins, Baler0, Bartosz Fenski, beri84, Bogux, Boy van der Werf, brokenelevator, Bruno Nascimento, Cris, Csaba, DavidatorusF, Dinko, dzsoo, Fresty di Lot, Globe96, Gokmen, GreenHattrick, h3t3r0, Hakkarainen, imikacic, Juan Manuel, karelant. cd, Kimmo, LA-Dzigo, LEOSCHUMY, LeSchmuh, Lidegand, Manny, Massimo, Mauro Aranda, mondstern, Moorhuhninho, Motavali, murko, Philipp, QueenF, Raffael, RaV, Ricardo Salgueiro, Saleh, Sebas90, Sergejs Harkovs, sich, silvio, Stef Migchielsen, Sumame. esta, taimikko, TeamBMW, Volker, wsbrenk, Zigmas
-- The translation status varies a lot from one language to another. If you can help in a language requiring attention please join in the effort and register on [POeditor](https://poeditor.com/join/project/jCaWGL1JCl)
+
+Reports by Contributors - Dec 20, 2021 - Feb 13, 2022	
+
+* Foppe	303
+* \_KOHb\_	76
+* akasolace	70
+* Lidegand 	67
+* Moorhuhninho	67
+* sich	35
+* wsbrenk 11
+* Total translated:	629

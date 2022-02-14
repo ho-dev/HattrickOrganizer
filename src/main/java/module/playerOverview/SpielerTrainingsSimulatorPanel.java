@@ -167,7 +167,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final void setSpieler(Player player) {
+    public void setSpieler(Player player) {
         m_clPlayer = player;
 
         if (player != null) {
@@ -175,11 +175,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             setCBs();
 
             //Remove for Temp player
-            if (player.getPlayerID() < 0) {
-                m_jbRemoveTempSpieler.setEnabled(true);
-            } else {
-                m_jbRemoveTempSpieler.setEnabled(false);
-            }
+            m_jbRemoveTempSpieler.setEnabled(player.getPlayerID() < 0);
         } else {
             resetLabels();
             resetCBs();
@@ -190,19 +186,19 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         repaint();
     }
 
-    public final void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(m_jbAddTempSpieler)) {
             final Player tempPlayer = new Player();
             tempPlayer.setHrfDate();
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempPlayer.setSpielerID(module.transfer.scout.TransferEingabePanel
+            tempPlayer.setPlayerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
             tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             tempPlayer.setAlter(getAge());
             tempPlayer.setAgeDays(getAgeDays());
-            tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
+            tempPlayer.setExperience(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
-            tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
+            tempPlayer.setStamina(((CBItem) m_jcbKondition.getSelectedItem()).getId());
             tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
             tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
             tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
@@ -223,7 +219,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
     }
 
-    public final void itemStateChanged(ItemEvent itemEvent) {
+    public void itemStateChanged(ItemEvent itemEvent) {
         if ((itemEvent.getStateChange() == ItemEvent.SELECTED) || (itemEvent.getSource() == m_jchHomegrown)) {
             if (m_clPlayer != null) {
                 setLabels();
@@ -233,11 +229,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
     }
 
-    public final void reInit() {
+    public void reInit() {
         setSpieler(null);
     }
 
-    public final void refresh() {
+    public void refresh() {
         setSpieler(null);
     }
 
@@ -288,8 +284,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void setLabels() {
         tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
-        tempPlayer.setErfahrung(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
-        tempPlayer.setKondition(((CBItem) m_jcbKondition.getSelectedItem()).getId());
+        tempPlayer.setExperience(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
+        tempPlayer.setStamina(((CBItem) m_jcbKondition.getSelectedItem()).getId());
         tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
         tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
@@ -331,7 +327,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
         tempPlayer.setAlter(getAge());
         tempPlayer.setAgeDays(getAgeDays());
-        tempPlayer.setFuehrung(m_clPlayer.getLeadership());
+        tempPlayer.setLeadership(m_clPlayer.getLeadership());
         tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
     }
 
@@ -362,7 +358,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
         try {
             age = Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", ""));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return age;
     }
@@ -374,7 +370,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
         try {
             age = Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", ""));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return age;
     }
@@ -738,8 +734,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void resetLabels() {
         m_jpBestPos.clear();
-        for (int i = 0; i < playerPositionValues.length; i++) {
-            playerPositionValues[i].clear();
+        for (DoubleLabelEntries playerPositionValue : playerPositionValues) {
+            playerPositionValue.clear();
         }
         m_jpEPV.clear();
     }

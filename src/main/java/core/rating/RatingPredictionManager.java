@@ -28,7 +28,7 @@ public class RatingPredictionManager {
     private static final int MIDDLE = RatingPredictionParameter.MIDDLE;
     private static final int LEFT = RatingPredictionParameter.LEFT;
     private static final int RIGHT = RatingPredictionParameter.RIGHT;
-    public static final Date LAST_CHANGE = (new GregorianCalendar(2009, 4, 18)).getTime(); //18.05.2009
+    public static final Date LAST_CHANGE = (new GregorianCalendar(2009, Calendar.MAY, 18)).getTime(); //18.05.2009
 	private static final int SIDEDEFENSE = 0;
     private static final int CENTRALDEFENSE = 1; 
     private static final int MIDFIELD = 2; 
@@ -75,7 +75,7 @@ public class RatingPredictionManager {
 	private Lineup startingLineup;
     private int pullBackMinute;
     private boolean pullBackOverride;
-    private int styleOfPlay;
+
 
 
 	/**  Evolution of lineup during the game
@@ -88,22 +88,13 @@ public class RatingPredictionManager {
 	 *           The values will represent the evolution of lineup
 	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
 	 */
-	private Hashtable<Double, Lineup> LineupEvolution = new Hashtable<>();
+	private Hashtable<Double, Lineup> LineupEvolution;
 
-    public RatingPredictionManager () {
-    	if (RatingPredictionManager.config == null)
-    		RatingPredictionManager.config = RatingPredictionConfig.getInstance();
-    }
-
-    public RatingPredictionManager (RatingPredictionConfig config) {
-    	RatingPredictionManager.config = config;
-    }
-    
-    public RatingPredictionManager(Lineup _startingLineup, Team iteam, int styleOfPlay, RatingPredictionConfig config)
+    public RatingPredictionManager(Lineup _startingLineup, Team iteam)
     {
         this.startingLineup = _startingLineup;
-        RatingPredictionManager.config = config;
-        init(iteam, styleOfPlay);
+		if (RatingPredictionManager.config == null) RatingPredictionManager.config = RatingPredictionConfig.getInstance();
+        init(iteam);
         this.LineupEvolution = this.setLineupEvolution();
     }
 
@@ -183,7 +174,7 @@ public class RatingPredictionManager {
 				while (itr.hasNext())
 				{
 					Double x = (Double)itr.next();
-					if (x == tNextEvent)
+					if (Objects.equals(x, tNextEvent))
 						itr.remove();
 				}
 
@@ -302,35 +293,24 @@ public class RatingPredictionManager {
     private double adjustForCrowding(Lineup _lineup, double stk, int pos) {
     	
     	double weight;
-    	
-    	switch (pos) {
-	    	case IMatchRoleID.CENTRAL_DEFENDER :
-	    	case IMatchRoleID.CENTRAL_DEFENDER_OFF :
-	    	case IMatchRoleID.CENTRAL_DEFENDER_TOWING :
-	    	{
-	    		weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
-	    		break;
-	    	}
-	    	case IMatchRoleID.MIDFIELDER :
-	    	case IMatchRoleID.MIDFIELDER_DEF :
-	    	case IMatchRoleID.MIDFIELDER_OFF :
-	    	case IMatchRoleID.MIDFIELDER_TOWING :
-	    	{
-	    		weight = getCrowdingPenalty(_lineup, MIDFIELD);
-	    		break;
-	    	}
-	    	case IMatchRoleID.FORWARD :
-	    	case IMatchRoleID.FORWARD_DEF :
-	    	case IMatchRoleID.FORWARD_TOWING :
-	    	{
-	    		weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
-	    		break;
-	    	}
-	    	default :
-	    	{
-	    		weight = 1;
-	    	}
-    	}
+
+		switch (pos) {
+			case IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.CENTRAL_DEFENDER_TOWING -> {
+				weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
+				break;
+			}
+			case IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_TOWING -> {
+				weight = getCrowdingPenalty(_lineup, MIDFIELD);
+				break;
+			}
+			case IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> {
+				weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
+				break;
+			}
+			default -> {
+				weight = 1;
+			}
+		}
     	
     	if ( !(weight > 0)) {
     		// It is probably not set in the config
@@ -446,58 +426,41 @@ public class RatingPredictionManager {
     }
 
     private static String getSkillName (int skill) {
-    	switch (skill) {
-		case GOALKEEPING:
-			return "goalkeeping";
-		case DEFENDING:
-			return "defending";
-		case WINGER:
-			return "winger";
-		case PLAYMAKING:
-			return "playmaking";
-		case SCORING:
-			return "scoring";
-		case PASSING:
-			return "passing";
-		case SETPIECES:
-			return "setpieces";
-		default:
-			return "";
-		}
+		return switch (skill) {
+			case GOALKEEPING -> "goalkeeping";
+			case DEFENDING -> "defending";
+			case WINGER -> "winger";
+			case PLAYMAKING -> "playmaking";
+			case SCORING -> "scoring";
+			case PASSING -> "passing";
+			case SETPIECES -> "setpieces";
+			default -> "";
+		};
     }
 
     private static int getSkillByName (String skillName) {
     	skillName = skillName.toLowerCase(java.util.Locale.ENGLISH);
-    	if (skillName.equals("goalkeeping"))
-    		return GOALKEEPING;
-    	else if (skillName.equals("defending"))
-    		return DEFENDING;
-    	else if (skillName.equals("winger"))
-    		return WINGER;
-    	else if (skillName.equals("playmaking"))
-    		return PLAYMAKING;
-    	else if (skillName.equals("scoring"))
-    		return SCORING;
-    	else if (skillName.equals("passing"))
-    		return PASSING;
-    	else if (skillName.equals("setpieces"))
-    		return SETPIECES;
-    	else
-    		return -1;
+		return switch (skillName) {
+			case "goalkeeping" -> GOALKEEPING;
+			case "defending" -> DEFENDING;
+			case "winger" -> WINGER;
+			case "playmaking" -> PLAYMAKING;
+			case "scoring" -> SCORING;
+			case "passing" -> PASSING;
+			case "setpieces" -> SETPIECES;
+			default -> -1;
+		};
     }
 
     private static int getSideByName (String sideName) {
     	sideName = sideName.toLowerCase(java.util.Locale.ENGLISH);
-    	if (sideName.equals("thisside"))
-    		return THISSIDE;
-    	else if (sideName.equals("otherside"))
-    		return OTHERSIDE;
-    	else if (sideName.equals("middle"))
-    		return MIDDLE;
-    	else if (sideName.equals("") || sideName.equals("allsides"))
-    		return ALLSIDES;
-    	else
-    		return -1;
+		return switch (sideName) {
+			case "thisside" -> THISSIDE;
+			case "otherside" -> OTHERSIDE;
+			case "middle" -> MIDDLE;
+			case "", "allsides" -> ALLSIDES;
+			default -> -1;
+		};
     }
     
     private static int[] sectionNameToSkillAndSide (String sectionName) {
@@ -506,7 +469,7 @@ public class RatingPredictionManager {
     	int[] retArray = new int[2];
     	String skillName = "";
     	String sideName = "";    	
-    	if (sectionName.indexOf("_") > -1) {
+    	if (sectionName.contains("_")) {
     		String[] tmp = sectionName.split("_");
     		if (tmp.length == 2) {
     			skillName = tmp[0];
@@ -606,23 +569,19 @@ public class RatingPredictionManager {
     	RatingPredictionParameter  para = config.getPlayerStrengthParameters();
     	
 //    	HOLogger.instance().debug(getClass(), "Parameter file used: " + config.getPredictionName());
-    	
-    	switch (pos) {
-    	case CENTRALDEFENSE :
-    		// Central Defender
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumCDs(_lineup) + "CdMulti");
-    		break;
-    	case MIDFIELD :
-    		// Midfielder
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumIMs(_lineup) + "MfMulti");
-    		break;
-    	case CENTRALATTACK :
-    		// Forward
-    		penalty = para.getParam(RatingPredictionParameter.GENERAL, getNumFWs(_lineup) + "FwMulti");
-    		break;
-    	default :
-    		penalty = 1;
-    	}
+
+		penalty = switch (pos) {
+			case CENTRALDEFENSE ->
+					// Central Defender
+					para.getParam(RatingPredictionParameter.GENERAL, getNumCDs(_lineup) + "CdMulti");
+			case MIDFIELD ->
+					// Midfielder
+					para.getParam(RatingPredictionParameter.GENERAL, getNumIMs(_lineup) + "MfMulti");
+			case CENTRALATTACK ->
+					// Forward
+					para.getParam(RatingPredictionParameter.GENERAL, getNumFWs(_lineup) + "FwMulti");
+			default -> 1;
+		};
     	return penalty;
     }
     
@@ -736,37 +695,25 @@ public class RatingPredictionManager {
     
 
     public boolean isLeft (int pos) {
-    	
-    	if (pos == IMatchRoleID.leftCentralDefender
+		return pos == IMatchRoleID.leftCentralDefender
 				|| pos == IMatchRoleID.leftInnerMidfield
 				|| pos == IMatchRoleID.leftBack
 				|| pos == IMatchRoleID.leftWinger
-				|| pos == IMatchRoleID.leftForward)
-			return true;
-		else
-			return false;
+				|| pos == IMatchRoleID.leftForward;
     }
 
     public boolean isRight (int  pos) {
-    	
-    	if (pos == IMatchRoleID.rightCentralDefender
+		return pos == IMatchRoleID.rightCentralDefender
 				|| pos == IMatchRoleID.rightInnerMidfield
 				|| pos == IMatchRoleID.rightBack
 				|| pos == IMatchRoleID.rightWinger
-				|| pos == IMatchRoleID.rightForward)
-			return true;
-		else
-			return false;
+				|| pos == IMatchRoleID.rightForward;
     }
     
     public boolean isMiddle (int pos) {
-    	
-    	if (pos == IMatchRoleID.centralForward
+		return pos == IMatchRoleID.centralForward
 				|| pos == IMatchRoleID.centralInnerMidfield
-				|| pos == IMatchRoleID.middleCentralDefender)
-			return true;
-		else
-			return false;
+				|| pos == IMatchRoleID.middleCentralDefender;
     }
 
     public static float getLoyaltyHomegrownBonus(Player player) {
@@ -780,6 +727,16 @@ public class RatingPredictionManager {
             Player player = _lineup.getPlayerByPositionID(pos);
             byte taktik = _lineup.getTactic4PositionID(pos);
             if(player != null) {
+				if ( this.startingLineup.getManMarkingPosition() != null) {
+					var manMarkingOrder = this.startingLineup.getManMarkingOrder();
+					if (manMarkingOrder != null &&
+							player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+							player.getGameStartingTime() + 5 >= t	// man marking starts 5 minutes after player enters the match
+					) {
+						// create player clone with reduced skill values
+						player = player.createManMarker(this.startingLineup.getManMarkingPosition());
+					}
+				}
             	// Check sides
             	if (!useLeft && isLeft(pos)
             			|| !useMiddle && isMiddle(pos)
@@ -861,13 +818,13 @@ public class RatingPredictionManager {
         double retVal = 0.0F;
         try
         {
-            Object lastLvlUp[];
+            Object[] lastLvlUp;
             float skill;
             float subSkill;
             skill = player.getValue4Skill(skillType);
             float subskillFromDB = player.getSub4Skill(skillType);
 //            System.out.println ("t="+skillType+", o="+manualOffset+", s="+subskillFromDB);
-            /**
+            /*
              * If we know the last level up date from this player or
              * the user has set an offset manually -> use this sub/offset
              */
@@ -875,7 +832,7 @@ public class RatingPredictionManager {
             		(lastLvlUp = player.getLastLevelUp(skillType)) != null && lastLvlUp[0] != null && (Boolean) lastLvlUp[1])
                 subSkill = player.getSub4Skill(skillType);
             else
-            	/**
+            	/*
             	 * Try to guess the sub based on the skill level
             	 */
               subSkill = getSubDeltaFromConfig (config.getPlayerStrengthParameters(), getSkillName(skillType), (int)skill);
@@ -893,7 +850,6 @@ public class RatingPredictionManager {
 			{
 				skill *= player.getImpactWeatherEffect(weather);
 			}
-
 
             retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
             		getSkillName(skillType), player.getStamina(), player.getExperience(), skill, player.getForm(), useForm);
@@ -918,53 +874,32 @@ public class RatingPredictionManager {
      */
     private static double getAvg90StaminaEffect(int iStamina)
 	{
-		double staminaEffect = 0.651561111111111;
-
-		switch (iStamina) {
-			case 2:
-				staminaEffect = 0.664462406015038;
-				break;
-			case 3:
-				staminaEffect = 0.726691729323308;
-				break;
-			case 4:
-				staminaEffect = 0.787578947368421;
-				break;
-			case 5:
-				staminaEffect = 0.846515037593985;
-				break;
-			case 6:
-				staminaEffect = 0.902372180451128;
-				break;
-			case 7:
-				staminaEffect = 0.949612781954887;
-				break;
-			case 8:
-				staminaEffect = 0.983289473684211;
-				break;
-			case 9:
-				staminaEffect = 1d;
-				break;
-		}
-
-		return staminaEffect;
+		return switch (iStamina) {
+			case 2 -> 0.664462406015038;
+			case 3 -> 0.726691729323308;
+			case 4 -> 0.787578947368421;
+			case 5 -> 0.846515037593985;
+			case 6 -> 0.902372180451128;
+			case 7 -> 0.949612781954887;
+			case 8 -> 0.983289473684211;
+			case 9 -> 1d;
+			default -> 0.651561111111111;
+		};
 	}
 
     private static float getSubDeltaFromConfig (RatingPredictionParameter params, String sectionName, int skill) {
     	String useSection = sectionName;
     	if (!params.hasSection(sectionName))
     		useSection = RatingPredictionParameter.GENERAL;
-    	float delta = (float)params.getParam(useSection, "skillSubDeltaForLevel"+skill, 0);
-//    	System.out.println(delta);
-    	return delta;    	
+		//    	System.out.println(delta);
+    	return (float)params.getParam(useSection, "skillSubDeltaForLevel"+skill, 0);
     }
     
     private static double _calcPlayerStrength (RatingPredictionParameter params,
     	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
     	// If config changed, we have to clear the cache
 		boolean forceRefresh = false;
-    	if (!playerStrengthCache.containsKey("lastRebuild") 
-    			|| playerStrengthCache.get("lastRebuild") < config.getLastParse() || forceRefresh) {
+    	if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
     		HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
     		playerStrengthCache.clear();
     		playerStrengthCache.put ("lastRebuild", (double) new Date().getTime());
@@ -974,7 +909,7 @@ public class RatingPredictionManager {
 //    		HOLogger.instance().debug(RatingPredictionManager.class, "Using from cache: " + key);
     		return playerStrengthCache.get(key);
     	}
-    	double stk = 0;
+    	double stk;
     	String useSection = sectionName;
     	if (!params.hasSection(sectionName))
     		useSection = RatingPredictionParameter.GENERAL;
@@ -1039,7 +974,7 @@ public class RatingPredictionManager {
 		return stk;
     }
 
-    private void init(Team team, int styleOfPlay)
+    private void init(Team team)
     {
         try
         {
@@ -1050,7 +985,6 @@ public class RatingPredictionManager {
             this.substimmung = (short)team.getSubTeamSpirit();
             this.selbstvertrauen = (short)team.getConfidence();
             this.pullBackMinute = startingLineup.getPullBackMinute();
-            this.styleOfPlay = styleOfPlay;
 		}
         catch(Exception e)
         {
@@ -1156,27 +1090,18 @@ public class RatingPredictionManager {
     	// neutral to either defensive or offensive depending on what the style is.
     	
     	double outlier;
-    	
+    	var styleOfPlay = this.startingLineup.getStyleOfPlay();
     	if (styleOfPlay >= 0) {
     		outlier = offensive;
     	} else {
     		outlier = defensive;
     	}
-    	
-    	double effect = neutral + (Math.abs(styleOfPlay) * 0.1)*(outlier - neutral);
-    	
-    	return effect;
+
+		return neutral + (Math.abs(styleOfPlay) * 0.1)*(outlier - neutral);
     }
-    
-    
-    /************************************************************************* 
-     * 
-     * TacticLevel Functions
-     * (AIW, AOW, Counter...)
-     * 
-     *************************************************************************/
-    
-    /**
+
+
+	/**
      * get the tactic level for AiM / AoW
      *
      * @return tactic level
@@ -1185,7 +1110,7 @@ public class RatingPredictionManager {
     {
     	RatingPredictionParameter params = config.getTacticsParameters();
     	double retVal = 0;
-    	float passing = 0;
+    	float passing;
         for(int i : IMatchRoleID.aFieldMatchRoleID)
         {
             Player ispieler = startingLineup.getPlayerByPositionID(i);
@@ -1281,10 +1206,7 @@ public class RatingPredictionManager {
     	return (float)retVal;
     }
 
-
-    public final static float getWeatherBonus(){
+    public static float getWeatherBonus(){
 		return (float) config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "weatherBonus", DEFAULT_WEATHER_BONUS);
 	}
-
-
 }

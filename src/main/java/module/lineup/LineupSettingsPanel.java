@@ -15,8 +15,10 @@ import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 import core.model.match.StyleOfPlay;
 import core.model.match.Weather;
+import core.model.player.Player;
 import core.model.player.TrainerType;
 import core.rating.RatingPredictionConfig;
+import core.rating.RatingPredictionManager;
 import core.util.Helper;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.ratings.LineupRatingPanel;
@@ -69,6 +71,14 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			new CBItem(getTranslation("ls.module.lineup.matchlocation.tournament"),IMatchDetails.LOCATION_TOURNAMENT)
 	};
 	private final JComboBox<CBItem> m_jcbLocation = new JComboBox<>(LOCATION);
+
+	private final CBItem[] ManMarkingPositions = {
+			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.none"),0),
+			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.opposite"), Player.ManMarkingPosition.Opposite.getValue()),
+			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.notopposite"), Player.ManMarkingPosition.NotOpposite.getValue()),
+			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.notinlineup"), Player.ManMarkingPosition.NotInLineup.getValue())
+	};
+	private final JComboBox<CBItem> m_jcbManMarkingPosition = new JComboBox<>(ManMarkingPositions);
 
 	private final CBItem[] PULLBACK_MINUTE = {
 			new CBItem(getTranslation("PullBack.None"), 90),
@@ -158,6 +168,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 	}
 
+	private void setManMarking(boolean enabled, Player.ManMarkingPosition manMarkingPosition){
+		m_jcbManMarkingPosition.setEnabled(enabled);
+		var id = 0;
+		if ( enabled ){
+			if ( manMarkingPosition != null){
+				id = manMarkingPosition.getValue();
+			}
+		}
+		Helper.setComboBoxFromID(m_jcbManMarkingPosition,id);
+	}
+
 	private void setLocation(int location) {
 		// Set the location
 		Helper.setComboBoxFromID(m_jcbLocation, location);
@@ -197,6 +218,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jbReset.setEnabled(bLineupSimulation);
 
 		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
+		setManMarking (currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
 		setLocation(currentLineup.getLocation());
 		var team = homodel.getTeam();
 		if ( team != null){
@@ -283,6 +305,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			}
 			else if (event.getSource().equals(this.m_jcbPredictionModel)){
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
+			}
+			else if (event.getSource().equals(m_jcbManMarkingPosition)){
+				homodel.getLineupWithoutRatingRecalc().setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
 			}
 			refresh();
 		}
@@ -411,6 +436,16 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
+		yPos++;
+		initLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.manmarkingposition")), yPos);
+		constraints.gridx = 2;
+		constraints.gridy = yPos;
+		constraints.gridwidth = 1;
+		m_jcbManMarkingPosition.setToolTipText(getTranslation("ls.module.lineup.manmarkingposition.ToolTip"));
+		m_jcbManMarkingPosition.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
+		layout.setConstraints(m_jcbManMarkingPosition, constraints);
+		add(m_jcbManMarkingPosition);
+
 		m_jcbPredictionModel = new JComboBox<>(getPredictionItems());
 		yPos++;
 		initLabel(constraints, layout, new JLabel(getTranslation("PredictionType")), yPos);
@@ -479,6 +514,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbPullBackMinute.addItemListener(this);
 		m_jcbTacticalAssistants.addItemListener(this);
 		m_jcbPredictionModel.addItemListener(this);
+		m_jcbManMarkingPosition.addItemListener(this);
 	}
 
 	/**
@@ -494,6 +530,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbPullBackMinute.removeItemListener(this);
 		m_jcbTacticalAssistants.removeItemListener(this);
 		m_jcbPredictionModel.removeItemListener(this);
+		m_jcbManMarkingPosition.removeItemListener(this);
 	}
 
 	private void initLabel(GridBagConstraints constraints, GridBagLayout layout, JLabel label, int y) {

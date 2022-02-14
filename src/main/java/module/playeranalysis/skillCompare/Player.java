@@ -111,81 +111,80 @@ public class Player
 	public String getPositionCompareAsString(byte position)
 	{
 		String s = "";
-		switch(position)
-		{
-			case IMatchRoleID.KEEPER: {
+		switch (position) {
+			case IMatchRoleID.KEEPER -> {
 				s += getPosVal_GK() + ";" + (getPosVal_GK() - getOldPosVal_GK());
 				break;
 			}
-			case IMatchRoleID.CENTRAL_DEFENDER: {
+			case IMatchRoleID.CENTRAL_DEFENDER -> {
 				s += getPosVal_CD() + ";" + (getPosVal_CD() - getOldPosVal_CD());
 				break;
 			}
-			case IMatchRoleID.CENTRAL_DEFENDER_OFF: {
+			case IMatchRoleID.CENTRAL_DEFENDER_OFF -> {
 				s += getPosVal_CD_O() + ";" + (getPosVal_CD_O() - getOldPosVal_CD_O());
 				break;
 			}
-			case IMatchRoleID.CENTRAL_DEFENDER_TOWING: {
+			case IMatchRoleID.CENTRAL_DEFENDER_TOWING -> {
 				s += getPosVal_CD_TW() + ";" + (getPosVal_CD_TW() - getOldPosVal_CD_TW());
 				break;
 			}
-			case IMatchRoleID.BACK: {
+			case IMatchRoleID.BACK -> {
 				s += getPosVAL_WB() + ";" + (getPosVAL_WB() - getOldPosVal_WB());
 				break;
 			}
-			case IMatchRoleID.BACK_TOMID: {
+			case IMatchRoleID.BACK_TOMID -> {
 				s += getPosVal_WB_TM() + ";" + (getPosVal_WB_TM() - getOldPosVal_WB_TM());
 				break;
 			}
-			case IMatchRoleID.BACK_OFF: {
+			case IMatchRoleID.BACK_OFF -> {
 				s += getPosVal_WB_O() + ";" + (getPosVal_WB_O() - getOldPosVal_WB_O());
 				break;
 			}
-			case IMatchRoleID.BACK_DEF: {
+			case IMatchRoleID.BACK_DEF -> {
 				s += getPosVal_WB_D() + ";" + (getPosVal_WB_D() - getOldPosVAL_WB_D());
 				break;
 			}
-			case IMatchRoleID.MIDFIELDER: {
+			case IMatchRoleID.MIDFIELDER -> {
 				s += getPosVal_IM() + ";" + (getPosVal_IM() - getOldPosVal_IM());
 				break;
 			}
-			case IMatchRoleID.MIDFIELDER_OFF: {
+			case IMatchRoleID.MIDFIELDER_OFF -> {
 				s += getPosVal_IM_O() + ";" + (getPosVal_IM_O() - getOldPosVal_IM_O());
 				break;
 			}
-			case IMatchRoleID.MIDFIELDER_DEF: {
+			case IMatchRoleID.MIDFIELDER_DEF -> {
 				s += getPosVal_IM_D() + ";" + (getPosVal_IM_D() - getOldPosVal_IM_D());
 				break;
 			}
-			case IMatchRoleID.MIDFIELDER_TOWING: {
+			case IMatchRoleID.MIDFIELDER_TOWING -> {
 				s += getPosVal_IM_TW() + ";" + (getPosVal_IM_TW() - getOldPosVal_IM_TW());
 				break;
 			}
-			case IMatchRoleID.WINGER: {
+			case IMatchRoleID.WINGER -> {
 				s += getPosVal_W() + ";" + (getPosVal_W() - getOldPosVal_W());
 				break;
 			}
-			case IMatchRoleID.WINGER_OFF:{
+			case IMatchRoleID.WINGER_OFF -> {
 				s += getPosVal_W_O() + ";" + (getPosVal_W_O() - getOldPosVal_W_O());
 				break;
 			}
-			case IMatchRoleID.WINGER_DEF:{
+			case IMatchRoleID.WINGER_DEF -> {
 				s += getPosVal_W_D() + ";" + (getPosVal_W_D() - getOldPosVal_W_D());
 				break;
 			}
-			case IMatchRoleID.WINGER_TOMID: {
+			case IMatchRoleID.WINGER_TOMID -> {
 				s += getPosVal_W_TM() + ";" + (getPosVal_W_TM() - getOldPosVal_W_TM());
 				break;
 			}
-			case IMatchRoleID.FORWARD:{
+			case IMatchRoleID.FORWARD -> {
 				s += getPosVal_F() + ";" + (getPosVal_F() - getOldPosVal_F());
 				break;
 			}
-			case IMatchRoleID.FORWARD_DEF:{
+			case IMatchRoleID.FORWARD_DEF -> {
 				s += getPosVal_F_D() + ";" + (getPosVal_F_D() - getOldPosVal_F_D());
 				break;
 			}
-			case IMatchRoleID.FORWARD_TOWING:{
+			case IMatchRoleID.FORWARD_TOWING -> {
 				s += getPosVal_F_TW() + ";" + (getPosVal_F_TW() - getOldPosVal_F_TW());
 				break;
 			}
@@ -204,53 +203,52 @@ public class Player
 	public double getSkillCompareAsDouble(int skill)
 	{
 		double combined = 0;
-		switch(skill)
-		{
-			case 0:{
+		switch (skill) {
+			case 0 -> {
 				combined = getExperience() + (getOldExperience() * 0.01);
 				break;
 			}
-			case 1:{
+			case 1 -> {
 				combined = getForm() + (getOldForm() * 0.01);
 				break;
 			}
-			case 2:{
+			case 2 -> {
 				combined = getStamina() + (getOldStamina() * 0.01);
 				break;
 			}
-			case 3:{
+			case 3 -> {
 				combined = getKeeping() + (getOldKeeping() * 0.01);
 				break;
 			}
-			case 4:{
+			case 4 -> {
 				combined = getDefending() + (getOldDefending() * 0.01);
 				break;
 			}
-			case 5:{
+			case 5 -> {
 				combined = getPlaymaking() + (getOldPlaymaking() * 0.01);
 				break;
 			}
-			case 6:{
+			case 6 -> {
 				combined = getPassing() + (getOldPassing() * 0.01);
 				break;
 			}
-			case 7:{
+			case 7 -> {
 				combined = getWinger() + (getOldWinger() * 0.01);
 				break;
 			}
-			case 8:{
+			case 8 -> {
 				combined = getScoring() + (getOldScoring() * 0.01);
 				break;
 			}
-			case 9:{
+			case 9 -> {
 				combined = getSetPieces() + (getOldSetPieces() * 0.01);
 				break;
 			}
-			case 10:{
+			case 10 -> {
 				combined = getLoyalty() + (getOldLoyalty() * 0.01);
 				break;
 			}
-			case 11:{
+			case 11 -> {
 				combined = getHomeGrown() + (getOldHomeGrown() * 0.01);
 				break;
 			}
@@ -269,53 +267,52 @@ public class Player
 	public String getSkillCompareAsString(int skill)
 	{
 		String s = "";
-		switch(skill)
-		{
-			case 0:{
+		switch (skill) {
+			case 0 -> {
 				s += getExperience() + ";" + (getExperience() - getOldExperience());
 				break;
 			}
-			case 1:{
+			case 1 -> {
 				s += getForm() + ";" + (getForm() - getOldForm());
 				break;
 			}
-			case 2:{
+			case 2 -> {
 				s += getStamina() + ";" + (getStamina() - getOldStamina());
 				break;
 			}
-			case 3:{
+			case 3 -> {
 				s += getKeeping() + ";" + (getKeeping() - getOldKeeping());
 				break;
 			}
-			case 4:{
+			case 4 -> {
 				s += getDefending() + ";" + (getDefending() - getOldDefending());
 				break;
 			}
-			case 5:{
+			case 5 -> {
 				s += getPlaymaking() + ";" + (getPlaymaking() - getOldPlaymaking());
 				break;
 			}
-			case 6:{
+			case 6 -> {
 				s += getPassing() + ";" + (getPassing() - getOldPassing());
 				break;
 			}
-			case 7:{
+			case 7 -> {
 				s += getWinger() + ";" + (getWinger() - getOldWinger());
 				break;
 			}
-			case 8:{
+			case 8 -> {
 				s += getScoring() + ";" + (getScoring() - getOldScoring());
 				break;
 			}
-			case 9:{
+			case 9 -> {
 				s += getSetPieces() + ";" + (getSetPieces() - getOldSetPieces());
 				break;
 			}
-			case 10: {
+			case 10 -> {
 				s += getLoyalty() + ";" + (getLoyalty() - getOldLoyalty());
 				break;
 			}
-			case 11: {
+			case 11 -> {
 				s += getHomeGrown() + ";" + getOldHomeGrown();
 				break;
 			}
@@ -329,54 +326,52 @@ public class Player
 	 */
 	public void changeSkill(int skill, int wert)
 	{
-		switch(skill)
-		{
-			case 0:{
-				m_Player.setErfahrung(wert);
+		switch (skill) {
+			case 0 -> {
+				m_Player.setExperience(wert);
 				break;
 			}
-			case 1:{
+			case 1 -> {
 				m_Player.setForm(wert);
 				break;
 			}
-			case 2:{
-				m_Player.setKondition(wert);
+			case 2 -> {
+				m_Player.setStamina(wert);
 				break;
 			}
-			case 3:{
+			case 3 -> {
 				m_Player.setTorwart(wert);
 				break;
 			}
-			case 4:{
+			case 4 -> {
 				m_Player.setVerteidigung(wert);
 				break;
 			}
-			case 5:{
+			case 5 -> {
 				m_Player.setSpielaufbau(wert);
 				break;
 			}
-			case 6:{
+			case 6 -> {
 				m_Player.setPasspiel(wert);
 				break;
 			}
-			case 7:{
+			case 7 -> {
 				m_Player.setFluegelspiel(wert);
 				break;
 			}
-			case 8:{
+			case 8 -> {
 				m_Player.setTorschuss(wert);
 				break;
 			}
-			case 9:{
+			case 9 -> {
 				m_Player.setStandards(wert);
 				break;
 			}
-			case 10: {
+			case 10 -> {
 				m_Player.setLoyalty(wert);
 				break;
 			}
-			case 11:
-			{
+			case 11 -> {
 				if (wert == 2)
 					m_Player.setHomeGrown(true);
 				else if (wert == 1)
@@ -402,7 +397,7 @@ public class Player
 		// Array for the old values
 		int[] oldSkillValues = getOldSkillValues();
 		
-		if(direction == true)
+		if(direction)
 		{
 			// Array for newly set values
 			int[] newRatings = PlayerComparePanel.getNewRating();
@@ -513,53 +508,52 @@ public class Player
 	
 	public void setNewSkillValues(int skill, int wert)
 	{
-		switch(skill)
-		{
-			case 0:{
+		switch (skill) {
+			case 0 -> {
 				setExperience(wert);
 				break;
 			}
-			case 1:{
+			case 1 -> {
 				setForm(wert);
 				break;
 			}
-			case 2:{
+			case 2 -> {
 				setStamina(wert);
 				break;
 			}
-			case 3:{
+			case 3 -> {
 				setKeeping(wert);
 				break;
 			}
-			case 4:{
+			case 4 -> {
 				setDefending(wert);
 				break;
 			}
-			case 5:{
+			case 5 -> {
 				setPlaymaking(wert);
 				break;
 			}
-			case 6:{
+			case 6 -> {
 				setPassing(wert);
 				break;
 			}
-			case 7:{
+			case 7 -> {
 				setWinger(wert);
 				break;
 			}
-			case 8:{
+			case 8 -> {
 				setScoring(wert);
 				break;
 			}
-			case 9:{
+			case 9 -> {
 				setSetPieces(wert);
 				break;
 			}
-			case 10: {
+			case 10 -> {
 				setLoyalty(wert);
 				break;
 			}
-			case 11: {
+			case 11 -> {
 				setHomeGrown(wert);
 				break;
 			}
