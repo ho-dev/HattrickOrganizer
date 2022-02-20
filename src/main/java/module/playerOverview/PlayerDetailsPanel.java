@@ -28,6 +28,7 @@ import core.model.player.Player;
 import core.module.IModule;
 import core.net.HattrickLink;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HTDatetime;
 import core.util.Helper;
 import module.statistics.StatistikMainPanel;
@@ -310,10 +311,14 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         String playerName = "<html><B><span style='font-size:16px'>" + m_clPlayer.getFullName() + "</span></html></B></html>";
         jlName.setText(playerName);
 
-        HTDatetime dtArrivalDate = new HTDatetime(m_clPlayer.getArrivalDate());
-        String arrivalDate = DateTimeUtils.FormatLongDate(dtArrivalDate.getUserLocalizedTimeAsTimestamp());
-
-        m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
+        if ( m_clPlayer.getArrivalDate() != null) {
+            var dtArrivalDate = HODateTime.fromHT(m_clPlayer.getArrivalDate());
+            String arrivalDate = dtArrivalDate.toLocaleDateTime();
+            m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
+        }
+        else {
+            m_jlInTeamSince.setText("");
+        }
         if (m_clPlayer.isHomeGrown()) m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
 
         m_jbStatistics.setEnabled(true);
@@ -361,7 +366,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
                      && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
-            Player comparisonPlayer = (Player) SpielerTrainingsVergleichsPanel
+            Player comparisonPlayer = SpielerTrainingsVergleichsPanel
                     .getVergleichsPlayer().get(i);
             if (comparisonPlayer.getPlayerID() == id) {
                 m_clComparisonPlayer = comparisonPlayer;
@@ -570,7 +575,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerSkilllPanel.setConstraints(jpbWI, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(jpbWI);
 
-        constraintsPlayerSkillPanel.gridx = 2;;
+        constraintsPlayerSkillPanel.gridx = 2;
         layoutPlayerSkilllPanel.setConstraints(m_jclWIchange, constraintsPlayerSkillPanel);
         jpPlayerSkill.add(m_jclWIchange);
 
@@ -898,21 +903,21 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         positions[1] = new CBItem(MatchRoleID.getNameForPosition(UNSELECTABLE), UNSELECTABLE);
 
         int k = 2;
-        String text = "";
+        StringBuilder text;
         for (FactorObject allPo : allPos) {
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-            text = MatchRoleID.getNameForPosition(allPo.getPosition())
+            text = new StringBuilder(MatchRoleID.getNameForPosition(allPo.getPosition())
                     + " ("
                     + Helper.getNumberFormat(false, 1).format(
                     m_clPlayer.calcPosValue(allPo.getPosition(), true, true, null, false))
-                    + "%)";
+                    + "%)");
             for (byte altPos : altPositions
             ) {
                 if (altPos == allPo.getPosition()) {
-                    text += " *";
+                    text.append(" *");
                 }
             }
-            positions[k] = new CBItem(text, allPo.getPosition());
+            positions[k] = new CBItem(text.toString(), allPo.getPosition());
             k++;
         }
 
@@ -920,13 +925,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     }
 
     private Color getColorForSkill(int iSkill){
-       var bgColor =  switch (iSkill){
-            case 7, 8 -> ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN);
-            case 5, 6 -> ThemeManager.getColor(HOColorName.YELLOW);
-            case 3, 4 -> ThemeManager.getColor(HOColorName.ORANGE);
-            default -> ThemeManager.getColor(HOColorName.RED);
-        };
-        return bgColor;
+        return switch (iSkill){
+             case 7, 8 -> ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN);
+             case 5, 6 -> ThemeManager.getColor(HOColorName.YELLOW);
+             case 3, 4 -> ThemeManager.getColor(HOColorName.ORANGE);
+             default -> ThemeManager.getColor(HOColorName.RED);
+         };
     }
 
     private JProgressBar createBar(int iMax){
