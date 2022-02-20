@@ -50,7 +50,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Feb 15, 2022	
+Reports by Contributors - Dec 20, 2021 - Feb 20, 2022	
 
 * Foppe	577
 * \_KOHb\_	76
