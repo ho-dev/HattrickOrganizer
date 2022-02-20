@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* refactoring player details panel showing players' avatars now (#1349)
 * refactoring of lineup panel
 * tracking confidence and team spirit of nt teams
 
@@ -12,6 +13,7 @@
 ### Statistics
 
 ### Squad
+* refactoring player details panel showing players' avatars now (#1349)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)
