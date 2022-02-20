@@ -105,9 +105,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final Color c_dev = new Color(235, 170, 170);
 
 	public Player getSelectedPlayer() {
+/*
 		if(m_selectedPlayer == null) {
 			setActualSpieler(getSpielerUebersichtPanel().getPlayerOverviewTable().getSorter().getSpieler(0));
 		}
+*/
 		return m_selectedPlayer;
 	}
 
@@ -227,19 +229,23 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return m_HOMainFrame_initialized;
 	}
 
-
 	public void setActualSpieler(Player player) {
-		m_selectedPlayer = player;
-		getLineupPanel().setPlayer(player.getPlayerID());
-		getSpielerUebersichtPanel().setPlayer(player);
+		if ( m_selectedPlayer != player) {
+			m_selectedPlayer = player;
+			getLineupPanel().setPlayer(player.getPlayerID());
+			getSpielerUebersichtPanel().setPlayer(player);
+		}
 	}
 
 	public LineupPanel getLineupPanel() {
 		Container c = getTabbedPane().getModulePanel(IModule.LINEUP);
 		if (c instanceof LineupPanel) {
 			return (LineupPanel) c;
-		} else {
+		} else if (c != null) {
 			return ((LineupMasterView) c).getLineupPanel();
+		}
+		else {
+			return null;
 		}
 	}
 
@@ -404,7 +410,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			// Dispose makes frame windowClosed as soon as all modules windowClosing all complete.
 			try {
 				dispose();
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		} catch (Exception ee) {
 			HOLogger.instance().error(getClass(), ee);

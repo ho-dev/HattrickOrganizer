@@ -236,13 +236,23 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
 				e -> {
 					int row = spielerUebersichtTableName.getSelectedRow();
-					if (row == -1) row = 0;
+					if (row == -1) {
+						var player = HOMainFrame.instance().getSelectedPlayer();
+						if ( player != null){
+							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerID());
+							selectRow(spielerUebersichtTableName,row);
+							return;
+						}
+					}
 
-					selectRow(playerOverviewTable, row);
+					if ( row > -1) {
+						selectRow(playerOverviewTable, row);
 
-					// Set player on HOMainFrame to notify other tabs.
-					Player player = playerOverviewTable.getSorter().getSpieler(row);
-					if (player != null) HOMainFrame.instance().setActualSpieler(player);
-					});
+						// Set player on HOMainFrame to notify other tabs.
+						Player player = playerOverviewTable.getSorter().getSpieler(row);
+						if (player != null) HOMainFrame.instance().setActualSpieler(player);
+					}
+				}
+		);
 	}
 }
