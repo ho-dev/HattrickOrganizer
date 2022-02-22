@@ -3,7 +3,6 @@ package module.training.ui.model;
 import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.training.TrainingPerWeek;
-import core.util.HTDatetime;
 
 
 import java.util.List;

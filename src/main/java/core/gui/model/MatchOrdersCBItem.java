@@ -7,7 +7,6 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchKurzInfo;
-import core.util.HTDatetime;
 
 import javax.swing.*;
 import java.awt.*;

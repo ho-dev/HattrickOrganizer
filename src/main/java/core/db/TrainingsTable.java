@@ -2,7 +2,6 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
-import core.util.HTDatetime;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 import java.sql.ResultSet;

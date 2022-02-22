@@ -13,7 +13,6 @@ import core.file.xml.XMLWorldDetailsParser;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 import core.util.HelperWrapper;
 import core.HO;
 

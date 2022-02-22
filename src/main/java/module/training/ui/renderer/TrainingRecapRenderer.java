@@ -7,13 +7,9 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.training.FutureTrainingManager;
-import core.training.HattrickDate;
-import core.training.TrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HOLogger;
 import module.training.ui.TrainingLegendPanel;
-import module.training.ui.TrainingRecapTable;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.Color;

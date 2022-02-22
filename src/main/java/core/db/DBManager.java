@@ -17,7 +17,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HTDatetime;
+import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
 import module.youth.YouthPlayer;
@@ -45,6 +45,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The type Db manager.
@@ -1205,6 +1206,30 @@ public class DBManager {
 	}
 
 	/**
+	 * function that fetch info of match played related to the TrainingPerWeek instance
+	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+	 */
+	public MatchKurzInfo[] loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
+	}
+
+	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
+		String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+		final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
+				teamId, teamId, firstMatchDate.toHT(), lastMatchDate.toHT(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
+
+		return getMatchesKurzInfo(where);
+	}
+
+	/**
+	 * function that fetch info of NT match played related to the TrainingPerWeek instance
+	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+	 */
+	public MatchKurzInfo[] loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
+	}
+
+	/**
 	 * Get all matches for the given sql where clause.
 	 *
 	 * @param where The string containing sql where clause
@@ -2009,7 +2034,7 @@ public class DBManager {
 			// Get the player data for the matches
 			for (final PlayerMatchCBItem item : playerMatchCBItems) {
 
-				filter = new HTDatetime(item.getMatchdate()).getHattrickTimeAsTimestamp();
+				filter = HODateTime.fromHT(item.getMatchdate()).toDbTimestamp();
 
 				// Player
 				final Player player = getSpielerAtDate(playerID, filter);

@@ -5,7 +5,6 @@ import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.util.DateTimeUtils;
-import core.util.HTDatetime;
 import core.util.HOLogger;
 import module.transfer.test.HTWeek;
 

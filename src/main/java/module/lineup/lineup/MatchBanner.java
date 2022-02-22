@@ -188,6 +188,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             jlAwayTeam.setIcon(AwayTeamIcon);
             jlAwayTeam.setText(m_clSelectedMatch.getGuestTeamName());
 
+/*
             ZonedDateTime matchSchedule = m_clSelectedMatch.getMatchSchedule(true);
             var nbDays = ChronoUnit.DAYS.between(ZonedDateTime.now(), matchSchedule);
 
@@ -198,8 +199,15 @@ public class MatchBanner extends JPanel implements Refreshable {
             else{
                 dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
             }
+*/
 
-            String sDate = matchSchedule.format(dtf);
+            String sDate;
+            if ( m_clSelectedMatch != null){
+                sDate = m_clSelectedMatch.getMatchSchedule(true);
+            }
+            else {
+                sDate = "";
+            }
             String sLabel = "<html><div style='text-align: center;'>" + sDate + "\n";
             if (matchType == MatchType.LEAGUE) {
                 int iHTWeek = m_clSelectedMatch.getHTWeek();

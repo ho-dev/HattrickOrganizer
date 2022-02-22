@@ -5,7 +5,6 @@ import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
-import core.training.HattrickDate;
 import core.training.WeeklyTrainingType;
 import core.util.Helper;
 import module.training.Skills;

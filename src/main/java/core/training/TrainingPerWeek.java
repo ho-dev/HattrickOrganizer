@@ -7,6 +7,7 @@ import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -26,18 +27,17 @@ public class TrainingPerWeek  {
     private int o_TrainingType;
     private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
-    private Instant o_TrainingDate;
+    private HODateTime o_TrainingDate;
     private MatchKurzInfo[] o_Matches;
     private MatchKurzInfo[] o_NTmatches;
     private DBDataSource o_Source;
-    private boolean o_includeMatches;
 
 
     /**
      *
      * Constructor, matches are not passsed as parameters but are loaded at object creation
      */
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source, boolean o_includeMatches) {
+    public TrainingPerWeek(HODateTime trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source, boolean o_includeMatches) {
         o_TrainingDate = trainingDate;
         o_TrainingType = trainingType;
         o_TrainingIntensity = trainingIntensity;
@@ -51,55 +51,21 @@ public class TrainingPerWeek  {
         }
     }
 
-    public TrainingPerWeek(Instant trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source) {
+    public TrainingPerWeek(HODateTime trainingDate, int trainingType, int trainingIntensity, int staminaShare, int trainingAssistantsLevel, int coachLevel, DBDataSource source) {
         this(trainingDate, trainingType, trainingIntensity, staminaShare, trainingAssistantsLevel, coachLevel, source, false);
     }
 
 
-    public TrainingPerWeek(Instant trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
+    public TrainingPerWeek(HODateTime trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
         this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
     }
 
-    public void addMatchesInfo(){
-        var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-        String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
-        String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
-        o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
-        o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
-    }
-
-    /**
-     * function that fetch info of NT match played related to the TrainingPerWeek instance
-     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
-     */
-    private MatchKurzInfo[] fetchNTMatches(String firstMatchDate, String lastMatchDate) {
-
-        var matchTypes= MatchType.getNTMatchType();
-
-        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
-
-        final String where = String.format("WHERE MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS=%s ORDER BY MatchDate DESC",
-                firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED);
-
-        return DBManager.instance().getMatchesKurzInfo(where);
-    }
-
-
-    /**
-     * function that fetch info of match played related to the TrainingPerWeek instance
-     * @return MatchKurzInfo[] related to this TrainingPerWeek instance
-     */
-    private MatchKurzInfo[] fetchMatches(String firstMatchDate, String lastMatchDate) {
-
-
-        var matchTypes= MatchType.getOfficialMatchTypes();
-        String sOfficialMatchType = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
-
-        final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
-                    myClubID, myClubID, firstMatchDate, lastMatchDate, sOfficialMatchType, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
-
-
-        return DBManager.instance().getMatchesKurzInfo(where);
+    public void loadMatches(){
+        var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+        var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
+        var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
+        o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
     }
 
     public MatchKurzInfo[] getMatches() {
@@ -110,11 +76,11 @@ public class TrainingPerWeek  {
         return o_NTmatches;
     }
 
-    public Instant getTrainingDate() {
+    public HODateTime getTrainingDate() {
         return o_TrainingDate;
     }
 
-    public void setTrainingDate(Instant trainingDate) {
+    public void setTrainingDate(HODateTime trainingDate) {
         o_TrainingDate = trainingDate;
     }
 
@@ -164,13 +130,12 @@ public class TrainingPerWeek  {
     @Override
     public final String toString() {
         return "TrainingPerWeek[" +
-                "Training date: " + DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate) +
+                "Training date: " + o_TrainingDate.toHT() +
                 ", Training Type: " + TrainingType.toString(o_TrainingType)  +
                 "%, Intensity: " + o_TrainingIntensity +
                 "%, StaminaPart: " + o_StaminaShare +
                 "]";
     }
-
 
     public void setStaminaShare(int staminaShare) {
         this.o_StaminaShare=staminaShare;
@@ -184,38 +149,8 @@ public class TrainingPerWeek  {
         this.o_TrainingAssistantsLevel=trainingAssistantsLevel;
     }
 
-    public void loadMatches() {
-        // Loading matches played the week preceding the training date --------------------------
-        var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-        String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
-        String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
-        o_Matches = fetchMatches(_firstMatchDate, _lastMatchDate);
-        o_NTmatches = fetchNTMatches(_firstMatchDate, _lastMatchDate);
-    }
-
-    public boolean skillDropDayIsBetween(Instant from, Instant to) {
-        var skillDropDay = o_TrainingDate.minus(Duration.ofHours(7*12)); // half week. TODO: check exact time difference
+    public boolean skillDropDayIsBetween(HODateTime from, HODateTime to) {
+        var skillDropDay = o_TrainingDate.minus(7*12, ChronoUnit.HOURS); // half week. TODO: check exact time difference
         return from.isBefore(skillDropDay) && !to.isBefore(skillDropDay);
-    }
-
-    private String getSqlBetween()
-    {
-        var _startDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-        String _firstMatchDate = DateTimeUtils.InstantToSQLtimeStamp(_startDate);
-        String _lastMatchDate = DateTimeUtils.InstantToSQLtimeStamp(o_TrainingDate.plus(23, ChronoUnit.HOURS));
-        return "MATCHDATE BETWEEN " + _firstMatchDate + " AND " + _lastMatchDate;
-    }
-
-    /**
-     * Load matches of national team players in own team, during training week
-     * (used for experience calculation)
-     *
-     * @param nationalTeamID id of player's national team (it is NOT own team id)
-     * @return MatchKurzInfo array
-     */
-    public MatchKurzInfo[] loadMatchesOfNTPlayers(int nationalTeamID) {
-        final String where = "WHERE (HEIMID=" + nationalTeamID + " OR GASTID=" + nationalTeamID + ") AND " +
-                getSqlBetween() + " ORDER BY MatchDate DESC";
-        return DBManager.instance().getMatchesKurzInfo(where);
     }
 }

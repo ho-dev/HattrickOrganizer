@@ -12,6 +12,7 @@ import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
@@ -61,7 +62,7 @@ public class Player {
      * TeamInfo Smilie Filename
      */
     private String m_sTeamInfoSmilie;
-    private java.sql.Timestamp m_clhrfDate;
+    private HODateTime m_clhrfDate;
 
     /**
      * The player is no longer available in the current HRF
@@ -872,20 +873,19 @@ public class Player {
         return m_bHomeGrown;
     }
 
-    public Timestamp getHrfDate() {
+    public HODateTime getHrfDate() {
         if ( m_clhrfDate == null){
             m_clhrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
         }
         return m_clhrfDate;
     }
 
-    public void setHrfDate(Timestamp timestamp) {
+    public void setHrfDate(HODateTime timestamp) {
         m_clhrfDate = timestamp;
     }
 
     public void setHrfDate() {
-        Date now = new Date();
-        setHrfDate(new Timestamp(now.getTime()));
+        setHrfDate(HODateTime.now());
     }
 
     /**
@@ -1902,7 +1902,7 @@ public class Player {
                 // get experience increase of national team matches
                 if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
                     // TODO check if national matches are stored in database
-                    var nationalMatches = train.loadMatchesOfNTPlayers(this.getNationalTeamID());
+                    var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
@@ -2235,16 +2235,14 @@ public class Player {
      * Set training priority for a time interval.
      * Previously saved trainings of this interval are overwritten or deleted.
      *  @param prio new training priority for the given time interval
-     * @param fromWeek first week with new training priority
-     * @param toWeek last week with new training priority, null means open end
+     * @param from first week with new training priority
+     * @param to last week with new training priority, null means open end
      */
-    public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
+    public void setFutureTraining(FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
-        var from = HattrickDate.fromInstant(fromWeek);
-        var to = toWeek != null ? HattrickDate.fromInstant(toWeek) : null;
         for (var t : getFuturePlayerTrainings()) {
             if (t.cut(from, to) ||
-                    t.cut(new HattrickDate(0, 0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
+                    t.cut(HODateTime.htStart, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
                 removeIntervals.add(t);
             }
         }
@@ -2270,10 +2268,11 @@ public class Player {
      *  if there are more than one selected priorities, "individual priorities" is returned
      *  if is no user selected priority, the best position information is returned
      */
-    public String getTrainingPriorityInformation(HattrickDate nextWeek) {
+    public String getTrainingPriorityInformation(HODateTime nextWeek) {
         String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (!nextWeek.isAfter(t.getTo())){
+            //
+            if ( !t.endsBefore(nextWeek)){
                 if ( ret != null ){
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;
@@ -2295,17 +2294,17 @@ public class Player {
      * @param trainingWeeks List of training week information
      */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
-        var before = DBManager.instance().getSpieler(previousID).stream()
+        var playerBefore = DBManager.instance().getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst()
                 .orElse(this.CloneWithoutSubskills());
 
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
-        boolean experienceSubDone = this.getExperience() > before.getExperience(); // Do not calculate sub on experience skill up
-        var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
+        boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up
+        var experienceSub = experienceSubDone?0:playerBefore.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
-            var sub = before.getSub4Skill(skill);
-            var valueBeforeTraining = before.getValue4Skill(skill);
+            var sub = playerBefore.getSub4Skill(skill);
+            var valueBeforeTraining = playerBefore.getValue4Skill(skill);
             var valueAfterTraining = this.getValue4Skill(skill);
 
             if (trainingWeeks.size() > 0) {
@@ -2350,7 +2349,7 @@ public class Player {
             // Handle skill drops that happens the monday after training date
             var nextWeekTraining = TrainingManager.instance().getNextWeekTraining();
             if ( SkillDrops.instance().isActive() && nextWeekTraining != null &&
-                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(before.getHrfDate().toInstant(), this.getHrfDate().toInstant()))
+                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate().toInstant(), this.getHrfDate().toInstant()))
             {
                 // calc another skill down
                 sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;

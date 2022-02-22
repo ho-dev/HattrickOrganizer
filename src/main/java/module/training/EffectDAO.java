@@ -5,12 +5,10 @@ import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
-import core.util.HTDatetime;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;

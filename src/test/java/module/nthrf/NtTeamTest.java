@@ -1,9 +1,6 @@
 package module.nthrf;
 
 
-import core.HO;
-import core.model.HOVerwaltung;
-import core.util.HTDatetime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -4,6 +4,7 @@ import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,7 +24,7 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * the birthday of hattrick
      */
-    private static final HODateTime htStart = HODateTime.fromHT("1997-09-22 00:00:00");
+    public static final HODateTime htStart = HODateTime.fromHT("1997-09-22 00:00:00");
 
     /**
      * internal time representation
@@ -66,6 +67,15 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     /**
+     * Create an instance from HT season, week
+     * @param week ht season, week
+     * @return date time of the start of hattrick week
+     */
+    public static HODateTime fromHTWeek(HTWeek week) {
+        return new HODateTime(htStart.instant.plus(Duration.ofDays(((week.season-1)*16+ week.week-1)*7)));
+    }
+
+    /**
      * Convert to HT (chpp) string representation
      * @return String
      */
@@ -78,7 +88,11 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return String
      */
     public String toLocaleDate() {
-        var formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withZone(ZoneId.systemDefault());
+        return toLocalDate(FormatStyle.MEDIUM);
+    }
+
+    public String toLocalDate(FormatStyle style){
+        var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
 
@@ -87,7 +101,11 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return String
      */
     public String toLocaleDateTime() {
-        var formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withZone(ZoneId.systemDefault());
+        return toLocaleDateTime(FormatStyle.MEDIUM);
+    }
+
+    public String toLocaleDateTime(FormatStyle style){
+        var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
 
@@ -109,10 +127,26 @@ public class HODateTime implements Comparable<HODateTime> {
         return instant.compareTo(o.instant);
     }
 
+    public HODateTime minus(int i, ChronoUnit unit) {
+        return new HODateTime(instant.minus(i,unit));
+    }
+
+    public HODateTime plus(int i, ChronoUnit unit) {
+        return new HODateTime(instant.plus(i,unit));
+    }
+
+    public boolean isBefore(HODateTime t) {
+        return instant.isBefore(t.instant);
+    }
+
+    public boolean isAfter(HODateTime t) {
+        return instant.isAfter(t.instant);
+    }
+
     /**
      * Internal class representing HT's season and week
      */
-    public class HTWeek {
+    public static class HTWeek {
         /**
          * season number [1..]
          */
@@ -121,6 +155,23 @@ public class HODateTime implements Comparable<HODateTime> {
          * week number [1..16]
          */
         public int week;
+
+        public HTWeek(int season, int week){
+            this.season = season;
+            this.week = week;
+        }
+
+        public static HTWeek fromString(String s) {
+            var nr = s.split(" ");
+            if (nr.length == 2) {
+                return new HTWeek(
+                    Integer.parseInt(nr[0]),
+                    Integer.parseInt(nr[1])
+                );
+            } else {
+                return new HTWeek(0,0);
+            }
+        }
     }
 
     /**
@@ -129,9 +180,10 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public HTWeek toHTWeek() {
         var dayDiff= ChronoUnit.DAYS.between(htStart.instant, instant);
-        var ret = new HTWeek();
-        ret.season = (int)(dayDiff / (16 * 7) + 1);
-        ret.week = (int) ((dayDiff % (16 * 7)) / 7) + 1;
+        var ret = new HTWeek(
+                (int)(dayDiff / (16 * 7) + 1),
+                (int) ((dayDiff % (16 * 7)) / 7) + 1
+        );
         return ret;
     }
 

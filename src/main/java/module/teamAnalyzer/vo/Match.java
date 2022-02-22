@@ -5,12 +5,9 @@ import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
-import core.util.HTDatetime;
 import module.teamAnalyzer.SystemManager;
 
 import java.sql.Timestamp;
-import java.util.Date;
-
 
 
 /**

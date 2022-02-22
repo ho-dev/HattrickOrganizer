@@ -2,16 +2,9 @@ package module.training.ui.model;
 
 import core.constants.TrainingType;
 import core.datatype.CBItem;
-import core.db.DBManager;
 import core.training.TrainingPerWeek;
-import core.util.HTDatetime;
 
-import java.awt.*;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.ListIterator;
 
 
 /**

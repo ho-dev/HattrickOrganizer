@@ -3,7 +3,6 @@ package module.training.ui;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.training.FuturePlayerTraining;
-import core.training.HattrickDate;
 import core.util.HOLogger;
 import module.training.ui.model.TrainingModel;
 
@@ -11,7 +10,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.Instant;
-import java.util.Collection;
 
 public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListener {
 

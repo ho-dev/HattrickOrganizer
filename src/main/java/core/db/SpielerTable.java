@@ -4,6 +4,7 @@ import core.constants.player.PlayerSkill;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -526,10 +527,10 @@ final class SpielerTable extends AbstractTable {
             player.setNationalityAsInt(rs.getInt("Land"));
             player.setTSI(rs.getInt("Marktwert"));
 
-            //TSI, alles vorher durch 1000 teilen
-            player.setHrfDate(rs.getTimestamp("Datum"));
-
-            if (player.getHrfDate().before(DBManager.TSIDATE)) {
+            //TSI, values stored before TSIDATE needs to be divided by 1000
+			var tsidate = rs.getTimestamp("Datum");
+            player.setHrfDate(HODateTime.fromDbTimestamp(tsidate));
+            if (tsidate.before(DBManager.TSIDATE)) {
                 player.setTSI(player.getTSI()/1000);
             }
 

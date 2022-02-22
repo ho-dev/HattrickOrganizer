@@ -2,11 +2,12 @@ package core.model.misc;
 
 import core.db.DBManager;
 import core.db.user.UserManager;
-import core.training.HattrickDate;
+import core.util.HODateTime;
 import core.util.HOLogger;
+import module.transfer.test.HTWeek;
+
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,10 +37,10 @@ public final class Basics  {
     private String m_sTeamName = "";
 
     /** Datum der Erstellung */
-    private Timestamp m_clDatum = new Timestamp(0);
+    private HODateTime m_clDatum = HODateTime.htStart;
 
     /** Date of activation */
-    private Timestamp m_tActivationDate = new Timestamp(0);
+    private HODateTime m_tActivationDate = HODateTime.htStart;
 
     /** Land */
     private int m_iLand;
@@ -156,7 +157,7 @@ public final class Basics  {
      *
      * @param m_clDatum New value of property m_clDatum.
      */
-    public void setDatum(Timestamp m_clDatum) {
+    public void setDatum(HODateTime m_clDatum) {
         this.m_clDatum = m_clDatum;
     }
 
@@ -165,7 +166,7 @@ public final class Basics  {
      *
      * @return Value of property m_clDatum.
      */
-    public Timestamp getDatum() {
+    public HODateTime getDatum() {
         return m_clDatum;
     }
 
@@ -341,8 +342,9 @@ public final class Basics  {
         return m_iSpieltag;
     }
 
-    public HattrickDate getHattrickWeek(){
-        return new HattrickDate(this.m_iSeason, this.m_iSpieltag);
+    public HODateTime getHattrickWeek(){
+        var week = new HODateTime.HTWeek(this.m_iSeason, this.m_iSpieltag);
+        return HODateTime.fromHTWeek(week);
     }
 
     /**

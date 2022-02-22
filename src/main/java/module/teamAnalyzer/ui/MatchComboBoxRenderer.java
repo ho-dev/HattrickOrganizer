@@ -6,14 +6,10 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
-import core.util.HTDatetime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.swing.*;
 
 

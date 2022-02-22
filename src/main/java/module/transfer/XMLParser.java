@@ -5,10 +5,8 @@ package module.transfer;
 import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.net.MyConnector;
-import core.util.HTDatetime;
 import core.util.Helper;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

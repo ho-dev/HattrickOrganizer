@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 
 import java.sql.Timestamp;
 import java.util.Calendar;

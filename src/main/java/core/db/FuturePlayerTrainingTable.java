@@ -2,7 +2,6 @@ package core.db;
 
 
 import core.training.FuturePlayerTraining;
-import core.training.HattrickDate;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;

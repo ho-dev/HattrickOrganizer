@@ -1,6 +1,7 @@
 package core.training;
 
 import core.model.HOVerwaltung;
+import core.util.HODateTime;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,12 +12,16 @@ public class FuturePlayerTraining {
 
     public boolean contains(Instant trainingDate) {
         // from<=date & to>date
-        if ( !from.toInstant().isAfter(trainingDate)  ) {
+        if ( !from.instant.isAfter(trainingDate)  ) {
             if  ( to == null ) return true;
-            var endOfToWeek = to.toInstant().plus(Duration.ofDays(7));
+            var endOfToWeek = to.instant.plus(Duration.ofDays(7));
             return endOfToWeek.isAfter(trainingDate);
         }
         return false;
+    }
+
+    public boolean endsBefore(HODateTime nextWeek) {
+        return to != null && to.instant.isBefore(nextWeek.instant);
     }
 
     public enum Priority {
@@ -64,17 +69,17 @@ public class FuturePlayerTraining {
     /**
      * first week of training interval
      */
-    private HattrickDate from;
+    private HODateTime from;
     /**
      * last week of training interval (null if training is planned forever)
      */
-    private HattrickDate to;
+    private HODateTime to;
     /**
      * priority of the training (overrides automatic determination by best position)
      */
     private Priority priority;
 
-    public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HattrickDate from, HattrickDate to) {
+    public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         this.playerId = playerId;
         this.priority = prio;
         this.from = from;
@@ -97,30 +102,22 @@ public class FuturePlayerTraining {
         this.playerId = playerId;
     }
 
-    public HattrickDate getFrom() {
+    public HODateTime getFrom() {
         return from;
     }
 
-    public void setFrom(HattrickDate from) {
+    public void setFrom(HODateTime from) {
         this.from = from;
     }
 
-    public HattrickDate getTo() {
+    public HODateTime getTo() {
         return to;
     }
 
-    public void setTo(HattrickDate to) {
+    public void setTo(HODateTime to) {
         this.to = to;
     }
 
-    /**
-     * check if week is during the planned training interval
-     * @param week week to test
-     * @return true if week is during current interval
-     */
-    public boolean isInWeek(HattrickDate week) {
-        return week.isBetween(this.from, this.to);
-    }
 
     /**
      * Cut the given time interval from the current training interval
@@ -131,20 +128,20 @@ public class FuturePlayerTraining {
      * @return false if remaining training interval is not empty
      *          true if training is completely replaced by the new interval
      */
-    public boolean cut(HattrickDate from, HattrickDate to) {
-        if (from.isAfter(this.to) || this.from.isAfter(to)) {
+    public boolean cut(HODateTime from, HODateTime to) {
+        if (from.instant.isAfter(this.to.instant) || this.from.instant.isAfter(to.instant)) {
             // this is outside the given interval
             return false;
         }
 
-        if (from.isAfter(this.from)) {
+        if (from.instant.isAfter(this.from.instant)) {
             this.to = from;
-            this.to.addWeeks(-1);
+            this.to.instant.minus(Duration.ofDays(7));
             return false;
         }
-        if ( to != null && (this.to == null || this.to.isAfter(to))) {
+        if ( to != null && (this.to == null || this.to.instant.isAfter(to.instant))) {
             this.from = to;
-            this.from.addWeeks(1);
+            this.from.instant.plus(Duration.ofDays(7));
             return false;
         }
         return true; // completely replaced
