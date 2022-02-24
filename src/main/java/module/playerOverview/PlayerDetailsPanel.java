@@ -311,8 +311,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         String playerName = "<html><B><span style='font-size:16px'>" + m_clPlayer.getFullName() + "</span></html></B></html>";
         jlName.setText(playerName);
 
-        if ( m_clPlayer.getArrivalDate() != null) {
-            var dtArrivalDate = HODateTime.fromHT(m_clPlayer.getArrivalDate());
+        var arrival = m_clPlayer.getArrivalDate();
+        if ( arrival != null &&  !arrival.isEmpty()) {
+            var dtArrivalDate = HODateTime.fromHT(arrival);
             String arrivalDate = dtArrivalDate.toLocaleDateTime();
             m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
         }
