@@ -437,7 +437,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private MatchKurzInfo createMatchKurzInfo(ResultSet rs) throws SQLException {
 		MatchKurzInfo match = new MatchKurzInfo();
-		match.setMatchSchedule(HODateTime.fromHT(rs.getString("MatchDate")));
+		match.setMatchSchedule(HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")));
 		match.setGuestTeamID(rs.getInt("GastID"));
 		match.setGuestTeamName(DBManager.deleteEscapeSequences(rs
 				.getString("GastName")));

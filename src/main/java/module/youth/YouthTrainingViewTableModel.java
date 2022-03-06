@@ -6,6 +6,8 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.model.HOVerwaltung;
 import core.module.IModule;
+import core.util.HODateTime;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(0, "ls.youth.training.date", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
-                        return new ColorLabelEntry(time2Int(youthTraining.getMatchDate()), youthTraining.getMatchDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(time2Int(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(1, "ls.youth.training.hometeam") {

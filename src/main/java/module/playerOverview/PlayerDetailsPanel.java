@@ -1089,9 +1089,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
-        public void update(int i, String matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
+        public void update(int i, HODateTime matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
                            String matchRating, int matchID){
-            lMatchDate.get(i).setText(matchDate);
+            lMatchDate.get(i).setText(HODateTime.toLocaleDateTime(matchDate));
 
             lMatchLabel.get(i).setText(matchLabel);
             lMatchLabel.get(i).setIcon(matchTypeIcon);

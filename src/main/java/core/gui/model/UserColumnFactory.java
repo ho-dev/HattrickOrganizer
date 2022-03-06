@@ -16,6 +16,7 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.HODateTime;
 import core.util.Helper;
 import module.playerOverview.PlayerStatusLabelEntry;
 
@@ -318,7 +319,7 @@ final public class UserColumnFactory {
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                return new ColorLabelEntry(spielerCBItem.getMatchdate(),
+                return new ColorLabelEntry(HODateTime.toLocaleDateTime(spielerCBItem.getMatchdate()),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }

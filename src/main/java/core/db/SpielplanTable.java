@@ -170,7 +170,7 @@ final class SpielplanTable extends AbstractTable {
 						"UPDATE "+getTableName()+" SET LigaName='"
 							+ plan.getLigaName()
 							+ "', FetchDate='"
-							+ plan.getFetchDate().toString()
+							+ plan.getFetchDate().toDbTimestamp()
 							+ "'"
 							+ " WHERE LigaID="
 							+ plan.getLigaId()

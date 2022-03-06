@@ -69,10 +69,22 @@ public class TrainingPerWeek  {
     }
 
     public MatchKurzInfo[] getMatches() {
+        if ( o_Matches == null){
+            var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+            var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
+            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
+        }
         return o_Matches;
     }
 
     public MatchKurzInfo[] getNTmatches() {
+        if ( o_NTmatches==null){
+            var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
+            var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
+            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+            o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
+        }
         return o_NTmatches;
     }
 

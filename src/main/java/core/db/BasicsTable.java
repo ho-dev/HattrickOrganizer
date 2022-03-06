@@ -80,7 +80,7 @@ final class BasicsTable extends AbstractTable {
 					+ ","
 					+ hrfId
 					+ ",'"
-					+ basics.getDatum().toString()
+					+ basics.getDatum().toDbTimestamp()
 					+ "',"
 					+ basics.getRegionId()
 					+ ",'"
@@ -90,7 +90,7 @@ final class BasicsTable extends AbstractTable {
 					+ "',"
 					+ basics.getYouthTeamId()
 					+ ","
-					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate() + "'")
+					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate().toDbTimestamp() + "'")
 					+ " )");
 			adapter.executeUpdate(statement);
 		}

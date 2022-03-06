@@ -1995,8 +1995,10 @@ public class DBManager {
 			// Get all data on the player
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
-						rs.getInt("MatchID"), rs.getFloat("Rating") * 2,
-						rs.getInt("HoPosCode"), rs.getString("MatchDate"),
+						rs.getInt("MatchID"),
+						rs.getFloat("Rating") * 2,
+						rs.getInt("HoPosCode"),
+						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
 						DBManager.deleteEscapeSequences(rs
 								.getString("HeimName")), rs.getInt("HeimID"),
 						DBManager.deleteEscapeSequences(rs
@@ -2013,7 +2015,7 @@ public class DBManager {
 			// Get the player data for the matches
 			for (final PlayerMatchCBItem item : playerMatchCBItems) {
 
-				filter = HODateTime.fromHT(item.getMatchdate()).toDbTimestamp();
+				filter = item.getMatchdate().toDbTimestamp();
 
 				// Player
 				final Player player = getSpielerAtDate(playerID, filter);
@@ -2717,28 +2719,24 @@ public class DBManager {
 		// - add one week to next training date of the week
 		// - use min(hrf) here
 
-		var sql = new StringBuilder("""
-					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
-					FROM XTRADATA
-					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
-					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
-					INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0
-					INNER JOIN (
-					  SELECT TRAININGDATE,""");
+		var sql = new StringBuilder();
+		sql.append("SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER")
+				.append(" FROM XTRADATA")
+				.append(" INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID")
+				.append(" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID")
+				.append(" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0")
+				.append(" INNER JOIN (")
+				.append(" SELECT TRAININGDATE,");
 		if ( all ) {
-			sql.append("min");
+			sql.append(" min");
 		}
 		else {
-			sql.append("max");
+			sql.append(" max");
 		}
-		sql.append("""
-				(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE
-				                 	) IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID
-				                 	WHERE XTRADATA.TRAININGDATE >""");
-		if (all ){
-			sql.append("=");
-		}
-		sql.append("'").append(startDate).append("'");
+		sql.append("(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE")
+				.append(") IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID")
+				.append(" WHERE XTRADATA.TRAININGDATE >=")
+				.append("'").append(startDate).append("'");
 
 		try {
 

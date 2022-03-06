@@ -106,10 +106,18 @@ public class HODateTime implements Comparable<HODateTime> {
     public String toLocaleDate() {
         return toLocaleDate(FormatStyle.MEDIUM);
     }
+    public static String toLocaleDate(HODateTime in){
+        if ( in != null) return in.toLocaleDate(FormatStyle.MEDIUM);
+        return "";
+    }
 
     public String toLocaleDate(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
+    }
+    public static String toLocaleDate(HODateTime in, FormatStyle style){
+        if ( in != null) return in.toLocaleDate(style);
+        return "";
     }
 
     /**
@@ -120,12 +128,19 @@ public class HODateTime implements Comparable<HODateTime> {
     public String toLocaleDateTime() {
         return toLocaleDateTime(FormatStyle.MEDIUM);
     }
+    public static String toLocaleDateTime(HODateTime in){
+        if ( in != null) return in.toLocaleDateTime(FormatStyle.MEDIUM);
+        return "";
+    }
 
     public String toLocaleDateTime(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
-
+    public static String toLocaleDateTime(HODateTime in, FormatStyle style){
+        if ( in != null) return in.toLocaleDateTime(style);
+        return "";
+    }
     /**
      * Convert to database timestamp
      *

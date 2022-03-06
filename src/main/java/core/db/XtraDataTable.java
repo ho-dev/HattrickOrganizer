@@ -86,11 +86,11 @@ final class XtraDataTable extends AbstractTable {
 					+ ",'"
 					+ core.db.DBManager.insertEscapeSequences(xtra.getLogoURL())
 					+ "', '"
-					+ xtra.getSeriesMatchDate()
+					+ xtra.getSeriesMatchDate().toDbTimestamp()
 					+ "', '"
-					+ xtra.getNextTrainingDate()
+					+ xtra.getNextTrainingDate().toDbTimestamp()
 					+ "', '"
-					+ xtra.getEconomyDate()
+					+ xtra.getEconomyDate().toDbTimestamp()
 					+ "', "
 					+ xtra.getLeagueLevelUnitID()
 					+ ", "
