@@ -57,7 +57,7 @@ public class XMLSpielplanParser {
 		tmp = (Element) ele.getElementsByTagName("AwayTeamName").item(0);
 		spiel.setGastName(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-		spiel.setDatum(tmp.getFirstChild().getNodeValue());
+		spiel.setDatum(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
 
 		// Zum Schluss weil nicht immer vorhanden
 		if (ele.getElementsByTagName("AwayGoals").getLength() > 0) {

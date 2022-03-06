@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.series.Paarung;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.series.Spielplan;
 
@@ -63,7 +64,7 @@ public final class PaarungTable extends AbstractTable {
 						+ "', '"
 						+ DBManager.insertEscapeSequences(match.getGastName())
 						+ "', '"
-						+ match.getStringDate()
+						+ match.getDatum().toDbTimestamp()
 						+ "', ");
 				sql += (match.getSpieltag() + ", " + match.getHeimId() + ", " + match.getGastId() + ", " + match.getToreHeim() + ", " + match.getToreGast() + ", " + match.getMatchId() + " )");
 				adapter.executeUpdate(sql);
@@ -88,12 +89,13 @@ public final class PaarungTable extends AbstractTable {
 
 			rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
 				//Paarung auslesen
 				match = new Paarung();
-				match.setDatum(rs.getString("Datum"));
+				match.setDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("Datum")));
 				match.setGastId(rs.getInt("GastID"));
 				match.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
 				match.setHeimId(rs.getInt("HeimID"));

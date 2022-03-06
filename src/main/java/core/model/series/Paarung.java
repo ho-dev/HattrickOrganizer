@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Paarung implements Comparable<Paarung>{
     //~ Instance fields ----------------------------------------------------------------------------
-    protected String m_sDatum = "";
+    protected HODateTime m_sDatum;
     protected String m_sGastName = "";
     protected String m_sHeimName = "";
     protected int m_iGastId = -1;
@@ -33,10 +33,8 @@ public class Paarung implements Comparable<Paarung>{
      *
      * @param date New value of property m_lDatum.
      */
-    public final void setDatum(String date) {
-        if (date != null) {
-            m_sDatum = date;
-        }
+    public final void setDatum(HODateTime date) {
+        m_sDatum = date;
     }
 
     /**
@@ -45,7 +43,7 @@ public class Paarung implements Comparable<Paarung>{
      * @return Value of property m_lDatum.
      */
     public final HODateTime getDatum() {
-        return HODateTime.fromHT(m_sDatum);
+        return m_sDatum;
     }
 
     /**
@@ -192,9 +190,6 @@ public class Paarung implements Comparable<Paarung>{
         return m_iSpieltag;
     }
 
-    public final String getStringDate() {
-        return m_sDatum;
-    }
 
     /**
      * Setter for property m_iToreGast.
@@ -251,7 +246,7 @@ public class Paarung implements Comparable<Paarung>{
 	public final boolean equals(Object obj) {
         if (obj instanceof final Paarung spiel) {
 
-            return (spiel.getStringDate().equals(m_sDatum))
+            return (spiel.getDatum().equals(m_sDatum))
                     && (spiel.getGastId() == m_iGastId)
                     && (spiel.getGastName().equals(m_sGastName))
                     && (spiel.getHeimId() == m_iHeimId)
