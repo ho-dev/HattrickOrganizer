@@ -5,6 +5,7 @@ import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -56,12 +57,7 @@ public class EffectDAO {
 
                 for (ISkillChange skillup : skillups) {
                     String key = skillup.getHtSeason() + "-" + skillup.getHtWeek(); //$NON-NLS-1$
-                    List<ISkillChange> collectedSkillups = weeklySkillups.get(key);
-
-                    if (collectedSkillups == null) {
-                        collectedSkillups = new Vector<>();
-                        weeklySkillups.put(key, collectedSkillups);
-                    }
+                    List<ISkillChange> collectedSkillups = weeklySkillups.computeIfAbsent(key, k -> new Vector<>());
 
                     collectedSkillups.add(skillup);
                 }
@@ -82,20 +78,19 @@ public class EffectDAO {
 
             try {
                 int first_in_week = 0;
+                assert tDateset != null;
                 if (tDateset.next()) {
                     first_in_week = tDateset.getInt(1);
                 }
                 while (tDateset.next()) {
-                    Timestamp trainDate = tDateset.getTimestamp(3);
-                    var htdatetime = new HTDatetime(trainDate);
-                    int HTWeek = htdatetime.getHTWeekLocalized();
-                    int HTSeason = htdatetime.getHTSeasonLocalized();
-                    trainingDates.add(new TrainWeekEffect(HTWeek, HTSeason, tDateset.getInt(1), first_in_week));
+                    var trainDate = HODateTime.fromDbTimestamp(tDateset.getTimestamp(3));
+                    var htWeek =trainDate.toHTWeek();
+                    trainingDates.add(new TrainWeekEffect(htWeek.week, htWeek.season, tDateset.getInt(1), first_in_week));
                     first_in_week = tDateset.getInt(1);
                 }
 
                 tDateset.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
 
             for (TrainWeekEffect week : trainingDates) {

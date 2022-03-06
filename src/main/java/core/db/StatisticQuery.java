@@ -5,6 +5,7 @@ import core.gui.model.ArenaStatistikTableModel;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -19,7 +20,7 @@ public class StatisticQuery {
 		final float faktor = core.model.UserParameter.instance().FXrate;
 
 		double[][] returnWerte = new double[0][0];
-		final Vector<double[]> vWerte = new Vector<double[]>();
+		final Vector<double[]> vWerte = new Vector<>();
 
 		ResultSet rs =
 			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
@@ -60,7 +61,7 @@ public class StatisticQuery {
 				returnWerte = new double[anzahlSpalten][vWerte.size()];
 
 				for (int i = 0; i < vWerte.size(); i++) {
-					final double[] werte = (double[]) vWerte.get(i);
+					final double[] werte = vWerte.get(i);
 
 					//Alle Ratings, die == 0 sind -> bis zu 6 Tage vorher nach Rating suchen
 					if (werte[13] == 0) {
@@ -71,14 +72,15 @@ public class StatisticQuery {
 						rs =
 							DBManager.instance().getAdapter().executeQuery(
 								"SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>='"
-									+ beforetime.toString()
+									+ beforetime
 									+ "' AND Datum<='"
-									+ hrftime.toString()
+									+ hrftime
 									+ "' AND SpielerID="
 									+ spielerId
 									+ " ORDER BY Datum");
 
 						//Wert gefunden
+						assert rs != null;
 						if (rs.first()) {
 							werte[13] = rs.getDouble("Bewertung") / 2d;
 						}
@@ -106,7 +108,7 @@ public class StatisticQuery {
 		ArenaStatistikModel arenamodel;
 		String sql;
 		ResultSet rs;
-		final ArrayList<ArenaStatistikModel> liste = new ArrayList<ArenaStatistikModel>();
+		final ArrayList<ArenaStatistikModel> liste = new ArrayList<>();
 		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		int maxFans = 0;
 		int maxArenaGroesse = 0;
@@ -124,12 +126,13 @@ public class StatisticQuery {
 
 			rs = DBManager.instance().getAdapter().executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
 				//Paarung auslesen
 				arenamodel = new core.gui.model.ArenaStatistikModel();
-				arenamodel.setMatchDate(rs.getString("SpielDatum"));
+				arenamodel.setMatchDate(HODateTime.fromHT(rs.getString("SpielDatum")));
 				arenamodel.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
 				arenamodel.setHeimName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
 				arenamodel.setMatchID(rs.getInt("MatchID"));
@@ -151,38 +154,40 @@ public class StatisticQuery {
 			HOLogger.instance().log(StatisticQuery.class, e);
 		}
 
-		arenamodels = liste.toArray(new ArenaStatistikModel[liste.size()]);
+		arenamodels = liste.toArray(new ArenaStatistikModel[0]);
 		
 
 		// Jetzt noch die Arenadate für die Zeit holen
-		for (int i = 0; i < arenamodels.length; i++) {
-			final int hrfid = DBManager.instance().getHRFID4Date(arenamodels[i].getTimestampMatchDate());
+		for (ArenaStatistikModel arenaStatistikModel : arenamodels) {
+			final int hrfid = DBManager.instance().getHRFID4Date(arenaStatistikModel.getMatchDate().toDbTimestamp());
 
 			try {
-                //Get the stadium capacities
+				//Get the stadium capacities
 				sql = "SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
+				assert rs != null;
 				if (rs.first()) {
-					arenamodels[i].setArenaGroesse(rs.getInt("GesamtGr"));
-                    arenamodels[i].setMaxTerraces(rs.getInt("AnzSteh"));
-                    arenamodels[i].setMaxBasic(rs.getInt("AnzSitz"));
-                    arenamodels[i].setMaxRoof(rs.getInt("AnzDach"));
-                    arenamodels[i].setMaxVip(rs.getInt("AnzLogen"));
-					maxArenaGroesse = Math.max(arenamodels[i].getArenaGroesse(), maxArenaGroesse);
+					arenaStatistikModel.setArenaGroesse(rs.getInt("GesamtGr"));
+					arenaStatistikModel.setMaxTerraces(rs.getInt("AnzSteh"));
+					arenaStatistikModel.setMaxBasic(rs.getInt("AnzSitz"));
+					arenaStatistikModel.setMaxRoof(rs.getInt("AnzDach"));
+					arenaStatistikModel.setMaxVip(rs.getInt("AnzLogen"));
+					maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 				}
 				rs.close();
 
 				// fix bug when visitors exceed the stadium size
 				try {
-					if (arenamodels[i].getZuschaueranzahl() > arenamodels[i].getArenaGroesse()) {
-						rs = DBManager.instance().getAdapter().executeQuery("SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + (hrfid+1));
+					if (arenaStatistikModel.getZuschaueranzahl() > arenaStatistikModel.getArenaGroesse()) {
+						rs = DBManager.instance().getAdapter().executeQuery("SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + (hrfid + 1));
+						assert rs != null;
 						if (rs.next()) {
-							arenamodels[i].setArenaGroesse(rs.getInt("GesamtGr"));
-                            arenamodels[i].setMaxTerraces(rs.getInt("AnzSteh"));
-                            arenamodels[i].setMaxBasic(rs.getInt("AnzSitz"));
-                            arenamodels[i].setMaxRoof(rs.getInt("AnzDach"));
-                            arenamodels[i].setMaxVip(rs.getInt("AnzLogen"));
-							maxArenaGroesse = Math.max(arenamodels[i].getArenaGroesse(), maxArenaGroesse);
+							arenaStatistikModel.setArenaGroesse(rs.getInt("GesamtGr"));
+							arenaStatistikModel.setMaxTerraces(rs.getInt("AnzSteh"));
+							arenaStatistikModel.setMaxBasic(rs.getInt("AnzSitz"));
+							arenaStatistikModel.setMaxRoof(rs.getInt("AnzDach"));
+							arenaStatistikModel.setMaxVip(rs.getInt("AnzLogen"));
+							maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 						}
 					}
 				} catch (Exception e) {
@@ -194,25 +199,28 @@ public class StatisticQuery {
 				//Fananzahl
 				sql = "SELECT Fans FROM " + VereinTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
+				assert rs != null;
 				if (rs.first()) {
-					arenamodels[i].setFans(rs.getInt("Fans"));
-					maxFans = Math.max(arenamodels[i].getFans(), maxFans);
+					arenaStatistikModel.setFans(rs.getInt("Fans"));
+					maxFans = Math.max(arenaStatistikModel.getFans(), maxFans);
 				}
 				rs.close();
 
 				//Fan satisfaction
 				sql = "SELECT SupportersPopularity FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
+				assert rs != null;
 				if (rs.first()) {
-					arenamodels[i].setFanZufriedenheit(rs.getInt("SupportersPopularity"));
+					arenaStatistikModel.setFanZufriedenheit(rs.getInt("SupportersPopularity"));
 				}
 				rs.close();
 
 				//Ligaplatz
 				sql = "SELECT Platz FROM " + LigaTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
+				assert rs != null;
 				if (rs.first()) {
-					arenamodels[i].setLigaPlatz(rs.getInt("Platz"));
+					arenaStatistikModel.setLigaPlatz(rs.getInt("Platz"));
 				}
 				rs.close();
 			} catch (Exception e) {
@@ -496,7 +504,7 @@ public class StatisticQuery {
 				returnWerte = new double[anzahlSpalten][vWerte.size()];
 
 				for (int i = 0; i < vWerte.size(); i++) {
-					final double[] werte = (double[]) vWerte.get(i);
+					final double[] werte = vWerte.get(i);
 
 					for (int j = 0; j < werte.length; j++) {
 						returnWerte[j][i] = werte[j];

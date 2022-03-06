@@ -193,7 +193,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 oTeam.setTeamId(match.getHomeTeamID());
                 oTeam.setHomeMatch(false);
             }
-            oTeam.setTime(match.getMatchDateAsTimestamp());
+            oTeam.setTime(match.getMatchSchedule());
             oTeam.setMatchType(match.getMatchTypeExtended());
             oTeam.setMatchID(match.getMatchID());
             m_jcbLoadLineup.addItem(oTeam);

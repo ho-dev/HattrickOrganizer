@@ -15,7 +15,7 @@ package module.tsforecast;
  *21.02.07  Version 0.5  added tooltip to point
  */
 
-/**
+/*
  *
  * @author  michael.roux
  */
@@ -24,8 +24,10 @@ import core.db.DBManager;
 import core.db.JDBCAdapter;
 import core.model.match.IMatchDetails;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 
 import java.awt.Color;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,9 +50,9 @@ class Curve {
 	static final int TRAINER_DOWN_PT = 11;
 	static final int START_TRAINER_PT = 12;
 
-	protected JDBCAdapter m_clJDBC = null;
+	protected JDBCAdapter m_clJDBC;
 
-	protected ArrayList<Point> m_clPoints = new ArrayList<Point>();
+	protected ArrayList<Point> m_clPoints = new ArrayList<>();
 
 	private Iterator<Point> m_clIterator = null;
 	private Point m_currentPoint = null;
@@ -58,16 +60,16 @@ class Curve {
 
 	class Point implements Comparable<Point> {
 
-		double m_dSpirit = TEAM_SPIRIT_UNKNOWN;
-		int m_iAttitude = core.model.match.IMatchDetails.EINSTELLUNG_UNBEKANNT;
-		Date m_dDate = null;
-		int m_iMatchDay = 0;
-		MatchType m_mtMatchType = UNKNOWN_MATCH;
-		int m_iPointType = STANDARD_PT;
+		double m_dSpirit;
+		int m_iAttitude;
+		HODateTime m_dDate;
+		int m_iMatchDay;
+		MatchType m_mtMatchType;
+		int m_iPointType;
 		String m_strTooltip = null;
 
 		Point(Point point) {
-			m_dDate = new Date(point.m_dDate.getTime());
+			m_dDate = point.m_dDate;
 			m_dSpirit = point.m_dSpirit;
 			m_iAttitude = point.m_iAttitude;
 			m_iMatchDay = point.m_iMatchDay;
@@ -75,9 +77,9 @@ class Curve {
 			m_iPointType = point.m_iPointType;
 		}
 
-		Point(Date date, double dSpirit, int iAttitude, int iMatchDay,
+		Point(HODateTime date, double dSpirit, int iAttitude, int iMatchDay,
 				MatchType iMatchType, int iPointType) {
-			m_dDate = new Date(date.getTime());
+			m_dDate = date;
 			m_dSpirit = dSpirit;
 			m_iAttitude = iAttitude;
 			m_iMatchDay = iMatchDay;
@@ -85,17 +87,17 @@ class Curve {
 			m_iPointType = iPointType;
 		}
 
-		Point(Date date, int iAttitude, int iMatchDay, MatchType matchType) {
+		Point(HODateTime date, int iAttitude, int iMatchDay, MatchType matchType) {
 			this(date, TEAM_SPIRIT_UNKNOWN, iAttitude, iMatchDay, matchType,
 					STANDARD_PT);
 		}
 
-		Point(Date date, double dSpirit) {
+		Point(HODateTime date, double dSpirit) {
 			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
 					UNKNOWN_MATCH, STANDARD_PT);
 		}
 
-		Point(Date date, double dSpirit, int iPointType) { // Spirit or Coach
+		Point(HODateTime date, double dSpirit, int iPointType) { // Spirit or Coach
 															// leadership
 			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
 					UNKNOWN_MATCH, iPointType);
@@ -131,7 +133,7 @@ class Curve {
 
 	}
 
-	Date getDate() {
+	HODateTime getDate() {
 		return m_currentPoint.m_dDate;
 	}
 
@@ -183,21 +185,22 @@ class Curve {
 	// ---------------------------------------------------------------------
 
 	protected static int getDiffDays(Point point1, Point point2) {
-		GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
-		gregoriancalendar1.setTime(point1.m_dDate);
-		GregorianCalendar gregoriancalendar2 = new GregorianCalendar();
-		gregoriancalendar2.setTime(point2.m_dDate);
-		int iRet = 0;
-		if (gregoriancalendar1.get(Calendar.YEAR) != gregoriancalendar2
-				.get(Calendar.YEAR)) {
-			iRet += 365;
-			if (gregoriancalendar1.isLeapYear(gregoriancalendar1
-					.get(Calendar.YEAR)))
-				iRet++;
-		}
-		iRet += gregoriancalendar2.get(Calendar.DAY_OF_YEAR)
-				- gregoriancalendar1.get(Calendar.DAY_OF_YEAR);
-		return iRet;
+		return (int)Duration.between(point1.m_dDate.instant, point2.m_dDate.instant).toDays();
+//		GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
+//		gregoriancalendar1.setTime(point1.m_dDate);
+//		GregorianCalendar gregoriancalendar2 = new GregorianCalendar();
+//		gregoriancalendar2.setTime(point2.m_dDate);
+//		int iRet = 0;
+//		if (gregoriancalendar1.get(Calendar.YEAR) != gregoriancalendar2
+//				.get(Calendar.YEAR)) {
+//			iRet += 365;
+//			if (gregoriancalendar1.isLeapYear(gregoriancalendar1
+//					.get(Calendar.YEAR)))
+//				iRet++;
+//		}
+//		iRet += gregoriancalendar2.get(Calendar.DAY_OF_YEAR)
+//				- gregoriancalendar1.get(Calendar.DAY_OF_YEAR);
+//		return iRet;
 	}
 
 }

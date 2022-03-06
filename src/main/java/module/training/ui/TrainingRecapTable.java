@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,16 +56,17 @@ public class TrainingRecapTable extends JScrollPane {
         // We are in the middle where season has not been updated!
         try {
             if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                    .after(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                actualWeek.addWeeks(1);
+                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+                actualWeek.plus(1, ChronoUnit.WEEKS);
             }
         } catch (Exception e1) {
             // Null when first time HO is launched
         }
 
         for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-            columns.add(actualWeek.getSeason() + " " + actualWeek.getWeek());
-            actualWeek.addWeeks(1);
+            var htweek = actualWeek.toLocaleHTWeek();
+            columns.add(htweek.season + " " + htweek.week);
+            actualWeek = actualWeek.plus(1, ChronoUnit.WEEKS);
         }
 
         columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
@@ -133,7 +135,7 @@ public class TrainingRecapTable extends JScrollPane {
             Vector<String> row = new Vector<>();
 
             row.add(player.getFullName());
-            row.add(player.getAlterWithAgeDaysAsString());
+            row.add(player.getAgeWithDaysAsString());
             byte bIdealPosition = player.getIdealPosition();
             row.add(MatchRoleID.getNameForPosition(bIdealPosition)
                     + " ("

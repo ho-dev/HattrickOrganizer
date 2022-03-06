@@ -5,6 +5,7 @@ package module.transfer;
 import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.net.MyConnector;
+import core.util.HODateTime;
 import core.util.Helper;
 
 import java.sql.Timestamp;
@@ -57,6 +58,7 @@ public final class XMLParser {
         final Document doc = XMLManager.parseString(xml);
 
         //get Root element ('HattrickData') :
+        assert doc != null;
         final Element root = doc.getDocumentElement();
 
         // Get tranfer info
@@ -84,30 +86,30 @@ public final class XMLParser {
 
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
-                        Date transferDate;
+                        HODateTime transferDate = HODateTime.fromHT(deadline);
 
-                        try {
-                            transferDate = DATETIME.parse(deadline);
-                        } catch (ParseException e) {
-                            try {
-                                transferDate = DATE.parse(deadline);
-                            } catch (ParseException e0) {
-                            	Helper.showMessage(HOMainFrame.instance(),
-                                                                           "XML Parse error",
-                                                                           "Error parsing XML: transfer '"
-                                                                           + transferid
-                                                                           + "' will be skipped", 0);
-                                continue;
-                            }
-                        }
+//                        try {
+//                            transferDate = DATETIME.parse(deadline);
+//                        } catch (ParseException e) {
+//                            try {
+//                                transferDate = DATE.parse(deadline);
+//                            } catch (ParseException e0) {
+//                            	Helper.showMessage(HOMainFrame.instance(),
+//                                                                           "XML Parse error",
+//                                                                           "Error parsing XML: transfer '"
+//                                                                           + transferid
+//                                                                           + "' will be skipped", 0);
+//                                continue;
+//                            }
+//                        }
                         
-                        Timestamp time = new Timestamp(transferDate.getTime());
+                        //Timestamp time = new Timestamp(transferDate.getTime());
 
-                        playerTranfer.setDate(time);
+                        playerTranfer.setDate(transferDate);
 
-                        var htdatetime = new HTDatetime(time);
-                        playerTranfer.setSeason(htdatetime.getHTSeasonLocalized());
-                        playerTranfer.setWeek(htdatetime.getHTWeekLocalized());
+                        var htweek = transferDate.toLocaleHTWeek();
+                        playerTranfer.setSeason(htweek.season);
+                        playerTranfer.setWeek(htweek.week);
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -129,7 +131,7 @@ public final class XMLParser {
                         transferList.add(playerTranfer);
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 
@@ -142,7 +144,7 @@ public final class XMLParser {
      * @param teamid the team id
      * @param endDate end date for the transfers
      */
-    public static List<PlayerTransfer> getAllTeamTransfers(int teamid, Date endDate) throws Exception {
+    public static List<PlayerTransfer> getAllTeamTransfers(int teamid, HODateTime endDate) {
         final List<PlayerTransfer> transferList = new Vector<>();
         final String url = "/common/chppxml.axd?file=transfersTeam&teamID="+teamid+"&pageIndex=";
 
@@ -154,16 +156,17 @@ public final class XMLParser {
 	        final Document doc = XMLManager.parseString(xml);
 
 	        //get Root element ('HattrickData') :
-	        final Element root = doc.getDocumentElement();
+            assert doc != null;
+            final Element root = doc.getDocumentElement();
 
 	        final Element teamElement = (Element) root.getElementsByTagName("Team").item(0); //$NON-NLS-1$
-	        Date activatedDate;
+	        var activatedDate = HODateTime.fromHT(getChildNodeValue(teamElement, "ActivatedDate"));
 
-	        try {
-	            activatedDate = DATETIME.parse(getChildNodeValue(teamElement, "ActivatedDate"));
-	        } catch (ParseException e) {
-	            activatedDate = DATE.parse(getChildNodeValue(teamElement, "ActivatedDate"));
-	        }
+//	        try {
+//	            activatedDate = DATETIME.parse(getChildNodeValue(teamElement, "ActivatedDate"));
+//	        } catch (ParseException e) {
+//	            activatedDate = DATE.parse(getChildNodeValue(teamElement, "ActivatedDate"));
+//	        }
 
 	        List<PlayerTransfer> transfers = parseTeamTransfers(doc, activatedDate, endDate);
 	        if (transfers.size()<1) {
@@ -218,7 +221,7 @@ public final class XMLParser {
      *
      * @return List of transfers.
      */
-    public static List<PlayerTransfer> parseTeamTransfers(Document doc, Date activatedDate, Date endDate) {
+    public static List<PlayerTransfer> parseTeamTransfers(Document doc, HODateTime activatedDate, HODateTime endDate) {
         final List<PlayerTransfer> transferList = new Vector<>();
 
         //get Root element ('HattrickData') :
@@ -249,31 +252,29 @@ public final class XMLParser {
 
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
-                        Date transferDate;
+                        HODateTime transferDate = HODateTime.fromHT(deadline);
+//
+//                        try {
+//                            transferDate
+//                        } catch (ParseException e) {
+//                            try {
+//                                transferDate = DATE.parse(deadline);
+//                            } catch (ParseException e0) {
+//                            	Helper.showMessage(HOMainFrame.instance(),
+//                                                                           "XML Parse error",
+//                                                                           "Error parsing XML: transfer '"
+//                                                                           + transferid+ "' will be skipped", 0);
+//
+//                                continue;
+//                            }
+//                        }
+                        if (transferDate.isBefore(activatedDate)) continue;
+                        if (transferDate.isAfter(endDate)) continue;
 
-                        try {
-                            transferDate = DATETIME.parse(deadline);
-                        } catch (ParseException e) {
-                            try {
-                                transferDate = DATE.parse(deadline);
-                            } catch (ParseException e0) {
-                            	Helper.showMessage(HOMainFrame.instance(),
-                                                                           "XML Parse error",
-                                                                           "Error parsing XML: transfer '"
-                                                                           + transferid+ "' will be skipped", 0);
-                                
-                                continue;
-                            }
-                        }
-                        if (transferDate.before(activatedDate)) continue;
-                        if (transferDate.after(endDate)) continue;
-
-                        Timestamp time = new Timestamp(transferDate.getTime());
-
-                        playerTranfer.setDate(time);
-                        var htdatetime = new HTDatetime(time);
-                        playerTranfer.setSeason(htdatetime.getHTSeasonLocalized());
-                        playerTranfer.setWeek(htdatetime.getHTWeekLocalized());
+                        playerTranfer.setDate(transferDate);
+                        var htweek = transferDate.toLocaleHTWeek();
+                        playerTranfer.setSeason(htweek.season);
+                        playerTranfer.setWeek(htweek.week);
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -295,7 +296,7 @@ public final class XMLParser {
                         transferList.add(playerTranfer);
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 

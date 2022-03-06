@@ -4,6 +4,7 @@ import core.HO;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.training.TrainingWeekManager;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import javax.swing.*;
@@ -60,8 +61,9 @@ final class DBConfigUpdater {
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
 				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
+				assert rs != null;
 				rs.next();
-				Instant firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+				var firstTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));
 				twm = new TrainingWeekManager(firstTrainingDate, false);
 				twm.push2TrainingsTable();
 			} catch (Exception e) {
@@ -70,6 +72,7 @@ final class DBConfigUpdater {
 
 			// Creating entries into FUTURETRAININGS table ===========================================================
 			try {
+				assert twm != null;
 				var trainingList = twm.getTrainingList();
 				Optional<TrainingPerWeek> optionallastTraining = trainingList.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
 

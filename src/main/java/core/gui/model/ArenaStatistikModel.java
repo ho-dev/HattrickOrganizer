@@ -3,10 +3,8 @@ package core.gui.model;
 
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
-import core.model.misc.Basics;
+import core.util.HODateTime;
 import tool.arenasizer.ArenaSizer;
-
-import java.sql.Timestamp;
 
 
 /**
@@ -22,7 +20,7 @@ public class ArenaStatistikModel {
     protected String m_sHeimName = "";
 
     /** Datum des spiels */
-    protected String m_sMatchDate = "";
+    protected HODateTime matchDate;
 
     /** Gast Tore */
     protected int m_iGastTore = -1;
@@ -217,8 +215,8 @@ public class ArenaStatistikModel {
      *
      * @param m_sMatchDate New value of property m_sMatchDate.
      */
-    public final void setMatchDate(java.lang.String m_sMatchDate) {
-        this.m_sMatchDate = m_sMatchDate;
+    public final void setMatchDate(HODateTime m_sMatchDate) {
+        this.matchDate = m_sMatchDate;
     }
 
     /**
@@ -226,17 +224,8 @@ public class ArenaStatistikModel {
      *
      * @return Value of property m_sMatchDate.
      */
-    public final java.lang.String getMatchDate() {
-        return m_sMatchDate;
-    }
-
-    /**
-     * Getter for property m_lDatum.
-     *
-     * @return Value of property m_lDatum.
-     */
-    public final Timestamp getMatchDateAsTimestamp() {
-        return Basics.parseHattrickDate(m_sMatchDate);
+    public final HODateTime getMatchDate() {
+        return matchDate;
     }
 
     /**
@@ -291,15 +280,6 @@ public class ArenaStatistikModel {
      */
     public final IMatchType getMatchTyp() {
         return m_mtMatchTyp;
-    }
-
-    /**
-     * Getter for property m_lDatum.
-     *
-     * @return Value of property m_lDatum.
-     */
-    public final Timestamp getTimestampMatchDate() {
-        return Basics.parseHattrickDate(m_sMatchDate);
     }
 
     /**
@@ -445,12 +425,11 @@ public class ArenaStatistikModel {
 
     //--------------------------------------------------------------
     public final int compareTo(Object obj) {
-        if (obj instanceof ArenaStatistikModel) {
-            final ArenaStatistikModel info = (ArenaStatistikModel) obj;
+        if (obj instanceof final ArenaStatistikModel info) {
 
-            if (info.getMatchDateAsTimestamp().before(this.getMatchDateAsTimestamp())) {
+            if (info.getMatchDate().isBefore(this.getMatchDate())) {
                 return -1;
-            } else if (info.getMatchDateAsTimestamp().after(this.getMatchDateAsTimestamp())) {
+            } else if (info.getMatchDate().isAfter(this.getMatchDate())) {
                 return 1;
             } else {
                 return 0;

@@ -252,37 +252,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * Setter for property m_sMatchDate.
 	 * @param sMatchDate New value of property m_sMatchDate.
 	 */
-	public final void setMatchSchedule(String sMatchDate) {
-		m_matchSchedule = HODateTime.fromHT(sMatchDate);
+	public final void setMatchSchedule(HODateTime sMatchDate) {
+		m_matchSchedule = sMatchDate;
 	}
 
-	public String getMatchSchedule(boolean localized) {
-		if ( m_matchSchedule != null) {
-			if (localized) {
-				return m_matchSchedule.toLocaleDateTime();
-			} else {
-				return m_matchSchedule.toHT();
-			}
-		}
-		return "";
-	}
-
-	/**
-	 * Getter for property m_lDatum.
-	 * 
-	 * @return Value of property m_lDatum.
-	 */
-	public Timestamp getMatchDateAsTimestamp() {
-			return m_matchSchedule.toDbTimestamp();
-	}
-
-	/**
-	 * get ht week of season
-	 *
-	 * @return 1..16
-	 */
-	public int getHTWeek(){
-		return m_matchSchedule.toHTWeek().week;
+	public HODateTime getMatchSchedule() {
+		return m_matchSchedule;
 	}
 
 	/**
@@ -415,21 +390,10 @@ public class MatchKurzInfo implements Comparable<Object> {
 	// --------------------------------------------------------------
 	@Override
 	public final int compareTo(@NotNull Object obj) {
-		if (obj instanceof MatchKurzInfo) {
-			final MatchKurzInfo info = (MatchKurzInfo) obj;
-
-			if (info.getMatchDateAsTimestamp().before(
-					this.getMatchDateAsTimestamp())) {
-				return -1;
-			} else if (info.getMatchDateAsTimestamp().after(
-					this.getMatchDateAsTimestamp())) {
-				return 1;
-			} else {
-				return 0;
-			}
+		if (obj instanceof final MatchKurzInfo info) {
+			return this.getMatchSchedule().compareTo(info.getMatchSchedule());
 		}
-
-		return 0;
+		return 1;
 	}
 
 
@@ -460,7 +424,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setHomeTeamID(match.getHomeTeamID());
 		setHomeTeamName(match.getHomeTeamName());
 		setHomeTeamGoals(match.getHomeTeamGoals());
-		setMatchSchedule(match.getMatchSchedule(false));
+		setMatchSchedule(match.getMatchSchedule());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());

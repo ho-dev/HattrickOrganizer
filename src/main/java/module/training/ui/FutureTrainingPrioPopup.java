@@ -3,6 +3,7 @@ package module.training.ui;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
 import core.training.FuturePlayerTraining;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.ui.model.TrainingModel;
 
@@ -46,8 +47,8 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
         var player = model.getActivePlayer();
         if (player == null) return;
 
-        Instant from;
-        Instant to = null;   // forever
+        HODateTime from;
+        HODateTime to = null;   // forever
         var futureTrainings = model.getFutureTrainings();
 
         if (futureTrainings == null || futureTrainings.isEmpty()) {

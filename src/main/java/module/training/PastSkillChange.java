@@ -1,6 +1,8 @@
 package module.training;
 
 import core.model.player.ISkillChange;
+import core.util.HODateTime;
+
 import java.util.Date;
 
 
@@ -11,7 +13,7 @@ public class PastSkillChange implements ISkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Skillup Date */
-    private Date date;
+    private HODateTime date;
 
     /** Hattrick Season */
     private int htSeason;
@@ -32,11 +34,11 @@ public class PastSkillChange implements ISkillChange {
     private int change=1;
 
     //~ Methods ------------------------------------------------------------------------------------
-    public void setDate(Date date) {
+    public void setDate(HODateTime date) {
         this.date = date;
     }
 
-    public Date getDate() {
+    public HODateTime getDate() {
         return date;
     }
 
@@ -110,7 +112,7 @@ public class PastSkillChange implements ISkillChange {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         if ( change>0) {
             buffer.append("Skillup["); //$NON-NLS-1$
@@ -118,11 +120,11 @@ public class PastSkillChange implements ISkillChange {
         else {
             buffer.append("Skilldrop["); //$NON-NLS-1$
         }
-        buffer.append(", type = " + type); //$NON-NLS-1$
-        buffer.append(", value = " + value); //$NON-NLS-1$
-        buffer.append(", htSeason = " + htSeason); //$NON-NLS-1$
-        buffer.append(", htWeek = " + htWeek); //$NON-NLS-1$
-        buffer.append(", trainType = " + trainType); //$NON-NLS-1$
+        buffer.append(", type = ").append(type); //$NON-NLS-1$
+        buffer.append(", value = ").append(value); //$NON-NLS-1$
+        buffer.append(", htSeason = ").append(htSeason); //$NON-NLS-1$
+        buffer.append(", htWeek = ").append(htWeek); //$NON-NLS-1$
+        buffer.append(", trainType = ").append(trainType); //$NON-NLS-1$
         buffer.append("]"); //$NON-NLS-1$
 
         return buffer.toString();

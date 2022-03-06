@@ -2,6 +2,7 @@ package core.file.xml;
 
 import core.model.Tournament.TournamentDetails;
 import core.model.misc.Basics;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +33,6 @@ public class XMLTournamentDetailsParser {
 
 				Element ele = (Element) list.item(0);
 				Element tmp;
-				Date tempDate;
 
 				tmp = (Element) ele.getElementsByTagName("TournamentId").item(0);
 				oTournamentDetails.setTournamentId(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
@@ -64,11 +64,11 @@ public class XMLTournamentDetailsParser {
 				oTournamentDetails.setLastMatchRound((short) Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 
 				tmp = (Element) ele.getElementsByTagName("FirstMatchRoundDate").item(0);
-				tempDate = Basics.parseHattrickDate(tmp.getFirstChild().getNodeValue());
+				var tempDate = HODateTime.fromHT(tmp.getFirstChild().getNodeValue());
 				oTournamentDetails.setFirstMatchRoundDate(tempDate);
 
 				tmp = (Element) ele.getElementsByTagName("NextMatchRoundDate").item(0);
-				tempDate = Basics.parseHattrickDate(tmp.getFirstChild().getNodeValue());
+				tempDate = HODateTime.fromHT(tmp.getFirstChild().getNodeValue());
 				oTournamentDetails.setNextMatchRoundDate(tempDate);
 
 				tmp = (Element) ele.getElementsByTagName("IsMatchesOngoing").item(0);

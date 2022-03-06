@@ -2,6 +2,7 @@ package core.model.match;
 
 import core.db.DBManager;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 
 import java.sql.Timestamp;
 
@@ -14,7 +15,7 @@ public class MatchLineup {
     MatchLineupTeam homeTeam;
     private String guestTeamName = null;
     private String homeTeamName = null;
-    private Timestamp matchDate;
+    private HODateTime matchDate;
     private int arenaId = -1;
     private int guestTeamId = -1;
 
@@ -235,7 +236,7 @@ public class MatchLineup {
      *
      * @return Value of property m_lDatum.
      */
-    public Timestamp getMatchDate() {
+    public HODateTime getMatchDate() {
         if ( this.matchDate == null){
             init();
         }

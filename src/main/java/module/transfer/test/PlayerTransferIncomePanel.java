@@ -2,11 +2,13 @@ package module.transfer.test;
 
 import core.db.DBManager;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.util.Date;
 
 import javax.swing.JLabel;
@@ -32,20 +34,19 @@ public class PlayerTransferIncomePanel extends JPanel {
 			NumberFormat nf = NumberFormat.getInstance();
 
 			Transfer t = Transfer.getTransfer(player.getPlayerID());
-			Date buyingDate = null;
+			HODateTime buyingDate;
 			if (!player.isHomeGrown()) {
 				buyingDate = t.purchaseDate;
 
 			} else {
-				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
+				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
 
 			int purchasePrice = (t.purchasePrice > 0) ? t.purchasePrice / 10 : 0;
 			int sellingPrice = (t.sellingPrice > 0) ? t.sellingPrice / 10 : 0;
 			int wages = Calc.getWagesSum(player.getPlayerID(), buyingDate, t.sellingDate);
-			int daysInTeam = Calc.getDaysBetween(t.sellingDate, buyingDate);
-			double fee = sellingPrice * (TransferFee.getFee(daysInTeam) / 100);
+			var daysInTeam = Duration.between(buyingDate.instant, t.sellingDate.instant).toDays();
+			double fee = sellingPrice * (TransferFee.getFee((int)daysInTeam) / 100);
 			double feePreviousClub = sellingPrice * (TransferFee.feePreviousClub(2) / 100);
 			double gewinn = sellingPrice - purchasePrice - wages - fee - feePreviousClub;
 

@@ -52,7 +52,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         // Sortindex Age corresponds with matchdate
-                        return new ColorLabelEntry((double) entry.getMatchDate().getTime(), entry.getPlayerAge(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry( entry.getMatchDate().instant.getEpochSecond(), entry.getPlayerAge(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.youth.training.primary") {

@@ -1,5 +1,7 @@
 package core.model.Tournament;
 
+import core.util.HODateTime;
+
 import java.util.Date;
 
 public class TournamentDetails {
@@ -76,19 +78,19 @@ public class TournamentDetails {
         this.lastMatchRound = lastMatchRound;
     }
 
-    public Date getFirstMatchRoundDate() {
+    public HODateTime getFirstMatchRoundDate() {
         return firstMatchRoundDate;
     }
 
-    public void setFirstMatchRoundDate(Date firstMatchRoundDate) {
+    public void setFirstMatchRoundDate(HODateTime firstMatchRoundDate) {
         this.firstMatchRoundDate = firstMatchRoundDate;
     }
 
-    public Date getNextMatchRoundDate() {
+    public HODateTime getNextMatchRoundDate() {
         return nextMatchRoundDate;
     }
 
-    public void setNextMatchRoundDate(Date nextMatchRoundDate) {
+    public void setNextMatchRoundDate(HODateTime nextMatchRoundDate) {
         this.nextMatchRoundDate = nextMatchRoundDate;
     }
 
@@ -125,8 +127,8 @@ public class TournamentDetails {
     private int NumberOfTeams; // The total number of teams.
     private int NumberOfGroups; // The total number of groups.
     private short lastMatchRound; // Last finished match round.
-    private Date firstMatchRoundDate; // The date of the first match round.
-    private Date nextMatchRoundDate; // The date of the next match round. During matches this will be the Next match round.
+    private HODateTime firstMatchRoundDate; // The date of the first match round.
+    private HODateTime nextMatchRoundDate; // The date of the next match round. During matches this will be the Next match round.
     private Boolean isMatchesOngoing; // Whether or not the match is currently being played.
     private int creator_UserId; // The globally unique user id of the tournament creator
     private String creator_Loginname; //The 'username' or 'nickname' of the tournament creator

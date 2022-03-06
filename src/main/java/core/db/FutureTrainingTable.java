@@ -3,6 +3,7 @@ package core.db;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -44,7 +45,7 @@ public final class FutureTrainingTable extends AbstractTable {
 				rs.beforeFirst();
 
 				while (rs.next()) {
-					var trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+					var trainingDate = rs.getTimestamp("TRAINING_DATE");
 					var training_type = rs.getInt("TRAINING_TYPE");
 					var training_intensity = rs.getInt("TRAINING_INTENSITY");
 					var staminaShare = rs.getInt("STAMINA_SHARE");
@@ -52,7 +53,7 @@ public final class FutureTrainingTable extends AbstractTable {
 					var coachLevel = rs.getInt("COACH_LEVEL");
 					var source = DBDataSource.getCode(rs.getInt("SOURCE"));
 
-					var tpw = new TrainingPerWeek(trainingDate, training_type, training_intensity, staminaShare, trainingAssistantsLevel,
+					var tpw = new TrainingPerWeek(HODateTime.fromDbTimestamp(trainingDate), training_type, training_intensity, staminaShare, trainingAssistantsLevel,
 							coachLevel, source);
 
 					vTrainings.add(tpw);
@@ -85,7 +86,7 @@ public final class FutureTrainingTable extends AbstractTable {
 	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
 
-			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
+			String trainingDate = training.getTrainingDate().toDbTimestamp().toString();
 
 			String statement =
 					"update " + getTableName() +

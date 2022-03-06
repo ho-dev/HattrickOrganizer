@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -29,9 +31,6 @@ public class TestDialog extends JDialog {
 	private JTextArea textArea;
 	private JComboBox cbox;
 	private WagesOverviewPanel wagesOverviewPanel;
-	private WagesSumPanel wagesSumPanel;
-	private PlayerTransferIncomePanel playerTransferIncomePanel;
-	private OverviewPanel overviewPanel;
 
 	public TestDialog(Window parent) {
 		super(parent, ModalityType.APPLICATION_MODAL);
@@ -55,13 +54,7 @@ public class TestDialog extends JDialog {
 		List<Player> player = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		player.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
 
-		Collections.sort(player, new Comparator<Player>() {
-
-			@Override
-			public int compare(Player o1, Player o2) {
-				return o1.getFullName().compareTo(o2.getFullName());
-			}
-		});
+		player.sort(Comparator.comparing(Player::getFullName));
 
 		CBItm[] array = new CBItm[player.size()];
 		for (int i = 0; i < player.size(); i++) {
@@ -75,13 +68,7 @@ public class TestDialog extends JDialog {
 		this.textArea = new JTextArea("", 30, 60);
 		getContentPane().add(this.textArea, BorderLayout.CENTER);
 
-		this.cbox.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				spielerChanged();
-			}
-		});
+		this.cbox.addActionListener(e -> spielerChanged());
 
 		 this.wagesOverviewPanel = new WagesOverviewPanel();
 		 getContentPane().add(this.wagesOverviewPanel, BorderLayout.SOUTH);
@@ -103,13 +90,12 @@ public class TestDialog extends JDialog {
 			// List<Wage> wages = Wage.getWagesByAge(player.getSpielerID());
 
 			Transfer t = Transfer.getTransfer(player.getPlayerID());
-			Date buyingDate = null;
+			HODateTime buyingDate;
 			if (!player.isHomeGrown()) {
 				buyingDate = t.purchaseDate;
 
 			} else {
-				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
+				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
 
 			StringBuilder sb = new StringBuilder();
@@ -121,8 +107,8 @@ public class TestDialog extends JDialog {
 			int wages = Calc.getWagesSum(player.getPlayerID(), buyingDate, t.sellingDate);
 
 			sb.append("wages payed: ").append(wages).append("\n");
-			int daysInTeam = Calc.getDaysBetween(t.sellingDate, buyingDate);
-			double fee = sellingPrice * (TransferFee.getFee(daysInTeam) / 100);
+			var daysInTeam = Duration.between( buyingDate.instant, t.sellingDate.instant).toDays();
+			double fee = sellingPrice * (TransferFee.getFee((int)daysInTeam) / 100);
 			sb.append("Gebühr für den Spielervermittler: ").append(fee).append("\n");
 
 			double feePreviousClub = sellingPrice * (TransferFee.feePreviousClub(2) / 100);
@@ -131,52 +117,15 @@ public class TestDialog extends JDialog {
 			double gewinn = sellingPrice - purchasePrice - wages - fee - feePreviousClub;
 			sb.append("Gewinn: ").append(gewinn).append("\n");
 
-			// sb.append("Age   -   Wage" + "\n");
-			// for (Wage wage : wages) {
-			// sb.append(wage.getAge() + " - " + wage.getWage() + "\n");
-			// }
-			// sb.append("\n\n");
-			// if (!player.isHomeGrown()) {
-			// sb.append("Bought at: " +
-			// Calc.getBuyingDates(player.getSpielerID()).get(0));
-			// }
-			//
-			// int ageDays = Calc.getAgeAt(new Date(), player.getSpielerID());
-			// int age = ageDays / 112;
-			// int days = ageDays % 112;
-			//
-			// sb.append("\n\n");
-			// sb.append("Age: " + age + "." + days);
-			//
-			// sb.append("\n\n");
-			// sb.append("Birthdays from 17 to 30\n");
-			// List<Birthday> birthdays =
-			// Calc.getBirthdays(player.getSpielerID(), 17, 30);
-			// for (Birthday birthday : birthdays) {
-			// sb.append(birthday.getAge()).append(" ").append(birthday.getDate()).append("\n");
-			// }
-
 			this.textArea.setText(sb.toString());
 
 			if (this.wagesOverviewPanel != null) {
 				this.wagesOverviewPanel.setPlayer(player);
 			}
-			if (this.wagesSumPanel != null) {
-				this.wagesSumPanel.setPlayer(player);
-			}
-			if (this.playerTransferIncomePanel != null) {
-				this.playerTransferIncomePanel.setPlayer(player);
-			}
 		} else {
 			this.textArea.setText("");
 			if (this.wagesOverviewPanel != null) {
 				this.wagesOverviewPanel.setPlayer(null);
-			}
-			if (this.wagesSumPanel != null) {
-				this.wagesSumPanel.setPlayer(null);
-			}
-			if (this.playerTransferIncomePanel != null) {
-				this.playerTransferIncomePanel.setPlayer(null);
 			}
 		}
 
@@ -214,12 +163,7 @@ public class TestDialog extends JDialog {
 		    // If Nimbus is not available, you can set the GUI to another look and feel.
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				DBManager.instance().disconnect();
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> DBManager.instance().disconnect()));
 
 		JFrame frame = new JFrame();
 		TestDialog dlg = new TestDialog(frame);

@@ -13,6 +13,7 @@ import core.model.enums.MatchType;
 import core.net.DownloadDialog;
 import core.net.MyConnector;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.gif.Quantize;
 
@@ -53,13 +54,13 @@ public class PluginIfaUtils {
 	}
 
 	public static boolean updateMatchesTable() {
-		Timestamp time;
 		boolean retry = true;
 
+		HODateTime time;
 		do {
 			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 
-			if (time != null && time.getTime() > 100) {
+			if (time != null && !time.isBefore(HODateTime.htStart) ) {
 				break;
 			}
 			DownloadDialog.instance();
@@ -139,12 +140,13 @@ public class PluginIfaUtils {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static void insertMatches(Date from, Date to) throws Exception {
+	private static void insertMatches(Date from, Date to) {
 		StringBuilder errors = new StringBuilder();
 		String matchDate = null;
 		String matchesArchive = MyConnector.instance().getMatchesArchive(HOVerwaltung.instance().getModel().getBasics().getTeamId(), from, to);
 		Document doc = XMLManager.parseString(matchesArchive);
 
+		assert doc != null;
 		int matchesCount = ((Element) doc.getDocumentElement().getElementsByTagName("MatchList")
 				.item(0)).getElementsByTagName("Match").getLength();
 		
@@ -174,8 +176,8 @@ public class PluginIfaUtils {
 							"Match"));
 					try {
 						
-						int homeLeagueIndex = 0;
-						int awayLeagueIndex = 0;
+						int homeLeagueIndex;
+						int awayLeagueIndex;
 						
 						// Some ifs inserted to avoid downloading own team info for every match
 						
@@ -215,9 +217,7 @@ public class PluginIfaUtils {
 
 						DBManager.instance().insertIFAMatch(match);
 					} catch (Exception e) {
-						errors.append("Error 1 getting data for match " + matchID + " ("
-								+ matchDate + " / HomeTeam " + homeTeamID + " vs. AwayTeam "
-								+ awayTeamID + ")<br>");
+						errors.append("Error 1 getting data for match ").append(matchID).append(" (").append(matchDate).append(" / HomeTeam ").append(homeTeamID).append(" vs. AwayTeam ").append(awayTeamID).append(")<br>");
 					}
 				}
 			}
@@ -237,7 +237,7 @@ public class PluginIfaUtils {
 		Date start = DateTimeUtils.getDateWithMinTime(from);
 		Calendar end = new GregorianCalendar();
 		end.setLenient(true);
-		end.add(5, 1);
+		end.add(Calendar.DATE, 1);
 
 		Calendar tmpF = new GregorianCalendar();
 		tmpF.setTime(start);
@@ -246,7 +246,7 @@ public class PluginIfaUtils {
 		tmpF.setLenient(true);
 		tmpT.setLenient(true);
 		while (tmpT.before(end)) {
-			tmpT.add(2, 2);
+			tmpT.add(Calendar.MONTH, 2);
 			if (tmpT.after(end)) {
 				tmpT = end;
 			}

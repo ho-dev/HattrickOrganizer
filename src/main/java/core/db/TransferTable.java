@@ -2,6 +2,7 @@ package core.db;
 
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -9,6 +10,7 @@ import module.transfer.XMLParser;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
@@ -118,11 +120,7 @@ public class TransferTable extends AbstractTable {
     public boolean updateTeamTransfers(int teamid) {
         try {
             final List<Player> players = new Vector<>();
-
-            final Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-
-            final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HTDatetime.resetDay(cal.getTime()));
+            final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HODateTime.now().plus(1, ChronoUnit.DAYS));
 
             for (PlayerTransfer transfer : transfers) {
                 final Player player = PlayerRetriever.getPlayer(transfer);
@@ -282,7 +280,7 @@ public class TransferTable extends AbstractTable {
             while (rs.next()) {
                 PlayerTransfer transfer = new PlayerTransfer(rs.getInt("transferid"),rs.getInt("playerid"));  
                 transfer.setPlayerName( DBManager.deleteEscapeSequences(rs.getString("playername"))); 
-                transfer.setDate(rs.getTimestamp("date")); 
+                transfer.setDate(HODateTime.fromDbTimestamp(rs.getTimestamp("date")));
                 transfer.setWeek(rs.getInt("week")); 
                 transfer.setSeason(rs.getInt("season")); 
 
@@ -302,7 +300,7 @@ public class TransferTable extends AbstractTable {
         }
 
         for (PlayerTransfer transfer : results) {
-            final Player player = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(), transfer.getDate());
+            final Player player = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
 
             if (player != null) {
                 transfer.setPlayerInfo(player);

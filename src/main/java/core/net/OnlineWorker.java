@@ -15,6 +15,7 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -35,6 +36,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,11 +95,11 @@ public class OnlineWorker {
 				if (hrf.contains("playingMatch=true")) {
 					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_Spiel"),
-							getLangString("NO_HRF_ERROR"), 1);
+							getLangString("NO_HRF_ERROR"), JOptionPane.INFORMATION_MESSAGE);
 				} else if (hrf.contains("NOT AVAILABLE")) {
 					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_ERROR"),
-							getLangString("NO_HRF_ERROR"), 1);
+							getLangString("NO_HRF_ERROR"), JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					// Create HOModel from the hrf data
 					HOModel homodel = HRFStringParser.parse(hrf);
@@ -285,7 +287,7 @@ public class OnlineWorker {
 						info.setHomeTeamID(details.getHomeTeamId());
 						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
-						info.setMatchSchedule(details.getMatchDate().toString());
+						info.setMatchSchedule(details.getMatchDate());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);
@@ -297,19 +299,14 @@ public class OnlineWorker {
 							if (!info.getWeatherForecast().isSure()) {
 								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
 								if ( regiondetails != null) {
-									SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-									java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
-									java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
-									String wdate = fmt.format(weatherDate);
-									String mdate = fmt.format(matchDate);
-									if (mdate.equals(wdate)) {
+									var matchDate = info.getMatchSchedule().toLocaleDate();
+									var weatherDate = regiondetails.getFetchDatum().toLocaleDate();
+									if (matchDate.equals(weatherDate)) {
 										info.setWeatherForecast(Weather.Forecast.TODAY);
 										info.setWeather(regiondetails.getWeather());
 									} else {
-										Calendar c = Calendar.getInstance();
-										c.setTime(fmt.parse(wdate));
-										c.add(Calendar.DATE, 1);
-										if (fmt.format(c.getTime()).equals(mdate)) {
+										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS).toLocaleDate();
+										if (matchDate.equals(forecastDate)) {
 											info.setWeatherForecast(Weather.Forecast.TOMORROW);
 										} else {
 											info.setWeatherForecast((Weather.Forecast.UNSURE));
@@ -457,11 +454,9 @@ public class OnlineWorker {
 	 *         if match could not be downloaded.
 	 */
 	public static @Nullable MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(match.getMatchDateAsTimestamp());
-		cal.add(Calendar.MINUTE, 1);
+		var matchDate = match.getMatchSchedule();
 		// At the moment, HT does not support getting a single match.
-		List<MatchKurzInfo> matches = getMatches(teamId, cal.getTime());
+		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
 				//DBManager.instance().updateMatchKurzInfo(m);
@@ -481,7 +476,7 @@ public class OnlineWorker {
 	 *            last date (+time) to get matches to.
 	 * @return the most recent and upcoming matches up to the given date.
 	 */
-	public static List<MatchKurzInfo> getMatches(int teamId, Date date) {
+	public static List<MatchKurzInfo> getMatches(int teamId, HODateTime date) {
 		String matchesString = null;
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, true, date);
@@ -722,7 +717,6 @@ public class OnlineWorker {
 		try {
 			showWaitInformation(10);
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
-			bOK = (leagueFixtures != null && leagueFixtures.length() > 0);
 			showWaitInformation(50);
 			return XMLSpielplanParser.parseSpielplanFromString(leagueFixtures);
 		} catch (Exception e) {

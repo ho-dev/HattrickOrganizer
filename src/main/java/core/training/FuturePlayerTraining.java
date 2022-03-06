@@ -5,23 +5,24 @@ import core.util.HODateTime;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 public class FuturePlayerTraining {
 
 
-    public boolean contains(Instant trainingDate) {
+    public boolean contains(HODateTime trainingDate) {
         // from<=date & to>date
-        if ( !from.instant.isAfter(trainingDate)  ) {
+        if ( !from.isAfter(trainingDate)  ) {
             if  ( to == null ) return true;
-            var endOfToWeek = to.instant.plus(Duration.ofDays(7));
+            var endOfToWeek = to.plus(7, ChronoUnit.DAYS);
             return endOfToWeek.isAfter(trainingDate);
         }
         return false;
     }
 
     public boolean endsBefore(HODateTime nextWeek) {
-        return to != null && to.instant.isBefore(nextWeek.instant);
+        return to != null && to.isBefore(nextWeek);
     }
 
     public enum Priority {
@@ -139,7 +140,7 @@ public class FuturePlayerTraining {
             this.to.instant.minus(Duration.ofDays(7));
             return false;
         }
-        if ( to != null && (this.to == null || this.to.instant.isAfter(to.instant))) {
+        if (this.to.instant.isAfter(to.instant)) {
             this.from = to;
             this.from.instant.plus(Duration.ofDays(7));
             return false;

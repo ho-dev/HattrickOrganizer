@@ -6,6 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
+import core.util.HODateTime;
 import core.util.Helper;
 import module.training.Skills;
 import module.training.ui.comp.TrainingPriorityCell;
@@ -131,7 +132,7 @@ public class OutputTableModel extends AbstractTableModel {
 
         return switch (columnIndex) {
             case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
-            case 1 -> player.getAlterWithAgeDaysAsString();
+            case 1 -> player.getAgeWithDaysAsString();
             case 2 -> createBestPositionCell(player);
             case 3 -> createIcon(player, PlayerSkill.KEEPER);
             case 4 -> createIcon(player, PlayerSkill.DEFENDING);
@@ -200,9 +201,9 @@ public class OutputTableModel extends AbstractTableModel {
     }
 
     private TrainingPriorityCell createBestPositionCell(Player player) {
-        HattrickDate firstTrainingDate = model.getFutureTrainings().isEmpty() ?
-                HattrickDate.fromInstant(Instant.now()) :
-                HattrickDate.fromInstant(model.getFutureTrainings().get(0).getTrainingDate());
+        var firstTrainingDate = model.getFutureTrainings().isEmpty() ?
+                HODateTime.now() :
+                model.getFutureTrainings().get(0).getTrainingDate();
         return new TrainingPriorityCell(player, firstTrainingDate);
     }
 

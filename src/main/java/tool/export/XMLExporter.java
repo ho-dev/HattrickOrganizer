@@ -18,6 +18,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.MyConnector;
 import core.rating.RatingPredictionManager;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 
@@ -109,7 +110,8 @@ public class XMLExporter  {
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
 				HOMainFrame.instance().setWaitInformation(0);
-				saveXML(file.getAbsolutePath(),new Timestamp(m_clSpinnerModel.getDate().getTime()));
+				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
+				saveXML(file.getAbsolutePath(),date);
             }
         } catch (Exception ex) {
             HOLogger.instance().log(getClass(),ex);
@@ -159,7 +161,7 @@ public class XMLExporter  {
 	 * Save XMP file.
 	 */
 	@SuppressWarnings("deprecation")
-	public void saveXML(String filename, Timestamp startingDate) {
+	public void saveXML(String filename, HODateTime startingDate) {
 				
 		//Alle Matches holen			
 		List<ExportMatchData> matches = MatchExporter.getDataUsefullMatches(startingDate);
@@ -199,7 +201,7 @@ public class XMLExporter  {
 				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchID()));
 				ele = doc.createElement("Datum");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode(matchData.getInfo().getMatchScheduleAsString()));
+				ele.appendChild(doc.createTextNode(matchData.getInfo().getMatchSchedule().toHT()));
 				ele = doc.createElement("Derby");
 				tmpEle.appendChild(ele);
 
@@ -233,7 +235,7 @@ public class XMLExporter  {
 
 				//Details holen
 				//details = (IMatchDetails) usefulMatches.get(new Integer(matchID));
-				int hrfID = DBManager.instance().getHrfIDSameTraining(matchData.getInfo().getMatchDateAsTimestamp());
+				int hrfID = DBManager.instance().getHrfIDSameTraining(matchData.getInfo().getMatchSchedule().toDbTimestamp());
 
 				//HRF ID vermerken
 				ele = doc.createElement("HRFID");
@@ -345,11 +347,10 @@ public class XMLExporter  {
 
 				//Player schreiben
 				for (var p : lineupTeam.getLineup().getAllPositions()) {
-					var playerMatch = (MatchLineupPosition) p;
-					Player playerData = matchData.getPlayers().get(playerMatch.getPlayerId());
+					Player playerData = matchData.getPlayers().get(((MatchLineupPosition) p).getPlayerId());
 
 					//Bank + verletzte überspringen
-					if (playerMatch.getRoleId() >= IMatchRoleID.startReserves) {
+					if (((MatchLineupPosition) p).getRoleId() >= IMatchRoleID.startReserves) {
 						continue;
 					}
 
@@ -361,28 +362,28 @@ public class XMLExporter  {
 
 					ele = doc.createElement("SpielerID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getPlayerId()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getPlayerId()));
 					ele = doc.createElement("Spezialitaet");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));
 					ele = doc.createElement("RoleID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getRoleId()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRoleId()));
 					ele = doc.createElement("Tactic");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getBehaviour()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getBehaviour()));
 					ele = doc.createElement("HOPosition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getPosition()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getPosition()));
 					ele = doc.createElement("HTPositionCode");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getRoleId()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRoleId()));
 					ele = doc.createElement("Bewertung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getRating()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRating()));
 					ele = doc.createElement("Name");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerMatch.getSpielerName()));
+					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getSpielerName()));
 					ele = doc.createElement("Alter");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getAlter()));
@@ -488,11 +489,11 @@ public class XMLExporter  {
 	/**
 	 * Check for skillup.
 	 */
-	private String hadSkillup(int skill, Player player, Timestamp matchdate) {
+	private String hadSkillup(int skill, Player player, HODateTime matchdate) {
 		Object[] value = player.getLastLevelUp(skill);
 
 		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
-			if (((Boolean) value[1]) && ((Timestamp) value[0]).before(matchdate)) {
+			if (((Boolean) value[1]) && ((HODateTime) value[0]).isBefore(matchdate)) {
 				return "1";
 			}
 		}

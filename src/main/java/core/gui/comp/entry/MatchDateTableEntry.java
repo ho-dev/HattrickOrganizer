@@ -6,6 +6,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
     private final Color bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private final JLabel matchLink = new JLabel("");
     private static Icon matchIcon;
-    private Date matchDate;
+    private HODateTime matchDate;
 
     private JComponent m_clComponent = new JPanel();
 
@@ -32,7 +33,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
         return m_clComponent;
     }
 
-    public MatchDateTableEntry(String lastMatchDate, IMatchType matchType) {
+    public MatchDateTableEntry(HODateTime lastMatchDate, IMatchType matchType) {
         createComponent();
         setMatchInfo(lastMatchDate, matchType);
     }
@@ -41,21 +42,15 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
         return matchLink;
     }
 
-    public final void setMatchInfo(String t, IMatchType matchType) {
+    public final void setMatchInfo(HODateTime t, IMatchType matchType) {
 
-        try {
-            if (t != null) {
-                matchDate = DATE_FORMAT.parse(t);
-                // TODO This should use the user preferences date format.
-                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                matchLink.setText(dateFormat.format(matchDate));
-                matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
-                matchLink.setIcon(matchIcon);
-            }
-
-        } catch (ParseException e) {
-            HOLogger.instance().log(this.getClass(), e.getMessage());
+        if (t != null) {
+            matchDate = t;
+            matchLink.setText(matchDate.toLocaleDateTime());
+            matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
+            matchLink.setIcon(matchIcon);
         }
+
         updateComponent();
 
 
@@ -102,8 +97,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
             return -1;
         }
 
-        if (obj instanceof MatchDateTableEntry) {
-            final MatchDateTableEntry entry = (MatchDateTableEntry) obj;
+        if (obj instanceof final MatchDateTableEntry entry) {
             if (entry.matchDate == null) {
                 return 1;
             }

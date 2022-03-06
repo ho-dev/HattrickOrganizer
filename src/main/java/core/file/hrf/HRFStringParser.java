@@ -12,6 +12,7 @@ import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.util.HODateTime;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.util.HOLogger;
@@ -50,7 +51,7 @@ public class HRFStringParser {
 
 	public static HOModel parse(String hrf) {
 		HOModel modelReturn = null;
-		Timestamp hrfdate = null;
+		HODateTime hrfdate = null;
 
 		if (hrf == null || hrf.length() == 0) {
 			HOLogger.instance().log(HRFStringParser.class, "HRF string is empty");
@@ -87,7 +88,7 @@ public class HRFStringParser {
 						entity = properties.get(ENTITY);
 						if (entity != null && entity.toString().equalsIgnoreCase(BASICS)) {
 							datestring = properties.getProperty("date");
-							hrfdate = Basics.parseHattrickDate(datestring);
+							hrfdate = HODateTime.fromHT(datestring);
 						}
 						propertiesList.add(properties);
 					}
@@ -146,7 +147,7 @@ public class HRFStringParser {
 	 * @param hrfdate Date of the HRF file.
 	 * @return HOModel – Model built from the properties.
 	 */
-	private static HOModel createHOModel(List<Properties> propertiesList, Timestamp hrfdate) throws Exception {
+	private static HOModel createHOModel(List<Properties> propertiesList, HODateTime hrfdate) throws Exception {
 
 		final HOModel hoModel = new HOModel();
 		int trainerID = -1;

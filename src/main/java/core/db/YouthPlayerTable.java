@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.player.Specialty;
+import core.util.HODateTime;
 import module.youth.YouthSkillInfo;
 import module.youth.YouthPlayer;
 import core.util.HOLogger;
@@ -121,8 +122,8 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(DBManager.insertEscapeSequences(player.getLastName())).append("',")
                 .append(player.getAgeYears()).append(",")
                 .append(player.getAgeDays()).append(",")
-                .append(DBManager.nullOrValue(player.getArrivalDate())).append(",")
-                .append(DBManager.nullOrValue(player.getPromotionDate())).append(",")
+                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getArrivalDate()))).append(",")
+                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getPromotionDate()))).append(",")
                 .append(player.getCanBePromotedIn()).append(",'")
                 .append(player.getPlayerNumber()).append("','")
                 .append(DBManager.insertEscapeSequences(player.getStatement())).append("','")
@@ -142,7 +143,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 .append(player.getPositionCode()).append(",")
                 .append(player.getPlayedMinutes()).append(",")
                 .append(player.getRating()).append(",")
-                .append(DBManager.nullOrValue(player.getYouthMatchDate()));
+                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getYouthMatchDate())));
 
         for ( var skillId: YouthPlayer.skillIds){
             AppendSkillInfo(sql, player, skillId);
@@ -151,7 +152,7 @@ public class YouthPlayerTable  extends AbstractTable {
         try {
             adapter.executeUpdate(sql.toString());
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + sql.toString() + " : " + e);
+            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + sql + " : " + e);
         }
         var scoutComments = player.getScoutComments();
         if (scoutComments.size() > 0) {
@@ -231,7 +232,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setId(rs.getInt("ID"));
             ret.setAgeDays(rs.getInt("AgeDays"));
             ret.setAgeYears(rs.getInt("Age"));
-            ret.setArrivalDate(rs.getTimestamp("ArrivalDate"));
+            ret.setArrivalDate(HODateTime.fromDbTimestamp(rs.getTimestamp("ArrivalDate")));
             ret.setCanBePromotedIn(rs.getInt("CanBePromotedIn"));
             ret.setCards(rs.getInt("Cards"));
             ret.setCareerGoals(rs.getInt("CareerGoals"));
@@ -253,7 +254,7 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
             ret.setSpecialty(Specialty.valueOf(DBManager.getInteger(rs,"Specialty")));
             ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
-            ret.setYouthMatchDate(rs.getTimestamp("YouthMatchDate"));
+            ret.setYouthMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("YouthMatchDate")));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
             for ( var skillId: YouthPlayer.skillIds){
                 setSkillInfo(ret, rs, skillId);

@@ -1,6 +1,7 @@
 package core.model.series;
 
 import core.model.misc.Basics;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,8 +44,8 @@ public class Paarung implements Comparable<Paarung>{
      *
      * @return Value of property m_lDatum.
      */
-    public final java.sql.Timestamp getDatum() {
-        return Basics.parseHattrickDate(m_sDatum);
+    public final HODateTime getDatum() {
+        return HODateTime.fromHT(m_sDatum);
     }
 
     /**
@@ -248,8 +249,7 @@ public class Paarung implements Comparable<Paarung>{
     ////////////////////////////////////////////////////////////////////////////////
     @Override
 	public final boolean equals(Object obj) {
-        if (obj instanceof Paarung) {
-            final Paarung spiel = (Paarung) obj;
+        if (obj instanceof final Paarung spiel) {
 
             return (spiel.getStringDate().equals(m_sDatum))
                     && (spiel.getGastId() == m_iGastId)

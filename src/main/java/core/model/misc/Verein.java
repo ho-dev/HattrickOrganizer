@@ -1,6 +1,7 @@
 // %163934374:de.hattrickorganizer.model%
 package core.model.misc;
 
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -22,7 +23,7 @@ public final class Verein {
     /** Team Name */
     private String m_sTeamName;
     /** Datum */
-    private Timestamp m_clDate;
+    private HODateTime m_clDate;
     /** Jungendspieler gezogen */
     private boolean m_bYouthPull;
     /** doctors */
@@ -126,7 +127,7 @@ public final class Verein {
             m_iRegionRanking = rs.getInt("regionranking");
             m_iPowerRating = rs.getInt("powerrating");
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor Verein: " + e.toString());
+            HOLogger.instance().log(getClass(),"Konstruktor Verein: " + e);
         }
     }
 
@@ -173,7 +174,7 @@ public final class Verein {
      *
      * @param m_clDate New value of property m_clDate.
      */
-    public void setDate(java.sql.Timestamp m_clDate) {
+    public void setDate(HODateTime m_clDate) {
         this.m_clDate = m_clDate;
     }
 
@@ -182,12 +183,12 @@ public final class Verein {
      *
      * @return Value of property m_clDate.
      */
-    public java.sql.Timestamp getDate() {
+    public HODateTime getDate() {
         return m_clDate;
     }
 
     public void setDateFromString(String date) {
-        m_clDate = Basics.parseHattrickDate(date);
+        m_clDate = HODateTime.fromHT(date);
     }
 
     /**

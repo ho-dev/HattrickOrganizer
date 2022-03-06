@@ -26,13 +26,13 @@ public class HTDatetimeBase implements PropertyChangeListener {
     static final DateTimeFormatter cl_DateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(cl_HTzoneID);
     private static final ZoneId cl_UserSystemZoneID = ZoneId.systemDefault();
     private static ZoneId cl_UserZoneID = DateTimeUtils.fromHash(core.model.UserParameter.instance().TimeZoneDifference);
-    static Instant cl_LastUpdate;
+    static HODateTime cl_LastUpdate;
     private static int cl_UserSeasonOffset;
     private PropertyChangeSupport support;
 
     public HTDatetimeBase() {
         cl_UserSeasonOffset = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
-        cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
+        cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum();
         if (cl_UserZoneID == null) {
             HOLogger.instance().error(getClass(), "ZoneID could not be identified, reverting to System defaults: " + cl_UserSystemZoneID);
             cl_UserZoneID = cl_UserSystemZoneID;
@@ -65,7 +65,7 @@ public class HTDatetimeBase implements PropertyChangeListener {
         HOLogger.instance().debug(this.getClass(), "HOVerwaltung model changed => HTDateTimeBase is reinitialized");
         HTDatetimeBase oldInstance = cl_Instance;
         cl_UserSeasonOffset = HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
-        cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum().toInstant();
+        cl_LastUpdate = HOVerwaltung.instance().getModel().getBasics().getDatum();
         support.firePropertyChange("cl_Instance", oldInstance, cl_Instance);
     }
 

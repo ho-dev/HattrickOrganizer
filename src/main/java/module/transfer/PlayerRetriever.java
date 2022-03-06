@@ -40,9 +40,7 @@ public final class PlayerRetriever {
         if (player == null) {
             final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
 
-            for (final Iterator<Player> iter = oldPlayers.iterator(); iter.hasNext();) {
-                final Player oldPlayer = iter.next();
-
+            for (final Player oldPlayer : oldPlayers) {
                 if (oldPlayer.getPlayerID() == id) {
                     return oldPlayer;
                 }
@@ -66,14 +64,14 @@ public final class PlayerRetriever {
 
         if (player != null) return player;
 
-        List<Player> players = new ArrayList<Player>();
+        List<Player> players = new ArrayList<>();
         players.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
         players.addAll(HOVerwaltung.instance().getModel().getFormerPlayers());
 
-        List<Player> matches = new ArrayList<Player>();
+        List<Player> matches = new ArrayList<>();
 
-        for (final Iterator<Player> iter = players.iterator(); iter.hasNext();) {
-            player = iter.next();
+        for (Player value : players) {
+            player = value;
 
             if (Objects.equals(player.getFullName(), transfer.getPlayerName())) {   //TODO: check this is not broken
                 matches.add(player);
@@ -85,7 +83,7 @@ public final class PlayerRetriever {
         for (final Iterator<Player> iter = matches.iterator(); iter.hasNext();) {
             final Player match = iter.next();
 
-            player = DBManager.instance().getSpielerAtDate(match.getPlayerID(), transfer.getDate());
+            player = DBManager.instance().getSpielerAtDate(match.getPlayerID(), transfer.getDate().toDbTimestamp());
 
             if(player == null) {
                 iter.remove();

@@ -6,6 +6,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class XMLMatchesParser {
 					ele = (Element) list.item(i);
 
 					tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-					match.setMatchSchedule(tmp.getFirstChild().getNodeValue());
+					match.setMatchSchedule(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
 					tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
 					match.setMatchID(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
 					tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
@@ -98,19 +99,19 @@ public class XMLMatchesParser {
 
 
 					tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);
-					match.setHomeTeamID(Integer.parseInt(((Element) tmp
-							.getElementsByTagName("HomeTeamID").item(0))
+					match.setHomeTeamID(Integer.parseInt(tmp
+							.getElementsByTagName("HomeTeamID").item(0)
 							.getFirstChild().getNodeValue()));
-					match.setHomeTeamName(((Element) tmp.getElementsByTagName(
-							"HomeTeamName").item(0)).getFirstChild()
+					match.setHomeTeamName(tmp.getElementsByTagName(
+							"HomeTeamName").item(0).getFirstChild()
 							.getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("AwayTeam")
 							.item(0);
-					match.setGuestTeamID(Integer.parseInt(((Element) tmp
-							.getElementsByTagName("AwayTeamID").item(0))
+					match.setGuestTeamID(Integer.parseInt(tmp
+							.getElementsByTagName("AwayTeamID").item(0)
 							.getFirstChild().getNodeValue()));
-					match.setGuestTeamName(((Element) tmp.getElementsByTagName(
-							"AwayTeamName").item(0)).getFirstChild()
+					match.setGuestTeamName(tmp.getElementsByTagName(
+							"AwayTeamName").item(0).getFirstChild()
 							.getNodeValue());
 					tmp = (Element) ele.getElementsByTagName("Status").item(0);
 					match.setMatchStatus(getStatus(tmp.getFirstChild()

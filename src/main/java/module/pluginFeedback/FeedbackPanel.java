@@ -7,6 +7,7 @@ import core.model.Ratings;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.UTF8Control;
 import module.lineup.Lineup;
@@ -19,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Duration;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,10 +42,11 @@ public class FeedbackPanel extends JFrame {
 
     public FeedbackPanel() {
         int lastHrfId = DBManager.instance().getLatestHrfId();
-        long dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum().getTime();
+        var dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum();
         long dateNow = new Date().getTime();
-        long updateTime = 1000 * 60 * 60; // Time (millisec), time difference for consider data too old, 1 hour
-        if (dateHrf + updateTime <= dateNow) {
+        if (Duration.between(dateHrf.instant, HODateTime.now().instant).toHours()>=3){
+//        long updateTime = 1000 * 60 * 60; // Time (millisec), time difference for consider data too old, 1 hour
+//        if (dateHrf + updateTime <= dateNow) {
 
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOldWarning"); //java.text.DateFormat.getDateTimeInstance().format(dateHrf));
             message = String.format(message, java.text.DateFormat.getDateTimeInstance().format(dateHrf));

@@ -5,6 +5,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.Specialty;
+import core.util.HODateTime;
 import module.training.Skills;
 
 import java.sql.Timestamp;
@@ -63,68 +64,19 @@ public class YouthTrainingDevelopmentEntry {
         for (var highlight : highlights) {
             if (highlight.getPlayerId() == player.getId()) {
                 switch (highlight.getMatchEventID()) {
-
-                    case SE_NO_GOAL_CORNER_HEAD_SPECIALIST:
-                    case SE_GOAL_CORNER_HEAD_SPECIALIST:
-                    case SE_WINGER_TO_HEAD_SPEC_SCORES:
-                        this.specialty = Specialty.Head;
-                        break;
-
-                    case SE_GOAL_UNPREDICTABLE_OWN_GOAL:
-                    case SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN:
-                    case SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES:
-                    case SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST:
-                        this.specialty = Specialty.Unpredictable;
-                        break;
-
-                    case SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE:
-                    case SE_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE:
-                    case SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE:
-                    case SE_POWERFUL_SUFFERS_FROM_SUN:
-                    case SE_POWERFUL_THRIVES_IN_RAIN:
-                        this.specialty = Specialty.Powerful;
-                        break;
-
-                    case SE_QUICK_LOSES_IN_RAIN:
-                    case SE_QUICK_LOSES_IN_SUN:
-                    case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
-                    case SE_QUICK_SCORES_AFTER_RUSH:
-                    case SE_SPEEDY_MISSES_AFTER_RUSH:
-                        this.specialty = Specialty.Quick;
-                        break;
-
-                    case SE_SUPPORT_PLAYER_BOOST_FAILED:
-                    case SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED:
-                    case SE_SUPPORT_PLAYER_BOOST_SUCCEEDED:
-                        this.specialty = Specialty.Support;
-                        break;
-                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
-                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
-                    case SE_TECHNICAL_SUFFERS_FROM_RAIN:
-                    case SE_TECHNICAL_THRIVES_IN_SUN:
-                        this.specialty = Specialty.Technical;
-                        break;
+                    case SE_NO_GOAL_CORNER_HEAD_SPECIALIST, SE_GOAL_CORNER_HEAD_SPECIALIST, SE_WINGER_TO_HEAD_SPEC_SCORES -> this.specialty = Specialty.Head;
+                    case SE_GOAL_UNPREDICTABLE_OWN_GOAL, SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN, SE_NO_GOAL_UNPREDICTABLE_ALMOST_SCORES, SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST -> this.specialty = Specialty.Unpredictable;
+                    case SE_NO_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE, SE_GOAL_POWERFUL_NORMAL_FORWARD_GENERATES_EXTRA_CHANCE, SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE, SE_POWERFUL_SUFFERS_FROM_SUN, SE_POWERFUL_THRIVES_IN_RAIN -> this.specialty = Specialty.Powerful;
+                    case SE_QUICK_LOSES_IN_RAIN, SE_QUICK_LOSES_IN_SUN, SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER, SE_QUICK_SCORES_AFTER_RUSH, SE_SPEEDY_MISSES_AFTER_RUSH -> this.specialty = Specialty.Quick;
+                    case SE_SUPPORT_PLAYER_BOOST_FAILED, SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED, SE_SUPPORT_PLAYER_BOOST_SUCCEEDED -> this.specialty = Specialty.Support;
+                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER, SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL, SE_TECHNICAL_SUFFERS_FROM_RAIN, SE_TECHNICAL_THRIVES_IN_SUN -> this.specialty = Specialty.Technical;
                 }
             } else {
                 // Analyse assistant
                 switch (highlight.getMatchEventID()) {
-                    case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES:
-                    case SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER:
-                    case SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS:
-                        this.specialty = Specialty.Quick;
-                        break;
-                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER:
-                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL:
-                        this.specialty = Specialty.Head;
-                        break;
-                    case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
-                    case SE_GOAL_UNPREDICTABLE_LONG_PASS:
-                    case SE_GOAL_UNPREDICTABLE_MISTAKE:
-                    case SE_NO_GOAL_UNPREDICTABLE_LONG_PASS:
-                    case SE_NO_GOAL_UNPREDICTABLE_MISTAKE:
-                    case SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION:
-                        this.specialty = Specialty.Unpredictable;
-                        break;
+                    case SE_QUICK_RUSHES_PASSES_AND_RECEIVER_SCORES, SE_QUICK_RUSHES_STOPPED_BY_QUICK_DEFENDER, SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS -> this.specialty = Specialty.Quick;
+                    case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER, SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER_NO_GOAL -> this.specialty = Specialty.Head;
+                    case SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION, SE_GOAL_UNPREDICTABLE_LONG_PASS, SE_GOAL_UNPREDICTABLE_MISTAKE, SE_NO_GOAL_UNPREDICTABLE_LONG_PASS, SE_NO_GOAL_UNPREDICTABLE_MISTAKE, SE_NO_GOAL_UNPREDICTABLE_SPECIAL_ACTION -> this.specialty = Specialty.Unpredictable;
                 }
             }
         }
@@ -176,7 +128,7 @@ public class YouthTrainingDevelopmentEntry {
      * Date of the training match
      * @return timestamp
      */
-    public Timestamp getMatchDate() {
+    public HODateTime getMatchDate() {
         return this.training.getMatchDate();
     }
 
@@ -217,7 +169,7 @@ public class YouthTrainingDevelopmentEntry {
      * @return String
      */
     public String getPlayerAge() {
-        return Player.getAgeWithDaysAsString(this.player.getAgeYears(),this.player.getAgeDays(),this.getMatchDate().getTime());
+        return Player.getAgeWithDaysAsString(this.player.getAgeYears(),this.player.getAgeDays(),this.getMatchDate());
     }
 
     /**

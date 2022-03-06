@@ -25,11 +25,13 @@ import core.model.match.IMatchDetails;
 import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
+import core.util.HODateTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -95,7 +97,7 @@ abstract class ForecastCurve extends Curve {
 		super.addPoint(0, point);
 		// delete all points that are before startpoint
 		for (int i = 1; i < m_clPoints.size(); i++) {
-			if ((m_clPoints.get(i)).m_dDate.before(point.m_dDate)) {
+			if ((m_clPoints.get(i)).m_dDate.isBefore(point.m_dDate)) {
 				m_clPoints.remove(i--);
 			} else {
 				break;
@@ -189,11 +191,10 @@ abstract class ForecastCurve extends Curve {
 				short start = 0;
 				Curve.Point point;
 
-				GregorianCalendar calendar = new GregorianCalendar();
-				calendar.setTime(resultset.getTimestamp("MATCHDATE"));
-				MatchType lastMatchType = MatchType.getById(resultset
-						.getInt("MATCHTYP"));
-				point = new Curve.Point(resultset.getTimestamp("MATCHDATE"),
+				//GregorianCalendar calendar = new GregorianCalendar();
+				var matchDate = HODateTime.fromDbTimestamp(resultset.getTimestamp("MATCHDATE"));
+				MatchType lastMatchType = MatchType.getById(resultset.getInt("MATCHTYP"));
+				point = new Curve.Point(matchDate,
 						IMatchDetails.EINSTELLUNG_NORMAL,
 						ibasics.getSpieltag(), lastMatchType);
 				m_clPoints.add(point);
@@ -215,13 +216,11 @@ abstract class ForecastCurve extends Curve {
 
 					if (lastMatchType == MatchType.CUP) { // add League Match
 						// SUNDAY = 0
-						calendar.add(Calendar.DATE, Calendar.SATURDAY
-								- Calendar.TUESDAY - 1);
+						matchDate = matchDate.plus( Calendar.SATURDAY - Calendar.TUESDAY - 1, ChronoUnit.DAYS);
 						switch (ibasics.getSpieltag() + s) {
-							case 16 -> point = new Point(calendar.getTime(),
-									TEAM_SPIRIT_RESET, RESET_PT);
+							case 16 -> point = new Point(matchDate,	TEAM_SPIRIT_RESET, RESET_PT);
 							case 15 -> {
-								point = new Point(calendar.getTime(),
+								point = new Point(matchDate,
 										IMatchDetails.EINSTELLUNG_NORMAL,
 										ibasics.getSpieltag() + s,
 										MatchType.QUALIFICATION);
@@ -230,7 +229,7 @@ abstract class ForecastCurve extends Curve {
 												"ls.match.matchtype.qualification");
 							}
 							default -> {
-								point = new Point(calendar.getTime(),
+								point = new Point(matchDate,
 										IMatchDetails.EINSTELLUNG_NORMAL,
 										ibasics.getSpieltag() + s, MatchType.LEAGUE);
 								point.m_strTooltip = (ibasics.getSpieltag() + s)
@@ -244,8 +243,8 @@ abstract class ForecastCurve extends Curve {
 						addUpdatePoints(point);
 					}
 					// add Cup Match
-					calendar.add(Calendar.DATE, Calendar.TUESDAY + 1);
-					point = new Curve.Point(calendar.getTime(),
+					matchDate = matchDate.plus( Calendar.TUESDAY + 1, ChronoUnit.DAYS);
+					point = new Curve.Point(matchDate,
 							IMatchDetails.EINSTELLUNG_NORMAL,
 							ibasics.getSpieltag() + s, MatchType.CUP);
 					point.m_strTooltip = (ibasics.getSpieltag() + s)
@@ -266,12 +265,12 @@ abstract class ForecastCurve extends Curve {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
-		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-		gregoriancalendar.setTime(ibasics.getDatum());
-		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
-
-		if (ibasics != null && iliga != null) {
+//		GregorianCalendar gregoriancalendar = new GregorianCalendar();
+//		gregoriancalendar.setTime(ibasics.getDatum());
+//		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
+//		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
+		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
+		if (iliga != null) {
 			// PAARUNG contains all Leaguematches, but no other
 			// MATCHESKURZINFO contains all other matches but no matchday
 			ResultSet resultset = m_clJDBC
@@ -326,7 +325,7 @@ abstract class ForecastCurve extends Curve {
 			 * and SORTDATE > '2006-01-01' order by SORTDATE
 			 */
 			int iMatchDay = 0;
-			java.util.Date maxDate = null;
+			HODateTime maxDate = null;
 
 			Curve.Point point;
 			if (resultset != null) {
@@ -335,14 +334,15 @@ abstract class ForecastCurve extends Curve {
 					if (resultset.getInt("SPIELTAG") > 0) {
 						iMatchDay = resultset.getInt("SPIELTAG");
 					}
+					var sortDate = HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE"));
 					if (ibasics.getTeamId() == resultset.getInt("HEIMID")) {
 						point = new Curve.Point(
-								resultset.getTimestamp("SORTDATE"),
+								sortDate,
 								resultset.getInt("HEIMEINSTELLUNG"), iMatchDay,
 								MatchType.getById(resultset.getInt("MATCHTYP")));
 					} else {
 						point = new Curve.Point(
-								resultset.getTimestamp("SORTDATE"),
+								sortDate,
 								resultset.getInt("GASTEINSTELLUNG"), iMatchDay,
 								MatchType.getById(resultset.getInt("MATCHTYP")));
 					}
@@ -353,7 +353,7 @@ abstract class ForecastCurve extends Curve {
 			// Add update points
 			// this function reads only league, cup and qualification matches,
 			// therefor has to add all Updatepoints
-			var points = new ArrayList<Point>(m_clPoints);
+			var points = new ArrayList<>(m_clPoints);
 			for ( var p : points){
 				point = p;
 				if (point.m_mtMatchType == MatchType.LEAGUE) {
@@ -371,58 +371,53 @@ abstract class ForecastCurve extends Curve {
 	}
 
 	private void addUpdatePoints(Curve.Point point, boolean bAllPoints) {
-		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-		gregoriancalendar.setTime(point.m_dDate);
+		var pointDate=point.m_dDate;
 
 		// League game ?
 		if (bAllPoints || point.m_mtMatchType == MatchType.LEAGUE
 				|| point.m_mtMatchType == MatchType.QUALIFICATION
 				|| point.m_iPointType == RESET_PT) {
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Sunday 15:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Sunday 15:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Monday 12:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Monday 12:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Tuesday 09:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Tuesday 09:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
 		}
 		if (bAllPoints || point.m_mtMatchType == MatchType.CUP) {
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Wednesday 06:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Wednesday 06:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Thursday 03:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Thursday 03:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Friday 00:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 00:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
-			gregoriancalendar.add(Calendar.HOUR_OF_DAY, 21); // Friday 21:00
-			m_clPoints.add(new Curve.Point(gregoriancalendar.getTime(),
+			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 21:00
+			m_clPoints.add(new Curve.Point(pointDate,
 					TEAM_SPIRIT_UNKNOWN));
 		}
 	}
 
-	private void addEndOfSeasonPoints(Curve.Point point, java.util.Date maxDate) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(point.m_dDate);
+	private void addEndOfSeasonPoints(Curve.Point point, HODateTime maxDate) {
+		var pointDate = point.m_dDate.plus(7, ChronoUnit.DAYS); 	// L14 p14 rel p15 RE p0 L1 (Kleinbuchstaben ist optional)
 
-		// L14 p14 rel p15 RE p0 L1 (Kleinbuchstaben ist optional)
-		cal.add(Calendar.DATE, 7); // Matchday 15
-
-		if (maxDate != null && maxDate.after(cal.getTime())) {
-			Curve.Point p = new Curve.Point(cal.getTime(),
+		if (maxDate != null && maxDate.isAfter(pointDate)) {
+			Curve.Point p = new Curve.Point(pointDate,
 					IMatchDetails.EINSTELLUNG_UNBEKANNT, 15,
 					MatchType.QUALIFICATION);
 			// don't add point only update points, real point come from database
 			// if at all
 			addUpdatePoints(p, true);
 
-			cal.add(Calendar.DATE, 7); // Matchday 16
+			pointDate = pointDate.plus( 7, ChronoUnit.DAYS); // Matchday 16
 
-			if (maxDate.after(cal.getTime())) {
-				p = new Curve.Point(cal.getTime(), TEAM_SPIRIT_RESET, RESET_PT);
+			if (maxDate.isAfter(pointDate)) {
+				p = new Curve.Point(pointDate, TEAM_SPIRIT_RESET, RESET_PT);
 				m_clPoints.add(p);
 				addUpdatePoints(p, true);
 			}

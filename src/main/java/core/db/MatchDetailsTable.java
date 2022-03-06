@@ -4,6 +4,7 @@ import core.model.match.MatchEvent;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.match.SourceSystem;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -106,12 +107,13 @@ final class MatchDetailsTable extends AbstractTable {
 			String sql = "SELECT * FROM "+getTableName()+" WHERE MATCHTYP=" + iMatchType + " AND MatchID=" + matchId;
 			ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			if (rs.first()) {
 				details.setMatchType(MatchType.getById(rs.getInt("MATCHTYP")));
 				details.setArenaID(rs.getInt("ArenaId"));
 				details.setArenaName(core.db.DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
 				details.setRegionId(rs.getInt("RegionID"));
-				details.setFetchDatum(rs.getTimestamp("Fetchdatum"));
+				details.setFetchDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("Fetchdatum")));
 				details.setGastId(rs.getInt("GastId"));
 				details.setGastName(core.db.DBManager.deleteEscapeSequences(rs.getString("GastName")));
 				details.setGuestEinstellung(rs.getInt("GastEinstellung"));
@@ -139,7 +141,7 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setHomeTacticSkill(rs.getInt("HeimTacticSkill"));
 				details.setHomeTacticType(rs.getInt("HeimTacticType"));
 				details.setMatchID(matchId);
-				details.setSpielDatum(rs.getTimestamp("SpielDatum"));
+				details.setSpielDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("SpielDatum")));
 				details.setWetterId(rs.getInt("WetterId"));
 				details.setZuschauer(rs.getInt("Zuschauer"));
 				details.setSoldTerraces(rs.getInt("soldTerraces"));
@@ -300,6 +302,7 @@ final class MatchDetailsTable extends AbstractTable {
 		try {
 			final String sql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=" + matchId;
 			final ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				int rating = rs.getInt(1);
@@ -328,6 +331,7 @@ final class MatchDetailsTable extends AbstractTable {
 		var sql = "select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
 		try {
 			var rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			if ( rs.next()){
 				return rs.getTimestamp(1);

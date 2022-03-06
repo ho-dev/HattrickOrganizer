@@ -147,7 +147,6 @@ public class TrainingPerPlayer  {
 	 * @return int age of the player in hattrick-years
 	 */
 	public int getPlayerAgeAtTrainingDate() {
-		Timestamp t = Timestamp.from(this._TrainingWeek.getTrainingDate());
-		return (int) this.getPlayer().getDoubleAgeFromDate(t);
+		return (int) this.getPlayer().getDoubleAgeFromDate(this._TrainingWeek.getTrainingDate());
 	}
 }

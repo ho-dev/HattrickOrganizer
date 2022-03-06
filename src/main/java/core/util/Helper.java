@@ -323,14 +323,6 @@ public class Helper {
 	}
 
 	/**
-	 * liefer das Datum aus einem String im Format yyyy-MM-dd HH:mm:ss
-	 *
-	 */
-	public static Timestamp parseDate(String date) {
-		return Basics.parseHattrickDate(date);
-	}
-
-	/**
 	 * entschlüsselt einen String der zuvor mit der Crypt methode verschlüsselt wurde
 	 *
 	 */

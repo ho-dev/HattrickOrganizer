@@ -13,11 +13,7 @@ import core.model.match.SourceSystem;
 import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
-import core.util.HOLogger;
-import core.util.Helper;
-import core.util.IOUtils;
-import core.util.StringUtils;
-import core.util.XMLUtils;
+import core.util.*;
 import org.jetbrains.annotations.Nullable;
 import tool.updater.UpdateHelper;
 import tool.updater.VersionInfo;
@@ -438,7 +434,7 @@ public class MyConnector {
 	 * @throws IOException
 	 *             if an IO error occurs during download.
 	 */
-	public String getMatches(int teamId, boolean forceRefresh, Date date) throws IOException {
+	public String getMatches(int teamId, boolean forceRefresh, HODateTime date) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(htUrl).append("?file=matches&version=2.8");
 		urlBuilder.append("&teamID=").append(teamId);
@@ -446,8 +442,7 @@ public class MyConnector {
 			urlBuilder.append("&actionType=refreshCache");
 		}
 		urlBuilder.append("&LastMatchDate=");
-		String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		urlBuilder.append(URLEncoder.encode(dateString, StandardCharsets.UTF_8));
+		urlBuilder.append(URLEncoder.encode(date.toHT(), StandardCharsets.UTF_8));
 		return getCHPPWebFile(urlBuilder.toString());
 	}
 

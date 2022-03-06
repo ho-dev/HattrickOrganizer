@@ -5,6 +5,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,7 +28,7 @@ public class TrainingManager implements PropertyChangeListener {
     private TrainingWeekManager recentTrainings;     						// trainings that took place (if any null otherwise) since last entry in Training table  => Created at initialization
 	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initialization
 
-	private Instant lastTrainingDate;
+	private HODateTime lastTrainingDate;
 
 	public static final boolean TRAINING_DEBUG = false;
 
@@ -57,15 +58,15 @@ public class TrainingManager implements PropertyChangeListener {
 
 		// Create recent training history from other tables in database
 		if (!historicalTrainings.isEmpty()) {
-			Instant previousTrainingDate = historicalTrainings.stream()
+			HODateTime previousTrainingDate = historicalTrainings.stream()
 					.map(TrainingPerWeek::getTrainingDate)
-					.max(Instant::compareTo).get();
+					.max(HODateTime::compareTo).get();
 			recentTrainings = new TrainingWeekManager(previousTrainingDate.plus(1, ChronoUnit.DAYS), false, true);
 		}
 		else {
 			var startDate = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 			if ( startDate != null ) {
-				recentTrainings = new TrainingWeekManager(startDate.toInstant(), false, true);
+				recentTrainings = new TrainingWeekManager(startDate, false, true);
 			}
 		}
 		// Load next week training
@@ -77,12 +78,12 @@ public class TrainingManager implements PropertyChangeListener {
 	/**
 	 * compute vector of trainingPerWeeks Vector between 2 dates to be used for subskill recalculation
 	 */
-    public List<TrainingPerWeek> getHistoricalTrainingsBetweenDates(Instant startDate, Instant endDate){
+    public List<TrainingPerWeek> getHistoricalTrainingsBetweenDates(HODateTime startDate, HODateTime endDate){
 		List<TrainingPerWeek> result = historicalTrainings.stream()
 				.filter(t->t.getTrainingDate().isBefore(endDate) && !startDate.isAfter(t.getTrainingDate()))
 				.collect(Collectors.toList());
 
-		result.forEach(TrainingPerWeek::addMatchesInfo);
+		result.forEach(TrainingPerWeek::loadMatches);
 
     	return result;
 	}
@@ -112,7 +113,7 @@ public class TrainingManager implements PropertyChangeListener {
 		return nextWeekTraining;
 	}
 
-	public Instant getLastTrainingDate() {
+	public HODateTime getLastTrainingDate() {
 		return lastTrainingDate;
 	}
 

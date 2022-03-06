@@ -3,6 +3,7 @@ package core.db;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,13 +43,12 @@ final class TrainingsTable extends AbstractTable {
 	 * @param training training to be saved
 	 * @param force if true will replace the training if it exists, otherwise will do nothing
 	 */
-	void saveTraining(TrainingPerWeek training, Instant lastTrainingDate, boolean force) {
+	void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate, boolean force) {
 
 		if (training != null) {
 
-			HTDatetime trainingDateAsDTI = new HTDatetime(training.getTrainingDate());
-			String trainingDate = DateTimeUtils.InstantToSQLtimeStamp(training.getTrainingDate());
-
+			var trainingDateAsDTI = training.getTrainingDate();
+			var trainingDate = trainingDateAsDTI.toDbTimestamp().toString();
 			if (trainingDateAsDTI.isAfter(lastTrainingDate)) {
 //				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
 				return;
@@ -59,8 +59,8 @@ final class TrainingsTable extends AbstractTable {
 
 				if (force){
 					sql = String.format("""
-     				UPDATE TRAINING  SET TRAINING_TYPE=%s, TRAINING_INTENSITY=%s, STAMINA_SHARE=%s, COACH_LEVEL=%s, 
-     				TRAINING_ASSISTANTS_LEVEL=%s, SOURCE=%s WHERE TRAINING_DATE = '%s'""", training.getTrainingType(), training.getTrainingIntensity(),
+									UPDATE TRAINING  SET TRAINING_TYPE=%s, TRAINING_INTENSITY=%s, STAMINA_SHARE=%s, COACH_LEVEL=%s, 
+									TRAINING_ASSISTANTS_LEVEL=%s, SOURCE=%s WHERE TRAINING_DATE = '%s'""", training.getTrainingType(), training.getTrainingIntensity(),
 							training.getStaminaShare(), training.getCoachLevel(), training.getTrainingAssistantsLevel(), training.getSource().getValue(), trainingDate);
 //					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    UPDATED");
 				}
@@ -95,14 +95,14 @@ final class TrainingsTable extends AbstractTable {
 	/**
 	 * apply the function saveTraining() to all elements of the provided vector
 	 */
-	void saveTrainings(List<TrainingPerWeek> trainings, Instant lastTrainingDate, boolean force) {
+	void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate, boolean force) {
 		for (var training:trainings) {
 			saveTraining(training, lastTrainingDate, force);
 		}
 	}
 
 	private TrainingPerWeek getTrainingPerWeek(ResultSet rs) throws SQLException {
-		Instant trainingDate = rs.getTimestamp("TRAINING_DATE").toInstant();
+		var trainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAINING_DATE"));
 		int trainingType = rs.getInt("TRAINING_TYPE");
 		int trainingIntensity = rs.getInt("TRAINING_INTENSITY");
 		int staminaShare = rs.getInt("STAMINA_SHARE");
@@ -164,14 +164,12 @@ final class TrainingsTable extends AbstractTable {
 
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
-		var statement = new StringBuilder ( "SELECT * FROM " )
-				.append( getTableName() )
-				.append(" WHERE TRAINING_DATE < '")
-				.append(""+toDate);
+		var statement = new StringBuilder("SELECT * FROM ")
+				.append(getTableName())
+				.append(" WHERE TRAINING_DATE < '").append(toDate);
 
 				if (fromDate!=null) {
-					statement.append("' AND TRAINING_DATE >= '")
-							.append(""+fromDate);
+					statement.append("' AND TRAINING_DATE >= '").append(fromDate);
 				}
 				statement.append("' ORDER BY TRAINING_DATE ASC");
 

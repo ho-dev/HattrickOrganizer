@@ -9,6 +9,7 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import javax.swing.*;
@@ -201,17 +202,20 @@ public class MatchBanner extends JPanel implements Refreshable {
             }
 */
 
+            int htWeek;
             String sDate;
             if ( m_clSelectedMatch != null){
-                sDate = m_clSelectedMatch.getMatchSchedule(true);
+                var datetime =  m_clSelectedMatch.getMatchSchedule();
+                sDate = datetime.toLocaleDateTime();
+                htWeek = datetime.toHTWeek().week;
             }
             else {
                 sDate = "";
+                htWeek = 0;
             }
             String sLabel = "<html><div style='text-align: center;'>" + sDate + "\n";
             if (matchType == MatchType.LEAGUE) {
-                int iHTWeek = m_clSelectedMatch.getHTWeek();
-                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), iHTWeek, HOVerwaltung.instance().getModel().getLeague().getLiga());
+                sLabel += String.format(Helper.getTranslation("ls.module.lineup.matchSchedule"), htWeek, HOVerwaltung.instance().getModel().getLeague().getLiga());
             }
             else if (matchType.isFriendly()) {
                 sLabel += "<br>" + matchType.getName();

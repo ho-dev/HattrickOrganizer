@@ -2,6 +2,7 @@ package core.db;
 
 
 import core.training.FuturePlayerTraining;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,12 +58,12 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         var playerid = rs.getInt("playerId");
         var fromSeason = rs.getInt("fromSeason");
         var fromWeek = rs.getInt("fromWeek");
-        var from = new HattrickDate(fromSeason, fromWeek);
-        HattrickDate to = null;
+        var from = HODateTime.fromHTWeek(new HODateTime.HTWeek(fromSeason, fromWeek));
+        HODateTime to = null;
         var toSeason = DBManager.getInteger(rs, "toSeason");
         var toWeek = DBManager.getInteger(rs, "toWeek");
         if (toSeason != null && toWeek != null) {
-            to = new HattrickDate(toSeason, toWeek);
+            to = HODateTime.fromHTWeek(new HODateTime.HTWeek(toSeason, toWeek));
         }
         var prio = FuturePlayerTraining.Priority.valueOf(DBManager.getInteger(rs,"prio"));
         return new FuturePlayerTraining(playerid, prio, from, to);
@@ -75,15 +76,17 @@ public class FuturePlayerTrainingTable extends AbstractTable {
             delete(where, werte);
 
             for (var t : futurePlayerTrainings) {
+                var to = t.getTo();
+                var from = t.getFrom();
                 String sql = "INSERT INTO " +
                         getTableName() +
                         " (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(" +
                         t.getPlayerId() + ", " +
                         t.getPriority().getValue() + ", " +
-                        t.getFrom().getSeason() + ", " +
-                        t.getFrom().getWeek() + ", " +
-                        (t.getTo() != null ? t.getTo().getSeason() : null) + ", " +
-                        (t.getTo() != null ? t.getTo().getWeek() : null) +
+                        from.toHTWeek().season + ", " +
+                        from.toHTWeek().week + ", " +
+                        (to != null ? to.toHTWeek().season : null) + ", " +
+                        (to != null ? to.toHTWeek().week : null) +
                         ")";
                 adapter.executeUpdate(sql);
             }

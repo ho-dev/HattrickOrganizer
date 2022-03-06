@@ -1,12 +1,14 @@
 package module.tsforecast;
 
 import core.model.HOVerwaltung;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -18,12 +20,11 @@ class TrainerCurve extends Curve {
 		readTrainer();
 	}
 
-	double getLeadership(Date d) throws Exception {
+	double getLeadership(HODateTime d) {
 		double dRet = -1;
 		if (d != null) {
-			for (Iterator<Point> i = m_clPoints.iterator(); i.hasNext();) {
-				Point p = i.next();
-				if (p.m_dDate.before(d))
+			for (Point p : m_clPoints) {
+				if (p.m_dDate.isBefore(d))
 					dRet = p.m_dSpirit;
 			}
 		} else {
@@ -47,16 +48,18 @@ class TrainerCurve extends Curve {
 		return getSpirit();
 	}
 
-	private void readTrainer() throws SQLException {
-		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-		gregoriancalendar.setTime(HOVerwaltung.instance().getModel()
-				.getBasics().getDatum());
-		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
+	private void readTrainer() {
+//		GregorianCalendar gregoriancalendar = new GregorianCalendar();
+//		gregoriancalendar.setTime(HOVerwaltung.instance().getModel()
+//				.getBasics().getDatum());
+//		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
+//		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
 
-		int iLeadership = -1;
+		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS);
+
+		int iLeadership;
 		int iLastLeadership = -1;
-		int iID = -1;
+		int iID;
 		int iLastID = -1;
 
 		// get last skill just before start date
@@ -66,10 +69,10 @@ class TrainerCurve extends Curve {
 						+ "' order by DATUM desc");
 		try {
 			boolean gotInitial = false;
+			assert resultset != null;
 			if (resultset.next()) {
 				iLeadership = resultset.getInt("FUEHRUNG");
-				iID = iLastID = resultset.getInt("SPIELERID");
-				m_clPoints.add(new Point(resultset.getTimestamp("DATUM"),
+				m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")),
 						iLeadership, START_TRAINER_PT));
 				gotInitial = true;
 			}
@@ -81,23 +84,25 @@ class TrainerCurve extends Curve {
 							+ "' and DATUM < '"
 							+ HOVerwaltung.instance().getModel().getBasics()
 									.getDatum() + "' order by DATUM");
-			while (resultset.next()) {
+			while (true) {
+				assert resultset != null;
+				if (!resultset.next()) break;
 				iLeadership = resultset.getInt("FUEHRUNG");
 				iID = resultset.getInt("SPIELERID");
 
 				if (!gotInitial) { // initial trainer unknown (database too
 									// young)
-					m_clPoints.add(new Point(resultset.getTimestamp("DATUM"),
+					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")),
 							iLeadership, START_TRAINER_PT));
 					gotInitial = true;
 				}
 				if (iID != iLastID) { // New Trainer
-					m_clPoints.add(new Point(resultset.getTimestamp("DATUM"),
+					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")),
 							iLeadership, NEW_TRAINER_PT));
 				} else if (iLastLeadership != -1
 						&& iLeadership != iLastLeadership) { // Trainer
 																// Skilldown
-					m_clPoints.add(new Point(resultset.getTimestamp("DATUM"),
+					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")),
 							iLeadership, TRAINER_DOWN_PT));
 				}
 				iLastLeadership = iLeadership;

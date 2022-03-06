@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.Tournament.TournamentDetails;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 		sql.append(" WHERE TOURNAMENTID = ").append(TournamentId);
 		try {
 			var rs = adapter.executeQuery(sql.toString());
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				oTournamentDetails = new TournamentDetails();
@@ -56,8 +58,8 @@ public final class TournamentDetailsTable extends AbstractTable {
 				oTournamentDetails.setNumberOfTeams(rs.getInt("NumberOfTeams"));
 				oTournamentDetails.setNumberOfGroups(rs.getInt("NumberOfGroups"));
 				oTournamentDetails.setLastMatchRound((short)rs.getInt("LastMatchRound"));
-				oTournamentDetails.setFirstMatchRoundDate(rs.getTimestamp("FirstMatchRoundDate"));
-				oTournamentDetails.setFirstMatchRoundDate(rs.getTimestamp("NextMatchRoundDate"));
+				oTournamentDetails.setFirstMatchRoundDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FirstMatchRoundDate")));
+				oTournamentDetails.setFirstMatchRoundDate(HODateTime.fromDbTimestamp(rs.getTimestamp("NextMatchRoundDate")));
 				oTournamentDetails.setMatchesOngoing(rs.getBoolean("IsMatchesOngoing"));
 				oTournamentDetails.setCreator_UserId(rs.getInt("Creator_UserID"));
 				oTournamentDetails.setCreator_Loginname(rs.getString("Creator_Loginname"));
@@ -97,8 +99,8 @@ public final class TournamentDetailsTable extends AbstractTable {
 			sql.append(oTournamentDetails.getNumberOfTeams()).append(", ");
 			sql.append(oTournamentDetails.getNumberOfGroups()).append(", ");
 			sql.append(oTournamentDetails.getLastMatchRound()).append(", ");
-			sql.append(DateToSQLtimeStamp(oTournamentDetails.getFirstMatchRoundDate())).append(", ");
-			sql.append(DateToSQLtimeStamp(oTournamentDetails.getNextMatchRoundDate())).append(", ");
+			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getFirstMatchRoundDate())).append(", ");
+			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getNextMatchRoundDate())).append(", ");
 
 			if (oTournamentDetails.getMatchesOngoing())
 			{

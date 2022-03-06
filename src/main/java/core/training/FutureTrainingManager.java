@@ -134,14 +134,14 @@ public class FutureTrainingManager {
 							if (change != 0) {
 								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 								var trainingDate = trainingPerWeek.getTrainingDate();
-								var hattrickDate = HattrickDate.fromInstant(trainingDate);
+								var htWeek = trainingDate.toLocaleHTWeek();
 								PlayerSkillChange su = new PlayerSkillChange();
-								su.setHtSeason(hattrickDate.getLocalSeason());
-								su.setHtWeek(hattrickDate.getWeek());
+								su.setHtSeason(htWeek.season);
+								su.setHtWeek(htWeek.season);
 								su.setType(SKILL_INDEX[i]);
 								su.setValue(finalSkill[i]);
 								su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-								su.setDate(Date.from(trainingDate));
+								su.setDate(trainingDate);
 								su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 								su.setChange(change);
 								futureSkillups.add(su);

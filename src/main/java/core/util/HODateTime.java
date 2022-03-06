@@ -29,37 +29,50 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * internal time representation
      */
-    public Instant instant;
+    final public Instant instant;
 
     /**
      * create an HODateTime instance (should it be private?)
+     *
      * @param in Instant
      */
-    public HODateTime(Instant in) {
+    public HODateTime(@NotNull Instant in) {
         this.instant = in;
     }
+    public HODateTime(@NotNull HODateTime in){this.instant=in.instant;}
 
     /**
      * Create instance from HT (chpp) string
+     *
      * @param htString HT string
      * @return HODateTime
      */
     public static HODateTime fromHT(String htString) {
-        LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
-        return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
+        if ( htString != null && !htString.isEmpty()) {
+            LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
+            return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
+        }
+        return null;
     }
 
     /**
      * Create an instance from database timestamp
+     *
      * @param timestamp database timestamp
      * @return HODateTime
      */
     public static HODateTime fromDbTimestamp(Timestamp timestamp) {
-        return new HODateTime(timestamp.toInstant());
+        if ( timestamp != null )return new HODateTime(timestamp.toInstant());
+        return null;
+    }
+    public static Timestamp toDbTimestamp(HODateTime time) {
+        if (time != null) return time.toDbTimestamp();
+        return null;
     }
 
     /**
      * Create an instance representing current time
+     *
      * @return HODateTime
      */
     public static HODateTime now() {
@@ -68,15 +81,17 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Create an instance from HT season, week
+     *
      * @param week ht season, week
      * @return date time of the start of hattrick week
      */
     public static HODateTime fromHTWeek(HTWeek week) {
-        return new HODateTime(htStart.instant.plus(Duration.ofDays(((week.season-1)*16+ week.week-1)*7)));
+        return new HODateTime(htStart.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
     }
 
     /**
      * Convert to HT (chpp) string representation
+     *
      * @return String
      */
     public String toHT() {
@@ -85,32 +100,35 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Convert to date only string, using user's locale setting (system default)
+     *
      * @return String
      */
     public String toLocaleDate() {
-        return toLocalDate(FormatStyle.MEDIUM);
+        return toLocaleDate(FormatStyle.MEDIUM);
     }
 
-    public String toLocalDate(FormatStyle style){
+    public String toLocaleDate(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
 
     /**
      * Convert to date and time string, using user's locale setting (system default)
+     *
      * @return String
      */
     public String toLocaleDateTime() {
         return toLocaleDateTime(FormatStyle.MEDIUM);
     }
 
-    public String toLocaleDateTime(FormatStyle style){
+    public String toLocaleDateTime(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
 
     /**
      * Convert to database timestamp
+     *
      * @return Timestamp
      */
     public Timestamp toDbTimestamp() {
@@ -119,6 +137,7 @@ public class HODateTime implements Comparable<HODateTime> {
 
     /**
      * Compare HODateTime instances
+     *
      * @param o other HODateTime instance
      * @return the comparator value, negative if less, positive if greater
      */
@@ -127,12 +146,14 @@ public class HODateTime implements Comparable<HODateTime> {
         return instant.compareTo(o.instant);
     }
 
+    public boolean equals(HODateTime t){ return this.instant.equals(t.instant);}
+
     public HODateTime minus(int i, ChronoUnit unit) {
-        return new HODateTime(instant.minus(i,unit));
+        return new HODateTime(instant.minus(i, unit));
     }
 
     public HODateTime plus(int i, ChronoUnit unit) {
-        return new HODateTime(instant.plus(i,unit));
+        return new HODateTime(instant.plus(i, unit));
     }
 
     public boolean isBefore(HODateTime t) {
@@ -156,7 +177,7 @@ public class HODateTime implements Comparable<HODateTime> {
          */
         public int week;
 
-        public HTWeek(int season, int week){
+        public HTWeek(int season, int week) {
             this.season = season;
             this.week = week;
         }
@@ -165,36 +186,67 @@ public class HODateTime implements Comparable<HODateTime> {
             var nr = s.split(" ");
             if (nr.length == 2) {
                 return new HTWeek(
-                    Integer.parseInt(nr[0]),
-                    Integer.parseInt(nr[1])
+                        Integer.parseInt(nr[0]),
+                        Integer.parseInt(nr[1])
                 );
             } else {
-                return new HTWeek(0,0);
+                return new HTWeek(0, 0);
             }
         }
     }
 
     /**
      * Convert to absolut HT's season and week (same as swedish's league season)
+     *
      * @return HTWeek
      */
     public HTWeek toHTWeek() {
-        var dayDiff= ChronoUnit.DAYS.between(htStart.instant, instant);
-        var ret = new HTWeek(
-                (int)(dayDiff / (16 * 7) + 1),
+        var dayDiff = ChronoUnit.DAYS.between(htStart.instant, instant);
+        return new HTWeek(
+                (int) (dayDiff / (16 * 7) + 1),
                 (int) ((dayDiff % (16 * 7)) / 7) + 1
         );
-        return ret;
     }
 
     /**
      * Convert to locale HT's seasond and week (user's league season)
+     *
      * @return HTWeek
      */
     public HTWeek toLocaleHTWeek() {
         var ret = toHTWeek();
         ret.season += HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
         return ret;
+    }
+
+    public static class HODuration {
+        public int seasons;
+        public int days;
+
+        public HODuration(int inSeasons, int inDays) {
+            this.seasons = inSeasons;
+            this.days = inDays;
+            while (days > 111) {
+                days -= 112;
+                seasons++;
+            }
+            while (days < 0) {
+                days += 112;
+                seasons--;
+            }
+        }
+
+        public static HODuration between(HODateTime from, HODateTime to) {
+            return new HODuration(0, (int) Duration.between(from.instant, to.instant).toDays());
+        }
+
+        public HODuration plus(HODuration diff) {
+            return new HODuration(this.seasons + diff.seasons, this.days + diff.days);
+        }
+
+        public HODuration minus(HODuration diff) {
+            return new HODuration(this.seasons - diff.seasons, this.days - diff.days);
+        }
     }
 }
 

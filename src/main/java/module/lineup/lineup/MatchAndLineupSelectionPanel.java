@@ -16,10 +16,7 @@ import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.TrainerType;
 import core.net.OnlineWorker;
-import core.util.GUIUtils;
-import core.util.HOLogger;
-import core.util.Helper;
-import core.util.XMLUtils;
+import core.util.*;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 import module.teamAnalyzer.ui.MatchComboBoxRenderer;
@@ -275,12 +272,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void setUpcomingMatchesFromDB(){
         MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
         Arrays.sort(matches, Collections.reverseOrder());
-        Timestamp now = new Timestamp(System.currentTimeMillis());
+        var now = HODateTime.now();
         List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
         short location;
 
         for (MatchKurzInfo match : matches) {
-            if (match.getMatchDateAsTimestamp().after(now)) {
+            if (match.getMatchSchedule().isAfter(now)) {
                 if (match.getMatchType().isTournament()){
                     location = IMatchDetails.LOCATION_TOURNAMENT;
                 }

@@ -10,6 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.util.HODateTime;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingManager;
@@ -520,7 +521,7 @@ public class HOModel {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum().toDbTimestamp());
 
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
@@ -529,14 +530,14 @@ public class HOModel {
     /**
      * Calculates the subskills of each player based on trainings that took place during a given period
      */
-    public final void calcSubskills(Instant from, Instant to) {
+    public final void calcSubskills(HODateTime from, HODateTime to) {
 
         var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum().toDbTimestamp());
 
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
@@ -556,9 +557,10 @@ public class HOModel {
      * save the model in the database
      */
     public final synchronized void saveHRF() {
+        var time = getBasics().getDatum().toDbTimestamp();
         DBManager.instance().saveHRF(getID(),
                 java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(
-                        System.currentTimeMillis())), getBasics().getDatum());
+                        System.currentTimeMillis())), time);
 
         //basics
         DBManager.instance().saveBasics(getID(), getBasics());
@@ -567,7 +569,7 @@ public class HOModel {
         //Team
         DBManager.instance().saveTeam(getID(), getTeam());
         //Finanzen
-        DBManager.instance().saveEconomyInDB(getID(), getEconomy(), getBasics().getDatum());
+        DBManager.instance().saveEconomyInDB(getID(), getEconomy(), time);
         //Stadion
         DBManager.instance().saveStadion(getID(), getStadium());
         //Liga
@@ -575,7 +577,7 @@ public class HOModel {
         //Xtra Daten
         DBManager.instance().saveXtraDaten(getID(), getXtraDaten());
         //Player
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), time);
         // Youth Player
         DBManager.instance().storeYouthPlayers(getID(), getCurrentYouthPlayers());
         //Staff
@@ -629,9 +631,9 @@ public class HOModel {
         }
     }
 
-    public List<YouthTraining> getYouthTrainingsAfter(Timestamp date) {
+    public List<YouthTraining> getYouthTrainingsAfter(HODateTime date) {
         return getYouthTrainings().stream()
-                .filter(i -> i.getMatchDate() != null && i.getMatchDate().after(date))
+                .filter(i -> i.getMatchDate() != null && i.getMatchDate().isAfter(date))
                 .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
     }

@@ -206,7 +206,7 @@ final class SpielerDetailDialog extends JDialog {
 		super(owner);
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
 		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getPlayerId(),
-				matchlineup.getMatchDate());
+				matchlineup.getMatchDate().toDbTimestamp());
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		// Nicht gefunden
@@ -970,7 +970,7 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.weightx = 1.0;
 		constraints.gridy = 7;
 		constraints.gridwidth = 2;
-		component = m_jpToreFreund.getComponent(false);;
+		component = m_jpToreFreund.getComponent(false);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
@@ -1015,7 +1015,7 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.weightx = 1.0;
 		constraints.gridy = 10;
 		constraints.gridwidth = 2;
-		component = m_jpToreGesamt.getComponent(false);;
+		component = m_jpToreGesamt.getComponent(false);
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 

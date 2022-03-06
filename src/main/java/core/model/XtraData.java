@@ -2,6 +2,7 @@ package core.model;
 
 import core.db.DBManager;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -15,9 +16,9 @@ import java.util.Properties;
 public class XtraData  {
 
     private String m_sLogoURL;
-    private Timestamp m_clEconomyDate;
-    private Timestamp m_clSeriesMatchDate;
-    private Timestamp m_TrainingDate;
+    private HODateTime m_clEconomyDate;
+    private HODateTime m_clSeriesMatchDate;
+    private HODateTime m_TrainingDate;
     private boolean m_bHasPromoted;
     private double m_dCurrencyRate = -1.0d;
     private Integer m_iCountryId;
@@ -37,11 +38,11 @@ public class XtraData  {
     public XtraData(Properties properties) {
         m_dCurrencyRate = Double.parseDouble(properties.getProperty("currencyrate", "1"));
         m_iCountryId = getInteger(properties, "countryid", null);
-        m_bHasPromoted = Boolean.valueOf(properties.getProperty("haspromoted", "FALSE"));
+        m_bHasPromoted = Boolean.parseBoolean(properties.getProperty("haspromoted", "FALSE"));
         m_sLogoURL = properties.getProperty("logourl", "");
-        m_clSeriesMatchDate = Helper.parseDate(properties.getProperty("seriesmatchdate"));
-        m_clEconomyDate = Helper.parseDate(properties.getProperty("economydate"));
-        m_TrainingDate = Helper.parseDate(properties.getProperty("trainingdate"));
+        m_clSeriesMatchDate = HODateTime.fromHT(properties.getProperty("seriesmatchdate"));
+        m_clEconomyDate = HODateTime.fromHT(properties.getProperty("economydate"));
+        m_TrainingDate = HODateTime.fromHT(properties.getProperty("trainingdate"));
         m_iLeagueLevelUnitID = getInteger(properties, "leaguelevelunitid", -1);
     }
 
@@ -58,25 +59,6 @@ public class XtraData  {
      */
     public XtraData(){}
 
-
-    /**
-     * Creates a new XtraData object.
-     */
-    public XtraData(ResultSet rs) {
-        try {
-            m_dCurrencyRate = rs.getDouble("CurrencyRate");
-            m_sLogoURL = DBManager.deleteEscapeSequences(rs.getString("LogoURL"));
-            m_bHasPromoted = rs.getBoolean("HasPromoted");
-            m_clSeriesMatchDate = rs.getTimestamp("SeriesMatchDate");
-            m_TrainingDate = rs.getTimestamp("TrainingDate");
-            m_clEconomyDate = rs.getTimestamp("EconomyDate");
-            m_iLeagueLevelUnitID = rs.getInt("LeagueLevelUnitID");
-            m_iCountryId = DBManager.getInteger(rs, "CountryId");
-        }
-        catch (Exception e) {
-            HOLogger.instance().log(getClass(),"XtraData: " + e);
-        }
-    }
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -103,7 +85,7 @@ public class XtraData  {
      *
      * @param m_clEconomyDate New value of property m_clEconomyDate.
      */
-    public final void setEconomyDate(Timestamp m_clEconomyDate) {
+    public final void setEconomyDate(HODateTime m_clEconomyDate) {
         this.m_clEconomyDate = m_clEconomyDate;
     }
 
@@ -112,7 +94,7 @@ public class XtraData  {
      *
      * @return Value of property m_clEconomyDate.
      */
-    public final Timestamp getEconomyDate() {
+    public final HODateTime getEconomyDate() {
         return m_clEconomyDate;
     }
 
@@ -161,12 +143,16 @@ public class XtraData  {
         return m_sLogoURL;
     }
 
+    public void setLogoURL(String logoURL){
+        this.m_sLogoURL=logoURL;
+    }
+
     /**
      * Setter for property m_clSeriesMatchDate.
      *
      * @param m_clSeriesMatchDate New value of property m_clSeriesMatchDate.
      */
-    public final void setSeriesMatchDate(Timestamp m_clSeriesMatchDate) {
+    public final void setSeriesMatchDate(HODateTime m_clSeriesMatchDate) {
         this.m_clSeriesMatchDate = m_clSeriesMatchDate;
     }
 
@@ -175,7 +161,7 @@ public class XtraData  {
      *
      * @return Value of property m_clSeriesMatchDate.
      */
-    public final Timestamp getSeriesMatchDate() {
+    public final HODateTime getSeriesMatchDate() {
         return m_clSeriesMatchDate;
     }
 
@@ -184,7 +170,7 @@ public class XtraData  {
      *
      * @param m_clTrainingDate New value of property m_clTrainingDate.
      */
-    public final void setTrainingDate(Timestamp m_clTrainingDate) {
+    public final void setTrainingDate(HODateTime m_clTrainingDate) {
         this.m_TrainingDate = m_clTrainingDate;
     }
 
@@ -194,22 +180,8 @@ public class XtraData  {
      *
      * @return Value of property m_clTrainingDate.
      */
-    public final Timestamp getNextTrainingDate() {
+    public final HODateTime getNextTrainingDate() {
         return m_TrainingDate;
-    }
-
-    /**
-     * Returns the next training date as a {@link Instant}.
-     *
-     * <p>The training date is stored as a Timestamp with timezone CET/CEST (depending on DST).</p>
-     * @return Instant – Next training date.
-     */
-    public final Instant getNextTrainingDateAsInstant() {
-        if (m_TrainingDate != null) {
-            return DateTimeUtils.getCESTTimestampToInstant(m_TrainingDate);
-        }
-
-        return null;
     }
 
     public Integer getCountryId() {

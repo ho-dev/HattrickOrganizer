@@ -19,7 +19,7 @@ package module.tsforecast;
  *17.09.09  Version 0.9  Fixed scaling and refresh problems
  */
 
-/**
+/*
  *
  * @author  michael.roux
  */
@@ -34,6 +34,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
+import core.util.HODateTime;
 import core.util.HelperWrapper;
 
 import java.awt.Color;
@@ -46,11 +47,16 @@ import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.time.Duration;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.swing.*;
+
+import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
 
 // Referenced classes of package hoplugins.tsforecast:
@@ -85,14 +91,14 @@ class TSPanel extends JPanel {
   private final Icon m_startImage = ThemeManager.getIcon(HOIconName.SMILEYS[1]);
 
 
-  private GregorianCalendar m_startDate  = null;
-  private GregorianCalendar m_endDate    = null;
+  private HODateTime m_startDate  = null;
+  private HODateTime m_endDate    = null;
   private int m_iDaysToDisplay           = 0;
   private int m_iTodayPosition           = 0;
   private boolean m_bShowTeamspiritScale = true;
   private boolean m_bShowConfidenceScale = true;
 
-  private ArrayList<Curve> m_Curves = new ArrayList<Curve>();
+  private ArrayList<Curve> m_Curves = new ArrayList<>();
 
 
   TSPanel() {
@@ -140,13 +146,13 @@ protected void paintComponent( Graphics g) {
     graphics2d.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
     drawCoordSystem( graphics2d);
-      for(int i = 0; i < m_Curves.size(); i++) {
-        if(m_Curves.get(i) instanceof TrainerCurve) {
-          drawIndicators(graphics2d, m_Curves.get(i));
-        }  else {
-          drawCurve(graphics2d, m_Curves.get(i));
-        }
+    for (Curve m_curve : m_Curves) {
+      if (m_curve instanceof TrainerCurve) {
+        drawIndicators(graphics2d, m_curve);
+      } else {
+        drawCurve(graphics2d, m_curve);
       }
+    }
   }
 
 
@@ -155,29 +161,30 @@ protected void paintComponent( Graphics g) {
     if(curve.first()) {
       Polygon polygon1 = new Polygon();
       Polygon polygon2 = new Polygon();
-      GregorianCalendar HRFDate = new GregorianCalendar();
+      //GregorianCalendar HRFDate = new GregorianCalendar();
       boolean flag = curve.next();
 
-      HRFDate.setTime( curve.getDate());
+      //HRFDate.setTime( curve.getDate());
 
-      int deltaX = m_startDate.get( Calendar.DAY_OF_YEAR);
-      int lastYear = m_startDate.get( Calendar.YEAR);
-      int deltaYear = 0;
-      double x = 0D;
-      int iSpirit = 40;
-      int dayOffset = m_startDate.get( Calendar.DAY_OF_WEEK) - 1;
+      //int deltaX = m_startDate.instant.get( Calendar.DAY_OF_YEAR);
+      //int lastYear = m_startDate.get( Calendar.YEAR);
+      //int deltaYear = 0;
+      double x;
+      int iSpirit;
+      int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
       if( dayOffset < 0) dayOffset += 7;
 
       for(; flag; flag = curve.next()) {
-        HRFDate.setTime( curve.getDate());
-        if( lastYear != HRFDate.get( Calendar.YEAR)) {
-          deltaYear += 365;
-          if( HRFDate.isLeapYear( lastYear))
-            deltaYear++;
-          lastYear = HRFDate.get( Calendar.YEAR);
-        }
-        x = (double)HRFDate.get( Calendar.DAY_OF_YEAR) + (double)HRFDate.get( Calendar.HOUR_OF_DAY)/24D
-            - (double)deltaX + (double)deltaYear + (double)dayOffset;
+        var curveDate =curve.getDate();
+//        if( lastYear != curveDate.get( Calendar.YEAR)) {
+//          deltaYear += 365;
+//          if( curveDate.isLeapYear( lastYear))
+//            deltaYear++;
+//          lastYear = curveDate.get( Calendar.YEAR);
+//        }
+        x = (double)Duration.between(m_startDate.instant, curveDate.instant).toHours()/24D + dayOffset;
+//        x = (double)curveDate.get( Calendar.DAY_OF_YEAR) + (double)curveDate.get( Calendar.HOUR_OF_DAY)/24D
+//            - (double)deltaX + (double)deltaYear + (double)dayOffset;
         iSpirit = (int)((curve.getSpirit() * (double)m_iMaxY) / m_dValues);
 
         if( curve.getPointType() == Curve.RESET_PT) {
@@ -204,58 +211,60 @@ protected void paintComponent( Graphics g) {
   private void drawIndicators( Graphics2D graphics2d, Curve curve) {
     graphics2d.setColor(Color.BLACK);
     if(curve.first()) {
-      GregorianCalendar gregoriancalendar = new GregorianCalendar();
-      GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
+//      GregorianCalendar gregoriancalendar = new GregorianCalendar().get();
+//      GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
       boolean flag = curve.next();
-      gregoriancalendar1.setTime(curve.getDate());
-      gregoriancalendar.setTime(curve.getDate());
-      int i = m_startDate.get(6);
-      int j = m_startDate.get(1);
-      int k = 0;
+//      gregoriancalendar1.setTime(curve.getDate());
+//      gregoriancalendar.setTime(curve.getDate());
+//      int iStartDayOfYear = m_startDate.get(DAY_OF_YEAR);
+//      int iStartYear = m_startDate.get(YEAR);
+//      int k = 0;
       //boolean flag1 = false;
       //byte byte0 = 40;
-      int j1 = m_startDate.get(7) - 1;
-      if(j1 < 0) j1 += 7;
+      int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
+      if( dayOffset < 0) dayOffset += 7;
+
       HelperWrapper ihelper = HelperWrapper.instance();
       for(; flag; flag = curve.next()) {
-        gregoriancalendar.setTime(curve.getDate());
-        if(j != gregoriancalendar.get(1)) {
-          k += 365;
-          if(gregoriancalendar.isLeapYear(j))
-            k++;
-          j = gregoriancalendar.get(1);
-        }
-        int l = (gregoriancalendar.get(6) - i) + k + j1;
-        int i1 = (int)(((curve.getSpirit() + 0.5D) * (double)m_iMaxY) / m_dValues);
-        switch(curve.getPointType()) {
-          case Curve.TRAINER_DOWN_PT:
-            graphics2d.drawImage(   ImageUtilities.getImageIcon4Veraenderung(-1,true).getImage(),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1,
-                                   ImageUtilities.getImageIcon4Veraenderung(-1,true).getImageObserver());
-            graphics2d.drawString( HOVerwaltung.instance().getLanguageString("trainer_down"),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1 - 2);
-            graphics2d.drawString( PlayerAbility.getNameForSkill((int)curve.getSpirit(), true),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), ((m_iMaxY + 10) - 2 - i1) + 24);
-            break;
-          case Curve.NEW_TRAINER_PT:
-            graphics2d.drawImage(  ImageUtilities.iconToImage(m_newImage),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1,
-                    ((ImageIcon)m_newImage).getImageObserver());
-            graphics2d.drawString( HOVerwaltung.instance().getLanguageString("trainer_exchange"),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1 - 2);
-            graphics2d.drawString( PlayerAbility.getNameForSkill((int)curve.getSpirit(), true),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), ((m_iMaxY + 10) - 2 - i1) + 24);
-            break;
-          case Curve.START_TRAINER_PT:
-            graphics2d.drawImage(  ImageUtilities.iconToImage(m_startImage),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1,
-                    ((ImageIcon)m_startImage).getImageObserver());
-            graphics2d.drawString( HOVerwaltung.instance().getLanguageString("ls.team.coachingskill"),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), (m_iMaxY + 10) - 2 - i1 - 2);
-            graphics2d.drawString( PlayerAbility.getNameForSkill((int)curve.getSpirit(), true),
-                                   (int)((double)l * m_dFactor + (double)m_iCoordX0), ((m_iMaxY + 10) - 2 - i1) + 24);
-            break;
+//        gregoriancalendar.setTime(curve.getDate());
+//        if(iStartYear != gregoriancalendar.get(1)) {
+//          k += 365;
+//          if(gregoriancalendar.isLeapYear(iStartYear))
+//            k++;
+//          iStartYear = gregoriancalendar.get(1);
+//        }
+        var xCoord = (double)Duration.between(m_startDate.instant, curve.getDate().instant).toHours()/24D + dayOffset;
+        //int xCoord = (gregoriancalendar.get(6) - iStartDayOfYear) + k + j1;
+        int yCoord = (int)(((curve.getSpirit() + 0.5D) * (double)m_iMaxY) / m_dValues);
+        switch (curve.getPointType()) {
+          case Curve.TRAINER_DOWN_PT -> {
+            graphics2d.drawImage(ImageUtilities.getImageIcon4Veraenderung(-1, true).getImage(),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
+                    ImageUtilities.getImageIcon4Veraenderung(-1, true).getImageObserver());
+            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("trainer_down"),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
+            graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
           }
+          case Curve.NEW_TRAINER_PT -> {
+            graphics2d.drawImage(ImageUtilities.iconToImage(m_newImage),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
+                    ((ImageIcon) m_newImage).getImageObserver());
+            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("trainer_exchange"),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
+            graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
+          }
+          case Curve.START_TRAINER_PT -> {
+            graphics2d.drawImage(ImageUtilities.iconToImage(m_startImage),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
+                    ((ImageIcon) m_startImage).getImageObserver());
+            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("ls.team.coachingskill"),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
+            graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
+                    (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
+          }
+        }
       }
     }
   }
@@ -263,15 +272,15 @@ protected void paintComponent( Graphics g) {
 
   private void drawCoordSystem( Graphics2D graphics2d) {
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
-    Font font = new Font( "SansSerif", 1, UserParameter.instance().fontSize);
+    Font font = new Font( "SansSerif", Font.BOLD, UserParameter.instance().fontSize);
     HelperWrapper ihelper = HelperWrapper.instance();
-    Rectangle2D rectangle2d = null;
+    Rectangle2D rectangle2d;
 
     drawSeason( graphics2d);
     drawWeeks( graphics2d);
 
     // y-axis text and helplines
-    String str = null;
+    String str;
     graphics2d.setFont( font);
     for( int i = 0; i < m_dValues; i++) { // values 0-10.2
       graphics2d.setColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
@@ -315,11 +324,13 @@ protected void paintComponent( Graphics g) {
 
 
   private void drawSeason( Graphics2D graphics2d) {
-    GregorianCalendar today = new GregorianCalendar();
-    today.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
+//    GregorianCalendar today = new GregorianCalendar();
+//    today.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
+
+    var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
 
     // Week starts at Saturday = 7, Sunday = 1
-    int iDay = today.get( Calendar.DAY_OF_WEEK);
+    int iDay = today.instant.get(DAY_OF_WEEK);
 
     int iSeason =HOVerwaltung.instance().getModel().getBasics().getSeason();
 
@@ -343,7 +354,7 @@ protected void paintComponent( Graphics g) {
     if( iXX3 > iXX4) iXX3 = iXX4;
     int iYText = m_iMaxY+2*DYFrame+DYAxis+3;
 
-    Font font = new Font("SansSerif", 1, UserParameter.instance().fontSize +2);
+    Font font = new Font("SansSerif", Font.BOLD, UserParameter.instance().fontSize +2);
     graphics2d.setFont(font);
 
     // current season
@@ -389,7 +400,7 @@ protected void paintComponent( Graphics g) {
     int iSeasonWeek = Math.round( HOVerwaltung.instance().getModel().getBasics().getSpieltag() - (float)m_iTodayPosition / 7.0f);
     while( iSeasonWeek < 1 ) iSeasonWeek += 16;
 
-    Font font = new Font("SansSerif", 1, UserParameter.instance().fontSize);
+    Font font = new Font("SansSerif", Font.BOLD, UserParameter.instance().fontSize);
     graphics2d.setFont(font);
 
     for( int saturday = Calendar.SATURDAY;
@@ -412,54 +423,56 @@ protected void paintComponent( Graphics g) {
   //Calculate first and last day of diagram, as well as the currentday and the range of the diagram in days,
   //depending on which curves are switched on
   private void setStartEndDate() {
-    m_startDate = new GregorianCalendar();
+//    m_startDate = new GregorianCalendar();
+//
+//    m_startDate.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
+    m_startDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+    m_endDate = new HODateTime( m_startDate);
 
-    m_startDate.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
-    m_endDate = (GregorianCalendar)m_startDate.clone();
-
-    Curve curve = null;
-    for( int i = 0; i < m_Curves.size(); i++) {
-      curve = m_Curves.get(i);
-      if( curve.first() && curve.next() && curve.getDate().before(m_startDate.getTime()))
-        m_startDate.setTime( curve.getDate());
-      if( curve.last() && curve.getDate().after(m_endDate.getTime()))
-        m_endDate.setTime( curve.getDate());
+    Curve curve;
+    for (Curve m_curve : m_Curves) {
+      curve = m_curve;
+      if (curve.first() && curve.next() && curve.getDate().isBefore(m_startDate))
+        m_startDate = curve.getDate();
+      if (curve.last() && curve.getDate().isAfter(m_endDate))
+        m_endDate = curve.getDate();
     }
 
     // This can really happen!
-    if(!m_startDate.before(m_endDate)) {
-      m_startDate.add( Calendar.DAY_OF_YEAR, -7);
+    if(!m_startDate.isBefore(m_endDate)) {
+      m_startDate = m_startDate.minus(7, ChronoUnit.DAYS);
     }
-    m_endDate.add( Calendar.DAY_OF_YEAR, 7);
+    m_endDate = m_endDate.plus(7, ChronoUnit.DAYS);
 
     //calculate days to display
-    m_iDaysToDisplay = 0;
-    if( m_startDate.get( Calendar.YEAR) != m_endDate.get( Calendar.YEAR)) {
-      m_iDaysToDisplay = 365;
-      if( m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
-        m_iDaysToDisplay++;
-    }
-    m_iDaysToDisplay += m_endDate.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
+    m_iDaysToDisplay = (int)Duration.between(m_startDate.instant,m_endDate.instant).toDays();
+//    if( m_startDate.get( Calendar.YEAR) != m_endDate.get( Calendar.YEAR)) {
+//      m_iDaysToDisplay = 365;
+//      if( m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
+//        m_iDaysToDisplay++;
+//    }
+//    m_iDaysToDisplay += m_endDate.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
 
     //calculate days from start to today
     m_iTodayPosition = 0;
-    GregorianCalendar today = new GregorianCalendar();
-    today.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
-    if( m_startDate.get( Calendar.YEAR) != today.get( Calendar.YEAR)) {
-      m_iTodayPosition = 365;
-      if(m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
-        m_iTodayPosition++;
-    }
-    m_iTodayPosition += today.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
+//    GregorianCalendar today = new GregorianCalendar();
+    var today =HOVerwaltung.instance().getModel().getBasics().getDatum();
+//    if( m_startDate.get( Calendar.YEAR) != today.get( Calendar.YEAR)) {
+//      m_iTodayPosition = 365;
+//      if(m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
+//        m_iTodayPosition++;
+//    }
+//    m_iTodayPosition += today.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
+    m_iTodayPosition = (int)Duration.between(m_startDate.instant, today.instant).toDays();
   }
 
   //Calculate longest string at y-axis
   private double getMaxTextWidth( Graphics2D graphics2d) {
-    Font font = new Font( "SansSerif", 1, UserParameter.instance().fontSize);
+    Font font = new Font( "SansSerif", Font.BOLD, UserParameter.instance().fontSize);
     HelperWrapper ihelper = HelperWrapper.instance();
 
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
-    Rectangle2D rectangle2d = null;
+    Rectangle2D rectangle2d;
     double maxWidth = 0D;
     for( int i = 0; i < m_dValues; i++) {
       rectangle2d = ( new TextLayout( TeamSpirit.toString( i), font, fontrendercontext)).getBounds();

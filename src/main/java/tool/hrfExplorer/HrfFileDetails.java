@@ -1,5 +1,7 @@
 package tool.hrfExplorer;
 
+import core.util.HODateTime;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,7 +42,7 @@ public class HrfFileDetails extends HrfDetails
 		{
 			fr = new FileReader(m_Datei);
 			br = new BufferedReader(fr);
-			String zeile="";
+			String zeile;
 			
 			while((zeile=br.readLine()) != null)
 			{
@@ -51,7 +53,7 @@ public class HrfFileDetails extends HrfDetails
 					String tmp_typ = st.nextElement().toString();
 					if(tmp_typ.equalsIgnoreCase("date"))
 					{
-						setStr_Datum(st.nextElement().toString());
+						setDatum(HODateTime.fromHT(st.nextElement().toString()));
 						createDates();
 					}
 					else if(tmp_typ.equalsIgnoreCase("season"))
@@ -126,12 +128,12 @@ public class HrfFileDetails extends HrfDetails
 			}
 			br.close();
 		}
-		catch(IOException ioe)
+		catch(IOException ignored)
 		{
 			
 		}
 		setTrArt(getTrArtInt());
-		calcDatum(getStr_Datum());
+		calcDatum();
 		
 	}
 	/**
@@ -143,7 +145,7 @@ public class HrfFileDetails extends HrfDetails
 		Vector daten = new Vector();
 		daten.add(Boolean.FALSE);
 		daten.add(getName());
-		daten.add(getStr_Datum());
+		daten.add(getDatum());
 		daten.add(getWochentag());
 		daten.add(getKw());
 		daten.add(getSaison());
@@ -181,5 +183,9 @@ public class HrfFileDetails extends HrfDetails
 	 */
 	public void setName(String dateiname) {
 		m_Dateiname = dateiname;
+	}
+
+	public String getFilename() {
+		return getDatum().toHT().substring(0,10);
 	}
 }

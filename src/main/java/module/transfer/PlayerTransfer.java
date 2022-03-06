@@ -4,6 +4,7 @@ package module.transfer;
 
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.sql.Timestamp;
 
@@ -41,7 +42,7 @@ public class PlayerTransfer {
     private String sellerName = ""; //$NON-NLS-1$
 
     /** Tranfer date */
-    private Timestamp date;
+    private HODateTime date;
 
     /** Id of the buyer team */
     private int buyerid = 0;
@@ -50,7 +51,7 @@ public class PlayerTransfer {
     private int marketvalue = 0;
 
     /** Id of the transfered player */
-    private int playerId = 0;
+    private int playerId;
 
     /** Transfer price */
     private int price = 0;
@@ -62,7 +63,7 @@ public class PlayerTransfer {
     private int sellerid = 0;
 
     /** Id of the transfer */
-    private int transferId = 0;
+    private int transferId;
 
     /** TSI value of the player at transfer date */
     private int tsi = 0;
@@ -137,7 +138,7 @@ public class PlayerTransfer {
      *
      * @param date Transfer date
      */
-    public final void setDate(Timestamp date) {
+    public final void setDate(HODateTime date) {
         this.date = date;
     }
 
@@ -146,7 +147,7 @@ public class PlayerTransfer {
      *
      * @return Transfer date
      */
-    public final Timestamp getDate() {
+    public final HODateTime getDate() {
         return date;
     }
 
@@ -171,7 +172,7 @@ public class PlayerTransfer {
     /**
      * Sets the id of the transfered player.
      *
-     * @param Id of the transfered player.
+     * @param id of the transfered player.
      */
     public final void setPlayerId(int id) {
         this.playerId = id;

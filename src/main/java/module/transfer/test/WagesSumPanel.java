@@ -1,7 +1,9 @@
 package module.transfer.test;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ public class WagesSumPanel extends JPanel {
 		setLayout(new BorderLayout());
 		this.table = new JTable();
 		this.table.setAutoCreateRowSorter(true);
-		this.table.setModel(new MyTableModel(new ArrayList<Entry>()));
-		List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+		this.table.setModel(new MyTableModel(new ArrayList<>()));
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
 		this.table.getRowSorter().setSortKeys(sortKeys);
 		add(new JScrollPane(this.table));		
@@ -46,44 +48,43 @@ public class WagesSumPanel extends JPanel {
 	private void refreshData() {
 		if (this.player != null) {
 			Transfer t = Transfer.getTransfer(player.getPlayerID());
-			Date buyingDate;
+			HODateTime buyingDate;
 			if (player.isHomeGrown()) {
-				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
+				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
 			} else {
 				buyingDate = t.purchaseDate;
 			}
 			
-			Date sellingDate = (t.sellingDate != null) ? t.sellingDate : new Date(); 
-			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, sellingDate);
+			var sellingDate = (t.sellingDate != null) ? t.sellingDate : HODateTime.now();
+			var updates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), buyingDate, sellingDate);
 			
 			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 
-			Map<Integer, Wage> ageWageMap = new HashMap<Integer, Wage>();
+			Map<Integer, Wage> ageWageMap = new HashMap<>();
 			for (Wage wage : wagesByAge) {
-				ageWageMap.put(Integer.valueOf(wage.getAge()), wage);
+				ageWageMap.put(wage.getAge(), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
-			Map<Integer, Entry> ageWageSumMap = new HashMap<Integer, Entry>();
-			for (Date date : updates) {
+			var birthDay17 = Calc.get17thBirthday(player.getPlayerID());
+			Map<Integer, Entry> ageWageSumMap = new HashMap<>();
+			for (var date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);
-				Integer key = Integer.valueOf(ageAt);
+				Integer key = ageAt;
 				Entry value = ageWageSumMap.get(key);
 				if (value == null) {
 					value = new Entry();
 					value.age = ageAt;
-					value.wage = ageWageMap.get(Integer.valueOf(ageAt)).getWage();
+					value.wage = ageWageMap.get(ageAt).getWage();
 					ageWageSumMap.put(key, value);
 				}
-				value.total += ageWageMap.get(Integer.valueOf(ageAt)).getWage();
+				value.total += ageWageMap.get(ageAt).getWage();
 				value.count++;
 			}
 
-			List<Entry> data = new ArrayList<Entry>(ageWageSumMap.values());
+			List<Entry> data = new ArrayList<>(ageWageSumMap.values());
 			this.table.setModel(new MyTableModel(data));
 		} else {
-			this.table.setModel(new MyTableModel(new ArrayList<Entry>()));
+			this.table.setModel(new MyTableModel(new ArrayList<>()));
 		}
 	}
 
@@ -117,17 +118,13 @@ public class WagesSumPanel extends JPanel {
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Entry wages = this.data.get(rowIndex);
-			switch (columnIndex) {
-			case 0:
-				return wages.age;
-			case 1:
-				return wages.wage;
-			case 2:
-				return wages.count;
-			case 3:
-				return wages.total;
-			}
-			return null;
+			return switch (columnIndex) {
+				case 0 -> wages.age;
+				case 1 -> wages.wage;
+				case 2 -> wages.count;
+				case 3 -> wages.total;
+				default -> null;
+			};
 		}
 		
 		@Override

@@ -12,6 +12,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -39,16 +40,16 @@ public class XMLMatchArchivParser {
 	}
 
 	private static List<MatchKurzInfo> createMatches(Document doc) {
-		List<MatchKurzInfo> matches = new ArrayList<MatchKurzInfo>();		
+		List<MatchKurzInfo> matches = new ArrayList<>();
 
 		if (doc == null) {
 			return matches;
 		}
 
 		Element root = doc.getDocumentElement();
-		Element ele = null;
-		Element tmp = null;
-		MatchKurzInfo match = null;
+		Element ele;
+		Element tmp;
+		MatchKurzInfo match;
 		int iMatchType;
 		int iCupLevel;
 		int iCupLevelIndex;
@@ -63,7 +64,7 @@ public class XMLMatchArchivParser {
 
 				// Daten füllen
 				tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-				match.setMatchSchedule(tmp.getFirstChild().getNodeValue());
+				match.setMatchSchedule(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
 				tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
 				match.setMatchID(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));
@@ -103,17 +104,17 @@ public class XMLMatchArchivParser {
 				}
 
 				tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);
-				match.setHomeTeamID(Integer.parseInt(((Element) tmp
-						.getElementsByTagName("HomeTeamID").item(0))
+				match.setHomeTeamID(Integer.parseInt(tmp
+						.getElementsByTagName("HomeTeamID").item(0)
 						.getFirstChild().getNodeValue()));
-				match.setHomeTeamName(((Element) tmp.getElementsByTagName(
-						"HomeTeamName").item(0)).getFirstChild().getNodeValue());
+				match.setHomeTeamName(tmp.getElementsByTagName(
+						"HomeTeamName").item(0).getFirstChild().getNodeValue());
 				tmp = (Element) ele.getElementsByTagName("AwayTeam").item(0);
-				match.setGuestTeamID(Integer.parseInt(((Element) tmp
-						.getElementsByTagName("AwayTeamID").item(0))
+				match.setGuestTeamID(Integer.parseInt(tmp
+						.getElementsByTagName("AwayTeamID").item(0)
 						.getFirstChild().getNodeValue()));
-				match.setGuestTeamName(((Element) tmp.getElementsByTagName(
-						"AwayTeamName").item(0)).getFirstChild().getNodeValue());
+				match.setGuestTeamName(tmp.getElementsByTagName(
+						"AwayTeamName").item(0).getFirstChild().getNodeValue());
 				tmp = (Element) ele.getElementsByTagName("HomeGoals").item(0);
 				match.setHomeTeamGoals(Integer.parseInt(tmp.getFirstChild()
 						.getNodeValue()));

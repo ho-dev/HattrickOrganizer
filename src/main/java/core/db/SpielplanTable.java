@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.series.Spielplan;
 
@@ -40,13 +41,14 @@ final class SpielplanTable extends AbstractTable {
 
 			var rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
 				// Plan auslesen
 				var plan = new Spielplan();
 
-				plan.setFetchDate(rs.getTimestamp("FetchDate"));
+				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
 				plan.setLigaId(rs.getInt("LigaID"));
 				plan.setLigaName(rs.getString("LigaName"));
 				plan.setSaison(rs.getInt("Saison"));
@@ -84,10 +86,11 @@ final class SpielplanTable extends AbstractTable {
 
 			var rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			if (rs.first()) {
 				var plan = new Spielplan();
 
-				plan.setFetchDate(rs.getTimestamp("FetchDate"));
+				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
 				plan.setLigaId(rs.getInt("LigaID"));
 				plan.setLigaName(rs.getString("LigaName"));
 				plan.setSaison(rs.getInt("Saison"));
@@ -116,6 +119,7 @@ final class SpielplanTable extends AbstractTable {
 			final String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=" + seasonid + " ORDER BY FETCHDATE DESC";
 			final ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			if (rs.first()) {
 				ligaid = rs.getInt("LigaID");
 			}
