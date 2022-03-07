@@ -132,7 +132,7 @@ public class StatisticQuery {
 			while (rs.next()) {
 				//Paarung auslesen
 				arenamodel = new core.gui.model.ArenaStatistikModel();
-				arenamodel.setMatchDate(HODateTime.fromHT(rs.getString("SpielDatum")));
+				arenamodel.setMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SpielDatum")));
 				arenamodel.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
 				arenamodel.setHeimName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
 				arenamodel.setMatchID(rs.getInt("MatchID"));
@@ -476,7 +476,7 @@ public class StatisticQuery {
 		final float faktor = core.model.UserParameter.instance().FXrate;
 
 		double[][] returnWerte = new double[0][0];
-		final Vector<double[]> vWerte = new Vector<double[]>();
+		final Vector<double[]> vWerte = new Vector<>();
 
 		ResultSet rs =
 			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
