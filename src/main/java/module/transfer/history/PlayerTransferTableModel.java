@@ -75,43 +75,24 @@ class PlayerTransferTableModel extends AbstractTableModel {
 
     /** {@inheritDoc} */
 	public boolean isCellEditable(int row, int col) {
-        if (col == 8) return true;
-		return false;
+        return col == 8;
     }
 
     /** {@inheritDoc} */
     public final Object getValueAt(int rowIndex, int columnIndex) {
-        final PlayerTransfer transfer = (PlayerTransfer) values.get(rowIndex);
+        final PlayerTransfer transfer = values.get(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return FORMAT.format(transfer.getDate());
-
-            case 1:
-                return transfer.getSeason();
-
-            case 2:
-                return transfer.getWeek();
-
-            case 3:
-                return transfer.getBuyerName();
-
-            case 4:
-                return PlayerTransfer.BUY;
-
-            case 5:
-                return transfer.getSellerName();
-
-            case 6:
-                return transfer.getPrice();
-
-            case 7:
-                return transfer.getTsi();
-
-            case 8:
-                return new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
-            default:
-                return ""; //$NON-NLS-1$
-        }
+        return switch (columnIndex) {
+            case 0 -> transfer.getDate().toLocaleDateTime();
+            case 1 -> transfer.getSeason();
+            case 2 -> transfer.getWeek();
+            case 3 -> transfer.getBuyerName();
+            case 4 -> PlayerTransfer.BUY;
+            case 5 -> transfer.getSellerName();
+            case 6 -> transfer.getPrice();
+            case 7 -> transfer.getTsi();
+            case 8 -> new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+            default -> ""; //$NON-NLS-1$
+        };
     }
 }

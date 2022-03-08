@@ -50,10 +50,10 @@ public class PastTrainingManager {
 			int count = 0;
 
 			for (Object[] element : levelUps) {
-				var skillUpDate = HODateTime.fromDbTimestamp((Timestamp) element[0]);
+				var skillUpDate =  (HODateTime)element[0];
 				var trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
-				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(1, ChronoUnit.WEEKS);
-				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(1, ChronoUnit.WEEKS);
+				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(7, ChronoUnit.DAYS);
+				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(7, ChronoUnit.DAYS);
 				var su = getSkillup(trainingDate);
 				su.setValue((Integer) element[2]);
 				su.setType(skill);
@@ -130,9 +130,6 @@ public class PastTrainingManager {
 					} else {
 						ret = -1;
 					}
-				}
-				else {
-					ret = 0;
 				}
 			}
 			return ret;

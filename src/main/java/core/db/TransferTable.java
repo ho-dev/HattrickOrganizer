@@ -237,7 +237,7 @@ public class TransferTable extends AbstractTable {
         sqlStmt.append("(transferid, date, week, season, playerid, playername, buyerid, buyername, sellerid, sellername, price, marketvalue, tsi)"); 
         sqlStmt.append(" VALUES ("); 
         sqlStmt.append(transfer.getTransferID()).append(",");
-        sqlStmt.append("'").append(transfer.getDate().toString()).append("',");
+        sqlStmt.append("'").append(transfer.getDate().toDbTimestamp()).append("',");
         sqlStmt.append(transfer.getWeek()).append(",");
         sqlStmt.append(transfer.getSeason()).append(",");
         sqlStmt.append(transfer.getPlayerId()).append(",");

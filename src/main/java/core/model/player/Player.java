@@ -2108,7 +2108,7 @@ public class Player {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if (start.isAfter(t.getTo())){
+                    if (t.endsBefore(start)){
                         remove.add(t);
                     }
                 }

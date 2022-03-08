@@ -22,7 +22,7 @@ public class FuturePlayerTraining {
     }
 
     public boolean endsBefore(HODateTime nextWeek) {
-        return to != null && to.isBefore(nextWeek);
+        return to != null && nextWeek.isAfter(to);
     }
 
     public enum Priority {
