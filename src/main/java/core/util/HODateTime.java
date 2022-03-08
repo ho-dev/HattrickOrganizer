@@ -1,5 +1,6 @@
 package core.util;
 
+import core.HO;
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 
@@ -177,6 +178,18 @@ public class HODateTime implements Comparable<HODateTime> {
 
     public boolean isAfter(HODateTime t) {
         return instant.isAfter(t.instant);
+    }
+
+    public HODateTime plusDaysAtSameLocalTime(int i) {
+        int hour = instant.atZone(DEFAULT_TIMEZONE).getHour();
+        int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();
+        int second = instant.atZone(DEFAULT_TIMEZONE).getSecond();
+
+        return new HODateTime(instant.plus(i, ChronoUnit.DAYS).atZone(DEFAULT_TIMEZONE)
+                .withHour(hour)
+                .withMinute(minute)
+                .withSecond(second)
+                .toInstant());
     }
 
     /**

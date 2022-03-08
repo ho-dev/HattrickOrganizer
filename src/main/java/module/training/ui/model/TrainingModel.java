@@ -16,6 +16,7 @@ import module.training.PastTrainingManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +184,7 @@ public class TrainingModel implements PropertyChangeListener {
 			while (newfutureTrainings.size() < requiredNBentries) {
 
 				//first iteration equals to nextWeek training then increase per one week per iteration
-				futureTrainingDate = trainingDate.plus(nbWeek * 7, ChronoUnit.DAYS);
+				futureTrainingDate = trainingDate.plusDaysAtSameLocalTime(nbWeek*7);
 
 				//ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
 				HODateTime finalFutureTrainingDate = futureTrainingDate;
