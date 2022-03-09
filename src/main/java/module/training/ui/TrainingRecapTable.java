@@ -66,7 +66,7 @@ public class TrainingRecapTable extends JScrollPane {
         for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
             var htweek = actualWeek.toLocaleHTWeek();
             columns.add(htweek.season + " " + htweek.week);
-            actualWeek = actualWeek.plus(1, ChronoUnit.WEEKS);
+            actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
         }
 
         columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
