@@ -25,28 +25,4 @@ public class FutureTrainingsTableModel extends AbstractTrainingsTableModel {
 		return trainingModel;
 	}
 
-	/**
-	 * Populate the table with the future training stored in the db, if not
-	 * present, create it new and saves it
-	 */
-	@Override
-	public void populate(List<TrainingPerWeek> trainings) {
-		setTrainingsPerWeek(trainings);
-		o_Data = new Object[getRowCount()][getColumnCount()];
-
-		int iRow = 0;
-
-		for (TrainingPerWeek tpw : this.o_TrainingsPerWeek) {
-			o_Data[iRow][0] = tpw.getTrainingDate().toLocaleDateTime();
-			o_Data[iRow][1] = new CBItem(TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
-			o_Data[iRow][2] = tpw.getTrainingIntensity();
-			o_Data[iRow][3] = tpw.getStaminaShare();
-			o_Data[iRow][4] = tpw.getCoachLevel();
-			o_Data[iRow][5] = tpw.getTrainingAssistantsLevel();
-			iRow ++;
-		}
-
-		fireTableDataChanged();
-
-	}
 }

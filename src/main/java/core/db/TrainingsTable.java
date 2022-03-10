@@ -141,7 +141,7 @@ final class TrainingsTable extends AbstractTable {
 	List<TrainingPerWeek> getTrainingList() {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
 
-		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY TRAINING_DATE ASC";
+		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY TRAINING_DATE DESC";
 
 		try {
 			final ResultSet rs = adapter.executeQuery(statement);

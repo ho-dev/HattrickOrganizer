@@ -75,9 +75,9 @@ public class FutureTrainingManager {
 			for (int week = 1; week <= numberOfWeeks; week++) {
 
 				// process skill drops
-				int ageInDays = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
+				int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
 				for (int i = 0; i < SKILL_INDEX.length; i++) {
-					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInDays, SKILL_INDEX[i]) / 100;
+					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, SKILL_INDEX[i]) / 100;
 				}
 
 				double trainingSpeed = 0;
@@ -137,7 +137,7 @@ public class FutureTrainingManager {
 								var htWeek = trainingDate.toLocaleHTWeek();
 								PlayerSkillChange su = new PlayerSkillChange();
 								su.setHtSeason(htWeek.season);
-								su.setHtWeek(htWeek.season);
+								su.setHtWeek(htWeek.week);
 								su.setType(SKILL_INDEX[i]);
 								su.setValue(finalSkill[i]);
 								su.setTrainType(ISkillChange.SKILLUP_FUTURE);

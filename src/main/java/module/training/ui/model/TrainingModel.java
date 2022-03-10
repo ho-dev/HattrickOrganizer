@@ -177,7 +177,7 @@ public class TrainingModel implements PropertyChangeListener {
 			var trainingDate = previousTraining.getTrainingDate();
 			//ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 
-			int nbWeek = 0;
+			int nbWeek = 1;
 			HODateTime futureTrainingDate;
 			TrainingPerWeek futureTraining;
 
