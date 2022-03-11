@@ -250,7 +250,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 
 						// Set player on HOMainFrame to notify other tabs.
 						Player player = playerOverviewTable.getSorter().getSpieler(row);
-						if (player != null) HOMainFrame.instance().setActualSpieler(player);
+						if (player != null) HOMainFrame.instance().selectPlayer(player);
 					}
 				}
 		);

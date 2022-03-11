@@ -106,7 +106,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         RefreshManager.instance().registerRefreshable(this);
     }
 
-
     /**
      * Set the player to be shown
      */
@@ -115,10 +114,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             if (HOMainFrame.isHOMainFrame_initialized()) {
                 player = HOMainFrame.instance().getSelectedPlayer();
             }
-            else {
-                // at initialisation select first player to ensure clean display =====
-                player = m_playerOverviewTable.getSorter().getSpieler(0);
-            }
+        }
+        if  ( player == null) {
+            // at initialisation select first player to ensure clean display =====
+            player = m_playerOverviewTable.getSorter().getSpieler(0);
         }
 
         m_clPlayer = player;

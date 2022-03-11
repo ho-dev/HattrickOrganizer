@@ -105,11 +105,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final Color c_dev = new Color(235, 170, 170);
 
 	public Player getSelectedPlayer() {
-/*
-		if(m_selectedPlayer == null) {
-			setActualSpieler(getSpielerUebersichtPanel().getPlayerOverviewTable().getSorter().getSpieler(0));
-		}
-*/
 		return m_selectedPlayer;
 	}
 
@@ -229,10 +224,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return m_HOMainFrame_initialized;
 	}
 
-	public void setActualSpieler(Player player) {
+	public void selectPlayer(Player player) {
 		if ( m_selectedPlayer != player) {
 			m_selectedPlayer = player;
-			getLineupPanel().setPlayer(player.getPlayerID());
+			var lineupPanel = getLineupPanel();
+			if ( lineupPanel != null ) lineupPanel.setPlayer(player.getPlayerID());
 			getSpielerUebersichtPanel().setPlayer(player);
 		}
 	}
