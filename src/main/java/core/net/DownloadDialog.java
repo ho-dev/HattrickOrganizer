@@ -19,6 +19,7 @@ import core.net.login.ProxyDialog;
 import core.util.HOLogger;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
+import module.series.Spielplan;
 import tool.updater.UpdateController;
 
 import java.awt.*;
@@ -342,29 +343,32 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				if (model.getBasics().getSpieltag() < 16) {
 					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, model.getXtraDaten().getLeagueLevelUnitID());
 					if (fixtures != null) {
-						// state of previous download
-						var oldDownloadedFixtures = hov.getModel().getFixtures().getMatches();
-						// extract played matches of foreign teams
-						var newPlayedMatchesOfOtherTeams = fixtures.getMatches().stream()
-								.filter(i -> i.getToreHeim() >= 0 && i.getHeimId() != teamId && i.getGastId() != teamId)
-								.toList();
-						if (oldDownloadedFixtures != null) {
-							// matches that were not played on previous download
-							var notPlayedYet = oldDownloadedFixtures.stream()
-									.filter(i -> i.getToreHeim() < 0)
+						final Spielplan modelFixtures = hov.getModel().getFixtures();
+						if (modelFixtures != null) {
+							// state of previous download
+							var oldDownloadedFixtures = modelFixtures.getMatches();
+							// extract played matches of foreign teams
+							var newPlayedMatchesOfOtherTeams = fixtures.getMatches().stream()
+									.filter(i -> i.getToreHeim() >= 0 && i.getHeimId() != teamId && i.getGastId() != teamId)
 									.toList();
-							// intersection of both lists gives the list of played matches since previous download
-							var latestPlayedMatches = newPlayedMatchesOfOtherTeams.stream()
-									.filter(i -> notPlayedYet.stream().anyMatch(j -> j.getMatchId() == i.getMatchId()))
-									.toList();
-							for (var m : latestPlayedMatches) {
-								if (!OnlineWorker.downloadMatchData(m.getMatchId(), MatchType.LEAGUE, true)) {
-									HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + m.getMatchId());
-									break;
+							if (oldDownloadedFixtures != null) {
+								// matches that were not played on previous download
+								var notPlayedYet = oldDownloadedFixtures.stream()
+										.filter(i -> i.getToreHeim() < 0)
+										.toList();
+								// intersection of both lists gives the list of played matches since previous download
+								var latestPlayedMatches = newPlayedMatchesOfOtherTeams.stream()
+										.filter(i -> notPlayedYet.stream().anyMatch(j -> j.getMatchId() == i.getMatchId()))
+										.toList();
+								for (var m : latestPlayedMatches) {
+									if (!OnlineWorker.downloadMatchData(m.getMatchId(), MatchType.LEAGUE, true)) {
+										HOLogger.instance().error(OnlineWorker.class, "Error fetching Match: " + m.getMatchId());
+										break;
+									}
 								}
 							}
+							hov.getModel().saveFixtures(fixtures);
 						}
-						hov.getModel().saveFixtures(fixtures);
 					} else {
 						bOK = false;
 					}

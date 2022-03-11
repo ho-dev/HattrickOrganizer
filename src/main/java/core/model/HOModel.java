@@ -11,6 +11,7 @@ import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
 import core.util.HODateTime;
+import core.training.TrainingPerWeek;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingManager;
@@ -516,7 +517,7 @@ public class HOModel {
      */
     public final void calcSubskills() {
 
-        var trainingWeeks = TrainingManager.instance().getRecentTrainings();
+        var trainingWeeks = getTrainingWeeksSincePreviousDownload();
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
@@ -525,6 +526,15 @@ public class HOModel {
 
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
+    }
+
+    /**
+     * Determine the list of training weeks since previous Download
+     *
+     * @return list of training weeks between previous and current download (may be empty)
+     */
+    private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
+        return DBManager.instance().getTrainingList(o_previousHRF.getDatum(), o_hrf.getDatum());
     }
 
     /**
@@ -586,7 +596,7 @@ public class HOModel {
 
     /**
      * Save match schedule in database
-     * @param fixtures
+     * @param fixtures Spielplan
      */
     public final synchronized void saveFixtures(Spielplan fixtures) {
         setFixtures(fixtures);
