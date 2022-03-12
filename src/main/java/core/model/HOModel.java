@@ -534,7 +534,7 @@ public class HOModel {
      * @return list of training weeks between previous and current download (may be empty)
      */
     private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
-        return DBManager.instance().getTrainingList(o_previousHRF.getDatum(), o_hrf.getDatum());
+        return DBManager.instance().getTrainingList(o_previousHRF.getDatum().toDbTimestamp(), o_hrf.getDatum().toDbTimestamp());
     }
 
     /**
