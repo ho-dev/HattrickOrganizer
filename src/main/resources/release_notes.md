@@ -45,6 +45,7 @@
 * fix bug in potential calculation due to wrong isTop3 skill tagging (#1278)
 * fix escaping of youth team names (#1295) 
 * fix set pieces is not limited by top3 skill rules (#1309)
+* fix settings loss of the first table columns (#1402)
 
 ### Misc
 * fix finance bug concerning missing spectators' income in misc module (#1282)
@@ -53,14 +54,15 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Feb 20, 2022	
+Reports by Contributors - Dec 20, 2021 - Mar 13, 2022	
 
-* Foppe	577
+* Foppe	640
 * \_KOHb\_	76
 * akasolace	76
 * Lidegand 	73
 * anti_anti 69
 * Moorhuhninho	67
 * sich	35
+* dzsoo 18
 * wsbrenk 11
-* Total translated:	984
+* Total translated:	1065
