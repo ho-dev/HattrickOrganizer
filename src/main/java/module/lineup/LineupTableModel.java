@@ -4,6 +4,7 @@ import core.gui.comp.table.BooleanColumn;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerColumn;
+import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ public class LineupTableModel extends HOTableModel {
 
 	private List<Player> m_vPlayers;
 
-	public LineupTableModel(int id) {
+	public LineupTableModel(UserColumnController.ColumnModelId id) {
 		super(id, "Aufstellung");
 		initialize();
 	}

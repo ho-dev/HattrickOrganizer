@@ -2,8 +2,8 @@
 
 ## Highlights
 * refactoring player details panel showing players' avatars now (#1349)
-* refactoring of lineup panel
-* tracking confidence and team spirit of nt teams
+* refactoring of lineup panel (#1267)
+* tracking confidence and team spirit of nt teams (#1305)
 
 ## Detailed Changelog
 
@@ -35,6 +35,7 @@
 
 ### Training
 * fix NPE in training tab in America-based timezones (#1296)
+* enable cell editing in future training table (#1396)
 
 ### League
 * fix download of power rating (not only one team per match) (#1293)

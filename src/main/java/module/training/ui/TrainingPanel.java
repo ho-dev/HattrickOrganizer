@@ -135,7 +135,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
 		this.pastTrainingsTableModel = new PastTrainingsTableModel();
-		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel, true){
+		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel){
 
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
@@ -297,16 +297,9 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	 */
 	private class TrainingTable extends JTable {
 
-
 		public TrainingTable(TableModel arg0) {
-			this(arg0, false);
-		}
-
-		public TrainingTable(TableModel arg0, boolean hasEditor) {
 			super(arg0);
-			if (hasEditor) {
-				setComboBoxEditor();
-			}
+			setComboBoxEditor();
 		}
 
 		/**

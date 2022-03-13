@@ -1,6 +1,7 @@
 package module.matches.statistics;
 
 import core.gui.comp.table.HOTableModel;
+import core.gui.model.UserColumnController;
 import core.model.match.MatchesOverviewRow;
 import core.util.StringUtils;
 
@@ -9,7 +10,7 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 
 	private MatchesOverviewRow[] rows;
 	
-	public MatchesOverviewColumnModel(int id){
+	public MatchesOverviewColumnModel(UserColumnController.ColumnModelId id){
 		super(id,"MatchesStatistics");
 		columns = createMatchesStatisticsArray();
 	}
