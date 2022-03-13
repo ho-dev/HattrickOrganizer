@@ -4,6 +4,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
+import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
-    public YouthPlayerOverviewTableModel(int id) {
+    public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id) {
         super(id, "YouthPlayerOverview");
         columns = initColumns();
     }

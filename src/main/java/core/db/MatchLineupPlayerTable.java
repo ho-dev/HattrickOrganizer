@@ -89,6 +89,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=" + spielerid;
 			final ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			int i = 0;
@@ -139,6 +140,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=" + spielerid + " AND HoPosCode=" + position;
 			final ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			int i = 0;
@@ -239,6 +241,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	private Vector<MatchLineupPosition> createMatchLineups(String sql) throws SQLException {
 		var vec = new Vector<MatchLineupPosition>();
 		var rs = adapter.executeQuery(sql);
+		assert rs != null;
 		rs.beforeFirst();
 
 		while (rs.next()) {
@@ -254,7 +257,6 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			var startBeh = rs.getInt("StartBehaviour");
 			var startSetPieces = DBManager.getBoolean(rs, "StartSetPieces", false);
 			var status = rs.getInt("STATUS");
-			var matchType = MatchType.getById(rs.getInt("MatchTyp"));
 
 			switch (behavior) {
 				case IMatchRoleID.OLD_EXTRA_DEFENDER -> {

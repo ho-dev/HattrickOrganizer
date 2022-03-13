@@ -102,7 +102,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerAnalysisModel getAnalysis1Model(){
 		if(playerAnalysis1Model == null)
-			playerAnalysis1Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1.getValue(), 1);
+			playerAnalysis1Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, 1);
 		
 		return playerAnalysis1Model;
 	}
@@ -113,7 +113,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerAnalysisModel getAnalysis2Model(){
 		if(playerAnalysis2Model == null)
-			playerAnalysis2Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS2.getValue(), 2);
+			playerAnalysis2Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS2, 2);
 		
 		return playerAnalysis2Model;
 	}
@@ -123,14 +123,14 @@ public final class UserColumnController {
 	 */
 	public final MatchesColumnModel getMatchesModel(){
 		if(matchesColumnModel == null)
-			matchesColumnModel = new MatchesColumnModel(1);
+			matchesColumnModel = new MatchesColumnModel(ColumnModelId.MATCHES);
 		
 		return matchesColumnModel;
 	}
 	
 	public final MatchesOverviewColumnModel getMatchesOverview1ColumnModel(){
 		if(matchesOverview1ColumnModel == null)
-			matchesOverview1ColumnModel = new MatchesOverviewColumnModel(ColumnModelId.MATCHESOVERVIEW.getValue());
+			matchesOverview1ColumnModel = new MatchesOverviewColumnModel(ColumnModelId.MATCHESOVERVIEW);
 		return matchesOverview1ColumnModel;	
 	}
 	
@@ -140,7 +140,7 @@ public final class UserColumnController {
 	 */
 	public final PlayerOverviewModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewModel(ColumnModelId.PLAYEROVERVIEW.getValue());
+			playerOverviewColumnModel = new PlayerOverviewModel(ColumnModelId.PLAYEROVERVIEW);
 		}
 		return playerOverviewColumnModel;
 	}
@@ -151,7 +151,7 @@ public final class UserColumnController {
 	 */
 	public final LineupTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new LineupTableModel(ColumnModelId.LINEUP.getValue());
+			lineupColumnModel = new LineupTableModel(ColumnModelId.LINEUP);
 		}
 		return lineupColumnModel;
 	}
@@ -174,20 +174,20 @@ public final class UserColumnController {
 
 	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel() {
 		if(youthPlayerOverviewColumnModel == null){
-			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW.getValue());
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW);
 		}
 		return youthPlayerOverviewColumnModel;
 	}
 
 	public YouthTrainingViewTableModel getYouthTrainingViewColumnModel() {
 		if(youthTrainingViewColumnModel == null){
-			youthTrainingViewColumnModel = new YouthTrainingViewTableModel(ColumnModelId.YOUTHTRAININGVIEW.getValue());
+			youthTrainingViewColumnModel = new YouthTrainingViewTableModel(ColumnModelId.YOUTHTRAININGVIEW);
 		}
 		return youthTrainingViewColumnModel;
 	}
 	public YouthPlayerDetailsTableModel getYouthPlayerDetailsColumnModel() {
 		if(youthPlayerDetailsTableModel == null){
-			youthPlayerDetailsTableModel = new YouthPlayerDetailsTableModel(ColumnModelId.YOUTHPLAYERDETAILS.getValue());
+			youthPlayerDetailsTableModel = new YouthPlayerDetailsTableModel(ColumnModelId.YOUTHPLAYERDETAILS);
 		}
 		return youthPlayerDetailsTableModel;
 	}

@@ -15,7 +15,7 @@ public final class MatchesColumnModel extends HOTableModel {
 
 	private MatchKurzInfo[] m_clMatches;
 
-	protected MatchesColumnModel(int id) {
+	protected MatchesColumnModel(UserColumnController.ColumnModelId id) {
 		super(id, "Matches");
 		initialize();
 	}
@@ -29,9 +29,9 @@ public final class MatchesColumnModel extends HOTableModel {
 
 	public MatchKurzInfo getMatch(int id) {
 		if (id > 0) {
-			for (int i = 0; i < m_clMatches.length; i++) {
-				if (m_clMatches[i].getMatchID() == id) {
-					return m_clMatches[i];
+			for (MatchKurzInfo m_clMatch : m_clMatches) {
+				if (m_clMatch.getMatchID() == id) {
+					return m_clMatch;
 				}
 			}
 		}

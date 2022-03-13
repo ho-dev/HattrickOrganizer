@@ -4,6 +4,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
+import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.module.IModule;
 import core.util.HODateTime;
@@ -21,7 +22,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     private List<YouthTraining> youthTrainings;
 
-    public YouthTrainingViewTableModel(int id) {
+    public YouthTrainingViewTableModel(UserColumnController.ColumnModelId id) {
         super(id,"YouthTrainingView");
         columns =  initColumns();
     }
@@ -123,7 +124,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
             t.store();
 
             var youthPanel = (YouthPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.YOUTH);
-            youthPanel.refreshYouthPlayerView();
+            if ( youthPanel != null) youthPanel.refreshYouthPlayerView();
         }
     }
 }

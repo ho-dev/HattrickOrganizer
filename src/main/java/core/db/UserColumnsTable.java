@@ -28,13 +28,16 @@ class UserColumnsTable extends AbstractTable {
 		columns[3]= new ColumnDescriptor("COLUMN_WIDTH",Types.INTEGER,true);
 	}
 
+	void deleteModel(int modelId){
+		adapter.executeUpdate("DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN "+(modelId*1000)+" AND "+((modelId*1000+999)));
+	}
 
 	void saveModel(HOTableModel model){
 
-		adapter.executeUpdate("DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN "+(model.getId()*1000)+" AND "+((model.getId()+1)*1000));
+		deleteModel(model.getId());
 
-		final StringBuffer sql = new StringBuffer(100);
-		final StringBuffer values = new StringBuffer(20);
+		final StringBuilder sql = new StringBuilder(100);
+		final StringBuilder values = new StringBuilder(20);
 		sql.append("INSERT INTO ");
 		sql.append(getTableName());
 		sql.append("(");
@@ -69,10 +72,10 @@ class UserColumnsTable extends AbstractTable {
 
 	void insertDefault(HOTableModel model){
 
-		adapter.executeUpdate("DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN "+(model.getId()*1000)+" AND "+((model.getId()+1)*1000));
+		deleteModel(model.getId());
 
-		final StringBuffer sql = new StringBuffer(100);
-		final StringBuffer values = new StringBuffer(20);
+		final StringBuilder sql = new StringBuilder(100);
+		final StringBuilder values = new StringBuilder(20);
 		sql.append("INSERT INTO ");
 		sql.append(getTableName());
 		sql.append("(");
@@ -101,27 +104,29 @@ class UserColumnsTable extends AbstractTable {
 			values.delete(0,values.length());
 		}
 	}
-	void loadModel(HOTableModel model){
-		int modelIndex 	= 0;
-		int tableIndex 	= 0;
-		int width		= 10;
 
-		final StringBuilder sql = new StringBuilder(100);
+	void loadModel(HOTableModel model){
+		int modelIndex;
+		int tableIndex;
+		int width;
+
 		int count = 0;
-		sql.append("SELECT * ");
-		sql.append(" FROM ");
-		sql.append(getTableName());
-		sql.append(" WHERE ");
-		sql.append(columns[0].getColumnName());
-		sql.append(" BETWEEN ");
-		sql.append(model.getId()*1000);
-		sql.append(" AND ");
-		sql.append(model.getId()*1000+999);
-		ResultSet rs = adapter.executeQuery(sql.toString());
+		String sql = "SELECT * " +
+				" FROM " +
+				getTableName() +
+				" WHERE " +
+				columns[0].getColumnName() +
+				" BETWEEN " +
+				model.getId() * 1000 +
+				" AND " +
+				(model.getId() * 1000 + 999);
+		ResultSet rs = adapter.executeQuery(sql);
 		UserColumn[] dbcolumns = model.getColumns();
 		try {
 
-			while (rs.next()) {
+			while (true) {
+				assert rs != null;
+				if (!rs.next()) break;
 				modelIndex 	= rs.getInt(columns[1].getColumnName());
 				if ( modelIndex < dbcolumns.length) {
 					tableIndex = rs.getInt(columns[2].getColumnName());

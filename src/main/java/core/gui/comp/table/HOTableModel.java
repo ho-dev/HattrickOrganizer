@@ -1,6 +1,7 @@
 package core.gui.comp.table;
 
 import core.db.DBManager;
+import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
 
@@ -52,8 +53,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * @param id
 	 * @param name
 	 */
-	protected HOTableModel(int id, String name) {
-		this.id = id;
+	protected HOTableModel(UserColumnController.ColumnModelId id, String name) {
+		this.id = id.getValue();
 		this.name = name;
 	}
 
