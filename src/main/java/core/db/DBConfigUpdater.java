@@ -4,8 +4,8 @@ import core.HO;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.training.TrainingWeekManager;
+import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -61,8 +61,9 @@ final class DBConfigUpdater {
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
 				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
+				assert rs != null;
 				rs.next();
-				Instant firstTrainingDate = rs.getTimestamp("TRAININGDATE").toInstant();
+				var firstTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));
 				twm = new TrainingWeekManager(firstTrainingDate, false);
 				twm.push2TrainingsTable();
 			} catch (Exception e) {
@@ -71,6 +72,7 @@ final class DBConfigUpdater {
 
 			// Creating entries into FUTURETRAININGS table ===========================================================
 			try {
+				assert twm != null;
 				var trainingList = twm.getTrainingList();
 				Optional<TrainingPerWeek> optionallastTraining = trainingList.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
 
@@ -83,32 +85,26 @@ final class DBConfigUpdater {
 				TrainingPerWeek latestTraining = optionallastTraining.get();
 				int assistantLevel = latestTraining.getTrainingAssistantsLevel();
 				int coachLevel = latestTraining.getCoachLevel();
-				Instant lastTrainnig = latestTraining.getTrainingDate();
-
-				HTDatetime oTrainingDate = new HTDatetime(lastTrainnig);
-				ZonedDateTime zdtLastTraining =  oTrainingDate.getHattrickTime();
-				int latestTrainingWeek = oTrainingDate.getHTWeekLocalized();
-				int latestTrainingSeason = oTrainingDate.getHTSeasonLocalized();
+				var oTrainingDate = latestTraining.getTrainingDate();
+				var htWeek = oTrainingDate.toHTWeek();
 
 				// iterate through entries of Future Training table and migrate data
 				List<TrainingPerWeek> futureTrainings = new ArrayList<>();
 				List<TrainingPerWeek> futureTrainingsInDB = DBManager.instance().getFutureTrainingsVector();
 
-				ZonedDateTime zdtFutureTrainingDate;
 				int iWeekNumber, iSeasonNumber, nbDays;
 				TrainingPerWeek futureTraining;
 
 				for(TrainingPerWeek futureTrainingDB : futureTrainingsInDB){
 
-					iWeekNumber = futureTrainingDB.getTrainingAssistantsLevel();
-					iSeasonNumber = futureTrainingDB.getCoachLevel();
-					nbDays = ((iSeasonNumber - latestTrainingSeason) * 16 + (iWeekNumber - latestTrainingWeek)) * 7 ;
+					var trainingWeek = futureTrainingDB.getTrainingDate().toHTWeek();
+					nbDays = ((trainingWeek.season - htWeek.season) * 16 + (trainingWeek.week - htWeek.week)) * 7 ;
 					if(nbDays <= 0){
 						continue;
 					}
 
-					zdtFutureTrainingDate = zdtLastTraining.plus(nbDays, ChronoUnit.DAYS);
-					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), futureTrainingDB.getTrainingType(), futureTrainingDB.getTrainingIntensity(),
+					var futureTrainingDate = oTrainingDate.plus(nbDays, ChronoUnit.DAYS);
+					futureTraining = new TrainingPerWeek(futureTrainingDate, futureTrainingDB.getTrainingType(), futureTrainingDB.getTrainingIntensity(),
 							futureTrainingDB.getStaminaShare(), assistantLevel, coachLevel, DBDataSource.MANUAL);
 					futureTrainings.add(futureTraining);
 				}

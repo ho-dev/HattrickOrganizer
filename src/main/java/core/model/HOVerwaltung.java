@@ -36,7 +36,7 @@ public class HOVerwaltung {
 
     public static boolean isNewModel(HOModel homodel) {
 		return (homodel != null && ((instance().getModel() == null) ||
-				(homodel.getBasics().getDatum().after(instance().getModel().getBasics().getDatum()))));
+				(homodel.getBasics().getDatum().isAfter(instance().getModel().getBasics().getDatum()))));
 	}
 
     public int getId() {
@@ -154,12 +154,12 @@ public class HOVerwaltung {
 				s1 = System.currentTimeMillis();
 
 				HOModel model = new HOModel(hrf, previousHRF);
-				Timestamp trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
-				Timestamp trainingDateHRF = DBManager.instance().getXtraDaten(hrf.getHrfId()).getNextTrainingDate();
+				var trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				var trainingDateHRF = DBManager.instance().getXtraDaten(hrf.getHrfId()).getNextTrainingDate();
 
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
-				model.calcSubskills(trainingDateOfPreviousHRF.toInstant(), trainingDateHRF.toInstant());
+				model.calcSubskills(trainingDateOfPreviousHRF, trainingDateHRF);
 				previousHRF=hrf;
 				mSum += (System.currentTimeMillis() - s2);
 				progress++;
@@ -288,7 +288,7 @@ public class HOVerwaltung {
             }
             s.close();
 
-            files = llist.toArray(new String[llist.size()]);
+            files = llist.toArray(new String[0]);
 
 		} catch (Exception e) {
 			HOLogger.instance().log(HOVerwaltung.class, e);
@@ -307,7 +307,6 @@ public class HOVerwaltung {
 
 			if (translationFile != null) {
 				HOLogger.instance().info(HOVerwaltung.class, "language used for interface is: " + languageFilename);
-				return;
 			}
 			else{
 				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");

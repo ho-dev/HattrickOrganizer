@@ -1,6 +1,8 @@
 package module.transfer.test;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
+import core.util.HODateTime;
 import core.util.StringUtils;
 
 import java.awt.Font;
@@ -41,13 +43,11 @@ public class WagesPanel extends JPanel {
 	private List<Data> getData(int playerId) {
 		var list = new ArrayList<Data>();
 
-		Date buyingDate = Calc.getBuyingDate(playerId);
+		var buyingDate = Calc.getBuyingDate(playerId);
 		if (buyingDate == null) {
-			buyingDate = new Date(DBManager.instance()
-					.getSpielerFirstHRF(playerId).getHrfDate().getTime());
+			buyingDate = DBManager.instance().getSpielerFirstHRF(playerId).getHrfDate();
 		}
-		List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate,
-				new Date());
+		var updates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), buyingDate, HODateTime.now());
 		List<Wage> wagesByAge = Wage.getWagesByAge(playerId);
 
 		var ageWageMap = new HashMap<Integer, Wage>();
@@ -55,16 +55,14 @@ public class WagesPanel extends JPanel {
 			ageWageMap.put(wage.getAge(), wage);
 		}
 
-		Date birthDay17 = Calc.get17thBirthday(playerId);
+		var birthDay17 = Calc.get17thBirthday(playerId);
 
-		for (Date date : updates) {
+		for (var date : updates) {
 			Data data = new Data();
 			int ageAt = Calc.getAgeAt(birthDay17, date);
 			data.age = ageAt;
 			data.date = date;
-			data.htWeek = new HTWeek(date);
 			data.wage = ageWageMap.get(ageAt).getWage();
-
 			list.add(data);
 		}
 
@@ -82,15 +80,15 @@ public class WagesPanel extends JPanel {
 			row.age = String.valueOf(data.age);
 			row.date = df.format(data.date);
 
-			row.season = String.valueOf(data.htWeek.getSeason());
-			row.week = String.valueOf(data.htWeek.getWeek());
+			var htweek = data.date.toHTWeek();
+			row.season = String.valueOf(htweek.season);
+			row.week = String.valueOf(htweek.week);
 			row.wage = String.valueOf(data.wage);
 
 			sum += data.wage;
 
 			if (i < dataList.size() - 1) {
-				if (dataList.get(i + 1).htWeek.getSeason() > data.htWeek
-						.getSeason()) {
+				if (dataList.get(i + 1).date.toHTWeek().season > data.date.toHTWeek().season) {
 					row.wageSum = String.valueOf(sum);
 				}
 			}
@@ -154,8 +152,7 @@ public class WagesPanel extends JPanel {
 
 	private class Data {
 		int age;
-		HTWeek htWeek;
-		Date date;
+		HODateTime date;
 		int wage;
 	}
 }

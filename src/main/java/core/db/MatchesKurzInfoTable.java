@@ -7,6 +7,7 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
@@ -104,6 +105,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(" ORDER BY DIFF DESC ");
 			var rs = adapter.executeQuery(sql.toString());
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			if (rs.next()) {
@@ -223,6 +225,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			rs = adapter.executeQuery(sql.toString());
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
@@ -236,7 +239,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		// matches = new MatchKurzInfo[liste.size()];
 		// Helper.copyVector2Array(liste, matches);
 
-		return liste.toArray(new MatchKurzInfo[liste.size()]);
+		return liste.toArray(new MatchKurzInfo[0]);
 	}
 
 
@@ -303,6 +306,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		try {
 			rs = adapter.executeQuery(sql.toString());
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
@@ -313,7 +317,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 					"DB.getMatchesKurzInfo Error" + e);
 		}
 
-		return liste.toArray(new MatchKurzInfo[liste.size()]);
+		return liste.toArray(new MatchKurzInfo[0]);
 	}
 
 	MatchKurzInfo[] getMatchesKurzInfoUpComing(int teamId) {
@@ -335,6 +339,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			rs = adapter.executeQuery(sql.toString());
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			while (rs.next()) {
@@ -345,18 +350,19 @@ final class MatchesKurzInfoTable extends AbstractTable {
 					"DB.getMatchesKurzInfo Error" + e);
 		}
 
-		return liste.toArray(new MatchKurzInfo[liste.size()]);
+		return liste.toArray(new MatchKurzInfo[0]);
 	}
 
 	public MatchKurzInfo loadLastMatchesKurzInfo(int teamId) {
 		StringBuilder sql = new StringBuilder(100);
-		ResultSet rs = null;
+		ResultSet rs;
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
 			sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
 			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
 			sql.append(" ORDER BY MatchDate DESC LIMIT 1");
 			rs = adapter.executeQuery(sql.toString());
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				return createMatchKurzInfo(rs);
@@ -377,6 +383,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(" AND Status=" + MatchKurzInfo.UPCOMING);
 			sql.append(" ORDER BY MatchDate ASC LIMIT 1");
 			rs = adapter.executeQuery(sql.toString());
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				return createMatchKurzInfo(rs);
@@ -391,17 +398,15 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private StringBuilder getMatchTypWhereClause(MatchTypeExtended matchType) {
 		StringBuilder sql = new StringBuilder(100);
-		switch (matchType) {
-			case GROUP_OFFICIAL -> {
-				var officialTypes = MatchType.getOfficialMatchTypes();
-				sql.append(" AND MatchTyp IN (");
-				char sep = ' ';
-				for (var t : officialTypes) {
-					sql.append(sep).append(t.getId());
-					sep = ',';
-				}
-				sql.append(" )");
+		if (matchType == MatchTypeExtended.GROUP_OFFICIAL) {
+			var officialTypes = MatchType.getOfficialMatchTypes();
+			sql.append(" AND MatchTyp IN (");
+			char sep = ' ';
+			for (var t : officialTypes) {
+				sql.append(sep).append(t.getId());
+				sep = ',';
 			}
+			sql.append(" )");
 		}
 		return sql;
 	}
@@ -432,7 +437,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	private MatchKurzInfo createMatchKurzInfo(ResultSet rs) throws SQLException {
 		MatchKurzInfo match = new MatchKurzInfo();
-		match.setMatchSchedule(rs.getString("MatchDate"));
+		match.setMatchSchedule(HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")));
 		match.setGuestTeamID(rs.getInt("GastID"));
 		match.setGuestTeamName(DBManager.deleteEscapeSequences(rs
 				.getString("GastName")));
@@ -475,6 +480,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			final ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 
 			if (rs.next()) {
@@ -493,6 +499,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		try{
 			final String sql = "SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=" + matchId;
 			final ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				Weather.Forecast forecast = Weather.Forecast.getById(rs.getInt(1));
@@ -545,6 +552,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		try {
 			var sql = "SELECT * FROM " + getTableName() + " " + where;
 			var rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			while (rs.next()) {
 				liste.add(createMatchKurzInfo(rs));
@@ -589,6 +597,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			final ResultSet rs = adapter.executeQuery(sql);
 
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				return createMatchKurzInfo(rs);
@@ -616,6 +625,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		try {
 			final ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				return createMatchKurzInfo(rs);
@@ -645,6 +655,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		try {
 			final ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
 				return createMatchKurzInfo(rs);
@@ -693,7 +704,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						+ ", '"
 						+ DBManager.insertEscapeSequences(match.getGuestTeamName()) + "', ");
 				sql += (match.getGuestTeamID() + ", '"
-						+ match.getMatchScheduleAsString() + "', "
+						+ match.getMatchSchedule().toDbTimestamp().toString() + "', "
 						+ match.getHomeTeamGoals() + ", "
 						+ match.getGuestGuestGoals() + ", "
 						+ match.isOrdersGiven() + ", "
@@ -722,7 +733,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				"', HeimID=" + match.getHomeTeamID() +
 				", GastName='" + DBManager.insertEscapeSequences(match.getGuestTeamName()) +
 				"', GastID=" + match.getGuestTeamID() +
-				", MatchDate='" + match.getMatchScheduleAsString() +
+				", MatchDate='" + match.getMatchSchedule().toHT() +
 				"', HeimTore=" + match.getHomeTeamGoals() +
 				", GastTore=" + match.getGuestGuestGoals() +
 				", Aufstellung=" + match.isOrdersGiven() +

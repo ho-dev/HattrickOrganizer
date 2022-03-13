@@ -1,5 +1,6 @@
 package core.model.misc;
 
+import core.util.HODateTime;
 import core.util.HelperWrapper;
 import module.training.Skills;
 
@@ -27,14 +28,14 @@ public class TrainingEvent {
     private int dayNumber;
     // An integer to show which season the event was recorded. The season is related to the league of the team of the player. Ranges from 1 to 7
 
-    private Timestamp eventDate;
+    private HODateTime eventDate;
     // undocumented feature
 
-    public Timestamp getEventDate() {
+    public HODateTime getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(Timestamp eventDate) {
+    public void setEventDate(HODateTime eventDate) {
         this.eventDate = eventDate;
     }
 
@@ -47,11 +48,7 @@ public class TrainingEvent {
         this.dayNumber = Integer.parseInt(trainingEvent.get("DayNumber"));
 
         String eventdatestr = trainingEvent.get("EventDate");
-        try {
-            this.eventDate = new Timestamp(HelperWrapper.instance().getHattrickDate(eventdatestr).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        this.eventDate = HODateTime.fromHT(eventdatestr);
     }
 
     public int getSkillID() {

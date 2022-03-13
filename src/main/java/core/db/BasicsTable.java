@@ -80,7 +80,7 @@ final class BasicsTable extends AbstractTable {
 					+ ","
 					+ hrfId
 					+ ",'"
-					+ basics.getDatum().toString()
+					+ basics.getDatum().toDbTimestamp()
 					+ "',"
 					+ basics.getRegionId()
 					+ ",'"
@@ -90,7 +90,7 @@ final class BasicsTable extends AbstractTable {
 					+ "',"
 					+ basics.getYouthTeamId()
 					+ ","
-					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate() + "'")
+					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate().toDbTimestamp() + "'")
 					+ " )");
 			adapter.executeUpdate(statement);
 		}
@@ -186,19 +186,14 @@ final class BasicsTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "XMLExporter.getHRFID4Time: " + e);
 		}
-
 		if (hrfID != -1) {
 			//todo sicherstellen das kein Trainingsdatum zwischen matchdate und hrfdate liegt
-
-			Timestamp training4Hrf = DBManager.instance().getXtraDaten(hrfID).getNextTrainingDate();
-
+			var training4Hrf = DBManager.instance().getXtraDaten(hrfID).getNextTrainingDate().toDbTimestamp();
 			if ((training4Hrf.after(hrfDate)) && (training4Hrf.before(time))) //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
 				{
 				hrfID = -1;
 			}
 		}
-
 		return hrfID;
 	}
-		
 }

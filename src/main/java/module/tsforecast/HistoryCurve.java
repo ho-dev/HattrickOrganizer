@@ -4,10 +4,12 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
+import core.util.HODateTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -53,31 +55,18 @@ public class HistoryCurve extends Curve {
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		GregorianCalendar startDate = new GregorianCalendar();
-		startDate.setTime(ibasics.getDatum());
-		startDate.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		Timestamp start = new Timestamp(startDate.getTimeInMillis());
-
-		/*
-		 * GregorianCalendar gregoriancalendar = new GregorianCalendar();
-		 * gregoriancalendar.setTime( m_clModel.getBasics().getDatum());
-		 * gregoriancalendar.add( Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		 * java.util.Date date = gregoriancalendar.getTime();
-		 */
+		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select DATUM, ISTIMMUNG from HRF, TEAM "
 						+ "where HRF.HRF_ID = TEAM.HRF_ID " + "and DATUM <= '"
 						+ ibasics.getDatum() + "' and DATUM > '" + start + "'"
 						+ "order by DATUM");
+		assert resultset != null;
 		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
-			// if( date.before(resultset.getTimestamp( "DATUM"))
-			// && !m_clModel.getBasics().getDatum().before(
-			// resultset.getTimestamp( "DATUM"))) {
 			double dSpirit = resultset.getInt("ISTIMMUNG") + 0.5D;
 			if (dSpirit > m_dMaxSpirit)
 				dSpirit = m_dMaxSpirit;
-			m_clPoints.add(new Point(resultset.getTimestamp("DATUM"), dSpirit));
-			// }
+			m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")), dSpirit));
 		}
 	}
 
@@ -86,17 +75,13 @@ public class HistoryCurve extends Curve {
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		Curve.Point pLastLeagueMatch = null;
-		GregorianCalendar dateOfLastLeagueMatch = new GregorianCalendar();
-		GregorianCalendar startDate = new GregorianCalendar();
-		startDate.setTime(ibasics.getDatum());
-		startDate.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		Timestamp start = new Timestamp(startDate.getTimeInMillis());
+		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
 
 		// Table PAARUNG is required for SPIELTAG but does only include League
 		// matches
 		// Table MATCHESKURZINFO includes all matches but not SPIELTAG
 		// Table MATCHDETAILS includes EINSTELLUNG
-		if (ibasics != null && iliga != null) {
+		if (iliga != null) {
 			ResultSet resultset = m_clJDBC
 					.executeQuery("SELECT * FROM (select MATCHESKURZINFO.MATCHDATE as SORTDATE, -1 AS SPIELTAG, MATCHESKURZINFO.MATCHTYP, "
 							+ "MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID "
@@ -150,7 +135,7 @@ public class HistoryCurve extends Curve {
 			 */
 			int i = 0;
 			if (resultset != null) {
-				for (boolean flag = resultset != null && resultset.first(); flag; flag = resultset
+				for (boolean flag = resultset.first(); flag; flag = resultset
 						.next()) {
 					if (resultset.getInt("SPIELTAG") > 0) {
 						i = resultset.getInt("SPIELTAG");
@@ -158,12 +143,12 @@ public class HistoryCurve extends Curve {
 					Curve.Point pNextLeagueMatch;
 					if (ibasics.getTeamId() == resultset.getInt("HEIMID")) {
 						pNextLeagueMatch = new Point(
-								resultset.getTimestamp("SORTDATE"),
+								HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE")),
 								resultset.getInt("HEIMEINSTELLUNG"), i,
 								MatchType.getById(resultset.getInt("MATCHTYP")));
 					} else {
 						pNextLeagueMatch = new Point(
-								resultset.getTimestamp("SORTDATE"),
+								HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE")),
 								resultset.getInt("GASTEINSTELLUNG"), i,
 								MatchType.getById(resultset.getInt("MATCHTYP")));
 					}
@@ -190,7 +175,6 @@ public class HistoryCurve extends Curve {
 						}
 					} else {
 						pLastLeagueMatch = pNextLeagueMatch;
-						dateOfLastLeagueMatch.setTime(pNextLeagueMatch.m_dDate);
 					}
 				}
 			}

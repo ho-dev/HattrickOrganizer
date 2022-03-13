@@ -6,6 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -28,15 +29,15 @@ public class MatchExporter {
 	 *
 	 * @return List of ExportMatchData objects
 	 */
-	public static List<ExportMatchData> getDataUsefullMatches (Date startingDate) {
+	public static List<ExportMatchData> getDataUsefullMatches (HODateTime startingDate) {
 		return getDataUsefullMatches(startingDate, startingDate);
 	}
 
-	public static List<ExportMatchData> getDataUsefullMatches(Date startingDate, Date startingDateForFriendlies) {
+	public static List<ExportMatchData> getDataUsefullMatches(HODateTime startingDate, HODateTime startingDateForFriendlies) {
 		return getDataUsefullMatches(startingDate, startingDateForFriendlies, true);
 	}
 
-	public static List<ExportMatchData> getDataUsefullMatches(Date startingDate, Date startingDateForFriendlies, boolean strict) {
+	public static List<ExportMatchData> getDataUsefullMatches(HODateTime startingDate, HODateTime startingDateForFriendlies, boolean strict) {
 		return getDataUsefullMatches(startingDate, startingDateForFriendlies, strict, false);
 	}
 	
@@ -50,7 +51,7 @@ public class MatchExporter {
 	 *
 	 * @return List of ExportMatchData objects
 	 */
-	public static List<ExportMatchData> getDataUsefullMatches(Date startingDate, Date startingDateForFriendlies, boolean strict, boolean skipPullBack) {		
+	public static List<ExportMatchData> getDataUsefullMatches(HODateTime startingDate, HODateTime startingDateForFriendlies, boolean strict, boolean skipPullBack) {
 		HOLogger.instance().log(MatchExporter.class, "Collecting MatchData");		
 		List<ExportMatchData> export = new ArrayList<>();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
@@ -81,7 +82,7 @@ public class MatchExporter {
 						continue;
 					}
 
-					formerPlayerData = DBManager.instance().getSpielerAtDate(player.getPlayerId(),match.getMatchDateAsTimestamp());
+					formerPlayerData = DBManager.instance().getSpielerAtDate(player.getPlayerId(),match.getMatchSchedule().toDbTimestamp());
 
 					//Keine Daten verfï¿½gbar ?
 					if (formerPlayerData == null) {
@@ -108,7 +109,7 @@ public class MatchExporter {
 		return export;
 	}
 
-	private static boolean isValidMatch(MatchKurzInfo info, Matchdetails details, Date startingDate, boolean strict, boolean skipPullBack) {
+	private static boolean isValidMatch(MatchKurzInfo info, Matchdetails details, HODateTime startingDate, boolean strict, boolean skipPullBack) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		if ((info.getMatchStatus() != MatchKurzInfo.FINISHED) ||  details == null || (details.getMatchID() == -1)) {
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": not finished");
@@ -122,9 +123,9 @@ public class MatchExporter {
 		}
 		ArrayList<MatchEvent> highlights = details.getHighlights();
 		//Aussortieren starten...
-		if (info.getMatchDateAsTimestamp().before(startingDate)) { //Zu alt !!!
+		if (info.getMatchSchedule().isBefore(startingDate)) { //Zu alt !!!
 			return false;
-		} else if (DBManager.instance().getHrfIDSameTraining(info.getMatchDateAsTimestamp()) == -1) //Kein HRF gefunden
+		} else if (DBManager.instance().getHrfIDSameTraining(info.getMatchSchedule().toDbTimestamp()) == -1) //Kein HRF gefunden
 		{
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": No matching HRF found");
 			return false;

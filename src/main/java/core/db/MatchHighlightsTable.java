@@ -68,7 +68,7 @@ final class MatchHighlightsTable extends AbstractTable {
 					String sql = "INSERT INTO " + getTableName() +
 							" ( MatchId, MatchDate, MatchTyp, Minute, EVENT_INDEX, SpielerId, SpielerName, TeamId, MATCH_EVENT_ID, SpielerHeim, GehilfeID, GehilfeName, GehilfeHeim, INJURY_TYPE, MatchPart, EventVariation, EventText) VALUES (" +
 							details.getMatchID() + ",'" +
-							details.getMatchDate() + "', " +
+							details.getMatchDate().toDbTimestamp() + "', " +
 							details.getMatchType().getId() + ", " +
 							highlight.getMinute() + ", " +
 							highlight.getM_iMatchEventIndex() + ", " +

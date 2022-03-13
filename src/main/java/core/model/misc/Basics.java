@@ -2,11 +2,12 @@ package core.model.misc;
 
 import core.db.DBManager;
 import core.db.user.UserManager;
-import core.training.HattrickDate;
+import core.util.HODateTime;
 import core.util.HOLogger;
+import module.transfer.test.HTWeek;
+
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,10 +37,10 @@ public final class Basics  {
     private String m_sTeamName = "";
 
     /** Datum der Erstellung */
-    private Timestamp m_clDatum = new Timestamp(0);
+    private HODateTime m_clDatum = HODateTime.htStart;
 
     /** Date of activation */
-    private Timestamp m_tActivationDate = new Timestamp(0);
+    private HODateTime m_tActivationDate = HODateTime.htStart;
 
     /** Land */
     private int m_iLand;
@@ -76,18 +77,17 @@ public final class Basics  {
 
     }
 
-
     /**
      * Creates a new Basics object.
      */
     public Basics(Properties properties) {
-        m_clDatum = getTimestamp(properties, "date");
+        m_clDatum = HODateTime.fromHT(properties.getProperty( "date"));
         m_iTeamId = getInt(properties, "teamid", 0);
         m_sYouthTeamName = properties.getProperty("youthteamname", "");
         setYouthTeamId(getInteger(properties, "youthteamid"));
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
-        m_tActivationDate = getTimestamp(properties, "activationdate");
+        m_tActivationDate = HODateTime.fromHT(properties.getProperty( "activationdate"));
         m_iLand = getInt(properties, "countryid", 0);
         m_iLiga = getInt(properties, "leagueid", 0);
         m_iSeason = getInt(properties, "season", 0);
@@ -118,13 +118,6 @@ public final class Basics  {
         return def;
     }
 
-    private Timestamp getTimestamp(Properties properties, String key) {
-        try {
-            return parseHattrickDate(properties.getProperty(key));
-        } catch (Exception ignored) {}
-        return null;
-    }
-
     /**
      * Creates a new Basics object.
      */
@@ -138,10 +131,10 @@ public final class Basics  {
             m_iSeason = rs.getInt("Saison");
             m_iSeasonOffset = rs.getInt("SeasonOffset");
             m_iSpieltag = rs.getInt("Spieltag");
-            m_clDatum = rs.getTimestamp("Datum");
+            m_clDatum = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
             m_iRegionId = rs.getInt("Region");
             m_bHasSupporter = rs.getBoolean("HasSupporter");
-            m_tActivationDate = rs.getTimestamp("ActivationDate");
+            m_tActivationDate = HODateTime.fromDbTimestamp(rs.getTimestamp("ActivationDate"));
             m_sYouthTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("YouthTeamName"));
             setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
@@ -156,7 +149,7 @@ public final class Basics  {
      *
      * @param m_clDatum New value of property m_clDatum.
      */
-    public void setDatum(Timestamp m_clDatum) {
+    public void setDatum(HODateTime m_clDatum) {
         this.m_clDatum = m_clDatum;
     }
 
@@ -165,7 +158,7 @@ public final class Basics  {
      *
      * @return Value of property m_clDatum.
      */
-    public Timestamp getDatum() {
+    public HODateTime getDatum() {
         return m_clDatum;
     }
 
@@ -208,15 +201,6 @@ public final class Basics  {
             }
         }
         return null;
-    }
-
-    /**
-     * Hattrick date time is presented as CE(ST)
-     * @param sDate string fetched from Hattrick files
-     * @return timestamp localized in CE(ST)
-     */
-    public static Timestamp parseHattrickDate(String sDate) {
-            return parseHattrickDate(sDate, false);
     }
 
     /**
@@ -292,7 +276,7 @@ public final class Basics  {
      *
      * @param m_tActivationDate New value of property m_tActivationDate.
      */
-    public void setActivationDate(Timestamp m_tActivationDate) {
+    public void setActivationDate(HODateTime m_tActivationDate) {
         this.m_tActivationDate = m_tActivationDate;
     }
 
@@ -301,7 +285,7 @@ public final class Basics  {
      *
      * @return Value of property m_tActivationDate.
      */
-    public Timestamp getActivationDate() {
+    public HODateTime getActivationDate() {
         return m_tActivationDate;
     }
 
@@ -341,8 +325,9 @@ public final class Basics  {
         return m_iSpieltag;
     }
 
-    public HattrickDate getHattrickWeek(){
-        return new HattrickDate(this.m_iSeason, this.m_iSpieltag);
+    public HODateTime getHattrickWeek(){
+        var week = new HODateTime.HTWeek(this.m_iSeason, this.m_iSpieltag);
+        return HODateTime.fromHTWeek(week);
     }
 
     /**

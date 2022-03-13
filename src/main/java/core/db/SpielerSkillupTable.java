@@ -4,6 +4,7 @@ import core.constants.player.PlayerSkill;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -39,15 +40,8 @@ final class SpielerSkillupTable extends AbstractTable {
 			"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
 	}
 
-	/**
-	 * speichert die Player
-	 */
-	void saveSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode) {
-		storeSkillup(hrfId,spielerId,date,skillValue,skillCode,true);
-	}
-
 	private void storeSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode, boolean reload) {
-		String statement = null;
+		String statement;
 
 		//erst Vorhandene Aufstellung löschen
 		final String[] awhereS = { "HRF_ID", "SpielerID", "Skill" };
@@ -80,24 +74,22 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	Object[] getLastLevelUp(int skillCode, int spielerId) {
 		Vector<Object[]> data = getSpielerSkillUp(spielerId);
-		for (Iterator<Object[]> iter = data.iterator(); iter.hasNext();) {
-			Object[] element = iter.next();
-			int code = ((Integer) element[4]).intValue();			
-			if (code==skillCode) {
-				return new Object[] { element[2], Boolean.TRUE};									
+		for (Object[] element : data) {
+			int code = (Integer) element[4];
+			if (code == skillCode) {
+				return new Object[]{element[2], Boolean.TRUE};
 			}
 		}
-		return new Object[] { new Timestamp(System.currentTimeMillis()), Boolean.FALSE};						
+		return new Object[] { HODateTime.now(), Boolean.FALSE};
 	}
 
 	Vector<Object[]> getAllLevelUp(int skillCode, int spielerId) {		
 		Vector<Object[]> data = getSpielerSkillUp(spielerId);
 		Vector<Object[]> v = new Vector<Object[]>();
-		for (Iterator<Object[]> iter = data.iterator(); iter.hasNext();) {
-			Object[] element = iter.next();
-			int code = ((Integer) element[4]).intValue();			
-			if (code==skillCode) {
-				v.add(new Object[] { element[2], Boolean.TRUE, element[3]});
+		for (Object[] element : data) {
+			int code = (Integer) element[4];
+			if (code == skillCode) {
+				v.add(new Object[]{element[2], Boolean.TRUE, element[3]});
 			}
 		}
 		return v;
@@ -107,11 +99,7 @@ final class SpielerSkillupTable extends AbstractTable {
 		if (playerSkillup==null) {
 			populate();
 		}
-		Vector<Object[]> v = playerSkillup.get(""+spielerId);
-		if (v==null) {
-			v = new Vector<Object[]>();
-			playerSkillup.put(""+spielerId,v);	
-		}
+		Vector<Object[]> v = playerSkillup.computeIfAbsent("" + spielerId, k -> new Vector<Object[]>());
 		return v;
 	}
 	
@@ -122,16 +110,15 @@ final class SpielerSkillupTable extends AbstractTable {
 			importFromSpieler();
 			idVector = getPlayerList();			
 		}  
-		playerSkillup = new HashMap<String,Vector<Object[]>>();				
-		for (Iterator<Integer> iter = idVector.iterator(); iter.hasNext();) {
-			Integer element = iter.next();
-			playerSkillup.put(""+element.intValue(),loadSpieler(element.intValue()));
+		playerSkillup = new HashMap<>();
+		for (Integer element : idVector) {
+			playerSkillup.put("" + element, loadSpieler(element));
 		}
 		
 	}
 
 	private Vector<Integer> getPlayerList() {
-		Vector<Integer> idVector = new Vector<Integer>();
+		Vector<Integer> idVector = new Vector<>();
 		ResultSet rs;
 		String sql = "SELECT DISTINCT SpielerID FROM "+getTableName();
 		try {
@@ -139,7 +126,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			if (rs != null) {
 				rs.beforeFirst();
 				while (rs.next()) {
-					idVector.add(Integer.valueOf(rs.getInt("SpielerID")));
+					idVector.add(rs.getInt("SpielerID"));
 				}
 			}
 		} catch (Exception e) {
@@ -150,13 +137,19 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	private Vector<Object[]> loadSpieler(int spielerId) {		
-		Vector<Object[]> v = new Vector<Object[]>();				
+		Vector<Object[]> v = new Vector<>();
 		try {
 			String sql = "SELECT * FROM "+getTableName()+" WHERE SpielerID=" + spielerId + " Order By Datum DESC";
 			ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			while (rs.next()) {
-				v.add(new Object[] {Integer.valueOf(rs.getInt("HRF_ID")),Integer.valueOf(spielerId),rs.getTimestamp("datum"),Integer.valueOf(rs.getInt("Value")),Integer.valueOf(rs.getInt("Skill"))});															
+				v.add(new Object[] {
+						rs.getInt("HRF_ID"),
+						spielerId,
+						HODateTime.fromDbTimestamp(rs.getTimestamp("datum")),
+						rs.getInt("Value"),
+						rs.getInt("Skill")});
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),e);
@@ -186,22 +179,22 @@ final class SpielerSkillupTable extends AbstractTable {
 		
 	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
 		if (newValue>oldValue) {
-			storeSkillup(hrf,nPlayer.getPlayerID(),nPlayer.getHrfDate(),newValue,skill,true);
+			storeSkillup(hrf,nPlayer.getPlayerID(),nPlayer.getHrfDate().toDbTimestamp(),newValue,skill,true);
 		}
 		
 	}
 
 	void importFromSpieler() {
 		playerSkillup = null;
-		ResultSet rs = null;
+		ResultSet rs;
 		String sql = "SELECT DISTINCT SpielerID FROM SPIELER";
-		final Vector<Integer> idVector = new Vector<Integer>();
+		final Vector<Integer> idVector = new Vector<>();
 		try {
 			rs = adapter.executeQuery(sql);			
 			if (rs != null) {
 				rs.beforeFirst();
 				while (rs.next()) {
-					idVector.add(Integer.valueOf(rs.getInt("SpielerID")));
+					idVector.add(rs.getInt("SpielerID"));
 				}
 			}
 		} catch (Exception e) {
@@ -209,9 +202,8 @@ final class SpielerSkillupTable extends AbstractTable {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
 		}	
 		adapter.executeUpdate("DELETE FROM "+getTableName());
-		for (Iterator<Integer> iter = idVector.iterator(); iter.hasNext();) {
-			Integer element = iter.next();
-			importSpieler(element.intValue());
+		for (Integer element : idVector) {
+			importSpieler(element);
 		}
 	}
 
@@ -232,22 +224,23 @@ final class SpielerSkillupTable extends AbstractTable {
 			String key = getKey(skillCode);				
 			String sql = "SELECT HRF_ID, datum, " + key + " FROM SPIELER WHERE SpielerID=" + spielerId + " Order By Datum ASC";
 			ResultSet rs = adapter.executeQuery(sql);
+			assert rs != null;
 			rs.beforeFirst();
 			int lastValue = -1;
 			if (rs.next()) {
 				lastValue = rs.getInt(key);
 			}
-			Vector<Object[]> v = new Vector<Object[]>();					
+			Vector<Object[]> v = new Vector<>();
 			while (rs.next()) {
 				int value = rs.getInt(key);
 				if (value > lastValue) {
-					v.add(new Object[] {Integer.valueOf(rs.getInt("HRF_ID")),Integer.valueOf(spielerId),rs.getTimestamp("datum"),Integer.valueOf(value),Integer.valueOf(skillCode)});															
+					v.add(new Object[] {rs.getInt("HRF_ID"), spielerId,rs.getTimestamp("datum"), value, skillCode});
 				}
 				lastValue = value;
 			}
 			for (Iterator<Object[]> iter = v.iterator(); iter.hasNext();) {
 				Object[] element = iter.next();
-				storeSkillup(((Integer)element[0]).intValue(),((Integer)element[1]).intValue(),((Timestamp)element[2]),((Integer)element[3]).intValue(),((Integer)element[4]).intValue(),false);
+				storeSkillup((Integer) element[0], (Integer) element[1],((Timestamp)element[2]), (Integer) element[3], (Integer) element[4],false);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),e);
@@ -255,45 +248,19 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	private String getKey(int code) {
-		String key = "Spielaufbau";
+		String key = switch (code) {
+			case PlayerSkill.SET_PIECES -> "Standards";
+			case PlayerSkill.PASSING -> "Passpiel";
+			case PlayerSkill.SCORING -> "Torschuss";
+			case PlayerSkill.PLAYMAKING -> "Spielaufbau";
+			case PlayerSkill.WINGER -> "Fluegel";
+			case PlayerSkill.KEEPER -> "Torwart";
+			case PlayerSkill.DEFENDING -> "Verteidigung";
+			case PlayerSkill.STAMINA -> "Kondition";
+			case PlayerSkill.EXPERIENCE -> "Erfahrung";
+			default -> "Spielaufbau";
+		};
 
-		switch (code) {
-			case PlayerSkill.SET_PIECES:
-				key = "Standards";
-				break;
-
-			case PlayerSkill.PASSING:
-				key = "Passpiel";
-				break;
-
-			case PlayerSkill.SCORING:
-				key = "Torschuss";
-				break;
-
-			case PlayerSkill.PLAYMAKING:
-				key = "Spielaufbau";
-				break;
-
-			case PlayerSkill.WINGER:
-				key = "Fluegel";
-				break;
-
-			case PlayerSkill.KEEPER:
-				key = "Torwart";
-				break;
-
-			case PlayerSkill.DEFENDING:
-				key = "Verteidigung";
-				break;
-
-			case PlayerSkill.STAMINA:
-				key = "Kondition";
-				break;
-
-			case PlayerSkill.EXPERIENCE:
-				key = "Erfahrung";
-				break;
-		}
 		return key;
  
 	}

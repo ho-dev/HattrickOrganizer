@@ -14,6 +14,7 @@ import core.util.StringUtils;
 
 import java.awt.Color;
 import java.text.DateFormat;
+import java.time.Duration;
 
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
@@ -177,11 +178,11 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
      */
     public final ArenaStatistikModel getMatch(int id) {
         if (id > 0) {
-            for (int i = 0; i < m_clMatches.length; i++) {
-                if (m_clMatches[i].getMatchID() == id) {
-                    return m_clMatches[i];
-                }
-            }
+			for (ArenaStatistikModel m_clMatch : m_clMatches) {
+				if (m_clMatch.getMatchID() == id) {
+					return m_clMatch;
+				}
+			}
         }
         return null;
     }
@@ -259,8 +260,9 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				int colIndex = 0;
 
 			    //Datum
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
-			    		DateFormat.getDateTimeInstance().format(match.getMatchDateAsTimestamp()),
+				var matchDate = match.getMatchDate();
+			    m_clData[i][colIndex] = new ColorLabelEntry(matchDate.toDbTimestamp().getTime(),
+			    		matchDate.toLocaleDateTime(),
 			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 				colIndex++;
 			    //Spielart
@@ -382,16 +384,16 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 						SwingConstants.LEFT);
 				colIndex++;
 
-			    //Fananzahl
+			    // fan count
 			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
 				colIndex++;
 
-			    //Fanzuwachs pro Woche
+			    // fan count increment per week
 			    float fanzuwachs = 0;
 
 			    if ((i + 1) < m_clMatches.length) {
-			        fanzuwachs = ((match.getFans() - m_clMatches[i + 1].getFans()) * 604800000f) / (match.getMatchDateAsTimestamp().getTime()
-			                     - m_clMatches[i + 1].getMatchDateAsTimestamp().getTime());
+					var diff = Duration.between(m_clMatches[i+1].getMatchDate().instant,match.getMatchDate().instant).toMillis();
+			        fanzuwachs = ((match.getFans() - m_clMatches[i + 1].getFans()) * 604800000f) / diff;
 			    }
 
 			    m_clData[i][colIndex] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
@@ -404,7 +406,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 			    // Fanstimmung
-			    m_clData[i][colIndex] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDateAsTimestamp()),
+			    m_clData[i][colIndex] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.LEFT);
 				colIndex++;

@@ -6,7 +6,7 @@ import core.model.HOVerwaltung;
 public final class PlayerSkill {
 
 	private static final String[] languageKeys = {
-		"ls.player.skill.keeper","ls.player.skill.defending","ls.player.skill.winger","ls.player.skill.playmaking","ls.player.skill.scoring","ls.player.skill.passing","ls.player.skill.stamina","ls.player.form","ls.player.skill.setpieces","ls.player.experience","ls.player.leadership","ls.player.loyalty"
+		"ls.player.skill.keeper", "ls.player.skill.defending","ls.player.skill.winger","ls.player.skill.playmaking","ls.player.skill.scoring","ls.player.skill.passing","ls.player.skill.stamina","ls.player.form","ls.player.skill.setpieces","ls.player.experience","ls.player.leadership","ls.player.loyalty"
 	};
 
 	public static final int KEEPER = 0;
@@ -22,9 +22,9 @@ public final class PlayerSkill {
 	public static final int LEADERSHIP = 10;
 	public static final int LOYALTY = 11;
 
-    private PlayerSkill(){};
+    private PlayerSkill(){}
 
-    public static String toString(int skill){
+	public static String toString(int skill){
     	if( skill >= KEEPER && skill <= LOYALTY)
 			return HOVerwaltung.instance().getLanguageString(languageKeys[skill]);
 		else

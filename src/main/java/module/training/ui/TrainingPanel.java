@@ -89,7 +89,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			JOptionPane.showOptionDialog(getTopLevelAncestor(),
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
 					Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
-					JOptionPane.NO_OPTION,
+					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
 					options, options[0]);
 		});
@@ -105,7 +105,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 			JOptionPane.showOptionDialog(getTopLevelAncestor(),
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
 					Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
-					JOptionPane.NO_OPTION,
+					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
 					options, options[0]);
 		});
@@ -315,31 +315,31 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		private void setComboBoxEditor() {
 			// Sets the combo box for selecting the training type
 			JComboBox jcbTrainingEditor = new TrainingComboBox();
-			TableColumn trainingColumn = getColumnModel().getColumn(1);
+			TableColumn trainingColumn = getColumnModel().getColumn(3);
 			trainingColumn.setCellEditor(new DefaultCellEditor(jcbTrainingEditor));
 			trainingColumn.setPreferredWidth(120);
 
 			// Sets the combo box for selecting the intensity
 			JComboBox jcbIntensityEditor = new trainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
-			TableColumn trainingIntensityColumn = getColumnModel().getColumn(2);
+			TableColumn trainingIntensityColumn = getColumnModel().getColumn(4);
 			trainingIntensityColumn.setCellEditor(new DefaultCellEditor(jcbIntensityEditor));
 			trainingIntensityColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the staminaTrainingPart
 			JComboBox jcbStaminaEditor = new trainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
-			TableColumn staminaColumn = getColumnModel().getColumn(3);
+			TableColumn staminaColumn = getColumnModel().getColumn(5);
 			staminaColumn.setCellEditor(new DefaultCellEditor(jcbStaminaEditor));
 			staminaColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the coach skill
 			JComboBox jcbCoachSkillEditor = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
-			TableColumn coachSkillColumn = getColumnModel().getColumn(4);
+			TableColumn coachSkillColumn = getColumnModel().getColumn(6);
 			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
 			coachSkillColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the Assistant Coach Total Level
 			JComboBox jcbAssitantsTotalLevelEditor = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
-			TableColumn assitantsLevelColumn = getColumnModel().getColumn(5);
+			TableColumn assitantsLevelColumn = getColumnModel().getColumn(7);
 			assitantsLevelColumn.setCellEditor(new DefaultCellEditor(jcbAssitantsTotalLevelEditor));
 			assitantsLevelColumn.setPreferredWidth(50);
 			

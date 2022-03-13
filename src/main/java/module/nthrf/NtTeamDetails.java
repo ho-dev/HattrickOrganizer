@@ -2,6 +2,7 @@ package module.nthrf;
 
 import core.file.xml.XMLManager;
 import core.model.misc.Basics;
+import core.util.HODateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.sql.Timestamp;
@@ -33,7 +34,7 @@ public class NtTeamDetails {
 	private int ratingScore;
 	private int fanclubSize;
 	private int rank;
-	private Timestamp fetchedDate;
+	private HODateTime fetchedDate;
 	private boolean parsingSuccess;
 
 	public void setTeamName(String teamName) {
@@ -110,7 +111,7 @@ public class NtTeamDetails {
 	public void setRank(Integer rank) {
 		if ( rank!=null) this.rank = rank;
 	}
-	public void setFetchedDate(Timestamp fetchedDate) {
+	public void setFetchedDate(HODateTime fetchedDate) {
 		this.fetchedDate = fetchedDate;
 	}
 	public int getTeamId() {
@@ -183,7 +184,7 @@ public class NtTeamDetails {
 	public String getTeamNameShort() {
 		return teamNameShort;
 	}
-	public Timestamp getFetchedDate() {
+	public HODateTime getFetchedDate() {
 		return fetchedDate;
 	}
 	public int getHrfId() {
@@ -204,7 +205,7 @@ public class NtTeamDetails {
 
             Element root = doc.getDocumentElement();
             Element ele = (Element)root.getElementsByTagName("FetchedDate").item(0);
-            fetchedDate = Basics.parseHattrickDate(XMLManager.getFirstChildNodeValue(ele));
+            fetchedDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(ele));
 
             // root Team
             var teamRoot = (Element) root.getElementsByTagName("Team").item(0);

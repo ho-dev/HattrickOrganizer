@@ -1,14 +1,11 @@
 package module.teamAnalyzer.ui.controller;
 
-import core.model.UserParameter;
-import core.util.HTDatetime;
+import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RecapPanel;
 import module.teamAnalyzer.ui.RecapTableSorter;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
 import module.teamAnalyzer.vo.TeamLineup;
-
-import java.util.Calendar;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -57,9 +54,9 @@ public class RecapListSelectionListener implements ListSelectionListener {
                 week = lineup.getWeek();
                 season = lineup.getSeason();
                 if (week < 0) {
-                    var htdatetime = HTDatetime.now();
-                    week = htdatetime.getHTWeekLocalized();
-                    season = htdatetime.getHTSeasonLocalized();
+                    var htdatetime = HODateTime.now().toLocaleHTWeek();
+                    week = htdatetime.week;
+                    season = htdatetime.season;
                 }
             }
             SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);

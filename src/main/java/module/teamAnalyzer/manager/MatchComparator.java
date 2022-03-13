@@ -1,6 +1,7 @@
 // %3002294435:hoplugins.teamAnalyzer.comparator%
 package module.teamAnalyzer.manager;
 
+import core.util.HODateTime;
 import module.teamAnalyzer.vo.Match;
 
 import java.util.Comparator;
@@ -25,8 +26,8 @@ class MatchComparator implements Comparator<Match> {
      */
     @Override
 	public int compare(Match o1, Match o2) {
-        Date s1 = o1.getMatchDate();
-        Date s2 = o2.getMatchDate();
+        HODateTime s1 = o1.getMatchDate();
+        HODateTime s2 = o2.getMatchDate();
 
         return s2.compareTo(s1);
     }

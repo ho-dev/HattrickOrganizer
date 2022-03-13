@@ -8,6 +8,7 @@ import core.gui.RefreshManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.util.HODateTime;
 import core.util.Helper;
 import java.awt.Component;
 import java.awt.Frame;
@@ -27,7 +28,7 @@ public class HRFImport {
 
 		File[] files = getHRFFiles(frame);
 		if (files != null) {
-			Timestamp olderHrf = new Timestamp(System.currentTimeMillis());
+			var olderHrf = HODateTime.now();
 			HOModel homodel;
 
 			UserChoice choice = null;
@@ -74,7 +75,7 @@ public class HRFImport {
 					frame.setInformation(getLangStr("HRFSave"));
 
 					// file already imported?
-					java.sql.Timestamp HRFts = homodel.getBasics().getDatum();
+					java.sql.Timestamp HRFts = homodel.getBasics().getDatum().toDbTimestamp();
 					String oldHRFName = DBManager.instance().getHRFName4Date(HRFts);
 
 					if (choice == null || !choice.applyToAll ) {
@@ -90,8 +91,8 @@ public class HRFImport {
 						// Saven
 						homodel.saveHRF();
 
-						if (homodel.getBasics().getDatum().before(olderHrf)) {
-							olderHrf = new Timestamp(homodel.getBasics().getDatum().getTime());
+						if (homodel.getBasics().getDatum().isBefore(olderHrf)) {
+							olderHrf = homodel.getBasics().getDatum();
 						}
 
 						// Info

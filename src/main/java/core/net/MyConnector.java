@@ -13,11 +13,7 @@ import core.model.match.SourceSystem;
 import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
-import core.util.HOLogger;
-import core.util.Helper;
-import core.util.IOUtils;
-import core.util.StringUtils;
-import core.util.XMLUtils;
+import core.util.*;
 import org.jetbrains.annotations.Nullable;
 import tool.updater.UpdateHelper;
 import tool.updater.VersionInfo;
@@ -256,7 +252,7 @@ public class MyConnector {
 	 * @throws IOException
 	 *             if an io-error occurred when fetching the matches.
 	 */
-	public String getMatchesArchive(int teamId, Date firstDate, Date lastDate){
+	public String getMatchesArchive(int teamId, HODateTime firstDate, HODateTime lastDate){
 		StringBuilder url = new StringBuilder();
 		url.append(htUrl).append("?file=matchesarchive&version=1.4");
 
@@ -265,17 +261,17 @@ public class MyConnector {
 		}
 
 		if (firstDate != null) {
-			url.append("&FirstMatchDate=").append(HT_FORMAT.format(firstDate));
+			url.append("&FirstMatchDate=").append(URLEncoder.encode(firstDate.toHT(), StandardCharsets.UTF_8));
 		}
 
 		if (lastDate != null) {
-			url.append("&LastMatchDate=").append(HT_FORMAT.format(lastDate));
+			url.append("&LastMatchDate=").append(URLEncoder.encode(lastDate.toHT(),StandardCharsets.UTF_8));
 		}
 		url.append("&includeHTO=true");
 		return getCHPPWebFile(url.toString());
 	}
 
-	public String getMatchesArchive(SourceSystem sourceSystem, int teamId, Date firstDate, Date lastDate) throws IOException {
+	public String getMatchesArchive(SourceSystem sourceSystem, int teamId, HODateTime firstDate, HODateTime lastDate) throws IOException {
 		StringBuilder url = new StringBuilder();
 		url.append(htUrl).append("?file=matchesarchive&version=1.4");
 
@@ -284,11 +280,11 @@ public class MyConnector {
 		}
 
 		if (firstDate != null) {
-			url.append("&FirstMatchDate=").append(HT_FORMAT.format(firstDate));
+			url.append("&FirstMatchDate=").append(firstDate.toHT());
 		}
 
 		if (lastDate != null) {
-			url.append("&LastMatchDate=").append(HT_FORMAT.format(lastDate));
+			url.append("&LastMatchDate=").append(lastDate.toHT());
 		}
 		if ( sourceSystem == SourceSystem.HTOINTEGRATED) url.append("&includeHTO=true");
 		else if ( sourceSystem == SourceSystem.YOUTH) url.append("&isYouth=true");
@@ -301,10 +297,6 @@ public class MyConnector {
 	 */
 	public String getTournamentDetails(int tournamentId) throws IOException{
 		String url = htUrl + "?file=tournamentdetails&version=" + VERSION_TOURNAMENTDETAILS + "&tournamentId=" + tournamentId;
-		if (url == "") {
-			HOLogger.instance().error(getClass(), "getTournamentDetails: could not download information for required tournament: "+tournamentId);
-			throw new IOException("getTournamentDetails: could not download information for required tournament: "+tournamentId);
-		}
 		return getCHPPWebFile(url);
 	}
 
@@ -396,7 +388,7 @@ public class MyConnector {
 			urlpara.append("&matchID=").append(matchId);
 		}
 		urlpara.append("&actionType=setmatchorder");
-		urlpara.append("&sourceSystem=" + matchType.getSourceString());
+		urlpara.append("&sourceSystem=").append(matchType.getSourceString());
 
 		Map<String, String> paras = new HashMap<>();
 		paras.put("lineup", orderString);
@@ -438,7 +430,7 @@ public class MyConnector {
 	 * @throws IOException
 	 *             if an IO error occurs during download.
 	 */
-	public String getMatches(int teamId, boolean forceRefresh, Date date) throws IOException {
+	public String getMatches(int teamId, boolean forceRefresh, HODateTime date) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder();
 		urlBuilder.append(htUrl).append("?file=matches&version=2.8");
 		urlBuilder.append("&teamID=").append(teamId);
@@ -446,8 +438,7 @@ public class MyConnector {
 			urlBuilder.append("&actionType=refreshCache");
 		}
 		urlBuilder.append("&LastMatchDate=");
-		String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-		urlBuilder.append(URLEncoder.encode(dateString, StandardCharsets.UTF_8));
+		urlBuilder.append(URLEncoder.encode(date.toHT(), StandardCharsets.UTF_8));
 		return getCHPPWebFile(urlBuilder.toString());
 	}
 
@@ -546,7 +537,7 @@ public class MyConnector {
 	/**
 	 * holt die Vereinsdaten
 	 */
-	public String getVerein(int teamId) throws IOException {
+	public String getVerein(int teamId) {
 		final String url = htUrl + "?file=club&version=1.5&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
@@ -664,7 +655,7 @@ public class MyConnector {
 		String returnString = "";
 		OAuthDialog authDialog = null;
 		Response response = null;
-		int iResponse = 200;
+		int iResponse;
 		boolean tryAgain = true;
 		try {
 			while (tryAgain) {
@@ -712,7 +703,7 @@ public class MyConnector {
 						}
 						authDialog.setVisible(true);
 						// A way out for a user unable to authorize for some reason
-						if (authDialog.getUserCancel() == true) {
+						if (authDialog.getUserCancel()) {
 							return null;
 						}
 						m_OAAccessToken = authDialog.getAccessToken();
@@ -806,9 +797,8 @@ public class MyConnector {
 		OAuthDialog authDialog = null;
 		Response response = null;
 		int iResponse;
-		boolean tryAgain = true;
 		try {
-			while (tryAgain) {
+			while (true) {
 				OAuthRequest request = new OAuthRequest(Verb.POST, surl);
 				for (Map.Entry<String, String> entry : bodyParas.entrySet()) {
 					request.addBodyParameter(entry.getKey(), entry.getValue());
@@ -835,7 +825,7 @@ public class MyConnector {
 						}
 						authDialog.setVisible(true);
 						// A way out for a user unable to authorize for some reason
-						if (authDialog.getUserCancel() == true) {
+						if (authDialog.getUserCancel()) {
 							return null;
 						}
 						m_OAAccessToken = authDialog.getAccessToken();

@@ -1,5 +1,9 @@
 package module.transfer.test;
 
+import core.model.HOVerwaltung;
+import core.util.HODateTime;
+
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,26 +17,23 @@ public class PlayerWagesModel {
 	private PlayerWagesModel() {
 	}
 
-	public static PlayerWagesModel create(int playerId, Date from, Date to) {
+	public static PlayerWagesModel create(int playerId, HODateTime from, HODateTime to) {
 		PlayerWagesModel model = new PlayerWagesModel();
 		model.list = new ArrayList<>();
-
-		List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), from, to);
+		var economyDates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), from, to);
 		List<Wage> wagesByAge = Wage.getWagesByAge(playerId);
-
 		var ageWageMap = new HashMap<Integer, Wage>();
 		for (Wage wage : wagesByAge) {
 			ageWageMap.put(wage.getAge(), wage);
 		}
 
-		Date birthDay17 = Calc.get17thBirthday(playerId);
+		HODateTime birthDay17 = Calc.get17thBirthday(playerId);
 
-		for (Date date : updates) {
+		for (var date : economyDates) {
 			PlayerWage data = new PlayerWage();
 			int ageAt = Calc.getAgeAt(birthDay17, date);
 			data.setAge(ageAt);
 			data.setFinancialUpdateDate(date);
-			data.setWeek(new HTWeek(date));
 			data.setWage(ageWageMap.get(ageAt).getWage());
 			model.list.add(data);
 		}

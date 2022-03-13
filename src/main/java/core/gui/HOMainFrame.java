@@ -37,11 +37,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URI;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,11 +102,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final Color c_dev = new Color(235, 170, 170);
 
 	public Player getSelectedPlayer() {
-/*
-		if(m_selectedPlayer == null) {
-			setActualSpieler(getSpielerUebersichtPanel().getPlayerOverviewTable().getSorter().getSpieler(0));
-		}
-*/
 		return m_selectedPlayer;
 	}
 
@@ -229,10 +221,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return m_HOMainFrame_initialized;
 	}
 
-	public void setActualSpieler(Player player) {
+	public void selectPlayer(Player player) {
 		if ( m_selectedPlayer != player) {
 			m_selectedPlayer = player;
-			getLineupPanel().setPlayer(player.getPlayerID());
+			var lineupPanel = getLineupPanel();
+			if ( lineupPanel != null ) lineupPanel.setPlayer(player.getPlayerID());
 			getSpielerUebersichtPanel().setPlayer(player);
 		}
 	}
@@ -314,16 +307,18 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
 		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
-			Instant from = ZonedDateTime.now().minusWeeks(32).toInstant();
+			//Instant from = ZonedDateTime.now().minusWeeks(32).toInstant();
+			var from = HODateTime.now().minus(32*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-				HOVerwaltung.instance().recalcSubskills(true, Timestamp.from(from));
+				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
-			Instant from = ZonedDateTime.now().minusWeeks(7).toInstant();
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from)),
+			//Instant from = ZonedDateTime.now().minusWeeks(7).toInstant();
+			var from = HODateTime.now().minus(7*7, ChronoUnit.DAYS);
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", from.toLocaleDate()),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-				HOVerwaltung.instance().recalcSubskills(true, Timestamp.from(from));
+				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen mode
 			FullScreen.instance().toggle(this);

@@ -7,7 +7,6 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchKurzInfo;
-import core.util.HTDatetime;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,11 +48,9 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         constraints.weightx = 1.0;
         constraints.gridx = 0;
 
-        String sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(this.getMatchDateAsTimestamp());
-        var htdatetime = new HTDatetime(this.getMatchDateAsTimestamp());
-        int iHTSeason =htdatetime.getHTSeasonLocalized();
-        int iHTWeek = htdatetime.getHTWeekLocalized();
-        sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+        var sDate = getMatchSchedule().toLocaleDateTime();
+        var htWeek  = getMatchSchedule().toLocaleHTWeek();
+        sDate += "(" + htWeek.week + "/" + htWeek.season + ")";
         JLabel jlNextGame = new JLabel(this.getOpponentTeamName() + "  " + sDate);
         jlNextGame.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[this.getMatchTypeExtended().getIconArrayIndex()]));
         layout.setConstraints(jlNextGame, constraints);

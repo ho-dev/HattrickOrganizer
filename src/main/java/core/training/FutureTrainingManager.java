@@ -75,9 +75,9 @@ public class FutureTrainingManager {
 			for (int week = 1; week <= numberOfWeeks; week++) {
 
 				// process skill drops
-				int ageInDays = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
+				int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
 				for (int i = 0; i < SKILL_INDEX.length; i++) {
-					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInDays, SKILL_INDEX[i]) / 100;
+					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, SKILL_INDEX[i]) / 100;
 				}
 
 				double trainingSpeed = 0;
@@ -134,14 +134,14 @@ public class FutureTrainingManager {
 							if (change != 0) {
 								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 								var trainingDate = trainingPerWeek.getTrainingDate();
-								var hattrickDate = HattrickDate.fromInstant(trainingDate);
+								var htWeek = trainingDate.toLocaleHTWeek();
 								PlayerSkillChange su = new PlayerSkillChange();
-								su.setHtSeason(hattrickDate.getLocalSeason());
-								su.setHtWeek(hattrickDate.getWeek());
+								su.setHtSeason(htWeek.season);
+								su.setHtWeek(htWeek.week);
 								su.setType(SKILL_INDEX[i]);
 								su.setValue(finalSkill[i]);
 								su.setTrainType(ISkillChange.SKILLUP_FUTURE);
-								su.setDate(Date.from(trainingDate));
+								su.setDate(trainingDate);
 								su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 								su.setChange(change);
 								futureSkillups.add(su);

@@ -5,12 +5,10 @@ import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
-import core.util.HTDatetime;
+import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 
 import java.sql.Timestamp;
-import java.util.Date;
-
 
 
 /**
@@ -22,7 +20,7 @@ public class Match {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** The match playing date */
-    private Timestamp matchDate;
+    private HODateTime matchDate;
 
     /** The away team name */
     private String awayTeam;
@@ -70,11 +68,11 @@ public class Match {
         homeGoals = matchInfo.getHomeTeamGoals();
         awayGoals = matchInfo.getGuestGuestGoals();
         matchType = matchInfo.getMatchTypeExtended();
-        matchDate = matchInfo.getMatchDateAsTimestamp();
+        matchDate = matchInfo.getMatchSchedule();
 
-        var htdatetime = new HTDatetime(matchInfo.getMatchDateAsTimestamp());
-        week = htdatetime.getHTWeekLocalized();
-        season = htdatetime.getHTSeasonLocalized();
+        var htweek = matchDate.toLocaleHTWeek();
+        week = htweek.week;
+        season = htweek.season;
     }
 
     /**
@@ -152,11 +150,11 @@ public class Match {
         return homeTeam;
     }
 
-    public void setMatchDate(Timestamp date) {
+    public void setMatchDate(HODateTime date) {
         matchDate = date;
     }
 
-    public Timestamp getMatchDate() {
+    public HODateTime getMatchDate() {
         return matchDate;
     }
 

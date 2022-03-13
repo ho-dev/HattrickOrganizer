@@ -16,11 +16,11 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.HODateTime;
 import core.util.Helper;
 import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.*;
-import java.sql.Timestamp;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumn;
 
@@ -95,10 +95,10 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 Player player = spielerCBItem.getSpieler();
-                Timestamp matchDate = spielerCBItem.getMatchdetails().getMatchDate();
+                var matchDate = spielerCBItem.getMatchdetails().getMatchDate();
 
                 if (matchDate != null) {
-                    String ageString = player.getAdjustedAgeFromDate(matchDate);
+                    String ageString = player.getAgeWithDaysAsString(matchDate);
                     return new ColorLabelEntry(player.getDoubleAgeFromDate(matchDate),
                             ageString,
                             ColorLabelEntry.FG_STANDARD,
@@ -311,16 +311,15 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                return new ColorLabelEntry(match.getMatchDateAsTimestamp().getTime(),
-                        java.text.DateFormat.getDateTimeInstance().format(match
-                                .getMatchDateAsTimestamp()),
+                return new ColorLabelEntry(match.getMatchSchedule().instant.getEpochSecond(),
+                        match.getMatchSchedule().toLocaleDateTime(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
             }
 
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
-                return new ColorLabelEntry(spielerCBItem.getMatchdate(),
+                return new ColorLabelEntry(HODateTime.toLocaleDateTime(spielerCBItem.getMatchdate()),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
@@ -543,8 +542,8 @@ final public class UserColumnFactory {
         playerAdditionalArray[2] = new PlayerColumn(30, "ls.player.age", 55) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                String ageString = player.getAlterWithAgeDaysAsString();
-                int birthdays = 0;
+                String ageString = player.getAgeWithDaysAsString();
+                int birthdays;
                 boolean playerExists;
 
                 if (playerCompare == null) {
@@ -744,7 +743,7 @@ final public class UserColumnFactory {
                 if (player.getLastMatchRating() > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info != null) {
-                        return new MatchDateTableEntry(info.getMatchDateAsTimestamp().toString(), info.getMatchTypeExtended());
+                        return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
                     }
                 }
                 return new MatchDateTableEntry(null, MatchType.NONE);

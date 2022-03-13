@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.XtraData;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -29,29 +30,32 @@ final class XtraDataTable extends AbstractTable {
 		};
 	}
 
-	
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * load Xtra data
 	 */
-	XtraData getXtraDaten(int hrfID) {
-
-		XtraData xtra = new XtraData();
-
+	XtraData loadXtraData(int hrfID) {
 		if (hrfID != -1) {
-
 			String sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
 			ResultSet rs = adapter.executeQuery(sql);
-
-			try {
-				if (rs != null) {
+			if (rs != null) {
+				try {
 					rs.first();
-					xtra = new XtraData(rs);
+					var xtra = new XtraData();
+					xtra.setCurrencyRate(rs.getDouble("CurrencyRate"));
+					xtra.setLogoURL(DBManager.deleteEscapeSequences(rs.getString("LogoURL")));
+					xtra.setHasPromoted(rs.getBoolean("HasPromoted"));
+					xtra.setSeriesMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SeriesMatchDate")));
+					xtra.setTrainingDate(HODateTime.fromDbTimestamp(rs.getTimestamp("TrainingDate")));
+					xtra.setEconomyDate(HODateTime.fromDbTimestamp(rs.getTimestamp("EconomyDate")));
+					xtra.setLeagueLevelUnitID(rs.getInt("LeagueLevelUnitID"));
+					xtra.setCountryId(DBManager.getInteger(rs, "CountryId"));
+					return xtra;
+				} catch (Exception e) {
+					HOLogger.instance().error(getClass(), "Error while loading XtraData model: " + e);
 				}
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error while loading XtraData model: " + e);
 			}
 		}
-		return xtra;
+		return null;
 	}
 
 	/**
@@ -82,11 +86,11 @@ final class XtraDataTable extends AbstractTable {
 					+ ",'"
 					+ core.db.DBManager.insertEscapeSequences(xtra.getLogoURL())
 					+ "', '"
-					+ xtra.getSeriesMatchDate()
+					+ xtra.getSeriesMatchDate().toDbTimestamp()
 					+ "', '"
-					+ xtra.getNextTrainingDate()
+					+ xtra.getNextTrainingDate().toDbTimestamp()
 					+ "', '"
-					+ xtra.getEconomyDate()
+					+ xtra.getEconomyDate().toDbTimestamp()
 					+ "', "
 					+ xtra.getLeagueLevelUnitID()
 					+ ", "

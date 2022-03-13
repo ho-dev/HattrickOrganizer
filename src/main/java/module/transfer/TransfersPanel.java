@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
-import module.transfer.test.OverviewPanel;
 import module.transfer.transfertype.TransferTypePane;
 
 import java.awt.BorderLayout;
@@ -26,7 +25,6 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	private List<Player> players;
 	private TransferTypePane transferTypePane;
 	private TransferScoutPanel scoutPanel;
-	private OverviewPanel overviewPanel;
 
 	public TransfersPanel() {
 		initialize();
@@ -63,14 +61,11 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		// LoginWaitDialog(HOMainFrame.instance());
 		// waitWindow.setVisible(true);
 
-		final List<Player> allOutdated = new Vector<Player>();
-
 		// Check for outdated players.
-		final List<Player> tmp = new Vector<Player>();
-		tmp.clear();
+		final List<Player> tmp = new Vector<>();
 		tmp.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tmp.removeAll(this.players);
-		allOutdated.addAll(tmp);
+		final List<Player> allOutdated = new Vector<>(tmp);
 
 		// Check for outdated old players.
 		tmp.clear();
@@ -78,17 +73,13 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		tmp.removeAll(this.oldplayers);
 		allOutdated.addAll(tmp);
 
-		final List<Player> outdated = allOutdated;
-
-		for (Iterator<Player> iter = allOutdated.iterator(); iter.hasNext();) {
-			final Player player = iter.next();
-
+		for (final Player player : allOutdated) {
 			if (player.getPlayerID() < 0) {
-				outdated.remove(player);
+				allOutdated.remove(player);
 			}
 		}
 		boolean success = false;
-		if ((outdated.size() > 0) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
+		if ((allOutdated.size() > 0) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
 			success = DBManager.instance().updateTeamTransfers(
 						HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		}
@@ -98,8 +89,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		
 		// Also, Db is called to do downloads? Truly messed up. 
 		if (success) {
-			for (Iterator<Player> iter = outdated.iterator(); iter.hasNext();) {
-				final Player player = iter.next();
+			for (final Player player : allOutdated) {
 				DBManager.instance().updatePlayerTransfers(player.getPlayerID());
 			}
 		}

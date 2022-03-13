@@ -1,6 +1,7 @@
 package core.db;
 
 import core.file.hrf.HRF;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
@@ -123,12 +124,13 @@ public final class HRFTable extends AbstractTable {
 		statement += ("" + hrfId + ",'" + name + "','" + datum.toString() + "' )");
 		adapter.executeUpdate(statement);
 
+		var hoDateTime = HODateTime.fromDbTimestamp(datum);
 		if (hrfId > getMaxHrf().getHrfId()) {
-			maxHrf = new HRF(hrfId, name, datum);
+			maxHrf = new HRF(hrfId, name, hoDateTime);
 		}
 
-		if (datum.after(getLatestHrf().getDatum())) {
-			latestHrf = new HRF(hrfId, name, datum);
+		if (hoDateTime.isAfter(getLatestHrf().getDatum())) {
+			latestHrf = new HRF(hrfId, name, hoDateTime);
 		}
 	}
 
@@ -190,6 +192,7 @@ public final class HRFTable extends AbstractTable {
 							+ time + "' ORDER BY Datum";
 					rs = adapter.executeQuery(sql);
 
+					assert rs != null;
 					if (rs.first()) {
 						hrfID = rs.getInt("HRF_ID");
 					}

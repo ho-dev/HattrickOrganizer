@@ -3,6 +3,7 @@ package module.specialEvents.table;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 import org.javatuples.Pair;
 import java.awt.Component;
 import java.text.DateFormat;
@@ -21,8 +22,8 @@ public class MatchDateTypeTableCellRenderer extends DefaultTableCellRenderer {
 		if (value != null) {
 			Pair oMatchDateMatchType = (Pair) value;
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			Date oMatchDate = (Date) oMatchDateMatchType.getValue0();
-			setText("  (" + dateFormat.format(oMatchDate) + ")");
+			HODateTime oMatchDate = (HODateTime) oMatchDateMatchType.getValue0();
+			setText("  (" + oMatchDate.toLocaleDate() + ")");
 			MatchType oMatchType = (MatchType) oMatchDateMatchType.getValue1();
 			Icon oMatchTypeIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[oMatchType.getIconArrayIndex()]);
 			setIcon(oMatchTypeIcon);

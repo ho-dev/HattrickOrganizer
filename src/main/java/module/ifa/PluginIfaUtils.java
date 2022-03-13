@@ -13,6 +13,7 @@ import core.model.enums.MatchType;
 import core.net.DownloadDialog;
 import core.net.MyConnector;
 import core.util.DateTimeUtils;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.gif.Quantize;
 
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,33 +55,33 @@ public class PluginIfaUtils {
 	}
 
 	public static boolean updateMatchesTable() {
-		Timestamp time;
 		boolean retry = true;
 
+		HODateTime time;
 		do {
 			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 
-			if (time != null && time.getTime() > 100) {
+			if (time != null && !time.isBefore(HODateTime.htStart)) {
 				break;
 			}
 			DownloadDialog.instance();
 		} while (retry && !(retry = false));
 
-		//JWindow waitWindow = new LoginWaitDialog(HOMainFrame.instance());
 		try {
-			//waitWindow.setVisible(true);
 			HOMainFrame.instance().setWaitInformation(0);
-			if(time != null)
-			{
-				Date from = DateHelper.getDate(DBManager.instance()
-						.getLastIFAMatchDate(time.toString()));
-				try {
-					List<Date[]> times = getTimeIntervalsForRetrieval(from);
-					for (Date[] fromTo : times) {
-						insertMatches(fromTo[0], fromTo[1]);
+			if (time != null) {
+				var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
+				if (from == null) {
+					from = time;
+				}
+				var today = HODateTime.now();
+				while (from.isBefore(today)) {
+					var to = from.plus(60, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
+					if (to.isAfter(today)) {
+						to = today;
 					}
-				} catch (Exception e) {
-					insertMatches(from, new Date());
+					insertMatches(from, to);
+					from = from.plus(60, ChronoUnit.DAYS);
 				}
 			}
 			HOMainFrame.instance().resetInformation();
@@ -139,12 +141,13 @@ public class PluginIfaUtils {
 	}
 
 	@SuppressWarnings("deprecation")
-	private static void insertMatches(Date from, Date to) throws Exception {
+	private static void insertMatches(HODateTime from, HODateTime to) {
 		StringBuilder errors = new StringBuilder();
-		String matchDate = null;
+		HODateTime matchDate = null;
 		String matchesArchive = MyConnector.instance().getMatchesArchive(HOVerwaltung.instance().getModel().getBasics().getTeamId(), from, to);
 		Document doc = XMLManager.parseString(matchesArchive);
 
+		assert doc != null;
 		int matchesCount = ((Element) doc.getDocumentElement().getElementsByTagName("MatchList")
 				.item(0)).getElementsByTagName("Match").getLength();
 		
@@ -157,7 +160,9 @@ public class PluginIfaUtils {
 			int matchTypeId = Integer.parseInt(parseXmlElement(doc, "MatchType", i, "Match"));
 			IfaMatch match = new IfaMatch(matchTypeId);
 			MatchType matchType = MatchType.getById(matchTypeId);
-			matchDate = parseXmlElement(doc, "MatchDate", i, "Match");
+			var matchDateString = parseXmlElement(doc, "MatchDate", i, "Match");
+			matchDate = HODateTime.fromHT(matchDateString);
+
 			if (matchType == MatchType.FRIENDLYCUPRULES || matchType == MatchType.FRIENDLYNORMAL
 					|| matchType == MatchType.INTFRIENDLYCUPRULES
 					|| matchType == MatchType.INTFRIENDLYNORMAL
@@ -174,8 +179,8 @@ public class PluginIfaUtils {
 							"Match"));
 					try {
 						
-						int homeLeagueIndex = 0;
-						int awayLeagueIndex = 0;
+						int homeLeagueIndex;
+						int awayLeagueIndex;
 						
 						// Some ifs inserted to avoid downloading own team info for every match
 						
@@ -205,7 +210,7 @@ public class PluginIfaUtils {
 						}
 						
 						match.setMatchId(matchID);
-						match.setPlayedDateString(matchDate);
+						match.setPlayedDate(matchDate);
 						match.setHomeLeagueId(homeLeagueIndex);
 						match.setHomeTeamId(homeTeamID);
 						match.setAwayLeagueId(awayLeagueIndex);
@@ -215,9 +220,7 @@ public class PluginIfaUtils {
 
 						DBManager.instance().insertIFAMatch(match);
 					} catch (Exception e) {
-						errors.append("Error 1 getting data for match " + matchID + " ("
-								+ matchDate + " / HomeTeam " + homeTeamID + " vs. AwayTeam "
-								+ awayTeamID + ")<br>");
+						errors.append("Error 1 getting data for match ").append(matchID).append(" (").append(matchDateString).append(" / HomeTeam ").append(homeTeamID).append(" vs. AwayTeam ").append(awayTeamID).append(")<br>");
 					}
 				}
 			}
@@ -228,31 +231,7 @@ public class PluginIfaUtils {
 		}
 
 		if (matchesCount == 50) {
-			insertMatches(DateHelper.getDate(matchDate), to);
+			insertMatches(matchDate, to);
 		}
-	}
-
-	private static List<Date[]> getTimeIntervalsForRetrieval(Date from) {
-		var ret = new ArrayList<Date[]>();
-		Date start = DateTimeUtils.getDateWithMinTime(from);
-		Calendar end = new GregorianCalendar();
-		end.setLenient(true);
-		end.add(5, 1);
-
-		Calendar tmpF = new GregorianCalendar();
-		tmpF.setTime(start);
-		Calendar tmpT = new GregorianCalendar();
-		tmpT.setTime(tmpF.getTime());
-		tmpF.setLenient(true);
-		tmpT.setLenient(true);
-		while (tmpT.before(end)) {
-			tmpT.add(2, 2);
-			if (tmpT.after(end)) {
-				tmpT = end;
-			}
-			ret.add(new Date[] { tmpF.getTime(), tmpT.getTime() });
-			tmpF.setTime(tmpT.getTime());
-		}
-		return ret;
 	}
 }

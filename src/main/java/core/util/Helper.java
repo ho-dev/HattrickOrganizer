@@ -6,18 +6,12 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.model.misc.Basics;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
 import java.awt.*;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -320,14 +314,6 @@ public class Helper {
 		numFormat.setMinimumFractionDigits(nbDecimals);
 		numFormat.setMaximumFractionDigits(nbDecimals);
 		return numFormat;
-	}
-
-	/**
-	 * liefer das Datum aus einem String im Format yyyy-MM-dd HH:mm:ss
-	 *
-	 */
-	public static Timestamp parseDate(String date) {
-		return Basics.parseHattrickDate(date);
 	}
 
 	/**

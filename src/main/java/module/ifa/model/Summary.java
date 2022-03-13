@@ -1,5 +1,6 @@
 package module.ifa.model;
 
+import core.util.HODateTime;
 import module.ifa.PluginIfaUtils;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class Summary {
 	private int wonTotal;
 	private int drawTotal;
 	private int lostTotal;
-	private long lastMatch;
+	private HODateTime lastMatch;
 	private double coolnessTotal;
 
 	Summary(List<IfaStatistic> data) {
@@ -37,7 +38,7 @@ public class Summary {
 		return lostTotal;
 	}
 
-	public long getLastMatch() {
+	public HODateTime getLastMatchDate() {
 		return lastMatch;
 	}
 
@@ -53,7 +54,7 @@ public class Summary {
 			drawTotal += stat.getMatchesDraw();
 			lostTotal += stat.getMatchesLost();
 			coolnessTotal += PluginIfaUtils.getCoolness(stat.getCountry().getCountryId());
-			if (lastMatch < stat.getLastMatchDate()) {
+			if (lastMatch == null || lastMatch.isBefore(stat.getLastMatchDate())) {
 				lastMatch = stat.getLastMatchDate();
 			}
 		}

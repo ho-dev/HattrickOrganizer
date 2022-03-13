@@ -99,7 +99,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     @Override
     public void focusGained(FocusEvent event) {
         if (getSelectedPlayer() != null) {
-            HOMainFrame.instance().setActualSpieler(getSelectedPlayer());
+            HOMainFrame.instance().selectPlayer(getSelectedPlayer());
         }
     }
 
@@ -198,7 +198,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             if (player != null) {
-                HOMainFrame.instance().setActualSpieler(player);
+                HOMainFrame.instance().selectPlayer(player);
             }
 
             //Update all other positions

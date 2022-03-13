@@ -16,6 +16,7 @@ import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.login.ProxyDialog;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
@@ -322,14 +323,16 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 
 				if (model.getBasics().hasYouthTeam()) {
-					var dateSince = DBManager.instance().getMinScoutingDate();
+					var dateSinceTimestamp = DBManager.instance().getMinScoutingDate();
+					var dateSince = HODateTime.fromDbTimestamp(dateSinceTimestamp);
 					OnlineWorker.downloadMissingYouthMatchData(model, dateSince);
 					// delete old youth match lineups, no longer needed (no current youth player has trained then)
-					DBManager.instance().deleteYouthMatchDataBefore(dateSince);
+					DBManager.instance().deleteYouthMatchDataBefore(dateSinceTimestamp);
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
-				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, m_clSpinnerModel.getDate(), false);
+				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
+				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
 					allmatches = OnlineWorker.FilterUserSelection(allmatches);
 					for (MatchKurzInfo i : allmatches) {

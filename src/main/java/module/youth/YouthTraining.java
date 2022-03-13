@@ -6,6 +6,7 @@ import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.player.MatchRoleID;
+import core.util.HODateTime;
 import module.lineup.substitution.model.MatchOrderType;
 import module.training.Skills;
 
@@ -117,7 +118,7 @@ public class YouthTraining {
         return this.matchdetails;
     }
 
-    public Timestamp getMatchDate() {
+    public HODateTime getMatchDate() {
         return this.getMatchDetails().getMatchDate();
     }
 

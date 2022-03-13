@@ -1,6 +1,7 @@
 // %214693493:de.hattrickorganizer.model%
 package core.file.hrf;
 
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
@@ -16,7 +17,7 @@ public final class HRF {
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private int hrfId = -1;
-	private Timestamp datum = new Timestamp(System.currentTimeMillis());
+	private HODateTime datum = HODateTime.now();
 	private String name = null;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ public final class HRF {
 	 * @param _name
 	 * @param _datum
 	 */
-	public HRF(int _hrfId, String _name, Timestamp _datum) {
+	public HRF(int _hrfId, String _name, HODateTime _datum) {
 		this.hrfId = _hrfId;
 		this.name = _name;
 		this.datum = _datum;
@@ -52,16 +53,16 @@ public final class HRF {
         try {
             hrfId = rs.getInt("HRF_ID");
             name = core.db.DBManager.deleteEscapeSequences(rs.getString("Name"));
-            datum = rs.getTimestamp("Datum");
+            datum = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor HRF: " + e.toString());
+            HOLogger.instance().error(getClass(),"Konstruktor HRF: " + e);
         }
     }
 
     //~ Methods ------------------------------------------------------------------------------------
 
 
-	public Timestamp getDatum() {
+	public HODateTime getDatum() {
 		return datum;
 	}
 

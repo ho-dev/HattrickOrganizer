@@ -8,12 +8,15 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.util.HODateTime;
 import core.util.Helper;
 import core.util.HelperWrapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -27,12 +30,9 @@ import static core.gui.theme.ThemeManager.getColor;
 class HrfDetails {
 
 	private HelperWrapper m_helper = HelperWrapper.instance();
-	private String m_Str_Datum;
 	private String m_Str_DatumVorher;
 	private String m_Str_DatumDanach;
-	private String m_inDB;
-	private Date m_Datum;
-	private Timestamp m_Timestamp;
+	private HODateTime m_Datum;
 	private String m_Wochentag;
 	private int m_Kw;
 	private String m_TrArt;
@@ -56,7 +56,6 @@ class HrfDetails {
 	private Icon m_bild;
 
 	private ResultSet m_rs = null;
-	private GregorianCalendar gc = null;
 
 	public HrfDetails() {
 	}
@@ -71,9 +70,11 @@ class HrfDetails {
 				.getAdapter()
 				.executeQuery(
 						"SELECT MAX(DATUM) FROM HRF WHERE DATUM < '"
-								+ Helper.parseDate(getStr_Datum()) + "'");
+								+ m_Datum.toDbTimestamp() + "'");
 		try {
-			while (m_rs.next()) {
+			while (true) {
+				assert m_rs != null;
+				if (!m_rs.next()) break;
 				m_rs.getTimestamp(1);
 
 				if (m_rs.wasNull()) {
@@ -91,9 +92,11 @@ class HrfDetails {
 				.getAdapter()
 				.executeQuery(
 						"SELECT MIN(DATUM) FROM HRF WHERE DATUM > '"
-								+ Helper.parseDate(getStr_Datum()) + "'");
+								+ m_Datum.toDbTimestamp() + "'");
 		try {
-			while (m_rs.next()) {
+			while (true) {
+				assert m_rs != null;
+				if (!m_rs.next()) break;
 				m_rs.getTimestamp(1);
 
 				if (m_rs.wasNull()) {
@@ -111,9 +114,11 @@ class HrfDetails {
 				.getAdapter()
 				.executeQuery(
 						"SELECT count(*) FROM HRF WHERE DATUM = '"
-								+ Helper.parseDate(getStr_Datum()) + "'");
+								+ m_Datum.toDbTimestamp() + "'");
 		try {
-			while (m_rs.next()) {
+			while (true) {
+				assert m_rs != null;
+				if (!m_rs.next()) break;
 				if (m_rs.getInt(1) == 0) {
 					setBild(ThemeManager.getIcon(HOIconName.REMOVE));
 				} else {
@@ -127,51 +132,20 @@ class HrfDetails {
 
 	/*****************
 	 * Berechnet diverse Datumswerte aus einem Timestamp-String
-	 * 
-	 * @param tStamp
+	 *
 	 */
-	void calcDatum(String tStamp) {
-		String tStamp_datum = tStamp;
-		int jahr = Integer.parseInt(tStamp_datum.substring(0, 4));
-		int monat = Integer.parseInt(tStamp_datum.substring(5, 7));
-		int tag = Integer.parseInt(tStamp_datum.substring(8, 10));
-		// int sekunde = Integer.parseInt(tStamp_datum.substring(17));
-		gc = new GregorianCalendar();
-		gc.set(Calendar.DAY_OF_MONTH, tag);
-		gc.set(Calendar.MONTH, monat - 1);
-		gc.set(Calendar.YEAR, jahr);
-		/*
-		 * gc.set(Calendar.HOUR, stunde); gc.set(Calendar.MINUTE, minute);
-		 * gc.set(Calendar.SECOND, sekunde);
-		 */
-		setDatum(gc.get(Calendar.DAY_OF_MONTH), gc.get(Calendar.MONTH),
-				gc.get(Calendar.YEAR));
-		setKw(gc.get(Calendar.WEEK_OF_YEAR));
-
-		int value = gc.get(Calendar.DAY_OF_WEEK);
+	void calcDatum() {
+		setKw(m_Datum.instant.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+		var value = m_Datum.instant.get(ChronoField.DAY_OF_WEEK);
 		String[] tage = HrfExplorer.getTage();
 		switch (value) {
-		case Calendar.MONDAY:
-			setWochentag(tage[0]);
-			break;
-		case Calendar.TUESDAY:
-			setWochentag(tage[1]);
-			break;
-		case Calendar.WEDNESDAY:
-			setWochentag(tage[2]);
-			break;
-		case Calendar.THURSDAY:
-			setWochentag(tage[3]);
-			break;
-		case Calendar.FRIDAY:
-			setWochentag(tage[4]);
-			break;
-		case Calendar.SATURDAY:
-			setWochentag(tage[5]);
-			break;
-		case Calendar.SUNDAY:
-			setWochentag(tage[6]);
-			break;
+			case Calendar.MONDAY -> setWochentag(tage[0]);
+			case Calendar.TUESDAY -> setWochentag(tage[1]);
+			case Calendar.WEDNESDAY -> setWochentag(tage[2]);
+			case Calendar.THURSDAY -> setWochentag(tage[3]);
+			case Calendar.FRIDAY -> setWochentag(tage[4]);
+			case Calendar.SATURDAY -> setWochentag(tage[5]);
+			case Calendar.SUNDAY -> setWochentag(tage[6]);
 		}
 	}
 
@@ -179,7 +153,7 @@ class HrfDetails {
 	 * liefert einen Vector mit den Daten bez�glich des Teams
 	 */
 	Vector<Object> getTeamData() {
-		Vector<Object> teamData = new Vector<Object>();
+		Vector<Object> teamData = new Vector<>();
 		teamData.add(getTeamName());
 		teamData.add(getTeamID());
 		teamData.add(getStimmung());
@@ -197,7 +171,7 @@ class HrfDetails {
 	 * liefert einen Vector mit den Daten bez�glich der Liga
 	 */
 	Vector<Object> getLigaData() {
-		Vector<Object> ligaData = new Vector<Object>();
+		Vector<Object> ligaData = new Vector<>();
 		ligaData.add(getSaison());
 		ligaData.add(getLiga());
 		ligaData.add(getSpieltag());
@@ -239,7 +213,7 @@ class HrfDetails {
 	/**
 	 * @return Returns the m_Datum.
 	 */
-	Date getDatum() {
+	HODateTime getDatum() {
 		return m_Datum;
 	}
 
@@ -248,13 +222,6 @@ class HrfDetails {
 	 */
 	int getFans() {
 		return m_Fans;
-	}
-
-	/**
-	 * @return Returns the m_inDB.
-	 */
-	String getinDB() {
-		return m_inDB;
 	}
 
 	/**
@@ -314,13 +281,6 @@ class HrfDetails {
 	}
 
 	/**
-	 * @return Returns the m_Str_Datum.
-	 */
-	String getStr_Datum() {
-		return m_Str_Datum;
-	}
-
-	/**
 	 * @return Returns the m_Str_DatumDanach.
 	 */
 	String getStr_DatumDanach() {
@@ -346,13 +306,6 @@ class HrfDetails {
 	 */
 	String getTeamName() {
 		return m_TeamName;
-	}
-
-	/**
-	 * @return Returns the m_Timestamp.
-	 */
-	Timestamp getTimestamp() {
-		return m_Timestamp;
 	}
 
 	/**
@@ -429,14 +382,6 @@ class HrfDetails {
 		m_bild = iIcon;
 	}
 
-	/**
-	 * @param datum
-	 *            The m_Datum to set.
-	 */
-	@SuppressWarnings("deprecation")
-	void setDatum(int gc_tag, int gc_monat, int gc_jahr) {
-		this.m_Datum = new Date(gc_jahr - 1900, gc_monat, gc_tag);
-	}
 
 	/**
 	 * @param fans
@@ -444,14 +389,6 @@ class HrfDetails {
 	 */
 	void setFans(int fans) {
 		m_Fans = fans;
-	}
-
-	/**
-	 * @param m_indb
-	 *            The m_inDB to set.
-	 */
-	void setinDB(String m_indb) {
-		m_inDB = m_indb;
 	}
 
 	/**
@@ -519,14 +456,6 @@ class HrfDetails {
 	}
 
 	/**
-	 * @param str_Datum
-	 *            The m_Str_Datum to set.
-	 */
-	void setStr_Datum(String str_Datum) {
-		m_Str_Datum = str_Datum.substring(0, 19);
-	}
-
-	/**
 	 * @param str_DatumDanach
 	 *            The m_Str_DatumDanach to set.
 	 */
@@ -558,13 +487,6 @@ class HrfDetails {
 		m_TeamName = teamName;
 	}
 
-	/**
-	 * @param timestamp
-	 *            The m_Timestamp to set.
-	 */
-	void setTimestamp(Timestamp timestamp) {
-		m_Timestamp = timestamp;
-	}
 
 	/**
 	 * @param toreFuer
@@ -614,4 +536,7 @@ class HrfDetails {
 		m_Wochentag = wochentag;
 	}
 
+	public void setDatum(HODateTime m_Datum) {
+		this.m_Datum = m_Datum;
+	}
 }

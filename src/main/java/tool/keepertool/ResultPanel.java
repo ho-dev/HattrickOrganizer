@@ -103,37 +103,29 @@ class ResultPanel extends JPanel {
         panel.add(result, BorderLayout.NORTH);
         panel.add(set, BorderLayout.SOUTH);
 
-        set.addActionListener(new ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent arg0) {
-                    final Player sp = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
-                    double decimals = average - sp.getGKskill()
-                                      - sp.getSub4Skill(PlayerSkill.KEEPER);
+        set.addActionListener(arg0 -> {
+            final Player sp = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
+            if (sp != null) {
+                double decimals = average - sp.getGKskill()
+                        - sp.getSub4Skill(PlayerSkill.KEEPER);
 
-                    if (decimals > 1) {
-                        decimals = 0.99;
-                    }
-
-                    if (decimals < 0) {
-                        decimals = 0;
-                    }
-
-                    sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float)decimals);
-                    core.db.DBManager.instance().saveSpieler(core.model.HOVerwaltung.instance()
-                                                                                                                          .getModel()
-                                                                                                                          .getID(),
-                                                                                   core.model.HOVerwaltung.instance()
-                                                                                                                          .getModel()
-                                                                                                                          .getCurrentPlayers(),
-                                                                                   core.model.HOVerwaltung.instance()
-                                                                                                                          .getModel()
-                                                                                                                          .getBasics()
-                                                                                                                          .getDatum());
-                    core.gui.RefreshManager.instance().doReInit();
-                    parent.setVisible(false);
-                    parent.dispose();
+                if (decimals > 1) {
+                    decimals = 0.99;
+                } else if (decimals < 0) {
+                    decimals = 0;
                 }
-            });
+
+                sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float) decimals);
+                core.db.DBManager.instance().saveSpieler(
+                        HOVerwaltung.instance().getModel().getID(),
+                        HOVerwaltung.instance().getModel().getCurrentPlayers(),
+                        HOVerwaltung.instance().getModel().getBasics().getDatum().toDbTimestamp()
+                );
+            }
+            core.gui.RefreshManager.instance().doReInit();
+            parent.setVisible(false);
+            parent.dispose();
+        });
         reset();
     }
 }

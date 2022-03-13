@@ -9,19 +9,17 @@ import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.training.WeeklyTrainingType;
+import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 import module.training.PastTrainingManager;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class TrainingModel implements PropertyChangeListener {
 
@@ -176,27 +174,28 @@ public class TrainingModel implements PropertyChangeListener {
 		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
 
 		if (previousTraining != null) {
-			HTDatetime oTrainingDate = new HTDatetime(previousTraining.getTrainingDate());
-			ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
+			var trainingDate = previousTraining.getTrainingDate();
+			//ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
 
-			int nbWeek = 0;
-			ZonedDateTime zdtFutureTrainingDate;
+			int nbWeek = 1;
+			HODateTime futureTrainingDate;
 			TrainingPerWeek futureTraining;
 
 			while (newfutureTrainings.size() < requiredNBentries) {
 
 				//first iteration equals to nextWeek training then increase per one week per iteration
-				zdtFutureTrainingDate = zdtrefDate.plus(nbWeek * 7L, ChronoUnit.DAYS);
+				futureTrainingDate = trainingDate.plusDaysAtSameLocalTime(nbWeek*7);
 
-				ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
-				var oFutureTraining = _futureTrainings.stream().filter(t -> finalZdtFutureTrainingDate.toInstant().equals(t.getTrainingDate())).findFirst();
+				//ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
+				HODateTime finalFutureTrainingDate = futureTrainingDate;
+				var oFutureTraining = _futureTrainings.stream().filter(t -> finalFutureTrainingDate.equals(t.getTrainingDate())).findFirst();
 
 				if (oFutureTraining.isPresent()) {
 					// training present in Future Training table => we keep it
 					futureTraining = oFutureTraining.get();
 				} else {
 					// training not present in Future Training table => we create a new one from previous training
-					futureTraining = new TrainingPerWeek(zdtFutureTrainingDate.toInstant(), previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
+					futureTraining = new TrainingPerWeek(futureTrainingDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
 							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
 				}
 

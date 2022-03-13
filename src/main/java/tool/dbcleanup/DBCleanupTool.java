@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -70,12 +69,12 @@ public class DBCleanupTool {
 		for (HRF curHrf : allHrfs) {
 			int curId = curHrf.getHrfId();
 //			String curName = curHrf.getName();
-			Timestamp curDate = curHrf.getDatum();
-			var htdatetime = new HTDatetime(curDate);
-			int curHtSeasonTraining = htdatetime.getHTSeasonLocalized();
-			int curHtWeekTraining = htdatetime.getHTWeekLocalized();
+			var curDate = curHrf.getDatum();
+			var htWeek = curDate.toLocaleHTWeek();
+			int curHtSeasonTraining = htWeek.season;
+			int curHtWeekTraining = htWeek.week;
 			boolean remove = false;
-			if (removeDate != null && removeDate.after(curDate)) {
+			if (removeDate != null && removeDate.after(curDate.toDbTimestamp())) {
 				remove = true;
 			} else if (autoRemove) {
 				if (lastSeason == curHtSeasonTraining && lastWeek == curHtWeekTraining) {
@@ -162,7 +161,7 @@ public class DBCleanupTool {
 		int counter = 0;
 		int myTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		for (MatchKurzInfo curKurzInfo : kurzInfos) {
-			Timestamp curMatchDate = curKurzInfo.getMatchDateAsTimestamp();
+			Timestamp curMatchDate = curKurzInfo.getMatchSchedule().toDbTimestamp();
 			int curMatchId = curKurzInfo.getMatchID();
 			MatchType curMatchType = curKurzInfo.getMatchType();
 			boolean isMyMatch = (curKurzInfo.getHomeTeamID() == myTeamId || curKurzInfo.getGuestTeamID() == myTeamId);

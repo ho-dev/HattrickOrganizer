@@ -12,12 +12,14 @@ import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -61,7 +63,7 @@ public class Player {
      * TeamInfo Smilie Filename
      */
     private String m_sTeamInfoSmilie;
-    private java.sql.Timestamp m_clhrfDate;
+    private HODateTime m_clhrfDate;
 
     /**
      * The player is no longer available in the current HRF
@@ -355,7 +357,7 @@ public class Player {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, Timestamp hrfdate) {
+    public Player(java.util.Properties properties, HODateTime hrfdate) {
         // Separate first, nick and last names are available. Utilize them?
 
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
@@ -399,7 +401,7 @@ public class Player {
         //TSI, alles vorher durch 1000 teilen
         m_clhrfDate = hrfdate;
 
-        if (hrfdate.before(DBManager.TSIDATE)) {
+        if (hrfdate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
             m_iTSI /= 1000d;
         }
 
@@ -536,14 +538,9 @@ public class Player {
      * i.e. age + (agedays+offset)/112
      */
     public double getAlterWithAgeDays() {
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long now = new Date().getTime();
-        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
-        int years = getAlter();
-        int days = getAgeDays();
-        return years + (double) (days + diff) / 112;
+        var now = HODateTime.now();
+        return getDoubleAgeFromDate(now);
     }
-
 
     /**
      * Calculates full age with days and offset for a given timestamp
@@ -554,13 +551,12 @@ public class Player {
      * @return Double value of age & agedays & offset combined,
      * i.e. age + (agedays+offset)/112
      */
-    public double getDoubleAgeFromDate(Timestamp t) {
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long time = t.getTime();
-        long diff = Math.abs((hrftime - time)) / (1000 * 60 * 60 * 24);
+    public double getDoubleAgeFromDate(HODateTime t) {
+        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var diff = Duration.between(hrfTime.instant, t.instant);
         int years = getAlter();
         int days = getAgeDays();
-        return years + (double) (days - diff) / 112;
+        return years + (double) (days + diff.toDays()) / 112;
     }
 
     /**
@@ -568,44 +564,16 @@ public class Player {
      *
      * @return String of age & agedays format is "YY (DDD)"
      */
-    public String getAlterWithAgeDaysAsString() {
-        return getAgeWithDaysAsString(new Date());
+    public String getAgeWithDaysAsString() {
+        return getAgeWithDaysAsString(HODateTime.now());
     }
-
-    public String getAgeWithDaysAsString(Date date) {
-        return getAgeWithDaysAsString(date.getTime());
+    public String getAgeWithDaysAsString(HODateTime t){
+        return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t);
     }
-
-    private String getAgeWithDaysAsString(long now)
-    {
-        return getAgeWithDaysAsString(getAlter(), getAgeDays(), now);
-    }
-
-    public static String getAgeWithDaysAsString(int years, int days, long now){
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
-        days += diff;
-        while (days > 111) {
-            days -= 112;
-            years++;
-        }
-        while (days < 0) {
-            days += 112;
-            years--;
-        }
-        return years + " (" + days + ")";
-    }
-
-    /**
-     * Calculates String for full age with days and offset for a given timestamp
-     * only takes days between dates into account
-     * used for the age column in player analysis tab
-     *
-     * @return String of age & agedays & offset combined,
-     * format is "YY (DDD)"
-     */
-    public String getAdjustedAgeFromDate(Timestamp t) {
-        return getAgeWithDaysAsString(t.getTime());
+    public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
+        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
+        return age.seasons + " (" + age.days + ")";
     }
 
     /**
@@ -615,24 +583,16 @@ public class Player {
      * @return the full i18n'd string representing the player's age
      */
     public String getAgeStringFull() {
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long now = new Date().getTime();
-        long diff = (now - hrftime) / (1000 * 60 * 60 * 24);
-        int years = getAlter();
-        int days = getAgeDays();
-        days += diff;
-        boolean birthday = false;
-        while (days > 111) {
-            days -= 112;
-            years++;
-            birthday = true;
-        }
+        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var oldAge = new HODateTime.HODuration(this.getAlter(), this.getAgeDays());
+        var age = oldAge.plus(HODateTime.HODuration.between(hrfTime, HODateTime.now()));
+        var birthday = oldAge.seasons != age.seasons;
         StringBuilder ret = new StringBuilder();
-        ret.append(years);
+        ret.append(age.seasons);
         ret.append(" ");
         ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
         ret.append(" ");
-        ret.append(days);
+        ret.append(age.days);
         ret.append(" ");
         ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
         if (birthday) {
@@ -872,20 +832,19 @@ public class Player {
         return m_bHomeGrown;
     }
 
-    public Timestamp getHrfDate() {
+    public HODateTime getHrfDate() {
         if ( m_clhrfDate == null){
             m_clhrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
         }
         return m_clhrfDate;
     }
 
-    public void setHrfDate(Timestamp timestamp) {
+    public void setHrfDate(HODateTime timestamp) {
         m_clhrfDate = timestamp;
     }
 
     public void setHrfDate() {
-        Date now = new Date();
-        setHrfDate(new Timestamp(now.getTime()));
+        setHrfDate(HODateTime.now());
     }
 
     /**
@@ -1034,38 +993,6 @@ public class Player {
      */
     public Object[] getLastLevelUp(int skill) {
         return DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
-    }
-
-    /**
-     * liefert die vergangenen Tage seit dem letzem LevelAufstieg für den angeforderten Skill
-     *
-     * @return anzahl Tage seit dem letzen Aufstieg
-     */
-    public int getLastLevelUpInTage(int skill) {
-        int tage = 0;
-        final Timestamp datum = (Timestamp) getLastLevelUp(skill)[0];
-        final Timestamp heute = new Timestamp(System.currentTimeMillis());
-        long diff;
-
-        if (datum != null) {
-            diff = heute.getTime() - datum.getTime();
-
-            //In Tage umrechnen
-            tage = (int) (diff / 86400000);
-        }
-
-        return tage;
-    }
-
-    /**
-     * Gibt die Letzte Bewertung zurück, die der Player bekommen hat
-     */
-    public int getPreviousRating() {
-        if (m_iLastBewertung < 0) {
-            m_iLastBewertung = DBManager.instance().getLetzteBewertung4Spieler(m_iSpielerID);
-        }
-
-        return m_iLastBewertung;
     }
 
 
@@ -1261,7 +1188,7 @@ public class Player {
      * Zum speichern! Die Reduzierung des Marktwerts auf TSI wird rückgängig gemacht
      */
     public int getSaveMarktwert() {
-        if (m_clhrfDate == null || m_clhrfDate.before(DBManager.TSIDATE)) {
+        if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
             //Echter Marktwert
             return m_iTSI * 1000;
         }
@@ -1902,7 +1829,7 @@ public class Player {
                 // get experience increase of national team matches
                 if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
                     // TODO check if national matches are stored in database
-                    var nationalMatches = train.loadMatchesOfNTPlayers(this.getNationalTeamID());
+                    var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
@@ -2181,7 +2108,7 @@ public class Player {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if (start.isAfter(t.getTo())){
+                    if (t.endsBefore(start)){
                         remove.add(t);
                     }
                 }
@@ -2202,7 +2129,7 @@ public class Player {
      * @return
      *  the training priority
      */
-    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, Instant trainingDate) {
+    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HODateTime trainingDate) {
         for ( var t : getFuturePlayerTrainings()) {
             if (t.contains(trainingDate)) {
                 return t.getPriority();
@@ -2235,16 +2162,14 @@ public class Player {
      * Set training priority for a time interval.
      * Previously saved trainings of this interval are overwritten or deleted.
      *  @param prio new training priority for the given time interval
-     * @param fromWeek first week with new training priority
-     * @param toWeek last week with new training priority, null means open end
+     * @param from first week with new training priority
+     * @param to last week with new training priority, null means open end
      */
-    public void setFutureTraining(FuturePlayerTraining.Priority prio, Instant fromWeek, Instant toWeek) {
+    public void setFutureTraining(FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
-        var from = HattrickDate.fromInstant(fromWeek);
-        var to = toWeek != null ? HattrickDate.fromInstant(toWeek) : null;
         for (var t : getFuturePlayerTrainings()) {
             if (t.cut(from, to) ||
-                    t.cut(new HattrickDate(0, 0), HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
+                    t.cut(HODateTime.htStart, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
                 removeIntervals.add(t);
             }
         }
@@ -2270,10 +2195,11 @@ public class Player {
      *  if there are more than one selected priorities, "individual priorities" is returned
      *  if is no user selected priority, the best position information is returned
      */
-    public String getTrainingPriorityInformation(HattrickDate nextWeek) {
+    public String getTrainingPriorityInformation(HODateTime nextWeek) {
         String ret=null;
         for ( var t : getFuturePlayerTrainings()) {
-            if (!nextWeek.isAfter(t.getTo())){
+            //
+            if ( !t.endsBefore(nextWeek)){
                 if ( ret != null ){
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;
@@ -2295,17 +2221,17 @@ public class Player {
      * @param trainingWeeks List of training week information
      */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
-        var before = DBManager.instance().getSpieler(previousID).stream()
+        var playerBefore = DBManager.instance().getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst()
                 .orElse(this.CloneWithoutSubskills());
 
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
-        boolean experienceSubDone = this.getExperience() > before.getExperience(); // Do not calculate sub on experience skill up
-        var experienceSub = experienceSubDone?0:before.getSubExperience(); // set sub to 0 on skill up
+        boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up
+        var experienceSub = experienceSubDone?0:playerBefore.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
-            var sub = before.getSub4Skill(skill);
-            var valueBeforeTraining = before.getValue4Skill(skill);
+            var sub = playerBefore.getSub4Skill(skill);
+            var valueBeforeTraining = playerBefore.getValue4Skill(skill);
             var valueAfterTraining = this.getValue4Skill(skill);
 
             if (trainingWeeks.size() > 0) {
@@ -2350,7 +2276,7 @@ public class Player {
             // Handle skill drops that happens the monday after training date
             var nextWeekTraining = TrainingManager.instance().getNextWeekTraining();
             if ( SkillDrops.instance().isActive() && nextWeekTraining != null &&
-                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(before.getHrfDate().toInstant(), this.getHrfDate().toInstant()))
+                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate(), this.getHrfDate()))
             {
                 // calc another skill down
                 sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;

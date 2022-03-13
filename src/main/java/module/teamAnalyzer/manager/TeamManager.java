@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
+import core.util.HODateTime;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.Team;
 import java.sql.Timestamp;
@@ -67,7 +68,7 @@ public class TeamManager {
 
 			t.setName(HOVerwaltung.instance().getModel().getBasics().getTeamName());
 			t.setTeamId(ownTeamID);
-			t.setTime(Timestamp.valueOf(LocalDateTime.of(LocalDate.parse("2200-01-01"), LocalTime.MIDNIGHT))); // to ensure own team appear last
+			t.setTime(HODateTime.fromHT("2200-01-01 00:00:00")); // to ensure own team appear last
 			t.setMatchType(MatchType.NONE);
 
 			lteams.add(t);
@@ -129,11 +130,8 @@ public class TeamManager {
 			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches(includeOwn));
 			Collections.sort(vLMatch);
 
-
-			Timestamp refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
-
+			var refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
 			for ( var team : vLMatch){
-
 				if (team.getTime().compareTo(refTS) >= 0) {
 					teams.putIfAbsent(team.getTeamId(), team);
 				}
@@ -170,7 +168,7 @@ public class TeamManager {
 				team.setName(match.getHomeTeamName());
 				team.setTeamId(match.getHomeTeamID());
 			}
-			team.setTime(match.getMatchDateAsTimestamp());
+			team.setTime(match.getMatchSchedule());
 			team.setMatchType(match.getMatchTypeExtended());
 
 			vTeams.add(team);

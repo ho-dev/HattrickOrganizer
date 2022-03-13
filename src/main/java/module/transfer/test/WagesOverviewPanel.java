@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import core.db.DBManager;
+import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,12 +39,11 @@ public class WagesOverviewPanel extends JPanel {
 
 	private void refreshData() {
 		if (this.player != null) {
-			Date buyingDate = Calc.getBuyingDate(player.getPlayerID());
+			var buyingDate = Calc.getBuyingDate(player.getPlayerID());
 			if (buyingDate == null) {
-				buyingDate = new Date(DBManager.instance()
-						.getSpielerFirstHRF(player.getPlayerID()).getHrfDate().getTime());
+				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
-			List<Date> updates = Calc.getUpdates(Calc.getEconomyDate(), buyingDate, new Date());
+			var updates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), buyingDate, HODateTime.now());
 			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
 
 			var ageWageMap = new HashMap<Integer, Wage>();
@@ -50,14 +51,13 @@ public class WagesOverviewPanel extends JPanel {
 				ageWageMap.put(wage.getAge(), wage);
 			}
 
-			Date birthDay17 = Calc.get17thBirthday(player.getPlayerID());
+			var birthDay17 = Calc.get17thBirthday(player.getPlayerID());
 			var entries = new ArrayList<Entry>();
-			for (Date date : updates) {
+			for (var date : updates) {
 				int ageAt = Calc.getAgeAt(birthDay17, date);
 				Entry entry = new Entry();
 				entry.age = ageAt;
 				entry.economyUpdate = date;
-				entry.htWeek = new HTWeek(date);
 				entry.wage = ageWageMap.get(ageAt).getWage();
 				entries.add(entry);
 			}
@@ -92,8 +92,8 @@ public class WagesOverviewPanel extends JPanel {
 			Entry entry = this.list.get(rowIndex);
 			return switch (columnIndex) {
 				case 0 -> entry.age;
-				case 1 -> entry.htWeek.getSeason();
-				case 2 -> entry.htWeek.getWeek();
+				case 1 -> entry.economyUpdate.toHTWeek().season;
+				case 2 -> entry.economyUpdate.toHTWeek().week;
 				case 3 -> entry.economyUpdate;
 				case 4 -> entry.wage;
 				default -> null;
@@ -107,9 +107,8 @@ public class WagesOverviewPanel extends JPanel {
 	}
 
 	private class Entry {
-		HTWeek htWeek;
 		int age;
-		Date economyUpdate;
+		HODateTime economyUpdate;
 		int wage;
 	}
 }

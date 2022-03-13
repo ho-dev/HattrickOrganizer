@@ -13,7 +13,6 @@ import core.file.xml.XMLWorldDetailsParser;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 import core.util.HelperWrapper;
 import core.HO;
 
@@ -138,8 +137,8 @@ class NthrfConvertXml2Hrf {
 		m_sHRFBuffer.append("[basics]\n");
 		m_sHRFBuffer.append("application=HO\n");
 		m_sHRFBuffer.append("appversion=").append(HO.VERSION).append("\n");
-		var fetched = new HTDatetime(details.getFetchedDate());
-		m_sHRFBuffer.append("date=").append(fetched.getHattrickTimeAsString()).append("\n");
+		var fetched = details.getFetchedDate();
+		m_sHRFBuffer.append("date=").append(fetched.toHT()).append("\n");
 		m_sHRFBuffer.append("season=" + "38" + "\n"); 		//TODO: Season
 		m_sHRFBuffer.append("matchround=" + "7" + "\n"); 	//TODO: MatchRound
 		m_sHRFBuffer.append("teamID=").append(details.getTeamId()).append("\n");

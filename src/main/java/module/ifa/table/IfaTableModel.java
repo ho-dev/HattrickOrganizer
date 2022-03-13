@@ -69,7 +69,7 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 			case COL_LOST:
 				return stat.getMatchesLost();
 			case COL_LASTMATCH:
-				return new Date(stat.getLastMatchDate());
+				return stat.getLastMatchDate();
 			case COL_COOLNESS:
 				return PluginIfaUtils.getCoolness(stat.getCountry().getCountryId());
 			}
@@ -86,7 +86,7 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 			case COL_LOST:
 				return this.summary.getLostTotal();
 			case COL_LASTMATCH:
-				return new Date(this.summary.getLastMatch());
+				return this.summary.getLastMatchDate();
 			case COL_COOLNESS:
 				return this.summary.getCoolnessTotal();
 			}
@@ -96,43 +96,30 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		switch (columnIndex) {
-		case COL_PLAYED:
-			return Integer.class;
-		case COL_WON:
-			return Integer.class;
-		case COL_DRAW:
-			return Integer.class;
-		case COL_LOST:
-			return Integer.class;
-		case COL_LASTMATCH:
-			return Date.class;
-		case COL_COOLNESS:
-			return Double.class;
-		}
-		return super.getColumnClass(columnIndex);
+		return switch (columnIndex) {
+			case COL_PLAYED -> Integer.class;
+			case COL_WON -> Integer.class;
+			case COL_DRAW -> Integer.class;
+			case COL_LOST -> Integer.class;
+			case COL_LASTMATCH -> Date.class;
+			case COL_COOLNESS -> Double.class;
+			default -> super.getColumnClass(columnIndex);
+		};
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		switch (columnIndex) {
-		case COL_COUNTRY:
-			return HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.country");
-		case COL_PLAYED:
-			return HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.played");
-		case COL_WON:
-			return HOVerwaltung.instance().getLanguageString("Gewonnen");
-		case COL_DRAW:
-			return HOVerwaltung.instance().getLanguageString("Unendschieden");
-		case COL_LOST:
-			return HOVerwaltung.instance().getLanguageString("Verloren");
-		case COL_LASTMATCH:
-			return HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.lastMatch");
-		case COL_COOLNESS:
-			return HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.coolness");
-		}
+		return switch (columnIndex) {
+			case COL_COUNTRY -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.country");
+			case COL_PLAYED -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.played");
+			case COL_WON -> HOVerwaltung.instance().getLanguageString("Gewonnen");
+			case COL_DRAW -> HOVerwaltung.instance().getLanguageString("Unendschieden");
+			case COL_LOST -> HOVerwaltung.instance().getLanguageString("Verloren");
+			case COL_LASTMATCH -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.lastMatch");
+			case COL_COOLNESS -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.coolness");
+			default -> null;
+		};
 
-		return null;
 	}
 
 	@Override

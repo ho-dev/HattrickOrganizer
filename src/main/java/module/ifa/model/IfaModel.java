@@ -15,15 +15,15 @@ public class IfaModel {
 
 	public static final int APACHE_LEAGUE_ID = 1001;
 
-	private final List<IfaMatch> visited = new ArrayList<IfaMatch>();
-	private final List<IfaMatch> hosted = new ArrayList<IfaMatch>();
+	private final List<IfaMatch> visited = new ArrayList<>();
+	private final List<IfaMatch> hosted = new ArrayList<>();
 	private List<IfaStatistic> hostedStatistic;
 	private List<IfaStatistic> visitedStatistic;
 	private Summary visitedSummary;
 	private Summary hostedSummary;
 	private double maxCoolness;
 	private int totalCountries;
-	private final List<ModelChangeListener> listeners = new ArrayList<ModelChangeListener>();
+	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
 	public IfaModel() {
 		init();
@@ -142,7 +142,7 @@ public class IfaModel {
 				} else {
 					stat.increaseLost();
 				}
-			} else if (match.getHomeTeamGoals() > match.getAwayTeamGoals()) {
+			} else {
 				if (away) {
 					stat.increaseLost();
 				} else {
@@ -151,17 +151,17 @@ public class IfaModel {
 			}
 		}
 
-		long matchTimestamp = match.getPlayedDate().getTime();
-		if (stat.getLastMatchDate() < matchTimestamp) {
+		var matchTimestamp = match.getPlayedDate();
+		var statMatchDate = stat.getLastMatchDate();
+		if (statMatchDate == null || statMatchDate.isBefore(matchTimestamp)) {
 			stat.setLastMatchDate(matchTimestamp);
 		}
 	}
 
 	private void createVisitedStatistic() {
-		Map<Integer, IfaStatistic> map = new HashMap<Integer, IfaStatistic>();
+		Map<Integer, IfaStatistic> map = new HashMap<>();
 		for (IfaMatch match : this.visited) {
-			Integer id = Integer.valueOf(WorldDetailsManager.instance()
-					.getWorldDetailLeagueByLeagueId(match.getHomeLeagueId()).getCountryId());
+			Integer id = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getHomeLeagueId()).getCountryId();
 			IfaStatistic stat = map.get(id);
 			if (stat == null) {
 				stat = new IfaStatistic();
@@ -171,14 +171,13 @@ public class IfaModel {
 
 			updateStats(stat, match, true);
 		}
-		this.visitedStatistic = new ArrayList<IfaStatistic>(map.values());
+		this.visitedStatistic = new ArrayList<>(map.values());
 	}
 
 	private void createHostedStatistic() {
-		Map<Integer, IfaStatistic> map = new HashMap<Integer, IfaStatistic>();
+		Map<Integer, IfaStatistic> map = new HashMap<>();
 		for (IfaMatch match : this.hosted) {
-			Integer id = Integer.valueOf(WorldDetailsManager.instance()
-					.getWorldDetailLeagueByLeagueId(match.getAwayLeagueId()).getCountryId());
+			Integer id = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getAwayLeagueId()).getCountryId();
 			IfaStatistic stat = map.get(id);
 			if (stat == null) {
 				stat = new IfaStatistic();
@@ -188,7 +187,7 @@ public class IfaModel {
 
 			updateStats(stat, match, false);
 		}
-		this.hostedStatistic = new ArrayList<IfaStatistic>(map.values());
+		this.hostedStatistic = new ArrayList<>(map.values());
 	}
 
 	public int getTotalCountries() {

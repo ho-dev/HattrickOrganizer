@@ -2,6 +2,7 @@ package core.gui.comp.table;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.util.HODateTime;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -354,14 +355,5 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 	}
 
-	static public String formatTime( Timestamp ts){
-		if (ts != null ) return DateFormat.getDateTimeInstance().format(ts);
-		return "";
-	}
-
-	static public long time2Int(Timestamp ts){
-		if ( ts!= null) return ts.getTime();
-		return 0l;
-	}
 
 }

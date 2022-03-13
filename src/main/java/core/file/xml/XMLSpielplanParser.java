@@ -7,6 +7,7 @@
 package core.file.xml;
 
 import core.model.series.Paarung;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.series.Spielplan;
@@ -28,7 +29,7 @@ public class XMLSpielplanParser {
 	}
 
 	public static Spielplan parseSpielplanFromString(String input) {
-		Spielplan plan = null;
+		Spielplan plan;
 		try {
 			plan = createSpielplan(XMLManager.parseString(input));
 		} catch (RuntimeException e) {
@@ -39,8 +40,8 @@ public class XMLSpielplanParser {
 		return plan;
 	}
 
-	private static Paarung createPaarung(Element ele) throws Exception {
-		Element tmp = null;
+	private static Paarung createPaarung(Element ele) {
+		Element tmp;
 		Paarung spiel = new Paarung();
 
 		tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
@@ -56,7 +57,7 @@ public class XMLSpielplanParser {
 		tmp = (Element) ele.getElementsByTagName("AwayTeamName").item(0);
 		spiel.setGastName(tmp.getFirstChild().getNodeValue());
 		tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-		spiel.setDatum(tmp.getFirstChild().getNodeValue());
+		spiel.setDatum(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
 
 		// Zum Schluss weil nicht immer vorhanden
 		if (ele.getElementsByTagName("AwayGoals").getLength() > 0) {
@@ -71,9 +72,9 @@ public class XMLSpielplanParser {
 
 	private static Spielplan createSpielplan(Document doc) {
 		Spielplan plan = new Spielplan();
-		Element ele = null;
-		Element root = null;
-		NodeList list = null;
+		Element ele;
+		Element root;
+		NodeList list;
 
 		if (doc == null) {
 			return plan;
@@ -97,7 +98,7 @@ public class XMLSpielplanParser {
 			ele = (Element) root.getElementsByTagName("Season").item(0);
 			plan.setSaison(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			plan.setFetchDate(Helper.parseDate(ele.getFirstChild().getNodeValue()));
+			plan.setFetchDate(HODateTime.fromHT(ele.getFirstChild().getNodeValue()));
 
 			// Einträge adden
 			list = root.getElementsByTagName("Match");

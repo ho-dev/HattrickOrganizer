@@ -26,6 +26,7 @@ import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
+import core.util.HODateTime;
 import core.util.Helper;
 import module.lineup.Lineup;
 import module.matches.statistics.MatchesHighlightsTable;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -583,12 +585,10 @@ public final class MatchesPanel extends LazyImagePanel {
 	private void updateButtons() {
 		deleteButton.setEnabled(true);
 		simulateMatchButton.setEnabled(true);
-		long gameFinishTime = matchesModel.getMatch().getMatchDateAsTimestamp().getTime() + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
-
+		var gameFinishTime = matchesModel.getMatch().getMatchSchedule().plus(3, ChronoUnit.HOURS); //assuming 3 hours to make sure the game is finished
 		boolean gameFinished = matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED ||
-				gameFinishTime < new Date().getTime();
+				gameFinishTime.isBefore(HODateTime.now()) ;
 		reloadMatchButton.setEnabled(gameFinished);
-
 		if (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED) {
 			final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			adoptLineupButton.setEnabled((matchesModel.getMatch().getHomeTeamID() == teamid)

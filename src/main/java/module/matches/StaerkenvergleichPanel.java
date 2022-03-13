@@ -212,7 +212,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 
 			// Stimmung und Selbstvertrauen
-			int hrfid = DBManager.instance().getHRFID4Date(info.getMatchDateAsTimestamp());
+			int hrfid = DBManager.instance().getHRFID4Date(info.getMatchSchedule().toDbTimestamp());
 			String[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauen(
 					hrfid);
 
@@ -236,13 +236,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.matchesModel.addMatchModelChangeListener(new MatchModelChangeListener() {
-
-			@Override
-			public void matchChanged() {
-				setNeedsRefresh(true);
-			}
-		});
+		this.matchesModel.addMatchModelChangeListener(() -> setNeedsRefresh(true));
 	}
 
 	private void initComponents() {

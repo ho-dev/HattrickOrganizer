@@ -6,7 +6,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.Ratings;
 import core.model.UserParameter;
-import core.model.match.StyleOfPlay;
 import core.model.match.Weather;
 import core.model.player.Player;
 import module.lineup.assistant.LineupAssistantPanel;
@@ -211,7 +210,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 					}
 					Player player = ((PlayerTable) sourceTable).getPlayer(row);
 					if (player != null) {
-						HOMainFrame.instance().setActualSpieler(player);
+						HOMainFrame.instance().selectPlayer(player);
 					}
 				}
 			}

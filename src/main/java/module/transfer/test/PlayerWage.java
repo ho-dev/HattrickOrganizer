@@ -1,35 +1,26 @@
 package module.transfer.test;
 
+import core.util.HODateTime;
+
 import java.util.Date;
 
 public class PlayerWage {
 
 	private int age;
 	private int wage;
-	private HTWeek week;
-	private Date financialUpdateDate;
+	private HODateTime financialUpdateDate;
 
 	public int getWage() {
 		return wage;
 	}
-
 	public void setWage(int wage) {
 		this.wage = wage;
 	}
-
-	public HTWeek getWeek() {
-		return week;
-	}
-
-	public void setWeek(HTWeek week) {
-		this.week = week;
-	}
-
-	public Date getFinancialUpdateDate() {
+	public HODateTime getFinancialUpdateDate() {
 		return financialUpdateDate;
 	}
 
-	public void setFinancialUpdateDate(Date financialUpdateDate) {
+	public void setFinancialUpdateDate(HODateTime financialUpdateDate) {
 		this.financialUpdateDate = financialUpdateDate;
 	}
 

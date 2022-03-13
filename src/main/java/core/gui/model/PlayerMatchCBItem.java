@@ -5,6 +5,7 @@ import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
+import core.util.HODateTime;
 
 
 /**
@@ -17,7 +18,7 @@ public class PlayerMatchCBItem {
     private Player m_clPlayer;
     private String m_clGastteam;
     private String m_clHeimteam;
-    private String m_clMatchdate;
+    private HODateTime m_clMatchdate;
     private String m_sSelbstvertrauen;
     private String m_sTeamSpirit;
     private float m_fRating;
@@ -33,7 +34,7 @@ public class PlayerMatchCBItem {
      * Creates a new SpielerMatchCBItem object.
      */
     public PlayerMatchCBItem(Player player, int matchid, float rating, int positionsid,
-                             String matchdate, String heimteam, int heimid, String gastteam,
+                             HODateTime matchdate, String heimteam, int heimid, String gastteam,
                              int gastid, MatchType matchtyp, Matchdetails matchdetails,
                              String selbstvertrauen, String stimmung) {
         m_clPlayer = player;
@@ -146,7 +147,7 @@ public class PlayerMatchCBItem {
     /**
      * Setter for property m_iMatchTyp.
      *
-     * @param m_iMatchTyp New value of property m_iMatchTyp.
+     * @param m_mtMatchTyp New value of property m_iMatchTyp.
      */
     public final void setMatchTyp(IMatchType m_mtMatchTyp) {
         this.m_mtMatchTyp = m_mtMatchTyp;
@@ -166,7 +167,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_clMatchdate New value of property m_clMatchdate.
      */
-    public final void setMatchdate(String m_clMatchdate) {
+    public final void setMatchdate(HODateTime m_clMatchdate) {
         this.m_clMatchdate = m_clMatchdate;
     }
 
@@ -175,7 +176,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_clMatchdate.
      */
-    public final String getMatchdate() {
+    public final HODateTime getMatchdate() {
         return m_clMatchdate;
     }
 

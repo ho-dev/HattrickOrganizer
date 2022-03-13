@@ -13,23 +13,19 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
 import core.gui.theme.*;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
-import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.module.IModule;
 import core.net.HattrickLink;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
-import core.util.HTDatetime;
 import core.util.Helper;
 import module.statistics.StatistikMainPanel;
 import java.awt.*;
@@ -110,7 +106,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         RefreshManager.instance().registerRefreshable(this);
     }
 
-
     /**
      * Set the player to be shown
      */
@@ -119,10 +114,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             if (HOMainFrame.isHOMainFrame_initialized()) {
                 player = HOMainFrame.instance().getSelectedPlayer();
             }
-            else {
-                // at initialisation select first player to ensure clean display =====
-                player = m_playerOverviewTable.getSorter().getSpieler(0);
-            }
+        }
+        if  ( player == null) {
+            // at initialisation select first player to ensure clean display =====
+            player = m_playerOverviewTable.getSorter().getSpieler(0);
         }
 
         m_clPlayer = player;
@@ -1094,9 +1089,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
-        public void update(int i, String matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
+        public void update(int i, HODateTime matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
                            String matchRating, int matchID){
-            lMatchDate.get(i).setText(matchDate);
+            lMatchDate.get(i).setText(HODateTime.toLocaleDateTime(matchDate));
 
             lMatchLabel.get(i).setText(matchLabel);
             lMatchLabel.get(i).setIcon(matchTypeIcon);

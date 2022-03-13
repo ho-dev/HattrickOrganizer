@@ -15,6 +15,7 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.misc.TrainingEvent;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -35,6 +36,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,11 +95,11 @@ public class OnlineWorker {
 				if (hrf.contains("playingMatch=true")) {
 					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_Spiel"),
-							getLangString("NO_HRF_ERROR"), 1);
+							getLangString("NO_HRF_ERROR"), JOptionPane.INFORMATION_MESSAGE);
 				} else if (hrf.contains("NOT AVAILABLE")) {
 					HOMainFrame.instance().resetInformation();
 					JOptionPane.showMessageDialog(parent, getLangString("NO_HRF_ERROR"),
-							getLangString("NO_HRF_ERROR"), 1);
+							getLangString("NO_HRF_ERROR"), JOptionPane.INFORMATION_MESSAGE);
 				} else {
 					// Create HOModel from the hrf data
 					HOModel homodel = HRFStringParser.parse(hrf);
@@ -147,19 +149,10 @@ public class OnlineWorker {
 	 *
 	 * @return The list of MatchKurzInfo. This can be null on error, or empty.
 	 */
-	public static List<MatchKurzInfo> getMatchArchive(int teamId, Date firstDate, boolean store) {
+	public static List<MatchKurzInfo> getMatchArchive(int teamId, HODateTime firstDate, boolean store) {
 
 		List<MatchKurzInfo> allMatches = new ArrayList<>();
-		GregorianCalendar tempBeginn = new GregorianCalendar();
-		tempBeginn.setTime(firstDate);
-		GregorianCalendar tempEnd = new GregorianCalendar();
-		tempEnd.setTimeInMillis(tempBeginn.getTimeInMillis());
-		tempEnd.add(Calendar.MONTH, 3);
-
-		GregorianCalendar endDate = new GregorianCalendar();
-		if (!tempEnd.before(endDate)) {
-			tempEnd.setTime(endDate.getTime());
-		}
+		var endDate = HODateTime.now();
 
 		// Show wait Dialog
 		showWaitInformation(1);
@@ -167,11 +160,15 @@ public class OnlineWorker {
 		try {
 			String matchesString;
 
-			while (tempBeginn.before(endDate)) {
+			while (firstDate.isBefore(endDate)) {
+				var lastDate=firstDate.plus(90, ChronoUnit.DAYS);
+				if (!lastDate.isBefore(endDate)) {
+					lastDate = endDate;
+				}
+
 				try {
 					showWaitInformation(10);
-					matchesString = MyConnector.instance().getMatchesArchive(teamId, tempBeginn.getTime(),
-							tempEnd.getTime());
+					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
 					showWaitInformation(20);
 				} catch (Exception e) {
 					// Info
@@ -192,12 +189,7 @@ public class OnlineWorker {
 				allMatches.addAll(matches);
 
 				// Zeitfenster neu setzen
-				tempBeginn.add(Calendar.MONTH, 3);
-				tempEnd.add(Calendar.MONTH, 3);
-
-				if (!tempEnd.before(endDate)) {
-					tempEnd.setTime(endDate.getTime());
-				}
+				firstDate = firstDate.plus(90, ChronoUnit.DAYS);
 			}
 
 			// Store in the db if store is true
@@ -285,7 +277,7 @@ public class OnlineWorker {
 						info.setHomeTeamID(details.getHomeTeamId());
 						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
-						info.setMatchSchedule(details.getMatchDate().toString());
+						info.setMatchSchedule(details.getMatchDate());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);
@@ -297,19 +289,14 @@ public class OnlineWorker {
 							if (!info.getWeatherForecast().isSure()) {
 								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
 								if ( regiondetails != null) {
-									SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
-									java.sql.Timestamp matchDate = info.getMatchDateAsTimestamp();
-									java.sql.Timestamp weatherDate = regiondetails.getFetchDatum();
-									String wdate = fmt.format(weatherDate);
-									String mdate = fmt.format(matchDate);
-									if (mdate.equals(wdate)) {
+									var matchDate = info.getMatchSchedule().toLocaleDate();
+									var weatherDate = regiondetails.getFetchDatum().toLocaleDate();
+									if (matchDate.equals(weatherDate)) {
 										info.setWeatherForecast(Weather.Forecast.TODAY);
 										info.setWeather(regiondetails.getWeather());
 									} else {
-										Calendar c = Calendar.getInstance();
-										c.setTime(fmt.parse(wdate));
-										c.add(Calendar.DATE, 1);
-										if (fmt.format(c.getTime()).equals(mdate)) {
+										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS).toLocaleDate();
+										if (matchDate.equals(forecastDate)) {
 											info.setWeatherForecast(Weather.Forecast.TOMORROW);
 										} else {
 											info.setWeatherForecast((Weather.Forecast.UNSURE));
@@ -457,11 +444,9 @@ public class OnlineWorker {
 	 *         if match could not be downloaded.
 	 */
 	public static @Nullable MatchKurzInfo updateMatch(int teamId, MatchKurzInfo match) {
-		Calendar cal = new GregorianCalendar();
-		cal.setTime(match.getMatchDateAsTimestamp());
-		cal.add(Calendar.MINUTE, 1);
+		var matchDate = match.getMatchSchedule();
 		// At the moment, HT does not support getting a single match.
-		List<MatchKurzInfo> matches = getMatches(teamId, cal.getTime());
+		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
 				//DBManager.instance().updateMatchKurzInfo(m);
@@ -481,7 +466,7 @@ public class OnlineWorker {
 	 *            last date (+time) to get matches to.
 	 * @return the most recent and upcoming matches up to the given date.
 	 */
-	public static List<MatchKurzInfo> getMatches(int teamId, Date date) {
+	public static List<MatchKurzInfo> getMatches(int teamId, HODateTime date) {
 		String matchesString = null;
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, true, date);
@@ -722,7 +707,6 @@ public class OnlineWorker {
 		try {
 			showWaitInformation(10);
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
-			bOK = (leagueFixtures != null && leagueFixtures.length() > 0);
 			showWaitInformation(50);
 			return XMLSpielplanParser.parseSpielplanFromString(leagueFixtures);
 		} catch (Exception e) {
@@ -1217,21 +1201,18 @@ public class OnlineWorker {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 
-	final static long oneDay = 24L*60L*60L*1000L;
-	final static long threeMonths = 3L*30L*oneDay;
-
-	public static void downloadMissingYouthMatchData(HOModel model, Timestamp dateSince) {
+	public static void downloadMissingYouthMatchData(HOModel model, HODateTime dateSince) {
 		var youthteamid = model.getBasics().getYouthTeamId();
-		var lastStoredYouthMatchDate = DBManager.instance().getLastYouthMatchDate();
+		var lastStoredYouthMatchDate = HODateTime.fromDbTimestamp(DBManager.instance().getLastYouthMatchDate());
 
-		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.after(dateSince) ){
+		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.isAfter(dateSince) ){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
 			dateSince = lastStoredYouthMatchDate;
 		}
 
-		for (Timestamp dateUntil; dateSince != null; dateSince = dateUntil) {
-			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
-				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
+		for (HODateTime dateUntil; dateSince != null; dateSince = dateUntil) {
+			if (dateSince.isBefore(HODateTime.now().minus(90, ChronoUnit.DAYS))){
+				dateUntil = dateSince.plus(90, ChronoUnit.DAYS);
 			}
 			else {
 				dateUntil = null;	// until now
@@ -1244,7 +1225,6 @@ public class OnlineWorker {
 					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {
 						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
-						//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
 						DBManager.instance().storeMatchDetails(details);
 						DBManager.instance().storeMatchLineup(lineup, youthteamid);
 						lineup.setMatchDetails(details);

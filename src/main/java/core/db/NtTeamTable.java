@@ -3,6 +3,7 @@ package core.db;
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.model.Team;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.nthrf.NtTeamDetails;
 
@@ -147,7 +148,7 @@ final class NtTeamTable extends AbstractTable {
 		team.setRatingScore(DBManager.getInteger(rs, "RATING"));
 		team.setFanclubSize(DBManager.getInteger(rs, "FANCLUBSIZE"));
 		team.setRank(DBManager.getInteger(rs, "RANK"));
-		team.setFetchedDate(DBManager.getTimestamp(rs, "FETCHEDDATE"));
+		team.setFetchedDate(HODateTime.fromDbTimestamp(DBManager.getTimestamp(rs, "FETCHEDDATE")));
 		return team;
 	}
 

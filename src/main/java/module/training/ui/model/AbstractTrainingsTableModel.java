@@ -29,13 +29,16 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     public AbstractTrainingsTableModel(TrainingType _trainingType) {
         o_trainingType = _trainingType;
         o_Data = new Object[][]{};
-        o_ColumnNames = new String[6];
-        o_ColumnNames[0] = Helper.getTranslation("ls.youth.player.training.date");
-        o_ColumnNames[1] = Helper.getTranslation("ls.team.trainingtype");
-        o_ColumnNames[2] = Helper.getTranslation("ls.team.trainingintensity");
-        o_ColumnNames[3] = Helper.getTranslation("ls.team.staminatrainingshare");
-        o_ColumnNames[4] = Helper.getTranslation("ls.team.coachingskill");
-        o_ColumnNames[5] = Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level");
+        o_ColumnNames = new String[]{
+                Helper.getTranslation("ls.youth.player.training.date"),
+                Helper.getTranslation("Season"),
+                Helper.getTranslation("Week"),
+                Helper.getTranslation("ls.team.trainingtype"),
+                Helper.getTranslation("ls.team.trainingintensity"),
+                Helper.getTranslation("ls.team.staminatrainingshare"),
+                Helper.getTranslation("ls.team.coachingskill"),
+                Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level")
+        };
     }
 
     public void setTrainingsPerWeek(List<TrainingPerWeek> trainingsPerWeek) {
@@ -61,17 +64,15 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
             tpw = o_TrainingsPerWeek.get(iRow);
         }
 
-        if (iCol == 1) {
-            CBItem sel = (CBItem) value;
-            tpw.setTrainingType(sel.getId());
-        } else if (iCol == 2) {
-            tpw.setTrainingIntensity((Integer) value);
-        } else if (iCol == 3) {
-            tpw.setStaminaPart((Integer) value);
-        } else if (iCol == 4) {
-            tpw.setCoachLevel((Integer) value);
-        } else if (iCol == 5) {
-            tpw.setTrainingAssistantLevel((Integer) value);
+        switch (iCol) {
+            case 3 -> {
+                CBItem sel = (CBItem) value;
+                tpw.setTrainingType(sel.getId());
+            }
+            case 4 -> tpw.setTrainingIntensity((Integer) value);
+            case 5 -> tpw.setStaminaPart((Integer) value);
+            case 6 -> tpw.setCoachLevel((Integer) value);
+            case 7 -> tpw.setTrainingAssistantLevel((Integer) value);
         }
 
         tpw.setSource(DBDataSource.MANUAL);
@@ -93,7 +94,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      */
     @Override
 	public boolean isCellEditable(int row, int column) {
-        return (column > 0);
+        return (column > 2);
     }
 
     @Override
@@ -152,5 +153,31 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     /**
      * Method to be called to populate the table with the data from HO API
      */
-    public abstract void populate(List<TrainingPerWeek> trainings);
+    public void populate(List<TrainingPerWeek> trainings) {
+        setTrainingsPerWeek(trainings);
+        o_Data = new Object[getRowCount()][getColumnCount()];
+
+        if (this.o_TrainingsPerWeek == null || this.o_TrainingsPerWeek.isEmpty()) {
+            return;
+        }
+
+        int iRow = 0;
+
+        for (TrainingPerWeek tpw : this.o_TrainingsPerWeek) {
+
+            var trainingDate = tpw.getTrainingDate();
+            var trainingWeek = trainingDate.toLocaleHTWeek();
+            o_Data[iRow][0] = trainingDate.toLocaleDateTime();
+            o_Data[iRow][1] = trainingWeek.season;
+            o_Data[iRow][2] = trainingWeek.week;
+            o_Data[iRow][3] = new CBItem(core.constants.TrainingType.toString(tpw.getTrainingType()),	tpw.getTrainingType());
+            o_Data[iRow][4] = tpw.getTrainingIntensity();
+            o_Data[iRow][5] = tpw.getStaminaShare();
+            o_Data[iRow][6] = tpw.getCoachLevel();
+            o_Data[iRow][7] = tpw.getTrainingAssistantsLevel();
+            iRow ++;
+        }
+
+        fireTableDataChanged();
+    }
 }

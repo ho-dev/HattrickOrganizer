@@ -7,6 +7,7 @@ import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.net.OnlineWorker;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
@@ -26,8 +27,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private String m_sGastName = "";
     private String m_sHeimName = "";
     private String m_sMatchreport = "";
-    private Timestamp m_clFetchDatum;
-    private Timestamp m_clSpielDatum;
+    private HODateTime m_clFetchDatum;
+    private HODateTime m_clSpielDatum;
     private ArrayList<MatchEvent> m_vHighlights;
     private int m_iArenaID = -1;
     private int m_iGastId = -1;
@@ -586,7 +587,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @param m_clFetchDatum New value of property m_clFetchDatum.
      */
-    public final void setFetchDatum(java.sql.Timestamp m_clFetchDatum) {
+    public final void setFetchDatum(HODateTime m_clFetchDatum) {
         this.m_clFetchDatum = m_clFetchDatum;
     }
 
@@ -595,7 +596,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_clFetchDatum.
      */
-    public final java.sql.Timestamp getFetchDatum() {
+    public final HODateTime getFetchDatum() {
         return m_clFetchDatum;
     }
 
@@ -603,30 +604,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * Getter for property m_lDatum.
      */
     public final boolean setFetchDatumFromString(String date) {
-        m_clFetchDatum = Basics.parseHattrickDate(date);
+        m_clFetchDatum = HODateTime.fromHT(date);
         return m_clFetchDatum != null;
-        /*
-        try {
-            //Hattrick
-            final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-                    java.util.Locale.GERMANY);
-
-            m_clFetchDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-        } catch (Exception e) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                        java.util.Locale.GERMANY);
-
-                m_clFetchDatum = new java.sql.Timestamp(simpleFormat.parse(date).getTime());
-            } catch (Exception ex) {
-                HOLogger.instance().log(getClass(), ex);
-                m_clFetchDatum = null;
-                return false;
-            }
-        }
-
-        return true;*/
     }
 
     /**
@@ -1330,7 +1309,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @param m_clSpielDatum New value of property m_clSpielDatum.
      */
-    public final void setSpielDatum(java.sql.Timestamp m_clSpielDatum) {
+    public final void setSpielDatum(HODateTime m_clSpielDatum) {
         this.m_clSpielDatum = m_clSpielDatum;
     }
 
@@ -1339,7 +1318,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_clSpielDatum.
      */
-    public final java.sql.Timestamp getMatchDate() {
+    public final HODateTime getMatchDate() {
         return m_clSpielDatum;
     }
 
@@ -1349,7 +1328,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      * @return Value of property m_lDatum.
      */
     public final boolean setSpielDatumFromString(String date) {
-        m_clSpielDatum = Basics.parseHattrickDate(date);
+        m_clSpielDatum = HODateTime.fromHT(date);
         return m_clSpielDatum != null;
     }
 
@@ -1516,16 +1495,10 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         double correctedCentralWeigth = CENTRAL_WEIGHT;
 
         switch (getHomeTacticType()) {
-            case IMatchDetails.TAKTIK_MIDDLE:
-                correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (getHomeTacticSkill() - 1)) / 19d) + 0.2);
-                break;
-
-            case IMatchDetails.TAKTIK_WINGS:
-                correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (getHomeTacticSkill() - 1)) / 19d) + 0.2);
-                break;
-
-            default:
-                break;
+            case IMatchDetails.TAKTIK_MIDDLE -> correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (getHomeTacticSkill() - 1)) / 19d) + 0.2);
+            case IMatchDetails.TAKTIK_WINGS -> correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (getHomeTacticSkill() - 1)) / 19d) + 0.2);
+            default -> {
+            }
         }
 
         final double correctedWingerWeight = (1 - correctedCentralWeigth) / 2d;
@@ -1562,16 +1535,10 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         double correctedCentralWeigth = CENTRAL_WEIGHT;
 
         switch (getGuestTacticType()) {
-            case IMatchDetails.TAKTIK_MIDDLE:
-                correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (getGuestTacticSkill() - 1)) / 19d) + 0.2);
-                break;
-
-            case IMatchDetails.TAKTIK_WINGS:
-                correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (getGuestTacticSkill() - 1)) / 19d) + 0.2);
-                break;
-
-            default:
-                break;
+            case IMatchDetails.TAKTIK_MIDDLE -> correctedCentralWeigth = CENTRAL_WEIGHT + (((0.2 * (getGuestTacticSkill() - 1)) / 19d) + 0.2);
+            case IMatchDetails.TAKTIK_WINGS -> correctedCentralWeigth = CENTRAL_WEIGHT - (((0.2 * (getGuestTacticSkill() - 1)) / 19d) + 0.2);
+            default -> {
+            }
         }
 
         final double correctedWingerWeight = (1 - correctedCentralWeigth) / 2d;

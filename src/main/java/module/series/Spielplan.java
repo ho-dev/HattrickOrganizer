@@ -1,6 +1,7 @@
 package module.series;
 
 import core.model.series.*;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
@@ -17,7 +18,7 @@ public class Spielplan  {
     protected LigaTabelle m_clTabelle;
     protected String m_sLigaName = "";
     protected Tabellenverlauf m_clVerlauf;
-    protected Timestamp m_clFetchDate;
+    protected HODateTime m_clFetchDate;
     protected List<Paarung> m_vEintraege = new ArrayList<>();
     protected int m_iLigaId = -1;
     protected int m_iSaison = -1;
@@ -39,7 +40,7 @@ public class Spielplan  {
      *
      * @param m_clFetchDate New value of property m_clFetchDate.
      */
-    public final void setFetchDate(java.sql.Timestamp m_clFetchDate) {
+    public final void setFetchDate(HODateTime m_clFetchDate) {
         this.m_clFetchDate = m_clFetchDate;
     }
 
@@ -48,7 +49,7 @@ public class Spielplan  {
      *
      * @return Value of property m_clFetchDate.
      */
-    public final java.sql.Timestamp getFetchDate() {
+    public final HODateTime getFetchDate() {
         return m_clFetchDate;
     }
 

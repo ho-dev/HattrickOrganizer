@@ -7,8 +7,8 @@ import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
 import core.net.OnlineWorker;
+import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.HTDatetime;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sHeimName = "";
 
-	private HTDatetime m_matchSchedule;
+	private HODateTime m_matchSchedule;
 
 	/** orders given for this match? */
 	private boolean ordersGiven = true;
@@ -252,58 +252,12 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * Setter for property m_sMatchDate.
 	 * @param sMatchDate New value of property m_sMatchDate.
 	 */
-	public final void setMatchSchedule(String sMatchDate) {
-		m_matchSchedule = new HTDatetime(sMatchDate);
+	public final void setMatchSchedule(HODateTime sMatchDate) {
+		m_matchSchedule = sMatchDate;
 	}
 
-	/**
-	 * This function return the match schedule as provided by CHPP in xml files
-	 * This function should be avoided
-	 */
-	@Deprecated
-	public final String getMatchScheduleAsString() {
-		return m_matchSchedule.getHattrickTimeAsString();
-	}
-
-	public ZonedDateTime getMatchSchedule(boolean localized) {
-		if (localized) {
-			return m_matchSchedule.getUserLocalizedTime();
-		}
-		else{
-			return m_matchSchedule.getHattrickTime();
-		}
-	}
-
-	/**
-	 * Getter for property m_lDatum.
-	 * 
-	 * @return Value of property m_lDatum.
-	 */
-	public Timestamp getMatchDateAsTimestamp() {
-			return getMatchDateAsTimestamp(false);
-	}
-
-	/**
-	 * Getter for property m_lDatum.
-	 *
-	 * @return Value of property m_lDatum.
-	 */
-	public Timestamp getMatchDateAsTimestamp(boolean localized) {
-		if (localized) {
-			return m_matchSchedule.getUserLocalizedTimeAsTimestamp();
-		}
-		else{
-			return m_matchSchedule.getHattrickTimeAsTimestamp();
-		}
-	}
-
-	/**
-	 * get ht week of season
-	 *
-	 * @return 1..16
-	 */
-	public int getHTWeek(){
-		return m_matchSchedule.getHTWeekLocalized();
+	public HODateTime getMatchSchedule() {
+		return m_matchSchedule;
 	}
 
 	/**
@@ -436,21 +390,10 @@ public class MatchKurzInfo implements Comparable<Object> {
 	// --------------------------------------------------------------
 	@Override
 	public final int compareTo(@NotNull Object obj) {
-		if (obj instanceof MatchKurzInfo) {
-			final MatchKurzInfo info = (MatchKurzInfo) obj;
-
-			if (info.getMatchDateAsTimestamp().before(
-					this.getMatchDateAsTimestamp())) {
-				return -1;
-			} else if (info.getMatchDateAsTimestamp().after(
-					this.getMatchDateAsTimestamp())) {
-				return 1;
-			} else {
-				return 0;
-			}
+		if (obj instanceof final MatchKurzInfo info) {
+			return this.getMatchSchedule().compareTo(info.getMatchSchedule());
 		}
-
-		return 0;
+		return 1;
 	}
 
 
@@ -481,7 +424,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		setHomeTeamID(match.getHomeTeamID());
 		setHomeTeamName(match.getHomeTeamName());
 		setHomeTeamGoals(match.getHomeTeamGoals());
-		setMatchSchedule(match.getMatchScheduleAsString());
+		setMatchSchedule(match.getMatchSchedule());
 		setMatchStatus(match.getMatchStatus());
 		setOrdersGiven(match.isOrdersGiven());
 		setMatchType(match.getMatchType());

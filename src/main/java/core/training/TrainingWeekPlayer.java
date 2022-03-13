@@ -1,6 +1,7 @@
 package core.training;
 
 import core.model.player.Player;
+import core.util.HODateTime;
 
 import java.time.Instant;
 
@@ -72,7 +73,7 @@ public class TrainingWeekPlayer {
 		return this.player.getFullName();
 	}
 
-	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, Instant trainingDate) {
+	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HODateTime trainingDate) {
 		return player.getTrainingPriority(wt, trainingDate);
 	}
 

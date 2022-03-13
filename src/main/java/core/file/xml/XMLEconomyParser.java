@@ -1,9 +1,10 @@
 package core.file.xml;
 
 
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.util.Map;
-import core.util.HTDatetime;
+
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,8 +23,9 @@ public class XMLEconomyParser {
 		var mapEconomy = parseDetails(XMLManager.parseString(inputStream));
 
 		// Manually add SponsorsBonus which is missing in version <= 1.3
-		HTDatetime fetchedDate = new HTDatetime(mapEconomy.get("FetchedDate"));
-		var season = fetchedDate.getHTSeason();
+		var fetchedDate = HODateTime.fromHT(mapEconomy.get("FetchedDate"));
+		var htWeek = fetchedDate.toHTWeek();
+		var season = htWeek.season;
 		if ((Float.parseFloat(VERSION_ECONOMY) >= 1.3f ) && (season >= 80)){
 			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"IncomeSpectators", "IncomeSponsors", "IncomeFinancial", "IncomeTemporary", "IncomeSoldPlayers",
 					"IncomeSoldPlayersCommission"}, "IncomeSum");

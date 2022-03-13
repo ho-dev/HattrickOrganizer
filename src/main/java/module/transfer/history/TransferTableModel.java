@@ -88,7 +88,7 @@ class TransferTableModel extends AbstractTableModel {
 
         switch (columnIndex) {
             case 0:
-                return FORMAT.format(transfer.getDate());
+                return transfer.getDate().toLocaleDateTime();
 
             case 1:
                 return transfer.getSeason();

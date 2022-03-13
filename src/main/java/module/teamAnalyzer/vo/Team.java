@@ -3,6 +3,7 @@ package module.teamAnalyzer.vo;
 
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
+import core.util.HODateTime;
 
 /**
  * Team Object Class
@@ -26,7 +27,7 @@ public class Team implements Comparable<Team> {
     private IMatchType matchType;
 
     // Timestamp when next match is played
-    private java.sql.Timestamp time;
+    private HODateTime time;
 
     private boolean isHomeMatch;
 
@@ -43,11 +44,11 @@ public class Team implements Comparable<Team> {
         teamId = i;
     }
 
-    public void setTime(java.sql.Timestamp t) {
+    public void setTime(HODateTime t) {
         time = t;
     }
 
-    public java.sql.Timestamp getTime() {
+    public HODateTime getTime() {
         return time;
     }
 

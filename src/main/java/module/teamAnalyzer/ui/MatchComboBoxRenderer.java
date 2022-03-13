@@ -6,14 +6,11 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
-import core.util.HTDatetime;
+import core.util.HODateTime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import javax.swing.*;
 
 
@@ -73,13 +70,13 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
         if (renderType == RenderType.TYPE_1) {
             String sDate = "";
             if ( value.getTime() != null) {
-                LocalDateTime matchSchedule = value.getTime().toLocalDateTime();
-                if (matchSchedule.getYear() > 1100) {
-                    sDate = new SimpleDateFormat("dd-MM-yyyy HH:mm ").format(value.getTime());
-                    var htdatetime = new HTDatetime(value.getTime());
-                    int iHTSeason = htdatetime.getHTSeasonLocalized();
-                    int iHTWeek = htdatetime.getHTWeekLocalized();
-                    sDate += "(" + iHTWeek + "/" + iHTSeason + ")";
+                var matchSchedule = value.getTime();
+                if (matchSchedule.isAfter(HODateTime.htStart)) {
+                    sDate = matchSchedule.toLocaleDateTime();
+                    var htWeek = matchSchedule.toLocaleHTWeek();
+                    int iHTSeason = htWeek.season;
+                    int iHTWeek = htWeek.week;
+                    sDate += " (" + iHTWeek + "/" + iHTSeason + ")";
                 }
             }
 

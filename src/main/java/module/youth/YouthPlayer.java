@@ -4,14 +4,15 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.CommentType;
 import core.model.player.Specialty;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.*;
 
-import static core.util.Helper.parseDate;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static module.training.Skills.HTSkillID.*;
@@ -24,8 +25,8 @@ public class YouthPlayer {
     private String lastName;
     private int ageYears;
     private int ageDays;
-    private Timestamp arrivalDate;
-    private Timestamp promotionDate;
+    private HODateTime arrivalDate;
+    private HODateTime promotionDate;
     private int canBePromotedIn;
     private String playerNumber;
     private String statement;
@@ -45,7 +46,7 @@ public class YouthPlayer {
     private Integer positionCode;
     private int playedMinutes;
     private Double rating;
-    private Timestamp youthMatchDate;
+    private HODateTime youthMatchDate;
 
     private double progressLastMatch=0;
 
@@ -71,7 +72,7 @@ public class YouthPlayer {
      *
      * mapping training match date to development entry
      */
-    private TreeMap<Timestamp, YouthTrainingDevelopmentEntry> trainingDevelopment;
+    private TreeMap<HODateTime, YouthTrainingDevelopmentEntry> trainingDevelopment;
 
 
     /**
@@ -176,11 +177,11 @@ public class YouthPlayer {
         this.ageDays = ageDays;
     }
 
-    public Timestamp getArrivalDate() {
+    public HODateTime getArrivalDate() {
         return arrivalDate;
     }
 
-    public void setArrivalDate(Timestamp arrivalDate) {
+    public void setArrivalDate(HODateTime arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
 
@@ -194,10 +195,9 @@ public class YouthPlayer {
      * @param date for which the duration should be calculated, typically the current date.
      * @return not negative number of days. 0 when the player can be promoted.
      */
-    public int getCanBePromotedInAtDate(long date) {
-        long hrftime = HOVerwaltung.instance().getModel().getBasics().getDatum().getTime();
-        long diff = (date - hrftime + 500*60*60*24) / (1000 * 60 * 60 * 24);
-        return max(0, canBePromotedIn - (int) diff);
+    public int getCanBePromotedInAtDate(HODateTime date) {
+        var diff = Duration.between( HOVerwaltung.instance().getModel().getBasics().getDatum().instant, date.instant);
+        return max(0, canBePromotedIn - (int) diff.toDays());
     }
 
     public void setCanBePromotedIn(int canBePromotedIn) {
@@ -348,11 +348,11 @@ public class YouthPlayer {
         this.rating = rating;
     }
 
-    public Timestamp getYouthMatchDate() {
+    public HODateTime getYouthMatchDate() {
         return youthMatchDate;
     }
 
-    public void setYouthMatchDate(Timestamp youthMatchDate) {
+    public void setYouthMatchDate(HODateTime youthMatchDate) {
         this.youthMatchDate = youthMatchDate;
     }
 
@@ -368,19 +368,15 @@ public class YouthPlayer {
         this.hrfid = hrfid;
     }
 
-    private Timestamp statusTime;
-    private Timestamp getStatusTime(){
-        if ( statusTime == null){
-            statusTime = DBManager.instance().getHrf(this.hrfid).getDatum();
-        }
-        return statusTime;
+    private HODateTime getStatusTime(){
+        return HOVerwaltung.instance().getModel().getBasics().getDatum();
     }
 
-    public Timestamp getPromotionDate() {
+    public HODateTime getPromotionDate() {
         return promotionDate;
     }
 
-    public void setPromotionDate(Timestamp promotionDate) {
+    public void setPromotionDate(HODateTime promotionDate) {
         this.promotionDate = promotionDate;
     }
 
@@ -418,7 +414,7 @@ public class YouthPlayer {
         this.currentSkills.put(skillinfo.getSkillID(), skillinfo);
     }
 
-    public TreeMap<Timestamp, YouthTrainingDevelopmentEntry> getTrainingDevelopment() {
+    public TreeMap<HODateTime, YouthTrainingDevelopmentEntry> getTrainingDevelopment() {
         if (trainingDevelopment == null) {
             calcTrainingDevelopment();
         }
@@ -490,7 +486,7 @@ public class YouthPlayer {
     /**
      * Cache of old skills info
      */
-    private Timestamp playerDevelopmentDate;
+    private HODateTime playerDevelopmentDate;
     private YouthPlayer oldPlayerInfo;
 
     /**
@@ -500,10 +496,10 @@ public class YouthPlayer {
      * @param date date of the requested player info
      * @return youth player state at date
      */
-    private YouthPlayer getOldPlayerInfo(Timestamp date){
+    private YouthPlayer getOldPlayerInfo(HODateTime date){
         if ( playerDevelopmentDate == null || !date.equals(playerDevelopmentDate)){
             playerDevelopmentDate = date;
-            oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date);
+            oldPlayerInfo = DBManager.instance().loadYouthPlayerOfMatchDate(this.id, date.toDbTimestamp());
         }
         return oldPlayerInfo;
     }
@@ -514,7 +510,7 @@ public class YouthPlayer {
      * @param date timestamp
      * @return youth player's skills
      */
-    private YouthSkillsInfo getSkillsAt(Timestamp date) {
+    private YouthSkillsInfo getSkillsAt(HODateTime date) {
         if (!date.equals(this.youthMatchDate)) {
             var oldPlayerInfo = getOldPlayerInfo(date);
             if (oldPlayerInfo != null) {
@@ -548,10 +544,10 @@ public class YouthPlayer {
      * @param date timestamp
      * @return youth player's skills
      */
-    private YouthSkillsInfo getSkillsBefore(Timestamp date) {
+    private YouthSkillsInfo getSkillsBefore(HODateTime date) {
         var ret = getStartSkills();
         for (var entry : this.trainingDevelopment.entrySet()) {
-            if (entry.getKey().before(date)) {
+            if (entry.getKey().isBefore(date)) {
                 ret = entry.getValue().getSkills();
             } else {
                 break;
@@ -565,7 +561,7 @@ public class YouthPlayer {
      * @param date timestamp
      * @return injury level
      */
-    private int getInjuryLevelAt(Timestamp date){
+    private int getInjuryLevelAt(HODateTime date){
         var oldPlayerInfo = getOldPlayerInfo(date);
         if ( oldPlayerInfo != null) return oldPlayerInfo.getInjuryLevel();
         return this.injuryLevel;
@@ -576,7 +572,7 @@ public class YouthPlayer {
      * @param date timestamp
      * @return boolean
      */
-    private boolean isSuspendedAt(Timestamp date){
+    private boolean isSuspendedAt(HODateTime date){
         var oldPlayerInfo = getOldPlayerInfo(date);
         if ( oldPlayerInfo != null) return oldPlayerInfo.isSuspended();
         return this.isSuspended();
@@ -591,7 +587,7 @@ public class YouthPlayer {
      * recalc skills since given date
      * @param since timestamp
      */
-    public void recalcSkills(Timestamp since) {
+    public void recalcSkills(HODateTime since) {
         if (trainingDevelopment != null) {
             var startSkills = getSkillsBefore(since);
             for (var entry : this.trainingDevelopment.tailMap(since, true).values()) {
@@ -611,7 +607,7 @@ public class YouthPlayer {
      * @param adjustment change of the start value
      * @param before adjust training development before given date
      */
-    public double adjustSkill(Skills.HTSkillID skillID, double adjustment, Timestamp before) {
+    public double adjustSkill(Skills.HTSkillID skillID, double adjustment, HODateTime before) {
         // start skills are examined from current skill infos
         var currentSkill = getSkillInfo(skillID);
         if (!isAdjusting) {
@@ -624,7 +620,7 @@ public class YouthPlayer {
                 var youthteamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
                 var skills = getStartSkills();
                 for (var trainingEntry : trainingDevelopment.values()) {
-                    if (!trainingEntry.getMatchDate().before(before)) break; // stop if before date is reached
+                    if (!trainingEntry.getMatchDate().isBefore(before)) break; // stop if before date is reached
                     var constraints = trainingEntry.getSkills(); // constraints (levels) are not changed
                     // this calculates all skill Ids, not only the requested one (this is a kind of overhead, i accept)
                     skills = trainingEntry.calcSkills(skills, constraints, trainingEntry.getTraining().getTeam(youthteamId));
@@ -655,12 +651,10 @@ public class YouthPlayer {
         return progressLastMatch;
     }
 
-    public int getAgeYearsAtDate(Timestamp matchDate) {
-        var hrfdate = this.getStatusTime().getTime();
-        long time = matchDate.getTime();
-        long diff = (hrfdate - time) / (1000 * 60 * 60 * 24);
-        long ageInDays = getAgeDays() + 112L * getAgeYears() - diff;
-        return (int)(ageInDays / 112);
+    public int getAgeYearsAtDate(HODateTime t) {
+        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        var diff = HODateTime.HODuration.between(hrfTime, t);
+        return new HODateTime.HODuration(this.getAgeYears(), this.getAgeDays()).plus(diff).seasons;
     }
 
     public YouthSkillsInfo getCurrentSkills() {
@@ -749,7 +743,7 @@ public class YouthPlayer {
         lastName = properties.getProperty("lastname", "");
         ageYears = getInt(properties, "age", 0);
         ageDays = getInt(properties, "agedays", 0);
-        arrivalDate = parseDate(properties.getProperty("arrivaldate", ""));
+        arrivalDate = HODateTime.fromHT(properties.getProperty("arrivaldate", ""));
         canBePromotedIn = getInt(properties, "canbepromotedin", 0);
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
@@ -770,7 +764,7 @@ public class YouthPlayer {
         positionCode = getInteger(properties, "positioncode");
         playedMinutes = getInt(properties, "playedminutes", 0);
         rating = getDouble(properties, "rating");
-        youthMatchDate = parseNullableDate(properties.getProperty("youthmatchdate"));
+        youthMatchDate = HODateTime.fromHT(properties.getProperty("youthmatchdate"));
 
         var playerStatusPreviousDownload = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(id);
         for (var skillId : YouthPlayer.skillIds) {
@@ -784,12 +778,6 @@ public class YouthPlayer {
         }
         parseScoutComments(properties);
         evaluateScoutComments();
-    }
-
-    // don't want to see warnings in HO log file on empty date strings
-    private Timestamp parseNullableDate(String date) {
-        if (date != null && date.length() > 0) return parseDate(date);
-        return null;
     }
 
     private void parseScoutComments(Properties properties) {

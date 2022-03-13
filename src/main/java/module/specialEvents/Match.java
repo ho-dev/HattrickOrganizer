@@ -3,6 +3,7 @@ package module.specialEvents;
 import core.model.match.MatchEvent;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
+import core.util.HODateTime;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 public class Match {
 
-	private Date matchDate;
+	private HODateTime matchDate;
 	private int matchId;
 	private int hostingTeamTactic;
 	private int visitingTeamTactic;
@@ -23,11 +24,11 @@ public class Match {
 	private MatchEvent matchHighlight;
 	private MatchType matchType;
 
-	public Date getMatchDate() {
+	public HODateTime getMatchDate() {
 		return matchDate;
 	}
 
-	public void setMatchDate(Date matchDate) {
+	public void setMatchDate(HODateTime matchDate) {
 		this.matchDate = matchDate;
 	}
 
@@ -82,7 +83,7 @@ public class Match {
 	}
 
 	public boolean isWinningTeam(String teamName) {
-		Integer iTeamID = hostingTeamId;
+		int iTeamID = hostingTeamId;
 		if (visitingTeam.equals(teamName)) iTeamID = visitingTeamId;
 		else if (! hostingTeam.equals(teamName)) return false; // should never occur
 		return isWinningTeam(iTeamID);

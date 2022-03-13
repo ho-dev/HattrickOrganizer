@@ -4,6 +4,7 @@
 package tool.hrfExplorer;
 
 import core.db.DBManager;
+import core.util.HODateTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,9 @@ class HrfDbDetails extends HrfDetails {
 		
 		m_result = DBManager.instance().getAdapter().executeQuery("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
 		try {
-			while(m_result.next())	{
+			while(true)	{
+				assert m_result != null;
+				if (!m_result.next()) break;
 				m_result.getObject(1);
 				
 				if( m_result.wasNull())	{
@@ -33,7 +36,8 @@ class HrfDbDetails extends HrfDetails {
 				{
 					HrfExplorer.appendText("Query war nicht NULL");
 					setName("---");
-					setStr_Datum(m_result.getObject("DATUM").toString().substring(0,19));
+//					setStr_Datum(m_result.getObject("DATUM").toString().substring(0,19));
+					setDatum(HODateTime.fromDbTimestamp(m_result.getTimestamp("DATUM")));
 					createDates();
 					setLiga(m_result.getString("LIGANAME"));
 					setPunkte(m_result.getInt("PUNKTE"));
@@ -56,11 +60,11 @@ class HrfDbDetails extends HrfDetails {
 				}
 			}
 		}
-		catch(SQLException sexc)
+		catch(SQLException ignored)
 		{
 			
 		}
-		calcDatum(getStr_Datum());
+		calcDatum();
 	}
 	
 	/**
@@ -68,10 +72,10 @@ class HrfDbDetails extends HrfDetails {
 	 */
 	Vector<Object> getDatenVector()
 	{
-		Vector<Object> daten = new Vector<Object>();
+		Vector<Object> daten = new Vector<>();
 		daten.add(Boolean.FALSE);
 		daten.add(getName());
-		daten.add(getStr_Datum());
+		daten.add(getDatum());
 		daten.add(getWochentag());
 		daten.add(getKw());
 		daten.add(getSaison());

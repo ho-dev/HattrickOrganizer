@@ -10,6 +10,7 @@ import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
+import core.model.enums.DBDataSource;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
@@ -17,7 +18,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.HTDatetime;
+import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
 import module.youth.YouthPlayer;
@@ -43,8 +44,9 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The type Db manager.
@@ -75,8 +77,6 @@ public class DBManager {
 
 
 	private int m_iLatestHRFid = -1;
-
-	private long m_lLatestUpdateTime = -1;
 
 //	private DateTime
 
@@ -887,7 +887,6 @@ public class DBManager {
 	 */
 	public void updateLatestData(){
 		m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();
-		m_lLatestUpdateTime = DBManager.instance().getBasics(m_iLatestHRFid).getDatum().getTime();
 	}
 
 	/**
@@ -905,29 +904,6 @@ public class DBManager {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(id);
 	}
 
-	/**
-	 * get latest update time based on latest HRF file
-	 *
-	 * @return the latest update time
-	 */
-	public long getLatestUpdateTime() {
-		if (m_lLatestUpdateTime == -1){
-			int iLatestHRFID = getLatestHrfId();
-			m_lLatestUpdateTime = DBManager.instance().getBasics(iLatestHRFID).getDatum().getTime();
-		}
-		return m_lLatestUpdateTime;
-	}
-
-	/**
-	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-	 * Wird kein HRF gefunden wird -1 zurückgegeben
-	 *
-	 * @param hrfId the hrf id
-	 * @return the previous hrf
-	 */
-	public int getPreviousHRFId(int hrfId) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getPreviousHRFId(hrfId);
-	}
 
 	/**
 
@@ -1202,6 +1178,30 @@ public class DBManager {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME))
 				.getLastMatchWithMatchId(matchId);
 
+	}
+
+	/**
+	 * function that fetch info of match played related to the TrainingPerWeek instance
+	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+	 */
+	public MatchKurzInfo[] loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
+	}
+
+	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
+		String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+		final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
+				teamId, teamId, firstMatchDate.toHT(), lastMatchDate.toHT(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
+
+		return getMatchesKurzInfo(where);
+	}
+
+	/**
+	 * function that fetch info of NT match played related to the TrainingPerWeek instance
+	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
+	 */
+	public MatchKurzInfo[] loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
 	}
 
 	/**
@@ -1537,11 +1537,11 @@ public class DBManager {
 				.getTrainingList(fromDate, toDate);
 	}
 
-	public void saveTraining(TrainingPerWeek training, Instant lastTrainingDate, boolean force) {
+	public void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate, boolean force) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate, force);
 	}
 
-	public void saveTrainings(List<TrainingPerWeek> trainings, Instant lastTrainingDate, boolean force) {
+	public void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate, boolean force) {
 		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate, force);
 	}
 
@@ -1624,7 +1624,7 @@ public class DBManager {
 	 */
 	public XtraData getXtraDaten(int hrfID) {
 		return ((XtraDataTable) getTable(XtraDataTable.TABLENAME))
-				.getXtraDaten(hrfID);
+				.loadXtraData(hrfID);
 	}
 
 	/**
@@ -1938,7 +1938,7 @@ public class DBManager {
 			while (rs.next()) {
 				count = rs.getInt("MatchNumber");
 			}
-		} catch (SQLException e) {
+		} catch (SQLException ignored) {
 		}
 
 		return count;
@@ -1986,13 +1986,16 @@ public class DBManager {
 
 			final ResultSet rs = m_clJDBCAdapter.executeQuery(String.format(sql, playerID));
 			PlayerMatchCBItem playerMatchCBItem;
+			assert rs != null;
 			rs.beforeFirst();
 
 			// Get all data on the player
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
-						rs.getInt("MatchID"), rs.getFloat("Rating") * 2,
-						rs.getInt("HoPosCode"), rs.getString("MatchDate"),
+						rs.getInt("MatchID"),
+						rs.getFloat("Rating") * 2,
+						rs.getInt("HoPosCode"),
+						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
 						DBManager.deleteEscapeSequences(rs
 								.getString("HeimName")), rs.getInt("HeimID"),
 						DBManager.deleteEscapeSequences(rs
@@ -2009,7 +2012,7 @@ public class DBManager {
 			// Get the player data for the matches
 			for (final PlayerMatchCBItem item : playerMatchCBItems) {
 
-				filter = new HTDatetime(item.getMatchdate()).getHattrickTimeAsTimestamp();
+				filter = item.getMatchdate().toDbTimestamp();
 
 				// Player
 				final Player player = getSpielerAtDate(playerID, filter);
@@ -2334,12 +2337,11 @@ public class DBManager {
 	/**
 	 * Gets last ifa match date.
 	 *
-	 * @param defaultValue the default value
 	 * @return the last ifa match date
 	 */
-	public String getLastIFAMatchDate(String defaultValue) {
+	public Timestamp getLastIFAMatchDate() {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-				.getLastMatchDate(defaultValue);
+				.getLastMatchDate();
 	}
 
 	/**
@@ -2692,5 +2694,78 @@ public class DBManager {
 
 	public void storeNtTeamDetails(NtTeamDetails details) {
 		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
+	}
+
+// sql string for case all==false
+//	String sql = String.format("""
+//					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
+//					FROM XTRADATA
+//					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
+//					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
+//					INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0
+//					INNER JOIN (
+//					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
+//					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
+//					WHERE XTRADATA.TRAININGDATE > '%s'""", refDate);
+
+	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
+
+		var ret = new ArrayList<TrainingPerWeek>();
+		// for past trainings the first hrf after training date is the best guess
+		// - add one week to next training date of the week
+		// - use min(hrf) here
+
+		var sql = new StringBuilder();
+		sql.append("SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER")
+				.append(" FROM XTRADATA")
+				.append(" INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID")
+				.append(" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID")
+				.append(" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0")
+				.append(" INNER JOIN (")
+				.append(" SELECT TRAININGDATE,");
+		if ( all ) {
+			sql.append(" min");
+		}
+		else {
+			sql.append(" max");
+		}
+		sql.append("(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE")
+				.append(") IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID")
+				.append(" WHERE XTRADATA.TRAININGDATE >=")
+				.append("'").append(startDate).append("'");
+
+		try {
+
+			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
+			final ResultSet rs = ijdbca.executeQuery(sql.toString());
+			if ( rs != null ) {
+				rs.beforeFirst();
+				while (rs.next()) {
+					int trainType = rs.getInt("TRAININGSART");
+					int trainIntensity = rs.getInt("TRAININGSINTENSITAET");
+					int trainStaminaPart = rs.getInt("STAMINATRAININGPART");
+					// subtract one week from next training date to get the past week training date
+					var trainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE")).minus(7, ChronoUnit.DAYS);
+					int coachLevel = rs.getInt("TRAINER");
+					int trainingAssistantLevel = rs.getInt("COTRAINER");
+					TrainingPerWeek tpw = new TrainingPerWeek(trainingDate,
+							trainType,
+							trainIntensity,
+							trainStaminaPart,
+							trainingAssistantLevel,
+							coachLevel,
+							DBDataSource.HRF);
+					ret.add( tpw);
+				}
+			}
+
+			return ret;
+		}
+		catch (Exception e) {
+			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
+		}
+
+		return null;
+
 	}
 }

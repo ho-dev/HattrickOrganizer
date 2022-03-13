@@ -2,7 +2,7 @@ package module.training.ui.comp;
 
 import core.model.player.Player;
 import core.model.player.MatchRoleID;
-import core.training.HattrickDate;
+import core.util.HODateTime;
 
 public class TrainingPriorityCell implements Comparable<TrainingPriorityCell> {
 
@@ -10,7 +10,7 @@ public class TrainingPriorityCell implements Comparable<TrainingPriorityCell> {
     private int pos;
     private float strength;
 
-    public TrainingPriorityCell(Player player, HattrickDate nextWeek) {
+    public TrainingPriorityCell(Player player, HODateTime nextWeek) {
         value = player.getTrainingPriorityInformation(nextWeek);
         pos = MatchRoleID.getSortId(player.getIdealPosition(), false);
     }

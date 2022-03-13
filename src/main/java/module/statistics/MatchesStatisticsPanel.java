@@ -508,13 +508,14 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				}
 
 				// Stimmung, Selbstvertrauen
-				int hrfid = DBManager.instance().getHRFID4Date(match.getMatchDateAsTimestamp());
+				var matchDate = match.getMatchSchedule();
+				int hrfid = DBManager.instance().getHRFID4Date(matchDate.toDbTimestamp());
 				int[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauenValues(hrfid);
 
 				statistikWerte[9][i] = stimmungSelbstvertrauen[0];
 				statistikWerte[10][i] = stimmungSelbstvertrauen[1];
 
-				statistikWerte[13][i] = match.getMatchDateAsTimestamp().getTime();
+				statistikWerte[13][i] = matchDate.instant.getEpochSecond();
 
 				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(match.getMatchID(), match.getMatchType(), teamid);
 				float sterne = 0;

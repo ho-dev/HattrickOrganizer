@@ -1,5 +1,7 @@
 package core.model.misc;
 
+import core.util.HODateTime;
+
 import java.sql.Timestamp;
 
 /**
@@ -21,7 +23,7 @@ public class Economy {
     public static final int LV_FANS_FURIOUS = 1;
     public static final int LV_FANS_MURDEROUS = 0;
     
-    private static Timestamp DATE_NEW_FANLEVELS = new Timestamp(1203897600000L); // 25.02.2008
+    private static HODateTime DATE_NEW_FANLEVELS = HODateTime.fromHT("2008-02-25 00:00:00"); // 25.02.2008
 
     // level constants for the sponsor mood
     public static final int LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU = 9;
@@ -195,10 +197,10 @@ public class Economy {
      * @param date time of the match (importand cause the fanlevels changed)
      * @return the i18n'ed name for the level
      */
-    public static String getNameForLevelFans(int level, Timestamp date) {
+    public static String getNameForLevelFans(int level, HODateTime date) {
     	// previously, fan and sponsor levels where identical, 
     	//   thats why we can simply use sponsor values
-    	if (date != null && date.before(DATE_NEW_FANLEVELS)) {
+    	if (date != null && date.isBefore(DATE_NEW_FANLEVELS)) {
     		return getNameForLevelSponsors(level);
     	}
         switch (level) {

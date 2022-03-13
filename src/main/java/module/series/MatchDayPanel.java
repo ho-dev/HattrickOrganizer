@@ -10,6 +10,7 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.net.OnlineWorker;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
@@ -18,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -63,6 +65,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         }
 
         // --Match zeigen ggf runterladen--
+        assert matchDatas != null;
         if (matchDatas[0] > 0) {
             // Spiel nicht vorhanden, dann erst runterladen!
             if (!DBManager.instance().isMatchInDB(matchDatas[0], MatchType.LEAGUE)) {
@@ -94,15 +97,14 @@ final class MatchDayPanel extends JPanel implements ActionListener {
     }
 
     private void setMatchButton(JButton button, @Nullable Paarung paarung) {
-        long gameFinishTime;
-        long nowTime = (new Date()).getTime();
+        HODateTime gameFinishTime;
+        HODateTime nowTime = HODateTime.now();
 
         boolean gameFinished; // Hat das Spiel schon stattgefunden
         if (paarung != null) {
-            gameFinishTime = paarung.getDatum().getTime();
-            gameFinishTime = gameFinishTime + 3 * 60 * 60 * 1000L; //assuming 3 hours to make sure the game is finished
+            gameFinishTime = paarung.getDatum().plus(3, ChronoUnit.HOURS); //assuming 3 hours to make sure the game is finished
             // if paarung was not updated regularly, it could happen that hatStattgefunden would fail
-            gameFinished = paarung.isGameOver() || gameFinishTime < nowTime;
+            gameFinished = paarung.isGameOver() || gameFinishTime.isBefore(nowTime);
         }
         else {
             gameFinished = false;
@@ -167,13 +169,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         String bordertext = HOVerwaltung.instance().getLanguageString("Spieltag") + " " + spieltag;
 
         if (paarungen != null && paarungen.size() > 0) {
-            try {
-                bordertext += ("  ( "
-                        + DateFormat.getDateTimeInstance().format(
-                        ((Paarung) paarungen.get(0)).getDatum()) + " )");
-            } catch (Exception e) {
-                bordertext += ("  ( " + ((Paarung) paarungen.get(0)).getStringDate() + " )");
-            }
+            bordertext += ("  ( " + paarungen.get(0).getDatum().toLocaleDateTime() + " )");
         }
 
         setBorder(BorderFactory.createTitledBorder(bordertext));

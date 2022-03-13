@@ -84,7 +84,7 @@ public class TeamReport {
         addMatch(matchDetail, SystemManager.isShowUnavailable.isSet());
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
         if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
-            this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate()));
+            this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate().toDbTimestamp()));
         }
     }
 
