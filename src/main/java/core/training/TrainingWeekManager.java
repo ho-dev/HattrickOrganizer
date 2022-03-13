@@ -117,7 +117,7 @@ public class TrainingWeekManager {
 			// when daylight saving time changes, the interval between two trainings is not exactly 7 days,
 			// so we need to calculate a ht week instance
 			var htWeek = currDate.toLocaleHTWeek();
-			var training = trainingsInDB.get((long)weekSinceOrigin(htWeek));
+			var training = trainingsInDB.get(htWeek.sinceOrigin());
 			if (training != null) {
 				if (includeMatches) {
 					training.loadMatches();
@@ -149,10 +149,6 @@ public class TrainingWeekManager {
 		return trainings;
 	}
 
-	private int weekSinceOrigin(HODateTime.HTWeek htWeek) {
-		return htWeek.season*16+htWeek.week;
-	}
-
 	/**
 	 * Fetch trainings information from database (excl. Training table)
 	 * This excludes manual entries set per user
@@ -162,7 +158,7 @@ public class TrainingWeekManager {
 		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
 		var startDate = m_StartDate.plus(7, ChronoUnit.DAYS);
 		for ( var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)){
-			output.put((long)weekSinceOrigin(trainingPerWeek.getTrainingDate().toHTWeek()), trainingPerWeek);
+			output.put(trainingPerWeek.getTrainingDate().toHTWeek().sinceOrigin(), trainingPerWeek);
 		}
 		return output;
 	}

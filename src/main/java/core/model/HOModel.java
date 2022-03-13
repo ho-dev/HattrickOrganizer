@@ -568,26 +568,15 @@ public class HOModel {
         DBManager.instance().saveHRF(getID(),
                 java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(
                         System.currentTimeMillis())), time);
-
-        //basics
         DBManager.instance().saveBasics(getID(), getBasics());
-        //Verein
         DBManager.instance().saveVerein(getID(), getClub());
-        //Team
         DBManager.instance().saveTeam(getID(), getTeam());
-        //Finanzen
         DBManager.instance().saveEconomyInDB(getID(), getEconomy(), time);
-        //Stadion
         DBManager.instance().saveStadion(getID(), getStadium());
-        //Liga
         DBManager.instance().saveLiga(getID(), getLeague());
-        //Xtra Daten
         DBManager.instance().saveXtraDaten(getID(), getXtraDaten());
-        //Player
         DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), time);
-        // Youth Player
         DBManager.instance().storeYouthPlayers(getID(), getCurrentYouthPlayers());
-        //Staff
         DBManager.instance().saveStaff(getID(), getStaff());
     }
 

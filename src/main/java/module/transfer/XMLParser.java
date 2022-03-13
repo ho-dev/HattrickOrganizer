@@ -26,11 +26,6 @@ import org.w3c.dom.NodeList;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 public final class XMLParser {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    private static final SimpleDateFormat DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final SimpleDateFormat DATE = new SimpleDateFormat("yyyy-MM-dd");
-//    private static final SimpleDateFormat XMLDATETIME = new SimpleDateFormat("yyyy-MM-dd%20HH:mm");
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -87,24 +82,6 @@ public final class XMLParser {
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
-
-//                        try {
-//                            transferDate = DATETIME.parse(deadline);
-//                        } catch (ParseException e) {
-//                            try {
-//                                transferDate = DATE.parse(deadline);
-//                            } catch (ParseException e0) {
-//                            	Helper.showMessage(HOMainFrame.instance(),
-//                                                                           "XML Parse error",
-//                                                                           "Error parsing XML: transfer '"
-//                                                                           + transferid
-//                                                                           + "' will be skipped", 0);
-//                                continue;
-//                            }
-//                        }
-                        
-                        //Timestamp time = new Timestamp(transferDate.getTime());
-
                         playerTranfer.setDate(transferDate);
 
                         var htweek = transferDate.toLocaleHTWeek();
@@ -161,12 +138,6 @@ public final class XMLParser {
 
 	        final Element teamElement = (Element) root.getElementsByTagName("Team").item(0); //$NON-NLS-1$
 	        var activatedDate = HODateTime.fromHT(getChildNodeValue(teamElement, "ActivatedDate"));
-
-//	        try {
-//	            activatedDate = DATETIME.parse(getChildNodeValue(teamElement, "ActivatedDate"));
-//	        } catch (ParseException e) {
-//	            activatedDate = DATE.parse(getChildNodeValue(teamElement, "ActivatedDate"));
-//	        }
 
 	        List<PlayerTransfer> transfers = parseTeamTransfers(doc, activatedDate, endDate);
 	        if (transfers.size()<1) {
@@ -253,21 +224,6 @@ public final class XMLParser {
                         final String deadline = getChildNodeValue(transfer, "Deadline");
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
-//
-//                        try {
-//                            transferDate
-//                        } catch (ParseException e) {
-//                            try {
-//                                transferDate = DATE.parse(deadline);
-//                            } catch (ParseException e0) {
-//                            	Helper.showMessage(HOMainFrame.instance(),
-//                                                                           "XML Parse error",
-//                                                                           "Error parsing XML: transfer '"
-//                                                                           + transferid+ "' will be skipped", 0);
-//
-//                                continue;
-//                            }
-//                        }
                         if (transferDate.isBefore(activatedDate)) continue;
                         if (transferDate.isAfter(endDate)) continue;
 

@@ -35,14 +35,7 @@ class ConfidenceCurve extends Curve {
 	}
 
 	private void readConfidenceHistory() throws SQLException {
-//		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-//		gregoriancalendar.setTime(HOVerwaltung.instance().getModel()
-//				.getBasics().getDatum());
-//		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-//		Date start = gregoriancalendar.getTime();
-
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS);
-
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select DATUM, ISELBSTVERTRAUEN from HRF, TEAM "
 						+ "where HRF.HRF_ID = TEAM.HRF_ID order by DATUM");

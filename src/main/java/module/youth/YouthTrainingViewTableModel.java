@@ -31,7 +31,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(0, "ls.youth.training.date", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
-                        return new ColorLabelEntry(time2Int(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(1, "ls.youth.training.hometeam") {
@@ -117,13 +117,14 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     private void setTraining(YouthTraining t, YouthTraining.Priority prio, YouthTrainingType trainingType) {
         if ( t.getTraining(prio) != trainingType){
-
             t.setTraining(prio, trainingType);
             t.recalcSkills();
             t.store();
 
             var youthPanel = (YouthPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.YOUTH);
-            youthPanel.refreshYouthPlayerView();
+            if ( youthPanel != null) {
+                youthPanel.refreshYouthPlayerView();
+            }
         }
     }
 }

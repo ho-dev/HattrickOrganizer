@@ -55,7 +55,7 @@ public final class HRF {
             name = core.db.DBManager.deleteEscapeSequences(rs.getString("Name"));
             datum = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor HRF: " + e);
+            HOLogger.instance().error(getClass(),"Konstruktor HRF: " + e);
         }
     }
 

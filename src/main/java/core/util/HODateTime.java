@@ -1,9 +1,7 @@
 package core.util;
 
-import core.HO;
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
-
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
@@ -63,11 +61,16 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return HODateTime
      */
     public static HODateTime fromDbTimestamp(Timestamp timestamp) {
-        if ( timestamp != null )return new HODateTime(timestamp.toInstant());
+        if (timestamp != null) {
+            return new HODateTime(timestamp.toInstant());
+        }
         return null;
     }
+
     public static Timestamp toDbTimestamp(HODateTime time) {
-        if (time != null) return time.toDbTimestamp();
+        if (time != null) {
+            return time.toDbTimestamp();
+        }
         return null;
     }
 
@@ -88,6 +91,11 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public static HODateTime fromHTWeek(HTWeek week) {
         return new HODateTime(htStart.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
+    }
+
+    static public long toEpochSecond(HODateTime ts){
+        if ( ts!= null) return ts.instant.getEpochSecond();
+        return 0L;
     }
 
     /**
@@ -220,6 +228,10 @@ public class HODateTime implements Comparable<HODateTime> {
             } else {
                 return new HTWeek(0, 0);
             }
+        }
+
+        public Long sinceOrigin() {
+            return (season-1) * 16L + week -1L;
         }
     }
 

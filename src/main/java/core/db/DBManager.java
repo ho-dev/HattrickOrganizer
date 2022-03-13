@@ -2762,7 +2762,7 @@ public class DBManager {
 			return ret;
 		}
 		catch (Exception e) {
-			HOLogger.instance().error(this.getClass(), "Error while performing fetchTrainingListFromDB():  " + e);
+			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
 		}
 
 		return null;

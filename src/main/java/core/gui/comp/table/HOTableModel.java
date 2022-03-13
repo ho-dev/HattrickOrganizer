@@ -355,14 +355,5 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 	}
 
-	static public String formatTime( HODateTime ts){
-		if (ts != null ) return ts.toLocaleDateTime();
-		return "";
-	}
-
-	static public long time2Int(HODateTime ts){
-		if ( ts!= null) return ts.instant.getEpochSecond();
-		return 0L;
-	}
 
 }
