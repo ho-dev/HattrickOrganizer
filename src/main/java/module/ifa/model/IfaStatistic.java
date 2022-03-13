@@ -1,6 +1,8 @@
 package module.ifa.model;
 
 
+import core.util.HODateTime;
+
 public class IfaStatistic {
 
 	private int matchesPlayed;
@@ -8,7 +10,7 @@ public class IfaStatistic {
 	private int matchesDraw;
 	private int matchesLost;
 	private Country country;
-	private long lastMatchDate;
+	private HODateTime lastMatchDate;
 
 	public Country getCountry() {
 		return this.country;
@@ -34,11 +36,11 @@ public class IfaStatistic {
 		return this.matchesLost;
 	}
 
-	public long getLastMatchDate() {
+	public HODateTime getLastMatchDate() {
 		return this.lastMatchDate;
 	}
 	
-	public void setLastMatchDate(long timestamp) {
+	public void setLastMatchDate(HODateTime timestamp) {
 		this.lastMatchDate = timestamp;
 	}
 

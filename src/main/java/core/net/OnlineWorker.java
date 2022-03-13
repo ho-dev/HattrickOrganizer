@@ -149,19 +149,10 @@ public class OnlineWorker {
 	 *
 	 * @return The list of MatchKurzInfo. This can be null on error, or empty.
 	 */
-	public static List<MatchKurzInfo> getMatchArchive(int teamId, Date firstDate, boolean store) {
+	public static List<MatchKurzInfo> getMatchArchive(int teamId, HODateTime firstDate, boolean store) {
 
 		List<MatchKurzInfo> allMatches = new ArrayList<>();
-		GregorianCalendar tempBeginn = new GregorianCalendar();
-		tempBeginn.setTime(firstDate);
-		GregorianCalendar tempEnd = new GregorianCalendar();
-		tempEnd.setTimeInMillis(tempBeginn.getTimeInMillis());
-		tempEnd.add(Calendar.MONTH, 3);
-
-		GregorianCalendar endDate = new GregorianCalendar();
-		if (!tempEnd.before(endDate)) {
-			tempEnd.setTime(endDate.getTime());
-		}
+		var endDate = HODateTime.now();
 
 		// Show wait Dialog
 		showWaitInformation(1);
@@ -169,11 +160,15 @@ public class OnlineWorker {
 		try {
 			String matchesString;
 
-			while (tempBeginn.before(endDate)) {
+			while (firstDate.isBefore(endDate)) {
+				var lastDate=firstDate.plus(90, ChronoUnit.DAYS);
+				if (!lastDate.isBefore(endDate)) {
+					lastDate = endDate;
+				}
+
 				try {
 					showWaitInformation(10);
-					matchesString = MyConnector.instance().getMatchesArchive(teamId, tempBeginn.getTime(),
-							tempEnd.getTime());
+					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
 					showWaitInformation(20);
 				} catch (Exception e) {
 					// Info
@@ -194,12 +189,7 @@ public class OnlineWorker {
 				allMatches.addAll(matches);
 
 				// Zeitfenster neu setzen
-				tempBeginn.add(Calendar.MONTH, 3);
-				tempEnd.add(Calendar.MONTH, 3);
-
-				if (!tempEnd.before(endDate)) {
-					tempEnd.setTime(endDate.getTime());
-				}
+				firstDate = firstDate.plus(90, ChronoUnit.DAYS);
 			}
 
 			// Store in the db if store is true
@@ -1211,21 +1201,18 @@ public class OnlineWorker {
 		MyConnector.instance().setSilentDownload(silentDownload);
 	}
 
-	final static long oneDay = 24L*60L*60L*1000L;
-	final static long threeMonths = 3L*30L*oneDay;
-
-	public static void downloadMissingYouthMatchData(HOModel model, Timestamp dateSince) {
+	public static void downloadMissingYouthMatchData(HOModel model, HODateTime dateSince) {
 		var youthteamid = model.getBasics().getYouthTeamId();
-		var lastStoredYouthMatchDate = DBManager.instance().getLastYouthMatchDate();
+		var lastStoredYouthMatchDate = HODateTime.fromDbTimestamp(DBManager.instance().getLastYouthMatchDate());
 
-		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.after(dateSince) ){
+		if ( dateSince == null || lastStoredYouthMatchDate != null && lastStoredYouthMatchDate.isAfter(dateSince) ){
 			// if there are no youth matches in database, take the limit from arrival date of 'oldest' youth players
 			dateSince = lastStoredYouthMatchDate;
 		}
 
-		for (Timestamp dateUntil; dateSince != null; dateSince = dateUntil) {
-			if (dateSince.before(new Timestamp(System.currentTimeMillis()- threeMonths))){
-				dateUntil = new Timestamp(dateSince.getTime() + threeMonths);
+		for (HODateTime dateUntil; dateSince != null; dateSince = dateUntil) {
+			if (dateSince.isBefore(HODateTime.now().minus(90, ChronoUnit.DAYS))){
+				dateUntil = dateSince.plus(90, ChronoUnit.DAYS);
 			}
 			else {
 				dateUntil = null;	// until now
@@ -1238,7 +1225,6 @@ public class OnlineWorker {
 					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {
 						var details = downloadMatchDetails(match.getMatchID(), match.getMatchType(), lineup);
-						//var lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHeimID(), match.getGastID());
 						DBManager.instance().storeMatchDetails(details);
 						DBManager.instance().storeMatchLineup(lineup, youthteamid);
 						lineup.setMatchDetails(details);

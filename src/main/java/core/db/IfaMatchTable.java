@@ -1,11 +1,13 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.DateHelper;
 import module.ifa.IfaMatch;
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,11 +41,10 @@ public class IfaMatchTable extends AbstractTable {
 	}
 
 	boolean isMatchInDB(int matchId) {
-		var select = new StringBuilder(100);
-		select.append("SELECT * FROM ").append(getTableName());
-		select.append(" WHERE ").append("MATCHID");
-		select.append(" = ").append(matchId);
-		ResultSet rs = adapter.executeQuery(select.toString());
+		String select = "SELECT * FROM " + getTableName() +
+				" WHERE " + "MATCHID" +
+				" = " + matchId;
+		ResultSet rs = adapter.executeQuery(select);
 		try {
 			if ((rs != null) && (rs.next()))
 				return true;
@@ -53,36 +54,29 @@ public class IfaMatchTable extends AbstractTable {
 		return false;
 	}
 
-	String getLastMatchDate(String defaultValue) {
-		StringBuffer select = new StringBuffer(100);
-		select.append("SELECT MAX(").append("PLAYEDDATE").append(") FROM ");
-		select.append(getTableName());
-		ResultSet rs = adapter.executeQuery(select.toString());
-		String s = defaultValue;
+	Timestamp getLastMatchDate() {
+		String select = "SELECT MAX(" + "PLAYEDDATE" + ") FROM " + getTableName();
+		ResultSet rs = adapter.executeQuery(select);
 		try {
 			if ((rs != null) && (rs.next())) {
-				String tmp = rs.getString(1);
-				if (tmp != null)
-					s = DateHelper.getDateString(DateHelper.getDate(tmp));
+				return rs.getTimestamp(1);
 			}
 		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage() + "\ns=" + s);
-			e.printStackTrace();
+			HOLogger.instance().error(this.getClass(),e);
 		}
-		return s;
+		return null;
 	}
 
 	@SuppressWarnings("deprecation")
 	IfaMatch[] getMatches(boolean home) {
 		var list = new ArrayList<IfaMatch>();
-		var select = new StringBuilder(100);
-		select.append("SELECT * FROM ").append(getTableName());
-		select.append(" WHERE ").append(home ? "HOMETEAMID" : "AWAYTEAMID");
-		select.append(" = ").append(HOVerwaltung.instance().getModel().getBasics().getTeamId());
-		select.append(" ORDER BY ");
-		select.append(home ? "AWAY_LEAGUEID" : "HOME_LEAGUEID");
-		select.append(" ASC ");
-		ResultSet rs = adapter.executeQuery(select.toString());
+		String select = "SELECT * FROM " + getTableName() +
+				" WHERE " + (home ? "HOMETEAMID" : "AWAYTEAMID") +
+				" = " + HOVerwaltung.instance().getModel().getBasics().getTeamId() +
+				" ORDER BY " +
+				(home ? "AWAY_LEAGUEID" : "HOME_LEAGUEID") +
+				" ASC ";
+		ResultSet rs = adapter.executeQuery(select);
 
 		if (rs == null) {
 			return new IfaMatch[0];
@@ -94,8 +88,7 @@ public class IfaMatchTable extends AbstractTable {
 				IfaMatch tmp = new IfaMatch(rs.getInt("MATCHTYP"));
 				tmp.setAwayLeagueId(rs.getInt("AWAY_LEAGUEID"));
 				tmp.setHomeLeagueId(rs.getInt("HOME_LEAGUEID"));
-				tmp.setPlayedDate(simpleFormat.parse(rs.getString("PLAYEDDATE")));
-				tmp.setPlayedDateString(rs.getString("PLAYEDDATE"));
+				tmp.setPlayedDate(HODateTime.fromDbTimestamp(rs.getTimestamp("PLAYEDDATE")));
 				tmp.setHomeTeamId(rs.getInt("HOMETEAMID"));
 				tmp.setAwayTeamId(rs.getInt("AWAYTEAMID"));
 				tmp.setHomeTeamGoals(rs.getInt("HOMETEAMGOALS"));
@@ -106,24 +99,23 @@ public class IfaMatchTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().error(this.getClass(), e);
 		}
-		return list.toArray(new IfaMatch[list.size()]);
+		return list.toArray(new IfaMatch[0]);
 	}
 
 	@SuppressWarnings("deprecation")
 	void insertMatch(IfaMatch match) {
 		var sql = initInsertStatement();
-		var statement = new StringBuilder(100);
-		statement.append(sql);
-		statement.append(match.getMatchId()).append(",");
-		statement.append(match.getMatchTyp()).append(",'");
-		statement.append(match.getPlayedDateString()).append("',");
-		statement.append(match.getHomeTeamId()).append(",");
-		statement.append(match.getAwayTeamId()).append(",");
-		statement.append(match.getHomeTeamGoals()).append(",");
-		statement.append(match.getAwayTeamGoals()).append(",");
-		statement.append(match.getHomeLeagueId()).append(",");
-		statement.append(match.getAwayLeagueId()).append(")");
-		adapter.executeUpdate(statement.toString());
+		String statement = sql +
+				match.getMatchId() + "," +
+				match.getMatchTyp() + ",'" +
+				HODateTime.toDbTimestamp(match.getPlayedDate()) + "'," +
+				match.getHomeTeamId() + "," +
+				match.getAwayTeamId() + "," +
+				match.getHomeTeamGoals() + "," +
+				match.getAwayTeamGoals() + "," +
+				match.getHomeLeagueId() + "," +
+				match.getAwayLeagueId() + ")";
+		adapter.executeUpdate(statement);
 	}
 
 	static private String insertStatementPrefix;

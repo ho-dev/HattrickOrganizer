@@ -2337,12 +2337,11 @@ public class DBManager {
 	/**
 	 * Gets last ifa match date.
 	 *
-	 * @param defaultValue the default value
 	 * @return the last ifa match date
 	 */
-	public String getLastIFAMatchDate(String defaultValue) {
+	public Timestamp getLastIFAMatchDate() {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-				.getLastMatchDate(defaultValue);
+				.getLastMatchDate();
 	}
 
 	/**

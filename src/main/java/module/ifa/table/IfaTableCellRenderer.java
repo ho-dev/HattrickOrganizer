@@ -1,5 +1,6 @@
 package module.ifa.table;
 
+import core.util.HODateTime;
 import module.ifa.model.Country;
 
 import java.awt.Component;
@@ -31,31 +32,28 @@ public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column) {
 
-		String displayValue = "";
+		String displayValue;
 		ImageIcon icon = null;
 		int modelColumnIndex = table.convertColumnIndexToModel(column);
 		int alignment = SwingConstants.RIGHT;
 
 		switch (modelColumnIndex) {
-		case IfaTableModel.COL_COUNTRY:
-			alignment = SwingConstants.LEFT;
-			if (!isSummaryRow(row, table)) {
-				Country country = (Country) value;
-				displayValue = country.getName();
-				icon = country.getCountryFlag();				
-			} else {
-				displayValue = String.valueOf(value);
+			case IfaTableModel.COL_COUNTRY -> {
+				alignment = SwingConstants.LEFT;
+				if (!isSummaryRow(row, table)) {
+					Country country = (Country) value;
+					displayValue = country.getName();
+					icon = country.getCountryFlag();
+				} else {
+					displayValue = String.valueOf(value);
+				}
 			}
-			break;
-		case IfaTableModel.COL_LASTMATCH:
-			displayValue = this.dateFormat.format((Date) value);
-			alignment = SwingConstants.LEFT;
-			break;
-		case IfaTableModel.COL_COOLNESS:
-			displayValue = this.doubleFormat.format((Double) value);
-			break;
-		default:			
-			displayValue = String.valueOf(value);
+			case IfaTableModel.COL_LASTMATCH -> {
+				displayValue = ((HODateTime) value).toLocaleDateTime();
+				alignment = SwingConstants.LEFT;
+			}
+			case IfaTableModel.COL_COOLNESS -> displayValue = this.doubleFormat.format(value);
+			default -> displayValue = String.valueOf(value);
 		}
 
 		JLabel label = (JLabel) super.getTableCellRendererComponent(table, displayValue,

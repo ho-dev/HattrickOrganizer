@@ -7,11 +7,13 @@ import core.file.xml.XMLPlayersParser;
 import core.model.match.MatchKurzInfo;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
+import core.util.HODateTime;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.Filter;
 import module.teamAnalyzer.vo.Match;
 import module.teamAnalyzer.vo.PlayerInfo;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -46,48 +48,50 @@ public class HattrickManager {
    		if (!filter.isAutomatic()) {
    			limit = 30;
    		}
-   		
-   		GregorianCalendar start = new GregorianCalendar();
-	    start.add(Calendar.MONTH, -8);
-	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive( teamId, start.getTime(), false);
-	    Collections.reverse(matches); // Newest first
-	    for (MatchKurzInfo match : matches) {
-            if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
-                continue;
-            }
 
-            boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())
-                    || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
-            var accepted = filter.isAcceptedMatch(new Match(match));
-            if (!filter.isAutomatic() || (accepted && refresh)) {
-                OnlineWorker.downloadMatchData(match, refresh);
-            }
+        var start = HODateTime.now().minus(8*30, ChronoUnit.DAYS);
+	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive( teamId, start, false);
+        if ( matches != null) {
+            Collections.reverse(matches); // Newest first
+            for (MatchKurzInfo match : matches) {
+                if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
+                    continue;
+                }
 
-            if ( accepted ) limit--;
-            if (limit < 1) {
-                break;
+                boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())
+                        || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
+                var accepted = filter.isAcceptedMatch(new Match(match));
+                if (!filter.isAutomatic() || (accepted && refresh)) {
+                    OnlineWorker.downloadMatchData(match, refresh);
+                }
+
+                if (accepted) limit--;
+                if (limit < 1) {
+                    break;
+                }
             }
         }
-	    
 	    // Look for tournament matches if they are included in filter.	    
 	    if (!filter.isAutomatic() || filter.isTournament()) {
 		    // Current matches includes tournament matches
 	    	matches = OnlineWorker.getMatches(teamId, true, false, false);
-	   		// newest first
-	   		Collections.reverse(matches);
-	   		
-	   		// Only store tournament matches
-	   		for (MatchKurzInfo match : matches) {
-	   			if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
-		    		continue;
-		    	}
-	   			if (filter.isAcceptedMatch(new Match(match)) 
-	   					&& match.getMatchType().isTournament()
-	   					&& !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())) {
-	   				
-	   				OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
-	   			}
-	   		}
+            if ( matches != null) {
+                // newest first
+                Collections.reverse(matches);
+
+                // Only store tournament matches
+                for (MatchKurzInfo match : matches) {
+                    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
+                        continue;
+                    }
+                    if (filter.isAcceptedMatch(new Match(match))
+                            && match.getMatchType().isTournament()
+                            && !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())) {
+
+                        OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
+                    }
+                }
+            }
 	    }
     }
 
@@ -125,8 +129,11 @@ public class HattrickManager {
     public static String downloadTeam(int teamId) {
 		String xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=team&teamID=" + teamId);
         Document dom = XMLManager.parseString(xml);
-        Document teamDocument = dom.getElementsByTagName("Team").item(0).getOwnerDocument();
-        return teamDocument.getElementsByTagName("TeamName").item(0).getFirstChild().getNodeValue();
+        if ( dom != null) {
+            Document teamDocument = dom.getElementsByTagName("Team").item(0).getOwnerDocument();
+            return teamDocument.getElementsByTagName("TeamName").item(0).getFirstChild().getNodeValue();
+        }
+        return "";
     }
 
     /**
