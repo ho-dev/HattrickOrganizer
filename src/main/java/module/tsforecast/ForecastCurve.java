@@ -190,8 +190,6 @@ abstract class ForecastCurve extends Curve {
 			if (resultset != null && resultset.first()) {
 				short start = 0;
 				Curve.Point point;
-
-				//GregorianCalendar calendar = new GregorianCalendar();
 				var matchDate = HODateTime.fromDbTimestamp(resultset.getTimestamp("MATCHDATE"));
 				MatchType lastMatchType = MatchType.getById(resultset.getInt("MATCHTYP"));
 				point = new Curve.Point(matchDate,
@@ -264,11 +262,6 @@ abstract class ForecastCurve extends Curve {
 	private void readPastMatches() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
-
-//		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-//		gregoriancalendar.setTime(ibasics.getDatum());
-//		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-//		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
 		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
 		if (iliga != null) {
 			// PAARUNG contains all Leaguematches, but no other

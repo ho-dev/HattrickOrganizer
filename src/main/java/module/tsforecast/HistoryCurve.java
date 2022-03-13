@@ -55,19 +55,7 @@ public class HistoryCurve extends Curve {
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-//		GregorianCalendar startDate = new GregorianCalendar();
-//		startDate.setTime(ibasics.getDatum());
-//		startDate.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-//		Timestamp start = new Timestamp(startDate.getTimeInMillis());
-
 		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
-
-		/*
-		 * GregorianCalendar gregoriancalendar = new GregorianCalendar();
-		 * gregoriancalendar.setTime( m_clModel.getBasics().getDatum());
-		 * gregoriancalendar.add( Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-		 * java.util.Date date = gregoriancalendar.getTime();
-		 */
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select DATUM, ISTIMMUNG from HRF, TEAM "
 						+ "where HRF.HRF_ID = TEAM.HRF_ID " + "and DATUM <= '"
@@ -75,14 +63,10 @@ public class HistoryCurve extends Curve {
 						+ "order by DATUM");
 		assert resultset != null;
 		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
-			// if( date.before(resultset.getTimestamp( "DATUM"))
-			// && !m_clModel.getBasics().getDatum().before(
-			// resultset.getTimestamp( "DATUM"))) {
 			double dSpirit = resultset.getInt("ISTIMMUNG") + 0.5D;
 			if (dSpirit > m_dMaxSpirit)
 				dSpirit = m_dMaxSpirit;
 			m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")), dSpirit));
-			// }
 		}
 	}
 
@@ -91,12 +75,6 @@ public class HistoryCurve extends Curve {
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		Curve.Point pLastLeagueMatch = null;
-//		GregorianCalendar dateOfLastLeagueMatch = new GregorianCalendar();
-//		GregorianCalendar startDate = new GregorianCalendar();
-//		startDate.setTime(ibasics.getDatum());
-//		startDate.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-//		Timestamp start = new Timestamp(startDate.getTimeInMillis());
-
 		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
 
 		// Table PAARUNG is required for SPIELTAG but does only include League
@@ -197,7 +175,6 @@ public class HistoryCurve extends Curve {
 						}
 					} else {
 						pLastLeagueMatch = pNextLeagueMatch;
-						//dateOfLastLeagueMatch.setTime(pNextLeagueMatch.m_dDate);
 					}
 				}
 			}

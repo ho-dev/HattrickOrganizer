@@ -161,14 +161,7 @@ protected void paintComponent( Graphics g) {
     if(curve.first()) {
       Polygon polygon1 = new Polygon();
       Polygon polygon2 = new Polygon();
-      //GregorianCalendar HRFDate = new GregorianCalendar();
       boolean flag = curve.next();
-
-      //HRFDate.setTime( curve.getDate());
-
-      //int deltaX = m_startDate.instant.get( Calendar.DAY_OF_YEAR);
-      //int lastYear = m_startDate.get( Calendar.YEAR);
-      //int deltaYear = 0;
       double x;
       int iSpirit;
       int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
@@ -176,15 +169,7 @@ protected void paintComponent( Graphics g) {
 
       for(; flag; flag = curve.next()) {
         var curveDate =curve.getDate();
-//        if( lastYear != curveDate.get( Calendar.YEAR)) {
-//          deltaYear += 365;
-//          if( curveDate.isLeapYear( lastYear))
-//            deltaYear++;
-//          lastYear = curveDate.get( Calendar.YEAR);
-//        }
         x = (double)Duration.between(m_startDate.instant, curveDate.instant).toHours()/24D + dayOffset;
-//        x = (double)curveDate.get( Calendar.DAY_OF_YEAR) + (double)curveDate.get( Calendar.HOUR_OF_DAY)/24D
-//            - (double)deltaX + (double)deltaYear + (double)dayOffset;
         iSpirit = (int)((curve.getSpirit() * (double)m_iMaxY) / m_dValues);
 
         if( curve.getPointType() == Curve.RESET_PT) {
@@ -211,30 +196,13 @@ protected void paintComponent( Graphics g) {
   private void drawIndicators( Graphics2D graphics2d, Curve curve) {
     graphics2d.setColor(Color.BLACK);
     if(curve.first()) {
-//      GregorianCalendar gregoriancalendar = new GregorianCalendar().get();
-//      GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
       boolean flag = curve.next();
-//      gregoriancalendar1.setTime(curve.getDate());
-//      gregoriancalendar.setTime(curve.getDate());
-//      int iStartDayOfYear = m_startDate.get(DAY_OF_YEAR);
-//      int iStartYear = m_startDate.get(YEAR);
-//      int k = 0;
-      //boolean flag1 = false;
-      //byte byte0 = 40;
       int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
       if( dayOffset < 0) dayOffset += 7;
 
       HelperWrapper ihelper = HelperWrapper.instance();
       for(; flag; flag = curve.next()) {
-//        gregoriancalendar.setTime(curve.getDate());
-//        if(iStartYear != gregoriancalendar.get(1)) {
-//          k += 365;
-//          if(gregoriancalendar.isLeapYear(iStartYear))
-//            k++;
-//          iStartYear = gregoriancalendar.get(1);
-//        }
         var xCoord = (double)Duration.between(m_startDate.instant, curve.getDate().instant).toHours()/24D + dayOffset;
-        //int xCoord = (gregoriancalendar.get(6) - iStartDayOfYear) + k + j1;
         int yCoord = (int)(((curve.getSpirit() + 0.5D) * (double)m_iMaxY) / m_dValues);
         switch (curve.getPointType()) {
           case Curve.TRAINER_DOWN_PT -> {
@@ -324,18 +292,10 @@ protected void paintComponent( Graphics g) {
 
 
   private void drawSeason( Graphics2D graphics2d) {
-//    GregorianCalendar today = new GregorianCalendar();
-//    today.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
-
     var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
-
     // Week starts at Saturday = 7, Sunday = 1
     int iDay = today.instant.get(DAY_OF_WEEK);
-
     int iSeason =HOVerwaltung.instance().getModel().getBasics().getSeason();
-
-//    m_dFactor = (double)(m_iMaxX - m_iCoordX0 + DXFrame) / (double)m_iDaysToDisplay;
-//    if(m_dFactor < 1.0D) m_dFactor = 1.0D;
 
     // Spieltag increases with game, therefore -1
     int iSeasonWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag()-1;
@@ -363,8 +323,6 @@ protected void paintComponent( Graphics g) {
     graphics2d.setColor(ThemeManager.getColor(HOColorName.TSFORECAST_ALT_COLOR));
     graphics2d.drawString( HOVerwaltung.instance().getLanguageString( "Season") + " " + iSeason,
                            iXX2 + (iXX3-iXX2)/2, iYText);
-//ErrorLog.writeln("Saisonstart(F): "+ (double) iCurrentSeasonStart*m_dFactor);
-//ErrorLog.writeln("Saisonstart   : "+ iCurrentSeasonStart);
 
     // previous seasons
     if(iCurrentSeasonStart > 0) {
@@ -423,9 +381,6 @@ protected void paintComponent( Graphics g) {
   //Calculate first and last day of diagram, as well as the currentday and the range of the diagram in days,
   //depending on which curves are switched on
   private void setStartEndDate() {
-//    m_startDate = new GregorianCalendar();
-//
-//    m_startDate.setTime( HOVerwaltung.instance().getModel().getBasics().getDatum());
     m_startDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
     m_endDate = new HODateTime( m_startDate);
 
@@ -446,23 +401,10 @@ protected void paintComponent( Graphics g) {
 
     //calculate days to display
     m_iDaysToDisplay = (int)Duration.between(m_startDate.instant,m_endDate.instant).toDays();
-//    if( m_startDate.get( Calendar.YEAR) != m_endDate.get( Calendar.YEAR)) {
-//      m_iDaysToDisplay = 365;
-//      if( m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
-//        m_iDaysToDisplay++;
-//    }
-//    m_iDaysToDisplay += m_endDate.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
 
     //calculate days from start to today
     m_iTodayPosition = 0;
-//    GregorianCalendar today = new GregorianCalendar();
     var today =HOVerwaltung.instance().getModel().getBasics().getDatum();
-//    if( m_startDate.get( Calendar.YEAR) != today.get( Calendar.YEAR)) {
-//      m_iTodayPosition = 365;
-//      if(m_startDate.isLeapYear(m_startDate.get( Calendar.YEAR)))
-//        m_iTodayPosition++;
-//    }
-//    m_iTodayPosition += today.get( Calendar.DAY_OF_YEAR) - m_startDate.get( Calendar.DAY_OF_YEAR);
     m_iTodayPosition = (int)Duration.between(m_startDate.instant, today.instant).toDays();
   }
 

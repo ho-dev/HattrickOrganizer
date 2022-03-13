@@ -30,12 +30,9 @@ import static core.gui.theme.ThemeManager.getColor;
 class HrfDetails {
 
 	private HelperWrapper m_helper = HelperWrapper.instance();
-//	private String m_Str_Datum;
 	private String m_Str_DatumVorher;
 	private String m_Str_DatumDanach;
-	private String m_inDB;
 	private HODateTime m_Datum;
-//	private Timestamp m_Timestamp;
 	private String m_Wochentag;
 	private int m_Kw;
 	private String m_TrArt;
@@ -59,7 +56,6 @@ class HrfDetails {
 	private Icon m_bild;
 
 	private ResultSet m_rs = null;
-//	private GregorianCalendar gc = null;
 
 	public HrfDetails() {
 	}
@@ -139,26 +135,7 @@ class HrfDetails {
 	 *
 	 */
 	void calcDatum() {
-//		var year = m_Datum.instant.get(ChronoField.YEAR);
-//		var month = m_Datum.instant.get(ChronoField.MONTH_OF_YEAR);
-//		var day = m_Datum.instant.get(ChronoField.DAY_OF_MONTH);
-//		String tStamp_datum = tStamp;
-//		int jahr = Integer.parseInt(tStamp_datum.substring(0, 4));
-//		int monat = Integer.parseInt(tStamp_datum.substring(5, 7));
-//		int tag = Integer.parseInt(tStamp_datum.substring(8, 10));
-//		// int sekunde = Integer.parseInt(tStamp_datum.substring(17));
-//		gc = new GregorianCalendar();
-//		gc.set(Calendar.DAY_OF_MONTH, tag);
-//		gc.set(Calendar.MONTH, monat - 1);
-//		gc.set(Calendar.YEAR, jahr);
-		/*
-		 * gc.set(Calendar.HOUR, stunde); gc.set(Calendar.MINUTE, minute);
-		 * gc.set(Calendar.SECOND, sekunde);
-		 */
-//		setDatum(gc.get(Calendar.DAY_OF_MONTH), gc.get(Calendar.MONTH),
-//				gc.get(Calendar.YEAR));
 		setKw(m_Datum.instant.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-
 		var value = m_Datum.instant.get(ChronoField.DAY_OF_WEEK);
 		String[] tage = HrfExplorer.getTage();
 		switch (value) {
@@ -245,13 +222,6 @@ class HrfDetails {
 	 */
 	int getFans() {
 		return m_Fans;
-	}
-
-	/**
-	 * @return Returns the m_inDB.
-	 */
-	String getinDB() {
-		return m_inDB;
 	}
 
 	/**

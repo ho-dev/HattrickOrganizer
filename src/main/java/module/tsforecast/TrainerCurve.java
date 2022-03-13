@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 class TrainerCurve extends Curve {
 
-	TrainerCurve() throws SQLException {
+	TrainerCurve() {
 		readTrainer();
 	}
 
@@ -44,17 +44,10 @@ class TrainerCurve extends Curve {
 
 	double getCurrentLeadership() {
 		last();
-		// ErrorLog.writeln( "currentLeadership = " + getSpirit());
 		return getSpirit();
 	}
 
 	private void readTrainer() {
-//		GregorianCalendar gregoriancalendar = new GregorianCalendar();
-//		gregoriancalendar.setTime(HOVerwaltung.instance().getModel()
-//				.getBasics().getDatum());
-//		gregoriancalendar.add(Calendar.WEEK_OF_YEAR, -WEEKS_BACK);
-//		Timestamp start = new Timestamp(gregoriancalendar.getTimeInMillis());
-
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS);
 
 		int iLeadership;

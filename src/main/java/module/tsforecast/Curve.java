@@ -75,6 +75,7 @@ class Curve {
 			m_iMatchDay = point.m_iMatchDay;
 			m_mtMatchType = point.m_mtMatchType;
 			m_iPointType = point.m_iPointType;
+			m_strTooltip = point.m_strTooltip;
 		}
 
 		Point(HODateTime date, double dSpirit, int iAttitude, int iMatchDay,
@@ -181,26 +182,8 @@ class Curve {
 		m_clPoints.add(i, new Point(point));
 	}
 
-	// -- protected
-	// ---------------------------------------------------------------------
-
 	protected static int getDiffDays(Point point1, Point point2) {
 		return (int)Duration.between(point1.m_dDate.instant, point2.m_dDate.instant).toDays();
-//		GregorianCalendar gregoriancalendar1 = new GregorianCalendar();
-//		gregoriancalendar1.setTime(point1.m_dDate);
-//		GregorianCalendar gregoriancalendar2 = new GregorianCalendar();
-//		gregoriancalendar2.setTime(point2.m_dDate);
-//		int iRet = 0;
-//		if (gregoriancalendar1.get(Calendar.YEAR) != gregoriancalendar2
-//				.get(Calendar.YEAR)) {
-//			iRet += 365;
-//			if (gregoriancalendar1.isLeapYear(gregoriancalendar1
-//					.get(Calendar.YEAR)))
-//				iRet++;
-//		}
-//		iRet += gregoriancalendar2.get(Calendar.DAY_OF_YEAR)
-//				- gregoriancalendar1.get(Calendar.DAY_OF_YEAR);
-//		return iRet;
 	}
 
 }
