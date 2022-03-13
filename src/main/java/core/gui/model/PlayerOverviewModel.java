@@ -25,7 +25,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 * constructor
 	 *
 	 */
-	protected PlayerOverviewModel(int id ){
+	protected PlayerOverviewModel(UserColumnController.ColumnModelId id ){
 		super(id,"Spieleruebersicht");
 		initialize();
 	}
@@ -41,21 +41,15 @@ public final class PlayerOverviewModel extends HOTableModel {
 		
 		UserColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
 		int skillIndex = 9; // - 20
-		for (int i = 0; i < skills.length; i++) {
-			columns[skillIndex+i] = skills[i];
-		}
+		System.arraycopy(skills, 0, columns, skillIndex + 0, skills.length);
 		
 		UserColumn[] positions =  UserColumnFactory.createPlayerPositionArray();
 		int positionIndex = 23;//- 41
-		for (int i = 0; i < positions.length; i++) {
-			columns[positionIndex+i] = positions[i];
-		}
+		System.arraycopy(positions, 0, columns, positionIndex + 0, positions.length);
 		
 		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
 		int goalsIndex = 42;//-45
-		for (int i = 0; i < goals.length; i++) {
-			columns[goalsIndex+i] = goals[i];
-		}
+		System.arraycopy(goals, 0, columns, goalsIndex + 0, goals.length);
 		UserColumn[] add = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = add[0];
 		columns[2] = add[1];
@@ -75,11 +69,11 @@ public final class PlayerOverviewModel extends HOTableModel {
     public final Player getPlayer(int id) {
         // Can be negative for temp player
         if (id != 0) {
-            for (int i = 0; i < m_vPlayers.size(); i++) {
-                if (m_vPlayers.get(i).getPlayerID() == id) {
-                    return m_vPlayers.get(i);
-                }
-            }
+			for (Player m_vPlayer : m_vPlayers) {
+				if (m_vPlayer.getPlayerID() == id) {
+					return m_vPlayer;
+				}
+			}
         }
 
         return null;

@@ -3,6 +3,7 @@ package module.youth;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
+import core.gui.model.UserColumnController;
 import core.gui.theme.ThemeManager;
 import core.model.enums.MatchType;
 import core.util.HODateTime;
@@ -18,7 +19,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
 
     private YouthPlayer youthPlayer;
 
-    public YouthPlayerDetailsTableModel(int id) {
+    public YouthPlayerDetailsTableModel(UserColumnController.ColumnModelId id) {
         super(id,"YouthPlayerDetails");
         columns =  initColumns();
     }

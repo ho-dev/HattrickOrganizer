@@ -30,7 +30,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	 * constructor
 	 *
 	 */
-	public PlayerAnalysisModel(int id, int instance){
+	public PlayerAnalysisModel(UserColumnController.ColumnModelId id, int instance){
 		super(id,"SpielerAnalyse");
 		super.instance = instance;
 		initialize();

@@ -42,7 +42,7 @@ public class SkillupTable extends JTable {
 		ISkillChange skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
 
 		if (skillup != null ) {
-			return java.text.DateFormat.getDateTimeInstance().format(skillup.getDate());
+			return skillup.getDate().toLocaleDateTime();
 		}
 
 		return "";
