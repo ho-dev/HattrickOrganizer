@@ -53,14 +53,15 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Feb 20, 2022	
+Reports by Contributors - Dec 20, 2021 - Mar 13, 2022	
 
-* Foppe	577
+* Foppe	640
 * \_KOHb\_	76
 * akasolace	76
 * Lidegand 	73
 * anti_anti 69
 * Moorhuhninho	67
 * sich	35
+* dzsoo 18
 * wsbrenk 11
-* Total translated:	984
+* Total translated:	1065
