@@ -135,8 +135,6 @@ public class MyConnector {
 	 * @param arenaId
 	 *            id of the arena to fetch (-1 = our arena)
 	 * @return arena xml
-	 * 
-	 * @throws IOException
 	 */
 	public String downloadArena(int arenaId) {
 		String url = htUrl + "?file=arenadetails";
@@ -152,8 +150,6 @@ public class MyConnector {
 	 * @param regionId
 	 *            id of the region to fetch
 	 * @return regiondetails xml
-	 *
-	 * @throws IOException
 	 */
 	public String getRegion(int regionId) {
 		String url = htUrl + "?file=regiondetails";
@@ -169,8 +165,6 @@ public class MyConnector {
 	 * @param playerId
 	 *            id of the region to fetch
 	 * @return training events xml
-	 *
-	 * @throws IOException
 	 */
 	public String getTrainingEvents(int playerId){
 		String url = htUrl + "?file=trainingevents&playerID=" + playerId;
@@ -249,8 +243,6 @@ public class MyConnector {
 	 * @param lastDate
 	 *            the last date of the period of time.
 	 * @return the a string containing the matches data in XML format.
-	 * @throws IOException
-	 *             if an io-error occurred when fetching the matches.
 	 */
 	public String getMatchesArchive(int teamId, HODateTime firstDate, HODateTime lastDate){
 		StringBuilder url = new StringBuilder();
@@ -280,11 +272,11 @@ public class MyConnector {
 		}
 
 		if (firstDate != null) {
-			url.append("&FirstMatchDate=").append(firstDate.toHT());
+			url.append("&FirstMatchDate=").append(URLEncoder.encode(firstDate.toHT(), StandardCharsets.UTF_8));
 		}
 
 		if (lastDate != null) {
-			url.append("&LastMatchDate=").append(lastDate.toHT());
+			url.append("&LastMatchDate=").append(URLEncoder.encode(lastDate.toHT(), StandardCharsets.UTF_8));
 		}
 		if ( sourceSystem == SourceSystem.HTOINTEGRATED) url.append("&includeHTO=true");
 		else if ( sourceSystem == SourceSystem.YOUTH) url.append("&isYouth=true");
@@ -344,7 +336,6 @@ public class MyConnector {
 	 * @param matchType
 	 *            The match type connected to the match
 	 * @return The api content (xml)
-	 * @throws IOException
 	 */
 	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
 		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
@@ -368,7 +359,6 @@ public class MyConnector {
 	 *            The string with the actual orders. See the CHPP API
 	 *            documentation.
 	 * @return the result xml from the upload
-	 * @throws IOException
 	 */
 	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
