@@ -733,7 +733,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				"', HeimID=" + match.getHomeTeamID() +
 				", GastName='" + DBManager.insertEscapeSequences(match.getGuestTeamName()) +
 				"', GastID=" + match.getGuestTeamID() +
-				", MatchDate='" + match.getMatchSchedule().toHT() +
+				", MatchDate='" + match.getMatchSchedule().toDbTimestamp() +
 				"', HeimTore=" + match.getHomeTeamGoals() +
 				", GastTore=" + match.getGuestGuestGoals() +
 				", Aufstellung=" + match.isOrdersGiven() +
