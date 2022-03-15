@@ -1191,7 +1191,7 @@ public class DBManager {
 	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
 		String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
 		final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
-				teamId, teamId, firstMatchDate.toHT(), lastMatchDate.toHT(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
+				teamId, teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
 
 		return getMatchesKurzInfo(where);
 	}
