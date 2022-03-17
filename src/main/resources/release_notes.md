@@ -3,7 +3,6 @@
 ## Highlights
 * refactoring player details panel showing players' avatars now (#1349)
 * refactoring of lineup panel (#1267)
-* tracking confidence and team spirit of nt teams (#1305)
 
 ## Detailed Changelog
 
@@ -32,6 +31,7 @@
 
 ### NT
 * fix download xml parse errors (#1305)
+* tracking confidence and team spirit of nt teams (#1305)
 
 ### Training
 * fix NPE in training tab in America-based timezones (#1296)
