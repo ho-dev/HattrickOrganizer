@@ -137,41 +137,22 @@ final class TrainingsTable extends AbstractTable {
 		return false;
 	}
 
-	// FIXME This method and the next one can be collapsed into one.
 	List<TrainingPerWeek> getTrainingList() {
-		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
-
-		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY TRAINING_DATE DESC";
-
-		try {
-			final ResultSet rs = adapter.executeQuery(statement);
-
-			if (rs != null) {
-				rs.beforeFirst();
-				while (rs.next()) {
-					vTrainings.add(getTrainingPerWeek(rs));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(),"TrainingsTable.getTrainingList " + e.getMessage());
-		}
-
-		return vTrainings;
+		return getTrainingList(null, null);
 	}
 
-
 	public List<TrainingPerWeek> getTrainingList(Timestamp fromDate, Timestamp toDate) {
-
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
-
-		var statement = new StringBuilder("SELECT * FROM ")
-				.append(getTableName())
-				.append(" WHERE TRAINING_DATE < '").append(toDate);
-
-				if (fromDate!=null) {
-					statement.append("' AND TRAINING_DATE >= '").append(fromDate);
-				}
-				statement.append("' ORDER BY TRAINING_DATE ASC");
+		var statement = new StringBuilder("SELECT * FROM ").append(getTableName());
+		var sep = " WHERE ";
+		if ( toDate != null ){
+			statement.append(sep).append("TRAINING_DATE < '").append(toDate).append("'");
+			sep = " AND ";
+		}
+		if (fromDate!=null) {
+			statement.append(sep).append("TRAINING_DATE >= '").append(fromDate).append("'");
+		}
+		statement.append(" ORDER BY TRAINING_DATE DESC");
 
 		try {
 			final ResultSet rs = adapter.executeQuery(statement.toString());
