@@ -18,8 +18,6 @@ import java.util.*;
 
 /**
  * Class that create a list of TrainingPerWeek objects between 2 dates.
- *
- * FIXME DB logic should be pushed down into the DB layer, there is a lot of code duplication in this class
  */
 public class TrainingWeekManager {
 
