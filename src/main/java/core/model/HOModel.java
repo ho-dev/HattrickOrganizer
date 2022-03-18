@@ -513,16 +513,14 @@ public class HOModel {
      * Calculates the subskills of each player based on recent trainings
      */
     public final void calcSubskills() {
-
+        // push recent training to historical training table
+        TrainingManager.instance().updateHistoricalTrainings();
         var trainingWeeks = getTrainingWeeksSincePreviousDownload();
         for (var player : this.getCurrentPlayers()) {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
         DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum().toDbTimestamp());
-
-        // push recent training to historical training table
-        TrainingManager.instance().updateHistoricalTrainings();
     }
 
     /**
