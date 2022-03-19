@@ -25,12 +25,12 @@ import javax.swing.*;
 public class ImageUtilities {
 
     /** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
-    private static Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<Integer,ImageIcon>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<Integer,ImageIcon>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<Integer,ImageIcon>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<Integer,ImageIcon>();
+    private static Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
+    private static Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
+    private static Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
+    private static Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
     /** Cache für Transparent gemachte Bilder */
-    public static HashMap<Image,Image> m_clTransparentsCache = new HashMap<Image,Image>();
+    public static HashMap<Image,Image> m_clTransparentsCache = new HashMap<>();
     public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
 
 	/**
@@ -49,7 +49,7 @@ public class ImageUtilities {
 	 * Makes a colour in the image transparent.
 	 */
 	public static Image makeColorTransparent(Image im, Color color) {
-		Image image = null;
+		Image image;
 
 		//Cache durchsuchen
 		image = m_clTransparentsCache.get(im);
@@ -79,8 +79,8 @@ public class ImageUtilities {
 	}
 
 	public static ImageIcon getImageIcon4Veraenderung(int wert, boolean aktuell) {
-	        ImageIcon icon = null;
-	        final Integer keywert = Integer.valueOf(wert);
+	        ImageIcon icon;
+	        final Integer keywert = wert;
 	        int xPosText = 3;
 	
 	        // Nicht im Cache
@@ -139,7 +139,7 @@ public class ImageUtilities {
 	                    g2d.setColor(Color.black);
 	                    g2d.drawString(wert + "", xPosText + 1, 11);
 	                }
-	            } else if (wert < 0) {
+	            } else {
 	                final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
 	                final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
 	
@@ -162,7 +162,7 @@ public class ImageUtilities {
 	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 	                }
 	
-	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
+	                g2d.setFont(new Font("sansserif", Font.PLAIN, 10));
 	
 	                //Position bei grossen Zahlen weiter nach vorne
 	                if (wert < -9) {
@@ -207,8 +207,8 @@ public class ImageUtilities {
 	 * @return an icon representation of the value
 	 */
 	public static ImageIcon getWideImageIcon4Veraenderung(int value, boolean current) {
-        ImageIcon icon = null;
-        final Integer keywert = Integer.valueOf(value);
+        ImageIcon icon;
+        final Integer keywert = value;
         int xPosText = 8;
 
         // Not in cache
@@ -329,9 +329,9 @@ public class ImageUtilities {
 	 *
 	 */
 	public static Icon getImage4Position(int posid, byte taktik, int trickotnummer) {
-		Color trickotfarbe = null;
-		Image trickotImage = null;
-		Icon komplettIcon = null;
+		Color trickotfarbe;
+		Image trickotImage;
+		Icon komplettIcon;
 		StringBuilder key = new StringBuilder(20);
 		// Im Cache nachsehen
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
@@ -467,9 +467,8 @@ public class ImageUtilities {
 //  This method returns true if the specified image has transparent pixels  
     private static boolean hasAlpha(Image image) {  
         // If buffered image, the color model is readily available  
-        if (image instanceof BufferedImage) {  
-            BufferedImage bimage = (BufferedImage)image;  
-            return bimage.getColorModel().hasAlpha();  
+        if (image instanceof BufferedImage bimage) {
+			return bimage.getColorModel().hasAlpha();
         }  
       
         // Use a pixel grabber to retrieve the image's color model;  
@@ -477,7 +476,7 @@ public class ImageUtilities {
          PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);  
         try {  
             pg.grabPixels();  
-        } catch (InterruptedException e) {  
+        } catch (InterruptedException ignored) {
         }  
       
         // Get the image's color model  
@@ -499,7 +498,7 @@ public class ImageUtilities {
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
         String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
-        Icon komplettIcon = ThemeManager.instance().getIcon(key);
+        Icon komplettIcon = ThemeManager.getIcon(key);
 
 
         if (komplettIcon == null) {
@@ -511,19 +510,18 @@ public class ImageUtilities {
             Map<Object, Object> colorMap = Map.of("jerseyColor", jerseyColor,
                                                   "collarColor", jerseyColor,
                                                   "outlineColor", textColor);
-            int width = size;
-            int height = Math.round(size * 16f / 20f);
+			int height = Math.round(size * 16f / 20f);
             Icon jerseyIcon = IconLoader.get().loadSVGIcon("gui/bilder/jerseys.svg",
-                                                           width, height, true, colorMap);
+					size, height, true, colorMap);
 
             Icon numberIcon = EmptyIcon.create(0);
-            if (trickotnummer > 0 && trickotnummer < 50) {
+            if (trickotnummer > 0 && trickotnummer < 100) {
                 int baseline = Math.round(height * 13f / 16f);
                 int fontSize = Math.round(height * 8f / 16f);
                 numberIcon = new TextIcon(String.valueOf(trickotnummer),
                                           textColor,
                                           new Font(Font.SANS_SERIF, Font.BOLD, fontSize),
-                                          width, height, baseline);
+						size, height, baseline);
             }
             komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
             ThemeManager.instance().put(key, komplettIcon);
@@ -533,9 +531,9 @@ public class ImageUtilities {
     }
 
 	public static Icon getSmileyIcon(String smileyName) {
-		if (Arrays.stream(HOIconName.SMILEYS).anyMatch(smileyName::equals)) {
+		if (Arrays.asList(HOIconName.SMILEYS).contains(smileyName)) {
 			String key = smileyName + "_cached";
-			Icon smileyIcon = ThemeManager.instance().getIcon(key);
+			Icon smileyIcon = ThemeManager.getIcon(key);
 			if (smileyIcon == null) {
 				int size = 15;
 				if (smileyName.equals("smiley-coach") || smileyName.equals("smiley-sale")) size = 17;
@@ -592,39 +590,17 @@ public class ImageUtilities {
 	private static Color getJerseyColorByPosition(int posid) {
 		Color trickotfarbe;
 		switch (posid) {
-			case IMatchRoleID.keeper -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
-			}
-			case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
-			}
-			case IMatchRoleID.leftBack, IMatchRoleID.rightBack -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
-			}
-			case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
-			}
-			case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
-			}
-			case IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.centralForward -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
-			}
-			case IMatchRoleID.substGK1 -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
-			}
-			case IMatchRoleID.substCD1 -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
-			}
-			case IMatchRoleID.substIM1 -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
-			}
-			case IMatchRoleID.substWI1 -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
-			}
-			case IMatchRoleID.substFW1 -> {
-				trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
-			}
+			case IMatchRoleID.keeper -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_KEEPER);
+			case IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_CENTRALDEFENCE);
+			case IMatchRoleID.leftBack, IMatchRoleID.rightBack -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WINGBACK);
+			case IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_MIDFIELD);
+			case IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_WING);
+			case IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.centralForward -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_FORWARD);
+			case IMatchRoleID.substGK1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBKEEPER);
+			case IMatchRoleID.substCD1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBDEFENCE);
+			case IMatchRoleID.substIM1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBMIDFIELD);
+			case IMatchRoleID.substWI1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBWING);
+			case IMatchRoleID.substFW1 -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT_SUBFORWARD);
 			default -> trickotfarbe = ThemeManager.getColor(HOColorName.SHIRT);
 		}
 		return trickotfarbe;
@@ -814,8 +790,7 @@ public class ImageUtilities {
 				case "trainbar_pt_fpt" ->{
 					b1=getColor(HOColorName.PARTIAL_TRAINING_DONE); b2=getColor(HOColorName.PARTIAL_TRAINING_DONE);
 					b3=getColor(HOColorName.PARTIAL_TRAINING_PLANNED); b4=getColor(HOColorName.PARTIAL_TRAINING_PLANNED);}
-				default -> {
-					HOLogger.instance().error(ImageUtilities.class, "requested training preview color has not been recognized: "+id);}
+				default -> HOLogger.instance().error(ImageUtilities.class, "requested training preview color has not been recognized: "+id);
 			}
 
 			Map<Object, Object> colorMap = Map.of("b1FillColor", b1, "b2FillColor", b2,
