@@ -13,6 +13,7 @@
 
 ### Squad
 * refactoring player details panel showing players' avatars now (#1349)
+* display jersey numbers greater than 49 (#1410)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)
@@ -54,7 +55,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Mar 13, 2022	
+Reports by Contributors - Dec 20, 2021 - Mar 19, 2022	
 
 * Foppe	640
 * \_KOHb\_	76
