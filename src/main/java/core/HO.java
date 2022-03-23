@@ -87,7 +87,7 @@ public class HO {
 
 		if (args != null) {
 			args = Arrays.stream(args).map(String::toUpperCase).toArray(String[]::new);
-			if(Arrays.asList(args).contains("INSTALLED")) {portable_version = false;};
+			if(Arrays.asList(args).contains("INSTALLED")) {portable_version = false;}
 			String arg;
 			for (String _arg : args) {
 				arg = _arg.trim().toUpperCase();
@@ -188,9 +188,11 @@ public class HO {
 		UserColumnController.instance().load();
 
 		// Set the currency from HRF
-		float fxRate = (float) HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
-		if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
-
+		var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+		if ( xtra != null) {
+			float fxRate = (float) xtra.getCurrencyRate();
+			if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
+		}
 		// Upgrade database configuration
 		if (!DBManager.instance().isFirstStart()) {
 			interuptionsWindow.setInfoText(7, "Upgrade DB configuration");

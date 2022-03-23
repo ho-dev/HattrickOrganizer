@@ -639,10 +639,13 @@ public class HOModel {
      * otherwise of the current team
      */
     public int getLeagueIdPremierTeam() {
-        var countryId = getXtraDaten().getCountryId();
-        if (countryId != null) {
-            var ret = getLeagueId(countryId);
-            if (ret != null) return ret;
+        var xtra = getXtraDaten();
+        if (xtra != null ){
+            var countryId = xtra.getCountryId();
+            if (countryId != null) {
+                var ret = getLeagueId(countryId);
+                if (ret != null) return ret;
+            }
         }
         return getBasics().getLiga(); // should no longer happen
     }
