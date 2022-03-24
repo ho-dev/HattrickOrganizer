@@ -80,8 +80,11 @@ public class TrainingWeekManager {
 
 	private HODateTime getNextTrainingDate() {
 		if (nextTrainingDate == null) {
-			nextTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
-			lastUpdateDate = DBManager.instance().getMaxHrf().getDatum();
+			var xtra =  HOVerwaltung.instance().getModel().getXtraDaten();
+			if ( xtra != null) {
+				nextTrainingDate =xtra.getNextTrainingDate();
+				lastUpdateDate = DBManager.instance().getMaxHrf().getDatum();
+			}
 		}
 		return nextTrainingDate;
 	}

@@ -267,7 +267,11 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers
      */
     private List<PlayerTransfer> loadTransfers(String sqlStmt) {
-        final double curr_rate = HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate();
+        double curr_rate=1.;
+        var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+        if ( xtra != null ){
+            curr_rate = xtra.getCurrencyRate();
+        }
 
         final List<PlayerTransfer> results = new Vector<>();
         final ResultSet rs = DBManager.instance().getAdapter().executeQuery(sqlStmt);
