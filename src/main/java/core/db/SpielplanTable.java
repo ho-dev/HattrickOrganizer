@@ -180,8 +180,13 @@ final class SpielplanTable extends AbstractTable {
 
 				} else {
 					// New schedule, insert it.
-					String sql = "INSERT INTO "+getTableName()+" ( LigaID , LigaName , Saison, FetchDate ) VALUES(";
-					sql += (plan.getLigaId() + "," + "'" + plan.getLigaName() + "'," + plan.getSaison() + ",'" + plan.getFetchDate().toString() + "'" + " )");
+					String sql = "INSERT INTO " + getTableName() +
+							" ( LigaID , LigaName , Saison, FetchDate ) VALUES(" +
+							plan.getLigaId() + ",'" +
+							plan.getLigaName() + "'," +
+							plan.getSaison() + ",'" +
+							plan.getFetchDate().toDbTimestamp() +
+							"')";
 					adapter.executeUpdate(sql);
 				}
 

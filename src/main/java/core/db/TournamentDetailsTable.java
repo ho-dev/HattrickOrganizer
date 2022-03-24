@@ -98,9 +98,9 @@ public final class TournamentDetailsTable extends AbstractTable {
 			sql.append(oTournamentDetails.getTrophyType()).append(", ");
 			sql.append(oTournamentDetails.getNumberOfTeams()).append(", ");
 			sql.append(oTournamentDetails.getNumberOfGroups()).append(", ");
-			sql.append(oTournamentDetails.getLastMatchRound()).append(", ");
-			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getFirstMatchRoundDate())).append(", ");
-			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getNextMatchRoundDate())).append(", ");
+			sql.append(oTournamentDetails.getLastMatchRound()).append(", '");
+			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getFirstMatchRoundDate())).append("', '");
+			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getNextMatchRoundDate())).append("', ");
 
 			if (oTournamentDetails.getMatchesOngoing())
 			{
