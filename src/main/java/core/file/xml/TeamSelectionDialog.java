@@ -6,10 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -59,18 +56,30 @@ public class TeamSelectionDialog extends JDialog{
 		JPanel mainPanel = new JPanel();
 		mainPanel.setOpaque(false);
 		mainPanel.setLayout(new BorderLayout());
-		int xDimension = 370;
-		mainPanel.setSize(xDimension, 560);
+		mainPanel.setPreferredSize(new Dimension(300, 200));
 		mainPanel.add(teamComboBox, BorderLayout.NORTH);
 
 		JPanel selectedPanel = new JPanel();
-		selectedPanel.setLayout(new GridLayout(0, 2));
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.teamName")));
-		selectedPanel.add(teamName);
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.series")));
-		selectedPanel.add(teamSeries);
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.country")));
-		selectedPanel.add(teamCountry);
+		selectedPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(2, 2, 2, 2);
+
+		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.teamName")), gbc);
+		gbc.gridx = 1;
+		selectedPanel.add(teamName, gbc);
+		gbc.gridx=0;
+		gbc.gridy++;
+		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.series")),gbc);
+		gbc.gridx=1;
+		selectedPanel.add(teamSeries, gbc);
+		gbc.gridx=0;
+		gbc.gridy++;
+		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.country")), gbc);
+		gbc.gridx=1;
+		selectedPanel.add(teamCountry, gbc);
 		initTeam(0);
 
 		mainPanel.add(selectedPanel, BorderLayout.CENTER);
@@ -82,7 +91,7 @@ public class TeamSelectionDialog extends JDialog{
 		buttonPanel.add(m_jbCancel);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(mainPanel);
-		this.setSize(400, 500);
+
 		Dimension size = mainFrame.getToolkit().getScreenSize();
 		if (size.width > this.getSize().width) { // open dialog in the middle of the screen
 			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));

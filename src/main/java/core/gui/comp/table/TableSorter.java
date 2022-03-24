@@ -50,7 +50,7 @@ public class TableSorter extends TableMap {
 
     // index of the column representing the ID
     private int idColumn;
-    private int m_iInitSortColumnIndex = -1;
+    private int m_iInitSortColumnIndex;
 
     private int thirdColSort = -1; // index of the column using “special” sorting on third click.
     private int iThirdSort = 0; // click count to detect if third click.
@@ -183,7 +183,10 @@ public class TableSorter extends TableMap {
 
     @Override
 	public final Object getValueAt(int i, int j) {
-        if ((i < 0) || (j < 0)) {
+        if ( getRowCount() == 0 ){
+            return null;
+        }
+        if (i < 0 || j < 0 ) {
             return null;
         }
 
@@ -330,10 +333,7 @@ public class TableSorter extends TableMap {
         int i1 = k;
 
         if (((j - i) >= 4) && (compare(ai[k - 1], ai[k]) <= 0)) {
-            for (int j1 = i; j1 < j; j1++) {
-                ai1[j1] = ai[j1];
-            }
-
+            if (j - i >= 0) System.arraycopy(ai, i, ai1, i, j - i);
             return;
         }
 

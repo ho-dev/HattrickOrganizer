@@ -24,6 +24,8 @@ import module.teamAnalyzer.manager.PlayerDataManager;
 import module.youth.YouthTraining;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
+
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -529,7 +531,11 @@ public class HOModel {
      * @return list of training weeks between previous and current download (may be empty)
      */
     private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
-        return DBManager.instance().getTrainingList(o_previousHRF.getDatum().toDbTimestamp(), o_hrf.getDatum().toDbTimestamp());
+        Timestamp from = null;
+        if( o_previousHRF!=null){
+            from = o_previousHRF.getDatum().toDbTimestamp();
+        }
+        return DBManager.instance().getTrainingList(from, o_hrf.getDatum().toDbTimestamp());
     }
 
     /**
