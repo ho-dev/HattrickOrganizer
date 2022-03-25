@@ -106,6 +106,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         scoutAndEditorPanelConstraints.gridx = 2;
         scoutAndEditorPanelConstraints.weightx=1;
         scoutAndEditorPanelConstraints.weighty=1;
+        scoutAndEditorPanelConstraints.fill =  GridBagConstraints.BOTH;
         scoutAndEditorPanel.add(panel, scoutAndEditorPanelConstraints);
 
         scoutAndEditorPanelConstraints.gridx = 0;
