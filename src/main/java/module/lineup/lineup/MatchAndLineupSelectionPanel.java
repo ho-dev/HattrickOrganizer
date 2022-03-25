@@ -315,10 +315,11 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             i++;
         }
 
-        m_jcbUpcomingGames.setMaximumRowCount(i);
-        m_jcbUpcomingGames.setSelectedIndex(selected);
-        m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-
+        if ( i > 0) {
+            m_jcbUpcomingGames.setMaximumRowCount(i);
+            m_jcbUpcomingGames.setSelectedIndex(selected);
+            m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
+        }
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
     }

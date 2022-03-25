@@ -149,10 +149,6 @@ public class ConvertXml2Hrf {
 			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
 		}
 
-		HOMainFrame.instance().setWaitInformation(25);
-		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), 25);
-		MatchLineup matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(mc.downloadMatchLineup(-1, teamId,
-						MatchType.LEAGUE));
 		HOMainFrame.instance().setWaitInformation(30);
 		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), 30);
 		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
@@ -217,8 +213,19 @@ public class ConvertXml2Hrf {
 			}
 		}
 
+		MatchLineup matchLineup = null;
+		var finishedMatchesAvailable = matches.stream().anyMatch(f->f.getMatchStatus()==MatchKurzInfo.FINISHED);
+		if ( finishedMatchesAvailable) {
+			HOMainFrame.instance().setWaitInformation(59);
+			DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), 25);
+			var matchLineupString = mc.downloadMatchLineup(-1, teamId, MatchType.LEAGUE);
+			if (!matchLineupString.isEmpty()) {
+				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
+			}
+		}
+
 		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.match_details"), 60);
-		HOMainFrame.instance().setWaitInformation(59);
+		HOMainFrame.instance().setWaitInformation(60);
 
 		MatchLineupTeam matchLineupTeam = null;
 		int lastAttitude = 0;
@@ -248,7 +255,7 @@ public class ConvertXml2Hrf {
 		}
 
 		// Abschnitte erstellen
-		HOMainFrame.instance().setWaitInformation(60);
+		HOMainFrame.instance().setWaitInformation(61);
 
 		// basics
 		DownloadDialog.instance().setInformation(Helper.getTranslation("ls.update_status.create_basics"), 65);

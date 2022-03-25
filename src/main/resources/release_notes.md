@@ -3,6 +3,7 @@
 ## Highlights
 * refactoring player details panel showing players' avatars now (#1349)
 * refactoring of lineup panel (#1267)
+* enable more than three teams (#1415)
 
 ## Detailed Changelog
 
