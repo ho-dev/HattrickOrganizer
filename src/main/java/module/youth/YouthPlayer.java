@@ -661,6 +661,29 @@ public class YouthPlayer {
         return this.currentSkills;
     }
 
+    public double[] getSkillDevelopment(Skills.HTSkillID skillId) {
+        var trainingDevelopment = getTrainingDevelopment();
+        var ret = new double[trainingDevelopment.size()];
+        int i=0;
+        for ( var t : trainingDevelopment.values()){
+            var skills = t.getSkills();
+            var skill = skills.get(skillId);
+            ret[i++] = skill.getCurrentValue();
+        }
+        return ret;
+    }
+
+    public double[] getSkillDevelopmentDates() {
+        var trainingDevelopment = getTrainingDevelopment();
+        var ret = new double[trainingDevelopment.size()];
+        int i=0;
+        for ( var t : trainingDevelopment.keySet()){
+            ret[i++] = Date.from(t.instant).getTime();
+        }
+        return ret;
+
+    }
+
     public static class ScoutComment {
         private int youthPlayerId;
         private int index;

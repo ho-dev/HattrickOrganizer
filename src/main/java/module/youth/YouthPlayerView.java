@@ -2,11 +2,16 @@ package module.youth;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
+import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import core.util.Helper;
+import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
+import module.statistics.Colors;
+import module.training.Skills;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,11 +20,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Comparator;
+import java.util.Map;
 
 public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
 
     public static final String VERTICALSPLIT1_POSITION = "YouthPlayerView.VerticalSplitPosition";
     public static final String VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplit2Position";
+    private HOLinesChart youthSkillChart;
 
     private JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
@@ -71,14 +78,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         scoutAndEditorPanelConstraints.insets = new Insets(5,5,5,5);
         scoutAndEditorPanelConstraints.gridx=0;
         scoutAndEditorPanelConstraints.gridy=0;
+        scoutAndEditorPanelConstraints.gridwidth=2;
         scoutAndEditorPanelConstraints.weightx=1;
         scoutAndEditorPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), scoutAndEditorPanelConstraints);
         scoutAndEditorPanelConstraints.gridy++;
         scoutAndEditorPanel.add(playerScoutCommentField, scoutAndEditorPanelConstraints);
         scoutAndEditorPanelConstraints.gridy++;
+        scoutAndEditorPanelConstraints.gridwidth=1;
+
+        var ystart = scoutAndEditorPanelConstraints.gridy;
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
-            var skillInfoEditor = new YouthSkillInfoEditor();
+            var skillInfoEditor = new YouthSkillInfoEditor(skillIDColorMap.get(YouthPlayer.skillIds[i]));
             skillInfoEditor.addCurrentValueChangeListener(currentValueChangeListener);
             skillInfoEditor.addStartValueChangeListener(startValueChangeListener);
 
@@ -87,7 +98,27 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             scoutAndEditorPanel.add(skillInfoEditor, scoutAndEditorPanelConstraints );
             if ( i%2 == 1 ) scoutAndEditorPanelConstraints.gridy++;
         }
-        scoutAndEditorPanelConstraints.gridy++;
+
+        youthSkillChart = new HOLinesChart(false, HOVerwaltung.instance().getLanguageString("skill"), null,"#,##0", null );
+        youthSkillChart.setYAxisMin(1, 0.);
+        youthSkillChart.setYAxisMax(1, 9.);
+        var panel = new ImagePanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(youthSkillChart.getPanel());
+        scoutAndEditorPanelConstraints.gridheight = scoutAndEditorPanelConstraints.gridy+ystart+1;
+        scoutAndEditorPanelConstraints.gridy = 0;
+        scoutAndEditorPanelConstraints.gridx = 2;
+        scoutAndEditorPanelConstraints.gridwidth = 2;
+        scoutAndEditorPanelConstraints.weightx=1;
+        scoutAndEditorPanelConstraints.weighty=1;
+        scoutAndEditorPanelConstraints.fill =  GridBagConstraints.BOTH;
+        panel.setPreferredSize(new Dimension(320, 120));
+        scoutAndEditorPanel.add(panel, scoutAndEditorPanelConstraints);
+
+        scoutAndEditorPanelConstraints.gridx = 0;
+        scoutAndEditorPanelConstraints.gridy += scoutAndEditorPanelConstraints.gridheight+1;
+        scoutAndEditorPanelConstraints.gridwidth = 1;
+        scoutAndEditorPanelConstraints.gridheight = 1;
         scoutAndEditorPanelConstraints.weighty=1;
         scoutAndEditorPanel.add(new JPanel(), scoutAndEditorPanelConstraints); // empty rows to eat up remaining space
         split2.setRightComponent(new JScrollPane(scoutAndEditorPanel));
@@ -214,6 +245,17 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
     private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
     private boolean isRefreshingPlayerDetails =false;
+
+    final private Map<Skills.HTSkillID, Color> skillIDColorMap = Map.of(
+            Skills.HTSkillID.Keeper, Colors.getColor(Colors.COLOR_PLAYER_GK),
+            Skills.HTSkillID.SetPieces, Colors.getColor(Colors.COLOR_PLAYER_SP),
+            Skills.HTSkillID.Defender, Colors.getColor(Colors.COLOR_PLAYER_DE),
+            Skills.HTSkillID.Scorer, Colors.getColor(Colors.COLOR_PLAYER_SC),
+            Skills.HTSkillID.Winger, Colors.getColor(Colors.COLOR_PLAYER_WI),
+            Skills.HTSkillID.Passing, Colors.getColor(Colors.COLOR_PLAYER_PS),
+            Skills.HTSkillID.Playmaker, Colors.getColor(Colors.COLOR_PLAYER_PM)
+    );
+
     private void refreshPlayerDetails() {
         if (isRefreshingPlayerDetails) return;
         try {
@@ -226,9 +268,13 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             }
             if (player != null) {
                 playerNameLabel.setText(player.getFullName());
+                var chartDataModels = new LinesChartDataModel[YouthPlayer.skillIds.length];
                 for (int i = 0; i < YouthPlayer.skillIds.length; i++) {
-                    playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(YouthPlayer.skillIds[i]));
+                    var skillId = YouthPlayer.skillIds[i];
+                    playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(skillId));
+                    chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, skillIDColorMap.get(skillId), null);
                 }
+                youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, HOVerwaltung.instance().getLanguageString("Wochen"), "",false, true);
                 playerScoutCommentField.setText(getScoutComment(player));
                 playerDetailsTableModel.setYouthPlayer(player);
                 playerDetailsTableModel.initData();

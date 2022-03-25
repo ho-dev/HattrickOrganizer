@@ -55,7 +55,7 @@ public class DBManager {
 
 	/** database versions */
 	private static final int DBVersion = 600; // HO 6.0 version
-	private static final double DBConfigVersion = 5d; // HO 5.0 version
+	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);

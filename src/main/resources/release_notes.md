@@ -48,6 +48,7 @@
 * fix escaping of youth team names (#1295) 
 * fix set pieces is not limited by top3 skill rules (#1309)
 * fix settings loss of the first table columns (#1402)
+* show youth player's training development as line charts (#1418)
 
 ### Misc
 * fix finance bug concerning missing spectators' income in misc module (#1282)

@@ -85,19 +85,22 @@ public class YouthTableSorter extends AbstractTableModel {
                 JTableHeader h = (JTableHeader) e.getSource();
                 TableColumnModel columnModel = h.getColumnModel();
                 int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-                int column = columnModel.getColumn(viewColumn).getModelIndex();
-                if (column != -1) {
-                    var selection = getSelectedModelIndex();
-                    var status = getSortingOrder(column).getValue();
-                    if (!e.isControlDown()) {
-                        cancelSorting();
+                var vcolumn = columnModel.getColumn(viewColumn);
+                if (vcolumn != null) {
+                    int column = vcolumn.getModelIndex();
+                    if (column != -1) {
+                        var selection = getSelectedModelIndex();
+                        var status = getSortingOrder(column).getValue();
+                        if (!e.isControlDown()) {
+                            cancelSorting();
+                        }
+                        // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
+                        // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
+                        status = status + (e.isShiftDown() ? -1 : 1);
+                        status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
+                        setSortingStatus(column, Order.valueOf(status));
+                        setSelectedModelIndex(selection);
                     }
-                    // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
-                    // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
-                    status = status + (e.isShiftDown() ? -1 : 1);
-                    status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
-                    setSortingStatus(column, Order.valueOf(status));
-                    setSelectedModelIndex(selection);
                 }
             }
         });
