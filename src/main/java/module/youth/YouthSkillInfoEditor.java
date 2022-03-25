@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
 public class YouthSkillInfoEditor extends JPanel {
@@ -36,6 +37,7 @@ public class YouthSkillInfoEditor extends JPanel {
     public void setStartSkillValue() {
         skillInfo.setStartValue(SkillValue(skillStartValue.slider.getValue()));
     }
+
 
     class SkillInfoSlider extends JPanel {
         private YouthSkillInfo skillInfo;
@@ -84,16 +86,28 @@ public class YouthSkillInfoEditor extends JPanel {
             this.slider.addChangeListener(l);
         }
         double getSkillValue(){ return SkillValue(this.slider.getValue());}
+
     }
 
     private JLabel skillLabel = new JLabel();
     private SkillInfoSlider skillStartValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue")+": ");
     private SkillInfoSlider skillCurrentValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue")+": ");
+    private ImageIcon getImageIcon4Color(Color color) {
+        final BufferedImage bufferedImage = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 
-    public YouthSkillInfoEditor() {
+        final java.awt.Graphics2D g2d = (java.awt.Graphics2D) bufferedImage.getGraphics();
+
+        g2d.setColor(color);
+        g2d.fillRect(0, 0, 13, 13);
+
+        return new ImageIcon(bufferedImage);
+    }
+
+    public YouthSkillInfoEditor(Color color) {
         super(new BorderLayout());
         this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         skillLabel.setOpaque(false);
+        skillLabel.setIcon(getImageIcon4Color(color));
         this.add(skillLabel, BorderLayout.NORTH);
         var valuesPanel = new JPanel(new GridLayout(1,0, 20, 0));
         valuesPanel.add(skillStartValue);

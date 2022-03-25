@@ -11,6 +11,7 @@ import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
 import module.statistics.Colors;
+import module.training.Skills;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Comparator;
+import java.util.Map;
 
 public class YouthPlayerView extends JPanel implements Refreshable, ListSelectionListener {
 
@@ -76,16 +78,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         scoutAndEditorPanelConstraints.insets = new Insets(5,5,5,5);
         scoutAndEditorPanelConstraints.gridx=0;
         scoutAndEditorPanelConstraints.gridy=0;
+        scoutAndEditorPanelConstraints.gridwidth=2;
         scoutAndEditorPanelConstraints.weightx=1;
         scoutAndEditorPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), scoutAndEditorPanelConstraints);
         scoutAndEditorPanelConstraints.gridy++;
         scoutAndEditorPanel.add(playerScoutCommentField, scoutAndEditorPanelConstraints);
         scoutAndEditorPanelConstraints.gridy++;
+        scoutAndEditorPanelConstraints.gridwidth=1;
 
         var ystart = scoutAndEditorPanelConstraints.gridy;
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
-            var skillInfoEditor = new YouthSkillInfoEditor();
+            var skillInfoEditor = new YouthSkillInfoEditor(skillIDColorMap.get(YouthPlayer.skillIds[i]));
             skillInfoEditor.addCurrentValueChangeListener(currentValueChangeListener);
             skillInfoEditor.addStartValueChangeListener(startValueChangeListener);
 
@@ -101,12 +105,14 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         var panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
         panel.add(youthSkillChart.getPanel());
-        scoutAndEditorPanelConstraints.gridheight = scoutAndEditorPanelConstraints.gridy-ystart+1;
-        scoutAndEditorPanelConstraints.gridy = ystart;
+        scoutAndEditorPanelConstraints.gridheight = scoutAndEditorPanelConstraints.gridy+ystart+1;
+        scoutAndEditorPanelConstraints.gridy = 0;
         scoutAndEditorPanelConstraints.gridx = 2;
+        scoutAndEditorPanelConstraints.gridwidth = 2;
         scoutAndEditorPanelConstraints.weightx=1;
         scoutAndEditorPanelConstraints.weighty=1;
         scoutAndEditorPanelConstraints.fill =  GridBagConstraints.BOTH;
+        panel.setPreferredSize(new Dimension(320, 120));
         scoutAndEditorPanel.add(panel, scoutAndEditorPanelConstraints);
 
         scoutAndEditorPanelConstraints.gridx = 0;
@@ -239,6 +245,17 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
     private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
     private boolean isRefreshingPlayerDetails =false;
+
+    final private Map<Skills.HTSkillID, Color> skillIDColorMap = Map.of(
+            Skills.HTSkillID.Keeper, Colors.getColor(Colors.COLOR_PLAYER_GK),
+            Skills.HTSkillID.SetPieces, Colors.getColor(Colors.COLOR_PLAYER_SP),
+            Skills.HTSkillID.Defender, Colors.getColor(Colors.COLOR_PLAYER_DE),
+            Skills.HTSkillID.Scorer, Colors.getColor(Colors.COLOR_PLAYER_SC),
+            Skills.HTSkillID.Winger, Colors.getColor(Colors.COLOR_PLAYER_WI),
+            Skills.HTSkillID.Passing, Colors.getColor(Colors.COLOR_PLAYER_PS),
+            Skills.HTSkillID.Playmaker, Colors.getColor(Colors.COLOR_PLAYER_PM)
+    );
+
     private void refreshPlayerDetails() {
         if (isRefreshingPlayerDetails) return;
         try {
@@ -255,7 +272,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 for (int i = 0; i < YouthPlayer.skillIds.length; i++) {
                     var skillId = YouthPlayer.skillIds[i];
                     playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(skillId));
-                    chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, Colors.getColor(Colors.COLOR_PLAYER_TSI), null);
+                    chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, skillIDColorMap.get(skillId), null);
                 }
                 youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, HOVerwaltung.instance().getLanguageString("Wochen"), "",false, true);
                 playerScoutCommentField.setText(getScoutComment(player));
