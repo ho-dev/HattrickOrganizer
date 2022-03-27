@@ -1,6 +1,7 @@
 package core.model.match;
 
 import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
@@ -967,6 +968,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                             "Reload Matchdetails id: " + this.getMatchID());
                     boolean silenDownloadMode = OnlineWorker.isSilentDownload();
                     try {
+                        HOMainFrame.instance().resetInformation();
                         OnlineWorker.setSilentDownload(true);
                         if (OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true)) {
                             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
@@ -978,6 +980,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
                         HOLogger.instance().error(Matchdetails.class, ex.getMessage());
                     } finally {
                         OnlineWorker.setSilentDownload(silenDownloadMode);
+                        HOMainFrame.instance().setInformationCompleted();
                     }
                 }
             }

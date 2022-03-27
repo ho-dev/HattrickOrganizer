@@ -46,10 +46,12 @@ public class InfoPanel extends ImagePanel {
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * set the information text and progress bar value
+     * set the information text and increments progress bar value
      */
-    public void setInformation(String information, int progress) {
-        setProgressbarValue(progress);
+    public void setInformation(String information, int progressIncrement) {
+        var newProgress = getProgress() + progressIncrement;
+        if (newProgress > 100) newProgress = 100;
+        setProgressbarValue(newProgress);
         setInformation(information);
     }
 
@@ -125,6 +127,5 @@ public class InfoPanel extends ImagePanel {
         constraint.gridy = 0;
         layout.setConstraints(m_jpbProgressBar, constraint);
         add(m_jpbProgressBar);
-
     }
 }

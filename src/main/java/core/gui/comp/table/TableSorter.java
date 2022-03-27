@@ -154,25 +154,25 @@ public class TableSorter extends TableMap {
         return null;
     }
 
-
     public final Player getSpieler(int row) {
         if (row > -1) {
             try {
-            	final int id = Integer.parseInt(((ColorLabelEntry) getValueAt(row, idColumn)).getText());
-
-                if (getModel() instanceof PlayerOverviewModel) {
-                    return ((PlayerOverviewModel) getModel()).getPlayer(id);
-                } else if (getModel() instanceof LineupTableModel) {
-                    return ((LineupTableModel) getModel()).getPlayer(id);
-                } else {
-                    throw new Exception("Tablemodel unbekannt!");
+                var text = ((ColorLabelEntry) getValueAt(row, idColumn)).getText();
+                if ( text != null && !text.isEmpty()) {
+                    final int id = Integer.parseInt(text);
+                    if (getModel() instanceof PlayerOverviewModel) {
+                        return ((PlayerOverviewModel) getModel()).getPlayer(id);
+                    } else if (getModel() instanceof LineupTableModel) {
+                        return ((LineupTableModel) getModel()).getPlayer(id);
+                    } else {
+                        throw new Exception("Tablemodel unbekannt!");
+                    }
                 }
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),e);
                 return null;
             }
         }
-
         return null;
     }
 

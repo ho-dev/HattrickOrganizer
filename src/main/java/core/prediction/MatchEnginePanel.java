@@ -97,7 +97,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	public final void calculateNMatches(int numberOfMatches) {
 		int match = (1 + numberOfMatches) * 1000;
 		var mainframe = HOMainFrame.instance();
-		mainframe.setWaitInformation(0);
+		mainframe.resetInformation();
 		MatchResult result = new MatchResult();
 		final TeamData team1 = homeTeamPanel.getTeamData();
 		final TeamData team2 = guestTeamPanel.getTeamData();
@@ -155,11 +155,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 		slider.setValue(UserParameter.instance().simulatorMatches);
-		slider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent arg0) {
-				UserParameter.instance().simulatorMatches = slider.getValue();
-			}
-		});
+		slider.addChangeListener(arg0 -> UserParameter.instance().simulatorMatches = slider.getValue());
 		actionpanel.add(slider, BorderLayout.CENTER);
 
 		panel.add(actionpanel, BorderLayout.SOUTH);

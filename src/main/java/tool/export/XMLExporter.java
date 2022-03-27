@@ -109,7 +109,7 @@ public class XMLExporter  {
 
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
-				HOMainFrame.instance().setWaitInformation(0);
+				HOMainFrame.instance().resetInformation();
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				saveXML(file.getAbsolutePath(),date);
             }
@@ -117,7 +117,7 @@ public class XMLExporter  {
             HOLogger.instance().log(getClass(),ex);
         }
 
-        HOMainFrame.instance().resetInformation();
+        HOMainFrame.instance().setInformationCompleted();
     }
 
 
@@ -347,10 +347,10 @@ public class XMLExporter  {
 
 				//Player schreiben
 				for (var p : lineupTeam.getLineup().getAllPositions()) {
-					Player playerData = matchData.getPlayers().get(((MatchLineupPosition) p).getPlayerId());
+					Player playerData = matchData.getPlayers().get(p.getPlayerId());
 
 					//Bank + verletzte überspringen
-					if (((MatchLineupPosition) p).getRoleId() >= IMatchRoleID.startReserves) {
+					if (p.getRoleId() >= IMatchRoleID.startReserves) {
 						continue;
 					}
 
@@ -362,28 +362,28 @@ public class XMLExporter  {
 
 					ele = doc.createElement("SpielerID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getPlayerId()));
+					ele.appendChild(doc.createTextNode("" + p.getPlayerId()));
 					ele = doc.createElement("Spezialitaet");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));
 					ele = doc.createElement("RoleID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRoleId()));
+					ele.appendChild(doc.createTextNode("" + p.getRoleId()));
 					ele = doc.createElement("Tactic");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getBehaviour()));
+					ele.appendChild(doc.createTextNode("" + p.getBehaviour()));
 					ele = doc.createElement("HOPosition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getPosition()));
+					ele.appendChild(doc.createTextNode("" + p.getPosition()));
 					ele = doc.createElement("HTPositionCode");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRoleId()));
+					ele.appendChild(doc.createTextNode("" + p.getRoleId()));
 					ele = doc.createElement("Bewertung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getRating()));
+					ele.appendChild(doc.createTextNode("" + p.getRating()));
 					ele = doc.createElement("Name");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + ((MatchLineupPosition) p).getSpielerName()));
+					ele.appendChild(doc.createTextNode("" + p.getSpielerName()));
 					ele = doc.createElement("Alter");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode("" + playerData.getAlter()));

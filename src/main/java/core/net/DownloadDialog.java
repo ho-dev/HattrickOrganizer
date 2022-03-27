@@ -18,6 +18,7 @@ import core.model.player.Player;
 import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import core.util.Helper;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
@@ -44,7 +45,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	// ~ Instance fields--/
 	private static DownloadDialog m_clDownloadDialog;
 	private static HOVerwaltung hov = HOVerwaltung.instance();
-	private static InfoPanel m_jpInfoPanel;
 	private JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
 	private JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
@@ -255,12 +255,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		m_jbAbort.setLocation(380, 300);
 		getContentPane().add(m_jbAbort);
 
-		m_jpInfoPanel = new InfoPanel();
-		m_jpInfoPanel.setSize(510, 40);
-		m_jpInfoPanel.setLocation(10, 340);
-		getContentPane().add(m_jpInfoPanel);
-
-		setSize(530, 430);
+		setSize(550, 395);
 
 		final Dimension size = getToolkit().getScreenSize();
 
@@ -314,9 +309,11 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		HOModel model = hov.getModel();
 		int teamId = model.getBasics().getTeamId();
 
+		int progressIncrement = 3;
 		if (teamId > 0) {
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
 				// Only get lineups for own fixtures
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
 					OnlineWorker.getAllLineups(10);
@@ -331,6 +328,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
@@ -344,6 +342,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			if (bOK && m_jchFixtures.isSelected()) {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
+					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
 					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, model.getXtraDaten().getLeagueLevelUnitID());
 					if (fixtures != null) {
 						final Spielplan modelFixtures = hov.getModel().getFixtures();
@@ -379,6 +378,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 
 			if (bOK && m_jchOldFixtures.isSelected()) {
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
 				for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
 					if (s instanceof CBItem) {
 						final int seasonId = ((CBItem) s).getId();
@@ -400,14 +400,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		}
 
 		DBManager.instance().updateLatestData();
+		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
 		model.calcSubskills();
-	}
 
-	public void setWaitInformation( int progress){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), progress);}
-	public void resetInformation(){setInformation("",0);}
-	public void setInformation( String information) { setInformation(information,0);}
-	public void setInformation( String information, int progress){m_jpInfoPanel.setInformation(information, progress);}
-	public void setInformation( String information, Color color){m_jpInfoPanel.setInformation(information, color);}
+		HOMainFrame.instance().setInformationCompleted();
+
+	}
 
 	private void startNtDownload() {
 		try {

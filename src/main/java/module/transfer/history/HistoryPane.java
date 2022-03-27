@@ -103,70 +103,58 @@ public class HistoryPane extends JSplitPane {
 
         spinner.setFocusable(false);
         spinner.setEnabled(false);
-        spinner.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    refresh();
-                }
-            });
+        spinner.addChangeListener(e -> refresh());
 
         rb1.setSelected(true);
 
-        rb1.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                	JRadioButton button = (JRadioButton)e.getSource();
-                    if(button.getModel().isPressed()){
-                    	spinner.setEnabled(false);
-                    	refresh();
-                    }
-                }
-            });
-        rb2.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                	JRadioButton button = (JRadioButton)e.getSource();
-                    if(button.getModel().isPressed()){
-                    	spinner.setEnabled(true);
-                    	refresh();
-                    }
-                }
-            });
+        rb1.addChangeListener(e -> {
+            JRadioButton button = (JRadioButton)e.getSource();
+            if(button.getModel().isPressed()){
+                spinner.setEnabled(false);
+                refresh();
+            }
+        });
+        rb2.addChangeListener(e -> {
+            JRadioButton button = (JRadioButton)e.getSource();
+            if(button.getModel().isPressed()){
+                spinner.setEnabled(true);
+                refresh();
+            }
+        });
 
         JButton button = new JButton(HOVerwaltung.instance().getLanguageString("Menu.refreshData"));
-        button.addActionListener(new ActionListener() {
+        button.addActionListener(e -> {
 
-			public void actionPerformed(ActionEvent e) {
+            HOVerwaltung hoV1 = HOVerwaltung.instance();
+            int teamId = hoV1.getModel().getBasics().getTeamId();
+            if (teamId != 0 && !hoV1.getModel().getBasics().isNationalTeam()) {
 
-				 HOVerwaltung hoV = HOVerwaltung.instance();
-				 int teamId = hoV.getModel().getBasics().getTeamId();
-	            if ( teamId != 0 && !hoV.getModel().getBasics().isNationalTeam()) {
-	                final StringBuffer sBuffer = new StringBuffer();
+                String sBuffer = hoV1.getLanguageString("UpdConfirmMsg.0") +
+                        "\n" + hoV1.getLanguageString("UpdConfirmMsg.1") +
+                        "\n" + hoV1.getLanguageString("UpdConfirmMsg.2") +
+                        "\n\n" + hoV1.getLanguageString("UpdConfirmMsg.3");
 
-	                sBuffer.append(hoV.getLanguageString("UpdConfirmMsg.0"));
-	                sBuffer.append("\n" + hoV.getLanguageString("UpdConfirmMsg.1"));
-	                sBuffer.append("\n" + hoV.getLanguageString("UpdConfirmMsg.2"));
-	                sBuffer.append("\n\n" + hoV.getLanguageString("UpdConfirmMsg.3"));
+                final int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+                        sBuffer,
+                        HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                        JOptionPane.YES_NO_OPTION);
 
-	                final int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-	                                                                 sBuffer.toString(),
-	                                                                 HOVerwaltung.instance().getLanguageString("confirmation.title"),
-	                                                                 JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    try {
+                        HOMainFrame.instance().resetInformation();
+                        DBManager.instance().updateTeamTransfers(teamId);
+                        HOMainFrame.instance().setInformationCompleted();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
 
-	                if (choice == JOptionPane.YES_OPTION) {
-	                    try {
-	                        HOMainFrame.instance().setWaitInformation(0);
-	                        DBManager.instance().updateTeamTransfers(teamId);
-                            HOMainFrame.instance().resetInformation();
-	                    } catch (Exception ex) {
-	                        ex.printStackTrace();
-	                    }
+                    refresh();
+                }
+            } else {
+                Helper.showMessage(HOMainFrame.instance(), hoV1.getLanguageString("UpdMsg"), "", 1);
+            }
 
-	                    refresh();
-	                }
-	            } else {
-	            	 Helper.showMessage(HOMainFrame.instance(),hoV.getLanguageString("UpdMsg"), "", 1);
-	            }
-
-			}
-		});
+        });
 
 
         filterPanel.add(button,"1,1,2,1");
