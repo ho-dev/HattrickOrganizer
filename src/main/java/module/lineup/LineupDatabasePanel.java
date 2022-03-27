@@ -27,7 +27,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     private JCheckBox includeHTIntegrated;
     private JCheckBox includeTemplates;
     private JTextField templateName;
-    private JButton store;
+    private JButton storeButton;
+    private JButton deleteButton;
 
     private ArrayList<MatchKurzInfo> previousPlayedMatches = null;
     private ArrayList<MatchLineupTeam> templateLineups = null;
@@ -90,9 +91,13 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         add(templateName);
 
         gbc.gridy++;
-        store = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.save"));
-        layout.setConstraints(store, gbc);
-        add(store);
+        var buttonPanel = new JPanel(new FlowLayout());
+        storeButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+        deleteButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+        buttonPanel.add(storeButton);
+        buttonPanel.add(deleteButton);
+        layout.setConstraints(buttonPanel, gbc);
+        add(buttonPanel);
 
         addListeners();
     }
@@ -101,7 +106,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         m_jcbLoadLineup.addActionListener(e -> adoptLineup());
         includeHTIntegrated.addActionListener(e -> update_jcbLoadLineup(false));
         includeTemplates.addActionListener(e -> update_jcbLoadLineup(false));
-        store.addActionListener(e->storeTemplate());
+        storeButton.addActionListener(e->storeTemplate());
+        deleteButton.addActionListener(e->deleteTemplate());
     }
 
     private void removeListeners() {
@@ -114,8 +120,11 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         for (ActionListener al : includeHTIntegrated.getActionListeners()) {
             includeHTIntegrated.removeActionListener(al);
         }
-        for (ActionListener al : store.getActionListeners()) {
-            store.removeActionListener(al);
+        for (ActionListener al : storeButton.getActionListeners()) {
+            storeButton.removeActionListener(al);
+        }
+        for (ActionListener al : deleteButton.getActionListeners()) {
+            deleteButton.removeActionListener(al);
         }
     }
 
@@ -169,6 +178,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         m_jcbLoadLineup.addItem(null);
         int select = 0;
         int i = 1;
+        boolean enableDeleteButton=false;
         if ( includeTemplates.isSelected()) {
             for (var team : templateLineups) {
                 oTeam = new Team();
@@ -177,7 +187,12 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
                 oTeam.setMatchType(MatchType.NONE);
                 oTeam.setMatchID(-1);
                 m_jcbLoadLineup.addItem(oTeam);
-                if (Objects.equals(team.getTeamName(), templateName.getText())) select=i;
+                if (Objects.equals(team.getTeamName(), templateName.getText())){
+                    select=i;
+                    if (oTeam.isTemplate()){
+                        enableDeleteButton=true;
+                    }
+                }
                 i++;
             }
         }
@@ -201,6 +216,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         }
         m_jcbLoadLineup.setMaximumRowCount(i);
         m_jcbLoadLineup.setSelectedIndex(select);
+        deleteButton.setEnabled(enableDeleteButton);
     }
 
     private void adoptLineup() {
@@ -211,9 +227,11 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
             if (isMatchTeam(team)) {
                 teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 templateName.setText(getTemplateDefaultName());
+                deleteButton.setEnabled(false);
             } else {
                 templateName.setText(team.getName());
                 teamId = team.getTeamId();
+                deleteButton.setEnabled(true);
             }
 
             var matchLineupTeam = DBManager.instance().loadMatchLineupTeam(team.getMatchType().getMatchTypeId(), team.getMatchID(), teamId);
@@ -247,6 +265,17 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
         if ( isNewTemplate) {
             templateDefaultName=null;
+            this.update_jcbLoadLineup();
+        }
+    }
+
+    private void deleteTemplate() {
+        var team = (Team) m_jcbLoadLineup.getSelectedItem();
+        if (team != null && !isMatchTeam(team)) {
+            var matchLineupTeam = new MatchLineupTeam((MatchType) team.getMatchType(), team.getMatchID(), team.getName(), team.getTeamId(), 0);
+            DBManager.instance().deleteMatchLineupTeam(matchLineupTeam);
+            templateDefaultName = null;
+            templateName.setText(getTemplateDefaultName());
             this.update_jcbLoadLineup();
         }
     }
