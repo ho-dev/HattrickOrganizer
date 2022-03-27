@@ -13,29 +13,31 @@ import java.util.ArrayList;
 
 public final class MatchLineupTeamTable extends AbstractTable {
 
-	/** tablename **/
+	/**
+	 * tablename
+	 **/
 	public final static String TABLENAME = "MATCHLINEUPTEAM";
-	
-	protected MatchLineupTeamTable(JDBCAdapter  adapter){
+
+	protected MatchLineupTeamTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("MatchID",Types.INTEGER,false),
-				new ColumnDescriptor("TeamID",Types.INTEGER,false),
-				new ColumnDescriptor("MatchTyp",Types.INTEGER,false),
-				new ColumnDescriptor("Erfahrung",Types.INTEGER,false),
-				new ColumnDescriptor("TeamName",Types.VARCHAR,false,256),
-				new ColumnDescriptor("StyleOfPlay",Types.INTEGER,false),
+				new ColumnDescriptor("MatchID", Types.INTEGER, false),
+				new ColumnDescriptor("TeamID", Types.INTEGER, false),
+				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
+				new ColumnDescriptor("Erfahrung", Types.INTEGER, false),
+				new ColumnDescriptor("TeamName", Types.VARCHAR, false, 256),
+				new ColumnDescriptor("StyleOfPlay", Types.INTEGER, false),
 				new ColumnDescriptor("Attitude", Types.INTEGER, true),
 				new ColumnDescriptor("Tactic", Types.INTEGER, true)
 		};
 	}
 
 	@Override
-	protected  String[] getConstraintStatements() {
+	protected String[] getConstraintStatements() {
 		return new String[]{
 				"  PRIMARY KEY (" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
 		};
@@ -69,18 +71,27 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		return null;
 	}
 
+	void deleteMatchLineupTeam(MatchLineupTeam team) {
+		try {
+			if (team != null) {
+				var matchID = team.getMatchId();
+				final String[] where = {"MatchTyp", "MatchID", "TeamID"};
+				final String[] werte = {"" + team.getMatchType().getId(), "" + matchID, "" + team.getTeamID()};
+				delete(where, werte);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupTeam Error" + e);
+			HOLogger.instance().log(getClass(), e);
+		}
+	}
+
 	void storeMatchLineupTeam(MatchLineupTeam team) {
 		if (team != null) {
-			var matchID = team.getMatchId();
-			final String[] where = { "MatchTyp", "MatchID" , "TeamID"};
-			final String[] werte = { "" + team.getMatchType().getId(), "" + matchID, "" +team.getTeamID()};
-			delete(where, werte);
-
-			String sql;
+			deleteMatchLineupTeam(team);
 			//saven
 			try {
-				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay, Attitude, Tactic ) VALUES(";
+				var matchID = team.getMatchId();
+				var sql = "INSERT INTO "+getTableName()+" ( MatchTyp, MatchID, Erfahrung, TeamName, TeamID, StyleOfPlay, Attitude, Tactic ) VALUES(";
 				sql += (team.getMatchType().getId() + "," +
 						matchID + "," +
 						team.getExperience() + ", '" +

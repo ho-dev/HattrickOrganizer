@@ -2676,6 +2676,10 @@ public class DBManager {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
 	}
 
+	public void deleteMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
+		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).deleteMatchLineupTeam(matchLineupTeam);
+	}
+
 	public ArrayList<MatchLineupTeam> loadTemplateMatchLineupTeams() {
 		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
 	}
