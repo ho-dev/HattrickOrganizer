@@ -74,9 +74,9 @@ public class CsvPlayerExport {
 				return;
             }
 
-			HOMainFrame.instance().setWaitInformation(0);
-			doExport (file);
 			HOMainFrame.instance().resetInformation();
+			doExport (file);
+			HOMainFrame.instance().setInformationCompleted();
 		}
 	}
 
@@ -138,21 +138,18 @@ public class CsvPlayerExport {
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing") + "\","
 							+ "\n");
-			Iterator<Player> iter = list.iterator();
-			while (iter.hasNext()) {
-				Player curPlayer = (Player)iter.next();
-
-				String [] outCols = {
+			for (Player curPlayer : list) {
+				String[] outCols = {
 						"" + curPlayer.getFullName(),
 						"" + curPlayer.getPlayerID(),
 						"" + curPlayer.getTrikotnummer(),
 						"" + curPlayer.getAlter(),
 						"" + curPlayer.getAgeDays(),
 						"" + curPlayer.getTSI(),
-						"" + (int)(curPlayer.getSalary() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
+						"" + (int) (curPlayer.getSalary() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
 						"" + curPlayer.getCards(),
 						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
-						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks()>9 ? "∞" : curPlayer.getInjuryWeeks()),
+						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks() > 9 ? "∞" : curPlayer.getInjuryWeeks()),
 
 						curPlayer.isHomeGrown() ? "♥" : "",
 						"" + PlayerAgreeability.toString(curPlayer.getCharakter()),
@@ -194,26 +191,22 @@ public class CsvPlayerExport {
 						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)),
 						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false))
 				};
-				for (int col=0; col < outCols.length; col++) {
+				for (int col = 0; col < outCols.length; col++) {
 					if (col > 0)
-						writer.write (",");
-					switch(col) {
-						case  0: // name
-						case  1: // id
-						case  8: // injury
-						case  9: // homegrown
-						case 10: // agreeability
-						case 11: // aggressiveness
-						case 12: // honesty
-						case 13: // speciality
-							writer.write("\"" + outCols[col]+ "\"");
-							break;
-						default:
-							writer.write(outCols[col]);
-							break;
+						writer.write(",");
+					switch (col) { // name
+						// id
+						// injury
+						// homegrown
+						// agreeability
+						// aggressiveness
+						// honesty
+						case 0, 1, 8, 9, 10, 11, 12, 13 -> // speciality
+								writer.write("\"" + outCols[col] + "\"");
+						default -> writer.write(outCols[col]);
 					}
 				}
-				writer.write ("\n");
+				writer.write("\n");
 			}
 			writer.close();
 			HOLogger.instance().info(getClass(), "CSV Export complete.");

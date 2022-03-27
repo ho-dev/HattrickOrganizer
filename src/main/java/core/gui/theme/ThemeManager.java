@@ -98,9 +98,9 @@ public final class ThemeManager {
 		Object obj;
 
 		obj = instance().classicSchema.getThemeColor(key);
-		if(obj!= null && obj instanceof Color)
+		if(obj instanceof Color)
 			return (Color)obj;
-		if(obj != null && obj instanceof String)
+		if(obj instanceof String)
 			return getColor(obj.toString());
 
 		if(obj == null)
@@ -249,7 +249,7 @@ public final class ThemeManager {
 
 		for (var avatar:missingAvatars){
 			HOLogger.instance().info(this.getClass(), "Donwloading player's avatar: %s/%s".formatted(i, iMax));
-			DownloadDialog.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
+			HOMainFrame.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try{
 				avatar.generateAvatar(playerAvatarPath);
 				}

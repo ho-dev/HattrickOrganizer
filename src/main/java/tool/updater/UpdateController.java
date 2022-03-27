@@ -144,13 +144,13 @@ public final class UpdateController {
         if (HO.isPortableVersion()) {
             // HO! manage the (partial) update
             File tmp = new File("update.piz");
-            HOMainFrame.instance().setWaitInformation(0);
+            HOMainFrame.instance().resetInformation();
             if (!UpdateHelper.download(urlString, tmp)) {
                 HOMainFrame.instance().resetInformation();
                 HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
                 return;
             }
-            HOMainFrame.instance().resetInformation();
+            HOMainFrame.instance().setInformationCompleted();
 
             JOptionPane.showMessageDialog(null,
                     HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()

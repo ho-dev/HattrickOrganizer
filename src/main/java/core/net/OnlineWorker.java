@@ -125,13 +125,13 @@ public class OnlineWorker {
 							HOMainFrame.instance().getLineupPanel().backupRealGameSettings();
 						}
 						// Info
-						setInfoMsg(getLangString("HRFErfolg"));
 						saveHRFToFile(parent,hrf);
 					}
 				}
 			}
 		} finally {
-			HOMainFrame.instance().resetInformation();
+			HOMainFrame.instance().setInformation(getLangString("HRFErfolg"),0);
+			//HOMainFrame.instance().resetInformation();
 		}
 		return ok;
 	}
@@ -155,7 +155,7 @@ public class OnlineWorker {
 		var endDate = HODateTime.now();
 
 		// Show wait Dialog
-		showWaitInformation(1);
+		HOMainFrame.instance().resetInformation();
 
 		try {
 			String matchesString;
@@ -167,9 +167,9 @@ public class OnlineWorker {
 				}
 
 				try {
-					showWaitInformation(10);
+					HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
 					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
-					showWaitInformation(20);
+					HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
 				} catch (Exception e) {
 					// Info
 					String msg = getLangString("Downloadfehler")
@@ -177,11 +177,10 @@ public class OnlineWorker {
 					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 					Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 							JOptionPane.ERROR_MESSAGE);
-					showWaitInformation(0);
 					return null;
 				}
 
-				showWaitInformation(40);
+				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
 				List<MatchKurzInfo> matches = XMLMatchArchivParser
 						.parseMatchesFromString(matchesString);
 
@@ -195,7 +194,7 @@ public class OnlineWorker {
 			// Store in the db if store is true
 			if (store && (allMatches.size() > 0)) {
 
-				showWaitInformation(80);
+				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
 				DBManager.instance().storeMatchKurzInfos(allMatches.toArray(new MatchKurzInfo[0]));
 
 				// Store full info for all matches
@@ -208,7 +207,7 @@ public class OnlineWorker {
 				}
 			}
 		} finally {
-			showWaitInformation(0);
+			HOMainFrame.instance().setInformationCompleted();
 		}
 		return allMatches;
 	}
@@ -253,7 +252,7 @@ public class OnlineWorker {
 			return false;
 		}
 
-		showWaitInformation(1);
+		HOMainFrame.instance().setWaitInformation();
 		// Only download if not present in the database, or if refresh is true or if match not oboslet
 		if (refresh
 				|| !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
@@ -271,7 +270,7 @@ public class OnlineWorker {
 				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
 				if ( newInfo || !bWeatherKnown) {
 
-					showWaitInformation(10);
+					HOMainFrame.instance().setWaitInformation();
 					details = downloadMatchDetails(matchID, info.getMatchType(), null);
 					if ( details != null) {
 						info.setHomeTeamID(details.getHomeTeamId());
@@ -349,7 +348,7 @@ public class OnlineWorker {
 					downloadTeamRatings(matchID, info.getMatchType(), info.getGuestTeamID());
 
 					// Get details with highlights.
-					showWaitInformation(10);
+					HOMainFrame.instance().setWaitInformation();
 					details = downloadMatchDetails(matchID, info.getMatchType(), lineup);
 
 					if (details == null) {
@@ -373,17 +372,14 @@ public class OnlineWorker {
 					success = true;
 				}
 				if (!success) {
-					showWaitInformation(0);
 					return false;
 				}
 			} catch (Exception ex) {
 				HOLogger.instance().error(OnlineWorker.class,
 						"downloadMatchData:  Error in downloading match: " + ex);
-				showWaitInformation(0);
 				return false;
 			}
 		}
-		showWaitInformation(0);
 		return true;
 	}
 
@@ -526,15 +522,13 @@ public class OnlineWorker {
 		String matchesString;
 		List<MatchKurzInfo> matches = new ArrayList<>();
 		boolean bOK;
-		showWaitInformation(10);
+		HOMainFrame.instance().setWaitInformation();
 
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, forceRefresh, upcoming);
 			bOK = (matchesString != null && matchesString.length() > 0);
 			if (bOK)
-				showWaitInformation(50);
-			else
-				showWaitInformation(0);
+				HOMainFrame.instance().setWaitInformation();
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching matches: "
 					+ e.getMessage();
@@ -543,7 +537,6 @@ public class OnlineWorker {
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().log(OnlineWorker.class, e);
-			showWaitInformation(0);
 			return null;
 		}
 		if (bOK) {
@@ -551,12 +544,12 @@ public class OnlineWorker {
 
 			// Store in DB if store is true
 			if (store) {
-				showWaitInformation(80);
+				HOMainFrame.instance().setWaitInformation();
 
 				matches = FilterUserSelection(matches);
 				DBManager.instance().storeMatchKurzInfos(matches.toArray(new MatchKurzInfo[0]));
 
-				showWaitInformation(100);
+				HOMainFrame.instance().setWaitInformation();
 
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
@@ -575,7 +568,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		showWaitInformation(0);
+		HOMainFrame.instance().setWaitInformation();
 		return matches;
 	}
 
@@ -658,12 +651,12 @@ public class OnlineWorker {
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
-		showWaitInformation(10);
+		HOMainFrame.instance().setWaitInformation();
 
 		// Lineups holen
 		var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
-			showWaitInformation(50);
+			HOMainFrame.instance().setWaitInformation();
 			if (teamId2 > 0)
 				lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
 
@@ -686,7 +679,7 @@ public class OnlineWorker {
 				}
 			}
 		}
-		showWaitInformation(0);
+		HOMainFrame.instance().setWaitInformation();
 		return lineUp1;
 	}
 
@@ -705,9 +698,9 @@ public class OnlineWorker {
 		String leagueFixtures;
 		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
-			showWaitInformation(10);
+			HOMainFrame.instance().setWaitInformation();
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
-			showWaitInformation(50);
+			HOMainFrame.instance().setWaitInformation();
 			return XMLSpielplanParser.parseSpielplanFromString(leagueFixtures);
 		} catch (Exception e) {
 			HOLogger.instance().log(OnlineWorker.class, e);
@@ -716,19 +709,8 @@ public class OnlineWorker {
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
-			showWaitInformation(0);
 		}
 		return null;
-	}
-	protected static void showWaitInformation(int i) {
-		if (HOMainFrame.launching.get()) return;
-		String info;
-		if ( i <=0 ){
-			HOMainFrame.instance().resetInformation();
-		}
-		else{
-			HOMainFrame.instance().setWaitInformation(i);
-		}
 	}
 
 	/**
@@ -754,7 +736,6 @@ public class OnlineWorker {
 		return result;
 	}
 
-
 	/**
 	 * Try to recover missing matchType information by querying HT with different source system and returning first result
 	 *
@@ -766,8 +747,6 @@ public class OnlineWorker {
 		Matchdetails details;
 		var conn = MyConnector.instance();
 		conn.setSilentDownload(true);
-
-
 
 		try {
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LEAGUE);
@@ -837,9 +816,6 @@ public class OnlineWorker {
 		}
 	}
 
-
-
-
 	private static Matchdetails downloadMatchDetails(int matchID, MatchType matchType, MatchLineup lineup) {
 		String matchDetails;
 		Matchdetails details;
@@ -850,15 +826,15 @@ public class OnlineWorker {
 				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
-			showWaitInformation(20);
+			HOMainFrame.instance().setWaitInformation();
 			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
-			showWaitInformation(40);
+			HOMainFrame.instance().setWaitInformation();
 			if (details == null) {
 				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
-			showWaitInformation(50);
+			HOMainFrame.instance().setWaitInformation();
 			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get("RegionID");
 			details.setRegionId(Integer.parseInt(regionIdAsString));
 		} catch (Exception e) {
@@ -866,10 +842,8 @@ public class OnlineWorker {
 			// Info
 			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
-			showWaitInformation(0);
 			return null;
 		}
-		showWaitInformation(0);
 		return details;
 	}
 
@@ -893,8 +867,6 @@ public class OnlineWorker {
 		}
 		return lineUp;
 	}
-
-
 
 	/**
 	 * Get all lineups for MatchKurzInfos, if they're not there already

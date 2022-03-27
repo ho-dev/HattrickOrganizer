@@ -68,7 +68,7 @@ public class PluginIfaUtils {
 		} while (retry && !(retry = false));
 
 		try {
-			HOMainFrame.instance().setWaitInformation(0);
+			HOMainFrame.instance().resetInformation();
 			if (time != null) {
 				var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
 				if (from == null) {
@@ -84,7 +84,7 @@ public class PluginIfaUtils {
 					from = from.plus(60, ChronoUnit.DAYS);
 				}
 			}
-			HOMainFrame.instance().resetInformation();
+			HOMainFrame.instance().setInformationCompleted();
 		} catch (Exception e) {
 			HOMainFrame.instance().resetInformation();
 			HOLogger.instance().error(PluginIfaUtils.class, e);

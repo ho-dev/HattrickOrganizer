@@ -190,7 +190,6 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 	}
 
-
 	public void addToAssistant(PlayerPositionPanel positionPanel) {
 		positions.put(positionPanel, null);
 	}

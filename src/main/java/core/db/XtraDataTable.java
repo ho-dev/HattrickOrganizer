@@ -39,17 +39,18 @@ final class XtraDataTable extends AbstractTable {
 			ResultSet rs = adapter.executeQuery(sql);
 			if (rs != null) {
 				try {
-					rs.first();
-					var xtra = new XtraData();
-					xtra.setCurrencyRate(rs.getDouble("CurrencyRate"));
-					xtra.setLogoURL(DBManager.deleteEscapeSequences(rs.getString("LogoURL")));
-					xtra.setHasPromoted(rs.getBoolean("HasPromoted"));
-					xtra.setSeriesMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SeriesMatchDate")));
-					xtra.setTrainingDate(HODateTime.fromDbTimestamp(rs.getTimestamp("TrainingDate")));
-					xtra.setEconomyDate(HODateTime.fromDbTimestamp(rs.getTimestamp("EconomyDate")));
-					xtra.setLeagueLevelUnitID(rs.getInt("LeagueLevelUnitID"));
-					xtra.setCountryId(DBManager.getInteger(rs, "CountryId"));
-					return xtra;
+					if (rs.next()) {
+						var xtra = new XtraData();
+						xtra.setCurrencyRate(rs.getDouble("CurrencyRate"));
+						xtra.setLogoURL(DBManager.deleteEscapeSequences(rs.getString("LogoURL")));
+						xtra.setHasPromoted(rs.getBoolean("HasPromoted"));
+						xtra.setSeriesMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SeriesMatchDate")));
+						xtra.setTrainingDate(HODateTime.fromDbTimestamp(rs.getTimestamp("TrainingDate")));
+						xtra.setEconomyDate(HODateTime.fromDbTimestamp(rs.getTimestamp("EconomyDate")));
+						xtra.setLeagueLevelUnitID(rs.getInt("LeagueLevelUnitID"));
+						xtra.setCountryId(DBManager.getInteger(rs, "CountryId"));
+						return xtra;
+					}
 				} catch (Exception e) {
 					HOLogger.instance().error(getClass(), "Error while loading XtraData model: " + e);
 				}

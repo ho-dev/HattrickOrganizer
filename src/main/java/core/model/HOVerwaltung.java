@@ -135,20 +135,15 @@ public class HOVerwaltung {
 
 		// Make sure the training week list is up to date.
 		//TrainingManager.instance().refreshTrainingWeeks();
+		HOMainFrame.instance().resetInformation();
 
 		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
-
-		int progress=0;
 		long s1, s2, lSum = 0, mSum = 0;
-
 		HRF previousHRF=hrfListe.get(0);
-
-		int nbSteps =  hrfListe.size() + 1;
-
 		for (var hrf: hrfListe.stream().skip(1).collect(Collectors.toList())) {
 			try {
 				if (showWait ) {
-					HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
+					HOMainFrame.instance().setWaitInformation();
 				}
 
 				s1 = System.currentTimeMillis();
@@ -162,8 +157,6 @@ public class HOVerwaltung {
 				model.calcSubskills(trainingDateOfPreviousHRF, trainingDateHRF);
 				previousHRF=hrf;
 				mSum += (System.currentTimeMillis() - s2);
-				progress++;
-
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "recalcSubskills : ");
 				HOLogger.instance().log(getClass(), e);
@@ -171,16 +164,14 @@ public class HOVerwaltung {
 		}
 
 		if (showWait ) {
-			progress ++;
-			HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
+			HOMainFrame.instance().setWaitInformation();
 		}
 
 		// Reload, because the subskills have changed
 		loadLatestHoModel();
 
 		if (showWait ) {
-			progress ++;
-			HOMainFrame.instance().setWaitInformation(progress * 100 / nbSteps);
+			HOMainFrame.instance().setWaitInformation();
 		}
 
 		RefreshManager.instance().doReInit();
@@ -191,11 +182,9 @@ public class HOVerwaltung {
 						+ (System.currentTimeMillis() - start) / 1000L + " sec), lSum=" + lSum
 						+ ", mSum=" + mSum);
 
-
 		if (showWait ) {
-			HOMainFrame.instance().resetInformation();
+			HOMainFrame.instance().setInformationCompleted();
 		}
-
 	}
 
 	/**

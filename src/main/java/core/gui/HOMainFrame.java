@@ -248,16 +248,22 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 		return m_jpInfoPanel;
 	}
-	public void setWaitInformation( int progress){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), progress);}
-	public void resetInformation(){setInformation("",0);}
-	public void setInformation( String information) { setInformation(information,0);}
+	public void setWaitInformation(){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), 1);}
+	public void resetInformation(){setInformation("",-100);}
+	public void setInformation( String information) { setInformation(information,-100);}
+	public void setInformationCompleted() { setInformation(Helper.getTranslation("ls.update_status.complete"), 100);}
 	public void setInformation( String information, int progress){
+		if (launching.get()) return;
 		getInfoPanel().setInformation(information, progress);
 	}
 	public void setInformation( String information, Color color){
+		if (launching.get()) return;
 		getInfoPanel().setInformation(information, color);
 	}
-	public void updateProgress(int progress) {getInfoPanel().setProgressbarValue(progress);	}
+	public void updateProgress(int progress) {
+		if (launching.get()) return;
+		getInfoPanel().setProgressbarValue(progress);
+	}
 
 	public PlayerAnalysisModulePanel getSpielerAnalyseMainPanel() {
 		return ((PlayerAnalysisModulePanel) getTabbedPane().getModulePanel(IModule.PLAYERANALYSIS));

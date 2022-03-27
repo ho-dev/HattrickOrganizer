@@ -206,8 +206,6 @@ public class ProxyDialog extends JDialog {
 			this.setLocation((size.width / 2) - (this.getSize().width / 2),
 					(size.height / 2) - (this.getSize().height / 2));
 		}
-
-		HOMainFrame.instance().setWaitInformation(0);
 	}
 
 	private void addListeners() {
@@ -238,33 +236,29 @@ public class ProxyDialog extends JDialog {
 		proxyAuthNameTextField.addFocusListener(fl);
 		proxyPasswordField.addFocusListener(fl);
 
-		ActionListener al = new ActionListener() {
-
-			@Override
-			public final void actionPerformed(ActionEvent actionEvent) {
-				if (actionEvent.getSource().equals(okButton)) {
-					saveSettings();
-					setVisible(false);
-				} else if (actionEvent.getSource().equals(useProxyCheckBox)) {
-					proxyHostTextField
-							.setEnabled(useProxyCheckBox.isSelected());
-					proxyPortTextField
-							.setEnabled(useProxyCheckBox.isSelected());
-					useProxyAuthCheckBox.setEnabled(useProxyCheckBox
-							.isSelected());
-					proxyAuthNameTextField.setEnabled(useProxyAuthCheckBox
-							.isEnabled() && useProxyAuthCheckBox.isSelected());
-					proxyPasswordField.setEnabled(useProxyAuthCheckBox
-							.isEnabled() && useProxyAuthCheckBox.isSelected());
-				} else if (actionEvent.getSource().equals(useProxyAuthCheckBox)) {
-					proxyAuthNameTextField.setEnabled(useProxyAuthCheckBox
-							.isSelected());
-					proxyPasswordField.setEnabled(useProxyAuthCheckBox
-							.isSelected());
-				} else {
-					// Beenden
-					dispose();
-				}
+		ActionListener al = actionEvent -> {
+			if (actionEvent.getSource().equals(okButton)) {
+				saveSettings();
+				setVisible(false);
+			} else if (actionEvent.getSource().equals(useProxyCheckBox)) {
+				proxyHostTextField
+						.setEnabled(useProxyCheckBox.isSelected());
+				proxyPortTextField
+						.setEnabled(useProxyCheckBox.isSelected());
+				useProxyAuthCheckBox.setEnabled(useProxyCheckBox
+						.isSelected());
+				proxyAuthNameTextField.setEnabled(useProxyAuthCheckBox
+						.isEnabled() && useProxyAuthCheckBox.isSelected());
+				proxyPasswordField.setEnabled(useProxyAuthCheckBox
+						.isEnabled() && useProxyAuthCheckBox.isSelected());
+			} else if (actionEvent.getSource().equals(useProxyAuthCheckBox)) {
+				proxyAuthNameTextField.setEnabled(useProxyAuthCheckBox
+						.isSelected());
+				proxyPasswordField.setEnabled(useProxyAuthCheckBox
+						.isSelected());
+			} else {
+				// Beenden
+				dispose();
 			}
 		};
 		useProxyCheckBox.addActionListener(al);

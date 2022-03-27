@@ -48,25 +48,17 @@ public class OptionenDialog extends JDialog {
 
 	private void addListeners() {
 
-		saveButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				save();
-				OptionManager.deleteInstance();
-				dispose();
-			}
+		saveButton.addActionListener(e -> {
+			save();
+			OptionManager.deleteInstance();
+			dispose();
 		});
 
-		cancelButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				UserParameter.deleteTempParameter();
-				ModuleManager.instance().clearTemp();
-				OptionManager.deleteInstance();
-				dispose();
-			}
+		cancelButton.addActionListener(e -> {
+			UserParameter.deleteTempParameter();
+			ModuleManager.instance().clearTemp();
+			OptionManager.deleteInstance();
+			dispose();
 		});
 
 		addWindowListener(new WindowAdapter() {
@@ -121,7 +113,7 @@ public class OptionenDialog extends JDialog {
 		// Tabs der plugins
 		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
 				&& (i < HOMainFrame.instance().getOptionPanels().size()); ++i) {
-			tabbedPane.addTab(HOMainFrame.instance().getOptionPanelNames().get(i).toString(),
+			tabbedPane.addTab(HOMainFrame.instance().getOptionPanelNames().get(i),
 					HOMainFrame.instance().getOptionPanels().get(i));
 		}
 
@@ -170,9 +162,9 @@ public class OptionenDialog extends JDialog {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (OptionManager.instance().isReInitNeeded()) {
-			HOMainFrame.instance().setWaitInformation(0);
-			RefreshManager.instance().doReInit();
 			HOMainFrame.instance().resetInformation();
+			RefreshManager.instance().doReInit();
+			HOMainFrame.instance().setInformationCompleted();
 		}
 	}
 }

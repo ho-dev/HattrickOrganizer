@@ -69,8 +69,7 @@ final class MatchesTable extends JTable {
 		if (m_clTableModel == null) {
 			m_clTableModel = UserColumnController.instance().getMatchesModel();
 			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation, false));
-			m_clTableSorter = new TableSorter(m_clTableModel,
-					m_clTableModel.getDisplayedColumns().length - 1, -1);
+			m_clTableSorter = new TableSorter(m_clTableModel,m_clTableModel.getDisplayedColumns().length - 1, -1);
 
 			final ToolTipHeader header = new ToolTipHeader(getColumnModel());
 			header.setToolTipStrings(m_clTableModel.getTooltips());
@@ -91,10 +90,10 @@ final class MatchesTable extends JTable {
 			targetColumn = Helper.sortintArray(targetColumn, 1);
 
 			if (targetColumn != null) {
-				for (int i = 0; i < targetColumn.length; i++) {
+				for (int[] ints : targetColumn) {
 					this.moveColumn(
-							getColumnModel().getColumnIndex(targetColumn[i][0]),
-							targetColumn[i][1]);
+							getColumnModel().getColumnIndex(ints[0]),
+							ints[1]);
 				}
 			}
 
