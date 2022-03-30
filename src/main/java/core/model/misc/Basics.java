@@ -325,8 +325,8 @@ public final class Basics  {
         return m_iSpieltag;
     }
 
-    public HODateTime getHattrickWeek(){
-        var week = new HODateTime.HTWeek(this.m_iSeason, this.m_iSpieltag);
+    public HODateTime getHattrickWeek() {
+        var week = new HODateTime.HTWeek(this.m_iSeason - this.m_iSeasonOffset, this.m_iSpieltag);
         return HODateTime.fromHTWeek(week);
     }
 
