@@ -58,7 +58,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Mar 19, 2022	
+Reports by Contributors - Dec 20, 2021 - Mar 30, 2022	
 
 * Foppe	640
 * \_KOHb\_	76
@@ -67,6 +67,7 @@ Reports by Contributors - Dec 20, 2021 - Mar 19, 2022
 * sich	73
 * anti_anti 69
 * Moorhuhninho	67
+* Ante 42
 * dzsoo 18
 * wsbrenk 11
-* Total translated:	1103
+* Total translated:	1145
