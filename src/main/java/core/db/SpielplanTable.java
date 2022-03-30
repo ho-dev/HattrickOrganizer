@@ -32,7 +32,7 @@ final class SpielplanTable extends AbstractTable {
 	 *
 	 * @param withFixtures Includes the games part of the schedule if <code>true</code>.
 	 */
-	Spielplan[] getAllSpielplaene(boolean withFixtures) {
+	List<Spielplan> getAllSpielplaene(boolean withFixtures) {
 		final List<Spielplan> gameSchedules = new ArrayList<>();
 
 		try {
@@ -65,7 +65,7 @@ final class SpielplanTable extends AbstractTable {
 			}
 		}
 
-		return gameSchedules.toArray(new Spielplan[0]);
+		return gameSchedules;
 	}
 
 	/**

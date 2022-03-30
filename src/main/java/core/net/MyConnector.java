@@ -435,6 +435,18 @@ public class MyConnector {
 	/**
 	 * Get Matches
 	 */
+	public String getMatchesOfSeason(int teamId, int season){
+		var url = new StringBuilder(htUrl).append("?file=matchesarchive&version=1.5");
+		if (teamId > 0) {
+			url.append( "&teamID=").append(teamId);
+		}
+		if (season > 0) {
+			url.append( "&season=").append(season);
+		}
+
+		return getCHPPWebFile(url.toString());
+	}
+
 	public String getMatches(int teamId, boolean forceRefresh, boolean upcoming) throws IOException {
 		String url = htUrl + "?file=matches&version=2.8";
 

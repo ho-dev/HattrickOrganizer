@@ -81,6 +81,10 @@ public class XMLMatchArchivParser {
 
 				match.setMatchType(MatchType.getById(iMatchType));
 
+				tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
+				int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+				match.setMatchContextId(tournamentId);
+
 				if (iMatchType == 3) {
 					tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 					iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
@@ -90,10 +94,6 @@ public class XMLMatchArchivParser {
 					match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 				}
 				else if (iMatchType == 50) {
-					tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
-					int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-					match.setMatchContextId(tournamentId);
-
 					TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
 					if (oTournamentDetails == null)
 					{
