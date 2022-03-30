@@ -175,9 +175,9 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	}
 
 	private void fillSeasonCombo(JComboBox seasonCombo) {
-		final Spielplan[] spielplaene = DBManager.instance().getAllSpielplaene(true);
-		for (int i = 0; i < spielplaene.length; i++) {
-			seasonCombo.addItem(spielplaene[i]);
+		var spielplaene = DBManager.instance().getAllSpielplaene(true);
+		for (var fixture : spielplaene) {
+			seasonCombo.addItem(fixture);
 		}
 	}
 
@@ -284,7 +284,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 				matchIDs.addAll(plan.getPaarungenBySpieltag(week));
 		}
 		// TODO For match of year attention of doubles
-		Map<String, MatchLineupPlayer> spieler = new HashMap<String, MatchLineupPlayer>();
+		Map<String, MatchLineupPlayer> spieler = new HashMap<>();
 		List<MatchLineupPlayer> players = getPlayetAt(db, matchIDs, IMatchRoleID.KEEPER, 1,
 				isBest);
 		spieler.put("1", players.get(0));
@@ -312,51 +312,46 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		String posClase = "";
 
 		switch (position) {
-		case IMatchRoleID.KEEPER: {
-			posClase += " FIELDPOS=" + IMatchRoleID.keeper + " ";
-			break;
-		}
-
-		case IMatchRoleID.CENTRAL_DEFENDER: {
-			posClase += " (FIELDPOS=" + IMatchRoleID.leftCentralDefender + " OR FIELDPOS="
-					+ IMatchRoleID.middleCentralDefender + " OR FIELDPOS="
-					+ IMatchRoleID.rightCentralDefender + ") ";
-			break;
-		}
-
-		case IMatchRoleID.BACK: {
-			posClase += " (FIELDPOS=" + IMatchRoleID.leftBack + " OR FIELDPOS="
-					+ IMatchRoleID.rightBack + ") ";
-			break;
-		}
-
-		case IMatchRoleID.WINGER: {
-			posClase += " (FIELDPOS=" + IMatchRoleID.leftWinger + " OR FIELDPOS="
-					+ IMatchRoleID.rightWinger + ") ";
-			break;
-		}
-
-		case IMatchRoleID.MIDFIELDER: {
-			posClase += " (FIELDPOS=" + IMatchRoleID.leftInnerMidfield + " OR FIELDPOS="
-					+ IMatchRoleID.centralInnerMidfield + " OR FIELDPOS="
-					+ IMatchRoleID.rightInnerMidfield + ") ";
-			break;
-		}
-
-		case IMatchRoleID.FORWARD: {
-			posClase += " (FIELDPOS=" + IMatchRoleID.leftForward + " OR FIELDPOS="
-					+ IMatchRoleID.centralForward + " OR FIELDPOS="
-					+ IMatchRoleID.rightForward + ") ";
-			break;
-		}
-		}
-
-		String matchClause = "";
-		for (int i = 0; i < matchIDs.size(); i++) {
-			if (matchClause.length() > 1) {
-				matchClause += " OR ";
+			case IMatchRoleID.KEEPER -> {
+				posClase += " FIELDPOS=" + IMatchRoleID.keeper + " ";
+				break;
 			}
-			matchClause += " MATCHID=" + matchIDs.get(i).getMatchId();
+			case IMatchRoleID.CENTRAL_DEFENDER -> {
+				posClase += " (FIELDPOS=" + IMatchRoleID.leftCentralDefender + " OR FIELDPOS="
+						+ IMatchRoleID.middleCentralDefender + " OR FIELDPOS="
+						+ IMatchRoleID.rightCentralDefender + ") ";
+				break;
+			}
+			case IMatchRoleID.BACK -> {
+				posClase += " (FIELDPOS=" + IMatchRoleID.leftBack + " OR FIELDPOS="
+						+ IMatchRoleID.rightBack + ") ";
+				break;
+			}
+			case IMatchRoleID.WINGER -> {
+				posClase += " (FIELDPOS=" + IMatchRoleID.leftWinger + " OR FIELDPOS="
+						+ IMatchRoleID.rightWinger + ") ";
+				break;
+			}
+			case IMatchRoleID.MIDFIELDER -> {
+				posClase += " (FIELDPOS=" + IMatchRoleID.leftInnerMidfield + " OR FIELDPOS="
+						+ IMatchRoleID.centralInnerMidfield + " OR FIELDPOS="
+						+ IMatchRoleID.rightInnerMidfield + ") ";
+				break;
+			}
+			case IMatchRoleID.FORWARD -> {
+				posClase += " (FIELDPOS=" + IMatchRoleID.leftForward + " OR FIELDPOS="
+						+ IMatchRoleID.centralForward + " OR FIELDPOS="
+						+ IMatchRoleID.rightForward + ") ";
+				break;
+			}
+		}
+
+		StringBuilder matchClause = new StringBuilder();
+		for (Paarung matchID : matchIDs) {
+			if (matchClause.length() > 1) {
+				matchClause.append(" OR ");
+			}
+			matchClause.append(" MATCHID=").append(matchID.getMatchId());
 		}
 
 		String sql = "SELECT DISTINCT MATCHID, SPIELERID, NAME, RATING, HOPOSCODE, TEAMID FROM MATCHLINEUPPLAYER WHERE "
@@ -374,7 +369,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		rs = db.executeQuery(sql);
 
-		List<MatchLineupPlayer> ret = new ArrayList<MatchLineupPlayer>();
+		List<MatchLineupPlayer> ret = new ArrayList<>();
 
 		for (int i = 0; i < number; i++) {
 			ret.add(new MatchLineupPlayer(rs, matchIDs));

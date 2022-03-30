@@ -671,7 +671,7 @@ public class DBManager {
 	 * @param mitPaarungen inklusive der Paarungen ja/nein
 	 * @return the spielplan [ ]
 	 */
-	public Spielplan[] getAllSpielplaene(boolean mitPaarungen) {
+	public List<Spielplan> getAllSpielplaene(boolean mitPaarungen) {
 		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
 				.getAllSpielplaene(mitPaarungen);
 	}
@@ -1356,7 +1356,7 @@ public class DBManager {
 	 *
 	 * @param matches the matches
 	 */
-	public void storeMatchKurzInfos(MatchKurzInfo[] matches) {
+	public void storeMatchKurzInfos(List<MatchKurzInfo> matches) {
 		((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.storeMatchKurzInfos(matches);
 	}
@@ -2113,8 +2113,8 @@ public class DBManager {
 
 			deleteMatch(info.getMatchID());
 
-			MatchKurzInfo[] matches = new MatchKurzInfo[1];
-			matches[0] = info;
+			var matches = new ArrayList<MatchKurzInfo>();
+			matches.add(info);
 			((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 					.storeMatchKurzInfos(matches);
 

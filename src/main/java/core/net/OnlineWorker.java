@@ -195,7 +195,7 @@ public class OnlineWorker {
 			if (store && (allMatches.size() > 0)) {
 
 				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
-				DBManager.instance().storeMatchKurzInfos(allMatches.toArray(new MatchKurzInfo[0]));
+				DBManager.instance().storeMatchKurzInfos(allMatches);
 
 				// Store full info for all matches
 				for (MatchKurzInfo match : allMatches) {
@@ -367,7 +367,8 @@ public class OnlineWorker {
 				}
 				else{
 					// Update arena and region ids
-					MatchKurzInfo[] matches = {info};
+					var matches = new ArrayList<MatchKurzInfo>();
+					matches.add(info);
 					DBManager.instance().storeMatchKurzInfos(matches);
 					success = true;
 				}
@@ -547,7 +548,7 @@ public class OnlineWorker {
 				HOMainFrame.instance().setWaitInformation();
 
 				matches = FilterUserSelection(matches);
-				DBManager.instance().storeMatchKurzInfos(matches.toArray(new MatchKurzInfo[0]));
+				DBManager.instance().storeMatchKurzInfos(matches);
 
 				HOMainFrame.instance().setWaitInformation();
 
@@ -1171,6 +1172,18 @@ public class OnlineWorker {
 
 	public static void setSilentDownload(boolean silentDownload) {
 		MyConnector.instance().setSilentDownload(silentDownload);
+	}
+
+	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
+		try{
+			var xml = MyConnector.instance().getMatchesOfSeason(teamId, season);
+			var matches = XMLMatchArchivParser.parseMatchesFromString(xml);
+			return  matches;
+		}
+		catch (Exception exception) {
+			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
+		}
+		return null;
 	}
 
 	public static void downloadMissingYouthMatchData(HOModel model, HODateTime dateSince) {

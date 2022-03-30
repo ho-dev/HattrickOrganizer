@@ -103,15 +103,15 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void fillSaisonCB() {
 		// Get the match schedules as objects with the pairings
-		final Spielplan[] spielplaene = DBManager.instance().getAllSpielplaene(true);
+		var spielplaene = DBManager.instance().getAllSpielplaene(true);
 		final Spielplan markierterPlan = (Spielplan) seasonComboBox.getSelectedItem();
 
 		// Remove all old seasons
 		seasonComboBox.removeAllItems();
 
 		// Fill new
-		for (int i = 0; (spielplaene != null) && (i < spielplaene.length); i++) {
-			seasonComboBox.addItem(spielplaene[i]);
+		for (var fixture : spielplaene) {
+			seasonComboBox.addItem(fixture);
 		}
 
 		//  Restore old marking

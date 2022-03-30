@@ -37,23 +37,29 @@ public class MatchesModel {
 		}
 		return this.details;
 	}
-	
+
+	private MatchLineupTeam loadLineup(MatchKurzInfo match , int teamId) {
+		var type = match.getMatchType().getId();
+		var matchId = match.getMatchID();
+		var ret = DBManager.instance().loadMatchLineupTeam(type, matchId, teamId);
+		if ( ret == null){
+			// Lineup team was not stored (Verlegenheitstruppe)
+			var ok = OnlineWorker.downloadMatchData(match, true);
+			ret = DBManager.instance().loadMatchLineupTeam(type, matchId, teamId);
+		}
+		return ret;
+	}
+
 	public MatchLineupTeam getHomeTeamInfo() {
 		if (home == null && match != null) {
-			home = DBManager.instance().loadMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getHomeTeamID());
-
-			if ( home == null){
-				// Lineup team was not stored (Verlegenheitstruppe)
-				var ok = OnlineWorker.downloadMatchData(match, true);
-				home = DBManager.instance().loadMatchLineupTeam(details.getSourceSystem().getValue(), match.getMatchID(), match.getHomeTeamID());
-			}
+			home = loadLineup(match, match.getHomeTeamID());
 		}
 		return home;
 	}
-	
+
 	public MatchLineupTeam getAwayTeamInfo() {
 		if (away == null && match != null) {
-			away = DBManager.instance().loadMatchLineupTeam(details.getMatchType().getId(), match.getMatchID(), match.getGuestTeamID());
+			away = loadLineup(match, match.getGuestTeamID());
 		}
 		return away;
 	}

@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -197,12 +198,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 			}
 			else{
-				if ((teamId > -1) && (matchtyp != MatchesPanel.ALL_GAMES)
-						&& (matchtyp != MatchesPanel.OTHER_TEAM_GAMES)) {
+				if (matchtyp != MatchesPanel.OTHER_TEAM_GAMES) {
 					sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
 				}
 
-				if ((teamId > -1) && (matchtyp == MatchesPanel.OTHER_TEAM_GAMES)) {
+				if (matchtyp == MatchesPanel.OTHER_TEAM_GAMES) {
 					sql.append(" WHERE ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
 				}
 
@@ -671,15 +671,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Saves matches into storeMatchKurzInfo table
 	 */
-	void storeMatchKurzInfos(MatchKurzInfo[] matches) {
+	void storeMatchKurzInfos(List<MatchKurzInfo> matches) {
 		if ( matches == null)return;
 		String sql;
-		final String[] where = { "MatchID" };
-		final String[] werte = new String[1];
+		final String[] where = { "MATCHTYP", "MatchID"  };
+		final String[] werte = new String[2];
 
 		for ( var match : matches){
 
-			werte[0] = "" + match.getMatchID();
+			werte[0] = "" + match.getMatchType().getId();
+			werte[1] = "" + match.getMatchID();
 			delete(where, werte);
 
 			try {

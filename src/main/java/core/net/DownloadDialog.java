@@ -30,6 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.*;
@@ -116,10 +117,21 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 */
 	private void fillOldFixturesList() {
 		final int aktuelleSaison = hov.getModel().getBasics().getSeason();
+		var activationDate = hov.getModel().getBasics().getActivationDate();
+		var htWeek = activationDate.toLocaleHTWeek();
+
+		var seasons = DBManager.instance().getAllSpielplaene(false);
+
 		final DefaultListModel listModel = new DefaultListModel();
 
-		for (int i = aktuelleSaison; i > 0; i--) {
-			listModel.addElement(new CBItem(hov.getLanguageString("Season") + " " + i, i));
+		for (int i = aktuelleSaison; i >= htWeek.season; i--) {
+			int finalI = i;
+			var season = seasons.stream().filter(f -> f.getSaison() == finalI).findFirst();
+			var itemText = new StringBuilder(hov.getLanguageString("Season")).append(" ").append(i);
+			if (season.isPresent()) {
+				itemText.append(" / ").append(season.get().getLigaName());
+			}
+			listModel.addElement(new CBItem(itemText.toString(), i));
 		}
 		m_jlOldSeasons.setModel(listModel);
 	}
@@ -382,9 +394,19 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
 					if (s instanceof CBItem) {
 						final int seasonId = ((CBItem) s).getId();
+
+						// download matches of the season to get the correct league id
+						var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
+						var matches = OnlineWorker.downloadMatchesOfSeason(teamId, seasonId);
+						DBManager.instance().storeMatchKurzInfos(matches);
+						var leagueMatch = matches.stream()
+								.filter(i->i.getMatchType()==MatchType.LEAGUE && i.getMatchStatus()==MatchKurzInfo.FINISHED).findFirst();
+						if ( leagueMatch.isPresent()){
+							leagueId = leagueMatch.get().getMatchContextId();
+						}
 						// Abfragen!
-						final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId);
-						final int leagueId = auswahlDialog.getLigaID();
+						final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId, leagueId);
+						leagueId = auswahlDialog.getLigaID();
 
 						if (leagueId > -2) {
 							var fixtures = OnlineWorker.downloadLeagueFixtures(seasonId, leagueId);

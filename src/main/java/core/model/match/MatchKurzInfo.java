@@ -327,7 +327,9 @@ public class MatchKurzInfo implements Comparable<Object> {
 				this.m_mtCupLevelIndex = m.getCupLevelIndex();
 				this.iTournamentTypeID = m.getTournamentTypeID();
 				this.isObsolet = m.isObsolet();
-				DBManager.instance().storeMatchKurzInfos(new MatchKurzInfo[]{this});
+				var matches = new ArrayList<MatchKurzInfo>();
+				matches.add(this);
+				DBManager.instance().storeMatchKurzInfos(matches);
 				HOLogger.instance().debug(this.getClass(), String.format("Successfully set MatchType to %s (%s) for match: %s", m_mtMatchTyp.getName(), this.getMatchTypeExtended().getName(), this.getMatchID()));
 			} else {
 				HOLogger.instance().debug(this.getClass(), String.format("Could not infer MatchType of match: %s", this.getMatchID()));
