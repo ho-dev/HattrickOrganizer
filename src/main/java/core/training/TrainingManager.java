@@ -95,7 +95,6 @@ public class TrainingManager implements PropertyChangeListener {
 		historicalTrainings = DBManager.instance().getTrainingList();
 	}
 
-
     public static TrainingManager instance() {
         if (m_clInstance == null) {
             m_clInstance = new TrainingManager();

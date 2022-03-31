@@ -52,18 +52,8 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
      *      refresh the table
      */
     public void setValueAt(Object value, int iRow, int iCol) {
-
         o_Data[iRow][iCol] = value;
-
-        TrainingPerWeek tpw;
-
-        if(o_trainingType == TrainingType.PAST_TRAINING) {
-            tpw = o_TrainingsPerWeek.get(getRowCount() - iRow - 1);
-        }
-        else{
-            tpw = o_TrainingsPerWeek.get(iRow);
-        }
-
+        TrainingPerWeek tpw = o_TrainingsPerWeek.get(iRow);
         switch (iCol) {
             case 3 -> {
                 CBItem sel = (CBItem) value;
@@ -80,12 +70,11 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
         if (o_trainingType == TrainingType.PAST_TRAINING) {
             DBManager.instance().saveTraining(tpw, TrainingManager.instance().getLastTrainingDate(), true);
-        } else{
-            ((FutureTrainingsTableModel)this).getTrainingModel().saveFutureTraining(tpw);
+        } else {
+            ((FutureTrainingsTableModel) this).getTrainingModel().saveFutureTraining(tpw);
             RefreshManager.instance().doRefresh();
         }
     }
-
 
     //TODO: isCellEditable() make sure that cells older than 2 seasons are not editable
     /**

@@ -116,21 +116,20 @@ public final class HRFTable extends AbstractTable {
 	/**
 	 * speichert das Verein
 	 */
-	void saveHRF(int hrfId, String name, Timestamp datum) {
+	void saveHRF(int hrfId, String name, HODateTime datum) {
 		String statement;
 
 		// insert vorbereiten
 		statement = "INSERT INTO " + getTableName() + " ( HRF_ID, Name, Datum ) VALUES(";
-		statement += ("" + hrfId + ",'" + name + "','" + datum.toString() + "' )");
+		statement += ("" + hrfId + ",'" + name + "','" + datum.toDbTimestamp() + "' )");
 		adapter.executeUpdate(statement);
 
-		var hoDateTime = HODateTime.fromDbTimestamp(datum);
 		if (hrfId > getMaxHrf().getHrfId()) {
-			maxHrf = new HRF(hrfId, name, hoDateTime);
+			maxHrf = new HRF(hrfId, name, datum);
 		}
 
-		if (hoDateTime.isAfter(getLatestHrf().getDatum())) {
-			latestHrf = new HRF(hrfId, name, hoDateTime);
+		if (datum.isAfter(getLatestHrf().getDatum())) {
+			latestHrf = new HRF(hrfId, name, datum);
 		}
 	}
 
