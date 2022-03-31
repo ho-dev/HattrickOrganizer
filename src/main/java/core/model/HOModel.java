@@ -522,7 +522,7 @@ public class HOModel {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum().toDbTimestamp());
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
     }
 
     /**
@@ -548,12 +548,11 @@ public class HOModel {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum().toDbTimestamp());
+        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
 
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
     }
-
 
     /**
      * Remove a Player
@@ -568,10 +567,8 @@ public class HOModel {
      * save the model in the database
      */
     public final synchronized void saveHRF() {
-        var time = getBasics().getDatum().toDbTimestamp();
-        DBManager.instance().saveHRF(getID(),
-                java.text.DateFormat.getDateTimeInstance().format(new java.util.Date(
-                        System.currentTimeMillis())), time);
+        var time = getBasics().getDatum();
+        DBManager.instance().saveHRF(getID(), time.toLocaleDateTime(), time);
         DBManager.instance().saveBasics(getID(), getBasics());
         DBManager.instance().saveVerein(getID(), getClub());
         DBManager.instance().saveTeam(getID(), getTeam());

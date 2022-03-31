@@ -119,7 +119,7 @@ class ResultPanel extends JPanel {
                 core.db.DBManager.instance().saveSpieler(
                         HOVerwaltung.instance().getModel().getID(),
                         HOVerwaltung.instance().getModel().getCurrentPlayers(),
-                        HOVerwaltung.instance().getModel().getBasics().getDatum().toDbTimestamp()
+                        HOVerwaltung.instance().getModel().getBasics().getDatum()
                 );
             }
             core.gui.RefreshManager.instance().doReInit();

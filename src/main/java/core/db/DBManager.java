@@ -567,9 +567,9 @@ public class DBManager {
 	 * @param player the player
 	 * @param date   the date
 	 */
-	public void saveSpieler(int hrfId, List<Player> player, Timestamp date) {
+	public void saveSpieler(int hrfId, List<Player> player, HODateTime date) {
 		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-				player, date);
+				player, date.toDbTimestamp());
 	}
 
 	/**
@@ -849,8 +849,8 @@ public class DBManager {
 	 * @param economy the economy
 	 * @param date    the date
 	 */
-	public void saveEconomyInDB(int hrfId, Economy economy, Timestamp date) {
-		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
+	public void saveEconomyInDB(int hrfId, Economy economy, HODateTime date) {
+		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date.toDbTimestamp());
 	}
 
 	// ------------------------------- HRFTable
@@ -913,7 +913,7 @@ public class DBManager {
 	 * @param name  the name
 	 * @param datum the datum
 	 */
-	public void saveHRF(int hrfId, String name, Timestamp datum) {
+	public void saveHRF(int hrfId, String name, HODateTime datum) {
 		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, name, datum);
 	}
 
