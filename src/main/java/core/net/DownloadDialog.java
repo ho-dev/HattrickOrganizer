@@ -84,7 +84,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		initComponents();
 	}
 
-
 	@Override
 	public final void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(m_jchOldFixtures)) {
