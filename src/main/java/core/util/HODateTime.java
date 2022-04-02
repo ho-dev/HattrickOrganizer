@@ -288,5 +288,9 @@ public class HODateTime implements Comparable<HODateTime> {
             return new HODuration(this.seasons - diff.seasons, this.days - diff.days);
         }
     }
+
+    public String toString(){
+        return this.instant.toString();
+    }
 }
 
