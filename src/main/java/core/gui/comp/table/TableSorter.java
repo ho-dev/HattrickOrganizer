@@ -97,8 +97,11 @@ public class TableSorter extends TableMap {
         if (matchid > 0) {
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    if (matchid == (int) ((ColorLabelEntry) getValueAt(i, idColumn)).getNumber()) {
-                        return indexes[i];
+                    var entry = (ColorLabelEntry) getValueAt(i, idColumn);
+                    if ( entry != null) {
+                        if (matchid == (int) entry.getNumber()) {
+                            return indexes[i];
+                        }
                     }
                 } catch (Exception e) {
                     HOLogger.instance().log(getClass(),"TableSorter.getRow4Match: " + e);
@@ -128,8 +131,11 @@ public class TableSorter extends TableMap {
         if (spielerid != 0) {
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    if (spielerid == Integer.parseInt(((ColorLabelEntry) getValueAt(i, idColumn)).getText())) {
-                        return i;
+                    var entry = (ColorLabelEntry) getValueAt(i, idColumn);
+                    if ( entry != null) {
+                        if (spielerid == Integer.parseInt(entry.getText())) {
+                            return i;
+                        }
                     }
                 } catch (Exception e) {
                     HOLogger.instance().log(getClass(),"TableSorter.getRow4Spieler: " + e);
@@ -143,8 +149,11 @@ public class TableSorter extends TableMap {
     public final module.transfer.scout.ScoutEintrag getScoutEintrag(int row) {
         if (row > -1) {
             try {
-                return ((module.transfer.scout.TransferTableModel) getModel())
-                       .getScoutEintrag(Integer.parseInt(((ColorLabelEntry) getValueAt(row, idColumn)).getText()));
+                var entry = (ColorLabelEntry) getValueAt(row, idColumn);
+                if ( entry != null) {
+                    return ((module.transfer.scout.TransferTableModel) getModel())
+                            .getScoutEintrag(Integer.parseInt(entry.getText()));
+                }
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(),"TableSorter.getScoutEintrag: " + e);
                 return null;
@@ -157,15 +166,18 @@ public class TableSorter extends TableMap {
     public final Player getSpieler(int row) {
         if (row > -1) {
             try {
-                var text = ((ColorLabelEntry) getValueAt(row, idColumn)).getText();
-                if ( text != null && !text.isEmpty()) {
-                    final int id = Integer.parseInt(text);
-                    if (getModel() instanceof PlayerOverviewModel) {
-                        return ((PlayerOverviewModel) getModel()).getPlayer(id);
-                    } else if (getModel() instanceof LineupTableModel) {
-                        return ((LineupTableModel) getModel()).getPlayer(id);
-                    } else {
-                        throw new Exception("Tablemodel unbekannt!");
+                var entry = (ColorLabelEntry) getValueAt(row, idColumn);
+                if ( entry != null ) {
+                    var text = entry.getText();
+                    if (text != null && !text.isEmpty()) {
+                        final int id = Integer.parseInt(text);
+                        if (getModel() instanceof PlayerOverviewModel) {
+                            return ((PlayerOverviewModel) getModel()).getPlayer(id);
+                        } else if (getModel() instanceof LineupTableModel) {
+                            return ((LineupTableModel) getModel()).getPlayer(id);
+                        } else {
+                            throw new Exception("Tablemodel unbekannt!");
+                        }
                     }
                 }
             } catch (Exception e) {

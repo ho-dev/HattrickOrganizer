@@ -164,46 +164,6 @@ public final class Basics  {
 
 
     /**
-     * Hattrick date time is presented as CE(ST)
-     * @param sDate string fetched from Hattrick files
-     * @param localized whether or not the date is localized (normally only for display purposes)
-     * @return timestamp localized in CE(ST) or in user default if localized is set to true
-     */
-    public static Timestamp parseHattrickDate(String sDate, boolean localized) {
-        if (sDate.length() > 19) {
-            sDate = sDate.substring(0, 19);
-        }
-
-        if (sDate.length() == 19) {
-            LocalDateTime htDateTimeNonLocalized = LocalDateTime.parse(sDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            if (localized) {
-                ZoneId zoneId = ZoneId.of("Europe/Stockholm");
-                ZonedDateTime htLocalDateTime = ZonedDateTime.of(htDateTimeNonLocalized, zoneId);
-
-                //TODO: let user specify a time zone or select system default then change the line below #884
-
-                ZonedDateTime userLocalDateTime = htLocalDateTime.withZoneSameInstant(ZoneId.systemDefault());
-
-                return Timestamp.valueOf(userLocalDateTime.toLocalDateTime());
-            } else {
-                return Timestamp.valueOf(htDateTimeNonLocalized);
-            }
-        } else if (sDate.length() > 0) {
-            try {
-                //Hattrick
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("yyyy-MM-dd",
-                        java.util.Locale.GERMANY);
-
-                return new Timestamp(simpleFormat.parse(sDate).getTime());
-            } catch (Exception e) {
-                HOLogger.instance().log(Basics.class, e);
-            }
-        }
-        return null;
-    }
-
-    /**
 	 * @return the m_bHasSupporter
 	 */
 	public boolean isHasSupporter() {
