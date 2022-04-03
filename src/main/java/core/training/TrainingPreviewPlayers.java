@@ -136,8 +136,8 @@ public class TrainingPreviewPlayers implements Refreshable {
         int iStamina = 0;
         boolean bEstimedStamina = false;
 
-        getMatchesForTraining();
-        for ( var ms : lMatchStats){
+        var matchStatistics = new ArrayList<>(getMatchesForTraining());
+        for ( var ms : matchStatistics){
             if ( weekTrainTyp != null ) {
                 if (weekTrainTyp.getTrainingSkillPositions() != null) {
                     fullTrain += ms.getTrainMinutesPlayedInPositions(playerID, weekTrainTyp.getTrainingSkillPositions());
@@ -195,7 +195,7 @@ public class TrainingPreviewPlayers implements Refreshable {
     /**
      * get the matches concerning by the training week
      */
-    private void getMatchesForTraining() {
+    private List<MatchStatistics> getMatchesForTraining() {
 
         if (!isFuturMatchInit) {
             var lastTraining = TrainingManager.instance().getNextWeekTraining();
@@ -214,7 +214,6 @@ public class TrainingPreviewPlayers implements Refreshable {
                         }
                     } else if (matchInfo.getMatchStatus() == MatchKurzInfo.UPCOMING) {
                         var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-                        //LineupPosition lineuppos = DBManager.instance().getMatchOrder(matchInfo.getMatchID(), matchInfo.getMatchType(), true);
                         var team = DBManager.instance().loadMatchLineupTeam(matchInfo.getMatchType().getId(), matchInfo.getMatchID(), teamId);
                         if (team != null)
                             lineups.add(team.getLineup());
@@ -222,5 +221,6 @@ public class TrainingPreviewPlayers implements Refreshable {
                 }
             }
         }
+        return lMatchStats;
     }
 }
