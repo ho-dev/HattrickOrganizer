@@ -38,6 +38,7 @@
 ### Training
 * fix NPE in training tab in America-based timezones (#1296)
 * enable cell editing in future training table (#1396)
+* fix concurrent modification exception on training refresh (#1430)
 
 ### League
 * fix download of power rating (not only one team per match) (#1293)
