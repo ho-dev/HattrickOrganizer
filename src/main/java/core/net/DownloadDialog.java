@@ -388,35 +388,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			if (bOK && m_jchOldFixtures.isSelected()) {
 				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
-				for (Object s : m_jlOldSeasons.getSelectedValuesList()) {
-					if (s instanceof CBItem) {
-						final int seasonId = ((CBItem) s).getId();
-
-						// download matches of the season to get the correct league id
-						var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
-						var matches = OnlineWorker.downloadMatchesOfSeason(teamId, seasonId);
-						if ( matches != null) {
-							DBManager.instance().storeMatchKurzInfos(matches);
-							var leagueMatch = matches.stream()
-									.filter(i -> i.getMatchType() == MatchType.LEAGUE && i.getMatchStatus() == MatchKurzInfo.FINISHED).findFirst();
-							if (leagueMatch.isPresent()) {
-								leagueId = leagueMatch.get().getMatchContextId();
-							}
-							// Abfragen!
-							final LigaAuswahlDialog auswahlDialog = new LigaAuswahlDialog(this, seasonId, leagueId);
-							leagueId = auswahlDialog.getLigaID();
-
-							if (leagueId > -2) {
-								var fixtures = OnlineWorker.downloadLeagueFixtures(seasonId, leagueId);
-								if (fixtures != null) {
-									hov.getModel().saveFixtures(fixtures);
-								} else {
-									break;
-								}
-							}
-						}
-					}
-				}
+				downloadOldFixtures(teamId);
 			}
 		}
 
@@ -426,6 +398,47 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		HOMainFrame.instance().setInformationCompleted();
 
+	}
+
+	private void downloadOldFixtures(int teamId) {
+		LigaAuswahlDialog leagueSelectionDialog = null;
+		boolean useOwnLeague = true;
+		var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
+		var selection = m_jlOldSeasons.getSelectedValuesList();
+		for (Object s : selection) {
+			if (s instanceof CBItem) {
+				final int seasonId = ((CBItem) s).getId();
+
+				if (useOwnLeague || !leagueSelectionDialog.getReuseSelection()) {
+					// download matches of the season to get the league id of own team
+					var matches = OnlineWorker.downloadMatchesOfSeason(teamId, seasonId);
+					if (matches != null) {
+						DBManager.instance().storeMatchKurzInfos(matches);
+						var leagueMatch = matches.stream()
+								.filter(i -> i.getMatchType() == MatchType.LEAGUE && i.getMatchStatus() == MatchKurzInfo.FINISHED).findFirst();
+						if (leagueMatch.isPresent()) {
+							leagueId = leagueMatch.get().getMatchContextId();
+						}
+					}
+				}
+
+				// confirm selection
+				if (leagueSelectionDialog == null || !leagueSelectionDialog.getReuseSelection()) {
+					leagueSelectionDialog = new LigaAuswahlDialog(this, seasonId, leagueId, selection.size() > 1);
+					if ( leagueSelectionDialog.isAborted()) break;
+					leagueId = leagueSelectionDialog.getLigaID();
+					useOwnLeague = leagueSelectionDialog.isOwnLeagueSelected();
+				}
+				if (leagueId > -2) {
+					var fixtures = OnlineWorker.downloadLeagueFixtures(seasonId, leagueId);
+					if (fixtures != null) {
+						hov.getModel().saveFixtures(fixtures);
+					} else {
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	private void startNtDownload() {
