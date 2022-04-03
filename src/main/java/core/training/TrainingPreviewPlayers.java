@@ -136,6 +136,7 @@ public class TrainingPreviewPlayers implements Refreshable {
         int iStamina = 0;
         boolean bEstimedStamina = false;
 
+        // create a copy of the list to prevent concurrent exception on refresh (#1430)
         var matchStatistics = new ArrayList<>(getMatchesForTraining());
         for ( var ms : matchStatistics){
             if ( weekTrainTyp != null ) {
