@@ -11,14 +11,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 
 
 /**
@@ -33,22 +26,21 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
 	private JButton m_jbAbbrechen = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
     private JButton m_jbOk = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.download"));
     private JComboBox m_jcbLiga;
-    private JRadioButton m_jrbLigaAktuell = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("AktuelleLiga"),
-                                                             true);
-    private JRadioButton m_jrbLigaAndere = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("AndereLiga"),
-                                                            false);
+    private JRadioButton m_jrbLigaAktuell = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("AktuelleLiga"),true);
+    private JRadioButton m_jrbLigaAndere = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("AndereLiga"),false);
+    private JCheckBox m_jcbReuseSelection = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.selection.reuse"));
     private int m_iLigaId = -2;
     private int ownLeagueId;
+    private boolean reuseEnabled;
+    private boolean isAborted=false;
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new LigaAuswahlDialog object.
      */
-    public LigaAuswahlDialog(JDialog owner, int seasonid, int leagueId) {
-        super(owner,
-              core.model.HOVerwaltung.instance().getLanguageString("Liga"),
-              true);
-
+    public LigaAuswahlDialog(JDialog owner, int seasonid, int leagueId, boolean reuseEnabled) {
+        super(owner, HOVerwaltung.instance().getLanguageString("Liga"),true);
+        this.reuseEnabled = reuseEnabled;
         ownLeagueId = leagueId;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         initComponents(seasonid);
@@ -73,6 +65,7 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
                 }
             }
         } else if (e.getSource().equals(m_jbAbbrechen)) {
+            this.isAborted = true;
             setVisible(false);
         } else if ((e.getSource().equals(m_jrbLigaAktuell))
                    || (e.getSource().equals(m_jrbLigaAndere))) {
@@ -86,7 +79,7 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
     }
 
     private void initComponents( int seasonid) {
-        setContentPane(new ImagePanel(new GridLayout(4, 2, 4, 4)));
+        setContentPane(new ImagePanel(new GridLayout(5, 2, 4, 4)));
 
         JLabel label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Season"));
         getContentPane().add(label);
@@ -103,7 +96,6 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
         bg.add(m_jrbLigaAktuell);
         getContentPane().add(m_jrbLigaAktuell);
 
-        //Platzhalter
         label = new JLabel(""+ ownLeagueId);
         getContentPane().add(label);
 
@@ -120,6 +112,11 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
         m_jcbLiga.setEditable(true);
         getContentPane().add(m_jcbLiga);
 
+        m_jcbReuseSelection.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.tt.selection.reuse"));
+        m_jcbReuseSelection.setEnabled(this.reuseEnabled);
+        getContentPane().add(m_jcbReuseSelection);
+        getContentPane().add(new JLabel("")); // placeholder
+
         m_jbOk.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Download_Start"));
         m_jbOk.addActionListener(this);
         getContentPane().add(m_jbOk);
@@ -128,7 +125,7 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
         m_jbAbbrechen.addActionListener(this);
         getContentPane().add(m_jbAbbrechen);
 
-        setSize(250, 150);
+        setSize(250, 180);
 
         final Dimension size = getToolkit().getScreenSize();
 
@@ -165,5 +162,17 @@ public class LigaAuswahlDialog extends JDialog implements ActionListener {
                                                           javax.swing.JOptionPane.ERROR_MESSAGE);
             return -1;
         }
+    }
+
+    public boolean getReuseSelection() {
+        return this.m_jcbReuseSelection.isSelected();
+    }
+
+    public boolean isOwnLeagueSelected() {
+        return this.m_jrbLigaAktuell.isSelected();
+    }
+
+    public boolean isAborted() {
+        return isAborted;
     }
 }
