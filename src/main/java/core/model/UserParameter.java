@@ -48,7 +48,6 @@ public final class UserParameter extends Configuration {
 
     //Path to stored HRFs
     public String hrfImport_HRFPath = "";
-    //    public String htip = "www1.hattrick.org";
     public String matchLineupImport_Path = "";
     public String spielPlanImport_Path = "";
 

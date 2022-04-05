@@ -378,8 +378,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 									}
 								}
 							}
-							hov.getModel().saveFixtures(fixtures);
 						}
+						hov.getModel().saveFixtures(fixtures);
 					} else {
 						bOK = false;
 					}

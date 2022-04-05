@@ -59,16 +59,16 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Mar 30, 2022	
+Reports by Contributors - Dec 20, 2021 - Apr 03, 2022	
 
-* Foppe	640
+* Foppe	645
+* akasolace	78
 * \_KOHb\_	76
-* akasolace	76
 * Lidegand 	73
 * sich	73
 * anti_anti 69
 * Moorhuhninho	67
-* Ante 42
+* Ante 52
 * dzsoo 18
 * wsbrenk 11
-* Total translated:	1145
+* Total translated:	1162
