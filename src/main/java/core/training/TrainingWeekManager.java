@@ -159,7 +159,7 @@ public class TrainingWeekManager {
 		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
 		var startDate = m_StartDate.plus(7, ChronoUnit.DAYS);
 		for ( var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)){
-			output.put(trainingPerWeek.getTrainingDate().toHTWeek().sinceOrigin(), trainingPerWeek);
+			output.put(trainingPerWeek.getTrainingDate().toLocaleHTWeek().sinceOrigin(), trainingPerWeek);
 		}
 		return output;
 	}
