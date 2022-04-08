@@ -57,7 +57,7 @@ public class TrainingRecapTable extends JScrollPane {
         try {
             if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
                     .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                actualWeek.plus(1, ChronoUnit.WEEKS);
+                actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
             }
         } catch (Exception e1) {
             // Null when first time HO is launched
