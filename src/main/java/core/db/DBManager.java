@@ -1,5 +1,6 @@
 package core.db;
 
+import core.HO;
 import core.datatype.CBItem;
 import core.db.backup.BackupDialog;
 import core.db.user.User;
@@ -55,6 +56,7 @@ public class DBManager {
 
 	/** database versions */
 	private static final int DBVersion = 601; // HO 6.0 version
+	private static final int previousDBVersion = 600;
 	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
 	/** 2004-06-14 11:00:00.0 */
@@ -99,6 +101,7 @@ public class DBManager {
 	 * @return the version
 	 */
 	public static int getVersion() {
+		if (HO.isDevelopment()) return previousDBVersion;
 		return DBVersion;
 	}
 
