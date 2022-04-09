@@ -61,6 +61,8 @@ final class DBUpdater {
 					case 500:
 						updateDBv600(DBVersion);
 					case 600:
+						updateDBv601(DBVersion);
+					case 601:
 				}
 
 			} catch (Exception e) {
@@ -69,6 +71,15 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv601(int dbVersion) throws SQLException {
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		if ( playerTable.tryAddColumn("Statement", "VARCHAR(255)")){
+			playerTable.tryAddColumn("OwnerNotes", "VARCHAR(255)");
+			playerTable.tryAddColumn("PlayerCategory", "INTEGER");
+		}
+		updateDBVersion(dbVersion, 601);
 	}
 
 	private void updateDBv600(int dbVersion) throws SQLException {
@@ -123,12 +134,6 @@ final class DBUpdater {
 			catch (Exception e) {
 				HOLogger.instance().error(getClass(), "Error when trying to add Sponsor Bonus columns have been added to Economy table: " + e);
 			}
-		}
-
-		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		if ( playerTable.tryAddColumn("Statement", "VARCHAR(255)")){
-			playerTable.tryAddColumn("OwnerNotes", "VARCHAR(255)");
-			playerTable.tryAddColumn("PlayerCategory", "INTEGER");
 		}
 		updateDBVersion(dbVersion, 600);
 	}
