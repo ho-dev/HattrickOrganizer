@@ -16,6 +16,7 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.playerOverview.PlayerStatusLabelEntry;
@@ -354,9 +355,8 @@ final public class UserColumnFactory {
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
                 if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestGuestGoals())) {
-                        entry.setFont(entry.getFont().deriveFont(Font.BOLD));
-                }
-                else{
+                    entry.setFont(entry.getFont().deriveFont(Font.BOLD));
+                } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));
                 }
                 return entry;
@@ -391,8 +391,7 @@ final public class UserColumnFactory {
 
                 if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestGuestGoals())) {
                     entry.setFont(entry.getFont().deriveFont(Font.BOLD));
-                }
-                else{
+                } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));
                 }
 
@@ -488,7 +487,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                return new ColorLabelEntry(spielerCBItem.getMatchID()+"",
+                return new ColorLabelEntry(spielerCBItem.getMatchID() + "",
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
@@ -503,7 +502,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[13];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[16];
 
         playerAdditionalArray[0] = new PlayerColumn(10, " ", " ", 0) {
             @Override
@@ -603,7 +602,7 @@ final public class UserColumnFactory {
         };
 
         // Position
-        playerAdditionalArray[4] = new PlayerColumn(LINUP, " ","Aufgestellt", 28) {
+        playerAdditionalArray[4] = new PlayerColumn(LINUP, " ", "Aufgestellt", 28) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
@@ -786,6 +785,35 @@ final public class UserColumnFactory {
                 home.setPlayer(player);
                 setPreferredWidth(35);
                 return home;
+            }
+        };
+
+        playerAdditionalArray[13] = new PlayerColumn(438, "ls.player.category", "ls.player.category", 25) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                var category = player.getPlayerCategory();
+                String text;
+                double sort;
+                if (category != null && category != PlayerCategory.NoCategorySet) {
+                    text = category.toString();
+                    sort = category.getId();
+                } else {
+                    text = "";
+                    sort = 100;
+                }
+                return new ColorLabelEntry(sort, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
+        playerAdditionalArray[14] = new PlayerColumn(439, "ls.player.statement", "ls.player.statement", 25) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
+        playerAdditionalArray[15] = new PlayerColumn(441, "ls.player.ownernotes", "ls.player.ownernotes", 25) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 

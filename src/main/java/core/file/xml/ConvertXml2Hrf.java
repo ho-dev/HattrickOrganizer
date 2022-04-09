@@ -926,7 +926,6 @@ public class ConvertXml2Hrf {
 				buffer.append("rating=0").append('\n');
 			}
 
-			// Bonus
 			if ((ht.get("PlayerNumber") != null)
 					|| (!ht.get("PlayerNumber").equals(""))) {
 				buffer.append("PlayerNumber=").append(ht.get("PlayerNumber"))
@@ -939,6 +938,10 @@ public class ConvertXml2Hrf {
 					.append('\n');
 			buffer.append("Caps=").append(ht.get("Caps")).append('\n');
 			buffer.append("CapsU20=").append(ht.get("CapsU20")).append('\n');
+			buffer.append("PlayerCategoryId=").append(ht.get("PlayerCategoryId")).append('\n');
+			// TODO: since we transport all data through the hrf file, we have to loose the new lines
+			buffer.append("Statement=").append(ht.get("Statement").replace('\n', ' ')).append('\n');
+			buffer.append("OwnerNotes=").append(ht.get("OwnerNotes").replace('\n', ' ')).append('\n');
 		}
 	}
 
