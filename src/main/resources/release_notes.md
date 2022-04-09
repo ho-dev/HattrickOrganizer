@@ -15,6 +15,7 @@
 ### Squad
 * refactoring player details panel showing players' avatars now (#1349)
 * display jersey numbers greater than 49 (#1410)
+* download and display players' category, statement and owner notes (#1441)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)

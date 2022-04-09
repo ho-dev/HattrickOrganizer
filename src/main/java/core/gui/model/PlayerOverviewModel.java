@@ -35,7 +35,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[50];
+		columns = new UserColumn[53];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -50,23 +50,26 @@ public final class PlayerOverviewModel extends HOTableModel {
 		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
 		int goalsIndex = 42;//-45
 		System.arraycopy(goals, 0, columns, goalsIndex + 0, goals.length);
-		UserColumn[] add = UserColumnFactory.createPlayerAdditionalArray();
-		columns[1] = add[0];
-		columns[2] = add[1];
-		columns[4] = add[2];
-		columns[21] = add[3]; // best position
-		columns[5] = add[4];
-		columns[6] = add[5];
-		columns[7] = add[6];
-		columns[46] = add[7];
-		columns[8] = add[8];// tsi
-		columns[22] = add[9]; // lastmatch
-		columns[47] = add[11];
-		columns[3] = add[12];// Motherclub
-		columns[49] = add[10];
+		UserColumn[] additionalArray = UserColumnFactory.createPlayerAdditionalArray();
+		columns[1] = additionalArray[0];
+		columns[2] = additionalArray[1];
+		columns[4] = additionalArray[2];
+		columns[21] = additionalArray[3]; // best position
+		columns[5] = additionalArray[4];
+		columns[6] = additionalArray[5];
+		columns[7] = additionalArray[6];
+		columns[46] = additionalArray[7];
+		columns[8] = additionalArray[8];// tsi
+		columns[22] = additionalArray[9]; // lastmatch
+		columns[47] = additionalArray[11];
+		columns[3] = additionalArray[12];// Motherclub
+		columns[49] = additionalArray[10];
+		columns[50] = additionalArray[13];
+		columns[51] = additionalArray[14];
+		columns[52] = additionalArray[15];
 	}
 	
-    public final Player getPlayer(int id) {
+    public Player getPlayer(int id) {
         // Can be negative for temp player
         if (id != 0) {
 			for (Player m_vPlayer : m_vPlayers) {
@@ -82,7 +85,7 @@ public final class PlayerOverviewModel extends HOTableModel {
     /**
      * Sets the new list of players.
      */
-    public final void setValues(List<Player> player) {
+    public void setValues(List<Player> player) {
     	m_vPlayers = player;
         initData();
     }
@@ -90,7 +93,7 @@ public final class PlayerOverviewModel extends HOTableModel {
     /**
      * Resets the data for an HRF comparison.
      */
-    public final void reInitDataHRFVergleich() {
+    public void reInitDataHRFVergleich() {
         initData();
     }
 
@@ -148,7 +151,7 @@ public final class PlayerOverviewModel extends HOTableModel {
     /**
      * Passt nur die Aufstellung an
      */
-    public final void reInitData() {
+    public void reInitData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
         for (int i = 0; i < m_vPlayers.size(); i++) {
             final Player aktuellerPlayer = m_vPlayers.get(i);

@@ -3,6 +3,7 @@ package core.db;
 import core.constants.player.PlayerSkill;
 import core.model.enums.MatchType;
 import core.model.player.Player;
+import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -25,73 +26,77 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[66];
-		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
-		columns[2] = new ColumnDescriptor("GelbeKarten", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("SpielerID", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100);
-		columns[5] = new ColumnDescriptor("NickName", Types.VARCHAR, true, 100);
-		columns[6] = new ColumnDescriptor("LastName", Types.VARCHAR, true, 100);
-		columns[7] = new ColumnDescriptor("Age", Types.INTEGER, false);
-		columns[8] = new ColumnDescriptor("Kondition", Types.INTEGER, false);
-		columns[9] = new ColumnDescriptor("Form", Types.INTEGER, false);
-		columns[10] = new ColumnDescriptor("Torwart", Types.INTEGER, false);
-		columns[11] = new ColumnDescriptor("Verteidigung", Types.INTEGER, false);
-		columns[12] = new ColumnDescriptor("Spielaufbau", Types.INTEGER, false);
-		columns[13] = new ColumnDescriptor("Fluegel", Types.INTEGER, false);
-		columns[14] = new ColumnDescriptor("Torschuss", Types.INTEGER, false);
-		columns[15] = new ColumnDescriptor("Passpiel", Types.INTEGER, false);
-		columns[16] = new ColumnDescriptor("Standards", Types.INTEGER, false);
-		columns[17] = new ColumnDescriptor("SubTorwart", Types.REAL, false);
-		columns[18] = new ColumnDescriptor("SubVerteidigung", Types.REAL, false);
-		columns[19] = new ColumnDescriptor("SubSpielaufbau", Types.REAL, false);
-		columns[20] = new ColumnDescriptor("SubFluegel", Types.REAL, false);
-		columns[21] = new ColumnDescriptor("SubTorschuss", Types.REAL, false);
-		columns[22] = new ColumnDescriptor("SubPasspiel", Types.REAL, false);
-		columns[23] = new ColumnDescriptor("SubStandards", Types.REAL, false);
-		columns[24] = new ColumnDescriptor("OffsetTorwart", Types.REAL, false);
-		columns[25] = new ColumnDescriptor("OffsetVerteidigung", Types.REAL, false);
-		columns[26] = new ColumnDescriptor("OffsetSpielaufbau", Types.REAL, false);
-		columns[27] = new ColumnDescriptor("OffsetFluegel", Types.REAL, false);
-		columns[28] = new ColumnDescriptor("OffsetTorschuss", Types.REAL, false);
-		columns[29] = new ColumnDescriptor("OffsetPasspiel", Types.REAL, false);
-		columns[30] = new ColumnDescriptor("OffsetStandards", Types.REAL, false);
-		columns[31] = new ColumnDescriptor("iSpezialitaet", Types.INTEGER, false);
-		columns[32] = new ColumnDescriptor("iCharakter", Types.INTEGER, false);
-		columns[33] = new ColumnDescriptor("iAnsehen", Types.INTEGER, false);
-		columns[34] = new ColumnDescriptor("iAgressivitaet", Types.INTEGER, false);
-		columns[35] = new ColumnDescriptor("Fuehrung", Types.INTEGER, false);
-		columns[36] = new ColumnDescriptor("Erfahrung", Types.INTEGER, false);
-		columns[37] = new ColumnDescriptor("Gehalt", Types.INTEGER, false);
-		columns[38] = new ColumnDescriptor("Bonus", Types.INTEGER, false);
-		columns[39] = new ColumnDescriptor("Land", Types.INTEGER, false);
-		columns[40] = new ColumnDescriptor("Marktwert", Types.INTEGER, false);
-		columns[41] = new ColumnDescriptor("Verletzt", Types.INTEGER, false);
-		columns[42] = new ColumnDescriptor("ToreFreund", Types.INTEGER, false);
-		columns[43] = new ColumnDescriptor("ToreLiga", Types.INTEGER, false);
-		columns[44] = new ColumnDescriptor("TorePokal", Types.INTEGER, false);
-		columns[45] = new ColumnDescriptor("ToreGesamt", Types.INTEGER, false);
-		columns[46] = new ColumnDescriptor("Hattrick", Types.INTEGER, false);
-		columns[47] = new ColumnDescriptor("Bewertung", Types.INTEGER, false);
-		columns[48] = new ColumnDescriptor("TrainerTyp", Types.INTEGER, false);
-		columns[49] = new ColumnDescriptor("Trainer", Types.INTEGER, false);
-		columns[50] = new ColumnDescriptor("PlayerNumber", Types.INTEGER, false);
-		columns[51] = new ColumnDescriptor("TransferListed", Types.INTEGER, false);
-		columns[52] = new ColumnDescriptor("Caps", Types.INTEGER, false);
-		columns[53] = new ColumnDescriptor("CapsU20", Types.INTEGER, false);
-		columns[54] = new ColumnDescriptor("AgeDays", Types.INTEGER, false);
-		columns[55] = new ColumnDescriptor("TrainingBlock", Types.BOOLEAN, false);
-		columns[56] = new ColumnDescriptor("Loyalty", Types.INTEGER, false);
-		columns[57] = new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false);
-		columns[58] = new ColumnDescriptor("NationalTeamID", Types.INTEGER, true);
-		columns[59] = new ColumnDescriptor("SubExperience", Types.REAL, false);
-		columns[60] = new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100);
-		columns[61] = new ColumnDescriptor("LastMatchRating", Types.INTEGER, true);
-		columns[62] = new ColumnDescriptor("LastMatchId", Types.INTEGER, true);
-		columns[63] = new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true);
-		columns[64] = new ColumnDescriptor("ArrivalDate", Types.VARCHAR, true, 100);
-		columns[65] = new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
+				new ColumnDescriptor("Datum", Types.TIMESTAMP, false),
+				new ColumnDescriptor("GelbeKarten", Types.INTEGER, false),
+				new ColumnDescriptor("SpielerID", Types.INTEGER, false),
+				new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
+				new ColumnDescriptor("NickName", Types.VARCHAR, true, 100),
+				new ColumnDescriptor("LastName", Types.VARCHAR, true, 100),
+				new ColumnDescriptor("Age", Types.INTEGER, false),
+				new ColumnDescriptor("Kondition", Types.INTEGER, false),
+				new ColumnDescriptor("Form", Types.INTEGER, false),
+				new ColumnDescriptor("Torwart", Types.INTEGER, false),
+				new ColumnDescriptor("Verteidigung", Types.INTEGER, false),
+				new ColumnDescriptor("Spielaufbau", Types.INTEGER, false),
+				new ColumnDescriptor("Fluegel", Types.INTEGER, false),
+				new ColumnDescriptor("Torschuss", Types.INTEGER, false),
+				new ColumnDescriptor("Passpiel", Types.INTEGER, false),
+				new ColumnDescriptor("Standards", Types.INTEGER, false),
+				new ColumnDescriptor("SubTorwart", Types.REAL, false),
+				new ColumnDescriptor("SubVerteidigung", Types.REAL, false),
+				new ColumnDescriptor("SubSpielaufbau", Types.REAL, false),
+				new ColumnDescriptor("SubFluegel", Types.REAL, false),
+				new ColumnDescriptor("SubTorschuss", Types.REAL, false),
+				new ColumnDescriptor("SubPasspiel", Types.REAL, false),
+				new ColumnDescriptor("SubStandards", Types.REAL, false),
+				new ColumnDescriptor("OffsetTorwart", Types.REAL, false),
+				new ColumnDescriptor("OffsetVerteidigung", Types.REAL, false),
+				new ColumnDescriptor("OffsetSpielaufbau", Types.REAL, false),
+				new ColumnDescriptor("OffsetFluegel", Types.REAL, false),
+				new ColumnDescriptor("OffsetTorschuss", Types.REAL, false),
+				new ColumnDescriptor("OffsetPasspiel", Types.REAL, false),
+				new ColumnDescriptor("OffsetStandards", Types.REAL, false),
+				new ColumnDescriptor("iSpezialitaet", Types.INTEGER, false),
+				new ColumnDescriptor("iCharakter", Types.INTEGER, false),
+				new ColumnDescriptor("iAnsehen", Types.INTEGER, false),
+				new ColumnDescriptor("iAgressivitaet", Types.INTEGER, false),
+				new ColumnDescriptor("Fuehrung", Types.INTEGER, false),
+				new ColumnDescriptor("Erfahrung", Types.INTEGER, false),
+				new ColumnDescriptor("Gehalt", Types.INTEGER, false),
+				new ColumnDescriptor("Bonus", Types.INTEGER, false),
+				new ColumnDescriptor("Land", Types.INTEGER, false),
+				new ColumnDescriptor("Marktwert", Types.INTEGER, false),
+				new ColumnDescriptor("Verletzt", Types.INTEGER, false),
+				new ColumnDescriptor("ToreFreund", Types.INTEGER, false),
+				new ColumnDescriptor("ToreLiga", Types.INTEGER, false),
+				new ColumnDescriptor("TorePokal", Types.INTEGER, false),
+				new ColumnDescriptor("ToreGesamt", Types.INTEGER, false),
+				new ColumnDescriptor("Hattrick", Types.INTEGER, false),
+				new ColumnDescriptor("Bewertung", Types.INTEGER, false),
+				new ColumnDescriptor("TrainerTyp", Types.INTEGER, false),
+				new ColumnDescriptor("Trainer", Types.INTEGER, false),
+				new ColumnDescriptor("PlayerNumber", Types.INTEGER, false),
+				new ColumnDescriptor("TransferListed", Types.INTEGER, false),
+				new ColumnDescriptor("Caps", Types.INTEGER, false),
+				new ColumnDescriptor("CapsU20", Types.INTEGER, false),
+				new ColumnDescriptor("AgeDays", Types.INTEGER, false),
+				new ColumnDescriptor("TrainingBlock", Types.BOOLEAN, false),
+				new ColumnDescriptor("Loyalty", Types.INTEGER, false),
+				new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false),
+				new ColumnDescriptor("NationalTeamID", Types.INTEGER, true),
+				new ColumnDescriptor("SubExperience", Types.REAL, false),
+				new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100),
+				new ColumnDescriptor("LastMatchRating", Types.INTEGER, true),
+				new ColumnDescriptor("LastMatchId", Types.INTEGER, true),
+				new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true),
+				new ColumnDescriptor("ArrivalDate", Types.VARCHAR, true, 100),
+				new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true),
+				new ColumnDescriptor("PlayerCategory", Types.INTEGER, true),
+				new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
+				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255)
+		};
 	}
 
 	@Override
@@ -109,96 +114,100 @@ final class SpielerTable extends AbstractTable {
 	 */
 
 	void saveSpieler(int hrfId, Player player, Timestamp date) {
-		StringBuilder statement = new StringBuilder(500);
 		final String[] awhereS = { "HRF_ID", "SpielerId" };
 		final String[] awhereV = { "" + hrfId, "" + player.getPlayerID()};
 		// Delete old values
 		delete(awhereS, awhereV);
 
 		//insert vorbereiten
-		statement.append("INSERT INTO ").append(getTableName());
-		statement.append(" ( GelbeKarten , SpielerID , ArrivalDate, FirstName , NickName, LastName , Age , AgeDays , ");
-		statement.append("Kondition , Form , Torwart , Verteidigung , Spielaufbau , Fluegel , ");
-		statement.append("Torschuss , Passpiel , Standards , SubTorwart , SubVerteidigung , ");
-		statement.append( "SubSpielaufbau , SubFluegel , SubTorschuss , SubPasspiel , SubStandards , ");
-		statement.append( "OffsetTorwart , OffsetVerteidigung , OffsetSpielaufbau , OffsetFluegel , ");
-		statement.append( "OffsetTorschuss , OffsetPasspiel , OffsetStandards , iSpezialitaet , ");
-		statement.append( "iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , ");
-		statement.append( "Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , GoalsCurrentTeam , ");
-		statement.append( "ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, ");
-		statement.append( "PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, ");
-		statement.append( "SubExperience, NationalTeamID, ");
-		statement.append( "LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE ");
-		statement.append(") VALUES(");
-		statement.append(player.getCards()).append(",");
 
-		statement.append(player.getPlayerID()).append(",");
-		statement.append("'").append(DBManager.insertEscapeSequences(player.getArrivalDate())).append("',");
-		statement.append("'").append(DBManager.insertEscapeSequences(player.getFirstName())).append("',");
-		statement.append("'").append(DBManager.insertEscapeSequences(player.getNickName())).append("',");
-		statement.append("'").append(DBManager.insertEscapeSequences(player.getLastName())).append("',");
-		statement.append(player.getAlter()).append(",");
-		statement.append(player.getAgeDays()).append(",");
-		statement.append(player.getStamina()).append(",");
-		statement.append(player.getForm()).append(",");
-		statement.append(player.getGKskill()).append(",");
-		statement.append(player.getDEFskill()).append(",");
-		statement.append(player.getPMskill()).append(",");
-		statement.append(player.getWIskill()).append(",");
-		statement.append(player.getSCskill()).append(",");
-		statement.append(player.getPSskill()).append(",");
-		statement.append(player.getSPskill()).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.KEEPER)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.DEFENDING)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.WINGER)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.SCORING)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.PASSING)).append(",");
-		statement.append(player.getSub4SkillAccurate(PlayerSkill.SET_PIECES)).append(",");
-		// Training offsets below
-		statement.append("0,");
-		statement.append("0,");
-		statement.append("0,");
-		statement.append("0,");
-		statement.append("0,");
-		statement.append("0,");
-		statement.append("0,");
-		statement.append(player.getPlayerSpecialty()).append(",");
-		statement.append(player.getCharakter()).append(",");
-		statement.append(player.getAnsehen()).append(",");
-		statement.append(player.getAgressivitaet()).append(",");
-		statement.append(player.getLeadership()).append(",");
-		statement.append(player.getExperience()).append(",");
-		statement.append(player.getSalary()).append(",");
-		statement.append(player.getBonus()).append(",");
-		statement.append(player.getNationalityAsInt()).append(",");
-		statement.append(player.getSaveMarktwert()).append(",");
-		statement.append(player.getInjuryWeeks()).append(",");
-		statement.append(player.getToreFreund()).append(",");
-		statement.append(player.getSeasonSeriesGoal()).append(",");
-		statement.append(player.getSeasonCupGoal()).append(",");
-		statement.append(player.getGoalsCurrentTeam()).append(",");
-		statement.append(player.getAllOfficialGoals()).append(",");
-		statement.append(player.getHattrick()).append(",");
-		statement.append(player.getRating()).append(",");
-		statement.append(TrainerType.toInt(player.getTrainerTyp())).append(",");
-		statement.append(player.getTrainerSkill()).append(",");
-		statement.append(hrfId).append(",");
-		statement.append("'").append(date.toString()).append("',");
-		statement.append(player.getTrikotnummer()).append(",");
-		statement.append(player.getTransferlisted()).append(",");
-		statement.append(player.getLaenderspiele()).append(",");
-		statement.append(player.getU20Laenderspiele()).append(",");
-		statement.append(player.hasTrainingBlock()).append(",");
-		statement.append(player.getLoyalty()).append(",");
-		statement.append(player.isHomeGrown()).append(",");
-		statement.append(player.getSubExperience()).append(",");
-		statement.append(player.getNationalTeamID()).append(",");
-		statement.append("'").append(player.getLastMatchDate()).append("',");
-		statement.append(player.getLastMatchRating()).append(",");
-		statement.append(player.getLastMatchId()).append(",");
-		statement.append(player.getLastMatchType().getId()).append(")");
-		adapter.executeUpdate(statement.toString());
+		String statement = "INSERT INTO " + getTableName() +
+				" ( GelbeKarten , SpielerID , ArrivalDate, FirstName , NickName, LastName , Age , AgeDays , " +
+				"Kondition , Form , Torwart , Verteidigung , Spielaufbau , Fluegel , " +
+				"Torschuss , Passpiel , Standards , SubTorwart , SubVerteidigung , " +
+				"SubSpielaufbau , SubFluegel , SubTorschuss , SubPasspiel , SubStandards , " +
+				"OffsetTorwart , OffsetVerteidigung , OffsetSpielaufbau , OffsetFluegel , " +
+				"OffsetTorschuss , OffsetPasspiel , OffsetStandards , iSpezialitaet , " +
+				"iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , " +
+				"Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , GoalsCurrentTeam , " +
+				"ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, " +
+				"PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, " +
+				"SubExperience, NationalTeamID, " +
+				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, " +
+				"Statement, OwnerNotes, PlayerCategory " +
+				") VALUES(" +
+				player.getCards() + "," +
+				player.getPlayerID() + "," +
+				"'" + DBManager.insertEscapeSequences(player.getArrivalDate()) + "'," +
+				"'" + DBManager.insertEscapeSequences(player.getFirstName()) + "'," +
+				"'" + DBManager.insertEscapeSequences(player.getNickName()) + "'," +
+				"'" + DBManager.insertEscapeSequences(player.getLastName()) + "'," +
+				player.getAlter() + "," +
+				player.getAgeDays() + "," +
+				player.getStamina() + "," +
+				player.getForm() + "," +
+				player.getGKskill() + "," +
+				player.getDEFskill() + "," +
+				player.getPMskill() + "," +
+				player.getWIskill() + "," +
+				player.getSCskill() + "," +
+				player.getPSskill() + "," +
+				player.getSPskill() + "," +
+				player.getSub4SkillAccurate(PlayerSkill.KEEPER) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.DEFENDING) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.WINGER) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.SCORING) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.PASSING) + "," +
+				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES) + "," +
+				// Training offsets below
+				"0," +
+				"0," +
+				"0," +
+				"0," +
+				"0," +
+				"0," +
+				"0," +
+				player.getPlayerSpecialty() + "," +
+				player.getCharakter() + "," +
+				player.getAnsehen() + "," +
+				player.getAgressivitaet() + "," +
+				player.getLeadership() + "," +
+				player.getExperience() + "," +
+				player.getSalary() + "," +
+				player.getBonus() + "," +
+				player.getNationalityAsInt() + "," +
+				player.getSaveMarktwert() + "," +
+				player.getInjuryWeeks() + "," +
+				player.getToreFreund() + "," +
+				player.getSeasonSeriesGoal() + "," +
+				player.getSeasonCupGoal() + "," +
+				player.getGoalsCurrentTeam() + "," +
+				player.getAllOfficialGoals() + "," +
+				player.getHattrick() + "," +
+				player.getRating() + "," +
+				TrainerType.toInt(player.getTrainerTyp()) + "," +
+				player.getTrainerSkill() + "," +
+				hrfId + "," +
+				"'" + date.toString() + "'," +
+				player.getTrikotnummer() + "," +
+				player.getTransferlisted() + "," +
+				player.getLaenderspiele() + "," +
+				player.getU20Laenderspiele() + "," +
+				player.hasTrainingBlock() + "," +
+				player.getLoyalty() + "," +
+				player.isHomeGrown() + "," +
+				player.getSubExperience() + "," +
+				player.getNationalTeamID() + "," +
+				"'" + player.getLastMatchDate() + "'," +
+				player.getLastMatchRating() + "," +
+				player.getLastMatchId() + "," +
+				player.getLastMatchType().getId()  + ", '"
+				+ player.getPlayerStatement() + "', '"
+				+ player.getOwnerNotes() + "', "
+				+ player.getPlayerCategory().getId()
+				+ ")";
+		adapter.executeUpdate(statement);
 	}
 
 	/**
@@ -577,6 +586,9 @@ final class SpielerTable extends AbstractTable {
 			}
 
             player.setLastMatchType(MatchType.getById(rs.getInt("LAST_MATCH_TYPE")));
+			player.setPlayerCategory(PlayerCategory.valueOf(DBManager.getInteger(rs, "PlayerCategory")));
+			player.setPlayerStatement(rs.getString("Statement"));
+			player.setOwnerNotes(rs.getString("OwnerNotes"));
 
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),e);

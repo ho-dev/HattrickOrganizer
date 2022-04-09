@@ -18,9 +18,8 @@ import core.util.Helper;
 import core.util.HelperWrapper;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
-import java.sql.Timestamp;
+
 import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 
 import static java.lang.Integer.min;
@@ -285,16 +284,25 @@ public class Player {
      */
     private int m_iTransferlisted;
 
-    //TODO Noch in DB adden
+    /**
+     * shirt number (can be edited in hattrick)
+     */
+    private int shirtNumber = -1;
 
     /**
-     * Fetchdate
+     * player's category (can be edited in hattrick)
      */
+    private PlayerCategory playerCategory;
 
-    //    protected Timestamp m_clFetchDate       =   new Timestamp( System.currentTimeMillis () );
+    /**
+     * player statement (can be edited in hattrick)
+     */
+    private String playerStatement;
 
-    /*TrikotNummer*/
-    private int m_iTrikotnummer = -1;
+    /**
+     * Owner notes (can be edited in hattrick)
+     */
+    private String ownerNotes;
 
     /**
      * Länderspiele
@@ -331,6 +339,7 @@ public class Player {
     private int GameStartingTime = 0;
     private int nationalTeamId=0;
     private double subExperience;
+
 
     /**
      * future training priorities planed by the user
@@ -434,7 +443,7 @@ public class Player {
         temp = properties.getProperty("playernumber", "");
 
         if ((temp != null) && !temp.equals("") && !temp.equals("null")) {
-            m_iTrikotnummer = Integer.parseInt(temp);
+            shirtNumber = Integer.parseInt(temp);
         }
 
         m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False"))?1:0;
@@ -461,6 +470,10 @@ public class Player {
             // Training block
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
         }
+
+        playerCategory = PlayerCategory.valueOf(Integer.parseInt(properties.getProperty("playercategoryid", "0")));
+        playerStatement = properties.getProperty("statement", "");
+        ownerNotes = properties.getProperty("ownernotes", "");
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -1639,7 +1652,7 @@ public class Player {
      * @param m_iTrikotnummer New value of property m_iTrikotnummer.
      */
     public void setTrikotnummer(int m_iTrikotnummer) {
-        this.m_iTrikotnummer = m_iTrikotnummer;
+        this.shirtNumber = m_iTrikotnummer;
     }
 
     /**
@@ -1648,7 +1661,7 @@ public class Player {
      * @return Value of property m_iTrikotnummer.
      */
     public int getTrikotnummer() {
-        return m_iTrikotnummer;
+        return shirtNumber;
     }
 
     /**
@@ -2312,6 +2325,30 @@ public class Player {
         ret.setAlter(getAlter());
         ret.setLastName(getLastName());
         return ret;
+    }
+
+    public PlayerCategory getPlayerCategory() {
+        return playerCategory;
+    }
+
+    public void setPlayerCategory(PlayerCategory playerCategory) {
+        this.playerCategory = playerCategory;
+    }
+
+    public String getPlayerStatement() {
+        return playerStatement;
+    }
+
+    public void setPlayerStatement(String playerStatement) {
+        this.playerStatement = playerStatement;
+    }
+
+    public String getOwnerNotes() {
+        return ownerNotes;
+    }
+
+    public void setOwnerNotes(String ownerNotes) {
+        this.ownerNotes = ownerNotes;
     }
 
 

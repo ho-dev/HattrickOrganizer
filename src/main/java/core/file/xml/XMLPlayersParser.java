@@ -83,6 +83,10 @@ public class XMLPlayersParser {
                 hash.put("PlayerForm", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("Statement").item(0);
                 hash.put("Statement", (XMLManager.getFirstChildNodeValue(ele)));
+                ele = (Element) root.getElementsByTagName("OwnerNotes").item(0);
+                hash.put("OwnerNotes", (XMLManager.getFirstChildNodeValue(ele)));
+                ele = (Element) root.getElementsByTagName("PlayerCategoryId").item(0);
+                hash.put("PlayerCategoryId", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("Experience").item(0);
                 hash.put("Experience", (XMLManager.getFirstChildNodeValue(ele)));
                 ele = (Element) root.getElementsByTagName("Loyalty").item(0);

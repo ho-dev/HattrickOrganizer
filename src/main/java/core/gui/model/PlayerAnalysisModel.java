@@ -37,9 +37,9 @@ public class PlayerAnalysisModel extends HOTableModel {
 	}
 
 	private void initialize() {
-		columns = new UserColumn[55];
+		columns = new UserColumn[56];
 
-		final UserColumn[] add =  UserColumnFactory.createPlayerAdditionalArray();
+		final UserColumn[] additionalArray =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
 		final MatchDetailsColumn [] matchdetails = UserColumnFactory.createMatchDetailsColumnsArray();
 		final PlayerColumn2[] cbItems = UserColumnFactory.createPlayerCBItemArray();
@@ -50,21 +50,21 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[0] = matches[0];
 		columns[1] = cbItems[3];
 		columns[2] = cbItems[2];//new PlayerColumn(700," ",10); // Position muss dort hin
-		columns[3] = add[3];
+		columns[3] = additionalArray[3];
 
 		columns[4] = matches[1];
 		columns[5] = matches[2];
 		columns[6] = matches[3];
 		columns[7] = matches[4];
 
-		columns[8] = add[6];
+		columns[8] = additionalArray[6];
 		columns[9] = matchdetails[0];
 		columns[10] = matchdetails[1];
 		columns[11] = matchdetails[2];
 		columns[12] = matchdetails[3];
 		columns[13] = cbItems[0];
 		columns[14] = cbItems[1];
-		columns[15] = add[11];
+		columns[15] = additionalArray[11];
 		columns[16] = skills[0];
 		columns[17] = skills[1];
 		columns[18] = skills[2];
@@ -107,14 +107,14 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[49] = goals[2];
 		columns[50] = goals[3];
 
-		columns[51] = add[7];
-		columns[52] = add[8];
+		columns[51] = additionalArray[7];
+		columns[52] = additionalArray[8];
 		columns[53] = cbItems[4];
 
 		columns[54] = matches[7];
+
+		columns[55] = additionalArray[13];
 	}
-
-
 
 //  -----initialisierung-----------------------------------------
 

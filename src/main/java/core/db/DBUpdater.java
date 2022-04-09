@@ -125,6 +125,11 @@ final class DBUpdater {
 			}
 		}
 
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		if ( playerTable.tryAddColumn("Statement", "VARCHAR(255)")){
+			playerTable.tryAddColumn("OwnerNotes", "VARCHAR(255)");
+			playerTable.tryAddColumn("PlayerCategory", "INTEGER");
+		}
 		updateDBVersion(dbVersion, 600);
 	}
 
