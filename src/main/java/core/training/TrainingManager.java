@@ -45,6 +45,8 @@ public class TrainingManager implements PropertyChangeListener {
      */
     private TrainingManager() {
 
+		if ( HOVerwaltung.instance().getModel() == null ) return; // nothing loaded yet
+
 		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
 			historicalTrainings = null;
 			nextWeekTraining = null;

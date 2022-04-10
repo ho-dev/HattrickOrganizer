@@ -56,6 +56,10 @@ public class DBManager {
 
 	/** database versions */
 	private static final int DBVersion = 601; // HO 6.0 version
+	/**
+	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
+	 * new installed preliminary version
+	 */
 	private static final int previousDBVersion = 600;
 	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
@@ -76,11 +80,6 @@ public class DBManager {
 
 	/** Erster Start */
 	private boolean m_bFirstStart;
-
-
-	private int m_iLatestHRFid = -1;
-
-//	private DateTime
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -862,51 +861,33 @@ public class DBManager {
 	/**
 	 * Get a list of all HRFs
 	 *
-	 * @param minId minimum HRF id (<0 for all)
-	 * @param maxId maximum HRF id (<0 for all)
 	 * @param asc   order ascending (descending otherwise)
 	 * @return all matching HRFs
 	 */
-	public HRF[] getAllHRFs(int minId, int maxId, boolean asc) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getAllHRFs(minId,
-				maxId, asc);
+	public HRF[] loadAllHRFs( boolean asc) {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadAllHRFs(asc);
 	}
 
 	/**
-	 * liefert die aktuelle Id des neuesten HRF-Files
-	 *
-	 * @return the max hrf id
+	 * get the latest imported hrf
+	 * this does not have to be the latest downloaded, if the user imported hrf files in any order from files
+	 * @return
 	 */
-	public int getMaxHrfId() {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf().getHrfId();
-	}
-
-	public HRF getMaxHrf() {
+	public HRF getMaxIdHrf() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf();
 	}
 
 	/**
-	 * Update latest data.
+	 * get the latest downloaded hrf
+	 * @return
 	 */
-	public void updateLatestData(){
-		m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();
+	public HRF getLatestHRF(){
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf();
 	}
 
-	/**
-	 * get ID of latest HRF file
-	 *
-	 * @return the latest hrf id
-	 */
-	public int getLatestHrfId() {
-		if (m_iLatestHRFid == -1){
-			m_iLatestHRFid = ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf().getHrfId();}
-		return m_iLatestHRFid;
-	}
-
-	public HRF getHrf(int id) {
+	public HRF getHRF(int id){
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(id);
 	}
-
 
 	/**
 
@@ -933,11 +914,15 @@ public class DBManager {
 	/**
 	 * is there is an HRFFile in the database with the same date?
 	 *
-	 * @param date the date
+	 * @param fetchDate the date
 	 * @return The date of the file to which the file was imported or zero if no suitable file is available
 	 */
-	public String getHRFName4Date(Timestamp date) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfName4Date(date);
+	public HRF loadHRFDownloadedAt(Timestamp fetchDate) {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRFDownloadedAt(fetchDate);
+	}
+
+	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate){
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadLatestHRFDownloadedBefore(fetchDate);
 	}
 
 	// ------------------------------- SpielerNotizenTable
@@ -2642,10 +2627,6 @@ public class DBManager {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHRFsSince(since);
 	}
 
-	public HRF getPreviousHRF(int currentHRFId) {
-		return ((HRFTable)getTable(HRFTable.TABLENAME)).getPreviousHRF(currentHRFId);
-	}
-
 	public String getHrfIdPerWeekList(int nWeeks) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
 	}
@@ -2696,24 +2677,12 @@ public class DBManager {
 	}
 
 	public List<NtTeamDetails> loadAllNtTeamDetails() {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(getLatestHrfId());
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(getLatestHRF().getHrfId());
 	}
 
 	public void storeNtTeamDetails(NtTeamDetails details) {
 		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
 	}
-
-// sql string for case all==false
-//	String sql = String.format("""
-//					SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER
-//					FROM XTRADATA
-//					INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID
-//					INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID
-//					INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0
-//					INNER JOIN (
-//					     SELECT TRAININGDATE, max(HRF_ID) MAX_HR_ID FROM XTRADATA GROUP BY TRAININGDATE
-//					) IJ1 ON XTRADATA.HRF_ID = IJ1.MAX_HR_ID
-//					WHERE XTRADATA.TRAININGDATE > '%s'""", refDate);
 
 	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
 

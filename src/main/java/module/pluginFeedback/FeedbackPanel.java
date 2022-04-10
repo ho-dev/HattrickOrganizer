@@ -38,7 +38,7 @@ public class FeedbackPanel extends JFrame {
     RatingComparisonPanel HOPredictionRating, HTPredictionRating, DeltaPredictionRating;
 
     public FeedbackPanel() {
-        int lastHrfId = DBManager.instance().getLatestHrfId();
+        int lastHrfId = DBManager.instance().getLatestHRF().getHrfId();
         var dateHrf = DBManager.instance().getBasics(lastHrfId).getDatum();
         if (Duration.between(dateHrf.instant, HODateTime.now().instant).toHours() >= 1) {
             String message = HOVerwaltung.instance().getLanguageString("feedbackplugin.dataTooOldWarning"); //java.text.DateFormat.getDateTimeInstance().format(dateHrf));

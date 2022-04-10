@@ -392,7 +392,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 
-		DBManager.instance().updateLatestData();
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
 		model.calcSubskills();
 
@@ -475,7 +474,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						OnlineWorker.getAllLineups(null);
 						OnlineWorker.downloadNtTeams(ntTeams, matches);
 					}
-					DBManager.instance().updateLatestData();
 				}
 				else {
 					HOLogger.instance().error(getClass(), "Download error: " + hrf);

@@ -9,6 +9,7 @@
 
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
+* fix bug in hrf file import (#1445)
 
 ### Statistics
 

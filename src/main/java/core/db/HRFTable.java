@@ -7,7 +7,6 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -40,78 +39,24 @@ public final class HRFTable extends AbstractTable {
 
 	HRF getLatestHrf() {
 		if (latestHrf.getHrfId() == -1) {
-			latestHrf = loadLatestHrf();
+			var hrf =  loadLatestDownloadedHRF();
+			if ( hrf != null){
+				latestHrf = hrf;
+			}
 		}
 		return latestHrf;
 	}
 
 	HRF getMaxHrf() {
 		if (maxHrf.getHrfId() == -1) {
-			maxHrf = loadMaxHrf();
+			var hrf = loadMaxHrf();
+			if ( hrf != null){
+				maxHrf = hrf;
+			}
 		}
 		return maxHrf;
 	}
 
-	/**
-	 * liefert die aktuelle Id des neuesten HRF-Files
-	 */
-	private HRF loadLatestHrf() {
-		ResultSet rs;
-
-		rs = adapter.executeQuery("SELECT HRF_ID FROM " + getTableName() + " Order By Datum DESC");
-
-		try {
-			if ((rs != null) && rs.first()) {
-//				HOLogger.instance().log(getClass(), "Max( HRF_ID )" + rs.getInt(1));
-				return getHRF(rs.getInt(1));
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.loadLatestHrf: " + e);
-		}
-
-		return new HRF();
-	}
-
-	/**
-	 * liefert die Maximal Vergebene Id eines HRF-Files
-	 */
-	private HRF loadMaxHrf() {
-		ResultSet rs = adapter.executeQuery("SELECT Max( HRF_ID ) FROM " + getTableName() + "");
-		try {
-			if ((rs != null) && rs.first()) {
-				return getHRF(rs.getInt(1));
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.loadMaxHrf: " + e);
-		}
-		return new HRF();
-	}
-
-	/**
-	 * Sucht das letzte HRF zwischen dem angegebenen Datum und 6 Tagen davor
-	 * Wird kein HRF gefunden wird -1 zurückgegeben
-	 */
-	int getPreviousHRFId(int hrfId) {
-		String sql;
-		int previousHrfId = -1;
-
-		sql = "select TOP 1 HRF_ID from HRF where datum < (select DATUM from " + getTableName()
-				+ " where HRF_ID=" + hrfId + ") order by datum desc";
-
-		final ResultSet rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					previousHrfId = rs.getInt("HRF_ID");
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e);
-		}
-
-		return previousHrfId;
-	}
 
 	/**
 	 * speichert das Verein
@@ -131,39 +76,6 @@ public final class HRFTable extends AbstractTable {
 		if (datum.isAfter(getLatestHrf().getDatum())) {
 			latestHrf = new HRF(hrfId, name, datum);
 		}
-	}
-
-	/**
-	 * gibt es ein HRFFile in der Datenbank mit dem gleichen Dateimodifieddatum
-	 * schon?
-	 * 
-	 * @param date
-	 *            der letzten Dateiänderung der zu vergleichenden Datei
-	 * 
-	 * @return Das Datum der Datei, an den die Datei importiert wurde oder null,
-	 *         wenn keine passende Datei vorhanden ist
-	 */
-	String getHrfName4Date(Timestamp date) {
-		ResultSet rs;
-		final String statement = "select Name from " + getTableName() + " where Datum='"
-				+ date.toString() + "'";
-
-		try {
-			rs = adapter.executeQuery(statement);
-
-			if (rs != null) {
-				rs.beforeFirst();
-
-				if (rs.next()) {
-					return rs.getString("Name");
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getName4Date " + e);
-		}
-
-		// Error or nothing found
-		return null;
 	}
 
 	/**
@@ -208,44 +120,22 @@ public final class HRFTable extends AbstractTable {
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
 	HRF getHRF(int hrfID) {
-
-		var rs = getSelectByHrfID(hrfID);
-
-		try {
-			if (rs != null) {
-				rs.first();
-				var hrf = new HRF(rs);
-				rs.close();
-				return hrf;
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getHrf: " + e);
-		}
-		return new HRF();
+		return loadHRF(" where HRF_ID = " +	hrfID);
 	}
 
 	/**
 	 * Get a list of all HRFs
 	 * 
-	 * @param minId
-	 *            minimum HRF id (<0 for all)
-	 * @param maxId
-	 *            maximum HRF id (<0 for all)
 	 * @param asc
 	 *            order ascending (descending otherwise)
 	 * 
 	 * @return all matching HRFs
 	 */
-	HRF[] getAllHRFs(int minId, int maxId, boolean asc) {
+	HRF[] loadAllHRFs( boolean asc) {
 		Vector<HRF> liste = new Vector<>();
 		ResultSet rs;
 		String sql;
 		sql = "SELECT * FROM " + getTableName();
-		sql += " WHERE 1=1";
-		if (minId >= 0)
-			sql += " AND HRF_ID >=" + minId;
-		if (maxId >= 0)
-			sql += " AND HRF_ID <=" + maxId;
 		if (asc)
 			sql += " ORDER BY Datum ASC";
 		else
@@ -286,22 +176,43 @@ public final class HRFTable extends AbstractTable {
 		return liste;
 	}
 
-	public HRF getPreviousHRF(int hrfId) {
-		var sql = "select * from HRF where HRF_ID < " + hrfId
-				+ " order by HRF_ID desc LIMIT 1";
+	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate) {
+		return loadHRF(" where DATUM < '" + fetchDate + "' order by DATUM desc LIMIT 1");
+	}
 
+	/**
+	 * liefert die Maximal Vergebene Id eines HRF-Files
+	 */
+	private HRF loadMaxHrf() {
+		return loadHRF(" order by HRF_ID desc LIMIT 1");
+	}
+
+	public HRF loadHRF(int id){
+		return loadHRF(" where HRF_ID =" + id );
+	}
+
+	public HRF loadLatestDownloadedHRF() {
+		return loadHRF(" order by DATUM desc LIMIT 1");
+	}
+
+	public HRF loadHRFDownloadedAt(Timestamp fetchDate){
+		return loadHRF(" where DATUM = '" + fetchDate + "'");
+	}
+
+	private HRF loadHRF(String where) {
+		var sql="select * from HRF" + where;
 		final ResultSet rs = adapter.executeQuery(sql);
-
 		try {
 			if (rs != null) {
 				if (rs.first()) {
-					return new HRF(rs);
+					var ret = new HRF(rs);
+					rs.close();
+					return ret;
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DBZugriff.getPreviousHRF: " + e);
+			HOLogger.instance().log(getClass(), "HRFTable.loadHRF: " + e);
 		}
-
 		return null;
 	}
 

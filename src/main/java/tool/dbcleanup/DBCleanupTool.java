@@ -61,14 +61,13 @@ public class DBCleanupTool {
 	public void cleanupHRFs (Timestamp removeDate, boolean autoRemove) {
 		HOLogger.instance().debug(getClass(),
 				"Removing old HRFs: removeDate=" + removeDate + ", autoRemove=" + autoRemove);
-		HRF[] allHrfs = DBManager.instance().getAllHRFs(-1, -1, true);
-		int latestHrf = DBManager.instance().getLatestHrfId();
+		HRF[] allHrfs = DBManager.instance().loadAllHRFs( true);
+		var latestHrf = DBManager.instance().getLatestHRF();
 		int lastSeason = -1;
 		int lastWeek = -1;
 		int counter = 0;
 		for (HRF curHrf : allHrfs) {
 			int curId = curHrf.getHrfId();
-//			String curName = curHrf.getName();
 			var curDate = curHrf.getDatum();
 			var htWeek = curDate.toLocaleHTWeek();
 			int curHtSeasonTraining = htWeek.season;
@@ -85,16 +84,12 @@ public class DBCleanupTool {
 				}
 			}
 			// Do not remove the latest HRF
-			if (remove && curId != latestHrf) {
+			if (remove && curId != latestHrf.getHrfId()) {
 				HOLogger.instance().debug(getClass(),
 						"Removing Hrf: " + curId + " @ " + curDate + " (" + curHtSeasonTraining + "/" + curHtWeekTraining + ")");
 				DBManager.instance().deleteHRF(curId);
 				counter++;
 			}
-//			else {
-//				HOLogger.instance().debug(getClass(),
-//						"Keeping Hrf: " + curId + " @ " + curDate + " (" + curHtSeasonTraining + "/" + curHtWeekTraining + ")");				
-//			}
 		}
 		HOLogger.instance().debug(getClass(), "Removed " + counter + "/" + allHrfs.length + " HRFs from DB!");
 		if (counter > 0) {

@@ -188,10 +188,13 @@ public class HO {
 		UserColumnController.instance().load();
 
 		// Set the currency from HRF
-		var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
-		if ( xtra != null) {
-			float fxRate = (float) xtra.getCurrencyRate();
-			if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
+		var model = HOVerwaltung.instance().getModel();
+		if ( model != null) {
+			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+			if (xtra != null) {
+				float fxRate = (float) xtra.getCurrencyRate();
+				if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
+			}
 		}
 		// Upgrade database configuration
 		if (!DBManager.instance().isFirstStart()) {

@@ -53,34 +53,29 @@ public class HOModel {
     private List<YouthTraining> youthTrainings;
 
     //~ Constructors -------------------------------------------------------------------------------
-    public HOModel() {
-
-        if (DBManager.instance().isFirstStart()) {
-            o_hrf = new HRF(0);
-        } else {
-
-            try {
-                o_previousHRF = DBManager.instance().getMaxHrf();
-                o_hrf = new HRF(o_previousHRF.getHrfId() + 1);
-            } catch (Exception e) {
-                HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
+    public HOModel(HODateTime fetchDate) {
+        try {
+            var latestImport = DBManager.instance().getMaxIdHrf();
+            int hrfId;
+            if (latestImport != null) {
+                hrfId = latestImport.getHrfId() + 1;
+            } else {
+                hrfId = 0;
             }
+            o_hrf = new HRF(hrfId, fetchDate);
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(o_hrf.getDatum().toDbTimestamp());
+        } catch (Exception e) {
+            HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
         }
     }
 
     public HOModel(int id) {
 
-        if (DBManager.instance().isFirstStart()) {
-            o_hrf = new HRF(0);
+        o_hrf = DBManager.instance().getHRF(id);
+        if (o_hrf == null) {
+            o_hrf = new HRF(id, HODateTime.now()); // initial start
         } else {
-            final HRF[] hrfs = DBManager.instance().getAllHRFs(id, id, false);
-            if (hrfs.length > 0) {
-                o_hrf = hrfs[0];
-                o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
-            } else {
-                // not the first Start, but no downloads yet
-                o_hrf = new HRF(0);
-            }
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(o_hrf.getDatum().toDbTimestamp());
         }
 
         setClub(DBManager.instance().getVerein(id));
@@ -109,7 +104,7 @@ public class HOModel {
         this.o_hrf = hrf;
         this.o_previousHRF = previous;
         if (o_previousHRF == null) {
-            o_previousHRF = DBManager.instance().getPreviousHRF(hrf.getHrfId());
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(hrf.getDatum().toDbTimestamp());
         }
     }
 
@@ -174,7 +169,7 @@ public class HOModel {
      * Set a new lineup
      */
     public final void setLineup(@Nullable MatchLineupTeam lineup) {
-        if ( lineup != null ) {
+        if (lineup != null) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
             if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
             lineup.calcStyleOfPlay();
@@ -204,10 +199,9 @@ public class HOModel {
     public final MatchLineupTeam getCurrentLineupTeam() {
         if (m_clAufstellung == null) {
             m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
-            if ( m_clAufstellung == null){
+            if (m_clAufstellung == null) {
                 m_clAufstellung = new MatchLineupTeam();
-            }
-            else {
+            } else {
                 m_clAufstellung.calcStyleOfPlay();
             }
         }
@@ -530,9 +524,9 @@ public class HOModel {
      *
      * @return list of training weeks between previous and current download (may be empty)
      */
-    private List<TrainingPerWeek>  getTrainingWeeksSincePreviousDownload() {
+    private List<TrainingPerWeek> getTrainingWeeksSincePreviousDownload() {
         Timestamp from = null;
-        if( o_previousHRF!=null){
+        if (o_previousHRF != null) {
             from = o_previousHRF.getDatum().toDbTimestamp();
         }
         return DBManager.instance().getTrainingList(from, o_hrf.getDatum().toDbTimestamp());
@@ -583,6 +577,7 @@ public class HOModel {
 
     /**
      * Save match schedule in database
+     *
      * @param fixtures Spielplan
      */
     public final synchronized void saveFixtures(Spielplan fixtures) {
@@ -643,7 +638,7 @@ public class HOModel {
      */
     public int getLeagueIdPremierTeam() {
         var xtra = getXtraDaten();
-        if (xtra != null ){
+        if (xtra != null) {
             var countryId = xtra.getCountryId();
             if (countryId != null) {
                 var ret = getLeagueId(countryId);
@@ -655,9 +650,10 @@ public class HOModel {
 
     /**
      * League id of country
+     *
      * @param countryId country id
      * @return league id of the country
-     *          or null if not found
+     * or null if not found
      */
     private Integer getLeagueId(int countryId) {
         var league = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);

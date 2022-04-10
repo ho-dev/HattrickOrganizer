@@ -42,10 +42,12 @@ public final class HRF {
 		this.datum = _datum;
 	}
 
-	public HRF(int hrfId){
+	public HRF(int hrfId, HODateTime fetchDate){
 		this.hrfId=hrfId;
+		this.datum = fetchDate;
 		this.name = datum.toString();
 	}
+
     /**
      * Creates a new Hrf object.
      */
