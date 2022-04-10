@@ -19,7 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
- * Imports a specified HRF file.
+ * Imports selected HRF files.
  */
 public class HRFImport {
 
@@ -27,93 +27,60 @@ public class HRFImport {
 
 		File[] files = getHRFFiles(frame);
 		if (files != null) {
-//			var importStartTime = HODateTime.now();
 			HOModel homodel;
 
 			UserChoice choice = null;
 			for (int i = 0; i < files.length; i++) {
 				files[i].getPath();
-				// Endung nicht hrf?
 				if (!files[i].getPath().endsWith(".hrf")) {
 					files[i] = new File(files[i].getAbsolutePath() + ".hrf");
 				}
 
-				// Datei schon vorhanden?
 				if (!files[i].exists()) {
-					// Info
-					frame.setInformation(getLangStr("DateiNichtGefunden"),
-							InfoPanel.FEHLERFARBE);
-
-					// Fehler
-					Helper.showMessage(frame, getLangStr("DateiNichtGefunden"),
-							getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
+					frame.setInformation(getLangStr("DateiNichtGefunden"), InfoPanel.FEHLERFARBE);
+					Helper.showMessage(frame, getLangStr("DateiNichtGefunden"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
-				// Pfad speichern
-				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile()
-						.getAbsolutePath();
-
-				// Info
+				// remember path
+				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
 				frame.setInformation(getLangStr("StartParse"));
-
-				// HRFParser
 				homodel = HRFFileParser.parse(files[i]);
 
 				if (homodel == null) {
-					// Info
-					frame.setInformation(
-							getLangStr("Importfehler") + " : " + files[i].getName(),
-							InfoPanel.FEHLERFARBE);
-
-					// Fehler
-					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"),
-							JOptionPane.ERROR_MESSAGE);
+					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.FEHLERFARBE);
+					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
 				} else {
-					// Info
 					frame.setInformation(getLangStr("HRFSave"));
 
 					// file already imported?
 					java.sql.Timestamp HRFts = homodel.getBasics().getDatum().toDbTimestamp();
 					var storedHrf = DBManager.instance().loadHRFDownloadedAt(HRFts);
 
-					if (choice == null || !choice.applyToAll ) {
+					if (choice == null || !choice.applyToAll) {
 						choice = bStoreHRF(frame, HRFts, storedHrf);
 						if (choice.cancel) {
-							// chaneled -> bail out here
 							break;
 						}
 					}
 
 					if (choice.importHRF) {
-
-						if ( storedHrf != null ){
+						if (storedHrf != null) {
 							DBManager.instance().deleteHRF(storedHrf.getHrfId());
 						}
 						homodel.saveHRF();
-
-//						if (homodel.getBasics().getDatum().isBefore(importStartTime)) {
-//							importStartTime = homodel.getBasics().getDatum();
-//						}
-
-						// Info
 						frame.setInformation(getLangStr("HRFErfolg"));
-					}
-					// Abbruch
-					else {
-						// Info
-						frame.setInformation(getLangStr("HRFAbbruch"),
-								InfoPanel.FEHLERFARBE);
+					} else {
+						// Cancel
+						frame.setInformation(getLangStr("HRFAbbruch"), InfoPanel.FEHLERFARBE);
 					}
 				}
 			}
 
 			DBManager.instance().reimportSkillup();
 			HOVerwaltung.instance().loadLatestHoModel();
-
 			HOModel hom = HOVerwaltung.instance().getModel();
 
-			// Refreshen aller Fenster
 			RefreshManager.instance().doReInit();
 		}
 	}
@@ -145,22 +112,23 @@ public class HRFImport {
 	private String getLangStr(String key) {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}
-	
+
 	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, HRF oldHRF) {
 		UserChoice choice = new UserChoice();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
 		String text = getLangStr("HRFfrom") + " " + dateFormat.format(HRF_date);
 
-		if (oldHRF!=null)
-		{text += "\n(" + getLangStr("HRFinDB") + " " + oldHRF.getName() + ")";}
+		if (oldHRF != null) {
+			text += "\n(" + getLangStr("HRFinDB") + " " + oldHRF.getName() + ")";
+		}
 
 		text += "\n" + getLangStr("ErneutImportieren");
 
 		JCheckBox applyToAllCheckBox = new JCheckBox(getLangStr("hrfImport.applyToAll"));
 		Object[] o = {text, applyToAllCheckBox};
 		int value = JOptionPane.showConfirmDialog(parent, o, getLangStr("confirmation.title"), JOptionPane.YES_NO_CANCEL_OPTION);
-		
+
 		if (value == JOptionPane.CANCEL_OPTION) {
 			choice.cancel = true;
 		} else {
@@ -171,7 +139,7 @@ public class HRFImport {
 		}
 		return choice;
 	}
-	
+
 	private class UserChoice {
 		boolean importHRF;
 		boolean applyToAll;
