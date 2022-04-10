@@ -149,7 +149,7 @@ public class HRFStringParser {
 	 */
 	private static HOModel createHOModel(List<Properties> propertiesList, HODateTime hrfdate) throws Exception {
 
-		final HOModel hoModel = new HOModel();
+		final HOModel hoModel = new HOModel(hrfdate);
 		int trainerID = -1;
 
 		for (Properties properties : propertiesList) {

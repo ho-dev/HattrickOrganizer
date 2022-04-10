@@ -1,17 +1,11 @@
 package core.training;
 
 import core.db.DBManager;
-import core.db.JDBCAdapter;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import module.transfer.test.HTWeek;
 
-import java.sql.ResultSet;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -83,7 +77,7 @@ public class TrainingWeekManager {
 			var xtra =  HOVerwaltung.instance().getModel().getXtraDaten();
 			if ( xtra != null) {
 				nextTrainingDate =xtra.getNextTrainingDate();
-				lastUpdateDate = DBManager.instance().getMaxHrf().getDatum();
+				lastUpdateDate = DBManager.instance().getMaxIdHrf().getDatum();
 			}
 		}
 		return nextTrainingDate;

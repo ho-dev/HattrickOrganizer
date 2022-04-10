@@ -53,11 +53,17 @@ public class HOModel {
     private List<YouthTraining> youthTrainings;
 
     //~ Constructors -------------------------------------------------------------------------------
-    public HOModel() {
+    public HOModel(HODateTime fetchDate) {
         try {
-            // empty database will return hrf id -1
-            o_previousHRF = DBManager.instance().getMaxHrf();
-            o_hrf = new HRF(o_previousHRF.getHrfId() + 1);
+            var latestImport = DBManager.instance().getMaxIdHrf();
+            int hrfId;
+            if (latestImport != null) {
+                hrfId = latestImport.getHrfId() + 1;
+            } else {
+                hrfId = 0;
+            }
+            o_hrf = new HRF(hrfId, fetchDate);
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(o_hrf.getDatum().toDbTimestamp());
         } catch (Exception e) {
             HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
         }
@@ -65,17 +71,12 @@ public class HOModel {
 
     public HOModel(int id) {
 
-        if (DBManager.instance().isFirstStart()) {
-            o_hrf = new HRF(0);
-        } else {
-            final HRF[] hrfs = DBManager.instance().getAllHRFs(id, id, false);
-            if (hrfs.length > 0) {
-                o_hrf = hrfs[0];
-                o_previousHRF = DBManager.instance().getPreviousHRF(o_hrf.getHrfId());
-            } else {
-                // not the first Start, but no downloads yet
-                o_hrf = new HRF(0);
-            }
+        o_hrf = DBManager.instance().getHRF(id);
+        if ( o_hrf == null){
+            o_hrf = new HRF(id, HODateTime.now()); // initial start
+        }
+        else {
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(o_hrf.getDatum().toDbTimestamp());
         }
 
         setClub(DBManager.instance().getVerein(id));
@@ -104,7 +105,7 @@ public class HOModel {
         this.o_hrf = hrf;
         this.o_previousHRF = previous;
         if (o_previousHRF == null) {
-            o_previousHRF = DBManager.instance().getPreviousHRF(hrf.getHrfId());
+            o_previousHRF = DBManager.instance().loadLatestHRFDownloadedBefore(hrf.getDatum().toDbTimestamp());
         }
     }
 

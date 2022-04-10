@@ -1177,8 +1177,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
 		try{
 			var xml = MyConnector.instance().getMatchesOfSeason(teamId, season);
-			var matches = XMLMatchArchivParser.parseMatchesFromString(xml);
-			return  matches;
+			return XMLMatchArchivParser.parseMatchesFromString(xml);
 		}
 		catch (Exception exception) {
 			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
@@ -1246,7 +1245,7 @@ public class OnlineWorker {
 	private static NtTeamDetails downloadNtTeam(int teamId) {
 		var xml = MyConnector.instance().downloadNtTeamDetails(teamId);
 		NtTeamDetails details = new NtTeamDetails(xml);
-		details.setHrfId(DBManager.instance().getLatestHrfId());
+		details.setHrfId(DBManager.instance().getLatestHRF().getHrfId());
 		DBManager.instance().storeNtTeamDetails(details);
 		return details;
 	}

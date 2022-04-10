@@ -47,7 +47,7 @@ public class HOVerwaltung {
 		return m_clHoModel.getPreviousID();
 	}
 
-	private int id;
+	private int id = -1;
 
 	private PropertyChangeSupport support;
 
@@ -117,9 +117,11 @@ public class HOVerwaltung {
 	 * läadt das zuletzt importtiert model ein
 	 */
 	public void loadLatestHoModel() {
-		int id = DBManager.instance().getLatestHrfId();
-		this.id = id;
-		setModel(loadModel(id));
+		var latestHRF = DBManager.instance().getLatestHRF();
+		if ( latestHRF != null && latestHRF.getHrfId() > -1){
+			this.id = latestHRF.getHrfId();
+		}
+		setModel(loadModel(this.id));
 	}
 
 	/**
