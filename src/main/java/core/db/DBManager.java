@@ -56,6 +56,10 @@ public class DBManager {
 
 	/** database versions */
 	private static final int DBVersion = 601; // HO 6.0 version
+	/**
+	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
+	 * new installed preliminary version
+	 */
 	private static final int previousDBVersion = 600;
 	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
@@ -936,8 +940,8 @@ public class DBManager {
 	 * @param date the date
 	 * @return The date of the file to which the file was imported or zero if no suitable file is available
 	 */
-	public String getHRFName4Date(Timestamp date) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfName4Date(date);
+	public HRF loadHRFDownloadedAt(Timestamp date) {
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRFDownloadedAt(date);
 	}
 
 	// ------------------------------- SpielerNotizenTable

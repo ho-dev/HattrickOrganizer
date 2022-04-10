@@ -8,7 +8,6 @@ import core.gui.RefreshManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.util.HODateTime;
 import core.util.Helper;
 import java.awt.Component;
 import java.awt.Frame;
@@ -28,7 +27,7 @@ public class HRFImport {
 
 		File[] files = getHRFFiles(frame);
 		if (files != null) {
-			var olderHrf = HODateTime.now();
+//			var importStartTime = HODateTime.now();
 			HOModel homodel;
 
 			UserChoice choice = null;
@@ -76,24 +75,26 @@ public class HRFImport {
 
 					// file already imported?
 					java.sql.Timestamp HRFts = homodel.getBasics().getDatum().toDbTimestamp();
-					String oldHRFName = DBManager.instance().getHRFName4Date(HRFts);
+					var storedHrf = DBManager.instance().loadHRFDownloadedAt(HRFts);
 
 					if (choice == null || !choice.applyToAll ) {
-						choice = bStoreHRF(frame, HRFts, oldHRFName);
+						choice = bStoreHRF(frame, HRFts, storedHrf);
 						if (choice.cancel) {
 							// chaneled -> bail out here
 							break;
 						}
 					}
 
-					// Speichern
 					if (choice.importHRF) {
-						// Saven
+
+						if ( storedHrf != null ){
+							DBManager.instance().deleteHRF(storedHrf.getHrfId());
+						}
 						homodel.saveHRF();
 
-						if (homodel.getBasics().getDatum().isBefore(olderHrf)) {
-							olderHrf = homodel.getBasics().getDatum();
-						}
+//						if (homodel.getBasics().getDatum().isBefore(importStartTime)) {
+//							importStartTime = homodel.getBasics().getDatum();
+//						}
 
 						// Info
 						frame.setInformation(getLangStr("HRFErfolg"));
@@ -145,14 +146,14 @@ public class HRFImport {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}
 	
-	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, String oldHRFName) {
+	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, HRF oldHRF) {
 		UserChoice choice = new UserChoice();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
 		String text = getLangStr("HRFfrom") + " " + dateFormat.format(HRF_date);
 
-		if (oldHRFName!=null)
-		{text += "\n(" + getLangStr("HRFinDB") + " " + oldHRFName + ")";}
+		if (oldHRF!=null)
+		{text += "\n(" + getLangStr("HRFinDB") + " " + oldHRF.getName() + ")";}
 
 		text += "\n" + getLangStr("ErneutImportieren");
 

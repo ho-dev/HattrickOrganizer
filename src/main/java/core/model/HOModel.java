@@ -54,17 +54,12 @@ public class HOModel {
 
     //~ Constructors -------------------------------------------------------------------------------
     public HOModel() {
-
-        if (DBManager.instance().isFirstStart()) {
-            o_hrf = new HRF(0);
-        } else {
-
-            try {
-                o_previousHRF = DBManager.instance().getMaxHrf();
-                o_hrf = new HRF(o_previousHRF.getHrfId() + 1);
-            } catch (Exception e) {
-                HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
-            }
+        try {
+            // empty database will return hrf id -1
+            o_previousHRF = DBManager.instance().getMaxHrf();
+            o_hrf = new HRF(o_previousHRF.getHrfId() + 1);
+        } catch (Exception e) {
+            HOLogger.instance().error(this.getClass(), "Error when trying to determine latest HRF_ID");
         }
     }
 
