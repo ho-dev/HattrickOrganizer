@@ -3,10 +3,7 @@ package core.util;
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 import java.sql.Timestamp;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
@@ -20,6 +17,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * Date time format of chpp files
      */
     private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
+    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
     /**
      * the birthday of hattrick
      */
@@ -48,8 +46,14 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public static HODateTime fromHT(String htString) {
         if ( htString != null && !htString.isEmpty()) {
-            LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
-            return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
+            try {
+                LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
+                return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
+            }
+            catch (Exception ignored){
+                var date = LocalDate.parse(htString, cl_ShortFormatter).atStartOfDay();
+                return new HODateTime(date.atZone(DEFAULT_TIMEZONE).toInstant());
+            }
         }
         return null;
     }
