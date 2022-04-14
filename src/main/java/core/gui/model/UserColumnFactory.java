@@ -504,7 +504,7 @@ final public class UserColumnFactory {
     public static PlayerColumn[] createPlayerAdditionalArray() {
         final PlayerColumn[] playerAdditionalArray = new PlayerColumn[16];
 
-        playerAdditionalArray[0] = new PlayerColumn(10, " ", " ", 0) {
+        playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 int sort = player.getTrikotnummer();
@@ -519,7 +519,7 @@ final public class UserColumnFactory {
                 }
 
                 return new ColorLabelEntry(sort, shirtNumberText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
-                        SwingConstants.LEFT);
+                        SwingConstants.CENTER);
             }
 
             @Override
