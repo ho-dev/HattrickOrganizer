@@ -508,25 +508,29 @@ public class MatchLineupTeam {
 			if ( subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION){
 				var subPos = changedPositions.get(subs.getSubjectPlayerID());
 				if ( subPos == null ) {
-					subPos = this.getPlayerByID(subs.getSubjectPlayerID()).getStartPosition();
+					var matchLineupPosition = this.getPlayerByID(subs.getSubjectPlayerID());
+					if ( matchLineupPosition != null) {
+						subPos = matchLineupPosition.getStartPosition();
+					}
 				}
 				var objPos = changedPositions.get(subs.getObjectPlayerID());
 				if ( objPos == null){
-					objPos = this.getPlayerByID(subs.getObjectPlayerID()).getStartPosition();
+					var matchLineupPosition = this.getPlayerByID(subs.getObjectPlayerID());
+					if (matchLineupPosition != null) {
+						objPos = matchLineupPosition.getStartPosition();
+					}
 				}
 				changedPositions.put(subs.getSubjectPlayerID(), objPos);
 				changedPositions.put(subs.getObjectPlayerID(), subPos);
 				if ( spielerId == subs.getSubjectPlayerID()){
-					ret = objPos;
+					if ( objPos != null ) ret = objPos;
 				}
 				else if ( spielerId == subs.getObjectPlayerID()){
-					ret = subPos;
+					if ( subPos != null ) ret = subPos;
 				}
 			}
 		}
-
 		return ret;
-
 	}
 
 	public int getMatchEndMinute(int spielerId) {
