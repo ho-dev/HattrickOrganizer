@@ -130,19 +130,19 @@ public class FuturePlayerTraining {
      *          true if training is completely replaced by the new interval
      */
     public boolean cut(HODateTime from, HODateTime to) {
-        if (from.instant.isAfter(this.to.instant) || this.from.instant.isAfter(to.instant)) {
+        if (this.to != null && from.isAfter(this.to) || to != null && this.from.isAfter(to)) {
             // this is outside the given interval
             return false;
         }
 
-        if (from.instant.isAfter(this.from.instant)) {
+        if (from.isAfter(this.from)) {
             this.to = from;
-            this.to.instant.minus(Duration.ofDays(7));
+            this.to.minus(7, ChronoUnit.DAYS);
             return false;
         }
-        if (this.to.instant.isAfter(to.instant)) {
+        if (this.to == null || to !=null && this.to.isAfter(to)) {
             this.from = to;
-            this.from.instant.plus(Duration.ofDays(7));
+            this.from.plus(7, ChronoUnit.DAYS);
             return false;
         }
         return true; // completely replaced
