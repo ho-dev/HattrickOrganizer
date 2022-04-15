@@ -18,8 +18,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamsLogoTable extends AbstractTable{
-    /** tablename **/
+public class TeamsLogoTable extends AbstractTable {
+    /**
+     * tablename
+     **/
     final static String TABLENAME = "CLUBS_LOGO";
 
     TeamsLogoTable(JDBCAdapter adapter) {
@@ -40,16 +42,16 @@ public class TeamsLogoTable extends AbstractTable{
      * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
      * It will also update LAST_ACCESS field
      *
-     * @param teamID the team id
+     * @param teamID             the team id
      * @param teamLogoFolderPath the team logo root folder path
      * @return the team logo file name
      */
-    public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID){
+    public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID) {
 
         String logoURL, logoFileName;
 
         // 1. Get logoFileName from the database
-        var rs= adapter.executeQuery("SELECT * from " + getTableName() + " WHERE TEAM_ID=" + teamID);
+        var rs = adapter.executeQuery("SELECT * from " + getTableName() + " WHERE TEAM_ID=" + teamID);
         if (rs == null) {
             HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
             return null;
@@ -57,65 +59,62 @@ public class TeamsLogoTable extends AbstractTable{
 
         try {
             if (!rs.next()) {
-                HOLogger.instance().error(this.getClass(), "logo information not available in database for team ID=" + teamID);
+                HOLogger.instance().info(this.getClass(), "logo information not available in database for team ID=" + teamID);
                 return null;
-            }
-            else {
+            } else {
                 logoURL = rs.getString("URL");
-                if(logoURL.equals("null")){
-                    HOLogger.instance().error(this.getClass(), "logo information not available in database for team ID=" + teamID);
+                if (logoURL.equals("null")) {
+                    HOLogger.instance().debug(this.getClass(), "team with no logo team ID=" + teamID);
                     return null;
                 }
 
                 logoFileName = teamLogoFolderPath.resolve(rs.getString("FILENAME")).toString();
             }
-        }
-        catch (SQLException throwables) {
+        } catch (SQLException throwables) {
             HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
             return null;
         }
 
         // 2. Check if the logo has already been downloaded
 
-            File logo = new File(logoFileName);
-            if (logo.exists()) {
-                return logoFileName;
-            }
-            else
-            {
-               // we try to download the logo from HT servers
-                boolean bSuccess = UpdateHelper.download(logoURL, logo);
-                if (!bSuccess) {
-                    HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + logoURL );
-                    return null;
-                }
-            }
-
-            //we update LAST_ACCESS value
-            updateLastAccessTime(teamID);
-
+        File logo = new File(logoFileName);
+        if (logo.exists()) {
             return logoFileName;
+        } else {
+            // we try to download the logo from HT servers
+            boolean bSuccess = UpdateHelper.download(logoURL, logo);
+            if (!bSuccess) {
+                HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + logoURL);
+                return null;
+            }
         }
 
+        //we update LAST_ACCESS value
+        updateLastAccessTime(teamID);
 
+        return logoFileName;
+    }
 
-    public void storeTeamLogoInfo(int teamID, String logoURI, Timestamp lastAccess){
-        String logoURL=null, fileName=null;
+    public void storeTeamLogoInfo(int teamID, String logoURI, Timestamp lastAccess) {
+        String logoURL = null, fileName = null;
 
-        if(logoURI == null) {
+        if (logoURI == null) {
             // case of bot team ?
             HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: logo URI was null for team " + teamID);
-        }
-        else{
+        } else {
             if (logoURI.contains(".")) {
-                logoURL = "https:" + logoURI;
+                if (!logoURI.startsWith("http")) {
+                    logoURL = "http:" + logoURI;
+                } else {
+                    logoURL = logoURI;
+                }
                 HttpUrl url = HttpUrl.parse(logoURL);
-                if ( url != null ) {
+                if (url != null) {
                     fileName = url.pathSegments().get(url.pathSize() - 1);
                 }
             }
 
-            if ( fileName == null){
+            if (fileName == null) {
                 HOLogger.instance().error(this.getClass(), "storeTeamLogoInfo: logo URI not recognized " + logoURI);
                 return;
             }
@@ -131,8 +130,7 @@ public class TeamsLogoTable extends AbstractTable{
     }
 
 
-
-    public void updateLastAccessTime(int teamID){
+    public void updateLastAccessTime(int teamID) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now + "' WHERE TEAM_ID = " + teamID;
         adapter.executeUpdate(sql);
