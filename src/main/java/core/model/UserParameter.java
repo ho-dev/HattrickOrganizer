@@ -377,7 +377,7 @@ public final class UserParameter extends Configuration {
 
     public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
     public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
-    public HODividerListener series_tableSplitPaneDivider = new HODividerListener(-1);
+    public HODividerListener series_tableSplitPaneDivider = new HODividerListener(920);
     public boolean includeHTOLineups=false;
     public boolean includeLineupTemplates=false;
 
