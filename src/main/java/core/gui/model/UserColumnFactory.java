@@ -522,10 +522,10 @@ final public class UserColumnFactory {
                         SwingConstants.CENTER);
             }
 
-            @Override
-            public boolean isEditable() {
-                return false;
-            }
+//            @Override
+//            public boolean isEditable() {
+//                return false;
+//            }
         };
 
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
