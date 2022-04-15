@@ -78,8 +78,9 @@ public abstract class UserColumn {
 	 */
 	public final void setDisplay(boolean display) {
 		this.display = display;
-		if (!display)
+		if (!display) {
 			index = 0;
+		}
 	}
 
 	/**

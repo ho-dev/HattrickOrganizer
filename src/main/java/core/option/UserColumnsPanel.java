@@ -83,9 +83,8 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
         final TableColumnModel tableColumnModel = table.getColumnModel();
         tableColumnModel.getColumn(0).setMaxWidth(50);
         tableColumnModel.getColumn(0).setPreferredWidth(50);
-        
-        JScrollPane scroll = new JScrollPane(table);
-        return scroll;
+
+		return new JScrollPane(table);
     }
 
     protected TableModel getModel(UserColumn[] dbColumns) {
@@ -97,9 +96,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
             value[i][1] = dbColumns[i];
         }
 
-        TableModel model = new TableModel(value, columnNames);
-
-        return model;
+		return new TableModel(value, columnNames);
     }
 
     protected JCheckBox getCheckbox(UserColumn column) {
@@ -128,7 +125,12 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
 		}
 		
 		if(arg0.getSource() instanceof JCheckBox){
-			((UserColumn)table.getValueAt(table.getSelectedRow(),1)).setDisplay(((JCheckBox)arg0.getSource()).isSelected());
+			var col = (UserColumn)table.getValueAt(table.getSelectedRow(),1);
+			var doDisplay = ((JCheckBox)arg0.getSource()).isSelected();
+			col.setDisplay(doDisplay);
+			if (doDisplay && col.getPreferredWidth()<25){
+				col.setPreferredWidth(25);
+			}
 			OptionManager.instance().setRestartNeeded();
 		}
 		
