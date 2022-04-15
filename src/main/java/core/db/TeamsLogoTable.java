@@ -64,7 +64,7 @@ public class TeamsLogoTable extends AbstractTable {
             } else {
                 logoURL = rs.getString("URL");
                 if (logoURL.equals("null")) {
-                    HOLogger.instance().info(this.getClass(), "team with no logo team ID=" + teamID);
+                    HOLogger.instance().debug(this.getClass(), "team with no logo team ID=" + teamID);
                     return null;
                 }
 
@@ -94,7 +94,6 @@ public class TeamsLogoTable extends AbstractTable {
 
         return logoFileName;
     }
-
 
     public void storeTeamLogoInfo(int teamID, String logoURI, Timestamp lastAccess) {
         String logoURL = null, fileName = null;

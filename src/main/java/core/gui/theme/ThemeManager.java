@@ -190,7 +190,8 @@ public final class ThemeManager {
 		int height = Math.round(width * 260f / 210f);
 		String logoPath = DBManager.instance().getTeamLogoFileName(teamLogoPath, teamID);
 		if (logoPath == null) {
-			HOLogger.instance().error(this.getClass(), "logo not found for team " + teamID);
+			// default logo is used for teams without logo
+			HOLogger.instance().debug(this.getClass(), "logo not found for team " + teamID);
 			return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 		}
 
@@ -199,12 +200,17 @@ public final class ThemeManager {
 		if (scaledIcon == null) {
 			BufferedImage img;
 			try {
-				img = ImageIO.read(new File(logoPath));
+				var logoFile = new File(logoPath);
+				img = ImageIO.read(logoFile);
 				if ( img != null) {
 					ImageIcon iconOriginal = new ImageIcon(img);
 					scaledIcon = ImageUtilities.getScaledIcon(iconOriginal, width, height);
 				}
 				else {
+					// remove damaged icon file
+					if ( !logoFile.delete() ) {
+						HOLogger.instance().debug(this.getClass(), "damaged logo file can not be deleted: " + logoPath);
+					}
 					return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 				}
 			}
