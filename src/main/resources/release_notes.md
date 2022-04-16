@@ -16,6 +16,7 @@
 * display jersey numbers greater than 49 (#1410)
 * download and display players' category, statement and owner notes (#1441)
 * shirt number column settings reset to editable (#1454)
+* hrf file list shows training week instead of match day (#1452)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)
@@ -64,7 +65,7 @@
 Reports by Contributors - Dec 20, 2021 - Apr 09, 2022
 
 * Foppe	645
-* akasolace	91
+* akasolace	93
 * \_KOHb\_	76
 * Lidegand 	75
 * sich	73
@@ -73,4 +74,5 @@ Reports by Contributors - Dec 20, 2021 - Apr 09, 2022
 * Ante 52
 * wsbrenk 26
 * dzsoo 18
-* Total translated:	1192
+* Philipp 2
+* Total translated:	1196

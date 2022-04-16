@@ -192,6 +192,10 @@ public class HODateTime implements Comparable<HODateTime> {
         return instant.isAfter(t.instant);
     }
 
+    public static Duration between(HODateTime from, HODateTime to) {
+        return Duration.between(from.instant, to.instant);
+    }
+
     public HODateTime plusDaysAtSameLocalTime(int i) {
         int hour = instant.atZone(DEFAULT_TIMEZONE).getHour();
         int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();
@@ -245,11 +249,27 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return HTWeek
      */
     public HTWeek toHTWeek() {
+        return calcHTWeek(instant);
+    }
+
+    private static HTWeek calcHTWeek(Instant instant){
         var dayDiff = ChronoUnit.DAYS.between(htStart.instant, instant);
         return new HTWeek(
                 (int) (dayDiff / (16 * 7) + 1),
                 (int) ((dayDiff % (16 * 7)) / 7) + 1
         );
+    }
+
+    private static Duration durationBetweenTrainingDateAndNextWeekStart =null;
+    public HTWeek toTrainingWeek(){
+        if ( durationBetweenTrainingDateAndNextWeekStart == null ){
+            var nextTrainingDate=HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+            var hrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+            var nextWeek = HODateTime.fromHTWeek(hrfDate.toHTWeek()).plus(7, ChronoUnit.DAYS);
+            durationBetweenTrainingDateAndNextWeekStart = HODateTime.between( nextTrainingDate, nextWeek);
+        }
+
+        return calcHTWeek(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
     }
 
     /**

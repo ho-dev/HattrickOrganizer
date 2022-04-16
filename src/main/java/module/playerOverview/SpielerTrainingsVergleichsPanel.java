@@ -13,10 +13,8 @@ import core.model.player.Player;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -69,28 +67,28 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
         final Object[] hrfs = m_jlHRFs.getSelectedValues();
-        String text = HOVerwaltung.instance().getLanguageString("ls.button.delete");
+        StringBuilder text = new StringBuilder(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
 
         if (hrfs.length > 1) {
-            text += (" (" + hrfs.length + " Files) : ");
+            text.append(" (").append(hrfs.length).append(" Files) : ");
         } else {
-            text += ": ";
+            text.append(": ");
         }
 
         for (int i = 0; (i < hrfs.length) && (i < 11); i++) {
-            text += ("\n" + hrfs[i].toString());
+            text.append("\n").append(hrfs[i].toString());
 
             if (i == 10) {
-                text += "\n ... ";
+                text.append("\n ... ");
             }
         }
 
-        final int value = JOptionPane.showConfirmDialog(this, text,
+        final int value = JOptionPane.showConfirmDialog(this, text.toString(),
 				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
         if (value == JOptionPane.OK_OPTION) {
-            for (int i = 0; i < hrfs.length; i++) {
-                DBManager.instance().deleteHRF(((CBItem) hrfs[i]).getId());
+            for (Object hrf : hrfs) {
+                DBManager.instance().deleteHRF(((CBItem) hrf).getId());
             }
 
             loadHRFListe(false);
@@ -121,11 +119,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 			vergleichsPlayer = DBManager.instance().getSpieler(((CBItem) m_jlHRFs.getSelectedValue()).getId());
 			vergleichsMarkierung = true;
 
-			if (m_jlHRFs.getSelectedIndex() > 0) {
-				m_jbLoeschen.setEnabled(true);
-			} else {
-				m_jbLoeschen.setEnabled(false);
-			}
+            m_jbLoeschen.setEnabled(m_jlHRFs.getSelectedIndex() > 0);
 		}
 		// Keine Markierung -> Alles löschen
 		else {
@@ -167,7 +161,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 	}
 
     private void loadHRFListe(boolean init) {
-        final Vector<CBItem> hrfListe = DBManager.instance().getCBItemHRFListe(new Timestamp(0));
+        var hrfListe = DBManager.instance().loadCBItemHRFList();
 
         m_jlHRFs.removeListSelectionListener(this);
 
@@ -182,8 +176,8 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             listmodel = new DefaultListModel();
         }
 
-        for (int i = 0; i < hrfListe.size(); i++) {
-            listmodel.addElement(hrfListe.get(i));
+        for (CBItem cbItem : hrfListe) {
+            listmodel.addElement(cbItem);
         }
 
         m_jlHRFs.setModel(listmodel);

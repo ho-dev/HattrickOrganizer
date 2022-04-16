@@ -757,14 +757,13 @@ public class DBManager {
 	}
 
 	/**
-	 * Gibt eine Vector mit HRF-CBItems zurück
+	 * load list of hrf combo box items
 	 *
-	 * @param datum from which hrf has to be returned, used to load a subset of            hrf
-	 * @return the cb item hrf liste
+	 * @return the cb item hrf list
 	 */
-	public Vector<CBItem> getCBItemHRFListe(Timestamp datum) {
+	public List<CBItem> loadCBItemHRFList() {
 		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
-				.getCBItemHRFListe(datum);
+				.loadCBItemHRFList();
 	}
 
 	/**
