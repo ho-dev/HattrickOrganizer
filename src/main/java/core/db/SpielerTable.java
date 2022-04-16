@@ -205,7 +205,7 @@ final class SpielerTable extends AbstractTable {
 				player.getLastMatchType().getId()  + ", '"
 				+ player.getPlayerStatement() + "', '"
 				+ player.getOwnerNotes() + "', "
-				+ player.getPlayerCategory().getId()
+				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null)
 				+ ")";
 		adapter.executeUpdate(statement);
 	}

@@ -64,7 +64,7 @@
 Reports by Contributors - Dec 20, 2021 - Apr 09, 2022
 
 * Foppe	645
-* akasolace	91
+* akasolace	93
 * \_KOHb\_	76
 * Lidegand 	75
 * sich	73
@@ -73,4 +73,5 @@ Reports by Contributors - Dec 20, 2021 - Apr 09, 2022
 * Ante 52
 * wsbrenk 26
 * dzsoo 18
-* Total translated:	1192
+* Philipp 2
+* Total translated:	1196

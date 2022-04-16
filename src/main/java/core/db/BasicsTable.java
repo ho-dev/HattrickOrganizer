@@ -1,12 +1,16 @@
 package core.db;
 
 import core.datatype.CBItem;
+import core.model.HOVerwaltung;
 import core.model.misc.Basics;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -122,15 +126,12 @@ final class BasicsTable extends AbstractTable {
 	}
 
 	/**
-	 * Gibt eine Vector mit HRF-CBItems zurück
-	 *
-	 * @param datum from which hrf has to be returned, used to load a subset of hrf
-	 *
+	 * load all hrf file entries and creates a list of combo box items
 	 */
-	Vector<CBItem> getCBItemHRFListe(Timestamp datum) {
+	List<CBItem> loadCBItemHRFList() {
 
-		final String statement = "SELECT * FROM "+getTableName()+" WHERE Datum >='" + datum.toString() + "' ORDER BY Datum DESC";
-		final Vector<CBItem> hrfs = new Vector<>();
+		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY Datum DESC";
+		var hrfs = new ArrayList<CBItem>();
 
 		try {
 			var rs = adapter.executeQuery(statement);
@@ -139,28 +140,30 @@ final class BasicsTable extends AbstractTable {
 				rs.beforeFirst();
 
 				while (rs.next()) {
+					var date = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
+					var trainingWeek = date.toTrainingWeek();
 					hrfs.add(
-						new core.datatype.CBItem(
-							java.text.DateFormat.getDateTimeInstance().format(rs.getTimestamp("Datum"))
-								+ " ( "
-								+ core.model.HOVerwaltung.instance().getLanguageString("Season")
-								+ " "
-								+ rs.getInt("Saison")
-								+ "  "
-								+ core.model.HOVerwaltung.instance().getLanguageString("Spieltag")
-								+ " "
-								+ rs.getInt("Spieltag")
-								+ " )",
-							rs.getInt("HRF_ID")));
+							new core.datatype.CBItem(
+									date.toLocaleDateTime()
+											+ " ( "
+											+ core.model.HOVerwaltung.instance().getLanguageString("Season")
+											+ " "
+											+ trainingWeek.season
+											+ "  "
+											+ core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
+											+ " "
+											+ trainingWeek.week
+											+ " )",
+									rs.getInt("HRF_ID")));
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getCBItemHRFListe " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getCBItemHRFListe " + e);
 		}
 
 		return hrfs;
 	}
-	
+
 	/**
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
 	 */
