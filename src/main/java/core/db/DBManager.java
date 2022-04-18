@@ -2087,8 +2087,7 @@ public class DBManager {
 	 * @param lineup  The MatchLineup for the match
 	 * @return true if the match is stored. False if not
 	 */
-	public boolean storeMatch(MatchKurzInfo info, Matchdetails details,
-			MatchLineup lineup) {
+	public boolean storeMatch(MatchKurzInfo info, Matchdetails details,	MatchLineup lineup) {
 
 		if ((info == null) || (details == null) || (lineup == null)) {
 			return false;

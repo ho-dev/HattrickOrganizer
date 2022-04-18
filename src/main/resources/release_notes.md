@@ -11,7 +11,7 @@
 * reducing data base file's disk space accelerates HO startup duration (#958)
 * fix bug in hrf file import (#1445)
 
-### Player overview
+### Squad
 * refactoring player details panel showing players' avatars now (#1349)
 * display jersey numbers greater than 49 (#1410)
 * download and display players' category, statement and owner notes (#1441)
@@ -41,6 +41,7 @@
 * fix NPE in training tab in America-based timezones (#1296)
 * enable cell editing in future training table (#1396)
 * fix concurrent modification exception on training refresh (#1430)
+* reimport of hrf files sets training information (#1469)
 
 ### League
 * fix download of power rating (not only one team per match) (#1293)

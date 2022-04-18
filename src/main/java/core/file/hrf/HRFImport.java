@@ -8,6 +8,7 @@ import core.gui.RefreshManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.util.HODateTime;
 import core.util.Helper;
 import java.awt.Component;
 import java.awt.Frame;
@@ -69,6 +70,8 @@ public class HRFImport {
 							DBManager.instance().deleteHRF(storedHrf.getHrfId());
 						}
 						homodel.saveHRF();
+						var training = homodel.getTraining();
+						DBManager.instance().saveTraining(training, HODateTime.now(),true);
 						frame.setInformation(getLangStr("HRFErfolg"));
 					} else {
 						// Cancel

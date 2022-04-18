@@ -308,23 +308,11 @@ public class MatchLineupTeam {
 		for (var matchRoleId : getLineup().getFieldPositions()) {
 			if (matchRoleId != null) {
 				switch (matchRoleId.getSector()) {
-					case None:
-					default:
-						break;
-
-					case CentralDefence:
-					case Back:
-						abw++;
-						break;
-
-					case InnerMidfield:
-					case Wing:
-						mf++;
-						break;
-
-					case Forward:
-						st++;
-						break;
+					default -> {
+					}
+					case CentralDefence, Back -> abw++;
+					case InnerMidfield, Wing -> mf++;
+					case Forward -> st++;
 				}
 			}
 		}
@@ -676,6 +664,7 @@ public class MatchLineupTeam {
 		if ( lastMatchAppearances != null) return; /// already done
 
 		// Start init
+		this.playersMinutesInSector = new HashMap<>();
 		lastMatchAppearances=new HashMap<>();
 		// get the starting positions
 		for (var iMatchRole : this.lineup.getFieldPositions()) {

@@ -2,6 +2,7 @@ package core.model;
 
 import core.db.DBManager;
 import core.file.hrf.HRF;
+import core.model.enums.DBDataSource;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
 import core.model.match.SourceSystem;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -661,4 +663,15 @@ public class HOModel {
         return null;
     }
 
+    public TrainingPerWeek getTraining() {
+        var team = this.getTeam();
+        return new TrainingPerWeek(
+                this.getXtraDaten().getNextTrainingDate().minus(7, ChronoUnit.DAYS),
+                team.getTrainingsArtAsInt(),
+                team.getTrainingslevel(),
+                team.getStaminaTrainingPart(),
+                this.getClub().getCoTrainer(),
+                this.getTrainer().getTrainerSkill(),
+                DBDataSource.HRF);
+    }
 }

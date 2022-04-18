@@ -226,13 +226,14 @@ public class Lineup{
 			m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substWI2, Integer.parseInt(properties.getProperty("substwi2", "0")), (byte) 0));
 			m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
 
-			if (properties.getProperty("tactictype").equals("null")) // to avoid exception when match is finish
+			var tactic = properties.getProperty("tactictype");
+			if (tactic == null || tactic.equals("null")) // to avoid exception when match is finish
 				settings.m_iTacticType = 0;
 			else
-				settings.m_iTacticType = Integer.parseInt(properties.getProperty("tactictype", "0"));
+				settings.m_iTacticType = Integer.parseInt(tactic);
 
 			String attitude = properties.getProperty("installning", "0");
-			if (attitude.equals("null") | attitude.equals("")) // to avoid exception when match is finish
+			if (attitude.equals("null") || attitude.equals("")) // to avoid exception when match is finish
 				settings.m_iAttitude = 0;
 			else
 				settings.m_iAttitude = Integer.parseInt(attitude);
