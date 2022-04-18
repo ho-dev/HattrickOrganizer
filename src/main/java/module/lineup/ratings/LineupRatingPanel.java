@@ -574,29 +574,30 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
-            final Lineup currentLineup = homodel.getCurrentLineupTeamRecalculated().getLineup();
+            var team = homodel.getCurrentLineupTeamRecalculated();
+            if ( team != null ) {
+                final Lineup currentLineup = team.getLineup();
+                m_jpMinuteToggler.load();
+                clear();
+                if (currentLineup.getRatings().getLeftDefense().size() != 0 &&
+                        currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()) != null) {
 
-            m_jpMinuteToggler.load();
+                    m_jpRightDefense.setRating(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpCentralDefense.setRating(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpLeftDefense.setRating(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpMidfield.setRating(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpLeftAttack.setRating(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpCentralAttack.setRating(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                    m_jpRightAttack.setRating(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
+                    setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
+                    setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
+                    int iTacticType = currentLineup.getTacticType();
+                    setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
+                    setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
 
-            clear();
-            if (currentLineup.getRatings().getLeftDefense().size() != 0 &&
-                    currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey())!=null) {
-
-                m_jpRightDefense.setRating(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpCentralDefense.setRating(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpLeftDefense.setRating(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpMidfield.setRating(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpLeftAttack.setRating(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpCentralAttack.setRating(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                m_jpRightAttack.setRating(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
-                setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
-                int iTacticType = currentLineup.getTacticType();
-                setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
-                setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
-
-                // Recalculate Borders
-                calcRatingRatio();
+                    // Recalculate Borders
+                    calcRatingRatio();
+                }
             }
         }
     }

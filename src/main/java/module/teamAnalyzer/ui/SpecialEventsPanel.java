@@ -35,7 +35,7 @@ public class SpecialEventsPanel extends JPanel {
     public SpecialEventsPanel(){
         Vector<Vector<Object>> data = new Vector<>();
 
-        tableModel = new BaseTableModel(data, new Vector<String>(Arrays.asList(columns)));
+        tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));
         table = new JTable(tableModel);
 
         //table.setDefaultRenderer(Object.class, new RatingTableCellRenderer());
@@ -65,64 +65,70 @@ public class SpecialEventsPanel extends JPanel {
         tableModel = new BaseTableModel(new Vector<>(), new Vector<>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
-        List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
         ArrayList<IMatchRoleID> involvedPositions;
-        for ( SpecialEventsPrediction se : teamEvents){
-            ArrayList<Player> involved = new ArrayList<Player>();
-            involvedPositions = se.getInvolvedPositions();
-            if ( involvedPositions != null) {
-                for (IMatchRoleID id : involvedPositions) {
-                    involved.add(specialEventsPredictionManager.getPlayer(id));
-                }
-            }
-            involvedPositions = se.getInvolvedOpponentPositions();
-            if ( involvedPositions != null){
-                for ( IMatchRoleID id: involvedPositions){
-                    involved.add(specialEventsPredictionManager.getOpponentPlayer(id));
-                }
-            }
 
-            tableModel.addRow(
-                    getRow(
-                            se.getEventTypeAsString(),
-                            specialEventsPredictionManager.getPlayer(se.getResponsiblePosition()),
-                            null,
-                            involved,
-                            se.getChanceCreationProbability(),
-                            se.getChanceCreationProbability()>0?se.getGoalProbability():null,
-                            se.getChanceCreationProbability()>0?null:-se.getGoalProbability()
-                    )
-            );
+        List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
+        if ( teamEvents != null) {
+            for (SpecialEventsPrediction se : teamEvents) {
+                ArrayList<Player> involved = new ArrayList<>();
+                involvedPositions = se.getInvolvedPositions();
+                if (involvedPositions != null) {
+                    for (IMatchRoleID id : involvedPositions) {
+                        involved.add(specialEventsPredictionManager.getPlayer(id));
+                    }
+                }
+                involvedPositions = se.getInvolvedOpponentPositions();
+                if (involvedPositions != null) {
+                    for (IMatchRoleID id : involvedPositions) {
+                        involved.add(specialEventsPredictionManager.getOpponentPlayer(id));
+                    }
+                }
+
+                tableModel.addRow(
+                        getRow(
+                                se.getEventTypeAsString(),
+                                specialEventsPredictionManager.getPlayer(se.getResponsiblePosition()),
+                                null,
+                                involved,
+                                se.getChanceCreationProbability(),
+                                se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
+                                se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability()
+                        )
+                );
+            }
         }
 
         List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
-        for ( SpecialEventsPrediction se : opponentEvents){
-            ArrayList<Player> involved = new ArrayList<Player>();
+        if (opponentEvents != null) {
 
-            involvedPositions = se.getInvolvedPositions();
-            if ( involvedPositions != null) {
-                for (IMatchRoleID id : involvedPositions) {
-                    involved.add(specialEventsPredictionManager.getOpponentPlayer(id));     // SE from opponent perspective
-                }
-            }
-            involvedPositions = se.getInvolvedOpponentPositions();
-            if ( involvedPositions  != null) {
-                for (IMatchRoleID id : involvedPositions) {
-                    involved.add(specialEventsPredictionManager.getPlayer(id));     // SE from opponent perspective
-                }
-            }
+            for (SpecialEventsPrediction se : opponentEvents) {
+                ArrayList<Player> involved = new ArrayList<>();
 
-            tableModel.addRow(
-                    getRow(
-                            se.getEventTypeAsString(),
-                            null,
-                            specialEventsPredictionManager.getOpponentPlayer(se.getResponsiblePosition()),
-                            involved,
-                            se.getChanceCreationProbability(),
-                            se.getChanceCreationProbability()>0?null:-se.getGoalProbability(),
-                            se.getChanceCreationProbability()>0?se.getGoalProbability():null
-                    )
-            );
+                involvedPositions = se.getInvolvedPositions();
+                if (involvedPositions != null) {
+                    for (IMatchRoleID id : involvedPositions) {
+                        involved.add(specialEventsPredictionManager.getOpponentPlayer(id));     // SE from opponent perspective
+                    }
+                }
+                involvedPositions = se.getInvolvedOpponentPositions();
+                if (involvedPositions != null) {
+                    for (IMatchRoleID id : involvedPositions) {
+                        involved.add(specialEventsPredictionManager.getPlayer(id));     // SE from opponent perspective
+                    }
+                }
+
+                tableModel.addRow(
+                        getRow(
+                                se.getEventTypeAsString(),
+                                null,
+                                specialEventsPredictionManager.getOpponentPlayer(se.getResponsiblePosition()),
+                                involved,
+                                se.getChanceCreationProbability(),
+                                se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
+                                se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null
+                        )
+                );
+            }
         }
 
         double scores = specialEventsPredictionManager.getResultScores();

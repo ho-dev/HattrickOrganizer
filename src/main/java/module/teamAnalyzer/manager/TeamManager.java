@@ -141,9 +141,11 @@ public class TeamManager {
 	}
 
 	private static Spielplan getDivisionMatches() {
-		return DBManager.instance().getSpielplan(
-				HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID(),
-				HOVerwaltung.instance().getModel().getBasics().getSeason());
+		var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+		if ( xtra != null) {
+			return DBManager.instance().getSpielplan(xtra.getLeagueLevelUnitID(), HOVerwaltung.instance().getModel().getBasics().getSeason());
+		}
+		return null;	// nothing downloaded yet
 	}
 
 	/*

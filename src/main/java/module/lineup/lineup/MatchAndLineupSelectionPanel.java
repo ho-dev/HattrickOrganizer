@@ -177,7 +177,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
             Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-            if (matchOrder != null) {
+            if (lineup != null && matchOrder != null) {
                 lineup.setLocation(matchOrder.getLocation());
                 lineup.setWeather(matchOrder.getWeather());
                 lineup.setWeatherForecast(matchOrder.getWeatherForecast());
@@ -187,10 +187,11 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-
-        // refresh lineup settings
-        Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
-        updateStyleOfPlayComboBox();
+        if ( lineup != null) {
+            // refresh lineup settings
+            Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
+            updateStyleOfPlayComboBox();
+        }
 
     }
 
@@ -361,6 +362,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void uploadLineupToHT() {
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        if ( lineup == null) return;
         if (!LineupCheck.doUpload(m_clSelectedMatch, lineup)) {
             return;
         }
@@ -492,6 +494,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void updateStyleOfPlayComboBox()
     {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        if ( lineup==null) return;
         var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
         // NT Team can select whatever Style of Play they like
         if (!UserManager.instance().getCurrentUser().isNtTeam()) {

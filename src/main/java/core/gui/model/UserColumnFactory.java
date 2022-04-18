@@ -236,11 +236,9 @@ final public class UserColumnFactory {
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new PlayerLabelEntry(player,
-                        HOVerwaltung.instance().getModel()
-                                .getLineupWithoutRatingRecalc()
-                                .getPositionByPlayerId(player.getPlayerID()),
-                        0f, false, false);
+                var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+                var pos = team!=null?team.getPositionById(player.getPlayerID()):null;
+                return new PlayerLabelEntry(player, pos,0f, false, false);
             }
 
             @Override
@@ -606,23 +604,24 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
-                final MatchRoleID positionBySpielerId = model.getLineupWithoutRatingRecalc()
-                        .getPositionByPlayerId(player.getPlayerID());
-                if (model.getLineupWithoutRatingRecalc().isPlayerInLineup(player.getPlayerID())
-                        && (positionBySpielerId != null)) {
-                    final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
-                            ImageUtilities.getJerseyIcon(
-                                    positionBySpielerId,
-                                    player.getTrikotnummer()
-                            ),
-                            -positionBySpielerId
-                                    .getSortId(),
-                            ColorLabelEntry.FG_STANDARD,
-                            ColorLabelEntry.BG_STANDARD,
-                            SwingConstants.CENTER
-                    );
-                    colorLabelEntry.setToolTipText(MatchRoleID.getNameForPosition(positionBySpielerId.getPosition()));
-                    return colorLabelEntry;
+                var team = model.getLineupWithoutRatingRecalc();
+                if ( team != null ) {
+                    final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
+                    if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
+                        final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
+                                ImageUtilities.getJerseyIcon(
+                                        positionBySpielerId,
+                                        player.getTrikotnummer()
+                                ),
+                                -positionBySpielerId
+                                        .getSortId(),
+                                ColorLabelEntry.FG_STANDARD,
+                                ColorLabelEntry.BG_STANDARD,
+                                SwingConstants.CENTER
+                        );
+                        colorLabelEntry.setToolTipText(MatchRoleID.getNameForPosition(positionBySpielerId.getPosition()));
+                        return colorLabelEntry;
+                    }
                 }
 
                 return new ColorLabelEntry(ImageUtilities.getJerseyIcon(null,

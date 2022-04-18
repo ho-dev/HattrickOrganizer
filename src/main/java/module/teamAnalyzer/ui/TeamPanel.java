@@ -119,24 +119,26 @@ public class TeamPanel extends JPanel {
 
                 // Display man marking order
                 Lineup ownLineup = getOwnLineup();
-                var manMarkingOrder = ownLineup.getManMarkingOrder();
-                if (manMarkingOrder != null) {
-                    var manMarker = manMarkingOrder.getSubjectPlayerID();
-                    var manMarkerPos = ownLineup.getPositionByPlayerId(manMarker).getId();
-                    var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
-                    var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
-                    if (manMarkingOrderDisplay == null) {
-                        manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                if ( ownLineup != null) {
+                    var manMarkingOrder = ownLineup.getManMarkingOrder();
+                    if (manMarkingOrder != null) {
+                        var manMarker = manMarkingOrder.getSubjectPlayerID();
+                        var manMarkerPos = ownLineup.getPositionByPlayerId(manMarker).getId();
+                        var manMarkedPos = teamLineup.getPositionByPlayerId(manMarkingOrder.getObjectPlayerID());
+                        var from = lineupPanel.getMyTeam().getPanel(manMarkerPos);
+                        if (manMarkingOrderDisplay == null) {
+                            manMarkingOrderDisplay = new ManMarkingOrderDisplay(grassPanel);
+                        }
+                        if (manMarkedPos > 0) {
+                            var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
+                            manMarkingOrderDisplay.set(from, to);
+                        } else {
+                            // TODO: Display warning about failed man marking order
+                            manMarkingOrderDisplay.set(from, from);
+                        }
+                    } else if (manMarkingOrderDisplay != null) {
+                        manMarkingOrderDisplay = null;
                     }
-                    if (manMarkedPos > 0) {
-                        var to = lineupPanel.getOpponentTeam().getPanel(manMarkedPos);
-                        manMarkingOrderDisplay.set(from, to);
-                    } else {
-                        // TODO: Display warning about failed man marking order
-                        manMarkingOrderDisplay.set(from, from);
-                    }
-                } else if (manMarkingOrderDisplay != null) {
-                    manMarkingOrderDisplay = null;
                 }
             }
 
@@ -189,6 +191,7 @@ public class TeamPanel extends JPanel {
     private void setMyTeam() {
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<>();
         Lineup lineup = getOwnLineup();
+        if ( lineup == null ) return;
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);

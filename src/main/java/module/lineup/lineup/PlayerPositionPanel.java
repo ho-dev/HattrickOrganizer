@@ -158,6 +158,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
             final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            if ( lineup == null) return;
 
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
@@ -235,6 +236,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
         Lineup lineup = model.getLineupWithoutRatingRecalc();
+        if (lineup == null) return;
+
         m_weather = weather;
         m_useWeatherImpact = useWeatherImpact;
         iSelectedPlayerId = -1;
@@ -251,17 +254,13 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 int iKeeperID = keeper.getPlayerID();
                 plCandidates.removeIf(pl -> pl.getPlayerID() == iKeeperID);
             }
-        }
-
-        else if (m_iPositionID == IMatchRoleID.captain) {
+        } else if (m_iPositionID == IMatchRoleID.captain) {
             selectedPlayer = model.getCurrentPlayer(lineup.getCaptain());
             if (selectedPlayer != null) {
                 iSelectedPlayerId = selectedPlayer.getPlayerID();
             }
 
-        }
-
-        else {
+        } else {
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
@@ -270,8 +269,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 if (selectedPlayer != null) {
                     m_jcbPlayer.setEnabled(true); // To be sure
                     iSelectedPlayerId = selectedPlayer.getPlayerID();
-                }
-                else {
+                } else {
                     // We want to enable the combobox if there is room in the lineup or if it is a substitue position
                     m_jcbPlayer.setEnabled((lineup.hasFreePosition()) || (m_iPositionID >= IMatchRoleID.startReserves));
                 }
@@ -330,12 +328,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_useWeatherImpact = useWeatherImpact;
 
         //Get currently setup player in that position
-        final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
-        if (position != null) {
-            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
-            setTactic(position.getTactic(), selectedPlayer);
+        var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        if ( team != null) {
+            final MatchRoleID position = team.getPositionById(m_iPositionID);
+            if (position != null) {
+                selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
+                setTactic(position.getTactic(), selectedPlayer);
+            }
         }
-
         setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub);
         initLabel();
         repaint();
@@ -525,7 +525,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         else if (m_iPositionID == IMatchRoleID.captain) {
             m_jlPosition.setText(getLangStr("Spielfuehrer"));
         }
-        else {
+        else if (lineup != null) {
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {

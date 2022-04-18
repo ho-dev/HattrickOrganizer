@@ -44,12 +44,12 @@ public class SpecialEventsPredictionManager {
         }
 
         public void analyzeLineup() {
+            if ( this.lineup == null ) return;
             this.specialEventsPredictions = new ArrayList<>();
             for (ISpecialEventPredictionAnalyzer analyzer : analyzers) {
                 for (MatchRoleID position : lineup.getFieldPositions()) {
-                    MatchRoleID mid = position;
-                    if (mid.getPlayerId() == 0) continue;
-                    analyzer.analyzePosition(this, mid);
+                    if (position.getPlayerId() == 0) continue;
+                    analyzer.analyzePosition(this, position);
                 }
             }
         }
@@ -89,6 +89,7 @@ public class SpecialEventsPredictionManager {
         }
 
         public Player getOpponentPlayerByPosition(int pos) {
+            if ( this.opponentLineup == null) return null;
             MatchRoleID mid = this.opponentLineup.getPositionById(pos);
             if ( mid == null) return null;
             return getOpponentPlayer(mid.getPlayerId());
@@ -209,12 +210,12 @@ public class SpecialEventsPredictionManager {
 
     public void setLineup(Lineup m_cLineup) {
         this.lineup = m_cLineup;
+        if ( this.lineup == null) return;
         HOModel model = HOVerwaltung.instance().getModel();
         for (MatchRoleID matchRoleID : this.lineup.getFieldPositions()) {
-            MatchRoleID mid = matchRoleID;
-            if (mid.getPlayerId() == 0) continue;
-            if (!this.playerInLineup.containsKey(mid.getPlayerId())) {
-                Player player = model.getCurrentPlayer(mid.getPlayerId());
+            if (matchRoleID.getPlayerId() == 0) continue;
+            if (!this.playerInLineup.containsKey(matchRoleID.getPlayerId())) {
+                Player player = model.getCurrentPlayer(matchRoleID.getPlayerId());
                 if (player != null) {
                     this.playerInLineup.put(player.getPlayerID(), player);
                 }
@@ -331,14 +332,20 @@ public class SpecialEventsPredictionManager {
     //  => aggregate sums of each type and handle probability sums > 1
     public double getResultScores() {
         double ret = 0;
-        for (SpecialEventsPrediction se : getTeamEvents()) {
-            if (se.getChanceCreationProbability() > 0) {
-                ret += se.getGoalProbability();
+        var teamEvents = getTeamEvents();
+        if ( teamEvents != null) {
+            for (SpecialEventsPrediction se : getTeamEvents()) {
+                if (se.getChanceCreationProbability() > 0) {
+                    ret += se.getGoalProbability();
+                }
             }
         }
-        for (SpecialEventsPrediction se : getOpponentEvents()) {
-            if (se.getChanceCreationProbability() < 0) {
-                ret -= se.getGoalProbability();
+        var opponentEvents = getOpponentEvents();
+        if ( opponentEvents != null) {
+            for (SpecialEventsPrediction se : getOpponentEvents()) {
+                if (se.getChanceCreationProbability() < 0) {
+                    ret -= se.getGoalProbability();
+                }
             }
         }
         return ret;
@@ -346,14 +353,20 @@ public class SpecialEventsPredictionManager {
 
     public double getOpponentResultScores() {
         double ret = 0;
-        for (SpecialEventsPrediction se : getTeamEvents()) {
-            if (se.getChanceCreationProbability() < 0) {
-                ret -= se.getGoalProbability();
+        var teamEvents = getTeamEvents();
+        if ( teamEvents != null) {
+            for (SpecialEventsPrediction se : getTeamEvents()) {
+                if (se.getChanceCreationProbability() < 0) {
+                    ret -= se.getGoalProbability();
+                }
             }
         }
-        for (SpecialEventsPrediction se : getOpponentEvents()) {
-            if (se.getChanceCreationProbability() > 0) {
-                ret += se.getGoalProbability();
+        var opponentEvents = getOpponentEvents();
+        if ( opponentEvents != null) {
+            for (SpecialEventsPrediction se : getOpponentEvents()) {
+                if (se.getChanceCreationProbability() > 0) {
+                    ret += se.getGoalProbability();
+                }
             }
         }
         return ret;

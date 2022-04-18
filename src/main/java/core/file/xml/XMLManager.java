@@ -53,7 +53,7 @@ public class XMLManager  {
             if (ele != null && ele.getFirstChild() != null) {
                 return ele.getFirstChild().getNodeValue();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         return "";
@@ -140,6 +140,7 @@ public class XMLManager  {
      */
     public static Document parseString(String inputString) {
         //Fix to remove commented tag
+        if ( inputString == null) return null;
         int indexComm = inputString.indexOf("<!--");
 
         while (indexComm > -1) {
