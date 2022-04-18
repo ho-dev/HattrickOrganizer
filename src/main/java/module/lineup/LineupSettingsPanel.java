@@ -217,9 +217,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		m_jcbPullBackMinute.setEnabled(bLineupSimulation);
 		m_jbReset.setEnabled(bLineupSimulation);
 
-		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
-		setManMarking (currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
-		setLocation(currentLineup.getLocation());
 		var team = homodel.getTeam();
 		if ( team != null){
 			if(bLineupSimulation) {
@@ -251,8 +248,13 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				setTacticalAssistants(m_iRealTacticalAssistantsLevel);
 			}
 		}
-		setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
-		setPullBackMinute(currentLineup.getPullBackMinute());
+		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
+		if ( currentLineup != null) {
+			setManMarking(currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
+			setLocation(currentLineup.getLocation());
+			setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
+			setPullBackMinute(currentLineup.getPullBackMinute());
+		}
 	}
 
 	public void setConfidence(int iTeamConfidence) {
@@ -280,7 +282,10 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void itemStateChanged(ItemEvent event) {
 		if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jcbPullBackMinute)) {
-				homodel.getLineupWithoutRatingRecalc().setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
+				var lineup = homodel.getLineupWithoutRatingRecalc();
+				if (lineup != null) {
+					lineup.setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
+				}
 			} else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
 				homodel.getTeam().setTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
@@ -292,22 +297,28 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(trainerType));
 				lineupPanel.updateStyleOfPlayComboBox();
 			} else if (event.getSource().equals(m_jcbLocation)) {
-				homodel.getLineupWithoutRatingRecalc().setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
+				var lineup = homodel.getLineupWithoutRatingRecalc();
+				if (lineup != null) {
+					lineup.setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
+				}
 			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
 				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
 				lineupPanel.updateStyleOfPlayComboBox();
 			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getLineupWithoutRatingRecalc();
-				lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
-				lineup.setWeather(getWeather());
-				lineupPanel.refreshLineupPositionsPanel();
-			}
-			else if (event.getSource().equals(this.m_jcbPredictionModel)){
+				if (lineup != null) {
+					lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
+					lineup.setWeather(getWeather());
+					lineupPanel.refreshLineupPositionsPanel();
+				}
+			} else if (event.getSource().equals(this.m_jcbPredictionModel)) {
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
-			}
-			else if (event.getSource().equals(m_jcbManMarkingPosition)){
-				homodel.getLineupWithoutRatingRecalc().setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
+			} else if (event.getSource().equals(m_jcbManMarkingPosition)) {
+				var lineup = homodel.getLineupWithoutRatingRecalc();
+				if (lineup != null) {
+					lineup.setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
+				}
 			}
 			refresh();
 		}

@@ -99,6 +99,7 @@ public class SubstitutionOverview extends JPanel {
 
 	private void refresh() {
 		SubstitutionsTableModel model = (SubstitutionsTableModel) this.substitutionTable.getModel();
+		if ( this.lineup == null) return;
 		model.setData(this.lineup.getSubstitutionList());
 
 		// Max order is 5 + the level of the tactical assistant.
@@ -314,7 +315,10 @@ public class SubstitutionOverview extends JPanel {
 			updateOrderIDs();
 			refresh();
 			selectSubstitution(newSub);
-			HOMainFrame.instance().getLineupPanel().setLineupSettingsLabels();
+			var lineupPanel = HOMainFrame.instance().getLineupPanel();
+			if ( lineupPanel != null) {
+				lineupPanel.setLineupSettingsLabels();
+			}
 		}
 		else {
 			restoreLineupSubstitutions();
