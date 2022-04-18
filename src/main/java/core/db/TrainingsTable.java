@@ -47,29 +47,29 @@ final class TrainingsTable extends AbstractTable {
 
 		if (training != null) {
 
-			var trainingDateAsDTI = training.getTrainingDate();
-			var trainingDate = trainingDateAsDTI.toDbTimestamp().toString();
-			if (trainingDateAsDTI.isAfter(lastTrainingDate)) {
+			var trainingDate = training.getTrainingDate();
+			if (trainingDate.isAfter(lastTrainingDate)) {
 //				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
 				return;
 			}
 
 			String sql;
-			if(isTrainingDateInDB(trainingDate)){
+			if (isTrainingDateInDB(trainingDate)) {
 
-				if (force){
-					sql = String.format("""
-									UPDATE TRAINING  SET TRAINING_TYPE=%s, TRAINING_INTENSITY=%s, STAMINA_SHARE=%s, COACH_LEVEL=%s, 
-									TRAINING_ASSISTANTS_LEVEL=%s, SOURCE=%s WHERE TRAINING_DATE = '%s'""", training.getTrainingType(), training.getTrainingIntensity(),
-							training.getStaminaShare(), training.getCoachLevel(), training.getTrainingAssistantsLevel(), training.getSource().getValue(), trainingDate);
+				if (force) {
+					sql = "UPDATE TRAINING  SET TRAINING_TYPE=" + training.getTrainingType() +
+							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
+							", STAMINA_SHARE=" + training.getStaminaShare() +
+							", COACH_LEVEL=" + training.getCoachLevel() +
+							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
+							", SOURCE=" + training.getSource().getValue() +
+							" WHERE TRAINING_DATE = '" + trainingDate.toDbTimestamp() + "'";
 //					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    UPDATED");
-				}
-				else{
+				} else {
 //					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
 					return;
 				}
-			}
-			else{
+			} else {
 				sql = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
 				sql += trainingDate + "', ";
 				sql += training.getTrainingType() + ", ";
@@ -83,14 +83,11 @@ final class TrainingsTable extends AbstractTable {
 
 			try {
 				adapter.executeUpdate(sql);
-			}
-
-			catch (Exception e) {
-				HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " +e);
+			} catch (Exception e) {
+				HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " + e);
 			}
 		}
 	}
-
 
 	/**
 	 * apply the function saveTraining() to all elements of the provided vector
@@ -119,8 +116,12 @@ final class TrainingsTable extends AbstractTable {
 				source);
 	}
 
-	private boolean isTrainingDateInDB(String trainingDate){
-		String sql = String.format("SELECT 1 FROM " + getTableName() + " WHERE TRAINING_DATE = '%s' LIMIT 1", trainingDate);
+	private boolean isTrainingDateInDB(HODateTime trainingDate) {
+		String sql = "SELECT 1 FROM "
+				+ getTableName()
+				+ " WHERE TRAINING_DATE = '"
+				+ trainingDate.toDbTimestamp()
+				+ "' LIMIT 1";
 
 		try {
 			final ResultSet rs = adapter.executeQuery(sql);
@@ -129,8 +130,7 @@ final class TrainingsTable extends AbstractTable {
 					return true;
 				}
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate + ": " + e.getMessage());
 			return false;
 		}
