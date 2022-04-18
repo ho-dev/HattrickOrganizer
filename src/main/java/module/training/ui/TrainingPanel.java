@@ -135,15 +135,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
 		this.pastTrainingsTableModel = new PastTrainingsTableModel();
-		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel){
+		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel) {
 
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				int modelRow = convertRowIndexToModel(row);
 				var histoTraining = TrainingManager.instance().getHistoricalTrainings();
-				var nbRows = histoTraining.size();
-				TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
+				TrainingPerWeek tpw = histoTraining.get(modelRow);
 				var source = tpw.getSource();
 				switch (source) {
 					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
@@ -152,8 +151,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				}
 				if (super.isRowSelected(modelRow)) {
 					c.setBackground(SELECTION_BG);
-				}
-				else {
+				} else {
 					c.setBackground(TABLE_BG);
 				}
 				return c;
@@ -165,16 +163,15 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				int rowIndex = rowAtPoint(p);
 
 				try {
-						int modelRow = convertRowIndexToModel(rowIndex);
-						var histoTraining = TrainingManager.instance().getHistoricalTrainings();
-						var nbRows = histoTraining.size();
-						TrainingPerWeek tpw = histoTraining.get(nbRows- modelRow- 1);
-						var source = tpw.getSource();
-						tip = switch (source) {
-							case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
-							case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
-							default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
-						};
+					int modelRow = convertRowIndexToModel(rowIndex);
+					var histoTraining = TrainingManager.instance().getHistoricalTrainings();
+					TrainingPerWeek tpw = histoTraining.get(modelRow);
+					var source = tpw.getSource();
+					tip = switch (source) {
+						case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
+						case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
+						default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+					};
 
 				} catch (RuntimeException e1) {
 					//catch null pointer exception if mouse is over an empty line
