@@ -37,6 +37,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URI;
+import java.sql.Date;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -313,16 +314,14 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
 		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
-			//Instant from = ZonedDateTime.now().minusWeeks(32).toInstant();
 			var from = HODateTime.now().minus(32*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
-			//Instant from = ZonedDateTime.now().minusWeeks(7).toInstant();
 			var from = HODateTime.now().minus(7*7, ChronoUnit.DAYS);
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", from.toLocaleDate()),
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from.instant)),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
