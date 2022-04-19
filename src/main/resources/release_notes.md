@@ -63,17 +63,17 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - Apr 09, 2022
+Reports by Contributors - Dec 20, 2021 - Apr 19, 2022
 
 * Foppe	645
-* akasolace	93
+* akasolace	94
 * \_KOHb\_	76
 * Lidegand 	75
 * sich	73
 * anti_anti 69
 * Moorhuhninho	67
 * Ante 52
-* wsbrenk 26
+* wsbrenk 28
 * dzsoo 18
-* Philipp 2
-* Total translated:	1196
+* Philipp 1
+* Total translated:	1198

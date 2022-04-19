@@ -247,16 +247,16 @@ public final class UserParameter extends Configuration {
     //Number of decimals
     public int nbDecimals = 2;
     public int aufstellungsAssistentPanel_reihenfolge = LineupAssistant.AW_MF_ST;
-    public int lineupPanel_horizontalSplitLocation = 600;
-    public int lineupPanel_verticalSplitLocation = GUIUtils.getLocationFromRight(400, 800);
+    public int lineupPanel_verticalSplitLocation = 600;
+    public int lineupPanel_horizontalSplitLocation = GUIUtils.getLocationFromRight(400, 800);
 
-    public int transferHistoryPane_splitPane = 200;
-    public int transferTypePane_splitPane = 200;
+    public int transferHistoryPane_splitPane = 380;
+    public int transferTypePane_splitPane = 380;
 
     public int training_splitPane = 300;
     public HODividerListener training_bottomSplitPane = new HODividerListener(400);
-    public HODividerListener training_rightSplitPane = new HODividerListener(700);
-    public HODividerListener training_mainSplitPane = new HODividerListener(300);
+    public HODividerListener training_rightSplitPane = new HODividerListener(800);
+    public HODividerListener training_mainSplitPane = new HODividerListener(400);
     public int training_lowerLeftSplitPane = 200;
     public HODividerListener training_pastFutureTrainingsSplitPane = new HODividerListener(200);
 
@@ -290,7 +290,7 @@ public final class UserParameter extends Configuration {
     //Spiele
     public int spielePanel_horizontalLeftSplitPane = 400;
     public int spielePanel_horizontalRightSplitPane = 310;
-    public int spielePanel_verticalSplitPane = 440;
+    public int spielePanel_verticalSplitPane = 490;
 
     //SpielerAnalyse
     public int spielerAnalysePanel_horizontalSplitPane = 400;
@@ -321,7 +321,7 @@ public final class UserParameter extends Configuration {
     //Wird nun für SpieleStatistik verwendet!
     public int statistikSpielerFinanzenAnzahlHRF = 50;
     //TransferScoutPanel
-    public int transferScoutPanel_horizontalSplitPane = 300;
+    public int transferScoutPanel_horizontalSplitPane = 400;
     //Id der Währung
 
     //veraltet!!
