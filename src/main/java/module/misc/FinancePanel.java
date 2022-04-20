@@ -60,6 +60,8 @@ final class FinancePanel extends JPanel {
 
     void setLabels() {
         final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
+        if ( finances == null) return;
+
         final float factor = core.model.UserParameter.instance().FXrate;
 
         if (currentFinance) {
@@ -136,7 +138,7 @@ final class FinancePanel extends JPanel {
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
         label.setOpaque(true);
-        constraints.gridy = 2;;
+        constraints.gridy = 2;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         layout.setConstraints(label, constraints);
         add(label);

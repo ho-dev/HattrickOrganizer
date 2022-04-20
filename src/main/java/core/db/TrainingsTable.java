@@ -71,7 +71,7 @@ final class TrainingsTable extends AbstractTable {
 				}
 			} else {
 				sql = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
-				sql += trainingDate + "', ";
+				sql += trainingDate.toDbTimestamp() + "', ";
 				sql += training.getTrainingType() + ", ";
 				sql += training.getTrainingIntensity() + ", ";
 				sql += training.getStaminaShare() + ", ";
@@ -131,7 +131,7 @@ final class TrainingsTable extends AbstractTable {
 				}
 			}
 		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate + ": " + e.getMessage());
+			HOLogger.instance().error(this.getClass(), "Error when controlling if following entry was in Training table: " + trainingDate.toDbTimestamp() + ": " + e.getMessage());
 			return false;
 		}
 		return false;
