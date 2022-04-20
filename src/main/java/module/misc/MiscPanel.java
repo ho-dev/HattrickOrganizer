@@ -60,6 +60,7 @@ final class MiscPanel extends JPanel {
     void setLabels() {
         final Verein verein = HOVerwaltung.instance().getModel().getClub();
         final Economy economy = HOVerwaltung.instance().getModel().getEconomy();
+        if( economy == null) return;
 
         DecimalFormat df = new DecimalFormat("###,###,###,##0");
 
@@ -166,20 +167,6 @@ final class MiscPanel extends JPanel {
         	return 0;
        	return Helper.round(getSumTSI() / (numPlayers - 1));
     }
-
-    /**
-     * Gibt den Durchschnittlichen Mannschaftswert zurück
-     * Returns the average estimated market value (EPV)
-     *
-     * @return average EPV
-     */
-//    float getAvgEPV() {
-//        int numPlayers = HOVerwaltung.instance().getModel().getAllSpieler().size();
-//        //Trainer abziehen // without trainer
-//        if (numPlayers <= 1)
-//        	return 0;
-//       	return Helper.round(getSumEPV() / (numPlayers - 1));
-//    }
 
     /**
      * Gibt das Durchschnittsalter zurück
