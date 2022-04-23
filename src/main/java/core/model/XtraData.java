@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.Properties;
 
 public class XtraData  {
@@ -182,6 +184,11 @@ public class XtraData  {
      */
     public final HODateTime getNextTrainingDate() {
         return m_TrainingDate;
+    }
+
+    public HODateTime getTrainingDateAfterWeeks(int nWeek)
+    {
+        return m_TrainingDate.plusDaysAtSameLocalTime(nWeek*7);
     }
 
     public Integer getCountryId() {

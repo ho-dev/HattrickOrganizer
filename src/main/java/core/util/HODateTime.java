@@ -196,6 +196,11 @@ public class HODateTime implements Comparable<HODateTime> {
         return Duration.between(from.instant, to.instant);
     }
 
+    /**
+     * add amount of days and reset local time (if daylight saving happened)
+     * @param i amount of days (may be negativ)
+     * @return HODateTime
+     */
     public HODateTime plusDaysAtSameLocalTime(int i) {
         int hour = instant.atZone(DEFAULT_TIMEZONE).getHour();
         int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();

@@ -238,7 +238,8 @@ public class Lineup{
 			else
 				settings.m_iAttitude = Integer.parseInt(attitude);
 
-			if (properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
+			var propStyleOfPlay = properties.getProperty("styleofplay");
+			if (propStyleOfPlay == null || properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
 				settings.m_iStyleOfPlay = 0;
 			else
 				settings.m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));

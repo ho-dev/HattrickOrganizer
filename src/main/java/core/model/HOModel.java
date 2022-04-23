@@ -669,7 +669,7 @@ public class HOModel {
     public TrainingPerWeek getTraining() {
         var team = this.getTeam();
         return new TrainingPerWeek(
-                this.getXtraDaten().getNextTrainingDate().minus(7, ChronoUnit.DAYS),
+                this.getXtraDaten().getTrainingDateAfterWeeks(-1), // previous training
                 team.getTrainingsArtAsInt(),
                 team.getTrainingslevel(),
                 team.getStaminaTrainingPart(),

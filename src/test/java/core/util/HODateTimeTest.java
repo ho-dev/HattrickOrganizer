@@ -16,6 +16,11 @@ public class HODateTimeTest {
             HOVerwaltung.instance().loadLatestHoModel();
             HOVerwaltung.instance().setResource("English");
 
+            var nextTraining = HODateTime.fromHT("2022-03-31 08:30:00");
+            var localDateTime = nextTraining.toLocaleDateTime();
+            var previousTraining = nextTraining.plusDaysAtSameLocalTime(-7);
+            var localPrevious = previousTraining.toLocaleDateTime();
+
             var fetchedDate = HODateTime.fromHT("2022-01-08 14:33:58");
 
             Assertions.assertEquals("2022-01-08 14:33:58", fetchedDate.toHT());
