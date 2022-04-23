@@ -102,7 +102,8 @@ public class TrainingWeekManager {
 		}
 
 		var nbWeeks = ChronoUnit.DAYS.between(m_StartDate.instant, nextTrainingDate.instant) / 7;
-		var currDate = nextTrainingDate.minus((int)nbWeeks * 7, ChronoUnit.DAYS);
+		//var currDate = nextTrainingDate.minus((int)nbWeeks * 7, ChronoUnit.DAYS);
+		var currDate = nextTrainingDate.plusDaysAtSameLocalTime(-7*(int)nbWeeks);
 		while (!currDate.isAfter(nextTrainingDate)) {
 
 			if ((!m_IncludeUpcomingTrainings) && (currDate.isAfter(lastUpdateDate))) {
@@ -137,8 +138,7 @@ public class TrainingWeekManager {
 					trainings.add(tpw);
 				}
 			}
-
-			currDate = currDate.plus(7, ChronoUnit.DAYS);
+			currDate = currDate.plusDaysAtSameLocalTime(7);
 		}
 
 		return trainings;
