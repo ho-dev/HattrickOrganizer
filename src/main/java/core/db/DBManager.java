@@ -2033,8 +2033,6 @@ public class DBManager {
 	 *
 	 * @param hrfid the hrfid
 	 */
-// ------------------------------------- Delete
-	// -------------------------------------------------------
 	public void deleteHRF(int hrfid) {
 		final String[] where = { "HRF_ID" };
 		final String[] value = { hrfid + "" };
