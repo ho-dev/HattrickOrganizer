@@ -607,8 +607,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void reInit() {
 		// Set the currency from the HRF file.
 		try {
-			float faktorgeld = (float) HOVerwaltung.instance().getModel().getXtraDaten()
-                .getCurrencyRate();
+			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+			if (xtra == null) return;
+			float faktorgeld = (float) xtra.getCurrencyRate();
 
 			if (faktorgeld > -1) {
 				UserParameter.instance().FXrate = faktorgeld;

@@ -149,6 +149,7 @@ public class HRFStringParser {
 	 */
 	private static HOModel createHOModel(List<Properties> propertiesList, HODateTime hrfdate) throws Exception {
 
+		Verein club = null;
 		final HOModel hoModel = new HOModel(hrfdate);
 		int trainerID = -1;
 
@@ -167,7 +168,8 @@ public class HRFStringParser {
 				}
 				// club
 				else if (entity.toString().equalsIgnoreCase(CLUB)) {
-					hoModel.setClub(new Verein(properties));
+					club = new Verein(properties);
+					hoModel.setClub(club);
 				}
 				// team
 				else if (entity.toString().equalsIgnoreCase(TEAM)) {
@@ -201,8 +203,6 @@ public class HRFStringParser {
 					} catch (NumberFormatException | NullPointerException nfe) {
 						trainerID = -1;
 					}
-
-
 				} else if (entity.toString().equalsIgnoreCase(LASTLINEUP)) {
 					hoModel.setPreviousLineup(new MatchLineupTeam(MatchRoleID.convertOldRoleToNew(properties)));
 				} else if (entity.toString().equalsIgnoreCase(STAFF)) {
@@ -234,7 +234,8 @@ public class HRFStringParser {
 			}
 		}
 
-		return hoModel;
+		if ( club != null)	return hoModel;
+		return null;	// corrupt hrf file?!
 	}
 
 
