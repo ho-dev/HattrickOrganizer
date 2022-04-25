@@ -73,7 +73,8 @@ public final class HRFTable extends AbstractTable {
 			maxHrf = new HRF(hrfId, name, datum);
 		}
 
-		if (datum.isAfter(getLatestHrf().getDatum())) {
+		// reimport of latest hrf file has to set latestHrf to a new value
+		if (!datum.isBefore(getLatestHrf().getDatum()) && hrfId != latestHrf.getHrfId()) {
 			latestHrf = new HRF(hrfId, name, datum);
 		}
 	}
