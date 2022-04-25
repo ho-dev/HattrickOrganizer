@@ -65,6 +65,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, new TrainingPanel(this.model));
 		UserParameter.instance().training_rightSplitPane.init(mainPanel);
+		mainPanel.setResizeWeight(0.8);
 
 		mainPanel.setOpaque(false);
 		add(mainPanel, BorderLayout.CENTER);
