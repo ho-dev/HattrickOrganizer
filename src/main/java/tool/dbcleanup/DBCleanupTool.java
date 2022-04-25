@@ -6,9 +6,11 @@ import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -43,9 +45,8 @@ public class DBCleanupTool {
 	public void cleanupHRFs (int keepWeeks, boolean autoRemove) {
 		Timestamp removeDate = null;
 		if (keepWeeks >= 0) {
-			Calendar cal = new GregorianCalendar();
-			cal.add(Calendar.WEEK_OF_YEAR, -keepWeeks);
-			removeDate = new Timestamp(cal.getTimeInMillis());
+			var hrfDateFrom = HODateTime.now().minus(keepWeeks*7, ChronoUnit.DAYS);
+			removeDate = hrfDateFrom.toDbTimestamp();
 		}
 		if (removeDate != null || autoRemove) {
 			cleanupHRFs(removeDate, autoRemove);
@@ -69,7 +70,7 @@ public class DBCleanupTool {
 		for (HRF curHrf : allHrfs) {
 			int curId = curHrf.getHrfId();
 			var curDate = curHrf.getDatum();
-			var htWeek = curDate.toLocaleHTWeek();
+			var htWeek = curDate.toTrainingWeek();
 			int curHtSeasonTraining = htWeek.season;
 			int curHtWeekTraining = htWeek.week;
 			boolean remove = false;
