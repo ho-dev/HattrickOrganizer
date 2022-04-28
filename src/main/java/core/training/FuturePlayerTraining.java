@@ -140,7 +140,7 @@ public class FuturePlayerTraining {
             this.to.minus(7, ChronoUnit.DAYS);
             return false;
         }
-        if (this.to == null || to !=null && this.to.isAfter(to)) {
+        if (to !=null && this.to.isAfter(to)) {
             this.from = to;
             this.from.plus(7, ChronoUnit.DAYS);
             return false;
