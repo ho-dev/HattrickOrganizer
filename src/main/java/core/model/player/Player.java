@@ -981,19 +981,19 @@ public class Player {
      * @return Value of stamina.
      */
     public int getStamina() {
-        //lastmatch rating default value:0
         int m_istamina = m_iKondition;
         //if the player has played a game
+        //lastmatch rating default value:0
         if (m_lastMatchRating != 0) {
             HODateTime currentTime = HODateTime.now();
             HODateTime matchDate = HODateTime.fromHT(m_lastMatchDate);
             long duration = HODateTime.between(matchDate, currentTime).getSeconds();
-            //the player has played a game during the week, 7 days = 604800
+            //if the player has played a game during the week, 7 days = 604800
             if (duration <= 604800) {
                 double adjustment = ((10 - m_lastMatchRating) / 15);
                 adjustment = Math.pow(adjustment, 3.5);
                 // 1 <= stamina <= 10
-                if ((m_istamina * adjustment >= 1) && (m_istamina * adjustment <= 10)) {
+                if ((Math.ceil(m_istamina * adjustment) >= 1) && (Math.ceil(m_istamina * adjustment) <= 10)) {
                     m_istamina = (int) Math.ceil(m_istamina * adjustment);
                 }
             }
