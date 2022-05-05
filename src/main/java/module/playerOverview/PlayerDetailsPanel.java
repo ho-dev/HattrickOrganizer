@@ -323,8 +323,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jbOffsets.setEnabled(true);
 
         formatBar(jpbForm, m_clPlayer.getForm(), true);
+        //m_clPlayer.getValue4Skill(6)
         formatBar(jpbStamina, m_clPlayer.getStamina(), true);
-
         formatBar(jpbGK, m_clPlayer.getSkill(PlayerSkill.KEEPER, true));
         formatBar(jpbDE, m_clPlayer.getSkill(PlayerSkill.DEFENDING, true));
         formatBar(jpbPM, m_clPlayer.getSkill(PlayerSkill.PLAYMAKING, true));

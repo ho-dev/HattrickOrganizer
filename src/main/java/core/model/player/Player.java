@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.HO;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
@@ -24,6 +25,7 @@ import java.util.*;
 
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
+
 
 public class Player {
 
@@ -324,7 +326,7 @@ public class Player {
      */
     private boolean m_bTrainingBlock = false;
 
-    // LastMAtch
+    // LastMatch
     private String m_lastMatchDate;
     private double m_lastMatchRating=0;
     private int m_lastMatchId=0;
@@ -974,12 +976,30 @@ public class Player {
     ////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Getter for property m_iKondition.
-     *
-     * @return Value of property m_iKondition.
+     * Getter for property stamina.
+     * Stamina αdjusts when a player has played a game during the week.
+     * @return Value of stamina.
      */
     public int getStamina() {
-        return m_iKondition;
+        //lastmatch rating default value:0
+        int m_istamina = m_iKondition;
+        //if the player has played a game
+        if (m_lastMatchRating != 0) {
+            HODateTime currentTime = HODateTime.now();
+            HODateTime matchDate = HODateTime.fromHT(m_lastMatchDate);
+            long duration = HODateTime.between(matchDate, currentTime).getSeconds();
+            //the player has played a game during the week, 7 days = 604800
+            if (duration <= 604800) {
+                double adjustment = ((10 - m_lastMatchRating) / 15);
+                adjustment = Math.pow(adjustment, 3.5);
+                // 1 <= stamina <= 10
+                if ((m_istamina * adjustment >= 1) && (m_istamina * adjustment <= 10)) {
+                    m_istamina = (int) Math.ceil(m_istamina * adjustment);
+                }
+            }
+        }
+        setStamina(m_istamina);
+        return m_istamina;
     }
 
     /**
@@ -1712,7 +1732,7 @@ public class Player {
             case WINGER -> m_iFluegelspiel;
             case SCORING -> m_iTorschuss;
             case SET_PIECES -> m_iStandards;
-            case STAMINA -> m_iKondition;
+            case STAMINA -> getStamina();
             case EXPERIENCE -> m_iErfahrung;
             case FORM -> m_iForm;
             case LEADERSHIP -> m_iFuehrung;
@@ -1720,7 +1740,6 @@ public class Player {
             default -> 0;
         };
     }
-
 
     public float getSkillValue(int skill){
         return getSub4Skill(skill) + getValue4Skill(skill);
