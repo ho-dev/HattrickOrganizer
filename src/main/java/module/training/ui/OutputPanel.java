@@ -48,6 +48,8 @@ import javax.swing.table.TableRowSorter;
  */
 public class OutputPanel extends LazyImagePanel {
 
+    private final int fixedColumns=1;
+    private JTable fixedOutputTable;
     private JTable outputTable;
     private JButton importButton;
     private JButton calculateButton;
@@ -165,30 +167,33 @@ public class OutputPanel extends LazyImagePanel {
     private void initComponents() {
         setLayout(new BorderLayout());
 
+        fixedOutputTable = new OutputTable(new OutputTableModel(this.model, true));
+        fixedOutputTable.getTableHeader().setReorderingAllowed(false);
+        fixedOutputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        fixedOutputTable.setDefaultRenderer(Object.class, new OutputTableRenderer());
         outputTable = new OutputTable(new OutputTableModel(this.model));
         outputTable.getTableHeader().setReorderingAllowed(false);
         outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         outputTable.setDefaultRenderer(Object.class, new OutputTableRenderer());
 
-        for (int i = 0; i < outputTable.getColumnCount(); i++) {
-            TableColumn column = outputTable.getColumnModel().getColumn(i);
+        fixedOutputTable.getColumnModel().getColumn(0).setPreferredWidth(150);
 
-            switch (i) {
-                case 0 -> column.setPreferredWidth(150);
-                case 1 -> column.setPreferredWidth(60);
-                case 2 -> column.setPreferredWidth(140);
-                default -> column.setPreferredWidth(70);
-            }
+        outputTable.getColumnModel().getColumn(0).setPreferredWidth(60);
+        outputTable.getColumnModel().getColumn(1).setPreferredWidth(140);
+
+        for (int i = 2; i < outputTable.getColumnCount(); i++) {
+            TableColumn column = outputTable.getColumnModel().getColumn(i);
+            column.setPreferredWidth(70);
         }
 
         // Hide column 11 (playerId)
-        TableColumn playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(11);
+        TableColumn playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(10);
         playerIDCol.setPreferredWidth(0);
         playerIDCol.setMinWidth(0);
         playerIDCol.setMaxWidth(0);
 
         // Hide column 12 (training speed)
-        playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(12);
+        playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(11);
         playerIDCol.setPreferredWidth(0);
         playerIDCol.setMinWidth(0);
         playerIDCol.setMaxWidth(0);
@@ -201,13 +206,23 @@ public class OutputPanel extends LazyImagePanel {
         outputTable.setRowSorter(sorter);
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 
-        int columnIndexToSort = 12;
+        int columnIndexToSort = 11;
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
 
         sorter.setSortKeys(sortKeys);
         sorter.sort();
 
-        add(new JScrollPane(outputTable), BorderLayout.CENTER);
+        var scrollPane = new JScrollPane(outputTable);
+        Dimension fixedSize = fixedOutputTable.getPreferredSize();
+        JViewport viewport = new JViewport();
+        viewport.setView(fixedOutputTable);
+        viewport.setPreferredSize(fixedSize);
+        viewport.setMaximumSize(fixedSize);
+        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedOutputTable.getTableHeader());
+        scrollPane.setRowHeaderView(viewport);
+
+
+        add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
 

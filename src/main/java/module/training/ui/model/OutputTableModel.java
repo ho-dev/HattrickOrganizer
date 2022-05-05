@@ -28,9 +28,11 @@ import javax.swing.table.AbstractTableModel;
  */
 public class OutputTableModel extends AbstractTableModel {
 
+    public final static int fixedColumns=1;
     public final static int COL_PLAYER_ID = 11;
     private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
+    private boolean isFixed = false;
 
     /**
      * Constructor
@@ -41,6 +43,13 @@ public class OutputTableModel extends AbstractTableModel {
         this.model = model;
     }
 
+    public OutputTableModel(TrainingModel model, boolean isFixed) {
+        this.model = model;
+        this.isFixed=isFixed;
+    }
+
+    public boolean isFixed(){return this.isFixed;}
+
     /*
      * (non-Javadoc)
      *
@@ -48,6 +57,9 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
+        if ( !isFixed ) {
+            columnIndex += fixedColumns;
+        }
         return switch (columnIndex) {
             case 0 -> PlayerNameCell.class;
             case 1, 2 -> TrainingPriorityCell.class;
@@ -56,7 +68,6 @@ public class OutputTableModel extends AbstractTableModel {
             case 12 -> Integer.class;
             default -> super.getColumnClass(columnIndex);
         };
-
     }
 
     /*
@@ -66,7 +77,8 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public int getColumnCount() {
-        return 13;
+        if ( isFixed ) return fixedColumns;
+        return 13-fixedColumns;
     }
 
     /*
@@ -76,6 +88,9 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public String getColumnName(int columnIndex) {
+        if ( !isFixed ) {
+            columnIndex += fixedColumns;
+        }
         return switch (columnIndex) {
             case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
             case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
@@ -113,6 +128,9 @@ public class OutputTableModel extends AbstractTableModel {
      * @return toolTip
      */
     public Object getToolTipAt(int rowIndex, int columnIndex) {
+        if ( !isFixed ) {
+            columnIndex += fixedColumns;
+        }
         if (columnIndex == 0) {
             return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
         } else {
@@ -129,6 +147,10 @@ public class OutputTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
+
+        if ( !isFixed){
+            columnIndex+=fixedColumns;
+        }
 
         return switch (columnIndex) {
             case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
