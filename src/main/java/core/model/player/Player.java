@@ -990,11 +990,10 @@ public class Player {
             long duration = HODateTime.between(matchDate, currentTime).getSeconds();
             //if the player has played a game during the week, 7 days = 604800
             if (duration <= 604800) {
-                double adjustment = ((10 - m_lastMatchRating) / 15);
-                adjustment = Math.pow(adjustment, 3.5);
+                double adjustment = Math.pow(0.2, (3/m_lastMatchRating));
                 // 1 <= stamina <= 10
-                if ((Math.ceil(m_istamina * adjustment) >= 1) && (Math.ceil(m_istamina * adjustment) <= 10)) {
-                    m_istamina = (int) Math.ceil(m_istamina * adjustment);
+                if ((m_istamina - adjustment >= 1) && (m_istamina - adjustment) <= 10) {
+                    m_istamina = (int) Math.round(m_istamina - adjustment);
                 }
             }
         }
