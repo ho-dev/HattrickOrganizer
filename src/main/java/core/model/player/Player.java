@@ -1607,11 +1607,27 @@ public class Player {
     }
 
     /**
+     * Setter for property m_lastMatchDate.
+     * @param m_lastMatchDate New value of property m_iTrainerTyp.
+     */
+    public void setLastMatchDate(String m_lastMatchDate) {
+        this.m_lastMatchDate = m_lastMatchDate;
+    }
+
+    /**
      * Last match
      * @return rating
      */
     public double getLastMatchRating(){
         return m_lastMatchRating;
+    }
+
+    /**
+     * Setter for property m_lastMatchRating.
+     * @param m_lastMatchRating New value of property m_iTrainerTyp.
+     */
+    public void setLastMatchRating(double m_lastMatchRating) {
+        this.m_lastMatchRating = m_lastMatchRating;
     }
 
     /**
