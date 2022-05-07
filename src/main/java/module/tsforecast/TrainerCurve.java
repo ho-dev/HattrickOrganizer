@@ -34,8 +34,7 @@ class TrainerCurve extends Curve {
 			HOLogger.instance().debug(
 					this.getClass(),
 					"Trainer for "
-							+ new SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
-									.format(d) + " has no leadership!");
+							+ d.toLocaleDateTime() + " has no leadership!");
 			dRet = 1; // quick hack to fix start problems when there are only
 						// few old datasets
 		}
@@ -48,7 +47,7 @@ class TrainerCurve extends Curve {
 	}
 
 	private void readTrainer() {
-		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS);
+		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 
 		int iLeadership;
 		int iLastLeadership = -1;
@@ -58,7 +57,7 @@ class TrainerCurve extends Curve {
 		// get last skill just before start date
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select SPIELERID, FUEHRUNG, DATUM from SPIELER "
-						+ "where TRAINERTYP <> -1 and DATUM <= '" + start
+						+ "where TRAINERTYP <> -1 and DATUM <= '" + start.toDbTimestamp()
 						+ "' order by DATUM desc");
 		try {
 			boolean gotInitial = false;
@@ -73,10 +72,10 @@ class TrainerCurve extends Curve {
 			resultset = m_clJDBC
 					.executeQuery("select SPIELERID, FUEHRUNG, DATUM from SPIELER "
 							+ "where TRAINERTYP <> -1 and DATUM > '"
-							+ start
+							+ start.toDbTimestamp()
 							+ "' and DATUM < '"
 							+ HOVerwaltung.instance().getModel().getBasics()
-									.getDatum() + "' order by DATUM");
+									.getDatum().toDbTimestamp() + "' order by DATUM");
 			while (true) {
 				assert resultset != null;
 				if (!resultset.next()) break;

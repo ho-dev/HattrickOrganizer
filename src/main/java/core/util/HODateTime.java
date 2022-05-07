@@ -213,6 +213,10 @@ public class HODateTime implements Comparable<HODateTime> {
                 .toInstant());
     }
 
+    public DayOfWeek DayOfWeek() {
+        return instant.atZone(DEFAULT_TIMEZONE).getDayOfWeek();
+    }
+
     /**
      * Internal class representing HT's season and week
      */
