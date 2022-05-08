@@ -55,11 +55,11 @@ public class HistoryCurve extends Curve {
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
+		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select DATUM, ISTIMMUNG from HRF, TEAM "
 						+ "where HRF.HRF_ID = TEAM.HRF_ID " + "and DATUM <= '"
-						+ ibasics.getDatum() + "' and DATUM > '" + start + "'"
+						+ ibasics.getDatum().toDbTimestamp() + "' and DATUM > '" + start + "'"
 						+ "order by DATUM");
 		assert resultset != null;
 		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
@@ -75,7 +75,7 @@ public class HistoryCurve extends Curve {
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
 		Curve.Point pLastLeagueMatch = null;
-		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
+		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
 
 		// Table PAARUNG is required for SPIELTAG but does only include League
 		// matches
@@ -93,7 +93,7 @@ public class HistoryCurve extends Curve {
 							+ ") "
 							+ "and MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID "
 							+ "and MATCHESKURZINFO.MATCHDATE < '"
-							+ ibasics.getDatum()
+							+ ibasics.getDatum().toDbTimestamp()
 							+ "' and MATCHESKURZINFO.MATCHDATE > '"
 							+ start
 							+ "' "
@@ -112,7 +112,7 @@ public class HistoryCurve extends Curve {
 							+ ") "
 							+ "and PAARUNG.MATCHID=MATCHDETAILS.MATCHID "
 							+ "and PAARUNG.DATUM < '"
-							+ ibasics.getDatum()
+							+ ibasics.getDatum().toDbTimestamp()
 							+ "' and PAARUNG.DATUM > '"
 							+ start
 							+ "') "
