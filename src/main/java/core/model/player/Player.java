@@ -1010,7 +1010,7 @@ public class Player {
      *
      * @param m_iSubStamina New value of property m_iKondition.
      */
-    public void setSubStamina(int m_iSubStamina) {
+    public void setSubStamina(double m_iSubStamina) {
         this.m_iSubStamina = m_iSubStamina;
     }
 
@@ -2261,19 +2261,10 @@ public class Player {
         //if the player has played a game
         //lastmatch rating default value:0
         if (m_lastMatchRating != 0) {
-            double m_iaverageStamina = DBManager.instance().getBewertungen4Player(getPlayerID())[2];
-            double m_isubStamina = (m_iaverageStamina - getLastMatchRating()) / 2;
-            m_isubStamina = Math.round(playerBefore.getStamina() - m_isubStamina);
-            if (m_isubStamina >= 1 && m_isubStamina <= 10) {
-                setStamina((int) m_isubStamina);
-            } else {
-                if (m_isubStamina < 1) {
-                    setStamina(1);
-                }
-                if (m_isubStamina > 10) {
-                    setStamina(10);
-                }
-            }
+            double m_iavgRating = DBManager.instance().getBewertungen4Player(getPlayerID())[2];
+            double subStamina = m_lastMatchRating/m_iavgRating;
+            subStamina = subStamina/10;
+            setSubStamina(subStamina);
         }
 
         // since we don't want to work with temp player objects we calculate skill by skill
