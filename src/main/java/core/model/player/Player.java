@@ -187,9 +187,9 @@ public class Player {
     private int m_iKondition = 1;
 
     /**
-     * Stamina
+     * Stamina Subskill
      */
-    private int m_iStamina = 1;
+    private double m_iSubStamina = 0;
 
     /**
      * Länderspiele
@@ -389,7 +389,6 @@ public class Player {
         m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
         m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
         m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
-        m_iStamina = Integer.parseInt(properties.getProperty("uth", "0"));
         m_iForm = Integer.parseInt(properties.getProperty("for", "0"));
         m_iTorwart = Integer.parseInt(properties.getProperty("mlv", "0"));
         m_iVerteidigung = Integer.parseInt(properties.getProperty("bac", "0"));
@@ -976,7 +975,7 @@ public class Player {
      *
      * @param m_iKondition New value of property m_iKondition.
      */
-    public void setKondition(int m_iKondition) {
+    public void setStamina(int m_iKondition) {
         this.m_iKondition = m_iKondition;
     }
 
@@ -989,35 +988,30 @@ public class Player {
      *
      * @return Value of m_iKondition.
      */
-    public int getKondition() {
+    public int getStamina() {
         return m_iKondition;
     }
 
-    /**
-     * Setter for property m_iStamina.
-     *
-     * @param m_iStamina New value of property m_iStamina.
-     */
-    public void setStamina(int m_iStamina) {
-        this.m_iStamina = m_iStamina;
-    }
-
-    /**
-     * Getter for property m_iStamina.
-     *
-     * @return Value of m_iStamina.
-     */
-    public int getStamina() {
-        return m_iStamina;
-    }
-
-    /**
-     * Setter for property m_iLaenderspiele.
-     *
-     * @param m_iLaenderspiele New value of property m_iLaenderspiele.
-     */
     public void setLaenderspiele(int m_iLaenderspiele) {
         this.m_iLaenderspiele = m_iLaenderspiele;
+    }
+
+    /**
+     * Getter for property m_iSubStamina.
+     *
+     * @return Value of m_iSubStamina.
+     */
+    public double getSubStamina() {
+        return m_iSubStamina;
+    }
+
+    /**
+     * Setter for property m_iSubStamina.
+     *
+     * @param m_iSubStamina New value of property m_iKondition.
+     */
+    public void setSubStamina(int m_iSubStamina) {
+        this.m_iSubStamina = m_iSubStamina;
     }
 
     /**
@@ -1757,7 +1751,7 @@ public class Player {
             case WINGER -> m_iFluegelspiel;
             case SCORING -> m_iTorschuss;
             case SET_PIECES -> m_iStandards;
-            case STAMINA -> getStamina();
+            case STAMINA -> m_iKondition;
             case EXPERIENCE -> m_iErfahrung;
             case FORM -> m_iForm;
             case LEADERSHIP -> m_iFuehrung;
