@@ -16,10 +16,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class OutputTableRenderer extends DefaultTableCellRenderer {
     //~ Methods ------------------------------------------------------------------------------------
 
+    private boolean isFixed;
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
     private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
+
+    public OutputTableRenderer(boolean isFixed){
+        this.isFixed=isFixed;
+    }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -28,7 +33,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                 row, column);
-        var isFixed = ((OutputTableModel)table.getModel()).isFixed();
+        var tableModel = (OutputTableModel)table.getModel();
 
         // Reset default values
         if (isSelected) {
@@ -40,7 +45,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         if (column < 2) {
             if (isSelected) {
-                if (isFixed && column == 0) {
+                if (isFixed && column == 1) {
                     PlayerNameCell pnc = (PlayerNameCell) value;
                     pnc.setBackground(SELECTION_BG);
                     return pnc;
@@ -49,7 +54,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                     return this;
                 }
             } else {
-                int speed = (int) table.getValueAt(row, 11);
+                int speed = tableModel.getTrainingSpeeed(row);
                 Color bgColor;
 
                 // Speed range is 16 to 125
@@ -61,7 +66,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                     bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
                 }
 
-                if (isFixed && column == 0) {
+                if (isFixed && column == 1) {
                     PlayerNameCell pnc = (PlayerNameCell) value;
                     // Reset default values
                     pnc.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
@@ -72,7 +77,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 }
 
             }
-        } else if (column < 11) {
+        } else if (column < 12) {
             VerticalIndicator vi = (VerticalIndicator) value;
 
             if (isSelected) {

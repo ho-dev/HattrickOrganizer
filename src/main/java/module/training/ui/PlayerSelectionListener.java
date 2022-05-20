@@ -35,6 +35,7 @@ public class PlayerSelectionListener implements ListSelectionListener {
 		if (!e.getValueIsAdjusting()) {
 			int index = table.getSelectedRow();
 			if (index >= 0) {
+
 				String playerId = (String) table.getValueAt(index, playerIdColumn);
 				if (StringUtils.isNumeric(playerId)) {
 					model.setActivePlayer(HOVerwaltung.instance().getModel()

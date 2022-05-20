@@ -24,13 +24,15 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.event.RowSorterEvent;
+import javax.swing.event.RowSorterListener;
+import javax.swing.table.*;
 
 /**
  * The Panel where the main training table is shown ("Training").
@@ -48,7 +50,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class OutputPanel extends LazyImagePanel {
 
-    private final int fixedColumns=1;
+    private static int fixedColumns=2;
     private JTable fixedOutputTable;
     private JTable outputTable;
     private JButton importButton;
@@ -77,6 +79,7 @@ public class OutputPanel extends LazyImagePanel {
     @Override
     protected void update() {
         ((OutputTableModel) outputTable.getModel()).fillWithData();
+        ((OutputTableModel) fixedOutputTable.getModel()).fillWithData();
     }
 
     /**
@@ -114,7 +117,10 @@ public class OutputPanel extends LazyImagePanel {
     private void addListeners() {
         this.outputTable.getSelectionModel().addListSelectionListener(
                 new PlayerSelectionListener(this.model, this.outputTable,
-                        OutputTableModel.COL_PLAYER_ID));
+                        ((OutputTableModel)this.outputTable.getModel()).getPlayerIdColumn()));
+        this.fixedOutputTable.getSelectionModel().addListSelectionListener(
+                new PlayerSelectionListener(this.model, this.fixedOutputTable,
+                        ((OutputTableModel)this.fixedOutputTable.getModel()).getPlayerIdColumn()));
 
         this.importButton.addActionListener(arg0 -> importMatches());
 
@@ -150,7 +156,7 @@ public class OutputPanel extends LazyImagePanel {
         if (player != null) {
             OutputTableModel tblModel = (OutputTableModel) this.outputTable.getModel();
             for (int i = 0; i < tblModel.getRowCount(); i++) {
-                String val = (String) tblModel.getValueAt(i, OutputTableModel.COL_PLAYER_ID);
+                String val = (String) tblModel.getValueAt(i, tblModel.getPlayerIdColumn());
                 int id = Integer.parseInt(val);
                 if (player.getPlayerID() == id) {
                     int viewIndex = this.outputTable.convertRowIndexToView(i);
@@ -167,16 +173,28 @@ public class OutputPanel extends LazyImagePanel {
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        fixedOutputTable = new OutputTable(new OutputTableModel(this.model, true));
+        fixedOutputTable = new OutputTable(new OutputTableModel(this.model));
         fixedOutputTable.getTableHeader().setReorderingAllowed(false);
         fixedOutputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fixedOutputTable.setDefaultRenderer(Object.class, new OutputTableRenderer());
+        fixedOutputTable.setDefaultRenderer(Object.class, new OutputTableRenderer(true));
         outputTable = new OutputTable(new OutputTableModel(this.model));
         outputTable.getTableHeader().setReorderingAllowed(false);
         outputTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        outputTable.setDefaultRenderer(Object.class, new OutputTableRenderer());
+        outputTable.setDefaultRenderer(Object.class, new OutputTableRenderer(false));
 
-        fixedOutputTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+        // Setup column models
+        for (int i=0; i< outputTable.getModel().getColumnCount(); i++){
+            if ( i < fixedColumns){
+                var col = outputTable.getColumnModel().getColumn(0);
+                outputTable.getColumnModel().removeColumn(col);
+            }
+            else {
+                var col = fixedOutputTable.getColumnModel().getColumn(fixedColumns);
+                fixedOutputTable.getColumnModel().removeColumn(col);
+            }
+        }
+
+        fixedOutputTable.getColumnModel().getColumn(1).setPreferredWidth(150);
 
         outputTable.getColumnModel().getColumn(0).setPreferredWidth(60);
         outputTable.getColumnModel().getColumn(1).setPreferredWidth(140);
@@ -186,17 +204,17 @@ public class OutputPanel extends LazyImagePanel {
             column.setPreferredWidth(70);
         }
 
-        // Hide column 11 (playerId)
-        TableColumn playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(10);
-        playerIDCol.setPreferredWidth(0);
-        playerIDCol.setMinWidth(0);
-        playerIDCol.setMaxWidth(0);
+        // Hide column 0 (playerId)
+        var fixedPlayerIDCol = fixedOutputTable.getTableHeader().getColumnModel().getColumn(0);
+        fixedPlayerIDCol.setPreferredWidth(0);
+        fixedPlayerIDCol.setMinWidth(0);
+        fixedPlayerIDCol.setMaxWidth(0);
 
-        // Hide column 12 (training speed)
-        playerIDCol = outputTable.getTableHeader().getColumnModel().getColumn(11);
-        playerIDCol.setPreferredWidth(0);
-        playerIDCol.setMinWidth(0);
-        playerIDCol.setMaxWidth(0);
+        // Hide column 10 (training speed)
+        var speedCol = outputTable.getTableHeader().getColumnModel().getColumn(10);
+        speedCol.setPreferredWidth(0);
+        speedCol.setMinWidth(0);
+        speedCol.setMaxWidth(0);
 
         outputTable.setAutoResizeMode(0);
         outputTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -212,6 +230,9 @@ public class OutputPanel extends LazyImagePanel {
         sorter.setSortKeys(sortKeys);
         sorter.sort();
 
+        fixedOutputTable.setAutoCreateRowSorter(true);
+        fixedOutputTable.setRowSorter(sorter);
+
         var scrollPane = new JScrollPane(outputTable);
         Dimension fixedSize = fixedOutputTable.getPreferredSize();
         JViewport viewport = new JViewport();
@@ -220,8 +241,6 @@ public class OutputPanel extends LazyImagePanel {
         viewport.setMaximumSize(fixedSize);
         scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedOutputTable.getTableHeader());
         scrollPane.setRowHeaderView(viewport);
-
-
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -257,19 +276,7 @@ public class OutputPanel extends LazyImagePanel {
             Point p = e.getPoint();
             int realColumnIndex = convertColumnIndexToModel(columnAtPoint(p));
             int realRowIndex = convertRowIndexToModel(rowAtPoint(p));
-
-            if (realColumnIndex == 0) {
-                Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
-                return obj.toString();
-            }
-
-            if ((realColumnIndex > 2) && (realColumnIndex < 11)) {
-                Object obj = tableModel.getToolTipAt(realRowIndex, realColumnIndex);
-
-                return obj.toString();
-            }
-
-            return "";
+            return tableModel.getToolTipAt(realRowIndex, realColumnIndex);
         }
     }
 }

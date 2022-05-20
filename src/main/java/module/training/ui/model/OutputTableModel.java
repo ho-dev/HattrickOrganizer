@@ -7,6 +7,7 @@ import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
+import core.util.HOLogger;
 import core.util.Helper;
 import module.training.Skills;
 import module.training.ui.comp.TrainingPriorityCell;
@@ -28,11 +29,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public class OutputTableModel extends AbstractTableModel {
 
-    public final static int fixedColumns=1;
-    public final static int COL_PLAYER_ID = 11;
+    // common column of fixed and scrolled tables
+    private final static int COL_PLAYER_ID = 0;
     private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
-    private boolean isFixed = false;
 
     /**
      * Constructor
@@ -43,12 +43,9 @@ public class OutputTableModel extends AbstractTableModel {
         this.model = model;
     }
 
-    public OutputTableModel(TrainingModel model, boolean isFixed) {
-        this.model = model;
-        this.isFixed=isFixed;
+    public int getPlayerIdColumn() {
+        return COL_PLAYER_ID;
     }
-
-    public boolean isFixed(){return this.isFixed;}
 
     /*
      * (non-Javadoc)
@@ -57,14 +54,12 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if ( !isFixed ) {
-            columnIndex += fixedColumns;
-        }
         return switch (columnIndex) {
-            case 0 -> PlayerNameCell.class;
-            case 1, 2 -> TrainingPriorityCell.class;
             case COL_PLAYER_ID -> String.class;
-            case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
+            case 1 -> PlayerNameCell.class;
+            case 2 -> String.class;
+            case 3 -> TrainingPriorityCell.class;
+            case 4, 5, 6, 7, 8, 9, 10, 11 -> VerticalIndicator.class;
             case 12 -> Integer.class;
             default -> super.getColumnClass(columnIndex);
         };
@@ -77,8 +72,7 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public int getColumnCount() {
-        if ( isFixed ) return fixedColumns;
-        return 13-fixedColumns;
+        return 13;
     }
 
     /*
@@ -88,22 +82,19 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public String getColumnName(int columnIndex) {
-        if ( !isFixed ) {
-            columnIndex += fixedColumns;
-        }
         return switch (columnIndex) {
-            case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
-            case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
-            case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
-            case 3 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
             case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
+            case 1 -> HOVerwaltung.instance().getLanguageString("Spieler");
+            case 2 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
+            case 3 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
+            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
+            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
+            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
+            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
+            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
+            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
+            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+            case 11 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
             case 12 -> "speed";
             default -> "";
         };
@@ -123,19 +114,18 @@ public class OutputTableModel extends AbstractTableModel {
      * Returns as toolTip for the cell, the last skillup for the proper player
      * and skill
      *
-     * @param rowIndex row
+     * @param rowIndex    row
      * @param columnIndex column
      * @return toolTip
      */
-    public Object getToolTipAt(int rowIndex, int columnIndex) {
-        if ( !isFixed ) {
-            columnIndex += fixedColumns;
-        }
-        if (columnIndex == 0) {
-            return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
-        } else {
-            return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
-        }
+    public String getToolTipAt(int rowIndex, int columnIndex) {
+        var val = getValueAt(rowIndex, columnIndex);
+        return switch (columnIndex) {
+            case 1 -> ((JLabel) val).getToolTipText();
+            case 2, 3 -> val.toString();
+            case 4, 5, 6, 7, 8, 9, 10, 11 -> ((VerticalIndicator) val).getToolTipText();
+            default -> "";
+        };
     }
 
     /*
@@ -147,27 +137,26 @@ public class OutputTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
-
-        if ( !isFixed){
-            columnIndex+=fixedColumns;
-        }
-
         return switch (columnIndex) {
-            case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
-            case 1 -> player.getAgeWithDaysAsString();
-            case 2 -> createBestPositionCell(player);
-            case 3 -> createIcon(player, PlayerSkill.KEEPER);
-            case 4 -> createIcon(player, PlayerSkill.DEFENDING);
-            case 5 -> createIcon(player, PlayerSkill.PLAYMAKING);
-            case 6 -> createIcon(player, PlayerSkill.PASSING);
-            case 7 -> createIcon(player, PlayerSkill.WINGER);
-            case 8 -> createIcon(player, PlayerSkill.SCORING);
-            case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
-            case 10 -> createIcon(player, PlayerSkill.STAMINA);
             case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
+            case 1 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
+            case 2 -> player.getAgeWithDaysAsString();
+            case 3 -> createBestPositionCell(player);
+            case 4 -> createIcon(player, PlayerSkill.KEEPER);
+            case 5 -> createIcon(player, PlayerSkill.DEFENDING);
+            case 6 -> createIcon(player, PlayerSkill.PLAYMAKING);
+            case 7 -> createIcon(player, PlayerSkill.PASSING);
+            case 8 -> createIcon(player, PlayerSkill.WINGER);
+            case 9 -> createIcon(player, PlayerSkill.SCORING);
+            case 10 -> createIcon(player, PlayerSkill.SET_PIECES);
+            case 11 -> createIcon(player, PlayerSkill.STAMINA);
             case 12 -> ftm.getTrainingSpeed();
             default -> "";
         };
+    }
+
+    public int getTrainingSpeeed(int row) {
+        return data.get(row).getTrainingSpeed();
     }
 
     /**
@@ -192,14 +181,14 @@ public class OutputTableModel extends AbstractTableModel {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
             var model = HOVerwaltung.instance().getModel();
-            return 1/wt.calculateSkillIncreaseOfTrainingWeek(
+            return 1 / wt.calculateSkillIncreaseOfTrainingWeek(
                     player.getValue4Skill(skillIndex),
                     model.getTrainer().getTrainerSkill(),
                     model.getClub().getCoTrainer(),
                     model.getTeam().getTrainingslevel(),
                     model.getTeam().getStaminaTrainingPart(),
                     player.getAlter(),
-                    90, 0,0, 0);
+                    90, 0, 0, 0);
         }
         return 0;
     }
@@ -228,5 +217,4 @@ public class OutputTableModel extends AbstractTableModel {
                 model.getFutureTrainings().get(0).getTrainingDate();
         return new TrainingPriorityCell(player, firstTrainingDate);
     }
-
 }
