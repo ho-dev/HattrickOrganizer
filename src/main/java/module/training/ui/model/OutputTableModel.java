@@ -60,7 +60,6 @@ public class OutputTableModel extends AbstractTableModel {
             case 2 -> String.class;
             case 3 -> TrainingPriorityCell.class;
             case 4, 5, 6, 7, 8, 9, 10, 11 -> VerticalIndicator.class;
-            case 12 -> Integer.class;
             default -> super.getColumnClass(columnIndex);
         };
     }
@@ -72,7 +71,7 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public int getColumnCount() {
-        return 13;
+        return 12;
     }
 
     /*
@@ -95,7 +94,6 @@ public class OutputTableModel extends AbstractTableModel {
             case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
             case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
             case 11 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
-            case 12 -> "speed";
             default -> "";
         };
     }
@@ -150,13 +148,8 @@ public class OutputTableModel extends AbstractTableModel {
             case 9 -> createIcon(player, PlayerSkill.SCORING);
             case 10 -> createIcon(player, PlayerSkill.SET_PIECES);
             case 11 -> createIcon(player, PlayerSkill.STAMINA);
-            case 12 -> ftm.getTrainingSpeed();
             default -> "";
         };
-    }
-
-    public int getTrainingSpeeed(int row) {
-        return data.get(row).getTrainingSpeed();
     }
 
     /**

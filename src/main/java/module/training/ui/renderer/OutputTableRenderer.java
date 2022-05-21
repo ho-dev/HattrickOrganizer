@@ -54,7 +54,9 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                     return this;
                 }
             } else {
-                int speed = tableModel.getTrainingSpeeed(row);
+                var modelRow = table.convertRowIndexToModel(row);
+                var playerCol = (PlayerNameCell)tableModel.getValueAt(modelRow,1);
+                var speed = playerCol.getSpeed();
                 Color bgColor;
 
                 // Speed range is 16 to 125

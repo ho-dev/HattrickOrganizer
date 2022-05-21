@@ -210,28 +210,20 @@ public class OutputPanel extends LazyImagePanel {
         fixedPlayerIDCol.setMinWidth(0);
         fixedPlayerIDCol.setMaxWidth(0);
 
-        // Hide column 10 (training speed)
-        var speedCol = outputTable.getTableHeader().getColumnModel().getColumn(10);
-        speedCol.setPreferredWidth(0);
-        speedCol.setMinWidth(0);
-        speedCol.setMaxWidth(0);
-
         outputTable.setAutoResizeMode(0);
         outputTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
         outputTable.setAutoCreateRowSorter(true);
+        fixedOutputTable.setAutoCreateRowSorter(true);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(outputTable.getModel());
         outputTable.setRowSorter(sorter);
+        fixedOutputTable.setRowSorter(sorter);
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 
-        int columnIndexToSort = 11;
+        int columnIndexToSort = 1;
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
-
         sorter.setSortKeys(sortKeys);
         sorter.sort();
-
-        fixedOutputTable.setAutoCreateRowSorter(true);
-        fixedOutputTable.setRowSorter(sorter);
 
         var scrollPane = new JScrollPane(outputTable);
         Dimension fixedSize = fixedOutputTable.getPreferredSize();
@@ -258,10 +250,7 @@ public class OutputPanel extends LazyImagePanel {
         buttonPanel.add(this.calculateButton, gbc);
 
         add(buttonPanel, BorderLayout.NORTH);
-
-
         trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
-
     }
 
     private class OutputTable extends JTable {
