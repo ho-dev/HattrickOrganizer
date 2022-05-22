@@ -30,7 +30,7 @@ import javax.swing.table.AbstractTableModel;
 public class OutputTableModel extends AbstractTableModel {
 
     // common column of fixed and scrolled tables
-    private final static int COL_PLAYER_ID = 0;
+    private final static int COL_PLAYER_ID = 11;
     private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
 
@@ -56,10 +56,10 @@ public class OutputTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
             case COL_PLAYER_ID -> String.class;
-            case 1 -> PlayerNameCell.class;
-            case 2 -> String.class;
-            case 3 -> TrainingPriorityCell.class;
-            case 4, 5, 6, 7, 8, 9, 10, 11 -> VerticalIndicator.class;
+            case 0 -> PlayerNameCell.class;
+            case 1 -> String.class;
+            case 2 -> TrainingPriorityCell.class;
+            case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
             default -> super.getColumnClass(columnIndex);
         };
     }
@@ -83,17 +83,17 @@ public class OutputTableModel extends AbstractTableModel {
     public String getColumnName(int columnIndex) {
         return switch (columnIndex) {
             case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
-            case 1 -> HOVerwaltung.instance().getLanguageString("Spieler");
-            case 2 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
-            case 3 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
-            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-            case 11 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+            case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
+            case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
+            case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
+            case 3 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
+            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
+            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
+            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
+            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
+            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
+            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
             default -> "";
         };
     }
@@ -119,9 +119,9 @@ public class OutputTableModel extends AbstractTableModel {
     public String getToolTipAt(int rowIndex, int columnIndex) {
         var val = getValueAt(rowIndex, columnIndex);
         return switch (columnIndex) {
-            case 1 -> ((JLabel) val).getToolTipText();
-            case 2, 3 -> val.toString();
-            case 4, 5, 6, 7, 8, 9, 10, 11 -> ((VerticalIndicator) val).getToolTipText();
+            case 0 -> ((JLabel) val).getToolTipText();
+            case 1, 2 -> val.toString();
+            case 3, 4, 5, 6, 7, 8, 9, 10 -> ((VerticalIndicator) val).getToolTipText();
             default -> "";
         };
     }
@@ -137,17 +137,17 @@ public class OutputTableModel extends AbstractTableModel {
         var player = ftm.getPlayer();
         return switch (columnIndex) {
             case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
-            case 1 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
-            case 2 -> player.getAgeWithDaysAsString();
-            case 3 -> createBestPositionCell(player);
-            case 4 -> createIcon(player, PlayerSkill.KEEPER);
-            case 5 -> createIcon(player, PlayerSkill.DEFENDING);
-            case 6 -> createIcon(player, PlayerSkill.PLAYMAKING);
-            case 7 -> createIcon(player, PlayerSkill.PASSING);
-            case 8 -> createIcon(player, PlayerSkill.WINGER);
-            case 9 -> createIcon(player, PlayerSkill.SCORING);
-            case 10 -> createIcon(player, PlayerSkill.SET_PIECES);
-            case 11 -> createIcon(player, PlayerSkill.STAMINA);
+            case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
+            case 1 -> player.getAgeWithDaysAsString();
+            case 2 -> createBestPositionCell(player);
+            case 3 -> createIcon(player, PlayerSkill.KEEPER);
+            case 4 -> createIcon(player, PlayerSkill.DEFENDING);
+            case 5 -> createIcon(player, PlayerSkill.PLAYMAKING);
+            case 6 -> createIcon(player, PlayerSkill.PASSING);
+            case 7 -> createIcon(player, PlayerSkill.WINGER);
+            case 8 -> createIcon(player, PlayerSkill.SCORING);
+            case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
+            case 10 -> createIcon(player, PlayerSkill.STAMINA);
             default -> "";
         };
     }

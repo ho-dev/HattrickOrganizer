@@ -45,7 +45,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
 
         if (column < 2) {
             if (isSelected) {
-                if (isFixed && column == 1) {
+                if (isFixed && column == 0) {
                     PlayerNameCell pnc = (PlayerNameCell) value;
                     pnc.setBackground(SELECTION_BG);
                     return pnc;
@@ -55,7 +55,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 }
             } else {
                 var modelRow = table.convertRowIndexToModel(row);
-                var playerCol = (PlayerNameCell)tableModel.getValueAt(modelRow,1);
+                var playerCol = (PlayerNameCell)tableModel.getValueAt(modelRow,0);
                 var speed = playerCol.getSpeed();
                 Color bgColor;
 
@@ -68,7 +68,7 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                     bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
                 }
 
-                if (isFixed && column == 1) {
+                if (isFixed && column == 0) {
                     PlayerNameCell pnc = (PlayerNameCell) value;
                     // Reset default values
                     pnc.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
