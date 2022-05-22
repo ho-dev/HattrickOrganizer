@@ -35,7 +35,7 @@ class ConfidenceCurve extends Curve {
 	}
 
 	private void readConfidenceHistory() throws SQLException {
-		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS);
+		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 		ResultSet resultset = m_clJDBC
 				.executeQuery("select DATUM, ISELBSTVERTRAUEN from HRF, TEAM "
 						+ "where HRF.HRF_ID = TEAM.HRF_ID order by DATUM");

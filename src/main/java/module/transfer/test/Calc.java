@@ -110,10 +110,10 @@ public class Calc {
 
 	public static List<HODateTime> getUpdates(HODateTime updateTime, HODateTime from, HODateTime to) {
 		var list = new ArrayList<HODateTime>();
-		while (!updateTime.isBefore(from)) updateTime=updateTime.minus(1, ChronoUnit.WEEKS);
+		while (!updateTime.isBefore(from)) updateTime=updateTime.minus(7, ChronoUnit.DAYS);
 		while (!updateTime.isAfter(to)){
 			list.add(updateTime);
-			updateTime=updateTime.plus(1, ChronoUnit.WEEKS);
+			updateTime=updateTime.plus(7, ChronoUnit.DAYS);
 		}
 		return list;
 	}
