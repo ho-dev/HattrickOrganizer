@@ -270,6 +270,12 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     private static Duration durationBetweenTrainingDateAndNextWeekStart =null;
+
+    /**
+     * Convert to locale training season and week
+     * training date differs from start of weeks
+     * @return local training season/week
+     */
     public HTWeek toTrainingWeek(){
         if ( durationBetweenTrainingDateAndNextWeekStart == null ){
             var nextTrainingDate=HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
@@ -278,11 +284,12 @@ public class HODateTime implements Comparable<HODateTime> {
             durationBetweenTrainingDateAndNextWeekStart = HODateTime.between( nextTrainingDate, nextWeek);
         }
 
-        return calcHTWeek(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
+        var trainingDateRelatedDate = new HODateTime(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
+        return trainingDateRelatedDate.toLocaleHTWeek();
     }
 
     /**
-     * Convert to locale HT's seasond and week (user's league season)
+     * Convert to locale HT's season and week (user's league season)
      *
      * @return HTWeek
      */
