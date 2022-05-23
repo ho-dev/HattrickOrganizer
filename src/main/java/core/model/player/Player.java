@@ -1,15 +1,10 @@
 package core.model.player;
 
-import core.HO;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
-import core.db.MatchLineupPlayerTable;
-import core.file.xml.TeamInfo;
 import core.model.*;
-import core.model.enums.DBDataSource;
-import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
@@ -21,17 +16,14 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
-import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.vo.PlayerInfo;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
-
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.*;
 
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
-
 
 public class Player {
 
@@ -351,7 +343,6 @@ public class Player {
     private int GameStartingTime = 0;
     private int nationalTeamId = 0;
     private double subExperience;
-
 
     /**
      * future training priorities planed by the user
@@ -1865,7 +1856,7 @@ public class Player {
                     //MatchStatistics ms = new MatchStatistics(match, mlt);
                     MatchType type = mlt.getMatchType();
                     boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-                    if (type != MatchType.MASTERS) { // MASTERS counts only for experience
+                    if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
                         tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
                         tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
                         tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
