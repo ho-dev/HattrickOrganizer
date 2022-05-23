@@ -1822,20 +1822,22 @@ public class Player {
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
                 for (var match : matches) {
-                    //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
-                    //MatchStatistics ms = new MatchStatistics(match, mlt);
-                    MatchType type = mlt.getMatchType();
-                    boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-                    if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-                        tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
-                        tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
-                        tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
-                        tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                    var details = match.getMatchdetails();
+                    if ( details != null ) {
+                        //Get the MatchLineup by id
+                        MatchLineupTeam mlt = details.getOwnTeamLineup();
+                        MatchType type = mlt.getMatchType();
+                        boolean walkoverWin = details.isWalkoverMatchWin(myID);
+                        if (type != MatchType.MASTERS) { // MASTERS counts only for experience
+                            tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
+                            tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
+                            tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
+                            tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                        }
+                        var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
+                        tp.addPlayedMinutes(minutes);
+                        ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
                     }
-                    var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
-                    tp.addPlayedMinutes(minutes);
-                    ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
