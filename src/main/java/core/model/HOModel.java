@@ -525,7 +525,7 @@ public class HOModel {
     }
 
     /**
-     * Determine the list of training weeks since previous Download
+     * Determine the list of training weeks since previous download
      *
      * @return list of training weeks between previous and current download (may be empty)
      */
