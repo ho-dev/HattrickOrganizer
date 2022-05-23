@@ -2472,4 +2472,7 @@ public class Player {
         }
 
         public int getValue() {
-            return val
+            return value;
+        }
+    }
+}
