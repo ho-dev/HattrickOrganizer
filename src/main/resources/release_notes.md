@@ -32,6 +32,7 @@
 * fixed a bug when downloading team logos (#1300)
 * substitutions of the same minute can be ordered (#1039)
 * fixed goalkeeper could not be selected as team captain (#1340)
+* fix null pointer exception in lineup assistant if no current lineup exists (#1496)
 
 ### NT
 * fix download xml parse errors (#1305)
@@ -63,7 +64,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - May 08, 2022
+Reports by Contributors - Dec 20, 2021 - May 23, 2022
 
 * Foppe	690
 * Pablo 314
