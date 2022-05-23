@@ -1864,19 +1864,19 @@ public class Player {
                     }
                     var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
                     tp.addPlayedMinutes(minutes);
-                    ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                    ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
                 // get experience increase of national team matches
-                if (this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID) {
+                if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
-                    for (var match : nationalMatches) {
+                    for (var match : nationalMatches){
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
-                        if (minutes > 0) {
-                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                        if ( minutes > 0 ) {
+                            ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                         }
                     }
                 }
@@ -2472,7 +2472,4 @@ public class Player {
         }
 
         public int getValue() {
-            return value;
-        }
-    }
-}
+            return val
