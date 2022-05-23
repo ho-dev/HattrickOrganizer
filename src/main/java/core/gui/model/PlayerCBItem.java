@@ -6,6 +6,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
@@ -51,14 +52,18 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         final Player player = getPlayer();
 
         if (player != null) {
-            m_clEntry.updateComponent(player, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-                            .getPositionByPlayerId(player.getPlayerID()), getPositionsEvaluation(), m_bSetInBestPosition,
-                    m_sText);
-
+            var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            MatchLineupPosition matchLineupPosition;
+            if ( lineup != null){
+                matchLineupPosition = lineup.getPositionByPlayerId(player.getPlayerID());
+            }
+            else {
+                matchLineupPosition = null;
+            }
+            m_clEntry.updateComponent(player, matchLineupPosition, getPositionsEvaluation(), m_bSetInBestPosition, m_sText);
             JComponent comp = m_clEntry.getComponent(isSelected, index==-1);
             if (m_bMultiLine) comp.setPreferredSize(new Dimension(comp.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
             return comp;
-
         } else {
             m_jlLeer.setOpaque(true);
             m_jlLeer.setBackground(isSelected ? HODefaultTableCellRenderer.SELECTION_BG : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
@@ -119,9 +124,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
     @Override
     public final boolean equals(Object obj) {
-        if (obj instanceof PlayerCBItem) {
-            final PlayerCBItem temp = (PlayerCBItem) obj;
-
+        if (obj instanceof final PlayerCBItem temp) {
             if ((this.getPlayer() != null) && (temp.getPlayer() != null)) {
                 return this.getPlayer().getPlayerID() == temp.getPlayer().getPlayerID();
             } else return (this.getPlayer() == null) && (temp.getPlayer() == null);
