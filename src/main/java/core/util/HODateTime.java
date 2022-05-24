@@ -9,17 +9,22 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
 public class HODateTime implements Comparable<HODateTime> {
+
     /**
      * time zone of hattrick
      */
     public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
+
     /**
      * Date time format of chpp files
      */
     private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
     private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
+
     /**
      * the birthday of hattrick
+     * Monday, the 22nd of September 1997 (CET)
+     *
      */
     public static final HODateTime htStart = HODateTime.fromHT("1997-09-22 00:00:00");
 
@@ -128,6 +133,7 @@ public class HODateTime implements Comparable<HODateTime> {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
+
     public static String toLocaleDate(HODateTime in, FormatStyle style){
         if ( in != null) return in.toLocaleDate(style);
         return "";
@@ -150,10 +156,12 @@ public class HODateTime implements Comparable<HODateTime> {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
+
     public static String toLocaleDateTime(HODateTime in, FormatStyle style){
         if ( in != null) return in.toLocaleDateTime(style);
         return "";
     }
+
     /**
      * Convert to database timestamp
      *
