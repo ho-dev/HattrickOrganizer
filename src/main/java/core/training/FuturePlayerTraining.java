@@ -119,7 +119,6 @@ public class FuturePlayerTraining {
         this.to = to;
     }
 
-
     /**
      * Cut the given time interval from the current training interval
      *
@@ -136,13 +135,11 @@ public class FuturePlayerTraining {
         }
 
         if (from.isAfter(this.from)) {
-            this.to = from;
-            this.to.minus(7, ChronoUnit.DAYS);
+            this.to = from.minus(7, ChronoUnit.DAYS);
             return false;
         }
-        if (to !=null && this.to.isAfter(to)) {
-            this.from = to;
-            this.from.plus(7, ChronoUnit.DAYS);
+        if (this.to == null || to !=null && this.to.isAfter(to)) {
+            this.from = to.plus(7, ChronoUnit.DAYS);
             return false;
         }
         return true; // completely replaced
