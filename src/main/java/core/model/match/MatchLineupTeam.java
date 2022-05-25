@@ -793,7 +793,7 @@ public class MatchLineupTeam {
 			for (var sector : minutesInSectors.entrySet()) {
 				if (accepted==null  || accepted.contains(sector.getKey())) {
 					ret += sector.getValue();
-					if (ret >= 90) {
+					if (ret > 90) {
 						ret = 90;
 						break;
 					}
