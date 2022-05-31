@@ -3,6 +3,7 @@ package core.gui.comp.entry;
 
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.ImageUtilities;
+import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -67,19 +68,12 @@ public class SmilieEntry extends DoubleLabelEntries {
                             .getTeamGroup());
                 }
 
-                //Bei "Gleichstand" die Aufstellung beachten
+                // if equal check lineup
                 if (ergebnis == 0) {
-                    final MatchRoleID entrySort = core.model.HOVerwaltung.instance()
-                            .getModel()
-                            .getCurrentLineupTeam().getLineup()
-                            .getPositionByPlayerId(entry.getPlayer()
-                                    .getPlayerID());
-                    final MatchRoleID sort = core.model.HOVerwaltung.instance()
-                            .getModel()
-                            .getCurrentLineupTeam().getLineup()
-                            .getPositionByPlayerId(getPlayer()
-                                    .getPlayerID());
-
+                    var team = HOVerwaltung.instance().getModel().getCurrentLineupTeam();
+                    if (team == null) return 0;
+                    final MatchRoleID entrySort = team.getLineup().getPositionByPlayerId(entry.getPlayer().getPlayerID());
+                    final MatchRoleID sort = team.getLineup().getPositionByPlayerId(getPlayer().getPlayerID());
                     if ((sort == null) && (entrySort == null)) {
                         ergebnis = 0;
                     } else if (sort == null) {
@@ -88,11 +82,9 @@ public class SmilieEntry extends DoubleLabelEntries {
                         ergebnis = 1;
                     } else ergebnis = Integer.compare(entrySort.getSortId(), sort.getSortId());
                 }
-
                 return ergebnis;
             }
         }
-
         return 0;
     }
 
