@@ -659,15 +659,18 @@ public class MatchLineupTeam {
 		}
 	}
 
-	private void initMinutesOfPlayersInSectors(){
-		if ( this.lineup == null ) return;	// init in progress
-		if ( lastMatchAppearances != null) return; /// already done
+	private void initMinutesOfPlayersInSectors() {
+		if (this.lineup == null) return;    // init in progress
+		if (lastMatchAppearances != null) return; /// already done
 
 		// Start init
 		this.playersMinutesInSector = new HashMap<>();
-		lastMatchAppearances=new HashMap<>();
+		lastMatchAppearances = new HashMap<>();
 		// get the starting positions
-		for (var iMatchRole : this.lineup.getFieldPositions()) {
+		var allActivePlayers = this.lineup.getFieldPositions();
+		// add start positions of replaced players
+		allActivePlayers.addAll(this.lineup.getReplacedPositions());
+		for (var iMatchRole : allActivePlayers) {
 			if (iMatchRole.getStartPosition() >= 0) {
 				lastMatchAppearances.put(iMatchRole.getStartPosition(), new MatchAppearance(iMatchRole, 0));
 			}
@@ -684,12 +687,12 @@ public class MatchLineupTeam {
 		}
 
 		// examine last minutes
-		for ( var app : lastMatchAppearances.entrySet()){
+		for (var app : lastMatchAppearances.entrySet()) {
 			var player = app.getValue().player;
 			//player.addMinutesInSector(getMatchEndMinute(player.getPlayerId())-app.getValue().minute, app.getKey());
 			addPlayersMinutesInSector(player.getPlayerId(),
 					app.getValue().getSector(),
-					getMatchEndMinute(player.getPlayerId())-app.getValue().minute);
+					getMatchEndMinute(player.getPlayerId()) - app.getValue().minute);
 		}
 	}
 
@@ -730,15 +733,15 @@ public class MatchLineupTeam {
 	private int removeMatchAppearance(MatchLineupPosition leavingplayer, int minute) {
 		int ret = MatchRoleID.UNKNOWN;
 		var entries = lastMatchAppearances.entrySet().stream()
-				.filter(i->i.getValue().getPlayerId()==leavingplayer.getPlayerId()).collect(Collectors.toList());
-		for ( var entry : entries){
+				.filter(i -> i.getValue().getPlayerId() == leavingplayer.getPlayerId()).collect(Collectors.toList());
+		for (var entry : entries) {
 			var appearance = entry.getValue();
 			var role = entry.getKey();
-			if ( role != MatchRoleID.setPieces) { // do not return set pieces taker role of leaving player
+			if (role != MatchRoleID.setPieces) { // do not return set pieces taker role of leaving player
 				ret = role;
 			}
 			//leavingplayer.addMinutesInSector(minute-appearance.minute, role);
-			addPlayersMinutesInSector(leavingplayer.getPlayerId(), appearance.getSector(), minute-appearance.minute);
+			addPlayersMinutesInSector(leavingplayer.getPlayerId(), MatchRoleID.getSector(role), minute - appearance.minute);
 			lastMatchAppearances.remove(entry.getKey());
 		}
 		return ret;
