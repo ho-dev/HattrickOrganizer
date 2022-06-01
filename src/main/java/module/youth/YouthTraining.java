@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 public class YouthTraining {
 
@@ -59,15 +60,12 @@ public class YouthTraining {
 
     public void recalcSkills() {
         var team = this.getMatchLineup().getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-
-        for (var matchRoleId : team.getLineup().getFieldPositions()) {
-            var player = (MatchRoleID)matchRoleId;
-            recalcSkills(player.getPlayerId());
-        }
-        for (var subs : team.getSubstitutions()) {
-            if (subs.getOrderType().equals(MatchOrderType.SUBSTITUTION)) {
-                recalcSkills(subs.getObjectPlayerID());
-            }
+        var lineup = team.getLineup();
+        var allActivePlayers = new Vector<MatchLineupPosition>();
+        allActivePlayers.addAll(lineup.getFieldPositions());
+        allActivePlayers.addAll(lineup.getReplacedPositions());
+        for (var matchRoleId : allActivePlayers) {
+            recalcSkills(matchRoleId.getPlayerId());
         }
     }
 

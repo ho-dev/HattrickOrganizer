@@ -667,7 +667,8 @@ public class MatchLineupTeam {
 		this.playersMinutesInSector = new HashMap<>();
 		lastMatchAppearances = new HashMap<>();
 		// get the starting positions
-		var allActivePlayers = this.lineup.getFieldPositions();
+		var allActivePlayers = new Vector<MatchLineupPosition>();
+		allActivePlayers.addAll(this.lineup.getFieldPositions());
 		// add start positions of replaced players
 		allActivePlayers.addAll(this.lineup.getReplacedPositions());
 		for (var iMatchRole : allActivePlayers) {
