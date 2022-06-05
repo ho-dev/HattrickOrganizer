@@ -172,6 +172,16 @@ poeditor {
     trans type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
     trans type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
     trans type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
+    trans type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/sprache/Norsk.properties"     // Norwegian
+    trans type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/sprache/Indonesian.properties"
+    trans type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/sprache/Japanese.properties"
+    trans type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/sprache/Slovenian.properties"
+    trans type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/sprache/Ukranian.properties"
+    trans type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/sprache/Georgian.properties"
+    trans type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
+    trans type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
+    trans type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
+    trans type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AG).properties"    // Argentina
 }
 
 
