@@ -5,7 +5,7 @@
 * refactoring of lineup panel (#1267)
 * enable more than three teams (#1415)
 
-## Detailed Changelog
+## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.0)
 
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
@@ -64,9 +64,12 @@
 * fix last weeks profit/loss, temporary income sum and missing sponsors bonus (#1301)
 * fix CHPP token not being saved when exiting HO on macos (#1291)
 
+## QA Team
+* masterpatje does a great job of testing the development versions of the HO to get rid of even the last bugs in it.
+
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - May 23, 2022
+Reports by Contributors - Dec 20, 2021 - June 05, 2022
 
 * Foppe	690
 * Pablo 314
@@ -74,6 +77,7 @@ Reports by Contributors - Dec 20, 2021 - May 23, 2022
 * sich	91
 * Lidegand 	91
 * \_KOHb\_	76
+* TeamBMW 75
 * anti_anti 69
 * Moorhuhninho	67
 * Ante 52
@@ -82,4 +86,4 @@ Reports by Contributors - Dec 20, 2021 - May 23, 2022
 * Csaba 14
 * Sophia 10
 * Philipp 1
-* Total translated:	1615
+* Total translated:	1690
