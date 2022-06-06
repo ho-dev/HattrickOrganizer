@@ -38,7 +38,7 @@ test {
 
 //  Version ============================================================
 // Development_stage (DEV:0  BETA:1  STABLE:2)
-def major = '6'
+def major = '7'
 def minor = '0'
 def development_stage = 0
 def releaseArtefacts = true
@@ -172,6 +172,16 @@ poeditor {
     trans type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
     trans type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
     trans type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
+    trans type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/sprache/Norsk.properties"     // Norwegian
+    trans type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/sprache/Indonesian.properties"
+    trans type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/sprache/Japanese.properties"
+    trans type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/sprache/Slovenian.properties"
+    trans type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/sprache/Ukranian.properties"
+    trans type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/sprache/Georgian.properties"
+    trans type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
+    trans type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
+    trans type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
+    trans type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AG).properties"    // Argentina
 }
 
 
@@ -299,9 +309,9 @@ task pushmd(dependsOn: preparingBuild)  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 5.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 5.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 6.0..HEAD --count')
+        def diff = callGit('git diff --shortstat 6.0..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 6.0..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")

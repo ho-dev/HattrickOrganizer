@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class PlayerNameCell extends JLabel implements Comparable<PlayerNameCell> {
 
-    int speed;
+    Integer speed;
 
     public PlayerNameCell(Player player, int speed) {
         super();
@@ -34,15 +34,6 @@ public class PlayerNameCell extends JLabel implements Comparable<PlayerNameCell>
 
     @Override
     public int compareTo(PlayerNameCell other) {
-
-        if (this.getSpeed() > other.getSpeed()) {
-            return -1;
-        }
-
-        if (this.getSpeed() < other.getSpeed()) {
-            return 1;
-        }
-
-        return 0;
+        return this.speed.compareTo(other.speed);
     }
 }

@@ -330,10 +330,14 @@ public class Player {
 
     // LastMatch
     private String m_lastMatchDate;
-    private double m_lastMatchRating = 0;
-    private int m_lastMatchId = 0;
+    private Integer m_lastMatchId;
     private MatchType lastMatchType;
-
+    private Integer lastMatchPosition;
+    private Integer lastMatchMinutes;
+    // Rating is number of half stars
+    // real rating value is rating/2.0f
+    private Integer m_lastMatchRating;
+    private Integer lastMatchRatingEndOfGame;
 
     /**
      * specifying at what time –in minutes- that player entered the field
@@ -455,10 +459,14 @@ public class Player {
         nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID", "0"));
 
         // #461-lastmatch
-        m_lastMatchDate = properties.getProperty("lastmatch_date");
-        if (m_lastMatchDate != null) {
-            m_lastMatchRating = 2 * Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
-            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id", "0"));
+        m_lastMatchDate =  properties.getProperty("lastmatch_date");
+        if(m_lastMatchDate!=null && !m_lastMatchDate.isEmpty()) {
+            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
+            lastMatchPosition = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
+            lastMatchMinutes = Integer.parseInt(properties.getProperty("lastmatch_playedminutes", "0"));
+            // rating is stored as number of half stars
+            m_lastMatchRating = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));
+            lastMatchRatingEndOfGame = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_ratingendofgame", "0")));
         }
 
         setLastMatchType(MatchType.getById(Integer.parseInt(properties.getProperty("lastmatch_type", "0"))));
@@ -1609,7 +1617,8 @@ public class Player {
      *
      * @return rating
      */
-    public double getLastMatchRating() {
+
+    public Integer getLastMatchRating(){
         return m_lastMatchRating;
     }
 
@@ -1627,7 +1636,8 @@ public class Player {
      *
      * @return id
      */
-    public int getLastMatchId() {
+
+    public Integer getLastMatchId(){
         return m_lastMatchId;
     }
 
@@ -1652,7 +1662,8 @@ public class Player {
      * @param rating
      * @param id
      */
-    public void setLastMatchDetails(String date, int rating, int id) {
+
+    public void setLastMatchDetails(String date, Integer  rating, Integer id){
         m_lastMatchDate = date;
         m_lastMatchRating = rating;
         m_lastMatchId = id;
@@ -1851,20 +1862,22 @@ public class Player {
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
                 for (var match : matches) {
-                    //Get the MatchLineup by id
-                    MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), myID);
-                    //MatchStatistics ms = new MatchStatistics(match, mlt);
-                    MatchType type = mlt.getMatchType();
-                    boolean walkoverWin = match.getMatchdetails().isWalkoverMatchWin(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-                    if ( type != MatchType.MASTERS) { // MASTERS counts only for experience
-                        tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
-                        tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
-                        tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
-                        tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                    var details = match.getMatchdetails();
+                    if ( details != null ) {
+                        //Get the MatchLineup by id
+                        MatchLineupTeam mlt = details.getOwnTeamLineup();
+                        MatchType type = mlt.getMatchType();
+                        boolean walkoverWin = details.isWalkoverMatchWin(myID);
+                        if (type != MatchType.MASTERS) { // MASTERS counts only for experience
+                            tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
+                            tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
+                            tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
+                            tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                        }
+                        var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
+                        tp.addPlayedMinutes(minutes);
+                        ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
                     }
-                    var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
-                    tp.addPlayedMinutes(minutes);
-                    ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
                 }
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
@@ -2368,6 +2381,37 @@ public class Player {
         this.ownerNotes = ownerNotes;
     }
 
+    public Integer getLastMatchPosition() {
+        return lastMatchPosition;
+    }
+
+    public void setLastMatchPosition(Integer lastMatchPosition) {
+        this.lastMatchPosition = lastMatchPosition;
+    }
+
+    public Integer getLastMatchMinutes() {
+        return lastMatchMinutes;
+    }
+
+    public void setLastMatchMinutes(Integer lastMatchMinutes) {
+        this.lastMatchMinutes = lastMatchMinutes;
+    }
+
+    /**
+     * Rating at end of game
+     * @return Integer number of half rating stars
+     */
+    public Integer getLastMatchRatingEndOfGame() {
+        return lastMatchRatingEndOfGame;
+    }
+
+    /**
+     * Rating at end of game
+      * @param lastMatchRatingEndOfGame number of half rating stars
+     */
+    public void setLastMatchRatingEndOfGame(Integer lastMatchRatingEndOfGame) {
+        this.lastMatchRatingEndOfGame = lastMatchRatingEndOfGame;
+    }
 
     static class PositionContribute {
         private final float m_rating;

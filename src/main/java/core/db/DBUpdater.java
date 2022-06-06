@@ -63,6 +63,8 @@ final class DBUpdater {
 					case 600:
 						updateDBv601(DBVersion);
 					case 601:
+						updateDBv700(DBVersion);
+					case 700:
 				}
 
 			} catch (Exception e) {
@@ -71,6 +73,15 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv700(int dbVersion) throws SQLException {
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		if ( playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")){
+			playerTable.tryAddColumn("LastMatch_PositionCode", "INTEGER");
+			playerTable.tryAddColumn("LastMatch_RatingEndOfGame", "INTEGER");
+		}
+		updateDBVersion(dbVersion, 700);
 	}
 
 	private void updateDBv601(int dbVersion) throws SQLException {

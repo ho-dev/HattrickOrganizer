@@ -262,7 +262,7 @@ abstract class ForecastCurve extends Curve {
 	private void readPastMatches() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
-		var start = ibasics.getDatum().minus(WEEKS_BACK, ChronoUnit.WEEKS).toDbTimestamp();
+		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
 		if (iliga != null) {
 			// PAARUNG contains all Leaguematches, but no other
 			// MATCHESKURZINFO contains all other matches but no matchday
@@ -279,7 +279,7 @@ abstract class ForecastCurve extends Curve {
 							+ MatchType.CUP.getId()
 							+ "and MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID "
 							+ "and MATCHESKURZINFO.MATCHDATE < '"
-							+ ibasics.getDatum()
+							+ ibasics.getDatum().toDbTimestamp()
 							+ "' and MATCHESKURZINFO.MATCHDATE > '"
 							+ start
 							+ "' "
@@ -296,7 +296,7 @@ abstract class ForecastCurve extends Curve {
 							+ ") "
 							+ "and PAARUNG.MATCHID=MATCHDETAILS.MATCHID "
 							+ "and PAARUNG.DATUM < '"
-							+ ibasics.getDatum()
+							+ ibasics.getDatum().toDbTimestamp()
 							+ "' "
 							+ "and PAARUNG.DATUM > '"
 							+ start

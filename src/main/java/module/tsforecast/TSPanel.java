@@ -164,7 +164,7 @@ protected void paintComponent( Graphics g) {
       boolean flag = curve.next();
       double x;
       int iSpirit;
-      int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
+      int dayOffset = m_startDate.DayOfWeek().getValue() - 1;
       if( dayOffset < 0) dayOffset += 7;
 
       for(; flag; flag = curve.next()) {
@@ -197,7 +197,7 @@ protected void paintComponent( Graphics g) {
     graphics2d.setColor(Color.BLACK);
     if(curve.first()) {
       boolean flag = curve.next();
-      int dayOffset = m_startDate.instant.get(DAY_OF_WEEK) - 1;
+      int dayOffset = m_startDate.DayOfWeek().getValue() - 1;
       if( dayOffset < 0) dayOffset += 7;
 
       HelperWrapper ihelper = HelperWrapper.instance();
@@ -294,7 +294,7 @@ protected void paintComponent( Graphics g) {
   private void drawSeason( Graphics2D graphics2d) {
     var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
     // Week starts at Saturday = 7, Sunday = 1
-    int iDay = today.instant.get(DAY_OF_WEEK);
+    var iDay = today.DayOfWeek().getValue();
     int iSeason =HOVerwaltung.instance().getModel().getBasics().getSeason();
 
     // Spieltag increases with game, therefore -1
