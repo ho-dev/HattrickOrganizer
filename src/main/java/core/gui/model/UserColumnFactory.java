@@ -722,13 +722,14 @@ final public class UserColumnFactory {
         playerAdditionalArray[9] = new PlayerColumn(RATING, "Rating", 40) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                if (player.getLastMatchRating() > 0) {
-                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-                    if (info == null) {
-                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-                    } else {
-                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-                    }
+                var lastMatchRating = player.getLastMatchRating();
+                if (lastMatchRating!=null && lastMatchRating > 0) {
+//                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
+//                    if (info == null) {
+//                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
+//                    } else {
+                        return new RatingTableEntry(lastMatchRating, true);
+//                    }
                 }
                 return new RatingTableEntry();
             }
@@ -738,7 +739,8 @@ final public class UserColumnFactory {
         playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                if (player.getLastMatchRating() > 0) {
+                var lastMatchRating = player.getLastMatchRating();
+                if (lastMatchRating!=null && lastMatchRating > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info != null) {
                         return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());

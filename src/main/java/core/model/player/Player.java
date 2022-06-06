@@ -326,10 +326,14 @@ public class Player {
 
     // LastMAtch
     private String m_lastMatchDate;
-    private double m_lastMatchRating=0;
-    private int m_lastMatchId=0;
+    private Integer m_lastMatchId;
     private MatchType lastMatchType;
-
+    private Integer lastMatchPosition;
+    private Integer lastMatchMinutes;
+    // Rating is number of half stars
+    // real rating value is rating/2.0f
+    private Integer m_lastMatchRating;
+    private Integer lastMatchRatingEndOfGame;
 
     /**
      * specifying at what time –in minutes- that player entered the field
@@ -453,9 +457,13 @@ public class Player {
 
         // #461-lastmatch
         m_lastMatchDate =  properties.getProperty("lastmatch_date");
-        if(m_lastMatchDate!=null) {
-            m_lastMatchRating = 2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0"));
+        if(m_lastMatchDate!=null && !m_lastMatchDate.isEmpty()) {
             m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
+            lastMatchPosition = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
+            lastMatchMinutes = Integer.parseInt(properties.getProperty("lastmatch_playedminutes", "0"));
+            // rating is stored as number of half stars
+            m_lastMatchRating = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));
+            lastMatchRatingEndOfGame = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_ratingendofgame", "0")));
         }
 
         setLastMatchType(MatchType.getById(
@@ -1590,7 +1598,7 @@ public class Player {
      * Last match
      * @return rating
      */
-    public double getLastMatchRating(){
+    public Integer getLastMatchRating(){
         return m_lastMatchRating;
     }
 
@@ -1598,7 +1606,7 @@ public class Player {
      * Last match id
      * @return id
      */
-    public int getLastMatchId(){
+    public Integer getLastMatchId(){
         return m_lastMatchId;
     }
 
@@ -1622,7 +1630,7 @@ public class Player {
      * @param rating
      * @param id
      */
-    public void setLastMatchDetails(String date, int rating, int id){
+    public void setLastMatchDetails(String date, Integer  rating, Integer id){
         m_lastMatchDate = date;
         m_lastMatchRating = rating;
         m_lastMatchId = id;
@@ -2353,6 +2361,37 @@ public class Player {
         this.ownerNotes = ownerNotes;
     }
 
+    public Integer getLastMatchPosition() {
+        return lastMatchPosition;
+    }
+
+    public void setLastMatchPosition(Integer lastMatchPosition) {
+        this.lastMatchPosition = lastMatchPosition;
+    }
+
+    public Integer getLastMatchMinutes() {
+        return lastMatchMinutes;
+    }
+
+    public void setLastMatchMinutes(Integer lastMatchMinutes) {
+        this.lastMatchMinutes = lastMatchMinutes;
+    }
+
+    /**
+     * Rating at end of game
+     * @return Integer number of half rating stars
+     */
+    public Integer getLastMatchRatingEndOfGame() {
+        return lastMatchRatingEndOfGame;
+    }
+
+    /**
+     * Rating at end of game
+      * @param lastMatchRatingEndOfGame number of half rating stars
+     */
+    public void setLastMatchRatingEndOfGame(Integer lastMatchRatingEndOfGame) {
+        this.lastMatchRatingEndOfGame = lastMatchRatingEndOfGame;
+    }
 
     static class PositionContribute {
     private final float m_rating;

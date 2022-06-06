@@ -1980,7 +1980,7 @@ public class DBManager {
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
 						rs.getInt("MatchID"),
-						rs.getFloat("Rating") * 2,
+						(int)(rs.getFloat("Rating") * 2),
 						rs.getInt("HoPosCode"),
 						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
 						DBManager.deleteEscapeSequences(rs
