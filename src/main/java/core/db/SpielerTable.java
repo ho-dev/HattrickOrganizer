@@ -133,7 +133,7 @@ final class SpielerTable extends AbstractTable {
 				"ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, " +
 				"PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, " +
 				"SubExperience, NationalTeamID, " +
-				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, " +
+				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, LastMatch_PositionCode, LastMatch_PlayedMinutes, LastMatch_RatingEndOfGame, " +
 				"Statement, OwnerNotes, PlayerCategory " +
 				") VALUES(" +
 				player.getCards() + "," +
@@ -202,7 +202,10 @@ final class SpielerTable extends AbstractTable {
 				"'" + player.getLastMatchDate() + "'," +
 				player.getLastMatchRating() + "," +
 				player.getLastMatchId() + "," +
-				player.getLastMatchType().getId()  + ", '"
+				player.getLastMatchType().getId()  + "," +
+				player.getLastMatchPosition() + "," +
+				player.getLastMatchMinutes() + "," +
+				player.getLastMatchRatingEndOfGame() + ",'"
 				+ player.getPlayerStatement() + "', '"
 				+ player.getOwnerNotes() + "', "
 				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null)
@@ -578,9 +581,14 @@ final class SpielerTable extends AbstractTable {
 			try {
 				player.setLastMatchDetails(
 						DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
-						rs.getInt("LastMatchRating"),
-						rs.getInt("LastMatchId")
+						DBManager.getInteger(rs,"LastMatchRating"),
+						DBManager.getInteger(rs,"LastMatchId")
 				);
+
+				player.setLastMatchMinutes(DBManager.getInteger(rs, "LastMatch_PlayedMinutes"));
+				player.setLastMatchPosition(DBManager.getInteger(rs, "LastMatch_PositionCode"));
+				player.setLastMatchRatingEndOfGame(DBManager.getInteger(rs, "LastMatch_RatingEndOfGame"));
+
 			} catch (Exception e) {
 				HOLogger.instance().error(getClass(), "Error retrieving last match details: " + e);
 			}

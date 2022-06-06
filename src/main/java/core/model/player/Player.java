@@ -3,10 +3,15 @@ package core.model.player;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
+import core.db.DBInfo;
 import core.db.DBManager;
+import core.file.hrf.HRF;
+import core.file.xml.*;
+import core.gui.HOMainFrame;
 import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
+import core.model.match.MatchTeamRating;
 import core.model.match.Weather;
 import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
@@ -16,9 +21,15 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
+import module.teamAnalyzer.manager.PlayerDataManager;
+import module.teamAnalyzer.ui.PlayerInfoPanel;
+import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamAnalyzer.vo.PlayerPerformance;
 import module.training.Skills;
+import module.training.ui.PlayerDetailPanel;
+import module.transfer.XMLParser;
 import org.jetbrains.annotations.Nullable;
-import java.sql.Timestamp;
+import core.file.xml.XMLPlayersParser;
 import java.time.Duration;
 import java.util.*;
 
@@ -330,10 +341,14 @@ public class Player {
 
     // LastMatch
     private String m_lastMatchDate;
-    private double m_lastMatchRating = 0;
-    private int m_lastMatchId = 0;
+    private Integer m_lastMatchId;
     private MatchType lastMatchType;
-
+    private Integer lastMatchPosition;
+    private Integer lastMatchMinutes;
+    // Rating is number of half stars
+    // real rating value is rating/2.0f
+    private Integer m_lastMatchRating;
+    private Integer lastMatchRatingEndOfGame;
 
     /**
      * specifying at what time –in minutes- that player entered the field

@@ -9,17 +9,22 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 
 public class HODateTime implements Comparable<HODateTime> {
+
     /**
      * time zone of hattrick
      */
     public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
+
     /**
      * Date time format of chpp files
      */
     private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
     private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
+
     /**
      * the birthday of hattrick
+     * Monday, the 22nd of September 1997 (CET)
+     *
      */
     public static final HODateTime htStart = HODateTime.fromHT("1997-09-22 00:00:00");
 
@@ -128,6 +133,7 @@ public class HODateTime implements Comparable<HODateTime> {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
+
     public static String toLocaleDate(HODateTime in, FormatStyle style){
         if ( in != null) return in.toLocaleDate(style);
         return "";
@@ -150,10 +156,12 @@ public class HODateTime implements Comparable<HODateTime> {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
+
     public static String toLocaleDateTime(HODateTime in, FormatStyle style){
         if ( in != null) return in.toLocaleDateTime(style);
         return "";
     }
+
     /**
      * Convert to database timestamp
      *
@@ -213,6 +221,10 @@ public class HODateTime implements Comparable<HODateTime> {
                 .toInstant());
     }
 
+    public DayOfWeek DayOfWeek() {
+        return instant.atZone(DEFAULT_TIMEZONE).getDayOfWeek();
+    }
+
     /**
      * Internal class representing HT's season and week
      */
@@ -266,6 +278,12 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     private static Duration durationBetweenTrainingDateAndNextWeekStart =null;
+
+    /**
+     * Convert to locale training season and week
+     * training date differs from start of weeks
+     * @return local training season/week
+     */
     public HTWeek toTrainingWeek(){
         if ( durationBetweenTrainingDateAndNextWeekStart == null ){
             var nextTrainingDate=HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
@@ -274,11 +292,12 @@ public class HODateTime implements Comparable<HODateTime> {
             durationBetweenTrainingDateAndNextWeekStart = HODateTime.between( nextTrainingDate, nextWeek);
         }
 
-        return calcHTWeek(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
+        var trainingDateRelatedDate = new HODateTime(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
+        return trainingDateRelatedDate.toLocaleHTWeek();
     }
 
     /**
-     * Convert to locale HT's seasond and week (user's league season)
+     * Convert to locale HT's season and week (user's league season)
      *
      * @return HTWeek
      */

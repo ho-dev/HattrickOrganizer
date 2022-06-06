@@ -13,8 +13,8 @@ public class FuturePlayerTraining {
 
     public boolean contains(HODateTime trainingDate) {
         // from<=date & to>date
-        if ( !from.isAfter(trainingDate)  ) {
-            if  ( to == null ) return true;
+        if (!from.isAfter(trainingDate)) {
+            if (to == null) return true;
             var endOfToWeek = to.plus(7, ChronoUnit.DAYS);
             return endOfToWeek.isAfter(trainingDate);
         }
@@ -52,7 +52,7 @@ public class FuturePlayerTraining {
             return value;
         }
 
-        public String toString(){
+        public String toString() {
             return switch (value) {
                 case 3 -> HOVerwaltung.instance().getLanguageString("trainpre.fulltrain");
                 case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.partialtrain");
@@ -119,15 +119,13 @@ public class FuturePlayerTraining {
         this.to = to;
     }
 
-
     /**
      * Cut the given time interval from the current training interval
      *
      * @param from HattrickDate
      * @param to   HattrickDate, null means open end
-     *
      * @return false if remaining training interval is not empty
-     *          true if training is completely replaced by the new interval
+     * true if training is completely replaced by the new interval
      */
     public boolean cut(HODateTime from, HODateTime to) {
         if (this.to != null && from.isAfter(this.to) || to != null && this.from.isAfter(to)) {
@@ -136,16 +134,13 @@ public class FuturePlayerTraining {
         }
 
         if (from.isAfter(this.from)) {
-            this.to = from;
-            this.to.minus(7, ChronoUnit.DAYS);
+            this.to = from.minus(7, ChronoUnit.DAYS);
             return false;
         }
-        if (to !=null && this.to.isAfter(to)) {
-            this.from = to;
-            this.from.plus(7, ChronoUnit.DAYS);
+        if (to != null && (this.to == null || this.to.isAfter(to))) {
+            this.from = to.plus(7, ChronoUnit.DAYS);
             return false;
         }
         return true; // completely replaced
     }
-
 }

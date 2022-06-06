@@ -37,13 +37,18 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         createComponent();
     }
 
-    public RatingTableEntry(float f) {
+    public RatingTableEntry(Integer f) {
         this(f, false);
     }
 
-    public RatingTableEntry(float f, Boolean _starsAligned) {
+    public RatingTableEntry(Integer f, Boolean _starsAligned) {
         starsAligned = _starsAligned;
-        m_fRating = f/2.0f;
+        if ( f == null){
+            m_fRating=0.f;
+        }
+        else {
+            m_fRating = f / 2.0f;
+        }
         createComponent();
     }
 

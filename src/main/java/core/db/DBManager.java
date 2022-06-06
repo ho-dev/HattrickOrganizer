@@ -55,13 +55,13 @@ import java.util.stream.Collectors;
 public class DBManager {
 
 	/** database versions */
-	private static final int DBVersion = 601; // HO 6.0 version
+	private static final int DBVersion = 700; // HO 7.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 600;
-	private static final double DBConfigVersion = 6d; // HO 6.0 version
+	private static final int previousDBVersion = 601;
+	private static final double DBConfigVersion = 7d; // HO 7.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -1980,7 +1980,7 @@ public class DBManager {
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
 						rs.getInt("MatchID"),
-						rs.getFloat("Rating") * 2,
+						(int)(rs.getFloat("Rating") * 2),
 						rs.getInt("HoPosCode"),
 						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
 						DBManager.deleteEscapeSequences(rs

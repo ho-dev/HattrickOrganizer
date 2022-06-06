@@ -1102,20 +1102,20 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 1.0;
 
-		RatingTableEntry ratingentry = new RatingTableEntry(rating[0] * 2);
+		RatingTableEntry ratingentry = new RatingTableEntry((int)(rating[0] * 2));
 
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 1;
-		ratingentry = new RatingTableEntry(rating[1] * 2);
+		ratingentry = new RatingTableEntry((int)(rating[1] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 2;
-		ratingentry = new RatingTableEntry(Math.round(rating[2] * 2));
+		ratingentry = new RatingTableEntry((int)Math.round(rating[2] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
@@ -1201,7 +1201,7 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 1.0;
-		ratingentry = new RatingTableEntry(ratingPos[0] * 2);
+		ratingentry = new RatingTableEntry((int)(ratingPos[0] * 2));
 
 		// ratingentry.getComponent ( false ).setPreferredSize ( new Dimension(
 		// 120, 14 ) );
@@ -1210,13 +1210,13 @@ final class SpielerDetailDialog extends JDialog {
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 1;
-		ratingentry = new RatingTableEntry(ratingPos[1] * 2);
+		ratingentry = new RatingTableEntry((int)(ratingPos[1] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 2;
-		ratingentry = new RatingTableEntry(Math.round(ratingPos[2] * 2));
+		ratingentry = new RatingTableEntry((int)Math.round(ratingPos[2] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 

@@ -34,6 +34,7 @@ import module.lineup.substitution.model.Substitution;
 import core.HO;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ConvertXml2Hrf {
 		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
 
 		String teamDetails = mc.getTeamdetails(-1);
-		
+
 		if (teamDetails == null) {
 			return null;
 		}
@@ -108,7 +109,7 @@ public class ConvertXml2Hrf {
 				return null;
 			}
 		}
-		
+
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
 		if (teamdetailsDataMap.size() == 0) return null;
 
@@ -167,7 +168,7 @@ public class ConvertXml2Hrf {
 		try {
 			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
 		} catch (Exception ignored) {
-			
+
 		}
 		Map<String, String> arenaDataMap = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId));
 
@@ -287,7 +288,7 @@ public class ConvertXml2Hrf {
 		// lineup from the last match
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
 		createLastLineUp(teamdetailsDataMap, matchLineupTeam, buffer);
-		
+
 		// staff
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);
 		createStaff(staffData, buffer);
@@ -698,7 +699,7 @@ public class ConvertXml2Hrf {
 		buffer.append("[lineup]").append('\n');
 
 		if (nextLineup != null) {
-			
+
 			try {
 				buffer.append("teamid=").append(teamId).append('\n');
 				buffer.append("matchid=").append(matchId).append('\n');
@@ -737,7 +738,7 @@ public class ConvertXml2Hrf {
 				buffer.append("substxt2=").append(getPlayerForNextLineup("substXT2ID", nextLineup)).append('\n');
 				buffer.append("captain=").append(getPlayerForNextLineup("CaptainID", nextLineup)).append('\n');
 				buffer.append("kicker1=").append(getPlayerForNextLineup("KickerID", nextLineup)).append('\n');
-	
+
 				buffer.append("order_rightback=").append(getPlayerOrderForNextLineup("RightBackOrder",	nextLineup)).append('\n');
 				buffer.append("order_rightCentralDefender=").append(getPlayerOrderForNextLineup("RightCentralDefenderOrder", nextLineup)).append('\n');
 				buffer.append("order_leftCentralDefender=").append(getPlayerOrderForNextLineup("LeftCentralDefenderOrder", nextLineup)).append('\n');
@@ -772,7 +773,7 @@ public class ConvertXml2Hrf {
 							.append(getPlayerForNextLineup(key, nextLineup))
 							.append('\n');
 				}
-	
+
 			} catch (Exception e) {
 				HOLogger.instance().debug(ConvertXml2Hrf.class,
 						"Error(lineup): " + e);
@@ -897,17 +898,27 @@ public class ConvertXml2Hrf {
 				buffer.append("TrainerType=").append('\n');
 				buffer.append("TrainerSkill=").append('\n');
 			}
-			if (ht.get("LastMatch_Date") != null) {
+			var matchId = ht.get("LastMatch_id");
+			if (!matchId.equals("0")) {
 				buffer.append("LastMatch_Date=")
 						.append(ht.get("LastMatch_Date")).append('\n');
 				buffer.append("LastMatch_Rating=")
 						.append(ht.get("LastMatch_Rating")).append('\n');
 				buffer.append("LastMatch_id=")
-						.append(ht.get("LastMatch_id")).append('\n');
+						.append(matchId).append('\n');
+				buffer.append("LastMatch_PositionCode=")
+						.append(ht.get("LastMatch_PositionCode")).append('\n');
+				buffer.append("LastMatch_PlayedMinutes=")
+						.append(ht.get("LastMatch_PlayedMinutes")).append('\n');
+				buffer.append("LastMatch_RatingEndOfGame=")
+						.append(ht.get("LastMatch_RatingEndOfGame")).append('\n');
 			} else {
 				buffer.append("LastMatch_Date=").append('\n');
 				buffer.append("LastMatch_Rating=").append('\n');
 				buffer.append("LastMatch_id=0").append('\n');
+				buffer.append("LastMatch_PositionCode=").append('\n');
+				buffer.append("LastMatch_PlayedMinutes=").append('\n');
+				buffer.append("LastMatch_RatingEndOfGame=").append('\n');
 			}
 
 			String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");

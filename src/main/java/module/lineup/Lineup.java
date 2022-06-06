@@ -654,9 +654,10 @@ public class Lineup{
 	public final void setArenaId(int id){
 		this.m_iArenaId=id;
 	}
-	public final int getArenaId()
-	{
-		if ( m_iArenaId == -1  && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
+	public final int getArenaId() {
+		if (m_iArenaId == -1 && !isUpcomingMatchLoaded()) {
+			getUpcomingMatch();
+		}
 		return m_iArenaId;
 	}
 
@@ -911,6 +912,8 @@ public class Lineup{
 	public final Vector<MatchLineupPosition> getFieldPositions(){
 		return m_vFieldPositions;
 	}
+
+	public Vector<MatchLineupPosition> getReplacedPositions(){return replacedPositions;}
 
 	public final Vector<MatchLineupPosition> getBenchPositions(){
 		return m_vBenchPositions;

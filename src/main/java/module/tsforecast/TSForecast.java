@@ -160,7 +160,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	@Override
 	public void actionPerformed(ActionEvent actionevent) {
 		Cursor cursor = getCursor();
-		setCursor(Cursor.getPredefinedCursor(3));
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		try {
 			if (actionevent.getSource() instanceof JRadioButton) {
 				int iButton = Integer.parseInt(actionevent.getActionCommand().substring(1));
@@ -232,12 +232,8 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		m_jpGraphics.showConfidenceScale(config.getBoolean(TS_CONFIDENCE));
 
 		// check whether it is necessary to draw teamspirit scale
-		if (!config.getBoolean(TS_LOEPIHISTORY) && !config.getBoolean(TS_LOEPIFORECAST)
-				&& !config.getBoolean(TS_HISTORY)) {
-			m_jpGraphics.showTeamspiritScale(false);
-		} else {
-			m_jpGraphics.showTeamspiritScale(true);
-		}
+		m_jpGraphics.showTeamspiritScale(config.getBoolean(TS_LOEPIHISTORY) || config.getBoolean(TS_LOEPIFORECAST)
+				|| config.getBoolean(TS_HISTORY));
 
 		m_jpGraphics.repaint();
 	}
@@ -321,8 +317,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 						|| (m_LoepiForecast.getMatchType() == MatchType.CUP && bshowCupMatches)
 						|| (m_LoepiForecast.getMatchType() == MatchType.QUALIFICATION && bshowQualMatches)) {
 
-					FutureMatchBox futurematchbox = new FutureMatchBox(DateFormat
-							.getDateInstance(3).format(m_LoepiForecast.getDate()),
+					FutureMatchBox futurematchbox = new FutureMatchBox(m_LoepiForecast.getDate().toLocaleDate(),
 							m_LoepiForecast.getTooltip(), iCmdID, m_LoepiForecast.getAttitude(),
 							m_LoepiForecast.getMatchType());
 					futurematchbox.addActionListener(this);

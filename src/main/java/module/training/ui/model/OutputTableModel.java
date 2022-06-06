@@ -7,6 +7,7 @@ import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
+import core.util.HOLogger;
 import core.util.Helper;
 import module.training.Skills;
 import module.training.ui.comp.TrainingPriorityCell;
@@ -28,7 +29,8 @@ import javax.swing.table.AbstractTableModel;
  */
 public class OutputTableModel extends AbstractTableModel {
 
-    public final static int COL_PLAYER_ID = 11;
+    // common column of fixed and scrolled tables
+    private final static int COL_PLAYER_ID = 11;
     private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
 
@@ -41,6 +43,10 @@ public class OutputTableModel extends AbstractTableModel {
         this.model = model;
     }
 
+    public int getPlayerIdColumn() {
+        return COL_PLAYER_ID;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -49,14 +55,13 @@ public class OutputTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
-            case 0 -> PlayerNameCell.class;
-            case 1, 2 -> TrainingPriorityCell.class;
             case COL_PLAYER_ID -> String.class;
+            case 0 -> PlayerNameCell.class;
+            case 1 -> String.class;
+            case 2 -> TrainingPriorityCell.class;
             case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
-            case 12 -> Integer.class;
             default -> super.getColumnClass(columnIndex);
         };
-
     }
 
     /*
@@ -66,7 +71,7 @@ public class OutputTableModel extends AbstractTableModel {
      */
     @Override
     public int getColumnCount() {
-        return 13;
+        return 12;
     }
 
     /*
@@ -77,6 +82,7 @@ public class OutputTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         return switch (columnIndex) {
+            case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
             case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
             case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
             case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
@@ -88,8 +94,6 @@ public class OutputTableModel extends AbstractTableModel {
             case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
             case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
             case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
-            case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
-            case 12 -> "speed";
             default -> "";
         };
     }
@@ -108,16 +112,18 @@ public class OutputTableModel extends AbstractTableModel {
      * Returns as toolTip for the cell, the last skillup for the proper player
      * and skill
      *
-     * @param rowIndex row
+     * @param rowIndex    row
      * @param columnIndex column
      * @return toolTip
      */
-    public Object getToolTipAt(int rowIndex, int columnIndex) {
-        if (columnIndex == 0) {
-            return ((JLabel) getValueAt(rowIndex, columnIndex)).getToolTipText();
-        } else {
-            return ((VerticalIndicator) getValueAt(rowIndex, columnIndex)).getToolTipText();
-        }
+    public String getToolTipAt(int rowIndex, int columnIndex) {
+        var val = getValueAt(rowIndex, columnIndex);
+        return switch (columnIndex) {
+            case 0 -> ((JLabel) val).getToolTipText();
+            case 1, 2 -> val.toString();
+            case 3, 4, 5, 6, 7, 8, 9, 10 -> ((VerticalIndicator) val).getToolTipText();
+            default -> "";
+        };
     }
 
     /*
@@ -129,8 +135,8 @@ public class OutputTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
-
         return switch (columnIndex) {
+            case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
             case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
             case 1 -> player.getAgeWithDaysAsString();
             case 2 -> createBestPositionCell(player);
@@ -142,8 +148,6 @@ public class OutputTableModel extends AbstractTableModel {
             case 8 -> createIcon(player, PlayerSkill.SCORING);
             case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
             case 10 -> createIcon(player, PlayerSkill.STAMINA);
-            case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
-            case 12 -> ftm.getTrainingSpeed();
             default -> "";
         };
     }
@@ -170,14 +174,14 @@ public class OutputTableModel extends AbstractTableModel {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
             var model = HOVerwaltung.instance().getModel();
-            return 1/wt.calculateSkillIncreaseOfTrainingWeek(
+            return 1 / wt.calculateSkillIncreaseOfTrainingWeek(
                     player.getValue4Skill(skillIndex),
                     model.getTrainer().getTrainerSkill(),
                     model.getClub().getCoTrainer(),
                     model.getTeam().getTrainingslevel(),
                     model.getTeam().getStaminaTrainingPart(),
                     player.getAlter(),
-                    90, 0,0, 0);
+                    90, 0, 0, 0);
         }
         return 0;
     }
@@ -206,5 +210,4 @@ public class OutputTableModel extends AbstractTableModel {
                 model.getFutureTrainings().get(0).getTrainingDate();
         return new TrainingPriorityCell(player, firstTrainingDate);
     }
-
 }

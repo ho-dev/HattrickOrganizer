@@ -6,6 +6,7 @@ import core.file.FileLoader;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Languages;
 import core.util.UTF8Control;
@@ -141,23 +142,26 @@ public class HOVerwaltung {
 
 		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
 		long s1, s2, lSum = 0, mSum = 0;
-		HRF previousHRF=hrfListe.get(0);
-		for (var hrf: hrfListe.stream().skip(1).collect(Collectors.toList())) {
+		HRF previousHRF = null;
+		for (var hrf : hrfListe) {
 			try {
-				if (showWait ) {
+				if (showWait) {
 					HOMainFrame.instance().setWaitInformation();
 				}
-
 				s1 = System.currentTimeMillis();
-
 				HOModel model = new HOModel(hrf, previousHRF);
-				var trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				HODateTime trainingDateOfPreviousHRF;
+				if (previousHRF != null) {
+					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				} else {
+					trainingDateOfPreviousHRF = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+				}
 				var trainingDateHRF = DBManager.instance().getXtraDaten(hrf.getHrfId()).getNextTrainingDate();
 
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
 				model.calcSubskills(trainingDateOfPreviousHRF, trainingDateHRF);
-				previousHRF=hrf;
+				previousHRF = hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "recalcSubskills : ");
@@ -165,14 +169,14 @@ public class HOVerwaltung {
 			}
 		}
 
-		if (showWait ) {
+		if (showWait) {
 			HOMainFrame.instance().setWaitInformation();
 		}
 
 		// Reload, because the subskills have changed
 		loadLatestHoModel();
 
-		if (showWait ) {
+		if (showWait) {
 			HOMainFrame.instance().setWaitInformation();
 		}
 
@@ -184,7 +188,7 @@ public class HOVerwaltung {
 						+ (System.currentTimeMillis() - start) / 1000L + " sec), lSum=" + lSum
 						+ ", mSum=" + mSum);
 
-		if (showWait ) {
+		if (showWait) {
 			HOMainFrame.instance().setInformationCompleted();
 		}
 	}
