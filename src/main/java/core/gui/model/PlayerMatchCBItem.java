@@ -21,7 +21,7 @@ public class PlayerMatchCBItem {
     private HODateTime m_clMatchdate;
     private String m_sSelbstvertrauen;
     private String m_sTeamSpirit;
-    private float m_fRating;
+    private Integer m_iRating; // number of half rating stars
     private int m_iGastID;
     private int m_iHeimID;
     private int m_iMatchID;
@@ -33,13 +33,13 @@ public class PlayerMatchCBItem {
     /**
      * Creates a new SpielerMatchCBItem object.
      */
-    public PlayerMatchCBItem(Player player, int matchid, float rating, int positionsid,
+    public PlayerMatchCBItem(Player player, int matchid, Integer rating, int positionsid,
                              HODateTime matchdate, String heimteam, int heimid, String gastteam,
                              int gastid, MatchType matchtyp, Matchdetails matchdetails,
                              String selbstvertrauen, String stimmung) {
         m_clPlayer = player;
         m_iMatchID = matchid;
-        m_fRating = rating;
+        m_iRating = rating;
         m_iPosition = positionsid;
         m_clMatchdate = matchdate;
         m_clHeimteam = heimteam;
@@ -217,21 +217,21 @@ public class PlayerMatchCBItem {
     }
 
     /**
-     * Setter for property m_fRating.
+     * Setter for property rating.
      *
-     * @param m_fRating New value of property m_fRating.
+     * @param rating number of half rating stars
      */
-    public final void setRating(float m_fRating) {
-        this.m_fRating = m_fRating;
+    public final void setRating(Integer rating) {
+        this.m_iRating = rating;
     }
 
     /**
-     * Getter for property m_fRating.
+     * Getter for property m_iRating.
      *
-     * @return Value of property m_fRating.
+     * @return Integer number of half rating stars
      */
-    public final float getRating() {
-        return m_fRating;
+    public final Integer getRating() {
+        return m_iRating;
     }
 
     /**

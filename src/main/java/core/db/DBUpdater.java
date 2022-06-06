@@ -75,8 +75,12 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv700(int dbVersion) {
-
+	private void updateDBv700(int dbVersion) throws SQLException {
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		if ( playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")){
+			playerTable.tryAddColumn("LastMatch_PositionCode", "INTEGER");
+			playerTable.tryAddColumn("LastMatch_RatingEndOfGame", "INTEGER");
+		}
 		updateDBVersion(dbVersion, 700);
 	}
 
