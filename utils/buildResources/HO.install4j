@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.4" transformSequenceNumber="9">
+<install4j version="9.0.7" transformSequenceNumber="9">
   <directoryPresets config="." />
   <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="14">
     <languages skipLanguageSelection="true">
@@ -35,7 +35,7 @@
       <variable name="versionType" />
       <variable name="mediaID" value="${compiler:sys.mediaId}" />
     </variables>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.1+12" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.3+7" />
   </application>
   <files defaultFileMode="666" defaultDirMode="777" preserveSymlinks="false">
     <mountPoints>
