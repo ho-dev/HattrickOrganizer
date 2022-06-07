@@ -899,7 +899,7 @@ public class ConvertXml2Hrf {
 				buffer.append("TrainerSkill=").append('\n');
 			}
 			var matchId = ht.get("LastMatch_id");
-			if (!matchId.equals("0")) {
+			if (matchId!= null && !matchId.equals("0")) {
 				buffer.append("LastMatch_Date=")
 						.append(ht.get("LastMatch_Date")).append('\n');
 				buffer.append("LastMatch_Rating=")
