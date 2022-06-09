@@ -36,8 +36,8 @@ public class StyleOfPlay {
    }
 
    public static StyleOfPlay fromInt(int styleOfPlay) {
-      if ( styleOfPlay < -10) return null; // old matches has -1000
-      return new StyleOfPlay(min(10,styleOfPlay));
+      if ( styleOfPlay < -10 || styleOfPlay > 10) return Neutral(); // old matches has -1000
+      return new StyleOfPlay(styleOfPlay);
    }
 
    public static StyleOfPlay Neutral() {
