@@ -699,16 +699,24 @@ public class MatchLineupTeam {
 
 	private void examineSubstitution(Substitution substitution) {
 		var leavingplayer = this.getPlayerByID(substitution.getSubjectPlayerID(),true);
+		if ( leavingplayer == null){
+			leavingplayer = new MatchLineupPosition(substitution.getRoleId(), substitution.getSubjectPlayerID(), substitution.getBehaviour());
+		}
 		switch (substitution.getOrderType()) {
 			case NEW_BEHAVIOUR -> {
 				removeMatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria());
-				lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria()));
+				if ( substitution.getRoleId() > 0) {
+					lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria()));
+				}
 			}
 			case SUBSTITUTION -> {
 				var setPiecesTaker = lastMatchAppearances.get(MatchRoleID.setPieces);
 				var leavingPlayerIsSetPiecesTaker = setPiecesTaker != null && setPiecesTaker.player == leavingplayer;
 				removeMatchAppearance(leavingplayer, substitution.getMatchMinuteCriteria());
 				var enteringplayer = this.getPlayerByID(substitution.getObjectPlayerID(), true);
+				if ( enteringplayer == null){
+					enteringplayer = new MatchLineupPosition(substitution.getRoleId(), substitution.getObjectPlayerID(), substitution.getBehaviour());
+				}
 				lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(enteringplayer, substitution.getMatchMinuteCriteria()));
 				if (leavingPlayerIsSetPiecesTaker) {
 					// Find the new set pieces taker
