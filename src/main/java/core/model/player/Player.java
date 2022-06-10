@@ -2242,9 +2242,10 @@ public class Player {
      */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
         var playerBefore = DBManager.instance().getSpieler(previousID).stream()
-                .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst()
-                .orElse(this.CloneWithoutSubskills());
-
+                .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst().orElse(null);
+        if ( playerBefore == null){
+            playerBefore = this.CloneWithoutSubskills();
+        }
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
         boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up

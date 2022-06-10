@@ -151,8 +151,9 @@ public class HOVerwaltung {
 				s1 = System.currentTimeMillis();
 				HOModel model = new HOModel(hrf, previousHRF);
 				HODateTime trainingDateOfPreviousHRF;
-				if (previousHRF != null) {
-					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				var previousHRFId = model.getPreviousID();
+				if (previousHRFId != -1) {
+					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRFId).getNextTrainingDate();
 				} else {
 					trainingDateOfPreviousHRF = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 				}
