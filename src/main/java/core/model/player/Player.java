@@ -1,6 +1,7 @@
 package core.model.player;
 
 import core.constants.TrainingType;
+import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -2241,15 +2242,16 @@ public class Player {
      * @param trainingWeeks List of training week information
      */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
+
         var playerBefore = DBManager.instance().getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst().orElse(null);
-        if ( playerBefore == null){
+        if (playerBefore == null) {
             playerBefore = this.CloneWithoutSubskills();
         }
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
         boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up
-        var experienceSub = experienceSubDone?0:playerBefore.getSubExperience(); // set sub to 0 on skill up
+        var experienceSub = experienceSubDone ? 0 : playerBefore.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
             var sub = playerBefore.getSub4Skill(skill);
             var valueBeforeTraining = playerBefore.getValue4Skill(skill);
@@ -2259,46 +2261,44 @@ public class Player {
                 for (var training : trainingWeeks) {
 
                     var trainingPerPlayer = calculateWeeklyTraining(training);
-                    if ( trainingPerPlayer != null) {
-
-                        if ( !this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
-
+                    if (trainingPerPlayer != null) {
+                        if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
                             sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
-
-                            if (sub > 1) { // Skill up expected
-                                if (valueAfterTraining > valueBeforeTraining) { // OK
-                                    valueBeforeTraining++;
+                            if (valueAfterTraining > valueBeforeTraining) {
+                                if (sub > 1) {
                                     sub -= 1.;
-                                } else {                                        // No skill up
-                                    sub = 0.99f;
+                                } else {
+                                    sub = 0.f;
                                 }
-                            } else if (sub < 0) {
-                                if (valueAfterTraining < valueBeforeTraining) { // OK
-                                    valueBeforeTraining--;
-                                    sub += 1.;
-                                } else {                                        // No skill down
-                                    sub = 0;
+                            } else if (valueAfterTraining < valueBeforeTraining) {
+                                if (sub < 0) {
+                                    sub += 1.f;
+                                } else {
+                                    sub = .99f;
+                                }
+                            } else {
+                                if (sub > 0.99f) {
+                                    sub = 0.99f;
+                                } else if (sub < 0f) {
+                                    sub = 0f;
                                 }
                             }
+                            valueBeforeTraining = valueAfterTraining;
                         }
 
-                        if ( !experienceSubDone){
-                            experienceSub+=trainingPerPlayer.getExperienceSub();
-                            if ( experienceSub > 0.99) experienceSub = 0.99;
+                        if (!experienceSubDone) {
+                            experienceSub += trainingPerPlayer.getExperienceSub();
+                            if (experienceSub > 0.99) experienceSub = 0.99;
                         }
                     }
                 }
-                experienceSubDone=true;
-                if (valueAfterTraining > valueBeforeTraining) { // Skill up (not yet expected)
-                    sub = 0;
-                }
+                experienceSubDone = true;
             }
 
             // Handle skill drops that happens the monday after training date
             var nextWeekTraining = TrainingManager.instance().getNextWeekTraining();
-            if ( SkillDrops.instance().isActive() && nextWeekTraining != null &&
-                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate(), this.getHrfDate()))
-            {
+            if (SkillDrops.instance().isActive() && nextWeekTraining != null &&
+                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate(), this.getHrfDate())) {
                 // calc another skill down
                 sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;
                 if (sub < 0) {
@@ -2308,9 +2308,11 @@ public class Player {
                         sub = 0;
                     }
                 }
-            }
-            else if (valueAfterTraining < valueBeforeTraining) {
+            } else if (valueAfterTraining < valueBeforeTraining) {
                 sub = .99f;
+            } else if (valueAfterTraining > valueBeforeTraining) {
+                sub = 0;
+                HOLogger.instance().error(getClass(), "skill up without training"); // missing training in database
             }
 
             this.setSubskill4PlayerSkill(skill, sub);
