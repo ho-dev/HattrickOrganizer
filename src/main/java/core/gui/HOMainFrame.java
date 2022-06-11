@@ -314,7 +314,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
 		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
-			var from = HODateTime.now().minus(32*7, ChronoUnit.DAYS);
+			var from = HODateTime.now().minus(64*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
