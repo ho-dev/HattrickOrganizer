@@ -15,6 +15,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -151,8 +152,9 @@ public class HOVerwaltung {
 				s1 = System.currentTimeMillis();
 				HOModel model = new HOModel(hrf, previousHRF);
 				HODateTime trainingDateOfPreviousHRF;
-				if (previousHRF != null) {
-					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRF.getHrfId()).getNextTrainingDate();
+				var previousHRFId = model.getPreviousID();
+				if (previousHRFId != -1) {
+					trainingDateOfPreviousHRF = DBManager.instance().getXtraDaten(previousHRFId).getNextTrainingDate();
 				} else {
 					trainingDateOfPreviousHRF = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 				}
@@ -160,7 +162,7 @@ public class HOVerwaltung {
 
 				lSum += (System.currentTimeMillis() - s1);
 				s2 = System.currentTimeMillis();
-				model.calcSubskills(trainingDateOfPreviousHRF, trainingDateHRF);
+				model.calcSubskills(trainingDateOfPreviousHRF.minus(1, ChronoUnit.HOURS), trainingDateHRF.minus(1, ChronoUnit.HOURS));
 				previousHRF = hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
