@@ -19,6 +19,7 @@
 * hrf file list shows training week instead of match day (#1452)
 * skill recalculation no longer ignores very first downloaded hrf file (#1489)
 * fix error of skill recalculation of replaced players (#1489)
+* fix another recalculation error concerning wrong skill up handling (#1519)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)
