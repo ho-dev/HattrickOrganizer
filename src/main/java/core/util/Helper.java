@@ -177,14 +177,14 @@ public class Helper {
 		}
     }
 
-
     public static void setComboBoxFromID(JComboBox<? extends ComboItem> combobox, int id) {
-		var item = ((CBItem)(combobox.getSelectedItem()));
-		if ( item != null && item.getId() == id ) return; // nothing to do
         final javax.swing.ComboBoxModel< ? extends ComboItem> model = combobox.getModel();
         for (int i = 0; i < model.getSize(); i++) {
-            if (model.getElementAt(i).getId() == id) {
-                combobox.setSelectedItem(model.getElementAt(i));
+			var modelEntry = model.getElementAt(i);
+            if (modelEntry.getId() == id) {
+				if ( modelEntry != combobox.getSelectedItem()){
+					combobox.setSelectedItem(modelEntry);
+				}
                 break;
             }
         }
