@@ -74,7 +74,7 @@ Reports by Contributors - Dec 20, 2021 - June 12, 2022
 
 * Foppe	690
 * Pablo 314
-* akasolace	94
+* akasolace	96
 * sich	91
 * Lidegand 	91
 * \_KOHb\_	76
@@ -82,10 +82,10 @@ Reports by Contributors - Dec 20, 2021 - June 12, 2022
 * anti_anti 69
 * Moorhuhninho	67
 * Ante 63
-* wsbrenk 28
+* wsbrenk 30
 * dzsoo 18
 * Sophia 17
 * Csaba 14
 * Motavali 2
 * Philipp 1
-* Total translated:	1710
+* Total translated:	1714
