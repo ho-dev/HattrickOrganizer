@@ -183,7 +183,7 @@ public class Helper {
 			var modelEntry = model.getElementAt(i);
             if (modelEntry.getId() == id) {
 				if ( modelEntry != combobox.getSelectedItem()){
-					combobox.setSelectedItem(model.getElementAt(i));
+					combobox.setSelectedItem(modelEntry);
 				}
                 break;
             }
