@@ -818,7 +818,11 @@ final public class UserColumnFactory {
             }
         };
 
+<<<<<<< HEAD
         // Last match rating end of game column.
+=======
+        // Last match rating column.
+>>>>>>> 85862602d43e548c4b8ea05719b345c84ca28bf6
         playerAdditionalArray[16] = new PlayerColumn(RATING, "ls.player.ratingend", 60) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
@@ -865,6 +869,12 @@ final public class UserColumnFactory {
                 return new ColorLabelEntry(sort, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
         };
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 85862602d43e548c4b8ea05719b345c84ca28bf6
         return playerAdditionalArray;
     }
 }
