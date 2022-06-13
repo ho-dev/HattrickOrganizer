@@ -60,7 +60,10 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[7] = additionalArray[6];
 		columns[46] = additionalArray[7];
 		columns[8] = additionalArray[8];// tsi
+		columns[24] = additionalArray[16]; //rating end of game
 		columns[22] = additionalArray[9]; // lastmatch
+		columns[42] = additionalArray[17];
+		columns[43] = additionalArray[18];
 		columns[47] = additionalArray[11];
 		columns[3] = additionalArray[12];// Motherclub
 		columns[49] = additionalArray[10];
