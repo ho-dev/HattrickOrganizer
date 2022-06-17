@@ -74,6 +74,7 @@ Reports by Contributors - Dec 20, 2021 - June 12, 2022
 
 * Foppe	690
 * Pablo 314
+* Adrian 107
 * akasolace	96
 * sich	91
 * Lidegand 	91
@@ -88,4 +89,4 @@ Reports by Contributors - Dec 20, 2021 - June 12, 2022
 * Csaba 14
 * Motavali 2
 * Philipp 1
-* Total translated:	1714
+* Total translated:	1821
