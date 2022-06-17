@@ -35,7 +35,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[53];
+		columns = new UserColumn[56];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -60,16 +60,16 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[7] = additionalArray[6];
 		columns[46] = additionalArray[7];
 		columns[8] = additionalArray[8];// tsi
-		columns[23] = additionalArray[16];
 		columns[22] = additionalArray[9]; // lastmatch
-		columns[42] = additionalArray[17];
-		columns[41] = additionalArray[18];
 		columns[47] = additionalArray[11];
 		columns[3] = additionalArray[12];// Motherclub
 		columns[49] = additionalArray[10];
-		columns[50] = additionalArray[13];
-		columns[51] = additionalArray[14];
-		columns[52] = additionalArray[15];
+		columns[50] = additionalArray[16];
+		columns[51] = additionalArray[17];
+		columns[52] = additionalArray[18];
+		columns[53] = additionalArray[13];
+		columns[54] = additionalArray[14];
+		columns[55] = additionalArray[15];
 	}
 	
     public Player getPlayer(int id) {
