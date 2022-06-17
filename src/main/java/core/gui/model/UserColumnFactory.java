@@ -842,7 +842,7 @@ final public class UserColumnFactory {
                 var minutes = player.getLastMatchMinutes();
                 String text;
                 if (minutes == null) {
-                    text = "0";
+                    text = "";
                 } else {
                     text = minutes.toString();
                 }
