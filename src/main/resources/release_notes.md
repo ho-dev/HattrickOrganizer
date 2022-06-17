@@ -70,14 +70,14 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 12, 2022
+Reports by Contributors - Dec 20, 2021 - June 17, 2022
 
 * Foppe	690
 * Pablo 314
 * Adrian 107
 * akasolace	96
+* Lidegand 	93
 * sich	91
-* Lidegand 	91
 * \_KOHb\_	76
 * TeamBMW 75
 * anti_anti 69
