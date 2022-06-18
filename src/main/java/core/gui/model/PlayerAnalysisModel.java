@@ -113,12 +113,12 @@ public class PlayerAnalysisModel extends HOTableModel {
 
 		columns[54] = matches[7];
 
-		columns[55] = additionalArray[13];
-		columns[56] = additionalArray[14];
-		columns[57] = additionalArray[15];
-		columns[58] = additionalArray[17];
-		columns[59] = additionalArray[16];
-		columns[60] = additionalArray[18];
+		columns[55] = additionalArray[16];
+		columns[56] = additionalArray[17];
+		columns[57] = additionalArray[18];
+		columns[58] = additionalArray[13];
+		columns[59] = additionalArray[14];
+		columns[60] = additionalArray[15];
 	}
 
 //  -----initialisierung-----------------------------------------
