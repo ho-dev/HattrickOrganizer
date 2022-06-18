@@ -64,12 +64,12 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[47] = additionalArray[11];
 		columns[3] = additionalArray[12];// Motherclub
 		columns[49] = additionalArray[10];
-		columns[50] = additionalArray[16];
-		columns[51] = additionalArray[17];
-		columns[52] = additionalArray[18];
-		columns[53] = additionalArray[13];
-		columns[54] = additionalArray[14];
-		columns[55] = additionalArray[15];
+		columns[50] = additionalArray[13];
+		columns[51] = additionalArray[14];
+		columns[52] = additionalArray[15];
+		columns[53] = additionalArray[17];
+		columns[54] = additionalArray[16];
+		columns[55] = additionalArray[18];
 	}
 	
     public Player getPlayer(int id) {
