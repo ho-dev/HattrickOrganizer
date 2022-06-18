@@ -237,8 +237,8 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-                var pos = team!=null?team.getPositionById(player.getPlayerID()):null;
-                return new PlayerLabelEntry(player, pos,0f, false, false);
+                var pos = team != null ? team.getPositionById(player.getPlayerID()) : null;
+                return new PlayerLabelEntry(player, pos, 0f, false, false);
             }
 
             @Override
@@ -605,8 +605,8 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 var team = model.getLineupWithoutRatingRecalc();
-                if ( team != null ) {
-                    final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
+                if (team != null) {
+                    final MatchRoleID positionBySpielerId = team.getPositionByPlayerId(player.getPlayerID());
                     if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
                         final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
                                 ImageUtilities.getJerseyIcon(
@@ -723,12 +723,12 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRating = player.getLastMatchRating();
-                if (lastMatchRating!=null && lastMatchRating > 0) {
+                if (lastMatchRating != null && lastMatchRating > 0) {
 //                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
 //                    if (info == null) {
 //                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
 //                    } else {
-                        return new RatingTableEntry(lastMatchRating, true);
+                    return new RatingTableEntry(lastMatchRating, true);
 //                    }
                 }
                 return new RatingTableEntry();
@@ -740,7 +740,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRating = player.getLastMatchRating();
-                if (lastMatchRating!=null && lastMatchRating > 0) {
+                if (lastMatchRating != null && lastMatchRating > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
                     if (info != null) {
                         return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
@@ -820,11 +820,11 @@ final public class UserColumnFactory {
 
 
         // Last match rating end of game column.
-        playerAdditionalArray[16] = new PlayerColumn(RATING, "ls.player.ratingend", 60) {
+        playerAdditionalArray[16] = new PlayerColumn(891, "ls.player.ratingend", 60) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRatingEndOfGame = player.getLastMatchRatingEndOfGame();
-                if (lastMatchRatingEndOfGame!=null && lastMatchRatingEndOfGame > 0) {
+                if (lastMatchRatingEndOfGame != null && lastMatchRatingEndOfGame > 0) {
 //                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
 //                    if (info == null) {
 //                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
@@ -851,8 +851,8 @@ final public class UserColumnFactory {
             }
         };
 
-        //last match postition
-        playerAdditionalArray[18] = new PlayerColumn(LINUP, "ls.player.lastlineup", 50) {
+        //last match position
+        playerAdditionalArray[18] = new PlayerColumn(892, "ls.player.lastlineup", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var position = player.getLastMatchPosition();
@@ -860,10 +860,10 @@ final public class UserColumnFactory {
                 if (position == null) {
                     text = "";
                 } else {
-                    text = position.toString();
+                    text = MatchRoleID.getNameForPositionWithoutTactic(MatchRoleID.getPosition(position, (byte) -1));
                 }
                 double sort = 100;
-                return new ColorLabelEntry(sort, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
+                return new ColorLabelEntry(sort, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 
