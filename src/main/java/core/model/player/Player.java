@@ -28,7 +28,7 @@ import static core.constants.player.PlayerSkill.*;
 
 public class Player {
 
-     /**
+    /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
     private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
@@ -964,9 +964,9 @@ public class Player {
     /**
      * return whether or not the position is one of the best position for the player
      */
-   public boolean isAnAlternativeBestPosition(byte position){
-       return Arrays.asList(getAlternativeBestPositions()).contains(position);
-   }
+    public boolean isAnAlternativeBestPosition(byte position){
+        return Arrays.asList(getAlternativeBestPositions()).contains(position);
+    }
 
 
     /**
@@ -1123,7 +1123,7 @@ public class Player {
         }
         return getFirstName().charAt(0) + ". " + getLastName();
 
-        }
+    }
 
 
     public java.lang.String getFullName() {
@@ -2395,28 +2395,28 @@ public class Player {
 
     /**
      * Rating at end of game
-      * @param lastMatchRatingEndOfGame number of half rating stars
+     * @param lastMatchRatingEndOfGame number of half rating stars
      */
     public void setLastMatchRatingEndOfGame(Integer lastMatchRatingEndOfGame) {
         this.lastMatchRatingEndOfGame = lastMatchRatingEndOfGame;
     }
 
     static class PositionContribute {
-    private final float m_rating;
-    private final byte clPositionID;
+        private final float m_rating;
+        private final byte clPositionID;
 
-    public PositionContribute(float rating, byte clPostionID) {
-        m_rating = rating;
-        clPositionID = clPostionID;
-    }
+        public PositionContribute(float rating, byte clPostionID) {
+            m_rating = rating;
+            clPositionID = clPostionID;
+        }
 
-    public float getRating() {
-        return m_rating;
-    }
+        public float getRating() {
+            return m_rating;
+        }
 
-    public byte getClPostionID() {
-        return clPositionID;
-    }
+        public byte getClPostionID() {
+            return clPositionID;
+        }
 
 
     }
