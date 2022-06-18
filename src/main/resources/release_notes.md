@@ -8,6 +8,7 @@
 ### Database
 
 ### Squad
+* add last match columns: rating at end of match, position and minutes (#1523)
 
 ### Team Analyser
 
