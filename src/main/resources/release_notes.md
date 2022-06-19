@@ -70,7 +70,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 17, 2022
+Reports by Contributors - Dec 20, 2021 - June 19, 2022
 
 * Foppe	690
 * Pablo 314
@@ -78,6 +78,7 @@ Reports by Contributors - Dec 20, 2021 - June 17, 2022
 * akasolace	96
 * Lidegand 	93
 * sich	91
+* Fresty di Lot 79
 * \_KOHb\_	76
 * TeamBMW 75
 * anti_anti 69
@@ -89,4 +90,4 @@ Reports by Contributors - Dec 20, 2021 - June 17, 2022
 * Csaba 14
 * Motavali 2
 * Philipp 1
-* Total translated:	1823
+* Total translated:	1902
