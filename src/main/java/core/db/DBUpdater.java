@@ -68,7 +68,7 @@ final class DBUpdater {
 				}
 
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), e);
+				HOLogger.instance().error(getClass(), e);
 			}
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
