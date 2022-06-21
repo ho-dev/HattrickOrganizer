@@ -47,7 +47,7 @@ def version_type = ["-DEV", "-BETA", ""]
 
 def development_message = [
         "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
-        "Latest beta release - the version is feature complete - feedback from early users are welcome",
+        "Latest beta release - the version is feature complete - feedback from early users is welcome",
         "Latest stable release"
 ]
 

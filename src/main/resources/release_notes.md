@@ -70,22 +70,25 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 12, 2022
+Reports by Contributors - Dec 20, 2021 - June 21, 2022
 
 * Foppe	690
 * Pablo 314
+* Ante 175
+* Adrian 107
 * akasolace	96
+* Lidegand 	93
 * sich	91
-* Lidegand 	91
+* Fresty di Lot 79
 * \_KOHb\_	76
 * TeamBMW 75
+* Frank 71
 * anti_anti 69
 * Moorhuhninho	67
-* Ante 63
 * wsbrenk 30
 * dzsoo 18
 * Sophia 17
 * Csaba 14
 * Motavali 2
 * Philipp 1
-* Total translated:	1714
+* Total translated:	2085
