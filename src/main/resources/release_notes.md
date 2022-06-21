@@ -70,7 +70,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 19, 2022
+Reports by Contributors - Dec 20, 2021 - June 21, 2022
 
 * Foppe	690
 * Pablo 314
