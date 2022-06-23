@@ -70,9 +70,10 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 21, 2022
+Reports by Contributors - Dec 20, 2021 - June 23, 2022
 
 * Foppe	690
+* brokenelevator 510
 * Pablo 314
 * Ante 175
 * Adrian 107
@@ -91,4 +92,4 @@ Reports by Contributors - Dec 20, 2021 - June 21, 2022
 * Csaba 14
 * Motavali 2
 * Philipp 1
-* Total translated:	2085
+* Total translated:	2595
