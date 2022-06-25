@@ -1802,9 +1802,9 @@ public class Player {
     }
 
     /**
-     * Training for given player for each skill
+     * Calculates training effect for each skill
      *
-     * @param train preset Trainingweeks
+     * @param train  Trainingweek giving the matches that should be calculated
      *
      * @return TrainingPerPlayer
      */
@@ -1865,11 +1865,6 @@ public class Player {
             }
         }
         return ret;
-    }
-
-    private void addExperienceSub(double experienceSub) {
-        this.subExperience += experienceSub;
-        if ( this.subExperience > .99) this.subExperience = .99;
     }
 
     /**
