@@ -541,17 +541,6 @@ public class DBManager {
 	}
 
 	/**
-	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
-	 *
-	 * @param spielerid the spielerid
-	 * @return the timestamp 4 first player hrf
-	 */
-	public Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
-		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getTimestamp4FirstPlayerHRF(spielerid);
-	}
-
-	/**
 	 * Returns the trainer code for the specified hrf. -99 if error
 	 *
 	 * @param hrfID HRF for which to load TrainerType

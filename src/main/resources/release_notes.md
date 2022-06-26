@@ -70,7 +70,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 23, 2022
+Reports by Contributors - Dec 20, 2021 - June 25, 2022
 
 * Foppe	690
 * brokenelevator 510

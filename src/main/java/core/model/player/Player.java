@@ -463,6 +463,7 @@ public class Player {
                 Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
         ));
 
+        // TODO: check if this is still necessary (training can no longer be blocked)
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
