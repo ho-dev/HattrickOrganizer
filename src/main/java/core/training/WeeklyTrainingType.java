@@ -359,7 +359,8 @@ public abstract class WeeklyTrainingType {
 		*/
 
 		if (coachLevel < 4 || coachLevel > 8) {
-			return trainingCalcError("Trainerlevel out of range [4,8]: " + coachLevel);    // dummy return
+			trainingCalcError("Trainerlevel out of range [4,8]: " + coachLevel);
+			coachLevel = 4; // calc minimum
 		}
 		var factorCoach = coachKoeff[coachLevel - 4];
 
@@ -380,7 +381,8 @@ public abstract class WeeklyTrainingType {
 		0 1.000
 		*/
 		if (assistantLevel < 0 || assistantLevel > 10) {
-			return trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);    // dummy return
+			trainingCalcError("AssistantLevel out of range [0,10]: " + assistantLevel);
+			assistantLevel = 0; // calc minimum
 		}
 		var factorAssistants =  1. + assistantLevel * .035; //assistantKoeff[assistantLevel];
 
@@ -497,7 +499,7 @@ public abstract class WeeklyTrainingType {
 
 	protected double trainingCalcError(String s) {
 		HOLogger.instance().error(this.getClass(), s);
-		return 1;
+		return 0;
 	}
 
 	/**

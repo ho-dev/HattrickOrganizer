@@ -677,4 +677,5 @@ public class HOModel {
                 this.getTrainer().getTrainerSkill(),
                 DBDataSource.HRF);
     }
+
 }
