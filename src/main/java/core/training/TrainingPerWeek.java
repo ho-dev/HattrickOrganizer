@@ -5,14 +5,8 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
-import core.model.enums.MatchType;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
-
-import java.time.Duration;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
 
 /**
  * Class that holds all information required to calculate training effect of a given week
@@ -144,7 +138,7 @@ public class TrainingPerWeek  {
         return "TrainingPerWeek[" +
                 "Training date: " + o_TrainingDate.toHT() +
                 ", Training Type: " + TrainingType.toString(o_TrainingType)  +
-                "%, Intensity: " + o_TrainingIntensity +
+                ", Intensity: " + o_TrainingIntensity +
                 "%, StaminaPart: " + o_StaminaShare +
                 "]";
     }
