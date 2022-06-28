@@ -20,15 +20,16 @@ public class TrainingWeekManager {
 	private HODateTime nextTrainingDate;
 	private HODateTime lastUpdateDate;
 
-    private List<TrainingPerWeek> m_Trainings;
-    private HODateTime m_StartDate;
+	private List<TrainingPerWeek> m_Trainings;
+	private HODateTime m_StartDate;
 	private Boolean m_IncludeUpcomingTrainings;
 
 	/**
 	 * Construct a list of TrainingPerWeek since provided initial training Date
-	 * @param startDate initial training Date
+	 *
+	 * @param startDate                initial training Date
 	 * @param includeUpcomingTrainings whether or not the TrainingPerWeek objects will contain upcoming match information
-	 * @param includeMatches whether or not the TrainingPerWeek objects will contain match information
+	 * @param includeMatches           whether or not the TrainingPerWeek objects will contain match information
 	 */
 	public TrainingWeekManager(HODateTime startDate, boolean includeUpcomingTrainings, boolean includeMatches) {
 		if (HOVerwaltung.instance().getModel() == null) {
@@ -48,6 +49,7 @@ public class TrainingWeekManager {
 
 	public void reset() {
 		nextTrainingDate = null;
+		lastUpdateDate = null;
 	}
 
 	public TrainingPerWeek getNextWeekTraining() {
@@ -74,10 +76,12 @@ public class TrainingWeekManager {
 
 	private HODateTime getNextTrainingDate() {
 		if (nextTrainingDate == null) {
-			var xtra =  HOVerwaltung.instance().getModel().getXtraDaten();
-			if ( xtra != null) {
-				nextTrainingDate =xtra.getNextTrainingDate();
-				lastUpdateDate = DBManager.instance().getMaxIdHrf().getDatum();
+			var hoModel = HOVerwaltung.instance().getModel();
+			if (hoModel != null) {
+				var xtra = hoModel.getXtraDaten();
+				if (xtra != null) {
+					nextTrainingDate = xtra.getNextTrainingDate();
+				}
 			}
 		}
 		return nextTrainingDate;
@@ -85,7 +89,7 @@ public class TrainingWeekManager {
 
 	/**
 	 * Create the list of trainings from DB but excluding 'Trainings' table
-	 *  missing weeks are created by duplicating previous entry
+	 * missing weeks are created by duplicating previous entry
 	 */
 	private List<TrainingPerWeek> createTrainingListFromHRF(boolean includeMatches) {
 
@@ -103,10 +107,10 @@ public class TrainingWeekManager {
 
 		var nbWeeks = ChronoUnit.DAYS.between(m_StartDate.instant, nextTrainingDate.instant) / 7;
 		//var currDate = nextTrainingDate.minus((int)nbWeeks * 7, ChronoUnit.DAYS);
-		var currDate = nextTrainingDate.plusDaysAtSameLocalTime(-7*(int)nbWeeks);
+		var currDate = nextTrainingDate.plusDaysAtSameLocalTime(-7 * (int) nbWeeks);
 		while (!currDate.isAfter(nextTrainingDate)) {
 
-			if ((!m_IncludeUpcomingTrainings) && (currDate.isAfter(lastUpdateDate))) {
+			if ((!m_IncludeUpcomingTrainings) && (currDate.isAfter(getLastUpdateDate()))) {
 				break;
 			}
 
@@ -152,41 +156,43 @@ public class TrainingWeekManager {
 
 		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
 		var startDate = m_StartDate.plus(7, ChronoUnit.DAYS);
-		for ( var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)){
+		for (var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)) {
 			output.put(trainingPerWeek.getTrainingDate().toLocaleHTWeek().sinceOrigin(), trainingPerWeek);
 		}
 		return output;
 	}
 
-    public List<TrainingPerWeek> getTrainingList() {
-    	return m_Trainings;
-    }
-
+	public List<TrainingPerWeek> getTrainingList() {
+		return m_Trainings;
+	}
 
 	public HODateTime getLastUpdateDate() {
+		if (lastUpdateDate == null) {
+			lastUpdateDate = DBManager.instance().getLatestHRF().getDatum();
+		}
 		return lastUpdateDate;
 	}
 
 	/**
 	 * The function push elements of m_Trainings into Training table but not replacing existing entries
-	 *
 	 */
-	public void push2TrainingsTable(){
-		DBManager.instance().saveTrainings(m_Trainings, lastUpdateDate,  false);
+	public void push2TrainingsTable() {
+		DBManager.instance().saveTrainings(m_Trainings, getLastUpdateDate(), false);
 	}
 
 	/**
 	 * The function push elements of m_Trainings into Training table but not replacing existing entries
-	 *
 	 */
-	public void pushPastTrainings2TrainingsTable(){
+	public void pushPastTrainings2TrainingsTable() {
+		var nextTraining = getNextTrainingDate();
+		if ( nextTraining == null) return;
 		List<TrainingPerWeek> pastTrainingsSinceLastUpdate = new ArrayList<>();
-		for (var training: m_Trainings) {
-			if (training.getTrainingDate().isBefore(nextTrainingDate)) {
+		for (var training : m_Trainings) {
+			if (training.getTrainingDate().isBefore(nextTraining)) {
 				pastTrainingsSinceLastUpdate.add(training);
 			}
 		}
-		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, lastUpdateDate, false);
+		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, getLastUpdateDate(), false);
 	}
 
 }

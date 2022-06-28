@@ -463,6 +463,7 @@ public class Player {
                 Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
         ));
 
+        // TODO: check if this is still necessary (training can no longer be blocked)
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
@@ -1802,9 +1803,9 @@ public class Player {
     }
 
     /**
-     * Training for given player for each skill
+     * Calculates training effect for each skill
      *
-     * @param train preset Trainingweeks
+     * @param train  Trainingweek giving the matches that should be calculated
      *
      * @return TrainingPerPlayer
      */
@@ -1865,11 +1866,6 @@ public class Player {
             }
         }
         return ret;
-    }
-
-    private void addExperienceSub(double experienceSub) {
-        this.subExperience += experienceSub;
-        if ( this.subExperience > .99) this.subExperience = .99;
     }
 
     /**
