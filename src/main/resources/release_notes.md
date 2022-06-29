@@ -64,13 +64,14 @@
 * fix finance bug concerning missing spectators' income in misc module (#1282)
 * fix last weeks profit/loss, temporary income sum and missing sponsors bonus (#1301)
 * fix CHPP token not being saved when exiting HO on macos (#1291)
+* fix portable HO update error when java version is changed (#1545)
 
 ## QA Team
 * masterpatje does a great job of testing the development versions of the HO to get rid of even the last bugs in it.
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 25, 2022
+Reports by Contributors - Dec 20, 2021 - June 29, 2022
 
 * Foppe	690
 * brokenelevator 510
