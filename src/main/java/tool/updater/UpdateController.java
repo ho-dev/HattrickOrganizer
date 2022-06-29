@@ -130,9 +130,9 @@ public final class UpdateController {
     public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
 
         return switch (versionType) {
-            case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV.zip";
-            case "BETA" -> "https://github.com/akasolace/HO/releases/download/beta/HO-" + full_version + "-portable-win-BETA.zip";
-            default -> "https://github.com/akasolace/HO/releases/download/tag_stable/HO-" + full_version + "-portable-win.zip";
+            case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV-JRE.zip";
+            case "BETA" -> "https://github.com/akasolace/HO/releases/download/beta/HO-" + full_version + "-portable-win-BETA-JRE.zip";
+            default -> "https://github.com/akasolace/HO/releases/download/tag_stable/HO-" + full_version + "-portable-win-JRE.zip";
         };
     }
 
