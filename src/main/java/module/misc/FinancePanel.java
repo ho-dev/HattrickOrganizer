@@ -183,12 +183,12 @@ final class FinancePanel extends JPanel {
         add(label,salariesLabel.getComponent(false),2,3);
 
         label = new JLabel(getTranslation("ls.finance.expenses.stadium_maintenance"));
-        add(label, stadiumMaintenanceLabel.getComponent(false),2,4);
+        add(label,stadiumMaintenanceLabel.getComponent(false),2,4);
 
         label = new JLabel(getTranslation("ls.finance.expenses.stadium_building"));
-        add(label, stadiumMaintenanceLabel.getComponent(false),2,5);
+        add(label,stadiumBuildingLabel.getComponent(false),2,5);
 
-        label = new JLabel(getTranslation("ls.finance.expenses.staf"));
+        label = new JLabel(getTranslation("ls.finance.expenses.staff"));
         add(label,staffLabel.getComponent(false),2,6);
 
         label = new JLabel(getTranslation("ls.finance.expenses.youth_scouting"));
