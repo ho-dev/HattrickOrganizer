@@ -75,22 +75,23 @@ Reports by Contributors - Dec 20, 2021 - June 29, 2022
 
 * Foppe	690
 * brokenelevator 510
-* Pablo 314
-* Ante 219
+* Pablo 313
+* Ante 218
 * Adrian 107
-* Fresty di Lot 103
+* Fresty di Lot 101
 * sich	96
 * akasolace	96
+* Frank 94
 * Lidegand 	93
 * \_KOHb\_	76
 * TeamBMW 75
-* Frank 71
 * anti_anti 69
 * Moorhuhninho	67
 * wsbrenk 30
 * dzsoo 18
 * Sophia 17
 * Csaba 14
+* Michał 6
 * Motavali 2
 * Philipp 1
-* Total translated:	2668
+* Total translated:	2693
