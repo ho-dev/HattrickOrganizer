@@ -25,7 +25,7 @@ import static core.util.Helper.getTranslation;
 final class FinancePanel extends JPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
-	private final ColorLabelEntry salariesLabel = new ColorLabelEntry("");
+    private final ColorLabelEntry salariesLabel = new ColorLabelEntry("");
     private final ColorLabelEntry totalCostLabel = new ColorLabelEntry("");
     private final ColorLabelEntry youthLabel = new ColorLabelEntry("");
     private final ColorLabelEntry newSigningsLabel = new ColorLabelEntry("");
@@ -51,7 +51,6 @@ final class FinancePanel extends JPanel {
 
     /**
      * Creates a new FinancePanel object.
-     *
      */
     FinancePanel(boolean currentFinance) {
         this.currentFinance = currentFinance;
@@ -60,13 +59,13 @@ final class FinancePanel extends JPanel {
 
     void setLabels() {
         final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
-        if ( finances == null) return;
+        if (finances == null) return;
 
         final float factor = core.model.UserParameter.instance().FXrate;
 
         if (currentFinance) {
             cashFundsLabel.setSpecialNumber((finances.getCash() / factor)
-                                            + (finances.getExpectedWeeksTotal() / factor), true, false);
+                    + (finances.getExpectedWeeksTotal() / factor), true, false);
             attendanceLabel.setSpecialNumber(finances.getIncomeSpectators() / factor, true, false);
             sponsorsLabel.setSpecialNumber(finances.getIncomeSponsors() / factor, true, false);
             sponsorsBonusLabel.setSpecialNumber(finances.getIncomeSponsorsBonus() / factor, true, false);
@@ -125,16 +124,16 @@ final class FinancePanel extends JPanel {
 
         label = new JLabel(getTranslation("ls.finance.cash"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
-        add(label, cashFundsLabel.getComponent(false),0,0);
+        add(label, cashFundsLabel.getComponent(false), 0, 0);
 
-        label = new JLabel(" ",SwingConstants.CENTER);
+        label = new JLabel(" ", SwingConstants.CENTER);
         constraints.anchor = GridBagConstraints.WEST;
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 2;
         add(label);
 
-        label = new JLabel(getTranslation("ls.finance.revenue"),SwingConstants.CENTER);
+        label = new JLabel(getTranslation("ls.finance.revenue"), SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
         label.setOpaque(true);
@@ -145,29 +144,29 @@ final class FinancePanel extends JPanel {
 
         label = new JLabel(getTranslation("ls.finance.revenue.match_takings"));  //Match takings
         constraints.fill = GridBagConstraints.NONE;
-        add(label,attendanceLabel.getComponent(false),0,3);
+        add(label, attendanceLabel.getComponent(false), 0, 3);
 
         label = new JLabel(getTranslation("ls.finance.revenue.sponsors"));  //Sponsors
-        add(label,sponsorsLabel.getComponent(false),0,4);
+        add(label, sponsorsLabel.getComponent(false), 0, 4);
 
         label = new JLabel(getTranslation("ls.finance.revenue.sponsors_bonuses"));  //Sponsors Bonus
-        add(label,sponsorsBonusLabel.getComponent(false),0,5);
+        add(label, sponsorsBonusLabel.getComponent(false), 0, 5);
 
         label = new JLabel(getTranslation("ls.finance.revenue.player_sales"));
-        add(label,playerSalesIncomeLabel.getComponent(false),0,6);
+        add(label, playerSalesIncomeLabel.getComponent(false), 0, 6);
 
         label = new JLabel(getTranslation("ls.finance.revenue.commission"));
-        add(label,commissionIncomeLabel.getComponent(false),0,7);
+        add(label, commissionIncomeLabel.getComponent(false), 0, 7);
 
         label = new JLabel(getTranslation("ls.finance.other"));
-        add(label,otherIncomeLabel.getComponent(false),0,8);
+        add(label, otherIncomeLabel.getComponent(false), 0, 8);
 
         label = new JLabel(getTranslation("Gesamteinnahmen"));  // Total Revenue
         label.setFont(label.getFont().deriveFont(Font.BOLD));
-        add(label,revenueTotalLabel.getComponent(false),0,11);
+        add(label, revenueTotalLabel.getComponent(false), 0, 11);
 
 
-        label = new JLabel(getTranslation("ls.finance.expenses"),SwingConstants.CENTER);
+        label = new JLabel(getTranslation("ls.finance.expenses"), SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
         label.setOpaque(true);
@@ -180,32 +179,32 @@ final class FinancePanel extends JPanel {
 
         label = new JLabel(getTranslation("ls.finance.expenses.wages"));  // Wages
         constraints.fill = GridBagConstraints.NONE;
-        add(label,salariesLabel.getComponent(false),2,3);
+        add(label, salariesLabel.getComponent(false), 2, 3);
 
         label = new JLabel(getTranslation("ls.finance.expenses.stadium_maintenance"));
-        add(label,stadiumMaintenanceLabel.getComponent(false),2,4);
+        add(label, stadiumMaintenanceLabel.getComponent(false), 2, 4);
 
         label = new JLabel(getTranslation("ls.finance.expenses.stadium_building"));
-        add(label,stadiumBuildingLabel.getComponent(false),2,5);
+        add(label, stadiumBuildingLabel.getComponent(false), 2, 5);
 
         label = new JLabel(getTranslation("ls.finance.expenses.staff"));
-        add(label,staffLabel.getComponent(false),2,6);
+        add(label, staffLabel.getComponent(false), 2, 6);
 
         label = new JLabel(getTranslation("ls.finance.expenses.youth_scouting"));
-        add(label,youthLabel.getComponent(false),2,7);
+        add(label, youthLabel.getComponent(false), 2, 7);
 
         label = new JLabel(getTranslation("ls.finance.expenses.new_signings"));
-        add(label,newSigningsLabel.getComponent(false),2,8);
+        add(label, newSigningsLabel.getComponent(false), 2, 8);
 
         label = new JLabel(getTranslation("ls.finance.other"));
-        add(label,otherCostsLabel.getComponent(false),2,9);
+        add(label, otherCostsLabel.getComponent(false), 2, 9);
 
         label = new JLabel(getTranslation("ls.finance.expenses.interest"));
-        add(label,interestExpensesLabel.getComponent(false),2,10);
+        add(label, interestExpensesLabel.getComponent(false), 2, 10);
 
         label = new JLabel(getTranslation("Gesamtausgaben"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
-        add(label,totalCostLabel.getComponent(false),2,11);
+        add(label, totalCostLabel.getComponent(false), 2, 11);
 
         if (currentFinance) {
             label = new JLabel(getTranslation("ErwarteterGewinnVerlust"));
@@ -230,18 +229,18 @@ final class FinancePanel extends JPanel {
         add(profitLossLabel.getComponent(false));
     }
 
-    private void add(JLabel label,Component comp, int x, int y){
-    	constraints.anchor = GridBagConstraints.WEST;
-    	constraints.gridx = x;
-    	constraints.gridy = y;
-    	constraints.gridwidth = 1;
-    	layout.setConstraints(label, constraints);
-    	add(label);
-    	constraints.anchor = GridBagConstraints.EAST;
-    	constraints.gridx = x+1;
-    	constraints.gridy = y;
-    	constraints.gridwidth = 1;
-    	layout.setConstraints(comp, constraints);
-    	add(comp);
+    private void add(JLabel label, Component comp, int x, int y) {
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.gridx = x;
+        constraints.gridy = y;
+        constraints.gridwidth = 1;
+        layout.setConstraints(label, constraints);
+        add(label);
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.gridx = x + 1;
+        constraints.gridy = y;
+        constraints.gridwidth = 1;
+        layout.setConstraints(comp, constraints);
+        add(comp);
     }
 }
