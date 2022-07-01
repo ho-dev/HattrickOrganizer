@@ -171,7 +171,7 @@ public class MatchBanner extends JPanel implements Refreshable {
 
             if (m_clSelectedMatch.getWeather() == Weather.NULL){
                 m_clSelectedMatch.setWeather(Weather.UNKNOWN);
-                HOLogger.instance().error(this.getClass(), "Weather for the selected game is null !");
+                HOLogger.instance().info(this.getClass(), "Weather for the selected game is unknown !");
             }
 
             Icon weatherIcon = ThemeManager.getIcon(HOIconName.WEATHER[m_clSelectedMatch.getWeather().getId()]);
