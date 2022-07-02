@@ -40,7 +40,7 @@ test {
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '7'
 def minor = '0'
-def development_stage = 1
+def development_stage = 0
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
 def version_type = ["-DEV", "-BETA", ""]
