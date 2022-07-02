@@ -73,18 +73,17 @@ public class MatchReportPanel extends LazyImagePanel {
 			return;
 		}
 
-
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 			clear();
 
 			Matchdetails details = this.matchesModel.getDetails();
+			List<MatchEvent> matchHighlights = details.getHighlights();
+			if ( matchHighlights == null) return;
 
 			JLabel timeLabel, eventIcon, eventDescription;
-
-			List<MatchEvent> matchHighlights = details.getHighlights();
 			Icon icon;
-			Boolean bEventHighlighted;
-			Boolean bMatchFinished = false;
+			boolean bEventHighlighted;
+			boolean bMatchFinished = false;
 
 			int homePenalitiesScored=0;
 			int guestPenalitiesScored=0;
@@ -177,7 +176,6 @@ public class MatchReportPanel extends LazyImagePanel {
 					panel.add(timeLabel);
 
 					constraints.anchor = GridBagConstraints.LINE_START;
-					constraints.fill = GridBagConstraints.HORIZONTAL;
 					constraints.fill = GridBagConstraints.VERTICAL;
 					constraints.weightx = 0.0;
 					constraints.gridy = i + 4;

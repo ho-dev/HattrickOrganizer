@@ -29,6 +29,7 @@
 * calculate effect of man marking on ratings (#682)
 
 ### Matches
+* fix error on selecting matches without downloaded highlights (#1553)
 
 ### Lineup
 * refactoring, including loading and storing of lineup templates (#1267)
@@ -71,7 +72,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 30, 2022
+Reports by Contributors - Dec 20, 2021 - July 02, 2022
 
 * Foppe	690
 * brokenelevator 510
@@ -79,10 +80,10 @@ Reports by Contributors - Dec 20, 2021 - June 30, 2022
 * Ante 218
 * Adrian 107
 * Fresty di Lot 101
+* Lidegand 	98
 * sich	96
 * akasolace	96
 * Frank 94
-* Lidegand 	93
 * \_KOHb\_	76
 * TeamBMW 75
 * anti_anti 69
@@ -91,7 +92,7 @@ Reports by Contributors - Dec 20, 2021 - June 30, 2022
 * dzsoo 18
 * Sophia 17
 * Csaba 14
-* Michał 6
+* Michał 9
 * Motavali 2
 * Philipp 1
-* Total translated:	2693
+* Total translated:	2701
