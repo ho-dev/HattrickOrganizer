@@ -29,6 +29,7 @@
 * calculate effect of man marking on ratings (#682)
 
 ### Matches
+* fix error on selecting matches without downloaded highlights (#1553)
 
 ### Lineup
 * refactoring, including loading and storing of lineup templates (#1267)
