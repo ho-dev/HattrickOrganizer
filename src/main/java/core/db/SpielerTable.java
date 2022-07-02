@@ -555,7 +555,7 @@ final class SpielerTable extends AbstractTable {
             player.setSubskill4PlayerSkill(PlayerSkill.SCORING,rs.getFloat("SubTorschuss"));
 			player.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
 
-			player.setSubExperience(rs.getFloat("SubExperience"));
+			player.setSubExperience(rs.getDouble("SubExperience"));
 			player.setNationalTeamId(rs.getInt("NationalTeamID"));
 
             player.setGelbeKarten(rs.getInt("GelbeKarten"));
