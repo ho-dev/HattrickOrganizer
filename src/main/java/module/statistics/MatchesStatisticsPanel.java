@@ -395,8 +395,10 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 			}
 
 			UserParameter.instance().statistikSpielerFinanzenAnzahlHRF = anzahlHRF;
-			UserParameter.instance().statistikSpieleFilter = ((CBItem) c_jcbMatchesFilter
-					.getSelectedItem()).getId();
+			var selectedItem = (CBItem) c_jcbMatchesFilter.getSelectedItem();
+			if ( selectedItem != null){
+				UserParameter.instance().statistikSpieleFilter = selectedItem.getId();
+			}
 
 			MatchKurzInfo[] matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
 					HOVerwaltung.instance().getModel().getBasics().getTeamId(),
@@ -509,13 +511,14 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 				// Stimmung, Selbstvertrauen
 				var matchDate = match.getMatchSchedule();
-				int hrfid = DBManager.instance().getHRFID4Date(matchDate.toDbTimestamp());
+				var matchDateTimestamg = matchDate.toDbTimestamp();
+				int hrfid = DBManager.instance().getHRFID4Date(matchDateTimestamg);
 				int[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauenValues(hrfid);
 
 				statistikWerte[9][i] = stimmungSelbstvertrauen[0];
 				statistikWerte[10][i] = stimmungSelbstvertrauen[1];
 
-				statistikWerte[13][i] = matchDate.instant.getEpochSecond();
+				statistikWerte[13][i] = matchDateTimestamg.getTime();
 
 				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(match.getMatchID(), match.getMatchType(), teamid);
 				float sterne = 0;
