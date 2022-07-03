@@ -1,5 +1,6 @@
 package module.teamAnalyzer.ui;
 
+import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
@@ -91,7 +92,6 @@ public class FilterPanel extends JPanel implements ActionListener {
 			radioManual.setSelected(true);
 			cLayout.show(cards, CARD_MANUAL);
 			manualPanel.reload();
-			return;
 		}
 	}
 
@@ -102,8 +102,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 		teamComboUpdating = true;
 		teamCombo.removeAllItems();
 		int i = 0;
-		for (Iterator<Team> iter = TeamManager.getTeams().iterator(); iter.hasNext();) {
-			Team element = iter.next();
+		for (Team element : TeamManager.getTeams()) {
 			teamCombo.addItem(element);
 			if (SystemManager.getActiveTeamId() == element.getTeamId()) {
 				teamCombo.setSelectedItem(element);
@@ -153,8 +152,8 @@ public class FilterPanel extends JPanel implements ActionListener {
 				HOLogger.instance().log(getClass(),
 						"UPDATE for Team " + SystemManager.getActiveTeamId());
 				HattrickManager.downloadPlayers(SystemManager.getActiveTeamId());
-				HattrickManager.downloadMatches(SystemManager.getActiveTeamId(),
-						TeamAnalyzerPanel.filter);
+				HattrickManager.downloadMatches(SystemManager.getActiveTeamId(), TeamAnalyzerPanel.filter);
+				HOMainFrame.instance().setInformationCompleted();
 				SystemManager.refresh();
 			}
 		});

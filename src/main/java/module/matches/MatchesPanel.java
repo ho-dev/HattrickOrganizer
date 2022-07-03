@@ -114,10 +114,10 @@ public final class MatchesPanel extends LazyImagePanel {
 	private void addListeners() {
 		this.reloadMatchButton.addActionListener(e -> {
 			int matchid = matchesModel.getMatch().getMatchID();
-			OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel
-					.getMatch().getMatchType(), true);
+			OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), true);
 			RefreshManager.instance().doReInit();
 			showMatch(matchid);
+			HOMainFrame.instance().setInformationCompleted();
 		});
 
 		this.deleteButton.addActionListener(e -> deleteSelectedMatches());
