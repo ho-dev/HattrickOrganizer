@@ -1,6 +1,7 @@
 package module.matches;
 
 import core.db.DBManager;
+import core.gui.HOMainFrame;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
@@ -46,6 +47,7 @@ public class MatchesModel {
 			// Lineup team was not stored (Verlegenheitstruppe)
 			var ok = OnlineWorker.downloadMatchData(match, true);
 			ret = DBManager.instance().loadMatchLineupTeam(type, matchId, teamId);
+			HOMainFrame.instance().setInformationCompleted();
 		}
 		return ret;
 	}
