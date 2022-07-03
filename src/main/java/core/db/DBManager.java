@@ -1249,7 +1249,6 @@ public class DBManager {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
 	}
 
-
 	/**
 	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
 	 * and of type <code>matchtyp</code>.
@@ -1258,14 +1257,13 @@ public class DBManager {
 	 * <code>MatchesPanel.ALL_MATCHS</code>.
 	 *
 	 * @param teamId   The ID of the team, or -1 for all.
-	 * @param matchtyp Type of match, as defined in {@link module.matches.MatchesPanel}.
-	 * @param asc      Ascending if true, descending otherwise.
+	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
+	 * @param matchLocation Home, Away, Neutral
 	 *
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, boolean asc) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(teamId, matchtyp, asc);
+	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
+		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.htStart.toDbTimestamp(), true);
 	}
 
 	/**
@@ -1278,13 +1276,12 @@ public class DBManager {
 	 * @param teamId   The ID of the team, or -1 for all.
 	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
 	 * @param matchLocation Home, Away, Neutral
-	 * @param asc      Ascending if true, descending otherwise.
-	 *
+	 * @param from filter match schedule date
+	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, boolean asc) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(teamId, iMatchType, matchLocation, asc);
+	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, iMatchType, matchLocation, from, includeUpcoming);
 	}
 
 	/**

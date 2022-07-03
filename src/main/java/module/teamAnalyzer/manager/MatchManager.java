@@ -62,8 +62,7 @@ public class MatchManager {
         String oldName = SystemManager.getActiveTeamName();
 
         MatchKurzInfo[] matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager.getActiveTeamId(),
-                                                                                MatchesPanel.OWN_GAMES,
-                                                                                false);
+                                                                                MatchesPanel.OWN_GAMES);
 
         for (MatchKurzInfo matchInfo : matchKurtzInfo) {
             if (matchInfo.getMatchStatus() != MatchKurzInfo.FINISHED) {
