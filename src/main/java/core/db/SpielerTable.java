@@ -95,7 +95,10 @@ final class SpielerTable extends AbstractTable {
 				new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true),
 				new ColumnDescriptor("PlayerCategory", Types.INTEGER, true),
 				new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255)
+				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255),
+				new ColumnDescriptor("LastMatch_PlayedMinutes", Types.INTEGER, true),
+				new ColumnDescriptor("LastMatch_PositionCode", Types.INTEGER, true),
+				new ColumnDescriptor("LastMatch_RatingEndOfGame", Types.INTEGER, true)
 		};
 	}
 
