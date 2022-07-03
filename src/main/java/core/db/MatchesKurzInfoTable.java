@@ -13,6 +13,8 @@ import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 import org.jetbrains.annotations.Nullable;
+
+import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -167,90 +169,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	/**
 	 * Important: If the teamid = -1 the match type must be ALL_GAMES!
-	 * 
-	 * @param teamId
-	 *            The Teamid or -1 for all
-	 * @param matchtyp
-	 *            Which matches? Constants in the GamesPanel!
-	 * 
-	 */
-	MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, boolean asc) {
-		StringBuilder sql = new StringBuilder(100);
-		ResultSet rs;
-		final ArrayList<MatchKurzInfo> liste = new ArrayList<>();
-
-		// Ohne Matchid nur AlleSpiele möglich!
-		if ((teamId < 0) && (matchtyp != MatchesPanel.ALL_GAMES)) {
-			return new MatchKurzInfo[0];
-		}
-
-		try {
-			sql.append("SELECT * FROM ").append(getTableName());
-
-			if (matchtyp == MatchesPanel.ALL_GAMES){
-
-				// Nur eigene gewählt
-				if (matchtyp >= 10) {
-					matchtyp = matchtyp - 10;
-
-					sql.append(" WHERE Status=" + MatchKurzInfo.FINISHED);
-				}
-
-			}
-			else{
-				if (matchtyp != MatchesPanel.OTHER_TEAM_GAMES) {
-					sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
-				}
-
-				if (matchtyp == MatchesPanel.OTHER_TEAM_GAMES) {
-					sql.append(" WHERE ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
-				}
-
-				// Nur eigene gewählt
-				if (matchtyp >= 10) {
-					matchtyp = matchtyp - 10;
-
-					sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
-				}
-			}
-
-			sql.append(getMatchTypWhereClause(matchtyp));
-
-			// nicht desc
-			sql.append(" ORDER BY MatchDate");
-
-			if (!asc) {
-				sql.append(" DESC");
-			}
-
-			rs = adapter.executeQuery(sql.toString());
-
-			assert rs != null;
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				liste.add(createMatchKurzInfo(rs));
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),
-					"DB.getMatchesKurzInfo Error" + e);
-		}
-
-		// matches = new MatchKurzInfo[liste.size()];
-		// Helper.copyVector2Array(liste, matches);
-
-		return liste.toArray(new MatchKurzInfo[0]);
-	}
-
-
-	/**
-	 * Important: If the teamid = -1 the match type must be ALL_GAMES!
 	 * @param teamId The Teamid or -1 for all
 	 * @param matchtyp Which matches? Constants in the GamesPanel!
 	 * @param matchLocation Home, Away, Neutral
-	 *
+	 * @param from filter match schedule date
+	 * @param includeUpcoming if false filter finished matches only
+	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, MatchLocation matchLocation, boolean asc) {
+	MatchKurzInfo[] getMatchesKurzInfo(int teamId, int matchtyp, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
 		StringBuilder sql = new StringBuilder(100);
 		ResultSet rs;
 		final ArrayList<MatchKurzInfo> liste = new ArrayList<>();
@@ -260,49 +186,38 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			return new MatchKurzInfo[0];
 		}
 
-
 		sql.append("SELECT * FROM ").append(getTableName());
 
-
-		if(matchtyp == MatchesPanel.ALL_GAMES){
-
-			sql.append(" WHERE Status=" + MatchKurzInfo.FINISHED);
-		}
-		else
-		{
-			if (teamId != -1){
-
-				// OTHER TEAM GAMES =============================================
-				if(matchtyp == MatchesPanel.OTHER_TEAM_GAMES){
-					sql.append(" WHERE ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
+		// filter time
+		sql.append(" WHERE MatchDate>='").append(from).append("'");
+		if(matchtyp != MatchesPanel.ALL_GAMES){
+			// OTHER TEAM GAMES =============================================
+			if(matchtyp == MatchesPanel.OTHER_TEAM_GAMES){
+				sql.append(" AND ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
+			}
+			// MY GAMES =============================================
+			else{
+				switch (matchLocation) {
+					case HOME -> sql.append(" AND HeimID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+					case AWAY -> sql.append(" AND GastID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
+					case NEUTRAL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") AND (isNeutral=true) ");
+					case ALL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") ");
 				}
-				// MY GAMES =============================================
-				else{
-					switch (matchLocation) {
-						case HOME -> sql.append(" WHERE HeimID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
-						case AWAY -> sql.append(" WHERE GastID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
-						case NEUTRAL -> sql.append(" WHERE (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") AND (isNeutral=true) ");
-						case ALL -> sql.append(" WHERE (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") ");
-					}
-				}
-
-				sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
-
 			}
 		}
 
 		// Filter matchType
-		if (matchtyp >= 10) {
+		if (matchtyp >= 10 ) {
 			matchtyp = matchtyp - 10;
+			includeUpcoming = false;
+		}
+
+		if( !includeUpcoming) {
+			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
 		}
 
 		sql.append(getMatchTypWhereClause(matchtyp));
-
-		sql.append(" ORDER BY MatchDate");
-
-		if (!asc) {
-			sql.append(" DESC");
-		}
+		sql.append(" ORDER BY MatchDate DESC");
 
 		try {
 			rs = adapter.executeQuery(sql.toString());

@@ -8,6 +8,7 @@ import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.match.MatchLineupPosition;
+import core.util.HODateTime;
 import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
@@ -19,6 +20,7 @@ import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
+import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
@@ -33,6 +35,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -400,18 +404,19 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				UserParameter.instance().statistikSpieleFilter = selectedItem.getId();
 			}
 
+			var from = HODateTime.now().minus(anzahlHRF*7, ChronoUnit.DAYS);
 			MatchKurzInfo[] matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
 					HOVerwaltung.instance().getModel().getBasics().getTeamId(),
-					((CBItem) c_jcbMatchesFilter.getSelectedItem()).getId(), true);
+					selectedItem.getId(), MatchLocation.ALL, from.toDbTimestamp(), false);
 
-			int anzahl = Math.min(matchkurzinfos.length, anzahlHRF);
+			int anzahl = matchkurzinfos.length;
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 			double[][] statistikWerte = new double[14][anzahl];
 
 			// Infos zusammenstellen
 			for (int i = 0; i < anzahl; i++) {
-				var match = matchkurzinfos[matchkurzinfos.length - i - 1];
+				var match = matchkurzinfos[i];
 				Matchdetails details = match.getMatchdetails();
 
 				int bewertungwert;
@@ -511,14 +516,14 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 				// Stimmung, Selbstvertrauen
 				var matchDate = match.getMatchSchedule();
-				var matchDateTimestamg = matchDate.toDbTimestamp();
-				int hrfid = DBManager.instance().getHRFID4Date(matchDateTimestamg);
+				var matchDateTimestamp = matchDate.toDbTimestamp();
+				int hrfid = DBManager.instance().getHRFID4Date(matchDateTimestamp);
 				int[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauenValues(hrfid);
 
 				statistikWerte[9][i] = stimmungSelbstvertrauen[0];
 				statistikWerte[10][i] = stimmungSelbstvertrauen[1];
 
-				statistikWerte[13][i] = matchDateTimestamg.getTime();
+				statistikWerte[13][i] = matchDateTimestamp.getTime();
 
 				List<MatchLineupPosition> team = DBManager.instance().getMatchLineupPlayers(match.getMatchID(), match.getMatchType(), teamid);
 				float sterne = 0;
