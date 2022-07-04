@@ -19,7 +19,6 @@
 ### Lineup
 
 ### Statistics
-* fix chart time axis (#1561)
 
 ### NT
 
