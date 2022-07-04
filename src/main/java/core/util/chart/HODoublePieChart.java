@@ -130,7 +130,7 @@ public class HODoublePieChart implements IChart {
 
                 // Serie is removed
                 if (seriesR.containsKey(serieName)) {
-                    serie = m_chartL.removeSeries(serieName);
+                    serie = m_chartR.removeSeries(serieName);
                     serie.setShowInLegend(false);
                 }
 
