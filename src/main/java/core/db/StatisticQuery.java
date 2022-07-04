@@ -10,6 +10,7 @@ import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -409,7 +410,7 @@ public class StatisticQuery {
 
 
 	// The data returned by this function are displayed in the Finance tab of the statistics module
-	public static double[][] getDataForFinancesStatisticsPanel(int iNumberHRF) {
+	public static double[][] getDataForFinancesStatisticsPanel(int iNumberWeeks) {
 
 		final int iNumberColumns = 18;
 		final float fxRate = core.model.UserParameter.instance().FXrate;
@@ -417,10 +418,10 @@ public class StatisticQuery {
 		Vector<double[]> values = new Vector<>();
 
 		try {
-			//TODO: filter one 1 HRF per HTweek only
-			//TODO: change filter iNumberHRF to HTSeason
+			var from = HODateTime.now().minus(iNumberWeeks*7, ChronoUnit.DAYS);
 			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
-					"SELECT * FROM ECONOMY ORDER BY FetchedDate DESC LIMIT " + iNumberHRF);
+					"SELECT * FROM ECONOMY WHERE FetchedDate >= '" + from.toDbTimestamp() +
+							"' ORDER BY FetchedDate DESC");
 
 			if (rs == null) return new double[0][0];
 

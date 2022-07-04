@@ -38,6 +38,9 @@
 * fixed goalkeeper could not be selected as team captain (#1340)
 * fix null pointer exception in lineup assistant if no current lineup exists (#1496)
 
+### Statistics
+* fix chart time axis (#1561)
+
 ### NT
 * fix download xml parse errors (#1305)
 * tracking confidence and team spirit of nt teams (#1305)
