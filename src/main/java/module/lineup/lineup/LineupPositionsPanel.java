@@ -119,7 +119,6 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-		if ( lineup == null) return;
 
 		for (Player player: allPlayers) {
 			// the first 11
@@ -139,7 +138,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 				boolean include = true;
 				if ( bExcludeLast) {
 					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup().getLineup();
-					if (previousLineup != null && previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+					if (previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
 						include = false;
 					}
 				}

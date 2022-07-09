@@ -158,7 +158,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
             final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-            if ( lineup == null) return;
 
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
@@ -236,7 +235,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
         Lineup lineup = model.getLineupWithoutRatingRecalc();
-        if (lineup == null) return;
 
         m_weather = weather;
         m_useWeatherImpact = useWeatherImpact;
@@ -329,12 +327,10 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         //Get currently setup player in that position
         var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        if ( team != null) {
-            final MatchRoleID position = team.getPositionById(m_iPositionID);
-            if (position != null) {
-                selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
-                setTactic(position.getTactic(), selectedPlayer);
-            }
+        final MatchRoleID position = team.getPositionById(m_iPositionID);
+        if (position != null) {
+            selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
+            setTactic(position.getTactic(), selectedPlayer);
         }
         setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub);
         initLabel();
@@ -425,18 +421,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         m_jcbPlayer.removeItemListener(this);
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-
         // list of all players currently set as subs
         List<Player> lSubs = new ArrayList<>();
-
+        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         for (Player player : allPlayers) {
             if (lineup.isPlayerASub(player.getPlayerID())) {
                 lSubs.add(player);
             }
         }
-
-
 
         final DefaultComboBoxModel<PlayerCBItem> cbModel = ((DefaultComboBoxModel<PlayerCBItem>) m_jcbPlayer.getModel());
 
@@ -525,7 +517,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         else if (m_iPositionID == IMatchRoleID.captain) {
             m_jlPosition.setText(getLangStr("Spielfuehrer"));
         }
-        else if (lineup != null) {
+        else {
             final MatchRoleID position = lineup.getPositionById(m_iPositionID);
 
             if (position != null) {
