@@ -25,7 +25,7 @@
 ### Training
 
 ### League
-  
+
 ### Youth
 
 ### Misc

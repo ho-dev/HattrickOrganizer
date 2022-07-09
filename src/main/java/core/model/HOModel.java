@@ -23,6 +23,7 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.youth.YouthTraining;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
@@ -190,34 +191,35 @@ public class HOModel {
      * returns the lineup (setRatings is called)
      */
     public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
-        if ( getCurrentLineupTeam() != null) {
-            m_clAufstellung.getLineup().setRatings();
-        }
+        getCurrentLineupTeam();
+        m_clAufstellung.getLineup().setRatings();
         return m_clAufstellung;
     }
 
     /**
      * returns the lineup (setRatings is NOT called)
      */
-    public final MatchLineupTeam getCurrentLineupTeam() {
+    public final @NotNull MatchLineupTeam getCurrentLineupTeam() {
         if (m_clAufstellung == null) {
             m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
             if (m_clAufstellung != null) {
                 m_clAufstellung.calcStyleOfPlay();
+            }
+            else {
+                // create an empty lineup
+                m_clAufstellung = new MatchLineupTeam();
+                m_clAufstellung.setLineup(new Lineup());
             }
         }
         return m_clAufstellung;
     }
 
     /**
-     * returns the lineup (redundant to getCurrentLineup)
+     * returns the lineup
      */
-    public final Lineup getLineupWithoutRatingRecalc() {
+    public final @NotNull Lineup getLineupWithoutRatingRecalc() {
         var team = getCurrentLineupTeam();
-        if ( team != null ){
-            return team.getLineup();
-        }
-        return null;
+        return team.getLineup();
     }
 
     /**

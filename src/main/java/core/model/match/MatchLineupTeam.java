@@ -9,6 +9,7 @@ import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,9 +103,12 @@ public class MatchLineupTeam {
 	 * 
 	 * @return Value of property m_vAufstellung.
 	 */
-	public final Lineup getLineup() {
+	public final @NotNull Lineup getLineup() {
 		if ( lineup == null){
 			loadLineup();
+			if ( lineup == null){
+				lineup = new Lineup(); // create empty lineup
+			}
 		}
 		return lineup;
 	}
