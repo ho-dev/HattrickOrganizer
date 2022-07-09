@@ -36,7 +36,7 @@
 * fixed a bug when downloading team logos (#1300)
 * substitutions of the same minute can be ordered (#1039)
 * fixed goalkeeper could not be selected as team captain (#1340)
-* fix null pointer exception in lineup assistant if no current lineup exists (#1496)
+* fix null pointer exception in lineup assistant if no current lineup exists (#1496, #1571)
 
 ### Statistics
 * fix chart time axis (#1561)
