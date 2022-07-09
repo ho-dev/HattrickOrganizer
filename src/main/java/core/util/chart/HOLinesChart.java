@@ -166,7 +166,8 @@ public class HOLinesChart implements IChart {
 
         XYSeries serie;
 
-        m_chart.getStyler().setHasAnnotations(m_hasLabels);
+        // TODO: setHasAnnotations not defined in XYChart style
+        //m_chart.getStyler().setHasAnnotations(m_hasLabels);
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
 
         var series = m_chart.getSeriesMap();
@@ -209,9 +210,9 @@ public class HOLinesChart implements IChart {
 
     public final void clearAllPlots(){
         if (m_models != null){
-            for (int i = 0; i < m_models.length; i++) {
-                if (m_models[i] != null) {
-                    m_models[i].setShow(false);
+            for (LinesChartDataModel m_model : m_models) {
+                if (m_model != null) {
+                    m_model.setShow(false);
                 }
             }
             updateGraph();
@@ -220,9 +221,9 @@ public class HOLinesChart implements IChart {
 
     public final void setShow(String name, boolean show) {
         if (m_models != null){
-            for (int i = 0; i < m_models.length; i++) {
-                if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
-                    m_models[i].setShow(show);
+            for (LinesChartDataModel m_model : m_models) {
+                if ((m_model != null) && (m_model.getName().equals(name))) {
+                    m_model.setShow(show);
                     break;
                 }
             }
@@ -232,9 +233,9 @@ public class HOLinesChart implements IChart {
 
     private final void setShowWithoutUpdate(String name, boolean show) {
         if (m_models != null){
-            for (int i = 0; i < m_models.length; i++) {
-                if ((m_models[i] != null) && (m_models[i].getName().equals(name))) {
-                    m_models[i].setShow(show);
+            for (LinesChartDataModel m_model : m_models) {
+                if ((m_model != null) && (m_model.getName().equals(name))) {
+                    m_model.setShow(show);
                     break;
                 }
             }

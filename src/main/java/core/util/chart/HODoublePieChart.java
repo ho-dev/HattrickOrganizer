@@ -29,10 +29,10 @@ public class HODoublePieChart implements IChart {
 
 
     public HODoublePieChart(boolean _bLegendVisible){
-        this(_bLegendVisible, PieStyler.AnnotationType.Percentage, PieStyler.AnnotationType.Percentage);
+        this(_bLegendVisible, PieStyler.LabelType.Percentage, PieStyler.LabelType.Percentage);
     }
 
-    public HODoublePieChart(boolean _bLegendVisible, PieStyler.AnnotationType AnnotationTypeL, PieStyler.AnnotationType AnnotationTypeR){
+    public HODoublePieChart(boolean _bLegendVisible, PieStyler.LabelType AnnotationTypeL, PieStyler.LabelType AnnotationTypeR){
 
         bLegendVisible = _bLegendVisible;
 
@@ -48,13 +48,13 @@ public class HODoublePieChart implements IChart {
         m_stylerR.setChartFontColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_stylerR.setPlotBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
         m_stylerR.setChartBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
-        m_stylerL.setAnnotationType(AnnotationTypeL);
-        m_stylerR.setAnnotationType(AnnotationTypeR);
+        m_stylerL.setLabelType(AnnotationTypeL);
+        m_stylerR.setLabelType(AnnotationTypeR);
 
-        Font cFont = m_stylerL.getAnnotationsFont();
+        Font cFont = m_stylerL.getAnnotationTextFont();
         cFont = cFont.deriveFont(Font.BOLD, cFont.getSize()+3);
-        m_stylerL.setAnnotationsFont(cFont);
-        m_stylerR.setAnnotationsFont(cFont);
+        m_stylerL.setAnnotationTextFont(cFont);
+        m_stylerR.setAnnotationTextFont(cFont);
 
 
         // Legend
