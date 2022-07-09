@@ -127,13 +127,16 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
 			// Empty all positions
-			hoModel.getLineupWithoutRatingRecalc().resetStartingLineup();
-			hoModel.getLineupWithoutRatingRecalc().resetPositionOrders();
-			hoModel.getLineupWithoutRatingRecalc().resetSubstituteBench();
-			hoModel.getLineupWithoutRatingRecalc().setKicker(0);
-			hoModel.getLineupWithoutRatingRecalc().setCaptain(0);
-			HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
-			mainFrame.getLineupPanel().update();
+			var lineup = hoModel.getLineupWithoutRatingRecalc();
+			if (lineup != null) {
+				lineup.resetStartingLineup();
+				lineup.resetPositionOrders();
+				lineup.resetSubstituteBench();
+				lineup.setKicker(0);
+				lineup.setCaptain(0);
+				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
+				mainFrame.getLineupPanel().update();
+			}
 		}
 		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
@@ -199,11 +202,12 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		// First, clear all positions that are not selected. We need to clear
 		// the way.
 
-		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
-				.entrySet()) {
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			if (!entry.getValue().isSelected()) {
-				HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-						.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
+				var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+				if (lineup != null) {
+					lineup.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
+				}
 			}
 		}
 
