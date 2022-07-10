@@ -204,7 +204,7 @@ Based on the previous example, here below is a side by side comparison of ``user
       ]
 
 
-First connexion
+First connection
 **********************
 
 For the first connection "F11" or, in the menu bar, "file" -> "download"
