@@ -27,7 +27,7 @@ public class HO {
 	public static int RevisionNumber;
     private static String versionType;
 	private static OSUtils.OS platform;
-	private static boolean portable_version; // Used to determined the location of the DB
+	private static boolean portable_version; // Used to determine the location of the DB
 	public static String getVersionType() {
 		return versionType;
 	}
