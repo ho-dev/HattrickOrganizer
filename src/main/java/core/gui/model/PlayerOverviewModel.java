@@ -35,21 +35,21 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[56];
+		columns = new UserColumn[58];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
 		UserColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
 		int skillIndex = 9; // - 20
-		System.arraycopy(skills, 0, columns, skillIndex + 0, skills.length);
+		System.arraycopy(skills, 0, columns, skillIndex, skills.length);
 		
 		UserColumn[] positions =  UserColumnFactory.createPlayerPositionArray();
 		int positionIndex = 23;//- 41
-		System.arraycopy(positions, 0, columns, positionIndex + 0, positions.length);
+		System.arraycopy(positions, 0, columns, positionIndex, positions.length);
 		
 		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
 		int goalsIndex = 42;//-45
-		System.arraycopy(goals, 0, columns, goalsIndex + 0, goals.length);
+		System.arraycopy(goals, 0, columns, goalsIndex, goals.length);
 		UserColumn[] additionalArray = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = additionalArray[0];
 		columns[2] = additionalArray[1];
@@ -70,6 +70,8 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[53] = additionalArray[13];
 		columns[54] = additionalArray[14];
 		columns[55] = additionalArray[15];
+		columns[56] = additionalArray[19];
+		columns[57] = additionalArray[20];
 	}
 	
     public Player getPlayer(int id) {

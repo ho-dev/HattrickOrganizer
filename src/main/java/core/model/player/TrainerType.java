@@ -14,13 +14,16 @@ public enum TrainerType {
         this.id = i;
     }
 
-    public static  TrainerType fromInt(int i){
-        return switch (i) {
-            case 0 -> Defensive;
-            case 1 -> Offensive;
-            case 2 -> Balanced;
-            default -> None;
-        };
+    public static TrainerType fromInt(Integer i){
+        if ( i != null) {
+            return switch (i) {
+                case 0 -> Defensive;
+                case 1 -> Offensive;
+                case 2 -> Balanced;
+                default -> None;
+            };
+        }
+        return None;
     }
 
     public static int toInt(TrainerType trainerTyp) {

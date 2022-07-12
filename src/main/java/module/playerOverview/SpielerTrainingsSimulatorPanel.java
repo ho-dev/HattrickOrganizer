@@ -194,7 +194,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setPlayerID(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
             tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
-            tempPlayer.setAlter(getAge());
+            tempPlayer.setAge(getAge());
             tempPlayer.setAgeDays(getAgeDays());
             tempPlayer.setExperience(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
@@ -325,7 +325,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             showWithCompare(playerPositionValues[i], playerPosition[i]);
         }
 
-        tempPlayer.setAlter(getAge());
+        tempPlayer.setAge(getAge());
         tempPlayer.setAgeDays(getAgeDays());
         tempPlayer.setLeadership(m_clPlayer.getLeadership());
         tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());

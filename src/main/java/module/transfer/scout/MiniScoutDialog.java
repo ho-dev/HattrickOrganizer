@@ -593,7 +593,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
         tempPlayer.setLoyalty(((CBItem) jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
-        tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+        tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
 //		EPVData data = new EPVData(tempPlayer);
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);

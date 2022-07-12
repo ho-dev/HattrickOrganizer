@@ -4,6 +4,7 @@ import core.model.enums.DBDataSource;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -77,10 +78,16 @@ final class DBUpdater {
 
 	private void updateDBv700(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		if ( playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")){
+		if (playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")) {
 			playerTable.tryAddColumn("LastMatch_PositionCode", "INTEGER");
 			playerTable.tryAddColumn("LastMatch_RatingEndOfGame", "INTEGER");
 		}
+
+		if (playerTable.tryAddColumn("MotherclubId", "INTEGER")) {
+			playerTable.tryAddColumn("MotherclubName", "VARCHAR(255)");
+			playerTable.tryAddColumn("MatchesCurrentTeam", "INTEGER");
+		}
+
 		updateDBVersion(dbVersion, 700);
 	}
 

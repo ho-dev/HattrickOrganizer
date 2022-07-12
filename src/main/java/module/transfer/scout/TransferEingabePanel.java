@@ -26,7 +26,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -188,7 +187,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             }
             tempPlayer.setTSI(Integer.parseInt(jtfTSI.getText()));
             tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
-            tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+            tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
@@ -365,7 +364,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         tempPlayer.setSpielaufbau(((CBItem)jcbPlaymaking.getSelectedItem()).getId());
         tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
-        tempPlayer.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
+        tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
 //        EPVData data = new EPVData(tempPlayer);
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);

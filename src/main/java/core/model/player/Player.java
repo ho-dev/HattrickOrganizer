@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -9,7 +8,6 @@ import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
-import core.model.misc.TrainingEvent;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
@@ -39,8 +37,6 @@ public class Player {
     private static final String C_BRACKET = "]";
     private static final String EMPTY = "";
 
-
-
     /**
      * canPlay
      */
@@ -57,18 +53,27 @@ public class Player {
     private String m_sFirstName = "";
     private String m_sNickName = "";
     private String m_sLastName = "";
+
+    /**
+     * Arrival in team
+     */
     private String m_arrivalDate;
 
     /**
      * TeamInfo Smilie Filename
      */
     private String m_sTeamInfoSmilie;
+
+    /**
+     * Download date
+     */
     private HODateTime m_clhrfDate;
 
     /**
      * The player is no longer available in the current HRF
      */
     private boolean m_bOld;
+
     private byte m_bUserPosFlag = -2;
 
     /**
@@ -185,13 +190,6 @@ public class Player {
      */
     private int m_iLaenderspiele;
 
-    //Cache
-
-    /**
-     * Letzte Bewertung
-     */
-    private int m_iLastBewertung = -1;
-
     /**
      * Loyalty
      */
@@ -201,8 +199,6 @@ public class Player {
      * Markwert
      */
     private int m_iTSI;
-
-    /* bonus in Prozent */
 
     private String m_sNationality;
 
@@ -325,7 +321,9 @@ public class Player {
      */
     private boolean m_bTrainingBlock = false;
 
-    // LastMAtch
+    /**
+     * Last match
+     */
     private String m_lastMatchDate;
     private Integer m_lastMatchId;
     private MatchType lastMatchType;
@@ -342,14 +340,17 @@ public class Player {
      * along the course of the game
      */
     private int GameStartingTime = 0;
-    private int nationalTeamId=0;
+    private Integer nationalTeamId;
     private double subExperience;
-
 
     /**
      * future training priorities planed by the user
      */
     private List<FuturePlayerTraining> futurePlayerTrainings;
+
+    private Integer motherclubId;
+    private String motherclubName;
+    private Integer matchesCurrentTeam;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -427,7 +428,7 @@ public class Player {
         m_iToreGesamt = Integer.parseInt(properties.getProperty("gev", "0"));
         m_iHattrick = Integer.parseInt(properties.getProperty("hat", "0"));
         m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
-
+        matchesCurrentTeam = Integer.parseInt(properties.getProperty("matchescurrentteam", "0"));
 
         if (properties.get("rating") != null) {
             m_iBewertung = Integer.parseInt(properties.getProperty("rating", "0"));
@@ -471,19 +472,36 @@ public class Player {
                 Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
         ));
 
-        // TODO: check if this is still necessary (training can no longer be blocked)
+        playerCategory = PlayerCategory.valueOf(Integer.parseInt(properties.getProperty("playercategoryid", "0")));
+        playerStatement = properties.getProperty("statement", "");
+        ownerNotes = properties.getProperty("ownernotes", "");
+
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
         final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
         if (oldPlayer != null) {
-            // Training block
+            // Training blocked (could be done in the past)
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
+            motherclubId = oldPlayer.getMotherclubId();
+            motherclubName = oldPlayer.getMotherclubName();
         }
 
-        playerCategory = PlayerCategory.valueOf(Integer.parseInt(properties.getProperty("playercategoryid", "0")));
-        playerStatement = properties.getProperty("statement", "");
-        ownerNotes = properties.getProperty("ownernotes", "");
+        if ( motherclubId == null){
+            var playerDetails = OnlineWorker.downloadPlayerDetails(this.getPlayerID());
+            if (playerDetails != null){
+                motherclubId = playerDetails.getMotherclubId();
+                motherclubName = playerDetails.getMotherclubName();
+            }
+        }
+    }
+
+    public String getMotherclubName() {
+        return this.motherclubName;
+    }
+
+    public Integer getMotherclubId() {
+        return this.motherclubId;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -523,7 +541,7 @@ public class Player {
      *
      * @param m_iAlter New value of property m_iAlter.
      */
-    public void setAlter(int m_iAlter) {
+    public void setAge(int m_iAlter) {
         this.m_iAlter = m_iAlter;
     }
 
@@ -1550,7 +1568,7 @@ public class Player {
      *
      * @param m_iTrainer New value of property m_iTrainer.
      */
-    public void setTrainerSkill(int m_iTrainer) {
+    public void setTrainerSkill(Integer m_iTrainer) {
         this.m_iTrainer = m_iTrainer;
     }
 
@@ -1567,7 +1585,7 @@ public class Player {
      * gibt an ob der Player Trainer ist
      */
     public boolean isTrainer() {
-        return ((m_iTrainer > 0) && (m_iTrainerTyp != null));
+        return m_iTrainer > 0 && m_iTrainerTyp != null;
     }
 
     /**
@@ -1661,7 +1679,7 @@ public class Player {
      *
      * @param m_iTrikotnummer New value of property m_iTrikotnummer.
      */
-    public void setTrikotnummer(int m_iTrikotnummer) {
+    public void setShirtNumber(int m_iTrikotnummer) {
         this.shirtNumber = m_iTrikotnummer;
     }
 
@@ -1857,7 +1875,8 @@ public class Player {
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
                 // get experience increase of national team matches
-                if  ( this.getNationalTeamID() != 0 && this.getNationalTeamID() != myID){
+                var id = this.getNationalTeamID();
+                if  ( id != null && id != 0 && id != myID){
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
@@ -2105,11 +2124,11 @@ public class Player {
         this.m_bTrainingBlock = isBlocked;
     }
 
-    public int getNationalTeamID() {
+    public Integer getNationalTeamID() {
         return nationalTeamId;
     }
 
-    public void setNationalTeamId( int id){
+    public void setNationalTeamId( Integer id){
         this.nationalTeamId=id;
     }
 
@@ -2120,11 +2139,6 @@ public class Player {
     public void setSubExperience( double experience){
         this.subExperience = experience;
     }
-
-    public List<TrainingEvent> downloadTrainingEvents() {
-        return OnlineWorker.getTrainingEvents(this.m_iSpielerID);
-    }
-
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
@@ -2336,7 +2350,7 @@ public class Player {
         var ret = new Player();
         ret.copySkills(this);
         ret.setPlayerID(getPlayerID());
-        ret.setAlter(getAlter());
+        ret.setAge(getAlter());
         ret.setLastName(getLastName());
         return ret;
     }
@@ -2397,6 +2411,22 @@ public class Player {
         this.lastMatchRatingEndOfGame = lastMatchRatingEndOfGame;
     }
 
+    public void setMotherClubId(Integer teamID) {
+        this.motherclubId = teamID;
+    }
+
+    public void setMotherClubName(String teamName) {
+        this.motherclubName = teamName;
+    }
+
+    public void setMatchesCurrentTeam(Integer matchesCurrentTeam) {
+        this.matchesCurrentTeam=matchesCurrentTeam;
+    }
+
+    public Integer getMatchesCurrentTeam() {
+        return this.matchesCurrentTeam;
+    }
+
     static class PositionContribute {
         private final float m_rating;
         private final byte clPositionID;
@@ -2437,7 +2467,7 @@ public class Player {
         var skillFactor = (float)(1 - manMarkingPosition.value / 100.);
         ret.setPlayerSpecialty(this.getPlayerSpecialty());
         ret.setAgeDays(this.getAgeDays());
-        ret.setAlter(this.getAlter());
+        ret.setAge(this.getAlter());
         ret.setAgressivitaet(this.getAgressivitaet());
         ret.setAnsehen(this.getAnsehen());
         ret.setCharakter(this.getCharakter());
