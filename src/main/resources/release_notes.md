@@ -9,6 +9,7 @@
 
 ### Squad
 * add last match columns: rating at end of match, position and minutes (#1523)
+* add mother club and matches current team columns (#1401)
 
 ### Team Analyser
 

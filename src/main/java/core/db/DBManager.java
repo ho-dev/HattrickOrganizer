@@ -219,6 +219,7 @@ public class DBManager {
 
 			// tempInstance.updateConfig();
 			m_clInstance = tempInstance;
+			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
 
 		return m_clInstance;

@@ -22,10 +22,8 @@ import core.model.match.*;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.PlayerAvatar;
-import core.net.DownloadDialog;
 import core.net.OnlineWorker;
 import core.util.Helper;
-import module.teamAnalyzer.vo.Match;
 import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
@@ -34,7 +32,6 @@ import module.lineup.substitution.model.Substitution;
 import core.HO;
 import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.util.List;
@@ -144,11 +141,11 @@ public class ConvertXml2Hrf {
 		}
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
-		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.getPlayers(teamId));
+		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
 
 		// Download players' avatar
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
-		List<PlayerAvatar> playersAvatar = new XMLAvatarsParser().parseAvatarsFromString(mc.getAvatars(teamId));
+		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1);
 
 		List<MyHashtable> youthplayers=null;
@@ -862,6 +859,8 @@ public class ConvertXml2Hrf {
 			buffer.append("gtt=").append(ht.get("FriendliesGoals"))
 					.append('\n');
 			buffer.append("GoalsCurrentTeam=").append(ht.get("GoalsCurrentTeam"))
+					.append('\n');
+			buffer.append("MatchesCurrentTeam=").append(ht.get("MatchesCurrentTeam"))
 					.append('\n');
 			buffer.append("hat=").append(ht.get("CareerHattricks"))
 					.append('\n');

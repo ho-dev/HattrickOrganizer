@@ -249,7 +249,7 @@ public class SpecialEventsPredictionManager {
                     player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
                     player.setExperience(latestPlayerInfo.getExperience());
-                    player.setAlter(age);
+                    player.setAge(age);
                     player.setGehalt(wage);
                     player.setTSI(tsi);
                     player.setForm((int) form);

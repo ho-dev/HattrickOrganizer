@@ -14,7 +14,7 @@ import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
-import core.model.misc.TrainingEvent;
+import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -34,12 +34,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
@@ -957,21 +954,6 @@ public class OnlineWorker {
 		return null;
 	}
 
-	public static List<TrainingEvent> getTrainingEvents(int playerId ){
-		try{
-			String xml = MyConnector.instance().getTrainingEvents(playerId);
-			return XMLTrainingEventsParser.parseTrainingEvents(xml);
-		}
-		catch(Exception e){
-			String msg = getLangString("Downloadfehler") + " : Error fetching training events :";
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-			Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-					JOptionPane.ERROR_MESSAGE);
-			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
-		}
-		return null;
-	}
-
 	private static Properties getProperties(String data) throws IOException {
 		ByteArrayInputStream bis = new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
 		InputStreamReader isr = new InputStreamReader(bis, StandardCharsets.UTF_8);
@@ -1248,5 +1230,10 @@ public class OnlineWorker {
 		details.setHrfId(DBManager.instance().getLatestHRF().getHrfId());
 		DBManager.instance().storeNtTeamDetails(details);
 		return details;
+	}
+
+	public static Player downloadPlayerDetails(int playerID) {
+		var xml = MyConnector.instance().downloadPlayerDetails(playerID);
+		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
 }

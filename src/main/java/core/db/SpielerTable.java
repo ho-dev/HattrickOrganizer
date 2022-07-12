@@ -98,7 +98,10 @@ final class SpielerTable extends AbstractTable {
 				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255),
 				new ColumnDescriptor("LastMatch_PlayedMinutes", Types.INTEGER, true),
 				new ColumnDescriptor("LastMatch_PositionCode", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatch_RatingEndOfGame", Types.INTEGER, true)
+				new ColumnDescriptor("LastMatch_RatingEndOfGame", Types.INTEGER, true),
+				new ColumnDescriptor("MotherclubId", Types.INTEGER, true),
+				new ColumnDescriptor("MotherclubName", Types.VARCHAR, true, 255),
+				new ColumnDescriptor("MatchesCurrentTeam", Types.INTEGER, true)
 		};
 	}
 
@@ -137,8 +140,9 @@ final class SpielerTable extends AbstractTable {
 				"PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, " +
 				"SubExperience, NationalTeamID, " +
 				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, LastMatch_PositionCode, LastMatch_PlayedMinutes, LastMatch_RatingEndOfGame, " +
-				"Statement, OwnerNotes, PlayerCategory " +
-				") VALUES(" +
+				"Statement, OwnerNotes, PlayerCategory, " +
+				"MotherclubId, MotherclubName, MatchesCurrentTeam" +
+		") VALUES(" +
 				player.getCards() + "," +
 				player.getPlayerID() + "," +
 				"'" + DBManager.insertEscapeSequences(player.getArrivalDate()) + "'," +
@@ -211,7 +215,10 @@ final class SpielerTable extends AbstractTable {
 				player.getLastMatchRatingEndOfGame() + ",'"
 				+ player.getPlayerStatement() + "', '"
 				+ player.getOwnerNotes() + "', "
-				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null)
+				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null) + ", "
+				+ player.getMotherclubId() + ", '"
+				+ DBManager.insertEscapeSequences(player.getMotherclubName() ) + "', "
+				+ player.getMatchesCurrentTeam()
 				+ ")";
 		adapter.executeUpdate(statement);
 	}
@@ -322,7 +329,7 @@ final class SpielerTable extends AbstractTable {
 					sql = "SELECT * from " + getTableName() + " WHERE SpielerID=" + integer + " ORDER BY Datum DESC";
 					rs = adapter.executeQuery(sql);
 
-					if (rs.first()) {
+					if (rs != null && rs.first()) {
 						player = createObject(rs);
 
 						//HOLogger.instance().log(getClass(), player.getSpielerID () );
@@ -519,7 +526,7 @@ final class SpielerTable extends AbstractTable {
 			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
 			player.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
 			player.setArrivalDate(DBManager.deleteEscapeSequences(rs.getString("ArrivalDate")));
-            player.setAlter(rs.getInt("Age"));
+            player.setAge(rs.getInt("Age"));
             player.setAgeDays(rs.getInt("AgeDays"));
             player.setStamina(rs.getInt("Kondition"));
             player.setForm(rs.getInt("Form"));
@@ -572,7 +579,7 @@ final class SpielerTable extends AbstractTable {
             player.setBewertung(rs.getInt("Bewertung"));
             player.setTrainerTyp(TrainerType.fromInt(rs.getInt("TrainerTyp")));
             player.setTrainerSkill(rs.getInt("Trainer"));
-            player.setTrikotnummer(rs.getInt("PlayerNumber"));
+            player.setShirtNumber(rs.getInt("PlayerNumber"));
             player.setTransferlisted(rs.getInt("TransferListed"));
             player.setLaenderspiele(rs.getInt("Caps"));
             player.setU20Laenderspiele(rs.getInt("CapsU20"));
@@ -601,7 +608,11 @@ final class SpielerTable extends AbstractTable {
 			player.setPlayerStatement(rs.getString("Statement"));
 			player.setOwnerNotes(rs.getString("OwnerNotes"));
 
-        } catch (Exception e) {
+			player.setMotherClubId(DBManager.getInteger(rs, "MotherclubID"));
+			player.setMotherClubName(DBManager.deleteEscapeSequences(rs.getString("MotherClubName")));
+			player.setMatchesCurrentTeam(DBManager.getInteger(rs,"MatchesCurrentTeam"));
+
+		} catch (Exception e) {
             HOLogger.instance().log(getClass(),e);
         }
         return player;

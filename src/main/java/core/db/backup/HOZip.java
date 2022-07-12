@@ -1,5 +1,7 @@
 package core.db.backup;
 
+import core.util.HOLogger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,10 +21,8 @@ public class HOZip extends File {
     public HOZip(String filename) throws Exception {
         super(filename);
 
-        // If source archive already exists
-        //	    if(this.exists()) {
-        //	      throw new Exception("Target archive already exists");
-        //	    }
+        HOLogger.instance().info(getClass(), "Create Backup: " + filename);
+
         // Open the ZipOutputStream
         zOut = new ZipOutputStream(new FileOutputStream(this));
         zOut.setMethod(ZipOutputStream.DEFLATED);

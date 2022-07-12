@@ -37,7 +37,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	}
 
 	private void initialize() {
-		columns = new UserColumn[61];
+		columns = new UserColumn[63];
 
 		final UserColumn[] additionalArray =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
@@ -119,6 +119,8 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[58] = additionalArray[13];
 		columns[59] = additionalArray[14];
 		columns[60] = additionalArray[15];
+		columns[61] = additionalArray[19];
+		columns[62] = additionalArray[20];
 	}
 
 //  -----initialisierung-----------------------------------------

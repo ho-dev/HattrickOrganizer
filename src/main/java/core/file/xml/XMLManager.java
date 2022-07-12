@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class XMLManager  {
+public class XMLManager {
 
     /**
      * Creates a new instance of XMLManager
@@ -59,9 +59,57 @@ public class XMLManager  {
         return "";
     }
 
-    public static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
+    public static String xmlValue(Element element, String xmlKey) {
         var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
-        hash.put(hashKey, XMLManager.getFirstChildNodeValue(ele));
+        return XMLManager.getFirstChildNodeValue(ele);
+    }
+
+    public static Integer xmlIntegerValue(Element ele, String xmlKey) {
+        var value = xmlValue(ele, xmlKey);
+        if (!value.isEmpty()) {
+            return Integer.parseInt(value);
+        }
+        return null;
+    }
+
+    public static int xmlIntValue(Element ele, String xmlKey) {
+        return xmlIntValue(ele,xmlKey,0);
+    }
+
+    public static int xmlIntValue(Element ele, String xmlKey, int def) {
+        var value = xmlValue(ele, xmlKey);
+        try {
+            return Integer.parseInt(value);
+        }
+        catch (Exception exception){
+            return def;
+        }
+    }
+
+    public static boolean xmlBoolValue(Element ele, String xmlKey) {
+        return xmlBoolValue(ele,xmlKey,false);
+    }
+
+    public static boolean xmlBoolValue(Element ele, String xmlKey, boolean def) {
+        var value = xmlValue(ele, xmlKey);
+        try {
+            return Boolean.parseBoolean(value);
+        }
+        catch (Exception exception){
+            return def;
+        }
+    }
+
+    public static Boolean xmlBooleanValue(Element ele, String xmlKey) {
+        var value = xmlValue(ele, xmlKey);
+        if (!value.isEmpty()) {
+            return Boolean.parseBoolean(value);
+        }
+        return null;
+    }
+
+    public static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
+        hash.put(hashKey, xmlValue(element, xmlKey));
     }
 
     public static void xmlValue2Hash(Map<String, String> hash, Element element, String key) {

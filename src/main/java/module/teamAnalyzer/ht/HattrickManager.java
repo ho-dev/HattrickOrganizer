@@ -15,9 +15,7 @@ import module.teamAnalyzer.vo.PlayerInfo;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -103,7 +101,7 @@ public class HattrickManager {
     public static List<PlayerInfo> downloadPlayers(int teamId) {
         String xml;
         try {
-			xml = MyConnector.instance().getPlayers(teamId);
+			xml = MyConnector.instance().downloadPlayers(teamId);
         } catch (Exception e) {
             return null;
         }
