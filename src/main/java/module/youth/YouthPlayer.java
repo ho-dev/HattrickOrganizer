@@ -11,6 +11,7 @@ import module.training.Skills.ScoutCommentSkillTypeID;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static java.lang.Math.max;
@@ -191,13 +192,34 @@ public class YouthPlayer {
 
     /**
      * Number of days until the player can be promoted at a given date.
+     * If only  part of one day left, the duration is formatted as d hh:mm:ss
      *
      * @param date for which the duration should be calculated, typically the current date.
-     * @return not negative number of days. 0 when the player can be promoted.
+     * @return string not negative number of days. 0 when the player can be promoted.
      */
-    public int getCanBePromotedInAtDate(HODateTime date) {
+    public String getCanBePromotedInAtDate(HODateTime date) {
         var diff = Duration.between( HOVerwaltung.instance().getModel().getBasics().getDatum().instant, date.instant);
-        return max(0, canBePromotedIn - (int) diff.toDays());
+        var days = canBePromotedIn - (int) diff.toDays();
+        if ( days > 0) return "" + days;
+        else if ( days < 0 ) return "0";
+        else {
+            var earliestPromotion = this.arrivalDate.plus(112, ChronoUnit.DAYS);
+            if ( earliestPromotion.isAfter(date)){
+                diff = Duration.between(date.instant, earliestPromotion.instant);
+                var strbuilder = new StringBuilder("0 ");
+                var t = diff.toHoursPart();
+                if ( t < 10) strbuilder.append("0");
+                strbuilder.append(t).append(":");
+                t = diff.toMinutesPart();
+                if ( t < 10) strbuilder.append("0");
+                strbuilder.append(t).append(":");
+                t = diff.toSecondsPart();
+                if ( t < 10) strbuilder.append("0");
+                strbuilder.append(t);
+                return strbuilder.toString();
+            }
+            return "0";
+        }
     }
 
     public void setCanBePromotedIn(int canBePromotedIn) {
@@ -366,10 +388,6 @@ public class YouthPlayer {
 
     public void setHrfid(int hrfid) {
         this.hrfid = hrfid;
-    }
-
-    private HODateTime getStatusTime(){
-        return HOVerwaltung.instance().getModel().getBasics().getDatum();
     }
 
     public HODateTime getPromotionDate() {

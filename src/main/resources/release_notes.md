@@ -28,6 +28,7 @@
 ### League
 
 ### Youth
+* duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)
 
 ### Misc
 
