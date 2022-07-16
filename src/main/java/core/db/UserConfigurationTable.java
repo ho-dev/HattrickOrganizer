@@ -34,7 +34,7 @@ final class UserConfigurationTable extends AbstractTable {
 
 
 	private void insert(String key, String value) {
-		StringBuffer sql = new StringBuffer(130);
+		var sql = new StringBuilder();
 		sql.append("INSERT INTO ");
 		sql.append(getTableName());
 		sql.append("(");
@@ -53,11 +53,11 @@ final class UserConfigurationTable extends AbstractTable {
 	/**
 	 * Update a key in the user configuration
 	 * if the key does not exist yet, insert it
-	 * @param key
-	 * @param value
+	 * @param key String
+	 * @param value String
 	 */
 	void update(String key, String value) {
-		final StringBuffer updateSQL = new StringBuffer(80);
+		var updateSQL = new StringBuilder();
 		updateSQL.append("UPDATE ");
 		updateSQL.append(getTableName());
 		updateSQL.append(" SET ");
@@ -80,7 +80,7 @@ final class UserConfigurationTable extends AbstractTable {
 	 * @param key Key to be removed.
 	 */
 	void remove(String key) {
-		final StringBuffer sql = new StringBuffer(80);
+		var sql = new StringBuilder();
 		sql.append("DELETE FROM ");
 		sql.append(getTableName());
 		sql.append(" WHERE ");
@@ -92,14 +92,14 @@ final class UserConfigurationTable extends AbstractTable {
 	}
 
 	private HashMap<String, String> getAllStringValues() {
-		final StringBuffer sql = new StringBuffer(100);
+		var sql = new StringBuilder();
 		sql.append("SELECT * FROM ");
 		sql.append(getTableName());
 
 		HashMap<String, String> map = new HashMap<>();
 		final ResultSet rs = adapter.executeQuery(sql.toString());
 		try {
-			while (rs.next()) {
+			while (rs != null && rs.next()) {
 				map.put(rs.getString("CONFIG_KEY"), rs.getString("CONFIG_VALUE"));
 			}
 			rs.close();
@@ -160,20 +160,19 @@ final class UserConfigurationTable extends AbstractTable {
 
 	/**
 	 * update/ insert method
-	 * @param obj
+	 * @param obj Configuration
 	 */
 	void store(Configuration obj) {
 		final Map<String, String> values = obj.getValues();
 		final Set<String> keys = values.keySet();
-		for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-			String key = iter.next();
-			update(key, (values.get(key) != null) ? values.get(key).toString() : "");
+		for (String key : keys) {
+			update(key, (values.get(key) != null) ? values.get(key) : "");
 		}		
 	}
 
 	/**
 	 * 
-	 * @param obj
+	 * @param obj Configuration
 	 */
 	void load(Configuration obj) {
 		// initialize with default value
@@ -185,7 +184,7 @@ final class UserConfigurationTable extends AbstractTable {
 
 			// this will allow to detect further problems
 			if (storedValue == null) {
-				HOLogger.instance().error(UserConfigurationTable.class, String.format("parameter %s is not stored in UserConfigurationTable", key));
+				HOLogger.instance().info(UserConfigurationTable.class, "parameter " + key + " is not stored in UserConfigurationTable. Default is used: " + value);
 			}
 			else {
 				map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)

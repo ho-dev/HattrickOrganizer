@@ -75,7 +75,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - July 02, 2022
+Reports by Contributors - Dec 20, 2021 - July 09, 2022
 
 * Foppe	690
 * brokenelevator 510
@@ -95,7 +95,7 @@ Reports by Contributors - Dec 20, 2021 - July 02, 2022
 * dzsoo 18
 * Sophia 17
 * Csaba 14
-* Michał 9
+* Michał 11
 * Motavali 2
 * Philipp 1
 * Total translated:	2701
