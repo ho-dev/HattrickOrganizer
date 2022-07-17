@@ -290,13 +290,7 @@ public class HODateTime implements Comparable<HODateTime> {
             var hrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
             var nextWeek = HODateTime.fromHTWeek(hrfDate.toHTWeek()).plus(7, ChronoUnit.DAYS);
             var between = HODateTime.between( nextTrainingDate, nextWeek);
-            if ( between.compareTo(Duration.ZERO)>=0 && between.compareTo(Duration.ofDays(7)) <= 0) {
-                durationBetweenTrainingDateAndNextWeekStart = between;
-            }
-            else {
-                HOLogger.instance().warning(getClass(), "training date could not be calculated");
-                return this.toLocaleHTWeek();
-            }
+            durationBetweenTrainingDateAndNextWeekStart = between;
         }
 
         var trainingDateRelatedDate = new HODateTime(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));

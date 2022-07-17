@@ -31,6 +31,12 @@ public class HyperLinkLabel extends JLabel {
 		setText(text);
 	}
 
+	public HyperLinkLabel( String url) {
+		this();
+		this.url = url;
+		setText(url);
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -40,7 +46,7 @@ public class HyperLinkLabel extends JLabel {
 	}
 
 	private void init() {
-		Map<TextAttribute, Object> map = new HashMap<TextAttribute, Object>();
+		Map<TextAttribute, Object> map = new HashMap<>();
 		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		Font font = getFont().deriveFont(map);
 		setFont(font);
