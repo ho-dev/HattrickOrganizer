@@ -613,8 +613,13 @@ public class Player {
     }
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
         var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
-        var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
-        return age.seasons + " (" + age.days + ")";
+        var between = HODateTime.HODuration.between(hrfTime, time);
+        if ( between.seasons>=0 && between.days >=0 ) {
+            var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
+            return age.seasons + " (" + age.days + ")";
+        }
+        // Should not happen (computer might have wrong time settings)
+        return ageYears  + " (" + ageDays + ")";
     }
 
     /**
