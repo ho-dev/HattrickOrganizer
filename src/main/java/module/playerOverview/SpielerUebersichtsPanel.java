@@ -20,11 +20,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private JSplitPane verticalSplitPane;
 	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
-	private SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel;
 	private LineupPlayersTableNameColumn spielerUebersichtTableName;
 	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
-
 
 	public PlayerOverviewTable getPlayerOverviewTable() {
 		return playerOverviewTable;
@@ -143,7 +141,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	private Component initSpielerHistory() {
 		JPanel panel = new ImagePanel();
 		panel.setLayout(new BorderLayout());
-		spielerTrainingsVergleichsPanel = new SpielerTrainingsVergleichsPanel();
+		SpielerTrainingsVergleichsPanel spielerTrainingsVergleichsPanel = new SpielerTrainingsVergleichsPanel();
 
 		final JScrollPane scrollPane = new JScrollPane(spielerTrainingsVergleichsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
