@@ -85,6 +85,8 @@ public class HOLogger {
 		return clLogger;
 	}
 
+	static public String getLogsFolderName(){ return logsFolderName;}
+
 	public void setLogLevel(int i) {
 		logLevel = i;
 	}
