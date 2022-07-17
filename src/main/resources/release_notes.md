@@ -11,6 +11,7 @@
 * reducing data base file's disk space accelerates HO startup duration (#958)
 * fix bug in hrf file import (#1445)
 * About dialog shows path of database and logs folder (#1576)
+* database update removes corrupt entries in hrf table (#1580)
 
 ### Squad
 * refactoring player details panel showing players' avatars now (#1349)
