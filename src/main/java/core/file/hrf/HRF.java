@@ -4,13 +4,8 @@ package core.file.hrf;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-
-
 /**
- * Benutzerdaten
+ * hattrick/HO file information
  */
 public final class HRF {
 	
@@ -18,7 +13,6 @@ public final class HRF {
 
 	private int hrfId = -1;
 	private HODateTime datum = HODateTime.now();
-	private String name = null;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -32,20 +26,12 @@ public final class HRF {
 	/**
 	 * Creates a new Hrf object.
 	 * 
-	 * @param _hrfId
-	 * @param _name
-	 * @param _datum
+	 * @param _hrfId database key
+	 * @param _datum creation date is used as filename
 	 */
-	public HRF(int _hrfId, String _name, HODateTime _datum) {
+	public HRF(int _hrfId,  HODateTime _datum) {
 		this.hrfId = _hrfId;
-		this.name = _name;
 		this.datum = _datum;
-	}
-
-	public HRF(int hrfId, HODateTime fetchDate){
-		this.hrfId=hrfId;
-		this.datum = fetchDate;
-		this.name = datum.toString();
 	}
 
     /**
@@ -54,7 +40,6 @@ public final class HRF {
     public HRF(java.sql.ResultSet rs) throws Exception {
         try {
             hrfId = rs.getInt("HRF_ID");
-            name = core.db.DBManager.deleteEscapeSequences(rs.getString("Name"));
             datum = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
         } catch (Exception e) {
             HOLogger.instance().error(getClass(),"Konstruktor HRF: " + e);
@@ -77,7 +62,7 @@ public final class HRF {
 	}
 
 	public String getName() {
-		return name;
+		return this.datum.toLocaleDateTime();
 	}
 
 }

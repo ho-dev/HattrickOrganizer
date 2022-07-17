@@ -25,16 +25,16 @@ public final class HRFTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[3];
-		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false, true);
-		columns[1] = new ColumnDescriptor("Name", Types.VARCHAR, false, 256);
-		columns[2] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
+		columns = new ColumnDescriptor[]{
+				new ColumnDescriptor("HRF_ID", Types.INTEGER, false, true),
+				new ColumnDescriptor("Datum", Types.TIMESTAMP, false)
+		};
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] { "CREATE INDEX iHRF_1 ON " + getTableName() + "("
-				+ columns[2].getColumnName() + ")" };
+				+ columns[1].getColumnName() + ")" };
 	}
 
 	HRF getLatestHrf() {
@@ -61,21 +61,21 @@ public final class HRFTable extends AbstractTable {
 	/**
 	 * speichert das Verein
 	 */
-	void saveHRF(int hrfId, String name, HODateTime datum) {
-		String statement;
-
-		// insert vorbereiten
-		statement = "INSERT INTO " + getTableName() + " ( HRF_ID, Name, Datum ) VALUES(";
-		statement += ("" + hrfId + ",'" + name + "','" + datum.toDbTimestamp() + "' )");
+	void saveHRF(int hrfId, HODateTime datum) {
+		String statement = "INSERT INTO " + getTableName()
+				+ " ( HRF_ID, Datum ) VALUES("
+				+ hrfId +  ",'"
+				+ datum.toDbTimestamp() + "' )"
+				;
 		adapter.executeUpdate(statement);
 
 		if (hrfId > getMaxHrf().getHrfId()) {
-			maxHrf = new HRF(hrfId, name, datum);
+			maxHrf = new HRF(hrfId,  datum);
 		}
 
 		// reimport of latest hrf file has to set latestHrf to a new value
 		if (!datum.isBefore(getLatestHrf().getDatum()) && hrfId != latestHrf.getHrfId()) {
-			latestHrf = new HRF(hrfId, name, datum);
+			latestHrf = new HRF(hrfId, datum);
 		}
 	}
 
@@ -88,7 +88,7 @@ public final class HRFTable extends AbstractTable {
 		int hrfID = 0;
 
 		// Die passende HRF-ID besorgen
-		sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum<='" + time.toString()
+		sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum<='" + time
 				+ "' ORDER BY Datum DESC";
 		rs = adapter.executeQuery(sql);
 
@@ -115,13 +115,6 @@ public final class HRFTable extends AbstractTable {
 		}
 
 		return hrfID;
-	}
-
-	/**
-	 * lädt die Basics zum angegeben HRF file ein
-	 */
-	HRF getHRF(int hrfID) {
-		return loadHRF(" where HRF_ID = " +	hrfID);
 	}
 
 	/**

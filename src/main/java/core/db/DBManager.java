@@ -860,7 +860,7 @@ public class DBManager {
 	/**
 	 * get the latest imported hrf
 	 * this does not have to be the latest downloaded, if the user imported hrf files in any order from files
-	 * @return
+	 * @return HRF object
 	 */
 	public HRF getMaxIdHrf() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf();
@@ -868,26 +868,24 @@ public class DBManager {
 
 	/**
 	 * get the latest downloaded hrf
-	 * @return
+	 * @return HRF object
 	 */
 	public HRF getLatestHRF(){
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf();
 	}
 
-	public HRF getHRF(int id){
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHRF(id);
+	public HRF loadHRF(int id){
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRF(id);
 	}
 
 	/**
-
-	 * speichert das Verein
+	 * save the HRF info
 	 *
-	 * @param hrfId the hrf id
-	 * @param name  the name
-	 * @param datum the datum
+	 * @param hrfId hrf id
+	 * @param datum date time
 	 */
-	public void saveHRF(int hrfId, String name, HODateTime datum) {
-		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, name, datum);
+	public void saveHRF(int hrfId, HODateTime datum) {
+		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, datum);
 	}
 
 	/**
