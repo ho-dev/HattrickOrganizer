@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,7 +73,7 @@ public class HOModel {
 
     public HOModel(int id) {
 
-        o_hrf = DBManager.instance().getHRF(id);
+        o_hrf = DBManager.instance().loadHRF(id);
         if (o_hrf == null) {
             o_hrf = new HRF(id, HODateTime.now()); // initial start
         } else {
@@ -569,7 +568,7 @@ public class HOModel {
      */
     public final synchronized void saveHRF() {
         var time = getBasics().getDatum();
-        DBManager.instance().saveHRF(getID(), time.toLocaleDateTime(), time);
+        DBManager.instance().saveHRF(getID(), time);
         DBManager.instance().saveBasics(getID(), getBasics());
         DBManager.instance().saveVerein(getID(), getClub());
         DBManager.instance().saveTeam(getID(), getTeam());

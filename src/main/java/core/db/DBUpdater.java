@@ -88,6 +88,9 @@ final class DBUpdater {
 			playerTable.tryAddColumn("MatchesCurrentTeam", "INTEGER");
 		}
 
+		var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
+		hrfTable.tryDeleteColumn("NAME");
+
 		updateDBVersion(dbVersion, 700);
 	}
 
