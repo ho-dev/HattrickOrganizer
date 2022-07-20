@@ -60,8 +60,8 @@ public class DBManager {
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 602;
-	private static final double DBConfigVersion = 7d; // HO 7.0 version
+	private static final int previousDBVersion = 601;
+	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
