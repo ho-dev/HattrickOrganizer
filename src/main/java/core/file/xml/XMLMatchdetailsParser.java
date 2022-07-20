@@ -478,13 +478,10 @@ public class XMLMatchdetailsParser {
      */
     private static void parseMatchReport(Matchdetails md) {
         ArrayList<MatchEvent> highlights = md.getHighlights();
-
         final StringBuilder report = new StringBuilder();
-
 		for (MatchEvent highlight : highlights) {
 			report.append(highlight.getEventText()).append(" ");
 		}
-
         md.setMatchreport(report.toString());
     }
 

@@ -60,11 +60,11 @@ public class MatchHelper {
 	 * @param matchType		match Type (league, cup, friendly...) from IMatchLineup
 	 */
 	public short getLocation(int homeTeamId, int awayTeamId, int matchId, MatchType matchType) {
-		/**
+		/*
 		 * Current progress:
 		 * =================
 		 * League/Cup/Qualification: 	Home, Away, AwayDerby are recognized correctly
-		 * 
+		 *
 		 * Friendlies:					Home, Away, AwayDerby are recognized correctly
 		 * 									(for downloads with HO >= 1.401,
 		 * 									for other downloads only HOME is recognized)
@@ -109,10 +109,10 @@ public class MatchHelper {
    		// Don't check home matches, except for the cup (because the cup finals are on neutral ground)
    		if (location != IMatchDetails.LOCATION_HOME || matchType == MatchType.CUP) {
    			if (matchType == MatchType.LEAGUE || matchType == MatchType.QUALIFICATION || matchType == MatchType.CUP) {
-   	   			/**
+   	   			/*
    	   			 * league or cup match -> check highlights
    	   			 */
-   		   		ArrayList<MatchEvent> highlights = details.getHighlights();
+   		   		ArrayList<MatchEvent> highlights = details.downloadHighlightsIfMissing();
    				for (int i=0; i<highlights.size(); i++) {
    					MatchEvent curHighlight = highlights.get(i);
    					if (curHighlight.getMatchEventID() == MatchEvent.MatchEventID.REGIONAL_DERBY) {
@@ -131,8 +131,8 @@ public class MatchHelper {
    				if (location != IMatchDetails.LOCATION_HOME && location != IMatchDetails.LOCATION_AWAYDERBY)
    					location = IMatchDetails.LOCATION_AWAY;
    			} else {
-   				/**
-   				 * Friendy match (not in our stadium)
+   				/*
+   				 * Friendly match (not in our stadium)
    				 */
    				int stadiumRegion = details.getRegionId();
    				if (stadiumRegion > 0 && userRegion > 0) {
@@ -152,81 +152,78 @@ public class MatchHelper {
 	}
 
 	public boolean hasOverConfidence (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent me = iter.next();
+		for (MatchEvent me : highlights) {
 			if (me.getTeamID() == teamId) {
-				if (me.getMatchEventID() == MatchEvent.MatchEventID.UNDERESTIMATION) {return true;}
+				if (me.getMatchEventID() == MatchEvent.MatchEventID.UNDERESTIMATION) {
+					return true;
 				}
 			}
+		}
 		return false;
 	}
 
 	public boolean hasTacticalProblems (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent me = iter.next();
+		for (MatchEvent me : highlights) {
 			if (me.getTeamID() == teamId) {
-				if (me.getMatchEventID() == MatchEvent.MatchEventID.ORGANIZATION_BREAKS) {return true;}
+				if (me.getMatchEventID() == MatchEvent.MatchEventID.ORGANIZATION_BREAKS) {
+					return true;
 				}
+			}
 		}
 		return false;
 	}
 
 	public boolean hasRedCard (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent me = iter.next();
-			if ((me.getTeamID() == teamId) && (me.isRedCard())) {return true;}
-				}
+		for (MatchEvent me : highlights) {
+			if ((me.getTeamID() == teamId) && (me.isRedCard())) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	public boolean hasInjury (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent me = iter.next();
-			if ( (me.getTeamID() == teamId) && me.isBruisedOrInjured()) {return true;}
+		for (MatchEvent me : highlights) {
+			if ((me.getTeamID() == teamId) && me.isBruisedOrInjured()) {
+				return true;
 			}
+		}
 		return false;
 	}
 
 	public boolean hasWeatherSE (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-								MatchEvent hlight = iter.next();
-								if ( (hlight.getTeamID() == teamId) && (hlight.isSpecialtyWeatherSE()))
-									{return true;}
-								}
-									return false;
+		for (MatchEvent hlight : highlights) {
+			if ((hlight.getTeamID() == teamId) && (hlight.isSpecialtyWeatherSE())) {
+				return true;
+			}
 		}
+		return false;
+	}
 
 	public boolean hasManualSubstitution (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent hlight = iter.next();
+		for (MatchEvent hlight : highlights) {
 			if (hlight.getTeamID() == teamId) {
-					if (hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND     ||   // #350
+				if (hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND ||   // #350
 						hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_AHEAD ||   // #351
-						hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_MINUTE      ||   // #352
+						hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_MINUTE ||   // #352
 						hlight.getMatchEventID() == MatchEvent.MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_BEHIND ||   // #360
-						hlight.getMatchEventID() == MatchEvent.MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD  ||   // #361
+						hlight.getMatchEventID() == MatchEvent.MatchEventID.CHANGE_OF_TACTIC_TEAM_IS_AHEAD ||   // #361
 						hlight.getMatchEventID() == MatchEvent.MatchEventID.CHANGE_OF_TACTIC_MINUTE) {           // #362
-						return true;
-					}
+					return true;
 				}
 			}
+		}
 		return false;
 	}
 
 	public boolean hasPullBack (ArrayList<MatchEvent> highlights, int teamId) {
-		Iterator<MatchEvent> iter = highlights.iterator();
-		while (iter.hasNext()) {
-			MatchEvent hlight = (MatchEvent) iter.next();
+		for (MatchEvent hlight : highlights) {
 			if (hlight.getTeamID() == teamId) {
 				// Pull back event
-				if (hlight.getMatchEventCategory() == MatchEvent.MatchEventID.WITHDRAW.ordinal()) {return true;}
-			}			
+				if (hlight.getMatchEventCategory() == MatchEvent.MatchEventID.WITHDRAW.ordinal()) {
+					return true;
+				}
+			}
 		}
 		return false;
 	}

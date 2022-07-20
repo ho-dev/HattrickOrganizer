@@ -526,7 +526,7 @@ public class MatchLineupTeam {
 	}
 
 	public int getMatchEndMinute(int spielerId) {
-		var hls = getMatchdetails().getHighlights(); // DBManager.instance().getMatchDetails(matchId).getHighlights();
+		var hls = getMatchdetails().downloadHighlightsIfMissing(); // DBManager.instance().getMatchDetails(matchId).downloadHighlightsIfMissing();
 		if ( hls != null ) {
 			for (MatchEvent hl : hls) {
 				MatchEvent.MatchEventID me = MatchEvent.MatchEventID.fromMatchEventID(hl.getiMatchEventID());
@@ -724,7 +724,7 @@ public class MatchLineupTeam {
 				lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(enteringplayer, substitution.getMatchMinuteCriteria()));
 				if (leavingPlayerIsSetPiecesTaker) {
 					// Find the new set pieces taker
-					var matchEvents = this.matchdetails.getHighlights().stream()
+					var matchEvents = this.matchdetails.downloadHighlightsIfMissing().stream()
 							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
 									i.getMinute() == substitution.getMatchMinuteCriteria()).collect(Collectors.toList());
 					for (var event : matchEvents) {

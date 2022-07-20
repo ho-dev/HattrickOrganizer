@@ -62,7 +62,7 @@ final class MatchHighlightsTable extends AbstractTable {
 			delete(where, werte);
 
 			try {
-				final ArrayList<MatchEvent> vHighlights = details.getHighlights();
+				final ArrayList<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
 				for (final MatchEvent highlight : vHighlights) {
 
 					String sql = "INSERT INTO " + getTableName() +

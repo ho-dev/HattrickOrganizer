@@ -6,12 +6,10 @@ import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
-import core.model.misc.Basics;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -261,7 +259,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public int getLastMinute() {
-        var highlights = getHighlights();
+        var highlights = downloadHighlightsIfMissing();
         if (highlights != null && highlights.size() > 0) {
             return highlights.get(highlights.size() - 1).getMinute();
         }
@@ -288,7 +286,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         int lastPart = 0;
         homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         guestGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
-        for (var event : getHighlights()) {
+        for (var event : downloadHighlightsIfMissing()) {
             int part = 0;
 
             var partId = event.getMatchPartId();
@@ -526,7 +524,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public final int getGuestHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = getHighlights();
+        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
         if (highLights != null) {
             for (MatchEvent iMatchHighlight : highLights) {
                 if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
@@ -537,7 +535,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public final int getHomeHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = getHighlights();
+        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
         if (highLights != null) {
             for (MatchEvent iMatchHighlight : highLights) {
                 if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
@@ -958,33 +956,35 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_vHighlights.
      */
-    public final ArrayList<MatchEvent> getHighlights() {
-        if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.size() == 0)) {
-            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
-
-            if (maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
-                if (m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
-                    HOLogger.instance().info(Matchdetails.class,
-                            "Reload Matchdetails id: " + this.getMatchID());
-                    boolean silenDownloadMode = OnlineWorker.isSilentDownload();
-                    try {
-                        HOMainFrame.instance().resetInformation();
-                        OnlineWorker.setSilentDownload(true);
-                        if (OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true)) {
-                            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
-                            maxMatchdetailsReloadsPerSession--;
-                        } else {
-                            maxMatchdetailsReloadsPerSession = 0;
-                        }
-                    } catch (Exception ex) {
-                        HOLogger.instance().error(Matchdetails.class, ex.getMessage());
-                    } finally {
-                        OnlineWorker.setSilentDownload(silenDownloadMode);
-                        HOMainFrame.instance().setInformationCompleted();
+    public final ArrayList<MatchEvent> downloadHighlightsIfMissing() {
+        if (getHighlights() == null && maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
+            if (m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
+                HOLogger.instance().info(Matchdetails.class,
+                        "Reload Matchdetails id: " + this.getMatchID());
+                boolean silenDownloadMode = OnlineWorker.isSilentDownload();
+                try {
+                    HOMainFrame.instance().resetInformation();
+                    OnlineWorker.setSilentDownload(true);
+                    if (OnlineWorker.downloadMatchData(this.getMatchID(), this.m_MatchTyp, true)) {
+                        m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
+                        maxMatchdetailsReloadsPerSession--;
+                    } else {
+                        maxMatchdetailsReloadsPerSession = 0;
                     }
+                } catch (Exception ex) {
+                    HOLogger.instance().error(Matchdetails.class, ex.getMessage());
+                } finally {
+                    OnlineWorker.setSilentDownload(silenDownloadMode);
+                    HOMainFrame.instance().setInformationCompleted();
                 }
             }
+        }
+        return m_vHighlights;
+    }
 
+    public ArrayList<MatchEvent> getHighlights() {
+        if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.size() == 0)) {
+            m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
         }
         return m_vHighlights;
     }
@@ -1579,7 +1579,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             isWalkoverMatchWin = false;
             if (getLastMinute() == 0) {
                 // Duration of walk over matches is 0 minutes
-                for (var e : getHighlights()) {
+                for (var e : downloadHighlightsIfMissing()) {
                     if (e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER) {
                         if (this.m_iHeimId == teamId) {
                             isWalkoverMatchWin = true;
