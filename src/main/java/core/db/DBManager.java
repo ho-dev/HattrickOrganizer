@@ -55,12 +55,12 @@ import java.util.stream.Collectors;
 public class DBManager {
 
 	/** database versions */
-	private static final int DBVersion = 602; // HO 6.0 version
+	private static final int DBVersion = 601; // HO 6.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 601;
+	private static final int previousDBVersion = 600;
 	private static final double DBConfigVersion = 6d; // HO 6.0 version
 
 	/** 2004-06-14 11:00:00.0 */
@@ -859,7 +859,7 @@ public class DBManager {
 	/**
 	 * get the latest imported hrf
 	 * this does not have to be the latest downloaded, if the user imported hrf files in any order from files
-	 * @return HRF
+	 * @return
 	 */
 	public HRF getMaxIdHrf() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf();
@@ -867,7 +867,7 @@ public class DBManager {
 
 	/**
 	 * get the latest downloaded hrf
-	 * @return HRF
+	 * @return
 	 */
 	public HRF getLatestHRF(){
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf();
