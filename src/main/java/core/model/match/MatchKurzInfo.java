@@ -12,8 +12,6 @@ import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -485,7 +483,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 			isWalkoverMatch = false;
 			if (getDuration() == 0) {
 				// Duration of walk over matches is 0 minutes
-				for (var e : getMatchdetails().getHighlights()) {
+				for (var e : getMatchdetails().downloadHighlightsIfMissing()) {
 					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
 						if (this.isHomeMatch()) {
 							isWalkoverMatch = true;

@@ -10,7 +10,6 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -121,7 +120,7 @@ public class MatchExporter {
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": Walk over");
 			return false;
 		}
-		ArrayList<MatchEvent> highlights = details.getHighlights();
+		ArrayList<MatchEvent> highlights = details.downloadHighlightsIfMissing();
 		//Aussortieren starten...
 		if (info.getMatchSchedule().isBefore(startingDate)) { //Zu alt !!!
 			return false;
