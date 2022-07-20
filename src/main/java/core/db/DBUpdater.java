@@ -1,7 +1,6 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
-import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,8 +63,6 @@ final class DBUpdater {
 					case 600:
 						updateDBv601(DBVersion);
 					case 601:
-						updateDBv602(DBVersion);
-					case 602:
 				}
 
 			} catch (Exception e) {
@@ -74,17 +71,6 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
-	}
-
-	private void updateDBv602(int dbVersion) {
-		// remove corrupt entries from hrf table
-		try {
-			m_clJDBCAdapter.executeUpdate("DELETE FROM " + HRFTable.TABLENAME + " WHERE DATUM >'" + HODateTime.now().toDbTimestamp() + "'");
-		}
-		catch (Exception e) {
-			HOLogger.instance().error(getClass(), "Error deleting corrupt entries in HRF table: " + e);
-		}
-		updateDBVersion(dbVersion, 602);
 	}
 
 	private void updateDBv601(int dbVersion) throws SQLException {
