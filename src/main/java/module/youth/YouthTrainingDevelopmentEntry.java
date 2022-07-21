@@ -8,7 +8,6 @@ import core.model.player.Specialty;
 import core.util.HODateTime;
 import module.training.Skills;
 
-import java.sql.Timestamp;
 import java.util.stream.Collectors;
 
 public class YouthTrainingDevelopmentEntry {
@@ -58,7 +57,7 @@ public class YouthTrainingDevelopmentEntry {
      */
     private void findSpecialty() {
         var matchDetails = training.getMatchDetails();
-        var highlights = matchDetails.getHighlights().stream()
+        var highlights = matchDetails.downloadHighlightsIfMissing().stream()
                 .filter(h -> h.getPlayerId() == player.getId() || h.getAssistingPlayerId() == player.getId())
                 .collect(Collectors.toList());
         for (var highlight : highlights) {

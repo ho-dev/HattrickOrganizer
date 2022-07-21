@@ -67,9 +67,9 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 			JLabel playerlabel, matchEventPlayer, resultlabel ;
 
-			List<MatchEvent> matchHighlights = details.getHighlights();
+			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
 			Icon icon;
-			Boolean bEventHighlighted;
+			boolean bEventHighlighted;
 
 			int homeScore = 0;
 			int guestScore = 0;
@@ -84,16 +84,9 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				scoreText = "";
 				MatchEvent highlight = matchHighlights.get(i);
 
-				if (highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
+				bEventHighlighted = highlight.isGoalEvent() || highlight.isNonGoalEvent() || highlight.isBruisedOrInjured() || highlight.isBooked()
 						|| highlight.isSubstitution() || highlight.isPenaltyContestGoalEvent() || highlight.isPenaltyContestNoGoalEvent() ||
-				     highlight.isChangeOfTactic())
-				{
-					bEventHighlighted = true;
-				}
-				else
-				{
-					bEventHighlighted = false;
-				}
+						highlight.isChangeOfTactic();
 
 				// Displaying the event
 				if (bEventHighlighted) {

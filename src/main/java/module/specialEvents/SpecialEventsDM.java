@@ -153,7 +153,7 @@ public class SpecialEventsDM {
 
 	private List<MatchEvent> getMatchHighlights(Matchdetails details, Filter filter) {
 		List<MatchEvent> filteredHighlights = new ArrayList<>();
-		List<MatchEvent> allHighlights = details.getHighlights();
+		List<MatchEvent> allHighlights = details.downloadHighlightsIfMissing();
 		if ( allHighlights != null) {
 			for (MatchEvent highlight : allHighlights) {
 				if (checkForSE(highlight, filter)) {
