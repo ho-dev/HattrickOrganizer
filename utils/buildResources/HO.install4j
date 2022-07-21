@@ -1165,10 +1165,10 @@ return true;</property>
         <launcher id="606" />
       </excludedLaunchers>
     </unixArchive>
-    <macos name="macOS Single Bundle" id="172" customInstallBaseDir="/Applications" launcherId="606">
+    <macos name="macOS Single Bundle" id="172" customInstallBaseDir="/Applications" architecture="universal" launcherId="606">
       <jreBundle usePack200="false" jreBundleSource="none" />
     </macos>
-    <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" customInstallBaseDir="/Applications" launcherId="606">
+    <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" customInstallBaseDir="/Applications" architecture="universal" launcherId="606">
       <jreBundle usePack200="false" />
     </macos>
     <unixInstaller name="Unix Installer" id="1062" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".ho" includeAllDownloadableComponents="true">
