@@ -237,7 +237,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-                var pos = team!=null?team.getPositionById(player.getPlayerID()):null;
+                var pos = team.getPositionById(player.getPlayerID());
                 return new PlayerLabelEntry(player, pos,0f, false, false);
             }
 
@@ -437,7 +437,8 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats()),
+                var hatstats = match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats();
+                return new ColorLabelEntry(hatstats, String.valueOf(hatstats),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
@@ -456,7 +457,8 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                return new ColorLabelEntry(String.valueOf(match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats()),
+                var hatstats = match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats();
+                return new ColorLabelEntry(hatstats, String.valueOf(hatstats),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
@@ -605,23 +607,21 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 var team = model.getLineupWithoutRatingRecalc();
-                if ( team != null ) {
-                    final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
-                    if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
-                        final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
-                                ImageUtilities.getJerseyIcon(
-                                        positionBySpielerId,
-                                        player.getTrikotnummer()
-                                ),
-                                -positionBySpielerId
-                                        .getSortId(),
-                                ColorLabelEntry.FG_STANDARD,
-                                ColorLabelEntry.BG_STANDARD,
-                                SwingConstants.CENTER
-                        );
-                        colorLabelEntry.setToolTipText(MatchRoleID.getNameForPosition(positionBySpielerId.getPosition()));
-                        return colorLabelEntry;
-                    }
+                final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
+                if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
+                    final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
+                            ImageUtilities.getJerseyIcon(
+                                    positionBySpielerId,
+                                    player.getTrikotnummer()
+                            ),
+                            -positionBySpielerId
+                                    .getSortId(),
+                            ColorLabelEntry.FG_STANDARD,
+                            ColorLabelEntry.BG_STANDARD,
+                            SwingConstants.CENTER
+                    );
+                    colorLabelEntry.setToolTipText(MatchRoleID.getNameForPosition(positionBySpielerId.getPosition()));
+                    return colorLabelEntry;
                 }
 
                 return new ColorLabelEntry(ImageUtilities.getJerseyIcon(null,

@@ -31,6 +31,7 @@
 
 ### Matches
 * fix error on selecting matches without downloaded highlights (#1553)
+* fix sorting of hatstat columns (#1598)
 
 ### Lineup
 * refactoring, including loading and storing of lineup templates (#1267)
