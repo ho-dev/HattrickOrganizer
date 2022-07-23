@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation 'com.install4j:install4j-runtime:8.0.7'
     implementation 'com.github.scribejava:scribejava-core:8.3.1'
-    implementation 'org.hsqldb:hsqldb:2.6.1'
+    implementation 'org.hsqldb:hsqldb:2.5.0'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'com.squareup.okhttp3:okhttp-tls:4.9.3'
