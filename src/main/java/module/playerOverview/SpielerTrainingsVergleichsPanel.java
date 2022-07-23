@@ -10,6 +10,8 @@ import core.gui.model.AufstellungsListRenderer;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.HODateTime;
+import core.util.HOLogger;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -160,8 +162,48 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 		add(m_jbLoeschen, BorderLayout.SOUTH);
 	}
 
+    /**
+     * load all hrf file entries and creates a list of combo box items
+     */
+    List<CBItem> loadCBItemHRFList() {
+        var hrfs = DBManager.instance().loadAllHRFs();
+
+        final String statement = "SELECT * FROM " + getTableName() + " ORDER BY Datum DESC";
+        var cbitems = new ArrayList<CBItem>();
+
+        try {
+            var rs = adapter.executeQuery(statement);
+
+            if (rs != null) {
+                rs.beforeFirst();
+
+                while (rs.next()) {
+                    var date = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
+                    var trainingWeek = date.toTrainingWeek();
+                    hrfs.add(
+                            new core.datatype.CBItem(
+                                    date.toLocaleDateTime()
+                                            + " ( "
+                                            + core.model.HOVerwaltung.instance().getLanguageString("Season")
+                                            + " "
+                                            + trainingWeek.season
+                                            + "  "
+                                            + core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
+                                            + " "
+                                            + trainingWeek.week
+                                            + " )",
+                                    rs.getInt("HRF_ID")));
+                }
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(getClass(), "DatenbankZugriff.getCBItemHRFListe " + e);
+        }
+
+        return hrfs;
+    }
+
     private void loadHRFListe(boolean init) {
-        var hrfListe = DBManager.instance().loadCBItemHRFList();
+        var hrfListe = loadCBItemHRFList();
 
         m_jlHRFs.removeListSelectionListener(this);
 

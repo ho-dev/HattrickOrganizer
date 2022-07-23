@@ -31,27 +31,6 @@ public class PenaltyTakersTable extends AbstractTable {
 				+ columns[2].getColumnName() + ")" };
 	}
 
-	void storePenaltyTakers(String lineupName, List<MatchRoleID> penaltyTakers)
-			throws SQLException {
-		String sql = null;
-
-		String[] where = { "LineupName" };
-		String[] values = { "'" + lineupName + "'" };
-
-		delete(where, values);
-
-		if (penaltyTakers != null && !penaltyTakers.isEmpty()) {
-			for (int i = 0; i < penaltyTakers.size(); i++) {
-				MatchRoleID penaltyTaker = penaltyTakers.get(i);
-				if (penaltyTaker != null && penaltyTaker.getId() > 0) {
-					sql = "INSERT INTO " + TABLENAME + " ( LineupName, PlayerID, Pos ) VALUES (";
-					sql += "'" + lineupName + "'," + penaltyTaker.getPlayerId() + "," + penaltyTaker.getId()  + ")";
-					adapter.executeUpdate_(sql);
-				}
-			}
-		}
-	}
-
 	List<MatchRoleID> getPenaltyTakers(String lineupName) throws SQLException {
 		String sql = "SELECT * FROM " + TABLENAME + " WHERE LineupName='" + lineupName + "' ORDER BY Pos";
 		List<MatchRoleID> list = new ArrayList<MatchRoleID>();

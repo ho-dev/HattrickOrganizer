@@ -4,18 +4,14 @@ package core.db;
 import core.util.ExceptionUtils;
 import core.util.HOLogger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Provides the connection functions to the database
  */
 public class JDBCAdapter {
 	private Connection m_clConnection;
-	private Statement m_clStatement;
+	//private Statement m_clStatement;
 	private DBInfo m_clDBInfo;
 
 	/**
@@ -29,7 +25,8 @@ public class JDBCAdapter {
 	 */
 	public final void disconnect() {
 		try {
-			m_clStatement.execute("SHUTDOWN");
+			var statement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement.execute("SHUTDOWN");
 			m_clConnection.close();
 			m_clConnection = null;
 		} catch (Exception e) {
@@ -46,23 +43,23 @@ public class JDBCAdapter {
 	 * 
 	 * @return ResultSet of the query
 	 */
-	public final ResultSet executeQuery(String Sql) {
+	public final ResultSet executePreparedQuery(String Sql, Object ... params) {
 		ResultSet resultat = null;
 
 		try {
 			if (m_clConnection.isClosed()) {
 				return null;
 			}
-
-			// HOLogger.instance().log(getClass(), Sql );
-			resultat = m_clStatement.executeQuery(Sql);
+			var preparedStatement = m_clConnection.prepareStatement(Sql);
+			int i = 0;
+			for ( var p: params) {
+				preparedStatement.setObject(++i, p);
+			}
+			resultat = preparedStatement.executeQuery(Sql);
 
 			return resultat;
 		} catch (Exception e) {
-			HOLogger.instance().error(
-					getClass(),
-					"JDBCAdapter.executeQuery : " + e + "\nStatement: " + Sql + "\n"
-							+ ExceptionUtils.getStackTrace(e));
+			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + Sql + "\n" 	+ ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}
@@ -79,15 +76,19 @@ public class JDBCAdapter {
 	 *         statements or 0 for SQL statements that return nothing
 	 * 
 	 */
-	public final int executeUpdate(String Sql) {
+	public final int executePreparedUpdate(String Sql, Object ... params) {
 		int ret = 0;
 
 		try {
 			if (m_clConnection.isClosed()) {
 				return 0;
 			}
-			// HOLogger.instance().log(getClass(), Sql );
-			ret = m_clStatement.executeUpdate(Sql);
+			var preparedStatement = m_clConnection.prepareStatement(Sql);
+			int i = 0;
+			for ( var p: params) {
+				preparedStatement.setObject(++i, p);
+			}
+			ret = preparedStatement.executeUpdate(Sql);
 			return ret;
 		} catch (Exception e) {
 			HOLogger.instance().error(
@@ -96,10 +97,6 @@ public class JDBCAdapter {
 							+ ExceptionUtils.getStackTrace(e));
 			return 0;
 		}
-	}
-
-	public int executeUpdate_(String sql) throws SQLException {
-		return m_clStatement.executeUpdate(sql);
 	}
 
 	/**
@@ -120,8 +117,8 @@ public class JDBCAdapter {
 			// Initialise the Database Driver Object
 			Class.forName(Driver);
 			m_clConnection = DriverManager.getConnection(URL, User, PWD);
-			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+//			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+//					ResultSet.CONCUR_READ_ONLY);
 
 		} catch (Exception e) {
 			if (m_clConnection != null) {

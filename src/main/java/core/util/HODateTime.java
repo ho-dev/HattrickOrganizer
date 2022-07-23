@@ -171,6 +171,11 @@ public class HODateTime implements Comparable<HODateTime> {
         return Timestamp.from(instant);
     }
 
+    public static Timestamp DbTimestamp(HODateTime in){
+        if ( in != null) return in.toDbTimestamp();
+        return  null;
+    }
+
     /**
      * Compare HODateTime instances
      *

@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import static core.util.HODateTime.DbTimestamp;
+
 
 final class BasicsTable extends AbstractTable {
 	final static String TABLENAME = "BASICS";
@@ -54,52 +56,31 @@ final class BasicsTable extends AbstractTable {
 	 *
 	 */
 	void saveBasics(int hrfId, core.model.misc.Basics basics) {
-
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
+		final String[] awhereS = {"HRF_ID"};
+		final String[] awhereV = {"" + hrfId};
 		if (basics != null) {
-			//erst Vorhandene Aufstellung löschen
-			delete( awhereS, awhereV );
-
-			//insert vorbereiten
-			var statement = "INSERT INTO "+getTableName()+" ( TeamID , Manager , TeamName , Land , Liga , Saison, SeasonOffset , Spieltag , HRF_ID, Datum, Region, HasSupporter, YouthTeamName , YouthTeamID, ActivationDate) VALUES(";
-			statement
-				+= (""
-					+ basics.getTeamId()
-					+ ",'"
-					+ core.db.DBManager.insertEscapeSequences(basics.getManager())
-					+ "','"
-					+ core.db.DBManager.insertEscapeSequences(basics.getTeamName())
-					+ "',"
-					+ basics.getLand()
-					+ ","
-					+ basics.getLiga()
-					+ ","
-					+ basics.getSeason()
-					+ ","
-					+ basics.getSeasonOffset()
-					+ ","
-					+ basics.getSpieltag()
-					+ ","
-					+ hrfId
-					+ ",'"
-					+ basics.getDatum().toDbTimestamp()
-					+ "',"
-					+ basics.getRegionId()
-					+ ",'"
-					+ basics.isHasSupporter()
-					+ "','"
-					+ core.db.DBManager.insertEscapeSequences(basics.getYouthTeamName() )
-					+ "',"
-					+ basics.getYouthTeamId()
-					+ ","
-					+ (basics.getActivationDate() == null ? "NULL" : "'" + basics.getActivationDate().toDbTimestamp() + "'")
-					+ " )");
-			adapter.executeUpdate(statement);
+			delete(awhereS, awhereV);
+			var statement = createInsertStatement();
+			adapter.executePreparedUpdate(statement,
+					hrfId,
+					basics.getManager(),
+					basics.getTeamId(),
+					basics.getTeamName(),
+					basics.getLand(),
+					basics.getLiga(),
+					basics.getSeason(),
+					basics.getSpieltag(),
+					DbTimestamp(basics.getDatum()),
+					basics.getRegionId(),
+					basics.isHasSupporter(),
+					DbTimestamp(basics.getActivationDate()),
+					basics.getSeasonOffset(),
+					basics.getYouthTeamName(),
+					basics.getYouthTeamId()
+			);
 		}
 	}
-	
+
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
 	 *
@@ -123,45 +104,6 @@ final class BasicsTable extends AbstractTable {
 		}
 
 		return basics;
-	}
-
-	/**
-	 * load all hrf file entries and creates a list of combo box items
-	 */
-	List<CBItem> loadCBItemHRFList() {
-
-		final String statement = "SELECT * FROM " + getTableName() + " ORDER BY Datum DESC";
-		var hrfs = new ArrayList<CBItem>();
-
-		try {
-			var rs = adapter.executeQuery(statement);
-
-			if (rs != null) {
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					var date = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
-					var trainingWeek = date.toTrainingWeek();
-					hrfs.add(
-							new core.datatype.CBItem(
-									date.toLocaleDateTime()
-											+ " ( "
-											+ core.model.HOVerwaltung.instance().getLanguageString("Season")
-											+ " "
-											+ trainingWeek.season
-											+ "  "
-											+ core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
-											+ " "
-											+ trainingWeek.week
-											+ " )",
-									rs.getInt("HRF_ID")));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getCBItemHRFListe " + e);
-		}
-
-		return hrfs;
 	}
 
 	/**
