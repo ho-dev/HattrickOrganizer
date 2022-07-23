@@ -1,11 +1,9 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
-import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -65,6 +63,7 @@ final class DBUpdater {
 					case 600:
 						updateDBv601(DBVersion);
 					case 601:
+					case 602:
 						updateDBv700(DBVersion);
 					case 700:
 				}
