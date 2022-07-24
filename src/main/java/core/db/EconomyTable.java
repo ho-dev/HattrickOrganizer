@@ -81,25 +81,51 @@ public final class EconomyTable extends AbstractTable {
 			delete(whereColumns, whereValues);
 
 			//insert new data
-			var statement =
-					"INSERT INTO "
-							+ getTableName()
-							+ " ( HRF_ID, FetchedDate, SupportersPopularity, SponsorsPopularity, Cash, IncomeSponsors, IncomeSponsorsBonus, IncomeSpectators, IncomeFinancial, IncomeTemporary, IncomeSum, CostsPlayers, " +
-							"CostsStaff, CostsArena, CostsYouth, CostsFinancial, CostsTemporary, CostsSum, ExpectedWeeksTotal, LastIncomeSponsors, LastIncomeSponsorsBonus, LastIncomeSpectators, LastIncomeFinancial, " +
-							"LastIncomeTemporary, LastIncomeSum, LastCostsPlayers, LastCostsStaff, LastCostsArena, LastCostsYouth, LastCostsFinancial, LastCostsTemporary, LastCostsSum, LastWeeksTotal, ExpectedCash, " +
-							"IncomeSoldPlayers, IncomeSoldPlayersCommission, CostsBoughtPlayers, CostsArenaBuilding, LastIncomeSoldPlayers, LastIncomeSoldPlayersCommission, LastCostsBoughtPlayers, LastCostsArenaBuilding) VALUES("
-							+ hrfId + ", '" + date.toString() + "', " + economy.getSupportersPopularity() + ", " + economy.getSponsorsPopularity() + ", "
-							+ economy.getCash() + ", " + economy.getIncomeSponsors() + ", " + economy.getIncomeSponsorsBonus() + ", "+ economy.getIncomeSpectators() + ", " + economy.getIncomeFinancial() + ", "
-							+ economy.getIncomeTemporary() + ", " + economy.getIncomeSum() + ", " + economy.getCostsPlayers() + ", " + economy.getCostsStaff() + ", "
-							+ economy.getCostsArena() + ", " + economy.getCostsYouth() + ", " + economy.getCostsFinancial() + ", " + economy.getCostsTemporary() + ","
-							+ economy.getCostsSum() + ", " + economy.getExpectedWeeksTotal() + ", " + economy.getLastIncomeSponsors() + ", " + economy.getLastIncomeSponsorsBonus() + "," + economy.getLastIncomeSpectators() + ", "
-							+ economy.getLastIncomeFinancial() + ", " + economy.getLastIncomeTemporary() + ", " + economy.getLastIncomeSum() + ", " + economy.getLastCostsPlayers() + ","
-							+ economy.getLastCostsStaff() + ", " + economy.getLastCostsArena() + ", " + economy.getLastCostsYouth() + ", " + economy.getLastCostsFinancial() + ", "
-							+ economy.getLastCostsTemporary() + ", " + economy.getLastCostsSum() + ", " + economy.getLastWeeksTotal() + ", " + economy.getExpectedCash() + ", "
-							+ economy.getIncomeSoldPlayers() + ", " + economy.getIncomeSoldPlayersCommission() + ", " + economy.getCostsBoughtPlayers() + ", " + economy.getCostsArenaBuilding() + ", "
-							+ economy.getLastIncomeSoldPlayers() + ", " + economy.getLastIncomeSoldPlayersCommission() + ", " + economy.getLastCostsBoughtPlayers() + ", " + economy.getLastCostsArenaBuilding()
-							+ ")";
-			adapter.executeUpdate(statement);
+			var statement = createInsertStatement();
+			adapter.executePreparedUpdate(statement,
+					hrfId,
+					date.toString(),
+					economy.getSupportersPopularity(),
+					economy.getSponsorsPopularity(),
+					economy.getCash(),
+					economy.getIncomeSponsors(),
+					economy.getIncomeSpectators(),
+					economy.getIncomeFinancial(),
+					economy.getIncomeTemporary(),
+					economy.getIncomeSum(),
+					economy.getCostsPlayers(),
+					economy.getCostsStaff(),
+					economy.getCostsArena(),
+					economy.getCostsYouth(),
+					economy.getCostsFinancial(),
+					economy.getCostsTemporary(),
+					economy.getCostsSum(),
+					economy.getExpectedWeeksTotal(),
+					economy.getLastIncomeSponsors(),
+					economy.getLastIncomeSpectators(),
+					economy.getLastIncomeFinancial(),
+					economy.getLastIncomeTemporary(),
+					economy.getLastIncomeSum(),
+					economy.getLastCostsPlayers(),
+					economy.getLastCostsStaff(),
+					economy.getLastCostsArena(),
+					economy.getLastCostsYouth(),
+					economy.getLastCostsFinancial(),
+					economy.getLastCostsTemporary(),
+					economy.getLastCostsSum(),
+					economy.getLastWeeksTotal(),
+					economy.getExpectedCash(),
+					economy.getIncomeSoldPlayers(),
+					economy.getIncomeSoldPlayersCommission(),
+					economy.getCostsBoughtPlayers(),
+					economy.getCostsArenaBuilding(),
+					economy.getLastIncomeSoldPlayers(),
+					economy.getLastIncomeSoldPlayersCommission(),
+					economy.getLastCostsBoughtPlayers(),
+					economy.getLastCostsArenaBuilding(),
+					economy.getIncomeSponsorsBonus(),
+					economy.getLastIncomeSponsorsBonus()
+			);
 		}
 	}
 

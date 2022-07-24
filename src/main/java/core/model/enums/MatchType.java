@@ -224,12 +224,4 @@ public enum MatchType implements IMatchType {
 			default -> "unknown";
 		};
 	}
-
-	public static String getWhereClauseFromSourceSystem(int sourceSystem){
-		var lMatchType =  MatchType.fromSourceSystem(SourceSystem.valueOf(sourceSystem));
-		String res = "(";
-		res += lMatchType.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		res += ")";
-		return res;
-	}
 }

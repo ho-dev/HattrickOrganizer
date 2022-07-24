@@ -1,20 +1,11 @@
 package core.db;
 
-import core.datatype.CBItem;
-import core.model.HOVerwaltung;
 import core.model.misc.Basics;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import static core.util.HODateTime.DbTimestamp;
-
 
 final class BasicsTable extends AbstractTable {
 	final static String TABLENAME = "BASICS";
@@ -70,10 +61,10 @@ final class BasicsTable extends AbstractTable {
 					basics.getLiga(),
 					basics.getSeason(),
 					basics.getSpieltag(),
-					DbTimestamp(basics.getDatum()),
+					HODateTime.toDbTimestamp(basics.getDatum()),
 					basics.getRegionId(),
 					basics.isHasSupporter(),
-					DbTimestamp(basics.getActivationDate()),
+					HODateTime.toDbTimestamp(basics.getActivationDate()),
 					basics.getSeasonOffset(),
 					basics.getYouthTeamName(),
 					basics.getYouthTeamId()
@@ -117,8 +108,8 @@ final class BasicsTable extends AbstractTable {
 
 		//Die passende HRF-ID besorgen
 //		sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' AND Datum>='" + mintime.toString() + "' ORDER BY Datum DESC";
-		var sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' ORDER BY Datum DESC LIMIT 1";
-		var rs = adapter.executeQuery(sql);
+		var sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1";
+		var rs = adapter.executePreparedQuery(sql, time);
 
 		try {
 			if (rs != null) {

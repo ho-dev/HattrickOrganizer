@@ -225,6 +225,4 @@ public abstract class AbstractTable {
 		ret.append(")").append(valuePlaceholders).append(")");
 		return ret.toString();
 	}
-
-
 }

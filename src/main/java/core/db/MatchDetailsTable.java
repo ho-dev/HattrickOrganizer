@@ -104,8 +104,8 @@ final class MatchDetailsTable extends AbstractTable {
 		final Matchdetails details = new Matchdetails();
 
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE MATCHTYP=" + iMatchType + " AND MatchID=" + matchId;
-			ResultSet rs = adapter.executeQuery(sql);
+			String sql = "SELECT * FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchID=?";
+			ResultSet rs = adapter.executePreparedQuery(sql, iMatchType, matchId);
 
 			assert rs != null;
 			if (rs.first()) {
@@ -115,7 +115,7 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setRegionId(rs.getInt("RegionID"));
 				details.setFetchDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("Fetchdatum")));
 				details.setGastId(rs.getInt("GastId"));
-				details.setGastName(core.db.DBManager.deleteEscapeSequences(rs.getString("GastName")));
+				details.setGastName(rs.getString("GastName"));
 				details.setGuestEinstellung(rs.getInt("GastEinstellung"));
 				details.setGuestGoals(rs.getInt("GastTore"));
 				details.setGuestLeftAtt(rs.getInt("GastLeftAtt"));
@@ -128,7 +128,7 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setGuestTacticSkill(rs.getInt("GastTacticSkill"));
 				details.setGuestTacticType(rs.getInt("GastTacticType"));
 				details.setHeimId(rs.getInt("HeimId"));
-				details.setHeimName(core.db.DBManager.deleteEscapeSequences(rs.getString("HeimName")));
+				details.setHeimName(rs.getString("HeimName"));
 				details.setHomeEinstellung(rs.getInt("HeimEinstellung"));
 				details.setHomeGoals(rs.getInt("HeimTore"));
 				details.setHomeLeftAtt(rs.getInt("HeimLeftAtt"));
@@ -148,7 +148,7 @@ final class MatchDetailsTable extends AbstractTable {
 				details.setSoldBasic(rs.getInt("soldBasic"));
 				details.setSoldRoof(rs.getInt("soldRoof"));
 				details.setSoldVIP(rs.getInt("soldVIP"));
-				details.setMatchreport(DBManager.deleteEscapeSequences(rs.getString("Matchreport")));
+				details.setMatchreport(rs.getString("Matchreport"));
 				details.setRatingIndirectSetPiecesAtt(rs.getInt("RatingIndirectSetPiecesAtt"));
 				details.setRatingIndirectSetPiecesDef(rs.getInt("RatingIndirectSetPiecesDef"));
 				var homeGoalsInPart = new Integer[]{
@@ -201,8 +201,8 @@ final class MatchDetailsTable extends AbstractTable {
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
 
-			final String[] where = { "MATCHTYP", "MatchID" };
-			final String[] werte = { "" + details.getMatchType().getId(), "" + details.getMatchID()};
+			final String[] where = {"MATCHTYP", "MatchID"};
+			final String[] werte = {"" + details.getMatchType().getId(), "" + details.getMatchID()};
 
 			//Remove existing entries
 			delete(where, werte);
@@ -210,98 +210,84 @@ final class MatchDetailsTable extends AbstractTable {
 			String sql;
 
 			try {
-				sql =
-					"INSERT INTO " +getTableName() +
-							" ( MatchID, MATCHTYP, ArenaId, ArenaName, Fetchdatum, GastId, " +
-							"GastName, GastEinstellung, GastTore, "	+
-							"GastLeftAtt, GastLeftDef, GastMidAtt, GastMidDef, GastMidfield, GastRightAtt, GastRightDef, " +
-							"GASTHATSTATS, GastTacticSkill, GastTacticType, " +
-							"HeimId, HeimName, HeimEinstellung, HeimTore, HeimLeftAtt, HeimLeftDef, HeimMidAtt, " +
-							"HeimMidDef, HeimMidfield, HeimRightAtt, HeimRightDef, HEIMHATSTATS, "+
-							"HeimTacticSkill, HeimTacticType, SpielDatum, WetterId, Zuschauer, " +
-							"Matchreport, RegionID, soldTerraces, soldBasic, soldRoof, soldVIP, " +
-							"RatingIndirectSetPiecesAtt, RatingIndirectSetPiecesDef, " +
-							"HomeGoal0, HomeGoal1, HomeGoal2, HomeGoal3, HomeGoal4, " +
-							"GuestGoal0, GuestGoal1, GuestGoal2, GuestGoal3, GuestGoal4, " +
-							"HomeFormation, AwayFormation" +
-							") VALUES ("
-						+ details.getMatchID() + ","
-						+ details.getMatchType().getId() + ","
-						+ details.getArenaID() + ",'"
-						+ DBManager.insertEscapeSequences(details.getArenaName()) + "','"
-						+ details.getFetchDatum().toDbTimestamp() + "',"
-						+ details.getGuestTeamId() + ",'"
-						+ DBManager.insertEscapeSequences(details.getGuestTeamName()) + "',"
-						+ details.getGuestEinstellung()	+ ","
-						+ details.getGuestGoals() + ","
-						+ details.getGuestLeftAtt()	+ ","
-						+ details.getGuestLeftDef()	+ ","
-						+ details.getGuestMidAtt() + ","
-						+ details.getGuestMidDef() + ","
-						+ details.getGuestMidfield() + ","
-						+ details.getGuestRightAtt() + ","
-						+ details.getGuestRightDef() + ","
-						+ details.getGuestHatStats() + ","
-						+ details.getGuestTacticSkill() + ","
-						+ details.getGuestTacticType() + ","
-						+ details.getHomeTeamId() + ",'"
-						+ DBManager.insertEscapeSequences(details.getHomeTeamName()) + "',"
-						+ details.getHomeEinstellung() + ","
-						+ details.getHomeGoals() + ","
-						+ details.getHomeLeftAtt() + ","
-						+ details.getHomeLeftDef() + ","
-						+ details.getHomeMidAtt() + ","
-						+ details.getHomeMidDef() + ","
-						+ details.getHomeMidfield()	+ ","
-						+ details.getHomeRightAtt() + ","
-						+ details.getHomeRightDef() + ","
-						+ details.getHomeHatStats() + ","
-						+ details.getHomeTacticSkill() + ","
-						+ details.getHomeTacticType() + ",'"
-						+ details.getMatchDate().toDbTimestamp() + "',"
-						+ details.getWetterId()	+ ","
-						+ details.getZuschauer() + ",'"
-						+ DBManager.insertEscapeSequences(details.getMatchreport()) + "',"
-						+ details.getRegionId() + ","
-						+ details.getSoldTerraces()	+ ","
-						+ details.getSoldBasic() + ","
-						+ details.getSoldRoof()	+ ","
-						+ details.getSoldVIP() + ","
-						+ details.getRatingIndirectSetPiecesAtt() + ","
-						+ details.getRatingIndirectSetPiecesDef() + ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED) + ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)	+ ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF) + ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.OVERTIME) + ","
-						+ details.getHomeGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)	+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF) + ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF) + ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME)	+ ","
-						+ details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST) + ",'"
-						+ details.getFormation(true) + "', '"
-						+ details.getFormation(false) +"')";
-
-				adapter.executeUpdate(sql);
+				sql = createInsertStatement();
+				adapter.executePreparedUpdate(sql,
+						details.getMatchID(),
+						details.getMatchType().getId(),
+						details.getArenaID(),
+						details.getArenaName(),
+						details.getFetchDatum(),
+						details.getGuestTeamName(),
+						details.getGuestTeamId(),
+						details.getGuestEinstellung(),
+						details.getGuestGoals(),
+						details.getGuestLeftAtt(),
+						details.getGuestLeftDef(),
+						details.getGuestMidAtt(),
+						details.getGuestMidDef(),
+						details.getGuestMidfield(),
+						details.getGuestRightAtt(),
+						details.getGuestRightDef(),
+						details.getGuestTacticSkill(),
+						details.getGuestTacticType(),
+						details.getGuestHatStats(),
+						details.getHomeTeamName(),
+						details.getHomeTeamId(),
+						details.getHomeEinstellung(),
+						details.getHomeGoals(),
+						details.getHomeLeftAtt(),
+						details.getHomeLeftDef(),
+						details.getHomeMidAtt(),
+						details.getHomeMidDef(),
+						details.getHomeMidfield(),
+						details.getHomeRightAtt(),
+						details.getHomeRightDef(),
+						details.getHomeTacticSkill(),
+						details.getHomeTacticType(),
+						details.getHomeHatStats(),
+						details.getMatchDate().toDbTimestamp(),
+						details.getWetterId(),
+						details.getZuschauer(),
+						details.getMatchreport(),
+						details.getRegionId(),
+						details.getSoldTerraces(),
+						details.getSoldBasic(),
+						details.getSoldRoof(),
+						details.getSoldVIP(),
+						details.getRatingIndirectSetPiecesDef(),
+						details.getRatingIndirectSetPiecesAtt(),
+						details.getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED),
+						details.getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF),
+						details.getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF),
+						details.getHomeGoalsInPart(MatchEvent.MatchPartId.OVERTIME),
+						details.getHomeGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST),
+						details.getGuestGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED),
+						details.getGuestGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF),
+						details.getGuestGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF),
+						details.getGuestGoalsInPart(MatchEvent.MatchPartId.OVERTIME),
+						details.getGuestGoalsInPart(MatchEvent.MatchPartId.PENALTY_CONTEST),
+						details.getFormation(true),
+						details.getFormation(false)
+				);
 
 				//Store Match Events
 				((MatchHighlightsTable) DBManager.instance().getTable(MatchHighlightsTable.TABLENAME))
-											.storeMatchHighlights(details);
+						.storeMatchHighlights(details);
 
 				// MatchKurzInfo should be set correctly in OnlineWorker.downloadMatchData now
 				// no workaround is necessary anymore
 
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storeMatchDetails Error" + e);
-				HOLogger.instance().log(getClass(),e);
+				HOLogger.instance().log(getClass(), "DB.storeMatchDetails Error" + e);
+				HOLogger.instance().log(getClass(), e);
 			}
 		}
 	}
 
 	public boolean isMatchIFKRatingAvailable(int matchId){
 		try {
-			final String sql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=" + matchId;
-			final ResultSet rs = adapter.executeQuery(sql);
+			final String sql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?";
+			final ResultSet rs = adapter.executePreparedQuery(sql, matchId);
 			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
@@ -315,22 +301,36 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
+	static private String placeHolderYouthMatchTypes;
+	static private String getPlaceHolderYouthMatchTypes(){
+		if ( placeHolderYouthMatchTypes==null){
+			var youthMatchTypes = MatchType.getYouthMatchType();
+			var sep = "(";
+			var placeHolders = new StringBuilder();
+			for ( var t : youthMatchTypes){
+				placeHolders.append(sep).append("?");
+				sep=",";
+			}
+			placeHolders.append(")");
+			placeHolderYouthMatchTypes = placeHolders.toString();
+		}
+		return placeHolderYouthMatchTypes;
+	}
+
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
-		var sql = "DELETE FROM " +
-				getTableName() +
-				" WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue()) +
-				" AND SPIELDATUM<'" +
-				before.toString() + "'";
+		var sql = "DELETE FROM " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?";
+
 		try {
-			adapter.executeUpdate(sql);
+			adapter.executePreparedUpdate(sql, MatchType.getYouthMatchType().toArray(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
 	}
+
 	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.YOUTH.getValue());
+		var sql = "select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes();
 		try {
-			var rs = adapter.executeQuery(sql);
+			var rs = adapter.executePreparedQuery(sql, MatchType.getYouthMatchType().toArray());
 			assert rs != null;
 			rs.beforeFirst();
 			if ( rs.next()){
@@ -342,5 +342,4 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 		return null;
 	}
-
 }

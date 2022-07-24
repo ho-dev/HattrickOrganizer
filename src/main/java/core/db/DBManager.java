@@ -226,7 +226,7 @@ public class DBManager {
 	}
 
 	private void executeSQL(String sql) {
-		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executeUpdate(sql);
+		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executePreparedUpdate(sql);
 	}
 
 	public static double getDBConfigVersion() {
@@ -362,7 +362,7 @@ public class DBManager {
 		if ( m_clJDBCAdapter==null) return false;
 		boolean exists;
 		try {
-			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
+			ResultSet rs = m_clJDBCAdapter.executePreparedQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?", "PUBLIC");
 			assert rs != null;
 			rs.next();
 			exists = rs.getInt(1) > 0;
@@ -744,16 +744,6 @@ public class DBManager {
 	 */
 	public Basics getBasics(int hrfID) {
 		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).getBasics(hrfID);
-	}
-
-	/**
-	 * load list of hrf combo box items
-	 *
-	 * @return the cb item hrf list
-	 */
-	public List<CBItem> loadCBItemHRFList() {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
-				.loadCBItemHRFList();
 	}
 
 	/**
@@ -1888,31 +1878,19 @@ public class DBManager {
 	 * @return the count of played matches
 	 */
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
-		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid ";
-		sqlStmt = sqlStmt + "where spielerId = " + playerId
-				+ " and FIELDPOS>-1 ";
-
-		if (official) {
-			sqlStmt = sqlStmt + "and matchtyp <8";
-		} else {
-			sqlStmt = sqlStmt + "and matchtyp >7";
-		}
-
-		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
-
+		var officialWhere = official ? "<8" : ">7";
+		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid where spielerId = ? and FIELDPOS>-1  and matchtyp " + officialWhere;
+		final ResultSet rs = getAdapter().executePreparedQuery(sqlStmt, playerId);
 		if (rs == null) {
 			return 0;
 		}
-
 		int count = 0;
-
 		try {
 			while (rs.next()) {
 				count = rs.getInt("MatchNumber");
 			}
 		} catch (SQLException ignored) {
 		}
-
 		return count;
 	}
 
@@ -1932,31 +1910,27 @@ public class DBManager {
 	 * @param officialOnly whether or not to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
-
 		if(playerID == -1) return new Vector<>();
-
 		final Vector<PlayerMatchCBItem> spielerMatchCBItems = new Vector<>();
-
 		String sql = """
 				SELECT DISTINCT MatchID, MatchDate, Rating, SpielDatum, HeimName, HeimID, GastName, GastID, HoPosCode, MatchTyp
 				FROM MATCHLINEUPPLAYER
 				INNER JOIN MATCHLINEUP ON (MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID AND MATCHLINEUPPLAYER.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
-				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0""";
+				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
 
 		if(officialOnly){
-			sql += " AND MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.HATTRICK.getValue());
+			var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue()));
+			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+			sql += " AND MATCHTYP IN (" + inValues + ")";
 		}
-
 		sql += " ORDER BY MATCHDETAILS.SpielDatum DESC";
-
 
 		// Get all data on the player
 		try {
 			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
-
-			final ResultSet rs = m_clJDBCAdapter.executeQuery(String.format(sql, playerID));
+			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(String.format(sql, playerID));
 			PlayerMatchCBItem playerMatchCBItem;
 			assert rs != null;
 			rs.beforeFirst();
@@ -1976,25 +1950,16 @@ public class DBManager {
 				playerMatchCBItems.add(playerMatchCBItem);
 			}
 
-
 			Timestamp filter;
-
-
-
 			// Get the player data for the matches
 			for (final PlayerMatchCBItem item : playerMatchCBItems) {
-
 				filter = item.getMatchdate().toDbTimestamp();
-
 				// Player
 				final Player player = getSpielerAtDate(playerID, filter);
-
 				// Matchdetails
 				final Matchdetails details = loadMatchDetails(item.getMatchType().getMatchTypeId(), item.getMatchID());
-
 				// Stimmung und Selbstvertrauen
 				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
-
 				//Only if player data has been found, pass it into the return vector
 				if ((player != null) && (details != null)
 						&& (sTSandConfidences != null)) {
@@ -2009,7 +1974,6 @@ public class DBManager {
 			HOLogger.instance().log(getClass(),
 					"DatenbankZugriff.getSpieler4Matches : " + e);
 		}
-
 		return spielerMatchCBItems;
 	}
 
@@ -2114,7 +2078,7 @@ public class DBManager {
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
-				m_clJDBCAdapter.executeUpdate(statement);
+				m_clJDBCAdapter.executePreparedUpdate(statement);
 			}
 		}
 	}
@@ -2419,6 +2383,7 @@ public class DBManager {
 	 * @param text the text
 	 * @return the string
 	 */
+	@Deprecated
 	public static String deleteEscapeSequences(String text) {
 		if (text == null) {
 			return "";
@@ -2446,6 +2411,7 @@ public class DBManager {
 	 * @param text the text
 	 * @return the string
 	 */
+	@Deprecated
 	public static String insertEscapeSequences(String text) {
 		if (text == null) {
 			return "";
@@ -2688,13 +2654,10 @@ public class DBManager {
 		}
 		sql.append("(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE")
 				.append(") IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID")
-				.append(" WHERE XTRADATA.TRAININGDATE >=")
-				.append("'").append(startDate).append("'");
-
+				.append(" WHERE XTRADATA.TRAININGDATE >= ?");
 		try {
 
-			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
-			final ResultSet rs = ijdbca.executeQuery(sql.toString());
+			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(sql.toString(), startDate);
 			if ( rs != null ) {
 				rs.beforeFirst();
 				while (rs.next()) {
@@ -2721,8 +2684,6 @@ public class DBManager {
 		catch (Exception e) {
 			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
 		}
-
 		return null;
-
 	}
 }

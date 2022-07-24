@@ -166,40 +166,27 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
      * load all hrf file entries and creates a list of combo box items
      */
     List<CBItem> loadCBItemHRFList() {
-        var hrfs = DBManager.instance().loadAllHRFs();
-
-        final String statement = "SELECT * FROM " + getTableName() + " ORDER BY Datum DESC";
+        var hrfs = DBManager.instance().loadAllHRFs(false);
         var cbitems = new ArrayList<CBItem>();
 
-        try {
-            var rs = adapter.executeQuery(statement);
-
-            if (rs != null) {
-                rs.beforeFirst();
-
-                while (rs.next()) {
-                    var date = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
-                    var trainingWeek = date.toTrainingWeek();
-                    hrfs.add(
-                            new core.datatype.CBItem(
-                                    date.toLocaleDateTime()
-                                            + " ( "
-                                            + core.model.HOVerwaltung.instance().getLanguageString("Season")
-                                            + " "
-                                            + trainingWeek.season
-                                            + "  "
-                                            + core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
-                                            + " "
-                                            + trainingWeek.week
-                                            + " )",
-                                    rs.getInt("HRF_ID")));
-                }
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DatenbankZugriff.getCBItemHRFListe " + e);
+        for (var hrf : hrfs) {
+            var date = hrf.getDatum();
+            var trainingWeek = date.toTrainingWeek();
+            cbitems.add(
+                    new core.datatype.CBItem(
+                            date.toLocaleDateTime()
+                                    + " ( "
+                                    + core.model.HOVerwaltung.instance().getLanguageString("Season")
+                                    + " "
+                                    + trainingWeek.season
+                                    + "  "
+                                    + core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
+                                    + " "
+                                    + trainingWeek.week
+                                    + " )",
+                            hrf.getHrfId()));
         }
-
-        return hrfs;
+        return cbitems;
     }
 
     private void loadHRFListe(boolean init) {

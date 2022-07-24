@@ -34,11 +34,8 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     }
 
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        String query = "select * from " +
-                getTableName() +
-                " where playerId=" +
-                playerId;
-        ResultSet rs = adapter.executeQuery(query);
+        String query = "select * from " + getTableName() + " where playerId=?";
+        ResultSet rs = adapter.executePreparedQuery(query, playerId);
         try {
             if (rs != null) {
                 var ret = new ArrayList<FuturePlayerTraining>();
@@ -65,7 +62,7 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         if (toSeason != null && toWeek != null) {
             to = HODateTime.fromHTWeek(new HODateTime.HTWeek(toSeason, toWeek));
         }
-        var prio = FuturePlayerTraining.Priority.valueOf(DBManager.getInteger(rs,"prio"));
+        var prio = FuturePlayerTraining.Priority.valueOf(DBManager.getInteger(rs, "prio"));
         return new FuturePlayerTraining(playerid, prio, from, to);
     }
 
@@ -74,21 +71,19 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         final String[] werte = {String.valueOf(spielerID)};
         try {
             delete(where, werte);
+            var sql = createInsertStatement();
 
             for (var t : futurePlayerTrainings) {
                 var to = t.getTo();
                 var from = t.getFrom();
-                String sql = "INSERT INTO " +
-                        getTableName() +
-                        " (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(" +
-                        t.getPlayerId() + ", " +
-                        t.getPriority().getValue() + ", " +
-                        from.toHTWeek().season + ", " +
-                        from.toHTWeek().week + ", " +
-                        (to != null ? to.toHTWeek().season : null) + ", " +
-                        (to != null ? to.toHTWeek().week : null) +
-                        ")";
-                adapter.executeUpdate(sql);
+                adapter.executePreparedUpdate(sql,
+                        t.getPlayerId(),
+                        from.toHTWeek().week,
+                        from.toHTWeek().season,
+                        (to != null ? to.toHTWeek().week : null),
+                        (to != null ? to.toHTWeek().season : null),
+                        t.getPriority().getValue()
+                );
             }
         } catch (Exception e) {
             HOLogger.instance().log(getClass(), e);

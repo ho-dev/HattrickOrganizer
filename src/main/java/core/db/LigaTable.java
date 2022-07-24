@@ -39,18 +39,22 @@ public final class LigaTable extends AbstractTable {
 	 * speichert die Basics
 	 */
 	protected void saveLiga(int hrfId, Liga liga) {
-		String statement = null;
 		final String[] awhereS = { columns[0].getColumnName() };
 		final String[] awhereV = { "" + hrfId };
 
 		if (liga != null) {
 			//erst Vorhandene Aufstellung löschen
 			delete( awhereS, awhereV );
-			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( LigaName , Punkte , ToreFuer , ToreGegen , Platz , Spieltag , HRF_ID ) VALUES(";
-			statement
-				+= ("'" + liga.getLiga() + "'," + liga.getPunkte() + "," + liga.getToreFuer() + "," + liga.getToreGegen() + "," + liga.getPlatzierung() + "," + liga.getSpieltag() + "," + hrfId + " )");
-			adapter.executeUpdate(statement);
+			var statement = createInsertStatement();
+			adapter.executePreparedUpdate(statement,
+					hrfId,
+					liga.getLiga(),
+					liga.getPunkte(),
+					liga.getToreFuer(),
+					liga.getToreGegen(),
+					liga.getPlatzierung(),
+					liga.getSpieltag()
+			);
 		}
 	}
 	
@@ -63,17 +67,13 @@ public final class LigaTable extends AbstractTable {
 
 		try {
 			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
-			final ResultSet rs = adapter.executeQuery(sql);
-
+			final ResultSet rs = adapter.executePreparedQuery(sql);
 			rs.beforeFirst();
-
 			while (rs.next()) {
 				vligaids.add(Integer.valueOf(rs.getInt("LigaID")));
 			}
 
-			//Umkopieren
 			ligaids = new Integer[vligaids.size()];
-
 			for (int i = 0; i < vligaids.size(); i++) {
 				ligaids[i] = vligaids.get(i);
 			}

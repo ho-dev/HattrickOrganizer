@@ -57,18 +57,12 @@ public final class HRFTable extends AbstractTable {
 		return maxHrf;
 	}
 
-
 	/**
-	 * speichert das Verein
+	 * Save hattrick resource file information
 	 */
 	void saveHRF(int hrfId, HODateTime datum) {
-		String statement = "INSERT INTO " + getTableName()
-				+ " ( HRF_ID, Datum ) VALUES("
-				+ hrfId +  ",'"
-				+ datum.toDbTimestamp() + "' )"
-				;
-		adapter.executeUpdate(statement);
-
+		String statement = createInsertStatement();
+		adapter.executePreparedUpdate(statement, hrfId, datum.toDbTimestamp());
 		if (hrfId > getMaxHrf().getHrfId()) {
 			maxHrf = new HRF(hrfId,  datum);
 		}
@@ -80,30 +74,21 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	/**
-	 * Gibt die HRFId vor dem Datum zurück, wenn möglich
+	 * Load id of latest hrf downloaded before time if available, otherwise the first after time
 	 */
 	int getHrfId4Date(Timestamp time) {
-		ResultSet rs;
-		String sql;
 		int hrfID = 0;
-
-		// Die passende HRF-ID besorgen
-		sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum<='" + time
-				+ "' ORDER BY Datum DESC";
-		rs = adapter.executeQuery(sql);
-
+		String sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum<=? ORDER BY Datum DESC LIMIT 1";
+		var rs = adapter.executePreparedQuery(sql, time);
 		try {
 			if (rs != null) {
-				// HRF vorher vorhanden?
 				if (rs.first()) {
+					// HRF available?
 					hrfID = rs.getInt("HRF_ID");
 				}
-				// sonst HRF nach dem Datum nehmen
 				else {
-					sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum>'"
-							+ time + "' ORDER BY Datum";
-					rs = adapter.executeQuery(sql);
-
+					sql = "SELECT HRF_ID FROM " + getTableName() + " WHERE Datum>? ORDER BY Datum LIMIT 1";
+					rs = adapter.executePreparedQuery(sql, time);
 					assert rs != null;
 					if (rs.first()) {
 						hrfID = rs.getInt("HRF_ID");
@@ -134,7 +119,7 @@ public final class HRFTable extends AbstractTable {
 			sql += " ORDER BY Datum ASC";
 		else
 			sql += " ORDER BY Datum DESC";
-		rs = adapter.executeQuery(sql);
+		rs = adapter.executePreparedQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -154,9 +139,8 @@ public final class HRFTable extends AbstractTable {
 	public List<HRF> getHRFsSince(Timestamp from) {
 		var liste = new ArrayList<HRF>();
 		ResultSet rs;
-		String sql = "SELECT * FROM " + getTableName() + " WHERE Datum>='" + from + "' ORDER BY Datum ASC";
-		rs = adapter.executeQuery(sql);
-
+		String sql = "SELECT * FROM " + getTableName() + " WHERE Datum>=? ORDER BY Datum ASC";
+		rs = adapter.executePreparedQuery(sql, from);
 		try {
 			if (rs != null) {
 				while (rs.next()) {
@@ -182,7 +166,7 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	public HRF loadHRF(int id){
-		return loadHRF(" where HRF_ID =" + id );
+		return loadHRF(" where HRF_ID = ?", id );
 	}
 
 	public HRF loadLatestDownloadedHRF() {
@@ -190,12 +174,12 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	public HRF loadHRFDownloadedAt(Timestamp fetchDate){
-		return loadHRF(" where DATUM = '" + fetchDate + "'");
+		return loadHRF(" where DATUM =?", fetchDate);
 	}
 
-	private HRF loadHRF(String where) {
+	private HRF loadHRF(String where, Object ... params) {
 		var sql="select * from HRF" + where;
-		final ResultSet rs = adapter.executeQuery(sql);
+		final ResultSet rs = adapter.executePreparedQuery(sql,params);
 		try {
 			if (rs != null) {
 				if (rs.first()) {
@@ -219,7 +203,7 @@ public final class HRFTable extends AbstractTable {
 		var ret = new StringBuilder();
 		var separator = "";
 
-		final ResultSet rs = adapter.executeQuery(sql);
+		final ResultSet rs = adapter.executePreparedQuery(sql);
 		try {
 			if (rs != null) {
 				while (rs.next()) {

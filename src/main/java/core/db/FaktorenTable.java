@@ -34,42 +34,28 @@ public final class FaktorenTable extends AbstractTable {
 	protected void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
 			String statement = null;
-			final String[] awhereS = { "PositionID" };
-			final String[] awhereV = { "" + fo.getPosition()};
-
+			final String[] awhereS = {"PositionID"};
+			final String[] awhereV = {"" + fo.getPosition()};
 			//delete  the existing entry
-			delete( awhereS, awhereV );
-
-			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" (PositionID, GKfactor, DEfactor, WIfactor, PSfactor, SPfactor, SCfactor, PMfactor, NormalisationFactor) VALUES(";
-			statement
-				+= (""
-					+ fo.getPosition()
-					+ ","
-					+ fo.getGKfactor()
-					+ ","
-					+ fo.getDEfactor()
-					+ ","
-					+ fo.getWIfactor()
-					+ ","
-					+ fo.getPSfactor()
-					+ ","
-					+ fo.getSPfactor()
-					+ ","
-					+ fo.getSCfactor()
-					+ ","
-					+ fo.getPMfactor()
-					+ ","
-					+ fo.getNormalizationFactor()
-					+ " )");
-			adapter.executeUpdate(statement);
+			delete(awhereS, awhereV);
+			statement = createInsertStatement();
+			adapter.executePreparedUpdate(statement,
+					fo.getPosition(),
+					fo.getGKfactor(),
+					fo.getDEfactor(),
+					fo.getWIfactor(),
+					fo.getPSfactor(),
+					fo.getSPfactor(),
+					fo.getSCfactor(),
+					fo.getPMfactor(),
+					fo.getNormalizationFactor()
+			);
 		}
 	}
-	
-	///////////////////Faktoren holen//////////////////////////
+
 	void getFaktorenFromDB() {
 		final FormulaFactors factors = FormulaFactors.instance();
-		final ResultSet rs = adapter.executeQuery("SELECT * FROM " + getTableName() + "");
+		final ResultSet rs = adapter.executePreparedQuery("SELECT * FROM " + getTableName() + "");
 
 		try {
 			if (rs != null) {
