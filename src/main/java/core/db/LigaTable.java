@@ -43,7 +43,7 @@ public final class LigaTable extends AbstractTable {
 		final String[] awhereV = { "" + hrfId };
 
 		if (liga != null) {
-			//erst Vorhandene Aufstellung löschen
+			// delete existing league
 			delete( awhereS, awhereV );
 			var statement = createInsertStatement();
 			adapter.executePreparedUpdate(statement,

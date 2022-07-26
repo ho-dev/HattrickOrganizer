@@ -100,13 +100,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			sql.append(column);
 			sql.append(" FROM ").append(getTableName());
 			sql.append(" WHERE ").append(home ? "HEIMID" : "GASTID")
-					.append(" = ");
-			sql.append(teamId);
+					.append(" = ?");
+			//sql.append(teamId);
 			sql.append(" AND HEIMTORE ").append(column2).append(" GASTTORE ");
 			sql.append(getMatchTypWhereClause(matchtyp));
 
 			sql.append(" ORDER BY DIFF DESC ");
-			var rs = adapter.executeQuery(sql.toString());
+			var rs = adapter.executePreparedQuery(sql.toString(), teamId);
 
 			assert rs != null;
 			rs.beforeFirst();
@@ -130,15 +130,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		StringBuilder sql = new StringBuilder(100);
 		ResultSet rs;
 
-		sql.append("SELECT * FROM ").append(getTableName());
+		sql.append("SELECT * FROM ").append(getTableName()).append(" WHERE Status=" + MatchKurzInfo.FINISHED);
 
 		if(ownTeam) {
-			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(")");
-			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
-		}
-		else{
-			sql.append(" WHERE Status=" + MatchKurzInfo.FINISHED);
+			sql.append(" AND ( GastID = ? OR HeimID = ?)");
 		}
 
 		if(bOfficialOnly) {
@@ -152,7 +147,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		try{
-			rs = adapter.executeQuery(sql.toString());
+			if ( ownTeam) {
+				final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+				rs = adapter.executePreparedQuery(sql.toString(), teamId, teamId);
+			}
+			else {
+				rs = adapter.executePreparedQuery(sql.toString());
+			}
 
 			assert rs != null;
 			rs.beforeFirst();
@@ -186,22 +187,41 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			return new MatchKurzInfo[0];
 		}
 
+		List<Object> params = new ArrayList<>();
 		sql.append("SELECT * FROM ").append(getTableName());
 
 		// filter time
-		sql.append(" WHERE MatchDate>='").append(from).append("'");
+		sql.append(" WHERE MatchDate>=?");
+		params.add(from);
+
 		if(matchtyp != MatchesPanel.ALL_GAMES){
 			// OTHER TEAM GAMES =============================================
 			if(matchtyp == MatchesPanel.OTHER_TEAM_GAMES){
-				sql.append(" AND ( GastID != ").append(teamId).append(" AND HeimID != ").append(teamId).append(" )");
+				sql.append(" AND ( GastID != ? AND HeimID != ? )");
+				params.add(teamId);
+				params.add(teamId);
 			}
 			// MY GAMES =============================================
 			else{
 				switch (matchLocation) {
-					case HOME -> sql.append(" AND HeimID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
-					case AWAY -> sql.append(" AND GastID=").append(teamId).append(" AND (isNeutral is NULL OR isNeutral=false) ");
-					case NEUTRAL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") AND (isNeutral=true) ");
-					case ALL -> sql.append(" AND (HeimID=").append(teamId).append(" OR GastID=").append(teamId).append(") ");
+					case HOME -> {
+						sql.append(" AND HeimID = ? AND (isNeutral is NULL OR isNeutral=false) ");
+						params.add(teamId);
+					}
+					case AWAY -> {
+						sql.append(" AND GastID = ? AND (is Neutral is NULL OR isNeutral=false) ");
+						params.add(teamId);
+					}
+					case NEUTRAL -> {
+						sql.append(" AND (HeimID = ? OR GastID = ?) AND (isNeutral=true) ");
+						params.add(teamId);
+						params.add(teamId);
+					}
+					case ALL -> {
+						sql.append(" AND (HeimID = ? OR GastID= ?) ");
+						params.add(teamId);
+						params.add(teamId);
+					}
 				}
 			}
 		}
@@ -220,7 +240,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(" ORDER BY MatchDate DESC");
 
 		try {
-			rs = adapter.executeQuery(sql.toString());
+			rs = adapter.executePreparedQuery(sql.toString(), params.toArray());
 			assert rs != null;
 			rs.beforeFirst();
 
@@ -247,13 +267,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
-			sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
-			sql.append(" AND Status=" + MatchKurzInfo.UPCOMING);
-			sql.append(" AND MatchTyp!=").append(MatchType.LEAGUE.getId());
-			sql.append(" ORDER BY MatchDate DESC");
-
-			rs = adapter.executeQuery(sql.toString());
-
+			sql.append(" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC");
+			rs = adapter.executePreparedQuery(sql.toString(), teamId, teamId, MatchKurzInfo.UPCOMING, MatchType.LEAGUE.getId());
 			assert rs != null;
 			rs.beforeFirst();
 
@@ -273,10 +288,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		ResultSet rs;
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
-			sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
-			sql.append(" AND Status=" + MatchKurzInfo.FINISHED);
-			sql.append(" ORDER BY MatchDate DESC LIMIT 1");
-			rs = adapter.executeQuery(sql.toString());
+			sql.append(" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1");
+			rs = adapter.executePreparedQuery(sql.toString(), teamId, teamId, MatchKurzInfo.FINISHED);
 			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
@@ -294,10 +307,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		ResultSet rs;
 		try {
 			sql.append("SELECT * FROM ").append(getTableName());
-			sql.append(" WHERE ( GastID = ").append(teamId).append(" OR HeimID = ").append(teamId).append(" )");
-			sql.append(" AND Status=" + MatchKurzInfo.UPCOMING);
-			sql.append(" ORDER BY MatchDate ASC LIMIT 1");
-			rs = adapter.executeQuery(sql.toString());
+			sql.append(" WHERE ( GastID = ? OR HeimID = ? ) AND Status=? ORDER BY MatchDate ASC LIMIT 1");
+			rs = adapter.executePreparedQuery(sql.toString(), teamId, teamId, MatchKurzInfo.UPCOMING);
 			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
@@ -309,7 +320,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 		return null;
 	}
-
 
 	private StringBuilder getMatchTypWhereClause(MatchTypeExtended matchType) {
 		StringBuilder sql = new StringBuilder(100);
@@ -387,13 +397,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		boolean vorhanden = false;
 
 		try {
+			List<Object> params = new ArrayList<>();
 			String sql = "SELECT MatchId FROM " + getTableName()
-					+ " WHERE MatchId=" + matchid;
+					+ " WHERE MatchId= ?";
+			params.add(matchid);
 			if ( matchType != null){
-				sql += " AND MatchTyp=" + matchType.getId();
+				sql += " AND MatchTyp=?";
+				params.add(matchType.getId());
 			}
 
-			final ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = adapter.executePreparedQuery(sql,params.toArray());
 
 			assert rs != null;
 			rs.beforeFirst();
@@ -412,8 +425,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	boolean hasUnsureWeatherForecast(int matchId)
 	{
 		try{
-			final String sql = "SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=" + matchId;
-			final ResultSet rs = adapter.executeQuery(sql);
+			final String sql = "SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?";
+			final ResultSet rs = adapter.executePreparedQuery(sql,matchId);
 			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
