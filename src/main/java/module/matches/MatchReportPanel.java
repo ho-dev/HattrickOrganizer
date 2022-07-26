@@ -77,7 +77,7 @@ public class MatchReportPanel extends LazyImagePanel {
 			clear();
 
 			Matchdetails details = this.matchesModel.getDetails();
-			List<MatchEvent> matchHighlights = details.getHighlights();
+			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
 			if ( matchHighlights == null) return;
 
 			JLabel timeLabel, eventIcon, eventDescription;
