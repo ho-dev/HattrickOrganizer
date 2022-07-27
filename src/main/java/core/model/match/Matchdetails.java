@@ -958,7 +958,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public final ArrayList<MatchEvent> downloadHighlightsIfMissing() {
         if (getHighlights() == null && maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
-            if (m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
+            if (m_vHighlights == null || m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
                 HOLogger.instance().info(Matchdetails.class,
                         "Reload Matchdetails id: " + this.getMatchID());
                 boolean silenDownloadMode = OnlineWorker.isSilentDownload();
