@@ -1154,11 +1154,26 @@ public class DBManager {
 	}
 
 	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
-		String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
-		final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
-				teamId, teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
+		//String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+		var matchTypeList=new ArrayList<Object>();
+		var placeholders=new StringBuilder();
+		var sep ="";
+		for ( var t : matchTypes ) {
+			matchTypeList.add(t);
+			placeholders.append(sep).append("?");
+			sep=",";
+		}
 
-		return getMatchesKurzInfo(where);
+		final String where = "WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+placeholders+") AND STATUS in (?, ?) ORDER BY MatchDate DESC";
+		var params = new ArrayList<Object>();
+		params.add(teamId);
+		params.add(teamId);
+		params.add( firstMatchDate.toDbTimestamp());
+		params.add(lastMatchDate.toDbTimestamp());
+		params.addAll(matchTypeList);
+		params.add(MatchKurzInfo.FINISHED);
+		params.add(MatchKurzInfo.UPCOMING);
+		return getMatchesKurzInfo(where, params);
 	}
 
 	/**
@@ -1175,9 +1190,9 @@ public class DBManager {
 	 * @param where The string containing sql where clause
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
+	public MatchKurzInfo[] getMatchesKurzInfo(String where, List<Object> params) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(where);
+				.getMatchesKurzInfo(where, params);
 	}
 
 	/**

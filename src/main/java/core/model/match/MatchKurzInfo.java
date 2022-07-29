@@ -196,7 +196,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 	 * 
 	 * @return Value of property m_iGastTore.
 	 */
-	public final int getGuestGuestGoals() {
+	public final int getGuestTeamGoals() {
 		return m_iGastTore;
 	}
 
@@ -420,7 +420,7 @@ public class MatchKurzInfo implements Comparable<Object> {
 		}
 		setGuestTeamID(match.getGuestTeamID());
 		setGuestTeamName(match.getGuestTeamName());
-		setGuestTeamGoals(match.getGuestGuestGoals());
+		setGuestTeamGoals(match.getGuestTeamGoals());
 		setHomeTeamID(match.getHomeTeamID());
 		setHomeTeamName(match.getHomeTeamName());
 		setHomeTeamGoals(match.getHomeTeamGoals());

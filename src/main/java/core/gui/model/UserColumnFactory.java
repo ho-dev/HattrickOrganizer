@@ -352,7 +352,7 @@ final public class UserColumnFactory {
                 entry.setFGColor((match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
-                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestGuestGoals())) {
+                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestTeamGoals())) {
                     entry.setFont(entry.getFont().deriveFont(Font.BOLD));
                 } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));
@@ -387,7 +387,7 @@ final public class UserColumnFactory {
                 entry.setFGColor((match.getGuestTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
-                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestGuestGoals())) {
+                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestTeamGoals())) {
                     entry.setFont(entry.getFont().deriveFont(Font.BOLD));
                 } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));

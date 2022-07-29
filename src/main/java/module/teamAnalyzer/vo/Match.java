@@ -8,8 +8,6 @@ import core.model.series.Paarung;
 import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 
-import java.sql.Timestamp;
-
 
 /**
  * Match Value object that holds relevant information about the game
@@ -66,7 +64,7 @@ public class Match {
         homeTeam = matchInfo.getHomeTeamName();
         awayTeam = matchInfo.getGuestTeamName();
         homeGoals = matchInfo.getHomeTeamGoals();
-        awayGoals = matchInfo.getGuestGuestGoals();
+        awayGoals = matchInfo.getGuestTeamGoals();
         matchType = matchInfo.getMatchTypeExtended();
         matchDate = matchInfo.getMatchSchedule();
 

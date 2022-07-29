@@ -119,11 +119,11 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			if (details.getHomeHalfTimeGoals() >= 0) {
 				heimTeamToreLabel.setText(info.getHomeTeamGoals() + " ("
 						+ details.getHomeHalfTimeGoals() + ") ");
-				gastTeamToreLabel.setText(info.getGuestGuestGoals() + " ("
+				gastTeamToreLabel.setText(info.getGuestTeamGoals() + " ("
 						+ details.getGuestHalfTimeGoals() + ") ");
 			} else {
 				heimTeamToreLabel.setText(String.valueOf(info.getHomeTeamGoals()));
-				gastTeamToreLabel.setText(String.valueOf(info.getGuestGuestGoals()));
+				gastTeamToreLabel.setText(String.valueOf(info.getGuestTeamGoals()));
 			}
 
 			String name4matchtyp = info.getMatchType().getName();
@@ -141,10 +141,10 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 			
 			// Sterne für Sieger!
-			if (info.getHomeTeamGoals() > info.getGuestGuestGoals()) {
+			if (info.getHomeTeamGoals() > info.getGuestTeamGoals()) {
 				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHomeTeamGoals() < info.getGuestGuestGoals()) {
+			} else if (info.getHomeTeamGoals() < info.getGuestTeamGoals()) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {

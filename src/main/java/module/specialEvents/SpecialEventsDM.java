@@ -124,7 +124,7 @@ public class SpecialEventsDM {
 			match.setHostingTeamTactic(details.getHomeTacticType());
 			match.setMatchDate(kurzInfos.getMatchSchedule());
 			match.setMatchId(kurzInfos.getMatchID());
-			match.setMatchResult(kurzInfos.getHomeTeamGoals() + " - " + kurzInfos.getGuestGuestGoals());
+			match.setMatchResult(kurzInfos.getHomeTeamGoals() + " - " + kurzInfos.getGuestTeamGoals());
 			match.setVisitingTeam(kurzInfos.getGuestTeamName());
 			match.setVisitingTeamId(kurzInfos.getGuestTeamID());
 			match.setVisitingTeamTactic(details.getGuestTacticType());
