@@ -77,7 +77,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - July 09, 2022
+Reports by Contributors - Dec 20, 2021 - July 30, 2022
 
 * Foppe	690
 * brokenelevator 510
@@ -85,8 +85,8 @@ Reports by Contributors - Dec 20, 2021 - July 09, 2022
 * Ante 218
 * Adrian 107
 * Fresty di Lot 101
+* sich	100
 * Lidegand 	98
-* sich	96
 * akasolace	96
 * Frank 94
 * \_KOHb\_	76
