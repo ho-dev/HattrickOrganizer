@@ -66,7 +66,9 @@ public class TrainingWeekManager {
 
 			if (numRows != 1) {
 				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining(): numRows: " + numRows);
-				return null;
+				// training date changed or hrf from another team loaded (select latest)
+				var ret = trainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
+				return ret.get();
 			}
 			return trainings.get(0);
 
