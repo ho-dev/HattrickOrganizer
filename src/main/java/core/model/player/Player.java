@@ -2310,8 +2310,14 @@ public class Player {
                         }
 
                         if (!experienceSubDone) {
-                            experienceSub += trainingPerPlayer.getExperienceSub();
+                            var inc = trainingPerPlayer.getExperienceSub();
+                            experienceSub += inc;
                             if (experienceSub > 0.99) experienceSub = 0.99;
+                            HOLogger.instance().info(getClass(),
+                                    "Training " + training.getTrainingDate().toLocaleDateTime() +
+                                            " Minutes= " + trainingPerPlayer.getTrainingPair().getTrainingDuration().getPlayedMinutes() +
+                                            " Experience increment of " + this.getFullName() + ": " +  inc +
+                                            " new sub value=" + experienceSub);
                         }
                     }
                 }
