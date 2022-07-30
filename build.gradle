@@ -476,7 +476,7 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
-installDist.dependsOn createLanguageFileList
+compileJava.dependsOn createLanguageFileList
 markdownToHtml.dependsOn pushmd
 poeditorPull.dependsOn markdownToHtml
 processResources.dependsOn poeditorPull

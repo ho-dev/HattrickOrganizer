@@ -300,22 +300,17 @@ public class HOVerwaltung {
 	public static void checkLanguageFile(String languageFilename) {
 		try {
 			final InputStream translationFile = FileLoader.instance().getFileInputStream("sprache/" + languageFilename + ".properties");
-
-
 			if (translationFile != null) {
 				HOLogger.instance().info(HOVerwaltung.class, "language used for interface is: " + languageFilename);
 			}
 			else{
 				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");
-				HOLogger.instance().log(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");
+				UserParameter.instance().sprachDatei = "English";
 			}
 		}
 		catch (Exception e) {
 			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
-			HOLogger.instance().log(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
 			UserParameter.instance().sprachDatei = "English";
 		}
-
-
 	}
 }
