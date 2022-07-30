@@ -9,6 +9,7 @@ import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.HODateTime;
+import core.util.HOLogger;
 import core.util.Helper;
 import java.awt.Component;
 import java.awt.Frame;
@@ -47,6 +48,10 @@ public class HRFImport {
 				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
 				frame.setInformation(getLangStr("StartParse"));
 				homodel = HRFFileParser.parse(files[i]);
+				if ( homodel != null && homodel.getBasics().getTeamId() != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
+					HOLogger.instance().error(getClass(), "hrf file from other team can not be imported: " + homodel.getBasics().getTeamName());
+					homodel = null;
+				}
 
 				if (homodel == null) {
 					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.FEHLERFARBE);
