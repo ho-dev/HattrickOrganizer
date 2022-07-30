@@ -2,14 +2,16 @@ package core.model.match;
 
 import core.model.HOVerwaltung;
 
+import java.util.List;
+
 public class MatchesHighlightsStat {
 
 	private String description;
 	private int noGoals;
 	private int goals;
 	private boolean ownTeam;
-	private String types;
-	private String subtyps;
+	private List<MatchEvent.MatchEventID> types;
+	private List<MatchEvent.MatchEventID> subtypes;
 	
 	public MatchesHighlightsStat(String key){
 		description = HOVerwaltung.instance().getLanguageString(key);
@@ -18,14 +20,14 @@ public class MatchesHighlightsStat {
 	}
 	
 	
-	public MatchesHighlightsStat(String key,String subtyps){
+	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtyps){
 		this(key,"1,2",subtyps);
 	}
 	
-	public MatchesHighlightsStat(String key,String types,String subtyps){
+	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> types,List<MatchEvent.MatchEventID> subtypes){
 		description = HOVerwaltung.instance().getLanguageString(key);
 		this.types = types;
-		this.subtyps = subtyps;
+		this.subtypes = subtypes;
 		goals=-1;
 	}
 

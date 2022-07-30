@@ -57,11 +57,11 @@ class MatchesOverviewQuery  {
 				whereAwayClause=" AND HEIMTORE > GASTTORE AND (HEIMTORE - GASTTORE ) >= 5 ))";
 				break;
 		}
-		sql.append(" ((HEIMID = ").append(teamId).append(whereHomeClause);
-		sql.append(" OR (GASTID = ").append(teamId).append(whereAwayClause);
+		sql.append(" ((HEIMID = ?").append(whereHomeClause);
+		sql.append(" OR (GASTID = ?").append(whereAwayClause);
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), teamId, teamId);
 		try {
 			if(rs.next()){
 				tmp = rs.getInt("C");
@@ -84,15 +84,15 @@ class MatchesOverviewQuery  {
 		sql.append(" WHERE TYP = 0 AND MINUTE = 45 AND MH_TEAMID = 0 ");
 		switch(statistic){
 		case MatchesOverviewCommonPanel.LeadingHTLosingFT:
-			sql.append("AND ((MK_HEIMID = "+teamId+" AND DIFFH >0 AND DIFF <0) or (MK_GASTID = "+teamId+" AND DIFFH <0 AND DIFF >0)) ");
+			sql.append("AND ((MK_HEIMID = ? AND DIFFH >0 AND DIFF <0) or (MK_GASTID = ? AND DIFFH <0 AND DIFF >0)) ");
 			break;
 		case MatchesOverviewCommonPanel.TrailingHTWinningFT:
-			sql.append("AND ((MK_HEIMID = "+teamId+" AND DIFFH <0 AND DIFF >0) or (MK_GASTID = "+teamId+" AND DIFFH >0 AND DIFF <0)) ");
+			sql.append("AND ((MK_HEIMID = ? AND DIFFH <0 AND DIFF >0) or (MK_GASTID = ? AND DIFFH >0 AND DIFF <0)) ");
 			break;
 		}
 		sql.append("AND (MK_MatchTyp=2 OR MK_MatchTyp=1 OR MK_MatchTyp=3 )");
 
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), teamId, teamId);
 		try {
 			for (int i = 0; rs.next(); i++) {
 				tmp=i;
