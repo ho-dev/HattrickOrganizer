@@ -379,7 +379,7 @@ public class Player {
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
         m_sLastName = properties.getProperty("lastname", "");
-        m_arrivalDate =  properties.getProperty("arrivaldate");
+        m_arrivalDate = properties.getProperty("arrivaldate");
         m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
         m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
         m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
@@ -452,20 +452,20 @@ public class Player {
             shirtNumber = Integer.parseInt(temp);
         }
 
-        m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False"))?1:0;
+        m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
-        nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID","0"));
+        nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID", "0"));
 
         // #461-lastmatch
-        m_lastMatchDate =  properties.getProperty("lastmatch_date");
-        if(m_lastMatchDate!=null && !m_lastMatchDate.isEmpty()) {
-            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id","0"));
+        m_lastMatchDate = properties.getProperty("lastmatch_date");
+        if (m_lastMatchDate != null && !m_lastMatchDate.isEmpty()) {
+            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id", "0"));
             lastMatchPosition = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
             lastMatchMinutes = Integer.parseInt(properties.getProperty("lastmatch_playedminutes", "0"));
             // rating is stored as number of half stars
-            m_lastMatchRating = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));
-            lastMatchRatingEndOfGame = (int)(2*Double.parseDouble(properties.getProperty("lastmatch_ratingendofgame", "0")));
+            m_lastMatchRating = (int) (2 * Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));
+            lastMatchRatingEndOfGame = (int) (2 * Double.parseDouble(properties.getProperty("lastmatch_ratingendofgame", "0")));
         }
 
         setLastMatchType(MatchType.getById(
@@ -485,13 +485,12 @@ public class Player {
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
             motherclubId = oldPlayer.getMotherclubId();
             motherclubName = oldPlayer.getMotherclubName();
-        }
-
-        if ( motherclubId == null){
-            var playerDetails = OnlineWorker.downloadPlayerDetails(this.getPlayerID());
-            if (playerDetails != null){
-                motherclubId = playerDetails.getMotherclubId();
-                motherclubName = playerDetails.getMotherclubName();
+            if (motherclubId == null) {
+                var playerDetails = OnlineWorker.downloadPlayerDetails(this.getPlayerID());
+                if (playerDetails != null) {
+                    motherclubId = playerDetails.getMotherclubId();
+                    motherclubName = playerDetails.getMotherclubName();
+                }
             }
         }
     }
@@ -2313,9 +2312,18 @@ public class Player {
                             var inc = trainingPerPlayer.getExperienceSub();
                             experienceSub += inc;
                             if (experienceSub > 0.99) experienceSub = 0.99;
+
+                            var minutes = 0;
+                            var tp =trainingPerPlayer.getTrainingPair();
+                            if  ( tp != null){
+                                minutes = tp.getTrainingDuration().getPlayedMinutes();
+                            }
+                            else {
+                                HOLogger.instance().warning(getClass(), "no training info found");
+                            }
                             HOLogger.instance().info(getClass(),
                                     "Training " + training.getTrainingDate().toLocaleDateTime() +
-                                            " Minutes= " + trainingPerPlayer.getTrainingPair().getTrainingDuration().getPlayedMinutes() +
+                                            " Minutes= " + minutes +
                                             " Experience increment of " + this.getFullName() + ": " +  inc +
                                             " new sub value=" + experienceSub);
                         }

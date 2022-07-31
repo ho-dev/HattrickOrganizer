@@ -2,6 +2,8 @@ package core.file.xml;
 
 import java.util.List;
 import java.util.Vector;
+
+import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
@@ -345,10 +347,15 @@ public class XMLPlayersParser {
     public Player parsePlayerDetailsFromString(String xml) {
         Document doc = XMLManager.parseString(xml);
 
-        var player = new Player();
+
         var root = doc.getDocumentElement();
         root = (Element) root.getElementsByTagName("Player").item(0);
 
+        var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
+        var teamID = xmlIntValue(owningTeam, "TeamID");
+        if (teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
+
+        var player = new Player();
         player.setPlayerID(xmlIntValue(root, "PlayerID"));
         player.setFirstName(xmlValue(root, "FirstName"));
         player.setNickName(xmlValue(root, "NickName"));
