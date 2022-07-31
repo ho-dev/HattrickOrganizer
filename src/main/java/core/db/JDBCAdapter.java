@@ -11,7 +11,7 @@ import java.sql.*;
  */
 public class JDBCAdapter {
 	private Connection m_clConnection;
-	//private Statement m_clStatement;
+	private Statement m_clStatement;
 	private DBInfo m_clDBInfo;
 
 	/**
@@ -38,28 +38,52 @@ public class JDBCAdapter {
 	/**
 	 * Execute a SQL Select statement
 	 * 
-	 * @param Sql
-	 *            Sql query
+	 * @param sqlStatement
+	 *            Sql query with placeholders
 	 * 
 	 * @return ResultSet of the query
 	 */
-	public final ResultSet executePreparedQuery(String Sql, Object ... params) {
+	public final ResultSet _executeQuery(String sqlStatement) {
+		try {
+			if (m_clConnection.isClosed()) {
+				return null;
+			}
+			return m_clStatement.executeQuery(sqlStatement);
+		} catch (Exception e) {
+			HOLogger.instance().error(
+					getClass(),
+					"executeQuery : " + e + "\nStatement: " + sqlStatement + "\n"
+							+ ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	public final PreparedStatement createPreparedStatement(String sql) {
+		try {
+			return m_clConnection.prepareStatement(sql);
+		} catch (Exception e) {
+			HOLogger.instance().error(getClass(), "createPreparedStatement : " + e + "\nStatement: " + sql + "\n" + ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	public final ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object ... params) {
+		if ( preparedStatement==null) return null;
 		ResultSet resultat = null;
 
 		try {
 			if (m_clConnection.isClosed()) {
 				return null;
 			}
-			var preparedStatement = m_clConnection.prepareStatement(Sql);
 			int i = 0;
 			for ( var p: params) {
 				preparedStatement.setObject(++i, p);
 			}
-			resultat = preparedStatement.executeQuery(Sql);
+			resultat = preparedStatement.executeQuery();
 
 			return resultat;
 		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + Sql + "\n" 	+ ExceptionUtils.getStackTrace(e));
+			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + preparedStatement.toString() + "\n" 	+ ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}
@@ -69,31 +93,50 @@ public class JDBCAdapter {
 	 * statements that return nothing, such as SQL DDL statements, can be
 	 * executed.
 	 * 
-	 * @param Sql
+	 * @param sqlStatement
 	 *            INSERT, UPDATE or DELETE statement
 	 * 
 	 * @return either the row count for SQL Data Manipulation Language (DML)
 	 *         statements or 0 for SQL statements that return nothing
 	 * 
 	 */
-	public final int executePreparedUpdate(String Sql, Object ... params) {
+	public final int _executeUpdate(String sqlStatement) {
 		int ret = 0;
 
 		try {
 			if (m_clConnection.isClosed()) {
 				return 0;
 			}
-			var preparedStatement = m_clConnection.prepareStatement(Sql);
-			int i = 0;
-			for ( var p: params) {
-				preparedStatement.setObject(++i, p);
-			}
-			ret = preparedStatement.executeUpdate(Sql);
+			// HOLogger.instance().log(getClass(), Sql );
+			ret = m_clStatement.executeUpdate(sqlStatement);
 			return ret;
 		} catch (Exception e) {
 			HOLogger.instance().error(
 					getClass(),
-					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + Sql + "\n"
+					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + sqlStatement + "\n"
+							+ ExceptionUtils.getStackTrace(e));
+			return 0;
+		}
+	}
+
+	public final int executePreparedUpdate(PreparedStatement preparedStatement, Object ... params) {
+		int ret = 0;
+
+		try {
+			if (m_clConnection.isClosed()) {
+				return 0;
+			}
+			//var preparedStatement = m_clConnection.prepareStatement(Sql);
+			int i = 0;
+			for ( var p: params) {
+				preparedStatement.setObject(++i, p);
+			}
+			ret = preparedStatement.executeUpdate();
+			return ret;
+		} catch (Exception e) {
+			HOLogger.instance().error(
+					getClass(),
+					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + preparedStatement.toString() + "\n"
 							+ ExceptionUtils.getStackTrace(e));
 			return 0;
 		}
@@ -117,8 +160,8 @@ public class JDBCAdapter {
 			// Initialise the Database Driver Object
 			Class.forName(Driver);
 			m_clConnection = DriverManager.getConnection(URL, User, PWD);
-//			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-//					ResultSet.CONCUR_READ_ONLY);
+			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
 
 		} catch (Exception e) {
 			if (m_clConnection != null) {

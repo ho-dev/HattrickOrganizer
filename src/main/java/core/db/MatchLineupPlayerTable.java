@@ -86,8 +86,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final float[] bewertungen = { 0f, 0f, 0f, 0f };
 
 		try {
-			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=" + spielerid;
-			final ResultSet rs = adapter.executeQuery(sql);
+			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=?";
+			final ResultSet rs = adapter.executePreparedQuery(sql, spielerid);
 
 			assert rs != null;
 			rs.beforeFirst();
@@ -137,8 +137,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final float[] starsStatistics = { 0f, 0f, 0f, 0f };
 
 		try {
-			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=" + spielerid + " AND HoPosCode=" + position;
-			final ResultSet rs = adapter.executeQuery(sql);
+			final String sql = "SELECT MatchID, Rating FROM "+getTableName()+" WHERE SpielerID=? AND HoPosCode=?";
+			final ResultSet rs = adapter.executePreparedQuery(sql, spielerid, position);
 
 			assert rs != null;
 			rs.beforeFirst();
@@ -180,44 +180,42 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType,  int matchID, int teamID) {
 		if (matchLineupPosition != null) {
-			final String[] where = { "MatchTyp", "MatchID" , "TeamID", "RoleID"};
-			final String[] werte = { "" + matchType.getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId()};
+			final String[] where = {"MatchTyp", "MatchID", "TeamID", "RoleID"};
+			final String[] werte = {"" + matchType.getId(), "" + matchID, "" + teamID, "" + matchLineupPosition.getRoleId()};
 			delete(where, werte);
 
 			try {
-				var sql = "INSERT INTO "+getTableName()+" (MatchID,TeamID,MatchTyp,SpielerID,RoleID,Taktik," +
-						"PositionCode,VName,NickName,Name,Rating,HoPosCode,STATUS,FIELDPOS,RatingStarsEndOfMatch," +
-						"StartPosition,StartBehaviour,StartSetPieces) VALUES(" +
-						matchID + "," +
-						teamID	+ "," +
-						matchType.getId() + "," +
-						matchLineupPosition.getPlayerId() + ","	+
-						matchLineupPosition.getRoleId() + "," +
-						matchLineupPosition.getBehaviour()	+ ","	+
-						matchLineupPosition.getRoleId() + ",'" +
-						DBManager.insertEscapeSequences(matchLineupPosition.getSpielerVName()) + "', '" +
-						DBManager.insertEscapeSequences(matchLineupPosition.getNickName()) + "', '" +
-						DBManager.insertEscapeSequences(matchLineupPosition.getSpielerName())+ "'," +
-						matchLineupPosition.getRating() + "," +
-						matchLineupPosition.getPosition() + "," +
-						"0," + // Status
-						matchLineupPosition.getRoleId() + "," +
-						matchLineupPosition.getRatingStarsEndOfMatch() + "," +
-						matchLineupPosition.getStartPosition() + "," +
-						matchLineupPosition.getStartBehavior() +  "," +
-						matchLineupPosition.isStartSetPiecesTaker() + " )";
-				adapter.executeUpdate(sql);
+				var sql = createInsertStatement();
+				adapter.executePreparedUpdate(sql,
+						matchID,
+						matchType.getId(),
+						teamID,
+						matchLineupPosition.getPlayerId(),
+						matchLineupPosition.getRoleId(),
+						matchLineupPosition.getBehaviour(),
+						matchLineupPosition.getRoleId(),
+						matchLineupPosition.getSpielerVName(),
+						matchLineupPosition.getNickName(),
+						matchLineupPosition.getSpielerName(),
+						matchLineupPosition.getRating(),
+						matchLineupPosition.getPosition(),
+						0,
+						matchLineupPosition.getRoleId(),
+						matchLineupPosition.getRatingStarsEndOfMatch(),
+						matchLineupPosition.getStartPosition(),
+						matchLineupPosition.getStartBehavior(),
+						matchLineupPosition.isStartSetPiecesTaker()
+				);
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storeMatchLineupPlayer Error" + e);
-				HOLogger.instance().log(getClass(),e);
+				HOLogger.instance().log(getClass(), "DB.storeMatchLineupPlayer Error" + e);
+				HOLogger.instance().log(getClass(), e);
 			}
 		}
-	}	
+	}
 
 	Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID) {
 		try {
-			var sql = "SELECT * FROM "+getTableName() +
-					" WHERE MatchID = "	+ matchID +
+			var sql = "SELECT * FROM "+getTableName() + " WHERE MatchID = "	+ matchID +
 					" AND MatchTyp = " + matchType.getId() +
 					" AND TeamID = " + teamID;
 			return createMatchLineups(sql);
@@ -240,7 +238,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	private Vector<MatchLineupPosition> createMatchLineups(String sql) throws SQLException {
 		var vec = new Vector<MatchLineupPosition>();
-		var rs = adapter.executeQuery(sql);
+		var rs = adapter.executePreparedQuery(sql);
 		assert rs != null;
 		rs.beforeFirst();
 

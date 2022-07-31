@@ -125,15 +125,15 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[9];
-		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEventsIDListToString(MatchEvent.penaltyME));
-		rows[1] = new MatchesHighlightsStat("highlight_freekick",  MatchEventsIDListToString(MatchEvent.freekickME));
-		rows[2] = new MatchesHighlightsStat("highlight_links", MatchEventsIDListToString(MatchEvent.leftAttackME));
-		rows[3] = new MatchesHighlightsStat("highlight_middle", MatchEventsIDListToString(MatchEvent.CentralAttackME));
-		rows[4] = new MatchesHighlightsStat("highlight_rechts", MatchEventsIDListToString(MatchEvent.RightAttackME));
-		rows[5] = new MatchesHighlightsStat("IFK", MatchEventsIDListToString(MatchEvent.IFKME));
-		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEventsIDListToString(MatchEvent.LSME));
-		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEventsIDListToString(MatchEvent.CounterAttackME));
-		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEventsIDListToString(MatchEvent.specialME));
+		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEvent.penaltyME);
+		rows[1] = new MatchesHighlightsStat("highlight_freekick",  MatchEvent.freekickME);
+		rows[2] = new MatchesHighlightsStat("highlight_links", MatchEvent.leftAttackME);
+		rows[3] = new MatchesHighlightsStat("highlight_middle", MatchEvent.CentralAttackME);
+		rows[4] = new MatchesHighlightsStat("highlight_rechts", MatchEvent.RightAttackME);
+		rows[5] = new MatchesHighlightsStat("IFK", MatchEvent.IFKME);
+		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEvent.LSME);
+		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEvent.CounterAttackME);
+		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEvent.specialME);
 
 		for (int i = 0; i < rows.length; i++) {
 			if(!rows[i].isTitle())
@@ -146,14 +146,16 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int iMatchType, MatchLocation matchLocation){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
+		List<Object> params = new ArrayList<>();
 		sql.append("SELECT MATCH_EVENT_ID, COUNT(*) AS C FROM MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID WHERE TEAMID");
 		if(!ownTeam) {sql.append("!");}
-		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
-		sql.append(row.getSubtyps()).append(")");
+		sql.append("=?").append(" AND MATCH_EVENT_ID IN(");
+		params.add(teamId);
+		sql.append(createSubTypePlaceholders(row.getSubtyps(), params)).append(")");
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), params);
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
@@ -177,6 +179,17 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 				HOLogger.instance().log(MatchesOverviewQuery.class, e);
 		}
 		}
+	}
+
+	private static StringBuilder createSubTypePlaceholders(List<MatchEvent.MatchEventID> subtypes, List<Object> params) {
+		var sep = "";
+		var placeholders = new StringBuilder();
+		for (var id : subtypes) {
+			placeholders.append(sep).append("?");
+			params.add(id.getValue());
+			sep = ",";
+		}
+		return placeholders;
 	}
 
 	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId) {
@@ -272,7 +285,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(" where 1=1 ");
 		sql.append(whereClause);
 		try{
-			ResultSet rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+			ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString());
 
 			while(rs.next()){
 				String[] fArray = {"0","",""};
@@ -339,7 +352,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(whereClause);
 		sql.append(")");
 		try{
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString());
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}

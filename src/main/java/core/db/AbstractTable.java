@@ -3,6 +3,7 @@ package core.db;
 
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -52,25 +53,27 @@ public abstract class AbstractTable {
 	protected String[] getConstraintStatements(){
 		return new String[0];
 	}
-	
-	protected int delete(String[] whereColumns, String[] whereValues) {
-		
-		final StringBuilder sql = new StringBuilder("DELETE FROM ");
+
+	protected PreparedStatement createPreparedDelete(String[] whereColumns) throws SQLException {
+		var sql = new StringBuilder("DELETE FROM ");
 		sql.append(getTableName());
-
-		// construct the Where placeholder list
-		if ((whereValues != null) && (whereColumns != null) && (whereColumns.length == whereValues.length) && (whereValues.length > 0)) {
-			sql.append(" WHERE ").append(whereColumns[0]).append(" = ?");
-
-			for (int i = 1; i < whereValues.length; i++) {
-				sql.append(" AND ").append(whereColumns[i]).append(" = ?");
+		if (whereColumns != null && whereColumns.length > 0) {
+			var sep = " WHERE ";
+			for ( var c : whereColumns){
+				sql.append(sep).append(c).append("=?");
+				sep = " AND ";
 			}
 		}
 		else {
 			HOLogger.instance().error(getClass(), "it is not allowed to delete without filter: " + sql);
-			return 0;
+			return null;
 		}
-		return adapter.executePreparedUpdate(sql.toString(), whereValues);
+
+		return adapter.createPreparedStatement(sql.toString());
+	}
+
+	protected int delete(PreparedStatement preparedStatement, String[] whereValues) {
+		return adapter.executePreparedUpdate(preparedStatement, whereValues);
 	}
 
 	public void createTable() throws SQLException {
@@ -101,15 +104,18 @@ public abstract class AbstractTable {
 			}
 			sql.append(" ) ");
 		
-			adapter.executePreparedUpdate(sql.toString());
+			adapter._executeUpdate(sql.toString());
 		
 			insertDefaultValues();
 		}
 	}
-	
+
+	private PreparedStatement selectByHrfIDStatement;
 	protected ResultSet getSelectByHrfID(int hrfID) {
-		String sql = "SELECT * FROM " + tableName + " WHERE HRF_ID = ?";
-		return adapter.executePreparedQuery(sql, hrfID);
+		if ( selectByHrfIDStatement == null){
+			selectByHrfIDStatement = adapter.createPreparedStatement("SELECT * FROM " + tableName + " WHERE HRF_ID = ?");
+		}
+		return adapter.executePreparedQuery(selectByHrfIDStatement, hrfID);
 	}
 
 	protected void insertDefaultValues(){
@@ -120,19 +126,19 @@ public abstract class AbstractTable {
 	 * Drop the current table
 	 */
 	protected void tryDropTable() {
-		adapter.executePreparedUpdate("DROP TABLE IF EXISTS "+getTableName());
+		adapter._executeUpdate("DROP TABLE IF EXISTS "+getTableName());
 	}
 	
 	/**
 	 * Truncate the current table (i.e. remove all rows)
 	 */
 	protected void truncateTable() {
-		adapter.executePreparedUpdate("DELETE FROM "+getTableName());
+		adapter._executeUpdate("DELETE FROM "+getTableName());
 	}
 	
 	private boolean tableExists(String tableName) throws SQLException {
-		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = ?";
-		ResultSet rs = this.adapter.executePreparedQuery(sql, tableName);
+		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName + "'";
+		ResultSet rs = this.adapter._executeQuery(sql);
 		return rs.next();
 	}
 

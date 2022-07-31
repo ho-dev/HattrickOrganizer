@@ -10,7 +10,7 @@ public class MatchesHighlightsStat {
 	private int noGoals;
 	private int goals;
 	private boolean ownTeam;
-	private List<MatchEvent.MatchEventID> types;
+	//private List<MatchEvent.MatchEventID> types;
 	private List<MatchEvent.MatchEventID> subtypes;
 	
 	public MatchesHighlightsStat(String key){
@@ -21,12 +21,8 @@ public class MatchesHighlightsStat {
 	
 	
 	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtyps){
-		this(key,"1,2",subtyps);
-	}
-	
-	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> types,List<MatchEvent.MatchEventID> subtypes){
 		description = HOVerwaltung.instance().getLanguageString(key);
-		this.types = types;
+//		this.types = types;
 		this.subtypes = subtypes;
 		goals=-1;
 	}
@@ -58,13 +54,13 @@ public class MatchesHighlightsStat {
 		this.ownTeam = ownTeam;
 	}
 
-	public String getSubtyps() {
-		return subtyps;
+	public List<MatchEvent.MatchEventID> getSubtyps() {
+		return subtypes;
 	}
 
-	public String getTypes() {
-		return types;
-	}
+//	public String getTypes() {
+//		return types;
+//	}
 
 	public String getTotalString(){
 		if(isTitle())
