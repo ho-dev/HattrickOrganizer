@@ -86,11 +86,8 @@ public class HOVerwaltung {
 	public static HOVerwaltung instance() {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
-
 			DBManager.instance().getFaktorenFromDB();
-
 		}
-
 		return m_clInstance;
 	}
 

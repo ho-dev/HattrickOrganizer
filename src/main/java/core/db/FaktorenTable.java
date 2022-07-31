@@ -4,6 +4,7 @@ import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
@@ -31,15 +32,28 @@ public final class FaktorenTable extends AbstractTable {
 		columns[8]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
 	}
 
+	private PreparedStatement pushFactorsIntoDBDeleteStatement;
+	private PreparedStatement getPushFactorsIntoDBDeleteStatement(){
+		if ( pushFactorsIntoDBDeleteStatement == null){
+			final String[] awhereS = {"PositionID"};
+			pushFactorsIntoDBDeleteStatement = createPreparedDelete(awhereS);
+		}
+		return  pushFactorsIntoDBDeleteStatement;
+	}
+
+	private PreparedStatement pushFactorsIntoDBInsertStatement;
+	private PreparedStatement getPushFactorsIntoDBInsertStatement(){
+		if ( pushFactorsIntoDBInsertStatement == null) {
+			pushFactorsIntoDBInsertStatement = createInsertStatement();
+		}
+		return pushFactorsIntoDBInsertStatement;
+	}
+
 	protected void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
-			String statement = null;
-			final String[] awhereS = {"PositionID"};
 			final String[] awhereV = {"" + fo.getPosition()};
-			//delete  the existing entry
-			delete(awhereS, awhereV);
-			statement = createInsertStatement();
-			adapter.executePreparedUpdate(statement,
+			delete(getPushFactorsIntoDBDeleteStatement(), awhereV);
+			adapter.executePreparedUpdate(getPushFactorsIntoDBInsertStatement(),
 					fo.getPosition(),
 					fo.getGKfactor(),
 					fo.getDEfactor(),
@@ -55,7 +69,7 @@ public final class FaktorenTable extends AbstractTable {
 
 	void getFaktorenFromDB() {
 		final FormulaFactors factors = FormulaFactors.instance();
-		final ResultSet rs = adapter.executePreparedQuery("SELECT * FROM " + getTableName() + "");
+		final ResultSet rs = adapter._executeQuery("SELECT * FROM " + getTableName());
 
 		try {
 			if (rs != null) {

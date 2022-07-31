@@ -10,61 +10,70 @@ import java.util.Arrays;
 
 
 public abstract class AbstractTable {
-	
-	/** tableName**/
+
+	/**
+	 * tableName
+	 **/
 	private String tableName;
-	
-	/** describes a tableColumn (name, datatype, nullable ..) **/
+
+	/**
+	 * describes a tableColumn (name, datatype, nullable ..)
+	 **/
 	protected ColumnDescriptor[] columns;
-	
-	/** Database connection **/
-	protected  JDBCAdapter  adapter;
-	
+
+	/**
+	 * Database connection
+	 **/
+	protected JDBCAdapter adapter;
+
 	/**
 	 * constructor
+	 *
 	 * @param tableName String table name
 	 */
-	public AbstractTable(String tableName,JDBCAdapter  adapter){
+	public AbstractTable(String tableName, JDBCAdapter adapter) {
 		this.tableName = tableName;
 		this.adapter = adapter;
 		initColumns();
 	}
-	
-	protected String getTableType() {return"CACHED";}
-	
+
+	protected String getTableType() {
+		return "CACHED";
+	}
+
 	protected abstract void initColumns();
-	
-	
-	protected String getTableName(){
+
+
+	protected String getTableName() {
 		return tableName;
 	}
-	protected void setColumns(ColumnDescriptor[] columns){
+
+	protected void setColumns(ColumnDescriptor[] columns) {
 		this.columns = columns;
 	}
-	
-	protected ColumnDescriptor[] getColumns(){
+
+	protected ColumnDescriptor[] getColumns() {
 		return columns;
 	}
-	
-	protected String[] getCreateIndexStatement(){
-		return new String[0];
-	}
-	
-	protected String[] getConstraintStatements(){
+
+	protected String[] getCreateIndexStatement() {
 		return new String[0];
 	}
 
-	protected PreparedStatement createPreparedDelete(String[] whereColumns) throws SQLException {
+	protected String[] getConstraintStatements() {
+		return new String[0];
+	}
+
+	protected PreparedStatement createPreparedDelete(String[] whereColumns) {
 		var sql = new StringBuilder("DELETE FROM ");
 		sql.append(getTableName());
 		if (whereColumns != null && whereColumns.length > 0) {
 			var sep = " WHERE ";
-			for ( var c : whereColumns){
+			for (var c : whereColumns) {
 				sql.append(sep).append(c).append("=?");
 				sep = " AND ";
 			}
-		}
-		else {
+		} else {
 			HOLogger.instance().error(getClass(), "it is not allowed to delete without filter: " + sql);
 			return null;
 		}
@@ -77,7 +86,7 @@ public abstract class AbstractTable {
 	}
 
 	public void createTable() throws SQLException {
-		if(!tableExists(getTableName())){
+		if (!tableExists(getTableName())) {
 			ColumnDescriptor[] columns = getColumns();
 			StringBuilder sql = new StringBuilder(500);
 			sql.append("CREATE ").append(getTableType());
@@ -89,53 +98,54 @@ public abstract class AbstractTable {
 					DBInfo dbInfo = adapter.getDBInfo();
 					sql.append(columns[i].getCreateString(dbInfo));
 				} catch (Exception e) {
-					HOLogger.instance().log(getClass(),e);
+					HOLogger.instance().log(getClass(), e);
 				}
 				if (i < columns.length - 1)
 					sql.append(",");
 				else
 					sql.append(" ");
 			}
-		
+
 			String[] constraintStatements = getConstraintStatements();
 			for (String constraint : constraintStatements) {
 				sql.append(",");
 				sql.append(constraint);
 			}
 			sql.append(" ) ");
-		
+
 			adapter._executeUpdate(sql.toString());
-		
+
 			insertDefaultValues();
 		}
 	}
 
 	private PreparedStatement selectByHrfIDStatement;
+
 	protected ResultSet getSelectByHrfID(int hrfID) {
-		if ( selectByHrfIDStatement == null){
+		if (selectByHrfIDStatement == null) {
 			selectByHrfIDStatement = adapter.createPreparedStatement("SELECT * FROM " + tableName + " WHERE HRF_ID = ?");
 		}
 		return adapter.executePreparedQuery(selectByHrfIDStatement, hrfID);
 	}
 
-	protected void insertDefaultValues(){
+	protected void insertDefaultValues() {
 		// override if values exists
 	}
-	
-	/** 
+
+	/**
 	 * Drop the current table
 	 */
 	protected void tryDropTable() {
-		adapter._executeUpdate("DROP TABLE IF EXISTS "+getTableName());
+		adapter._executeUpdate("DROP TABLE IF EXISTS " + getTableName());
 	}
-	
+
 	/**
 	 * Truncate the current table (i.e. remove all rows)
 	 */
 	protected void truncateTable() {
-		adapter._executeUpdate("DELETE FROM "+getTableName());
+		adapter._executeUpdate("DELETE FROM " + getTableName());
 	}
-	
+
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName + "'";
 		ResultSet rs = this.adapter._executeQuery(sql);
@@ -143,92 +153,89 @@ public abstract class AbstractTable {
 	}
 
 	public boolean tryAddColumn(String columnName, String columnType) throws SQLException {
-		if ( ! columnExistsInTable(columnName)) {
+		if (!columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + columnType;
-			adapter.executePreparedUpdate(sql);
+			adapter._executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	private boolean columnExistsInTable(String columnName) throws SQLException {
-		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = ? AND COLUMN_NAME = ?";
-//
-//		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
-//				+ getTableName().toUpperCase()
-//				+ "' AND COLUMN_NAME = '"
-//				+ columnName.toUpperCase()
-//				+ "'";
-		ResultSet rs = adapter.executePreparedQuery(sql, getTableName().toUpperCase(), columnName.toUpperCase());
-		if ( rs != null ) return rs.next();
+		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
+				+ getTableName().toUpperCase()
+				+ "' AND COLUMN_NAME = '"
+				+ columnName.toUpperCase()
+				+ "'";
+		ResultSet rs = adapter._executeQuery(sql);
+		if (rs != null) return rs.next();
 		return false;
 	}
 
 	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
-		if ( columnExistsInTable(columnName)) {
+		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
-			adapter.executePreparedUpdate(sql);
+			adapter._executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	public boolean tryRenameColumn(String from, String to) throws SQLException {
-		if ( columnExistsInTable(from)) {
+		if (columnExistsInTable(from)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
-			adapter.executePreparedUpdate(sql);
+			adapter._executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	public boolean tryDeleteColumn(String columnName) throws SQLException {
-		if ( columnExistsInTable(columnName)) {
+		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " DROP COLUMN " + columnName;
-			adapter.executePreparedUpdate(sql);
+			adapter._executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	public void addPrimaryKey(String columns) {
-		adapter.executePreparedUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
+		adapter._executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
 	}
 
 	public void tryDropPrimaryKey() throws SQLException {
 		if (primaryKeyExists()) {
-			adapter.executePreparedUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+			adapter._executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
 		}
 	}
 
 	public void tryDropIndex(String index) {
-		adapter.executePreparedUpdate("DROP INDEX " + index + " IF EXISTS");
+		adapter._executeUpdate("DROP INDEX " + index + " IF EXISTS");
 	}
 
 	public void tryAddIndex(String indexName, String columns) {
-		adapter.executePreparedUpdate("CREATE INDEX IF NOT EXISTS " + indexName +  " ON " + tableName + " (" + columns + ")");
+		adapter._executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {
-		String sql = "SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = ? AND table_name = ?";
-		ResultSet rs = adapter.executePreparedQuery(sql, "PRIMARY KEY", getTableName().toUpperCase());
-		if ( rs != null ) return rs.next();
+		String sql = "SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY KEY' AND table_name = '"
+				+ getTableName().toUpperCase() + "'";
+		ResultSet rs = adapter._executeQuery(sql);
+		if (rs != null) return rs.next();
 		return false;
 	}
 
-	public  String createInsertStatement() {
+	public PreparedStatement createInsertStatement() {
 		var ret = new StringBuilder("INSERT INTO ");
 		ret.append(getTableName());
-
 		var valuePlaceholders = new StringBuilder(" VALUES ");
 		var sep = "(";
-		for ( var c : columns){
+		for (var c : columns) {
 			valuePlaceholders.append(sep).append("?");
 			ret.append(sep).append(c.getColumnName());
-			sep=",";
+			sep = ",";
 		}
-
 		ret.append(")").append(valuePlaceholders).append(")");
-		return ret.toString();
+		return adapter.createPreparedStatement(ret.toString());
 	}
 }

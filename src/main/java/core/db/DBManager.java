@@ -295,7 +295,7 @@ public class DBManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
+//		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
@@ -1437,21 +1437,6 @@ public class DBManager {
 			String lineupName) {
 		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
 				.getMatchSubstitutionsByHrf(hrfId, lineupName);
-	}
-
-	/**
-	 * Gets penalty takers.
-	 *
-	 * @param lineupName the lineup name
-	 * @return the penalty takers
-	 */
-	List<MatchRoleID> getPenaltyTakers(String lineupName) {
-		try {
-			return ((PenaltyTakersTable) getTable(PenaltyTakersTable.TABLENAME))
-					.getPenaltyTakers(lineupName);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	// ------------------------------- TeamTable

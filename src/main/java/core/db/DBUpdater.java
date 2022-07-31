@@ -91,6 +91,8 @@ final class DBUpdater {
 		var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
 		hrfTable.tryDeleteColumn("NAME");
 
+		m_clJDBCAdapter._executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+
 		updateDBVersion(dbVersion, 700);
 	}
 
