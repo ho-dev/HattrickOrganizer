@@ -2323,9 +2323,11 @@ public class Player {
                             }
                             HOLogger.instance().info(getClass(),
                                     "Training " + training.getTrainingDate().toLocaleDateTime() +
-                                            " Minutes= " + minutes +
-                                            " Experience increment of " + this.getFullName() + ": " +  inc +
-                                            " new sub value=" + experienceSub);
+                                            "; Minutes= " + minutes +
+                                            "; Experience increment of " + this.getFullName() +
+                                            "; increment: " +  inc +
+                                            "; new sub value=" + experienceSub
+                            );
                         }
                     }
                 }
