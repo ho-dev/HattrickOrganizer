@@ -77,7 +77,7 @@
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - July 30, 2022
+Reports by Contributors - Dec 20, 2021 - July 31, 2022
 
 * Foppe	690
 * brokenelevator 510
@@ -93,7 +93,7 @@ Reports by Contributors - Dec 20, 2021 - July 30, 2022
 * TeamBMW 75
 * anti_anti 69
 * Moorhuhninho	67
-* wsbrenk 30
+* wsbrenk 34
 * dzsoo 18
 * Sophia 17
 * Csaba 14
