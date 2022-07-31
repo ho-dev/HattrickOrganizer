@@ -3,16 +3,8 @@ package core.training;
 public class TrainingPoints {
 	private TrainingWeekPlayer trainingDuration;
 	private WeeklyTrainingType trainingtype;
-	private double _Primary = 0;
-	private double _Secondary = 0;
-	public TrainingPoints()
-	{
-	}
-	public TrainingPoints(double dPrimary, double dSecondary)
-	{
-		_Primary = dPrimary;
-		_Secondary = dSecondary;	
-	}
+	private double _Primary;
+	private double _Secondary;
 
 	public TrainingPoints(WeeklyTrainingType wt, TrainingWeekPlayer tp) {
 		_Primary = wt.getPrimaryTraining(tp);

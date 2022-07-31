@@ -1,10 +1,6 @@
 package core.file.hrf;
 
-import core.model.HOModel;
-import core.model.StaffMember;
-import core.model.StaffType;
-import core.model.Team;
-import core.model.XtraData;
+import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
@@ -161,6 +157,11 @@ public class HRFStringParser {
 				// basics
 				if (entity.toString().equalsIgnoreCase(BASICS)) {
 					hoModel.setBasics(new Basics(properties));
+					var ownTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+					if (hoModel.getBasics().getTeamId() != ownTeamId && ownTeamId != 0) {
+						HOLogger.instance().error(HOModel.class, "properties of other team can not be imported: " + hoModel.getBasics().getTeamName());
+						return null; // properties of foreign team
+					}
 				}
 				// league
 				else if (entity.toString().equalsIgnoreCase(LEAGUE)) {
