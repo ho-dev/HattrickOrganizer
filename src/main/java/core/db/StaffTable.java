@@ -29,16 +29,6 @@ public class StaffTable extends AbstractTable{
 		columns[6] = new ColumnDescriptor("name", Types.VARCHAR, false, 127);
 	}
 
-	protected void deleteAllStaffByHrfId(int hrfId) {
-		if (hrfId <= 0) {
-			return;
-		}
-		final String[] where = { "HrfID" };
-		final String[] values = {String.valueOf(hrfId)};
-		delete(where, values);
-		
-	}
-	
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
 		var list = new ArrayList<StaffMember>();
 		if ( hrfId > -1) {

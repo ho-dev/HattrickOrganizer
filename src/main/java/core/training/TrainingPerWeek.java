@@ -7,6 +7,7 @@ import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /**
  * Class that holds all information required to calculate training effect of a given week
@@ -22,8 +23,8 @@ public class TrainingPerWeek  {
     private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
     private HODateTime o_TrainingDate;
-    private MatchKurzInfo[] o_Matches;
-    private MatchKurzInfo[] o_NTmatches;
+    private List<MatchKurzInfo> o_Matches;
+    private List<MatchKurzInfo> o_NTmatches;
     private DBDataSource o_Source;
 
 
@@ -62,7 +63,7 @@ public class TrainingPerWeek  {
         o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
     }
 
-    public MatchKurzInfo[] getMatches() {
+    public List<MatchKurzInfo> getMatches() {
         if ( o_Matches == null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
@@ -72,7 +73,7 @@ public class TrainingPerWeek  {
         return o_Matches;
     }
 
-    public MatchKurzInfo[] getNTmatches() {
+    public List<MatchKurzInfo> getNTmatches() {
         if ( o_NTmatches==null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);

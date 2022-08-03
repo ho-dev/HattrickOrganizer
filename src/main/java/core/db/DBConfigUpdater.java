@@ -60,7 +60,7 @@ final class DBConfigUpdater {
 			// Creating entries into TRAININGS table ===========================================================
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
-				ResultSet rs = m_clJDBCAdapter.executePreparedQuery(sql);
+				ResultSet rs = m_clJDBCAdapter._executeQuery(sql);
 				assert rs != null;
 				rs.next();
 				var firstTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));

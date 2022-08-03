@@ -7,6 +7,7 @@ import core.model.match.SourceSystem;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -96,6 +97,14 @@ final class MatchDetailsTable extends AbstractTable {
 				"CREATE INDEX matchdetails_gastid_idx ON " + getTableName() + " (GastID)"
 		};
 	}
+
+	private PreparedStatement loadMatchDetailsStatement;
+	private PreparedStatement getLoadMatchDetailsStatement(){
+		if (loadMatchDetailsStatement==null ){
+			loadMatchDetailsStatement = adapter.createPreparedStatement("SELECT * FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchID=?");
+		}
+		return loadMatchDetailsStatement;
+	}
 	
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
@@ -104,14 +113,12 @@ final class MatchDetailsTable extends AbstractTable {
 		final Matchdetails details = new Matchdetails();
 
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchID=?";
-			ResultSet rs = adapter.executePreparedQuery(sql, iMatchType, matchId);
-
+			ResultSet rs = adapter.executePreparedQuery(getLoadMatchDetailsStatement(), iMatchType, matchId);
 			assert rs != null;
 			if (rs.first()) {
 				details.setMatchType(MatchType.getById(rs.getInt("MATCHTYP")));
 				details.setArenaID(rs.getInt("ArenaId"));
-				details.setArenaName(core.db.DBManager.deleteEscapeSequences(rs.getString("ArenaName")));
+				details.setArenaName(rs.getString("ArenaName"));
 				details.setRegionId(rs.getInt("RegionID"));
 				details.setFetchDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("Fetchdatum")));
 				details.setGastId(rs.getInt("GastId"));
@@ -195,23 +202,36 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
+	private  PreparedStatement deleteMatchDetailsStatement;
+	private PreparedStatement getDeleteMatchDetailsStatement(){
+		if (deleteMatchDetailsStatement==null){
+			final String[] where = {"MATCHTYP", "MatchID"};
+			deleteMatchDetailsStatement=createPreparedDelete(where);
+		}
+		return deleteMatchDetailsStatement;
+	}
+	private PreparedStatement storeMatchDetailsStatement;
+	private PreparedStatement getStoreMatchDetailsStatement(){
+		if ( storeMatchDetailsStatement==null){
+			storeMatchDetailsStatement=createInsertStatement();
+		}
+		return storeMatchDetailsStatement;
+	}
 	/**
 	 * speichert die MatchDetails
 	 */
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
 
-			final String[] where = {"MATCHTYP", "MatchID"};
 			final String[] werte = {"" + details.getMatchType().getId(), "" + details.getMatchID()};
 
 			//Remove existing entries
-			delete(where, werte);
+			delete(getDeleteMatchDetailsStatement(), werte);
 
 			String sql;
 
 			try {
-				sql = createInsertStatement();
-				adapter.executePreparedUpdate(sql,
+				adapter.executePreparedUpdate(getStoreMatchDetailsStatement(),
 						details.getMatchID(),
 						details.getMatchType().getId(),
 						details.getArenaID(),
@@ -284,10 +304,16 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 	}
 
+	private PreparedStatement isMatchIFKRatingAvailableStatement;
+	private PreparedStatement getIsMatchIFKRatingAvailableStatement(){
+		if (isMatchIFKRatingAvailableStatement==null ){
+			isMatchIFKRatingAvailableStatement = adapter.createPreparedStatement("SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?");
+		}
+		return isMatchIFKRatingAvailableStatement;
+	}
 	public boolean isMatchIFKRatingAvailable(int matchId){
 		try {
-			final String sql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?";
-			final ResultSet rs = adapter.executePreparedQuery(sql, matchId);
+			final ResultSet rs = adapter.executePreparedQuery(getIsMatchIFKRatingAvailableStatement(), matchId);
 			assert rs != null;
 			rs.beforeFirst();
 			if (rs.next()) {
@@ -317,20 +343,31 @@ final class MatchDetailsTable extends AbstractTable {
 		return placeHolderYouthMatchTypes;
 	}
 
+	private PreparedStatement deleteYouthMatchDetailsBeforeStatement;
+	private PreparedStatement getDeleteYouthMatchDetailsBeforeStatement(){
+		if(deleteYouthMatchDetailsBeforeStatement==null){
+			deleteYouthMatchDetailsBeforeStatement = adapter.createPreparedStatement("DELETE FROM " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
+		}
+		return deleteYouthMatchDetailsBeforeStatement;
+	}
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
-		var sql = "DELETE FROM " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?";
-
 		try {
-			adapter.executePreparedUpdate(sql, MatchType.getYouthMatchType().toArray(), before);
+			adapter.executePreparedUpdate(getDeleteYouthMatchDetailsBeforeStatement(), MatchType.getYouthMatchType().toArray(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
 	}
 
+	private PreparedStatement getLastYouthMatchDateStatement;
+	private PreparedStatement getGetLastYouthMatchDateStatement(){
+		if ( getLastYouthMatchDateStatement==null){
+			getLastYouthMatchDateStatement=adapter.createPreparedStatement("select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
+		}
+		return getLastYouthMatchDateStatement;
+	}
 	public Timestamp getLastYouthMatchDate() {
-		var sql = "select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes();
 		try {
-			var rs = adapter.executePreparedQuery(sql, MatchType.getYouthMatchType().toArray());
+			var rs = adapter.executePreparedQuery(getGetLastYouthMatchDateStatement(), MatchType.getYouthMatchType().toArray());
 			assert rs != null;
 			rs.beforeFirst();
 			if ( rs.next()){

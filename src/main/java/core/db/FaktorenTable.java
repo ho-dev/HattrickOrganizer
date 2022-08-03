@@ -35,25 +35,17 @@ public final class FaktorenTable extends AbstractTable {
 	private PreparedStatement pushFactorsIntoDBDeleteStatement;
 	private PreparedStatement getPushFactorsIntoDBDeleteStatement(){
 		if ( pushFactorsIntoDBDeleteStatement == null){
-			final String[] awhereS = {"PositionID"};
-			pushFactorsIntoDBDeleteStatement = createPreparedDelete(awhereS);
+			final String[] whereS = {"PositionID"};
+			pushFactorsIntoDBDeleteStatement = createDeleteStatement(whereS);
 		}
 		return  pushFactorsIntoDBDeleteStatement;
-	}
-
-	private PreparedStatement pushFactorsIntoDBInsertStatement;
-	private PreparedStatement getPushFactorsIntoDBInsertStatement(){
-		if ( pushFactorsIntoDBInsertStatement == null) {
-			pushFactorsIntoDBInsertStatement = createInsertStatement();
-		}
-		return pushFactorsIntoDBInsertStatement;
 	}
 
 	protected void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
 			final String[] awhereV = {"" + fo.getPosition()};
 			delete(getPushFactorsIntoDBDeleteStatement(), awhereV);
-			adapter.executePreparedUpdate(getPushFactorsIntoDBInsertStatement(),
+			adapter.executePreparedUpdate(getInsertStatement(),
 					fo.getPosition(),
 					fo.getGKfactor(),
 					fo.getDEfactor(),

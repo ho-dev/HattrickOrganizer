@@ -2,6 +2,8 @@ package core.db;
 
 import core.model.misc.Economy;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -68,21 +70,23 @@ public final class EconomyTable extends AbstractTable {
 			"CREATE INDEX ECONOMY_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")"
 		};
 	}
-	
+
+	private PreparedStatement deleteStatement;
+	private PreparedStatement getDeleteStatement(){
+		if ( deleteStatement==null){
+			final String[] where = {"HRF_ID"};
+			deleteStatement = createDeleteStatement(where);
+		}
+		return deleteStatement;
+	}
 	/**
 	 * store the economy info in the database
 	 */
 	void storeEconomyInfoIntoDB(int hrfId, Economy economy, Timestamp date) {
-		final String[] whereColumns = {columns[0].getColumnName()};
-		final String[] whereValues = {"" + hrfId};
-
 		if (economy != null) {
 			//first delete existing entry
-			delete(whereColumns, whereValues);
-
-			//insert new data
-			var statement = createInsertStatement();
-			adapter.executePreparedUpdate(statement,
+			delete(getDeleteStatement(), hrfId);
+			adapter.executePreparedUpdate(getInsertStatement(),
 					hrfId,
 					date.toString(),
 					economy.getSupportersPopularity(),

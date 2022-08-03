@@ -14,10 +14,7 @@ import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Timestamp;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -524,12 +521,12 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return getMatchesKurzInfo(sql, params);
 	}
 
-	MatchKurzInfo[] getMatchesKurzInfo(final String where, List<Object> params) {
+	MatchKurzInfo[] getMatchesKurzInfo(final String where) {
 		var liste = new Vector<MatchKurzInfo>();
 
 		try {
 			var sql = "SELECT * FROM " + getTableName() + " " + where;
-			var rs = adapter.executePreparedQuery(sql,params.toArray());
+			var rs = adapter._executeQuery(sql);
 			assert rs != null;
 			rs.beforeFirst();
 			while (rs.next()) {
@@ -543,6 +540,22 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		var matches = new MatchKurzInfo[liste.size()];
 		matches = liste.toArray(matches);
 		return matches;
+	}
+	public List<MatchKurzInfo> getMatchesKurzInfo(PreparedStatement statement, Object[] params) {
+		var list = new ArrayList<MatchKurzInfo>();
+
+		try {
+			var rs = adapter.executePreparedQuery(statement, params);
+			assert rs != null;
+			rs.beforeFirst();
+			while (rs.next()) {
+				list.add(createMatchKurzInfo(rs));
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DB.getMatchesKurzInfo Error" + e);
+		}
+		return list;
 	}
 
 	/**

@@ -6,7 +6,6 @@ import core.util.HOLogger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 
 public abstract class AbstractTable {
@@ -64,7 +63,7 @@ public abstract class AbstractTable {
 		return new String[0];
 	}
 
-	protected PreparedStatement createPreparedDelete(String[] whereColumns) {
+	public PreparedStatement createDeleteStatement(String ... whereColumns) {
 		var sql = new StringBuilder("DELETE FROM ");
 		sql.append(getTableName());
 		if (whereColumns != null && whereColumns.length > 0) {
@@ -80,8 +79,7 @@ public abstract class AbstractTable {
 
 		return adapter.createPreparedStatement(sql.toString());
 	}
-
-	protected int delete(PreparedStatement preparedStatement, String[] whereValues) {
+	protected int delete(PreparedStatement preparedStatement, Object ... whereValues) {
 		return adapter.executePreparedUpdate(preparedStatement, whereValues);
 	}
 
@@ -225,7 +223,7 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	public PreparedStatement createInsertStatement() {
+	private PreparedStatement createInsertStatement() {
 		var ret = new StringBuilder("INSERT INTO ");
 		ret.append(getTableName());
 		var valuePlaceholders = new StringBuilder(" VALUES ");
@@ -237,5 +235,12 @@ public abstract class AbstractTable {
 		}
 		ret.append(")").append(valuePlaceholders).append(")");
 		return adapter.createPreparedStatement(ret.toString());
+	}
+	private PreparedStatement insertStatement;
+	protected  PreparedStatement getInsertStatement(){
+		if ( insertStatement == null){
+			insertStatement = createInsertStatement();
+		}
+		return insertStatement;
 	}
 }

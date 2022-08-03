@@ -4,6 +4,8 @@ package core.db;
 import core.training.FuturePlayerTraining;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -33,9 +35,15 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         };
     }
 
+    private PreparedStatement getFuturePlayerTrainingPlanStatement;
+    private PreparedStatement getGetFuturePlayerTrainingPlanStatement(){
+        if (getFuturePlayerTrainingPlanStatement==null){
+            getFuturePlayerTrainingPlanStatement=adapter.createPreparedStatement("select * from " + getTableName() + " where playerId=?");
+        }
+        return getFuturePlayerTrainingPlanStatement;
+    }
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        String query = "select * from " + getTableName() + " where playerId=?";
-        ResultSet rs = adapter.executePreparedQuery(query, playerId);
+        ResultSet rs = adapter.executePreparedQuery(getGetFuturePlayerTrainingPlanStatement(), playerId);
         try {
             if (rs != null) {
                 var ret = new ArrayList<FuturePlayerTraining>();
@@ -66,17 +74,21 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         return new FuturePlayerTraining(playerid, prio, from, to);
     }
 
+    private PreparedStatement deleteStatement;
+    private PreparedStatement getDeleteStatement(){
+        if ( deleteStatement==null){
+            final String[] where = {"playerId"};
+            deleteStatement=createDeleteStatement(where);
+        }
+        return deleteStatement;
+    }
     public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
-        final String[] where = {"playerId"};
-        final String[] werte = {String.valueOf(spielerID)};
         try {
-            delete(where, werte);
-            var sql = createInsertStatement();
-
+            delete(getDeleteStatement(), spielerID);
             for (var t : futurePlayerTrainings) {
                 var to = t.getTo();
                 var from = t.getFrom();
-                adapter.executePreparedUpdate(sql,
+                adapter.executePreparedUpdate(getInsertStatement(),
                         t.getPlayerId(),
                         from.toHTWeek().week,
                         from.toHTWeek().season,

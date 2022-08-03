@@ -3,15 +3,17 @@ package core.db;
 import core.model.misc.Basics;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 
 final class BasicsTable extends AbstractTable {
 	final static String TABLENAME = "BASICS";
-	
-	protected BasicsTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
+
+	protected BasicsTable(JDBCAdapter adapter) {
+		super(TABLENAME, adapter);
 	}
 
 	@Override
@@ -37,22 +39,18 @@ final class BasicsTable extends AbstractTable {
 
 	@Override
 	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX IBASICS_2 ON " + getTableName() + "(Datum)"
+		return new String[]{
+				"CREATE INDEX IBASICS_2 ON " + getTableName() + "(Datum)"
 		};
 	}
-	
+
 	/**
 	 * save Basics
-	 *
 	 */
 	void saveBasics(int hrfId, core.model.misc.Basics basics) {
-		final String[] awhereS = {"HRF_ID"};
-		final String[] awhereV = {"" + hrfId};
 		if (basics != null) {
-			delete(awhereS, awhereV);
-			var statement = createInsertStatement();
-			adapter.executePreparedUpdate(statement,
+			delete(getDeleteStatement(), hrfId);
+			adapter.executePreparedUpdate(getInsertStatement(),
 					hrfId,
 					basics.getManager(),
 					basics.getTeamId(),
@@ -72,9 +70,17 @@ final class BasicsTable extends AbstractTable {
 		}
 	}
 
+	private PreparedStatement deleteStatement;
+	private PreparedStatement getDeleteStatement() {
+		if ( deleteStatement == null){
+			final String[] whereS = {"HRF_ID"};
+			deleteStatement=createDeleteStatement(whereS);
+		}
+		return deleteStatement;
+	}
+
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
-	 *
 	 */
 	Basics getBasics(int hrfID) {
 		ResultSet rs;
@@ -97,20 +103,23 @@ final class BasicsTable extends AbstractTable {
 		return basics;
 	}
 
+	private PreparedStatement getHrfIDSameTrainingStatement;
+
+	private PreparedStatement getGetHrfIDSameTrainingStatement() {
+		if (getHrfIDSameTrainingStatement == null) {
+			getHrfIDSameTrainingStatement = adapter.createPreparedStatement("SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
+		}
+		return getHrfIDSameTrainingStatement;
+	}
+
 	/**
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
 	 */
 	int getHrfIDSameTraining(Timestamp time) {
 
 		int hrfID = -1;
-//		Timestamp mintime = new Timestamp(time.getTime() - 259200000); //72 Std
 		Timestamp hrfDate = null;
-
-		//Die passende HRF-ID besorgen
-//		sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<='" + time.toString() + "' AND Datum>='" + mintime.toString() + "' ORDER BY Datum DESC";
-		var sql = "SELECT HRF_ID, Datum FROM "+getTableName()+" WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1";
-		var rs = adapter.executePreparedQuery(sql, time);
-
+		var rs = adapter.executePreparedQuery(getGetHrfIDSameTrainingStatement(), time);
 		try {
 			if (rs != null) {
 				//HRF vorher vorhanden?
@@ -126,7 +135,7 @@ final class BasicsTable extends AbstractTable {
 			//todo sicherstellen das kein Trainingsdatum zwischen matchdate und hrfdate liegt
 			var training4Hrf = DBManager.instance().getXtraDaten(hrfID).getNextTrainingDate().toDbTimestamp();
 			if ((training4Hrf.after(hrfDate)) && (training4Hrf.before(time))) //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
-				{
+			{
 				hrfID = -1;
 			}
 		}

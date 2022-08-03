@@ -1,7 +1,6 @@
 package core.db;
 
 import core.HO;
-import core.datatype.CBItem;
 import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
@@ -17,7 +16,6 @@ import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
@@ -42,6 +40,7 @@ import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
 import java.io.File;
 import java.nio.file.Path;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -226,7 +225,7 @@ public class DBManager {
 	}
 
 	private void executeSQL(String sql) {
-		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executePreparedUpdate(sql);
+		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter._executeUpdate(sql);
 	}
 
 	public static double getDBConfigVersion() {
@@ -362,7 +361,7 @@ public class DBManager {
 		if ( m_clJDBCAdapter==null) return false;
 		boolean exists;
 		try {
-			ResultSet rs = m_clJDBCAdapter.executePreparedQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ?", "PUBLIC");
+			ResultSet rs = m_clJDBCAdapter._executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
 			assert rs != null;
 			rs.next();
 			exists = rs.getInt(1) > 0;
@@ -652,9 +651,9 @@ public class DBManager {
 	 * @param whereSpalten the where spalten
 	 * @param whereValues  the where values
 	 */
-	public void deleteSpielplanTabelle(String[] whereSpalten,
-			String[] whereValues) {
-		getTable(SpielplanTable.TABLENAME).delete(whereSpalten, whereValues);
+	public void deleteSpielplanTabelle(PreparedStatement preparedStatement, String[] whereValues) {
+		var table = (SpielplanTable)getTable(SpielerTable.TABLENAME);
+		table.delete(preparedStatement, whereValues);
 	}
 
 	/**
@@ -1145,43 +1144,62 @@ public class DBManager {
 
 	}
 
+	private PreparedStatement loadOfficialMatchesBetweenStatement;
+	private PreparedStatement getLoadOfficialMatchesBetweenStatement(){
+		if (loadOfficialMatchesBetweenStatement==null ){
+			loadOfficialMatchesBetweenStatement = m_clJDBCAdapter.createPreparedStatement(preparedLoadMatchesBetween(MatchType.getOfficialMatchTypes()));
+		}
+		return loadOfficialMatchesBetweenStatement;
+	}
+
+	private String preparedLoadMatchesBetween(List<MatchType> matchTypes) {
+		var placeholders=new StringBuilder();
+		var sep ="";
+		for ( var t : matchTypes ) {
+			placeholders.append(sep).append("?");
+			sep=",";
+		}
+		return "WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+placeholders+") AND STATUS in (?, ?) ORDER BY MatchDate DESC";
+	}
+
 	/**
 	 * function that fetch info of match played related to the TrainingPerWeek instance
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public MatchKurzInfo[] loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
+	public List<MatchKurzInfo> loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(getLoadOfficialMatchesBetweenStatement(), teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
 	}
 
-	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
-		//String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
+	public List<MatchKurzInfo> loadMatchesBetween(PreparedStatement statement, int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
 		var matchTypeList=new ArrayList<Object>();
-		var placeholders=new StringBuilder();
 		var sep ="";
 		for ( var t : matchTypes ) {
-			matchTypeList.add(t);
-			placeholders.append(sep).append("?");
+			matchTypeList.add(t.getId());
 			sep=",";
 		}
-
-		final String where = "WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+placeholders+") AND STATUS in (?, ?) ORDER BY MatchDate DESC";
-		var params = new ArrayList<Object>();
-		params.add(teamId);
-		params.add(teamId);
-		params.add( firstMatchDate.toDbTimestamp());
-		params.add(lastMatchDate.toDbTimestamp());
-		params.addAll(matchTypeList);
-		params.add(MatchKurzInfo.FINISHED);
-		params.add(MatchKurzInfo.UPCOMING);
-		return getMatchesKurzInfo(where, params);
+		return getMatchesKurzInfo(statement,
+				teamId,
+				teamId,
+				firstMatchDate.toDbTimestamp(),
+				lastMatchDate.toDbTimestamp(),
+				matchTypeList,
+				MatchKurzInfo.FINISHED,
+				MatchKurzInfo.UPCOMING);
 	}
 
+	private PreparedStatement loadNTMatchesBetweenStatement;
+	private PreparedStatement getloadNTMatchesBetweenStatement(){
+		if (loadNTMatchesBetweenStatement==null ){
+			loadNTMatchesBetweenStatement = m_clJDBCAdapter.createPreparedStatement(preparedLoadMatchesBetween(MatchType.getNTMatchType()));
+		}
+		return loadNTMatchesBetweenStatement;
+	}
 	/**
 	 * function that fetch info of NT match played related to the TrainingPerWeek instance
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public MatchKurzInfo[] loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
+	public List<MatchKurzInfo> loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return loadMatchesBetween(getloadNTMatchesBetweenStatement(),teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
 	}
 
 	/**
@@ -1190,9 +1208,14 @@ public class DBManager {
 	 * @param where The string containing sql where clause
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(String where, List<Object> params) {
+	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(where, params);
+				.getMatchesKurzInfo(where);
+	}
+
+	public List<MatchKurzInfo> getMatchesKurzInfo(PreparedStatement statement, Object ... params) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getMatchesKurzInfo(statement, params);
 	}
 
 	/**
@@ -1650,8 +1673,10 @@ public class DBManager {
 	 * @param whereSpalten the where spalten
 	 * @param whereValues  the where values
 	 */
-	public void deletePaarungTabelle(String[] whereSpalten, String[] whereValues) {
-		getTable(PaarungTable.TABLENAME).delete(whereSpalten, whereValues);
+	public void deletePaarungTabelle(PreparedStatement preparedStatement, Object ... whereValues) {
+		var table = getTable(PaarungTable.TABLENAME);
+		table.delete(preparedStatement, whereValues);
+
 	}
 
 	// ------------------------------- MatchDetailsTable
@@ -1869,7 +1894,6 @@ public class DBManager {
 				anzahlHRF, group);
 	}
 
-
 	/**
 	 * Gets count of played matches.
 	 *
@@ -1879,8 +1903,11 @@ public class DBManager {
 	 */
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
 		var officialWhere = official ? "<8" : ">7";
-		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid where spielerId = ? and FIELDPOS>-1  and matchtyp " + officialWhere;
-		final ResultSet rs = getAdapter().executePreparedQuery(sqlStmt, playerId);
+		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER " +
+				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
+				"where spielerId = "+ playerId +
+				" and FIELDPOS>-1  and matchtyp " + officialWhere;
+		final ResultSet rs = getAdapter()._executeQuery(sqlStmt);
 		if (rs == null) {
 			return 0;
 		}
@@ -1918,7 +1945,7 @@ public class DBManager {
 				INNER JOIN MATCHLINEUP ON (MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID AND MATCHLINEUPPLAYER.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
-				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
+				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0""";
 
 		if(officialOnly){
 			var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue()));
@@ -1930,7 +1957,7 @@ public class DBManager {
 		// Get all data on the player
 		try {
 			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
-			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(String.format(sql, playerID));
+			final ResultSet rs = m_clJDBCAdapter._executeQuery(String.format(sql, playerID));
 			PlayerMatchCBItem playerMatchCBItem;
 			assert rs != null;
 			rs.beforeFirst();
@@ -1977,26 +2004,156 @@ public class DBManager {
 		return spielerMatchCBItems;
 	}
 
+	private PreparedStatement deleteStadionStatement;
+	private PreparedStatement deleteHRFStatement;
+	private PreparedStatement deleteLigaStatement;
+	private PreparedStatement deleteVereinStatement;
+	private PreparedStatement deleteTeamStatement;
+	private PreparedStatement deleteEconomyStatement;
+	private PreparedStatement deleteBasicsStatement;
+	private PreparedStatement deleteSpielerStatement;
+	private PreparedStatement deleteSpielerSkillupStatement;
+	private PreparedStatement deleteXtraStatement;
+	private PreparedStatement deleteStaffStatement;
+
+	private final String[] whereHRF_ID = { "HRF_ID" };
+	private PreparedStatement getDeleteStadionStatement() {
+		if (deleteStadionStatement==null ){
+			deleteStadionStatement = getTable(StadionTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteStadionStatement;
+	}
+	private PreparedStatement getDeleteHRFStatement() {
+		if (deleteHRFStatement==null ){
+			deleteHRFStatement = getTable(HRFTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteHRFStatement;
+	}
+	private PreparedStatement getDeleteLigaStatement() {
+		if (deleteLigaStatement==null ){
+			deleteLigaStatement = getTable(LigaTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteLigaStatement;
+	}
+	private PreparedStatement getDeleteVereinStatement() {
+		if (deleteVereinStatement==null ){
+			deleteVereinStatement = getTable(VereinTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteVereinStatement;
+	}
+	private PreparedStatement getDeleteTeamStatement() {
+		if (deleteTeamStatement==null ){
+			deleteTeamStatement = getTable(TeamTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteTeamStatement;
+	}
+	private PreparedStatement getDeleteEconomyStatement() {
+		if (deleteEconomyStatement==null ){
+			deleteEconomyStatement = getTable(EconomyTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteEconomyStatement;
+	}
+	private PreparedStatement getDeleteBasicsStatement() {
+		if (deleteBasicsStatement==null ){
+			deleteBasicsStatement = getTable(BasicsTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteBasicsStatement;
+	}
+	private PreparedStatement getDeleteSpielerStatement() {
+		if (deleteSpielerStatement==null ){
+			deleteSpielerStatement = getTable(SpielplanTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteSpielerStatement;
+	}
+	private PreparedStatement getDeleteSpielerSkillupStatement() {
+		if (deleteSpielerSkillupStatement==null ){
+			deleteSpielerSkillupStatement = getTable(SpielerSkillupTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteSpielerSkillupStatement;
+	}
+	private PreparedStatement getDeleteXtraStatement() {
+		if (deleteXtraStatement==null ){
+			deleteXtraStatement = getTable(XtraDataTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteXtraStatement;
+	}
+	private PreparedStatement getDeleteStaffStatement() {
+		if (deleteStaffStatement==null ){
+			deleteStaffStatement = getTable(StaffTable.TABLENAME).createDeleteStatement(whereHRF_ID);
+		}
+		return deleteStaffStatement;
+	}
+
+
 	/**
 	 * Delete hrf.
 	 *
 	 * @param hrfid the hrfid
 	 */
 	public void deleteHRF(int hrfid) {
-		final String[] where = { "HRF_ID" };
-		final String[] value = { hrfid + "" };
+		getTable(StadionTable.TABLENAME).delete(getDeleteStadionStatement(), hrfid);
+		getTable(HRFTable.TABLENAME).delete(getDeleteHRFStatement(), hrfid);
+		getTable(LigaTable.TABLENAME).delete(getDeleteLigaStatement(), hrfid);
+		getTable(VereinTable.TABLENAME).delete(getDeleteVereinStatement(), hrfid);
+		getTable(TeamTable.TABLENAME).delete(getDeleteTeamStatement(), hrfid);
+		getTable(EconomyTable.TABLENAME).delete(getDeleteEconomyStatement(), hrfid);
+		getTable(BasicsTable.TABLENAME).delete(getDeleteBasicsStatement(), hrfid);
+		getTable(SpielerTable.TABLENAME).delete(getDeleteSpielerStatement(), hrfid);
+		getTable(SpielerSkillupTable.TABLENAME).delete(getDeleteSpielerSkillupStatement(), hrfid);
+		getTable(XtraDataTable.TABLENAME).delete(getDeleteXtraStatement(), hrfid);
+		getTable(StaffTable.TABLENAME).delete(getDeleteStaffStatement(), hrfid);
+	}
 
-		getTable(StadionTable.TABLENAME).delete(where, value);
-		getTable(HRFTable.TABLENAME).delete(where, value);
-		getTable(LigaTable.TABLENAME).delete(where, value);
-		getTable(VereinTable.TABLENAME).delete(where, value);
-		getTable(TeamTable.TABLENAME).delete(where, value);
-		getTable(EconomyTable.TABLENAME).delete(where, value);
-		getTable(BasicsTable.TABLENAME).delete(where, value);
-		getTable(SpielerTable.TABLENAME).delete(where, value);
-		getTable(SpielerSkillupTable.TABLENAME).delete(where, value);
-		getTable(XtraDataTable.TABLENAME).delete(where, value);
-		((StaffTable) getTable(StaffTable.TABLENAME)).deleteAllStaffByHrfId(hrfid);
+	private PreparedStatement deleteMatchDetailsStatement;
+	private PreparedStatement deleteMatchHighlightsStatement;
+	private PreparedStatement deleteMatchLineupStatement;
+	private PreparedStatement deleteMatchLineupTeamStatement;
+
+	private PreparedStatement deleteMatchLineupPlayerStatement;
+	private PreparedStatement deleteMatchKurzInfoStatement;
+	private PreparedStatement deleteMatchSubstitutionStatement;
+	private final String[] whereMatchID = { "MatchTyp", "MatchID" };
+	private PreparedStatement getDeleteMatchDetailsStatement() {
+		if (deleteMatchDetailsStatement==null ){
+			deleteMatchDetailsStatement = getTable(MatchDetailsTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchDetailsStatement;
+	}
+	private PreparedStatement getDeleteMatchHighlightsStatement() {
+		if (deleteMatchHighlightsStatement==null ){
+			deleteMatchHighlightsStatement = getTable(MatchHighlightsTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchHighlightsStatement;
+	}
+	private PreparedStatement getDeleteMatchLineupStatement() {
+		if (deleteMatchLineupStatement==null ){
+			deleteMatchLineupStatement = getTable(MatchLineupTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchLineupStatement;
+	}
+	private PreparedStatement getDeleteMatchLineupTeamStatement() {
+		if (deleteMatchLineupTeamStatement==null ){
+			deleteMatchLineupTeamStatement = getTable(MatchLineupTeamTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchLineupTeamStatement;
+	}
+	private PreparedStatement getDeleteMatchLineupPlayerStatement() {
+		if (deleteMatchLineupPlayerStatement==null ){
+			deleteMatchLineupPlayerStatement = getTable(MatchLineupPlayerTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchLineupPlayerStatement;
+	}
+	private PreparedStatement getDeleteMatchKurzInfoStatement() {
+		if (deleteMatchKurzInfoStatement==null ){
+			deleteMatchKurzInfoStatement = getTable(MatchesKurzInfoTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchKurzInfoStatement;
+	}
+	private PreparedStatement getDeleteMatchSubstitutionStatement() {
+		if (deleteMatchSubstitutionStatement==null ){
+			deleteMatchSubstitutionStatement = getTable(MatchSubstitutionTable.TABLENAME).createDeleteStatement(whereMatchID);
+		}
+		return deleteMatchSubstitutionStatement;
 	}
 
 	/**
@@ -2004,21 +2161,14 @@ public class DBManager {
 	 *
 	 * @param matchid The matchid. Must be larger than 0.
 	 */
-	public void deleteMatch(int matchid) {
-		final String[] whereSpalten = { "MatchID" };
-		final String[] whereValues = { "" + matchid };
-		getTable(MatchDetailsTable.TABLENAME).delete(whereSpalten, whereValues);
-		getTable(MatchHighlightsTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchLineupTable.TABLENAME).delete(whereSpalten, whereValues);
-		getTable(MatchLineupTeamTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchLineupPlayerTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchesKurzInfoTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.deleteAllMatchSubstitutionsByMatchId(matchid);
+	public void deleteMatch(int matchType, int matchid) {
+		getTable(MatchDetailsTable.TABLENAME).delete(getDeleteMatchDetailsStatement(), matchType, matchid);
+		getTable(MatchHighlightsTable.TABLENAME).delete(getDeleteMatchHighlightsStatement(), matchType, matchid);
+		getTable(MatchLineupTable.TABLENAME).delete(getDeleteMatchLineupStatement(), matchType, matchid);
+		getTable(MatchLineupTeamTable.TABLENAME).delete(getDeleteMatchLineupTeamStatement(), matchType, matchid);
+		getTable(MatchLineupPlayerTable.TABLENAME).delete(getDeleteMatchLineupPlayerStatement(),matchType, matchid);
+		getTable(MatchesKurzInfoTable.TABLENAME).delete(getDeleteMatchKurzInfoStatement(),	matchType, matchid);
+		getTable(MatchSubstitutionTable.TABLENAME).delete(getDeleteMatchSubstitutionStatement(), matchType, matchid);
 	}
 
 	/**
@@ -2044,7 +2194,7 @@ public class DBManager {
 				&& (info.getMatchID() == lineup.getMatchID())
 				&& (info.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 
-			deleteMatch(info.getMatchID());
+			deleteMatch(info.getMatchType().getId(), info.getMatchID());
 
 			var matches = new ArrayList<MatchKurzInfo>();
 			matches.add(info);
@@ -2078,7 +2228,7 @@ public class DBManager {
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
-				m_clJDBCAdapter.executePreparedUpdate(statement);
+				m_clJDBCAdapter._executeUpdate(statement);
 			}
 		}
 	}
@@ -2631,33 +2781,35 @@ public class DBManager {
 		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
 	}
 
+	private String sql = "SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER" +
+			" FROM XTRADATA INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID" +
+			" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID" +
+			" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0" +
+			" INNER JOIN (SELECT TRAININGDATE, %s(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE) IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID" +
+			" WHERE XTRADATA.TRAININGDATE >= ?";
+
+	private PreparedStatement loadTrainingPerWeekMaxStatement;
+	private PreparedStatement loadTrainingPerWeekMinStatement;
+	private PreparedStatement getLoadTrainingPerWeekMaxStatement(){
+		if (loadTrainingPerWeekMaxStatement==null ){
+			loadTrainingPerWeekMaxStatement = m_clJDBCAdapter.createPreparedStatement(String.format(sql, "max"));
+		}
+		return loadTrainingPerWeekMaxStatement;
+	}
+	private PreparedStatement getLoadTrainingPerWeekMinStatement(){
+		if (loadTrainingPerWeekMinStatement==null ){
+			loadTrainingPerWeekMinStatement = m_clJDBCAdapter.createPreparedStatement(String.format(sql, "min"));
+		}
+		return loadTrainingPerWeekMinStatement;
+	}
+
 	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
 
 		var ret = new ArrayList<TrainingPerWeek>();
-		// for past trainings the first hrf after training date is the best guess
-		// - add one week to next training date of the week
-		// - use min(hrf) here
-
-		var sql = new StringBuilder();
-		sql.append("SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER")
-				.append(" FROM XTRADATA")
-				.append(" INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID")
-				.append(" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID")
-				.append(" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0")
-				.append(" INNER JOIN (")
-				.append(" SELECT TRAININGDATE,");
-		if ( all ) {
-			sql.append(" min");
-		}
-		else {
-			sql.append(" max");
-		}
-		sql.append("(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE")
-				.append(") IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID")
-				.append(" WHERE XTRADATA.TRAININGDATE >= ?");
 		try {
-
-			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(sql.toString(), startDate);
+			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(
+					all?getLoadTrainingPerWeekMinStatement():getLoadTrainingPerWeekMaxStatement(),
+					startDate);
 			if ( rs != null ) {
 				rs.beforeFirst();
 				while (rs.next()) {
@@ -2678,7 +2830,6 @@ public class DBManager {
 					ret.add( tpw);
 				}
 			}
-
 			return ret;
 		}
 		catch (Exception e) {
