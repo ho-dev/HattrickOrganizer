@@ -6,6 +6,7 @@ import core.util.HOLogger;
 import module.ifa.DateHelper;
 import module.ifa.IfaMatch;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -40,9 +41,15 @@ public class IfaMatchTable extends AbstractTable {
 		return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
+	private PreparedStatement isMatchInDBStatement;
+	private PreparedStatement getIsMatchInDBStatement(){
+		if ( isMatchInDBStatement==null){
+			isMatchInDBStatement=adapter.createPreparedStatement("SELECT * FROM " + getTableName() + " WHERE MATCHID=?");
+		}
+		return isMatchInDBStatement;
+	}
 	boolean isMatchInDB(int matchId) {
-		String select = "SELECT * FROM " + getTableName() + " WHERE MATCHID=?";
-		ResultSet rs = adapter.executePreparedQuery(select, matchId);
+		ResultSet rs = adapter.executePreparedQuery(getIsMatchInDBStatement(), matchId);
 		try {
 			if ((rs != null) && (rs.next()))
 				return true;
@@ -54,7 +61,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	Timestamp getLastMatchDate() {
 		String select = "SELECT MAX(" + "PLAYEDDATE" + ") FROM " + getTableName();
-		ResultSet rs = adapter.executePreparedQuery(select);
+		ResultSet rs = adapter._executeQuery(select);
 		try {
 			if ((rs != null) && (rs.next())) {
 				return rs.getTimestamp(1);
@@ -69,11 +76,11 @@ public class IfaMatchTable extends AbstractTable {
 	IfaMatch[] getMatches(boolean home) {
 		var list = new ArrayList<IfaMatch>();
 		String select = "SELECT * FROM " + getTableName() +
-				" WHERE " + (home ? "HOMETEAMID" : "AWAYTEAMID") +
-				" = ? ORDER BY " +
-				(home ? "AWAY_LEAGUEID" : "HOME_LEAGUEID") +
+				" WHERE " + (home ? "HOMETEAMID=" : "AWAYTEAMID=")
+				+ HOVerwaltung.instance().getModel().getBasics().getTeamId()
+				+ " ORDER BY " + (home ? "AWAY_LEAGUEID" : "HOME_LEAGUEID") +
 				" ASC ";
-		ResultSet rs = adapter.executePreparedQuery(select, HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		ResultSet rs = adapter._executeQuery(select);
 
 		if (rs == null) {
 			return new IfaMatch[0];
@@ -99,8 +106,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	@SuppressWarnings("deprecation")
 	void insertMatch(IfaMatch match) {
-		var sql = createInsertStatement();
-		adapter.executePreparedUpdate(sql,
+		adapter.executePreparedUpdate(getInsertStatement(),
 				match.getMatchId(),
 				match.getMatchTyp(),
 				HODateTime.toDbTimestamp(match.getPlayedDate()),
@@ -115,7 +121,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	void deleteAllMatches() {
 		String sql = "delete from " + getTableName();
-		adapter.executePreparedUpdate(sql);
+		adapter._executeUpdate(sql);
 	}
 
 }

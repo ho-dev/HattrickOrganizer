@@ -65,8 +65,9 @@ public class SpecialEventsDM {
 		whereClause.append(" (GastID=").append(teamId).append(" OR HeimID=").append(teamId).append(") ");
 		whereClause.append(" AND (Status=").append(MatchKurzInfo.FINISHED).append(")");
 
+		Timestamp from=null;
 		if (filter.getSeasonFilterValue() != SeasonFilterValue.ALL_SEASONS) {
-			Timestamp datumAb = getMatchDateFrom(filter.getSeasonFilterValue());
+			from = getMatchDateFrom(filter.getSeasonFilterValue());
 			whereClause.append(" AND (MATCHDATE > '").append(this.dateformat.format(datumAb));
 			whereClause.append("')");
 		}
@@ -109,7 +110,7 @@ public class SpecialEventsDM {
 		}
 		whereClause.append(" ORDER BY MatchDate DESC");
 
-		return DBManager.instance().getMatchesKurzInfo(whereClause.toString());
+		return DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.FINISHED, from, matchTypes);
 	}
 
 	private List<MatchRow> getMatchRows(MatchKurzInfo kurzInfos, Matchdetails details, Filter filter) {

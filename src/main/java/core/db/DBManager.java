@@ -1117,7 +1117,7 @@ public class DBManager {
 	 * @param teamId the teamid or -1 for all matches
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId);
 	}
@@ -1144,14 +1144,6 @@ public class DBManager {
 
 	}
 
-	private PreparedStatement loadOfficialMatchesBetweenStatement;
-	private PreparedStatement getLoadOfficialMatchesBetweenStatement(){
-		if (loadOfficialMatchesBetweenStatement==null ){
-			loadOfficialMatchesBetweenStatement = m_clJDBCAdapter.createPreparedStatement(preparedLoadMatchesBetween(MatchType.getOfficialMatchTypes()));
-		}
-		return loadOfficialMatchesBetweenStatement;
-	}
-
 	private String preparedLoadMatchesBetween(List<MatchType> matchTypes) {
 		var placeholders=new StringBuilder();
 		var sep ="";
@@ -1160,6 +1152,7 @@ public class DBManager {
 			sep=",";
 		}
 		return "WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+placeholders+") AND STATUS in (?, ?) ORDER BY MatchDate DESC";
+
 	}
 
 	/**
@@ -1167,55 +1160,15 @@ public class DBManager {
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
 	public List<MatchKurzInfo> loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(getLoadOfficialMatchesBetweenStatement(), teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
+		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getOfficialMatchTypes());
 	}
 
-	public List<MatchKurzInfo> loadMatchesBetween(PreparedStatement statement, int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
-		var matchTypeList=new ArrayList<Object>();
-		var sep ="";
-		for ( var t : matchTypes ) {
-			matchTypeList.add(t.getId());
-			sep=",";
-		}
-		return getMatchesKurzInfo(statement,
-				teamId,
-				teamId,
-				firstMatchDate.toDbTimestamp(),
-				lastMatchDate.toDbTimestamp(),
-				matchTypeList,
-				MatchKurzInfo.FINISHED,
-				MatchKurzInfo.UPCOMING);
-	}
-
-	private PreparedStatement loadNTMatchesBetweenStatement;
-	private PreparedStatement getloadNTMatchesBetweenStatement(){
-		if (loadNTMatchesBetweenStatement==null ){
-			loadNTMatchesBetweenStatement = m_clJDBCAdapter.createPreparedStatement(preparedLoadMatchesBetween(MatchType.getNTMatchType()));
-		}
-		return loadNTMatchesBetweenStatement;
-	}
 	/**
 	 * function that fetch info of NT match played related to the TrainingPerWeek instance
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
 	public List<MatchKurzInfo> loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(getloadNTMatchesBetweenStatement(),teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
-	}
-
-	/**
-	 * Get all matches for the given sql where clause.
-	 *
-	 * @param where The string containing sql where clause
-	 * @return the match kurz info [ ]
-	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(where);
-	}
-
-	public List<MatchKurzInfo> getMatchesKurzInfo(PreparedStatement statement, Object ... params) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(statement, params);
+		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getNTMatchType());
 	}
 
 	/**
@@ -1226,7 +1179,7 @@ public class DBManager {
 	 * @param matchStatus the match status
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(final int teamId, final int matchStatus) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(final int teamId, final int matchStatus) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchStatus);
 	}
@@ -1250,7 +1203,7 @@ public class DBManager {
 	 * @param iNbGames the nb games
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames){
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames){
 		return getOwnPlayedMatchInfo(iNbGames, false);
 	}
 
@@ -1261,7 +1214,7 @@ public class DBManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, true);
 	}
 
@@ -1272,7 +1225,7 @@ public class DBManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
+	public List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
 	}
 
@@ -1289,7 +1242,7 @@ public class DBManager {
 	 *
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
 		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.htStart.toDbTimestamp(), true);
 	}
 
@@ -1307,7 +1260,7 @@ public class DBManager {
 	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, iMatchType, matchLocation, from, includeUpcoming);
 	}
 
@@ -1317,7 +1270,7 @@ public class DBManager {
 	 * @param teamId the team id
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfoUpComing(int teamId) {
+	public List<MatchKurzInfo> getMatchesKurzInfoUpComing(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfoUpComing(teamId);
 	}
@@ -2836,5 +2789,9 @@ public class DBManager {
 			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
 		}
 		return null;
+	}
+
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
 	}
 }

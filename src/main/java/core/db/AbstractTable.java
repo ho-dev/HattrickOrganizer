@@ -63,6 +63,17 @@ public abstract class AbstractTable {
 		return new String[0];
 	}
 
+	public PreparedStatement createSelectStatement(String where) {
+		var sql = new StringBuilder("SELECT * FROM ");
+		sql.append(getTableName()).append(" ").append(where);
+		return adapter.createPreparedStatement(sql.toString());
+	}
+	public PreparedStatement createUpdateStatement(String set) {
+		var sql = new StringBuilder("UPDATE ");
+		sql.append(getTableName()).append(" ").append(set);
+		return adapter.createPreparedStatement(sql.toString());
+	}
+
 	public PreparedStatement createDeleteStatement(String ... whereColumns) {
 		var sql = new StringBuilder("DELETE FROM ");
 		sql.append(getTableName());

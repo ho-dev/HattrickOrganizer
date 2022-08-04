@@ -58,18 +58,13 @@ public final class HRFTable extends AbstractTable {
 		return maxHrf;
 	}
 
-	private PreparedStatement saveHRFStatement;
-	private PreparedStatement getSaveHRFStatement(){
-		if ( saveHRFStatement==null){
-			saveHRFStatement=createInsertStatement();
-		}
-		return saveHRFStatement;
-	}
 	/**
 	 * Save hattrick resource file information
 	 */
 	void saveHRF(int hrfId, HODateTime datum) {
-		adapter.executePreparedUpdate(getSaveHRFStatement(), hrfId, datum.toDbTimestamp());
+		adapter.executePreparedUpdate(getInsertStatement(),
+				hrfId,
+				datum.toDbTimestamp());
 		if (hrfId > getMaxHrf().getHrfId()) {
 			maxHrf = new HRF(hrfId,  datum);
 		}

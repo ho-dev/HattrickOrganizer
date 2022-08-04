@@ -206,17 +206,11 @@ final class MatchDetailsTable extends AbstractTable {
 	private PreparedStatement getDeleteMatchDetailsStatement(){
 		if (deleteMatchDetailsStatement==null){
 			final String[] where = {"MATCHTYP", "MatchID"};
-			deleteMatchDetailsStatement=createPreparedDelete(where);
+			deleteMatchDetailsStatement=createDeleteStatement(where);
 		}
 		return deleteMatchDetailsStatement;
 	}
-	private PreparedStatement storeMatchDetailsStatement;
-	private PreparedStatement getStoreMatchDetailsStatement(){
-		if ( storeMatchDetailsStatement==null){
-			storeMatchDetailsStatement=createInsertStatement();
-		}
-		return storeMatchDetailsStatement;
-	}
+
 	/**
 	 * speichert die MatchDetails
 	 */
@@ -231,7 +225,7 @@ final class MatchDetailsTable extends AbstractTable {
 			String sql;
 
 			try {
-				adapter.executePreparedUpdate(getStoreMatchDetailsStatement(),
+				adapter.executePreparedUpdate(getInsertStatement(),
 						details.getMatchID(),
 						details.getMatchType().getId(),
 						details.getArenaID(),

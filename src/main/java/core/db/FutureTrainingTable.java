@@ -5,6 +5,8 @@ import core.training.TrainingPerWeek;
 import core.util.DateTimeUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -35,15 +37,19 @@ public final class FutureTrainingTable extends AbstractTable {
 		};
 	}
 
+	private PreparedStatement getFutureTrainingsVectorStatement;
+	private PreparedStatement getGetFutureTrainingsVectorStatement(){
+		if (getFutureTrainingsVectorStatement==null ){
+			getFutureTrainingsVectorStatement = adapter.createPreparedStatement("select * from " + getTableName() + " ORDER BY TRAINING_DATE");
+		}
+		return getFutureTrainingsVectorStatement;
+	}
 	List<TrainingPerWeek> getFutureTrainingsVector() {
 		var vTrainings = new ArrayList<TrainingPerWeek>();
-		String query = "select * from " + getTableName() + " ORDER BY TRAINING_DATE";
-		ResultSet rs = adapter.executePreparedQuery(query);
-
+		ResultSet rs = adapter.executePreparedQuery(getGetFutureTrainingsVectorStatement());
 		try {
 			if (rs != null) {
 				rs.beforeFirst();
-
 				while (rs.next()) {
 					var trainingDate = rs.getTimestamp("TRAINING_DATE");
 					var training_type = rs.getInt("TRAINING_TYPE");
@@ -52,10 +58,8 @@ public final class FutureTrainingTable extends AbstractTable {
 					var trainingAssistantsLevel = rs.getInt("TRAINING_ASSISTANTS_LEVEL");
 					var coachLevel = rs.getInt("COACH_LEVEL");
 					var source = DBDataSource.getCode(rs.getInt("SOURCE"));
-
 					var tpw = new TrainingPerWeek(HODateTime.fromDbTimestamp(trainingDate), training_type, training_intensity, staminaShare, trainingAssistantsLevel,
 							coachLevel, source);
-
 					vTrainings.add(tpw);
 				}
 			}
@@ -65,9 +69,15 @@ public final class FutureTrainingTable extends AbstractTable {
 		return vTrainings;
 	}
 
+	private PreparedStatement loadFutureTrainingsStatement;
+	private PreparedStatement getLoadFutureTrainingsStatement(){
+		if(loadFutureTrainingsStatement==null){
+			loadFutureTrainingsStatement=adapter.createPreparedStatement("select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
+		}
+		return loadFutureTrainingsStatement;
+	}
 	int loadFutureTrainings(Timestamp trainingDate) {
-		String query = "select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?";
-		ResultSet rs = adapter.executePreparedQuery(query, trainingDate);
+		ResultSet rs = adapter.executePreparedQuery(getLoadFutureTrainingsStatement(), trainingDate);
 		try {
 			if (rs != null) {
 				rs.beforeFirst();
@@ -81,15 +91,20 @@ public final class FutureTrainingTable extends AbstractTable {
 		return -1;
 	}
 
+	private PreparedStatement updateFutureTrainingStatement;
+	private PreparedStatement getUpdateFutureTrainingStatement(){
+		if (updateFutureTrainingStatement==null){
+			updateFutureTrainingStatement=adapter.createPreparedStatement( "update " + getTableName() +
+					" set TRAINING_TYPE= ?, TRAINING_INTENSITY=?, STAMINA_SHARE=?, COACH_LEVEL=?, " +
+					"TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE=?");
+		}
+		return updateFutureTrainingStatement;
+	}
 	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
 
-			String trainingDate = training.getTrainingDate().toDbTimestamp().toString();
-
-			String statement = "update " + getTableName() +
-					" set TRAINING_TYPE= ?, TRAINING_INTENSITY=?, STAMINA_SHARE=?, COACH_LEVEL=?, TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE=?";
-
-			int count = adapter.executePreparedUpdate(statement,
+			var trainingDate = training.getTrainingDate().toDbTimestamp();
+			int count = adapter.executePreparedUpdate(getUpdateFutureTrainingStatement(),
 					training.getTrainingType(),
 					training.getTrainingIntensity(),
 					training.getStaminaShare(),
@@ -100,8 +115,7 @@ public final class FutureTrainingTable extends AbstractTable {
 			);
 
 			if (count == 0) {
-				statement = createInsertStatement();
-				adapter.executePreparedUpdate(statement,
+				adapter.executePreparedUpdate(getInsertStatement(),
 						trainingDate,
 						training.getTrainingIntensity(),
 						training.getStaminaShare(),
@@ -118,9 +132,15 @@ public final class FutureTrainingTable extends AbstractTable {
 		}
 	}
 
+	private PreparedStatement clearFutureTrainingsTableStatement;
+	private PreparedStatement getClearFutureTrainingsTableStatement(){
+		if ( clearFutureTrainingsTableStatement==null){
+			clearFutureTrainingsTableStatement=adapter.createPreparedStatement("DELETE FROM " + getTableName()+ " WHERE TRUE");
+		}
+		return clearFutureTrainingsTableStatement;
+	}
 	void clearFutureTrainingsTable(){
-		String sql = "DELETE FROM " + getTableName() + " WHERE TRUE";
-		adapter.executePreparedUpdate(sql);
+		adapter.executePreparedUpdate(getClearFutureTrainingsTableStatement());
 		HOLogger.instance().debug(getClass(), "FutureTraining table has been cleared !");
 	}
 }

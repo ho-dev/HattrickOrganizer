@@ -3,9 +3,11 @@ package core.db;
 import core.model.series.Liga;
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Vector;
+import java.util.function.Predicate;
 
 
 public final class LigaTable extends AbstractTable {
@@ -34,19 +36,23 @@ public final class LigaTable extends AbstractTable {
 		return new String[] {
 			"CREATE INDEX ILIGA_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}
-	
+
+	private PreparedStatement deleteStatement;
+	private PreparedStatement getDeleteStatement(){
+		if ( deleteStatement==null){
+			final String[] awhereS = { columns[0].getColumnName() };
+			deleteStatement=createDeleteStatement(awhereS);
+		}
+		return deleteStatement;
+	}
 	/**
-	 * speichert die Basics
+	 * store league
 	 */
 	protected void saveLiga(int hrfId, Liga liga) {
-		final String[] awhereS = { columns[0].getColumnName() };
-		final String[] awhereV = { "" + hrfId };
-
 		if (liga != null) {
 			// delete existing league
-			delete( awhereS, awhereV );
-			var statement = createInsertStatement();
-			adapter.executePreparedUpdate(statement,
+			delete( getDeleteStatement(), hrfId );
+			adapter.executePreparedUpdate(getInsertStatement(),
 					hrfId,
 					liga.getLiga(),
 					liga.getPunkte(),
@@ -59,7 +65,7 @@ public final class LigaTable extends AbstractTable {
 	}
 	
 	/**
-	 * Gibt alle bekannten Ligaids zurück
+	 * load all league ids
 	 */
 	Integer[] getAllLigaIDs() {
 		final Vector<Integer> vligaids = new Vector<Integer>();
@@ -67,7 +73,7 @@ public final class LigaTable extends AbstractTable {
 
 		try {
 			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
-			final ResultSet rs = adapter.executePreparedQuery(sql);
+			final ResultSet rs = adapter._executeQuery(sql);
 			rs.beforeFirst();
 			while (rs.next()) {
 				vligaids.add(Integer.valueOf(rs.getInt("LigaID")));
@@ -84,23 +90,14 @@ public final class LigaTable extends AbstractTable {
 		return ligaids;
 	}
 
-	/**
-	 * lädt die Basics zum angegeben HRF file ein
-	 */
 	Liga getLiga(int hrfID) {
-
 		Liga serie = new Liga();
-
-
 		if(hrfID == -1){
 			return serie;
 		}
 		else {
-
 			ResultSet rs;
-
 			rs = getSelectByHrfID(hrfID);
-
 			try {
 				if (rs != null) {
 					rs.first();
@@ -111,7 +108,6 @@ public final class LigaTable extends AbstractTable {
 				HOLogger.instance().error(getClass(), "Error while loding Serie model: " + e);
 			}
 		}
-
 		return serie;
 	}
 	
