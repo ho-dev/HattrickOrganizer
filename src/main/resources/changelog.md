@@ -2,15 +2,13 @@
 # Changelist HO! 6.0
 
 ## Some numbers
-* 226 commits
-* 385 files changed, 12913 insertions(+), 15669 deletions(-)
+* 259 commits
+* 395 files changed, 13134 insertions(+), 15920 deletions(-)
 * Contributors:
-  * 137 wsbrenk
+  * 174 wsbrenk
   * 80 akasolace
-  * 4 Sébastien Le Callonnec
-  * 4 Wolfgang Schneider
+  * 4 Sébastien Le Callonnec 
   * 1 Goran Stefanovic
-
 
 ## Highlights
 * refactoring player details panel showing players' avatars now (#1349)
@@ -22,6 +20,7 @@
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
 * fix bug in hrf file import (#1445)
+* About dialog shows path of database and logs folder (#1576)
 
 ### Squad
 * refactoring player details panel showing players' avatars now (#1349)
@@ -31,6 +30,7 @@
 * hrf file list shows training week instead of match day (#1452)
 * skill recalculation no longer ignores very first downloaded hrf file (#1489)
 * fix error of skill recalculation of replaced players (#1489)
+* fix another recalculation error concerning wrong skill up handling (#1519)
 
 ### Team Analyser
 * display confidence and team spirit of nt team opponents (#1305)
@@ -40,13 +40,18 @@
 * calculate effect of man marking on ratings (#682)
 
 ### Matches
+* fix error on selecting matches without downloaded highlights (#1553)
+* fix sorting of hatstat columns (#1598)
 
 ### Lineup
 * refactoring, including loading and storing of lineup templates (#1267)
 * fixed a bug when downloading team logos (#1300)
 * substitutions of the same minute can be ordered (#1039)
 * fixed goalkeeper could not be selected as team captain (#1340)
-* fix null pointer exception in lineup assistant if no current lineup exists (#1496)
+* fix null pointer exception in lineup assistant if no current lineup exists (#1496, #1571)
+
+### Statistics
+* fix chart time axis (#1561)
 
 ### NT
 * fix download xml parse errors (#1305)
@@ -75,31 +80,38 @@
 * fix finance bug concerning missing spectators' income in misc module (#1282)
 * fix last weeks profit/loss, temporary income sum and missing sponsors bonus (#1301)
 * fix CHPP token not being saved when exiting HO on macos (#1291)
+* fix portable HO update error when java version is changed (#1545)
 
 ## QA Team
 * masterpatje does a great job of testing the development versions of the HO to get rid of even the last bugs in it.
 
 ## Translations
 
-Reports by Contributors - Dec 20, 2021 - June 05, 2022
+Reports by Contributors - Dec 20, 2021 - August 05, 2022
 
 * Foppe	690
-* Pablo 314
-* akasolace	94
-* sich	91
-* Lidegand 	91
-* \_KOHb\_	76
+* brokenelevator 510
+* Pablo 313
+* Ante 218
+* \_KOHb\_	110
+* Adrian 107
+* Fresty di Lot 101
+* sich	100
+* Lidegand 	98
+* akasolace	96
+* Frank 94
 * TeamBMW 75
 * anti_anti 69
 * Moorhuhninho	67
-* Ante 52
-* wsbrenk 28
+* wsbrenk 34
 * dzsoo 18
+* Sophia 17
 * Csaba 14
-* Sophia 10
+* Michał 11
+* Motavali 2
 * Philipp 1
-* Total translated:	1690
-
+* Total translated:	2745
+1
 # Changelist HO! 5.2
 
 ## Some numbers
