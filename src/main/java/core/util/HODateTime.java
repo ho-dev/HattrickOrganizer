@@ -124,19 +124,10 @@ public class HODateTime implements Comparable<HODateTime> {
     public String toLocaleDate() {
         return toLocaleDate(FormatStyle.MEDIUM);
     }
-    public static String toLocaleDate(HODateTime in){
-        if ( in != null) return in.toLocaleDate(FormatStyle.MEDIUM);
-        return "";
-    }
 
     public String toLocaleDate(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
-    }
-
-    public static String toLocaleDate(HODateTime in, FormatStyle style){
-        if ( in != null) return in.toLocaleDate(style);
-        return "";
     }
 
     /**
@@ -277,7 +268,7 @@ public class HODateTime implements Comparable<HODateTime> {
         );
     }
 
-    private static Duration durationBetweenTrainingDateAndNextWeekStart =null;
+    private static Duration durationBetweenWeekStartAndTrainingDate =null;
 
     /**
      * Convert to locale training season and week
@@ -285,15 +276,13 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return local training season/week
      */
     public HTWeek toTrainingWeek(){
-        if ( durationBetweenTrainingDateAndNextWeekStart == null ){
+        if ( durationBetweenWeekStartAndTrainingDate == null ){
             var nextTrainingDate=HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
-            var hrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
-            var nextWeek = HODateTime.fromHTWeek(hrfDate.toHTWeek()).plus(7, ChronoUnit.DAYS);
-            var between = HODateTime.between( nextTrainingDate, nextWeek);
-            durationBetweenTrainingDateAndNextWeekStart = between;
+            var startOfWeek = HODateTime.fromHTWeek(nextTrainingDate.toHTWeek());
+            durationBetweenWeekStartAndTrainingDate = HODateTime.between(startOfWeek, nextTrainingDate);
         }
 
-        var trainingDateRelatedDate = new HODateTime(this.instant.plus(durationBetweenTrainingDateAndNextWeekStart));
+        var trainingDateRelatedDate = new HODateTime(this.instant.minus(durationBetweenWeekStartAndTrainingDate));
         return trainingDateRelatedDate.toLocaleHTWeek();
     }
 
