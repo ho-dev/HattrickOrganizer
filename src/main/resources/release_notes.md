@@ -36,4 +36,4 @@
 
 ## Translations
 
-Reports by Contributors - June 05, 2022 - June 05, 2022
+Reports by Contributors - June 05, 2022 - August 08, 2022
