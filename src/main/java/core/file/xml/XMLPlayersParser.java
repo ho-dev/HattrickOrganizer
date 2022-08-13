@@ -355,7 +355,7 @@ public class XMLPlayersParser {
         var teamID = xmlIntValue(owningTeam, "TeamID");
         if (teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
 
-        var player = new Player();
+        var player = new Player(properties, hrfdate, hoModel.getID());
         player.setPlayerID(xmlIntValue(root, "PlayerID"));
         player.setFirstName(xmlValue(root, "FirstName"));
         player.setNickName(xmlValue(root, "NickName"));

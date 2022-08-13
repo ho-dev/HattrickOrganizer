@@ -2,6 +2,8 @@ package core.db;
 
 import core.model.match.MatchTeamRating;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
 public class MatchTeamRatingTable extends AbstractTable {
     public final static String TABLENAME = "MATCHTEAMRATING";
 
-    protected MatchTeamRatingTable(JDBCAdapter  adapter){
+    protected MatchTeamRatingTable(JDBCAdapter adapter) {
         super(TABLENAME, adapter);
     }
 
@@ -31,16 +33,18 @@ public class MatchTeamRatingTable extends AbstractTable {
 
     @Override
     protected String[] getConstraintStatements() {
-        return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
+        return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
     }
 
-    List<MatchTeamRating> load(int matchID, int matchType ) {
+    @Override
+    protected PreparedStatement createSelectStatement() {
+        return createSelectStatement("WHERE MatchTyp = ? AND MatchID = ?");
+    }
+
+    List<MatchTeamRating> load(int matchID, int matchType) {
         var ret = new ArrayList<MatchTeamRating>();
         try {
-            var sql = "SELECT * FROM " + getTableName()
-                    + " WHERE MatchTyp = " + matchType
-                    + " AND MatchID = " + matchID;
-            var rs = adapter.executeQuery(sql);
+            var rs = executePreparedSelect(matchType, matchID);
             if (rs != null) {
                 rs.beforeFirst();
                 while (rs.next()) {
@@ -53,42 +57,32 @@ public class MatchTeamRatingTable extends AbstractTable {
         return ret;
     }
 
-    private String getColumnNames() {
-        StringBuilder ret = new StringBuilder();
-        String sep = " (";
-        for (var c : columns) {
-            ret.append(sep);
-            ret.append(c.getColumnName());
-            sep = ",";
-        }
-        ret.append(")");
-        return ret.toString();
+    @Override
+    protected PreparedStatement createDeleteStatement() {
+        return createDeleteStatement("WHERE MatchTyp=? AND MatchID=? AND TeamID=?");
     }
 
     void store(MatchTeamRating teamRating) {
         if (teamRating != null) {
-            final String[] where = { "MatchTyp", "MatchID", "TEAMID" };
-            final String[] werte = { "" + teamRating.getMatchTyp().getId(), "" + teamRating.getMatchId(), "" + teamRating.getTeamId() };
-
-            // Remove existing entry
-            delete(where, werte);
 
             try {
-                var sql = "INSERT INTO "
-                        + getTableName()
-                        + getColumnNames()
-                        + " VALUES("
-                        + teamRating.getMatchId() + ","
-                        + teamRating.getMatchTyp().getId() + ","
-                        + teamRating.getTeamId() + ","
-                        + teamRating.getFanclubSize() + ","
-                        + teamRating.getPowerRating() + ","
-                        + teamRating.getGlobalRanking() + ","
-                        + teamRating.getLeagueRanking() + ","
-                        + teamRating.getRegionRanking() + ","
-                        + teamRating.getNumberOfVictories() + ","
-                        + teamRating.getNumberOfUndefeated() + ")";
-                adapter.executeUpdate(sql);
+                executePreparedDelete(
+                        teamRating.getMatchTyp().getId(),
+                        teamRating.getMatchId(),
+                        teamRating.getTeamId()
+                );
+                executePreparedInsert(
+                        +teamRating.getMatchId(),
+                        +teamRating.getMatchTyp().getId(),
+                        +teamRating.getTeamId(),
+                        +teamRating.getFanclubSize(),
+                        +teamRating.getPowerRating(),
+                        +teamRating.getGlobalRanking(),
+                        +teamRating.getRegionRanking(),
+                        +teamRating.getLeagueRanking(),
+                        +teamRating.getNumberOfVictories(),
+                        +teamRating.getNumberOfUndefeated()
+                );
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(), "DB.store MatchTeamRating Error" + e);
                 HOLogger.instance().log(getClass(), e);

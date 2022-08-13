@@ -32,20 +32,15 @@ public final class FaktorenTable extends AbstractTable {
 		columns[8]= new ColumnDescriptor("NormalisationFactor",Types.REAL,false);
 	}
 
-	private PreparedStatement pushFactorsIntoDBDeleteStatement;
-	private PreparedStatement getPushFactorsIntoDBDeleteStatement(){
-		if ( pushFactorsIntoDBDeleteStatement == null){
-			final String[] whereS = {"PositionID"};
-			pushFactorsIntoDBDeleteStatement = createDeleteStatement(whereS);
-		}
-		return  pushFactorsIntoDBDeleteStatement;
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE PositionID = ?");
 	}
 
 	protected void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
-			final String[] awhereV = {"" + fo.getPosition()};
-			delete(getPushFactorsIntoDBDeleteStatement(), awhereV);
-			adapter.executePreparedUpdate(getInsertStatement(),
+			executePreparedDelete(fo.getPosition());
+			executePreparedInsert(
 					fo.getPosition(),
 					fo.getGKfactor(),
 					fo.getDEfactor(),
@@ -59,9 +54,13 @@ public final class FaktorenTable extends AbstractTable {
 		}
 	}
 
+	@Override
+	protected PreparedStatement createSelectStatement(){
+		return createSelectStatement("");
+	}
 	void getFaktorenFromDB() {
 		final FormulaFactors factors = FormulaFactors.instance();
-		final ResultSet rs = adapter._executeQuery("SELECT * FROM " + getTableName());
+		final ResultSet rs = executePreparedSelect();
 
 		try {
 			if (rs != null) {

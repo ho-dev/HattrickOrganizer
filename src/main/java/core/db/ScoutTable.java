@@ -3,6 +3,7 @@ package core.db;
 import core.util.HOLogger;
 import module.transfer.scout.ScoutEintrag;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Vector;
@@ -48,6 +49,10 @@ final class ScoutTable extends AbstractTable {
 		columns[25]= new ColumnDescriptor("MotherClub",Types.BOOLEAN,false);
 	}
 
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement(""); // delete all
+	}
 	/**
 	 * Save players from TransferScout
 	 */
@@ -59,83 +64,42 @@ final class ScoutTable extends AbstractTable {
 		if (list != null) {
 			// Delete already existing list
 
-			delete( null,null );
-			for (int i = 0; i < list.size(); i++) {
-				final ScoutEintrag scout = list.elementAt(i);
+			try {
+				executePreparedDelete();
 
-				if (scout.isWecker()) {
-					bool = "1";
-				} else {
-					bool = "0";
+				for (var scout : list) {
+					executePreparedInsert(
+							scout.getPlayerID(),
+							scout.getName(),
+							scout.getInfo(),
+							scout.getAlter(),
+							scout.getTSI(),
+							scout.getSpeciality(),
+							scout.getKondition(),
+							scout.getErfahrung(),
+							scout.getForm(),
+							scout.getTorwart(),
+							scout.getVerteidigung(),
+							scout.getSpielaufbau(),
+							scout.getFluegelspiel(),
+							scout.getTorschuss(),
+							scout.getPasspiel(),
+							scout.getStandards(),
+							scout.getPrice(),
+							scout.getDeadline(),
+							scout.isWecker(),
+							scout.getAgeDays(),
+							scout.getAgreeability(),
+							scout.getbaseWage(),
+							scout.getNationality(),
+							scout.getLeadership(),
+							scout.getLoyalty(),
+							scout.isHomegrown()
+					);
 				}
-				if (scout.isHomegrown())
-					hg = "1";
-				else
-					hg = "0";
 
-				// Prepare insert statement
-				sql =
-					"INSERT INTO "+getTableName()+" (Name, Info, Age, AgeDays, Marktwert, Kondition, Erfahrung,  Form, Torwart, Verteidigung, Spielaufbau, Fluegel, Torschuss, Passpiel, Standards, Deadline, Wecker, PlayerID, Speciality, Price, Agreeability, baseWage, Nationality, Leadership, Loyalty, MotherClub ) VALUES (";
-				sql
-					+= ("'"
-						+ core.db.DBManager.insertEscapeSequences(scout.getName())
-						+ "','"
-						+ core.db.DBManager.insertEscapeSequences(scout.getInfo())
-						+ "',"
-						+ scout.getAlter()
-						+ ","
-						+ scout.getAgeDays()
-						+ ","
-						+ scout.getTSI()
-						+ ","
-						+ scout.getKondition()
-						+ ","
-						+ scout.getErfahrung()
-						+ ","
-						+ scout.getForm()
-						+ ","
-						+ scout.getTorwart()
-						+ ","
-						+ scout.getVerteidigung()
-						+ ","
-						+ scout.getSpielaufbau()
-						+ ","
-						+ scout.getFluegelspiel()
-						+ ","
-						+ scout.getTorschuss()
-						+ ","
-						+ scout.getPasspiel()
-						+ ","
-						+ scout.getStandards()
-						+ ",'"
-						+ scout.getDeadline().toString()
-						+ "',"
-						+ bool
-						+ ", "
-						+ scout.getPlayerID()
-						+ ", "
-						+ scout.getSpeciality()
-						+ ", "
-						+ scout.getPrice()
-						+ ", "
-						+ scout.getAgreeability()
-						+ ", "
-						+ scout.getbaseWage()
-						+ ", "
-						+ scout.getNationality()
-						+ ", "
-						+ scout.getLeadership()
-						+ ", "
-						+ scout.getLoyalty()
-						+ ", "
-						+ hg
-						+ ")");
-
-				try {
-					adapter.executeUpdate(sql);
-				} catch (Exception e) {
-					HOLogger.instance().log(getClass(),"DBZugriff.deleteScoutTabelle: " + e);
-				}
+			} catch (Exception e) {
+				HOLogger.instance().log(getClass(), "DBZugriff.saveScoutList: " + e);
 			}
 		}
 	}
@@ -147,11 +111,8 @@ final class ScoutTable extends AbstractTable {
 		final Vector<ScoutEintrag> ret = new Vector<ScoutEintrag>();
 
 		try {
-			final String sql =
-				"SELECT * FROM "+getTableName();
-			final ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = executePreparedSelect();
 			rs.beforeFirst();
-
 			while (rs.next()) {
 				final ScoutEintrag scout = new ScoutEintrag(rs);
 				ret.add(scout);
@@ -159,7 +120,6 @@ final class ScoutTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DBZugriff.getScoutList: " + e);
 		}
-
 		return ret;
 	}
 	

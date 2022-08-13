@@ -357,7 +357,7 @@ public class TransferTableModel extends AbstractTableModel {
         m_clData = new Object[m_vScoutEintraege.size()][m_sColumnNames.length];
         for (int i = 0; i < m_vScoutEintraege.size(); i++) {
             final ScoutEintrag aktuellerScoutEintrag = m_vScoutEintraege.get(i);
-            final Player aktuellerPlayer = new Player();
+            final Player aktuellerPlayer = new Player(properties, hrfdate, hoModel.getID());
             aktuellerPlayer.setFirstName("");  //TODO: fix this
             aktuellerPlayer.setNickName(" "); //TODO: fix this
             aktuellerPlayer.setLastName(aktuellerScoutEintrag.getName());

@@ -7,10 +7,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import module.nthrf.NtTeamDetails;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,57 +56,66 @@ final class NtTeamTable extends AbstractTable {
 		};
 	}
 
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE HRF_ID=? AND TEAM_ID=?");
+	}
 	void store(NtTeamDetails ntTeamDetails) {
 		if (ntTeamDetails != null) {
-			final String[] awhereS = {"HRF_ID", "TEAM_ID"};
-			final String[] awhereV = {"" + ntTeamDetails.getHrfId(), "" + ntTeamDetails.getTeamId()};
-
-			//delete existing record
-			delete(awhereS, awhereV);
-			//prepare insert statement
-			var statement = "INSERT INTO " +
-					getTableName() +
-					" (HRF_ID,TEAM_ID,MORALE,SELFCONFIDENCE,xp253,xp343,xp352,xp433,xp442,xp451,xp523,xp532,xp541,xp550," +
-					"NAME,SHORTNAME,COACHID,COACHNAME,LEAGUEID,LEAGUENAME,SUPPORTERPOPULARITY," +
-					"RATING,FANCLUBSIZE,RANK,FETCHEDDATE) VALUES (" +
-					ntTeamDetails.getHrfId() + "," +
-					ntTeamDetails.getTeamId() + "," +
-					ntTeamDetails.getMorale() + "," +
-					ntTeamDetails.getSelfConfidence() + "," +
-					ntTeamDetails.getXp253() + "," +
-					ntTeamDetails.getXp343() + "," +
-					ntTeamDetails.getXp352() + "," +
-					ntTeamDetails.getXp433() + "," +
-					ntTeamDetails.getXp442() + "," +
-					ntTeamDetails.getXp451() + "," +
-					ntTeamDetails.getXp523() + "," +
-					ntTeamDetails.getXp532() + "," +
-					ntTeamDetails.getXp541() + "," +
-					ntTeamDetails.getXp550() + ",'" +
-					DBManager.insertEscapeSequences(ntTeamDetails.getTeamName()) + "','" +
-					DBManager.insertEscapeSequences(ntTeamDetails.getTeamNameShort()) + "'," +
-					ntTeamDetails.getCoachId() + ",'" +
-					DBManager.insertEscapeSequences(ntTeamDetails.getCoachName()) + "'," +
-					ntTeamDetails.getLeagueId() + ",'" +
-					DBManager.insertEscapeSequences(ntTeamDetails.getLeagueName()) + "'," +
-					ntTeamDetails.getSupportersPopularity() + "," +
-					ntTeamDetails.getRatingScore() + "," +
-					ntTeamDetails.getFanclubSize() + "," +
-					ntTeamDetails.getRank() + ",'" +
-					ntTeamDetails.getFetchedDate().toString() + "')";
-			adapter.executeUpdate(statement);
+			executePreparedDelete(ntTeamDetails.getHrfId(), ntTeamDetails.getTeamId());
+			executePreparedInsert(
+					ntTeamDetails.getHrfId(),
+					ntTeamDetails.getTeamId(),
+					ntTeamDetails.getMorale(),
+					ntTeamDetails.getSelfConfidence(),
+					ntTeamDetails.getXp253(),
+					ntTeamDetails.getXp343(),
+					ntTeamDetails.getXp352(),
+					ntTeamDetails.getXp433() ,
+					ntTeamDetails.getXp442() ,
+					ntTeamDetails.getXp451() ,
+					ntTeamDetails.getXp523() ,
+					ntTeamDetails.getXp532() ,
+					ntTeamDetails.getXp541(),
+					ntTeamDetails.getXp550(),
+					ntTeamDetails.getTeamName(),
+					ntTeamDetails.getTeamNameShort(),
+					ntTeamDetails.getCoachId() ,
+					ntTeamDetails.getCoachName(),
+					ntTeamDetails.getLeagueId(),
+					ntTeamDetails.getLeagueName(),
+					ntTeamDetails.getSupportersPopularity(),
+					ntTeamDetails.getRatingScore(),
+					ntTeamDetails.getFanclubSize(),
+					ntTeamDetails.getRank() ,
+					ntTeamDetails.getFetchedDate()
+			);
 		}
 	}
 
+	private  PreparedStatement selectBeforeStatement;
+	protected PreparedStatement getSelectBeforeStatement(){
+		if ( selectBeforeStatement==null){
+			selectBeforeStatement=createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
+		}
+		return selectBeforeStatement;
+	}
+	private  PreparedStatement selectTeamStatement;
+	protected PreparedStatement getSelectTeamStatement(){
+		if ( selectTeamStatement==null){
+			selectTeamStatement=createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
+		}
+		return selectTeamStatement;
+	}
 	public NtTeamDetails load(int teamId, Timestamp matchDate) {
 		try {
-			var sql = new StringBuilder();
-			sql.append("SELECT * FROM ").append(TABLENAME)
-					.append(" WHERE TEAM_ID=").append(teamId)
-					.append(" AND MORALE IS NOT NULL");
-			if (matchDate != null) sql.append(" AND FETCHEDDATE<'").append(matchDate).append("'");
-			sql.append(" ORDER BY HRF_ID DESC LIMIT 1");
-			var rs = adapter.executeQuery(sql.toString());
+			ResultSet rs;
+			if ( matchDate!=null){
+				rs = executePreparedSelect(getSelectBeforeStatement(), teamId, matchDate);
+			}
+			else {
+				rs = executePreparedSelect(getSelectTeamStatement(), teamId);
+			}
 			if (rs != null) {
 				rs.first();
 				var team = createNtTeamDetails(rs);
@@ -152,10 +158,14 @@ final class NtTeamTable extends AbstractTable {
 		return team;
 	}
 
+	@Override
+	protected PreparedStatement createSelectStatement(){
+		return createSelectStatement(" WHERE HRF_ID=?");
+	}
 	public List<NtTeamDetails> load(int hrfId) {
 		var ret = new ArrayList<NtTeamDetails>();
 		try {
-			var rs = adapter.executeQuery("SELECT * FROM " + TABLENAME + " WHERE HRF_ID=" + hrfId);
+			var rs = executePreparedSelect(hrfId);
 			if ( rs!=null) {
 				rs.beforeFirst();
 				while (rs.next()) {

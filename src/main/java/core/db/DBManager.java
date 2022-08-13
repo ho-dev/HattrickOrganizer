@@ -526,7 +526,7 @@ public class DBManager {
 	 */
 	public Player getSpielerAtDate(int spielerid, Timestamp time) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpielerAtDate(spielerid, time);
+				.getSpielerNearDate(spielerid, time);
 	}
 
 	/**
@@ -635,6 +635,11 @@ public class DBManager {
 				.getSpielplan(ligaId, saison);
 	}
 
+	public Spielplan getLatestSpielplan() {
+		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+				.getLatestSpielplan();
+	}
+
 	/**
 	 * speichert einen Spielplan mitsamt Paarungen
 	 *
@@ -651,9 +656,9 @@ public class DBManager {
 	 * @param whereSpalten the where spalten
 	 * @param whereValues  the where values
 	 */
-	public void deleteSpielplanTabelle(PreparedStatement preparedStatement, String[] whereValues) {
-		var table = (SpielplanTable)getTable(SpielerTable.TABLENAME);
-		table.delete(preparedStatement, whereValues);
+	public void deleteSpielplanTabelle(int saison, int ligaId) {
+		var table = (SpielplanTable)getTable(SpielplanTable.TABLENAME);
+		table.executePreparedDelete(saison, ligaId);
 	}
 
 	/**
@@ -904,138 +909,14 @@ public class DBManager {
 	// ------------------------------- SpielerNotizenTable
 	// -------------------------------------------------
 
-	/**
-	 * Gets manueller smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the manueller smilie
-	 */
-	public String getManuellerSmilie(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getManuellerSmilie(spielerId);
+	public void storePlayerNotes(Player.Notes notes) {
+		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).store(notes);
 	}
 
-	/**
-	 * Gets team info smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the team info smilie
-	 */
-	public String getTeamInfoSmilie(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getTeamInfoSmilie(spielerId);
+	public Player.Notes loadPlayerNotes(int playerId) {
+		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).load(playerId);
 	}
 
-	/**
-	 * Gets spieler notiz.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler notiz
-	 */
-	public String getSpielerNotiz(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerNotiz(spielerId);
-	}
-
-	/**
-	 * Gets spieler spielberechtigt.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler spielberechtigt
-	 */
-	public boolean getSpielerSpielberechtigt(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerSpielberechtigt(spielerId);
-	}
-
-	/**
-	 * Gets spieler user pos flag.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler user pos flag
-	 */
-	public byte getSpielerUserPosFlag(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerUserPosFlag(spielerId);
-	}
-
-	/**
-	 * Gets is spieler fired.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the is spieler fired
-	 */
-	public boolean getIsSpielerFired(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getIsSpielerFired(spielerId);
-	}
-
-	/**
-	 * Save manueller smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @param smilie    the smilie
-	 */
-	public void saveManuellerSmilie(int spielerId, String smilie) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveManuellerSmilie(spielerId, smilie);
-	}
-
-	/**
-	 * Save spieler notiz.
-	 *
-	 * @param spielerId the spieler id
-	 * @param notiz     the notiz
-	 */
-	public void saveSpielerNotiz(int spielerId, String notiz) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerNotiz(spielerId, notiz);
-	}
-
-	/**
-	 * Save spieler spielberechtigt.
-	 *
-	 * @param spielerId       the spieler id
-	 * @param spielberechtigt the spielberechtigt
-	 */
-	public void saveSpielerSpielberechtigt(int spielerId,
-			boolean spielberechtigt) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerSpielberechtigt(spielerId, spielberechtigt);
-	}
-
-	/**
-	 * Save spieler user pos flag.
-	 *
-	 * @param spielerId the spieler id
-	 * @param flag      the flag
-	 */
-	public void saveSpielerUserPosFlag(int spielerId, byte flag) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerUserPosFlag(spielerId, flag);
-	}
-
-	/**
-	 * Save team info smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @param smilie    the smilie
-	 */
-	public void saveTeamInfoSmilie(int spielerId, String smilie) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveTeamInfoSmilie(spielerId, smilie);
-	}
-
-	/**
-	 * Save is spieler fired.
-	 *
-	 * @param spielerId the spieler id
-	 * @param isFired   the is fired
-	 */
-	public void saveIsSpielerFired(int spielerId, boolean isFired) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveIsSpielerFired(spielerId, isFired);
-	}
 
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
@@ -1403,22 +1284,6 @@ public class DBManager {
 	}
 
 	/**
-	 * Returns an array with substitution belonging to given hrfId and name
-	 *
-	 * @param hrfId      The teamId for the team in question
-	 * @param lineupName The name of the lineup
-	 * @return the match substitutions by hrf
-	 */
-	public List<Substitution> getMatchSubstitutionsByHrf(int hrfId,
-			String lineupName) {
-		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.getMatchSubstitutionsByHrf(hrfId, lineupName);
-	}
-
-	// ------------------------------- TeamTable
-	// -------------------------------------------------
-
-	/**
 	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
 	 * Stimmung [1] = Selbstvertrauen
 	 *
@@ -1626,10 +1491,9 @@ public class DBManager {
 	 * @param whereSpalten the where spalten
 	 * @param whereValues  the where values
 	 */
-	public void deletePaarungTabelle(PreparedStatement preparedStatement, Object ... whereValues) {
+	public void deletePaarungTabelle(int saison, int ligaId) {
 		var table = getTable(PaarungTable.TABLENAME);
-		table.delete(preparedStatement, whereValues);
-
+		table.executePreparedDelete(saison, ligaId);
 	}
 
 	// ------------------------------- MatchDetailsTable
@@ -1957,86 +1821,6 @@ public class DBManager {
 		return spielerMatchCBItems;
 	}
 
-	private PreparedStatement deleteStadionStatement;
-	private PreparedStatement deleteHRFStatement;
-	private PreparedStatement deleteLigaStatement;
-	private PreparedStatement deleteVereinStatement;
-	private PreparedStatement deleteTeamStatement;
-	private PreparedStatement deleteEconomyStatement;
-	private PreparedStatement deleteBasicsStatement;
-	private PreparedStatement deleteSpielerStatement;
-	private PreparedStatement deleteSpielerSkillupStatement;
-	private PreparedStatement deleteXtraStatement;
-	private PreparedStatement deleteStaffStatement;
-
-	private final String[] whereHRF_ID = { "HRF_ID" };
-	private PreparedStatement getDeleteStadionStatement() {
-		if (deleteStadionStatement==null ){
-			deleteStadionStatement = getTable(StadionTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteStadionStatement;
-	}
-	private PreparedStatement getDeleteHRFStatement() {
-		if (deleteHRFStatement==null ){
-			deleteHRFStatement = getTable(HRFTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteHRFStatement;
-	}
-	private PreparedStatement getDeleteLigaStatement() {
-		if (deleteLigaStatement==null ){
-			deleteLigaStatement = getTable(LigaTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteLigaStatement;
-	}
-	private PreparedStatement getDeleteVereinStatement() {
-		if (deleteVereinStatement==null ){
-			deleteVereinStatement = getTable(VereinTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteVereinStatement;
-	}
-	private PreparedStatement getDeleteTeamStatement() {
-		if (deleteTeamStatement==null ){
-			deleteTeamStatement = getTable(TeamTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteTeamStatement;
-	}
-	private PreparedStatement getDeleteEconomyStatement() {
-		if (deleteEconomyStatement==null ){
-			deleteEconomyStatement = getTable(EconomyTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteEconomyStatement;
-	}
-	private PreparedStatement getDeleteBasicsStatement() {
-		if (deleteBasicsStatement==null ){
-			deleteBasicsStatement = getTable(BasicsTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteBasicsStatement;
-	}
-	private PreparedStatement getDeleteSpielerStatement() {
-		if (deleteSpielerStatement==null ){
-			deleteSpielerStatement = getTable(SpielplanTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteSpielerStatement;
-	}
-	private PreparedStatement getDeleteSpielerSkillupStatement() {
-		if (deleteSpielerSkillupStatement==null ){
-			deleteSpielerSkillupStatement = getTable(SpielerSkillupTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteSpielerSkillupStatement;
-	}
-	private PreparedStatement getDeleteXtraStatement() {
-		if (deleteXtraStatement==null ){
-			deleteXtraStatement = getTable(XtraDataTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteXtraStatement;
-	}
-	private PreparedStatement getDeleteStaffStatement() {
-		if (deleteStaffStatement==null ){
-			deleteStaffStatement = getTable(StaffTable.TABLENAME).createDeleteStatement(whereHRF_ID);
-		}
-		return deleteStaffStatement;
-	}
-
 
 	/**
 	 * Delete hrf.
@@ -2044,69 +1828,17 @@ public class DBManager {
 	 * @param hrfid the hrfid
 	 */
 	public void deleteHRF(int hrfid) {
-		getTable(StadionTable.TABLENAME).delete(getDeleteStadionStatement(), hrfid);
-		getTable(HRFTable.TABLENAME).delete(getDeleteHRFStatement(), hrfid);
-		getTable(LigaTable.TABLENAME).delete(getDeleteLigaStatement(), hrfid);
-		getTable(VereinTable.TABLENAME).delete(getDeleteVereinStatement(), hrfid);
-		getTable(TeamTable.TABLENAME).delete(getDeleteTeamStatement(), hrfid);
-		getTable(EconomyTable.TABLENAME).delete(getDeleteEconomyStatement(), hrfid);
-		getTable(BasicsTable.TABLENAME).delete(getDeleteBasicsStatement(), hrfid);
-		getTable(SpielerTable.TABLENAME).delete(getDeleteSpielerStatement(), hrfid);
-		getTable(SpielerSkillupTable.TABLENAME).delete(getDeleteSpielerSkillupStatement(), hrfid);
-		getTable(XtraDataTable.TABLENAME).delete(getDeleteXtraStatement(), hrfid);
-		getTable(StaffTable.TABLENAME).delete(getDeleteStaffStatement(), hrfid);
-	}
-
-	private PreparedStatement deleteMatchDetailsStatement;
-	private PreparedStatement deleteMatchHighlightsStatement;
-	private PreparedStatement deleteMatchLineupStatement;
-	private PreparedStatement deleteMatchLineupTeamStatement;
-
-	private PreparedStatement deleteMatchLineupPlayerStatement;
-	private PreparedStatement deleteMatchKurzInfoStatement;
-	private PreparedStatement deleteMatchSubstitutionStatement;
-	private final String[] whereMatchID = { "MatchTyp", "MatchID" };
-	private PreparedStatement getDeleteMatchDetailsStatement() {
-		if (deleteMatchDetailsStatement==null ){
-			deleteMatchDetailsStatement = getTable(MatchDetailsTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchDetailsStatement;
-	}
-	private PreparedStatement getDeleteMatchHighlightsStatement() {
-		if (deleteMatchHighlightsStatement==null ){
-			deleteMatchHighlightsStatement = getTable(MatchHighlightsTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchHighlightsStatement;
-	}
-	private PreparedStatement getDeleteMatchLineupStatement() {
-		if (deleteMatchLineupStatement==null ){
-			deleteMatchLineupStatement = getTable(MatchLineupTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchLineupStatement;
-	}
-	private PreparedStatement getDeleteMatchLineupTeamStatement() {
-		if (deleteMatchLineupTeamStatement==null ){
-			deleteMatchLineupTeamStatement = getTable(MatchLineupTeamTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchLineupTeamStatement;
-	}
-	private PreparedStatement getDeleteMatchLineupPlayerStatement() {
-		if (deleteMatchLineupPlayerStatement==null ){
-			deleteMatchLineupPlayerStatement = getTable(MatchLineupPlayerTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchLineupPlayerStatement;
-	}
-	private PreparedStatement getDeleteMatchKurzInfoStatement() {
-		if (deleteMatchKurzInfoStatement==null ){
-			deleteMatchKurzInfoStatement = getTable(MatchesKurzInfoTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchKurzInfoStatement;
-	}
-	private PreparedStatement getDeleteMatchSubstitutionStatement() {
-		if (deleteMatchSubstitutionStatement==null ){
-			deleteMatchSubstitutionStatement = getTable(MatchSubstitutionTable.TABLENAME).createDeleteStatement(whereMatchID);
-		}
-		return deleteMatchSubstitutionStatement;
+		getTable(StadionTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(HRFTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(LigaTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(VereinTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(TeamTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(EconomyTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(BasicsTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(SpielerTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(SpielerSkillupTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(XtraDataTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(StaffTable.TABLENAME).executePreparedDelete( hrfid);
 	}
 
 	/**
@@ -2115,13 +1847,13 @@ public class DBManager {
 	 * @param matchid The matchid. Must be larger than 0.
 	 */
 	public void deleteMatch(int matchType, int matchid) {
-		getTable(MatchDetailsTable.TABLENAME).delete(getDeleteMatchDetailsStatement(), matchType, matchid);
-		getTable(MatchHighlightsTable.TABLENAME).delete(getDeleteMatchHighlightsStatement(), matchType, matchid);
-		getTable(MatchLineupTable.TABLENAME).delete(getDeleteMatchLineupStatement(), matchType, matchid);
-		getTable(MatchLineupTeamTable.TABLENAME).delete(getDeleteMatchLineupTeamStatement(), matchType, matchid);
-		getTable(MatchLineupPlayerTable.TABLENAME).delete(getDeleteMatchLineupPlayerStatement(),matchType, matchid);
-		getTable(MatchesKurzInfoTable.TABLENAME).delete(getDeleteMatchKurzInfoStatement(),	matchType, matchid);
-		getTable(MatchSubstitutionTable.TABLENAME).delete(getDeleteMatchSubstitutionStatement(), matchType, matchid);
+		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(  matchType, matchid);
+		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(  matchType, matchid);
+		getTable(MatchLineupTable.TABLENAME).executePreparedDelete(  matchType, matchid);
+		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(  matchType, matchid);
+		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete( matchType, matchid);
+		getTable(MatchesKurzInfoTable.TABLENAME).executePreparedDelete( matchType, matchid);
+		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(  matchType, matchid);
 	}
 
 	/**
@@ -2605,8 +2337,8 @@ public class DBManager {
 	 * @param sourcesystem the sourcesystem
 	 * @return the list
 	 */
-	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
-		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
+	public List<MatchLineup> getYouthMatchLineups() {
+		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadYouthMatchLineups();
 	}
 
 	/**
@@ -2793,5 +2525,9 @@ public class DBManager {
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
+	}
+
+	public List<Player> loadPlayerHistory(int spielerId) {
+		return ((SpielerTable)getTable(SpielerTable.TABLENAME)).loadPlayerHistory(spielerId);
 	}
 }

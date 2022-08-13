@@ -8,6 +8,7 @@ import core.model.player.TrainerType;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -112,6 +113,10 @@ final class SpielerTable extends AbstractTable {
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE HRF_ID=? AND SPIELERID=?");
+	}
 	/**
 	 * saves one player to the DB
 	 *
@@ -120,126 +125,112 @@ final class SpielerTable extends AbstractTable {
 	 */
 
 	void saveSpieler(int hrfId, Player player, Timestamp date) {
-		final String[] awhereS = { "HRF_ID", "SpielerId" };
-		final String[] awhereV = { "" + hrfId, "" + player.getPlayerID()};
-		// Delete old values
-		delete(awhereS, awhereV);
-
-		//insert vorbereiten
-
-		String statement = "INSERT INTO " + getTableName() +
-				" ( GelbeKarten , SpielerID , ArrivalDate, FirstName , NickName, LastName , Age , AgeDays , " +
-				"Kondition , Form , Torwart , Verteidigung , Spielaufbau , Fluegel , " +
-				"Torschuss , Passpiel , Standards , SubTorwart , SubVerteidigung , " +
-				"SubSpielaufbau , SubFluegel , SubTorschuss , SubPasspiel , SubStandards , " +
-				"OffsetTorwart , OffsetVerteidigung , OffsetSpielaufbau , OffsetFluegel , " +
-				"OffsetTorschuss , OffsetPasspiel , OffsetStandards , iSpezialitaet , " +
-				"iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , " +
-				"Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , GoalsCurrentTeam , " +
-				"ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, " +
-				"PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, " +
-				"SubExperience, NationalTeamID, " +
-				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, LastMatch_PositionCode, LastMatch_PlayedMinutes, LastMatch_RatingEndOfGame, " +
-				"Statement, OwnerNotes, PlayerCategory, " +
-				"MotherclubId, MotherclubName, MatchesCurrentTeam" +
-		") VALUES(" +
-				player.getCards() + "," +
-				player.getPlayerID() + "," +
-				"'" + DBManager.insertEscapeSequences(player.getArrivalDate()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getFirstName()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getNickName()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getLastName()) + "'," +
-				player.getAlter() + "," +
-				player.getAgeDays() + "," +
-				player.getStamina() + "," +
-				player.getForm() + "," +
-				player.getGKskill() + "," +
-				player.getDEFskill() + "," +
-				player.getPMskill() + "," +
-				player.getWIskill() + "," +
-				player.getSCskill() + "," +
-				player.getPSskill() + "," +
-				player.getSPskill() + "," +
-				player.getSub4SkillAccurate(PlayerSkill.KEEPER) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.DEFENDING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.WINGER) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.SCORING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.PASSING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES) + "," +
+		executePreparedDelete(hrfId, player.getPlayerID());
+		executePreparedInsert(
+				hrfId,
+				date,
+				player.getCards(),
+				player.getPlayerID(),
+				player.getFirstName(),
+				player.getNickName(),
+				player.getLastName(),
+				player.getAlter(),
+				player.getStamina(),
+				player.getForm(),
+				player.getGKskill(),
+				player.getDEFskill(),
+				player.getPMskill(),
+				player.getWIskill(),
+				player.getSCskill(),
+				player.getPSskill(),
+				player.getSPskill(),
+				player.getSub4SkillAccurate(PlayerSkill.KEEPER),
+				player.getSub4SkillAccurate(PlayerSkill.DEFENDING),
+				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING),
+				player.getSub4SkillAccurate(PlayerSkill.WINGER),
+				player.getSub4SkillAccurate(PlayerSkill.SCORING),
+				player.getSub4SkillAccurate(PlayerSkill.PASSING),
+				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES),
 				// Training offsets below
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				player.getPlayerSpecialty() + "," +
-				player.getCharakter() + "," +
-				player.getAnsehen() + "," +
-				player.getAgressivitaet() + "," +
-				player.getLeadership() + "," +
-				player.getExperience() + "," +
-				player.getSalary() + "," +
-				player.getBonus() + "," +
-				player.getNationalityAsInt() + "," +
-				player.getSaveMarktwert() + "," +
-				player.getInjuryWeeks() + "," +
-				player.getToreFreund() + "," +
-				player.getSeasonSeriesGoal() + "," +
-				player.getSeasonCupGoal() + "," +
-				player.getGoalsCurrentTeam() + "," +
-				player.getAllOfficialGoals() + "," +
-				player.getHattrick() + "," +
-				player.getRating() + "," +
-				TrainerType.toInt(player.getTrainerTyp()) + "," +
-				player.getTrainerSkill() + "," +
-				hrfId + "," +
-				"'" + date.toString() + "'," +
-				player.getTrikotnummer() + "," +
-				player.getTransferlisted() + "," +
-				player.getLaenderspiele() + "," +
-				player.getU20Laenderspiele() + "," +
-				player.hasTrainingBlock() + "," +
-				player.getLoyalty() + "," +
-				player.isHomeGrown() + "," +
-				player.getSubExperience() + "," +
-				player.getNationalTeamID() + "," +
-				"'" + player.getLastMatchDate() + "'," +
-				player.getLastMatchRating() + "," +
-				player.getLastMatchId() + "," +
-				player.getLastMatchType().getId()  + "," +
-				player.getLastMatchPosition() + "," +
-				player.getLastMatchMinutes() + "," +
-				player.getLastMatchRatingEndOfGame() + ",'"
-				+ player.getPlayerStatement() + "', '"
-				+ player.getOwnerNotes() + "', "
-				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null) + ", "
-				+ player.getMotherclubId() + ", '"
-				+ DBManager.insertEscapeSequences(player.getMotherclubName() ) + "', "
-				+ player.getMatchesCurrentTeam()
-				+ ")";
-		adapter.executeUpdate(statement);
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				player.getPlayerSpecialty(),
+				player.getCharakter(),
+				player.getAnsehen(),
+				player.getAgressivitaet(),
+				player.getLeadership(),
+				player.getExperience(),
+				player.getSalary(),
+				player.getBonus(),
+				player.getNationalityAsInt(),
+				player.getMarktwert(),
+				player.getInjuryWeeks(),
+				player.getToreFreund(),
+				player.getSeasonSeriesGoal(),
+				player.getSeasonCupGoal(),
+				player.getAllOfficialGoals(),
+				player.getHattrick(),
+				player.getRating(),
+				TrainerType.toInt(player.getTrainerTyp()),
+				player.getTrainerSkill(),
+				player.getTrikotnummer(),
+				player.getTransferlisted(),
+				player.getLaenderspiele(),
+				player.getU20Laenderspiele(),
+				player.getAgeDays(),
+				player.hasTrainingBlock(),
+				player.getLoyalty(),
+				player.isHomeGrown(),
+				player.getNationalTeamID(),
+				player.getSubExperience(),
+				player.getLastMatchDate(),
+				player.getLastMatchRating(),
+				player.getLastMatchId(),
+				player.getLastMatchType().getId(),
+				player.getArrivalDate(),
+				player.getGoalsCurrentTeam(),
+				(player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null),
+				player.getPlayerStatement(),
+				player.getOwnerNotes(),
+				player.getLastMatchMinutes(),
+				player.getLastMatchPosition(),
+				player.getLastMatchRatingEndOfGame(),
+				player.getMotherclubId(),
+				player.getMotherclubName(),
+				player.getMatchesCurrentTeam()
+		);
+	}
+
+	private PreparedStatement deletePlayerStatement;
+	private PreparedStatement getDeletePlayerStatement(){
+		if(deletePlayerStatement==null){
+			deletePlayerStatement=createDeleteStatement("WHERE HRF_ID=?");
+		}
+		return deletePlayerStatement;
 	}
 
 	/**
 	 * Saves the players in the <code>spieler</code> list.
 	 */
 	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
 		if (spieler != null) {
 			// Delete old values
-			delete(awhereS, awhereV);
-
+			adapter.executePreparedUpdate(getDeletePlayerStatement(), hrfId);
 			for (Player p: spieler) {
 				saveSpieler(hrfId, p, date);
 			}
 		}
 	}
 
+	@Override
+	protected PreparedStatement createSelectStatement(){
+		return createSelectStatement(" WHERE HRF_ID =? AND SpielerId=?");
+	}
 	/**
 	 * get a player from a specific HRF
 	 *
@@ -250,28 +241,22 @@ final class SpielerTable extends AbstractTable {
 	 * @return player
 	 */
 	Player getSpielerFromHrf(int hrfID, int playerId) {
-		ResultSet rs;
-		Player player;
-		String sql;
-
-		sql = "SELECT * from "+getTableName()+" WHERE HRF_ID = " + hrfID + " AND SpielerId="+playerId;
-		rs = adapter.executeQuery(sql);
+		var rs = executePreparedSelect(hrfID, playerId);
 
 		try {
 			if (rs != null) {
 				rs.beforeFirst();
 
 				if (rs.next()) {
-					player = createObject(rs);
-					return player;
+					return  createObject(rs);
 				}
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerFromHrf: " + e);
 		}
-
 		return null;
 	}
+
 
 	/**
 	 * lädt die Player zum angegeben HRF file ein
@@ -279,12 +264,11 @@ final class SpielerTable extends AbstractTable {
 	List<Player> getSpieler(int hrfID) {
 		ResultSet rs;
 		Player player;
-		String sql;
+
 		final ArrayList<Player> ret = new ArrayList<>();
 		if ( hrfID > -1) {
 
-			sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
-			rs = adapter.executeQuery(sql);
+			rs = getSelectByHrfID(hrfID);
 
 			try {
 				if (rs != null) {
@@ -304,6 +288,18 @@ final class SpielerTable extends AbstractTable {
 		return ret;
 	}
 
+	private PreparedStatement getAllSpielerStatement;
+	private PreparedStatement getGetAllSpielerStatement(){
+		if ( getAllSpielerStatement==null){
+			getAllSpielerStatement=createSelectStatement(" t inner join (" +
+					"    select SPIELERID, max(DATUM) as MaxDate from " +
+					getTableName() +
+					"    group by SPIELERID" +
+					") tm on t.SPIELERID = tm.SPIELERID and t.DATUM = tm.MaxDate");
+		}
+		return getAllSpielerStatement;
+	}
+
 	/**
 	 * gibt alle Player zurück, auch ehemalige
 	 */
@@ -312,38 +308,29 @@ final class SpielerTable extends AbstractTable {
 		Player player;
 		String sql;
 		final Vector<Player> ret = new Vector<>();
-
-		sql = "SELECT DISTINCT SpielerID from "+getTableName()+"";
-		rs = adapter.executeQuery(sql);
-
 		try {
+			rs = adapter.executePreparedQuery(getDeletePlayerStatement());
 			if (rs != null) {
-				final Vector<Integer> idVector = new Vector<>();
 				rs.beforeFirst();
-
 				while (rs.next()) {
-					idVector.add(rs.getInt("SpielerID"));
-				}
-
-				for (Integer integer : idVector) {
-					sql = "SELECT * from " + getTableName() + " WHERE SpielerID=" + integer + " ORDER BY Datum DESC";
-					rs = adapter.executeQuery(sql);
-
-					if (rs != null && rs.first()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), player.getSpielerID () );
-						ret.add(player);
-					}
+					player = createObject(rs);
+					ret.add(player);
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
 		}
 
 		return ret;
 	}
 
+	private PreparedStatement getLetzteBewertung4SpielerStatement;
+	private PreparedStatement getGetLetzteBewertung4SpielerStatement(){
+		if(getLetzteBewertung4SpielerStatement==null){
+			getLetzteBewertung4SpielerStatement=adapter.createPreparedStatement("SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1");
+		}
+		return getLetzteBewertung4SpielerStatement;
+	}
 
 	/**
 	 * Gibt die letzte Bewertung für den Player zurück // HRF
@@ -352,23 +339,35 @@ final class SpielerTable extends AbstractTable {
 		int bewertung = 0;
 
 		try {
-			final String sql = "SELECT Bewertung from "+getTableName()+" WHERE SpielerID=" + spielerid + " AND Bewertung>0 ORDER BY Datum DESC";
-			final ResultSet rs = adapter.executeQuery(sql);
-
+			final ResultSet rs = adapter.executePreparedQuery(getGetLetzteBewertung4SpielerStatement(), spielerid);
 			if ((rs != null) && rs.first()) {
 				bewertung = rs.getInt("Bewertung");
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + spielerid + " : " + e);
 		}
-
 		return bewertung;
+	}
+
+	private PreparedStatement getSpielerNearDateBeforeStatement;
+	private PreparedStatement getSpielerNearDateAfterStatement;
+	private PreparedStatement getGetSpielerNearDateBeforeStatement(){
+		if ( getSpielerNearDateBeforeStatement==null){
+			getSpielerNearDateBeforeStatement=createSelectStatement("WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
+		}
+		return getSpielerNearDateBeforeStatement;
+	}
+	private PreparedStatement getGetSpielerNearDateAfterStatement() {
+		if (getSpielerNearDateAfterStatement == null) {
+			getSpielerNearDateAfterStatement = createSelectStatement("WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
+		}
+		return getSpielerNearDateAfterStatement;
 	}
 
 	/**
 	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
 	 */
-	Player getSpielerAtDate(int spielerid, Timestamp time) {
+	Player getSpielerNearDate(int spielerid, Timestamp time) {
 		ResultSet rs;
 		Player player = null;
 		String sql;
@@ -383,18 +382,12 @@ final class SpielerTable extends AbstractTable {
 		//--- Zuerst x Tage vor dem Datum suchen -------------------------------
 		//x Tage vorher
 		final Timestamp time2 = new Timestamp(time.getTime() - spanne);
-
-		//HOLogger.instance().log(getClass(),"Time : " + time + " : vor 14 Tage : " + time2 );
-		sql = "SELECT * from "+getTableName()+" WHERE Datum<='" + time + "' AND Datum>='" + time2 + "' AND SpielerID=" + spielerid + " ORDER BY Datum DESC";
-		rs = adapter.executeQuery(sql);
+		rs = adapter.executePreparedQuery(getGetSpielerNearDateBeforeStatement(), time, time2, spielerid);
 
 		try {
 			if (rs != null) {
 				if (rs.first()) {
-					player = createObject(rs);
-
-					//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
-				}
+					player = createObject(rs);}
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"1. Player nicht gefunden für Datum " + time + " und SpielerID " + spielerid);
@@ -403,14 +396,12 @@ final class SpielerTable extends AbstractTable {
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
 		if (player == null) {
 			sql = "SELECT * from "+getTableName()+" WHERE Datum>'" + time + "' AND SpielerID=" + spielerid + " ORDER BY Datum";
-			rs = adapter.executeQuery(sql);
+			rs = adapter.executePreparedQuery(getGetSpielerNearDateAfterStatement(), time, spielerid);
 
 			try {
 				if (rs != null) {
 					if (rs.first()) {
 						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 					}
 				}
 			} catch (Exception e) {
@@ -422,17 +413,12 @@ final class SpielerTable extends AbstractTable {
 		if (player == null) {
 			//x Tage vorher
 			final Timestamp time3 = new Timestamp(time2.getTime() - (spanne * 2));
-
-			//HOLogger.instance().log(getClass(),"Time : " + time + " : vor 14 Tage : " + time2 );
-			sql = "SELECT * from "+getTableName()+" WHERE Datum<='" + time2 + "' AND Datum>='" + time3 + "' AND SpielerID=" + spielerid + " ORDER BY Datum DESC";
-			rs = adapter.executeQuery(sql);
+			rs = adapter.executePreparedQuery(getGetSpielerNearDateBeforeStatement(), time2, time3, spielerid);
 
 			try {
 				if (rs != null) {
 					if (rs.first()) {
 						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
 					}
 				}
 			} catch (Exception e) {
@@ -445,25 +431,27 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
+	private PreparedStatement getSpielerFirstHRFStatement;
+	private PreparedStatement getGetSpielerFirstHRFStatement(){
+		if(getSpielerFirstHRFStatement==null){
+			getSpielerFirstHRFStatement=createSelectStatement(" WHERE SpielerID=? ORDER BY Datum ASC LIMIT 1");
+		}
+		return getSpielerFirstHRFStatement;
+	}
 	/**
 	 * Gibt einen Player zurück aus dem ersten HRF
 	 */
 	Player getSpielerFirstHRF(int spielerid) {
 		ResultSet rs;
 		Player player = null;
-		String sql;
-
-		sql = "SELECT * from "+getTableName()+" WHERE SpielerID=" + spielerid + " ORDER BY Datum ASC";
-		rs = adapter.executeQuery(sql);
+		rs = adapter.executePreparedQuery(getGetSpielerFirstHRFStatement(), spielerid);
 
 		try {
 			if (rs != null) {
 				if (rs.first()) {
 					player = createObject(rs);
-
 					//Info, da der Player für den Vergleich in der Spielerübersicht benutzt wird
 					player.setOld(true);
-//					HOLogger.instance().log(getClass(),"Player " + player.getName() + " vom " + rs.getTimestamp("Datum"));
 				}
 			}
 		} catch (Exception e) {
@@ -473,36 +461,16 @@ final class SpielerTable extends AbstractTable {
 		return player;
 	}
 
-	/**
-	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
-	 */
-	Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
-		Timestamp time = null;
-
-		try {
-			final String sql = "SELECT Datum from "+getTableName()+" WHERE SpielerID=" + spielerid + " ORDER BY Datum";
-			final ResultSet rs = adapter.executeQuery(sql);
-
-			if ((rs != null) && rs.first()) {
-				time = rs.getTimestamp("Datum");
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + spielerid + " : " + e);
+	private PreparedStatement getTrainerTypeStatement;
+	private PreparedStatement getGetTrainerTypeStatement() {
+		if (getTrainerTypeStatement == null) {
+			getTrainerTypeStatement=createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
 		}
-
-		return time;
+		return getTrainerTypeStatement;
 	}
-
-	/**
-	 * Gibt einen Player zurï¿½ck mit den Daten kurz vor dem Timestamp
-	 */
 	int getTrainerType(int hrfID) {
 		ResultSet rs;
-		String sql;
-
-		sql = "SELECT TrainerTyp FROM "+getTableName()+" WHERE HRF_ID=" + hrfID + " AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc";
-		rs = adapter.executeQuery(sql);
-
+		rs = adapter.executePreparedQuery(getGetTrainerTypeStatement(), hrfID);
 		try {
 			if (rs != null) {
 				if (rs.first()) {
@@ -521,6 +489,7 @@ final class SpielerTable extends AbstractTable {
     private Player createObject(ResultSet rs) {
     	Player player = new Player();
         try {
+			player.setHrfId(rs.getInt("HRF_ID"));
         	player.setPlayerID(rs.getInt("SpielerID"));
             player.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
 			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
@@ -617,4 +586,27 @@ final class SpielerTable extends AbstractTable {
         }
         return player;
     }
+
+	private PreparedStatement loadPlayerHistoryStatement;
+	private PreparedStatement getLoadPlayerHistoryStatement(){
+		if(loadPlayerHistoryStatement==null){
+			loadPlayerHistoryStatement=createSelectStatement("WHERE SpielerID=? Order By Datum ASC");
+		}
+		return loadPlayerHistoryStatement;
+	}
+	public List<Player> loadPlayerHistory(int spielerId) {
+		var ret = new ArrayList<Player>();
+		try {
+			var rs = executePreparedSelect(getLoadPlayerHistoryStatement(), spielerId);
+			if (rs != null) {
+				if (rs.first()) {
+					var player = createObject(rs);
+					ret.add(player);
+				}
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),e);
+		}
+		return ret;
+	}
 }

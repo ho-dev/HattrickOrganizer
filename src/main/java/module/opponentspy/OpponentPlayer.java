@@ -12,8 +12,12 @@ public class OpponentPlayer extends Player {
 	private int position;
 	private List<PlayedPosition> playedPositions;
 
-	
-	public int getPosition() {
+    public OpponentPlayer() {
+        super(properties, hrfdate, hoModel.getID());
+    }
+
+
+    public int getPosition() {
 		return position;
 	}
 	

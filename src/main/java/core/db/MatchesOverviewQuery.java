@@ -9,9 +9,11 @@ import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static core.model.match.MatchEvent.isGoalEvent;
@@ -61,7 +63,7 @@ class MatchesOverviewQuery  {
 		sql.append(" OR (GASTID = ?").append(whereAwayClause);
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
-		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), teamId, teamId);
+		rs = DBManager.instance().getAdapter().executePreparedQuery(getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			if(rs.next()){
 				tmp = rs.getInt("C");
@@ -70,6 +72,16 @@ class MatchesOverviewQuery  {
 			HOLogger.instance().log(MatchesOverviewQuery.class, e);
 		}
 		return tmp;
+	}
+
+	private static HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
+	private static PreparedStatement getPreparedStatement(String sql) {
+		PreparedStatement ret = preparedStatements.get(sql);
+		if ( ret == null){
+			ret = DBManager.instance().getAdapter().createPreparedStatement(sql);
+			preparedStatements.put(sql, ret);
+		}
+		return ret;
 	}
 
 	static int getChangeGameStat(int teamId, int statistic){
@@ -92,7 +104,7 @@ class MatchesOverviewQuery  {
 		}
 		sql.append("AND (MK_MatchTyp=2 OR MK_MatchTyp=1 OR MK_MatchTyp=3 )");
 
-		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), teamId, teamId);
+		rs = DBManager.instance().getAdapter().executePreparedQuery(getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			for (int i = 0; rs.next(); i++) {
 				tmp=i;
@@ -103,22 +115,6 @@ class MatchesOverviewQuery  {
 		return tmp;
 
 	}
-
-
-	private static String MatchEventsIDListToString(List<MatchEvent.MatchEventID> matchEvents){
-		String res = "";
-		for (MatchEvent.MatchEventID meID : matchEvents)
-		{
-			res += meID.getValue() + ", ";
-		}
-		return res.substring(0, res.length() - 2);
-	}
-
-	/**
-	 * SELECT TYP, COUNT(*)  FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID
-WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING TYP in (1,2) ORDER BY TYP
-	 * @return
-	 */
 
 	public static MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType, MatchLocation matchLocation){
 
@@ -155,7 +151,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
-		rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString(), params);
+		rs = DBManager.instance().getAdapter().executePreparedQuery(getPreparedStatement(sql.toString()), params);
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
@@ -285,7 +281,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(" where 1=1 ");
 		sql.append(whereClause);
 		try{
-			ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString());
+			ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(getPreparedStatement(sql.toString()));
 
 			while(rs.next()){
 				String[] fArray = {"0","",""};
@@ -352,7 +348,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(whereClause);
 		sql.append(")");
 		try{
-		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(sql.toString());
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(getPreparedStatement(sql.toString()));
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}

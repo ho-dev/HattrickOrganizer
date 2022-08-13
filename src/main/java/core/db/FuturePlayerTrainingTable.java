@@ -74,21 +74,17 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         return new FuturePlayerTraining(playerid, prio, from, to);
     }
 
-    private PreparedStatement deleteStatement;
-    private PreparedStatement getDeleteStatement(){
-        if ( deleteStatement==null){
-            final String[] where = {"playerId"};
-            deleteStatement=createDeleteStatement(where);
-        }
-        return deleteStatement;
+    @Override
+    protected PreparedStatement createDeleteStatement(){
+        return createDeleteStatement("where playerId=?");
     }
     public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
         try {
-            delete(getDeleteStatement(), spielerID);
+            executePreparedDelete(spielerID);
             for (var t : futurePlayerTrainings) {
                 var to = t.getTo();
                 var from = t.getFrom();
-                adapter.executePreparedUpdate(getInsertStatement(),
+                executePreparedInsert(
                         t.getPlayerId(),
                         from.toHTWeek().week,
                         from.toHTWeek().season,

@@ -6,10 +6,7 @@ import core.model.match.Matchdetails;
 import core.model.match.SourceSystem;
 import core.util.HOLogger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -53,20 +50,19 @@ final class MatchHighlightsTable extends AbstractTable {
 		};
 	}
 
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	}
+
 	void storeMatchHighlights(Matchdetails details) {
 		if (details != null) {
-
-			final String[] where = {"MatchTyp", "MatchID"};
-			final String[] werte = {"" + details.getMatchType().getId(), "" + details.getMatchID()};
-
-			// Remove existing entry
-			delete(where, werte);
-
-			var sql = createInsertStatement();
 			try {
+				// Remove existing entry
+				executePreparedDelete(details.getMatchType().getId(), details.getMatchID());
 				final ArrayList<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
 				for (final MatchEvent highlight : vHighlights) {
-					adapter.executePreparedUpdate(sql,
+					executePreparedInsert(
 							details.getMatchID(),
 							details.getMatchType().getId(),
 							highlight.getM_iMatchEventIndex(),
@@ -93,6 +89,11 @@ final class MatchHighlightsTable extends AbstractTable {
 		}
 	}
 
+	@Override
+	protected PreparedStatement createSelectStatement(){
+		return createSelectStatement("WHERE MatchTyp=? AND MatchId=? ORDER BY EVENT_INDEX, Minute");
+	}
+
 	/**
 	 * @param matchId the match id
 	 * @return the match highlights
@@ -100,8 +101,7 @@ final class MatchHighlightsTable extends AbstractTable {
 	ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		try {
 			final ArrayList<MatchEvent> vMatchHighlights = new ArrayList<>();
-			String sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp=? AND MatchId=? ORDER BY EVENT_INDEX, Minute";
-			ResultSet rs = adapter.executePreparedQuery(sql, iMatchType, matchId);
+			ResultSet rs = executePreparedSelect(iMatchType, matchId);
 			rs.beforeFirst();
 			while (rs.next()) {
 				vMatchHighlights.add(createObject(rs));
@@ -134,14 +134,23 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
+	private PreparedStatement deleteYouthMatchHighlightsBeforeStatement;
+	private PreparedStatement getDeleteYouthMatchHighlightsBeforeStatement(){
+		if ( deleteYouthMatchHighlightsBeforeStatement==null){
+			var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
+			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+			deleteYouthMatchHighlightsBeforeStatement=adapter.createPreparedStatement(
+					"DELETE FROM " +
+					getTableName() +
+					" WHERE MatchTyp IN (" +
+					inValues +
+					") AND MatchDate IS NOT NULL AND MatchDate<?");
+		}
+		return deleteYouthMatchHighlightsBeforeStatement;
+	}
 	public void deleteYouthMatchHighlightsBefore(Timestamp before) {
-		var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
-		var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		var sql = "DELETE FROM " +
-				getTableName() +
-				" WHERE MatchTyp IN (" + inValues + ") AND MatchDate IS NOT NULL AND MatchDate<?";
 		try {
-			adapter.executePreparedUpdate(sql, before);
+			adapter.executePreparedUpdate(getDeleteYouthMatchHighlightsBeforeStatement(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

@@ -351,6 +351,7 @@ public class Player {
     private Integer motherclubId;
     private String motherclubName;
     private Integer matchesCurrentTeam;
+    private int hrf_id;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -372,9 +373,10 @@ public class Player {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, HODateTime hrfdate) {
+    public Player(java.util.Properties properties, HODateTime hrfdate, int hrf_id) {
         // Separate first, nick and last names are available. Utilize them?
 
+        this.hrf_id=hrf_id;
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
@@ -921,7 +923,7 @@ public class Player {
      */
     public byte getIdealPosition() {
         //in case player best position is forced by user
-        final byte flag = getUserPosFlag();
+        final int flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
             if (idealPos == IMatchRoleID.UNKNOWN) {
@@ -943,7 +945,7 @@ public class Player {
             return idealPos;
         }
 
-        return flag;
+        return (byte)flag;
     }
 
     /**
@@ -1062,12 +1064,8 @@ public class Player {
      * @param manuellerSmilie New value of property m_sManuellerSmilie.
      */
     public void setManuellerSmilie(java.lang.String manuellerSmilie) {
-        if (manuellerSmilie == null) {
-            manuellerSmilie = "";
-        }
-
-        m_sManuellerSmilie = manuellerSmilie;
-        DBManager.instance().saveManuellerSmilie(m_iSpielerID, manuellerSmilie);
+        getNotes().setManuelSmilie(manuellerSmilie);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
@@ -1076,17 +1074,7 @@ public class Player {
      * @return Value of property m_sManuellerSmilie.
      */
     public java.lang.String getInfoSmiley() {
-        if (m_sManuellerSmilie == null) {
-            m_sManuellerSmilie = DBManager.instance().getManuellerSmilie(m_iSpielerID);
-
-            //Steht null in der DB?
-            if (m_sManuellerSmilie == null) {
-                m_sManuellerSmilie = "";
-            }
-        }
-
-        //database.DBZugriff.instance ().getManuellerSmilie( m_iSpielerID );
-        return m_sManuellerSmilie;
+        return getNotes().getManuelSmilie();
     }
 
     /**
@@ -1232,7 +1220,7 @@ public class Player {
     /**
      * Zum speichern! Die Reduzierung des Marktwerts auf TSI wird rückgängig gemacht
      */
-    public int getSaveMarktwert() {
+    public int getMarktwert() {
         if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
             //Echter Marktwert
             return m_iTSI * 1000;
@@ -1320,21 +1308,15 @@ public class Player {
      * set whether or not that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        m_bCanBeSelectedByAssistant = flag;
-        DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,  flag);
+        getNotes().setEligibleToPlay(flag);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
      * get whether or not that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
-        //Only check if not authorized to play: Reduced access!
-        if (m_bCanBeSelectedByAssistant == null) {
-            m_bCanBeSelectedByAssistant = DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID);
-        }
-
-        return m_bCanBeSelectedByAssistant;
-
+        return getNotes().isEligibleToPlay();
     }
 
     /**
@@ -1433,12 +1415,8 @@ public class Player {
      * @param teamInfoSmilie New value of property m_sTeamInfoSmilie.
      */
     public void setTeamInfoSmilie(String teamInfoSmilie) {
-        if (teamInfoSmilie == null) {
-            teamInfoSmilie = "";
-        }
-
-        m_sTeamInfoSmilie = teamInfoSmilie;
-        DBManager.instance().saveTeamInfoSmilie(m_iSpielerID, teamInfoSmilie);
+        getNotes().setTeamInfoSmilie(teamInfoSmilie);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
@@ -1447,16 +1425,8 @@ public class Player {
      * @return Value of property m_sTeamInfoSmilie.
      */
     public String getTeamGroup() {
-        if (m_sTeamInfoSmilie == null) {
-            m_sTeamInfoSmilie = DBManager.instance().getTeamInfoSmilie(m_iSpielerID);
-
-            //Steht null in der DB?
-            if (m_sTeamInfoSmilie == null) {
-                m_sTeamInfoSmilie = "";
-            }
-        }
-
-        return m_sTeamInfoSmilie.replaceAll("\\.png$", "");
+        var ret = getNotes().getTeamInfoSmilie();
+        return ret.replaceAll("\\.png$", "");
     }
 
     /**
@@ -1714,22 +1684,100 @@ public class Player {
         return m_iU20Laenderspiele;
     }
 
+    public void setHrfId(int hrf_id) {
+        this.hrf_id=hrf_id;
+    }
+
+    public int getHrfId() {
+        return this.hrf_id;
+    }
+
+    public static class Notes{
+
+        private int playerId;
+
+        public int getUserPos() {
+            return userPos;
+        }
+
+        private int userPos = IMatchRoleID.UNKNOWN;
+
+        public String getManuelSmilie() {
+            return manuelSmilie;
+        }
+
+        public String getNote() {
+            return note;
+        }
+
+        public boolean isEligibleToPlay() {
+            return eligibleToPlay;
+        }
+
+        public String getTeamInfoSmilie() {
+            return teamInfoSmilie;
+        }
+
+        public boolean isFired() {
+            return isFired;
+        }
+
+        private String manuelSmilie="";
+        private String note="";
+        private boolean eligibleToPlay=true;
+        private String teamInfoSmilie="";
+        private boolean isFired=false;
+
+        public void setPlayerId(int playerId) {
+            this.playerId=playerId;
+        }
+
+        public void setNote(String note) {
+            this.note=note;
+        }
+
+        public void setEligibleToPlay(boolean spielberechtigt) {
+            this.eligibleToPlay=spielberechtigt;
+        }
+
+        public void setTeamInfoSmilie(String teamInfoSmilie) {
+            this.teamInfoSmilie=teamInfoSmilie;
+        }
+
+        public void setManuelSmilie(String manuellerSmilie) {
+            this.manuelSmilie=manuellerSmilie;
+        }
+
+        public void setUserPos(int userPos) {
+            this.userPos=userPos;
+        }
+
+        public void setIsFired(boolean isFired) {
+            this.isFired=isFired;
+        }
+
+        public int getPlayerId() {
+            return this.playerId;
+        }
+    }
+    private Notes notes;
+    private Notes getNotes(){
+        if ( notes==null){
+            notes = DBManager.instance().loadPlayerNotes(this.getPlayerID());
+        }
+        return notes;
+    }
     public void setUserPosFlag(byte flag) {
-        m_bUserPosFlag = flag;
-        DBManager.instance().saveSpielerUserPosFlag(m_iSpielerID, m_bUserPosFlag);
+        getNotes().setUserPos(flag);
+        DBManager.instance().storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
     }
 
     /**
      * liefert User Notiz zum Player
      */
-    public byte getUserPosFlag() {
-        if (m_bUserPosFlag < MatchRoleID.UNKNOWN) {
-            m_bUserPosFlag = DBManager.instance().getSpielerUserPosFlag(m_iSpielerID);
-        }
-
-        //database.DBZugriff.instance ().getSpielerNotiz ( m_iSpielerID );
-        return m_bUserPosFlag;
+    public int getUserPosFlag() {
+        return  getNotes().getUserPos();
     }
 
     /**
@@ -2369,6 +2417,7 @@ public class Player {
 
     private Player CloneWithoutSubskills() {
         var ret = new Player();
+        ret.setHrfId(this.hrf_id);
         ret.copySkills(this);
         ret.setPlayerID(getPlayerID());
         ret.setAge(getAlter());

@@ -177,7 +177,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         if (actionEvent.getSource().equals(jbApply)) {
             copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
-            final core.model.player.Player tempPlayer = new core.model.player.Player();
+            final core.model.player.Player tempPlayer = new core.model.player.Player(properties, hrfdate, hoModel.getID());
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerID(getNextTempSpielerID());
             if (jtfName.getText().trim().equals("")) {
@@ -349,7 +349,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      * Set labels to the new values
      */
     private void setLabels() {
-        final core.model.player.Player tempPlayer = new core.model.player.Player();
+        final core.model.player.Player tempPlayer = new core.model.player.Player(properties, hrfdate, hoModel.getID());
         tempPlayer.setPlayerSpecialty(((CBItem)jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setExperience(((CBItem)jcbExperience.getSelectedItem()).getId());
         tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());

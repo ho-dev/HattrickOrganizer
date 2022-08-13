@@ -44,13 +44,17 @@ final class BasicsTable extends AbstractTable {
 		};
 	}
 
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE HRF_ID=?");
+	}
 	/**
 	 * save Basics
 	 */
 	void saveBasics(int hrfId, core.model.misc.Basics basics) {
 		if (basics != null) {
-			delete(getDeleteStatement(), hrfId);
-			adapter.executePreparedUpdate(getInsertStatement(),
+			executePreparedDelete(hrfId);
+			executePreparedInsert(
 					hrfId,
 					basics.getManager(),
 					basics.getTeamId(),
@@ -68,15 +72,6 @@ final class BasicsTable extends AbstractTable {
 					basics.getYouthTeamId()
 			);
 		}
-	}
-
-	private PreparedStatement deleteStatement;
-	private PreparedStatement getDeleteStatement() {
-		if ( deleteStatement == null){
-			final String[] whereS = {"HRF_ID"};
-			deleteStatement=createDeleteStatement(whereS);
-		}
-		return deleteStatement;
 	}
 
 	/**

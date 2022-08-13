@@ -578,7 +578,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      * Called whenever value changes. Positions are recalculated
      */
     private void spielervalueChanged() {
-        final Player tempPlayer = new Player();
+        final Player tempPlayer = new Player(properties, hrfdate, hoModel.getID());
         tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
 		tempPlayer.setLeadership(((CBItem) jcbLeadership.getSelectedItem()).getId());

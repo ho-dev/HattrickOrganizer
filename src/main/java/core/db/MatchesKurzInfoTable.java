@@ -76,23 +76,20 @@ final class MatchesKurzInfoTable extends AbstractTable {
         };
     }
 
-	private PreparedStatement deleteStatement;
-	private PreparedStatement getDeleteStatement(){
-		if ( deleteStatement==null){
-			final String[] where = { "MATCHTYP", "MatchID"  };
-			deleteStatement=createDeleteStatement(where);
-		}
-		return deleteStatement;
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
 	}
+
 	/**
 	 * Saves matches into storeMatchKurzInfo table
 	 */
 	void storeMatchKurzInfos(List<MatchKurzInfo> matches) {
 		if ( matches == null)return;
 		for ( var match : matches){
-			delete(getDeleteStatement(), match.getMatchType().getId(), match.getMatchID());
 			try {
-				adapter.executePreparedUpdate(getInsertStatement(),
+				executePreparedDelete(match.getMatchType().getId(), match.getMatchID());
+				executePreparedInsert(
 						match.getMatchID(),
 						match.getMatchType().getId(),
 						match.getHomeTeamName(),

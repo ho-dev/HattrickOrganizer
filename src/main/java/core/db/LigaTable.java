@@ -37,22 +37,14 @@ public final class LigaTable extends AbstractTable {
 			"CREATE INDEX ILIGA_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")"};
 	}
 
-	private PreparedStatement deleteStatement;
-	private PreparedStatement getDeleteStatement(){
-		if ( deleteStatement==null){
-			final String[] awhereS = { columns[0].getColumnName() };
-			deleteStatement=createDeleteStatement(awhereS);
-		}
-		return deleteStatement;
-	}
 	/**
 	 * store league
 	 */
 	protected void saveLiga(int hrfId, Liga liga) {
 		if (liga != null) {
 			// delete existing league
-			delete( getDeleteStatement(), hrfId );
-			adapter.executePreparedUpdate(getInsertStatement(),
+			executePreparedDelete( hrfId );
+			executePreparedInsert(
 					hrfId,
 					liga.getLiga(),
 					liga.getPunkte(),

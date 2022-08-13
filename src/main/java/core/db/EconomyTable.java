@@ -71,22 +71,14 @@ public final class EconomyTable extends AbstractTable {
 		};
 	}
 
-	private PreparedStatement deleteStatement;
-	private PreparedStatement getDeleteStatement(){
-		if ( deleteStatement==null){
-			final String[] where = {"HRF_ID"};
-			deleteStatement = createDeleteStatement(where);
-		}
-		return deleteStatement;
-	}
 	/**
 	 * store the economy info in the database
 	 */
 	void storeEconomyInfoIntoDB(int hrfId, Economy economy, Timestamp date) {
 		if (economy != null) {
 			//first delete existing entry
-			delete(getDeleteStatement(), hrfId);
-			adapter.executePreparedUpdate(getInsertStatement(),
+			executePreparedDelete( hrfId);
+			executePreparedInsert(
 					hrfId,
 					date.toString(),
 					economy.getSupportersPopularity(),

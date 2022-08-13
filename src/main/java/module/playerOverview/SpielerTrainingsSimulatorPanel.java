@@ -155,7 +155,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private final JLabel m_jlLoyalty = new JLabel();
     private final JLabel m_jlHomeGrown = new JLabel();
     private Player m_clPlayer;
-    private final Player tempPlayer = new Player();
+    private final Player tempPlayer = new Player(properties, hrfdate, hoModel.getID());
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -188,7 +188,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(m_jbAddTempSpieler)) {
-            final Player tempPlayer = new Player();
+            final Player tempPlayer = new Player(properties, hrfdate, hoModel.getID());
             tempPlayer.setHrfDate();
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerID(module.transfer.scout.TransferEingabePanel

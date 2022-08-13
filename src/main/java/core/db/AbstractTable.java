@@ -2,6 +2,7 @@ package core.db;
 
 
 import core.util.HOLogger;
+import jdk.jshell.spi.ExecutionControl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -63,35 +64,108 @@ public abstract class AbstractTable {
 		return new String[0];
 	}
 
-	public PreparedStatement createSelectStatement(String where) {
+	private PreparedStatement createInsertStatement() {
+		var ret = new StringBuilder("INSERT INTO ");
+		ret.append(getTableName());
+		var valuePlaceholders = new StringBuilder(" VALUES ");
+		var sep = "(";
+		for (var c : columns) {
+			valuePlaceholders.append(sep).append("?");
+			ret.append(sep).append(c.getColumnName());
+			sep = ",";
+		}
+		ret.append(")").append(valuePlaceholders).append(")");
+		return adapter.createPreparedStatement(ret.toString());
+	}
+	private PreparedStatement insertStatement;
+	protected  PreparedStatement getInsertStatement(){
+		if ( insertStatement == null){
+			insertStatement = createInsertStatement();
+		}
+		return insertStatement;
+	}
+
+	protected int executePreparedInsert(Object ... values){
+		return adapter.executePreparedUpdate(getInsertStatement(), values);
+	}
+
+	protected PreparedStatement createSelectStatement(String where) {
 		var sql = new StringBuilder("SELECT * FROM ");
 		sql.append(getTableName()).append(" ").append(where);
 		return adapter.createPreparedStatement(sql.toString());
 	}
-	public PreparedStatement createUpdateStatement(String set) {
+
+	private PreparedStatement selectStatement;
+	protected PreparedStatement getSelectStatement(){
+		if ( selectStatement==null){
+			selectStatement=createSelectStatement();
+		}
+		return selectStatement;
+	}
+
+	protected PreparedStatement createSelectStatement() {
+		return createSelectStatement("");
+	}
+
+	protected ResultSet executePreparedSelect (Object ... whereValues){
+		var statement = getSelectStatement();
+		if ( statement != null){
+			return adapter.executePreparedQuery(statement, whereValues);
+		}
+		HOLogger.instance().error(getClass(), "no select statement created");
+		return  null;
+	}
+
+	protected PreparedStatement createUpdateStatement(){
+		return null;
+	}
+	protected PreparedStatement createUpdateStatement(String set) {
 		var sql = new StringBuilder("UPDATE ");
 		sql.append(getTableName()).append(" ").append(set);
 		return adapter.createPreparedStatement(sql.toString());
 	}
 
-	public PreparedStatement createDeleteStatement(String ... whereColumns) {
-		var sql = new StringBuilder("DELETE FROM ");
-		sql.append(getTableName());
-		if (whereColumns != null && whereColumns.length > 0) {
-			var sep = " WHERE ";
-			for (var c : whereColumns) {
-				sql.append(sep).append(c).append("=?");
-				sep = " AND ";
-			}
-		} else {
-			HOLogger.instance().error(getClass(), "it is not allowed to delete without filter: " + sql);
-			return null;
+	private PreparedStatement updateStatement;
+	private PreparedStatement getUpdateStatement(){
+		if ( updateStatement==null){
+			updateStatement=createUpdateStatement();
 		}
+		return updateStatement;
+	}
 
+	protected int executePreparedUpdate(Object ... values){
+		var statement = getUpdateStatement();
+		if ( statement != null) {
+			return adapter.executePreparedUpdate(getUpdateStatement(), values);
+		}
+		HOLogger.instance().error(getClass(), "no update statement created");
+		return  -1;
+	}
+
+	protected PreparedStatement createDeleteStatement(String where) {
+		var sql = new StringBuilder("DELETE FROM ");
+		sql.append(getTableName()).append(" ").append(where);
 		return adapter.createPreparedStatement(sql.toString());
 	}
-	protected int delete(PreparedStatement preparedStatement, Object ... whereValues) {
-		return adapter.executePreparedUpdate(preparedStatement, whereValues);
+	private PreparedStatement deleteStatement;
+	private PreparedStatement getDeleteStatement(){
+		if ( deleteStatement==null){
+			deleteStatement = createDeleteStatement();
+		}
+		return deleteStatement;
+	}
+
+	protected PreparedStatement createDeleteStatement() {
+		return createDeleteStatement("WHERE HRF_ID = ?");
+	}
+
+	protected int executePreparedDelete(Object ... whereValues){
+		var statement = getDeleteStatement();
+		if ( statement != null){
+			return adapter.executePreparedUpdate(statement, whereValues);
+		}
+		HOLogger.instance().error(getClass(), "no delete statement created");
+		return  -1;
 	}
 
 	public void createTable() throws SQLException {
@@ -234,24 +308,4 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	private PreparedStatement createInsertStatement() {
-		var ret = new StringBuilder("INSERT INTO ");
-		ret.append(getTableName());
-		var valuePlaceholders = new StringBuilder(" VALUES ");
-		var sep = "(";
-		for (var c : columns) {
-			valuePlaceholders.append(sep).append("?");
-			ret.append(sep).append(c.getColumnName());
-			sep = ",";
-		}
-		ret.append(")").append(valuePlaceholders).append(")");
-		return adapter.createPreparedStatement(ret.toString());
-	}
-	private PreparedStatement insertStatement;
-	protected  PreparedStatement getInsertStatement(){
-		if ( insertStatement == null){
-			insertStatement = createInsertStatement();
-		}
-		return insertStatement;
-	}
 }

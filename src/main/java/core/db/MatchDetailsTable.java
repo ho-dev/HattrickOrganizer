@@ -98,14 +98,15 @@ final class MatchDetailsTable extends AbstractTable {
 		};
 	}
 
-	private PreparedStatement loadMatchDetailsStatement;
-	private PreparedStatement getLoadMatchDetailsStatement(){
-		if (loadMatchDetailsStatement==null ){
-			loadMatchDetailsStatement = adapter.createPreparedStatement("SELECT * FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchID=?");
-		}
-		return loadMatchDetailsStatement;
+	@Override
+	protected PreparedStatement createDeleteStatement(){
+		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
 	}
-	
+	@Override
+	protected  PreparedStatement createSelectStatement(){
+		return createSelectStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	}
+
 	/**
 	 * Gibt die MatchDetails zu einem Match zurück
 	 */
@@ -113,7 +114,7 @@ final class MatchDetailsTable extends AbstractTable {
 		final Matchdetails details = new Matchdetails();
 
 		try {
-			ResultSet rs = adapter.executePreparedQuery(getLoadMatchDetailsStatement(), iMatchType, matchId);
+			ResultSet rs = executePreparedSelect(iMatchType, matchId);
 			assert rs != null;
 			if (rs.first()) {
 				details.setMatchType(MatchType.getById(rs.getInt("MATCHTYP")));
@@ -202,30 +203,17 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
-	private  PreparedStatement deleteMatchDetailsStatement;
-	private PreparedStatement getDeleteMatchDetailsStatement(){
-		if (deleteMatchDetailsStatement==null){
-			final String[] where = {"MATCHTYP", "MatchID"};
-			deleteMatchDetailsStatement=createDeleteStatement(where);
-		}
-		return deleteMatchDetailsStatement;
-	}
 
 	/**
 	 * speichert die MatchDetails
 	 */
 	void storeMatchDetails(Matchdetails details) {
 		if (details != null) {
-
-			final String[] werte = {"" + details.getMatchType().getId(), "" + details.getMatchID()};
-
 			//Remove existing entries
-			delete(getDeleteMatchDetailsStatement(), werte);
-
-			String sql;
-
 			try {
-				adapter.executePreparedUpdate(getInsertStatement(),
+
+				executePreparedDelete(details.getMatchType().getId(), details.getMatchID());
+				executePreparedInsert(
 						details.getMatchID(),
 						details.getMatchType().getId(),
 						details.getArenaID(),

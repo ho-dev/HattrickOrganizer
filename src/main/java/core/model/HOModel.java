@@ -5,7 +5,6 @@ import core.file.hrf.HRF;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupTeam;
-import core.model.match.SourceSystem;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
@@ -90,7 +89,7 @@ public class HOModel {
         setEconomy(DBManager.instance().getEconomy(id));
         setLeague(DBManager.instance().getLiga(id));
         setStadium(DBManager.instance().getStadion(id));
-        setFixtures(DBManager.instance().getSpielplan(-1, -1));
+        setFixtures(DBManager.instance().getLatestSpielplan());
         setXtraDaten(DBManager.instance().getXtraDaten(id));
         setStaff(DBManager.instance().getStaffByHrfId(id));
     }
@@ -370,7 +369,7 @@ public class HOModel {
      */
     public final module.series.Spielplan getFixtures() {
         if (m_clSpielplan == null) {
-            m_clSpielplan = DBManager.instance().getSpielplan(-1, -1); // valid only for the current Model
+            m_clSpielplan = DBManager.instance().getLatestSpielplan(); // valid only for the current Model
         }
         return m_clSpielplan;
     }
@@ -603,7 +602,7 @@ public class HOModel {
 
     public List<MatchLineup> getYouthMatchLineups() {
         if (this.youthMatchLineups == null) {
-            youthMatchLineups = DBManager.instance().loadMatchLineups(SourceSystem.YOUTH.getValue());
+            youthMatchLineups = DBManager.instance().getYouthMatchLineups();
         }
         return youthMatchLineups;
     }

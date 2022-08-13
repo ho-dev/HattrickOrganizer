@@ -7,19 +7,19 @@ import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.*;
 
 final class SpielerSkillupTable extends AbstractTable {
 
-	/** tablename **/						
+	/**
+	 * tablename
+	 **/
 	final static String TABLENAME = "SPIELERSKILLUP";
-	private static Map<String,Vector<Object[]>> playerSkillup = null;
+	private static Map<String, Vector<Object[]>> playerSkillup = null;
 
 	SpielerSkillupTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);					
+		super(TABLENAME, adapter);
 	}
 
 	@Override
@@ -35,41 +35,31 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	@Override
 	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX iSkillup_1 ON " + getTableName() + "(" + columns[2].getColumnName() + ")",
-			"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
+		return new String[]{
+				"CREATE INDEX iSkillup_1 ON " + getTableName() + "(" + columns[2].getColumnName() + ")",
+				"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
+	}
+
+	@Override
+	protected PreparedStatement createDeleteStatement() {
+		return createDeleteStatement("WHERE HORF_ID=? AND SpielerID=? AND Skill=?");
 	}
 
 	private void storeSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode, boolean reload) {
-		String statement;
+		executePreparedDelete(hrfId, spielerId, skillCode);
+		executePreparedInsert(
+				hrfId,
+				date,
+				spielerId,
+				skillCode,
+				skillValue
+		);
 
-		//erst Vorhandene Aufstellung löschen
-		final String[] awhereS = { "HRF_ID", "SpielerID", "Skill" };
-		final String[] awhereV = { "" + hrfId, "" + spielerId, "" +skillCode};
-
-		delete(awhereS, awhereV);
-
-		//insert vorbereiten
-		statement =
-			"INSERT INTO "+getTableName()+" ( HRF_ID , Datum , SpielerID , Skill , Value ) VALUES(";
-		statement
-			+= (""
-				+ hrfId
-				+ ",'"
-				+ date
-				+ "', "
-				+ spielerId
-				+ ","
-				+ skillCode
-				+ ","
-				+ skillValue
-				+ " )");
-		adapter.executeUpdate(statement);
 		if (reload) {
 			Vector<Object[]> data = getSpielerSkillUp(spielerId);
 			data.clear();
-			data.addAll(loadSpieler(spielerId));						
-		}				
+			data.addAll(loadSpieler(spielerId));
+		}
 	}
 
 	Object[] getLastLevelUp(int skillCode, int spielerId) {
@@ -80,10 +70,10 @@ final class SpielerSkillupTable extends AbstractTable {
 				return new Object[]{element[2], Boolean.TRUE};
 			}
 		}
-		return new Object[] { HODateTime.now(), Boolean.FALSE};
+		return new Object[]{HODateTime.now(), Boolean.FALSE};
 	}
 
-	Vector<Object[]> getAllLevelUp(int skillCode, int spielerId) {		
+	Vector<Object[]> getAllLevelUp(int skillCode, int spielerId) {
 		Vector<Object[]> data = getSpielerSkillUp(spielerId);
 		Vector<Object[]> v = new Vector<Object[]>();
 		for (Object[] element : data) {
@@ -96,33 +86,41 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	private Vector<Object[]> getSpielerSkillUp(int spielerId) {
-		if (playerSkillup==null) {
+		if (playerSkillup == null) {
 			populate();
 		}
 		Vector<Object[]> v = playerSkillup.computeIfAbsent("" + spielerId, k -> new Vector<Object[]>());
 		return v;
 	}
-	
+
 	private void populate() {
 
 		Vector<Integer> idVector = getPlayerList();
-		if (idVector.size()==0) {
+		if (idVector.size() == 0) {
 			importFromSpieler();
-			idVector = getPlayerList();			
-		}  
+			idVector = getPlayerList();
+		}
 		playerSkillup = new HashMap<>();
 		for (Integer element : idVector) {
 			playerSkillup.put("" + element, loadSpieler(element));
 		}
-		
+
+	}
+
+	private PreparedStatement getPlayerListStatement;
+
+	private PreparedStatement getGetPlayerListStatement() {
+		if (getPlayerListStatement == null) {
+			getPlayerListStatement = adapter.createPreparedStatement("SELECT DISTINCT SpielerID FROM " + getTableName());
+		}
+		return getPlayerListStatement;
 	}
 
 	private Vector<Integer> getPlayerList() {
 		Vector<Integer> idVector = new Vector<>();
-		ResultSet rs;
-		String sql = "SELECT DISTINCT SpielerID FROM "+getTableName();
+
 		try {
-			rs = adapter.executeQuery(sql);			
+			var rs = adapter.executePreparedQuery(getGetPlayerListStatement());
 			if (rs != null) {
 				rs.beforeFirst();
 				while (rs.next()) {
@@ -130,21 +128,25 @@ final class SpielerSkillupTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),e);
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
+			HOLogger.instance().log(getClass(), e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
 		}
 		return idVector;
 	}
 
-	private Vector<Object[]> loadSpieler(int spielerId) {		
+	@Override
+	protected PreparedStatement createSelectStatement() {
+		return createSelectStatement(" WHERE SpielerID=? Order By Datum DESC");
+	}
+
+	private Vector<Object[]> loadSpieler(int spielerId) {
 		Vector<Object[]> v = new Vector<>();
 		try {
-			String sql = "SELECT * FROM "+getTableName()+" WHERE SpielerID=" + spielerId + " Order By Datum DESC";
-			ResultSet rs = adapter.executeQuery(sql);
+			ResultSet rs = executePreparedSelect(spielerId);
 			assert rs != null;
 			rs.beforeFirst();
 			while (rs.next()) {
-				v.add(new Object[] {
+				v.add(new Object[]{
 						rs.getInt("HRF_ID"),
 						spielerId,
 						HODateTime.fromDbTimestamp(rs.getTimestamp("datum")),
@@ -152,7 +154,7 @@ final class SpielerSkillupTable extends AbstractTable {
 						rs.getInt("Skill")});
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),e);
+			HOLogger.instance().log(getClass(), e);
 		}
 		return v;
 	}
@@ -161,9 +163,9 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	void importNewSkillup(HOModel homodel) {
 		List<Player> players = homodel.getCurrentPlayers();
-		for ( Player nPlayer : players){
+		for (Player nPlayer : players) {
 			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getPlayerID());
-			if (oPlayer!=null) {
+			if (oPlayer != null) {
 				checkNewSkillup(nPlayer, nPlayer.getGKskill(), oPlayer.getGKskill(), PlayerSkill.KEEPER, homodel.getID());
 				checkNewSkillup(nPlayer, nPlayer.getPMskill(), oPlayer.getPMskill(), PlayerSkill.PLAYMAKING, homodel.getID());
 				checkNewSkillup(nPlayer, nPlayer.getPSskill(), oPlayer.getPSskill(), PlayerSkill.PASSING, homodel.getID());
@@ -176,21 +178,28 @@ final class SpielerSkillupTable extends AbstractTable {
 			}
 		}
 	}
-		
+
 	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
-		if (newValue>oldValue) {
-			storeSkillup(hrf,nPlayer.getPlayerID(),nPlayer.getHrfDate().toDbTimestamp(),newValue,skill,true);
+		if (newValue > oldValue) {
+			storeSkillup(hrf, nPlayer.getPlayerID(), nPlayer.getHrfDate().toDbTimestamp(), newValue, skill, true);
 		}
-		
+
+	}
+
+	private PreparedStatement importFromSpielerStatement;
+
+	private PreparedStatement getImportFromSpielerStatement() {
+		if (importFromSpielerStatement == null) {
+			importFromSpielerStatement = adapter.createPreparedStatement("SELECT DISTINCT SpielerID FROM SPIELER");
+		}
+		return importFromSpielerStatement;
 	}
 
 	void importFromSpieler() {
 		playerSkillup = null;
-		ResultSet rs;
-		String sql = "SELECT DISTINCT SpielerID FROM SPIELER";
 		final Vector<Integer> idVector = new Vector<>();
 		try {
-			rs = adapter.executeQuery(sql);			
+			var rs = adapter.executePreparedQuery(getImportFromSpielerStatement());
 			if (rs != null) {
 				rs.beforeFirst();
 				while (rs.next()) {
@@ -198,71 +207,41 @@ final class SpielerSkillupTable extends AbstractTable {
 				}
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),e);
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
-		}	
-		adapter.executeUpdate("DELETE FROM "+getTableName());
+			HOLogger.instance().log(getClass(), e);
+			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
+		}
+		adapter._executeUpdate("DELETE FROM " + getTableName());
 		for (Integer element : idVector) {
 			importSpieler(element);
 		}
 	}
 
-	private void importSpieler(int spielerId) {	
-		importSkillUp(PlayerSkill.PLAYMAKING,spielerId);
-		importSkillUp(PlayerSkill.STAMINA,spielerId);
-		importSkillUp(PlayerSkill.DEFENDING,spielerId);
-		importSkillUp(PlayerSkill.KEEPER,spielerId);
-		importSkillUp(PlayerSkill.WINGER,spielerId);
-		importSkillUp(PlayerSkill.SCORING,spielerId);
-		importSkillUp(PlayerSkill.PASSING,spielerId);
-		importSkillUp(PlayerSkill.SET_PIECES,spielerId);
-		importSkillUp(PlayerSkill.EXPERIENCE,spielerId);
-	}
-	
-	private void importSkillUp(int skillCode, int spielerId) {
-		try {	
-			String key = getKey(skillCode);				
-			String sql = "SELECT HRF_ID, datum, " + key + " FROM SPIELER WHERE SpielerID=" + spielerId + " Order By Datum ASC";
-			ResultSet rs = adapter.executeQuery(sql);
-			assert rs != null;
-			rs.beforeFirst();
-			int lastValue = -1;
-			if (rs.next()) {
-				lastValue = rs.getInt(key);
-			}
-			Vector<Object[]> v = new Vector<>();
-			while (rs.next()) {
-				int value = rs.getInt(key);
-				if (value > lastValue) {
-					v.add(new Object[] {rs.getInt("HRF_ID"), spielerId,rs.getTimestamp("datum"), value, skillCode});
+	private int[] skills = {
+			PlayerSkill.PLAYMAKING,
+			PlayerSkill.STAMINA,
+			PlayerSkill.DEFENDING,
+			PlayerSkill.KEEPER,
+			PlayerSkill.WINGER,
+			PlayerSkill.SCORING,
+			PlayerSkill.PASSING,
+			PlayerSkill.SET_PIECES,
+			PlayerSkill.EXPERIENCE
+	};
+
+	private void importSpieler(int spielerId) {
+		var playerHistory = DBManager.instance().loadPlayerHistory(spielerId);
+		try {
+			for (var skill : skills) {
+				int lastValue = -1;
+				for (var player : playerHistory) {
+					var value = player.getValue4Skill(skill);
+					if (value > lastValue && lastValue >= 0) {
+						storeSkillup(player.getHrfId(), player.getPlayerID(), player.getHrfDate().toDbTimestamp(), value, skill, false);
+					}
 				}
-				lastValue = value;
-			}
-			for (Iterator<Object[]> iter = v.iterator(); iter.hasNext();) {
-				Object[] element = iter.next();
-				storeSkillup((Integer) element[0], (Integer) element[1],((Timestamp)element[2]), (Integer) element[3], (Integer) element[4],false);
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),e);
+			HOLogger.instance().log(getClass(), e);
 		}
 	}
-
-	private String getKey(int code) {
-		String key = switch (code) {
-			case PlayerSkill.SET_PIECES -> "Standards";
-			case PlayerSkill.PASSING -> "Passpiel";
-			case PlayerSkill.SCORING -> "Torschuss";
-			case PlayerSkill.PLAYMAKING -> "Spielaufbau";
-			case PlayerSkill.WINGER -> "Fluegel";
-			case PlayerSkill.KEEPER -> "Torwart";
-			case PlayerSkill.DEFENDING -> "Verteidigung";
-			case PlayerSkill.STAMINA -> "Kondition";
-			case PlayerSkill.EXPERIENCE -> "Erfahrung";
-			default -> "Spielaufbau";
-		};
-
-		return key;
- 
-	}
-
 }

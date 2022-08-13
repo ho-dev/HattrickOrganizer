@@ -3,6 +3,8 @@ package core.db;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -29,17 +31,20 @@ public class StaffTable extends AbstractTable{
 		columns[6] = new ColumnDescriptor("name", Types.VARCHAR, false, 127);
 	}
 
+	@Override
+	protected PreparedStatement createSelectStatement(){
+		return createSelectStatement("WHERE HrfID = ? ORDER BY index");
+	}
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
 		var list = new ArrayList<StaffMember>();
 		if ( hrfId > -1) {
-			String sql = "SELECT * FROM " + getTableName() + " WHERE HrfID = " + hrfId + " ORDER BY index";
 			try {
-				var rs = adapter.executeQuery(sql);
+				var rs =executePreparedSelect(hrfId);
 				if ( rs != null) {
 					rs.beforeFirst();
 					while (rs.next()) {
 						StaffMember staff = new StaffMember();
-						staff.setName(DBManager.deleteEscapeSequences(rs.getString("Name")));
+						staff.setName(rs.getString("Name"));
 						staff.setId(rs.getInt("id"));
 						staff.setStaffType(StaffType.getById(rs.getInt("stafftype")));
 						staff.setLevel(rs.getInt("level"));
@@ -56,27 +61,25 @@ public class StaffTable extends AbstractTable{
 	
 	protected void storeStaff(int hrfId, List<StaffMember> list) {
 		
-		String sql;
-		
 		if ( list==null || hrfId < 0) {
 			return;
 		}
 		
 		int index = 0;
-		
 		for (StaffMember staff : list) {
-			
 			try {
-				sql = "INSERT INTO "
-						+ getTableName()
-						+ " ( HrfID, index, id, stafftype, level, cost, name ) VALUES(";
-				sql += hrfId + "," + index + "," + staff.getId() + "," + staff.getStaffType().getId() + "," +
-						staff.getLevel() + "," + staff.getCost() + ",'" + staff.getName() + "')";
-				adapter.executeUpdate(sql);
+				executePreparedInsert(
+						hrfId,
+						index,
+						staff.getId(),
+						staff.getStaffType().getId(),
+						staff.getLevel(),
+						staff.getCost(),
+						staff.getName()
+				);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DB.storeStaff Error " + e);
 			}
-		
 			index++;
 		}
 	

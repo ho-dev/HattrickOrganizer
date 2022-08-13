@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -139,7 +138,7 @@ public class TransferTable extends AbstractTable {
                             DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
 //                            continue;
                         } else {
-                            Player dummy = new Player();
+                            Player dummy = new Player(properties, hrfdate, hoModel.getID());
                             dummy.setPlayerID(transfer.getPlayerId());
                             if (!players.contains(dummy)) players.add(dummy);
                         }
