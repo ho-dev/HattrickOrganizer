@@ -4,7 +4,6 @@ import core.model.misc.Basics;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -44,10 +43,6 @@ final class BasicsTable extends AbstractTable {
 		};
 	}
 
-	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE HRF_ID=?");
-	}
 	/**
 	 * save Basics
 	 */
@@ -83,10 +78,10 @@ final class BasicsTable extends AbstractTable {
 
 		if (hrfID != -1) {
 
-			rs = getSelectByHrfID(hrfID);
+			rs = executePreparedSelect(hrfID);
 			try {
 				if (rs != null) {
-					rs.first();
+					rs.next();
 					basics = new Basics(rs);
 					rs.close();
 				}
@@ -98,14 +93,7 @@ final class BasicsTable extends AbstractTable {
 		return basics;
 	}
 
-	private PreparedStatement getHrfIDSameTrainingStatement;
-
-	private PreparedStatement getGetHrfIDSameTrainingStatement() {
-		if (getHrfIDSameTrainingStatement == null) {
-			getHrfIDSameTrainingStatement = adapter.createPreparedStatement("SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
-		}
-		return getHrfIDSameTrainingStatement;
-	}
+	private DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new PreparedSelectStatementBuilder(this, "SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
 
 	/**
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
@@ -114,11 +102,11 @@ final class BasicsTable extends AbstractTable {
 
 		int hrfID = -1;
 		Timestamp hrfDate = null;
-		var rs = adapter.executePreparedQuery(getGetHrfIDSameTrainingStatement(), time);
+		var rs = adapter.executePreparedQuery(getHrfIDSameTrainingStatementBuilder.getStatement(), time);
 		try {
 			if (rs != null) {
 				//HRF vorher vorhanden?
-				if (rs.first()) {
+				if (rs.next()) {
 					hrfID = rs.getInt("HRF_ID");
 					hrfDate = rs.getTimestamp("Datum");
 				}

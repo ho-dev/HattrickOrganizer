@@ -34,9 +34,9 @@ public class YouthScoutCommentTable extends AbstractTable {
         };
     }
 
+    private final DBManager.PreparedStatementBuilder countScoutCommentsStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=?");
     public int countScoutComments(int youthplayerid) {
-        var sql = "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=" + youthplayerid;
-        var rs = adapter.executeQuery(sql);
+        var rs = adapter.executePreparedQuery(countScoutCommentsStatementBuilder.getStatement(), youthplayerid);
         try {
             if (rs != null && rs.next()) {
                 return rs.getInt(1);
@@ -47,25 +47,16 @@ public class YouthScoutCommentTable extends AbstractTable {
         return 0;
     }
 
-    public int deleteScoutComments(int youthplayerid) {
-        final String[] where = { "YOUTHPLAYER_ID" };
-        final String[] values = { "" + youthplayerid };
-        return delete(where, values);
-    }
-
     public void storeYouthScoutComment(int i, int youthPlayerId, ScoutComment c) {
-        //insert vorbereiten
-        String sql = "INSERT INTO " + getTableName() +
-                " (YOUTHPLAYER_ID,INDEX,Text,Type,Variation,SkillType,SkillLevel) VALUES(" +
-                youthPlayerId + "," +
-                i + ",'" +
-                DBManager.insertEscapeSequences(c.getText()) + "'," +
-                ValueOf(c.getType()) + "," +
-                c.getVariation() + "," +
-                ValueOf(c.getSkillType()) + "," +
-                c.getSkillLevel() +
-                ")";
-        adapter.executeUpdate(sql);
+        executePreparedInsert(
+                youthPlayerId,
+                i,
+                c.getText(),
+                ValueOf(c.getType()),
+                c.getVariation(),
+                ValueOf(c.getSkillType()),
+                c.getSkillLevel()
+        );
     }
 
     private String ValueOf(CommentType type) {
@@ -81,11 +72,9 @@ public class YouthScoutCommentTable extends AbstractTable {
     public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
         final ArrayList<ScoutComment> ret = new ArrayList<>();
         if ( youthplayer_id > -1) {
-            var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + youthplayer_id;
-            var rs = adapter.executeQuery(sql);
+            var rs = executePreparedSelect(youthplayer_id);
             try {
                 if (rs != null) {
-                    rs.beforeFirst();
                     while (rs.next()) {
                         var comment = createObject(rs);
                         ret.add(comment);
@@ -103,7 +92,7 @@ public class YouthScoutCommentTable extends AbstractTable {
         try {
             ret.setYouthPlayerId(rs.getInt("YouthPlayer_Id"));
             ret.setIndex(rs.getInt("Index"));
-            ret.setText(DBManager.deleteEscapeSequences(rs.getString("Text")));
+            ret.setText(rs.getString("Text"));
             ret.setSkillLevel(rs.getInt("SkillLevel"));
             ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(rs.getInt("SkillType")));
             ret.setVariation(rs.getInt("Variation"));

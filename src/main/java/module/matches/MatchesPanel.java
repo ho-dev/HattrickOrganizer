@@ -210,7 +210,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		if (value == JOptionPane.YES_OPTION) {
 			for (MatchKurzInfo info : infos) {
-				DBManager.instance().deleteMatch(info.getMatchID());
+				DBManager.instance().deleteMatch(info.getMatchID(), info.getMatchType().getId());
 			}
 			RefreshManager.instance().doReInit();
 		}

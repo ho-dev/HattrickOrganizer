@@ -62,7 +62,7 @@ public final class HRFTable extends AbstractTable {
 	 * Save hattrick resource file information
 	 */
 	void saveHRF(int hrfId, HODateTime datum) {
-		adapter.executePreparedUpdate(getInsertStatement(),
+		executePreparedInsert(
 				hrfId,
 				datum.toDbTimestamp());
 		if (hrfId > getMaxHrf().getHrfId()) {
@@ -75,37 +75,25 @@ public final class HRFTable extends AbstractTable {
 		}
 	}
 
-	PreparedStatement getHrfID4DateStatement;
-	private PreparedStatement getGetHrfID4DateStatement(){
-		if ( getHrfID4DateStatement== null){
-			getHrfID4DateStatement = adapter.createPreparedStatement("SELECT HRF_ID FROM " + getTableName() + " WHERE Datum<=? ORDER BY Datum DESC LIMIT 1");
-		}
-		return getHrfID4DateStatement;
-	}
-	PreparedStatement getHrfID4DateStatement2;
-	private PreparedStatement getGetHrfID4DateStatement2(){
-		if ( getHrfID4DateStatement2== null){
-			getHrfID4DateStatement2 = adapter.createPreparedStatement("SELECT HRF_ID FROM " + getTableName() + " WHERE Datum>? ORDER BY Datum LIMIT 1");
-		}
-		return getHrfID4DateStatement2;
-	}
+	private PreparedSelectStatementBuilder getGetHrfID4DateStatementBeforeBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum<=? ORDER BY Datum DESC LIMIT 1");
+	private PreparedSelectStatementBuilder getGetHrfID4DateStatementAfterBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum>? ORDER BY Datum LIMIT 1");
 
 	/**
 	 * Load id of latest hrf downloaded before time if available, otherwise the first after time
 	 */
-	int getHrfId4Date(Timestamp time) {
+	int getHrfIdNearDate(Timestamp time) {
 		int hrfID = 0;
-		var rs = adapter.executePreparedQuery(getGetHrfID4DateStatement(), time);
+		var rs = adapter.executePreparedQuery(getGetHrfID4DateStatementBeforeBuilder.getStatement(), time);
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					// HRF available?
 					hrfID = rs.getInt("HRF_ID");
 				}
 				else {
-					rs = adapter.executePreparedQuery(getGetHrfID4DateStatement2(), time);
+					rs = adapter.executePreparedQuery(getGetHrfID4DateStatementAfterBuilder.getStatement(), time);
 					assert rs != null;
-					if (rs.first()) {
+					if (rs.next()) {
 						hrfID = rs.getInt("HRF_ID");
 					}
 				}
@@ -134,7 +122,7 @@ public final class HRFTable extends AbstractTable {
 			sql += " ORDER BY Datum ASC";
 		else
 			sql += " ORDER BY Datum DESC";
-		rs = adapter._executeQuery(sql);
+		rs = adapter.executeQuery(sql);
 
 		try {
 			if (rs != null) {
@@ -151,17 +139,11 @@ public final class HRFTable extends AbstractTable {
 		return liste.toArray(new HRF[0]);
 	}
 
-	PreparedStatement getHRFsSinceStatement;
-	private PreparedStatement getGetHRFsSinceStatement(){
-		if ( getHRFsSinceStatement==null){
-			getHRFsSinceStatement=adapter.createPreparedStatement("SELECT * FROM " + getTableName() + " WHERE Datum>=? ORDER BY Datum ASC");
-		}
-		return getHRFsSinceStatement;
-	}
+	private PreparedSelectStatementBuilder loadHRFOrderedStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum>=? ORDER BY Datum ASC");
+
 	public List<HRF> getHRFsSince(Timestamp from) {
 		var liste = new ArrayList<HRF>();
-
-		var rs = adapter.executePreparedQuery(getGetHRFsSinceStatement(), from);
+		var rs = this.adapter.executePreparedQuery(loadHRFOrderedStatementBuilder.getStatement(), from);
 		try {
 			if (rs != null) {
 				while (rs.next()) {
@@ -175,69 +157,39 @@ public final class HRFTable extends AbstractTable {
 		return liste;
 	}
 
-	private PreparedStatement loadLatestHRFDownloadedBeforeStatement;
-	private PreparedStatement getLoadLatestHRFDownloadedBeforeStatement(){
-		if ( loadLatestHRFDownloadedBeforeStatement==null){
-			loadLatestHRFDownloadedBeforeStatement=adapter.createPreparedStatement("select * from HRF where DATUM < ? order by DATUM desc LIMIT 1");
-		}
-		return loadLatestHRFDownloadedBeforeStatement;
-	}
+	private PreparedSelectStatementBuilder loadLatestHRFDownloadedBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "where DATUM < ? order by DATUM desc LIMIT 1");
 	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate) {
-		return loadHRF(getLoadLatestHRFDownloadedBeforeStatement(), fetchDate);
+		return loadHRF(loadLatestHRFDownloadedBeforeStatementBuilder.getStatement(), fetchDate);
 	}
 
 	/**
 	 * liefert die Maximal Vergebene Id eines HRF-Files
 	 */
-	private PreparedStatement loadMaxHrfStatement;
-	private PreparedStatement getLoadMaxHrfStatement(){
-		if ( loadMaxHrfStatement==null){
-			loadMaxHrfStatement=adapter.createPreparedStatement("select * from HRF order by HRF_ID desc LIMIT 1");
-		}
-		return loadMaxHrfStatement;
-	}
+	private PreparedSelectStatementBuilder loadMaxHrfStatementBuilder = new PreparedSelectStatementBuilder(this, "order by HRF_ID desc LIMIT 1");
+
 	private HRF loadMaxHrf() {
-		return loadHRF(getLoadMaxHrfStatement());
+		return loadHRF(loadMaxHrfStatementBuilder.getStatement());
 	}
 
-	private PreparedStatement loadHRFStatement;
-	private PreparedStatement getLoadHRFStatement(){
-		if ( loadHRFStatement==null){
-			loadHRFStatement=adapter.createPreparedStatement("select * from HRF where HRF_ID = ?");
-		}
-		return loadHRFStatement;
-	}
 	public HRF loadHRF(int id){
-		return loadHRF(getLoadHRFStatement(), id );
+		return loadHRF(getPreparedSelectStatement(), id );
 	}
 
-	private PreparedStatement loadLatestDownloadedHRFStatement;
-	private PreparedStatement getLoadLatestDownloadedHRFStatement(){
-		if ( loadLatestDownloadedHRFStatement==null){
-			loadLatestDownloadedHRFStatement=adapter.createPreparedStatement("select * from HRF order by DATUM desc LIMIT 1");
-		}
-		return loadLatestDownloadedHRFStatement;
-	}
+	private PreparedSelectStatementBuilder loadLatestDownloadedHRFStatementBuilder = new PreparedSelectStatementBuilder(this, "order by DATUM desc LIMIT 1");
 	public HRF loadLatestDownloadedHRF() {
-		return loadHRF(getLoadLatestDownloadedHRFStatement());
+		return loadHRF(loadLatestDownloadedHRFStatementBuilder.getStatement());
 	}
 
-	private PreparedStatement loadHRFDownloadedAtStatement;
-	private PreparedStatement getLoadHRFDownloadedAtStatement(){
-		if ( loadHRFDownloadedAtStatement==null){
-			loadHRFDownloadedAtStatement=adapter.createPreparedStatement("select * from HRF where DATUM =?");
-		}
-		return loadHRFDownloadedAtStatement;
-	}
+	private PreparedSelectStatementBuilder loadHRFDownloadedAtStatementBuilder = new PreparedSelectStatementBuilder(this, "where DATUM =?");
 	public HRF loadHRFDownloadedAt(Timestamp fetchDate){
-		return loadHRF(getLoadHRFDownloadedAtStatement(), fetchDate);
+		return loadHRF(loadHRFDownloadedAtStatementBuilder.getStatement(), fetchDate);
 	}
 
 	private HRF loadHRF(PreparedStatement preparedStatement, Object ... params) {
 		final ResultSet rs = adapter.executePreparedQuery(preparedStatement,params);
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					var ret = new HRF(rs);
 					rs.close();
 					return ret;
@@ -249,26 +201,23 @@ public final class HRFTable extends AbstractTable {
 		return null;
 	}
 
-	public String getHrfIdPerWeekList(int nWeeks) {
+	public List<Integer> getHrfIdPerWeekList(int nWeeks) {
 		var sql = "select min(hrf_id) as id from " +
 				getTableName() +
 				" group by unix_timestamp(datum)/7/86400 order by id desc limit " +
 				nWeeks;
 
-		var ret = new StringBuilder();
-		var separator = "";
-
-		final ResultSet rs = adapter._executeQuery(sql);
+		var ret = new ArrayList<Integer>();
+		final ResultSet rs = adapter.executeQuery(sql);
 		try {
 			if (rs != null) {
 				while (rs.next()) {
-					ret.append(separator).append(rs.getInt("ID"));
-					separator=",";
+					ret.add(rs.getInt("ID"));
 				}
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAllHRFs: " + e);
 		}
-		return ret.toString();
+		return ret;
 	}
 }

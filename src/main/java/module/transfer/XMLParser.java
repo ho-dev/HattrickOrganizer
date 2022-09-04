@@ -2,8 +2,11 @@
 package module.transfer;
 
 
+import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
+import core.model.HOModel;
+import core.model.HOVerwaltung;
 import core.net.MyConnector;
 import core.util.HODateTime;
 import core.util.Helper;
@@ -11,6 +14,7 @@ import core.util.Helper;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -257,5 +261,31 @@ public final class XMLParser {
         }
 
         return transferList;
+    }
+
+    public static boolean updateTeamTransfers(int teamId) {
+        var transfers = getAllTeamTransfers(teamId, HODateTime.now().plus(1, ChronoUnit.DAYS));
+        var players =  DBManager.instance().updateTeamTransfers(transfers);
+        if ( players != null) {
+            for (var player : players) {
+                updatePlayerTransfers(player.getPlayerID());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static void updatePlayerTransfers(int playerID) {
+        var transfers = getAllPlayerTransfers(playerID);
+        if (transfers.size()>0) {
+            DBManager.instance().updatePlayerTransfers(transfers);
+        }
+        else {
+            var notes = DBManager.instance().loadPlayerNotes(playerID);
+            if ( notes != null){
+                notes.setIsFired(true);
+                DBManager.instance().storePlayerNotes(notes);
+            }
+        }
     }
 }

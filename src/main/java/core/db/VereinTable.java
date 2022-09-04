@@ -44,49 +44,32 @@ final class VereinTable extends AbstractTable {
 
 		if (verein != null) {
 			//first delete existing entry
-			delete( awhereS, awhereV );
-
-			//create sql insertion statement
-			statement = "INSERT INTO "+getTableName()+" ( COTrainer , Pschyologen , Finanzberater , PRManager , Aerzte , Jugend , Siege , " +
-					"Ungeschlagen , Fans , GlobalRanking , LeagueRanking , RegionRanking , PowerRating , TacticAssist , FormAssist, HRF_ID ) VALUES(";
-			statement
-				+= (""
-					+ verein.getCoTrainer()
-					+ ","
-					+ verein.getPsychologen()
-					+ ","
-					+ verein.getFinancialDirectorLevels()
-					+ ","
-					+ verein.getPRManager()
-					+ ","
-					+ verein.getAerzte()
-					+ ","
-					+ verein.getJugend()
-					+ ","
-					+ verein.getSiege()
-					+ ","
-					+ verein.getUngeschlagen()
-					+ ","
-					+ verein.getFans()
-					+ ","
-					+ verein.getGlobalRanking()
-					+ ","
-					+ verein.getLeagueRanking()
-					+ ","
-					+ verein.getRegionRanking()
-					+ ","
-					+ verein.getPowerRating()
-					+ ","
-					+ verein.getTacticalAssistantLevels()
-					+ ","
-					+ verein.getFormCoachLevels()
-					+ ","
-					+ hrfId
-					+ " )");
-			adapter.executeUpdate(statement);
-		}
+			executePreparedDelete( hrfId);
+			executePreparedInsert(
+					hrfId,
+					verein.getCoTrainer(),
+					verein.getPsychologen(),
+					verein.getFinancialDirectorLevels(),
+					verein.getPRManager(),
+					verein.getAerzte(),
+					verein.getJugend(),
+					verein.getSiege(),
+					verein.getUngeschlagen(),
+					verein.getFans(),
+					verein.getTacticalAssistantLevels(),
+					verein.getFormCoachLevels(),
+					verein.getGlobalRanking(),
+					verein.getLeagueRanking(),
+					verein.getRegionRanking(),
+					verein.getPowerRating()
+			);
+	}
 	}
 
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
+	}
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
 	 */
@@ -94,16 +77,10 @@ final class VereinTable extends AbstractTable {
 		Verein club = new Verein();
 
 		if (hrfID != -1) {
-			ResultSet rs;
-
-			String sql;
-
-			sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
-			rs = adapter.executeQuery(sql);
-
+			ResultSet rs = executePreparedSelect(hrfID);
 			try {
 				if (rs != null) {
-					rs.first();
+					rs.next();
 					club = new Verein(rs);
 				}
 			} catch (Exception e) {

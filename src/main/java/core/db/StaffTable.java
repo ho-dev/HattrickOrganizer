@@ -3,9 +3,6 @@ package core.db;
 import core.model.StaffMember;
 import core.model.StaffType;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +29,8 @@ public class StaffTable extends AbstractTable{
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement("WHERE HrfID = ? ORDER BY index");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "WHERE HrfID = ? ORDER BY index");
 	}
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
 		var list = new ArrayList<StaffMember>();
@@ -41,7 +38,6 @@ public class StaffTable extends AbstractTable{
 			try {
 				var rs =executePreparedSelect(hrfId);
 				if ( rs != null) {
-					rs.beforeFirst();
 					while (rs.next()) {
 						StaffMember staff = new StaffMember();
 						staff.setName(rs.getString("Name"));
@@ -84,6 +80,4 @@ public class StaffTable extends AbstractTable{
 		}
 	
 	}
-		
-	
 }

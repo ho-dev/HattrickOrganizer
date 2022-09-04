@@ -88,7 +88,7 @@ public class ScoutEintrag {
     public ScoutEintrag(java.sql.ResultSet rs) {
         try {
             m_iPlayerID = rs.getInt("PlayerID");
-            m_sName = core.db.DBManager.deleteEscapeSequences(rs.getString("Name"));
+            m_sName = rs.getString("Name");
             m_iAlter = rs.getInt("Age");
             m_iAgeDays = rs.getInt("AgeDays");
             m_iTSI = rs.getInt("Marktwert");
@@ -106,7 +106,7 @@ public class ScoutEintrag {
             m_iPrice = rs.getInt("Price");
             m_clDeadline = rs.getTimestamp("Deadline");
             m_bWecker = rs.getBoolean("Wecker");
-            m_sInfo = core.db.DBManager.deleteEscapeSequences(rs.getString("Info"));
+            m_sInfo = rs.getString("Info");
             m_iAgreeability = rs.getInt("Agreeability");
             m_ibaseWage = rs.getInt("baseWage");
             m_iNationality = rs.getInt("Nationality");

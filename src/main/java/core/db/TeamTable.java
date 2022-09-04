@@ -45,38 +45,31 @@ final class TeamTable extends AbstractTable {
 	 * Save the team data for the given HRF id.
 	 */
 	void saveTeam(int hrfId, Team team) {
-		String statement = null;
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
 		if (team != null) {
 			//delete existing lineup
-			delete( awhereS, awhereV );
-			//prepare insert statment 
-			statement = "INSERT INTO " + getTableName()
-					+ " ( TrainingsIntensitaet , StaminaTrainingPart, TrainingsArt, sTrainingsArt , iStimmung, sStimmung , iSelbstvertrauen, sSelbstvertrauen , iErfahrung541 , iErfahrung433 , iErfahrung352 , iErfahrung451 , iErfahrung532 , iErfahrung343, iErfahrung442, iErfahrung523, iErfahrung550, iErfahrung253, HRF_ID ) VALUES(";
-			statement
-				+= ("" + team.getTrainingslevel()
-					+ "," + team.getStaminaTrainingPart()
-					+ "," + team.getTrainingsArtAsInt()
-					+ ",'" 
-					+ "'," + team.getTeamSpirit()
-					+ ",'" 
-					+ "'," + team.getConfidence()
-					+ ",'" 
-					+ "'," + team.getFormationExperience541()
-					+ "," + team.getFormationExperience433()
-					+ "," + team.getFormationExperience352()
-					+ "," + team.getFormationExperience451()
-					+ "," + team.getFormationExperience532()
-					+ "," + team.getFormationExperience343()
-					+ "," + team.getFormationExperience442()
-					+ "," + team.getFormationExperience523()
-					+ "," + team.getFormationExperience550()
-					+ "," + team.getFormationExperience253()
-					+ "," + hrfId
-					+ " )");
-			adapter.executeUpdate(statement);
+			executePreparedDelete(hrfId);
+			executePreparedInsert(
+					hrfId,
+					team.getTrainingslevel(),
+					team.getTrainingsArtAsInt(),
+					"",
+					team.getTeamSpirit(),
+					"",
+					team.getConfidence(),
+					"",
+					team.getFormationExperience541(),
+					team.getFormationExperience433(),
+					team.getFormationExperience352(),
+					team.getFormationExperience451(),
+					team.getFormationExperience532(),
+					team.getFormationExperience343(),
+					team.getStaminaTrainingPart(),
+					team.getFormationExperience442(),
+					team.getFormationExperience523(),
+					team.getFormationExperience550(),
+					team.getFormationExperience253()
+			);
+
 		}
 	}
 
@@ -87,12 +80,10 @@ final class TeamTable extends AbstractTable {
 	String[] getStimmmungSelbstvertrauen(int hrfid) {
 		final int[] intvalue = new int[2];
 		final String[] returnvalue = new String[2];
-		final String sql = "SELECT iStimmung, iSelbstvertrauen, sStimmung, sSelbstvertrauen FROM "+getTableName()+" WHERE HRF_ID=" + hrfid;
-
 		try {
-			final ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = executePreparedSelect(hrfid);
 
-			if (rs.first()) {
+			if (rs.next()) {
 				intvalue[0] = rs.getInt("iStimmung");
 				intvalue[1] = rs.getInt("iSelbstvertrauen");
 
@@ -118,19 +109,16 @@ final class TeamTable extends AbstractTable {
 	 */
 	int[] getStimmmungSelbstvertrauenValues(int hrfid) {
 		final int[] intvalue = new int[2];
-		final String sql = "SELECT iStimmung, iSelbstvertrauen, sStimmung, sSelbstvertrauen FROM "+getTableName()+" WHERE HRF_ID=" + hrfid;
-
 		try {
-			final ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = executePreparedSelect(hrfid);
 
-			if (rs.first()) {
+			if (rs.next()) {
 				intvalue[0] = rs.getInt("iStimmung");
 				intvalue[1] = rs.getInt("iSelbstvertrauen");
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauenValues : " + e);
 		}
-
 		return intvalue;
 	}
 	
@@ -143,11 +131,11 @@ final class TeamTable extends AbstractTable {
 
 		if(hrfID != -1) {
 
-			ResultSet rs = getSelectByHrfID(hrfID);
+			ResultSet rs = executePreparedSelect(hrfID);
 
 			try {
 				if (rs != null) {
-					rs.first();
+					rs.next();
 					team = new Team(rs);
 					rs.close();
 				}

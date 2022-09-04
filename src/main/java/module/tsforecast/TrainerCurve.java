@@ -1,18 +1,12 @@
 package module.tsforecast;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 class TrainerCurve extends Curve {
 
@@ -46,6 +40,12 @@ class TrainerCurve extends Curve {
 		return getSpirit();
 	}
 
+	private static DBManager.PreparedStatementBuilder readTrainerBeforeStartStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM <= ? order by DATUM desc"
+	);
+	private static DBManager.PreparedStatementBuilder readTrainerStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM > ? and DATUM < ? order by DATUM"
+	);
 	private void readTrainer() {
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 
@@ -55,10 +55,7 @@ class TrainerCurve extends Curve {
 		int iLastID = -1;
 
 		// get last skill just before start date
-		ResultSet resultset = m_clJDBC
-				.executeQuery("select SPIELERID, FUEHRUNG, DATUM from SPIELER "
-						+ "where TRAINERTYP <> -1 and DATUM <= '" + start.toDbTimestamp()
-						+ "' order by DATUM desc");
+		ResultSet resultset = m_clJDBC.executePreparedQuery(readTrainerBeforeStartStatementBuilder.getStatement(), start.toDbTimestamp());
 		try {
 			boolean gotInitial = false;
 			assert resultset != null;
@@ -69,13 +66,7 @@ class TrainerCurve extends Curve {
 				gotInitial = true;
 			}
 
-			resultset = m_clJDBC
-					.executeQuery("select SPIELERID, FUEHRUNG, DATUM from SPIELER "
-							+ "where TRAINERTYP <> -1 and DATUM > '"
-							+ start.toDbTimestamp()
-							+ "' and DATUM < '"
-							+ HOVerwaltung.instance().getModel().getBasics()
-									.getDatum().toDbTimestamp() + "' order by DATUM");
+			resultset = m_clJDBC.executePreparedQuery(readTrainerStatementBuilder.getStatement(), start.toDbTimestamp(), HOVerwaltung.instance().getModel().getBasics().getDatum().toDbTimestamp());
 			while (true) {
 				assert resultset != null;
 				if (!resultset.next()) break;

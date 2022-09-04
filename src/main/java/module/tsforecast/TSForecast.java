@@ -122,11 +122,9 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 */
 	private boolean isInCup() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(
-				" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")" + " AND MatchTyp = "
-						+ MatchType.CUP.getId() + " AND Status <> " + MatchKurzInfo.FINISHED
-						+ " LIMIT 1");
-		return matches.length != 0;
+		var matches = DBManager.instance().getMatchesKurzInfo(
+				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,MatchType.CUP.getId(),MatchKurzInfo.FINISHED);
+		return matches.size() != 0;
 	}
 
 	/**
@@ -134,11 +132,9 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 */
 	private boolean hasQualificationMatch() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(
-				" WHERE ( GastID = " + teamId + " OR HeimID = " + teamId + ")" + " AND MatchTyp = "
-						+ MatchType.QUALIFICATION.getId() + " AND Status <> "
-						+ MatchKurzInfo.FINISHED + " LIMIT 1");
-		return matches.length != 0;
+		var matches = DBManager.instance().getMatchesKurzInfo(
+				" WHERE ( GastID = ? OR HeimID = ?) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId, MatchType.QUALIFICATION.getId(), MatchKurzInfo.FINISHED);
+		return matches.size() != 0;
 	}
 
 	private void initializeConfig() {

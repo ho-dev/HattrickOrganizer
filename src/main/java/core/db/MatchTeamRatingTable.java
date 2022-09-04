@@ -3,7 +3,6 @@ package core.db;
 import core.model.match.MatchTeamRating;
 import core.util.HOLogger;
 
-import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +36,8 @@ public class MatchTeamRatingTable extends AbstractTable {
     }
 
     @Override
-    protected PreparedStatement createSelectStatement() {
-        return createSelectStatement("WHERE MatchTyp = ? AND MatchID = ?");
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+        return new PreparedSelectStatementBuilder(this,"WHERE MatchTyp = ? AND MatchID = ?");
     }
 
     List<MatchTeamRating> load(int matchID, int matchType) {
@@ -46,7 +45,6 @@ public class MatchTeamRatingTable extends AbstractTable {
         try {
             var rs = executePreparedSelect(matchType, matchID);
             if (rs != null) {
-                rs.beforeFirst();
                 while (rs.next()) {
                     ret.add(new MatchTeamRating(rs));
                 }
@@ -58,8 +56,8 @@ public class MatchTeamRatingTable extends AbstractTable {
     }
 
     @Override
-    protected PreparedStatement createDeleteStatement() {
-        return createDeleteStatement("WHERE MatchTyp=? AND MatchID=? AND TeamID=?");
+    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
+        return new PreparedDeleteStatementBuilder(this,"WHERE MatchTyp=? AND MatchID=? AND TeamID=?");
     }
 
     void store(MatchTeamRating teamRating) {

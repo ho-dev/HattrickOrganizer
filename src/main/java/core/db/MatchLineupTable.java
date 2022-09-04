@@ -40,19 +40,18 @@ public final class MatchLineupTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
-
 
 	MatchLineup loadMatchLineup(int iMatchType, int matchID) {
 		try {
 			var rs = executePreparedSelect(iMatchType, matchID);
-			rs.first();
+			rs.next();
 			var lineup = createMatchLineup(rs);
 			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
 			lineup.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
@@ -65,21 +64,15 @@ public final class MatchLineupTable extends AbstractTable {
 		return null;
 	}
 
-	private PreparedStatement isMatchLineupInDBStatement;
-	private PreparedStatement getIsMatchLineupInDBStatement(){
-		if ( isMatchLineupInDBStatement==null){
-			isMatchLineupInDBStatement=adapter.createPreparedStatement("SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
-		}
-		return isMatchLineupInDBStatement;
-	}
+	private DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
+
 	/**
 	 * Ist das Match schon in der Datenbank vorhanden?
 	 */
 	boolean isMatchLineupInDB(MatchType matchType, int matchid) {
 		boolean vorhanden = false;
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getIsMatchLineupInDBStatement(), matchType.getId(), matchid);
-			rs.beforeFirst();
+			final ResultSet rs = adapter.executePreparedQuery(isMatchLineupInDBStatementBuilder.getStatement(), matchType.getId(), matchid);
 			if (rs.next()) {
 				vorhanden = true;
 			}
@@ -118,20 +111,12 @@ public final class MatchLineupTable extends AbstractTable {
 		}
 	}
 
-	private PreparedStatement loadYouthMatchLineupsStatement;
-	private PreparedStatement getLoadYouthMatchLineupsStatement(){
-		if ( loadYouthMatchLineupsStatement==null){
-			loadYouthMatchLineupsStatement=createSelectStatement(" WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
-		}
-		return loadYouthMatchLineupsStatement;
-	}
-
+	private final PreparedSelectStatementBuilder loadYouthMatchLineupsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
 	public List<MatchLineup> loadYouthMatchLineups() {
 
 		var lineups = new ArrayList<MatchLineup>();
 		try {
-			var rs = adapter.executePreparedQuery(getLoadYouthMatchLineupsStatement());
-			rs.beforeFirst();
+			var rs = adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement());
 			while (rs.next()) {
 				var lineup = createMatchLineup(rs);
 				lineups.add(lineup);
@@ -142,20 +127,19 @@ public final class MatchLineupTable extends AbstractTable {
 		return lineups;
 	}
 
-	private PreparedStatement deleteYouthMatchLineupsBeforeStatement;
-	private PreparedStatement getDeleteYouthMatchLineupsBeforeStatement(){
-		if (deleteYouthMatchLineupsBeforeStatement==null){
-			var matchTypes = getMatchTypeInValues();
-			deleteYouthMatchLineupsBeforeStatement=createDeleteStatement(" WHERE MATCHTYP IN (" +
-					matchTypes +
-					") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN "+
-					matchTypes + ")");
-		}
-		return deleteYouthMatchLineupsBeforeStatement;
+	private final PreparedDeleteStatementBuilder deleteYouthMatchLineupsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchLineupsBeforeStatementSQL());
+
+	private String getDeleteYouthMatchLineupsBeforeStatementSQL() {
+		var matchTypes = getMatchTypeInValues();
+		return " WHERE MATCHTYP IN (" +
+				matchTypes +
+				") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN " +
+				matchTypes + ")";
 	}
+
 	public void deleteYouthMatchLineupsBefore(Timestamp before) {
 		try {
-			executePreparedDelete(getDeleteYouthMatchLineupsBeforeStatement(), before);
+			executePreparedDelete(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

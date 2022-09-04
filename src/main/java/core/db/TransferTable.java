@@ -5,19 +5,20 @@ import core.model.player.Player;
 import core.util.HODateTime;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
-import module.transfer.XMLParser;
-
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
 public class TransferTable extends AbstractTable {
 	final static String TABLENAME = "TRANSFER";
-	
-	TransferTable(JDBCAdapter adapter){
+    private final HashMap<String, PreparedStatement> getTransferStatements = new HashMap<>();
+
+    TransferTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 
@@ -47,6 +48,14 @@ public class TransferTable extends AbstractTable {
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
 
+    @Override
+    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+        return new PreparedDeleteStatementBuilder(this, " WHERE transferid= ?");
+    }
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, " WHERE transferid= ?");
+    }
     /**
      * Remove a transfer from the HO database
      *
@@ -54,7 +63,7 @@ public class TransferTable extends AbstractTable {
      */
     public void removeTransfer(int transferId) {
     	try {
-            adapter.executeUpdate("DELETE FROM " + getTableName() + " WHERE transferid= "+transferId);
+            executePreparedDelete(transferId);
     	} catch (Exception e) {
     		// ignore
     	}
@@ -66,11 +75,14 @@ public class TransferTable extends AbstractTable {
      * @param transferId Transfer ID
      */
     public PlayerTransfer getTransfer(int transferId) {
-        List<PlayerTransfer> result = loadTransfers("SELECT * FROM " + getTableName() + " WHERE transferid = "+ transferId);
+        List<PlayerTransfer> result = loadTransfers(executePreparedSelect( transferId));
         if (result.size() > 0) return result.get(0);
         return null;
     }
-	
+
+    private final PreparedSelectStatementBuilder getAllTransfersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE playerid = ? ORDER BY date DESC");
+    private final PreparedSelectStatementBuilder getTransfersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE playerid = ? AND (buyerid=? OR sellerid=?) ORDER BY date DESC");
+
     /**
      * Gets a list of transfers.
      *
@@ -81,18 +93,11 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers.
      */
     public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-        final StringBuilder sqlStmt = new StringBuilder("SELECT * FROM " + getTableName());
-        sqlStmt.append(" WHERE playerid = ").append(playerid);
-
         if (!allTransfers) {
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            sqlStmt.append(" AND (buyerid = ").append(teamid);
-            sqlStmt.append(" OR sellerid = ").append(teamid).append(")");
+            return loadTransfers(this.adapter.executePreparedQuery(getTransfersStatementBuilder.getStatement(), playerid, teamid, teamid));
         }
-
-        sqlStmt.append(" ORDER BY date DESC"); 
-
-        return loadTransfers(sqlStmt.toString());
+        return loadTransfers(this.adapter.executePreparedQuery(getAllTransfersStatementBuilder.getStatement(), playerid));
     }
     
     /**
@@ -111,16 +116,13 @@ public class TransferTable extends AbstractTable {
     
     /**
      * Update transfer data for a team from the HT xml.
-     *
      * Returns false if this fails
      *
-     * @param teamid Team id to update data for
+     * @param transfers player transfers
      */
-    public boolean updateTeamTransfers(int teamid) {
+    public List<Player> updateTeamTransfers(List<PlayerTransfer> transfers) {
         try {
-            final List<Player> players = new Vector<>();
-            final List<PlayerTransfer> transfers = XMLParser.getAllTeamTransfers(teamid, HODateTime.now().plus(1, ChronoUnit.DAYS));
-
+            final List<Player> players = new ArrayList<>();
             for (PlayerTransfer transfer : transfers) {
                 final Player player = PlayerRetriever.getPlayer(transfer);
 
@@ -129,16 +131,18 @@ public class TransferTable extends AbstractTable {
                     if (transfer.getPlayerId() == 0) {
                         int playerIdFound = player.getPlayerID();
                         transfer.setPlayerId(playerIdFound);
-                        DBManager.instance().saveIsSpielerFired(playerIdFound, true);
+                        player.setIsFired(true);
                     }
                 } else {
                     PlayerTransfer alreadyInDB = getTransfer(transfer.getTransferID());
                     if (alreadyInDB != null) {
                         if (transfer.getPlayerId() == 0) {
-                            DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
+                            var pl = PlayerRetriever.getPlayer(alreadyInDB);
+                            if ( pl != null) pl.setIsFired(true);
+//                            DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
 //                            continue;
                         } else {
-                            Player dummy = new Player(properties, hrfdate, hoModel.getID());
+                            Player dummy = new Player();
                             dummy.setPlayerID(transfer.getPlayerId());
                             if (!players.contains(dummy)) players.add(dummy);
                         }
@@ -148,39 +152,38 @@ public class TransferTable extends AbstractTable {
                 addTransfer(transfer);
             }
 
-            for (Player player : players) {
-                int playerID = player.getPlayerID();
-                if (!DBManager.instance().getIsSpielerFired(playerID)) {
-                    updatePlayerTransfers(playerID);
-                }
-            }
+            return players.stream().filter(i->!i.isFired()).toList();
 
-            return true;
+//            for (Player player : players) {
+//                int playerID = player.getPlayerID();
+//                if (!player.isFired()) {
+//                    updatePlayerTransfers(playerID);
+//                }
+//            }
+//
+//            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+//            return false;
           }
+
+        return null;
     }
     
     /**
      * Update transfer data for a player.
      *
-     * @param playerId Player
+     * @param transfers Player
      */
-    public void updatePlayerTransfers(int playerId) {
+    public void updatePlayerTransfers(List<PlayerTransfer> transfers) {
         try {
-            final List<PlayerTransfer> transfers = XMLParser.getAllPlayerTransfers(playerId);
-
-            if (transfers.size() > 0) {
-                for (final PlayerTransfer transfer : transfers) {
-                    addTransfer(transfer);
-                }
-            } else DBManager.instance().saveIsSpielerFired(playerId, true);
+            for (final PlayerTransfer transfer : transfers) {
+                addTransfer(transfer);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
     
     
     /**
@@ -194,18 +197,22 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers.
      */
     public List<PlayerTransfer> getTransfers(int teamid, int season, boolean bought, boolean sold) {
-        final StringBuilder sqlStmt = new StringBuilder("SELECT * FROM " + getTableName()); //$NON-NLS-1$
-        sqlStmt.append(" WHERE 1=1"); //$NON-NLS-1$
+        final StringBuilder sqlStmt = new StringBuilder(); //$NON-NLS-1$
 
+        var params = new ArrayList<>();
+        var sep = " WHERE";
         if (season != 0) {
-            sqlStmt.append(" AND season = ").append(season); //$NON-NLS-1$
+            sqlStmt.append(sep).append(" season = ?");
+            params.add(season); //$NON-NLS-1$
+            sep = " AND";
         }
 
         if (bought || sold) {
-            sqlStmt.append(" AND ("); //$NON-NLS-1$
+            sqlStmt.append(sep).append(" ("); //$NON-NLS-1$
 
             if (bought) {
-                sqlStmt.append(" buyerid = ").append(teamid); //$NON-NLS-1$
+                sqlStmt.append(" buyerid = ?");
+                params.add(teamid); //$NON-NLS-1$
             }
 
             if (bought && sold) {
@@ -213,7 +220,8 @@ public class TransferTable extends AbstractTable {
             }
 
             if (sold) {
-                sqlStmt.append(" sellerid = ").append(teamid); //$NON-NLS-1$
+                sqlStmt.append(" sellerid = ?");
+                params.add(teamid); //$NON-NLS-1$
             }
 
             sqlStmt.append(")"); //$NON-NLS-1$
@@ -221,10 +229,16 @@ public class TransferTable extends AbstractTable {
 
         sqlStmt.append(" ORDER BY date DESC"); //$NON-NLS-1$
 
-        return loadTransfers(sqlStmt.toString());
+        var sql = sqlStmt.toString();
+        var statement = getTransferStatements.get(sql);
+        if ( statement == null){
+            statement = new PreparedSelectStatementBuilder(this, sql).getStatement();
+            getTransferStatements.put(sql, statement);
+        }
+        return loadTransfers(this.adapter.executePreparedQuery(statement, params.toArray()));
     }
 	/**
-     * Adds a tranfer to the HO database
+     * Adds a transfer to the HO database
      *
      * @param transfer Transfer information
      *
@@ -232,26 +246,22 @@ public class TransferTable extends AbstractTable {
      */
     private boolean addTransfer(PlayerTransfer transfer) {
     	removeTransfer(transfer.getTransferID());
-        final StringBuilder sqlStmt = new StringBuilder("INSERT INTO " + getTableName());
-        sqlStmt.append("(transferid, date, week, season, playerid, playername, buyerid, buyername, sellerid, sellername, price, marketvalue, tsi)"); 
-        sqlStmt.append(" VALUES ("); 
-        sqlStmt.append(transfer.getTransferID()).append(",");
-        sqlStmt.append("'").append(transfer.getDate().toDbTimestamp()).append("',");
-        sqlStmt.append(transfer.getWeek()).append(",");
-        sqlStmt.append(transfer.getSeason()).append(",");
-        sqlStmt.append(transfer.getPlayerId()).append(",");
-        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getPlayerName())).append("',");
-        sqlStmt.append(transfer.getBuyerid()).append(",");
-        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getBuyerName())).append("',");
-        sqlStmt.append(transfer.getSellerid()).append(",");
-        sqlStmt.append("'").append(DBManager.insertEscapeSequences(transfer.getSellerName())).append("',");
-        sqlStmt.append(transfer.getPrice()).append(",");
-        sqlStmt.append(transfer.getMarketvalue()).append(",");
-        sqlStmt.append(transfer.getTsi());
-        sqlStmt.append(" )"); 
-
         try {
-            DBManager.instance().getAdapter().executeUpdate(sqlStmt.toString());
+            executePreparedInsert(
+                    transfer.getTransferID(),
+                    transfer.getDate().toDbTimestamp(),
+                    transfer.getWeek(),
+                    transfer.getSeason(),
+                    transfer.getPlayerId(),
+                    transfer.getPlayerName(),
+                    transfer.getBuyerid(),
+                    transfer.getBuyerName(),
+                    transfer.getSellerid(),
+                    transfer.getSellerName(),
+                    transfer.getPrice(),
+                    transfer.getMarketvalue(),
+                    transfer.getTsi()
+            );
             return true;
         } catch (Exception inore) {
             return false;
@@ -261,36 +271,32 @@ public class TransferTable extends AbstractTable {
     /**
      * Loads a list of transfers from the HO database.
      *
-     * @param sqlStmt SQL statement.
+     * @param rs ResultSet
      *
      * @return List of transfers
      */
-    private List<PlayerTransfer> loadTransfers(String sqlStmt) {
+    private List<PlayerTransfer> loadTransfers(ResultSet rs) {
         double curr_rate=1.;
         var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
         if ( xtra != null ){
             curr_rate = xtra.getCurrencyRate();
         }
-
         final List<PlayerTransfer> results = new Vector<>();
-        final ResultSet rs = DBManager.instance().getAdapter().executeQuery(sqlStmt);
-
         if (rs == null) {
             return new Vector<>();
         }
-
         try {
             while (rs.next()) {
                 PlayerTransfer transfer = new PlayerTransfer(rs.getInt("transferid"),rs.getInt("playerid"));  
-                transfer.setPlayerName( DBManager.deleteEscapeSequences(rs.getString("playername"))); 
+                transfer.setPlayerName( rs.getString("playername"));
                 transfer.setDate(HODateTime.fromDbTimestamp(rs.getTimestamp("date")));
                 transfer.setWeek(rs.getInt("week")); 
                 transfer.setSeason(rs.getInt("season")); 
 
                 transfer.setBuyerid(rs.getInt("buyerid")); 
-                transfer.setBuyerName( DBManager.deleteEscapeSequences(rs.getString("buyername"))); 
+                transfer.setBuyerName(rs.getString("buyername"));
                 transfer.setSellerid(rs.getInt("sellerid")); 
-                transfer.setSellerName( DBManager.deleteEscapeSequences(rs.getString("sellername"))); 
+                transfer.setSellerName( rs.getString("sellername"));
 
                 transfer.setPrice((int) (rs.getInt("price") / curr_rate)); 
                 transfer.setMarketvalue((int) (rs.getInt("marketvalue") / curr_rate)); 

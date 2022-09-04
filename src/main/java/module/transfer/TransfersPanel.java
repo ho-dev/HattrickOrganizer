@@ -80,8 +80,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		}
 		boolean success = false;
 		if ((allOutdated.size() > 0) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
-			success = DBManager.instance().updateTeamTransfers(
-						HOVerwaltung.instance().getModel().getBasics().getTeamId());
+			success = XMLParser.updateTeamTransfers(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		}
 		
 		// If download is cancelled, the below will give authorization requests for each player.
@@ -90,7 +89,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		// Also, Db is called to do downloads? Truly messed up. 
 		if (success) {
 			for (final Player player : allOutdated) {
-				DBManager.instance().updatePlayerTransfers(player.getPlayerID());
+				XMLParser.updatePlayerTransfers(player.getPlayerID());
 			}
 		}
 

@@ -2,11 +2,8 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -20,7 +17,7 @@ public final class FutureTrainingTable extends AbstractTable {
 	 **/
 	public final static String TABLENAME = "FUTURETRAINING";
 
-	protected FutureTrainingTable(JDBCAdapter adapter) {
+	FutureTrainingTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -37,19 +34,15 @@ public final class FutureTrainingTable extends AbstractTable {
 		};
 	}
 
-	private PreparedStatement getFutureTrainingsVectorStatement;
-	private PreparedStatement getGetFutureTrainingsVectorStatement(){
-		if (getFutureTrainingsVectorStatement==null ){
-			getFutureTrainingsVectorStatement = adapter.createPreparedStatement("select * from " + getTableName() + " ORDER BY TRAINING_DATE");
-		}
-		return getFutureTrainingsVectorStatement;
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this," ORDER BY TRAINING_DATE");
 	}
 	List<TrainingPerWeek> getFutureTrainingsVector() {
 		var vTrainings = new ArrayList<TrainingPerWeek>();
-		ResultSet rs = adapter.executePreparedQuery(getGetFutureTrainingsVectorStatement());
 		try {
+			ResultSet rs =executePreparedSelect();
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					var trainingDate = rs.getTimestamp("TRAINING_DATE");
 					var training_type = rs.getInt("TRAINING_TYPE");
@@ -69,18 +62,11 @@ public final class FutureTrainingTable extends AbstractTable {
 		return vTrainings;
 	}
 
-	private PreparedStatement loadFutureTrainingsStatement;
-	private PreparedStatement getLoadFutureTrainingsStatement(){
-		if(loadFutureTrainingsStatement==null){
-			loadFutureTrainingsStatement=adapter.createPreparedStatement("select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
-		}
-		return loadFutureTrainingsStatement;
-	}
+	private final DBManager.PreparedStatementBuilder loadFutureTrainingsStatementBuilder = new DBManager.PreparedStatementBuilder( this.adapter, "select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
 	int loadFutureTrainings(Timestamp trainingDate) {
-		ResultSet rs = adapter.executePreparedQuery(getLoadFutureTrainingsStatement(), trainingDate);
+		ResultSet rs = adapter.executePreparedQuery(loadFutureTrainingsStatementBuilder.getStatement(), trainingDate);
 		try {
 			if (rs != null) {
-				rs.beforeFirst();
 				if (rs.next()) {
 					return (rs.getInt("TYPE"));
 				}
@@ -91,20 +77,19 @@ public final class FutureTrainingTable extends AbstractTable {
 		return -1;
 	}
 
-	private PreparedStatement updateFutureTrainingStatement;
-	private PreparedStatement getUpdateFutureTrainingStatement(){
-		if (updateFutureTrainingStatement==null){
-			updateFutureTrainingStatement=adapter.createPreparedStatement( "update " + getTableName() +
-					" set TRAINING_TYPE= ?, TRAINING_INTENSITY=?, STAMINA_SHARE=?, COACH_LEVEL=?, " +
-					"TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE=?");
-		}
-		return updateFutureTrainingStatement;
+
+	@Override
+	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder() {
+		return new PreparedUpdateStatementBuilder(this,
+				" set TRAINING_TYPE= ?, TRAINING_INTENSITY=?, STAMINA_SHARE=?, COACH_LEVEL=?, " +
+						"TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE=?");
 	}
+
 	void storeFutureTraining(TrainingPerWeek training) {
 		if (training != null) {
 
 			var trainingDate = training.getTrainingDate().toDbTimestamp();
-			int count = adapter.executePreparedUpdate(getUpdateFutureTrainingStatement(),
+			int count = executePreparedUpdate(
 					training.getTrainingType(),
 					training.getTrainingIntensity(),
 					training.getStaminaShare(),
@@ -115,7 +100,7 @@ public final class FutureTrainingTable extends AbstractTable {
 			);
 
 			if (count == 0) {
-				adapter.executePreparedUpdate(getInsertStatement(),
+				executePreparedInsert(
 						trainingDate,
 						training.getTrainingIntensity(),
 						training.getStaminaShare(),
@@ -132,15 +117,12 @@ public final class FutureTrainingTable extends AbstractTable {
 		}
 	}
 
-	private PreparedStatement clearFutureTrainingsTableStatement;
-	private PreparedStatement getClearFutureTrainingsTableStatement(){
-		if ( clearFutureTrainingsTableStatement==null){
-			clearFutureTrainingsTableStatement=adapter.createPreparedStatement("DELETE FROM " + getTableName()+ " WHERE TRUE");
-		}
-		return clearFutureTrainingsTableStatement;
+	@Override
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this, " WHERE TRUE");
 	}
 	void clearFutureTrainingsTable(){
-		adapter.executePreparedUpdate(getClearFutureTrainingsTableStatement());
+		executePreparedDelete();
 		HOLogger.instance().debug(getClass(), "FutureTraining table has been cleared !");
 	}
 }

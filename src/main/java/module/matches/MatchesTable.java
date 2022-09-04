@@ -10,6 +10,7 @@ import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+import core.model.match.MatchKurzInfo;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -68,7 +69,8 @@ final class MatchesTable extends JTable {
 
 		if (m_clTableModel == null) {
 			m_clTableModel = UserColumnController.instance().getMatchesModel();
-			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation));
+			var matches = DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]);
+			m_clTableModel.setValues(matches);
 			m_clTableSorter = new TableSorter(m_clTableModel,m_clTableModel.getDisplayedColumns().length - 1, -1);
 
 			final ToolTipHeader header = new ToolTipHeader(getColumnModel());
@@ -102,7 +104,7 @@ final class MatchesTable extends JTable {
 		} else {
 			// Reset Values of the matches table in matches module after selection change
 			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(
-					HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation));
+					HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]));
 			m_clTableSorter.reallocateIndexes();
 		}
 

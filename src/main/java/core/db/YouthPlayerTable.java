@@ -7,11 +7,10 @@ import module.youth.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.*;
+
+import static core.util.HODateTime.toDbTimestamp;
 
 public class YouthPlayerTable  extends AbstractTable {
 
@@ -81,13 +80,9 @@ public class YouthPlayerTable  extends AbstractTable {
      * save youth players
      */
     void storeYouthPlayers(int hrfId, List<YouthPlayer> players) {
-
-        final String[] awhereS = { "HRF_ID" };
-        final String[] awhereV = { "" + hrfId };
-
         if (players != null) {
             // Delete old values
-            delete(awhereS, awhereV);
+            executePreparedDelete(hrfId);
 
             for ( YouthPlayer p: players){
                 storeYouthPlayer(hrfId, p);
@@ -95,64 +90,49 @@ public class YouthPlayerTable  extends AbstractTable {
         }
     }
 
+    private PreparedDeleteStatementBuilder deleteYouthPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND ID=?");
     void storeYouthPlayer(int hrfId, YouthPlayer player) {
+        adapter.executePreparedUpdate(deleteYouthPlayerStatementBuilder.getStatement(), hrfId, player.getId());
 
-        final String[] awhereS = {"HRF_ID", "ID"};
-        final String[] awhereV = {"" + hrfId, "" + player.getId()};
-        // Delete old values
-        delete(awhereS, awhereV);
-
-        //insert vorbereiten
-        var sql = new StringBuilder("INSERT INTO ")
-                .append(getTableName())
-                .append(" (HRF_ID,ID,FirstName,NickName,LastName,Age,AgeDays,ArrivalDate,PromotionDate," +
-                        "CanBePromotedIn,PlayerNumber," +
-                        "Statement,OwnerNotes,PlayerCategoryID,Cards,InjuryLevel,Specialty,CareerGoals,CareerHattricks," +
-                        "LeagueGoals,FriendlyGoals,ScoutId,ScoutingRegionID,ScoutName,YouthMatchID,PositionCode," +
-                        "PlayedMinutes,Rating,YouthMatchDate");
-
-        for ( var skillId : YouthPlayer.skillIds){
-            sql.append(",").append(getSkillColumnNames(skillId));
-        }
-        sql.append(") VALUES(")
-                .append(hrfId).append(",")
-                .append(player.getId()).append(",'")
-                .append(DBManager.insertEscapeSequences(player.getFirstName())).append("','")
-                .append(DBManager.insertEscapeSequences(player.getNickName())).append("','")
-                .append(DBManager.insertEscapeSequences(player.getLastName())).append("',")
-                .append(player.getAgeYears()).append(",")
-                .append(player.getAgeDays()).append(",")
-                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getArrivalDate()))).append(",")
-                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getPromotionDate()))).append(",")
-                .append(player.getCanBePromotedIn()).append(",'")
-                .append(player.getPlayerNumber()).append("','")
-                .append(DBManager.insertEscapeSequences(player.getStatement())).append("','")
-                .append(DBManager.insertEscapeSequences(player.getOwnerNotes())).append("',")
-                .append(player.getPlayerCategoryID()).append(",")
-                .append(player.getCards()).append(",")
-                .append(player.getInjuryLevel()).append(",")
-                .append(player.getSpecialty().getValue()).append(",")
-                .append(player.getCareerGoals()).append(",")
-                .append(player.getCareerHattricks()).append(",")
-                .append(player.getLeagueGoals()).append(",")
-                .append(player.getFriendlyGoals()).append(",")
-                .append(player.getScoutId()).append(",")
-                .append(player.getScoutingRegionID()).append(",'")
-                .append(DBManager.insertEscapeSequences(player.getScoutName())).append("',")
-                .append(player.getYouthMatchID()).append(",")
-                .append(player.getPositionCode()).append(",")
-                .append(player.getPlayedMinutes()).append(",")
-                .append(player.getRating()).append(",")
-                .append(DBManager.nullOrValue(HODateTime.toDbTimestamp(player.getYouthMatchDate())));
+        var values = new ArrayList<>();
+        values.add(hrfId);
+        values.add(player.getId());
+        values.add(player.getFirstName());
+        values.add(player.getNickName());
+        values.add(player.getLastName());
+        values.add(player.getAgeYears());
+        values.add(player.getAgeDays());
+        values.add(toDbTimestamp(player.getArrivalDate()));
+        values.add(toDbTimestamp(player.getPromotionDate()));
+        values.add(player.getCanBePromotedIn());
+        values.add(player.getPlayerNumber());
+        values.add(player.getStatement());
+        values.add(player.getOwnerNotes());
+        values.add(player.getPlayerCategoryID());
+        values.add(player.getCards());
+        values.add(player.getInjuryLevel());
+        values.add(player.getSpecialty().getValue());
+        values.add(player.getCareerGoals());
+        values.add(player.getCareerHattricks());
+        values.add(player.getLeagueGoals());
+        values.add(player.getFriendlyGoals());
+        values.add(player.getScoutId());
+        values.add(player.getScoutingRegionID());
+        values.add(player.getScoutName());
+        values.add(player.getYouthMatchID());
+        values.add(player.getPositionCode());
+        values.add(player.getPlayedMinutes());
+        values.add(player.getRating());
+        values.add(toDbTimestamp(player.getYouthMatchDate()));
 
         for ( var skillId: YouthPlayer.skillIds){
-            AppendSkillInfo(sql, player, skillId);
+            AppendSkillInfo(values, player, skillId);
         }
-        sql.append(")");
+
         try {
-            adapter.executeUpdate(sql.toString());
+            executePreparedInsert(values.toArray());
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + sql + " : " + e);
+            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + e);
         }
         var scoutComments = player.getScoutComments();
         if (scoutComments.size() > 0) {
@@ -166,25 +146,20 @@ public class YouthPlayerTable  extends AbstractTable {
         }
     }
 
-    private String getSkillColumnNames(Skills.HTSkillID prefix) {
-        return prefix +","
-                + prefix + "Max,"
-                + prefix + "Start,"
-                + prefix + "IsMaxReached,"
-                + prefix + "Value,"
-                + prefix + "StartValue,"
-                + prefix + "Top3";
+    private void AppendSkillInfo(ArrayList<Object> values, YouthPlayer player, Skills.HTSkillID skillID) {
+        var skillInfo = player.getSkillInfo(skillID);
+        values.add(skillInfo.getCurrentLevel());
+        values.add(skillInfo.getMax());
+        values.add(skillInfo.getStartLevel());
+        values.add(skillInfo.isMaxReached());
+        values.add(skillInfo.getCurrentValue());
+        values.add(skillInfo.getStartValue());
+        values.add(skillInfo.isTop3());
     }
 
-    private void AppendSkillInfo(StringBuilder sql, YouthPlayer player, Skills.HTSkillID skillID) {
-        var skillInfo = player.getSkillInfo(skillID);
-        sql.append(",").append(skillInfo.getCurrentLevel())
-                .append(",").append(skillInfo.getMax())
-                .append(",").append(skillInfo.getStartLevel())
-                .append(",").append(skillInfo.isMaxReached())
-                .append(",").append(skillInfo.getCurrentValue())
-                .append(",").append(skillInfo.getStartValue())
-                .append(",").append(skillInfo.isTop3());
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, " WHERE HRF_ID = ?" );
     }
     /**
      * load youth player of HRF file id
@@ -192,11 +167,9 @@ public class YouthPlayerTable  extends AbstractTable {
     List<YouthPlayer> loadYouthPlayers(int hrfID) {
         final ArrayList<YouthPlayer> ret = new ArrayList<>();
         if ( hrfID > -1) {
-            var sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
-            var rs = adapter.executeQuery(sql);
+            var rs = executePreparedSelect(hrfID);
             try {
                 if (rs != null) {
-                    rs.beforeFirst();
                     while (rs.next()) {
                         var player = createObject(rs);
                         ret.add(player);
@@ -209,12 +182,11 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
+    private PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
     public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
-        var sql = "SELECT * from " + getTableName() + " WHERE ID=" + id + " AND YOUTHMATCHDATE='" + date + "'";
-        var rs = adapter.executeQuery(sql);
+        var rs = adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date);
         try {
             if (rs != null) {
-                rs.beforeFirst();
                 if (rs.next()) {
                     return createObject(rs);
                 }
@@ -237,13 +209,13 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setCards(rs.getInt("Cards"));
             ret.setCareerGoals(rs.getInt("CareerGoals"));
             ret.setCareerHattricks(rs.getInt("CareerHattricks"));
-            ret.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
-            ret.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
-            ret.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
+            ret.setFirstName(rs.getString("FirstName"));
+            ret.setNickName(rs.getString("NickName"));
+            ret.setLastName(rs.getString("LastName"));
             ret.setFriendlyGoals(rs.getInt("FriendlyGoals"));
             ret.setInjuryLevel(rs.getInt("InjuryLevel"));
             ret.setLeagueGoals(rs.getInt("LeagueGoals"));
-            ret.setOwnerNotes(DBManager.deleteEscapeSequences(rs.getString("OwnerNotes")));
+            ret.setOwnerNotes(rs.getString("OwnerNotes"));
             ret.setPlayedMinutes(rs.getInt("PlayedMinutes"));
             ret.setPlayerCategoryID(rs.getInt("PlayerCategoryID"));
             ret.setPlayerNumber(rs.getString("PlayerNumber"));
@@ -251,9 +223,9 @@ public class YouthPlayerTable  extends AbstractTable {
             ret.setRating(rs.getDouble("Rating"));
             ret.setScoutId(rs.getInt("ScoutId"));
             ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
-            ret.setScoutName(DBManager.deleteEscapeSequences(rs.getString("ScoutName")));
+            ret.setScoutName(rs.getString("ScoutName"));
             ret.setSpecialty(Specialty.valueOf(DBManager.getInteger(rs,"Specialty")));
-            ret.setStatement(DBManager.deleteEscapeSequences(rs.getString("Statement")));
+            ret.setStatement(rs.getString("Statement"));
             ret.setYouthMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("YouthMatchDate")));
             ret.setYouthMatchID(rs.getInt("YouthMatchID"));
             for ( var skillId: YouthPlayer.skillIds){
@@ -279,12 +251,11 @@ public class YouthPlayerTable  extends AbstractTable {
         youthPlayer.setSkillInfo(skillinfo);
     }
 
+    private DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
     public Timestamp loadMinScoutingDate() {
-        var sql = "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL";
         try {
-            var rs = adapter.executeQuery(sql);
+            var rs = adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement());
             if (rs != null) {
-                rs.beforeFirst();
                 if (rs.next()) {
                     return rs.getTimestamp(1);
                 }

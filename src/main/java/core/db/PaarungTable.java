@@ -37,8 +37,8 @@ public final class PaarungTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE SAISON=? AND LigaId=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE SAISON=? AND LigaId=?");
 	}
 
 
@@ -79,8 +79,8 @@ public final class PaarungTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement(" WHERE LigaID = ? AND Saison = ?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this," WHERE LigaID = ? AND Saison = ?");
 	}
 
 	/**
@@ -94,8 +94,6 @@ public final class PaarungTable extends AbstractTable {
 		try {
 			rs = executePreparedSelect(plan.getLigaId(), plan.getSaison());
 			assert rs != null;
-			rs.beforeFirst();
-
 			while (rs.next()) {
 				//Paarung auslesen
 				match = new Paarung();

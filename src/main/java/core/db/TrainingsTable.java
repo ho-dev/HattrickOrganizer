@@ -2,15 +2,11 @@ package core.db;
 
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.time.Instant;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -22,7 +18,7 @@ import java.util.List;
 final class TrainingsTable extends AbstractTable {
 	final static String TABLENAME = "TRAINING";
 	
-	protected TrainingsTable(JDBCAdapter  adapter){
+	TrainingsTable(JDBCAdapter adapter){
 		super(TABLENAME, adapter);
 	}
 
@@ -38,6 +34,12 @@ final class TrainingsTable extends AbstractTable {
 		columns[6]= new ColumnDescriptor("SOURCE",Types.INTEGER,false);
 	}
 
+	@Override
+	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
+		return new PreparedUpdateStatementBuilder(this, "SET TRAINING_TYPE=?, TRAINING_INTENSITY=?" +
+				", STAMINA_SHARE=?, COACH_LEVEL=?, TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE = ?" );
+	}
+
 	/**
 	 * save provided training in database (trainings still in the future will be skipped)
 	 * @param training training to be saved
@@ -49,40 +51,38 @@ final class TrainingsTable extends AbstractTable {
 
 			var trainingDate = training.getTrainingDate();
 			if (trainingDate.isAfter(lastTrainingDate)) {
-//				HOLogger.instance().debug(this.getClass(), trainingDate + " in the future   =>    SKIPPED");
 				return;
 			}
-
-			String sql;
-			if (isTrainingDateInDB(trainingDate)) {
-
-				if (force) {
-					sql = "UPDATE TRAINING  SET TRAINING_TYPE=" + training.getTrainingType() +
-							", TRAINING_INTENSITY=" + training.getTrainingIntensity() +
-							", STAMINA_SHARE=" + training.getStaminaShare() +
-							", COACH_LEVEL=" + training.getCoachLevel() +
-							", TRAINING_ASSISTANTS_LEVEL=" + training.getTrainingAssistantsLevel() +
-							", SOURCE=" + training.getSource().getValue() +
-							" WHERE TRAINING_DATE = '" + trainingDate.toDbTimestamp() + "'";
-//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    UPDATED");
-				} else {
-//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
-					return;
-				}
-			} else {
-				sql = "INSERT INTO " + getTableName() + " (TRAINING_DATE, TRAINING_TYPE, TRAINING_INTENSITY, STAMINA_SHARE, COACH_LEVEL, TRAINING_ASSISTANTS_LEVEL, SOURCE) VALUES ('";
-				sql += trainingDate.toDbTimestamp() + "', ";
-				sql += training.getTrainingType() + ", ";
-				sql += training.getTrainingIntensity() + ", ";
-				sql += training.getStaminaShare() + ", ";
-				sql += training.getCoachLevel() + ", ";
-				sql += training.getTrainingAssistantsLevel() + ", ";
-				sql += training.getSource().getValue() + ")";
-				//HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
-			}
-
 			try {
-				adapter.executeUpdate(sql);
+				if (isTrainingDateInDB(trainingDate)) {
+
+					if (force) {
+						executePreparedUpdate(
+								training.getTrainingType(),
+								training.getTrainingIntensity(),
+								training.getStaminaShare(),
+								training.getCoachLevel(),
+								training.getTrainingAssistantsLevel(),
+								training.getSource().getValue(),
+								trainingDate.toDbTimestamp()
+						);
+//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    UPDATED");
+					} else {
+//					HOLogger.instance().debug(this.getClass(), trainingDate + " already in TRAININGS   =>    SKIPPED");
+					}
+				} else {
+					executePreparedInsert(
+							trainingDate.toDbTimestamp(),
+							training.getTrainingType(),
+							training.getTrainingIntensity(),
+							training.getStaminaShare(),
+							training.getCoachLevel(),
+							training.getTrainingAssistantsLevel(),
+							training.getSource().getValue()
+					);
+					//HOLogger.instance().debug(this.getClass(), trainingDate + "  =>    INSERTED");
+				}
+
 			} catch (Exception e) {
 				HOLogger.instance().error(this.getClass(), "Error when executing TrainingsTable.saveTraining(): " + e);
 			}
@@ -116,15 +116,10 @@ final class TrainingsTable extends AbstractTable {
 				source);
 	}
 
+	private final PreparedSelectStatementBuilder isTrainingDateInDBBuilder = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE = ? LIMIT 1");
 	private boolean isTrainingDateInDB(HODateTime trainingDate) {
-		String sql = "SELECT 1 FROM "
-				+ getTableName()
-				+ " WHERE TRAINING_DATE = '"
-				+ trainingDate.toDbTimestamp()
-				+ "' LIMIT 1";
-
 		try {
-			final ResultSet rs = adapter.executeQuery(sql);
+			final ResultSet rs = adapter.executePreparedQuery(isTrainingDateInDBBuilder.getStatement(), trainingDate.toDbTimestamp());
 			if (rs != null) {
 				if (rs.next()) {
 					return true;
@@ -137,28 +132,53 @@ final class TrainingsTable extends AbstractTable {
 		return false;
 	}
 
+	private final HashMap<Integer, PreparedStatement> getTrainingListStatements = new HashMap<>();
+	private PreparedStatement getTrainingListStatement(Timestamp from, Timestamp to, List<Object> values){
+		PreparedStatement ret;
+		if ( from == null && to==null){
+			ret = getTrainingListStatements.get(0);
+			if ( ret == null){
+				ret = new PreparedSelectStatementBuilder(this, "ORDER  BY TRAINING_DATE DESC").getStatement();
+				getTrainingListStatements.put(0,ret);
+			}
+		}
+		else if ( from==null ) {
+			ret = getTrainingListStatements.get(1);
+			if ( ret == null){
+				ret = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE<?").getStatement();
+				getTrainingListStatements.put(1,ret);
+			}
+			values.add(to);
+		}
+		else if ( to==null ){
+			ret = getTrainingListStatements.get(2);
+			if ( ret == null) {
+				ret = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE>=?").getStatement();
+				getTrainingListStatements.put(2, ret);
+			}
+			values.add(from);
+		}
+		else {
+			ret = getTrainingListStatements.get(3);
+			if ( ret == null){
+				ret = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE>=? AND WHERE TRAINING_DATE<?").getStatement();
+			}
+			values.add(from);
+			values.add(to);
+		}
+		return ret;
+	}
 	List<TrainingPerWeek> getTrainingList() {
 		return getTrainingList(null, null);
 	}
 
 	public List<TrainingPerWeek> getTrainingList(Timestamp fromDate, Timestamp toDate) {
 		final List<TrainingPerWeek> vTrainings = new ArrayList<>();
-		var statement = new StringBuilder("SELECT * FROM ").append(getTableName());
-		var sep = " WHERE ";
-		if ( toDate != null ){
-			statement.append(sep).append("TRAINING_DATE < '").append(toDate).append("'");
-			sep = " AND ";
-		}
-		if (fromDate!=null) {
-			statement.append(sep).append("TRAINING_DATE >= '").append(fromDate).append("'");
-		}
-		statement.append(" ORDER BY TRAINING_DATE DESC");
-
 		try {
-			final ResultSet rs = adapter.executeQuery(statement.toString());
-
+			var values = new ArrayList<>();
+			var statement = getTrainingListStatement(fromDate, toDate, values);
+			final ResultSet rs = adapter.executePreparedQuery(statement, values.toArray());
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					vTrainings.add(getTrainingPerWeek(rs));
 				}
@@ -166,7 +186,6 @@ final class TrainingsTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(),"TrainingsTable.getTrainingList " + e.getMessage());
 		}
-
 		return vTrainings;
 	}
 }

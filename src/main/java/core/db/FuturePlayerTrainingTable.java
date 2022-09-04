@@ -4,8 +4,6 @@ package core.db;
 import core.training.FuturePlayerTraining;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -34,20 +32,11 @@ public class FuturePlayerTrainingTable extends AbstractTable {
                 new ColumnDescriptor("prio", Types.INTEGER, false)
         };
     }
-
-    private PreparedStatement getFuturePlayerTrainingPlanStatement;
-    private PreparedStatement getGetFuturePlayerTrainingPlanStatement(){
-        if (getFuturePlayerTrainingPlanStatement==null){
-            getFuturePlayerTrainingPlanStatement=adapter.createPreparedStatement("select * from " + getTableName() + " where playerId=?");
-        }
-        return getFuturePlayerTrainingPlanStatement;
-    }
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        ResultSet rs = adapter.executePreparedQuery(getGetFuturePlayerTrainingPlanStatement(), playerId);
+        ResultSet rs = executePreparedSelect(playerId);
         try {
             if (rs != null) {
                 var ret = new ArrayList<FuturePlayerTraining>();
-                rs.beforeFirst();
                 while (rs.next()) {
                     ret.add(createFuturePlayerTraining(rs));
                 }
@@ -74,10 +63,6 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         return new FuturePlayerTraining(playerid, prio, from, to);
     }
 
-    @Override
-    protected PreparedStatement createDeleteStatement(){
-        return createDeleteStatement("where playerId=?");
-    }
     public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
         try {
             executePreparedDelete(spielerID);

@@ -29,13 +29,15 @@ public class YouthTrainingTable extends AbstractTable{
         };
     }
 
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, "");
+    }
     public List<YouthTraining> loadYouthTrainings() {
         final ArrayList<YouthTraining> ret = new ArrayList<>();
-        var sql = "SELECT * from " + getTableName() ;
-        var rs = adapter.executeQuery(sql);
+        var rs = executePreparedSelect();
         try {
             if (rs != null) {
-                rs.beforeFirst();
                 while (rs.next()) {
                     var training = createObject(rs);
                     ret.add(training);
@@ -58,23 +60,15 @@ public class YouthTrainingTable extends AbstractTable{
 
     public void storeYouthTraining(YouthTraining youthTraining) {
         var matchId = youthTraining.getMatchId();
-        delete( new String[]{"MatchId"}, new String[]{""+matchId});
+        executePreparedDelete(matchId);
         if ( youthTraining.getTraining(YouthTraining.Priority.Primary) != null ||
                 youthTraining.getTraining(YouthTraining.Priority.Secondary) != null) {
-            StringBuilder sql = new StringBuilder("INSERT INTO " + getTableName()
-                    + " ( MatchId, MatchTyp, Training1, Training2 ) VALUES("
-                    + matchId + ","
-                    + youthTraining.getMatchType().getId());
-            for (var p : YouthTraining.Priority.values()) {
-                var tt = youthTraining.getTraining(p);
-                if (tt == null) {
-                    sql.append(",null");
-                } else {
-                    sql.append(",").append(tt.getValue());
-                }
-            }
-            sql.append(")");
-            adapter.executeUpdate(sql.toString());
+            executePreparedInsert(
+                    matchId,
+                    youthTraining.getMatchType().getId(),
+                    youthTraining.getTraining(YouthTraining.Priority.Primary),
+                    youthTraining.getTraining(YouthTraining.Priority.Secondary)
+            );
         }
     }
 }

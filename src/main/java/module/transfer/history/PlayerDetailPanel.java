@@ -11,6 +11,7 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
+import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.sorter.DefaultTableSorter;
@@ -194,7 +195,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     /** {@inheritDoc} */
     public final void actionPerformed(ActionEvent e) {
         if (this.playerId > 0) {
-        	DBManager.instance().updatePlayerTransfers(this.playerId);
+        	XMLParser.updatePlayerTransfers(this.playerId);
             updatePanel();
         }
     }
@@ -253,7 +254,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void updatePanel() {
         if (playerId > 0) {
-            if (DBManager.instance().getIsSpielerFired(playerId)) {
+            var playerNotes = DBManager.instance().loadPlayerNotes(playerId);
+            if (playerNotes.isFired()) {
                 fired.setVisible(true);
                 updBtn.setEnabled(false);
             } else {

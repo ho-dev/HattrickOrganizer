@@ -3,8 +3,6 @@ package core.db;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
@@ -14,7 +12,7 @@ public final class FaktorenTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "FAKTOREN";
 	
-	protected FaktorenTable(JDBCAdapter  adapter){
+	FaktorenTable(JDBCAdapter adapter){
 		super(TABLENAME, adapter);
 	}
 
@@ -33,11 +31,11 @@ public final class FaktorenTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE PositionID = ?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
 	}
 
-	protected void pushFactorsIntoDB(FactorObject fo) {
+	void pushFactorsIntoDB(FactorObject fo) {
 		if (fo != null) {
 			executePreparedDelete(fo.getPosition());
 			executePreparedInsert(
@@ -54,17 +52,12 @@ public final class FaktorenTable extends AbstractTable {
 		}
 	}
 
-	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement("");
-	}
 	void getFaktorenFromDB() {
 		final FormulaFactors factors = FormulaFactors.instance();
 		final ResultSet rs = executePreparedSelect();
 
 		try {
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					factors.setPositionFactor(rs.getByte("PositionID"), new FactorObject(rs));
 				}

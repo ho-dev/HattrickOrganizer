@@ -2,7 +2,6 @@ package core.db;
 
 import core.model.player.Player;
 import core.util.HOLogger;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -29,8 +28,8 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	@Override
-	protected  PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE SPIELERID=?");
+	protected  PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE SPIELERID=?");
 	}
 
 	void store(Player.Notes notes) {
@@ -53,8 +52,8 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement("WHERE SpielerID=?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this,"WHERE SpielerID=?");
 	}
 	public Player.Notes load(int playerId) {
 		try {

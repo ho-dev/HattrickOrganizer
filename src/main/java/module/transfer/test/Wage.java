@@ -41,6 +41,8 @@ public class Wage {
 		this.wage = wage;
 	}
 
+	static private DBManager.PreparedStatementBuilder playerStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT age, gehalt FROM Player WHERE spielerid=? GROUP BY age, gehalt");
 	/**
 	 * Gets a list of Wages for player which have to be payed for his different
 	 * ages (the wages to be payed at birthdays in the past).
@@ -50,10 +52,7 @@ public class Wage {
 	 */
 	public static List<Wage> getWagesByAge(int playerID) {
 		List<Wage> wages = new ArrayList<Wage>();
-
-		String query = "SELECT age, gehalt FROM Player WHERE spielerid=" + playerID
-				+ " GROUP BY age, gehalt";
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(playerStatementBuilder.getStatement(), playerID);
 		try {
 			while (rs.next()) {
 				wages.add(new Wage(rs.getInt("age"), rs.getInt("gehalt") / 10));

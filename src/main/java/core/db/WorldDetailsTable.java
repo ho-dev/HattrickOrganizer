@@ -26,60 +26,25 @@ class WorldDetailsTable extends AbstractTable {
 		columns[3]= new ColumnDescriptor("ACTIVE_USER",Types.INTEGER,false);
 	}
 
-	
-	
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
+	}
 	void insertWorldDetailsLeague(WorldDetailLeague league){
 		if(league == null)
 			return;
-		
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("insert into ").append(getTableName()).append("(");
-		for (int i = 0; i < columns.length; i++) {
-			statement.append(columns[i].getColumnName());
-			if(i<columns.length-1)
-				statement.append(",");
-		}
-		statement.append(") VALUES (");
-		statement.append(league.getLeagueId()).append(",");
-		statement.append(league.getCountryId()).append(",'");
-		statement.append(DBManager.insertEscapeSequences(league.getCountryName())).append("',");
-		statement.append(league.getActiveUsers()).append(")");
-		adapter.executeQuery(statement.toString());
+
+		executePreparedInsert(
+				league.getLeagueId(),
+				league.getCountryId(),
+				league.getCountryName(),
+				league.getActiveUsers()
+		);
 	}
-	
-	WorldDetailLeague getWorldDetailLeagueByLeagueId(int leagueId){
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName()).append(" where ");
-		statement.append(columns[0].getColumnName()).append("=").append(leagueId);
-		ResultSet rs = adapter.executeQuery(statement.toString());
-		try {
-			if(rs.next())
-				return createObject(rs);
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return null;
-	}
-	
-	WorldDetailLeague getWorldDetailLeagueByCountryId(int countryId){
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName()).append(" where ");
-		statement.append(columns[1].getColumnName()).append("=").append(countryId);
-		ResultSet rs = adapter.executeQuery(statement.toString());
-		try {
-			if(rs.next())
-				return createObject(rs);
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return null;
-	}
-	
+
 	List<WorldDetailLeague> getAllWorldDetailLeagues(){
 		ArrayList<WorldDetailLeague> ret = new ArrayList<WorldDetailLeague>();
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName());
-		ResultSet rs = adapter.executeQuery(statement.toString());
+		ResultSet rs = executePreparedSelect();
 		try {
 			while(rs.next()){
 				ret.add(createObject(rs));
@@ -96,7 +61,7 @@ class WorldDetailsTable extends AbstractTable {
 		try {
 				league.setLeagueId(rs.getInt(columns[0].getColumnName()));
 				league.setCountryId(rs.getInt(columns[1].getColumnName()));
-				league.setCountryName(DBManager.deleteEscapeSequences(rs.getString(columns[2].getColumnName())));
+				league.setCountryName(rs.getString(columns[2].getColumnName()));
 				league.setActiveUsers(rs.getInt(columns[3].getColumnName()));
 		} catch (SQLException ex){
 			HOLogger.instance().error(this.getClass(), ex);

@@ -871,13 +871,13 @@ public class OnlineWorker {
 	 */
 	public static void getAllLineups(@Nullable Integer nbGames) {
 
-		final MatchKurzInfo[] infos;
+		final List<MatchKurzInfo> infos;
 
 		if (nbGames == null){
 			infos = DBManager.instance().getMatchesKurzInfo(-1);
 		}
 		else{
-			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false).toArray(new MatchKurzInfo[0]);
+			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false);
 		}
 
 		boolean bOK;

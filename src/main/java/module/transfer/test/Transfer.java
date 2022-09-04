@@ -15,13 +15,11 @@ public class Transfer {
 	int purchasePrice;
 	int sellingPrice;
 	
-	
+	static private DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"Select price, BUYERID, sellerid, date from transfer WHERE PLAYERID=? and (BUYERID=? OR SELLERID=?");
 	public static Transfer getTransfer(int playerId) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		String query = "Select price, BUYERID, sellerid, date from transfer WHERE PLAYERID=" + playerId
-				+ " and (BUYERID=" + teamId + " OR SELLERID=" + teamId + ")";
-
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(transferStatementBuilder.getStatement(), playerId, teamId, teamId);
 		Transfer t = new Transfer();
 		try {
 			while (true) {

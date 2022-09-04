@@ -70,7 +70,7 @@ final class StadionTable extends AbstractTable {
 	Stadium getStadion(int hrfID) {
 		Stadium stadion = null;
 		if (hrfID > -1) {
-			var rs = getSelectByHrfID(hrfID);
+			var rs = executePreparedSelect(hrfID);
 			if (rs != null) {
 				try {
 					if (rs.next()) {
@@ -86,7 +86,7 @@ final class StadionTable extends AbstractTable {
 
 	private Stadium createStadionObject(ResultSet rs) throws SQLException {
 		Stadium arena = new Stadium();
-		arena.setStadienname(DBManager.deleteEscapeSequences(rs.getString("StadionName")));
+		arena.setStadienname(rs.getString("StadionName"));
 		arena.setArenaId(rs.getInt("ArenaID"));
 		arena.setSitzplaetze(rs.getInt("AnzSitz"));
 		arena.setStehplaetze(rs.getInt("AnzSteh"));

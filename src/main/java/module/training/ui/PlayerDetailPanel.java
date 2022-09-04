@@ -91,7 +91,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
-        m_jtaNotes.setText(DBManager.instance().getSpielerNotiz(this.model.getActivePlayer().getPlayerID()));
+        m_jtaNotes.setText(this.model.getActivePlayer().getNote());
 
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
@@ -238,8 +238,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     }
 
     private void saveNotes() {
-        if( this.playerId>0){
-            DBManager.instance().saveSpielerNotiz(this.playerId, m_jtaNotes.getText());
+        var player = this.model.getActivePlayer();
+        if( player!= null){
+            player.setNote(m_jtaNotes.getText());
         }
     }
 

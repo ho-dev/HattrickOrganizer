@@ -1,22 +1,14 @@
 package core.db;
 
-import core.gui.HOMainFrame;
-import core.net.MyConnector;
 import core.util.HOLogger;
-import module.youth.YouthTraining;
-import module.youth.YouthTrainingType;
 import okhttp3.HttpUrl;
-import tool.updater.UpdateController;
 import tool.updater.UpdateHelper;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeamsLogoTable extends AbstractTable {
     /**
@@ -38,6 +30,15 @@ public class TeamsLogoTable extends AbstractTable {
         };
     }
 
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, " WHERE TEAM_ID=?");
+    }
+    @Override
+    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+        return new PreparedDeleteStatementBuilder(this, " WHERE TEAM_ID=?");
+    }
+
     /**
      * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
      * It will also update LAST_ACCESS field
@@ -50,14 +51,13 @@ public class TeamsLogoTable extends AbstractTable {
 
         String logoURL, logoFileName;
 
-        // 1. Get logoFileName from the database
-        var rs = adapter.executeQuery("SELECT * from " + getTableName() + " WHERE TEAM_ID=" + teamID);
-        if (rs == null) {
-            HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
-            return null;
-        }
-
         try {
+            // 1. Get logoFileName from the database
+            var rs = executePreparedSelect(teamID);
+            if (rs == null) {
+                HOLogger.instance().error(this.getClass(), "error with table " + getTableName());
+                return null;
+            }
             if (!rs.next()) {
                 HOLogger.instance().info(this.getClass(), "logo information not available in database for team ID=" + teamID);
                 return null;
@@ -120,21 +120,24 @@ public class TeamsLogoTable extends AbstractTable {
             }
         }
 
-        String sql = "MERGE INTO " + getTableName() + " AS t USING (VALUES(" + teamID + ", '" + logoURL + "', '" + fileName + "', " + lastAccess + ")) AS vals(a, b, c, d) " +
-                "ON t.TEAM_ID=vals.a \n" +
-                "WHEN MATCHED THEN UPDATE SET t.URL=vals.b, t.FILENAME=vals.c, t.LAST_ACCESS=vals.d \n" +
-                "WHEN NOT MATCHED THEN INSERT VALUES vals.a, vals.b, vals.c, vals.d";
+        executePreparedDelete(teamID);
+        executePreparedInsert(
+                teamID,
+                logoURL,
+                fileName,
+                lastAccess
+        );
 
-        adapter.executeUpdate(sql);
-//        HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: " +  teamID + " " +  logoURL + " " +  lastAccess);
     }
 
+    @Override
+    protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
+        return new PreparedUpdateStatementBuilder(this, "SET LAST_ACCESS = ? WHERE TEAM_ID = ?");
+    }
 
     public void updateLastAccessTime(int teamID) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        String sql = "UPDATE CLUBS_LOGO SET LAST_ACCESS = '" + now + "' WHERE TEAM_ID = " + teamID;
-        adapter.executeUpdate(sql);
-//        HOLogger.instance().debug(this.getClass(), "Update access time info of teamID : " +  teamID);
+        executePreparedUpdate(now, teamID);
     }
 
 }

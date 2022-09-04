@@ -61,8 +61,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement() {
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
+		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 
 	/**
@@ -86,14 +86,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return ratings;
 	}
 
-	private PreparedStatement getBewertungen4PlayerStatement;
-	private PreparedStatement getGetBewertungen4PlayerStatement() {
-		if (getBewertungen4PlayerStatement == null) {
-			getBewertungen4PlayerStatement = adapter.createPreparedStatement("SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?");
-		}
-		return getBewertungen4PlayerStatement;
-	}
-
+	private final DBManager.PreparedStatementBuilder getBewertungen4PlayerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?");
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den Player, sowie die
 	 * Anzahl der Bewertungen zurück // Match
@@ -103,9 +96,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final float[] bewertungen = {0f, 0f, 0f, 0f};
 
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getGetBewertungen4PlayerStatement(), spielerid);
+			final ResultSet rs = adapter.executePreparedQuery(getBewertungen4PlayerStatementBuilder.getStatement(), spielerid);
 			assert rs != null;
-			rs.beforeFirst();
 			int i = 0;
 			while (rs.next()) {
 				float rating = rs.getFloat("Rating");
@@ -132,14 +124,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return bewertungen;
 	}
 
-	private PreparedStatement getPlayerRatingForPositionStatement;
-
-	private PreparedStatement getGetPlayerRatingForPositionStatement() {
-		if (getPlayerRatingForPositionStatement == null) {
-			getPlayerRatingForPositionStatement = adapter.createPreparedStatement("SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?");
-		}
-		return getPlayerRatingForPositionStatement;
-	}
+	private final DBManager.PreparedStatementBuilder getPlayerRatingForPositionStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?" );
 
 	/**
 	 * Returns the best, worst, and average rating for the player, as well as the number of ratings // match
@@ -152,9 +137,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		final float[] starsStatistics = {0f, 0f, 0f, 0f};
 
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getGetPlayerRatingForPositionStatement(), spielerid, position);
+			final ResultSet rs = adapter.executePreparedQuery(getPlayerRatingForPositionStatementBuilder.getStatement(), spielerid, position);
 			assert rs != null;
-			rs.beforeFirst();
 			int i = 0;
 			while (rs.next()) {
 				float rating = rs.getFloat("Rating");
@@ -181,19 +165,12 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return starsStatistics;
 	}
 
-	private PreparedStatement deleteMatchLineupPlayerStatement;
-
-	private PreparedStatement getDeleteMatchLineupPlayerStatement() {
-		if (deleteMatchLineupPlayerStatement == null) {
-			deleteMatchLineupPlayerStatement = createDeleteStatement("WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND RoleID=?");
-		}
-		return deleteMatchLineupPlayerStatement;
-	}
+	private final PreparedDeleteStatementBuilder deleteMatchLineupPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND RoleID=?");
 
 	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType, int matchID, int teamID) {
 		if (matchLineupPosition != null) {
 			try {
-				adapter.executePreparedUpdate(getDeleteMatchLineupPlayerStatement(), matchType.getId(), matchID, teamID, matchLineupPosition.getRoleId());
+				adapter.executePreparedUpdate(deleteMatchLineupPlayerStatementBuilder.getStatement(), matchType.getId(), matchID, teamID, matchLineupPosition.getRoleId());
 				executePreparedInsert(
 						matchID,
 						matchType.getId(),
@@ -221,40 +198,22 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		}
 	}
 
-	private PreparedStatement getMatchLineupPlayersStatement;
-
-	private PreparedStatement getGetMatchLineupPlayersStatement() {
-		if (getMatchLineupPlayersStatement == null) {
-			getMatchLineupPlayersStatement = adapter.createPreparedStatement(
-					"SELECT * FROM " +
-							getTableName() +
-							" WHERE MatchID = ? AND MatchTyp = ? AND TeamID = ?");
-		}
-		return getMatchLineupPlayersStatement;
-	}
+	private final PreparedSelectStatementBuilder getMatchLineupPlayersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MatchID = ? AND MatchTyp = ? AND TeamID = ?");
 
 	Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID)  {
-		return createMatchLineups(getGetMatchLineupPlayersStatement(), matchID, matchType.getId(), teamID);
+		return createMatchLineups(getMatchLineupPlayersStatementBuilder.getStatement(), matchID, matchType.getId(), teamID);
 	}
 
-	private  PreparedStatement getMatchInsertsStatement;
-	private  PreparedStatement getGetMatchInsertsStatement(){
-		if ( getMatchInsertsStatement==null){
-			getMatchInsertsStatement = adapter.createPreparedStatement("SELECT * FROM " + getTableName() + " WHERE SpielerID = ?");
-		}
-		return getMatchInsertsStatement;
-	}
+	private  PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
 	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
-		return  createMatchLineups(getGetMatchInsertsStatement(), objectPlayerID);
+		return  createMatchLineups(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID);
 	}
 
 	private Vector<MatchLineupPosition> createMatchLineups(PreparedStatement sql, Object... values)  {
 		var vec = new Vector<MatchLineupPosition>();
 		try {
-			var rs = adapter.executePreparedQuery(sql);
+			var rs = adapter.executePreparedQuery(sql, values);
 			assert rs != null;
-			rs.beforeFirst();
-
 			while (rs.next()) {
 				var roleID = rs.getInt("RoleID");
 				var behavior = rs.getInt("Taktik");

@@ -1,8 +1,5 @@
 package core.db;
 
-import core.constants.TeamConfidence;
-import core.constants.TeamSpirit;
-import core.model.Team;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.nthrf.NtTeamDetails;
@@ -57,8 +54,8 @@ final class NtTeamTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE HRF_ID=? AND TEAM_ID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND TEAM_ID=?");
 	}
 	void store(NtTeamDetails ntTeamDetails) {
 		if (ntTeamDetails != null) {
@@ -93,31 +90,19 @@ final class NtTeamTable extends AbstractTable {
 		}
 	}
 
-	private  PreparedStatement selectBeforeStatement;
-	protected PreparedStatement getSelectBeforeStatement(){
-		if ( selectBeforeStatement==null){
-			selectBeforeStatement=createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
-		}
-		return selectBeforeStatement;
-	}
-	private  PreparedStatement selectTeamStatement;
-	protected PreparedStatement getSelectTeamStatement(){
-		if ( selectTeamStatement==null){
-			selectTeamStatement=createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
-		}
-		return selectTeamStatement;
-	}
+	private final PreparedSelectStatementBuilder selectBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
+	private final PreparedSelectStatementBuilder selectTeamStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
 	public NtTeamDetails load(int teamId, Timestamp matchDate) {
 		try {
 			ResultSet rs;
 			if ( matchDate!=null){
-				rs = executePreparedSelect(getSelectBeforeStatement(), teamId, matchDate);
+				rs = executePreparedSelect(selectBeforeStatementBuilder.getStatement(), teamId, matchDate);
 			}
 			else {
-				rs = executePreparedSelect(getSelectTeamStatement(), teamId);
+				rs = executePreparedSelect(selectTeamStatementBuilder.getStatement(), teamId);
 			}
 			if (rs != null) {
-				rs.first();
+				rs.next();
 				var team = createNtTeamDetails(rs);
 				rs.close();
 				return team;
@@ -158,16 +143,11 @@ final class NtTeamTable extends AbstractTable {
 		return team;
 	}
 
-	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement(" WHERE HRF_ID=?");
-	}
 	public List<NtTeamDetails> load(int hrfId) {
 		var ret = new ArrayList<NtTeamDetails>();
 		try {
 			var rs = executePreparedSelect(hrfId);
 			if ( rs!=null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					var ntTeamDetails = createNtTeamDetails(rs);
 					ret.add(ntTeamDetails);

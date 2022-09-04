@@ -9,8 +9,6 @@ import core.util.HOLogger;
 
 import javax.swing.*;
 import java.sql.ResultSet;
-import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -60,7 +58,7 @@ final class DBConfigUpdater {
 			// Creating entries into TRAININGS table ===========================================================
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
-				ResultSet rs = m_clJDBCAdapter._executeQuery(sql);
+				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
 				assert rs != null;
 				rs.next();
 				var firstTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));

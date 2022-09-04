@@ -31,19 +31,25 @@ final class TAFavoriteTable extends AbstractTable {
 		columns[1] = new ColumnDescriptor("NAME", Types.VARCHAR, true, 20);
 	}
 
+    @Override
+    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+        return new PreparedDeleteStatementBuilder(this, "where TEAMID=?");
+    }
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, "where TEAMID=?");
+    }
 
     void removeTeam(int teamId) {
-        adapter.executeUpdate("delete from TA_FAVORITE where TEAMID=" + teamId);
+        executePreparedDelete(teamId);
     }
     
     void addTeam(Team team) {
-        adapter.executeUpdate("insert into TA_FAVORITE (TEAMID, NAME) values ("
-                                                      + team.getTeamId() + ", '" + team.getName()
-                                                      + "')");
+        executePreparedInsert(team.getTeamId(), team.getName());
     }
 
     boolean isTAFavourite(int teamId) {
-        ResultSet rs = adapter.executeQuery("select * from TA_FAVORITE where TEAMID=" + teamId);
+        ResultSet rs = executePreparedSelect(teamId);
         try {
             if (rs.next()) {
                 return true;
@@ -54,6 +60,7 @@ final class TAFavoriteTable extends AbstractTable {
         return false;
     }
 
+    private PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
     /**
      * Returns all favourite teams
      *
@@ -61,7 +68,7 @@ final class TAFavoriteTable extends AbstractTable {
      */
     List<Team> getTAFavoriteTeams() {
         List<Team> list = new ArrayList<Team>();
-        ResultSet rs = adapter.executeQuery("select * from TA_FAVORITE");
+        ResultSet rs = adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement());
 
         try {
             while (rs.next()) {

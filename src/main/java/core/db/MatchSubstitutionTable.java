@@ -2,12 +2,8 @@ package core.db;
 
 import core.util.HOLogger;
 import module.lineup.substitution.model.GoalDiffCriteria;
-import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +52,13 @@ public class MatchSubstitutionTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement() {
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
+		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement() {
-		return createSelectStatement(" WHERE MatchTyp = ? AND MatchID = ? AND TeamID = ?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+		return new PreparedSelectStatementBuilder(this," WHERE MatchTyp = ? AND MatchID = ? AND TeamID = ?");
 	}
 
 	/**
@@ -72,10 +68,9 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * @param matchId The matchId for the match in question
 	 */
 	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int iMatchType, int teamId, int matchId) {
-		List<Substitution> subst = new ArrayList<Substitution>();
+		List<Substitution> subst = new ArrayList<>();
 		try {
 			var rs = executePreparedSelect(iMatchType, matchId, teamId);
-			rs.beforeFirst();
 			while (rs.next()) {
 				byte orderId = (byte) rs.getInt("OrderType");
 				int playerIn = rs.getInt("PlayerIn");
@@ -106,23 +101,18 @@ public class MatchSubstitutionTable extends AbstractTable {
 			return;
 		}
 		// D is string dummy
-		storeSub(iMatchType, matchId, teamId, DUMMY, subs, "D");
+		storeSub(iMatchType, matchId, teamId, subs);
 	}
 
-	private PreparedStatement deleteSubStatement;
+	private final PreparedDeleteStatementBuilder deleteSubStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND HRFID=? AND LineupName=?");
 
-	private PreparedStatement getDeleteSubStatement() {
-		return createDeleteStatement("WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND HRFID=? AND LineupName=?");
-	}
-
-	private void storeSub(int iMatchType, int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
-						  String lineupName) {
-		executePreparedDelete(getDeleteSubStatement(),
+	private void storeSub(int iMatchType, int matchId, int teamId, List<Substitution> subs) {
+		executePreparedDelete(deleteSubStatementBuilder.getStatement(),
 				iMatchType,
 				matchId,
 				teamId,
-				hrfId,
-				lineupName
+				MatchSubstitutionTable.DUMMY,
+				"D"
 		);
 
 		for (Substitution sub : subs) {
@@ -135,7 +125,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 				executePreparedInsert(
 						matchId,
 						teamId,
-						hrfId,
+						MatchSubstitutionTable.DUMMY,
 						sub.getPlayerOrderId(),
 						sub.getObjectPlayerID(),
 						sub.getSubjectPlayerID(),
@@ -145,7 +135,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 						sub.getBehaviour(),
 						sub.getRedCardCriteria().getId(),
 						sub.getStanding().getId(),
-						lineupName
+						"D"
 				);
 			} catch (Exception e) {
 				HOLogger.instance().log(getClass(), "DB.storeMatchSubstitution Error" + e);

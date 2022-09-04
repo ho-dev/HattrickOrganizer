@@ -43,7 +43,7 @@ public class JDBCAdapter {
 	 * 
 	 * @return ResultSet of the query
 	 */
-	public final ResultSet _executeQuery(String sqlStatement) {
+	public final ResultSet executeQuery(String sqlStatement) {
 		try {
 			if (m_clConnection.isClosed()) {
 				return null;
@@ -69,8 +69,6 @@ public class JDBCAdapter {
 
 	public final ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object ... params) {
 		if ( preparedStatement==null) return null;
-		ResultSet resultat = null;
-
 		try {
 			if (m_clConnection.isClosed()) {
 				return null;
@@ -79,9 +77,7 @@ public class JDBCAdapter {
 			for ( var p: params) {
 				preparedStatement.setObject(++i, p);
 			}
-			resultat = preparedStatement.executeQuery();
-
-			return resultat;
+			return  preparedStatement.executeQuery();
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + preparedStatement.toString() + "\n" 	+ ExceptionUtils.getStackTrace(e));
 			return null;
@@ -100,7 +96,7 @@ public class JDBCAdapter {
 	 *         statements or 0 for SQL statements that return nothing
 	 * 
 	 */
-	public final int _executeUpdate(String sqlStatement) {
+	public final int executeUpdate(String sqlStatement) {
 		int ret = 0;
 
 		try {
@@ -126,7 +122,6 @@ public class JDBCAdapter {
 			if (m_clConnection.isClosed()) {
 				return 0;
 			}
-			//var preparedStatement = m_clConnection.prepareStatement(Sql);
 			int i = 0;
 			for ( var p: params) {
 				preparedStatement.setObject(++i, p);

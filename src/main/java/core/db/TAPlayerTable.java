@@ -83,12 +83,12 @@ final class TAPlayerTable extends AbstractTable {
 		return weekNumber/16;
 	}
 
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, " where PLAYERID=? and week=?");
+	}
 	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
-		String query = "select * from " + TABLENAME + " where PLAYERID=" + playerId + " and week="
-				+ calcWeekNumber(season, week);
-
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
-
+		ResultSet rs = executePreparedSelect(playerId, calcWeekNumber(season, week));
 		try {
 			if (rs.next()) {
 				PlayerInfo info = new PlayerInfo();
@@ -114,6 +114,10 @@ final class TAPlayerTable extends AbstractTable {
 		return new PlayerInfo();
 	}
 
+
+	DBManager.PreparedStatementBuilder getLatestPlayerInfoBuilder = new DBManager.PreparedStatementBuilder(this.adapter,
+			"SELECT max(WEEK) FROM " + TABLENAME + " WHERE PLAYERID=? AND WEEK<=?" );
+
 	/**
 	 * Returns the specialEvent code for a player
 	 * 
@@ -123,13 +127,7 @@ final class TAPlayerTable extends AbstractTable {
 	 * @return a numeric code
 	 */
 	PlayerInfo getLatestPlayerInfo(int playerId) {
-		ResultSet rs = DBManager
-				.instance()
-				.getAdapter()
-				.executeQuery(
-						"SELECT max(WEEK) FROM " + TABLENAME +
-								" WHERE" + " PLAYERID=" + playerId +
-								" AND WEEK<=" + calcCurrentWeekNumber()); // because of an error corrupt numbers may be in the database
+		ResultSet rs = this.adapter.executePreparedQuery(getLatestPlayerInfoBuilder.getStatement(), playerId, calcCurrentWeekNumber()); // because of an error corrupt numbers may be in the database
 
 		try {
 			if (rs.next()) {
@@ -149,51 +147,45 @@ final class TAPlayerTable extends AbstractTable {
 	 * @param info
 	 */
 	void addPlayer(PlayerInfo info) {
-		DBManager
-				.instance()
-				.getAdapter()
-				.executeUpdate(
-						"insert into " + TABLENAME + " values ("
-								+ info.getTeamId() + ", "
-								+ info.getPlayerId() + ", "
-								+ info.getStatus() + " , "
-								+ info.getSpecialEvent() + ", "
-								+ info.getTSI() + ", "
-								+ info.getForm() + ", "
-								+ info.getAge() + ", "
-								+ info.getExperience() + ", "
-								+ calcCurrentWeekNumber() + ", "
-								+ info.getSalary() + ", "
-								+ info.getStamina()+ ", "
-								+ info.getMotherClubBonus() + ", "
-								+ info.getLoyalty() + ", '"
-								+ DBManager.insertEscapeSequences(info.getName()) +"')");
+		executePreparedInsert(
+				info.getTeamId(),
+				info.getPlayerId(),
+				info.getStatus(),
+				info.getSpecialEvent(),
+				info.getTSI(),
+				info.getForm(),
+				info.getAge(),
+				info.getExperience(),
+				calcCurrentWeekNumber(),
+				info.getSalary(),
+				info.getStamina(),
+				info.getMotherClubBonus(),
+				info.getLoyalty(),
+				info.getName()
+		);
 	}
 
+	@Override
+	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
+		return new PreparedUpdateStatementBuilder(this,
+				" set SPECIALEVENT=?, TSI=?, FORM=?, AGE=?, EXPERIENCE=?, STATUS=?, SALARY=?, STAMINA=?" +
+				", MOTHERCLUBBONUS=?, LOYALTY =?, NAME =? where PLAYERID=? and WEEK=?");
+	}
 	void updatePlayer(PlayerInfo info) {
-		DBManager
-				.instance()
-				.getAdapter()
-				.executeUpdate(
-						"update " + TABLENAME + " set "
-								+ "   SPECIALEVENT=" + info.getSpecialEvent()
-								+ " , TSI=" + info.getTSI()
-								+ " , FORM=" +info.getForm()
-								+ " , AGE=" + info.getAge()
-								+ " , EXPERIENCE=" + info.getExperience()
-								+ " , STATUS=" + info.getStatus()
-								+ " , SALARY=" + info.getSalary()
-								+ " , STAMINA=" + info.getStamina()
-								+ " , MOTHERCLUBBONUS=" + info.getMotherClubBonus()
-								+ " , LOYALTY =" + info.getLoyalty()
-								+ " , NAME ='" + DBManager.insertEscapeSequences(info.getName())
-								+ "' where PLAYERID=" + info.getPlayerId() + " and WEEK="
-								+ calcCurrentWeekNumber());
-	}
-
-	void deleteOldPlayers() {
-		adapter.executeUpdate("DELETE FROM " + TABLENAME + " WHERE WEEK<"
-				+ (calcCurrentWeekNumber() - 10));
+		executePreparedUpdate(
+				info.getSpecialEvent(),
+				info.getTSI(),
+				info.getForm(),
+				info.getAge(),
+				info.getExperience(),
+				info.getStatus(),
+				info.getSalary(),
+				info.getStamina(),
+				info.getMotherClubBonus(),
+				info.getLoyalty(),
+				info.getName(),
+				info.getPlayerId(),
+				calcCurrentWeekNumber());
 	}
 
 }

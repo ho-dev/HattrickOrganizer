@@ -2,7 +2,6 @@ package core.db;
 
 
 import core.util.HOLogger;
-import jdk.jshell.spi.ExecutionControl;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,7 +63,18 @@ public abstract class AbstractTable {
 		return new String[0];
 	}
 
-	private PreparedStatement createInsertStatement() {
+	// Prepared Statements
+	// Insert
+	public static class PreparedInsertStatementBuilder extends DBManager.PreparedStatementBuilder {
+		public PreparedInsertStatementBuilder(AbstractTable table) {
+			super(table.adapter, table.createInsertStatement());
+		}
+	}
+	protected PreparedInsertStatementBuilder preparedInsertStatementBuilder;
+	protected PreparedInsertStatementBuilder createPreparedInsertStatementBuilder(){
+		return new PreparedInsertStatementBuilder(this);
+	}
+	private String createInsertStatement() {
 		var ret = new StringBuilder("INSERT INTO ");
 		ret.append(getTableName());
 		var valuePlaceholders = new StringBuilder(" VALUES ");
@@ -75,97 +85,82 @@ public abstract class AbstractTable {
 			sep = ",";
 		}
 		ret.append(")").append(valuePlaceholders).append(")");
-		return adapter.createPreparedStatement(ret.toString());
+		return ret.toString();
 	}
-	private PreparedStatement insertStatement;
-	protected  PreparedStatement getInsertStatement(){
-		if ( insertStatement == null){
-			insertStatement = createInsertStatement();
-		}
-		return insertStatement;
-	}
-
 	protected int executePreparedInsert(Object ... values){
-		return adapter.executePreparedUpdate(getInsertStatement(), values);
-	}
-
-	protected PreparedStatement createSelectStatement(String where) {
-		var sql = new StringBuilder("SELECT * FROM ");
-		sql.append(getTableName()).append(" ").append(where);
-		return adapter.createPreparedStatement(sql.toString());
-	}
-
-	private PreparedStatement selectStatement;
-	protected PreparedStatement getSelectStatement(){
-		if ( selectStatement==null){
-			selectStatement=createSelectStatement();
+		if ( preparedInsertStatementBuilder==null){
+			preparedInsertStatementBuilder=createPreparedInsertStatementBuilder();
 		}
-		return selectStatement;
+		return adapter.executePreparedUpdate(preparedInsertStatementBuilder.getStatement(), values);
 	}
 
-	protected PreparedStatement createSelectStatement() {
-		return createSelectStatement("");
-	}
-
-	protected ResultSet executePreparedSelect (Object ... whereValues){
-		var statement = getSelectStatement();
-		if ( statement != null){
-			return adapter.executePreparedQuery(statement, whereValues);
+	// Update
+	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
+		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
+			super(table.adapter, "UPDATE " + table.getTableName() + " " + set);
 		}
-		HOLogger.instance().error(getClass(), "no select statement created");
-		return  null;
-	}
-
-	protected PreparedStatement createUpdateStatement(){
-		return null;
-	}
-	protected PreparedStatement createUpdateStatement(String set) {
-		var sql = new StringBuilder("UPDATE ");
-		sql.append(getTableName()).append(" ").append(set);
-		return adapter.createPreparedStatement(sql.toString());
-	}
-
-	private PreparedStatement updateStatement;
-	private PreparedStatement getUpdateStatement(){
-		if ( updateStatement==null){
-			updateStatement=createUpdateStatement();
+		public PreparedUpdateStatementBuilder(AbstractTable table) {
+			super(table.adapter, "UPDATE " + table.getTableName() + " SET " + table.getColumns()[1].getColumnName() + "=? WHERE " + table.getColumns()[0].getColumnName() + "=?");
 		}
-		return updateStatement;
 	}
 
+	protected PreparedUpdateStatementBuilder preparedUpdateStatementBuilder;
+	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
+		return new PreparedUpdateStatementBuilder(this);
+	}
 	protected int executePreparedUpdate(Object ... values){
-		var statement = getUpdateStatement();
-		if ( statement != null) {
-			return adapter.executePreparedUpdate(getUpdateStatement(), values);
+		if (preparedUpdateStatementBuilder==null){
+			preparedUpdateStatementBuilder=createPreparedUpdateStatementBuilder();
 		}
-		HOLogger.instance().error(getClass(), "no update statement created");
+		if ( preparedUpdateStatementBuilder != null) {
+			return adapter.executePreparedUpdate(preparedUpdateStatementBuilder.getStatement(), values);
+		}
+		HOLogger.instance().error(getClass(), "no update statement builder created");
 		return  -1;
 	}
 
-	protected PreparedStatement createDeleteStatement(String where) {
-		var sql = new StringBuilder("DELETE FROM ");
-		sql.append(getTableName()).append(" ").append(where);
-		return adapter.createPreparedStatement(sql.toString());
-	}
-	private PreparedStatement deleteStatement;
-	private PreparedStatement getDeleteStatement(){
-		if ( deleteStatement==null){
-			deleteStatement = createDeleteStatement();
+	// Delete
+	public static class PreparedDeleteStatementBuilder extends DBManager.PreparedStatementBuilder {
+		public PreparedDeleteStatementBuilder(AbstractTable table) {
+			super(table.adapter, "DELETE FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
 		}
-		return deleteStatement;
+		public PreparedDeleteStatementBuilder(AbstractTable table, String where) {
+			super(table.adapter, "DELETE FROM " + table.getTableName() + " " + where);
+		}
+	}
+	protected  PreparedDeleteStatementBuilder preparedDeleteStatementBuilder;
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this);
+	}
+	protected int executePreparedDelete(Object ... whereValues) {
+		if ( preparedDeleteStatementBuilder==null){
+			preparedDeleteStatementBuilder=createPreparedDeleteStatementBuilder();
+		}
+		return adapter.executePreparedUpdate(preparedDeleteStatementBuilder.getStatement(), whereValues);
 	}
 
-	protected PreparedStatement createDeleteStatement() {
-		return createDeleteStatement("WHERE HRF_ID = ?");
+	// Select
+	public static class PreparedSelectStatementBuilder extends DBManager.PreparedStatementBuilder {
+		public PreparedSelectStatementBuilder(AbstractTable table, String where) {
+			super(table.adapter, "SELECT * FROM " + table.getTableName() + " " + where);
+		}
+		public PreparedSelectStatementBuilder(AbstractTable table) {
+			super(table.adapter, "SELECT * FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
+		}
+	}
+	protected PreparedSelectStatementBuilder preparedSelectStatementBuilder;
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+		return new PreparedSelectStatementBuilder(this);
 	}
 
-	protected int executePreparedDelete(Object ... whereValues){
-		var statement = getDeleteStatement();
-		if ( statement != null){
-			return adapter.executePreparedUpdate(statement, whereValues);
+	protected PreparedStatement getPreparedSelectStatement(){
+		if ( preparedSelectStatementBuilder==null){
+			preparedSelectStatementBuilder=createPreparedSelectStatementBuilder();
 		}
-		HOLogger.instance().error(getClass(), "no delete statement created");
-		return  -1;
+		return preparedSelectStatementBuilder.getStatement();
+	}
+	protected ResultSet executePreparedSelect (Object ... whereValues){
+		return adapter.executePreparedQuery(getPreparedSelectStatement(), whereValues);
 	}
 
 	public void createTable() throws SQLException {
@@ -196,21 +191,11 @@ public abstract class AbstractTable {
 			}
 			sql.append(" ) ");
 
-			adapter._executeUpdate(sql.toString());
+			adapter.executeUpdate(sql.toString());
 
 			insertDefaultValues();
 		}
 	}
-
-	private PreparedStatement selectByHrfIDStatement;
-
-	protected ResultSet getSelectByHrfID(int hrfID) {
-		if (selectByHrfIDStatement == null) {
-			selectByHrfIDStatement = adapter.createPreparedStatement("SELECT * FROM " + tableName + " WHERE HRF_ID = ?");
-		}
-		return adapter.executePreparedQuery(selectByHrfIDStatement, hrfID);
-	}
-
 	protected void insertDefaultValues() {
 		// override if values exists
 	}
@@ -219,26 +204,26 @@ public abstract class AbstractTable {
 	 * Drop the current table
 	 */
 	protected void tryDropTable() {
-		adapter._executeUpdate("DROP TABLE IF EXISTS " + getTableName());
+		adapter.executeUpdate("DROP TABLE IF EXISTS " + getTableName());
 	}
 
 	/**
 	 * Truncate the current table (i.e. remove all rows)
 	 */
 	protected void truncateTable() {
-		adapter._executeUpdate("DELETE FROM " + getTableName());
+		adapter.executeUpdate("DELETE FROM " + getTableName());
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName + "'";
-		ResultSet rs = this.adapter._executeQuery(sql);
+		ResultSet rs = this.adapter.executeQuery(sql);
 		return rs.next();
 	}
 
 	public boolean tryAddColumn(String columnName, String columnType) throws SQLException {
 		if (!columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + columnType;
-			adapter._executeUpdate(sql);
+			adapter.executeUpdate(sql);
 			return true;
 		}
 		return false;
@@ -250,7 +235,7 @@ public abstract class AbstractTable {
 				+ "' AND COLUMN_NAME = '"
 				+ columnName.toUpperCase()
 				+ "'";
-		ResultSet rs = adapter._executeQuery(sql);
+		ResultSet rs = adapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
 	}
@@ -258,7 +243,7 @@ public abstract class AbstractTable {
 	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
-			adapter._executeUpdate(sql);
+			adapter.executeUpdate(sql);
 			return true;
 		}
 		return false;
@@ -267,7 +252,7 @@ public abstract class AbstractTable {
 	public boolean tryRenameColumn(String from, String to) throws SQLException {
 		if (columnExistsInTable(from)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
-			adapter._executeUpdate(sql);
+			adapter.executeUpdate(sql);
 			return true;
 		}
 		return false;
@@ -276,34 +261,34 @@ public abstract class AbstractTable {
 	public boolean tryDeleteColumn(String columnName) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " DROP COLUMN " + columnName;
-			adapter._executeUpdate(sql);
+			adapter.executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	public void addPrimaryKey(String columns) {
-		adapter._executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
+		adapter.executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
 	}
 
 	public void tryDropPrimaryKey() throws SQLException {
 		if (primaryKeyExists()) {
-			adapter._executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+			adapter.executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
 		}
 	}
 
 	public void tryDropIndex(String index) {
-		adapter._executeUpdate("DROP INDEX " + index + " IF EXISTS");
+		adapter.executeUpdate("DROP INDEX " + index + " IF EXISTS");
 	}
 
 	public void tryAddIndex(String indexName, String columns) {
-		adapter._executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
+		adapter.executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {
 		String sql = "SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY KEY' AND table_name = '"
 				+ getTableName().toUpperCase() + "'";
-		ResultSet rs = adapter._executeQuery(sql);
+		ResultSet rs = adapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
 	}

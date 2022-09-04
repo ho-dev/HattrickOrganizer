@@ -131,11 +131,11 @@ public final class EconomyTable extends AbstractTable {
 		Economy economy = null;
 		if ( hrfID > -1) {
 
-			rs = getSelectByHrfID(hrfID);
+			rs = executePreparedSelect(hrfID);
 
 			try {
 				if (rs != null) {
-					rs.first();
+					rs.next();
 					economy = new Economy();
 					economy.setSupPopularity(rs.getInt("SupportersPopularity"));
 					economy.setSponsorsPopularity(rs.getInt("SponsorsPopularity"));

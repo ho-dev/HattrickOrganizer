@@ -54,7 +54,7 @@ public class MatchExporter {
 		HOLogger.instance().log(MatchExporter.class, "Collecting MatchData");		
 		List<ExportMatchData> export = new ArrayList<>();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId);
+		var matches = DBManager.instance().getMatchesKurzInfo(teamId);
 
 		//check all matches
 		for (var match: matches) {

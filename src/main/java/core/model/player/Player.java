@@ -1100,7 +1100,7 @@ public class Player {
     }
 
     public java.lang.String getFirstName() {
-        return DBManager.deleteEscapeSequences(m_sFirstName);
+        return m_sFirstName;
     }
 
     public void setNickName(java.lang.String m_sName) {
@@ -1108,7 +1108,7 @@ public class Player {
     }
 
     public java.lang.String getNickName() {
-        return DBManager.deleteEscapeSequences(m_sNickName);
+        return m_sNickName;
     }
 
     public void setLastName(java.lang.String m_sName) {
@@ -1116,7 +1116,7 @@ public class Player {
     }
 
     public java.lang.String getLastName() {
-        return DBManager.deleteEscapeSequences(m_sLastName);
+        return m_sLastName;
     }
 
 
@@ -1692,6 +1692,7 @@ public class Player {
         return this.hrf_id;
     }
 
+
     public static class Notes{
 
         private int playerId;
@@ -1772,6 +1773,14 @@ public class Player {
         DBManager.instance().storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
     }
+    public void setIsFired(boolean b) {
+        getNotes().setIsFired(b);
+        DBManager.instance().storePlayerNotes(notes);
+    }
+
+    public boolean isFired() {
+        return getNotes().isFired();
+    }
 
     /**
      * liefert User Notiz zum Player
@@ -1779,6 +1788,13 @@ public class Player {
     public int getUserPosFlag() {
         return  getNotes().getUserPos();
     }
+
+    public String getNote() {return getNotes().getNote();}
+    public void setNote(String text) {
+        getNotes().setNote(text);
+        DBManager.instance().storePlayerNotes(notes);
+    }
+
 
     /**
      * get Skillvalue 4 skill

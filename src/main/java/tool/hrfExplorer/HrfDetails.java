@@ -60,6 +60,16 @@ class HrfDetails {
 	public HrfDetails() {
 	}
 
+	private static DBManager.PreparedStatementBuilder maxHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT MAX(DATUM) FROM HRF WHERE DATUM < ?"
+	);
+	private static DBManager.PreparedStatementBuilder minHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT MIN(DATUM) FROM HRF WHERE DATUM > ?"
+	);
+	private static DBManager.PreparedStatementBuilder countHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT count(*) FROM HRF WHERE DATUM = ?"
+	);
+
 	/*****************
 	 * Berechnet das vorhergehende und das folgende Datum in der DB und pr�ft,
 	 * ob das File/der Eintrag in DB angelegt ist
@@ -68,9 +78,7 @@ class HrfDetails {
 		m_rs = DBManager
 				.instance()
 				.getAdapter()
-				.executeQuery(
-						"SELECT MAX(DATUM) FROM HRF WHERE DATUM < '"
-								+ m_Datum.toDbTimestamp() + "'");
+				.executePreparedQuery(maxHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;
@@ -90,9 +98,7 @@ class HrfDetails {
 		m_rs = DBManager
 				.instance()
 				.getAdapter()
-				.executeQuery(
-						"SELECT MIN(DATUM) FROM HRF WHERE DATUM > '"
-								+ m_Datum.toDbTimestamp() + "'");
+				.executePreparedQuery(minHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;
@@ -112,9 +118,7 @@ class HrfDetails {
 		m_rs = DBManager
 				.instance()
 				.getAdapter()
-				.executeQuery(
-						"SELECT count(*) FROM HRF WHERE DATUM = '"
-								+ m_Datum.toDbTimestamp() + "'");
+				.executePreparedQuery(countHrfDateStatementBuilder.getStatement(),m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;

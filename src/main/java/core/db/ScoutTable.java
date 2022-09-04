@@ -2,8 +2,6 @@ package core.db;
 
 import core.util.HOLogger;
 import module.transfer.scout.ScoutEintrag;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Vector;
@@ -50,16 +48,13 @@ final class ScoutTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement(""); // delete all
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,""); // delete all
 	}
 	/**
 	 * Save players from TransferScout
 	 */
 	void saveScoutList(Vector<ScoutEintrag> list) {
-		String sql = "";
-		String bool = "0";
-		String hg = "0";
 		// What should be done when list = null?? jailbird.
 		if (list != null) {
 			// Delete already existing list
@@ -103,16 +98,20 @@ final class ScoutTable extends AbstractTable {
 			}
 		}
 	}
+
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
+	}
 	
 	/**
 	 * Load player list for insertion into TransferScout
 	 */
 	Vector<ScoutEintrag> getScoutList() {
-		final Vector<ScoutEintrag> ret = new Vector<ScoutEintrag>();
+		final Vector<ScoutEintrag> ret = new Vector<>();
 
 		try {
 			final ResultSet rs = executePreparedSelect();
-			rs.beforeFirst();
 			while (rs.next()) {
 				final ScoutEintrag scout = new ScoutEintrag(rs);
 				ret.add(scout);

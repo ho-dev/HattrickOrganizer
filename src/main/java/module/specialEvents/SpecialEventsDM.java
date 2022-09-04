@@ -28,7 +28,7 @@ public class SpecialEventsDM {
 	List<MatchRow> getRows(Filter filter) {
 		List<MatchRow> matchRows = new ArrayList<>();
 
-		MatchKurzInfo[] matches = getMatches(filter);
+		var matches = getMatches(filter);
 		if (matches != null) {
 			int matchCount = 1;
 			for (MatchKurzInfo matchKurzInfo : matches) {
@@ -57,19 +57,19 @@ public class SpecialEventsDM {
 		return false;
 	}
 
-	private MatchKurzInfo[] getMatches(Filter filter) {
+	private List<MatchKurzInfo> getMatches(Filter filter) {
 		List<MatchRow> matchRows = new ArrayList<>();
-		StringBuilder whereClause = new StringBuilder(" WHERE ");
+//		StringBuilder whereClause = new StringBuilder(" WHERE ");
 
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		whereClause.append(" (GastID=").append(teamId).append(" OR HeimID=").append(teamId).append(") ");
-		whereClause.append(" AND (Status=").append(MatchKurzInfo.FINISHED).append(")");
+//		whereClause.append(" (GastID=").append(teamId).append(" OR HeimID=").append(teamId).append(") ");
+//		whereClause.append(" AND (Status=").append(MatchKurzInfo.FINISHED).append(")");
 
 		Timestamp from=null;
 		if (filter.getSeasonFilterValue() != SeasonFilterValue.ALL_SEASONS) {
 			from = getMatchDateFrom(filter.getSeasonFilterValue());
-			whereClause.append(" AND (MATCHDATE > '").append(this.dateformat.format(datumAb));
-			whereClause.append("')");
+//			whereClause.append(" AND (MATCHDATE > '").append(this.dateformat.format(from));
+//			whereClause.append("')");
 		}
 
 		List<Integer> matchTypes = new ArrayList<>();
@@ -97,18 +97,18 @@ public class SpecialEventsDM {
 		}
 
 		if (matchTypes.size() > 0) {
-			whereClause.append(" AND (MatchTyp IN (");
-			for (Integer id : matchTypes) {
-				whereClause.append(id).append(',');
-			}
-			// remove last ','
-			whereClause.deleteCharAt(whereClause.length() - 1);
-			whereClause.append("))");
+//			whereClause.append(" AND (MatchTyp IN (");
+//			for (Integer id : matchTypes) {
+//				whereClause.append(id).append(',');
+//			}
+//			// remove last ','
+//			whereClause.deleteCharAt(whereClause.length() - 1);
+//			whereClause.append("))");
 		} else {
 			// NO matches at all
 			return null;
 		}
-		whereClause.append(" ORDER BY MatchDate DESC");
+//		whereClause.append(" ORDER BY MatchDate DESC");
 
 		return DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.FINISHED, from, matchTypes);
 	}

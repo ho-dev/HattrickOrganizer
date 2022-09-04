@@ -271,8 +271,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     }
 
     private void setUpcomingMatchesFromDB(){
-        MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
-        Arrays.sort(matches);
+        var matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
+        Collections.sort(matches);
         var now = HODateTime.now();
         List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
         short location;

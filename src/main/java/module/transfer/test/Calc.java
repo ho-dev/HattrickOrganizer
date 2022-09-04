@@ -29,12 +29,11 @@ public class Calc {
 		return null;
 	}
 
+	static private DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT * FROM transfer WHERE playerid=? AND buyerid=?");
 	public static List<HODateTime> getBuyingDates(int playerId) {
 		var list = new ArrayList<HODateTime>();
-
-		String query = "SELECT * FROM transfer WHERE playerid=" + playerId + " AND buyerid="
-				+ HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(transferStatementBuilder.getStatement(), playerId, HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		try {
 			while (rs.next()) {
 				list.add(HODateTime.fromDbTimestamp(rs.getTimestamp("date")));
@@ -46,9 +45,10 @@ public class Calc {
 		return list;
 	}
 
+	static private DBManager.PreparedStatementBuilder playerStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+			"SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid=?");
 	public static HODateTime get17thBirthday(int playerId) {
-		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid=" + playerId;
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
+		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(playerStatementBuilder.getStatement(), playerId);
 		try {
 			if (rs.next()) {
 				var rsDate = HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM"));
@@ -80,25 +80,6 @@ public class Calc {
 		}
 		return sum;
 	}
-
-	public static int getAgeAt(HODateTime date, int playerId) {
-		String query = "SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid="
-				+ playerId;
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
-		try {
-			assert rs != null;
-			if (rs.next()) {
-				int age = rs.getInt("AGE") * 112 + rs.getInt("AGEDAYS");
-				var rsDate =HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM"));
-				return (int)Duration.between(rsDate.instant, date.instant).toDays() + age;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return -1;
-	}
-
 	public static int getAgeAt(HODateTime birthDay17, HODateTime date) {
 		if (date.isBefore(birthDay17)) {
 			throw new IllegalArgumentException();

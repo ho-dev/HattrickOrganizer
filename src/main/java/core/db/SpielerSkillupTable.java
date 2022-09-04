@@ -41,8 +41,8 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement() {
-		return createDeleteStatement("WHERE HORF_ID=? AND SpielerID=? AND Skill=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
+		return new PreparedDeleteStatementBuilder(this,"WHERE HORF_ID=? AND SpielerID=? AND Skill=?");
 	}
 
 	private void storeSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode, boolean reload) {
@@ -107,22 +107,14 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	}
 
-	private PreparedStatement getPlayerListStatement;
-
-	private PreparedStatement getGetPlayerListStatement() {
-		if (getPlayerListStatement == null) {
-			getPlayerListStatement = adapter.createPreparedStatement("SELECT DISTINCT SpielerID FROM " + getTableName());
-		}
-		return getPlayerListStatement;
-	}
+	private final DBManager.PreparedStatementBuilder getPlayerListStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT DISTINCT SpielerID FROM " + getTableName());
 
 	private Vector<Integer> getPlayerList() {
 		Vector<Integer> idVector = new Vector<>();
 
 		try {
-			var rs = adapter.executePreparedQuery(getGetPlayerListStatement());
+			var rs = adapter.executePreparedQuery(getPlayerListStatementBuilder.getStatement());
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					idVector.add(rs.getInt("SpielerID"));
 				}
@@ -135,8 +127,8 @@ final class SpielerSkillupTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement() {
-		return createSelectStatement(" WHERE SpielerID=? Order By Datum DESC");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+		return new PreparedSelectStatementBuilder(this," WHERE SpielerID=? Order By Datum DESC");
 	}
 
 	private Vector<Object[]> loadSpieler(int spielerId) {
@@ -144,7 +136,6 @@ final class SpielerSkillupTable extends AbstractTable {
 		try {
 			ResultSet rs = executePreparedSelect(spielerId);
 			assert rs != null;
-			rs.beforeFirst();
 			while (rs.next()) {
 				v.add(new Object[]{
 						rs.getInt("HRF_ID"),
@@ -186,22 +177,14 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	}
 
-	private PreparedStatement importFromSpielerStatement;
-
-	private PreparedStatement getImportFromSpielerStatement() {
-		if (importFromSpielerStatement == null) {
-			importFromSpielerStatement = adapter.createPreparedStatement("SELECT DISTINCT SpielerID FROM SPIELER");
-		}
-		return importFromSpielerStatement;
-	}
+	private final DBManager.PreparedStatementBuilder importFromSpielerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT DISTINCT SpielerID FROM SPIELER");
 
 	void importFromSpieler() {
 		playerSkillup = null;
 		final Vector<Integer> idVector = new Vector<>();
 		try {
-			var rs = adapter.executePreparedQuery(getImportFromSpielerStatement());
+			var rs = adapter.executePreparedQuery(importFromSpielerStatementBuilder.getStatement());
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					idVector.add(rs.getInt("SpielerID"));
 				}
@@ -210,7 +193,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			HOLogger.instance().log(getClass(), e);
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
 		}
-		adapter._executeUpdate("DELETE FROM " + getTableName());
+		adapter.executeUpdate("DELETE FROM " + getTableName());
 		for (Integer element : idVector) {
 			importSpieler(element);
 		}

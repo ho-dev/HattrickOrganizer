@@ -71,7 +71,7 @@ final class TablesDialog extends JDialog implements MouseListener {
     private Object[][] setTable(String tablename)
         throws Exception
     {
-        ResultSet rs = DBManager.instance().getAdapter()._executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
+        ResultSet rs = DBManager.instance().getAdapter().executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
         int columns = rs.getMetaData().getColumnCount();
         Object columnData[][] = new Object[columns][4];
         for(int i = 0; i < columns; i++)

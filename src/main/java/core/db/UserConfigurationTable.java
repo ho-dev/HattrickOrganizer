@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 /**
@@ -34,20 +33,7 @@ final class UserConfigurationTable extends AbstractTable {
 
 
 	private void insert(String key, String value) {
-		var sql = new StringBuilder();
-		sql.append("INSERT INTO ");
-		sql.append(getTableName());
-		sql.append("(");
-		sql.append(columns[0].getColumnName());
-		sql.append(",");
-		sql.append(columns[1].getColumnName());
-		sql.append(") VALUES (");
-		sql.append("'");
-		sql.append(key);
-		sql.append("','");
-		sql.append(value);
-		sql.append("')");
-		adapter.executeUpdate(sql.toString());
+		executePreparedInsert(key, value);
 	}
 
 	/**
@@ -57,47 +43,24 @@ final class UserConfigurationTable extends AbstractTable {
 	 * @param value String
 	 */
 	void update(String key, String value) {
-		var updateSQL = new StringBuilder();
-		updateSQL.append("UPDATE ");
-		updateSQL.append(getTableName());
-		updateSQL.append(" SET ");
-		updateSQL.append(columns[1].getColumnName());
-		updateSQL.append(" = '");
-		updateSQL.append(value);
-		updateSQL.append("' WHERE ");
-		updateSQL.append(columns[0].getColumnName());
-		updateSQL.append(" = '");
-		updateSQL.append(key);
-		updateSQL.append("'");
-		// Try to update the key in the DB
-		int updated = adapter.executeUpdate(updateSQL.toString());
+		int updated = executePreparedUpdate(value, key);
 		if (updated == 0)
 			// Key not yet in DB -> insert key/value
 			insert(key, value);
 	}
+
 	/**
 	 * Removes a <code>key</code> from the user configuration tablr
 	 * @param key Key to be removed.
 	 */
 	void remove(String key) {
-		var sql = new StringBuilder();
-		sql.append("DELETE FROM ");
-		sql.append(getTableName());
-		sql.append(" WHERE ");
-		sql.append(columns[0].getColumnName());
-		sql.append(" = '");
-		sql.append(key);
-		sql.append("'");
-		adapter.executeUpdate(sql.toString());
+		executePreparedDelete(key);
 	}
 
+	private PreparedSelectStatementBuilder getAllStringValuesStatementBuilder = new PreparedSelectStatementBuilder(this, "");
 	private HashMap<String, String> getAllStringValues() {
-		var sql = new StringBuilder();
-		sql.append("SELECT * FROM ");
-		sql.append(getTableName());
-
 		HashMap<String, String> map = new HashMap<>();
-		final ResultSet rs = adapter.executeQuery(sql.toString());
+		final ResultSet rs = adapter.executePreparedQuery(getAllStringValuesStatementBuilder.getStatement());
 		try {
 			while (rs != null && rs.next()) {
 				map.put(rs.getString("CONFIG_KEY"), rs.getString("CONFIG_VALUE"));
@@ -109,28 +72,22 @@ final class UserConfigurationTable extends AbstractTable {
 		return map;
 	}
 
-
 	int getDBVersion() {
 		int version = 0;
 		try {
-			//      	 in the next version we have to change statement!!!
-
-			final ResultSet rs = adapter.executeQuery("SELECT CONFIG_VALUE FROM " + TABLENAME + " WHERE CONFIG_KEY = 'DBVersion'");
-
-			if ((rs != null) && rs.first()) {
-				version = rs.getInt(1);
+			final ResultSet rs = executePreparedSelect("DBVersion");
+			if (rs != null && rs.next()) {
+				version = rs.getInt(2);
 				rs.close();
 			}
-			
 		} catch (Exception e) {
 			try {
 				HOLogger.instance().log(getClass(), "Old DB version.");
 				final ResultSet rs = adapter.executeQuery("SELECT DBVersion FROM UserParameter");
-				if ((rs != null) && rs.first()) {
+				if ((rs != null) && rs.next()) {
 					version = rs.getInt(1);
 					rs.close();
 				}
-				
 			} catch (Exception e1) {
 				HOLogger.instance().log(getClass(), e1);
 			}
@@ -145,10 +102,10 @@ final class UserConfigurationTable extends AbstractTable {
 	double getLastConfUpdate() {
 		double version = 0;
 		try {
-			final ResultSet rs = adapter.executeQuery("SELECT CONFIG_VALUE FROM " + TABLENAME + " WHERE CONFIG_KEY = 'LastConfUpdate'");
+			final ResultSet rs = executePreparedSelect("LastConfUpdate");
 
-			if ((rs != null) && rs.first()) {
-				version = rs.getDouble(1);
+			if ((rs != null) && rs.next()) {
+				version = rs.getDouble(2);
 				rs.close();
 			}
 			

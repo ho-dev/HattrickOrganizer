@@ -51,8 +51,8 @@ final class MatchHighlightsTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 
 	void storeMatchHighlights(Matchdetails details) {
@@ -90,8 +90,8 @@ final class MatchHighlightsTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement("WHERE MatchTyp=? AND MatchId=? ORDER BY EVENT_INDEX, Minute");
+	protected PreparedSelectStatementBuilder  createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this,"WHERE MatchTyp=? AND MatchId=? ORDER BY EVENT_INDEX, Minute");
 	}
 
 	/**
@@ -102,7 +102,6 @@ final class MatchHighlightsTable extends AbstractTable {
 		try {
 			final ArrayList<MatchEvent> vMatchHighlights = new ArrayList<>();
 			ResultSet rs = executePreparedSelect(iMatchType, matchId);
-			rs.beforeFirst();
 			while (rs.next()) {
 				vMatchHighlights.add(createObject(rs));
 			}
@@ -134,23 +133,21 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
-	private PreparedStatement deleteYouthMatchHighlightsBeforeStatement;
-	private PreparedStatement getDeleteYouthMatchHighlightsBeforeStatement(){
-		if ( deleteYouthMatchHighlightsBeforeStatement==null){
-			var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
-			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-			deleteYouthMatchHighlightsBeforeStatement=adapter.createPreparedStatement(
-					"DELETE FROM " +
-					getTableName() +
-					" WHERE MatchTyp IN (" +
-					inValues +
-					") AND MatchDate IS NOT NULL AND MatchDate<?");
-		}
-		return deleteYouthMatchHighlightsBeforeStatement;
+	private PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchHighlightsBeforeStatementSQL());
+
+	private String getDeleteYouthMatchHighlightsBeforeStatementSQL() {
+		var lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
+		var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+		return "DELETE FROM " +
+				getTableName() +
+				" WHERE MatchTyp IN (" +
+				inValues +
+				") AND MatchDate IS NOT NULL AND MatchDate<?";
 	}
+
 	public void deleteYouthMatchHighlightsBefore(Timestamp before) {
 		try {
-			adapter.executePreparedUpdate(getDeleteYouthMatchHighlightsBeforeStatement(), before);
+			adapter.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

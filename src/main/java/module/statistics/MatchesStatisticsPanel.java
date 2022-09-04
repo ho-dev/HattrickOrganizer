@@ -405,18 +405,20 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 			}
 
 			var from = HODateTime.now().minus(anzahlHRF*7, ChronoUnit.DAYS);
-			MatchKurzInfo[] matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
+			var matchkurzinfos = DBManager.instance().getMatchesKurzInfo(
 					HOVerwaltung.instance().getModel().getBasics().getTeamId(),
 					selectedItem.getId(), MatchLocation.ALL, from.toDbTimestamp(), false);
 
-			int anzahl = matchkurzinfos.length;
+			int anzahl = matchkurzinfos.size();
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 			double[][] statistikWerte = new double[14][anzahl];
 
 			// Infos zusammenstellen
-			for (int i = 0; i < anzahl; i++) {
-				var match = matchkurzinfos[i];
+			int i= -1;
+			for (var match : matchkurzinfos) {
+				i++;
+//				var match = matchkurzinfos[i];
 				Matchdetails details = match.getMatchdetails();
 
 				int bewertungwert;

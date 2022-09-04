@@ -2,10 +2,7 @@ package core.db;
 
 import core.util.HODateTime;
 import core.util.HOLogger;
-import kotlin.reflect.KProperty;
 import module.series.Spielplan;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -15,10 +12,9 @@ import java.util.List;
 final class SpielplanTable extends AbstractTable {
 	final static String TABLENAME = "SPIELPLAN";
 	
-	protected SpielplanTable(JDBCAdapter  adapter){
+	SpielplanTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
-	
 
 	@Override
 	protected void initColumns() {
@@ -30,17 +26,12 @@ final class SpielplanTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE SAISON=? AND LigaId=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE SAISON=? AND LigaId=?");
 	}
 
-	private PreparedStatement getAllSpielplaeneStatement;
-	private PreparedStatement getGetAllSpielplaeneStatement(){
-		if(getAllSpielplaeneStatement==null){
-			getAllSpielplaeneStatement=createSelectStatement( "ORDER BY Saison DESC");
-		}
-		return getAllSpielplaeneStatement;
-	}
+	private final PreparedSelectStatementBuilder getAllSpielplaeneStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY Saison DESC");
+
 	/**
 	 * Returns all the game schedules from the database.
 	 *
@@ -50,9 +41,8 @@ final class SpielplanTable extends AbstractTable {
 		final List<Spielplan> gameSchedules = new ArrayList<>();
 
 		try {
-			var rs = adapter.executePreparedQuery(getGetAllSpielplaeneStatement());
+			var rs = adapter.executePreparedQuery(getAllSpielplaeneStatementBuilder.getStatement());
 			assert rs != null;
-			rs.beforeFirst();
 			while (rs.next()) {
 				// Plan auslesen
 				var plan = new Spielplan();
@@ -77,13 +67,8 @@ final class SpielplanTable extends AbstractTable {
 		return gameSchedules;
 	}
 
-	private PreparedStatement getSpielplanStatement;
-	private PreparedStatement getGetSpielplanStatement(){
-		if (getSpielplanStatement==null){
-			getSpielplanStatement=createSelectStatement(" WHERE LigaID = ? AND Saison = ? ORDER BY FetchDate DESC LIMIT 1");
-		}
-		return getSpielplanStatement;
-	}
+	private final PreparedSelectStatementBuilder getSpielplanStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE LigaID = ? AND Saison = ? ORDER BY FetchDate DESC LIMIT 1");
+
 	/**
 	 * Gets a game schedule from the database; returns the latest if either param is -1.
 	 *
@@ -92,9 +77,9 @@ final class SpielplanTable extends AbstractTable {
 	 */
 	Spielplan getSpielplan(int ligaId, int saison) {
 		try {
-			var rs = adapter.executePreparedQuery(getGetSpielplanStatement(), ligaId, saison);
+			var rs = adapter.executePreparedQuery(getSpielplanStatementBuilder.getStatement(), ligaId, saison);
 			assert rs != null;
-			if (rs.first()) {
+			if (rs.next()) {
 				var plan = new Spielplan();
 
 				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
@@ -114,13 +99,8 @@ final class SpielplanTable extends AbstractTable {
 		return null;
 	}
 
-	private PreparedStatement getLigaID4SaisonIDStatement;
-	private PreparedStatement getGetLigaID4SaisonIDStatement(){
-		if (getLigaID4SaisonIDStatement==null){
-			getLigaID4SaisonIDStatement=adapter.createPreparedStatement("SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
-		}
-		return getLigaID4SaisonIDStatement;
-	}
+	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(this.adapter, "SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
+
 	/**
 	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der DB gefunden
 	 * wurde
@@ -129,9 +109,9 @@ final class SpielplanTable extends AbstractTable {
 		int ligaid = -1;
 
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getGetLigaID4SaisonIDStatement(), seasonid);
+			final ResultSet rs = adapter.executePreparedQuery(getLigaID4SaisonIDStatementBuilder.getStatement(), seasonid);
 			assert rs != null;
-			if (rs.first()) {
+			if (rs.next()) {
 				ligaid = rs.getInt("LigaID");
 			}
 		} catch (Exception e) {
@@ -165,14 +145,14 @@ final class SpielplanTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement(" ORDER BY FetchDate DESC LIMIT 1");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this," ORDER BY FetchDate DESC LIMIT 1");
 	}
 	public Spielplan getLatestSpielplan() {
 		try {
 			var rs = executePreparedSelect();
 			assert rs != null;
-			if (rs.first()) {
+			if (rs.next()) {
 				var plan = new Spielplan();
 
 				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));

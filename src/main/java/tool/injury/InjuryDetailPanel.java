@@ -110,6 +110,12 @@ class InjuryDetailPanel extends JPanel {
         }
     }
 
+
+    private static DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
+    private static DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
+
     /**
      * Method called to reset panel and reload needed data
      */
@@ -130,55 +136,44 @@ class InjuryDetailPanel extends JPanel {
             players.setEnabled(false);
         }
 
-        players.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    final PlayerItem selected = (PlayerItem) players.getSelectedItem();
+        players.addItemListener(e -> {
+            final PlayerItem selected = (PlayerItem) players.getSelectedItem();
 
-                    if (selected == null) {
-                        return;
-                    }
+            if (selected == null) {
+                return;
+            }
 
-                    final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(selected
-                                                                                           .getId());
+            final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(selected.getId());
 
-                    if (player == null) {
-                        return;
-                    }
+            if (player == null) {
+                return;
+            }
 
-                    age.setText("" + player.getAlter());
-                    injury.setText("" + player.getInjuryWeeks());
+            age.setText("" + player.getAlter());
+            injury.setText("" + player.getInjuryWeeks());
 
-                    String tsi = "";
+            String tsi = "";
 
-                    try {
-                        ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert, hrf_id from SPIELER where spielerid="
-                                                                                        + player
-                                                                                          .getPlayerID()
-                                                                                        + " and verletzt=-1 order by hrf_id desc");
-
-                        if (rs.next()) {
-                            tsi = rs.getString("marktwert");
-                        }
-                    } catch (Exception e1) {
-                    }
-
-                    tsiPre.setText(tsi);
-
-                    try {
-                        ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert from SPIELER where spielerid="
-                                                                                        + player
-                                                                                          .getPlayerID()
-                                                                                        + " and verletzt>-1 order by hrf_id desc");
-
-                        if (rs.next()) {
-                            tsi = rs.getString("marktwert");
-                        }
-                    } catch (Exception e1) {
-                    }
-
-                    tsiPost.setText(tsi);
+            try {
+                ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
+                if (rs.next()) {
+                    tsi = rs.getString("marktwert");
                 }
-            });
+            } catch (Exception e1) {
+            }
+
+            tsiPre.setText(tsi);
+
+            try {
+                ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
+                if (rs.next()) {
+                    tsi = rs.getString("marktwert");
+                }
+            } catch (Exception e1) {
+            }
+
+            tsiPost.setText(tsi);
+        });
 
         injuryType.setSelectedIndex(0);
         players.setSelectedIndex(0);

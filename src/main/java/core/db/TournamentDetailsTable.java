@@ -36,17 +36,17 @@ public final class TournamentDetailsTable extends AbstractTable {
 		columns[13]= new ColumnDescriptor("Creator_Loginname",Types.VARCHAR,true, 256);
 	}
 
-	public TournamentDetails getTournamentDetails(int TournamentId)
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this," WHERE TOURNAMENTID = ?" );
+	}
+
+	public TournamentDetails getTournamentDetails(int tournamentId)
 	{
 		TournamentDetails oTournamentDetails = null;
-		StringBuilder sql = new StringBuilder(200);
-
-        sql.append("SELECT * FROM ").append(getTableName());
-		sql.append(" WHERE TOURNAMENTID = ").append(TournamentId);
 		try {
-			var rs = adapter.executeQuery(sql.toString());
+			var rs = executePreparedSelect(tournamentId);
 			assert rs != null;
-			rs.beforeFirst();
 			if (rs.next()) {
 				oTournamentDetails = new TournamentDetails();
 				oTournamentDetails.setTournamentId(rs.getInt("TournamentId"));
@@ -76,56 +76,31 @@ public final class TournamentDetailsTable extends AbstractTable {
 	/**
 	 * Store Tournament Details into DB
 	 */
-	void storeTournamentDetails(TournamentDetails oTournamentDetails) {
+	void storeTournamentDetails(TournamentDetails details) {
 		StringBuilder sql = new StringBuilder(200);
 
 		try {
-			sql.append("INSERT INTO ").append(getTableName());
-			sql.append(" (TOURNAMENTID, NAME, TOURNAMENTTYPE, SEASON, LOGOURL, TROPHYTYPE, NUMBEROFTEAMS, NUMBEROFGROUPS, " +
-					"LASTMATCHROUND, FIRSTMATCHROUNDDATE, NEXTMATCHROUNDDATE, ISMATCHESONGOING, CREATOR_USERID, CREATOR_LOGINNAME) VALUES (");
-			sql.append(oTournamentDetails.getTournamentId()).append(", '");
-			sql.append(oTournamentDetails.getName()).append("', ");
-			sql.append(oTournamentDetails.getTournamentType()).append(", ");
-			sql.append(oTournamentDetails.getSeason()).append(", ");
-			if (oTournamentDetails.getLogoUrl() == null)
-			{
-				sql.append("null, ");
-			}
-			else
-			{
-				sql.append("'").append(oTournamentDetails.getLogoUrl()).append("', ");
-			}
-			sql.append(oTournamentDetails.getTrophyType()).append(", ");
-			sql.append(oTournamentDetails.getNumberOfTeams()).append(", ");
-			sql.append(oTournamentDetails.getNumberOfGroups()).append(", ");
-			sql.append(oTournamentDetails.getLastMatchRound()).append(", '");
-			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getFirstMatchRoundDate())).append("', '");
-			sql.append(HODateTime.toDbTimestamp(oTournamentDetails.getNextMatchRoundDate())).append("', ");
-
-			if (oTournamentDetails.getMatchesOngoing())
-			{
-				sql.append("true, ");
-			}
-			else
-			{
-				sql.append("false, ");
-			}
-			sql.append(oTournamentDetails.getCreator_UserId()).append(", ");
-
-			if (oTournamentDetails.getCreator_Loginname() == null)
-			{
-				sql.append("null)");
-			}
-			else
-			{
-				sql.append("'").append(oTournamentDetails.getCreator_Loginname()).append("')");
-			}
-			adapter.executeUpdate(sql.toString());
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),
-						"DB.storeMatchKurzInfos Error" + e);
-				HOLogger.instance().log(getClass(), e);
-			}
+			executePreparedInsert(
+					details.getTournamentId(),
+					details.getName(),
+					details.getTournamentType(),
+					details.getSeason(),
+					details.getLogoUrl(),
+					details.getTrophyType(),
+					details.getNumberOfTeams(),
+					details.getNumberOfGroups(),
+					details.getLastMatchRound(),
+					HODateTime.toDbTimestamp(details.getFirstMatchRoundDate()),
+					HODateTime.toDbTimestamp(details.getNextMatchRoundDate()),
+					details.getMatchesOngoing(),
+					details.getCreator_UserId(),
+					details.getCreator_Loginname()
+			);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),
+					"DB.storeTournamentDetails Error" + e);
+			HOLogger.instance().log(getClass(), e);
+		}
 
 	}
 

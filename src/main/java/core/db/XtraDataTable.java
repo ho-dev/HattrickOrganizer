@@ -30,19 +30,22 @@ final class XtraDataTable extends AbstractTable {
 		};
 	}
 
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID = ?");
+	}
 	/**
 	 * load Xtra data
 	 */
 	XtraData loadXtraData(int hrfID) {
 		if (hrfID != -1) {
-			String sql = "SELECT * FROM " + getTableName() + " WHERE HRF_ID = " + hrfID;
-			ResultSet rs = adapter.executeQuery(sql);
+			ResultSet rs = executePreparedSelect(hrfID);
 			if (rs != null) {
 				try {
 					if (rs.next()) {
 						var xtra = new XtraData();
 						xtra.setCurrencyRate(rs.getDouble("CurrencyRate"));
-						xtra.setLogoURL(DBManager.deleteEscapeSequences(rs.getString("LogoURL")));
+						xtra.setLogoURL(rs.getString("LogoURL"));
 						xtra.setHasPromoted(rs.getBoolean("HasPromoted"));
 						xtra.setSeriesMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SeriesMatchDate")));
 						xtra.setTrainingDate(HODateTime.fromDbTimestamp(rs.getTimestamp("TrainingDate")));
@@ -74,37 +77,23 @@ final class XtraDataTable extends AbstractTable {
 
 			//erst Vorhandene Aufstellung löschen
 			deleteXtraDaten(hrfId);
+			executePreparedInsert(
+					hrfId,
+					xtra.getCurrencyRate(),
+					xtra.isHasPromoted(),
+					xtra.getLogoURL(),
+					xtra.getSeriesMatchDate().toDbTimestamp(),
+					xtra.getNextTrainingDate().toDbTimestamp(),
+					xtra.getEconomyDate().toDbTimestamp(),
+					xtra.getLeagueLevelUnitID(),
+					xtra.getCountryId()
+			);
 
-			//insert vorbereiten
-			statement = "INSERT INTO "+getTableName()+" ( HRF_ID , CurrencyRate, HasPromoted , LogoURL , SeriesMatchDate ,TrainingDate, EconomyDate, LeagueLevelUnitID, CountryId ) VALUES(";
-			statement
-				+= (""
-					+ hrfId
-					+ ","
-					+ xtra.getCurrencyRate()
-					+ ","
-					+ hasProm
-					+ ",'"
-					+ core.db.DBManager.insertEscapeSequences(xtra.getLogoURL())
-					+ "', '"
-					+ xtra.getSeriesMatchDate().toDbTimestamp()
-					+ "', '"
-					+ xtra.getNextTrainingDate().toDbTimestamp()
-					+ "', '"
-					+ xtra.getEconomyDate().toDbTimestamp()
-					+ "', "
-					+ xtra.getLeagueLevelUnitID()
-					+ ", "
-					+ xtra.getCountryId()
-					+ " )");
-			adapter.executeUpdate(statement);
 		}
 	}
 	
 	private void deleteXtraDaten(int hrfID) {
-		final String[] where = { "HRF_ID" };
-		final String[] value = { hrfID + "" };
-		delete( where,value );
+		executePreparedDelete(hrfID);
 	}
 
 }

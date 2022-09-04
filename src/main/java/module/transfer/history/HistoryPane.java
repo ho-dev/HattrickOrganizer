@@ -11,6 +11,7 @@ import core.util.Helper;
 import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerTransfer;
+import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import java.awt.BorderLayout;
@@ -142,7 +143,7 @@ public class HistoryPane extends JSplitPane {
                 if (choice == JOptionPane.YES_OPTION) {
                     try {
                         HOMainFrame.instance().resetInformation();
-                        DBManager.instance().updateTeamTransfers(teamId);
+                        XMLParser.updateTeamTransfers(teamId);
                         HOMainFrame.instance().setInformationCompleted();
                     } catch (Exception ex) {
                         ex.printStackTrace();

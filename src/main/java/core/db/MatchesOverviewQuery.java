@@ -1,12 +1,9 @@
 package core.db;
 
 import core.model.HOVerwaltung;
-import core.model.cup.CupLevel;
-import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 import module.matches.MatchLocation;
-import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
 
 import java.sql.PreparedStatement;

@@ -13,7 +13,7 @@ public class OpponentPlayer extends Player {
 	private List<PlayedPosition> playedPositions;
 
     public OpponentPlayer() {
-        super(properties, hrfdate, hoModel.getID());
+        super();
     }
 
 

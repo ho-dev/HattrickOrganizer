@@ -40,6 +40,10 @@ final class ModuleConfigTable extends AbstractTable {
 		} // for		
 	}
 
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
+	}
 	 Map<String,Object> findAll() {
 		 final HashMap<String, Object> values = new HashMap<>();
 		 try {
@@ -57,8 +61,8 @@ final class ModuleConfigTable extends AbstractTable {
 	 }
 
 	 @Override
-	 protected PreparedStatement createUpdateStatement(){
-		return createUpdateStatement("SET CONFIG_VALUE=?, CONFIG_DATATYPE=? WHERE CONFIG_KEY=?");
+	 protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder() {
+		 return new PreparedUpdateStatementBuilder(this, "SET CONFIG_VALUE=?, CONFIG_DATATYPE=? WHERE CONFIG_KEY=?");
 	 }
 	private int updateConfig(String key, Object value)  {
 		return executePreparedUpdate(
@@ -78,10 +82,6 @@ final class ModuleConfigTable extends AbstractTable {
 		);
 	}
 
-	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE CONFIG_KEY=?");
-	}
 	void deleteConfig(String key) {
 		executePreparedDelete(key);
 	}

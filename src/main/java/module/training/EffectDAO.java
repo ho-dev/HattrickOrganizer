@@ -37,10 +37,26 @@ public class EffectDAO {
         return trainWeeks;
     }
 
-    /**
-     * Calculates the training weeks and returns a list of TrainWeek instances. These value object
-     * contain the last hrf id before the training update and the first hrf id after the update.
-     */
+    private static DBManager.PreparedStatementBuilder trainingDatesStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "SELECT HRFMIN.hrf_id, HRFMAX.hrf_id, trainingdate" +
+            " FROM HRF as HRFMIN, HRF as HRFMAX, (SELECT max(HRF.datum) as maxdate, min(HRF.datum) as mindate, trainingdate" +
+            " FROM HRF, XTRADATA" +
+            " WHERE HRF.hrf_id=XTRADATA.hrf_id" +
+            " GROUP BY trainingdate) AS X" +
+            " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC" );
+    private static DBManager.PreparedStatementBuilder weeksStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
+
+    private static DBManager.PreparedStatementBuilder playersStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
+
+    private static DBManager.PreparedStatementBuilder playerbasicsStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+            "SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = ?");
+
+            /**
+             * Calculates the training weeks and returns a list of TrainWeek instances. These value object
+             * contain the last hrf id before the training update and the first hrf id after the update.
+             */
     public static void reload() {
         try {
             Map<String,List<ISkillChange>> weeklySkillups = new HashMap<>();
@@ -64,16 +80,8 @@ public class EffectDAO {
             }
 
             JDBCAdapter db = DBManager.instance().getAdapter();
-
             trainWeeks.clear();
-
-            ResultSet tDateset = db.executeQuery("SELECT HRFMIN.hrf_id, HRFMAX.hrf_id, trainingdate" +
-                    " FROM HRF as HRFMIN, HRF as HRFMAX, (SELECT max(HRF.datum) as maxdate, min(HRF.datum) as mindate, trainingdate" +
-                        " FROM HRF, XTRADATA" +
-                        " WHERE HRF.hrf_id=XTRADATA.hrf_id" +
-                        " GROUP BY trainingdate) AS X" +
-                        " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC");
-
+            ResultSet tDateset = db.executePreparedQuery(trainingDatesStatementBuilder.getStatement());
             List<TrainWeekEffect> trainingDates = new Vector<>();
 
             try {
@@ -94,9 +102,7 @@ public class EffectDAO {
             }
 
             for (TrainWeekEffect week : trainingDates) {
-                ResultSet set = db.executeQuery("SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = " //$NON-NLS-1$
-                        + week.getHRFafterUpdate());
-
+                ResultSet set = db.executePreparedQuery(weeksStatementBuilder.getStatement(),week.getHRFafterUpdate());
                 if (set != null) {
                     set.next();
                     week.setTotalTSI(set.getInt("totaltsi")); //$NON-NLS-1$
@@ -114,8 +120,7 @@ public class EffectDAO {
 
                 Map<Integer, PlayerValues> valuesBeforeUpdate = new HashMap<>();
 
-                set = db.executeQuery("SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = " //$NON-NLS-1$
-                        + week.getHRFbeforeUpdate());
+                set = db.executePreparedQuery(playersStatementBuilder.getStatement(),week.getHRFbeforeUpdate());
 
                 if (set != null) {
                     while (set.next()) {
@@ -128,8 +133,7 @@ public class EffectDAO {
                     set.close();
                 }
 
-                set = db.executeQuery("SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = " //$NON-NLS-1$
-                        + week.getHRFafterUpdate());
+                set = db.executePreparedQuery(playerbasicsStatementBuilder.getStatement(),week.getHRFafterUpdate());
 
                 if (set != null) {
                     while (set.next()) {

@@ -1,9 +1,14 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
+import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -18,15 +23,12 @@ final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
 	DBManager dbManager;
 
-	void setDbManager(DBManager dbManager) {
-		this.dbManager = dbManager;
-	}
-
 	void updateDB(int DBVersion) {
 		// Just add new version cases in the switch..case part
 		// and leave the old ones active, so also users which
 		// have skipped a version get their database updated.
 
+		dbManager = DBManager.instance();
 		this.m_clJDBCAdapter = dbManager.getAdapter();
 
 		int version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME)).getDBVersion();
@@ -76,6 +78,46 @@ final class DBUpdater {
 		}
 	}
 
+	private HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();
+	private PreparedStatement getMigrateEscapesStatement(String table, String column){
+		var sql = "Update "+ table + " SET " + column + "=REPLACE(" + column + ", ?, ?)";
+		var ret = migrateStatements.get(sql);
+		if ( ret == null ){
+			ret = new DBManager.PreparedStatementBuilder(m_clJDBCAdapter,sql).getStatement();
+			migrateStatements.put(sql, ret);
+		}
+		return ret;
+	}
+	private PreparedStatement getMigrateEscapesStatement(String table, String column, String where){
+		var sql = "Update "+ table + " SET " + column + "=REPLACE("+column+", ?, ?) " + where;
+		var ret = migrateStatements.get(sql);
+		if ( ret == null ){
+			ret = new DBManager.PreparedStatementBuilder(m_clJDBCAdapter,sql).getStatement();
+			migrateStatements.put(sql, ret);
+		}
+		return ret;
+	}
+	private void migrateEscapes(String table, String ... columns){
+		for (var column:columns){
+			var now = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
+			m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column), "§", "\\");
+			var rows = m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column), "#", "'");
+			var finished = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+		}
+	}
+	private void migrateSelectedEscapes(String table, String where, String ... columns){
+		for (var column:columns){
+			var now = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
+			m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column, where), "§", "\\");
+			var rows = m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column, where),    "#", "'");
+			var finished = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+		}
+	}
+
 	private void updateDBv700(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		if (playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")) {
@@ -91,7 +133,27 @@ final class DBUpdater {
 		var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
 		hrfTable.tryDeleteColumn("NAME");
 
-		m_clJDBCAdapter._executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+
+		migrateEscapes("MATCHHIGHLIGHTS", "EventText", "SpielerName", "GehilfeName");
+		migrateEscapes("BASICS", "Manager", "TeamName", "YouthTeamName");
+		migrateEscapes("MATCHDETAILS", "ArenaName", "GastName", "HeimName", "Matchreport");
+		migrateEscapes("MATCHLINEUPPLAYER", "VName", "NickName", "Name");
+		migrateEscapes("MATCHLINEUPTEAM", "TeamName");
+		migrateEscapes("MATCHESKURZINFO",  "GastName", "HeimName");
+		migrateEscapes("NTTEAM", "SHORTNAME", "COACHNAME", "LEAGUENAME", "NAME");
+		migrateEscapes("PAARUNG",  "GastName", "HeimName");
+		migrateEscapes("SCOUT",  "Name", "Info");
+		migrateEscapes("SPIELERNOTIZ",  "Notiz");
+		migrateEscapes("SPIELER",  "ArrivalDate","MotherclubName", "NickName","LastName","FirstName");
+		migrateEscapes("STADION",  "StadionName");
+		migrateEscapes("TA_PLAYER",  "NAME");
+		migrateEscapes("TRANSFER", "playername", "buyername", "sellername");
+		migrateEscapes("HT_WORLDDETAILS",  "COUNTRYNAME");
+		migrateEscapes("XTRADATA",  "LogoURL");
+		migrateEscapes("YOUTHPLAYER",  "ScoutName", "OwnerNotes","Statement", "NickName","LastName","FirstName");
+		migrateEscapes("YOUTHSCOUTCOMMENT",  "Text");
+		migrateSelectedEscapes("USERCONFIGURATION",  "where CONFIG_KEY='hrfImport_HRFPath'" , "CONFIG_VALUE");
 
 		updateDBVersion(dbVersion, 700);
 	}
@@ -107,14 +169,14 @@ final class DBUpdater {
 
 	private void updateDBv600(int dbVersion) throws SQLException {
 		// reduce data base file's disk space
-		m_clJDBCAdapter._executeUpdate("CHECKPOINT DEFRAG");
-		m_clJDBCAdapter._executeUpdate("SET FILES SPACE TRUE");
-		m_clJDBCAdapter._executeUpdate("SET TABLE MATCHHIGHLIGHTS NEW SPACE");
-		m_clJDBCAdapter._executeUpdate("SET TABLE MATCHLINEUPPLAYER NEW SPACE");
+		m_clJDBCAdapter.executeUpdate("CHECKPOINT DEFRAG");
+		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHHIGHLIGHTS NEW SPACE");
+		m_clJDBCAdapter.executeUpdate("SET TABLE MATCHLINEUPPLAYER NEW SPACE");
 
-		m_clJDBCAdapter._executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
-		m_clJDBCAdapter._executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
-		m_clJDBCAdapter._executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE AUFSTELLUNG IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE MATCHORDER IF EXISTS");
+		m_clJDBCAdapter.executeUpdate("DROP TABLE POSITIONEN IF EXISTS");
 
 		var matchLineupTeamTable = dbManager.getTable(MatchLineupTeamTable.TABLENAME);
 		if ( !matchLineupTeamTable.primaryKeyExists() ) {
@@ -139,8 +201,8 @@ final class DBUpdater {
 
 		if (!columnExistsInTable("IncomeSponsorsBonus", EconomyTable.TABLENAME)) {
 			try {
-				m_clJDBCAdapter._executeUpdate("ALTER TABLE ECONOMY ADD COLUMN LastIncomeSponsorsBonus INTEGER DEFAULT 0");
-				m_clJDBCAdapter._executeUpdate("ALTER TABLE ECONOMY ADD COLUMN IncomeSponsorsBonus INTEGER DEFAULT 0");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN LastIncomeSponsorsBonus INTEGER DEFAULT 0");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE ECONOMY ADD COLUMN IncomeSponsorsBonus INTEGER DEFAULT 0");
 				HOLogger.instance().info(getClass(), "Sponsor Bonus columns have been added to Economy table");
 			}
 			catch (Exception e) {
@@ -150,8 +212,8 @@ final class DBUpdater {
 
 		if (!columnExistsInTable("GoalsCurrentTeam", SpielerTable.TABLENAME)) {
 			try {
-				m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN GoalsCurrentTeam INTEGER DEFAULT 0");
-				m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN ArrivalDate VARCHAR (100)");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN GoalsCurrentTeam INTEGER DEFAULT 0");
+				m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN ArrivalDate VARCHAR (100)");
 				HOLogger.instance().info(getClass(), "SPIELER table structure has been updated");
 			}
 			catch (Exception e) {
@@ -164,46 +226,46 @@ final class DBUpdater {
 	private void updateDBv500(int dbVersion) throws SQLException {
 		// Upgrade legacy FINANZEN table to new ECONOMY Table (since HO 5.0)
 		if (!tableExists(EconomyTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Datum RENAME TO FetchedDate");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Sponsoren RENAME TO SponsorsPopularity");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Finanzen RENAME TO Cash");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSponsoren RENAME TO IncomeSponsors");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZinsen RENAME TO IncomeFinancial");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSonstiges RENAME TO IncomeTemporary");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinGesamt RENAME TO IncomeSum");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSpieler RENAME TO CostsPlayers");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostTrainer RENAME TO CostsStaff");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostStadion RENAME TO CostsArena");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostJugend RENAME TO CostsYouth");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostZinsen RENAME TO CostsFinancial");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSonstiges RENAME TO CostsTemporary");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostGesamt RENAME TO CostsSum");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN GewinnVerlust RENAME TO ExpectedWeeksTotal");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSponsoren RENAME TO LastIncomeSponsors");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZuschauer RENAME TO LastIncomeSpectators");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZinsen RENAME TO LastIncomeFinancial");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSonstiges RENAME TO LastIncomeTemporary");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinGesamt RENAME TO LastIncomeSum");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSpieler RENAME TO LastCostsPlayers");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostTrainer RENAME TO LastCostsStaff");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostStadion RENAME TO LastCostsArena");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostJugend RENAME TO LastCostsYouth");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostZinsen RENAME TO LastCostsFinancial");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSonstiges RENAME TO LastCostsTemporary");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostGesamt RENAME TO LastCostsSum");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteGewinnVerlust RENAME TO LastWeeksTotal");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN ExpectedCash INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayersCommission INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsBoughtPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsArenaBuilding INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayersCommission INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsBoughtPlayers INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsArenaBuilding INTEGER DEFAULT 0");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Datum RENAME TO FetchedDate");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Supporter RENAME TO SupportersPopularity");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Sponsoren RENAME TO SponsorsPopularity");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN Finanzen RENAME TO Cash");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSponsoren RENAME TO IncomeSponsors");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZuschauer RENAME TO IncomeSpectators");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinZinsen RENAME TO IncomeFinancial");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinSonstiges RENAME TO IncomeTemporary");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN EinGesamt RENAME TO IncomeSum");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSpieler RENAME TO CostsPlayers");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostTrainer RENAME TO CostsStaff");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostStadion RENAME TO CostsArena");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostJugend RENAME TO CostsYouth");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostZinsen RENAME TO CostsFinancial");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostSonstiges RENAME TO CostsTemporary");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN KostGesamt RENAME TO CostsSum");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN GewinnVerlust RENAME TO ExpectedWeeksTotal");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSponsoren RENAME TO LastIncomeSponsors");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZuschauer RENAME TO LastIncomeSpectators");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinZinsen RENAME TO LastIncomeFinancial");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinSonstiges RENAME TO LastIncomeTemporary");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteEinGesamt RENAME TO LastIncomeSum");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSpieler RENAME TO LastCostsPlayers");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostTrainer RENAME TO LastCostsStaff");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostStadion RENAME TO LastCostsArena");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostJugend RENAME TO LastCostsYouth");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostZinsen RENAME TO LastCostsFinancial");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostSonstiges RENAME TO LastCostsTemporary");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteKostGesamt RENAME TO LastCostsSum");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ALTER COLUMN LetzteGewinnVerlust RENAME TO LastWeeksTotal");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN ExpectedCash INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayers INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN IncomeSoldPlayersCommission INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsBoughtPlayers INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN CostsArenaBuilding INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayers INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastIncomeSoldPlayersCommission INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsBoughtPlayers INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN ADD COLUMN LastCostsArenaBuilding INTEGER DEFAULT 0");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE FINANZEN RENAME TO ECONOMY");
 		}
 
 		AbstractTable matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
@@ -249,10 +311,9 @@ final class DBUpdater {
 			// Step 2. Migrate existing entries ==================================================================
 			var trainings = new ArrayList<int[]>();
 			final String statement = "SELECT * FROM " + TrainingsTable.TABLENAME;
-			ResultSet rs = m_clJDBCAdapter._executeQuery(statement);
+			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
 			try {
 				if (rs != null) {
-					rs.beforeFirst();
 					while (rs.next()) {
 						var training = new int[]{
 								rs.getInt("week"),
@@ -329,7 +390,7 @@ final class DBUpdater {
 			String sql = "UPDATE " + FutureTrainingTable.TABLENAME +
 					" SET TRAINING_DATE=timestamp('1900-01-01'), TRAINING_ASSISTANTS_LEVEL=WEEK, COACH_LEVEL=SEASON, SOURCE=" +
 					DBDataSource.MANUAL.getValue() + " WHERE TRUE";
-			m_clJDBCAdapter._executeUpdate(sql);
+			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Step 3. Finalize upgrade of FUTURETRAININGS table structure ===============================
 			futureTrainingTable.tryChangeColumn("COACH_LEVEL", "NOT NULL");
@@ -357,8 +418,8 @@ final class DBUpdater {
 			matchIFATable.tryDropPrimaryKey();
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			matchLineupTable.tryDeleteColumn("SourceSystem");
 			matchLineupTable.tryDeleteColumn("HeimName");
@@ -400,7 +461,7 @@ final class DBUpdater {
 					WHERE
 					    MATCHTYP IN (1001, 1002, 1003, 1004, 1101)""";
 
-			m_clJDBCAdapter._executeUpdate(sql);
+			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO =============================
 			// use match lineup table to fix match types, since the lineup table holds the youth matches too
@@ -418,21 +479,21 @@ final class DBUpdater {
 			copyMatchTypes("MATCHLINEUP", "YOUTHTRAINING");
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			HOLogger.instance().debug(getClass(), "Upgrade of DB structure SourceSystem/MatchType is complete ! ");
 		}
 
 		if (!columnExistsInTable("LAST_MATCH_TYPE", "SPIELER")) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
 		}
 
 		// Delete corrupt entries (wrong week numbers) from TA_PLAYER table
 		var hrfTable = (HRFTable)dbManager.getTable(HRFTable.TABLENAME);
 		var hrf = hrfTable.getLatestHrf();
 		if ( hrf.isOK() ) {
-			m_clJDBCAdapter._executeUpdate("DELETE FROM " + TAPlayerTable.TABLENAME
+			m_clJDBCAdapter.executeUpdate("DELETE FROM " + TAPlayerTable.TABLENAME
 					+ " WHERE WEEK> (SELECT SAISON*16+SPIELTAG-1 FROM "
 					+ basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")" );
 		}
@@ -450,44 +511,44 @@ final class DBUpdater {
 
 	private void copyMatchTypes(String fromTable, String toTable) {
 		String sql = "UPDATE " + toTable + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM " + fromTable +" MK WHERE t1.MATCHID = MK.MATCHID)";
-		m_clJDBCAdapter._executeUpdate(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 		sql = "UPDATE " + toTable + " SET MATCHTYP = 0 WHERE MATCHTYP IS NULL";
-		m_clJDBCAdapter._executeUpdate(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 	}
 
 	private void updateDBv400(int dbVersion) throws SQLException {
 		// Delete existing values to provide sane defaults.
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'spielerUebersichtsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_verticalSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalRightSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'aufstellungsPanel_horizontalLeftSplitPane'");
 
 		if (!columnExistsInTable("SeasonOffset", BasicsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE BASICS ADD COLUMN SeasonOffset INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE BASICS ADD COLUMN SeasonOffset INTEGER");
 		}
 
 		if (!columnExistsInTable("Duration", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Duration INTEGER ");
 		}
 		if (!columnExistsInTable("MatchPart", MatchHighlightsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchPart INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EventVariation INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN MatchPart INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EventVariation INTEGER ");
 		}
 		if (!columnExistsInTable("HomeGoal0", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal0 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal1 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal2 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal3 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal4 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal0 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal1 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal2 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal3 INTEGER ");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal4 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal0 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal1 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal2 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal3 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN HomeGoal4 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal0 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal1 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal2 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal3 INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN GuestGoal4 INTEGER ");
 		}
 
 		if (!columnExistsInTable("NAME", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN NAME VARCHAR (100) ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN NAME VARCHAR (100) ");
 		}
 
 		// use defaults player formula from defaults.xml by resetting the value in the database
@@ -515,53 +576,53 @@ final class DBUpdater {
 
 	private void updateDBv301(int dbVersion) throws SQLException {
 
-		m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
-		m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isDerby SET DATA TYPE BOOLEAN");
+		m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ALTER COLUMN isNeutral SET DATA TYPE BOOLEAN");
 
 		if (!columnExistsInTable("EVENT_INDEX", MatchHighlightsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN EVENT_INDEX INTEGER");
 		}
 
 		if (!columnExistsInTable("INJURY_TYPE", MatchHighlightsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS ADD COLUMN INJURY_TYPE TINYINT");
 		}
 
 		if (columnExistsInTable("TYP", MatchHighlightsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
+			m_clJDBCAdapter.executeUpdate("UPDATE MATCHHIGHLIGHTS SET MATCH_EVENT_ID = (TYP * 100) + SUBTYP WHERE MATCH_EVENT_ID IS NULL");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP TYP");
 		}
 
 		if (!columnExistsInTable("LastMatchDate", SpielerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchDate VARCHAR (100)");
 		}
 		if (!columnExistsInTable("LastMatchRating", SpielerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchRating INTEGER");
 		}
 		if (!columnExistsInTable("LastMatchId", SpielerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LastMatchId INTEGER");
 		}
 
 		Arrays.asList("HEIMTORE", "GASTTORE", "SUBTYP").forEach(s -> {
 			try {
 				if (columnExistsInTable(s, MatchHighlightsTable.TABLENAME)) {
-					m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHHIGHLIGHTS DROP " + s);
 				}
 			} catch (SQLException e) {
 				HOLogger.instance().log(getClass(), e);
 			}
 		});
 
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
-		m_clJDBCAdapter._executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_heimid_idx ON MATCHDETAILS (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchdetails_gastid_idx ON MATCHDETAILS (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_heimid_idx ON MATCHESKURZINFO (HEIMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchkurzinfo_gastid_idx ON MATCHESKURZINFO (GASTID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_teamid_idx ON MATCHHIGHLIGHTS (TEAMID)");
+		m_clJDBCAdapter.executeUpdate("CREATE INDEX IF NOT EXISTS matchhighlights_eventid_idx ON MATCHHIGHLIGHTS (MATCH_EVENT_ID)");
 
 		Arrays.asList("GlobalRanking", "LeagueRanking", "RegionRanking", "PowerRating").forEach(s -> {
 			try {
 				if (!columnExistsInTable(s, VereinTable.TABLENAME)) {
-					m_clJDBCAdapter._executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
+					m_clJDBCAdapter.executeUpdate(String.format("ALTER TABLE VEREIN ADD COLUMN %s INTEGER", s));
 				}
 			} catch (SQLException e) {
 				HOLogger.instance().log(getClass(), e);
@@ -571,7 +632,7 @@ final class DBUpdater {
 		Arrays.asList("TWTrainer", "Physiologen").forEach(s -> {
 			try {
 				if (columnExistsInTable(s, VereinTable.TABLENAME)) {
-					m_clJDBCAdapter._executeUpdate("ALTER TABLE VEREIN DROP " + s);
+					m_clJDBCAdapter.executeUpdate("ALTER TABLE VEREIN DROP " + s);
 				}
 			} catch (SQLException e) {
 				HOLogger.instance().log(getClass(), e);
@@ -586,75 +647,75 @@ final class DBUpdater {
 		// HO 3.0
 
 		// delete old divider locations
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
-		m_clJDBCAdapter._executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
 
 		//store ArenaId into MATCHESKURZINFO table
 		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN ArenaId INTEGER");
 		}
 
 		//store RegionId into MATCHESKURZINFO table
 		if (!columnExistsInTable("RegionId", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN RegionId INTEGER");
 		}
 
 		//store Weather into MATCHESKURZINFO table
 		if (!columnExistsInTable("Weather", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN Weather INTEGER");
 		}
 
 		//store WeatherForecast into MATCHESKURZINFO table
 		if (!columnExistsInTable("WeatherForecast", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN WeatherForecast INTEGER");
 		}
 
 		//store isDerby into MATCHESKURZINFO table
 		if (!columnExistsInTable("isDerby", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isDerby BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isDerby BOOLEAN");
 		}
 
 		//store isNeutral into MATCHESKURZINFO table
 		if (!columnExistsInTable("isNeutral", MatchesKurzInfoTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD COLUMN isNeutral BOOLEAN");
 		}
 
 		//store Salary into TA_PLAYER table
 		if (!columnExistsInTable("SALARY", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN SALARY INTEGER");
 		}
 
 		//store Stamina  into TA_PLAYER table
 		if (!columnExistsInTable("STAMINA", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN STAMINA INTEGER");
 		}
 
 		//store MotherClubBonus  into TA_PLAYER table
 		if (!columnExistsInTable("MOTHERCLUBBONUS", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN MOTHERCLUBBONUS BOOLEAN");
 		}
 
 		//store Loyalty  into TA_PLAYER table
 		if (!columnExistsInTable("LOYALTY", TAPlayerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE TA_PLAYER ADD COLUMN LOYALTY INTEGER");
 		}
 
 		//store RATINGINDIRECTSETPIECESATT  into MATCHDETAILS table
 		if (!columnExistsInTable("RATINGINDIRECTSETPIECESATT", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESATT INTEGER");
 		}
 
 		//store RATINGINDIRECTSETPIECESDEF  into MATCHDETAILS table
 		if (!columnExistsInTable("RATINGINDIRECTSETPIECESDEF", MatchDetailsTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD COLUMN RATINGINDIRECTSETPIECESDEF INTEGER");
 		}
 
 		//store FirstName, Nickname  into Playertable
 		if (!columnExistsInTable("FirstName", SpielerTable.TABLENAME)) {
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN FirstName VARCHAR (100)");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ADD COLUMN NickName VARCHAR (100)");
-			m_clJDBCAdapter._executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN FirstName VARCHAR (100)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN NickName VARCHAR (100)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ALTER COLUMN Name RENAME TO LastName");
 		}
 
 		// Delete league plans which are not of our own team
@@ -663,7 +724,7 @@ final class DBUpdater {
 			int teamId = getTeamId();
 			// select saison,ligaid from paarung where heimid=520472 group by saison,ligaid
 			HashMap<Integer, Integer> ownLeaguePlans = new HashMap<>();
-			ResultSet rs = m_clJDBCAdapter._executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from paarung where heimid=" + teamId + " group by saison,ligaid");
 			if (rs != null) {
 				while (rs.next()) {
 					int saison = rs.getInt(1);
@@ -673,15 +734,15 @@ final class DBUpdater {
 				rs.close();
 			}
 			// delete entries in SPIELPLAN and PAARUNG which are not from own team
-			rs = m_clJDBCAdapter._executeQuery("select saison,ligaid from spielplan");
+			rs = m_clJDBCAdapter.executeQuery("select saison,ligaid from spielplan");
 			if (rs != null) {
 				while (rs.next()) {
 					int saison = rs.getInt(1);
 					int league = rs.getInt(2);
 					if (!ownLeaguePlans.containsKey(saison) || ownLeaguePlans.get(saison) != league) {
 						// league is not our own one
-						m_clJDBCAdapter._executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
-						m_clJDBCAdapter._executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM spielplan WHERE ligaid=" + league + " and saison=" + saison);
+						m_clJDBCAdapter.executeUpdate("DELETE FROM paarung WHERE ligaid=" + league + " and saison=" + saison);
 					}
 				}
 				rs.close();
@@ -718,9 +779,9 @@ final class DBUpdater {
 
 	private int getTeamId() {
 		try {
-			ResultSet rs = m_clJDBCAdapter._executeQuery("select teamid from basics limit 1");
+			ResultSet rs = m_clJDBCAdapter.executeQuery("select teamid from basics limit 1");
 			if (rs != null) {
-				rs.first();
+				rs.next();
 				int ret = rs.getInt(1);
 				rs.close();
 				return ret;
@@ -734,14 +795,14 @@ final class DBUpdater {
 	private boolean columnExistsInTable(String columnName, String tableName) throws SQLException {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '" +
 				tableName.toUpperCase() + "' AND COLUMN_NAME = '" + columnName.toUpperCase() + "'";
-		ResultSet rs = this.m_clJDBCAdapter._executeQuery(sql);
+		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName.toUpperCase() + "'";
-		ResultSet rs = this.m_clJDBCAdapter._executeQuery(sql);
+		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
 	}
@@ -749,10 +810,10 @@ final class DBUpdater {
 	private void resetUserColumns() {
 		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
 		String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
-		m_clJDBCAdapter._executeUpdate(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 
 		HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
 		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
-		m_clJDBCAdapter._executeUpdate(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 	}
 }

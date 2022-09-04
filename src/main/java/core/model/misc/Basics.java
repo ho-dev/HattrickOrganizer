@@ -124,8 +124,8 @@ public final class Basics  {
     public Basics(ResultSet rs) {
         try {
             m_iTeamId = rs.getInt("TeamID");
-            m_sTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("TeamName"));
-            m_sManager = core.db.DBManager.deleteEscapeSequences(rs.getString("Manager"));
+            m_sTeamName = rs.getString("TeamName");
+            m_sManager = rs.getString("Manager");
             m_iLand = rs.getInt("Land");
             m_iLiga = rs.getInt("Liga");
             m_iSeason = rs.getInt("Saison");
@@ -135,7 +135,7 @@ public final class Basics  {
             m_iRegionId = rs.getInt("Region");
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = HODateTime.fromDbTimestamp(rs.getTimestamp("ActivationDate"));
-            m_sYouthTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("YouthTeamName"));
+            m_sYouthTeamName = rs.getString("YouthTeamName");
             setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
         } catch (Exception e) {
             HOLogger.instance().log(getClass(),"Constructor Basics: " + e);

@@ -36,8 +36,7 @@ public class YouthTrainerCommentTable extends AbstractTable {
 
     public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
         final ArrayList<YouthTrainerComment> ret = new ArrayList<>();
-        var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + id;
-        var rs = adapter.executeQuery(sql);
+        var rs =executePreparedSelect(id);
         try {
             if (rs != null) {
                 rs.beforeFirst();
@@ -58,7 +57,7 @@ public class YouthTrainerCommentTable extends AbstractTable {
             ret.setYouthPlayerId(rs.getInt("YOUTHPLAYER_ID"));
             ret.setMatchId(rs.getInt("MATCH_ID"));
             ret.setIndex(rs.getInt("INDEX"));
-            ret.setText(DBManager.deleteEscapeSequences(rs.getString("TEXT")));
+            ret.setText(rs.getString("TEXT"));
             ret.setType(CommentType.valueOf(DBManager.getInteger(rs, "TYPE")));
             ret.setVariation(DBManager.getInteger(rs, "VARIATION"));
             ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(DBManager.getInteger(rs, "SKILLTYPE")));

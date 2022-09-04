@@ -8,6 +8,7 @@ import core.model.enums.MatchType;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
@@ -16,6 +17,42 @@ import java.util.*;
 
 public class StatisticQuery {
 
+	private static PreparedStatement getSpielerDaten4StatistikStatement;
+	private static String getPlaceholders(int anzahl){
+		var ret = new StringBuilder();
+		var sep = "";
+		for (int i=0; i<anzahl;++i){
+			ret.append(sep).append("?");
+			sep=",";
+		}
+		return ret.toString();
+	}
+
+	static class PreparedSelectINStatementBuilder extends DBManager.PreparedStatementBuilder{
+		private final int anzahl;
+
+		public PreparedSelectINStatementBuilder(JDBCAdapter adapter, String sql, int anzahl ) {
+			super(adapter, sql);
+			this.anzahl=anzahl;
+		}
+
+		public int getAnzahl() {
+			return anzahl;
+		}
+	}
+
+	private static PreparedSelectINStatementBuilder getSpielerDaten4StatistikStatementBuilder=null;
+	private static PreparedStatement getSpielerDaten4StatistikStatement(int anzahl){
+		if ( getSpielerDaten4StatistikStatementBuilder == null || getSpielerDaten4StatistikStatementBuilder.getAnzahl() != anzahl){
+			getSpielerDaten4StatistikStatementBuilder= new PreparedSelectINStatementBuilder(
+					DBManager.instance().getAdapter(),
+					"SELECT * FROM SPIELER WHERE SpielerID=? AND HRF_ID IN (" + getPlaceholders(anzahl) + ") ORDER BY Datum DESC",
+					anzahl);
+		}
+		return getSpielerDaten4StatistikStatementBuilder.getStatement();
+	}
+	private static final DBManager.PreparedStatementBuilder getSpielerBewertungStatementBuilder =
+			new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(), "SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>=? AND Datum<=? AND SpielerID=? ORDER BY Datum");
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 16;
 		final float faktor = core.model.UserParameter.instance().FXrate;
@@ -23,16 +60,11 @@ public class StatisticQuery {
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<>();
 
-		ResultSet rs =
-			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
-
+		var rs = DBManager.instance().getAdapter().executePreparedQuery(getSpielerDaten4StatistikStatement(anzahlHRF), spielerId , loadHrfIdPerWeekList(anzahlHRF) );
 		if (rs != null) {
 			try {
-				rs.beforeFirst();
-
 				while (rs.next()) {
 					final double[] tempwerte = new double[anzahlSpalten];
-
 					//faktor;
 					tempwerte[0] = rs.getDouble("Marktwert");
 					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
@@ -60,7 +92,6 @@ public class StatisticQuery {
 				}
 
 				returnWerte = new double[anzahlSpalten][vWerte.size()];
-
 				for (int i = 0; i < vWerte.size(); i++) {
 					final double[] werte = vWerte.get(i);
 
@@ -70,19 +101,10 @@ public class StatisticQuery {
 
 						//6 Tage vorher
 						final Timestamp beforetime = new Timestamp((long) werte[15] - 518400000);
-						rs =
-							DBManager.instance().getAdapter().executeQuery(
-								"SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>='"
-									+ beforetime
-									+ "' AND Datum<='"
-									+ hrftime
-									+ "' AND SpielerID="
-									+ spielerId
-									+ " ORDER BY Datum");
-
+						rs = DBManager.instance().getAdapter().executePreparedQuery(getSpielerBewertungStatementBuilder.getStatement(), beforetime, hrftime, spielerId);
 						//Wert gefunden
 						assert rs != null;
-						if (rs.first()) {
+						if (rs.next()) {
 							werte[13] = rs.getDouble("Bewertung") / 2d;
 						}
 					}
@@ -128,14 +150,12 @@ public class StatisticQuery {
 			rs = DBManager.instance().getAdapter().executeQuery(sql);
 
 			assert rs != null;
-			rs.beforeFirst();
-
 			while (rs.next()) {
 				//Paarung auslesen
 				arenamodel = new core.gui.model.ArenaStatistikModel();
 				arenamodel.setMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("SpielDatum")));
-				arenamodel.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
-				arenamodel.setHeimName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
+				arenamodel.setGastName(rs.getString("GastName"));
+				arenamodel.setHeimName(rs.getString("HeimName"));
 				arenamodel.setMatchID(rs.getInt("MatchID"));
 				arenamodel.setGastTore(rs.getInt("GastTore"));
 				arenamodel.setHeimTore(rs.getInt("HeimTore"));
@@ -147,8 +167,6 @@ public class StatisticQuery {
 				arenamodel.setVip(rs.getInt("soldVIP"));
 				arenamodel.setZuschaueranzahl(rs.getInt("Zuschauer"));
 				arenamodel.setWetter(rs.getInt("WetterId"));
-
-				//Adden
 				liste.add(arenamodel);
 			}
 		} catch (Exception e) {
@@ -167,7 +185,7 @@ public class StatisticQuery {
 				sql = "SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				assert rs != null;
-				if (rs.first()) {
+				if (rs.next()) {
 					arenaStatistikModel.setArenaGroesse(rs.getInt("GesamtGr"));
 					arenaStatistikModel.setMaxTerraces(rs.getInt("AnzSteh"));
 					arenaStatistikModel.setMaxBasic(rs.getInt("AnzSitz"));
@@ -201,7 +219,7 @@ public class StatisticQuery {
 				sql = "SELECT Fans FROM " + VereinTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				assert rs != null;
-				if (rs.first()) {
+				if (rs.next()) {
 					arenaStatistikModel.setFans(rs.getInt("Fans"));
 					maxFans = Math.max(arenaStatistikModel.getFans(), maxFans);
 				}
@@ -211,7 +229,7 @@ public class StatisticQuery {
 				sql = "SELECT SupportersPopularity FROM " + EconomyTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				assert rs != null;
-				if (rs.first()) {
+				if (rs.next()) {
 					arenaStatistikModel.setFanZufriedenheit(rs.getInt("SupportersPopularity"));
 				}
 				rs.close();
@@ -220,7 +238,7 @@ public class StatisticQuery {
 				sql = "SELECT Platz FROM " + LigaTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = DBManager.instance().getAdapter().executeQuery(sql);
 				assert rs != null;
-				if (rs.first()) {
+				if (rs.next()) {
 					arenaStatistikModel.setLigaPlatz(rs.getInt("Platz"));
 				}
 				rs.close();
@@ -251,14 +269,12 @@ public class StatisticQuery {
 		}
 
 
-		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + getHrfIdPerWeekList(nbHRF) + ") ORDER BY Datum DESC");
+		statement += (" Trainer=0 AND SPIELER.HRF_ID IN (" + loadHrfIdPerWeekList(nbHRF) + ") ORDER BY Datum DESC");
 
 		final ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(statement);
 
 		if (rs != null) {
 			try {
-				rs.beforeFirst();
-
 				int lastHRFID = -1;
 				int nbPlayersInHRF = 0;
 				double[] allValues = new double[nbColumns];
@@ -350,6 +366,19 @@ public class StatisticQuery {
 		return returnValues;
 	}
 
+	private static PreparedSelectINStatementBuilder getDataForClubStatisticsPanelStatementBuilder=null;
+	private static PreparedStatement getGetDataForClubStatisticsPanelStatement(int anzahl){
+		if ( getDataForClubStatisticsPanelStatementBuilder==null || getDataForClubStatisticsPanelStatementBuilder.getAnzahl()!=anzahl){
+			getDataForClubStatisticsPanelStatementBuilder = new PreparedSelectINStatementBuilder(
+					DBManager.instance().getAdapter(),
+					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
+							getPlaceholders(anzahl) +
+							") ORDER BY HRF.DATUM ASC",
+					anzahl
+					);
+		}
+		return getDataForClubStatisticsPanelStatementBuilder.getStatement();
+	}
 
 	// The data returned by this function are displayed in the Club tab of the statistics module
 	public static double[][] getDataForClubStatisticsPanel(int iNumberHRF) {
@@ -358,18 +387,9 @@ public class StatisticQuery {
 		Vector<double[]> values = new Vector<>();
 
 		try {
-			//TODO: filter one 1 HRF per HTweek only and change filter iNumberHRF to HTSeason
-			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
-					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
-							getHrfIdPerWeekList(iNumberHRF) +
-							") ORDER BY HRF.DATUM ASC");
-
+			var rs = DBManager.instance().getAdapter().executePreparedQuery(getGetDataForClubStatisticsPanelStatement(iNumberHRF), loadHrfIdPerWeekList(iNumberHRF));
 			if (rs == null) return new double[0][0];
-
-			rs.beforeFirst();
-
 			double[] tempValues;
-
 			while (rs.next()) {
 				tempValues = new double[iNumberColumns];
 				tempValues[0] = rs.getDouble("COTrainer");  // AssistantTrainerLevels
@@ -408,6 +428,10 @@ public class StatisticQuery {
 	}
 
 
+	private static DBManager.PreparedStatementBuilder getDataForFinancesStatisticsPanelBuilder=new DBManager.PreparedStatementBuilder(
+			DBManager.instance().getAdapter(),
+			"SELECT * FROM ECONOMY WHERE FetchedDate >= ? ORDER BY FetchedDate DESC"
+	);
 
 	// The data returned by this function are displayed in the Finance tab of the statistics module
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberWeeks) {
@@ -419,16 +443,10 @@ public class StatisticQuery {
 
 		try {
 			var from = HODateTime.now().minus(iNumberWeeks*7, ChronoUnit.DAYS);
-			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(
-					"SELECT * FROM ECONOMY WHERE FetchedDate >= '" + from.toDbTimestamp() +
-							"' ORDER BY FetchedDate DESC");
-
+			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(
+					getDataForFinancesStatisticsPanelBuilder.getStatement(),from.toDbTimestamp() );
 			if (rs == null) return new double[0][0];
-
-			rs.beforeFirst();
-
 			double[] tempValues;
-
 			while (rs.next()) {
 				tempValues = new double[iNumberColumns];
 				tempValues[0] = rs.getDouble("Cash") / fxRate;
@@ -472,52 +490,52 @@ public class StatisticQuery {
 		return returnValues;
 	}
 
-	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
-		final int anzahlSpalten = 3;
-		final float faktor = core.model.UserParameter.instance().FXrate;
-
-		double[][] returnWerte = new double[0][0];
-		final Vector<double[]> vWerte = new Vector<>();
-
-		ResultSet rs =
-			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
-
-		if (rs != null) {
-			try {
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					final double[] tempwerte = new double[anzahlSpalten];
-
-					//faktor;
-					tempwerte[0] = rs.getDouble("Marktwert");
-					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
-					tempwerte[2] = rs.getTimestamp("Datum").getTime();
-
-					//TSI, alle Marktwerte / 1000 teilen
-					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
-						tempwerte[0] /= 1000d;
-					}
-
-					vWerte.add(tempwerte);
-				}
-
-				returnWerte = new double[anzahlSpalten][vWerte.size()];
-
-				for (int i = 0; i < vWerte.size(); i++) {
-					final double[] werte = vWerte.get(i);
-
-					for (int j = 0; j < werte.length; j++) {
-						returnWerte[j][i] = werte[j];
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(StatisticQuery.class, e);
-			}
-		}
-
-		return returnWerte;
-	}
+//	public static double[][] getSpielerFinanzDaten4Statistik(int spielerId, int anzahlHRF) {
+//		final int anzahlSpalten = 3;
+//		final float faktor = core.model.UserParameter.instance().FXrate;
+//
+//		double[][] returnWerte = new double[0][0];
+//		final Vector<double[]> vWerte = new Vector<>();
+//
+//		ResultSet rs =
+//			DBManager.instance().getAdapter().executeQuery("SELECT * FROM SPIELER WHERE SpielerID=" + spielerId + " AND HRF_ID IN (" + getHrfIdPerWeekList(anzahlHRF) + ") ORDER BY Datum DESC");
+//
+//		if (rs != null) {
+//			try {
+//				rs.beforeFirst();
+//
+//				while (rs.next()) {
+//					final double[] tempwerte = new double[anzahlSpalten];
+//
+//					//faktor;
+//					tempwerte[0] = rs.getDouble("Marktwert");
+//					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
+//					tempwerte[2] = rs.getTimestamp("Datum").getTime();
+//
+//					//TSI, alle Marktwerte / 1000 teilen
+//					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
+//						tempwerte[0] /= 1000d;
+//					}
+//
+//					vWerte.add(tempwerte);
+//				}
+//
+//				returnWerte = new double[anzahlSpalten][vWerte.size()];
+//
+//				for (int i = 0; i < vWerte.size(); i++) {
+//					final double[] werte = vWerte.get(i);
+//
+//					for (int j = 0; j < werte.length; j++) {
+//						returnWerte[j][i] = werte[j];
+//					}
+//				}
+//			} catch (Exception e) {
+//				HOLogger.instance().log(StatisticQuery.class, e);
+//			}
+//		}
+//
+//		return returnWerte;
+//	}
 
 
 	/**
@@ -527,8 +545,8 @@ public class StatisticQuery {
 	 * @param nWeeks number of weeks
 	 * @return comma separated list of hrf ids
 	 */
-	private static String getHrfIdPerWeekList(int nWeeks) {
-		return DBManager.instance().getHrfIdPerWeekList(nWeeks);
+	private static List<Integer> loadHrfIdPerWeekList(int nWeeks) {
+		return DBManager.instance().loadHrfIdPerWeekList(nWeeks);
 	}
 
 }

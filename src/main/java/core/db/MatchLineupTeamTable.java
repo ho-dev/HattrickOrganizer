@@ -1,13 +1,9 @@
 package core.db;
 
-import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-import module.lineup.Lineup;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 
@@ -44,13 +40,13 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		};
 	}
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE MATCHTYP=? AND MATCHID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 
 	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement("WHERE MatchTyp = ? AND MatchID = ? AND TeamID = ?");
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this,"WHERE MatchTyp = ? AND MatchID = ? AND TeamID = ?");
 	}
 
 	MatchLineupTeam getMatchLineupTeam(int iMatchType, int matchID, int teamID) {
@@ -58,7 +54,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 			var sql = "SELECT * FROM " + getTableName() + " WHERE MatchTyp = " + iMatchType + " AND MatchID = " + matchID + " AND TeamID = " + teamID;
 			var rs = executePreparedSelect(iMatchType, matchID, teamID);
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					var team = new MatchLineupTeam(MatchType.getById(iMatchType),
 							matchID,
 							rs.getString("TeamName"),
@@ -81,17 +77,11 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		return null;
 	}
 
-	private PreparedStatement deleteMatchLineupTeamStatement;
-	private PreparedStatement getDeleteMatchLineupTeamStatement(){
-		if ( deleteMatchLineupTeamStatement==null){
-			deleteMatchLineupTeamStatement=createDeleteStatement("WHERE MatchTyp=? AND MatchID=? AND TeamID=?");
-		}
-		return deleteMatchLineupTeamStatement;
-	}
+	private final PreparedDeleteStatementBuilder deleteMatchLineupTeamStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE MatchTyp=? AND MatchID=? AND TeamID=?");
 	void deleteMatchLineupTeam(MatchLineupTeam team) {
 		try {
 			if (team != null) {
-				executePreparedDelete(getDeleteMatchLineupTeamStatement(),
+				this.adapter.executePreparedUpdate(deleteMatchLineupTeamStatementBuilder.getStatement(),
 						team.getMatchType().getId(),
 						team.getMatchId(),
 						team.getTeamID());
@@ -140,9 +130,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		try {
 			String sql = "SELECT * FROM " + getTableName() + " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1";
 
-			var rs = adapter._executeQuery(sql);
+			var rs = adapter.executeQuery(sql);
 			if ( rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					var team = new MatchLineupTeam(
 							MatchType.getById(rs.getInt("MATCHTYP")),
@@ -169,9 +158,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	public int getTemplateMatchLineupTeamNextNumber() {
 		try {
 			var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
-			var rs = adapter._executeQuery(sql);
+			var rs = adapter.executeQuery(sql);
 			if (rs != null) {
-				rs.beforeFirst();
 				if (rs.next()) {
 					return Math.min(-1,rs.getInt(1)-1);
 				}

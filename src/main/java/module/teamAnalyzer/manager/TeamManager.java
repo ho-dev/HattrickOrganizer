@@ -2,16 +2,11 @@ package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.util.HODateTime;
 import module.series.Spielplan;
 import module.teamAnalyzer.vo.Team;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 public class TeamManager {
@@ -153,14 +148,14 @@ public class TeamManager {
 	 */
 	private static Vector<Team> getUpComingMatchs(Vector<Team> vTeams) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		MatchKurzInfo[] dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
+		var dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
 
-		List<MatchKurzInfo> l = new ArrayList<>(Arrays.asList(dbMatches));
+//		List<MatchKurzInfo> l = new ArrayList<>(Arrays.asList(dbMatches));
+//
+//		Object[] matches = l.toArray();
 
-		Object[] matches = l.toArray();
-
-		for (Object o : matches) {
-			MatchKurzInfo match = (MatchKurzInfo) o;
+		for (var match : dbMatches) {
+//			MatchKurzInfo match = (MatchKurzInfo) o;
 			Team team = new Team();
 
 			if (match.getHomeTeamID() == teamId) {

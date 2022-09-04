@@ -3,11 +3,9 @@ package core.db;
 import core.model.series.Liga;
 import core.util.HOLogger;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.Vector;
-import java.util.function.Predicate;
 
 
 public final class LigaTable extends AbstractTable {
@@ -65,8 +63,7 @@ public final class LigaTable extends AbstractTable {
 
 		try {
 			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
-			final ResultSet rs = adapter._executeQuery(sql);
-			rs.beforeFirst();
+			final ResultSet rs = adapter.executeQuery(sql);
 			while (rs.next()) {
 				vligaids.add(Integer.valueOf(rs.getInt("LigaID")));
 			}
@@ -89,10 +86,10 @@ public final class LigaTable extends AbstractTable {
 		}
 		else {
 			ResultSet rs;
-			rs = getSelectByHrfID(hrfID);
+			rs = executePreparedSelect(hrfID);
 			try {
 				if (rs != null) {
-					rs.first();
+					rs.next();
 					serie = new Liga(rs);
 					rs.close();
 				}

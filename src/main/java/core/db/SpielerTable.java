@@ -114,8 +114,8 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedStatement createDeleteStatement(){
-		return createDeleteStatement("WHERE HRF_ID=? AND SPIELERID=?");
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this,"WHERE HRF_ID=? AND SPIELERID=?");
 	}
 	/**
 	 * saves one player to the DB
@@ -206,13 +206,7 @@ final class SpielerTable extends AbstractTable {
 		);
 	}
 
-	private PreparedStatement deletePlayerStatement;
-	private PreparedStatement getDeletePlayerStatement(){
-		if(deletePlayerStatement==null){
-			deletePlayerStatement=createDeleteStatement("WHERE HRF_ID=?");
-		}
-		return deletePlayerStatement;
-	}
+	private final PreparedDeleteStatementBuilder deletePlayerStatementBuilder=new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
 
 	/**
 	 * Saves the players in the <code>spieler</code> list.
@@ -220,17 +214,16 @@ final class SpielerTable extends AbstractTable {
 	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
 		if (spieler != null) {
 			// Delete old values
-			adapter.executePreparedUpdate(getDeletePlayerStatement(), hrfId);
+			adapter.executePreparedUpdate(deletePlayerStatementBuilder.getStatement(), hrfId);
 			for (Player p: spieler) {
 				saveSpieler(hrfId, p, date);
 			}
 		}
 	}
 
-	@Override
-	protected PreparedStatement createSelectStatement(){
-		return createSelectStatement(" WHERE HRF_ID =? AND SpielerId=?");
-	}
+
+	private PreparedSelectStatementBuilder selectStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID =? AND SpielerId=?");
+
 	/**
 	 * get a player from a specific HRF
 	 *
@@ -241,12 +234,10 @@ final class SpielerTable extends AbstractTable {
 	 * @return player
 	 */
 	Player getSpielerFromHrf(int hrfID, int playerId) {
-		var rs = executePreparedSelect(hrfID, playerId);
+		var rs = this.adapter.executePreparedQuery(selectStatementBuilder.getStatement(), hrfID, playerId);
 
 		try {
 			if (rs != null) {
-				rs.beforeFirst();
-
 				if (rs.next()) {
 					return  createObject(rs);
 				}
@@ -268,12 +259,10 @@ final class SpielerTable extends AbstractTable {
 		final ArrayList<Player> ret = new ArrayList<>();
 		if ( hrfID > -1) {
 
-			rs = getSelectByHrfID(hrfID);
+			rs = executePreparedSelect(hrfID);
 
 			try {
 				if (rs != null) {
-					rs.beforeFirst();
-
 					while (rs.next()) {
 						player = createObject(rs);
 
@@ -288,17 +277,11 @@ final class SpielerTable extends AbstractTable {
 		return ret;
 	}
 
-	private PreparedStatement getAllSpielerStatement;
-	private PreparedStatement getGetAllSpielerStatement(){
-		if ( getAllSpielerStatement==null){
-			getAllSpielerStatement=createSelectStatement(" t inner join (" +
-					"    select SPIELERID, max(DATUM) as MaxDate from " +
-					getTableName() +
-					"    group by SPIELERID" +
-					") tm on t.SPIELERID = tm.SPIELERID and t.DATUM = tm.MaxDate");
-		}
-		return getAllSpielerStatement;
-	}
+	private final PreparedSelectStatementBuilder getAllSpielerStatementBuilder = new PreparedSelectStatementBuilder(this, " t inner join (" +
+			"    select SPIELERID, max(DATUM) as MaxDate from " +
+			getTableName() +
+			"    group by SPIELERID" +
+			") tm on t.SPIELERID = tm.SPIELERID and t.DATUM = tm.MaxDate");
 
 	/**
 	 * gibt alle Player zurück, auch ehemalige
@@ -309,9 +292,8 @@ final class SpielerTable extends AbstractTable {
 		String sql;
 		final Vector<Player> ret = new Vector<>();
 		try {
-			rs = adapter.executePreparedQuery(getDeletePlayerStatement());
+			rs = adapter.executePreparedQuery(getAllSpielerStatementBuilder.getStatement());
 			if (rs != null) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					player = createObject(rs);
 					ret.add(player);
@@ -324,13 +306,7 @@ final class SpielerTable extends AbstractTable {
 		return ret;
 	}
 
-	private PreparedStatement getLetzteBewertung4SpielerStatement;
-	private PreparedStatement getGetLetzteBewertung4SpielerStatement(){
-		if(getLetzteBewertung4SpielerStatement==null){
-			getLetzteBewertung4SpielerStatement=adapter.createPreparedStatement("SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1");
-		}
-		return getLetzteBewertung4SpielerStatement;
-	}
+	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
 
 	/**
 	 * Gibt die letzte Bewertung für den Player zurück // HRF
@@ -339,8 +315,8 @@ final class SpielerTable extends AbstractTable {
 		int bewertung = 0;
 
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getGetLetzteBewertung4SpielerStatement(), spielerid);
-			if ((rs != null) && rs.first()) {
+			final ResultSet rs = adapter.executePreparedQuery(getLetzteBewertung4SpielerStatementBuilder.getStatement(), spielerid);
+			if ((rs != null) && rs.next()) {
 				bewertung = rs.getInt("Bewertung");
 			}
 		} catch (Exception e) {
@@ -349,20 +325,8 @@ final class SpielerTable extends AbstractTable {
 		return bewertung;
 	}
 
-	private PreparedStatement getSpielerNearDateBeforeStatement;
-	private PreparedStatement getSpielerNearDateAfterStatement;
-	private PreparedStatement getGetSpielerNearDateBeforeStatement(){
-		if ( getSpielerNearDateBeforeStatement==null){
-			getSpielerNearDateBeforeStatement=createSelectStatement("WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
-		}
-		return getSpielerNearDateBeforeStatement;
-	}
-	private PreparedStatement getGetSpielerNearDateAfterStatement() {
-		if (getSpielerNearDateAfterStatement == null) {
-			getSpielerNearDateAfterStatement = createSelectStatement("WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
-		}
-		return getSpielerNearDateAfterStatement;
-	}
+	private final PreparedSelectStatementBuilder getSpielerNearDateBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
+	private final PreparedSelectStatementBuilder getSpielerNearDateAfterStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
 
 	/**
 	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
@@ -382,11 +346,11 @@ final class SpielerTable extends AbstractTable {
 		//--- Zuerst x Tage vor dem Datum suchen -------------------------------
 		//x Tage vorher
 		final Timestamp time2 = new Timestamp(time.getTime() - spanne);
-		rs = adapter.executePreparedQuery(getGetSpielerNearDateBeforeStatement(), time, time2, spielerid);
+		rs = adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time, time2, spielerid);
 
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					player = createObject(rs);}
 			}
 		} catch (Exception e) {
@@ -396,11 +360,11 @@ final class SpielerTable extends AbstractTable {
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
 		if (player == null) {
 			sql = "SELECT * from "+getTableName()+" WHERE Datum>'" + time + "' AND SpielerID=" + spielerid + " ORDER BY Datum";
-			rs = adapter.executePreparedQuery(getGetSpielerNearDateAfterStatement(), time, spielerid);
+			rs = adapter.executePreparedQuery(getSpielerNearDateAfterStatementBuilder.getStatement(), time, spielerid);
 
 			try {
 				if (rs != null) {
-					if (rs.first()) {
+					if (rs.next()) {
 						player = createObject(rs);
 					}
 				}
@@ -413,11 +377,11 @@ final class SpielerTable extends AbstractTable {
 		if (player == null) {
 			//x Tage vorher
 			final Timestamp time3 = new Timestamp(time2.getTime() - (spanne * 2));
-			rs = adapter.executePreparedQuery(getGetSpielerNearDateBeforeStatement(), time2, time3, spielerid);
+			rs = adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time2, time3, spielerid);
 
 			try {
 				if (rs != null) {
-					if (rs.first()) {
+					if (rs.next()) {
 						player = createObject(rs);
 					}
 				}
@@ -431,24 +395,18 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
-	private PreparedStatement getSpielerFirstHRFStatement;
-	private PreparedStatement getGetSpielerFirstHRFStatement(){
-		if(getSpielerFirstHRFStatement==null){
-			getSpielerFirstHRFStatement=createSelectStatement(" WHERE SpielerID=? ORDER BY Datum ASC LIMIT 1");
-		}
-		return getSpielerFirstHRFStatement;
-	}
+	private final PreparedSelectStatementBuilder getSpielerFirstHRFStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? ORDER BY Datum ASC LIMIT 1");
 	/**
 	 * Gibt einen Player zurück aus dem ersten HRF
 	 */
 	Player getSpielerFirstHRF(int spielerid) {
 		ResultSet rs;
 		Player player = null;
-		rs = adapter.executePreparedQuery(getGetSpielerFirstHRFStatement(), spielerid);
+		rs = adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid);
 
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					player = createObject(rs);
 					//Info, da der Player für den Vergleich in der Spielerübersicht benutzt wird
 					player.setOld(true);
@@ -461,19 +419,13 @@ final class SpielerTable extends AbstractTable {
 		return player;
 	}
 
-	private PreparedStatement getTrainerTypeStatement;
-	private PreparedStatement getGetTrainerTypeStatement() {
-		if (getTrainerTypeStatement == null) {
-			getTrainerTypeStatement=createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
-		}
-		return getTrainerTypeStatement;
-	}
+	private final PreparedSelectStatementBuilder getTrainerTypeStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
 	int getTrainerType(int hrfID) {
 		ResultSet rs;
-		rs = adapter.executePreparedQuery(getGetTrainerTypeStatement(), hrfID);
+		rs = adapter.executePreparedQuery(getTrainerTypeStatementBuilder.getStatement(), hrfID);
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					return rs.getInt("TrainerTyp");
 				}
 			}
@@ -491,10 +443,10 @@ final class SpielerTable extends AbstractTable {
         try {
 			player.setHrfId(rs.getInt("HRF_ID"));
         	player.setPlayerID(rs.getInt("SpielerID"));
-            player.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
-			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
-			player.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
-			player.setArrivalDate(DBManager.deleteEscapeSequences(rs.getString("ArrivalDate")));
+            player.setFirstName(rs.getString("FirstName"));
+			player.setNickName(rs.getString("NickName"));
+			player.setLastName(rs.getString("LastName"));
+			player.setArrivalDate(rs.getString("ArrivalDate"));
             player.setAge(rs.getInt("Age"));
             player.setAgeDays(rs.getInt("AgeDays"));
             player.setStamina(rs.getInt("Kondition"));
@@ -559,7 +511,7 @@ final class SpielerTable extends AbstractTable {
 			// LastMatch
 			try {
 				player.setLastMatchDetails(
-						DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
+						rs.getString("LastMatchDate"),
 						DBManager.getInteger(rs,"LastMatchRating"),
 						DBManager.getInteger(rs,"LastMatchId")
 				);
@@ -578,7 +530,7 @@ final class SpielerTable extends AbstractTable {
 			player.setOwnerNotes(rs.getString("OwnerNotes"));
 
 			player.setMotherClubId(DBManager.getInteger(rs, "MotherclubID"));
-			player.setMotherClubName(DBManager.deleteEscapeSequences(rs.getString("MotherClubName")));
+			player.setMotherClubName(rs.getString("MotherClubName"));
 			player.setMatchesCurrentTeam(DBManager.getInteger(rs,"MatchesCurrentTeam"));
 
 		} catch (Exception e) {
@@ -587,19 +539,13 @@ final class SpielerTable extends AbstractTable {
         return player;
     }
 
-	private PreparedStatement loadPlayerHistoryStatement;
-	private PreparedStatement getLoadPlayerHistoryStatement(){
-		if(loadPlayerHistoryStatement==null){
-			loadPlayerHistoryStatement=createSelectStatement("WHERE SpielerID=? Order By Datum ASC");
-		}
-		return loadPlayerHistoryStatement;
-	}
+	private final PreparedSelectStatementBuilder loadPlayerHistoryStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE SpielerID=? Order By Datum ASC");
 	public List<Player> loadPlayerHistory(int spielerId) {
 		var ret = new ArrayList<Player>();
 		try {
-			var rs = executePreparedSelect(getLoadPlayerHistoryStatement(), spielerId);
+			var rs = executePreparedSelect(loadPlayerHistoryStatementBuilder.getStatement(), spielerId);
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					var player = createObject(rs);
 					ret.add(player);
 				}
