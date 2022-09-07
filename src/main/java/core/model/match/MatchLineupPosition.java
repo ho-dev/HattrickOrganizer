@@ -92,7 +92,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sNickName.
      */
     public final java.lang.String getNickName() {
-        return m_sNickName;
+        if ( m_sNickName != null ) return m_sNickName;
+        return "";
     }
 
     /**
@@ -151,7 +152,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sSpielerName.
      */
     public final java.lang.String getSpielerName() {
-        return m_sSpielerName;
+        if ( m_sSpielerName != null ) return m_sSpielerName;
+        return "";
     }
 
     /**
@@ -169,7 +171,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sSpielerVName.
      */
     public final java.lang.String getSpielerVName() {
-        return m_sSpielerVName;
+        if ( m_sSpielerVName != null )return m_sSpielerVName;
+        return "";
     }
 
     /**

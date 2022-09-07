@@ -218,7 +218,7 @@ final class MatchDetailsTable extends AbstractTable {
 						details.getMatchType().getId(),
 						details.getArenaID(),
 						details.getArenaName(),
-						details.getFetchDatum(),
+						details.getFetchDatum().toDbTimestamp(),
 						details.getGuestTeamName(),
 						details.getGuestTeamId(),
 						details.getGuestEinstellung(),
@@ -318,7 +318,7 @@ final class MatchDetailsTable extends AbstractTable {
 		return placeHolderYouthMatchTypes;
 	}
 
-	private final PreparedDeleteStatementBuilder deleteYouthMatchDetailsBeforeStatementBuilder= new PreparedDeleteStatementBuilder(this, "WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?\"");
+	private final PreparedDeleteStatementBuilder deleteYouthMatchDetailsBeforeStatementBuilder= new PreparedDeleteStatementBuilder(this, "WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
 		try {
 			adapter.executePreparedUpdate(deleteYouthMatchDetailsBeforeStatementBuilder.getStatement(), MatchType.getYouthMatchType().toArray(), before);
@@ -330,7 +330,7 @@ final class MatchDetailsTable extends AbstractTable {
 	private final DBManager.PreparedStatementBuilder getLastYouthMatchDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
 	public Timestamp getLastYouthMatchDate() {
 		try {
-			var rs = adapter.executePreparedQuery(getLastYouthMatchDateStatementBuilder.getStatement(), MatchType.getYouthMatchType().toArray());
+			var rs = adapter.executePreparedQuery(getLastYouthMatchDateStatementBuilder.getStatement(), MatchType.getYouthMatchType().stream().map(MatchType::getId).toArray());
 			assert rs != null;
 			if ( rs.next()){
 				return rs.getTimestamp(1);

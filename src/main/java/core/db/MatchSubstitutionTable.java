@@ -107,7 +107,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 	private final PreparedDeleteStatementBuilder deleteSubStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND HRFID=? AND LineupName=?");
 
 	private void storeSub(int iMatchType, int matchId, int teamId, List<Substitution> subs) {
-		executePreparedDelete(deleteSubStatementBuilder.getStatement(),
+		this.adapter.executePreparedUpdate(deleteSubStatementBuilder.getStatement(),
 				iMatchType,
 				matchId,
 				teamId,
@@ -124,6 +124,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 			try {
 				executePreparedInsert(
 						matchId,
+						iMatchType,
 						teamId,
 						MatchSubstitutionTable.DUMMY,
 						sub.getPlayerOrderId(),

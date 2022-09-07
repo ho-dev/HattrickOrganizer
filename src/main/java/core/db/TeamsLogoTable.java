@@ -63,7 +63,7 @@ public class TeamsLogoTable extends AbstractTable {
                 return null;
             } else {
                 logoURL = rs.getString("URL");
-                if (logoURL.equals("null")) {
+                if (logoURL == null || logoURL.equals("null")) {
                     HOLogger.instance().debug(this.getClass(), "team with no logo team ID=" + teamID);
                     return null;
                 }

@@ -134,7 +134,7 @@ final class SpielplanTable extends AbstractTable {
 						plan.getLigaId(),
 						plan.getLigaName(),
 						plan.getSaison(),
-						plan.getFetchDate()
+						plan.getFetchDate().toDbTimestamp()
 				);
 				DBManager.instance().storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
 			} catch (Exception e) {

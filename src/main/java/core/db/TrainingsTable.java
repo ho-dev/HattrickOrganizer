@@ -161,7 +161,7 @@ final class TrainingsTable extends AbstractTable {
 		else {
 			ret = getTrainingListStatements.get(3);
 			if ( ret == null){
-				ret = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE>=? AND WHERE TRAINING_DATE<?").getStatement();
+				ret = new PreparedSelectStatementBuilder(this, "WHERE TRAINING_DATE>=? AND TRAINING_DATE<?").getStatement();
 			}
 			values.add(from);
 			values.add(to);

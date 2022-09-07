@@ -59,14 +59,14 @@ public class YouthScoutCommentTable extends AbstractTable {
         );
     }
 
-    private String ValueOf(CommentType type) {
-        if (type != null) return "" + type.getValue();
+    private Integer ValueOf(CommentType type) {
+        if (type != null) return type.getValue();
         return null;
     }
 
-    private String ValueOf(Skills.ScoutCommentSkillTypeID skillType) {
-        if (skillType != null) return "" + skillType.getValue();
-        return "null";
+    private Integer ValueOf(Skills.ScoutCommentSkillTypeID skillType) {
+        if (skillType != null) return skillType.getValue();
+        return null;
     }
 
     public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {

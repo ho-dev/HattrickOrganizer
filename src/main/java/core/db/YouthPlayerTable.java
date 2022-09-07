@@ -254,7 +254,7 @@ public class YouthPlayerTable  extends AbstractTable {
     private DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
     public Timestamp loadMinScoutingDate() {
         try {
-            var rs = adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement());
+            var rs = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement());
             if (rs != null) {
                 if (rs.next()) {
                     return rs.getTimestamp(1);

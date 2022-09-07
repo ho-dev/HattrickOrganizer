@@ -133,14 +133,13 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
-	private PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchHighlightsBeforeStatementSQL());
+	private PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
+			getDeleteYouthMatchHighlightsBeforeStatementSQL());
 
 	private String getDeleteYouthMatchHighlightsBeforeStatementSQL() {
 		var lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
 		var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		return "DELETE FROM " +
-				getTableName() +
-				" WHERE MatchTyp IN (" +
+		return " WHERE MatchTyp IN (" +
 				inValues +
 				") AND MatchDate IS NOT NULL AND MatchDate<?";
 	}
