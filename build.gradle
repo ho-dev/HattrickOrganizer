@@ -309,9 +309,9 @@ task pushmd(dependsOn: preparingBuild)  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 5.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 5.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 5.0..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 6.0..HEAD --count')
+        def diff = callGit('git diff --shortstat 6.0..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 6.0..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
