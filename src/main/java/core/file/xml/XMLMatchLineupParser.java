@@ -204,7 +204,7 @@ public class XMLMatchLineupParser {
 		// Adding entries
 		NodeList list = tmp.getElementsByTagName("Player");
 
-		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 
 			// We want to stop an api error that has repositioned players as
 			// substituted.
@@ -228,7 +228,7 @@ public class XMLMatchLineupParser {
 		// The starting lineup
 		list = starting.getElementsByTagName("Player");
 
-		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 			MatchLineupPosition startPlayer = createPlayer(matchType, (Element) list.item(i));
 			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
 			startPlayer.setStartBehavior(startPlayer.getBehaviour());
@@ -247,6 +247,7 @@ public class XMLMatchLineupParser {
 				} else {
 					// He was not already in the lineup, so add him
 					team.add2Lineup(startPlayer);
+					startPlayer.setRoleId(IMatchRoleID.UNKNOWN); // Maybe an injured player
 				}
 			}
 		}
@@ -256,7 +257,7 @@ public class XMLMatchLineupParser {
 		list = subs.getElementsByTagName("Substitution");
 		List<Substitution> substitutions = new ArrayList<>();
 
-		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 
 			Substitution s = createSubstitution((Element) list.item(i), i);
 			substitutions.add(s);
@@ -311,7 +312,6 @@ public class XMLMatchLineupParser {
 		if (tmp != null) {
 			playerIn = Integer.parseInt(XMLManager.getFirstChildNodeValue(tmp));
 		}
-
 		tmp = (Element) ele.getElementsByTagName("OrderType").item(0);
 		if (tmp != null) {
 			orderTypeId = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
@@ -328,68 +328,4 @@ public class XMLMatchLineupParser {
 				matchMinuteCriteria, pos, behaviour, RedCardCriteria.getById(card),
 				GoalDiffCriteria.getById(standing));
 	}
-/*
-	private static MatchLineupPosition createStartPlayer(Element ele) {
-		MatchLineupPosition player = null;
-		int roleID = -1;
-		int behavior = 0;
-		String name = "";
-
-		Element tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
-		int spielerID = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("RoleID").item(0);
-		if (tmp != null) {
-			roleID = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		}
-
-		// nur wenn Player existiert
-		if (spielerID > 0) {
-			name = getStringValue( (Element) ele.getElementsByTagName("FirstName").item(0));
-			var lastName = getStringValue( (Element) ele.getElementsByTagName("LastName").item(0));
- 			if ( name.length()>0 && lastName.length()>0) name = name + " ";
- 			name = name + lastName;
-
-			// tactic is only set for those in the lineup (and not for the
-			// keeper).
-			if (roleID == IMatchRoleID.keeper) {
-				// Diese Werte sind von HT vorgegeben aber nicht garantiert
-				// mitgeliefert in xml, daher selbst setzen!
-				behavior = 0;
-
-			} else if ((roleID >= 0)
-					&& (roleID < IMatchRoleID.setPieces)
-					|| ((roleID < IMatchRoleID.startReserves) && (roleID > IMatchRoleID.keeper))) {
-				tmp = (Element) ele.getElementsByTagName("Behaviour").item(0);
-				behavior = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-
-				switch (behavior) {
-					case IMatchRoleID.OLD_EXTRA_DEFENDER:
-						roleID = IMatchRoleID.middleCentralDefender;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_MIDFIELD:
-						roleID = IMatchRoleID.centralInnerMidfield;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_FORWARD:
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.NORMAL;
-						break;
-					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD:
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.DEFENSIVE;
-				}
-
-				// Wash the remaining old positions
-				if (roleID < IMatchRoleID.setPieces) {
-					roleID = MatchRoleID.convertOldRoleToNew(roleID);
-				}
-			}
-
-			}
-		player = new MatchLineupPosition(-1, -1, spielerID, 0, name, 0);
-		player.setStartBehavior(behavior);
-		player.setStartPosition(roleID);
-		return player;
-	}*/
 }
