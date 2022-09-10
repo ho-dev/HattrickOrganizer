@@ -55,7 +55,6 @@ public class MatchLineupTeam {
 	private int experience;
 
 	// null player to fill empty spots
-	private final static MatchLineupPosition NULLPLAYER = new MatchLineupPosition( -1, -1, 0, -1d, "", 0);
 	private Matchdetails matchdetails;
 
 	// ~ Constructors
@@ -587,11 +586,23 @@ public class MatchLineupTeam {
 			if (subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION) {
 				var subSector = changedPositions.get(subs.getSubjectPlayerID());
 				if (subSector == null) {
-					subSector = MatchRoleID.getSector(this.getPlayerByID(subs.getSubjectPlayerID(),true).getStartPosition());
+					var sPos = this.getPlayerByID(subs.getSubjectPlayerID(),true);
+					if ( sPos != null){
+						subSector = MatchRoleID.getSector(sPos.getStartPosition());
+					}
+					else {
+						continue;
+					}
 				}
 				var objSector = changedPositions.get(subs.getObjectPlayerID());
 				if (objSector == null) {
-					objSector = MatchRoleID.getSector(this.getPlayerByID(subs.getObjectPlayerID(), true).getStartPosition());
+					var oPos= this.getPlayerByID(subs.getObjectPlayerID(), true);
+					if ( oPos != null){
+						objSector = MatchRoleID.getSector(oPos.getStartPosition());
+					}
+					else {
+						continue;
+					}
 				}
 				if (subSector != objSector) {
 					changedPositions.put(subs.getSubjectPlayerID(), objSector);
@@ -726,7 +737,7 @@ public class MatchLineupTeam {
 					// Find the new set pieces taker
 					var matchEvents = this.matchdetails.downloadHighlightsIfMissing().stream()
 							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
-									i.getMinute() == substitution.getMatchMinuteCriteria()).collect(Collectors.toList());
+									i.getMinute() == substitution.getMatchMinuteCriteria()).toList();
 					for (var event : matchEvents) {
 						var newSetPiecesTaker = this.getPlayerByID(event.getAssistingPlayerId(), true);
 						lastMatchAppearances.put(MatchRoleID.setPieces, new MatchAppearance(newSetPiecesTaker, substitution.getMatchMinuteCriteria()));
@@ -746,7 +757,7 @@ public class MatchLineupTeam {
 	private int removeMatchAppearance(MatchLineupPosition leavingplayer, int minute) {
 		int ret = MatchRoleID.UNKNOWN;
 		var entries = lastMatchAppearances.entrySet().stream()
-				.filter(i -> i.getValue().getPlayerId() == leavingplayer.getPlayerId()).collect(Collectors.toList());
+				.filter(i -> i.getValue().getPlayerId() == leavingplayer.getPlayerId()).toList();
 		for (var entry : entries) {
 			var appearance = entry.getValue();
 			var role = entry.getKey();
