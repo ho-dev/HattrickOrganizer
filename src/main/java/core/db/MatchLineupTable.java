@@ -16,7 +16,7 @@ public final class MatchLineupTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "MATCHLINEUP";
 	
-	protected MatchLineupTable(JDBCAdapter  adapter){
+	MatchLineupTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 
@@ -64,7 +64,7 @@ public final class MatchLineupTable extends AbstractTable {
 		return null;
 	}
 
-	private DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
+	private final DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
 
 	/**
 	 * Ist das Match schon in der Datenbank vorhanden?
@@ -133,13 +133,13 @@ public final class MatchLineupTable extends AbstractTable {
 		var matchTypes = getMatchTypeInValues();
 		return " WHERE MATCHTYP IN (" +
 				matchTypes +
-				") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN " +
-				matchTypes + ")";
+				") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN (" +
+				matchTypes + "))";
 	}
 
 	public void deleteYouthMatchLineupsBefore(Timestamp before) {
 		try {
-			executePreparedDelete(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before);
+			this.adapter.executePreparedUpdate(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

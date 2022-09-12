@@ -42,7 +42,7 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	@Override
 	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
-		return new PreparedDeleteStatementBuilder(this,"WHERE HORF_ID=? AND SpielerID=? AND Skill=?");
+		return new PreparedDeleteStatementBuilder(this,"WHERE HRF_ID=? AND SpielerID=? AND Skill=?");
 	}
 
 	private void storeSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode, boolean reload) {
@@ -75,7 +75,7 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	Vector<Object[]> getAllLevelUp(int skillCode, int spielerId) {
 		Vector<Object[]> data = getSpielerSkillUp(spielerId);
-		Vector<Object[]> v = new Vector<Object[]>();
+		Vector<Object[]> v = new Vector<>();
 		for (Object[] element : data) {
 			int code = (Integer) element[4];
 			if (code == skillCode) {
@@ -89,8 +89,7 @@ final class SpielerSkillupTable extends AbstractTable {
 		if (playerSkillup == null) {
 			populate();
 		}
-		Vector<Object[]> v = playerSkillup.computeIfAbsent("" + spielerId, k -> new Vector<Object[]>());
-		return v;
+		return playerSkillup.computeIfAbsent("" + spielerId, k -> new Vector<>());
 	}
 
 	private void populate() {
@@ -199,7 +198,7 @@ final class SpielerSkillupTable extends AbstractTable {
 		}
 	}
 
-	private int[] skills = {
+	private final int[] skills = {
 			PlayerSkill.PLAYMAKING,
 			PlayerSkill.STAMINA,
 			PlayerSkill.DEFENDING,
@@ -221,6 +220,7 @@ final class SpielerSkillupTable extends AbstractTable {
 					if (value > lastValue && lastValue >= 0) {
 						storeSkillup(player.getHrfId(), player.getPlayerID(), player.getHrfDate().toDbTimestamp(), value, skill, false);
 					}
+					lastValue = value;
 				}
 			}
 		} catch (Exception e) {

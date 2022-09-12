@@ -3,20 +3,19 @@ package core.db;
 import core.model.match.MatchEvent;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 final class MatchDetailsTable extends AbstractTable {
 
 	public final static String TABLENAME = "MATCHDETAILS";
 
-	protected MatchDetailsTable(JDBCAdapter  adapter){
+	MatchDetailsTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 	
@@ -306,14 +305,8 @@ final class MatchDetailsTable extends AbstractTable {
 	static private String getPlaceHolderYouthMatchTypes(){
 		if ( placeHolderYouthMatchTypes==null){
 			var youthMatchTypes = MatchType.getYouthMatchType();
-			var sep = "(";
-			var placeHolders = new StringBuilder();
-			for ( var t : youthMatchTypes){
-				placeHolders.append(sep).append("?");
-				sep=",";
-			}
-			placeHolders.append(")");
-			placeHolderYouthMatchTypes = placeHolders.toString();
+			var placeholders =youthMatchTypes.stream().map(i->"?").collect(Collectors.joining(","));
+			placeHolderYouthMatchTypes = "(" + placeholders + ")";
 		}
 		return placeHolderYouthMatchTypes;
 	}
@@ -321,7 +314,10 @@ final class MatchDetailsTable extends AbstractTable {
 	private final PreparedDeleteStatementBuilder deleteYouthMatchDetailsBeforeStatementBuilder= new PreparedDeleteStatementBuilder(this, "WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
 		try {
-			adapter.executePreparedUpdate(deleteYouthMatchDetailsBeforeStatementBuilder.getStatement(), MatchType.getYouthMatchType().toArray(), before);
+			var params = new ArrayList<>();
+			params.addAll(MatchType.getYouthMatchType().stream().map(MatchType::getId).toList());
+			params.add(before);
+			adapter.executePreparedUpdate(deleteYouthMatchDetailsBeforeStatementBuilder.getStatement(), params.toArray());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

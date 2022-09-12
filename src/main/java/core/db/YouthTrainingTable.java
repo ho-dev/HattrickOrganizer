@@ -66,8 +66,8 @@ public class YouthTrainingTable extends AbstractTable{
             executePreparedInsert(
                     matchId,
                     youthTraining.getMatchType().getId(),
-                    youthTraining.getTraining(YouthTraining.Priority.Primary),
-                    youthTraining.getTraining(YouthTraining.Priority.Secondary)
+                    YouthTrainingType.getValue(youthTraining.getTraining(YouthTraining.Priority.Primary)),
+                    YouthTrainingType.getValue(youthTraining.getTraining(YouthTraining.Priority.Secondary))
             );
         }
     }
