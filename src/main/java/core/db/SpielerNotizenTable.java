@@ -58,10 +58,15 @@ final class SpielerNotizenTable extends AbstractTable {
 	public Player.Notes load(int playerId) {
 		try {
 			var rs = executePreparedSelect(playerId);
-			return createPlayerNotes(rs);
+			if (rs != null) {
+				if (rs.next()) {
+					return createPlayerNotes(rs);
+				}
+			}
 		} catch (Exception e) {
-			return new Player.Notes();
+			HOLogger.instance().error(getClass(), "Player.Notes load error");
 		}
+		return new Player.Notes();
 	}
 
 	private Player.Notes createPlayerNotes(ResultSet rs) throws SQLException {
