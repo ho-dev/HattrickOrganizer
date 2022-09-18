@@ -11,7 +11,7 @@ import java.sql.Types;
 final class BasicsTable extends AbstractTable {
 	final static String TABLENAME = "BASICS";
 
-	protected BasicsTable(JDBCAdapter adapter) {
+	BasicsTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -93,7 +93,7 @@ final class BasicsTable extends AbstractTable {
 		return basics;
 	}
 
-	private DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new PreparedSelectStatementBuilder(this, "SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
+	private final DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new DBManager.PreparedStatementBuilder(this.adapter, "SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
 
 	/**
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
