@@ -3,17 +3,13 @@ package core.db;
 import core.model.Tournament.TournamentDetails;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.ResultSet;
 import java.sql.Types;
-
-import static core.util.DateTimeUtils.DateToSQLtimeStamp;
 
 public final class TournamentDetailsTable extends AbstractTable {
 
 	public final static String TABLENAME = "TOURNAMENTDETAILS";
 
-	protected TournamentDetailsTable(JDBCAdapter  adapter){
+	TournamentDetailsTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 
@@ -34,11 +30,6 @@ public final class TournamentDetailsTable extends AbstractTable {
 		columns[11]= new ColumnDescriptor("IsMatchesOngoing",Types.BOOLEAN,false);
 		columns[12]= new ColumnDescriptor("Creator_UserID",Types.INTEGER,false);
 		columns[13]= new ColumnDescriptor("Creator_Loginname",Types.VARCHAR,true, 256);
-	}
-
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this," WHERE TOURNAMENTID = ?" );
 	}
 
 	public TournamentDetails getTournamentDetails(int tournamentId)
@@ -72,13 +63,10 @@ public final class TournamentDetailsTable extends AbstractTable {
 		return oTournamentDetails;
 	}
 
-
 	/**
 	 * Store Tournament Details into DB
 	 */
 	void storeTournamentDetails(TournamentDetails details) {
-		StringBuilder sql = new StringBuilder(200);
-
 		try {
 			executePreparedInsert(
 					details.getTournamentId(),
@@ -101,7 +89,5 @@ public final class TournamentDetailsTable extends AbstractTable {
 					"DB.storeTournamentDetails Error" + e);
 			HOLogger.instance().log(getClass(), e);
 		}
-
 	}
-
 }

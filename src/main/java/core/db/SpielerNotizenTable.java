@@ -50,11 +50,6 @@ final class SpielerNotizenTable extends AbstractTable {
 			HOLogger.instance().error(getClass(), "cannot store player notes: " + e);
 		}
 	}
-
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this,"WHERE SpielerID=?");
-	}
 	public Player.Notes load(int playerId) {
 		try {
 			var rs = executePreparedSelect(playerId);

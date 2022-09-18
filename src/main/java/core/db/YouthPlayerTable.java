@@ -90,7 +90,7 @@ public class YouthPlayerTable  extends AbstractTable {
         }
     }
 
-    private PreparedDeleteStatementBuilder deleteYouthPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND ID=?");
+    private final PreparedDeleteStatementBuilder deleteYouthPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND ID=?");
     void storeYouthPlayer(int hrfId, YouthPlayer player) {
         adapter.executePreparedUpdate(deleteYouthPlayerStatementBuilder.getStatement(), hrfId, player.getId());
 
@@ -157,10 +157,6 @@ public class YouthPlayerTable  extends AbstractTable {
         values.add(skillInfo.isTop3());
     }
 
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, " WHERE HRF_ID = ?" );
-    }
     /**
      * load youth player of HRF file id
      */
@@ -182,7 +178,7 @@ public class YouthPlayerTable  extends AbstractTable {
         return ret;
     }
 
-    private PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
+    private final PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
     public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
         var rs = adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date);
         try {
@@ -251,7 +247,7 @@ public class YouthPlayerTable  extends AbstractTable {
         youthPlayer.setSkillInfo(skillinfo);
     }
 
-    private DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
+    private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
     public Timestamp loadMinScoutingDate() {
         try {
             var rs = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement());

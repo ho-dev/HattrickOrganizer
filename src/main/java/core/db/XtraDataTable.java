@@ -11,7 +11,7 @@ import java.sql.Types;
 final class XtraDataTable extends AbstractTable {
 	final static String TABLENAME = "XTRADATA";
 	
-	protected XtraDataTable(JDBCAdapter  adapter){
+	XtraDataTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 	
@@ -30,10 +30,6 @@ final class XtraDataTable extends AbstractTable {
 		};
 	}
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID = ?");
-	}
 	/**
 	 * load Xtra data
 	 */
@@ -66,16 +62,7 @@ final class XtraDataTable extends AbstractTable {
 	 * speichert das Team
 	 */
 	void saveXtraDaten(int hrfId, XtraData xtra) {
-		String statement;
-
 		if (xtra != null) {
-			int hasProm = 0;
-
-			if (xtra.isHasPromoted()) {
-				hasProm = 1;
-			}
-
-			//erst Vorhandene Aufstellung löschen
 			deleteXtraDaten(hrfId);
 			executePreparedInsert(
 					hrfId,
@@ -88,7 +75,6 @@ final class XtraDataTable extends AbstractTable {
 					xtra.getLeagueLevelUnitID(),
 					xtra.getCountryId()
 			);
-
 		}
 	}
 	

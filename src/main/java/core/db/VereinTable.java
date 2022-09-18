@@ -9,7 +9,7 @@ import java.sql.Types;
 final class VereinTable extends AbstractTable {
 	final static String TABLENAME = "VEREIN";
 
-	protected VereinTable(JDBCAdapter  adapter){
+	VereinTable(JDBCAdapter adapter){
 		super( TABLENAME, adapter );
 	}
 
@@ -38,13 +38,8 @@ final class VereinTable extends AbstractTable {
 	 * speichert das Verein
 	 */
 	void saveVerein(int hrfId, Verein verein) {
-		String statement ;
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
 		if (verein != null) {
-			//first delete existing entry
-			executePreparedDelete( hrfId);
+			executePreparedDelete(hrfId);
 			executePreparedInsert(
 					hrfId,
 					verein.getCoTrainer(),
@@ -63,13 +58,9 @@ final class VereinTable extends AbstractTable {
 					verein.getRegionRanking(),
 					verein.getPowerRating()
 			);
-	}
+		}
 	}
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
-	}
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
 	 */

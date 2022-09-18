@@ -48,14 +48,6 @@ public class TransferTable extends AbstractTable {
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
 
-    @Override
-    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, " WHERE transferid= ?");
-    }
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, " WHERE transferid= ?");
-    }
     /**
      * Remove a transfer from the HO database
      *
@@ -241,10 +233,8 @@ public class TransferTable extends AbstractTable {
      * Adds a transfer to the HO database
      *
      * @param transfer Transfer information
-     *
-     * @return Boolean to indicate if the transfer is sucessfully added.
      */
-    private boolean addTransfer(PlayerTransfer transfer) {
+    private void addTransfer(PlayerTransfer transfer) {
     	removeTransfer(transfer.getTransferID());
         try {
             executePreparedInsert(
@@ -262,9 +252,7 @@ public class TransferTable extends AbstractTable {
                     transfer.getMarketvalue(),
                     transfer.getTsi()
             );
-            return true;
-        } catch (Exception inore) {
-            return false;
+        } catch (Exception ignored) {
         }
     }
 	

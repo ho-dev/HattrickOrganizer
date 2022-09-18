@@ -3,7 +3,6 @@ package core.db;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
-import core.model.enums.MatchTypeExtended;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 final class MatchesKurzInfoTable extends AbstractTable {
 	final static String TABLENAME = "MATCHESKURZINFO";
 
-	protected MatchesKurzInfoTable(JDBCAdapter adapter) {
+	MatchesKurzInfoTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -163,7 +162,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * Return the list of n latest played matches (own team)
 	 */
 	List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialOnly, boolean ownTeam) {
-		final ArrayList<MatchKurzInfo> playedMatches = new ArrayList<>();
 		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		var params = new ArrayList<>();
@@ -175,7 +173,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			params.add(teamId);
 		}
 		if(bOfficialOnly) {
-			where.append(getMatchTypWhereClause(MatchTypeExtended.GROUP_OFFICIAL));
+			where.append(getOfficialMatchTypWhereClause());
 		}
 		where.append(" ORDER BY MatchDate DESC");
 		if(iNbGames != null) {
@@ -252,7 +250,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(getMatchTypWhereClause(matchType));
 		sql.append(" ORDER BY MatchDate DESC");
 
-		return getMatchesKurzInfo(sql.toString(), params);
+		return getMatchesKurzInfo(sql.toString(), params.toArray());
 	}
 
 	List<MatchKurzInfo> getMatchesKurzInfoUpComing(int teamId) {
@@ -283,18 +281,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return matches.stream().findFirst().orElse(null);
 	}
 
-	private StringBuilder getMatchTypWhereClause(MatchTypeExtended matchType) {
+	private StringBuilder getOfficialMatchTypWhereClause() {
 		StringBuilder sql = new StringBuilder(100);
-		if (matchType == MatchTypeExtended.GROUP_OFFICIAL) {
-			var officialTypes = MatchType.getOfficialMatchTypes();
-			sql.append(" AND MatchTyp IN (");
-			char sep = ' ';
-			for (var t : officialTypes) {
-				sql.append(sep).append(t.getId());
-				sep = ',';
-			}
-			sql.append(" )");
+		var officialTypes = MatchType.getOfficialMatchTypes();
+		sql.append(" AND MatchTyp IN (");
+		char sep = ' ';
+		for (var t : officialTypes) {
+			sql.append(sep).append(t.getId());
+			sep = ',';
 		}
+		sql.append(" )");
 		return sql;
 	}
 
@@ -409,7 +405,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	List<MatchKurzInfo> getMatchesKurzInfo(final int teamId, final int matchStatus) {
 
 		var sql = new StringBuilder();
-		var params = new ArrayList<Object>();
+		var params = new ArrayList<>();
 
 		var sep = "WHERE";
 		if (teamId > -1) {
@@ -462,7 +458,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 */
 	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
 
-			var params = new ArrayList<Object>();
+			var params = new ArrayList<>();
 			String sql = " WHERE MatchId=?";
 			params.add(matchid);
 			if ( matchType != null) {
@@ -495,7 +491,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return matches.stream().findFirst().orElse(null);
 	}
 
-	private HashMap<String,PreparedStatement> preparedStatements= new HashMap<>();
+	private final HashMap<String,PreparedStatement> preparedStatements= new HashMap<>();
 	private PreparedStatement getMatchKurzInfoStatement(String where) {
 		PreparedStatement ret = preparedStatements.get(where);
 		if ( ret == null){
@@ -512,17 +508,13 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	private PreparedStatement updateStatement;
 	private PreparedStatement getUpdateStatement(){
 		if ( updateStatement==null){
-			updateStatement=createUpdateStatement(" SET HeimName=?, HeimID=?, GastName=?, GastID=?, MatchDate=?," +
-					" HeimTore=?, GastTore=?, Aufstellung=?, Status=?, MatchContextId=?, TournamentTypeID=?, CupLevel=?," +
-					" CupLevelIndex=?, ArenaId=?, RegionId=?, isDerby=?, isObsolete=?, isNeutral=?, Weather=?," +
-					" WeatherForecast=?, Duration=?" +
-					" WHERE MatchID=? AND MatchTyp=?");
+			updateStatement=createUpdateStatement();
 		}
 		return updateStatement;
 	}
 
-	private PreparedStatement createUpdateStatement(String s) {
-		return new PreparedUpdateStatementBuilder(this, s).getStatement();
+	private PreparedStatement createUpdateStatement() {
+		return new PreparedUpdateStatementBuilder(this, " SET HeimName=?, HeimID=?, GastName=?, GastID=?, MatchDate=?, HeimTore=?, GastTore=?, Aufstellung=?, Status=?, MatchContextId=?, TournamentTypeID=?, CupLevel=?, CupLevelIndex=?, ArenaId=?, RegionId=?, isDerby=?, isObsolete=?, isNeutral=?, Weather=?, WeatherForecast=?, Duration=? WHERE MatchID=? AND MatchTyp=?").getStatement();
 	}
 
 
@@ -566,11 +558,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
 		whereClause.append(" AND MATCHTYP IN (").append(placeholders).append(") ORDER BY MatchDate DESC");
-		return getMatchesKurzInfo(whereClause.toString(), params);
+		return getMatchesKurzInfo(whereClause.toString(), params.toArray());
 	}
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp  from, Timestamp to, List<MatchType> matchTypes) {
-		var typeListAsInt = matchTypes.stream().map(i->i.getId()).toList();
+		var typeListAsInt = matchTypes.stream().map(MatchType::getId).toList();
 		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
 		var params = new ArrayList<>();
 		params.add(teamId);

@@ -30,15 +30,6 @@ public class TeamsLogoTable extends AbstractTable {
         };
     }
 
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, " WHERE TEAM_ID=?");
-    }
-    @Override
-    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, " WHERE TEAM_ID=?");
-    }
-
     /**
      * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
      * It will also update LAST_ACCESS field

@@ -20,7 +20,7 @@ import java.util.List;
 final class TAFavoriteTable extends AbstractTable {
 	final static String TABLENAME = "TA_FAVORITE";
 
-	protected TAFavoriteTable(JDBCAdapter adapter) {
+	TAFavoriteTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -30,15 +30,6 @@ final class TAFavoriteTable extends AbstractTable {
 		columns[0] = new ColumnDescriptor("TEAMID", Types.INTEGER, false, true);
 		columns[1] = new ColumnDescriptor("NAME", Types.VARCHAR, true, 20);
 	}
-
-    @Override
-    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, "where TEAMID=?");
-    }
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "where TEAMID=?");
-    }
 
     void removeTeam(int teamId) {
         executePreparedDelete(teamId);
@@ -60,14 +51,14 @@ final class TAFavoriteTable extends AbstractTable {
         return false;
     }
 
-    private PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
+    private final PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
     /**
      * Returns all favourite teams
      *
      * @return List of Teams Object
      */
     List<Team> getTAFavoriteTeams() {
-        List<Team> list = new ArrayList<Team>();
+        List<Team> list = new ArrayList<>();
         ResultSet rs = adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement());
 
         try {
@@ -79,7 +70,7 @@ final class TAFavoriteTable extends AbstractTable {
                 list.add(team);
             }
         } catch (SQLException e) {
-            return new ArrayList<Team>();
+            return new ArrayList<>();
         }
 
         return list;

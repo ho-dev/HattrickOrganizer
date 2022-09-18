@@ -6,38 +6,21 @@ import java.util.List;
 
 public class MatchesHighlightsStat {
 
-	private String description;
+	private final String description;
 	private int noGoals;
 	private int goals;
-	private boolean ownTeam;
-	//private List<MatchEvent.MatchEventID> types;
-	private List<MatchEvent.MatchEventID> subtypes;
+	private final List<MatchEvent.MatchEventID> subtypes;
 	
-	public MatchesHighlightsStat(String key){
+	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtypes){
 		description = HOVerwaltung.instance().getLanguageString(key);
-		goals=-1;
-		noGoals=-1;
-	}
-	
-	
-	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtyps){
-		description = HOVerwaltung.instance().getLanguageString(key);
-//		this.types = types;
 		this.subtypes = subtypes;
 		goals=-1;
 	}
 
-	public void appendDescription(String append){
-		description = description +" "+HOVerwaltung.instance().getLanguageString(append);
-	}
-	
 	public String getDescription() {
 		return description;
 	}
 
-	public int getNoGoals() {
-		return noGoals;
-	}
 	public void setNoGoals(int noGoals) {
 		this.noGoals = noGoals;
 	}
@@ -47,20 +30,9 @@ public class MatchesHighlightsStat {
 	public void setGoals(int goals) {
 		this.goals = goals;
 	}
-	public boolean isOwnTeam() {
-		return ownTeam;
-	}
-	public void setOwnTeam(boolean ownTeam) {
-		this.ownTeam = ownTeam;
-	}
-
 	public List<MatchEvent.MatchEventID> getSubtyps() {
 		return subtypes;
 	}
-
-//	public String getTypes() {
-//		return types;
-//	}
 
 	public String getTotalString(){
 		if(isTitle())

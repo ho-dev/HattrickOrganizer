@@ -20,14 +20,6 @@ public class TransferTypeTable extends AbstractTable {
 
 	}
 
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "WHERE PLAYER_ID=?");
-    }
-    protected PreparedDeleteStatementBuilder  createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, "WHERE PLAYER_ID=?");
-    }
-
     void setTransferType(int playerId, int type) {
         executePreparedDelete(playerId);
         executePreparedInsert(
