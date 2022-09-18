@@ -102,11 +102,12 @@ public final class FutureTrainingTable extends AbstractTable {
 			if (count == 0) {
 				executePreparedInsert(
 						trainingDate,
+						training.getTrainingType(),
 						training.getTrainingIntensity(),
 						training.getStaminaShare(),
 						training.getCoachLevel(),
 						training.getTrainingAssistantsLevel(),
-						training.getSource()
+						training.getSource().getValue()
 				);
 			}
 		}
