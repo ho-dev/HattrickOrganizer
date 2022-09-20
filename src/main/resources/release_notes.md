@@ -1,11 +1,13 @@
 
 
 ## Highlights
+* faster and more secure database access using prepared statements (#1593)
 
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.0)
 
 ### Database
+* faster and more secure database access using prepared statements (#1593)
 
 ### Squad
 * add last match columns: rating at end of match, position and minutes (#1523)
