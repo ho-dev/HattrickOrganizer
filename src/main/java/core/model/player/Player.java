@@ -29,23 +29,14 @@ public class Player {
     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
-    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
-    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
+    private static final Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
+    private static final Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
     private byte idealPos = IMatchRoleID.UNKNOWN;
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
     private static final String EMPTY = "";
 
-    /**
-     * canPlay
-     */
-    private Boolean m_bCanBeSelectedByAssistant;
-
-    /**
-     * Manual Smilie Filename
-     */
-    private String m_sManuellerSmilie;
 
     /**
      * Name
@@ -60,11 +51,6 @@ public class Player {
     private String m_arrivalDate;
 
     /**
-     * TeamInfo Smilie Filename
-     */
-    private String m_sTeamInfoSmilie;
-
-    /**
      * Download date
      */
     private HODateTime m_clhrfDate;
@@ -73,8 +59,6 @@ public class Player {
      * The player is no longer available in the current HRF
      */
     private boolean m_bOld;
-
-    private byte m_bUserPosFlag = -2;
 
     /**
      * Wing skill
@@ -1096,7 +1080,8 @@ public class Player {
     }
 
     public void setFirstName(java.lang.String m_sName) {
-        this.m_sFirstName = m_sName;
+        if ( m_sName != null ) this.m_sFirstName = m_sName;
+        else m_sFirstName = "";
     }
 
     public java.lang.String getFirstName() {
@@ -1104,7 +1089,8 @@ public class Player {
     }
 
     public void setNickName(java.lang.String m_sName) {
-        this.m_sNickName = m_sName;
+        if ( m_sName != null ) this.m_sNickName = m_sName;
+        else m_sNickName = "";
     }
 
     public java.lang.String getNickName() {
@@ -1112,7 +1098,8 @@ public class Player {
     }
 
     public void setLastName(java.lang.String m_sName) {
-        this.m_sLastName = m_sName;
+        if (m_sName != null ) this.m_sLastName = m_sName;
+        else this.m_sLastName = "";
     }
 
     public java.lang.String getLastName() {
@@ -1887,11 +1874,6 @@ public class Player {
         return m_iVerteidigung;
     }
 
-
-    public int getWeatherEffect(Weather weather) {
-        return PlayerSpeciality.getWeatherEffect(weather, iPlayerSpecialty);
-    }
-
     public float getImpactWeatherEffect(Weather weather) {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
@@ -1962,39 +1944,6 @@ public class Player {
         }
         return ret;
     }
-
-    /**
-     * Performs skill drops on the player based on age and skills
-     *
-     * @param originalPlayer The player as he was before this week. Used to find a subskill to drop from.
-     * @param weeks          The number of weeks to drop in case of missing info.
-     */
-
-    public void performSkilldrop(Player originalPlayer, int weeks) {
-
-        if (originalPlayer == null) {
-            return;
-        }
-
-        for (int skillType = 0; skillType < EXPERIENCE; skillType++) {
-
-            if ((skillType == FORM) || (skillType == STAMINA)) {
-                continue;
-            }
-
-            if (getValue4Skill(skillType) >= 1) {
-                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill(skillType), originalPlayer.getAlter(), skillType);
-
-                // Only bother if there is drop, there is something to drop from,
-                //and check that the player has not popped
-                if ((drop > 0) && (originalPlayer.getSub4SkillAccurate(skillType) > 0)
-                        && (getValue4Skill(skillType) == originalPlayer.getValue4Skill(skillType))) {
-                    setSubskill4PlayerSkill(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
-                }
-            }
-        }
-    }
-
 
     /**
      * Calculate the player strength on a specific lineup position
@@ -2125,22 +2074,6 @@ public class Player {
         }
     }
 
-    /**
-     * Performs the subskill reset needed at skill drop.
-     *
-     * @param skillType The ID of the skill to perform drop on.
-     */
-    public void dropSubskills(int skillType) {
-        if (getValue4Skill(skillType) > 0) {
-            // non-existent has no subskill.
-            setSubskill4PlayerSkill(skillType, 0.999f);
-
-        } else {
-            setSubskill4PlayerSkill(skillType, 0);
-        }
-    }
-
-
     //////////////////////////////////////////////////////////////////////////////////
     //equals
     /////////////////////////////////////////////////////////////////////////////////
@@ -2153,25 +2086,6 @@ public class Player {
         }
 
         return equals;
-    }
-
-    /**
-     * prüft ob Skillup vorliegt
-     */
-    protected boolean check4SkillUp(int skill, Player oldPlayer) {
-        if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
-            return oldPlayer.getValue4Skill(skill) < getValue4Skill(skill);
-        return false;
-    }
-
-    /**
-     * Test for whether skilldown has occurred
-     */
-    public boolean check4SkillDown(int skill, Player oldPlayer) {
-        if (skill < EXPERIENCE)
-            if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
-                return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
-        return false;
     }
 
     /**
@@ -2319,7 +2233,7 @@ public class Player {
 
     }
 
-    private static int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
+    private static final int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
 
     /**
      * Calculates skill status of the player
@@ -2422,15 +2336,6 @@ public class Player {
             this.setSubExperience(experienceSub);
         }
     }
-
-    private int getValue4Skill(Skills.HTSkillID skill) {
-        return getValue4Skill(skill.convertToPlayerSkill());
-    }
-
-    private double getSub4Skill(Skills.HTSkillID skill) {
-        return getSub4Skill(skill.convertToPlayerSkill());
-    }
-
     private Player CloneWithoutSubskills() {
         var ret = new Player();
         ret.setHrfId(this.hrf_id);
@@ -2602,7 +2507,7 @@ public class Player {
          */
         NotInLineup(10);
 
-        private int value;
+        private final int value;
 
         ManMarkingPosition(int v){this.value=v;}
 

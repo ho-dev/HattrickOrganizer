@@ -556,6 +556,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			whereClause.append(" AND MATCHDATE > ?");
 			params.add(from);
 		}
+		params.addAll(matchTypes);
 		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
 		whereClause.append(" AND MATCHTYP IN (").append(placeholders).append(") ORDER BY MatchDate DESC");
 		return getMatchesKurzInfo(whereClause.toString(), params.toArray());
