@@ -10,10 +10,7 @@ import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static core.model.player.MatchRoleID.Sector.None;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -32,7 +29,7 @@ public class MatchLineupTeam {
 	 * in case of played matches or match orders
 	 * -1 for user stored lineups
 	 */
-	private int matchId;
+	private final int matchId;
 	/**
 	 * lineup Id
 	 * equal to team Id in played matches or match orders
@@ -123,28 +120,19 @@ public class MatchLineupTeam {
 		var ordered = new ArrayList<>(substitutions);
 
 		// Make sure substitutions are sorted first on minute, then by ID.
-		ordered.sort(new Comparator<Substitution>() {
-			@Override
-			public int compare(Substitution o1, Substitution o2) {
+		ordered.sort((o1, o2) -> {
 
-				if (o1.getMatchMinuteCriteria() == o2.getMatchMinuteCriteria()) {
-					return Integer.compare(o1.getPlayerOrderId(), o2.getPlayerOrderId());
+			if (o1.getMatchMinuteCriteria() == o2.getMatchMinuteCriteria()) {
+				return Integer.compare(o1.getPlayerOrderId(), o2.getPlayerOrderId());
 
-				}
-
-				if (o1.getMatchMinuteCriteria() < o2.getMatchMinuteCriteria()) {
-					return -1;
-				}
-
-				// minutes in o1 is greater than o2
-				return 1;
 			}
 
-			public boolean equals(Substitution o1, Substitution o2) {
-				// Lazy solution, a proper would compare all fields, but we
-				// don't need that.
-				return o1 == o2;
+			if (o1.getMatchMinuteCriteria() < o2.getMatchMinuteCriteria()) {
+				return -1;
 			}
+
+			// minutes in o1 is greater than o2
+			return 1;
 		});
 
 		this.lineup.setSubstitionList(ordered);
@@ -565,6 +553,17 @@ public class MatchLineupTeam {
 		this.matchdetails = details;
 	}
 
+	private MatchRoleID.Sector getSubstitutionSector(HashMap<Integer, MatchRoleID.Sector> changedPositions, int playerId){
+		var ret = changedPositions.get(playerId);
+		if (ret == null) {
+			var sPos = this.getPlayerByID(playerId,true);
+			if ( sPos != null){
+				ret = MatchRoleID.getSector(sPos.getStartPosition());
+			}
+		}
+		return ret;
+	}
+
 	public Map<MatchRoleID.Sector, Integer> getTrainMinutesPlayedInSectors(int playerId) {
 		var ret = new HashMap<MatchRoleID.Sector, Integer>();
 		var player = this.getPlayerByID(playerId, true);
@@ -584,25 +583,13 @@ public class MatchLineupTeam {
 		HashMap<Integer, MatchRoleID.Sector> changedPositions = new HashMap<>();    // player id, new Position
 		for (var subs : this.getSubstitutions()) {
 			if (subs.getOrderType() == MatchOrderType.POSITION_SWAP || subs.getOrderType() == MatchOrderType.SUBSTITUTION) {
-				var subSector = changedPositions.get(subs.getSubjectPlayerID());
+				var subSector = getSubstitutionSector(changedPositions, subs.getSubjectPlayerID());
 				if (subSector == null) {
-					var sPos = this.getPlayerByID(subs.getSubjectPlayerID(),true);
-					if ( sPos != null){
-						subSector = MatchRoleID.getSector(sPos.getStartPosition());
-					}
-					else {
-						continue;
-					}
+					continue;
 				}
-				var objSector = changedPositions.get(subs.getObjectPlayerID());
+				var objSector = getSubstitutionSector(changedPositions, subs.getObjectPlayerID());
 				if (objSector == null) {
-					var oPos= this.getPlayerByID(subs.getObjectPlayerID(), true);
-					if ( oPos != null){
-						objSector = MatchRoleID.getSector(oPos.getStartPosition());
-					}
-					else {
-						continue;
-					}
+					continue;
 				}
 				if (subSector != objSector) {
 					changedPositions.put(subs.getSubjectPlayerID(), objSector);
@@ -798,9 +785,9 @@ public class MatchLineupTeam {
 		return this.matchId;
 	}
 
-	private class MatchAppearance {
-		private int minute;
-		private MatchLineupPosition player;
+	private static class MatchAppearance {
+		private final int minute;
+		private final MatchLineupPosition player;
 
 		public MatchAppearance(MatchLineupPosition player, int i) {
 			this.minute=i;
@@ -829,19 +816,4 @@ public class MatchLineupTeam {
 		}
 		return ret;
 	}
-
-
-	public class SectorAppearance {
-		MatchRoleID.Sector sector;
-		private int minutes;
-
-		public SectorAppearance(int minutes, MatchRoleID.Sector sector) {
-			this.sector=sector;
-			this.minutes=minutes;
-		}
-
-		public int getMinutes(){return minutes;}
-		public MatchRoleID.Sector getSector(){return sector;}
-	}
-
 }

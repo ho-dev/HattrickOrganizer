@@ -7,8 +7,6 @@ import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -113,10 +111,7 @@ final class SpielerTable extends AbstractTable {
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this,"WHERE HRF_ID=? AND SPIELERID=?");
-	}
+	private final PreparedDeleteStatementBuilder deletePlayerStatementBuilder=new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND SPIELERID=?");
 	/**
 	 * saves one player to the DB
 	 *
@@ -125,7 +120,7 @@ final class SpielerTable extends AbstractTable {
 	 */
 
 	void saveSpieler(int hrfId, Player player, Timestamp date) {
-		executePreparedDelete(hrfId, player.getPlayerID());
+		this.adapter.executePreparedUpdate(deletePlayerStatementBuilder.getStatement(), hrfId, player.getPlayerID());
 		executePreparedInsert(
 				hrfId,
 				date,
@@ -206,7 +201,6 @@ final class SpielerTable extends AbstractTable {
 		);
 	}
 
-	private final PreparedDeleteStatementBuilder deletePlayerStatementBuilder=new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
 
 	/**
 	 * Saves the players in the <code>spieler</code> list.
@@ -214,7 +208,7 @@ final class SpielerTable extends AbstractTable {
 	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
 		if (spieler != null) {
 			// Delete old values
-			adapter.executePreparedUpdate(deletePlayerStatementBuilder.getStatement(), hrfId);
+			executePreparedDelete(hrfId);
 			for (Player p: spieler) {
 				saveSpieler(hrfId, p, date);
 			}
@@ -222,14 +216,13 @@ final class SpielerTable extends AbstractTable {
 	}
 
 
-	private PreparedSelectStatementBuilder selectStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID =? AND SpielerId=?");
+	private final PreparedSelectStatementBuilder selectStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID =? AND SpielerId=?");
 
 	/**
 	 * get a player from a specific HRF
 	 *
 	 * @param hrfID hrd id
 	 * @param playerId player id
-	 *
 	 *
 	 * @return player
 	 */
@@ -289,7 +282,6 @@ final class SpielerTable extends AbstractTable {
 	Vector<Player> getAllSpieler() {
 		ResultSet rs;
 		Player player;
-		String sql;
 		final Vector<Player> ret = new Vector<>();
 		try {
 			rs = adapter.executePreparedQuery(getAllSpielerStatementBuilder.getStatement());
@@ -334,7 +326,6 @@ final class SpielerTable extends AbstractTable {
 	Player getSpielerNearDate(int spielerid, Timestamp time) {
 		ResultSet rs;
 		Player player = null;
-		String sql;
 
 		//6 Tage   //1209600000  //14 Tage vorher
 		final int spanne = 518400000;
@@ -359,7 +350,6 @@ final class SpielerTable extends AbstractTable {
 
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
 		if (player == null) {
-			sql = "SELECT * from "+getTableName()+" WHERE Datum>'" + time + "' AND SpielerID=" + spielerid + " ORDER BY Datum";
 			rs = adapter.executePreparedQuery(getSpielerNearDateAfterStatementBuilder.getStatement(), time, spielerid);
 
 			try {
