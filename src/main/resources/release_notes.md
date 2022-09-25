@@ -10,6 +10,7 @@
 ### Squad
 
 ### Team Analyser
+* fix team analyzer simulation out of bounds error (#1638)
 
 ### Rating
 
