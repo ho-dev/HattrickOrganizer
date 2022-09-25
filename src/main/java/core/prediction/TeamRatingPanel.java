@@ -25,13 +25,12 @@ import javax.swing.JPanel;
 class TeamRatingPanel extends JPanel implements ItemListener {
 	private static final long serialVersionUID = -6238120571629957579L;
     //~ Instance fields ----------------------------------------------------------------------------
-	private GridBagConstraints m_clConstraints;
-    private GridBagLayout m_clLayout;
+	private final GridBagConstraints m_clConstraints;
     private List<RatingItem> levels;
     private List<RatingItem> subLevels;
     private List<RatingItem> tactics;
     private String teamName;
-    private JComboBox[][] values = new JComboBox[8][2];
+    private final JComboBox[][] values = new JComboBox[8][2];
     private int row;
 
     private boolean ratingsChanged;
@@ -41,10 +40,10 @@ class TeamRatingPanel extends JPanel implements ItemListener {
     TeamRatingPanel(TeamData team) {
         super();
         teamName = team.getTeamName();
-        initLevel();
+        initLevel(25);
         initSubLevel();
         initTactics();
-        m_clLayout = new GridBagLayout();
+        GridBagLayout m_clLayout = new GridBagLayout();
         m_clConstraints = new GridBagConstraints();
         m_clConstraints.fill = GridBagConstraints.HORIZONTAL;
         m_clConstraints.weightx = 0.0;
@@ -109,8 +108,8 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         teamName = teamdata.getTeamName();
 
         final TeamRatings ratings = teamdata.getRatings();
-        int lvl = 0;
-        int subLvl = 0;
+        int lvl;
+        int subLvl;
 
         lvl = ((int) ratings.getMidfield() - 1) / 4;
         subLvl = ((int) ratings.getMidfield() - 1) - (lvl * 4);
@@ -161,22 +160,16 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         rat.setLeftAttack(getValue(6));
 
         int tactic = values[7][0].getSelectedIndex();
-        if ( tactic>4) tactic+=2; // special values for longshot and creativ
+        if (tactic > 4) tactic += 2; // special values for longshot and creativ
 
-        final TeamData teamData = new TeamData(teamName, rat, tactic,
-                                               values[7][1].getSelectedIndex()+1);
-        return teamData;
+        return new TeamData(teamName, rat, tactic, values[7][1].getSelectedIndex() + 1);
     }
 
     public final void itemStateChanged(ItemEvent e) {
         if ( e.getSource() == values[7][0]){
             //Taktik
-            if (values[7][0].getSelectedItem() instanceof RatingItem
-                    && (((RatingItem) values[7][0].getSelectedItem()).getValue() == IMatchDetails.TAKTIK_NORMAL)) {
-                values[7][1].setEnabled(false);
-            } else {
-                values[7][1].setEnabled(true);
-            }
+            values[7][1].setEnabled(!(values[7][0].getSelectedItem() instanceof RatingItem)
+                    || (((RatingItem) values[7][0].getSelectedItem()).getValue() != IMatchDetails.TAKTIK_NORMAL));
         }
         ratingsChanged = true;
     }
@@ -193,6 +186,9 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         add(new JLabel(zone), m_clConstraints);
 
         final int lvl = ((int) d - 1) / 4;
+        if ( lvl >= levels.size()){
+            initLevel(lvl+1);
+        }
         values[row][0] = new JComboBox(levels.toArray());
         values[row][0].setSelectedIndex(lvl);
         m_clConstraints.gridx = 1;
@@ -210,7 +206,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         row++;
     }
 
-    private void initLevel() {
+    private void initSubLevel() {
         subLevels = new ArrayList<>();
 
         final HOVerwaltung verwaltung = HOVerwaltung.instance();
@@ -220,16 +216,16 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         subLevels.add(new RatingItem(verwaltung.getLanguageString("veryhigh"), 3));
     }
 
-    private void initSubLevel() {
+    private void initLevel(int n) {
         levels = new ArrayList<>();
 
-        for (int i = 1; i < 26; i++) {
-            levels.add(new RatingItem(PlayerAbility.getNameForSkill(i, false), i));
+        for (int i = 0; i < n; i++) {
+            levels.add(new RatingItem(PlayerAbility.getNameForSkill(i, false), i + 1));
         }
     }
 
     private void initTactics() {
-        tactics = new ArrayList<RatingItem>();
+        tactics = new ArrayList<>();
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_NORMAL),IMatchDetails.TAKTIK_NORMAL));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_PRESSING),IMatchDetails.TAKTIK_PRESSING));
         tactics.add(new RatingItem(Matchdetails.getNameForTaktik(IMatchDetails.TAKTIK_KONTER), IMatchDetails.TAKTIK_KONTER));
