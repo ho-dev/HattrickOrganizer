@@ -8,7 +8,6 @@ import core.util.HOLogger;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 import java.util.Vector;
@@ -23,7 +22,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	 **/
 	public final static String TABLENAME = "MATCHLINEUPPLAYER";
 
-	protected MatchLineupPlayerTable(JDBCAdapter adapter) {
+	MatchLineupPlayerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -86,7 +85,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return ratings;
 	}
 
-	private final DBManager.PreparedStatementBuilder getBewertungen4PlayerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?");
+	private final DBManager.PreparedStatementBuilder getBewertungen4PlayerStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?");
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den Player, sowie die
 	 * Anzahl der Bewertungen zurück // Match
@@ -124,7 +124,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return bewertungen;
 	}
 
-	private final DBManager.PreparedStatementBuilder getPlayerRatingForPositionStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?" );
+	private final DBManager.PreparedStatementBuilder getPlayerRatingForPositionStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?" );
 
 	/**
 	 * Returns the best, worst, and average rating for the player, as well as the number of ratings // match
@@ -204,7 +205,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return createMatchLineups(getMatchLineupPlayersStatementBuilder.getStatement(), matchID, matchType.getId(), teamID);
 	}
 
-	private  PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
+	private final PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
 	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
 		return  createMatchLineups(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID);
 	}

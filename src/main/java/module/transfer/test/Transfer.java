@@ -3,10 +3,9 @@ package module.transfer.test;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.Objects;
 
 public class Transfer {
 
@@ -15,11 +14,11 @@ public class Transfer {
 	int purchasePrice;
 	int sellingPrice;
 	
-	static private DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	static private final DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"Select price, BUYERID, sellerid, date from transfer WHERE PLAYERID=? and (BUYERID=? OR SELLERID=?");
 	public static Transfer getTransfer(int playerId) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(transferStatementBuilder.getStatement(), playerId, teamId, teamId);
+		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(transferStatementBuilder.getStatement(), playerId, teamId, teamId);
 		Transfer t = new Transfer();
 		try {
 			while (true) {

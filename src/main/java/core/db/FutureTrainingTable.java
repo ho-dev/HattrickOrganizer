@@ -62,7 +62,8 @@ public final class FutureTrainingTable extends AbstractTable {
 		return vTrainings;
 	}
 
-	private final DBManager.PreparedStatementBuilder loadFutureTrainingsStatementBuilder = new DBManager.PreparedStatementBuilder( this.adapter, "select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
+	private final DBManager.PreparedStatementBuilder loadFutureTrainingsStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
 	int loadFutureTrainings(Timestamp trainingDate) {
 		ResultSet rs = adapter.executePreparedQuery(loadFutureTrainingsStatementBuilder.getStatement(), trainingDate);
 		try {

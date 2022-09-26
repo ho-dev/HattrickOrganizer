@@ -247,7 +247,8 @@ public class YouthPlayerTable  extends AbstractTable {
         youthPlayer.setSkillInfo(skillinfo);
     }
 
-    private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
+    private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(
+            "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
     public Timestamp loadMinScoutingDate() {
         try {
             var rs = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement());

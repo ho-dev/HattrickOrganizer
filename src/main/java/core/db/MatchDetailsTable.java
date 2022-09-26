@@ -285,13 +285,14 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 	}
 
-	private final DBManager.PreparedStatementBuilder isMatchIFKRatingAvailableStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?");
+	private final DBManager.PreparedStatementBuilder isMatchIFKRatingAvailableStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?");
 	public boolean isMatchIFKRatingAvailable(int matchId){
 		try {
 			final ResultSet rs = adapter.executePreparedQuery(isMatchIFKRatingAvailableStatementBuilder.getStatement(), matchId);
 			assert rs != null;
 			if (rs.next()) {
-				int rating = rs.getInt(1);
+				rs.getInt(1);
 				return !rs.wasNull();
 			}
 		} catch (Exception e) {
@@ -323,7 +324,8 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 	}
 
-	private final DBManager.PreparedStatementBuilder getLastYouthMatchDateStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
+	private final DBManager.PreparedStatementBuilder getLastYouthMatchDateStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
 	public Timestamp getLastYouthMatchDate() {
 		try {
 			var rs = adapter.executePreparedQuery(getLastYouthMatchDateStatementBuilder.getStatement(), MatchType.getYouthMatchType().stream().map(MatchType::getId).toArray());

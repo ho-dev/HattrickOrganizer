@@ -67,7 +67,7 @@ public abstract class AbstractTable {
 	// Insert
 	public static class PreparedInsertStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedInsertStatementBuilder(AbstractTable table) {
-			super(table.adapter, table.createInsertStatement());
+			super(table.createInsertStatement());
 		}
 	}
 	protected PreparedInsertStatementBuilder preparedInsertStatementBuilder;
@@ -97,10 +97,10 @@ public abstract class AbstractTable {
 	// Update
 	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
-			super(table.adapter, "UPDATE " + table.getTableName() + " " + set);
+			super("UPDATE " + table.getTableName() + " " + set);
 		}
 		public PreparedUpdateStatementBuilder(AbstractTable table) {
-			super(table.adapter, "UPDATE " + table.getTableName() + " SET " + table.getColumns()[1].getColumnName() + "=? WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super("UPDATE " + table.getTableName() + " SET " + table.getColumns()[1].getColumnName() + "=? WHERE " + table.getColumns()[0].getColumnName() + "=?");
 		}
 	}
 
@@ -122,10 +122,10 @@ public abstract class AbstractTable {
 	// Delete
 	public static class PreparedDeleteStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedDeleteStatementBuilder(AbstractTable table) {
-			super(table.adapter, "DELETE FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super("DELETE FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
 		}
 		public PreparedDeleteStatementBuilder(AbstractTable table, String where) {
-			super(table.adapter, "DELETE FROM " + table.getTableName() + " " + where);
+			super("DELETE FROM " + table.getTableName() + " " + where);
 		}
 	}
 	protected  PreparedDeleteStatementBuilder preparedDeleteStatementBuilder;
@@ -142,10 +142,10 @@ public abstract class AbstractTable {
 	// Select
 	public static class PreparedSelectStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedSelectStatementBuilder(AbstractTable table, String where) {
-			super(table.adapter, "SELECT * FROM " + table.getTableName() + " " + where);
+			super("SELECT * FROM " + table.getTableName() + " " + where);
 		}
 		public PreparedSelectStatementBuilder(AbstractTable table) {
-			super(table.adapter, "SELECT * FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super("SELECT * FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
 		}
 	}
 	protected PreparedSelectStatementBuilder preparedSelectStatementBuilder;
@@ -217,7 +217,7 @@ public abstract class AbstractTable {
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName + "'";
 		ResultSet rs = this.adapter.executeQuery(sql);
-		return rs.next();
+		return rs != null && rs.next();
 	}
 
 	public boolean tryAddColumn(String columnName, String columnType) throws SQLException {

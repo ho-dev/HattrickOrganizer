@@ -8,10 +8,9 @@ import tool.keepertool.PlayerItem;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.util.Iterator;
+import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -31,12 +30,12 @@ class InjuryDetailPanel extends JPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private JComboBox injuryType = new JComboBox();
-    private JComboBox players = new JComboBox();
-    private JTextField age = new JTextField(8);
-    private JTextField injury = new JTextField(8);
-    private JTextField tsiPost = new JTextField(8);
-    private JTextField tsiPre = new JTextField(8);
+	private final JComboBox injuryType = new JComboBox();
+    private final JComboBox players = new JComboBox();
+    private final JTextField age = new JTextField(8);
+    private final JTextField injury = new JTextField(8);
+    private final JTextField tsiPost = new JTextField(8);
+    private final JTextField tsiPre = new JTextField(8);
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -111,9 +110,9 @@ class InjuryDetailPanel extends JPanel {
     }
 
 
-    private static DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
             "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
-    private static DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(
             "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
 
     /**
@@ -123,10 +122,7 @@ class InjuryDetailPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayers().iterator();
-             iter.hasNext();) {
-            final Player element = iter.next();
-
+        for (final Player element : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
             if (element.getInjuryWeeks() > 0) {
                 players.addItem(new PlayerItem(element));
             }
@@ -155,7 +151,7 @@ class InjuryDetailPanel extends JPanel {
             String tsi = "";
 
             try {
-                ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
+                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
                 if (rs.next()) {
                     tsi = rs.getString("marktwert");
                 }
@@ -165,7 +161,7 @@ class InjuryDetailPanel extends JPanel {
             tsiPre.setText(tsi);
 
             try {
-                ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
+                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
                 if (rs.next()) {
                     tsi = rs.getString("marktwert");
                 }

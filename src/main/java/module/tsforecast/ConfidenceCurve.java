@@ -18,16 +18,9 @@ package module.tsforecast;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-// Referenced classes of package hoplugins.tsforecast:
-//            Curve
 
 class ConfidenceCurve extends Curve {
 
@@ -35,7 +28,7 @@ class ConfidenceCurve extends Curve {
 		readConfidenceHistory();
 	}
 
-	private static DBManager.PreparedStatementBuilder teamStatemenBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder teamStatemenBuilder = new DBManager.PreparedStatementBuilder(
 			"select DATUM, ISELBSTVERTRAUEN from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID order by DATUM"
 			);
 

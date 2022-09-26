@@ -99,7 +99,8 @@ final class SpielplanTable extends AbstractTable {
 		return null;
 	}
 
-	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(this.adapter, "SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
+	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(
+			"SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
 
 	/**
 	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der DB gefunden

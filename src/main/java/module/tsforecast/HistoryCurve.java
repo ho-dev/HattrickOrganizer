@@ -48,7 +48,7 @@ public class HistoryCurve extends Curve {
 		fillupSpirit();
 	}
 
-	private static final DBManager.PreparedStatementBuilder readSpiritHistoryStatementBuilder  = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder readSpiritHistoryStatementBuilder  = new DBManager.PreparedStatementBuilder(
 			"select DATUM, ISTIMMUNG from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM"
 	);
 

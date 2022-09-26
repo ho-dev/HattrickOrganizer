@@ -35,15 +35,10 @@ class TrainerCurve extends Curve {
 		return dRet;
 	}
 
-	double getCurrentLeadership() {
-		last();
-		return getSpirit();
-	}
-
-	private static DBManager.PreparedStatementBuilder readTrainerBeforeStartStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder readTrainerBeforeStartStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM <= ? order by DATUM desc"
 	);
-	private static DBManager.PreparedStatementBuilder readTrainerStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder readTrainerStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM > ? and DATUM < ? order by DATUM"
 	);
 	private void readTrainer() {

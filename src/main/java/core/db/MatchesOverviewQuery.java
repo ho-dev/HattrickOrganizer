@@ -5,17 +5,12 @@ import core.model.match.*;
 import core.util.HOLogger;
 import module.matches.MatchLocation;
 import module.matches.statistics.MatchesOverviewCommonPanel;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
 import static core.model.match.MatchEvent.isGoalEvent;
-
 
 class MatchesOverviewQuery  {
 
@@ -54,7 +49,7 @@ class MatchesOverviewQuery  {
 		sql.append(" OR (GASTID = ?").append(whereAwayClause);
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(getPreparedStatement(sql.toString()), teamId, teamId);
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			if(rs.next()){
 				tmp = rs.getInt("C");
@@ -65,15 +60,15 @@ class MatchesOverviewQuery  {
 		return tmp;
 	}
 
-	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
-	private static PreparedStatement getPreparedStatement(String sql) {
-		PreparedStatement ret = preparedStatements.get(sql);
-		if ( ret == null){
-			ret = Objects.requireNonNull(DBManager.instance().getAdapter()).createPreparedStatement(sql);
-			preparedStatements.put(sql, ret);
-		}
-		return ret;
-	}
+//	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
+//	private static PreparedStatement getPreparedStatement(String sql) {
+//		PreparedStatement ret = preparedStatements.get(sql);
+//		if ( ret == null){
+//			ret = Objects.requireNonNull(DBManager.instance().getAdapter()).createPreparedStatement(sql);
+//			preparedStatements.put(sql, ret);
+//		}
+//		return ret;
+//	}
 
 	static int getChangeGameStat(int teamId, int statistic){
 		StringBuilder sql = new StringBuilder(200);
@@ -94,7 +89,7 @@ class MatchesOverviewQuery  {
 		}
 		sql.append("AND (MK_MatchTyp=2 OR MK_MatchTyp=1 OR MK_MatchTyp=3 )");
 
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(getPreparedStatement(sql.toString()), teamId, teamId);
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			for (int i = 0; rs.next(); i++) {
 				tmp=i;
@@ -141,7 +136,7 @@ class MatchesOverviewQuery  {
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(getPreparedStatement(sql.toString()), params.toArray());
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), params.toArray());
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
@@ -271,7 +266,7 @@ class MatchesOverviewQuery  {
 		sql.append(" where 1=1 ");
 		sql.append(whereClause);
 		try{
-			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(getPreparedStatement(sql.toString()));
+			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
 
 			while(rs.next()){
 				String[] fArray = {"0","",""};
@@ -338,7 +333,7 @@ class MatchesOverviewQuery  {
 		sql.append(whereClause);
 		sql.append(")");
 		try{
-		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(getPreparedStatement(sql.toString()));
+		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 			return;

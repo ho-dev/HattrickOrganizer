@@ -54,7 +54,7 @@ public enum MatchType implements IMatchType {
 		return Stream.of(MatchType.values());
 	}
 
-	public static MatchType getById(int id) {
+	public static MatchType getById(Integer id) {
 		for (MatchType matchType : MatchType.values()) {
 			if (matchType.getId() == id) {
 				return matchType;

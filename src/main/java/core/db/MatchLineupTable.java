@@ -64,7 +64,8 @@ public final class MatchLineupTable extends AbstractTable {
 		return null;
 	}
 
-	private final DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
+	private final DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
 
 	/**
 	 * Ist das Match schon in der Datenbank vorhanden?

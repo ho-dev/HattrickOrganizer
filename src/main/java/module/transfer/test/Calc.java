@@ -3,21 +3,11 @@ package module.transfer.test;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
-
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Calc {
 
@@ -29,11 +19,11 @@ public class Calc {
 		return null;
 	}
 
-	static private DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	static private final DBManager.PreparedStatementBuilder transferStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT * FROM transfer WHERE playerid=? AND buyerid=?");
 	public static List<HODateTime> getBuyingDates(int playerId) {
 		var list = new ArrayList<HODateTime>();
-		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(transferStatementBuilder.getStatement(), playerId, HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(transferStatementBuilder.getStatement(), playerId, HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		try {
 			while (rs.next()) {
 				list.add(HODateTime.fromDbTimestamp(rs.getTimestamp("date")));
@@ -45,10 +35,10 @@ public class Calc {
 		return list;
 	}
 
-	static private DBManager.PreparedStatementBuilder playerStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	static private final DBManager.PreparedStatementBuilder playerStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT LIMIT 0 1 AGE, AGEDAYS, DATUM FROM player WHERE spielerid=?");
 	public static HODateTime get17thBirthday(int playerId) {
-		ResultSet rs = DBManager.instance().getAdapter().executePreparedQuery(playerStatementBuilder.getStatement(), playerId);
+		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(playerStatementBuilder.getStatement(), playerId);
 		try {
 			if (rs.next()) {
 				var rsDate = HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM"));
@@ -75,7 +65,6 @@ public class Calc {
 		int sum = 0;
 		for (var date : updates) {
 			int ageAt = Calc.getAgeAt(birthDay17, date);
-			Integer key = ageAt;
 			sum += ageWageMap.get(ageAt).getWage();
 		}
 		return sum;

@@ -7,7 +7,6 @@ import core.util.HOLogger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -78,12 +77,12 @@ final class DBUpdater {
 		}
 	}
 
-	private HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();
+	private final HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();
 	private PreparedStatement getMigrateEscapesStatement(String table, String column){
 		var sql = "Update "+ table + " SET " + column + "=REPLACE(" + column + ", ?, ?)";
 		var ret = migrateStatements.get(sql);
 		if ( ret == null ){
-			ret = new DBManager.PreparedStatementBuilder(m_clJDBCAdapter,sql).getStatement();
+			ret = new DBManager.PreparedStatementBuilder(sql).getStatement();
 			migrateStatements.put(sql, ret);
 		}
 		return ret;
@@ -92,7 +91,7 @@ final class DBUpdater {
 		var sql = "Update "+ table + " SET " + column + "=REPLACE("+column+", ?, ?) " + where;
 		var ret = migrateStatements.get(sql);
 		if ( ret == null ){
-			ret = new DBManager.PreparedStatementBuilder(m_clJDBCAdapter,sql).getStatement();
+			ret = new DBManager.PreparedStatementBuilder(sql).getStatement();
 			migrateStatements.put(sql, ret);
 		}
 		return ret;

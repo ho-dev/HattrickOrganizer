@@ -34,7 +34,8 @@ public class YouthScoutCommentTable extends AbstractTable {
         };
     }
 
-    private final DBManager.PreparedStatementBuilder countScoutCommentsStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=?");
+    private final DBManager.PreparedStatementBuilder countScoutCommentsStatementBuilder = new DBManager.PreparedStatementBuilder(
+            "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=?");
     public int countScoutComments(int youthplayerid) {
         var rs = adapter.executePreparedQuery(countScoutCommentsStatementBuilder.getStatement(), youthplayerid);
         try {

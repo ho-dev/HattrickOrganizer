@@ -6,14 +6,11 @@ import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HODateTime;
-
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 
 /**
  * This class is used to collect all required data and fill the lists of values with instances of
@@ -24,7 +21,7 @@ import java.util.Vector;
 public class EffectDAO {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static List<TrainWeekEffect> trainWeeks = new Vector<>();
+    private static final List<TrainWeekEffect> trainWeeks = new Vector<>();
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -37,20 +34,20 @@ public class EffectDAO {
         return trainWeeks;
     }
 
-    private static DBManager.PreparedStatementBuilder trainingDatesStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder trainingDatesStatementBuilder = new DBManager.PreparedStatementBuilder(
             "SELECT HRFMIN.hrf_id, HRFMAX.hrf_id, trainingdate" +
             " FROM HRF as HRFMIN, HRF as HRFMAX, (SELECT max(HRF.datum) as maxdate, min(HRF.datum) as mindate, trainingdate" +
             " FROM HRF, XTRADATA" +
             " WHERE HRF.hrf_id=XTRADATA.hrf_id" +
             " GROUP BY trainingdate) AS X" +
             " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC" );
-    private static DBManager.PreparedStatementBuilder weeksStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder weeksStatementBuilder = new DBManager.PreparedStatementBuilder(
             "SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
 
-    private static DBManager.PreparedStatementBuilder playersStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder playersStatementBuilder = new DBManager.PreparedStatementBuilder(
             "SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
 
-    private static DBManager.PreparedStatementBuilder playerbasicsStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+    private static final DBManager.PreparedStatementBuilder playerbasicsStatementBuilder = new DBManager.PreparedStatementBuilder(
             "SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = ?");
 
             /**

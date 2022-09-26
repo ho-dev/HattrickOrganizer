@@ -219,30 +219,6 @@ final class SpielerTable extends AbstractTable {
 	private final PreparedSelectStatementBuilder selectStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID =? AND SpielerId=?");
 
 	/**
-	 * get a player from a specific HRF
-	 *
-	 * @param hrfID hrd id
-	 * @param playerId player id
-	 *
-	 * @return player
-	 */
-	Player getSpielerFromHrf(int hrfID, int playerId) {
-		var rs = this.adapter.executePreparedQuery(selectStatementBuilder.getStatement(), hrfID, playerId);
-
-		try {
-			if (rs != null) {
-				if (rs.next()) {
-					return  createObject(rs);
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerFromHrf: " + e);
-		}
-		return null;
-	}
-
-
-	/**
 	 * lädt die Player zum angegeben HRF file ein
 	 */
 	List<Player> getSpieler(int hrfID) {
@@ -298,7 +274,8 @@ final class SpielerTable extends AbstractTable {
 		return ret;
 	}
 
-	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter,"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
+	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
 
 	/**
 	 * Gibt die letzte Bewertung für den Player zurück // HRF

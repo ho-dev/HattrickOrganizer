@@ -93,7 +93,8 @@ final class BasicsTable extends AbstractTable {
 		return basics;
 	}
 
-	private final DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new DBManager.PreparedStatementBuilder(this.adapter, "SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
+	private final DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new DBManager.PreparedStatementBuilder(
+			"SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
 
 	/**
 	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich

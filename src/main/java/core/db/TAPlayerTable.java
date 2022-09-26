@@ -18,7 +18,7 @@ import java.sql.Types;
 final class TAPlayerTable extends AbstractTable {
 	final static String TABLENAME = "TA_PLAYER";
 
-	protected TAPlayerTable(JDBCAdapter adapter) {
+	TAPlayerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -67,7 +67,7 @@ final class TAPlayerTable extends AbstractTable {
 
 	/**
 	 * Get number of week from weekNumber
-	 * @param weekNumber
+	 * @param weekNumber int
 	 * @return number of week [1..16]
 	 */
 	private int getWeekFromWeekNumber(int weekNumber){
@@ -76,7 +76,7 @@ final class TAPlayerTable extends AbstractTable {
 
 	/**
 	 * Get number of season from weekNumber
-	 * @param weekNumber
+	 * @param weekNumber int
 	 * @return number of season [1..]
 	 */
 	private int getSeasonFromWeekNumber(int weekNumber){
@@ -115,7 +115,7 @@ final class TAPlayerTable extends AbstractTable {
 	}
 
 
-	DBManager.PreparedStatementBuilder getLatestPlayerInfoBuilder = new DBManager.PreparedStatementBuilder(this.adapter,
+	DBManager.PreparedStatementBuilder getLatestPlayerInfoBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT max(WEEK) FROM " + TABLENAME + " WHERE PLAYERID=? AND WEEK<=?" );
 
 	/**
@@ -144,7 +144,7 @@ final class TAPlayerTable extends AbstractTable {
 	/**
 	 * Add a player to a team
 	 * 
-	 * @param info
+	 * @param info PlayerInfo
 	 */
 	void addPlayer(PlayerInfo info) {
 		executePreparedInsert(

@@ -371,7 +371,8 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return vorhanden;
 	}
 
-	private final DBManager.PreparedStatementBuilder hasUnsureWeatherForecastStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?");
+	private final DBManager.PreparedStatementBuilder hasUnsureWeatherForecastStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?");
 	boolean hasUnsureWeatherForecast(int matchId)
 	{
 		try{

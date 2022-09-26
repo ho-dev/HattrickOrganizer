@@ -31,8 +31,8 @@ public class StatisticQuery {
 	static class PreparedSelectINStatementBuilder extends DBManager.PreparedStatementBuilder{
 		private final int anzahl;
 
-		public PreparedSelectINStatementBuilder(JDBCAdapter adapter, String sql, int anzahl ) {
-			super(adapter, sql);
+		public PreparedSelectINStatementBuilder(String sql, int anzahl ) {
+			super(sql);
 			this.anzahl=anzahl;
 		}
 
@@ -45,14 +45,14 @@ public class StatisticQuery {
 	private static PreparedStatement getSpielerDaten4StatistikStatement(int anzahl){
 		if ( getSpielerDaten4StatistikStatementBuilder == null || getSpielerDaten4StatistikStatementBuilder.getAnzahl() != anzahl){
 			getSpielerDaten4StatistikStatementBuilder= new PreparedSelectINStatementBuilder(
-					DBManager.instance().getAdapter(),
 					"SELECT * FROM SPIELER WHERE SpielerID=? AND HRF_ID IN (" + getPlaceholders(anzahl) + ") ORDER BY Datum DESC",
 					anzahl);
 		}
 		return getSpielerDaten4StatistikStatementBuilder.getStatement();
 	}
 	private static final DBManager.PreparedStatementBuilder getSpielerBewertungStatementBuilder =
-			new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(), "SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>=? AND Datum<=? AND SpielerID=? ORDER BY Datum");
+			new DBManager.PreparedStatementBuilder(
+					"SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>=? AND Datum<=? AND SpielerID=? ORDER BY Datum");
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 16;
 		final float faktor = core.model.UserParameter.instance().FXrate;
@@ -376,7 +376,6 @@ public class StatisticQuery {
 	private static PreparedStatement getGetDataForClubStatisticsPanelStatement(int anzahl){
 		if ( getDataForClubStatisticsPanelStatementBuilder==null || getDataForClubStatisticsPanelStatementBuilder.getAnzahl()!=anzahl){
 			getDataForClubStatisticsPanelStatementBuilder = new PreparedSelectINStatementBuilder(
-					DBManager.instance().getAdapter(),
 					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
 							getPlaceholders(anzahl) +
 							") ORDER BY HRF.DATUM ASC",
@@ -437,7 +436,6 @@ public class StatisticQuery {
 
 
 	private static final DBManager.PreparedStatementBuilder getDataForFinancesStatisticsPanelBuilder=new DBManager.PreparedStatementBuilder(
-			DBManager.instance().getAdapter(),
 			"SELECT * FROM ECONOMY WHERE FetchedDate >= ? ORDER BY FetchedDate DESC"
 	);
 

@@ -106,7 +106,8 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	}
 
-	private final DBManager.PreparedStatementBuilder getPlayerListStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT DISTINCT SpielerID FROM " + getTableName());
+	private final DBManager.PreparedStatementBuilder getPlayerListStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT DISTINCT SpielerID FROM " + getTableName());
 
 	private Vector<Integer> getPlayerList() {
 		Vector<Integer> idVector = new Vector<>();
@@ -176,7 +177,8 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	}
 
-	private final DBManager.PreparedStatementBuilder importFromSpielerStatementBuilder = new DBManager.PreparedStatementBuilder(this.adapter, "SELECT DISTINCT SpielerID FROM SPIELER");
+	private final DBManager.PreparedStatementBuilder importFromSpielerStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT DISTINCT SpielerID FROM SPIELER");
 
 	void importFromSpieler() {
 		playerSkillup = null;

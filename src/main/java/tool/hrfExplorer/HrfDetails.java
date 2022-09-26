@@ -47,13 +47,13 @@ class HrfDetails {
 	public HrfDetails() {
 	}
 
-	private static final DBManager.PreparedStatementBuilder maxHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder maxHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT MAX(DATUM) FROM HRF WHERE DATUM < ?"
 	);
-	private static final DBManager.PreparedStatementBuilder minHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder minHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT MIN(DATUM) FROM HRF WHERE DATUM > ?"
 	);
-	private static final DBManager.PreparedStatementBuilder countHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(DBManager.instance().getAdapter(),
+	private static final DBManager.PreparedStatementBuilder countHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
 			"SELECT count(*) FROM HRF WHERE DATUM = ?"
 	);
 
