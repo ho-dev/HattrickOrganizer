@@ -18,6 +18,7 @@
 * fix handling of replacement of injured goalkeeper by field player (#1633)
 
 ### Lineup
+* enable download of lineups of future matches even if match order status is not known (#1630)
 
 ### Statistics
 
