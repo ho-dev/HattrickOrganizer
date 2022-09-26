@@ -10,23 +10,17 @@ import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.Ratings;
-import core.model.enums.MatchType;
 import core.model.match.*;
-import core.model.player.IMatchRoleID;
 import core.model.player.TrainerType;
 import core.net.OnlineWorker;
 import core.util.*;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
-import module.teamAnalyzer.ui.MatchComboBoxRenderer;
-import module.teamAnalyzer.vo.Team;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,21 +171,19 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
 
             Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-            if (lineup != null && matchOrder != null) {
+            if (matchOrder != null) {
                 lineup.setLocation(matchOrder.getLocation());
                 lineup.setWeather(matchOrder.getWeather());
                 lineup.setWeatherForecast(matchOrder.getWeatherForecast());
             }
         }
-        m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+        m_jbDownloadLineup.setEnabled(m_clSelectedMatch != null);
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        if ( lineup != null) {
-            // refresh lineup settings
-            Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
-            updateStyleOfPlayComboBox();
-        }
+        // refresh lineup settings
+        Helper.setComboBoxFromID(m_jcbTactic, lineup.getTacticType());
+        updateStyleOfPlayComboBox();
 
     }
 
@@ -205,7 +197,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             m_clSelectedMatch = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
             setEnabledTeamAttitudeCB((m_clSelectedMatch != null) && m_clSelectedMatch.getMatchType().isCompetitive());
             adjustLineupSettings();
-            m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
+            m_jbDownloadLineup.setEnabled(m_clSelectedMatch != null);
             m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
         });
 
@@ -349,9 +341,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     private void adjustLineupSettings(){
         MatchOrdersCBItem matchOrder = (MatchOrdersCBItem) m_jcbUpcomingGames.getSelectedItem();
-
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         if (matchOrder != null) {
+            var details = matchOrder.getMatchdetails();
+            if ( details != null){
+                HOVerwaltung.instance().getModel().setLineup(details.getOwnTeamLineup());
+            }
+            Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeam().getLineup();
             lineup.setLocation(matchOrder.getLocation());
             lineup.setWeather(matchOrder.getWeather());
             lineup.setWeatherForecast(matchOrder.getWeatherForecast());
@@ -362,7 +357,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void uploadLineupToHT() {
 
         Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        if ( lineup == null) return;
         if (!LineupCheck.doUpload(m_clSelectedMatch, lineup)) {
             return;
         }
@@ -373,8 +367,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             CursorToolkit.startWaitCursor(this);
             assert m_clSelectedMatch != null : "Can't push a lineup if selected game is null !";
             result = OnlineWorker.uploadMatchOrder(m_clSelectedMatch.getMatchID(), m_clSelectedMatch.getMatchType(), lineup);
-        }
-        finally {
+        } finally {
             CursorToolkit.stopWaitCursor(this);
         }
 
@@ -389,14 +382,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 if (success) {
                     messageType = JOptionPane.PLAIN_MESSAGE;
                     message = Helper.getTranslation("lineup.upload.success");
-                }
-                else {
+                } else {
                     messageType = JOptionPane.ERROR_MESSAGE;
                     message = Helper.getTranslation("lineup.upload.fail")
                             + "\n" + XMLUtils.getTagData(doc, "Reason");
                 }
-            }
-            else {
+            } else {
                 messageType = JOptionPane.ERROR_MESSAGE;
                 message = Helper.getTranslation("lineup.upload.result.parseerror");
                 HOLogger.instance().log(getClass(), message + "\n" + result);
@@ -409,7 +400,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
 
         if (success) {
-            m_clSelectedMatch.setOrdersSetInHT(true);
+            if (m_clSelectedMatch != null) m_clSelectedMatch.setOrdersSetInHT(true);
             try {
                 CursorToolkit.startWaitCursor(this);
                 MatchKurzInfo refreshed = OnlineWorker.updateMatch(OWN_TEAM_ID, m_clSelectedMatch);
@@ -421,12 +412,11 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
 
                 // store lineup in database
-                var lineupTeam = new MatchLineupTeam( m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
+                var lineupTeam = new MatchLineupTeam(m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
                         HOVerwaltung.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
                 lineupTeam.setLineup(lineup);
                 DBManager.instance().storeMatchLineupTeam(lineupTeam);
-            }
-            finally {
+            } finally {
                 CursorToolkit.stopWaitCursor(this);
             }
         }
@@ -435,46 +425,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     }
 
 
-    /*
-            update items in UpcomingGames ComboBox except if data are too old or if Lineup simulator is checked
-         */
-    private void update_jcbUpcomingGamesAfterSendingMatchOrders(MatchOrdersCBItem selectedMatch) {
-
-        removeListeners();
-
-
-        int selectedMatchID = selectedMatch.getMatchID();
-
-        // Update upcomingMatchesInDB with uploaded game
-        List<MatchOrdersCBItem> copyUpcomingMatchesInDB = new ArrayList<>(upcomingMatchesInDB);
-        upcomingMatchesInDB = new ArrayList<>();
-
-        for (MatchOrdersCBItem element : copyUpcomingMatchesInDB) {
-            if(element.getMatchID() == selectedMatchID) {
-                upcomingMatchesInDB.add(selectedMatch);
-            }
-            else {
-                m_jcbUpcomingGames.addItem(element);
-            }
-        }
-
-        // update all elements in m_jcbUpcomingGames
-        m_jcbUpcomingGames.removeAllItems();
-
-        for (MatchOrdersCBItem element : upcomingMatchesInDB) {
-                m_jcbUpcomingGames.addItem(element);
-        }
-
-        m_jcbUpcomingGames.setMaximumRowCount(upcomingMatchesInDB.size());
-        m_clSelectedMatch = selectedMatch;
-
-        m_jbDownloadLineup.setEnabled(true);
-        m_jbUploadLineup.setEnabled(true);
-
-        m_jcbUpcomingGames.setSelectedItem(selectedMatch);
-
-        refresh();
-    }
 
     @Override
     public void reInit() {
@@ -494,7 +444,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void updateStyleOfPlayComboBox()
     {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        if ( lineup==null) return;
         var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
         // NT Team can select whatever Style of Play they like
         if (!UserManager.instance().getCurrentUser().isNtTeam()) {
@@ -583,12 +532,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
         else {
             var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-            if ( lineup != null){
-                attitude = lineup.getAttitude();
-            }
-            else{
-                attitude = MatchTeamAttitude.toInt(MatchTeamAttitude.Normal);
-            }
+            attitude = lineup.getAttitude();
         }
         Helper.setComboBoxFromID(m_jcbTeamAttitude, attitude);
         m_jcbTeamAttitude.setEnabled(enabled);

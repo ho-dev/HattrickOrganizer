@@ -143,13 +143,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     private String homeFormation;
     private String awayFormation;
 
-    public String getResultInPart(MatchEvent.MatchPartId part) {
-        if (homeGoalsInParts != null) {
-            return getResultString(homeGoalsInParts[part.getValue()], guestGoalsInParts[part.getValue()], "");
-        }
-        return "";
-    }
-
     public String getResultAfterPart(MatchEvent.MatchPartId part) {
         if (homeGoalsInParts != null) {
             int home = 0;
@@ -237,6 +230,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type) {
         var ret = DBManager.instance().loadMatchDetails(type.getId(), matchId);
+        ret.setMatchID(matchId);
         ret.setMatchType(type);
         ret.setSourceSystem(type.getSourceSystem());
         return ret;
@@ -359,10 +353,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         this.guestGoalsInParts = guestGoalsInPart;
     }
 
-    public SourceSystem getSourceSystem() {
-        return sourceSystem;
-    }
-
     public void setSourceSystem(SourceSystem sourceSystem) {
         this.sourceSystem = sourceSystem;
     }
@@ -434,11 +424,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         public eInjuryType getInjuryType() {
             return InjuryType;
         }
-
-        public int getInjuryMinute() {
-            return InjuryMinute;
-        }
-
 
         int InjuryPlayerID;
         int InjuryTeamID;
@@ -602,9 +587,8 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     /**
      * Getter for property m_lDatum.
      */
-    public final boolean setFetchDatumFromString(String date) {
+    public final void setFetchDatumFromString(String date) {
         m_clFetchDatum = HODateTime.fromHT(date);
-        return m_clFetchDatum != null;
     }
 
     /**
@@ -1327,12 +1311,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     /**
      * Getter for property m_lDatum.
-     *
-     * @return Value of property m_lDatum.
      */
-    public final boolean setSpielDatumFromString(String date) {
+    public final void setSpielDatumFromString(String date) {
         m_clSpielDatum = HODateTime.fromHT(date);
-        return m_clSpielDatum != null;
     }
 
     private MatchLineupTeam teamLineup;
@@ -1384,19 +1365,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      */
     public final int getZuschauer() {
         return m_iZuschauer;
-    }
-
-    /**
-     * check if numeric
-     */
-    protected static boolean isNumeric(String aText) {
-        for (int k = 0; k < aText.length(); k++) {
-            if (!((aText.charAt(k) >= '0') && (aText.charAt(k) <= '9'))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
