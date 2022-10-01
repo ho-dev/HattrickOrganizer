@@ -31,7 +31,7 @@ public class YouthTableSorter extends AbstractTableModel {
         none(0),
         ascending(1);
 
-        private int value;
+        private final int value;
 
         Order(int value) {
             this.value = value;
@@ -53,7 +53,7 @@ public class YouthTableSorter extends AbstractTableModel {
 
     private Row[] viewToModel;
     private int[] modelToView;
-    private List<ColumnSorting> sortingColumns = new ArrayList<>();
+    private final List<ColumnSorting> sortingColumns = new ArrayList<>();
 
     private void clearSortingState() {
         viewToModel = null;
@@ -85,21 +85,23 @@ public class YouthTableSorter extends AbstractTableModel {
                 JTableHeader h = (JTableHeader) e.getSource();
                 TableColumnModel columnModel = h.getColumnModel();
                 int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-                var vcolumn = columnModel.getColumn(viewColumn);
-                if (vcolumn != null) {
-                    int column = vcolumn.getModelIndex();
-                    if (column != -1) {
-                        var selection = getSelectedModelIndex();
-                        var status = getSortingOrder(column).getValue();
-                        if (!e.isControlDown()) {
-                            cancelSorting();
+                if ( viewColumn > -1 ) {
+                    var vcolumn = columnModel.getColumn(viewColumn);
+                    if (vcolumn != null) {
+                        int column = vcolumn.getModelIndex();
+                        if (column != -1) {
+                            var selection = getSelectedModelIndex();
+                            var status = getSortingOrder(column).getValue();
+                            if (!e.isControlDown()) {
+                                cancelSorting();
+                            }
+                            // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
+                            // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
+                            status = status + (e.isShiftDown() ? -1 : 1);
+                            status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
+                            setSortingStatus(column, Order.valueOf(status));
+                            setSelectedModelIndex(selection);
                         }
-                        // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
-                        // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
-                        status = status + (e.isShiftDown() ? -1 : 1);
-                        status = (status + 4) % 3 - 1; // signed mod, returning {-1, 0, 1}
-                        setSortingStatus(column, Order.valueOf(status));
-                        setSelectedModelIndex(selection);
                     }
                 }
             }
@@ -219,7 +221,7 @@ public class YouthTableSorter extends AbstractTableModel {
     // Helper classes
 
     private class Row implements Comparable {
-        private int modelIndex;
+        private final int modelIndex;
 
         public Row(int index) {
             this.modelIndex = index;
@@ -252,7 +254,7 @@ public class YouthTableSorter extends AbstractTableModel {
         }
     }
 
-    private TableModelListener tableModelListener = new TableModelListener() {
+    private final TableModelListener tableModelListener = new TableModelListener() {
         public void tableChanged(TableModelEvent e) {
             // If we're not sorting by anything, just pass the event along.
             if (!isSorting()) {
@@ -307,8 +309,8 @@ public class YouthTableSorter extends AbstractTableModel {
     };
 
     private static class ColumnSorting {
-        private int column;
-        private Order order;
+        private final int column;
+        private final Order order;
 
         public ColumnSorting(int column, Order order) {
             this.column = column;
@@ -325,12 +327,6 @@ public class YouthTableSorter extends AbstractTableModel {
         setTableModel(tableModel);
         table.setColumnSelectionAllowed(false);
         setTableHeader(table.getTableHeader());
-    }
-
-    public void tableChanged(TableModelEvent event) {
-        var tm = getTableModel();
-        tm.fireTableChanged(event);
-        fireTableDataChanged();
     }
 
     public void sort() {
