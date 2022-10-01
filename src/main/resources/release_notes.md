@@ -29,6 +29,7 @@
 ### League
   
 ### Youth
+* fix exception on sorting of invalid column indexes (#1645)
 
 ### Misc
 
