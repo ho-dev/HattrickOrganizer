@@ -42,15 +42,15 @@ import javax.swing.table.TableModel;
 public class TableSorter extends TableMap {
 
 	private static final long serialVersionUID = 1132334126127788944L;
-	private List<Integer> sortingColumns;
+	private final List<Integer> sortingColumns;
     private int[] indexes;
     private boolean ascending;
 
     private int currentColumn;
 
     // index of the column representing the ID
-    private int idColumn;
-    private int m_iInitSortColumnIndex;
+    private final int idColumn;
+    private final int m_iInitSortColumnIndex;
 
     private int thirdColSort = -1; // index of the column using “special” sorting on third click.
     private int iThirdSort = 0; // click count to detect if third click.
@@ -110,13 +110,6 @@ public class TableSorter extends TableMap {
         }
 
         return -1;
-    }
-
-    public int getIndex(int row) {
-        if (row >= 0 && row < indexes.length) {
-            return indexes[row];
-        }
-        return 0;
     }
 
     /**
@@ -226,31 +219,33 @@ public class TableSorter extends TableMap {
 			public void mouseClicked(MouseEvent mouseevent) {
                 final TableColumnModel tablecolumnmodel = tableView.getColumnModel();
                 final int i = tablecolumnmodel.getColumnIndexAtX(mouseevent.getX());
-                final int j = tableView.convertColumnIndexToModel(i);
+                if ( i > -1) {
+                    final int j = tableView.convertColumnIndexToModel(i);
 
-                if ((mouseevent.getClickCount() == 1) && (j != -1)) {
-                    boolean flag = ascending;
+                    if ((mouseevent.getClickCount() == 1) && (j != -1)) {
+                        boolean flag = ascending;
 
-                    // If column sorted is different to the current one, sort by natural order.
-                    if (currentColumn != j) {
-                        flag = isAscending(getModel(), j);
-                    }
-
-                    if (thirdColSort == i) {
-                        isThirdSort = false;
-                        iThirdSort++;
-                        if (iThirdSort == 3) {
-                            isThirdSort = true;
-                            flag = true;
-                            iThirdSort = 0;
+                        // If column sorted is different to the current one, sort by natural order.
+                        if (currentColumn != j) {
+                            flag = isAscending(getModel(), j);
                         }
-                    }
 
-                    if (currentColumn == j) {
-                        flag = !flag;
-                    }
+                        if (thirdColSort == i) {
+                            isThirdSort = false;
+                            iThirdSort++;
+                            if (iThirdSort == 3) {
+                                isThirdSort = true;
+                                flag = true;
+                                iThirdSort = 0;
+                            }
+                        }
 
-                    TableSorter.this.sortByColumn(j, flag);
+                        if (currentColumn == j) {
+                            flag = !flag;
+                        }
+
+                        TableSorter.this.sortByColumn(j, flag);
+                    }
                 }
             }
         };
