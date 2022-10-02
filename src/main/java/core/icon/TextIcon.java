@@ -1,6 +1,6 @@
 package core.icon;
 
-import com.github.weisj.darklaf.icons.DerivableIcon;
+import com.github.weisj.darklaf.properties.icons.DerivableIcon;
 
 import javax.swing.*;
 import java.awt.*;

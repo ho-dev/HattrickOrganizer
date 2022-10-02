@@ -1,7 +1,7 @@
 package core.gui.theme;
 
 
-import com.github.weisj.darklaf.icons.DerivableImageIcon;
+import com.github.weisj.darklaf.properties.icons.DerivableImageIcon;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.xml.MyHashtable;
