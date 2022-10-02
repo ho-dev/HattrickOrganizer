@@ -12,7 +12,7 @@ class MouseHandler extends MouseAdapter {
     /**
      * Creates a new MouseHandler object.
      *
-     * @param sorter
+     * @param sorter AbstractTableSorter
      */
     MouseHandler(AbstractTableSorter sorter) {
         this.sorter = sorter;
@@ -25,25 +25,27 @@ class MouseHandler extends MouseAdapter {
         JTableHeader h = (JTableHeader) e.getSource();
         TableColumnModel columnModel = h.getColumnModel();
         int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-        int column = columnModel.getColumn(viewColumn).getModelIndex();
+        if ( viewColumn > -1 ) {
+            int column = columnModel.getColumn(viewColumn).getModelIndex();
 
-        //skip unwanted columns            
-        if (column < this.sorter.minSortableColumn()) {
-            column = -1;
-        }
-
-        if (column != -1) {
-            int status = this.sorter.getSortingStatus(column);
-
-            if (!e.isControlDown()) {
-                this.sorter.cancelSorting();
+            //skip unwanted columns
+            if (column < this.sorter.minSortableColumn()) {
+                column = -1;
             }
 
-            // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or 
-            // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed. 
-            status = status + (e.isShiftDown() ? (-1) : 1);
-            status = ((status + 4) % 3) - 1; // signed mod, returning {-1, 0, 1}
-            this.sorter.setSortingStatus(column, status);
+            if (column != -1) {
+                int status = this.sorter.getSortingStatus(column);
+
+                if (!e.isControlDown()) {
+                    this.sorter.cancelSorting();
+                }
+
+                // Cycle the sorting states through {NOT_SORTED, ASCENDING, DESCENDING} or
+                // {NOT_SORTED, DESCENDING, ASCENDING} depending on whether shift is pressed.
+                status = status + (e.isShiftDown() ? (-1) : 1);
+                status = ((status + 4) % 3) - 1; // signed mod, returning {-1, 0, 1}
+                this.sorter.setSortingStatus(column, status);
+            }
         }
     }
 }

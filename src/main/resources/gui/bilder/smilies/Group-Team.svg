@@ -29,9 +29,11 @@
   <defs id="colors">
     <linearGradient id="fillColor" opacity="opacityVal">
       <stop offset="0" stop-color="#FF0000"/>
+      <stop offset="1" stop-color="#FF0000"/>
     </linearGradient>
     <linearGradient id="strokeColor" opacity="opacityVal">
       <stop offset="0" stop-color="#00FF00"/>
+      <stop offset="1" stop-color="#00FF00"/>
     </linearGradient>
   </defs>
   <sodipodi:namedview

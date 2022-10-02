@@ -48,6 +48,11 @@ public class HRFImport {
 				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
 				frame.setInformation(getLangStr("StartParse"));
 				homodel = HRFFileParser.parse(files[i]);
+				if ( homodel != null && homodel.getBasics().getTeamId() != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
+					HOLogger.instance().error(getClass(), "hrf file from other team can not be imported: " + homodel.getBasics().getTeamName());
+					homodel = null;
+				}
+
 				if (homodel == null) {
 					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.FEHLERFARBE);
 					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);

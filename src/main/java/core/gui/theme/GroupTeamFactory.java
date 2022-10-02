@@ -1,6 +1,6 @@
 package core.gui.theme;
 
-import com.github.weisj.darklaf.icons.IconLoader;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import core.icon.OverlayIcon;
 import core.icon.TextIcon;
 import org.javatuples.Pair;
