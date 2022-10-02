@@ -3,7 +3,6 @@ package core.db;
 import core.util.HOLogger;
 import okhttp3.HttpUrl;
 import tool.updater.UpdateHelper;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.sql.SQLException;

@@ -1,6 +1,7 @@
 package core.model.player;
 
 import core.constants.TrainingType;
+import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
