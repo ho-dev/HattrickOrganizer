@@ -18,16 +18,6 @@ import java.util.stream.Collectors;
 
 public class StatisticQuery {
 
-	private static String getPlaceholders(int anzahl){
-		var ret = new StringBuilder();
-		var sep = "";
-		for (int i=0; i<anzahl;++i){
-			ret.append(sep).append("?");
-			sep=",";
-		}
-		return ret.toString();
-	}
-
 	static class PreparedSelectINStatementBuilder extends DBManager.PreparedStatementBuilder{
 		private final int anzahl;
 
@@ -45,7 +35,7 @@ public class StatisticQuery {
 	private static PreparedStatement getSpielerDaten4StatistikStatement(int anzahl){
 		if ( getSpielerDaten4StatistikStatementBuilder == null || getSpielerDaten4StatistikStatementBuilder.getAnzahl() != anzahl){
 			getSpielerDaten4StatistikStatementBuilder= new PreparedSelectINStatementBuilder(
-					"SELECT * FROM SPIELER WHERE SpielerID=? AND HRF_ID IN (" + getPlaceholders(anzahl) + ") ORDER BY Datum DESC",
+					"SELECT * FROM SPIELER WHERE SpielerID=? AND HRF_ID IN (" + DBManager.getPlaceholders(anzahl) + ") ORDER BY Datum DESC",
 					anzahl);
 		}
 		return getSpielerDaten4StatistikStatementBuilder.getStatement();
@@ -377,7 +367,7 @@ public class StatisticQuery {
 		if ( getDataForClubStatisticsPanelStatementBuilder==null || getDataForClubStatisticsPanelStatementBuilder.getAnzahl()!=anzahl){
 			getDataForClubStatisticsPanelStatementBuilder = new PreparedSelectINStatementBuilder(
 					"SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
-							getPlaceholders(anzahl) +
+							DBManager.getPlaceholders(anzahl) +
 							") ORDER BY HRF.DATUM ASC",
 					anzahl
 					);

@@ -6,14 +6,15 @@ import core.util.HOLogger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public abstract class AbstractTable {
 
 	/**
 	 * tableName
 	 **/
-	private String tableName;
+	private final String tableName;
 
 	/**
 	 * describes a tableColumn (name, datatype, nullable ..)
@@ -75,17 +76,12 @@ public abstract class AbstractTable {
 		return new PreparedInsertStatementBuilder(this);
 	}
 	private String createInsertStatement() {
-		var ret = new StringBuilder("INSERT INTO ");
-		ret.append(getTableName());
-		var valuePlaceholders = new StringBuilder(" VALUES ");
-		var sep = "(";
-		for (var c : columns) {
-			valuePlaceholders.append(sep).append("?");
-			ret.append(sep).append(c.getColumnName());
-			sep = ",";
-		}
-		ret.append(")").append(valuePlaceholders).append(")");
-		return ret.toString();
+		return "INSERT INTO " + getTableName() +
+				" (" +
+				Arrays.stream(columns).map(ColumnDescriptor::getColumnName).collect(Collectors.joining(",")) +
+				") VALUES (" +
+				DBManager.getPlaceholders(columns.length) +
+				")";
 	}
 	protected int executePreparedInsert(Object ... values){
 		if ( preparedInsertStatementBuilder==null){

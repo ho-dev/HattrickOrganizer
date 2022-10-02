@@ -8,9 +8,6 @@ import tool.keepertool.PlayerItem;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.sql.ResultSet;
-import java.util.Iterator;
-import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -109,12 +106,6 @@ class InjuryDetailPanel extends JPanel {
         }
     }
 
-
-    private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
-    private static final DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
-
     /**
      * Method called to reset panel and reload needed data
      */
@@ -148,25 +139,26 @@ class InjuryDetailPanel extends JPanel {
             age.setText("" + player.getAlter());
             injury.setText("" + player.getInjuryWeeks());
 
-            String tsi = "";
-
-            try {
-                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
-                if (rs.next()) {
-                    tsi = rs.getString("marktwert");
-                }
-            } catch (Exception e1) {
-            }
+            String tsi = player.getLatestTSINotInjured();
+//
+//            try {
+//                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
+//                if (rs.next()) {
+//                    tsi = rs.getString("marktwert");
+//                }
+//            } catch (Exception e1) {
+//            }
 
             tsiPre.setText(tsi);
 
-            try {
-                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
-                if (rs.next()) {
-                    tsi = rs.getString("marktwert");
-                }
-            } catch (Exception e1) {
-            }
+            tsi = player.getLatestTSIInjured();
+//            try {
+//                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
+//                if (rs.next()) {
+//                    tsi = rs.getString("marktwert");
+//                }
+//            } catch (Exception e1) {
+//            }
 
             tsiPost.setText(tsi);
         });

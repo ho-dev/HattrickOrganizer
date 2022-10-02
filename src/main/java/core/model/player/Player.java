@@ -15,7 +15,6 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
-import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -1215,6 +1214,22 @@ public class Player {
 
         //TSI
         return m_iTSI;
+    }
+
+
+    String latestTSIInjured;
+    String latestTSINotInjured;
+    public String getLatestTSINotInjured(){
+        if (latestTSINotInjured == null){
+            latestTSINotInjured = DBManager.instance().loadLatestTSINotInjured(m_iSpielerID);
+        }
+        return latestTSINotInjured;
+    }
+    public String getLatestTSIInjured(){
+        if (latestTSIInjured == null){
+            latestTSIInjured = DBManager.instance().loadLatestTSIInjured(m_iSpielerID);
+        }
+        return latestTSIInjured;
     }
 
     /**

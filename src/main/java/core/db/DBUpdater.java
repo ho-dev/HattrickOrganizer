@@ -78,15 +78,6 @@ final class DBUpdater {
 	}
 
 	private final HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();
-	private PreparedStatement getMigrateEscapesStatement(String table, String column){
-		var sql = "Update "+ table + " SET " + column + "=REPLACE(" + column + ", ?, ?)";
-		var ret = migrateStatements.get(sql);
-		if ( ret == null ){
-			ret = new DBManager.PreparedStatementBuilder(sql).getStatement();
-			migrateStatements.put(sql, ret);
-		}
-		return ret;
-	}
 	private PreparedStatement getMigrateEscapesStatement(String table, String column, String where){
 		var sql = "Update "+ table + " SET " + column + "=REPLACE("+column+", ?, ?) " + where;
 		var ret = migrateStatements.get(sql);
@@ -97,14 +88,7 @@ final class DBUpdater {
 		return ret;
 	}
 	private void migrateEscapes(String table, String ... columns){
-		for (var column:columns){
-			var now = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
-			m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column), "§", "\\");
-			var rows = m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column), "#", "'");
-			var finished = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
-		}
+		migrateSelectedEscapes(table, "", columns);
 	}
 	private void migrateSelectedEscapes(String table, String where, String ... columns){
 		for (var column:columns){

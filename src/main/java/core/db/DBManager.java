@@ -2388,6 +2388,34 @@ public class DBManager {
 		return ((SpielerTable)getTable(SpielerTable.TABLENAME)).loadPlayerHistory(spielerId);
 	}
 
+	private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
+	private static final DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
+
+	public String loadLatestTSINotInjured(int m_iSpielerID) {
+		return loadLatestTSI(preStatementBuilder, m_iSpielerID);
+	}
+	public String loadLatestTSIInjured(int m_iSpielerID) {
+		return loadLatestTSI(postStatementBuilder, m_iSpielerID);
+	}
+
+	private String loadLatestTSI(DBManager.PreparedStatementBuilder preparedStatementBuilder, int m_iSpielerID) {
+		try {
+			ResultSet rs = Objects.requireNonNull(this.getAdapter()).executePreparedQuery(preparedStatementBuilder.getStatement(), m_iSpielerID);
+			if (rs.next()) {
+				return  rs.getString("marktwert");
+			}
+		} catch (Exception e1) {
+		}
+		return "";
+	}
+
+
+	public static String getPlaceholders(int count){
+		return String.join(",", Collections.nCopies(count, "?"));
+	}
+
 	public static class PreparedStatementBuilder{
 		private final String sql;
 		public PreparedStatementBuilder(String sql){

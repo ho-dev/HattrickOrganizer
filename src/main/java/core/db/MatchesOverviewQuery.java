@@ -60,16 +60,6 @@ class MatchesOverviewQuery  {
 		return tmp;
 	}
 
-//	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
-//	private static PreparedStatement getPreparedStatement(String sql) {
-//		PreparedStatement ret = preparedStatements.get(sql);
-//		if ( ret == null){
-//			ret = Objects.requireNonNull(DBManager.instance().getAdapter()).createPreparedStatement(sql);
-//			preparedStatements.put(sql, ret);
-//		}
-//		return ret;
-//	}
-
 	static int getChangeGameStat(int teamId, int statistic){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
