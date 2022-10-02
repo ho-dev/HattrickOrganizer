@@ -1,22 +1,13 @@
 package core.db;
 
-import core.gui.HOMainFrame;
-import core.net.MyConnector;
 import core.util.HOLogger;
-import module.youth.YouthTraining;
-import module.youth.YouthTrainingType;
 import okhttp3.HttpUrl;
-import tool.updater.UpdateController;
 import tool.updater.UpdateHelper;
-
 import java.io.File;
 import java.nio.file.Path;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TeamsLogoTable extends AbstractTable {
     /**
@@ -63,7 +54,7 @@ public class TeamsLogoTable extends AbstractTable {
                 return null;
             } else {
                 logoURL = rs.getString("URL");
-                if (logoURL.equals("null")) {
+                if (logoURL == null || logoURL.equals("null")) {
                     HOLogger.instance().debug(this.getClass(), "team with no logo team ID=" + teamID);
                     return null;
                 }
