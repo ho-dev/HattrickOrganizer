@@ -1,11 +1,10 @@
 package core.gui.theme;
 
-
-import com.github.weisj.darklaf.icons.DerivableImageIcon;
+import com.github.weisj.darklaf.properties.icons.DerivableImageIcon;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
+import com.github.weisj.darklaf.util.LogUtil;
 import core.db.DBManager;
 import core.db.user.UserManager;
-import core.file.xml.MyHashtable;
-import core.file.xml.XMLPlayersParser;
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
@@ -13,9 +12,7 @@ import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
 import core.model.UserParameter;
-import core.model.player.Player;
 import core.model.player.PlayerAvatar;
-import core.net.DownloadDialog;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import java.awt.Color;
@@ -28,12 +25,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.*;
-
 
 public final class ThemeManager {
 
@@ -83,6 +79,12 @@ public final class ThemeManager {
 				HOLogger.instance().log(this.getClass(),"Failed to create directory for player Avatars: " + e.getMessage());
 			}
 		}
+
+		IconLoader.updateThemeStatus(new Object());
+
+		// TODO: Workaround some warnings which are issued incorrectly. To silence them you can call
+		LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
+		Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
 	}
 
 	/**
@@ -226,7 +228,7 @@ public final class ThemeManager {
 
 	/**
 	 * Function called during data download
-	 *
+	 * <p>
 	 * During users access to internet download all missing avatars
 	 *
 	 * @param playersAvatar list of player avatars fetched avatars CSV

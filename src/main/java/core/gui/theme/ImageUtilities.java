@@ -1,6 +1,9 @@
 package core.gui.theme;
 
-import com.github.weisj.darklaf.icons.*;
+import com.github.weisj.darklaf.properties.icons.DerivableIcon;
+import com.github.weisj.darklaf.properties.icons.DerivableImageIcon;
+import com.github.weisj.darklaf.properties.icons.EmptyIcon;
+import com.github.weisj.darklaf.properties.icons.IconLoader;
 import core.icon.OverlayIcon;
 import core.icon.TextIcon;
 import core.model.UserParameter;
