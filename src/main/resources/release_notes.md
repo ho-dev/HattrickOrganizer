@@ -8,6 +8,7 @@
 ### Database
 
 ### Squad
+* fix painting error when HO path contains non ascii characters (#1644)
 
 ### Team Analyser
 * fix team analyzer simulation out of bounds error (#1638)
