@@ -26,6 +26,7 @@
 ### NT
 
 ### Training
+* fix season offset when upgrading from HO3. Correct training seasons are displayed (#1651)
 
 ### League
   
