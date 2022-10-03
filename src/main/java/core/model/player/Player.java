@@ -1,7 +1,6 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
 import core.db.DBManager;
@@ -336,6 +335,7 @@ public class Player {
     private String motherclubName;
     private Integer matchesCurrentTeam;
     private int hrf_id;
+    private boolean isStored=false;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -1695,6 +1695,13 @@ public class Player {
         return this.hrf_id;
     }
 
+    public boolean isStored() {
+        return this.isStored;
+    }
+
+    public void setIsStored(boolean b) {
+        this.isStored=b;
+    }
 
     public static class Notes{
 

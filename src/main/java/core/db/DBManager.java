@@ -420,9 +420,9 @@ public class DBManager {
 	 *
 	 * @return the all spieler
 	 */
-	public Vector<Player> getAllSpieler() {
+	public List<Player> loadAllPlayers() {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getAllSpieler();
+				.loadAllPlayers();
 	}
 
 	/**
@@ -444,7 +444,7 @@ public class DBManager {
 	 */
 	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpieler(hrfID);
+				.loadPlayers(hrfID);
 	}
 
 	/**
@@ -536,15 +536,12 @@ public class DBManager {
 	}
 
 	/**
-	 * speichert die Player
+	 * store list of Player
 	 *
-	 * @param hrfId  the hrf id
 	 * @param player the player
-	 * @param date   the date
 	 */
-	public void saveSpieler(int hrfId, List<Player> player, HODateTime date) {
-		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-				player, date.toDbTimestamp());
+	public void saveSpieler(List<Player> player) {
+		((SpielerTable) getTable(SpielerTable.TABLENAME)).store(player);
 	}
 
 	// ------------------------------- LigaTable
@@ -2406,7 +2403,7 @@ public class DBManager {
 			if (rs.next()) {
 				return  rs.getString("marktwert");
 			}
-		} catch (Exception e1) {
+		} catch (Exception ignored) {
 		}
 		return "";
 	}

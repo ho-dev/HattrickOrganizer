@@ -91,12 +91,20 @@ public abstract class AbstractTable {
 	}
 
 	// Update
+	private String createUpdateStatement() {
+		return "UPDATE " + getTableName() +
+				" SET " +
+				Arrays.stream(columns).skip(1).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
+				" WHERE " +
+				columns[0].getColumnName() +
+				"=?";
+	}
 	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
 			super("UPDATE " + table.getTableName() + " " + set);
 		}
 		public PreparedUpdateStatementBuilder(AbstractTable table) {
-			super("UPDATE " + table.getTableName() + " SET " + table.getColumns()[1].getColumnName() + "=? WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super(table.createUpdateStatement());
 		}
 	}
 

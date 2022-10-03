@@ -81,7 +81,7 @@ public class HOModel {
 
         setClub(DBManager.instance().getVerein(id));
         setCurrentPlayers(DBManager.instance().getSpieler(id));
-        setFormerPlayers(DBManager.instance().getAllSpieler());
+        setFormerPlayers(DBManager.instance().loadAllPlayers());
         setTeam(DBManager.instance().getTeam(id));
         setLineup(DBManager.instance().loadNextMatchLineup(getClub().getTeamID()));
         setPreviousLineup(DBManager.instance().loadPreviousMatchLineup(getClub().getTeamID()));
@@ -115,23 +115,15 @@ public class HOModel {
      * Sets the list of former players of the club
      * current players are removed from the list
      */
-    public final void setFormerPlayers(Vector<Player> playerVector) {
-        for (int i = 0; i < playerVector.size(); i++) {
-            //Auf alt setzen, die neuen werden gleich entfernt
-            playerVector.get(i).setOld(true);
-
-            for (Player player : m_vPlayer) {
-                //Schon in den aktuellen Spielern vorhanden, dann überspringen
-                if (playerVector.get(i).equals(player)) {
-                    playerVector.remove(i);
-
-                    //Index einen zurücksetzen, da ein wert gelöscht wurde
-                    i--;
-                    break;
-                }
+    public final void setFormerPlayers(List<Player> playerVector) {
+        m_vOldPlayer = new ArrayList<>();
+        for (var old : playerVector) {
+            var isCurrent = this.m_vPlayer.stream().anyMatch(i -> i.getPlayerID() == old.getPlayerID());
+            if (!isCurrent) {
+                old.setOld(true);
+                m_vOldPlayer.add(old);
             }
         }
-        m_vOldPlayer = playerVector;
     }
 
     /**
@@ -139,7 +131,7 @@ public class HOModel {
      */
     public final List<Player> getFormerPlayers() {
         if (m_vOldPlayer == null) {
-            m_vOldPlayer = DBManager.instance().getAllSpieler();
+            m_vOldPlayer = DBManager.instance().loadAllPlayers();
         }
         return m_vOldPlayer;
     }
@@ -521,7 +513,7 @@ public class HOModel {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+        DBManager.instance().saveSpieler( getCurrentPlayers());
     }
 
     /**
@@ -547,7 +539,7 @@ public class HOModel {
             player.calcSubskills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), getBasics().getDatum());
+        DBManager.instance().saveSpieler(getCurrentPlayers());
 
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
@@ -575,7 +567,7 @@ public class HOModel {
         DBManager.instance().saveStadion(getID(), getStadium());
         DBManager.instance().saveLiga(getID(), getLeague());
         DBManager.instance().saveXtraDaten(getID(), getXtraDaten());
-        DBManager.instance().saveSpieler(getID(), getCurrentPlayers(), time);
+        DBManager.instance().saveSpieler(getCurrentPlayers());
         DBManager.instance().storeYouthPlayers(getID(), getCurrentYouthPlayers());
         DBManager.instance().saveStaff(getID(), getStaff());
     }

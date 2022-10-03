@@ -10,9 +10,8 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import java.util.stream.Collectors;
 
 final class SpielerTable extends AbstractTable {
 
@@ -111,19 +110,129 @@ final class SpielerTable extends AbstractTable {
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
-	private final PreparedDeleteStatementBuilder deletePlayerStatementBuilder=new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND SPIELERID=?");
 	/**
-	 * saves one player to the DB
-	 *
-	 * @param hrfId		hrf id
-	 * @param player	the player to be saved
+	 * store record
+	 * @param player Player
 	 */
+	public void store(Player player) {
+		if (player.isStored()) {
+			update(player);
+		} else if (0 < insert(player)) {
+			player.setIsStored(true);
+		}
+	}
 
-	void saveSpieler(int hrfId, Player player, Timestamp date) {
-		this.adapter.executePreparedUpdate(deletePlayerStatementBuilder.getStatement(), hrfId, player.getPlayerID());
-		executePreparedInsert(
-				hrfId,
-				date,
+	/**
+	 * create SET part of update sql statement (override the standard SET with only HRF_ID in where part)
+	 * @return String HRF_ID and SpielerID in WHERE part and the other columns in SET list
+	 */
+	private String createUpdateSet() {
+		return " SET " +
+				Arrays.stream(columns).filter(i-> !i.getColumnName().equals("HRF_ID") && !i.getColumnName().equals("SpielerID")).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
+				" WHERE HRF_ID=? AND SpielerID=?";
+	}
+
+	@Override
+	protected  PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
+		return new PreparedUpdateStatementBuilder(this, createUpdateSet());
+	}
+
+	/**
+	 * update existing record
+	 * @param player Player
+	 * @return number of updated records. 1 on success
+	 */
+	int update(Player player) {
+		return executePreparedUpdate(
+				player.getHrfDate().toDbTimestamp(),
+				player.getCards(),
+				player.getFirstName(),
+				player.getNickName(),
+				player.getLastName(),
+				player.getAlter(),
+				player.getStamina(),
+				player.getForm(),
+				player.getGKskill(),
+				player.getDEFskill(),
+				player.getPMskill(),
+				player.getWIskill(),
+				player.getSCskill(),
+				player.getPSskill(),
+				player.getSPskill(),
+				player.getSub4SkillAccurate(PlayerSkill.KEEPER),
+				player.getSub4SkillAccurate(PlayerSkill.DEFENDING),
+				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING),
+				player.getSub4SkillAccurate(PlayerSkill.WINGER),
+				player.getSub4SkillAccurate(PlayerSkill.SCORING),
+				player.getSub4SkillAccurate(PlayerSkill.PASSING),
+				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES),
+				// Training offsets below
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				0,
+				player.getPlayerSpecialty(),
+				player.getCharakter(),
+				player.getAnsehen(),
+				player.getAgressivitaet(),
+				player.getLeadership(),
+				player.getExperience(),
+				player.getSalary(),
+				player.getBonus(),
+				player.getNationalityAsInt(),
+				player.getMarktwert(),
+				player.getInjuryWeeks(),
+				player.getToreFreund(),
+				player.getSeasonSeriesGoal(),
+				player.getSeasonCupGoal(),
+				player.getAllOfficialGoals(),
+				player.getHattrick(),
+				player.getRating(),
+				TrainerType.toInt(player.getTrainerTyp()),
+				player.getTrainerSkill(),
+				player.getTrikotnummer(),
+				player.getTransferlisted(),
+				player.getLaenderspiele(),
+				player.getU20Laenderspiele(),
+				player.getAgeDays(),
+				player.hasTrainingBlock(),
+				player.getLoyalty(),
+				player.isHomeGrown(),
+				player.getNationalTeamID(),
+				player.getSubExperience(),
+				player.getLastMatchDate(),
+				player.getLastMatchRating(),
+				player.getLastMatchId(),
+				player.getLastMatchType().getId(),
+				player.getArrivalDate(),
+				player.getGoalsCurrentTeam(),
+				(player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null),
+				player.getPlayerStatement(),
+				player.getOwnerNotes(),
+				player.getLastMatchMinutes(),
+				player.getLastMatchPosition(),
+				player.getLastMatchRatingEndOfGame(),
+				player.getMotherclubId(),
+				player.getMotherclubName(),
+				player.getMatchesCurrentTeam(),
+				// Where
+				player.getHrfId(),
+				player.getPlayerID()
+		);
+	}
+
+	/**
+	 * create a new record
+	 * @param player Player
+	 * @return number of created records. 1 on success
+	 */
+	int insert(Player player) {
+		return executePreparedInsert(
+				player.getHrfId(),
+				player.getHrfDate().toDbTimestamp(),
 				player.getCards(),
 				player.getPlayerID(),
 				player.getFirstName(),
@@ -201,46 +310,36 @@ final class SpielerTable extends AbstractTable {
 		);
 	}
 
-
 	/**
-	 * Saves the players in the <code>spieler</code> list.
+	 * store a list of records
+	 * @param players list of players
 	 */
-	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
-		if (spieler != null) {
-			// Delete old values
-			executePreparedDelete(hrfId);
-			for (Player p: spieler) {
-				saveSpieler(hrfId, p, date);
+	void store(List<Player> players) {
+		if (players != null) {
+			for (var p : players) {
+				store(p);
 			}
 		}
 	}
 
-
-	private final PreparedSelectStatementBuilder selectStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID =? AND SpielerId=?");
-
 	/**
-	 * lädt die Player zum angegeben HRF file ein
+	 * load players of a hrf (download)
+	 * @param hrfID id of hrf
+	 * @return list of pLayers
 	 */
-	List<Player> getSpieler(int hrfID) {
-		ResultSet rs;
-		Player player;
-
+	List<Player> loadPlayers(int hrfID) {
 		final ArrayList<Player> ret = new ArrayList<>();
 		if ( hrfID > -1) {
-
-			rs = executePreparedSelect(hrfID);
-
+			var rs = executePreparedSelect(hrfID);
 			try {
 				if (rs != null) {
 					while (rs.next()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), player.getSpielerID () );
+						var player = createObject(rs);
 						ret.add(player);
 					}
 				}
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
+				HOLogger.instance().log(getClass(), "loadPlayers: " + e);
 			}
 		}
 		return ret;
@@ -253,12 +352,13 @@ final class SpielerTable extends AbstractTable {
 			") tm on t.SPIELERID = tm.SPIELERID and t.DATUM = tm.MaxDate");
 
 	/**
-	 * gibt alle Player zurück, auch ehemalige
+	 * load all players of database
+	 * @return List of latest records stored in database of all players.
 	 */
-	Vector<Player> getAllSpieler() {
+	List<Player> loadAllPlayers() {
 		ResultSet rs;
 		Player player;
-		final Vector<Player> ret = new Vector<>();
+		final List<Player> ret = new ArrayList<>();
 		try {
 			rs = adapter.executePreparedQuery(getAllSpielerStatementBuilder.getStatement());
 			if (rs != null) {
@@ -270,7 +370,6 @@ final class SpielerTable extends AbstractTable {
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
 		}
-
 		return ret;
 	}
 
@@ -408,6 +507,7 @@ final class SpielerTable extends AbstractTable {
     private Player createObject(ResultSet rs) {
     	Player player = new Player();
         try {
+			player.setIsStored(true);
 			player.setHrfId(rs.getInt("HRF_ID"));
         	player.setPlayerID(rs.getInt("SpielerID"));
             player.setFirstName(rs.getString("FirstName"));

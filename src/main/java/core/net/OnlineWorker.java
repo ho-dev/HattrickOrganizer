@@ -66,11 +66,7 @@ public class OnlineWorker {
 		// Show wait dialog
 		boolean ok = true;
 		try {
-			HOMainFrame homf = HOMainFrame.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
-
-			UserParameter up = core.model.UserParameter.instance();
-
 			String hrf = null;
 			try {
 				hrf = ConvertXml2Hrf.createHrf();
@@ -111,7 +107,7 @@ public class OnlineWorker {
 						homodel.saveHRF();
 						homodel.setFixtures(hov.getModel().getFixtures());
 						// Add old players to the model
-						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
+						homodel.setFormerPlayers(DBManager.instance().loadAllPlayers());
 						// Only update when the model is newer than existing
 						if (HOVerwaltung.isNewModel(homodel)) {
 							// Reimport Skillup
@@ -645,7 +641,6 @@ public class OnlineWorker {
 	 */
 	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
 												   int teamId2) {
-		boolean bOK = false;
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
@@ -692,9 +687,7 @@ public class OnlineWorker {
 	 * @return true on sucess, false on failure
 	 */
 	public static Spielplan downloadLeagueFixtures(int season, int leagueID) {
-		boolean bOK;
 		String leagueFixtures;
-		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
 			HOMainFrame.instance().setWaitInformation();
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
@@ -1051,7 +1044,6 @@ public class OnlineWorker {
 		}
 		builder.append(day);
 		builder.append(".hrf");
-		String name = calendar.get(Calendar.YEAR) + "-" + month + "-" + day + ".hrf";
 		return builder.toString();
 	}
 
