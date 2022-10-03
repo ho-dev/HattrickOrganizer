@@ -4,16 +4,8 @@ import core.db.DBManager;
 import core.db.user.UserManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import module.transfer.test.HTWeek;
-
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-
 
 /**
  * Benutzerdaten
@@ -136,9 +128,17 @@ public final class Basics  {
             m_bHasSupporter = rs.getBoolean("HasSupporter");
             m_tActivationDate = HODateTime.fromDbTimestamp(rs.getTimestamp("ActivationDate"));
             m_sYouthTeamName = core.db.DBManager.deleteEscapeSequences(rs.getString("YouthTeamName"));
-            setYouthTeamId(DBManager.getInteger(rs,"YouthTeamID"));
+            setYouthTeamId(DBManager.getInteger(rs, "YouthTeamID"));
+
+            // when upgrading from HO3 season offset is not known
+            if (m_iSeasonOffset == 0) {
+                var season0 = m_clDatum.toHTWeek().season;
+                if (season0 != m_iSeason) {
+                    m_iSeasonOffset = m_iSeason-season0;
+                }
+            }
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Constructor Basics: " + e);
+            HOLogger.instance().log(getClass(), "Constructor Basics: " + e);
         }
     }
 
