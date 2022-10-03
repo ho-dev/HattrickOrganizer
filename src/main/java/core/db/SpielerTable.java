@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
-import java.util.stream.Collectors;
 
 final class SpielerTable extends AbstractTable {
 
@@ -20,295 +19,90 @@ final class SpielerTable extends AbstractTable {
 
 	SpielerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
-				new ColumnDescriptor("Datum", Types.TIMESTAMP, false),
-				new ColumnDescriptor("GelbeKarten", Types.INTEGER, false),
-				new ColumnDescriptor("SpielerID", Types.INTEGER, false),
-				new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("NickName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("LastName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("Age", Types.INTEGER, false),
-				new ColumnDescriptor("Kondition", Types.INTEGER, false),
-				new ColumnDescriptor("Form", Types.INTEGER, false),
-				new ColumnDescriptor("Torwart", Types.INTEGER, false),
-				new ColumnDescriptor("Verteidigung", Types.INTEGER, false),
-				new ColumnDescriptor("Spielaufbau", Types.INTEGER, false),
-				new ColumnDescriptor("Fluegel", Types.INTEGER, false),
-				new ColumnDescriptor("Torschuss", Types.INTEGER, false),
-				new ColumnDescriptor("Passpiel", Types.INTEGER, false),
-				new ColumnDescriptor("Standards", Types.INTEGER, false),
-				new ColumnDescriptor("SubTorwart", Types.REAL, false),
-				new ColumnDescriptor("SubVerteidigung", Types.REAL, false),
-				new ColumnDescriptor("SubSpielaufbau", Types.REAL, false),
-				new ColumnDescriptor("SubFluegel", Types.REAL, false),
-				new ColumnDescriptor("SubTorschuss", Types.REAL, false),
-				new ColumnDescriptor("SubPasspiel", Types.REAL, false),
-				new ColumnDescriptor("SubStandards", Types.REAL, false),
-				new ColumnDescriptor("OffsetTorwart", Types.REAL, false),
-				new ColumnDescriptor("OffsetVerteidigung", Types.REAL, false),
-				new ColumnDescriptor("OffsetSpielaufbau", Types.REAL, false),
-				new ColumnDescriptor("OffsetFluegel", Types.REAL, false),
-				new ColumnDescriptor("OffsetTorschuss", Types.REAL, false),
-				new ColumnDescriptor("OffsetPasspiel", Types.REAL, false),
-				new ColumnDescriptor("OffsetStandards", Types.REAL, false),
-				new ColumnDescriptor("iSpezialitaet", Types.INTEGER, false),
-				new ColumnDescriptor("iCharakter", Types.INTEGER, false),
-				new ColumnDescriptor("iAnsehen", Types.INTEGER, false),
-				new ColumnDescriptor("iAgressivitaet", Types.INTEGER, false),
-				new ColumnDescriptor("Fuehrung", Types.INTEGER, false),
-				new ColumnDescriptor("Erfahrung", Types.INTEGER, false),
-				new ColumnDescriptor("Gehalt", Types.INTEGER, false),
-				new ColumnDescriptor("Bonus", Types.INTEGER, false),
-				new ColumnDescriptor("Land", Types.INTEGER, false),
-				new ColumnDescriptor("Marktwert", Types.INTEGER, false),
-				new ColumnDescriptor("Verletzt", Types.INTEGER, false),
-				new ColumnDescriptor("ToreFreund", Types.INTEGER, false),
-				new ColumnDescriptor("ToreLiga", Types.INTEGER, false),
-				new ColumnDescriptor("TorePokal", Types.INTEGER, false),
-				new ColumnDescriptor("ToreGesamt", Types.INTEGER, false),
-				new ColumnDescriptor("Hattrick", Types.INTEGER, false),
-				new ColumnDescriptor("Bewertung", Types.INTEGER, false),
-				new ColumnDescriptor("TrainerTyp", Types.INTEGER, false),
-				new ColumnDescriptor("Trainer", Types.INTEGER, false),
-				new ColumnDescriptor("PlayerNumber", Types.INTEGER, false),
-				new ColumnDescriptor("TransferListed", Types.INTEGER, false),
-				new ColumnDescriptor("Caps", Types.INTEGER, false),
-				new ColumnDescriptor("CapsU20", Types.INTEGER, false),
-				new ColumnDescriptor("AgeDays", Types.INTEGER, false),
-				new ColumnDescriptor("TrainingBlock", Types.BOOLEAN, false),
-				new ColumnDescriptor("Loyalty", Types.INTEGER, false),
-				new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false),
-				new ColumnDescriptor("NationalTeamID", Types.INTEGER, true),
-				new ColumnDescriptor("SubExperience", Types.REAL, false),
-				new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("LastMatchRating", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatchId", Types.INTEGER, true),
-				new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true),
-				new ColumnDescriptor("ArrivalDate", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true),
-				new ColumnDescriptor("PlayerCategory", Types.INTEGER, true),
-				new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("LastMatch_PlayedMinutes", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatch_PositionCode", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatch_RatingEndOfGame", Types.INTEGER, true),
-				new ColumnDescriptor("MotherclubId", Types.INTEGER, true),
-				new ColumnDescriptor("MotherclubName", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("MatchesCurrentTeam", Types.INTEGER, true)
+
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p)->((Player)p).getHrfId()).setSetter((p,v)->((Player)p).setHrfId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((p)->((Player)p).getPlayerID()).setSetter((p,v)->((Player)p).setPlayerID((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((p)->((Player)p).getHrfDate().toDbTimestamp()).setSetter((p,v)->((Player)p).setHrfDate(HODateTime.fromDbTimestamp((Timestamp) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GelbeKarten").setGetter((p)->((Player)p).getCards()).setSetter((p,v)->((Player)p).setGelbeKarten((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FirstName").setGetter((p)->((Player)p).getFirstName()).setSetter((p,v)->((Player)p).setFirstName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NickName").setGetter((p)->((Player)p).getNickName()).setSetter((p,v)->((Player)p).setNickName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastName").setGetter((p)->((Player)p).getLastName()).setSetter((p,v)->((Player)p).setLastName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Age").setGetter((p)->((Player)p).getAlter()).setSetter((p,v)->((Player)p).setAge((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Kondition").setGetter((p)->((Player)p).getStamina()).setSetter((p,v)->((Player)p).setStamina((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Form").setGetter((p)->((Player)p).getForm()).setSetter((p,v)->((Player)p).setForm((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torwart").setGetter((p)->((Player)p).getGKskill()).setSetter((p,v)->((Player)p).setTorwart((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Verteidigung").setGetter((p)->((Player)p).getDEFskill()).setSetter((p,v)->((Player)p).setVerteidigung((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spielaufbau").setGetter((p)->((Player)p).getPMskill()).setSetter((p,v)->((Player)p).setSpielaufbau((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fluegel").setGetter((p)->((Player)p).getWIskill()).setSetter((p,v)->((Player)p).setFluegelspiel((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torschuss").setGetter((p)->((Player)p).getSCskill()).setSetter((p,v)->((Player)p).setTorschuss((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Passpiel").setGetter((p)->((Player)p).getPSskill()).setSetter((p,v)->((Player)p).setPasspiel((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Standards").setGetter((p)->((Player)p).getSPskill()).setSetter((p,v)->((Player)p).setStandards((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubTorwart").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.KEEPER)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.KEEPER,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubVerteidigung").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.DEFENDING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.DEFENDING,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubSpielaufbau").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.PLAYMAKING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubFluegel").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.WINGER)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.WINGER,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubTorschuss").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.SCORING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.SCORING,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubPasspiel").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.PASSING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.PASSING,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubStandards").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.SET_PIECES)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.SET_PIECES,(int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iSpezialitaet").setGetter((p)->((Player)p).getPlayerSpecialty()).setSetter((p,v)->((Player)p).setPlayerSpecialty((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iCharakter").setGetter((p)->((Player)p).getCharakter()).setSetter((p,v)->((Player)p).setCharakter((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iAnsehen").setGetter((p)->((Player)p).getAnsehen()).setSetter((p,v)->((Player)p).setAnsehen((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iAgressivitaet").setGetter((p)->((Player)p).getAgressivitaet()).setSetter((p,v)->((Player)p).setAgressivitaet((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fuehrung").setGetter((p)->((Player)p).getLeadership()).setSetter((p,v)->((Player)p).setLeadership((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((p)->((Player)p).getExperience()).setSetter((p,v)->((Player)p).setExperience((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Gehalt").setGetter((p)->((Player)p).getSalary()).setSetter((p,v)->((Player)p).setGehalt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((p)->((Player)p).getNationalityAsInt()).setSetter((p,v)->((Player)p).setNationalityAsInt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((p)->((Player)p).getMarktwert()).setSetter((p,v)->((Player)p).setTSI((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Verletzt").setGetter((p)->((Player)p).getInjuryWeeks()).setSetter((p,v)->((Player)p).setInjuryWeeks((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreFreund").setGetter((p)->((Player)p).getToreFreund()).setSetter((p,v)->((Player)p).setToreFreund((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreLiga").setGetter((p)->((Player)p).getSeasonSeriesGoal()).setSetter((p,v)->((Player)p).setToreLiga((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TorePokal").setGetter((p)->((Player)p).getSeasonCupGoal()).setSetter((p,v)->((Player)p).setTorePokal((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreGesamt").setGetter((p)->((Player)p).getAllOfficialGoals()).setSetter((p,v)->((Player)p).setAllOfficialGoals((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Hattrick").setGetter((p)->((Player)p).getHattrick()).setSetter((p,v)->((Player)p).setHattrick((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Bewertung").setGetter((p)->((Player)p).getRating()).setSetter((p,v)->((Player)p).setBewertung((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainerTyp").setGetter((p)->TrainerType.toInt(((Player)p).getTrainerTyp())).setSetter((p,v)->((Player)p).setTrainerTyp(TrainerType.fromInt((int)v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Trainer").setGetter((p)->((Player)p).getTrainerSkill()).setSetter((p,v)->((Player)p).setTrainerSkill((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerNumber").setGetter((p)->((Player)p).getTrikotnummer()).setSetter((p,v)->((Player)p).setShirtNumber((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TransferListed").setGetter((p)->((Player)p).getTransferlisted()).setSetter((p,v)->((Player)p).setTransferlisted((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Caps").setGetter((p)->((Player)p).getLaenderspiele()).setSetter((p,v)->((Player)p).setLaenderspiele((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CapsU20").setGetter((p)->((Player)p).getU20Laenderspiele()).setSetter((p,v)->((Player)p).setU20Laenderspiele((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((p)->((Player)p).getAgeDays()).setSetter((p,v)->((Player)p).setAgeDays((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingBlock").setGetter((p)->((Player)p).hasTrainingBlock()).setSetter((p,v)->((Player)p).setTrainingBlock((boolean)v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Loyalty").setGetter((p)->((Player)p).getLoyalty()).setSetter((p,v)->((Player)p).setLoyalty((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HomeGrown").setGetter((p)->((Player)p).isHomeGrown()).setSetter((p,v)->((Player)p).setHomeGrown((boolean)v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NationalTeamID").setGetter((p)->((Player)p).getNationalTeamID()).setSetter((p,v)->((Player)p).setNationalTeamId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubExperience").setGetter((p)->((Player)p).getSubExperience()).setSetter((p,v)->((Player)p).setSubExperience((int)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchDate").setGetter((p)->((Player)p).getLastMatchDate()).setSetter((p,v)->((Player)p).setLastMatchDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchRating").setGetter((p)->((Player)p).getLastMatchRating()).setSetter((p,v)->((Player)p).setLastMatchRating((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchId").setGetter((p)->((Player)p).getLastMatchId()).setSetter((p,v)->((Player)p).setLastMatchId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LAST_MATCH_TYPE").setGetter((p)->((Player)p).getLastMatchType().getId()).setSetter((p,v)->((Player)p).setLastMatchType(MatchType.getById((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p)->((Player)p).getArrivalDate()).setSetter((p,v)->((Player)p).setArrivalDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GoalsCurrentTeam").setGetter((p)->((Player)p).getGoalsCurrentTeam()).setSetter((p,v)->((Player)p).setGoalsCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategory").setGetter((p)->((Player)p).getPlayerCategory().getId()).setSetter((p,v)->((Player)p).setPlayerCategory(PlayerCategory.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p)->((Player)p).getPlayerStatement()).setSetter((p,v)->((Player)p).setPlayerStatement((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p)->((Player)p).getOwnerNotes()).setSetter((p,v)->((Player)p).setOwnerNotes((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_PlayedMinutes").setGetter((p)->((Player)p).getLastMatchMinutes()).setSetter((p,v)->((Player)p).setLastMatchMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_PositionCode").setGetter((p)->((Player)p).getLastMatchPosition()).setSetter((p,v)->((Player)p).setLastMatchPosition((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_RatingEndOfGame").setGetter((p)->((Player)p).getLastMatchRatingEndOfGame()).setSetter((p,v)->((Player)p).setLastMatchRatingEndOfGame((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubId").setGetter((p)->((Player)p).getMotherclubId()).setSetter((p,v)->((Player)p).setMotherClubId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubName").setGetter((p)->((Player)p).getMotherclubName()).setSetter((p,v)->((Player)p).setMotherClubName((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p)->((Player)p).getMatchesCurrentTeam()).setSetter((p,v)->((Player)p).setMatchesCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
 		};
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-			"CREATE INDEX iSpieler_1 ON " + getTableName() + "(" + columns[3].getColumnName() + "," + columns[1].getColumnName() + ")",
+			"CREATE INDEX iSpieler_1 ON " + getTableName() + "(" + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")",
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
-	/**
-	 * store record
-	 * @param player Player
-	 */
-	public void store(Player player) {
-		if (player.isStored()) {
-			update(player);
-		} else if (0 < insert(player)) {
-			player.setIsStored(true);
-		}
-	}
-
-	/**
-	 * create SET part of update sql statement (override the standard SET with only HRF_ID in where part)
-	 * @return String HRF_ID and SpielerID in WHERE part and the other columns in SET list
-	 */
-	private String createUpdateSet() {
-		return " SET " +
-				Arrays.stream(columns).filter(i-> !i.getColumnName().equals("HRF_ID") && !i.getColumnName().equals("SpielerID")).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
-				" WHERE HRF_ID=? AND SpielerID=?";
-	}
-
-	@Override
-	protected  PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
-		return new PreparedUpdateStatementBuilder(this, createUpdateSet());
-	}
-
-	/**
-	 * update existing record
-	 * @param player Player
-	 * @return number of updated records. 1 on success
-	 */
-	int update(Player player) {
-		return executePreparedUpdate(
-				player.getHrfDate().toDbTimestamp(),
-				player.getCards(),
-				player.getFirstName(),
-				player.getNickName(),
-				player.getLastName(),
-				player.getAlter(),
-				player.getStamina(),
-				player.getForm(),
-				player.getGKskill(),
-				player.getDEFskill(),
-				player.getPMskill(),
-				player.getWIskill(),
-				player.getSCskill(),
-				player.getPSskill(),
-				player.getSPskill(),
-				player.getSub4SkillAccurate(PlayerSkill.KEEPER),
-				player.getSub4SkillAccurate(PlayerSkill.DEFENDING),
-				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING),
-				player.getSub4SkillAccurate(PlayerSkill.WINGER),
-				player.getSub4SkillAccurate(PlayerSkill.SCORING),
-				player.getSub4SkillAccurate(PlayerSkill.PASSING),
-				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES),
-				// Training offsets below
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				player.getPlayerSpecialty(),
-				player.getCharakter(),
-				player.getAnsehen(),
-				player.getAgressivitaet(),
-				player.getLeadership(),
-				player.getExperience(),
-				player.getSalary(),
-				player.getBonus(),
-				player.getNationalityAsInt(),
-				player.getMarktwert(),
-				player.getInjuryWeeks(),
-				player.getToreFreund(),
-				player.getSeasonSeriesGoal(),
-				player.getSeasonCupGoal(),
-				player.getAllOfficialGoals(),
-				player.getHattrick(),
-				player.getRating(),
-				TrainerType.toInt(player.getTrainerTyp()),
-				player.getTrainerSkill(),
-				player.getTrikotnummer(),
-				player.getTransferlisted(),
-				player.getLaenderspiele(),
-				player.getU20Laenderspiele(),
-				player.getAgeDays(),
-				player.hasTrainingBlock(),
-				player.getLoyalty(),
-				player.isHomeGrown(),
-				player.getNationalTeamID(),
-				player.getSubExperience(),
-				player.getLastMatchDate(),
-				player.getLastMatchRating(),
-				player.getLastMatchId(),
-				player.getLastMatchType().getId(),
-				player.getArrivalDate(),
-				player.getGoalsCurrentTeam(),
-				(player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null),
-				player.getPlayerStatement(),
-				player.getOwnerNotes(),
-				player.getLastMatchMinutes(),
-				player.getLastMatchPosition(),
-				player.getLastMatchRatingEndOfGame(),
-				player.getMotherclubId(),
-				player.getMotherclubName(),
-				player.getMatchesCurrentTeam(),
-				// Where
-				player.getHrfId(),
-				player.getPlayerID()
-		);
-	}
-
-	/**
-	 * create a new record
-	 * @param player Player
-	 * @return number of created records. 1 on success
-	 */
-	int insert(Player player) {
-		return executePreparedInsert(
-				player.getHrfId(),
-				player.getHrfDate().toDbTimestamp(),
-				player.getCards(),
-				player.getPlayerID(),
-				player.getFirstName(),
-				player.getNickName(),
-				player.getLastName(),
-				player.getAlter(),
-				player.getStamina(),
-				player.getForm(),
-				player.getGKskill(),
-				player.getDEFskill(),
-				player.getPMskill(),
-				player.getWIskill(),
-				player.getSCskill(),
-				player.getPSskill(),
-				player.getSPskill(),
-				player.getSub4SkillAccurate(PlayerSkill.KEEPER),
-				player.getSub4SkillAccurate(PlayerSkill.DEFENDING),
-				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING),
-				player.getSub4SkillAccurate(PlayerSkill.WINGER),
-				player.getSub4SkillAccurate(PlayerSkill.SCORING),
-				player.getSub4SkillAccurate(PlayerSkill.PASSING),
-				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES),
-				// Training offsets below
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				0,
-				player.getPlayerSpecialty(),
-				player.getCharakter(),
-				player.getAnsehen(),
-				player.getAgressivitaet(),
-				player.getLeadership(),
-				player.getExperience(),
-				player.getSalary(),
-				player.getBonus(),
-				player.getNationalityAsInt(),
-				player.getMarktwert(),
-				player.getInjuryWeeks(),
-				player.getToreFreund(),
-				player.getSeasonSeriesGoal(),
-				player.getSeasonCupGoal(),
-				player.getAllOfficialGoals(),
-				player.getHattrick(),
-				player.getRating(),
-				TrainerType.toInt(player.getTrainerTyp()),
-				player.getTrainerSkill(),
-				player.getTrikotnummer(),
-				player.getTransferlisted(),
-				player.getLaenderspiele(),
-				player.getU20Laenderspiele(),
-				player.getAgeDays(),
-				player.hasTrainingBlock(),
-				player.getLoyalty(),
-				player.isHomeGrown(),
-				player.getNationalTeamID(),
-				player.getSubExperience(),
-				player.getLastMatchDate(),
-				player.getLastMatchRating(),
-				player.getLastMatchId(),
-				player.getLastMatchType().getId(),
-				player.getArrivalDate(),
-				player.getGoalsCurrentTeam(),
-				(player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null),
-				player.getPlayerStatement(),
-				player.getOwnerNotes(),
-				player.getLastMatchMinutes(),
-				player.getLastMatchPosition(),
-				player.getLastMatchRatingEndOfGame(),
-				player.getMotherclubId(),
-				player.getMotherclubName(),
-				player.getMatchesCurrentTeam()
-		);
-	}
 
 	/**
 	 * store a list of records

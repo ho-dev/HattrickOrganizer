@@ -3,6 +3,7 @@ package core.model.player;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.*;
 import core.model.match.MatchLineupTeam;
@@ -23,7 +24,7 @@ import java.util.*;
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
 
-public class Player {
+public class Player extends AbstractTable.Storable {
 
     /**
      * Cache for player contribution (Hashtable<String, Float>)
@@ -335,7 +336,6 @@ public class Player {
     private String motherclubName;
     private Integer matchesCurrentTeam;
     private int hrf_id;
-    private boolean isStored=false;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -1672,6 +1672,7 @@ public class Player {
     /**
      * Setter for property m_iU20Laenderspiele.
      *
+     *
      * @param m_iU20Laenderspiele New value of property m_iU20Laenderspiele.
      */
     public void setU20Laenderspiele(int m_iU20Laenderspiele) {
@@ -1695,12 +1696,16 @@ public class Player {
         return this.hrf_id;
     }
 
-    public boolean isStored() {
-        return this.isStored;
+    public void setLastMatchDate(String v) {
+        this.m_lastMatchDate = v;
     }
 
-    public void setIsStored(boolean b) {
-        this.isStored=b;
+    public void setLastMatchRating(Integer v) {
+        this.m_lastMatchRating=v;
+    }
+
+    public void setLastMatchId(Integer v) {
+        this.m_lastMatchId = v;
     }
 
     public static class Notes{

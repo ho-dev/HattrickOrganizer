@@ -1,11 +1,10 @@
 package core.db;
 
-
 import core.util.HOLogger;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -20,6 +19,12 @@ public abstract class AbstractTable {
 	 * describes a tableColumn (name, datatype, nullable ..)
 	 **/
 	protected ColumnDescriptor[] columns;
+
+
+	/**
+	 * id columns count
+	 */
+	protected int idColumns = 1;
 
 	/**
 	 * Database connection
@@ -64,6 +69,25 @@ public abstract class AbstractTable {
 		return new String[0];
 	}
 
+	public <T extends Storable> void store(T object){
+		if (object.isStored()) {
+			update(object);
+		} else if (0 < insert(object)) {
+			object.setIsStored(true);
+		}
+	}
+
+	private <T extends Storable> int insert(T object) {
+		return executePreparedInsert(Arrays.stream(columns).map(c->c.getter.apply(object)).toArray());
+	}
+
+	private <T extends Storable> int update(T object) {
+		var values = new ArrayList<>();
+		values.addAll(Arrays.stream(columns).skip(idColumns).map(c->c.getter.apply(object)).toList());
+		values.addAll(Arrays.stream(columns).limit(idColumns).map(c->c.getter.apply(object)).toList()); // where
+		return executePreparedUpdate(values.toArray());
+	}
+
 	// Prepared Statements
 	// Insert
 	public static class PreparedInsertStatementBuilder extends DBManager.PreparedStatementBuilder {
@@ -94,10 +118,9 @@ public abstract class AbstractTable {
 	private String createUpdateStatement() {
 		return "UPDATE " + getTableName() +
 				" SET " +
-				Arrays.stream(columns).skip(1).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
+				Arrays.stream(columns).skip(idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
 				" WHERE " +
-				columns[0].getColumnName() +
-				"=?";
+				Arrays.stream(columns).limit(idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(" AND "));
 	}
 	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
@@ -297,4 +320,15 @@ public abstract class AbstractTable {
 		return false;
 	}
 
+	public static class Storable {
+		private boolean isStored=false;
+
+		public boolean isStored(){
+			return this.isStored;
+		}
+
+		public void setIsStored(boolean v){
+			this.isStored = v;
+		}
+	}
 }

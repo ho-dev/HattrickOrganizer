@@ -113,30 +113,41 @@ final class DBUpdater {
 			playerTable.tryAddColumn("MatchesCurrentTeam", "INTEGER");
 		}
 
-		var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
-		hrfTable.tryDeleteColumn("NAME");
+		if ( playerTable.tryDeleteColumn("BONUS")) {
+			playerTable.tryDeleteColumn("OffsetTorwart");
+			playerTable.tryDeleteColumn("OffsetVerteidigung");
+			playerTable.tryDeleteColumn("OffsetSpielaufbau");
+			playerTable.tryDeleteColumn("OffsetFluegel");
+			playerTable.tryDeleteColumn("OffsetTorschuss");
+			playerTable.tryDeleteColumn("OffsetPasspiel");
+			playerTable.tryDeleteColumn("OffsetStandards");
 
-		m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+			var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
+			hrfTable.tryDeleteColumn("NAME");
 
-		migrateEscapes("MATCHHIGHLIGHTS", "EventText", "SpielerName", "GehilfeName");
-		migrateEscapes("BASICS", "Manager", "TeamName", "YouthTeamName");
-		migrateEscapes("MATCHDETAILS", "ArenaName", "GastName", "HeimName", "Matchreport");
-		migrateEscapes("MATCHLINEUPPLAYER", "VName", "NickName", "Name");
-		migrateEscapes("MATCHLINEUPTEAM", "TeamName");
-		migrateEscapes("MATCHESKURZINFO",  "GastName", "HeimName");
-		migrateEscapes("NTTEAM", "SHORTNAME", "COACHNAME", "LEAGUENAME", "NAME");
-		migrateEscapes("PAARUNG",  "GastName", "HeimName");
-		migrateEscapes("SCOUT",  "Name", "Info");
-		migrateEscapes("SPIELERNOTIZ",  "Notiz");
-		migrateEscapes("SPIELER",  "ArrivalDate","MotherclubName", "NickName","LastName","FirstName");
-		migrateEscapes("STADION",  "StadionName");
-		migrateEscapes("TA_PLAYER",  "NAME");
-		migrateEscapes("TRANSFER", "playername", "buyername", "sellername");
-		migrateEscapes("HT_WORLDDETAILS",  "COUNTRYNAME");
-		migrateEscapes("XTRADATA",  "LogoURL");
-		migrateEscapes("YOUTHPLAYER",  "ScoutName", "OwnerNotes","Statement", "NickName","LastName","FirstName");
-		migrateEscapes("YOUTHSCOUTCOMMENT",  "Text");
-		migrateSelectedEscapes("USERCONFIGURATION",  "where CONFIG_KEY='hrfImport_HRFPath'" , "CONFIG_VALUE");
+
+			m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+
+			migrateEscapes("MATCHHIGHLIGHTS", "EventText", "SpielerName", "GehilfeName");
+			migrateEscapes("BASICS", "Manager", "TeamName", "YouthTeamName");
+			migrateEscapes("MATCHDETAILS", "ArenaName", "GastName", "HeimName", "Matchreport");
+			migrateEscapes("MATCHLINEUPPLAYER", "VName", "NickName", "Name");
+			migrateEscapes("MATCHLINEUPTEAM", "TeamName");
+			migrateEscapes("MATCHESKURZINFO", "GastName", "HeimName");
+			migrateEscapes("NTTEAM", "SHORTNAME", "COACHNAME", "LEAGUENAME", "NAME");
+			migrateEscapes("PAARUNG", "GastName", "HeimName");
+			migrateEscapes("SCOUT", "Name", "Info");
+			migrateEscapes("SPIELERNOTIZ", "Notiz");
+			migrateEscapes("SPIELER", "ArrivalDate", "MotherclubName", "NickName", "LastName", "FirstName");
+			migrateEscapes("STADION", "StadionName");
+			migrateEscapes("TA_PLAYER", "NAME");
+			migrateEscapes("TRANSFER", "playername", "buyername", "sellername");
+			migrateEscapes("HT_WORLDDETAILS", "COUNTRYNAME");
+			migrateEscapes("XTRADATA", "LogoURL");
+			migrateEscapes("YOUTHPLAYER", "ScoutName", "OwnerNotes", "Statement", "NickName", "LastName", "FirstName");
+			migrateEscapes("YOUTHSCOUTCOMMENT", "Text");
+			migrateSelectedEscapes("USERCONFIGURATION", "where CONFIG_KEY='hrfImport_HRFPath'", "CONFIG_VALUE");
+		}
 
 		updateDBVersion(dbVersion, 700);
 	}
