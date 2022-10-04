@@ -1,11 +1,16 @@
 package core.db;
 
+import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class AbstractTable {
@@ -87,6 +92,71 @@ public abstract class AbstractTable {
 		values.addAll(Arrays.stream(columns).limit(idColumns).map(c->c.getter.apply(object)).toList()); // where
 		return executePreparedUpdate(values.toArray());
 	}
+	
+	public <T extends Storable> List<T> load(Class<T> tClass, Object ... whereValues) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
+		var ret = new ArrayList<T>();
+		var constructor = tClass.getConstructor();
+		var rs = executePreparedSelect(whereValues);
+		if (rs != null) {
+			while (rs.next()) {
+				var object = constructor.newInstance();
+				for (var c : columns) {
+					var value = switch (c.getType()) {
+						case Types.CHAR, Types.LONGVARCHAR, Types.VARCHAR -> getString(rs, c.getColumnName());
+						case Types.BIT, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.INTEGER -> getInteger(rs,c.getColumnName());
+						case Types.TIME, Types.DATE, Types.TIMESTAMP_WITH_TIMEZONE, Types.TIME_WITH_TIMEZONE, Types.TIMESTAMP -> getHODateTime(rs, c.getColumnName()));
+						case Types.BOOLEAN -> getBoolean(rs,c.getColumnName());
+						case Types.DECIMAL, Types.DOUBLE, Types.FLOAT, Types.REAL -> getDouble(rs, c.getColumnName());
+						default -> throw new IllegalStateException("Unexpected value: " + c.getType());
+					};
+					c.setter.accept(object, value);
+				}
+				ret.add(object);
+			}
+			rs.close();
+		}
+		return ret;
+	}
+
+	private String getString(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getString(columnName);
+		if (rs.wasNull()){
+			return "";
+		}
+		return ret;
+	}
+
+	private HODateTime getHODateTime(ResultSet rs, String columnName) throws SQLException {
+		var ts = rs.getTimestamp(columnName);
+		if (rs.wasNull()){
+			return null;
+		}
+		return HODateTime.fromDbTimestamp(ts);
+	}
+
+	private Double getDouble(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getDouble(columnName);
+		if (rs.wasNull()){
+			return null;
+		}
+		return ret;
+	}
+
+	private Boolean getBoolean(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getBoolean(columnName);
+		if (rs.wasNull()){
+			return null;
+		}
+		return ret;
+	}
+
+	private Integer getInteger(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getInt(columnName);
+		if (rs.wasNull()){
+			return null;
+		}
+		return ret;
+	}
 
 	// Prepared Statements
 	// Insert
@@ -119,9 +189,9 @@ public abstract class AbstractTable {
 		return "UPDATE " + getTableName() +
 				" SET " +
 				Arrays.stream(columns).skip(idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(",")) +
-				" WHERE " +
-				Arrays.stream(columns).limit(idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(" AND "));
+				createSQLWhere();
 	}
+
 	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
 			super("UPDATE " + table.getTableName() + " " + set);
@@ -172,9 +242,14 @@ public abstract class AbstractTable {
 			super("SELECT * FROM " + table.getTableName() + " " + where);
 		}
 		public PreparedSelectStatementBuilder(AbstractTable table) {
-			super("SELECT * FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super("SELECT * FROM " + table.getTableName() + table.createSQLWhere());
 		}
 	}
+
+	private String createSQLWhere() {
+		return " WHERE " + Arrays.stream(this.columns).limit(this.idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(" AND "));
+	}
+
 	protected PreparedSelectStatementBuilder preparedSelectStatementBuilder;
 	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
 		return new PreparedSelectStatementBuilder(this);
