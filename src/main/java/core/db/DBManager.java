@@ -553,7 +553,7 @@ public class DBManager {
 	 * @return the integer [ ]
 	 */
 	public Integer[] getAllLigaIDs() {
-		return ((LigaTable) getTable(LigaTable.TABLENAME)).getAllLigaIDs();
+		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllLigaIDs();
 	}
 
 	/**

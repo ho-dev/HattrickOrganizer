@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 
 final class SpielplanTable extends AbstractTable {
@@ -169,4 +170,30 @@ final class SpielplanTable extends AbstractTable {
 		}
 		return null;
 	}
+
+	/**
+	 * load all league ids
+	 */
+	Integer[] getAllLigaIDs() {
+		final Vector<Integer> vligaids = new Vector<>();
+		Integer[] ligaids = null;
+
+		try {
+			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
+			final ResultSet rs = adapter.executeQuery(sql);
+			while (rs != null && rs.next()) {
+				vligaids.add(rs.getInt("LigaID"));
+			}
+
+			ligaids = new Integer[vligaids.size()];
+			for (int i = 0; i < vligaids.size(); i++) {
+				ligaids[i] = vligaids.get(i);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getAllLigaIDs : " + e);
+		}
+
+		return ligaids;
+	}
+
 }

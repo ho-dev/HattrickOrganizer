@@ -1,12 +1,12 @@
 // %2139958143:de.hattrickorganizer.model%
 package core.model.series;
 
-import core.util.HOLogger;
+import core.db.AbstractTable;
 
 /**
  * Enthält alle Ligadaten
  */
-public final class Liga {
+public final class Liga extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Liganame */
@@ -14,10 +14,6 @@ public final class Liga {
 
     /** Plazierung */
     private int m_iPlatzierung;
-
-    /** Bewertung ? */
-
-    //protected int    m_iBewertung      =   0;
 
     /** Punkte */
     private int m_iPunkte;
@@ -30,6 +26,7 @@ public final class Liga {
 
     /** ToreGegen */
     private int m_iToreGegen;
+    private int hrfId;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -37,7 +34,7 @@ public final class Liga {
      * Creates a new Liga object.
      */
     public Liga(java.util.Properties properties) {
-        m_sLiga = properties.getProperty("serie", "").toString();
+        m_sLiga = properties.getProperty("serie", "");
 
         try {
             m_iPunkte = Integer.parseInt(properties.getProperty("poang", "0"));
@@ -75,24 +72,6 @@ public final class Liga {
      * Creates a new Liga object.
      */
     public Liga() {
-    }
-
-    /**
-     * Creates a new Liga object.
-     */
-    public Liga(java.sql.ResultSet rs) {
-        try {
-            m_sLiga = rs.getString("LigaName");
-            m_iPunkte = rs.getInt("Punkte");
-            m_iToreGegen = rs.getInt("ToreGegen");
-            m_iToreFuer = rs.getInt("ToreFuer");
-            m_iSpieltag = rs.getInt("Spieltag");
-
-            //.. fehlen noch Einträge, Bedeutung unklar
-            m_iPlatzierung = rs.getInt("Platz");
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor Liga : " + e.toString());
-        }
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -203,5 +182,13 @@ public final class Liga {
      */
     public int getToreGegen() {
         return m_iToreGegen;
+    }
+
+    public int getHrfId() {
+        return hrfId;
+    }
+
+    public void setHrfId(int hrfId) {
+        this.hrfId = hrfId;
     }
 }
