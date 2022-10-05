@@ -125,6 +125,7 @@ public abstract class AbstractTable {
 						};
 						c.setter.accept(object, value);
 					}
+					object.setIsStored(true);
 					ret.add(object);
 				}
 				rs.close();

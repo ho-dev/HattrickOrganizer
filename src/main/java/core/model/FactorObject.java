@@ -1,9 +1,9 @@
 package core.model;
 
+import core.db.AbstractTable;
 import core.model.player.IMatchRoleID;
-import core.util.HOLogger;
 
-public final class FactorObject {
+public final class FactorObject extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** The position that is described by this FactorObject */
@@ -54,23 +54,7 @@ public final class FactorObject {
     /**
      * Creates a new FactorObject object.
      */
-    public FactorObject(java.sql.ResultSet rs) {
-        try {
-            if (rs != null) {
-                fScoring = rs.getFloat("SCfactor");
-                fGoalkeeping = rs.getFloat("GKfactor");
-                fSetPieces = rs.getFloat("SPfactor");
-                fPlaymaking = rs.getFloat("PMfactor");
-                fPassing = rs.getFloat("PSfactor");
-                fDefending = rs.getFloat("DEfactor");
-                fWing = rs.getFloat("WIfactor");
-                m_bPosition = rs.getByte("PositionID");
-                fNormalization = rs.getFloat("NormalisationFactor");
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor Faktor Obj: " + e.toString());
-        }
-    }
+    public FactorObject() {}
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -79,7 +63,7 @@ public final class FactorObject {
      *
      * @param m_fFluegelspiel New value of property fWing.
      */
-    public final void setWingerFactor(float m_fFluegelspiel) {
+    public void setWingerFactor(float m_fFluegelspiel) {
         this.fWing = m_fFluegelspiel;
     }
 
@@ -89,7 +73,7 @@ public final class FactorObject {
      *
      * @param m_fPasspiel New value of property fPassing.
      */
-    public final void setPassingFactor(float m_fPasspiel) {
+    public void setPassingFactor(float m_fPasspiel) {
         this.fPassing = m_fPasspiel;
     }
 
@@ -99,7 +83,7 @@ public final class FactorObject {
      *
      * @param m_bPosition New value of property m_bPosition.
      */
-    public final void setPosition(byte m_bPosition) {
+    public void setPosition(byte m_bPosition) {
         this.m_bPosition = m_bPosition;
     }
 
@@ -108,7 +92,7 @@ public final class FactorObject {
      *
      * @return Value of property m_bPosition.
      */
-    public final byte getPosition() {
+    public byte getPosition() {
         return m_bPosition;
     }
 
@@ -117,7 +101,7 @@ public final class FactorObject {
      *
      * @param m_fSpielaufbau New value of property fPlaymaking.
      */
-    public final void setPlaymakingFactor(float m_fSpielaufbau) {
+    public void setPlaymakingFactor(float m_fSpielaufbau) {
         this.fPlaymaking = m_fSpielaufbau;
     }
 
@@ -127,13 +111,13 @@ public final class FactorObject {
      *
      * @param m_fStandards New value of property fSetPieces.
      */
-    public final void setSetPiecesFactor(float m_fStandards) {
+    public void setSetPiecesFactor(float m_fStandards) {
         this.fSetPieces = m_fStandards;
     }
 
 
     //HelperFuncs//////
-    public final float getSum() {
+    public float getSum() {
         return (fGoalkeeping + fSetPieces + fScoring + fDefending + fWing
                + fPassing + fPlaymaking);
     }
@@ -143,7 +127,7 @@ public final class FactorObject {
      *
      * @param m_fTorschuss New value of property fScoring.
      */
-    public final void setTorschuss(float m_fTorschuss) {
+    public void setTorschuss(float m_fTorschuss) {
         this.fScoring = m_fTorschuss;
     }
 
@@ -152,7 +136,7 @@ public final class FactorObject {
      *
      * @param m_iTorwart New value of property m_iTorwart.
      */
-    public final void setTorwart(float m_iTorwart) {
+    public void setTorwart(float m_iTorwart) {
         this.fGoalkeeping = m_iTorwart;
     }
 
@@ -163,12 +147,12 @@ public final class FactorObject {
      *
      * @param m_fVerteidigung New value of property fDefending.
      */
-    public final void setDefendingFactor(float m_fVerteidigung) {
+    public void setDefendingFactor(float m_fVerteidigung) {
         this.fDefending = m_fVerteidigung;
     }
 
 
-    public final void setNormalizationFactor(float fNormalization) {
+    public void setNormalizationFactor(float fNormalization) {
         this.fNormalization = fNormalization;
     }
 
