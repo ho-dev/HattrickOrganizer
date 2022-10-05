@@ -1,28 +1,58 @@
 package core.training;
 
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
-
-import java.time.Duration;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
-public class FuturePlayerTraining {
+public class FuturePlayerTraining extends AbstractTable.Storable {
 
 
     public boolean contains(HODateTime trainingDate) {
         // from<=date & to>date
-        if (!from.isAfter(trainingDate)) {
-            if (to == null) return true;
-            var endOfToWeek = to.plus(7, ChronoUnit.DAYS);
+        if (!this.getFrom().isAfter(trainingDate)) {
+            if (this.getTo() == null) return true;
+            var endOfToWeek = this.getTo().plus(7, ChronoUnit.DAYS);
             return endOfToWeek.isAfter(trainingDate);
         }
         return false;
     }
 
     public boolean endsBefore(HODateTime nextWeek) {
-        return to != null && nextWeek.isAfter(to);
+        return getTo() != null && nextWeek.isAfter(getTo());
+    }
+
+    public int getFromWeek() {
+        return fromWeek;
+    }
+
+    public void setFromWeek(int fromWeek) {
+        this.fromWeek = fromWeek;
+    }
+
+    public int getFromSeason() {
+        return fromSeason;
+    }
+
+    public void setFromSeason(int fromSeason) {
+        this.fromSeason = fromSeason;
+    }
+
+    public Integer getToWeek() {
+        return toWeek;
+    }
+
+    public void setToWeek(Integer toWeek) {
+        this.toWeek = toWeek;
+    }
+
+    public Integer getToSeason() {
+        return toSeason;
+    }
+
+    public void setToSeason(Integer toSeason) {
+        this.toSeason = toSeason;
     }
 
     public enum Priority {
@@ -31,8 +61,8 @@ public class FuturePlayerTraining {
         PARTIAL_TRAINING(2),
         FULL_TRAINING(3);
 
-        private int value;
-        private static HashMap<Integer, Priority> map = new HashMap<>();
+        private final int value;
+        private static final HashMap<Integer, Priority> map = new HashMap<>();
 
         Priority(int value) {
             this.value = value;
@@ -70,11 +100,18 @@ public class FuturePlayerTraining {
     /**
      * first week of training interval
      */
-    private HODateTime from;
+
+    private int fromWeek;
+    private int fromSeason;
+
+    private HODateTime _from;
     /**
      * last week of training interval (null if training is planned forever)
      */
-    private HODateTime to;
+    private Integer toWeek;
+    private Integer toSeason;
+
+    private HODateTime _to;
     /**
      * priority of the training (overrides automatic determination by best position)
      */
@@ -83,9 +120,14 @@ public class FuturePlayerTraining {
     public FuturePlayerTraining(int playerId, FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         this.playerId = playerId;
         this.priority = prio;
-        this.from = from;
-        this.to = to;
+        setFrom(from);
+        setTo(to);
     }
+
+    /**
+     * constructor is used by AbstractTable.load
+     */
+    public FuturePlayerTraining(){}
 
     public Priority getPriority() {
         return priority;
@@ -104,19 +146,42 @@ public class FuturePlayerTraining {
     }
 
     public HODateTime getFrom() {
-        return from;
+        if ( this._from == null){
+            this._from = HODateTime.fromHTWeek(new HODateTime.HTWeek(fromSeason, fromWeek));
+        }
+        return _from;
     }
 
     public void setFrom(HODateTime from) {
-        this.from = from;
+        this._from = from;
+        var htWeek = from.toHTWeek();
+        this.fromSeason = htWeek.season;
+        this.fromWeek = htWeek.week;
     }
 
+    boolean toInitDone = false;
     public HODateTime getTo() {
-        return to;
+        if ( !toInitDone) {
+            if (toSeason != null && toWeek != null) {
+                _to = HODateTime.fromHTWeek(new HODateTime.HTWeek(toSeason, toWeek));
+            } else {
+                _to = null;
+            }
+        }
+        return _to;
     }
 
     public void setTo(HODateTime to) {
-        this.to = to;
+        this._to = to;
+        if (to != null){
+            var htWeek = to.toHTWeek();
+            this.toSeason = htWeek.season;
+            this.toWeek = htWeek.week;
+        }
+        else {
+            this.toSeason = null;
+            this.toWeek = null;
+        }
     }
 
     /**
@@ -128,17 +193,17 @@ public class FuturePlayerTraining {
      * true if training is completely replaced by the new interval
      */
     public boolean cut(HODateTime from, HODateTime to) {
-        if (this.to != null && from.isAfter(this.to) || to != null && this.from.isAfter(to)) {
+        if (this.getTo() != null && from.isAfter(this.getTo()) || to != null && this.getFrom().isAfter(to)) {
             // this is outside the given interval
             return false;
         }
 
-        if (from.isAfter(this.from)) {
-            this.to = from.minus(7, ChronoUnit.DAYS);
+        if (from.isAfter(this.getFrom())) {
+            setTo(from.minus(7, ChronoUnit.DAYS));
             return false;
         }
-        if (to != null && (this.to == null || this.to.isAfter(to))) {
-            this.from = to.plus(7, ChronoUnit.DAYS);
+        if (to != null && (this.getTo() == null || this.getTo().isAfter(to))) {
+            setFrom(to.plus(7, ChronoUnit.DAYS));
             return false;
         }
         return true; // completely replaced

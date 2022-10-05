@@ -2154,12 +2154,11 @@ public class DBManager {
 	/**
 	 * Store future player trainings.
 	 *
-	 * @param spielerID             the spieler id
 	 * @param futurePlayerTrainings the future player trainings
 	 */
-	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+	public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
 		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
-				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
+				.storeFuturePlayerTrainings(futurePlayerTrainings);
 
 	}
 

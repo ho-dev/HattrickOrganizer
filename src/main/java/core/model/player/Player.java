@@ -1622,18 +1622,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Set last match £461
-     * @param date
-     * @param rating
-     * @param id
-     */
-    public void setLastMatchDetails(String date, Integer  rating, Integer id){
-        m_lastMatchDate = date;
-        m_lastMatchRating = rating;
-        m_lastMatchId = id;
-    }
-
-    /**
      * Setter for property m_iTransferlisted.
      *
      * @param m_iTransferlisted New value of property m_iTransferlisted.
@@ -2227,7 +2215,7 @@ public class Player extends AbstractTable.Storable {
         if (prio != null) {
             futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
         }
-        DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
+        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
     }
 
     public String getBestPositionInfo(@Nullable Weather weather, boolean useWeatherImpact) {
