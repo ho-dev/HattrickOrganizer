@@ -92,8 +92,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// Components
 	private HOTabbedPane m_jtpTabbedPane;
 
-	private Vector<String> m_vOptionPanelNames = new Vector<>();
-	private Vector<JPanel> m_vOptionPanels = new Vector<>();
+	private final Vector<String> m_vOptionPanelNames = new Vector<>();
+	private final Vector<JPanel> m_vOptionPanels = new Vector<>();
 
 	private final AtomicBoolean isAppTerminated = new AtomicBoolean(false); // set when HO should be terminated
 	private final List<ApplicationClosingListener> applicationClosingListener = new ArrayList<>();
@@ -158,7 +158,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	private void setFrameTitle() {
-		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHRF().getHrfId()).getTeamName();
+		var teamName = HOVerwaltung.instance().getModel().getBasics().getTeamName();
+//		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHRF().getHrfId()).getTeamName();
 
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 		

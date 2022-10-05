@@ -710,7 +710,7 @@ public class DBManager {
 	 * @return the basics
 	 */
 	public Basics getBasics(int hrfID) {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).getBasics(hrfID);
+		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).loadBasics(hrfID);
 	}
 
 	/**
