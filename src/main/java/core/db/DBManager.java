@@ -798,7 +798,7 @@ public class DBManager {
 	 * @param date    the date
 	 */
 	public void saveEconomyInDB(int hrfId, Economy economy, HODateTime date) {
-		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date.toDbTimestamp());
+		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
 	}
 
 	// ------------------------------- HRFTable

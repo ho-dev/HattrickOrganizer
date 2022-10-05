@@ -1,11 +1,7 @@
 package core.db;
 
 import core.model.misc.Economy;
-import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import core.util.HODateTime;
 import java.sql.Types;
 
 
@@ -19,49 +15,50 @@ public final class EconomyTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[42];
-		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("FetchedDate",Types.TIMESTAMP,false);
-		columns[2]= new ColumnDescriptor("SupportersPopularity",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("SponsorsPopularity",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("Cash",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("IncomeSponsors",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("IncomeSpectators",Types.INTEGER,false);
-		columns[7]= new ColumnDescriptor("IncomeFinancial",Types.INTEGER,false);
-		columns[8]= new ColumnDescriptor("IncomeTemporary",Types.INTEGER,false);
-		columns[9]= new ColumnDescriptor("IncomeSum",Types.INTEGER,false);
-		columns[10]= new ColumnDescriptor("CostsPlayers",Types.INTEGER,false);
-		columns[11]= new ColumnDescriptor("CostsStaff",Types.INTEGER,false);
-		columns[12]= new ColumnDescriptor("CostsArena",Types.INTEGER,false);
-		columns[13]= new ColumnDescriptor("CostsYouth",Types.INTEGER,false);
-		columns[14]= new ColumnDescriptor("CostsFinancial",Types.INTEGER,false);
-		columns[15]= new ColumnDescriptor("CostsTemporary",Types.INTEGER,false);
-		columns[16]= new ColumnDescriptor("CostsSum",Types.INTEGER,false);
-		columns[17]= new ColumnDescriptor("ExpectedWeeksTotal",Types.INTEGER,false);
-		columns[18]= new ColumnDescriptor("LastIncomeSponsors",Types.INTEGER,false);
-		columns[19]= new ColumnDescriptor("LastIncomeSpectators",Types.INTEGER,false);
-		columns[20]= new ColumnDescriptor("LastIncomeFinancial",Types.INTEGER,false);
-		columns[21]= new ColumnDescriptor("LastIncomeTemporary",Types.INTEGER,false);
-		columns[22]= new ColumnDescriptor("LastIncomeSum",Types.INTEGER,false);
-		columns[23]= new ColumnDescriptor("LastCostsPlayers",Types.INTEGER,false);
-		columns[24]= new ColumnDescriptor("LastCostsStaff",Types.INTEGER,false);
-		columns[25]= new ColumnDescriptor("LastCostsArena",Types.INTEGER,false);
-		columns[26]= new ColumnDescriptor("LastCostsYouth",Types.INTEGER,false);
-		columns[27]= new ColumnDescriptor("LastCostsFinancial",Types.INTEGER,false);
-		columns[28]= new ColumnDescriptor("LastCostsTemporary",Types.INTEGER,false);
-		columns[29]= new ColumnDescriptor("LastCostsSum",Types.INTEGER,false);
-		columns[30]= new ColumnDescriptor("LastWeeksTotal",Types.INTEGER,false);
-		columns[31]= new ColumnDescriptor("ExpectedCash",Types.INTEGER,false);
-		columns[32]= new ColumnDescriptor("IncomeSoldPlayers",Types.INTEGER,false);
-		columns[33]= new ColumnDescriptor("IncomeSoldPlayersCommission",Types.INTEGER,false);
-		columns[34]= new ColumnDescriptor("CostsBoughtPlayers",Types.INTEGER,false);
-		columns[35]= new ColumnDescriptor("CostsArenaBuilding",Types.INTEGER,false);
-		columns[36]= new ColumnDescriptor("LastIncomeSoldPlayers",Types.INTEGER,false);
-		columns[37]= new ColumnDescriptor("LastIncomeSoldPlayersCommission",Types.INTEGER,false);
-		columns[38]= new ColumnDescriptor("LastCostsBoughtPlayers",Types.INTEGER,false);
-		columns[39]= new ColumnDescriptor("LastCostsArenaBuilding",Types.INTEGER,false);
-		columns[40]= new ColumnDescriptor("IncomeSponsorsBonus",Types.INTEGER,false);
-		columns[41]= new ColumnDescriptor("LastIncomeSponsorsBonus",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((e) -> ((Economy) e).getHrfId()).setSetter((e, v) -> ((Economy) e).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FetchedDate").setGetter((e) -> ((Economy) e).getFetchedDate().toDbTimestamp()).setSetter((e, v) -> ((Economy) e).setFetchedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SupportersPopularity").setGetter((e) -> ((Economy) e).getSupportersPopularity()).setSetter((e, v) -> ((Economy) e).setSupPopularity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SponsorsPopularity").setGetter((e) -> ((Economy) e).getSponsorsPopularity()).setSetter((e, v) -> ((Economy) e).setSponsorsPopularity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Cash").setGetter((e) -> ((Economy) e).getCash()).setSetter((e, v) -> ((Economy) e).setCash((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSponsors").setGetter((e) -> ((Economy) e).getIncomeSponsors()).setSetter((e, v) -> ((Economy) e).setIncomeSponsors((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSpectators").setGetter((e) -> ((Economy) e).getIncomeSpectators()).setSetter((e, v) -> ((Economy) e).setIncomeSpectators((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeFinancial").setGetter((e) -> ((Economy) e).getIncomeFinancial()).setSetter((e, v) -> ((Economy) e).setIncomeFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeTemporary").setGetter((e) -> ((Economy) e).getIncomeTemporary()).setSetter((e, v) -> ((Economy) e).setIncomeTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSum").setGetter((e) -> ((Economy) e).getIncomeSum()).setSetter((e, v) -> ((Economy) e).setIncomeSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsPlayers").setGetter((e) -> ((Economy) e).getCostsPlayers()).setSetter((e, v) -> ((Economy) e).setCostsPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsStaff").setGetter((e) -> ((Economy) e).getCostsStaff()).setSetter((e, v) -> ((Economy) e).setCostsStaff((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsArena").setGetter((e) -> ((Economy) e).getCostsArena()).setSetter((e, v) -> ((Economy) e).setCostsArena((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsYouth").setGetter((e) -> ((Economy) e).getCostsYouth()).setSetter((e, v) -> ((Economy) e).setCostsYouth((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsFinancial").setGetter((e) -> ((Economy) e).getCostsFinancial()).setSetter((e, v) -> ((Economy) e).setCostsFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsTemporary").setGetter((e) -> ((Economy) e).getCostsTemporary()).setSetter((e, v) -> ((Economy) e).setCostsTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsSum").setGetter((e) -> ((Economy) e).getCostsSum()).setSetter((e, v) -> ((Economy) e).setCostsSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ExpectedWeeksTotal").setGetter((e) -> ((Economy) e).getExpectedWeeksTotal()).setSetter((e, v) -> ((Economy) e).setExpectedWeeksTotal((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSponsors").setGetter((e) -> ((Economy) e).getLastIncomeSponsors()).setSetter((e, v) -> ((Economy) e).setLastIncomeSponsors((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSpectators").setGetter((e) -> ((Economy) e).getLastIncomeSpectators()).setSetter((e, v) -> ((Economy) e).setLastIncomeSpectators((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeFinancial").setGetter((e) -> ((Economy) e).getLastIncomeFinancial()).setSetter((e, v) -> ((Economy) e).setLastIncomeFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeTemporary").setGetter((e) -> ((Economy) e).getLastIncomeTemporary()).setSetter((e, v) -> ((Economy) e).setLastIncomeTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSum").setGetter((e) -> ((Economy) e).getLastIncomeSum()).setSetter((e, v) -> ((Economy) e).setLastIncomeSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsPlayers").setGetter((e) -> ((Economy) e).getLastCostsPlayers()).setSetter((e, v) -> ((Economy) e).setLastCostsPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsStaff").setGetter((e) -> ((Economy) e).getLastCostsStaff()).setSetter((e, v) -> ((Economy) e).setLastCostsStaff((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsArena").setGetter((e) -> ((Economy) e).getLastCostsArena()).setSetter((e, v) -> ((Economy) e).setLastCostsArena((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsYouth").setGetter((e) -> ((Economy) e).getLastCostsYouth()).setSetter((e, v) -> ((Economy) e).setLastCostsYouth((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsFinancial").setGetter((e) -> ((Economy) e).getLastCostsFinancial()).setSetter((e, v) -> ((Economy) e).setLastCostsFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsTemporary").setGetter((e) -> ((Economy) e).getLastCostsTemporary()).setSetter((e, v) -> ((Economy) e).setLastCostsTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsSum").setGetter((e) -> ((Economy) e).getLastCostsSum()).setSetter((e, v) -> ((Economy) e).setLastCostsSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastWeeksTotal").setGetter((e) -> ((Economy) e).getLastWeeksTotal()).setSetter((e, v) -> ((Economy) e).setLastWeeksTotal((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ExpectedCash").setGetter((e) -> ((Economy) e).getExpectedCash()).setSetter((e, v) -> ((Economy) e).setExpectedCash((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSoldPlayers").setGetter((e) -> ((Economy) e).getIncomeSoldPlayers()).setSetter((e, v) -> ((Economy) e).setIncomeSoldPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSoldPlayersCommission").setGetter((e) -> ((Economy) e).getIncomeSoldPlayersCommission()).setSetter((e, v) -> ((Economy) e).setIncomeSoldPlayersCommission((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsBoughtPlayers").setGetter((e) -> ((Economy) e).getCostsBoughtPlayers()).setSetter((e, v) -> ((Economy) e).setCostsBoughtPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CostsArenaBuilding").setGetter((e) -> ((Economy) e).getCostsArenaBuilding()).setSetter((e, v) -> ((Economy) e).setCostsArenaBuilding((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSoldPlayers").setGetter((e) -> ((Economy) e).getLastIncomeSoldPlayers()).setSetter((e, v) -> ((Economy) e).setLastIncomeSoldPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSoldPlayersCommission").setGetter((e) -> ((Economy) e).getLastIncomeSoldPlayersCommission()).setSetter((e, v) -> ((Economy) e).setLastIncomeSoldPlayersCommission((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsBoughtPlayers").setGetter((e) -> ((Economy) e).getLastCostsBoughtPlayers()).setSetter((e, v) -> ((Economy) e).setLastCostsBoughtPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsArenaBuilding").setGetter((e) -> ((Economy) e).getLastCostsArenaBuilding()).setSetter((e, v) -> ((Economy) e).setLastCostsArenaBuilding((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSponsorsBonus").setGetter((e) -> ((Economy) e).getIncomeSponsorsBonus()).setSetter((e, v) -> ((Economy) e).setIncomeSponsorsBonus((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSponsorsBonus").setGetter((e) -> ((Economy) e).getLastIncomeSponsorsBonus()).setSetter((e, v) -> ((Economy) e).setLastIncomeSponsorsBonus((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		};
 	}
 
 	@Override
@@ -74,116 +71,19 @@ public final class EconomyTable extends AbstractTable {
 	/**
 	 * store the economy info in the database
 	 */
-	void storeEconomyInfoIntoDB(int hrfId, Economy economy, Timestamp date) {
+	void storeEconomyInfoIntoDB(int hrfId, Economy economy, HODateTime date) {
 		if (economy != null) {
-			//first delete existing entry
-			executePreparedDelete( hrfId);
-			executePreparedInsert(
-					hrfId,
-					date.toString(),
-					economy.getSupportersPopularity(),
-					economy.getSponsorsPopularity(),
-					economy.getCash(),
-					economy.getIncomeSponsors(),
-					economy.getIncomeSpectators(),
-					economy.getIncomeFinancial(),
-					economy.getIncomeTemporary(),
-					economy.getIncomeSum(),
-					economy.getCostsPlayers(),
-					economy.getCostsStaff(),
-					economy.getCostsArena(),
-					economy.getCostsYouth(),
-					economy.getCostsFinancial(),
-					economy.getCostsTemporary(),
-					economy.getCostsSum(),
-					economy.getExpectedWeeksTotal(),
-					economy.getLastIncomeSponsors(),
-					economy.getLastIncomeSpectators(),
-					economy.getLastIncomeFinancial(),
-					economy.getLastIncomeTemporary(),
-					economy.getLastIncomeSum(),
-					economy.getLastCostsPlayers(),
-					economy.getLastCostsStaff(),
-					economy.getLastCostsArena(),
-					economy.getLastCostsYouth(),
-					economy.getLastCostsFinancial(),
-					economy.getLastCostsTemporary(),
-					economy.getLastCostsSum(),
-					economy.getLastWeeksTotal(),
-					economy.getExpectedCash(),
-					economy.getIncomeSoldPlayers(),
-					economy.getIncomeSoldPlayersCommission(),
-					economy.getCostsBoughtPlayers(),
-					economy.getCostsArenaBuilding(),
-					economy.getLastIncomeSoldPlayers(),
-					economy.getLastIncomeSoldPlayersCommission(),
-					economy.getLastCostsBoughtPlayers(),
-					economy.getLastCostsArenaBuilding(),
-					economy.getIncomeSponsorsBonus(),
-					economy.getLastIncomeSponsorsBonus()
-			);
+			economy.setHrfId(hrfId);
+			economy.setFetchedDate(date);
+			store(economy);
 		}
 	}
 
 	// load economy model from specified hrfID
 	public Economy getEconomy(int hrfID) {
-		ResultSet rs;
-		Economy economy = null;
 		if ( hrfID > -1) {
-
-			rs = executePreparedSelect(hrfID);
-
-			try {
-				if (rs != null) {
-					rs.next();
-					economy = new Economy();
-					economy.setSupPopularity(rs.getInt("SupportersPopularity"));
-					economy.setSponsorsPopularity(rs.getInt("SponsorsPopularity"));
-					economy.setCash(rs.getInt("Cash"));
-					economy.setIncomeSponsors(rs.getInt("IncomeSponsors"));
-					economy.setIncomeSponsorsBonus(rs.getInt("IncomeSponsorsBonus"));
-					economy.setIncomeSpectators(rs.getInt("IncomeSpectators"));
-					economy.setIncomeFinancial(rs.getInt("IncomeFinancial"));
-					economy.setIncomeTemporary(rs.getInt("IncomeTemporary"));
-					economy.setIncomeSum(rs.getInt("IncomeSum"));
-					economy.setCostsPlayers(rs.getInt("CostsPlayers"));
-					economy.setCostsStaff(rs.getInt("CostsStaff"));
-					economy.setCostsArena(rs.getInt("CostsArena"));
-					economy.setCostsYouth(rs.getInt("CostsYouth"));
-					economy.setCostsFinancial(rs.getInt("CostsFinancial"));
-					economy.setCostsTemporary(rs.getInt("CostsTemporary"));
-					economy.setCostsSum(rs.getInt("CostsSum"));
-					economy.setExpectedWeeksTotal(rs.getInt("ExpectedWeeksTotal"));
-					economy.setLastIncomeSponsors(rs.getInt("LastIncomeSponsors"));
-					economy.setLastIncomeSponsorsBonus(rs.getInt("LastIncomeSponsorsBonus"));
-					economy.setLastIncomeSpectators(rs.getInt("LastIncomeSpectators"));
-					economy.setLastIncomeFinancial(rs.getInt("LastIncomeFinancial"));
-					economy.setLastIncomeTemporary(rs.getInt("LastIncomeTemporary"));
-					economy.setLastIncomeSum(rs.getInt("LastIncomeSum"));
-					economy.setLastCostsPlayers(rs.getInt("LastCostsPlayers"));
-					economy.setLastCostsStaff(rs.getInt("LastCostsStaff"));
-					economy.setLastCostsArena(rs.getInt("LastCostsArena"));
-					economy.setLastCostsYouth(rs.getInt("LastCostsYouth"));
-					economy.setLastCostsFinancial(rs.getInt("LastCostsFinancial"));
-					economy.setLastCostsTemporary(rs.getInt("LastCostsTemporary"));
-					economy.setLastCostsSum(rs.getInt("LastCostsSum"));
-					economy.setLastWeeksTotal(rs.getInt("LastWeeksTotal"));
-					economy.setExpectedCash(rs.getInt("ExpectedCash"));
-					economy.setIncomeSoldPlayers(rs.getInt("IncomeSoldPlayers"));
-					economy.setIncomeSoldPlayersCommission(rs.getInt("IncomeSoldPlayersCommission"));
-					economy.setCostsBoughtPlayers(rs.getInt("CostsBoughtPlayers"));
-					economy.setCostsArenaBuilding(rs.getInt("CostsArenaBuilding"));
-					economy.setLastIncomeSoldPlayers(rs.getInt("LastIncomeSoldPlayers"));
-					economy.setLastIncomeSoldPlayersCommission(rs.getInt("LastIncomeSoldPlayersCommission"));
-					economy.setLastCostsBoughtPlayers(rs.getInt("LastCostsBoughtPlayers"));
-					economy.setCostsArenaBuilding(rs.getInt("LastCostsArenaBuilding"));
-					rs.close();
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DatenbankZugriff.getFinanzen: " + e);
-			}
+			return loadOne(Economy.class, hrfID);
 		}
-		return economy;
+		return null;
 	}
-	
 }
