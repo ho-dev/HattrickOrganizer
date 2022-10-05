@@ -1,13 +1,8 @@
 package core.model.enums;
 
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
 import core.model.match.SourceSystem;
-
-import javax.swing.*;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
@@ -55,9 +50,11 @@ public enum MatchType implements IMatchType {
 	}
 
 	public static MatchType getById(Integer id) {
-		for (MatchType matchType : MatchType.values()) {
-			if (matchType.getId() == id) {
-				return matchType;
+		if ( id != null) {
+			for (MatchType matchType : MatchType.values()) {
+				if (matchType.getId() == id) {
+					return matchType;
+				}
 			}
 		}
 		return null;

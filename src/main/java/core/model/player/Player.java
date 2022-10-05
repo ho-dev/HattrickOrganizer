@@ -2146,8 +2146,9 @@ public class Player extends AbstractTable.Storable {
         return this.subExperience;
     }
 
-    public void setSubExperience( double experience){
-        this.subExperience = experience;
+    public void setSubExperience( Double experience){
+        if ( experience != null ) this.subExperience = experience;
+        else this.subExperience=0;
     }
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){

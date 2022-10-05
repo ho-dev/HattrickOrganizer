@@ -2,8 +2,6 @@ package core.db;
 
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -92,28 +90,56 @@ public abstract class AbstractTable {
 		values.addAll(Arrays.stream(columns).limit(idColumns).map(c->c.getter.apply(object)).toList()); // where
 		return executePreparedUpdate(values.toArray());
 	}
-	
-	public <T extends Storable> List<T> load(Class<T> tClass, Object ... whereValues) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
+
+	public <T extends Storable> T loadOne(Class<T> tClass, Object ... whereValues) {
+		return loadOne(tClass, executePreparedSelect(whereValues));
+	}
+	public <T extends Storable> T loadOne(Class<T> tClass, ResultSet rs) {
+		var list = load(tClass, rs, 1);
+		if ( list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
+	public <T extends Storable> List<T> load(Class<T> tClass, Object ... whereValues) {
+		return load(tClass, executePreparedSelect(whereValues), -1);
+	}
+
+	protected <T extends  Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
 		var ret = new ArrayList<T>();
-		var constructor = tClass.getConstructor();
-		var rs = executePreparedSelect(whereValues);
-		if (rs != null) {
-			while (rs.next()) {
-				var object = constructor.newInstance();
-				for (var c : columns) {
-					var value = switch (c.getType()) {
-						case Types.CHAR, Types.LONGVARCHAR, Types.VARCHAR -> getString(rs, c.getColumnName());
-						case Types.BIT, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.INTEGER -> getInteger(rs,c.getColumnName());
-						case Types.TIME, Types.DATE, Types.TIMESTAMP_WITH_TIMEZONE, Types.TIME_WITH_TIMEZONE, Types.TIMESTAMP -> getHODateTime(rs, c.getColumnName()));
-						case Types.BOOLEAN -> getBoolean(rs,c.getColumnName());
-						case Types.DECIMAL, Types.DOUBLE, Types.FLOAT, Types.REAL -> getDouble(rs, c.getColumnName());
-						default -> throw new IllegalStateException("Unexpected value: " + c.getType());
-					};
-					c.setter.accept(object, value);
+		try{
+			var constructor = tClass.getConstructor();
+			if (rs != null) {
+				while (rs.next() && 0 != max--) {
+					var object = constructor.newInstance();
+					for (var c : columns) {
+						var value = switch (c.getType()) {
+							case Types.CHAR, Types.LONGVARCHAR, Types.VARCHAR -> getString(rs, c.getColumnName());
+							case Types.BIT, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.INTEGER -> getInteger(rs,c.getColumnName());
+							case Types.TIME, Types.DATE, Types.TIMESTAMP_WITH_TIMEZONE, Types.TIME_WITH_TIMEZONE, Types.TIMESTAMP -> getHODateTime(rs, c.getColumnName());
+							case Types.BOOLEAN -> getBoolean(rs,c.getColumnName());
+							case Types.DOUBLE -> getDouble(rs, c.getColumnName());
+							case Types.DECIMAL, Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
+							default -> throw new IllegalStateException("Unexpected value: " + c.getType());
+						};
+						c.setter.accept(object, value);
+					}
+					ret.add(object);
 				}
-				ret.add(object);
+				rs.close();
 			}
-			rs.close();
+		}
+		catch (Exception exception){
+			HOLogger.instance().error(getClass(), "load: " + exception);
+		}
+		return ret;
+	}
+
+	private Float getFloat(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getFloat(columnName);
+		if (rs.wasNull()){
+			return null;
 		}
 		return ret;
 	}
