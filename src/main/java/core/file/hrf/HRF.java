@@ -1,13 +1,13 @@
 // %214693493:de.hattrickorganizer.model%
 package core.file.hrf;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
-import core.util.HOLogger;
 
 /**
  * hattrick/HO file information
  */
-public final class HRF {
+public final class HRF extends AbstractTable.Storable {
 	
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -34,17 +34,6 @@ public final class HRF {
 		this.datum = _datum;
 	}
 
-    /**
-     * Creates a new Hrf object.
-     */
-    public HRF(java.sql.ResultSet rs) throws Exception {
-        try {
-            hrfId = rs.getInt("HRF_ID");
-            datum = HODateTime.fromDbTimestamp(rs.getTimestamp("Datum"));
-        } catch (Exception e) {
-            HOLogger.instance().error(getClass(),"Konstruktor HRF: " + e);
-        }
-    }
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -65,4 +54,11 @@ public final class HRF {
 		return this.datum.toLocaleDateTime();
 	}
 
+	public void setHrfId(int v) {
+		this.hrfId = v;
+	}
+
+	public void setDatum(HODateTime v) {
+		this.datum=v;
+	}
 }

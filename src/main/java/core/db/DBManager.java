@@ -837,12 +837,9 @@ public class DBManager {
 
 	/**
 	 * save the HRF info
-	 *
-	 * @param hrfId hrf id
-	 * @param datum date time
 	 */
-	public void saveHRF(int hrfId, HODateTime datum) {
-		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, datum);
+	public void saveHRF(HRF hrf) {
+		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrf);
 	}
 
 	/**

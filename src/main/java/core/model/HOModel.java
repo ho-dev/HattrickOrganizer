@@ -559,7 +559,7 @@ public class HOModel {
      */
     public final synchronized void saveHRF() {
         var time = getBasics().getDatum();
-        DBManager.instance().saveHRF(getID(), time);
+        DBManager.instance().saveHRF(this.o_hrf);
         DBManager.instance().saveBasics(getID(), getBasics());
         DBManager.instance().saveVerein(getID(), getClub());
         DBManager.instance().saveTeam(getID(), getTeam());

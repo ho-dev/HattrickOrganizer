@@ -105,6 +105,9 @@ public abstract class AbstractTable {
 	public <T extends Storable> List<T> load(Class<T> tClass, Object ... whereValues) {
 		return load(tClass, executePreparedSelect(whereValues), -1);
 	}
+	public <T extends Storable> List<T> load(Class<T> tClass, ResultSet rs) {
+		return load(tClass, rs, -1);
+	}
 
 	protected <T extends  Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
 		var ret = new ArrayList<T>();
