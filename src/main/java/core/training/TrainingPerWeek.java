@@ -1,6 +1,7 @@
 package core.training;
 
 import core.constants.TrainingType;
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
@@ -13,9 +14,7 @@ import java.util.List;
  * Class that holds all information required to calculate training effect of a given week
  * (e.g. training intensity, stamina part, assistant level, played games ...)
  */
-public class TrainingPerWeek  {
-
-    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+public class TrainingPerWeek extends AbstractTable.Storable {
 
     private int o_TrainingIntensity;
     private int o_StaminaShare;
@@ -54,6 +53,11 @@ public class TrainingPerWeek  {
     public TrainingPerWeek(HODateTime trainingDate, int training_type, int training_intensity, int staminaShare, int trainingAssistantsLevel, int coachLevel) {
         this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
     }
+
+    /**
+     * constructor is used by AbstractTable.load
+     */
+    public TrainingPerWeek(){}
 
     public void loadMatches(){
         var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
@@ -124,10 +128,6 @@ public class TrainingPerWeek  {
 
     public DBDataSource getSource() {
         return o_Source;
-    }
-
-    public Integer getSourceAsInt() {
-        return o_Source.getValue();
     }
 
     public void setSource(DBDataSource source) {
