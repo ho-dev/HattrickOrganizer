@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.cup.CupLevel;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static core.util.StringUtils.getResultString;
 
-public class MatchKurzInfo implements Comparable<Object> {
+public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<Object> {
 
 	/** Name des Teams zu dem die Matchinfo gehört */
 	private String m_sGastName = "";
@@ -53,8 +54,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public int getMatchContextId() {
 		return iMatchContextId;
 	}
-	public void setMatchContextId(int iMatchContextId) {
-		this.iMatchContextId = iMatchContextId;
+	public void setMatchContextId(Integer iMatchContextId) {
+		if ( iMatchContextId != null ) 	this.iMatchContextId = iMatchContextId;
 	}
 
 	/** TournamentTypeID */
@@ -62,8 +63,8 @@ public class MatchKurzInfo implements Comparable<Object> {
 	public int getTournamentTypeID() {
 		return iTournamentTypeID;
 	}
-	public void setTournamentTypeID(int iTournamentTypeID) {
-		this.iTournamentTypeID = iTournamentTypeID;
+	public void setTournamentTypeID(Integer iTournamentTypeID) {
+		if ( iTournamentTypeID!=null ) this.iTournamentTypeID = iTournamentTypeID;
 	}
 
 	/** Status des Spiels */
@@ -82,15 +83,13 @@ public class MatchKurzInfo implements Comparable<Object> {
 	// Details of the match, if available
 	private Matchdetails matchdetails;
 
-	public final void setArenaId(int id) {this.m_iArenaId=id;}
+	public final void setArenaId(Integer id) {if ( id != null ) this.m_iArenaId=id;}
 	public final int getArenaId() {return this.m_iArenaId;}
-	public final void setRegionId(int id) {this.m_iRegionId=id;}
+	public final void setRegionId(Integer id) {if ( id != null) this.m_iRegionId=id;}
 	public final int getRegionId(){return this.m_iRegionId;}
 	public final void setIsDerby(Boolean is) {this.m_iIsDerby=is;}
 	public final boolean isDerby(){return this.m_iIsDerby != null && this.m_iIsDerby.equals(Boolean.TRUE);}
-	public final Boolean getIsDerby(){return this.m_iIsDerby;}
 	public final void setIsNeutral(Boolean is) {this.m_iIsNeutral=is;}
-	public final Boolean getIsNeutral(){return this.m_iIsNeutral;}
 	public final boolean isNeutral(){return this.m_iIsNeutral != null && this.m_iIsNeutral.equals(Boolean.TRUE);}
 	public void setWeather(Weather w){this.m_iWeather=w;}
 	public Weather getWeather(){return m_iWeather;}
@@ -112,8 +111,9 @@ public class MatchKurzInfo implements Comparable<Object> {
 		return isObsolet;
 	}
 
-	public void setisObsolet(boolean obsolet) {
-		isObsolet = obsolet;
+	public void setisObsolet(Boolean obsolet) {
+		if (obsolet != null)
+			isObsolet = obsolet;
 	}
 
 	private boolean isObsolet = false;  //True if match has been deleted in HT (might happen for some hto integrated game)
@@ -335,11 +335,6 @@ public class MatchKurzInfo implements Comparable<Object> {
 		}
 		return m_mtMatchTyp;
 	}
-
-	public void setMatchTypeExtended(IMatchType _matchTypeExtended) {
-		this.m_matchTypeExtended = _matchTypeExtended;
-	}
-
 	public IMatchType getMatchTypeExtended() {
 		if (m_matchTypeExtended == MatchType.NONE) {
 			if (this.getMatchType() == MatchType.CUP) {		// reload missing type info

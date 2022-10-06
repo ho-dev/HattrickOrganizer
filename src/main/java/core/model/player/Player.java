@@ -206,10 +206,6 @@ public class Player extends AbstractTable.Storable {
      */
     private int m_iSpielaufbau = 1;
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Member
-    ////////////////////////////////////////////////////////////////////////////////
-
     /**
      * SpielerID
      */
@@ -1659,7 +1655,6 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Setter for property m_iU20Laenderspiele.
-     *
      *
      * @param m_iU20Laenderspiele New value of property m_iU20Laenderspiele.
      */

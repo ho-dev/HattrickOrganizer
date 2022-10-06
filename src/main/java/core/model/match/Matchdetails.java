@@ -237,12 +237,14 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         return ret;
     }
 
-    public void setRatingIndirectSetPiecesAtt(int ratingIndirectSetPiecesAtt) {
-        this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+    public void setRatingIndirectSetPiecesAtt(Integer ratingIndirectSetPiecesAtt) {
+        if ( ratingIndirectSetPiecesAtt != null)
+            this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
     }
 
-    public void setRatingIndirectSetPiecesDef(int ratingIndirectSetPiecesDef) {
-        this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+    public void setRatingIndirectSetPiecesDef(Integer ratingIndirectSetPiecesDef) {
+        if ( ratingIndirectSetPiecesDef != null)
+            this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
     }
 
     public int getRatingIndirectSetPiecesDef() {

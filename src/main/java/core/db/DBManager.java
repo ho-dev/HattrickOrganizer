@@ -1782,13 +1782,13 @@ public class DBManager {
 	 * @param matchid The matchid. Must be larger than 0.
 	 */
 	public void deleteMatch(int matchid, int matchType) {
-		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(  matchType, matchid);
-		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(  matchType, matchid);
-		getTable(MatchLineupTable.TABLENAME).executePreparedDelete(  matchType, matchid);
-		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(  matchType, matchid);
-		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete( matchType, matchid);
-		getTable(MatchesKurzInfoTable.TABLENAME).executePreparedDelete( matchType, matchid);
-		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(  matchType, matchid);
+		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchesKurzInfoTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(matchid, matchType);
 	}
 
 	/**
@@ -1814,7 +1814,7 @@ public class DBManager {
 				&& (info.getMatchID() == lineup.getMatchID())
 				&& (info.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 
-			deleteMatch( info.getMatchID(), info.getMatchType().getId());
+			//deleteMatch( info.getMatchID(), info.getMatchType().getId());
 
 			var matches = new ArrayList<MatchKurzInfo>();
 			matches.add(info);

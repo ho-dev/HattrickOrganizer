@@ -130,7 +130,7 @@ final class SpielerTable extends AbstractTable {
 		return load(Player.class, hrfID);
 	}
 
-	private final PreparedSelectStatementBuilder getAllSpielerStatementBuilder = new PreparedSelectStatementBuilder(this, " t inner join (" +
+	private final PreparedSelectStatementBuilder loadAllPlayersStatementBuilder = new PreparedSelectStatementBuilder(this, " t inner join (" +
 			"    select SPIELERID, max(DATUM) as MaxDate from " +
 			getTableName() +
 			"    group by SPIELERID" +
@@ -141,7 +141,7 @@ final class SpielerTable extends AbstractTable {
 	 * @return List of latest records stored in database of all players.
 	 */
 	List<Player> loadAllPlayers() {
-		return load(Player.class, adapter.executePreparedQuery(getAllSpielerStatementBuilder.getStatement()),-1);
+		return load(Player.class, adapter.executePreparedQuery(loadAllPlayersStatementBuilder.getStatement()),-1);
 	}
 
 	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(

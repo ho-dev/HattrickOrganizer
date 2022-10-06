@@ -249,7 +249,7 @@ public abstract class AbstractTable {
 	// Delete
 	public static class PreparedDeleteStatementBuilder extends DBManager.PreparedStatementBuilder {
 		public PreparedDeleteStatementBuilder(AbstractTable table) {
-			super("DELETE FROM " + table.getTableName() + " WHERE " + table.getColumns()[0].getColumnName() + "=?");
+			super("DELETE FROM " + table.getTableName() +  table.createSQLWhere());
 		}
 		public PreparedDeleteStatementBuilder(AbstractTable table, String where) {
 			super("DELETE FROM " + table.getTableName() + " " + where);
@@ -293,6 +293,23 @@ public abstract class AbstractTable {
 	}
 	protected ResultSet executePreparedSelect (Object ... whereValues){
 		return adapter.executePreparedQuery(getPreparedSelectStatement(), whereValues);
+	}
+
+	protected boolean isStored(Object ... whereValues) {
+		boolean ret = false;
+		try{
+			var rs = executePreparedSelect(whereValues);
+			if (rs != null) {
+				if (rs.next() ) {
+					ret = true;
+				}
+				rs.close();
+			}
+		}
+		catch (Exception exception){
+			HOLogger.instance().error(getClass(), "load: " + exception);
+		}
+		return ret;
 	}
 
 	public void createTable() throws SQLException {

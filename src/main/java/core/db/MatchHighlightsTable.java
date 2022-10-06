@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 final class MatchHighlightsTable extends AbstractTable {
 	final static String TABLENAME = "MATCHHIGHLIGHTS";
 
-	protected MatchHighlightsTable(JDBCAdapter adapter) {
+	MatchHighlightsTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -58,7 +58,7 @@ final class MatchHighlightsTable extends AbstractTable {
 	void storeMatchHighlights(Matchdetails details) {
 		if (details != null) {
 			try {
-				// Remove existing entry
+				// Remove existing entries
 				executePreparedDelete(details.getMatchType().getId(), details.getMatchID());
 				final ArrayList<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
 				for (final MatchEvent highlight : vHighlights) {
@@ -133,7 +133,7 @@ final class MatchHighlightsTable extends AbstractTable {
 		return highlight;
 	}
 
-	private PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
+	private final PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
 			getDeleteYouthMatchHighlightsBeforeStatementSQL());
 
 	private String getDeleteYouthMatchHighlightsBeforeStatementSQL() {
