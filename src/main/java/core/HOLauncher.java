@@ -88,10 +88,10 @@ public class HOLauncher {
 			while (entries.hasMoreElements()) {
 				entry = entries.nextElement();
 
-				if ((!entry.isDirectory()) & (isValidDestPath(entry.getName()))) {
+				if (!entry.isDirectory() && isValidDestPath(entry.getName())) {
 					destPath = Paths.get(zipFileDir, entry.getName()).toRealPath().toString();
 					try (InputStream inputStream = zipFile.getInputStream(entry);
-						 OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(destPath), BUFFER_SIZE);
+						 OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(destPath), BUFFER_SIZE)
 					) {
 						int data;
 						while ((data = inputStream.read(bytesIn)) != -1) {

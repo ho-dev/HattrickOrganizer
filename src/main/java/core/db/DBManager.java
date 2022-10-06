@@ -1821,8 +1821,7 @@ public class DBManager {
 			((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 					.storeMatchKurzInfos(matches);
 
-			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
-					.storeMatchDetails(details);
+			storeMatchDetails(details);
 			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
 					.storeMatchLineup(lineup);
 
@@ -2242,8 +2241,9 @@ public class DBManager {
 	 */
 	public void storeMatchDetails(Matchdetails details) {
 		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
+		//Store Match Events
+		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).storeMatchHighlights(details);
 	}
-
 
 	/**
 	 * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.

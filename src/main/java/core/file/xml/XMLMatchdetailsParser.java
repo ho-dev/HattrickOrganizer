@@ -9,9 +9,7 @@ import core.model.match.*;
 import core.util.HOLogger;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Vector;
 
-import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -338,7 +336,7 @@ public class XMLMatchdetailsParser {
 					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.INJURY);}
 				else if ((iMatchEventID>=401) && (iMatchEventID<=422))
 				{
-					myHighlight.setM_eInjuryType(getInjuryType(iMinute, iSubjectPlayerID, md.getM_Injuries()));
+					myHighlight.setM_eInjuryType(getInjuryType(iSubjectPlayerID, md.getM_Injuries()));
 				}
 				else
 				{
@@ -455,23 +453,6 @@ public class XMLMatchdetailsParser {
     }
 
     /**
-     * convert the existing team lineup into a Vector of Vectors (of playerId, playerName)
-     *
-     * @param lineup (of MatchLineupPosition)		team lineup
-     */
-    private static Vector<Vector<String>> parseLineup (Lineup lineup) {
-    	Vector<Vector<String>> players = new Vector<>();
-
-        for ( var p : lineup.getFieldPositions()){
-			final Vector<String> tmpPlayer = new Vector<>();
-            tmpPlayer.add("" + p.getPlayerId());
-            tmpPlayer.add(p.getSpielerName());
-            players.add(tmpPlayer);
-        }
-    	return players;
-    }
-    
-    /**
      * parse match report from previously parsed highlights
      *
      * @param md	match details
@@ -545,7 +526,6 @@ public class XMLMatchdetailsParser {
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
 
 			var matchType = Objects.requireNonNull(MatchType.getById(iMatchType));
-			md.setSourceSystem(matchType.getSourceSystem());
 			md.setMatchType(matchType);
 
 			if (iMatchType == 3) {
@@ -696,7 +676,7 @@ public class XMLMatchdetailsParser {
         }
     }
 
-	private static Matchdetails.eInjuryType getInjuryType(int iMinute, int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
+	private static Matchdetails.eInjuryType getInjuryType(int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
 	{
 		for (Matchdetails.Injury injury : injuries )
 		{
