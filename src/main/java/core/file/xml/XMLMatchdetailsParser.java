@@ -8,6 +8,7 @@ import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.jetbrains.annotations.Nullable;
@@ -315,7 +316,7 @@ public class XMLMatchdetailsParser {
 
             	//generate MatchHighlight and add to list
             	final MatchEvent myHighlight = new MatchEvent();
-            	myHighlight.setM_iMatchEventIndex(n+1);
+            	myHighlight.setMatchEventIndex(n+1);
             	myHighlight.setMatchEventID(iMatchEventID);
             	myHighlight.setMinute(iMinute);
             	myHighlight.setPlayerId(iSubjectPlayerID);
@@ -357,7 +358,7 @@ public class XMLMatchdetailsParser {
      * @param md	match details
      */
     private static void parseMatchReport(Matchdetails md) {
-        ArrayList<MatchEvent> highlights = md.getHighlights();
+        List<MatchEvent> highlights = md.getHighlights();
         final StringBuilder report = new StringBuilder();
 		for (MatchEvent highlight : highlights) {
 			report.append(highlight.getEventText()).append(" ");

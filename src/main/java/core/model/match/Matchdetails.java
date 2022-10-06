@@ -28,7 +28,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     private String m_sMatchreport = "";
     private HODateTime m_clFetchDatum;
     private HODateTime m_clSpielDatum;
-    private ArrayList<MatchEvent> m_vHighlights;
+    private List<MatchEvent> m_vHighlights;
     private int m_iArenaID = -1;
     private int m_iGastId = -1;
 
@@ -509,23 +509,15 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
     public final int getGuestHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
-        if (highLights != null) {
-            for (MatchEvent iMatchHighlight : highLights) {
-                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                    return iMatchHighlight.getGastTore();
-            }
+        if ( guestGoalsInParts != null){
+            return guestGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
         }
         return -1;
     }
 
     public final int getHomeHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
-        if (highLights != null) {
-            for (MatchEvent iMatchHighlight : highLights) {
-                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                    return iMatchHighlight.getHeimTore();
-            }
+        if ( homeGoalsInParts != null){
+            return homeGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
         }
         return -1;
     }
@@ -943,7 +935,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return Value of property m_vHighlights.
      */
-    public final ArrayList<MatchEvent> downloadHighlightsIfMissing() {
+    public final List<MatchEvent> downloadHighlightsIfMissing() {
         if (getHighlights() == null && maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
             if (m_vHighlights == null || m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
                 HOLogger.instance().info(Matchdetails.class,
@@ -969,7 +961,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         return m_vHighlights;
     }
 
-    public ArrayList<MatchEvent> getHighlights() {
+    public List<MatchEvent> getHighlights() {
         if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.size() == 0)) {
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
         }

@@ -89,14 +89,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	private final HashMap<String, PreparedStatement> preparedStatements = new HashMap<>();
-	private PreparedStatement getPreparedStatement(String sql){
-		var ret = preparedStatements.get(sql);
-		if ( ret == null ){
-			ret = this.adapter.createPreparedStatement(sql);
-			preparedStatements.put(sql, ret);
-		}
-		return ret;
-	}
+//	private PreparedStatement getPreparedStatement(String sql){
+//		var ret = preparedStatements.get(sql);
+//		if ( ret == null ){
+//			ret = this.adapter.createPreparedStatement(sql);
+//			preparedStatements.put(sql, ret);
+//		}
+//		return ret;
+//	}
 	MatchKurzInfo getMatchesKurzInfo(int teamId, int matchtyp, int statistic, boolean home) {
 		StringBuilder sql = new StringBuilder(200);
 		String column = "";
@@ -121,7 +121,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(" AND HEIMTORE ").append(column2).append(" GASTTORE ");
 		sql.append(getMatchTypWhereClause(matchtyp));
 		sql.append(" ORDER BY DIFF DESC ");
-		return loadOne(MatchKurzInfo.class, adapter.executePreparedQuery(getPreparedStatement(sql.toString()), teamId));
+		return loadOne(MatchKurzInfo.class, adapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId));
 
 	}
 

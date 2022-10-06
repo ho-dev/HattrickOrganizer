@@ -1,20 +1,22 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MatchEvent {
+public class MatchEvent extends AbstractTable.Storable {
 
     private String m_sEventText = "";
 
@@ -26,22 +28,19 @@ public class MatchEvent {
 
     private boolean m_sSpielerHeim = true;
 
-    private int m_iGastTore;
-
     private int m_iGehilfeID;
-
-    private int m_iHeimTore;
 
     private int m_iMatchEventCategory;
 
     private int m_iMatchEventID;
     private Integer eventVariation;
+    private HODateTime matchDate;
 
-    public int getM_iMatchEventIndex() {
+    public int getMatchEventIndex() {
         return m_iMatchEventIndex;
     }
 
-    public void setM_iMatchEventIndex(int m_iMatchEventIndex) {
+    public void setMatchEventIndex(int m_iMatchEventIndex) {
         this.m_iMatchEventIndex = m_iMatchEventIndex;
     }
 
@@ -58,6 +57,7 @@ public class MatchEvent {
     private int m_iTeamID;
 
     private int matchId;
+    private MatchType matchType;
 
     public MatchPartId getMatchPartId() {
         return matchPartId;
@@ -77,6 +77,22 @@ public class MatchEvent {
 
     public boolean isEndOfMatchEvent() {
         return m_iMatchEventID >= 599 && m_iMatchEventID <= 606;
+    }
+
+    public MatchType getMatchType() {
+        return matchType;
+    }
+
+    public void setMatchType(MatchType matchType) {
+        this.matchType = matchType;
+    }
+
+    public HODateTime getMatchDate() {
+        return this.matchDate;
+    }
+
+    public void setMatchDate(HODateTime matchDate) {
+        this.matchDate = matchDate;
     }
 
     public enum MatchEventID {
@@ -238,36 +254,6 @@ public class MatchEvent {
     }
 
     public Matchdetails.eInjuryType m_eInjuryType;
-
-
-    public enum MatchEventCategory {
-        MATCH_EVENT_GOAL(1),
-        MATCH_EVENT_CARDS(5);
-//        /** Information */
-//        public static final int HIGHLIGHT_INFORMATION = 0;
-//
-//        /** Success -> Goal */
-//        public static final int HIGHLIGHT_ERFOLGREICH = 1;
-//
-//        /** Failure -> No Goal */
-//        public static final int HIGHLIGHT_FEHLGESCHLAGEN = 2;
-//
-//        /** Special */
-//        public static final int HIGHLIGHT_SPEZIAL = 3;
-//
-//        /** Cards */
-//        public static final int HIGHLIGHT_KARTEN = 5;
-
-        private final int value;
-
-        MatchEventCategory(final int newValue) {
-            value = newValue;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     //This is used for the mapping of Match Event and icons
     public static HashMap<MatchEventID, String> mapMatchEventIcons = new HashMap<>() {{
@@ -609,24 +595,6 @@ public class MatchEvent {
     }
 
     /**
-     * Setter for property m_iGastTore.
-     *
-     * @param m_iGastTore New value of property m_iGastTore.
-     */
-    public final void setGastTore(int m_iGastTore) {
-        this.m_iGastTore = m_iGastTore;
-    }
-
-    /**
-     * Getter for property m_iGastTore.
-     *
-     * @return Value of property m_iGastTore.
-     */
-    public final int getGastTore() {
-        return m_iGastTore;
-    }
-
-    /**
      * Setter for property m_sGehilfeHeim.
      *
      * @param m_sGehilfeHeim New value of property m_sGehilfeHeim.
@@ -679,17 +647,6 @@ public class MatchEvent {
     public final String getAssistingPlayerName() {
         return m_sGehilfeName;
     }
-
-
-    /**
-     * Getter for property m_iHeimTore.
-     *
-     * @return Value of property m_iHeimTore.
-     */
-    public final int getHeimTore() {
-        return m_iHeimTore;
-    }
-
 
     public final void setMatchEventID(int m_iMatchEventID) {
         this.m_iMatchEventID = m_iMatchEventID;

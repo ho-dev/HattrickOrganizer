@@ -235,7 +235,6 @@ public class DBManager {
 		return ret;
 	}
 
-
 	public static double getDBConfigVersion() {
 		return DBConfigVersion;
 	}
@@ -1465,7 +1464,7 @@ public class DBManager {
 	 * @param matchId      the match id
 	 * @return the match highlights
 	 */
-	public ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
+	public List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlights(iMatchType, matchId);
 	}

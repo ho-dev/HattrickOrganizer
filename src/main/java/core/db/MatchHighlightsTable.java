@@ -4,10 +4,10 @@ import core.model.enums.MatchType;
 import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
 import core.model.match.SourceSystem;
+import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 final class MatchHighlightsTable extends AbstractTable {
@@ -15,28 +15,29 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	MatchHighlightsTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
-				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-				new ColumnDescriptor("EVENT_INDEX", Types.INTEGER, false),
-				new ColumnDescriptor("TeamId", Types.INTEGER, false),
-				new ColumnDescriptor("MATCH_EVENT_ID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchDate", Types.TIMESTAMP, true),
-				new ColumnDescriptor("Minute", Types.INTEGER, false),
-				new ColumnDescriptor("SpielerId", Types.INTEGER, false),
-				new ColumnDescriptor("SpielerName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("SpielerHeim", Types.BOOLEAN, false),
-				new ColumnDescriptor("GehilfeID", Types.INTEGER, false),
-				new ColumnDescriptor("GehilfeName", Types.VARCHAR, false, 256),
-				new ColumnDescriptor("GehilfeHeim", Types.BOOLEAN, false),
-				new ColumnDescriptor("EventText", Types.VARCHAR, false, 5000),
-				new ColumnDescriptor("INJURY_TYPE", Types.TINYINT, false),
-				new ColumnDescriptor("MatchPart", Types.INTEGER, true),
-				new ColumnDescriptor("EventVariation", Types.INTEGER, true)
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchEvent) o).getMatchId()).setSetter((o, v) -> ((MatchEvent) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchEvent) o).getMatchType().getId()).setSetter((o, v) -> ((MatchEvent) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("EVENT_INDEX").setGetter((o) -> ((MatchEvent) o).getMatchEventIndex()).setSetter((o, v) -> ((MatchEvent) o).setMatchEventIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamId").setGetter((o) -> ((MatchEvent) o).getTeamID()).setSetter((o, v) -> ((MatchEvent) o).setTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MATCH_EVENT_ID").setGetter((o) -> ((MatchEvent) o).getMatchEventID().getValue()).setSetter((o, v) -> ((MatchEvent) o).setMatchEventID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchDate").setGetter((o) -> ((MatchEvent) o).getMatchDate().toDbTimestamp()).setSetter((o, v) -> ((MatchEvent) o).setMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Minute").setGetter((o) -> ((MatchEvent) o).getMinute()).setSetter((o, v) -> ((MatchEvent) o).setMinute((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerId").setGetter((o) -> ((MatchEvent) o).getPlayerId()).setSetter((o, v) -> ((MatchEvent) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerName").setGetter((o) -> ((MatchEvent) o).getPlayerId()).setSetter((o, v) -> ((MatchEvent) o).setPlayerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerHeim").setGetter((o) -> ((MatchEvent) o).getSpielerHeim()).setSetter((o, v) -> ((MatchEvent) o).setSpielerHeim((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeID").setGetter((o) -> ((MatchEvent) o).getAssistingPlayerId()).setSetter((o, v) -> ((MatchEvent) o).setAssistingPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeName").setGetter((o) -> ((MatchEvent) o).getAssistingPlayerName()).setSetter((o, v) -> ((MatchEvent) o).setAssistingPlayerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeHeim").setGetter((o) -> ((MatchEvent) o).getGehilfeHeim()).setSetter((o, v) -> ((MatchEvent) o).setGehilfeHeim((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("EventText").setGetter((o) -> ((MatchEvent) o).getEventText()).setSetter((o, v) -> ((MatchEvent) o).setEventText((String) v)).setType(Types.VARCHAR).setLength(5000).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("INJURY_TYPE").setGetter((o) -> ((MatchEvent) o).getM_eInjuryType().getValue()).setSetter((o, v) -> ((MatchEvent) o).setM_eInjuryType((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchPart").setGetter((o) -> ((MatchEvent) o).getMatchPartId().getValue()).setSetter((o, v) -> ((MatchEvent) o).setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("EventVariation").setGetter((o) -> ((MatchEvent) o).getEventVariation()).setSetter((o, v) -> ((MatchEvent) o).setEventVariation((int) v)).setType(Types.INTEGER).isNullable(false).build()
 		};
 	}
 
@@ -50,87 +51,32 @@ final class MatchHighlightsTable extends AbstractTable {
 		};
 	}
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
-	}
-
 	void storeMatchHighlights(Matchdetails details) {
 		if (details != null) {
-			try {
-				// Remove existing entries
-				executePreparedDelete(details.getMatchType().getId(), details.getMatchID());
-				final ArrayList<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
-				for (final MatchEvent highlight : vHighlights) {
-					executePreparedInsert(
-							details.getMatchID(),
-							details.getMatchType().getId(),
-							highlight.getM_iMatchEventIndex(),
-							highlight.getTeamID(),
-							highlight.getiMatchEventID(),
-							details.getMatchDate().toDbTimestamp(),
-							highlight.getMinute(),
-							highlight.getPlayerId(),
-							highlight.getPlayerName(),
-							highlight.getSpielerHeim(),
-							highlight.getAssistingPlayerId(),
-							highlight.getAssistingPlayerName(),
-							highlight.getGehilfeHeim(),
-							highlight.getEventText(),
-							highlight.getM_eInjuryType().getValue(),
-							highlight.getMatchPartId().getValue(),
-							highlight.getEventVariation()
-					);
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.storeMatchHighlights Error" + e);
-				HOLogger.instance().log(getClass(), e);
+			// Remove existing entries
+			executePreparedDelete( details.getMatchID(), details.getMatchType().getId());
+			final List<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
+			for (final MatchEvent highlight : vHighlights) {
+				highlight.setIsStored(false);
+				highlight.setMatchDate(details.getMatchDate());
+				highlight.setMatchType(details.getMatchType());
+				highlight.setMatchId(details.getMatchID());
+				store(highlight);
 			}
 		}
 	}
 
 	@Override
 	protected PreparedSelectStatementBuilder  createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this,"WHERE MatchTyp=? AND MatchId=? ORDER BY EVENT_INDEX, Minute");
+		return new PreparedSelectStatementBuilder(this,"WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute");
 	}
 
 	/**
 	 * @param matchId the match id
 	 * @return the match highlights
 	 */
-	ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
-		try {
-			final ArrayList<MatchEvent> vMatchHighlights = new ArrayList<>();
-			ResultSet rs = executePreparedSelect(iMatchType, matchId);
-			while (rs.next()) {
-				vMatchHighlights.add(createObject(rs));
-			}
-			return vMatchHighlights;
-
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
-		return new ArrayList<>();
-	}
-
-	private MatchEvent createObject(ResultSet rs) throws SQLException {
-		final MatchEvent highlight = new MatchEvent();
-
-		highlight.setMatchId(rs.getInt("MatchId"));
-		highlight.setMinute(rs.getInt("Minute"));
-		highlight.setPlayerId(rs.getInt("SpielerId"));
-		highlight.setPlayerName(rs.getString("SpielerName"));
-		highlight.setTeamID(rs.getInt("TeamId"));
-		highlight.setMatchEventID(rs.getInt("MATCH_EVENT_ID"));
-		highlight.setSpielerHeim(rs.getBoolean("SpielerHeim"));
-		highlight.setAssistingPlayerId(rs.getInt("GehilfeID"));
-		highlight.setAssistingPlayerName(rs.getString("GehilfeName"));
-		highlight.setGehilfeHeim(rs.getBoolean("GehilfeHeim"));
-		highlight.setEventText(rs.getString("EventText"));
-		highlight.setM_eInjuryType(rs.getInt("INJURY_TYPE"));
-		highlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(DBManager.getInteger(rs,"MatchPart")));
-		highlight.setEventVariation(DBManager.getInteger(rs, "EventVariation"));
-		return highlight;
+	List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
+		return load(MatchEvent.class, matchId, iMatchType);
 	}
 
 	private final PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
