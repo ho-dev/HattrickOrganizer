@@ -8,11 +8,9 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 public class MatchExporter {
 	//~ Static fields/initializers -----------------------------------------------------------------
@@ -64,7 +62,7 @@ public class MatchExporter {
 					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
-				Vector<MatchLineupPosition> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), details.getMatchType(), teamId);
+				var aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), details.getMatchType(), teamId);
 				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<>();
 
 				boolean dataOK = true;

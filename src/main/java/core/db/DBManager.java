@@ -681,7 +681,7 @@ public class DBManager {
 	 * @param teamID  the team id
 	 * @return the match lineup players
 	 */
-	public Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID,
+	public List<MatchLineupPosition> getMatchLineupPlayers(int matchID,
                                                              MatchType matchType, int teamID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.getMatchLineupPlayers(matchID, matchType, teamID);
@@ -1656,7 +1656,7 @@ public class DBManager {
 		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER " +
 				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
 				"where spielerId = "+ playerId +
-				" and FIELDPOS>-1  and matchtyp " + officialWhere;
+				" and ROLEID BETWEEN 100 AND 113 and matchtyp " + officialWhere;
 		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
 		if (rs == null) {
 			return 0;

@@ -11,7 +11,6 @@ import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.rating.RatingPredictionConfig;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -44,13 +43,9 @@ public class Lineup{
 	public static final byte SYS_550 = 9;
 	public static final byte SYS_253 = 10;
 
-	public static final String DEFAULT_NAME = "HO!";
-	public static final String DEFAULT_NAMELAST = "HO!LastLineup";
-	public static final int NO_HRF_VERBINDUNG = -1;
-
 	// TODO: remove assistant from Lineup class
 	/** Aufstellungsassistent */
-	private LineupAssistant m_clAssi = new LineupAssistant();
+	private final LineupAssistant m_clAssi = new LineupAssistant();
 
 	/** positions */
 	@SerializedName("positions")
@@ -82,7 +77,7 @@ public class Lineup{
 	MatchLineupPosition setPiecesTaker;
 	private Player.ManMarkingPosition manMarkingPosition;
 
-	public Lineup(Vector<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
+	public Lineup(List<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
 		initPositionen553(); // reset all
 		for (var position : matchLineupPositions){
 			setPosition(position);
@@ -108,7 +103,7 @@ public class Lineup{
 		this.manMarkingPosition = manMarkingPosition;
 	}
 
-	private class Settings {
+	private static class Settings {
 		/** Attitude */
 		@SerializedName("speechLevel")
 		@Expose
@@ -162,7 +157,7 @@ public class Lineup{
 
 	/**
 	 * Creates a new instance of Lineup
-	 * 
+	 * <p>
 	 * Probably up for change with new XML?
 	 */
 	public Lineup(Properties properties) {
@@ -449,13 +444,6 @@ public class Lineup{
 	 * Get the average experience of all players in lineup using the formula
 	 * from kopsterkespits: teamxp = ((sum of teamxp + xp of
 	 * captain)/12)*(1-(7-leadership of captain)*5%)
-	 */
-	public final float getAverageExperience() {
-		return getAverageExperience(0);
-	}
-
-	/**
-	 * Get the average experience of all players in lineup using a specific
 	 *
 	 * @param captainsId use this player as captain (<= 0 for current captain)
 	 * @return float
@@ -768,15 +756,12 @@ public class Lineup{
 	}
 
 	public String tryGetPlayerNameByPositionID(int positionId) {
-		String playerName;
-
 		try {
 			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getPlayerId()).getShortName();
 		} catch (Exception e) {
 			return "           ";
 		}
 	}
-
 
 	public void printLineup() {
 		try {
@@ -831,28 +816,6 @@ public class Lineup{
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Setter for property m_vPositionen. All previous entries of the linup are
-	 * cleared.
-	 * 
-	 * @param positions
-	 *            New value of property m_vPositionen.
-	 */
-	public final void setPositionen(List<MatchLineupPosition> positions) {
-		// Replace the existing positions with the incoming on a one by one
-		// basis. Otherwise we will miss 3 positions when loading
-		// an old style lineup.
-		// We need to avoid the regular methods, as some required stuff like the
-		// Model may not be created yet.
-
-		if (positions != null) {
-			initPositionen553();
-			for (var pos : positions) {
-				setPosition(pos);
-			}
-		}
 	}
 
 	public final void setPosition(MatchLineupPosition position)
@@ -947,25 +910,25 @@ public class Lineup{
 					if (oldPlayerRole != null) {
 						if (position.isFieldMatchRoleId()) {
 							//if player changed is in starting eleven it has to be remove from previous occupied positions
-							oldPlayerRole.setSpielerId(0, this);
+							oldPlayerRole.setPlayerIdIfValidForLineup(0, this);
 							if (oldPlayerRole.isSubstitutesMatchRoleId()) {
 								removeObjectPlayerFromSubstitutions(playerID);
 								// player can occupy multiple bench positions
 								oldPlayerRole = getPositionByPlayerId(playerID);
 								while (oldPlayerRole != null) {
-									oldPlayerRole.setSpielerId(0, this);
+									oldPlayerRole.setPlayerIdIfValidForLineup(0, this);
 									oldPlayerRole = getPositionByPlayerId(playerID);
 								}
 							}
 						} else {
 							// position is on bench (or backup), remove him from field position, but not from other bench positions
 							if (oldPlayerRole.isFieldMatchRoleId()) {
-								oldPlayerRole.setSpielerId(0, this);
+								oldPlayerRole.setPlayerIdIfValidForLineup(0, this);
 							}
 						}
 					}
 				}
-				position.setSpielerId(playerID, this);
+				position.setPlayerIdIfValidForLineup(playerID, this);
 			}
 		}
 	}
@@ -1173,7 +1136,7 @@ public class Lineup{
 			if ((HOVerwaltung.instance().getModel() != null)
 					&& (HOVerwaltung.instance().getModel().getCurrentPlayer(pos.getPlayerId()) == null)) {
 				// nein dann zuweisung aufheben
-				pos.setSpielerId(0, this);
+				pos.setPlayerIdIfValidForLineup(0, this);
 			}
 		}
 	}
@@ -1482,21 +1445,6 @@ public class Lineup{
 	}
 
 	/**
-	 * Calculate team strength for the given position.
-	 */
-	private float calcTeamStrength(List<Player> players, byte positionId, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
-		float stk = 0.0f;
-		if (players != null) {
-			for (var pos : m_vFieldPositions) {
-				if (pos.getPosition() == positionId) {
-					stk += calcPlayerStrength(players, pos.getPlayerId(), positionId, useForm, weather, useWeatherImpact);
-				}
-			}
-		}
-		return Helper.round(stk, 1);
-	}
-
-	/**
 	 * Initializes the 553 lineup
 	 */
 	private void initPositionen553() {
@@ -1591,8 +1539,8 @@ public class Lineup{
 				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
 				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
 				if ( matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null ){
-					matchRoleIDaffectedPlayer.setSpielerId(sub.getObjectPlayerID());
-					matchRoleIDPlayer.setSpielerId(sub.getSubjectPlayerID());
+					matchRoleIDaffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
+					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
 				}
 				else {
 					if ( matchRoleIDaffectedPlayer == null ){

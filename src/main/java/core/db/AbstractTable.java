@@ -25,7 +25,7 @@ public abstract class AbstractTable {
 
 
 	/**
-	 * id columns count
+	 * id columns count, is used to build the standard select, delete and update statements
 	 */
 	protected int idColumns = 1;
 
@@ -295,6 +295,11 @@ public abstract class AbstractTable {
 		return adapter.executePreparedQuery(getPreparedSelectStatement(), whereValues);
 	}
 
+	/**
+	 * Check if record is stored in database without loading it
+	 * @param whereValues values for prepared select statement
+	 * @return true if record is found
+	 */
 	protected boolean isStored(Object ... whereValues) {
 		boolean ret = false;
 		try{

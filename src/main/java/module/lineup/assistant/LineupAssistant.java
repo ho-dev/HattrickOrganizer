@@ -7,7 +7,7 @@ import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.rating.RatingPredictionManager;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -328,7 +328,7 @@ public class LineupAssistant {
 	 */
 	public final void resetPositionsbesetzungen(Vector<MatchLineupPosition> positionen) {
 		for ( var pos: positionen){
-			pos.setSpielerId(0);
+			pos.setPlayerIdIfValidForLineup(0);
 		}
 	}
 	
@@ -413,7 +413,7 @@ public class LineupAssistant {
 		Player player;
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
-			pos = (MatchRoleID) positionen.get(i);
+			pos = positionen.get(i);
 
 			// Ignore already assigned positions and non substitute position
 			if ((pos.getPlayerId() > 0) || ! IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
@@ -427,7 +427,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
 				}
 			}
 		}
@@ -443,7 +443,7 @@ public class LineupAssistant {
 		Player player;
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
-			pos = (MatchRoleID) positionen.get(i);
+			pos = positionen.get(i);
 
 			// bereits vergebene Positionen ignorieren und ReserveBank leer
 			// lassen
@@ -458,7 +458,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setSpielerId(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
 				}
 			}
 		}
@@ -481,7 +481,7 @@ public class LineupAssistant {
 //		final Vector<IMatchRoleID> zusPos = new Vector<IMatchRoleID>();
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
-			pos = (MatchRoleID) positionen.get(i);
+			pos = positionen.get(i);
 
 			//Ignore already assigned positions and substitutes
 			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
@@ -495,7 +495,7 @@ public class LineupAssistant {
 
 				// fill the position
 				if (player != null) {
-					pos.setSpielerId(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
 				}
 			}
 		}
@@ -512,7 +512,7 @@ public class LineupAssistant {
 		final Vector<IMatchRoleID> zusPos = new Vector<>();
 
 		for (int i = 0; (positions != null) && (players != null) && (i < positions.size()); i++) {
-			pos = (MatchRoleID) positions.get(i);
+			pos = positions.get(i);
 
 			//ignore already assigned positions and leave ReserveBank empty
 			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
@@ -526,7 +526,7 @@ public class LineupAssistant {
 
 				// occupy position
 				if (player != null) {
-					pos.setSpielerId(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
 				}
 			}
 		}
@@ -547,7 +547,7 @@ public class LineupAssistant {
 
 				// occupy position
 				if (player != null) {
-					pos.setSpielerId(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
 				}
 			}
 		}

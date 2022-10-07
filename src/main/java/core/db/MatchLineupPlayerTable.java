@@ -2,18 +2,12 @@ package core.db;
 
 import core.model.match.MatchLineupPosition;
 import core.model.enums.MatchType;
-import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
 import core.util.HOLogger;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
 import java.util.Vector;
-
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
-
 
 public final class MatchLineupPlayerTable extends AbstractTable {
 
@@ -24,29 +18,28 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	MatchLineupPlayerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 3;
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-				new ColumnDescriptor("TeamID", Types.INTEGER, false),
-				new ColumnDescriptor("SpielerID", Types.INTEGER, false),
-				new ColumnDescriptor("RoleID", Types.INTEGER, false),
-				new ColumnDescriptor("Taktik", Types.INTEGER, false),
-				new ColumnDescriptor("PositionCode", Types.INTEGER, false),
-				new ColumnDescriptor("VName", Types.VARCHAR, false, 255),
-				new ColumnDescriptor("NickName", Types.VARCHAR, false, 255),
-				new ColumnDescriptor("Name", Types.VARCHAR, false, 255),
-				new ColumnDescriptor("Rating", Types.REAL, false),
-				new ColumnDescriptor("HoPosCode", Types.INTEGER, false),
-				new ColumnDescriptor("STATUS", Types.INTEGER, false),
-				new ColumnDescriptor("FIELDPOS", Types.INTEGER, false),
-				new ColumnDescriptor("RatingStarsEndOfMatch", Types.REAL, false),
-				new ColumnDescriptor("StartPosition", Types.INTEGER, false),
-				new ColumnDescriptor("StartBehaviour", Types.INTEGER, false),
-				new ColumnDescriptor("StartSetPieces", Types.BOOLEAN, true)
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchLineupPosition) o).getMatchId()).setSetter((o, v) -> ((MatchLineupPosition) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchLineupPosition) o).getMatchType().getId()).setSetter((o, v) -> ((MatchLineupPosition) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchLineupPosition) o).getTeamId()).setSetter((o, v) -> ((MatchLineupPosition) o).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((MatchLineupPosition) o).getPlayerId()).setSetter((o, v) -> ((MatchLineupPosition) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("RoleID").setGetter((o) -> ((MatchLineupPosition) o).getRoleId()).setSetter((o, v) -> ((MatchLineupPosition) o).setRoleId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Taktik").setGetter((o) -> ((MatchLineupPosition) o).getBehaviour()).setSetter((o, v) -> ((MatchLineupPosition) o).setTaktik((byte)(int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("VName").setGetter((o) -> ((MatchLineupPosition) o).getSpielerVName()).setSetter((o, v) -> ((MatchLineupPosition) o).setSpielerVName((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NickName").setGetter((o) -> ((MatchLineupPosition) o).getNickName()).setSetter((o, v) -> ((MatchLineupPosition) o).setNickName((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Name").setGetter((o) -> ((MatchLineupPosition) o).getSpielerName()).setSetter((o, v) -> ((MatchLineupPosition) o).setSpielerName((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Rating").setGetter((o) -> ((MatchLineupPosition) o).getRating()).setSetter((o, v) -> ((MatchLineupPosition) o).setRating((float) v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HoPosCode").setGetter((o) -> ((MatchLineupPosition) o).getHoPosCode()).setSetter((o, v) -> ((MatchLineupPosition) o).setHoPosCode((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("STATUS").setGetter((o) -> ((MatchLineupPosition) o).getStatus()).setSetter((o, v) -> ((MatchLineupPosition) o).setStatus((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("RatingStarsEndOfMatch").setGetter((o) -> ((MatchLineupPosition) o).getRatingStarsEndOfMatch()).setSetter((o, v) -> ((MatchLineupPosition) o).setRatingStarsEndOfMatch((float) v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("StartPosition").setGetter((o) -> ((MatchLineupPosition) o).getStartPosition()).setSetter((o, v) -> ((MatchLineupPosition) o).setStartPosition((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("StartBehaviour").setGetter((o) -> ((MatchLineupPosition) o).getStartBehavior()).setSetter((o, v) -> ((MatchLineupPosition) o).setStartBehavior((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("StartSetPieces").setGetter((o) -> ((MatchLineupPosition) o).isStartSetPiecesTaker()).setSetter((o, v) -> ((MatchLineupPosition) o).setStartSetPiecesTaker((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
 		};
 	}
 
@@ -57,11 +50,6 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 				"CREATE INDEX iMATCHLINEUPPLAYER_2 ON " + getTableName() + "(MatchID,TeamID)",
 				"SET TABLE " + getTableName() + " NEW SPACE"
 		};
-	}
-
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
-		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
 	}
 
 	/**
@@ -166,96 +154,21 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return starsStatistics;
 	}
 
-	private final PreparedDeleteStatementBuilder deleteMatchLineupPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE MatchTyp=? AND MatchID=? AND TeamID=? AND RoleID=?");
-
 	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType, int matchID, int teamID) {
 		if (matchLineupPosition != null) {
-			try {
-				adapter.executePreparedUpdate(deleteMatchLineupPlayerStatementBuilder.getStatement(), matchType.getId(), matchID, teamID, matchLineupPosition.getRoleId());
-				executePreparedInsert(
-						matchID,
-						matchType.getId(),
-						teamID,
-						matchLineupPosition.getPlayerId(),
-						matchLineupPosition.getRoleId(),
-						matchLineupPosition.getBehaviour(),
-						matchLineupPosition.getRoleId(),
-						matchLineupPosition.getSpielerVName(),
-						matchLineupPosition.getNickName(),
-						matchLineupPosition.getSpielerName(),
-						matchLineupPosition.getRating(),
-						matchLineupPosition.getPosition(),
-						0,
-						matchLineupPosition.getRoleId(),
-						matchLineupPosition.getRatingStarsEndOfMatch(),
-						matchLineupPosition.getStartPosition(),
-						matchLineupPosition.getStartBehavior(),
-						matchLineupPosition.isStartSetPiecesTaker()
-				);
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.storeMatchLineupPlayer Error" + e);
-				HOLogger.instance().log(getClass(), e);
-			}
+			matchLineupPosition.setMatchId(matchID);
+			matchLineupPosition.setMatchType(matchType);
+			matchLineupPosition.setTeamId(teamID);
+			matchLineupPosition.setIsStored(false);	// replace (if record was available in database, it has to be deleted before storing)
+			store(matchLineupPosition);
 		}
 	}
-
-	private final PreparedSelectStatementBuilder getMatchLineupPlayersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MatchID = ? AND MatchTyp = ? AND TeamID = ?");
-
-	Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID)  {
-		return createMatchLineups(getMatchLineupPlayersStatementBuilder.getStatement(), matchID, matchType.getId(), teamID);
+	List<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID)  {
+		return load(MatchLineupPosition.class, matchID, matchType.getId(), teamID);
 	}
 
 	private final PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
 	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
-		return  createMatchLineups(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID);
+		return load(MatchLineupPosition.class, adapter.executePreparedQuery(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID));
 	}
-
-	private Vector<MatchLineupPosition> createMatchLineups(PreparedStatement sql, Object... values)  {
-		var vec = new Vector<MatchLineupPosition>();
-		try {
-			var rs = adapter.executePreparedQuery(sql, values);
-			assert rs != null;
-			while (rs.next()) {
-				var roleID = rs.getInt("RoleID");
-				var behavior = rs.getInt("Taktik");
-				var spielerID = rs.getInt("SpielerID");
-				var rating = rs.getDouble("Rating");
-				var ratingStarsEndOfMatch = rs.getDouble("RatingStarsEndOfMatch");
-				var vname = rs.getString("VName");
-				var nickName = rs.getString("NickName");
-				var name = rs.getString("Name");
-				var startPos = rs.getInt("StartPosition");
-				var startBeh = rs.getInt("StartBehaviour");
-				var startSetPieces = DBManager.getBoolean(rs, "StartSetPieces", false);
-				var status = rs.getInt("STATUS");
-
-				switch (behavior) {
-					case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
-						roleID = IMatchRoleID.middleCentralDefender;
-						behavior = IMatchRoleID.NORMAL;
-					}
-					case IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
-						roleID = IMatchRoleID.centralInnerMidfield;
-						behavior = IMatchRoleID.NORMAL;
-					}
-					case IMatchRoleID.OLD_EXTRA_FORWARD -> {
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.NORMAL;
-					}
-				}
-
-				roleID = MatchRoleID.convertOldRoleToNew(roleID);
-
-				// Position code and field position was removed from constructor below.
-				var player = new MatchLineupPosition(roleID, spielerID, behavior, rating, vname, nickName, name, status, ratingStarsEndOfMatch, startPos, startBeh, startSetPieces);
-				vec.add(player);
-			}
-
-			return vec;
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.getMatchLineupTeam Error" + e);
-		}
-		return new Vector<>();
-	}
-
 }

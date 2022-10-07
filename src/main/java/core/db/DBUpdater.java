@@ -113,7 +113,7 @@ final class DBUpdater {
 			playerTable.tryAddColumn("MatchesCurrentTeam", "INTEGER");
 		}
 
-		if ( playerTable.tryDeleteColumn("BONUS")) {
+		if (playerTable.tryDeleteColumn("BONUS")) {
 			playerTable.tryDeleteColumn("OffsetTorwart");
 			playerTable.tryDeleteColumn("OffsetVerteidigung");
 			playerTable.tryDeleteColumn("OffsetSpielaufbau");
@@ -149,6 +149,10 @@ final class DBUpdater {
 			migrateSelectedEscapes("USERCONFIGURATION", "where CONFIG_KEY='hrfImport_HRFPath'", "CONFIG_VALUE");
 		}
 
+		var matchlineupplayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
+		if (matchlineupplayerTable.tryDeleteColumn("PositionCode")) {
+			matchlineupplayerTable.tryDeleteColumn("FIELDPOS");
+		}
 		updateDBVersion(dbVersion, 700);
 	}
 
