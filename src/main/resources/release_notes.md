@@ -5,7 +5,8 @@
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.1)
 
-### Database
+### Installer/Update
+* fix update error of portable version (#1654)
 
 ### Squad
 * fix painting error when HO path contains non ascii characters (#1644)
