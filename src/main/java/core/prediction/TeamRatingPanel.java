@@ -7,6 +7,7 @@ import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
+import module.teamAnalyzer.ui.RatingUtil;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -185,7 +186,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         m_clConstraints.gridy = row;
         add(new JLabel(zone), m_clConstraints);
 
-        final int lvl = ((int) d - 1) / 4;
+        final int lvl = (int)RatingUtil.getDoubleValue4Rating((int)d);
         if ( lvl >= levels.size()){
             initLevel(lvl+1);
         }
@@ -194,7 +195,7 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         m_clConstraints.gridx = 1;
         add(values[row][0], m_clConstraints);
 
-        final int subLvl = ((int) d - 1) - (lvl * 4);
+        final int subLvl = RatingUtil.getSubLevel((int)d);
         values[row][1] = new JComboBox(subLevels.toArray());
         values[row][1].setSelectedIndex(subLvl);
         m_clConstraints.gridx = 2;

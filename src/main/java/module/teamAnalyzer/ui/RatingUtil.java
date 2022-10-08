@@ -39,7 +39,7 @@ public final class RatingUtil {
         String subLevel = "";
         final StringTokenizer st = new StringTokenizer(value, "(");
      
-        if (value != null && value.indexOf("(")>-1 && value.indexOf(")")>-1) {
+        if (value.contains("(") && value.contains(")")) {
 	        level = st.nextToken().trim();
 	        if (rating > 80) // divine(very high)
 	        {
@@ -51,16 +51,16 @@ public final class RatingUtil {
 	        subLevel = st2.nextToken();
         }
 
-        if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("veryhigh")) > -1) {
+        if (subLevel.contains(HOVerwaltung.instance().getLanguageString("veryhigh"))) {
             level = level + "++";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("high")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("high"))) {
             level = level + "+";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("verylow")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("verylow"))) {
             level = level + "--";
         }
-        else if (subLevel.indexOf(HOVerwaltung.instance().getLanguageString("low")) > -1) {
+        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("low"))) {
             level = level + "-";
         }
 
@@ -69,7 +69,7 @@ public final class RatingUtil {
         }
 
         if (showNumber) {
-        	if (value != null && value.indexOf("(")>-1 && value.indexOf(")")>-1) {
+        	if (value.contains("(") && value.contains(")")) {
 	        	StringTokenizer st2 = new StringTokenizer(st.nextToken(), ")");
 	
 	            final String number = st2.nextToken();
@@ -104,7 +104,7 @@ public final class RatingUtil {
             return Double.parseDouble(desc);
         }
 
-        if (isNumeric && isDescription) {
+        if (isNumeric) {
             final StringTokenizer st = new StringTokenizer(desc, "(");
 
             st.nextToken();
@@ -131,19 +131,19 @@ public final class RatingUtil {
         }
         
         
-        if (valueStr.indexOf("++") > -1) {
+        if (valueStr.contains("++")) {
             extra += 0.7;
             valueStr = valueStr.substring(0, valueStr.indexOf("++"));
         }
-        else if (valueStr.indexOf("+") > -1) {
+        else if (valueStr.contains("+")) {
             extra += 0.6;
             valueStr = valueStr.substring(0, valueStr.indexOf("+"));
         }
-        else if (valueStr.indexOf("--") > -1) {
+        else if (valueStr.contains("--")) {
             extra += 0.3;
             valueStr = valueStr.substring(0, valueStr.indexOf("--"));
         }
-        else if (valueStr.indexOf("-") > -1) {
+        else if (valueStr.contains("-")) {
             extra += 0.4;
             valueStr = valueStr.substring(0, valueStr.indexOf("-"));
         }
@@ -157,6 +157,13 @@ public final class RatingUtil {
         return extra + value;
     }
     public static int getIntValue4Rating(double rating) {
-		return (int) (((double) (rating - 1) * 4d) + 1);
-	}
+        return (int) (((rating - 1) * 4d) + 1);
+    }
+    public static double getDoubleValue4Rating(int rating) {
+        return (int) (((double) (rating - 1) / 4d) + 1);
+    }
+
+    public static int getSubLevel(int rating) {
+        return (rating - 1) % 4;
+    }
 }

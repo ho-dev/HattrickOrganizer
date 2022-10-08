@@ -13,6 +13,7 @@
 
 ### Team Analyser
 * fix team analyzer simulation out of bounds error (#1638)
+* fix wrong rating values in simulator (#1655)
 
 ### Rating
 
