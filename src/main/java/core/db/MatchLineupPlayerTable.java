@@ -154,13 +154,16 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return starsStatistics;
 	}
 
-	void storeMatchLineupPlayer(MatchLineupPosition matchLineupPosition, MatchType matchType, int matchID, int teamID) {
-		if (matchLineupPosition != null) {
-			matchLineupPosition.setMatchId(matchID);
-			matchLineupPosition.setMatchType(matchType);
-			matchLineupPosition.setTeamId(teamID);
-			matchLineupPosition.setIsStored(false);	// replace (if record was available in database, it has to be deleted before storing)
-			store(matchLineupPosition);
+	void storeMatchLineupPlayers(List<MatchLineupPosition> matchLineupPositions, MatchType matchType, int matchID, int teamID) {
+		if (matchLineupPositions != null) {
+			executePreparedDelete(matchID, teamID, matchType.getId());
+			for ( var p : matchLineupPositions){
+				p.setMatchId(matchID);
+				p.setMatchType(matchType);
+				p.setTeamId(teamID);
+				p.setIsStored(false);	// replace (if record was available in database, it has to be deleted before storing)
+				store(p);
+			}
 		}
 	}
 	List<MatchLineupPosition> getMatchLineupPlayers(int matchID, MatchType matchType, int teamID)  {

@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
@@ -15,7 +16,7 @@ import static core.model.player.MatchRoleID.Sector.None;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-public class MatchLineupTeam {
+public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/*
 	* usages:
@@ -29,7 +30,7 @@ public class MatchLineupTeam {
 	 * in case of played matches or match orders
 	 * -1 for user stored lineups
 	 */
-	private final int matchId;
+	private int matchId;
 	/**
 	 * lineup Id
 	 * equal to team Id in played matches or match orders
@@ -783,6 +784,14 @@ public class MatchLineupTeam {
 
 	public int getMatchId() {
 		return this.matchId;
+	}
+
+	public void setMatchId(int v) {
+		this.matchId = v;
+	}
+
+	public void setMatchType(MatchType matchType) {
+		this.matchType = matchType;
 	}
 
 	private static class MatchAppearance {

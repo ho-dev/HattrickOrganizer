@@ -2296,7 +2296,7 @@ public class DBManager {
 	// -------------------------------------------------
 	public MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
 		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(iMatchType, matchID, teamID);
+				.loadMatchLineupTeam(iMatchType, matchID, teamID);
 	}
 
 	public MatchLineupTeam loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
@@ -2311,13 +2311,21 @@ public class DBManager {
 
 	public void storeMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
+
+		//replace players
+		var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance().getTable(MatchLineupPlayerTable.TABLENAME);
+		matchLineupPlayerTable.storeMatchLineupPlayers(matchLineupTeam.getLineup().getAllPositions(), matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID());
+
+		// replace Substitutions
+		var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
+		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType().getId(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
 	}
 
 	public void deleteMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).deleteMatchLineupTeam(matchLineupTeam);
 	}
 
-	public ArrayList<MatchLineupTeam> loadTemplateMatchLineupTeams() {
+	public List<MatchLineupTeam> loadTemplateMatchLineupTeams() {
 		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
 	}
 
