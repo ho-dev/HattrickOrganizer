@@ -153,6 +153,11 @@ final class DBUpdater {
 		if (matchlineupplayerTable.tryDeleteColumn("PositionCode")) {
 			matchlineupplayerTable.tryDeleteColumn("FIELDPOS");
 		}
+
+		var mmatchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+		if ( mmatchSubstitutionTable.tryDeleteColumn("HRFID")){
+			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
+		}
 		updateDBVersion(dbVersion, 700);
 	}
 

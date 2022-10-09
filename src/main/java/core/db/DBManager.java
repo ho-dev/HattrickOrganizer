@@ -2295,8 +2295,11 @@ public class DBManager {
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
 	public MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.loadMatchLineupTeam(iMatchType, matchID, teamID);
+		var ret = ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).loadMatchLineupTeam(iMatchType, matchID, teamID);
+		if ( ret != null) {
+			ret.loadLineup();
+		}
+		return ret;
 	}
 
 	public MatchLineupTeam loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
@@ -2318,7 +2321,7 @@ public class DBManager {
 
 		// replace Substitutions
 		var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
-		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType().getId(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
+		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
 	}
 
 	public void deleteMatchLineupTeam(MatchLineupTeam matchLineupTeam) {

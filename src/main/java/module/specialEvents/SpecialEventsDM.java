@@ -23,8 +23,6 @@ import java.util.List;
 
 public class SpecialEventsDM {
 
-	private final DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 	List<MatchRow> getRows(Filter filter) {
 		List<MatchRow> matchRows = new ArrayList<>();
 
@@ -58,18 +56,10 @@ public class SpecialEventsDM {
 	}
 
 	private List<MatchKurzInfo> getMatches(Filter filter) {
-		List<MatchRow> matchRows = new ArrayList<>();
-//		StringBuilder whereClause = new StringBuilder(" WHERE ");
-
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-//		whereClause.append(" (GastID=").append(teamId).append(" OR HeimID=").append(teamId).append(") ");
-//		whereClause.append(" AND (Status=").append(MatchKurzInfo.FINISHED).append(")");
-
 		Timestamp from=null;
 		if (filter.getSeasonFilterValue() != SeasonFilterValue.ALL_SEASONS) {
 			from = getMatchDateFrom(filter.getSeasonFilterValue());
-//			whereClause.append(" AND (MATCHDATE > '").append(this.dateformat.format(from));
-//			whereClause.append("')");
 		}
 
 		List<Integer> matchTypes = new ArrayList<>();
@@ -96,19 +86,10 @@ public class SpecialEventsDM {
 			matchTypes.add(MatchType.QUALIFICATION.getId());
 		}
 
-		if (matchTypes.size() > 0) {
-//			whereClause.append(" AND (MatchTyp IN (");
-//			for (Integer id : matchTypes) {
-//				whereClause.append(id).append(',');
-//			}
-//			// remove last ','
-//			whereClause.deleteCharAt(whereClause.length() - 1);
-//			whereClause.append("))");
-		} else {
+		if (matchTypes.size() == 0) {
 			// NO matches at all
 			return null;
 		}
-//		whereClause.append(" ORDER BY MatchDate DESC");
 
 		return DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.FINISHED, from, matchTypes);
 	}
@@ -253,7 +234,7 @@ public class SpecialEventsDM {
 
 	public static String getSpielerName(MatchEvent highlight) {
 		String name;
-		// if(highlight.getTeamID() == teamId && !isNegativeSE(highlight))
+		// if(highlight.getTeamId() == teamId && !isNegativeSE(highlight))
 		if (highlight.getTeamID() == HOVerwaltung.instance().getModel().getBasics().getTeamId()) {
 			name = findName(highlight) + "|*";} // -> black
 		else {
