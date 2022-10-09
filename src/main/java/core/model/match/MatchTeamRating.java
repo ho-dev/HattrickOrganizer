@@ -1,15 +1,11 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.model.enums.MatchType;
 import core.util.HOLogger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 
-import static core.file.xml.XMLManager.xmlValue2Hash;
-
-public class MatchTeamRating {
+public class MatchTeamRating extends AbstractTable.Storable {
 
     private int matchId;
     private MatchType matchTyp;
@@ -22,18 +18,10 @@ public class MatchTeamRating {
     private int numberOfVictories;
     private int numberOfUndefeated;
 
-    public MatchTeamRating(ResultSet rs) throws SQLException {
-        this.matchId = rs.getInt("MatchId");
-        this.matchTyp = MatchType.getById(rs.getInt("MatchTyp"));
-        this.teamId = rs.getInt("TeamId");
-        this.fanclubSize = rs.getInt("FanclubSize");
-        this.powerRating = rs.getInt("Powerrating");
-        this.globalRanking = rs.getInt("GlobalRanking");
-        this.leagueRanking = rs.getInt("LeagueRanking");
-        this.regionRanking = rs.getInt("RegionRanking");
-        this.numberOfVictories = rs.getInt("NumberOfVictories");
-        this.numberOfUndefeated = rs.getInt("NumberOfUndefeated");
-    }
+    /**
+     * constructor is needed by AbstractTable.load
+     */
+    public MatchTeamRating(){}
 
     public MatchTeamRating(int matchID, MatchType matchType, Map<String, String> download) {
         this.matchId=matchID;
@@ -94,47 +82,47 @@ public class MatchTeamRating {
         return powerRating;
     }
 
-    public void setPowerRating(int powerRating) {
-        this.powerRating = powerRating;
+    public void setPowerRating(Integer powerRating) {
+        if ( powerRating != null ) this.powerRating = powerRating;
     }
 
     public int getGlobalRanking() {
         return globalRanking;
     }
 
-    public void setGlobalRanking(int globalRanking) {
-        this.globalRanking = globalRanking;
+    public void setGlobalRanking(Integer globalRanking) {
+        if ( globalRanking != null ) this.globalRanking = globalRanking;
     }
 
     public int getLeagueRanking() {
         return leagueRanking;
     }
 
-    public void setLeagueRanking(int leagueRanking) {
-        this.leagueRanking = leagueRanking;
+    public void setLeagueRanking(Integer leagueRanking) {
+        if ( leagueRanking!= null) this.leagueRanking = leagueRanking;
     }
 
     public int getRegionRanking() {
         return regionRanking;
     }
 
-    public void setRegionRanking(int regionRanking) {
-        this.regionRanking = regionRanking;
+    public void setRegionRanking(Integer regionRanking) {
+       if ( regionRanking != null)  this.regionRanking = regionRanking;
     }
 
     public int getNumberOfVictories() {
         return numberOfVictories;
     }
 
-    public void setNumberOfVictories(int numberOfVictories) {
-        this.numberOfVictories = numberOfVictories;
+    public void setNumberOfVictories(Integer numberOfVictories) {
+        if ( numberOfVictories != null ) this.numberOfVictories = numberOfVictories;
     }
 
     public int getNumberOfUndefeated() {
         return numberOfUndefeated;
     }
 
-    public void setNumberOfUndefeated(int numberOfUndefeated) {
-        this.numberOfUndefeated = numberOfUndefeated;
+    public void setNumberOfUndefeated(Integer numberOfUndefeated) {
+        if ( numberOfUndefeated != null ) this.numberOfUndefeated = numberOfUndefeated;
     }
 }
