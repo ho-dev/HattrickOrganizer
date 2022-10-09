@@ -1,12 +1,11 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.enums.MatchType;
 import core.util.HODateTime;
 
-import java.sql.Timestamp;
-
-public class MatchLineup {
+public class MatchLineup extends AbstractTable.Storable {
 
     protected int homeTeamId = -1;
     protected int matchId = -1;
@@ -16,7 +15,6 @@ public class MatchLineup {
     private String guestTeamName = null;
     private String homeTeamName = null;
     private HODateTime matchDate;
-    private int arenaId = -1;
     private int guestTeamId = -1;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -26,33 +24,6 @@ public class MatchLineup {
      */
     public MatchLineup() {
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * Setter for property m_iArenaID.
-     *
-     * @param m_iArenaID New value of property m_iArenaID.
-     */
-    public final void setArenaID(int m_iArenaID) {
-        this.arenaId = m_iArenaID;
-    }
-
-    /**
-     * Getter for property m_iArenaID.
-     *
-     * @return Value of property m_iArenaID.
-     */
-    public final int getArenaID() {
-        return arenaId;
-    }
-
-
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    //Accessor
-    /////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Setter for property m_clGast.
@@ -241,10 +212,6 @@ public class MatchLineup {
             init();
         }
         return this.matchDate;
-    }
-
-    public SourceSystem getSourceSystem() {
-        return this.getMatchTyp().getSourceSystem();
     }
 
     public MatchLineupTeam getTeam(Integer teamId) {

@@ -4,12 +4,9 @@ import core.model.match.MatchLineup;
 import core.model.enums.MatchType;
 import core.model.match.SourceSystem;
 import core.util.HOLogger;
-
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public final class MatchLineupTable extends AbstractTable {
 
@@ -18,13 +15,14 @@ public final class MatchLineupTable extends AbstractTable {
 	
 	MatchLineupTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchTyp", Types.INTEGER, false)
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchLineup) o).getMatchID()).setSetter((o, v) -> ((MatchLineup) o).setMatchID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchLineup) o).getMatchType().getId()).setSetter((o, v) -> ((MatchLineup) o).setMatchTyp(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build()
 		};
 	}
 
@@ -39,93 +37,26 @@ public final class MatchLineupTable extends AbstractTable {
 			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(MatchID)"};
 	}
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
-	}
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this,"WHERE MATCHTYP=? AND MATCHID=?");
-	}
-
 	MatchLineup loadMatchLineup(int iMatchType, int matchID) {
-		try {
-			var rs = executePreparedSelect(iMatchType, matchID);
-			rs.next();
-			var lineup = createMatchLineup(rs);
-			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
-			lineup.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
-			lineup.setGuestTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
-			return lineup;
-
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getMatchLineup Error " + e);
-		}
-		return null;
+		return loadOne(MatchLineup.class, matchID, iMatchType);
 	}
 
-	private final DBManager.PreparedStatementBuilder isMatchLineupInDBStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT MatchId FROM "+getTableName()+" WHERE MATCHTYP=? AND MatchId=?");
-
-	/**
-	 * Ist das Match schon in der Datenbank vorhanden?
-	 */
 	boolean isMatchLineupInDB(MatchType matchType, int matchid) {
-		boolean vorhanden = false;
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(isMatchLineupInDBStatementBuilder.getStatement(), matchType.getId(), matchid);
-			if (rs.next()) {
-				vorhanden = true;
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"isMatchLineupInDB() : " + e);
-		}
-		return vorhanden;
+		return isStored(matchid, matchType.getId());
 	}
 
-	/**
-	 * store match lineup including team and player information
-	 */
 	void storeMatchLineup(MatchLineup lineup) {
-		storeMatchLineup(lineup, null);
-	}
-
-	void storeMatchLineup(MatchLineup lineup, Integer teamId) {
-		if (lineup != null) {
-			try {
-				executePreparedDelete( lineup.getMatchType().getId(), lineup.getMatchID());
-				//insert
-				executePreparedInsert(
-						lineup.getMatchID(),
-						lineup.getMatchTyp().getId());
-
-				if (teamId == null || teamId == lineup.getHomeTeamId()) {
-					DBManager.instance().storeMatchLineupTeam(lineup.getHomeTeam());
-				}
-				if (teamId == null || teamId == lineup.getGuestTeamId()) {
-					DBManager.instance().storeMatchLineupTeam(lineup.getGuestTeam());
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.storeMatchLineup Error" + e);
-				HOLogger.instance().log(getClass(), e);
+		if ( lineup != null) {
+			lineup.setIsStored(isStored(lineup.getMatchID(), lineup.getMatchType().getId()));
+			if (!lineup.isStored()) {    // do not update, because there is nothing to update (only ids in class)
+				store(lineup);
 			}
 		}
 	}
 
 	private final PreparedSelectStatementBuilder loadYouthMatchLineupsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
 	public List<MatchLineup> loadYouthMatchLineups() {
-
-		var lineups = new ArrayList<MatchLineup>();
-		try {
-			var rs = adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement());
-			while (rs.next()) {
-				var lineup = createMatchLineup(rs);
-				lineups.add(lineup);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.loadMatchLineups Error" + e);
-		}
-		return lineups;
+		return load(MatchLineup.class,  adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement()));
 	}
 
 	private final PreparedDeleteStatementBuilder deleteYouthMatchLineupsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchLineupsBeforeStatementSQL());
@@ -148,12 +79,5 @@ public final class MatchLineupTable extends AbstractTable {
 
 	private String getMatchTypeInValues() {
 		return MatchType.fromSourceSystem(SourceSystem.YOUTH).stream().map(i->String.valueOf(i.getId())).collect(Collectors.joining(","));
-	}
-
-	private MatchLineup createMatchLineup(ResultSet rs) throws SQLException {
-		var lineup = new MatchLineup();
-		lineup.setMatchID(rs.getInt("MatchID"));
-		lineup.setMatchTyp(MatchType.getById(rs.getInt("MatchTyp")));
-		return lineup;
 	}
 }

@@ -888,8 +888,13 @@ public class DBManager {
 	 * @return the match lineup
 	 */
 	public MatchLineup loadMatchLineup(int iMatchType, int matchID) {
-		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.loadMatchLineup(iMatchType, matchID);
+		var ret =  ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).loadMatchLineup(iMatchType, matchID);
+		if ( ret != null ) {
+			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
+			ret.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
+			ret.setGuestTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
+		}
+		return ret;
 	}
 
 	/**
@@ -1821,8 +1826,7 @@ public class DBManager {
 					.storeMatchKurzInfos(matches);
 
 			storeMatchDetails(details);
-			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-					.storeMatchLineup(lineup);
+			storeMatchLineup(lineup, null);
 
 			return true;
 		}
@@ -2181,11 +2185,16 @@ public class DBManager {
 	 * Store match lineup.
 	 *
 	 * @param lineup the lineup
-	 * @param teamId the team id
+	 * @param teamId the team id, if null both teams are stored
 	 */
 	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
-		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.storeMatchLineup(lineup, teamId);
+		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).storeMatchLineup(lineup);
+		if (teamId == null || teamId == lineup.getHomeTeamId()) {
+			storeMatchLineupTeam(lineup.getHomeTeam());
+		}
+		if (teamId == null || teamId == lineup.getGuestTeamId()) {
+			storeMatchLineupTeam(lineup.getGuestTeam());
+		}
 	}
 
 	/**
