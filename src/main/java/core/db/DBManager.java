@@ -2337,15 +2337,15 @@ public class DBManager {
 	}
 
 	public NtTeamDetails loadNtTeamDetails(int teamId, Timestamp matchDate) {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(teamId, matchDate);
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeam(teamId, matchDate);
 	}
 
 	public List<NtTeamDetails> loadAllNtTeamDetails() {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(getLatestHRF().getHrfId());
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeams(getLatestHRF().getHrfId());
 	}
 
 	public void storeNtTeamDetails(NtTeamDetails details) {
-		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
+		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).storeNTTeam(details);
 	}
 
 	private final String sql = "SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER" +
