@@ -1,18 +1,16 @@
 package core.db;
 
 import core.util.HOLogger;
-
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
 final class ModuleConfigTable extends AbstractTable {
 	final static String TABLENAME = "MODULE_CONFIGURATION";
 
-	protected ModuleConfigTable(JDBCAdapter adapter) {
+	ModuleConfigTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -60,10 +58,6 @@ final class ModuleConfigTable extends AbstractTable {
 		 return values;
 	 }
 
-	 @Override
-	 protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder() {
-		 return new PreparedUpdateStatementBuilder(this, "SET CONFIG_VALUE=?, CONFIG_DATATYPE=? WHERE CONFIG_KEY=?");
-	 }
 	private int updateConfig(String key, Object value)  {
 		return executePreparedUpdate(
 				value,
