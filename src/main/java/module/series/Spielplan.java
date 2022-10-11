@@ -3,8 +3,6 @@ package module.series;
 import core.model.series.*;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -421,5 +419,9 @@ public class Spielplan  {
         	HOLogger.instance().error(getClass(), "Error(generateTabellenVerlauf):" + e);
             return new Tabellenverlauf();
         }
+    }
+
+    public void addFixtures(List<Paarung> fixtures) {
+        m_vEintraege.addAll(fixtures);
     }
 }
