@@ -1,8 +1,9 @@
 package module.transfer.scout;
 
+import core.db.AbstractTable;
 import core.util.HOLogger;
 
-public class ScoutEintrag {
+public class ScoutEintrag extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Info */
@@ -82,42 +83,6 @@ public class ScoutEintrag {
     public ScoutEintrag() {
     }
 
-    /**
-     * Creates a new instance of ScoutEintrag
-     */
-    public ScoutEintrag(java.sql.ResultSet rs) {
-        try {
-            m_iPlayerID = rs.getInt("PlayerID");
-            m_sName = rs.getString("Name");
-            m_iAlter = rs.getInt("Age");
-            m_iAgeDays = rs.getInt("AgeDays");
-            m_iTSI = rs.getInt("Marktwert");
-            m_iSpeciality = rs.getInt("Speciality");
-            m_iKondition = rs.getInt("Kondition");
-            m_iErfahrung = rs.getInt("Erfahrung");
-            m_iForm = rs.getInt("Form");
-            m_iTorwart = rs.getInt("Torwart");
-            m_iVerteidigung = rs.getInt("Verteidigung");
-            m_iSpielaufbau = rs.getInt("Spielaufbau");
-            m_iPasspiel = rs.getInt("Passpiel");
-            m_iFluegelspiel = rs.getInt("Fluegel");
-            m_iTorschuss = rs.getInt("Torschuss");
-            m_iStandards = rs.getInt("Standards");
-            m_iPrice = rs.getInt("Price");
-            m_clDeadline = rs.getTimestamp("Deadline");
-            m_bWecker = rs.getBoolean("Wecker");
-            m_sInfo = rs.getString("Info");
-            m_iAgreeability = rs.getInt("Agreeability");
-            m_ibaseWage = rs.getInt("baseWage");
-            m_iNationality = rs.getInt("Nationality");
-            m_iLeadership = rs.getInt("Leadership");
-            m_iLoyalty = rs.getInt("Loyalty");
-            m_bHomegrown = rs.getBoolean("MotherClub");
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"Konstruktor ScoutEintrag : " + e.toString());
-        }
-    }
-
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -176,8 +141,7 @@ public class ScoutEintrag {
      */
     public String getAlterWithAgeDaysAsString() {
     	// format = yy.ddd
-    	String retVal = getAlter() + "." + getAgeDays();
-    	return retVal;
+        return getAlter() + "." + getAgeDays();
     }
 
     /**
@@ -585,7 +549,7 @@ public class ScoutEintrag {
     public final ScoutEintrag duplicate() {
         final ScoutEintrag eintrag = new ScoutEintrag();
         eintrag.setPlayerID(getPlayerID());
-        eintrag.setName(new String(getName()));
+        eintrag.setName(getName());
         eintrag.setAlter(getAlter());
         eintrag.setAgeDays(getAgeDays());
         eintrag.setTSI(getTSI());
@@ -600,7 +564,7 @@ public class ScoutEintrag {
         eintrag.setPasspiel(getPasspiel());
         eintrag.setVerteidigung(getVerteidigung());
         eintrag.setStandards(getStandards());
-        eintrag.setInfo(new String(getInfo()));
+        eintrag.setInfo(getInfo());
         eintrag.setPrice(getPrice());
         eintrag.setWecker(isWecker());
         eintrag.setDeadline(new java.sql.Timestamp(getDeadline().getTime()));

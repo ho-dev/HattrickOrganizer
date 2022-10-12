@@ -1148,7 +1148,9 @@ public class DBManager {
 	 * @return the scout list
 	 */
 	public Vector<ScoutEintrag> getScoutList() {
-		return ((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList();
+		var ret = new Vector<ScoutEintrag>();
+		ret.addAll(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
+		return ret;
 	}
 
 	/**
