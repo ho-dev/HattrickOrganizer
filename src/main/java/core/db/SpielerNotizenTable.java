@@ -1,9 +1,6 @@
 package core.db;
 
 import core.model.player.Player;
-import core.util.HOLogger;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 
 final class SpielerNotizenTable extends AbstractTable {
@@ -17,63 +14,23 @@ final class SpielerNotizenTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[7];
-		columns[0]= new ColumnDescriptor("SpielerID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("Notiz",Types.VARCHAR,false,2048);
-		columns[2]= new ColumnDescriptor("Spielberechtigt",Types.BOOLEAN,false);
-		columns[3]= new ColumnDescriptor("TeamInfoSmilie",Types.VARCHAR,false,127);
-		columns[4]= new ColumnDescriptor("ManuellerSmilie",Types.VARCHAR,false,127);
-		columns[5]= new ColumnDescriptor("userPos",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("isFired",Types.BOOLEAN,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Player.Notes) o).getPlayerId()).setSetter((o, v) -> ((Player.Notes) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Notiz").setGetter((o) -> ((Player.Notes) o).getNote()).setSetter((o, v) -> ((Player.Notes) o).setNote((String) v)).setType(Types.VARCHAR).setLength(2048).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spielberechtigt").setGetter((o) -> ((Player.Notes) o).isEligibleToPlay()).setSetter((o, v) -> ((Player.Notes) o).setEligibleToPlay((boolean) v)).setType(Types.BOOLEAN).setLength(2048).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamInfoSmilie").setGetter((o) -> ((Player.Notes) o).getTeamInfoSmilie()).setSetter((o, v) -> ((Player.Notes) o).setTeamInfoSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ManuellerSmilie").setGetter((o) -> ((Player.Notes) o).getManuelSmilie()).setSetter((o, v) -> ((Player.Notes) o).setManuelSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("userPos").setGetter((o) -> ((Player.Notes) o).getUserPos()).setSetter((o, v) -> ((Player.Notes) o).setUserPos((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("isFired").setGetter((o) -> ((Player.Notes) o).isFired()).setSetter((o, v) -> ((Player.Notes) o).setIsFired((boolean) v)).setType(Types.BOOLEAN).setLength(2048).isNullable(false).build()
+		};
 	}
 
-	@Override
-	protected  PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this,"WHERE SPIELERID=?");
-	}
-
-	void store(Player.Notes notes) {
-
-		try {
-			executePreparedDelete(notes.getPlayerId());
-			executePreparedInsert(
-					notes.getPlayerId(),
-					notes.getNote(),
-					notes.isEligibleToPlay(),
-					notes.getTeamInfoSmilie(),
-					notes.getManuelSmilie(),
-					notes.getUserPos(),
-					notes.isFired()
-
-			);
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "cannot store player notes: " + e);
-		}
+	void storeNotes(Player.Notes notes) {
+		store(notes);
 	}
 	public Player.Notes load(int playerId) {
-		try {
-			var rs = executePreparedSelect(playerId);
-			if (rs != null) {
-				if (rs.next()) {
-					return createPlayerNotes(rs);
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "Player.Notes load error");
-		}
-		return new Player.Notes();
-	}
-
-	private Player.Notes createPlayerNotes(ResultSet rs) throws SQLException {
-		var ret = new Player.Notes();
-		ret.setPlayerId(rs.getInt("SpielerID"));
-		ret.setNote(rs.getString("Notiz"));
-		ret.setEligibleToPlay(rs.getBoolean("Spielberechtigt"));
-		ret.setTeamInfoSmilie(rs.getString("TeamInfoSmilie"));
-		ret.setManuelSmilie(rs.getString("ManuellerSmilie"));
-		ret.setUserPos(rs.getInt("userPos"));
-		ret.setIsFired(rs.getBoolean("isFired"));
-
+		var ret =  loadOne(Player.Notes.class, playerId);
+		if ( ret == null) ret = new Player.Notes();
 		return ret;
 	}
 }

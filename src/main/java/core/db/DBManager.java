@@ -869,7 +869,7 @@ public class DBManager {
 	// -------------------------------------------------
 
 	public void storePlayerNotes(Player.Notes notes) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).store(notes);
+		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).storeNotes(notes);
 	}
 
 	public Player.Notes loadPlayerNotes(int playerId) {

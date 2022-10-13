@@ -1691,7 +1691,9 @@ public class Player extends AbstractTable.Storable {
         this.m_lastMatchId = v;
     }
 
-    public static class Notes{
+    public static class Notes extends  AbstractTable.Storable{
+
+        public Notes(){}
 
         private int playerId;
 
