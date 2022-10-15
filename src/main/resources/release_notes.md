@@ -40,5 +40,7 @@
 
 ## Translations
 
-Reports by Contributors - August 05, 2022 - Sep 10, 2022
+Reports by Contributors - August 05, 2022 - October 15, 2022
 
+* Moorhuhninho 33
+* TeamBMW 23
