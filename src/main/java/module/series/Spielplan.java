@@ -1,5 +1,6 @@
 package module.series;
 
+import core.db.AbstractTable;
 import core.model.series.*;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Spielplan represents a game schedule, i.e. a particular season in a series.
  */
-public class Spielplan  {
+public class Spielplan  extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     protected LigaTabelle m_clTabelle;

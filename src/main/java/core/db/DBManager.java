@@ -615,8 +615,11 @@ public class DBManager {
 	 * @param plan the plan
 	 */
 	public void storeSpielplan(Spielplan plan) {
-		((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.storeSpielplan(plan);
+		if ( plan != null){
+			((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+					.storeSpielplan(plan);
+			storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
+		}
 	}
 
 	public void deleteSpielplanTabelle(int saison, int ligaId) {
@@ -627,12 +630,18 @@ public class DBManager {
 	/**
 	 * lädt alle Spielpläne aus der DB
 	 *
-	 * @param mitPaarungen inklusive der Paarungen ja/nein
+	 * @param withFixtures inklusive der Paarungen ja/nein
 	 * @return the spielplan [ ]
 	 */
-	public List<Spielplan> getAllSpielplaene(boolean mitPaarungen) {
-		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.getAllSpielplaene(mitPaarungen);
+	public List<Spielplan> getAllSpielplaene(boolean withFixtures) {
+		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+				.getAllSpielplaene();
+		if (withFixtures) {
+			for (Spielplan gameSchedule : ret) {
+				getPaarungen(gameSchedule);
+			}
+		}
+		return ret;
 	}
 
 	// ------------------------------- MatchLineupPlayerTable

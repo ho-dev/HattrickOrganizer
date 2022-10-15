@@ -5,70 +5,35 @@ import core.util.HOLogger;
 import module.series.Spielplan;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 
 final class SpielplanTable extends AbstractTable {
 	final static String TABLENAME = "SPIELPLAN";
 	
 	SpielplanTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[4];
-		columns[0]= new ColumnDescriptor("LigaID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("LigaName",Types.VARCHAR,true,256);
-		columns[2]= new ColumnDescriptor("Saison",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("FetchDate",Types.TIMESTAMP,false);
-	}
-
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this,"WHERE SAISON=? AND LigaId=?");
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((p) -> ((Spielplan) p).getLigaId()).setSetter((p, v) -> ((Spielplan) p).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((p) -> ((Spielplan) p).getSaison()).setSetter((p, v) -> ((Spielplan) p).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName").setGetter((p) -> ((Spielplan) p).getLigaName()).setSetter((p, v) -> ((Spielplan) p).setLigaName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate").setGetter((p) -> ((Spielplan) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((Spielplan) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+		};
 	}
 
 	private final PreparedSelectStatementBuilder getAllSpielplaeneStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY Saison DESC");
 
 	/**
 	 * Returns all the game schedules from the database.
-	 *
-	 * @param withFixtures Includes the games part of the schedule if <code>true</code>.
 	 */
-	List<Spielplan> getAllSpielplaene(boolean withFixtures) {
-		final List<Spielplan> gameSchedules = new ArrayList<>();
-
-		try {
-			var rs = adapter.executePreparedQuery(getAllSpielplaeneStatementBuilder.getStatement());
-			assert rs != null;
-			while (rs.next()) {
-				// Plan auslesen
-				var plan = new Spielplan();
-
-				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
-				plan.setLigaId(rs.getInt("LigaID"));
-				plan.setLigaName(rs.getString("LigaName"));
-				plan.setSaison(rs.getInt("Saison"));
-
-				gameSchedules.add(plan);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getSpielplan Error" + e);
-		}
-
-		if (withFixtures) {
-			for (Spielplan gameSchedule : gameSchedules) {
-				DBManager.instance().getPaarungen(gameSchedule);
-			}
-		}
-
-		return gameSchedules;
+	List<Spielplan> getAllSpielplaene() {
+		return load(Spielplan.class, adapter.executePreparedQuery(getAllSpielplaeneStatementBuilder.getStatement()));
 	}
-
-	private final PreparedSelectStatementBuilder getSpielplanStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE LigaID = ? AND Saison = ? ORDER BY FetchDate DESC LIMIT 1");
 
 	/**
 	 * Gets a game schedule from the database; returns the latest if either param is -1.
@@ -77,27 +42,7 @@ final class SpielplanTable extends AbstractTable {
 	 * @param saison Season number.
 	 */
 	Spielplan getSpielplan(int ligaId, int saison) {
-		try {
-			var rs = adapter.executePreparedQuery(getSpielplanStatementBuilder.getStatement(), ligaId, saison);
-			assert rs != null;
-			if (rs.next()) {
-				var plan = new Spielplan();
-
-				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
-				plan.setLigaId(rs.getInt("LigaID"));
-				plan.setLigaName(rs.getString("LigaName"));
-				plan.setSaison(rs.getInt("Saison"));
-
-				DBManager.instance().getPaarungen(plan);
-				return plan;
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getSpielplan Error" + e);
-
-			HOLogger.instance().log(getClass(),e);
-		}
-
-		return null;
+		return loadOne(Spielplan.class, ligaId, saison);
 	}
 
 	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(
@@ -129,46 +74,16 @@ final class SpielplanTable extends AbstractTable {
 	 */
 	void storeSpielplan(Spielplan plan) {
 		if (plan != null) {
-			try {
-
-				executePreparedDelete(plan.getSaison(), plan.getLigaId());
-				executePreparedInsert(
-						plan.getLigaId(),
-						plan.getLigaName(),
-						plan.getSaison(),
-						plan.getFetchDate().toDbTimestamp()
-				);
-				DBManager.instance().storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storeSpielplan Error" + e);
-				HOLogger.instance().log(getClass(),e);
-			}
+			plan.setIsStored(isStored(plan.getLigaId(), plan.getSaison()));
+			store(plan);
 		}
 	}
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this," ORDER BY FetchDate DESC LIMIT 1");
-	}
+	private final PreparedSelectStatementBuilder loadLatestSpielplanStatementBuilder = new PreparedSelectStatementBuilder(this,
+			" ORDER BY FetchDate DESC LIMIT 1");
+
 	public Spielplan getLatestSpielplan() {
-		try {
-			var rs = executePreparedSelect();
-			assert rs != null;
-			if (rs.next()) {
-				var plan = new Spielplan();
-
-				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
-				plan.setLigaId(rs.getInt("LigaID"));
-				plan.setLigaName(rs.getString("LigaName"));
-				plan.setSaison(rs.getInt("Saison"));
-
-				DBManager.instance().getPaarungen(plan);
-				return plan;
-			}
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "DB.getSpielplan Error" + e);
-		}
-		return null;
+		return loadOne(Spielplan.class, this.adapter.executePreparedQuery(loadLatestSpielplanStatementBuilder.getStatement()));
 	}
 
 	/**
