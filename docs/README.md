@@ -9,7 +9,7 @@
   <td>Latest Release</td>
   <td>
     <a href="https://github.com/akasolace/HO/releases/tag/6.1">
-    <img src="https://img.shields.io/badge/HO-6.0-brightgreen.svg" alt="latest release" />
+    <img src="https://img.shields.io/badge/HO-6.1-brightgreen.svg" alt="latest release" />
     </a>
   </td>
 </tr>
