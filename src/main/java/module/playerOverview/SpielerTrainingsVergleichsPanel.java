@@ -10,14 +10,10 @@ import core.gui.model.AufstellungsListRenderer;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.Player;
-import core.util.HODateTime;
-import core.util.HOLogger;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -40,9 +36,9 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private JButton m_jbLoeschen = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
-    private JList m_jlHRFs = new JList();
-    private List<ChangeListener> changeListeners = new ArrayList<>();
+    private final JButton m_jbLoeschen = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+    private final JList m_jlHRFs = new JList();
+    private final List<ChangeListener> changeListeners = new ArrayList<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -97,7 +93,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             vergleichsPlayer.clear(); // .removeAllElements();
 
             // HRF Deleted, recalculate Skillups
-			DBManager.instance().reimportSkillup();
+//			DBManager.instance().reimportSkillup();
 
             //Nur manuelles Update der Tabelle, kein reInit, damit die Sortierung bleibt.
             HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFVergleich();

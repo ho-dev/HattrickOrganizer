@@ -34,16 +34,14 @@ public class MatchTeamRatingTable extends AbstractTable {
         return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
     }
 
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-        return new PreparedSelectStatementBuilder(this,"WHERE MatchID = ? AND MatchTyp = ?");
-    }
+    private final PreparedSelectStatementBuilder loadBothTeamRatingStatementBuilder = new PreparedSelectStatementBuilder(this,
+                   "WHERE MatchID = ? AND MatchTyp = ?");
 
     List<MatchTeamRating> load(int matchID, int matchType) {
-        return load(MatchTeamRating.class, matchID, matchType);
+        return load(MatchTeamRating.class, this.adapter.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType));
     }
 
-    void store(MatchTeamRating teamRating) {
+    void storeTeamRating(MatchTeamRating teamRating) {
         if (teamRating != null) {
             teamRating.setIsStored(isStored(teamRating.getMatchId(), teamRating.getMatchTyp().getId(), teamRating.getTeamId()));
             store(teamRating);

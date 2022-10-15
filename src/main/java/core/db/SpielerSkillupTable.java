@@ -4,8 +4,8 @@ import core.constants.player.PlayerSkill;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.model.player.Skillup;
 import core.util.HODateTime;
-import core.util.HOLogger;
 
 import java.sql.*;
 import java.util.*;
@@ -16,21 +16,22 @@ final class SpielerSkillupTable extends AbstractTable {
 	 * tablename
 	 **/
 	final static String TABLENAME = "SPIELERSKILLUP";
-	private static Map<String, Vector<Object[]>> playerSkillup = null;
+//	private static Map<String, Vector<Object[]>> playerSkillup = null;
 
 	SpielerSkillupTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[5];
-		columns[0] = new ColumnDescriptor("HRF_ID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("Datum", Types.TIMESTAMP, false);
-		columns[2] = new ColumnDescriptor("SpielerID", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("Skill", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("Value", Types.INTEGER, false);
-
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Skillup) o).getPlayerId()).setSetter((o, v) -> ((Skillup) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Skill").setGetter((o) -> ((Skillup) o).getSkill()).setSetter((o, v) -> ((Skillup) o).setSkill((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((Skillup) o).getHrfId()).setSetter((o, v) -> ((Skillup) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((Skillup) o).getDate().toDbTimestamp()).setSetter((o, v) -> ((Skillup) o).setDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Value").setGetter((o) -> ((Skillup) o).getValue()).setSetter((o, v) -> ((Skillup) o).setValue((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		};
 	}
 
 	@Override
@@ -40,117 +41,20 @@ final class SpielerSkillupTable extends AbstractTable {
 				"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
 	}
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
-		return new PreparedDeleteStatementBuilder(this,"WHERE HRF_ID=? AND SpielerID=? AND Skill=?");
+	private void storeSkillup(Skillup skillup) {
+		store(skillup);
 	}
 
-	private void storeSkillup(int hrfId, int spielerId, Timestamp date, int skillValue, int skillCode, boolean reload) {
-		executePreparedDelete(hrfId, spielerId, skillCode);
-		executePreparedInsert(
-				hrfId,
-				date,
-				spielerId,
-				skillCode,
-				skillValue
-		);
-
-		if (reload) {
-			Vector<Object[]> data = getSpielerSkillUp(spielerId);
-			data.clear();
-			data.addAll(loadSpieler(spielerId));
-		}
+	private final PreparedSelectStatementBuilder loadLastLevelUpStatementBuilder = new PreparedSelectStatementBuilder(this,
+			"WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
+	Skillup getLastLevelUp(int skillCode, int spielerId) {
+		return loadOne(Skillup.class, this.adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, skillCode));
 	}
 
-	Object[] getLastLevelUp(int skillCode, int spielerId) {
-		Vector<Object[]> data = getSpielerSkillUp(spielerId);
-		for (Object[] element : data) {
-			int code = (Integer) element[4];
-			if (code == skillCode) {
-				return new Object[]{element[2], Boolean.TRUE};
-			}
-		}
-		return new Object[]{HODateTime.now(), Boolean.FALSE};
+	List<Skillup> getAllLevelUp(int skillCode, int spielerId) {
+		return load(Skillup.class, spielerId, skillCode);
 	}
 
-	Vector<Object[]> getAllLevelUp(int skillCode, int spielerId) {
-		Vector<Object[]> data = getSpielerSkillUp(spielerId);
-		Vector<Object[]> v = new Vector<>();
-		for (Object[] element : data) {
-			int code = (Integer) element[4];
-			if (code == skillCode) {
-				v.add(new Object[]{element[2], Boolean.TRUE, element[3]});
-			}
-		}
-		return v;
-	}
-
-	private Vector<Object[]> getSpielerSkillUp(int spielerId) {
-		if (playerSkillup == null) {
-			populate();
-		}
-		return playerSkillup.computeIfAbsent("" + spielerId, k -> new Vector<>());
-	}
-
-	private void populate() {
-
-		Vector<Integer> idVector = getPlayerList();
-		if (idVector.size() == 0) {
-			importFromSpieler();
-			idVector = getPlayerList();
-		}
-		playerSkillup = new HashMap<>();
-		for (Integer element : idVector) {
-			playerSkillup.put("" + element, loadSpieler(element));
-		}
-
-	}
-
-	private final DBManager.PreparedStatementBuilder getPlayerListStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT DISTINCT SpielerID FROM " + getTableName());
-
-	private Vector<Integer> getPlayerList() {
-		Vector<Integer> idVector = new Vector<>();
-
-		try {
-			var rs = adapter.executePreparedQuery(getPlayerListStatementBuilder.getStatement());
-			if (rs != null) {
-				while (rs.next()) {
-					idVector.add(rs.getInt("SpielerID"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
-		}
-		return idVector;
-	}
-
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-		return new PreparedSelectStatementBuilder(this," WHERE SpielerID=? Order By Datum DESC");
-	}
-
-	private Vector<Object[]> loadSpieler(int spielerId) {
-		Vector<Object[]> v = new Vector<>();
-		try {
-			ResultSet rs = executePreparedSelect(spielerId);
-			assert rs != null;
-			while (rs.next()) {
-				v.add(new Object[]{
-						rs.getInt("HRF_ID"),
-						spielerId,
-						HODateTime.fromDbTimestamp(rs.getTimestamp("datum")),
-						rs.getInt("Value"),
-						rs.getInt("Skill")});
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
-		return v;
-	}
-
-	// -------------------------------- Importing PArt ----------------------------------------------
 
 	void importNewSkillup(HOModel homodel) {
 		List<Player> players = homodel.getCurrentPlayers();
@@ -172,61 +76,13 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
 		if (newValue > oldValue) {
-			storeSkillup(hrf, nPlayer.getPlayerID(), nPlayer.getHrfDate().toDbTimestamp(), newValue, skill, true);
-		}
-
-	}
-
-	private final DBManager.PreparedStatementBuilder importFromSpielerStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT DISTINCT SpielerID FROM SPIELER");
-
-	void importFromSpieler() {
-		playerSkillup = null;
-		final Vector<Integer> idVector = new Vector<>();
-		try {
-			var rs = adapter.executePreparedQuery(importFromSpielerStatementBuilder.getStatement());
-			if (rs != null) {
-				while (rs.next()) {
-					idVector.add(rs.getInt("SpielerID"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
-		}
-		adapter.executeUpdate("DELETE FROM " + getTableName());
-		for (Integer element : idVector) {
-			importSpieler(element);
-		}
-	}
-
-	private final int[] skills = {
-			PlayerSkill.PLAYMAKING,
-			PlayerSkill.STAMINA,
-			PlayerSkill.DEFENDING,
-			PlayerSkill.KEEPER,
-			PlayerSkill.WINGER,
-			PlayerSkill.SCORING,
-			PlayerSkill.PASSING,
-			PlayerSkill.SET_PIECES,
-			PlayerSkill.EXPERIENCE
-	};
-
-	private void importSpieler(int spielerId) {
-		var playerHistory = DBManager.instance().loadPlayerHistory(spielerId);
-		try {
-			for (var skill : skills) {
-				int lastValue = -1;
-				for (var player : playerHistory) {
-					var value = player.getValue4Skill(skill);
-					if (value > lastValue && lastValue >= 0) {
-						storeSkillup(player.getHrfId(), player.getPlayerID(), player.getHrfDate().toDbTimestamp(), value, skill, false);
-					}
-					lastValue = value;
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
+			var skillup = new Skillup();
+			skillup.setHrfId(hrf);
+			skillup.setDate(nPlayer.getHrfDate());
+			skillup.setSkill(skill);
+			skillup.setPlayerId(nPlayer.getPlayerID());
+			skillup.setValue(newValue);
+			storeSkillup(skillup);
 		}
 	}
 }

@@ -487,13 +487,14 @@ public class XMLExporter  {
 	 * Check for skillup.
 	 */
 	private String hadSkillup(int skill, Player player, HODateTime matchdate) {
-		Object[] value = player.getLastLevelUp(skill);
+		var value = player.getLastLevelUp(skill);
 
-		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
-			if (((Boolean) value[1]) && ((HODateTime) value[0]).isBefore(matchdate)) {
+		if ( value != null && value.getDate().isBefore(matchdate)) {
+//		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
+//			if (((Boolean) value[1]) && ((HODateTime) value[0]).isBefore(matchdate)) {
 				return "1";
 			}
-		}
+//		}
 
 		return "0";
 	}

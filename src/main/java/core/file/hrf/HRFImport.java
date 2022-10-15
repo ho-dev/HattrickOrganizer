@@ -85,7 +85,7 @@ public class HRFImport {
 				}
 			}
 
-			DBManager.instance().reimportSkillup();
+//			DBManager.instance().reimportSkillup();
 			HOVerwaltung.instance().loadLatestHoModel();
 			HOModel hom = HOVerwaltung.instance().getModel();
 
@@ -148,7 +148,7 @@ public class HRFImport {
 		return choice;
 	}
 
-	private class UserChoice {
+	private static class UserChoice {
 		boolean importHRF;
 		boolean applyToAll;
 		boolean cancel;

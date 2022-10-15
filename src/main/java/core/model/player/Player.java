@@ -513,7 +513,7 @@ public class Player extends AbstractTable.Storable {
      *      [1] = Boolean: false=no skill up found
      *      [2] = skill value
      */
-    public Vector<Object[]> getAllLevelUp(int skill) {
+    public List<Skillup> getAllLevelUp(int skill) {
         return DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
     }
 
@@ -1018,10 +1018,9 @@ public class Player extends AbstractTable.Storable {
      * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
      * Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
-    public Object[] getLastLevelUp(int skill) {
+    public Skillup getLastLevelUp(int skill) {
         return DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
     }
-
 
     /**
      * Returns the loyalty stat

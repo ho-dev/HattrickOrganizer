@@ -17,6 +17,7 @@ import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
+import core.model.player.Skillup;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
@@ -375,7 +376,7 @@ public class DBManager {
 	 * @param spielerId player ID
 	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
-	public Object[] getLastLevelUp(int skill, int spielerId) {
+	public Skillup getLastLevelUp(int skill, int spielerId) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getLastLevelUp(skill, spielerId);
 	}
@@ -388,7 +389,7 @@ public class DBManager {
 	 * @param m_iSpielerID the m i spieler id
 	 * @return the all level up
 	 */
-	public Vector<Object[]> getAllLevelUp(int skill, int m_iSpielerID) {
+	public List<Skillup> getAllLevelUp(int skill, int m_iSpielerID) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getAllLevelUp(skill, m_iSpielerID);
 	}
@@ -396,10 +397,10 @@ public class DBManager {
 	/**
 	 * Reimport skillup.
 	 */
-	public void reimportSkillup() {
-		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
-				.importFromSpieler();
-	}
+//	public void reimportSkillup() {
+//		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
+//				.importFromSpieler();
+//	}
 
 	/**
 	 * Check skillup.
@@ -2287,7 +2288,7 @@ public class DBManager {
 	}
 
 	public void storeTeamRatings(MatchTeamRating teamrating) {
-		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).store(teamrating);
+		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).storeTeamRating(teamrating);
 	}
 
     public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
