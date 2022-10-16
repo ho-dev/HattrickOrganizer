@@ -51,14 +51,6 @@ public class PlayerDataManager {
 		if (info.getPlayerId() == 0) {
 			return;
 		}
-
-		PlayerInfo actual = DBManager.instance().getTAPlayerInfo(info.getPlayerId(),
-				getCurrentHTWeek(), getCurrentHTSeason());
-		
-		if (actual.getPlayerId() == 0) {
-			DBManager.instance().addTAPlayerInfo(info);
-		} else {
-			DBManager.instance().updateTAPlayerInfo(info);
-		}
+		DBManager.instance().storeTAPlayerInfo(info);
 	}
 }

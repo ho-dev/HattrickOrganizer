@@ -2013,21 +2013,12 @@ public class DBManager {
 	}
 
 	/**
-	 * Add ta player info.
-	 *
-	 * @param info the info
-	 */
-	public void addTAPlayerInfo(PlayerInfo info) {
-		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).addPlayer(info);
-	}
-
-	/**
 	 * Update ta player info.
 	 *
 	 * @param info the info
 	 */
-	public void updateTAPlayerInfo(PlayerInfo info) {
-		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).updatePlayer(info);
+	public void storeTAPlayerInfo(PlayerInfo info) {
+		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).storePlayer(info);
 	}
 
 	/**
