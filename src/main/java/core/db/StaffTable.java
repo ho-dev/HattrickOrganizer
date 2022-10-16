@@ -2,9 +2,7 @@ package core.db;
 
 import core.model.StaffMember;
 import core.model.StaffType;
-import core.util.HOLogger;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StaffTable extends AbstractTable{
@@ -18,14 +16,15 @@ public class StaffTable extends AbstractTable{
 	@Override
 	protected void initColumns() {
 
-		columns = new ColumnDescriptor[7];
-		columns[0] = new ColumnDescriptor("HrfID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("index", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("id", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("stafftype", Types.INTEGER, false);
-		columns[4] = new ColumnDescriptor("level", Types.INTEGER, false);
-		columns[5] = new ColumnDescriptor("cost", Types.INTEGER, false);
-		columns[6] = new ColumnDescriptor("name", Types.VARCHAR, false, 127);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("HrfID").setGetter((p) -> ((StaffMember) p).getHrfId()).setSetter((p, v) -> ((StaffMember) p).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("id").setGetter((p) -> ((StaffMember) p).getId()).setSetter((p, v) -> ((StaffMember) p).setId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("index").setGetter((p) -> ((StaffMember) p).getIndex()).setSetter((p, v) -> ((StaffMember) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("stafftype").setGetter((p) -> ((StaffMember) p).getStaffType().getId()).setSetter((p, v) -> ((StaffMember) p).setStaffType(StaffType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("level").setGetter((p) -> ((StaffMember) p).getLevel()).setSetter((p, v) -> ((StaffMember) p).setLevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("cost").setGetter((p) -> ((StaffMember) p).getCost()).setSetter((p, v) -> ((StaffMember) p).setCost((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("name").setGetter((p) -> ((StaffMember) p).getName()).setSetter((p, v) -> ((StaffMember) p).setName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build()
+		};
 	}
 
 	@Override
@@ -33,26 +32,7 @@ public class StaffTable extends AbstractTable{
 		return new PreparedSelectStatementBuilder(this, "WHERE HrfID = ? ORDER BY index");
 	}
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
-		var list = new ArrayList<StaffMember>();
-		if ( hrfId > -1) {
-			try {
-				var rs =executePreparedSelect(hrfId);
-				if ( rs != null) {
-					while (rs.next()) {
-						StaffMember staff = new StaffMember();
-						staff.setName(rs.getString("Name"));
-						staff.setId(rs.getInt("id"));
-						staff.setStaffType(StaffType.getById(rs.getInt("stafftype")));
-						staff.setLevel(rs.getInt("level"));
-						staff.setCost(rs.getInt("cost"));
-						list.add(staff);
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.getStaff Error" + e);
-			}
-		}
-		return list;
+		return load(StaffMember.class, hrfId);
 	}
 	
 	protected void storeStaff(int hrfId, List<StaffMember> list) {
@@ -60,24 +40,14 @@ public class StaffTable extends AbstractTable{
 		if ( list==null || hrfId < 0) {
 			return;
 		}
-		
+
+		executePreparedDelete(hrfId);
 		int index = 0;
 		for (StaffMember staff : list) {
-			try {
-				executePreparedInsert(
-						hrfId,
-						index,
-						staff.getId(),
-						staff.getStaffType().getId(),
-						staff.getLevel(),
-						staff.getCost(),
-						staff.getName()
-				);
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.storeStaff Error " + e);
-			}
-			index++;
+			staff.setIndex(index++);
+			staff.setHrfId(hrfId);
+			staff.setIsStored(false);
+			store(staff);
 		}
-	
 	}
 }
