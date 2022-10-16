@@ -1,12 +1,7 @@
 package core.db;
 
-import core.util.HOLogger;
 import module.teamAnalyzer.vo.Team;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +21,11 @@ final class TAFavoriteTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[2];
-		columns[0] = new ColumnDescriptor("TEAMID", Types.INTEGER, false, true);
-		columns[1] = new ColumnDescriptor("NAME", Types.VARCHAR, true, 20);
+
+        columns = new ColumnDescriptor[]{
+                ColumnDescriptor.Builder.newInstance().setColumnName("TEAMID").setGetter((p) -> ((Team) p).getTeamId()).setSetter((p, v) -> ((Team) p).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("NAME").setGetter((p) -> ((Team) p).getName()).setSetter((p, v) -> ((Team) p).setName((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(20).build()
+        };
 	}
 
     void removeTeam(int teamId) {
@@ -36,19 +33,11 @@ final class TAFavoriteTable extends AbstractTable {
     }
     
     void addTeam(Team team) {
-        executePreparedInsert(team.getTeamId(), team.getName());
+        store(team);
     }
 
     boolean isTAFavourite(int teamId) {
-        ResultSet rs = executePreparedSelect(teamId);
-        try {
-            if (rs.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            HOLogger.instance().debug(this.getClass(), e);
-        }
-        return false;
+        return isStored(teamId);
     }
 
     private final PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
@@ -58,21 +47,6 @@ final class TAFavoriteTable extends AbstractTable {
      * @return List of Teams Object
      */
     List<Team> getTAFavoriteTeams() {
-        List<Team> list = new ArrayList<>();
-        ResultSet rs = adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement());
-
-        try {
-            while (rs.next()) {
-                Team team = new Team();
-
-                team.setTeamId(rs.getInt(1));
-                team.setName(rs.getString(2));
-                list.add(team);
-            }
-        } catch (SQLException e) {
-            return new ArrayList<>();
-        }
-
-        return list;
+        return load(Team.class, adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement()));
     }
 }
