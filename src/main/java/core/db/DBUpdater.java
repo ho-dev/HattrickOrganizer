@@ -158,6 +158,10 @@ final class DBUpdater {
 		if ( mmatchSubstitutionTable.tryDeleteColumn("HRFID")){
 			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
 		}
+
+		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+		stadiumTable.tryDeleteColumn("GesamtGr");
+
 		updateDBVersion(dbVersion, 700);
 	}
 

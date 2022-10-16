@@ -1,9 +1,11 @@
 package tool.arenasizer;
 
+import core.db.AbstractTable;
+
 /**
  * Enthält die Stadiendaten
  */
-public class Stadium {
+public class Stadium extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Stadienname */
@@ -30,9 +32,6 @@ public class Stadium {
     /** Ausbau Überdachte Sitzplätze */
     private int m_iAusbauUeberdachteSitzplaetze;
 
-    /** Gesamtgroesse */
-   // private int m_iGesamtgroesse;
-
     /** Logen */
     private int m_iLogen;
 
@@ -44,6 +43,7 @@ public class Stadium {
 
     /** Überdachte Sitzplätze */
     private int m_iUeberdachteSitzplaetze;
+    private int hrfId;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -71,11 +71,7 @@ public class Stadium {
                                                                                   "0"));
         m_iAusbauLogen = Integer.parseInt(properties.getProperty("expandingvip", "0"));
 
-        if (Integer.parseInt(properties.getProperty("isexpanding", "0")) > 0) {
-            m_bAusbau = true;
-        } else {
-            m_bAusbau = false;
-        }
+        m_bAusbau = Integer.parseInt(properties.getProperty("isexpanding", "0")) > 0;
 
         if (m_bAusbau) {
             m_iAusbauKosten = Integer.parseInt(properties.getProperty("expandcost", "0"));
@@ -93,10 +89,6 @@ public class Stadium {
         this.m_bAusbau = m_bAusbau;
     }
 
-    public final byte getAusbau() {
-        return (m_bAusbau) ? (byte) 1 : (byte) 0;
-    }
-
     /**
      * Getter for property m_bAusbau.
      *
@@ -111,8 +103,8 @@ public class Stadium {
      *
      * @param m_iAusbauKosten New value of property m_iAusbauKosten.
      */
-    public final void setAusbauKosten(float m_iAusbauKosten) {
-        this.m_iAusbauKosten = (int) m_iAusbauKosten;
+    public final void setAusbauKosten(int m_iAusbauKosten) {
+        this.m_iAusbauKosten = m_iAusbauKosten;
     }
 
     /**
@@ -197,14 +189,6 @@ public class Stadium {
         return m_iAusbauUeberdachteSitzplaetze;
     }
 
-    /**
-     * Setter for property m_iGesamtgroesse.
-     *
-     * @param m_iGesamtgroesse New value of property m_iGesamtgroesse.
-     */
-    public final void setGesamtgroesse(int m_iGesamtgroesse) {
-     //   this.m_iGesamtgroesse = m_iGesamtgroesse;
-    }
 
     ////////////////////////////Accessor////////////////////////////////////////    
 
@@ -323,4 +307,11 @@ public class Stadium {
     	this.m_iStadiumId = arenaId;
     }
 
+    public int getHrfId() {
+        return hrfId;
+    }
+
+    public void setHrfId(int hrfId) {
+        this.hrfId = hrfId;
+    }
 }

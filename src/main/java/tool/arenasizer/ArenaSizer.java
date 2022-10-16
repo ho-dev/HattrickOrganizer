@@ -37,7 +37,7 @@ public class ArenaSizer {
     static final BigDecimal VIP_PERCENT 		= new BigDecimal(0.025).setScale(3, BigDecimal.ROUND_HALF_DOWN);
 
     //SUPPORTER-DISTRIBUTION
-    static final Integer SUPPORTER_NORMAL = Integer.valueOf(20);
+    static final Integer SUPPORTER_NORMAL = 20;
 
     float currencyFactor = core.model.UserParameter.instance().FXrate;
 
@@ -59,9 +59,9 @@ public class ArenaSizer {
     }
 
     final Stadium[] calcConstructionArenas(Stadium currentArena, int supporter){
-    	Stadium arenaMax = createArena(supporter * (SUPPORTER_NORMAL.intValue()+5) ,currentArena);
-        Stadium arenaNormal = createArena(supporter * SUPPORTER_NORMAL.intValue(),currentArena);
-        Stadium arenaMin = createArena(supporter * (SUPPORTER_NORMAL.intValue()-5),currentArena);
+    	Stadium arenaMax = createArena(supporter * (SUPPORTER_NORMAL +5) ,currentArena);
+        Stadium arenaNormal = createArena(supporter * SUPPORTER_NORMAL,currentArena);
+        Stadium arenaMin = createArena(supporter * (SUPPORTER_NORMAL -5),currentArena);
         return new Stadium[]{arenaMax, arenaNormal, arenaMin};
     }
 
@@ -92,7 +92,7 @@ public class ArenaSizer {
         return tmp;
     }
 
-    final float calcConstructionCosts(float steh, float sitz, float dach, float logen) {
+    final int calcConstructionCosts(float steh, float sitz, float dach, float logen) {
         float kosten = FIXKOSTEN / currencyFactor;
 
         if (steh > 0) {
@@ -119,7 +119,7 @@ public class ArenaSizer {
             kosten -= ((logen * ABRISS) / currencyFactor);
         }
 
-        return kosten;
+        return (int)kosten;
     }
 
     final int calcDistribution(float arenaSize,float percent) {
