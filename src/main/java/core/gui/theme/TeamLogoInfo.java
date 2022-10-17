@@ -1,8 +1,12 @@
 package core.gui.theme;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
 
-public class TeamLogoInfo {
+public class TeamLogoInfo extends AbstractTable.Storable {
+
+    public TeamLogoInfo(){}
+
     private int teamId;
     private String url;
     private String filename;

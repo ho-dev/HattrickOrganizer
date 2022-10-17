@@ -8,6 +8,7 @@ import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
+import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
 import core.model.enums.DBDataSource;
@@ -2275,8 +2276,12 @@ public class DBManager {
 	 * @param logoURL    the logo url
 	 * @param lastAccess the last access
 	 */
-	public void storeTeamLogoInfo(int teamID, String logoURL, Timestamp lastAccess){
-		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(teamID, logoURL, lastAccess);
+	public void storeTeamLogoInfo(int teamID, String logoURL, HODateTime lastAccess){
+		var info = new TeamLogoInfo();
+		info.setUrl(logoURL);
+		info.setTeamId(teamID);
+		info.setLastAccess(lastAccess);
+		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
 	}
 
 	public List<HRF> getHRFsSince(Timestamp since) {
@@ -2397,10 +2402,6 @@ public class DBManager {
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
-	}
-
-	public List<Player> loadPlayerHistory(int spielerId) {
-		return ((SpielerTable)getTable(SpielerTable.TABLENAME)).loadPlayerHistory(spielerId);
 	}
 
 	private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
