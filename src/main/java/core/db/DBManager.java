@@ -1,6 +1,8 @@
 package core.db;
 
 import core.HO;
+import core.constants.TeamConfidence;
+import core.constants.TeamSpirit;
 import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
@@ -1240,29 +1242,29 @@ public class DBManager {
 				.getMatchSubstitutionsByMatchTeam(matchType.getId(), teamId, matchId);
 	}
 
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-	 * Stimmung [1] = Selbstvertrauen
-	 *
-	 * @param hrfid the hrfid
-	 * @return the string [ ]
-	 */
-	public String[] getStimmmungSelbstvertrauen(int hrfid) {
-		return ((TeamTable) getTable(TeamTable.TABLENAME))
-				.getStimmmungSelbstvertrauen(hrfid);
-	}
-
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-	 * Stimmung [1] = Selbstvertrauen
-	 *
-	 * @param hrfid the hrfid
-	 * @return the int [ ]
-	 */
-	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
-		return ((TeamTable) getTable(TeamTable.TABLENAME))
-				.getStimmmungSelbstvertrauenValues(hrfid);
-	}
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
+//	 * Stimmung [1] = Selbstvertrauen
+//	 *
+//	 * @param hrfid the hrfid
+//	 * @return the string [ ]
+//	 */
+//	public String[] getStimmmungSelbstvertrauen(int hrfid) {
+//		return ((TeamTable) getTable(TeamTable.TABLENAME))
+//				.getStimmmungSelbstvertrauen(hrfid);
+//	}
+//
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
+//	 * Stimmung [1] = Selbstvertrauen
+//	 *
+//	 * @param hrfid the hrfid
+//	 * @return the int [ ]
+//	 */
+//	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
+//		return ((TeamTable) getTable(TeamTable.TABLENAME))
+//				.getStimmmungSelbstvertrauenValues(hrfid);
+//	}
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
@@ -1755,7 +1757,11 @@ public class DBManager {
 				// Matchdetails
 				final Matchdetails details = loadMatchDetails(item.getMatchType().getMatchTypeId(), item.getMatchID());
 				// Stimmung und Selbstvertrauen
-				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
+				var team = getTeam(getHRFID4Date(filter));
+				final String[] sTSandConfidences = {
+						TeamSpirit.toString(team.getTeamSpirit()),
+						TeamConfidence.toString(team.getConfidence())
+				};
 				//Only if player data has been found, pass it into the return vector
 				if ((player != null) && (details != null)
 						&& (sTSandConfidences != null)) {

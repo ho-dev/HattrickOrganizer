@@ -149,21 +149,23 @@ final class DBUpdater {
 			migrateSelectedEscapes("USERCONFIGURATION", "where CONFIG_KEY='hrfImport_HRFPath'", "CONFIG_VALUE");
 		}
 
-		var matchlineupplayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
-		if (matchlineupplayerTable.tryDeleteColumn("PositionCode")) {
+		var teamTable = dbManager.getTable(TeamTable.TABLENAME);
+		if ( teamTable.tryDeleteColumn("sTrainingsArt")) {
+			teamTable.tryDeleteColumn("sStimmung");
+			teamTable.tryDeleteColumn("sSelbstvertrauen");
+
+			var matchlineupplayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
+			matchlineupplayerTable.tryDeleteColumn("PositionCode");
 			matchlineupplayerTable.tryDeleteColumn("FIELDPOS");
-		}
-
-		var mmatchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
-		if ( mmatchSubstitutionTable.tryDeleteColumn("HRFID")){
+			var mmatchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+			mmatchSubstitutionTable.tryDeleteColumn("HRFID");
 			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
+			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+			stadiumTable.tryDeleteColumn("GesamtGr");
 		}
-
-		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
-		stadiumTable.tryDeleteColumn("GesamtGr");
-
 		updateDBVersion(dbVersion, 700);
 	}
+
 
 	private void updateDBv601(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);

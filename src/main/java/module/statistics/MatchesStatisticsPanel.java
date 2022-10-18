@@ -14,7 +14,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
@@ -36,7 +35,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -178,7 +176,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 		c_jtfNumberHRF.addFocusListener(new FocusAdapter() {
 
 			@Override
-			public final void focusLost(FocusEvent focusEvent) {
+			public void focusLost(FocusEvent focusEvent) {
 				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberHRF, false);
 			}
 		});
@@ -520,7 +518,11 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				var matchDate = match.getMatchSchedule();
 				var matchDateTimestamp = matchDate.toDbTimestamp();
 				int hrfid = DBManager.instance().getHRFID4Date(matchDateTimestamp);
-				int[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauenValues(hrfid);
+				var teamInfo = DBManager.instance().getTeam(hrfid);
+				int[] stimmungSelbstvertrauen  = {
+						teamInfo.getTeamSpirit(),
+						teamInfo.getConfidence()
+				};
 
 				statistikWerte[9][i] = stimmungSelbstvertrauen[0];
 				statistikWerte[10][i] = stimmungSelbstvertrauen[1];
