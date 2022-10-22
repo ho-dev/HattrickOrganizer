@@ -12,12 +12,8 @@ import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.PastTrainingManager;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,8 +62,6 @@ public class TrainingModel implements PropertyChangeListener {
 
 			// remove old entries and add new to make sure the vector size match user preference settings
 			List<TrainingPerWeek> adjustedFutureTrainings = adjustFutureTrainingsVector(_futureTrainings, UserParameter.instance().futureWeeks);
-
-			DBManager.instance().clearFutureTrainingsTable();
 			DBManager.instance().saveFutureTrainings(adjustedFutureTrainings);
 			futureTrainings = adjustedFutureTrainings;
 		}

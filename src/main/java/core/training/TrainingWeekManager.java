@@ -20,9 +20,9 @@ public class TrainingWeekManager {
 	private HODateTime nextTrainingDate;
 	private HODateTime lastUpdateDate;
 
-	private List<TrainingPerWeek> m_Trainings;
-	private HODateTime m_StartDate;
-	private Boolean m_IncludeUpcomingTrainings;
+	private final List<TrainingPerWeek> m_Trainings;
+	private final HODateTime m_StartDate;
+	private final Boolean m_IncludeUpcomingTrainings;
 
 	/**
 	 * Construct a list of TrainingPerWeek since provided initial training Date
@@ -179,7 +179,7 @@ public class TrainingWeekManager {
 	 * The function push elements of m_Trainings into Training table but not replacing existing entries
 	 */
 	public void push2TrainingsTable() {
-		DBManager.instance().saveTrainings(m_Trainings, getLastUpdateDate(), false);
+		DBManager.instance().saveTrainings(m_Trainings, getLastUpdateDate());
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class TrainingWeekManager {
 				pastTrainingsSinceLastUpdate.add(training);
 			}
 		}
-		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, getLastUpdateDate(), false);
+		DBManager.instance().saveTrainings(pastTrainingsSinceLastUpdate, getLastUpdateDate());
 	}
 
 }

@@ -76,7 +76,7 @@ public class HRFImport {
 						}
 						homodel.saveHRF();
 						var training = homodel.getTraining();
-						DBManager.instance().saveTraining(training, HODateTime.now(),true);
+						DBManager.instance().saveTraining(training, HODateTime.now());
 						frame.setInformation(getLangStr("HRFErfolg"));
 					} else {
 						// Cancel

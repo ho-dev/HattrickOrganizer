@@ -4,7 +4,6 @@ import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.List;
@@ -33,36 +32,15 @@ public final class FutureTrainingTable extends AbstractTable {
 		};
 	}
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this," ORDER BY TRAINING_DATE");
-	}
+	private final PreparedSelectStatementBuilder loadAllFutureTrainingStatementBuilder = new PreparedSelectStatementBuilder(this,
+			" ORDER BY TRAINING_DATE");
+
 	List<TrainingPerWeek> getFutureTrainingsVector() {
-		return load(TrainingPerWeek.class);
+		return load(TrainingPerWeek.class, this.adapter.executePreparedQuery(loadAllFutureTrainingStatementBuilder.getStatement()));
 	}
 
-	private final DBManager.PreparedStatementBuilder loadFutureTrainingsStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"select TRAINING_TYPE from " + getTableName() + " where TRAINING_DATE=?");
-	int loadFutureTrainings(Timestamp trainingDate) {
-		ResultSet rs = adapter.executePreparedQuery(loadFutureTrainingsStatementBuilder.getStatement(), trainingDate);
-		try {
-			if (rs != null) {
-				if (rs.next()) {
-					return (rs.getInt("TYPE"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "loadFutureTrainings " + e);
-		}
-		return -1;
-	}
-
-
-	@Override
-	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder() {
-		return new PreparedUpdateStatementBuilder(this,
-				" set TRAINING_TYPE= ?, TRAINING_INTENSITY=?, STAMINA_SHARE=?, COACH_LEVEL=?, " +
-						"TRAINING_ASSISTANTS_LEVEL=?, SOURCE=? WHERE TRAINING_DATE=?");
+	TrainingPerWeek loadFutureTrainings(Timestamp trainingDate) {
+		return loadOne(TrainingPerWeek.class, trainingDate);
 	}
 
 	void storeFutureTraining(TrainingPerWeek training) {

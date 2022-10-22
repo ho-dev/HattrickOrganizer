@@ -10,10 +10,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
 import module.lineup.Lineup;
-import module.transfer.test.HTWeek;
 import org.jetbrains.annotations.Nullable;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +25,7 @@ public class TrainingPreviewPlayers implements Refreshable {
 
     private static TrainingPreviewPlayers m_clInstance;
 
-    private HashMap<Player, TrainingPreviewPlayer> players = new HashMap<>();
+    private final HashMap<Player, TrainingPreviewPlayer> players = new HashMap<>();
     private int nextWeekTraining = -1;
     private boolean isFuturMatchInit =false;
     private WeeklyTrainingType weekTrainTyp = null;
@@ -103,11 +100,9 @@ public class TrainingPreviewPlayers implements Refreshable {
      * @return     training id
      */
     public int getNextWeekTraining() {
-
         if (nextWeekTraining == -1) {
             int nextWeekSaison = HOVerwaltung.instance().getModel().getBasics().getSeason();
             int nextWeekWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-
             if (nextWeekWeek == 16) {
                 nextWeekWeek = 1;
                 nextWeekSaison++;
@@ -115,9 +110,11 @@ public class TrainingPreviewPlayers implements Refreshable {
                 nextWeekWeek++;
             }
             var hattrickDate = HODateTime.fromHTWeek(new HODateTime.HTWeek(nextWeekSaison, nextWeekWeek));
-            nextWeekTraining = DBManager.instance().getFuturTraining(HODateTime.toDbTimestamp(hattrickDate));
+            var nextTraining = DBManager.instance().getFuturTraining(HODateTime.toDbTimestamp(hattrickDate));
+            if ( nextTraining != null) {
+                nextWeekTraining = nextTraining.getTrainingType();
+            }
         }
-
         return nextWeekTraining;
     }
 

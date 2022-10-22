@@ -1299,12 +1299,12 @@ public class DBManager {
 				.getTrainingList(fromDate, toDate);
 	}
 
-	public void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate, force);
+	public void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate);
 	}
 
-	public void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate, force);
+	public void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate);
 	}
 
 	// ------------------------------- FutureTrainingTable
@@ -1371,7 +1371,7 @@ public class DBManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public int getFuturTraining(Timestamp trainingDate) {
+	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
