@@ -1,9 +1,7 @@
 package core.db;
 
 import core.model.misc.Verein;
-import core.util.HOLogger;
 
-import java.sql.ResultSet;
 import java.sql.Types;
 
 final class VereinTable extends AbstractTable {
@@ -15,71 +13,43 @@ final class VereinTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns 	= new ColumnDescriptor[16];
-		columns[0]	= new ColumnDescriptor( "HRF_ID",		Types.INTEGER,false, true );
-		columns[1]	= new ColumnDescriptor( "COTrainer",		Types.INTEGER,false );
-		columns[2]	= new ColumnDescriptor( "Pschyologen",	Types.INTEGER,false );
-		columns[3]	= new ColumnDescriptor( "Finanzberater", Types.INTEGER,false );
-		columns[4]	= new ColumnDescriptor( "PRManager",		Types.INTEGER,false );
-		columns[5]	= new ColumnDescriptor( "Aerzte",		Types.INTEGER,false );
-		columns[6]	= new ColumnDescriptor( "Jugend",		Types.INTEGER,false );
-		columns[7]	= new ColumnDescriptor( "Siege",			Types.INTEGER,false );
-		columns[8]	= new ColumnDescriptor( "Ungeschlagen",	Types.INTEGER,false );
-		columns[9]	= new ColumnDescriptor( "Fans",			Types.INTEGER,false );
-		columns[10]	= new ColumnDescriptor( "TacticAssist",	Types.INTEGER,false );
-		columns[11]	= new ColumnDescriptor( "FormAssist",	Types.INTEGER,false );
-		columns[12]	= new ColumnDescriptor( "GlobalRanking",	Types.INTEGER,false );
-		columns[13]	= new ColumnDescriptor( "LeagueRanking",	Types.INTEGER,false );
-		columns[14]	= new ColumnDescriptor( "RegionRanking",	Types.INTEGER,false );
-		columns[15]	= new ColumnDescriptor( "PowerRating",	Types.INTEGER,false );
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((Verein) p).getHrfId()).setSetter((p, v) -> ((Verein) p).setHrfId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COTrainer").setGetter((p) -> ((Verein) p).getCoTrainer()).setSetter((p, v) -> ((Verein) p).setCoTrainer((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Pschyologen").setGetter((p) -> ((Verein) p).getPsychologen()).setSetter((p, v) -> ((Verein) p).setPsychologen((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Finanzberater").setGetter((p) -> ((Verein) p).getFinancialDirectorLevels()).setSetter((p, v) -> ((Verein) p).setFinancialDirectorLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PRManager").setGetter((p) -> ((Verein) p).getPRManager()).setSetter((p, v) -> ((Verein) p).setPRManager((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Aerzte").setGetter((p) -> ((Verein) p).getAerzte()).setSetter((p, v) -> ((Verein) p).setAerzte((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Jugend").setGetter((p) -> ((Verein) p).getJugend()).setSetter((p, v) -> ((Verein) p).setJugend((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Siege").setGetter((p) -> ((Verein) p).getSiege()).setSetter((p, v) -> ((Verein) p).setSiege((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Ungeschlagen").setGetter((p) -> ((Verein) p).getUngeschlagen()).setSetter((p, v) -> ((Verein) p).setUngeschlagen((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fans").setGetter((p) -> ((Verein) p).getFans()).setSetter((p, v) -> ((Verein) p).setFans((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TacticAssist").setGetter((p) -> ((Verein) p).getTacticalAssistantLevels()).setSetter((p, v) -> ((Verein) p).setTacticalAssistantLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FormAssist").setGetter((p) -> ((Verein) p).getFormCoachLevels()).setSetter((p, v) -> ((Verein) p).setFormCoachLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GlobalRanking").setGetter((p) -> ((Verein) p).getGlobalRanking()).setSetter((p, v) -> ((Verein) p).setGlobalRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LeagueRanking").setGetter((p) -> ((Verein) p).getLeagueRanking()).setSetter((p, v) -> ((Verein) p).setLeagueRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("RegionRanking").setGetter((p) -> ((Verein) p).getRegionRanking()).setSetter((p, v) -> ((Verein) p).setRegionRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PowerRating").setGetter((p) -> ((Verein) p).getPowerRating()).setSetter((p, v) -> ((Verein) p).setPowerRating((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		};
 	}
 
 	/**
-	 * speichert das Verein
+	 * store team info
 	 */
 	void saveVerein(int hrfId, Verein verein) {
 		if (verein != null) {
-			executePreparedDelete(hrfId);
-			executePreparedInsert(
-					hrfId,
-					verein.getCoTrainer(),
-					verein.getPsychologen(),
-					verein.getFinancialDirectorLevels(),
-					verein.getPRManager(),
-					verein.getAerzte(),
-					verein.getJugend(),
-					verein.getSiege(),
-					verein.getUngeschlagen(),
-					verein.getFans(),
-					verein.getTacticalAssistantLevels(),
-					verein.getFormCoachLevels(),
-					verein.getGlobalRanking(),
-					verein.getLeagueRanking(),
-					verein.getRegionRanking(),
-					verein.getPowerRating()
-			);
+			verein.setHrfId(hrfId);
+			verein.setIsStored(isStored(hrfId));
+			store(verein);
 		}
 	}
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * load team basic information
 	 */
-	Verein getVerein(int hrfID) {
-		Verein club = new Verein();
-
-		if (hrfID != -1) {
-			ResultSet rs = executePreparedSelect(hrfID);
-			try {
-				if (rs != null) {
-					rs.next();
-					club = new Verein(rs);
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DatenbankZugriff.getTeam: " + e);
-			}
-		}
-
-		return club;
+	Verein loadVerein(int hrfID) {
+		var ret = loadOne(Verein.class, hrfID);
+		if ( ret == null ) ret =  new Verein();
+		return ret;
 	}
-
 }

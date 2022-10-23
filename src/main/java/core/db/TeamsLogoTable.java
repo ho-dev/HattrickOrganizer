@@ -9,6 +9,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.sql.Types;
 
+import static core.util.HODateTime.toDbTimestamp;
+
 public class TeamsLogoTable extends AbstractTable {
     /**
      * tablename
@@ -25,7 +27,7 @@ public class TeamsLogoTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("TEAM_ID").setGetter((p) -> ((TeamLogoInfo) p).getTeamId()).setSetter((p, v) -> ((TeamLogoInfo) p).setTeamId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("URL").setGetter((p) -> ((TeamLogoInfo) p).getUrl()).setSetter((p, v) -> ((TeamLogoInfo) p).setUrl((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("FILENAME").setGetter((p) -> ((TeamLogoInfo) p).getFilename()).setSetter((p, v) -> ((TeamLogoInfo) p).setFilename((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LAST_ACCESS").setGetter((p) -> ((TeamLogoInfo) p).getLastAccess().toDbTimestamp()).setSetter((p, v) -> ((TeamLogoInfo) p).setLastAccess((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("LAST_ACCESS").setGetter((p) -> toDbTimestamp(((TeamLogoInfo) p).getLastAccess())).setSetter((p, v) -> ((TeamLogoInfo) p).setLastAccess((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
         };
     }
 
@@ -40,7 +42,9 @@ public class TeamsLogoTable extends AbstractTable {
     public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID) {
 
         var info = loadOne(TeamLogoInfo.class, teamID);
-
+        if ( info == null ){
+            return null;
+        }
         var url = info.getUrl();
         if ( url == null || url.isEmpty() || url.equals("null") ){
             HOLogger.instance().debug(this.getClass(), "team with no logo team ID=" + teamID);
@@ -96,6 +100,7 @@ public class TeamsLogoTable extends AbstractTable {
         }
 
         info.setUrl(logoURL);
+        info.setIsStored(isStored(info.getTeamId()));
         store(info);
     }
 }

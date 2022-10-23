@@ -907,7 +907,7 @@ public class DBManager {
 	 */
 	public boolean matchLineupIsNotStored(MatchType iMatchType, int matchid) {
 		return !getTable(MatchLineupTable.TABLENAME)
-				.isStored(matchid, iMatchType);
+				.isStored(matchid, iMatchType.getId());
 	}
 
 	/**
@@ -1149,8 +1149,7 @@ public class DBManager {
 	 * @return the scout list
 	 */
 	public Vector<ScoutEintrag> getScoutList() {
-		var ret = new Vector<ScoutEintrag>(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
-		return ret;
+		return new Vector<>(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
 	}
 
 	/**
@@ -1336,7 +1335,7 @@ public class DBManager {
 	 * @return the verein
 	 */
 	public Verein getVerein(int hrfID) {
-		return ((VereinTable) getTable(VereinTable.TABLENAME)).getVerein(hrfID);
+		return ((VereinTable) getTable(VereinTable.TABLENAME)).loadVerein(hrfID);
 	}
 
 	/**

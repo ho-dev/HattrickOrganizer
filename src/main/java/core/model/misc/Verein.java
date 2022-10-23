@@ -1,11 +1,10 @@
 // %163934374:de.hattrickorganizer.model%
 package core.model.misc;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -15,7 +14,7 @@ import java.util.Properties;
 /**
  * Allgemeine Informationen über den Verein
  */
-public final class Verein {
+public final class Verein extends AbstractTable.Storable {
 	
 	// for locale indepemdent parsing of input with commas
     final DecimalFormat DF = new DecimalFormat("0", new DecimalFormatSymbols(Locale.GERMANY));
@@ -24,8 +23,6 @@ public final class Verein {
     private String m_sTeamName;
     /** Datum */
     private HODateTime m_clDate;
-    /** Jungendspieler gezogen */
-    private boolean m_bYouthPull;
     /** doctors */
     private int m_iMedicLevels;
     /** Co-Trainer */
@@ -36,13 +33,16 @@ public final class Verein {
     private int m_iFormCoachLevels;
     /** Jugendmannschaft */
     private int m_iJugend;
-    /** Investition */
-    private int m_iJugendGeld;
     /** Pressesprecher */
     private int m_iSpokePersonLevels;
+    private int hrfId;
 
     public int getGlobalRanking() {
         return m_iGlobalRanking;
+    }
+
+    public void setGlobalRanking(int v){
+        this.m_iGlobalRanking = v;
     }
 
     /** Power Ranking */
@@ -187,10 +187,6 @@ public final class Verein {
         return m_clDate;
     }
 
-    public void setDateFromString(String date) {
-        m_clDate = HODateTime.fromHT(date);
-    }
-
     /**
      * Setter for property m_iFans.
      *
@@ -207,25 +203,6 @@ public final class Verein {
      */
     public int getFans() {
         return m_iFans;
-    }
-
-    /**
-     * Setter for property m_iFinanzberater.
-     *
-     * @param m_iFinanzberater New value of property m_iFinanzberater.
-     */
-    @Deprecated
-    public void setFinanzberater(int m_iFinanzberater) {
-    }
-
-    /**
-     * Getter for property m_iFinanzberater.
-     *
-     * @return Value of property m_iFinanzberater.
-     */
-    @Deprecated
-    public int getFinanzberater() {
-        return 0;
     }
 
     public int getFinancialDirectorLevels() {
@@ -261,17 +238,6 @@ public final class Verein {
     public int getJugend() {
         return m_iJugend;
     }
-
-    /**
-     * Setter for property m_iJugendGeld.
-     *
-     * @param m_iJugendGeld New value of property m_iJugendGeld.
-     */
-    public void setJugendGeld(int m_iJugendGeld) {
-        this.m_iJugendGeld = m_iJugendGeld;
-    }
-
-
 
     /**
      * Setter for property m_iPRManager.
@@ -370,18 +336,6 @@ public final class Verein {
 	public void setTacticalAssistantLevels(int m_iTacticalAssistantLevels) {
 		this.m_iTacticalAssistantLevels = m_iTacticalAssistantLevels;
 	}
-    
-    /**
-     * Setter for property m_iTorwartTrainer.
-     *
-     * @param m_iTorwartTrainer New value of property m_iTorwartTrainer.
-     */
-    @Deprecated
-    public void setTorwartTrainer(int m_iTorwartTrainer) {}
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //Accessor
-    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Getter for property m_iTorwartTrainer.
@@ -411,21 +365,23 @@ public final class Verein {
         return m_iUngeschlagen;
     }
 
-    /**
-     * Setter for property m_bYouthPull.
-     *
-     * @param m_bYouthPull New value of property m_bYouthPull.
-     */
-    public void setYouthPull(boolean m_bYouthPull) {
-        this.m_bYouthPull = m_bYouthPull;
+    public int getHrfId() {
+        return hrfId;
     }
 
-    /**
-     * Getter for property m_bYouthPull.
-     *
-     * @return Value of property m_bYouthPull.
-     */
-    public boolean isYouthPull() {
-        return m_bYouthPull;
+    public void setHrfId(int hrfId) {
+        this.hrfId = hrfId;
+    }
+
+    public void setLeagueRanking(int v) {
+        this.m_iLeagueRanking = v;
+    }
+
+    public void setRegionRanking(int v) {
+        this.m_iRegionRanking = v;
+    }
+
+    public void setPowerRating(int v) {
+        this.m_iPowerRating = v;
     }
 }
