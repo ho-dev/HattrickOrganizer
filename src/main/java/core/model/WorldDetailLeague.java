@@ -1,6 +1,8 @@
 package core.model;
 
-public class WorldDetailLeague {
+import core.db.AbstractTable;
+
+public class WorldDetailLeague  extends AbstractTable.Storable {
 	private int leagueId;
 	private int countryId;
 	private String countryName;
