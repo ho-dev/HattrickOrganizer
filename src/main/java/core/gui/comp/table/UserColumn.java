@@ -1,10 +1,11 @@
 package core.gui.comp.table;
 
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import javax.swing.table.TableColumn;
 
 
-public abstract class UserColumn {
+public class UserColumn extends AbstractTable.Storable {
 
 
 
@@ -29,6 +30,10 @@ public abstract class UserColumn {
 	
 	/** if a column is shown in the jtable. Only displayed columns are saved in db**/
 	protected boolean display = false;
+	/**
+	 * index of the column in model array definition (not in the table display)
+	 */
+	private int modelIndex;
 
 	protected UserColumn(int id,String name, String tooltip){
 		this.id = id;
@@ -39,6 +44,11 @@ public abstract class UserColumn {
 	protected UserColumn(int id,String name){
 		this(id,name,name);
 	}
+
+	/**
+	 * constructor is used by AbstractTable
+	 */
+	public UserColumn(){}
 	
 	/**
 	 * returns the language dependency name of the column
@@ -55,10 +65,14 @@ public abstract class UserColumn {
 	public final int getId() {
 		return id;
 	}
+
+	public void setId(int v){
+		this.id = v;
+	}
 	
 	/**
 	 * returns the language dependency tooltip of the column
-	 * @return
+	 * @return String
 	 */
 	public final String getTooltip() {
 		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip:HOVerwaltung.instance().getLanguageString(tooltip);
@@ -74,7 +88,7 @@ public abstract class UserColumn {
 
 	/**
 	 * set a column to be showed
-	 * @param display
+	 * @param display boolean
 	 */
 	public final void setDisplay(boolean display) {
 		this.display = display;
@@ -95,7 +109,7 @@ public abstract class UserColumn {
 	/**
 	 * set index
 	 * if columnModel should be saved index will set, or column is loaded
-	 * @param index
+	 * @param index int
 	 */
 	public final void setIndex(int index) {
 		this.index = index;
@@ -120,7 +134,7 @@ public abstract class UserColumn {
 
 	/**
 	 * set minWidth and prefWidth in the TableColumn
-	 * @param column
+	 * @param column TableColumn
 	 */
 	public void setSize(TableColumn column){
 		column.setMinWidth(minWidth);
@@ -129,7 +143,7 @@ public abstract class UserColumn {
 	
 	/**
 	 * set preferredWidth for saving to DB
-	 * @param width
+	 * @param width int
 	 */
 	public void setPreferredWidth(int width){
 		preferredWidth = width;
@@ -137,5 +151,21 @@ public abstract class UserColumn {
 	
 	public int getPreferredWidth(){
 		return preferredWidth;
+	}
+
+	/**
+	 * return index of the user column in the model's array definition
+	 * @return int
+	 */
+	public int getModelIndex() {
+		return modelIndex;
+	}
+
+	/**
+	 * set the index of the user column in the model's array definition
+	 * @param modelIndex int
+	 */
+	public void setModelIndex(int modelIndex) {
+		this.modelIndex = modelIndex;
 	}
 }

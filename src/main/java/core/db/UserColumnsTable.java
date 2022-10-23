@@ -3,13 +3,7 @@ package core.db;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
-import core.util.HOLogger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-
-
 
 class UserColumnsTable extends AbstractTable {
 	final static String TABLENAME = "USERCOLUMNS";
@@ -18,14 +12,14 @@ class UserColumnsTable extends AbstractTable {
 		super(TABLENAME, adapter);
 	}
 
-
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[4];
-		columns[0] = new ColumnDescriptor("COLUMN_ID", Types.INTEGER, false, true);
-		columns[1] = new ColumnDescriptor("MODELL_INDEX", Types.INTEGER, false);
-		columns[2] = new ColumnDescriptor("TABLE_INDEX", Types.INTEGER, false);
-		columns[3] = new ColumnDescriptor("COLUMN_WIDTH", Types.INTEGER, true);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_ID").setGetter((p) -> ((UserColumn) p).getId()).setSetter((p, v) -> ((UserColumn) p).setId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MODELL_INDEX").setGetter((p) -> ((UserColumn) p).getModelIndex()).setSetter((p, v) -> ((UserColumn) p).setModelIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TABLE_INDEX").setGetter((p) -> ((UserColumn) p).getIndex()).setSetter((p, v) -> ((UserColumn) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_WIDTH").setGetter((p) -> ((UserColumn) p).getPreferredWidth()).setSetter((p, v) -> ((UserColumn) p).setPreferredWidth((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+		};
 	}
 
 	@Override
@@ -43,76 +37,47 @@ class UserColumnsTable extends AbstractTable {
 	}
 
 	void saveModel(HOTableModel model) {
-
 		deleteModel(model.getId());
-
 		UserColumn[] dbcolumns = model.getColumns();
 		for (int i = 0; i < dbcolumns.length; i++) {
 			if (model.getId() == 2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
 				dbcolumns[i].setDisplay(true); // force ID column
 			}
 			if (dbcolumns[i].isDisplay()) {
-				executePreparedInsert(
-						model.getId() * 1000 + dbcolumns[i].getId(),
-						i,
-						dbcolumns[i].getIndex(),
-						dbcolumns[i].getPreferredWidth()
-				);
+				dbcolumns[i].setModelIndex(i);
+				dbcolumns[i].setId(model.getId() * 1000 + dbcolumns[i].getId());
+				store(dbcolumns[i]);
 			}
 		}
 	}
 
 	void insertDefault(HOTableModel model) {
-
-		deleteModel(model.getId());
-
 		UserColumn[] dbcolumns = model.getColumns();
 		for (int i = 0; i < dbcolumns.length; i++) {
 			dbcolumns[i].setIndex(i);
-			executePreparedInsert(
-					model.getId() * 1000 + dbcolumns[i].getId(),
-					i,
-					dbcolumns[i].getIndex(),
-					dbcolumns[i].getPreferredWidth()
-			);
 		}
+		saveModel(model);
 	}
 
 	void loadModel(HOTableModel model) {
-		int modelIndex;
-		int tableIndex;
-		int width;
-
 		int count = 0;
-		var rs = executePreparedSelect(
-				model.getId() * 1000,
-				model.getId() * 1000 + 999);
-
+		var userColumns = load(UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
 		UserColumn[] dbcolumns = model.getColumns();
-		try {
-
-			while (true) {
-				assert rs != null;
-				if (!rs.next()) break;
-				modelIndex = rs.getInt(columns[1].getColumnName());
-				if (modelIndex < dbcolumns.length) {
-					tableIndex = rs.getInt(columns[2].getColumnName());
-					width = rs.getInt(columns[3].getColumnName());
-					dbcolumns[modelIndex].setIndex(tableIndex);
-					dbcolumns[modelIndex].setDisplay(true);
-					dbcolumns[modelIndex].setPreferredWidth(width);
-					count++;
-				}
+		for (var userColumn : userColumns) {
+			var modelIndex = userColumn.getModelIndex();
+			if (modelIndex < dbcolumns.length) {
+				var dbColumn = dbcolumns[modelIndex];
+				dbColumn.setModelIndex(modelIndex);
+				dbColumn.setPreferredWidth(userColumn.getPreferredWidth());
+				dbColumn.setDisplay(true);
+				dbColumn.setIndex(userColumn.getIndex());
+				count++;
 			}
+		}
 
-			if (count == 0) {
-				insertDefault(model);
-				loadModel(model);
-			}
-			rs.close();
-
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(), e);
+		if (count == 0) {
+			insertDefault(model);
+			loadModel(model);
 		}
 	}
 }
