@@ -1,6 +1,7 @@
 // %1126721329338:hoplugins.transfers.constants%
 package module.transfer;
 
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 
 
@@ -9,12 +10,17 @@ import core.model.HOVerwaltung;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public final class TransferTypes {
+public final class TransferType extends AbstractTable.Storable {
+
+    private int playerId;
+    private Integer transferType;
+
     //~ Static fields/initializers -----------------------------------------------------------------
 
     /** Number of Transfers Types */
     public static final int NUMBER = 12;
 
+    public static final int UNDEFINED = -2;
     /** Fired Player */
     public static final int FIRED_PLAYER = -1;
 
@@ -56,7 +62,7 @@ public final class TransferTypes {
     /**
      * Creates a new DividerDAO object.
      */
-    private TransferTypes() {
+    public TransferType() {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -104,45 +110,57 @@ public final class TransferTypes {
      * @return the descritption
      */
     public static String getTransferDesc(int type) {
-        switch (type) {
-            case TRAINED_ROSTER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Trained_on_Roster"); //$NON-NLS-1$
+        return switch (type) {
+            case TRAINED_ROSTER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Trained_on_Roster"); //$NON-NLS-1$
 
-            case STARTER_ROSTER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Starter_on_Roster"); //$NON-NLS-1$
+            case STARTER_ROSTER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Starter_on_Roster"); //$NON-NLS-1$
 
-            case BACKUP_ROSTER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Backup_on_Roster"); //$NON-NLS-1$
+            case BACKUP_ROSTER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Backup_on_Roster"); //$NON-NLS-1$
 
-            case YOUTH_PULL:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Youth_Pull"); //$NON-NLS-1$
+            case YOUTH_PULL -> HOVerwaltung.instance().getLanguageString("TransferTypes.Youth_Pull"); //$NON-NLS-1$
 
-            case ORIGINAL_ROSTER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Original_Player"); //$NON-NLS-1$
+            case ORIGINAL_ROSTER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Original_Player"); //$NON-NLS-1$
 
-            case DAY_TRADING:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Day_Trading"); //$NON-NLS-1$
+            case DAY_TRADING -> HOVerwaltung.instance().getLanguageString("TransferTypes.Day_Trading"); //$NON-NLS-1$
 
-            case SKILL_TRADING:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Skill_Trading"); //$NON-NLS-1$
+            case SKILL_TRADING ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Skill_Trading"); //$NON-NLS-1$
 
-            case FUTURE_TRAINER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Future_Trainer"); //$NON-NLS-1$
+            case FUTURE_TRAINER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Future_Trainer"); //$NON-NLS-1$
 
-            case OLD_TRAINED:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Trained_Player"); //$NON-NLS-1$
+            case OLD_TRAINED ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Trained_Player"); //$NON-NLS-1$
 
-            case OLD_STARTER:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Starter_Player"); //$NON-NLS-1$
+            case OLD_STARTER ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Starter_Player"); //$NON-NLS-1$
 
-            case OLD_BACKUP:
-                return HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Backup_Player"); //$NON-NLS-1$
+            case OLD_BACKUP ->
+                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Backup_Player"); //$NON-NLS-1$
 
-            case FIRED_PLAYER:
-                return HOVerwaltung.instance().getLanguageString("FiredPlayer"); //$NON-NLS-1$
+            case FIRED_PLAYER -> HOVerwaltung.instance().getLanguageString("FiredPlayer"); //$NON-NLS-1$
 
-            default:
-                return ""; //$NON-NLS-1$
-        }
+            default -> ""; //$NON-NLS-1$
+        };
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public Integer getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(Integer transferType) {
+        this.transferType = transferType;
     }
 }

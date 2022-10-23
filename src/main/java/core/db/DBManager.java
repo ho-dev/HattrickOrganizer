@@ -24,6 +24,7 @@ import core.model.player.Skillup;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
+import module.transfer.TransferType;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
@@ -1580,20 +1581,19 @@ public class DBManager {
 	 * @param playerId the player id
 	 * @return the transfer type
 	 */
-	public int getTransferType(int playerId) {
+	public TransferType getTransferType(int playerId) {
 		return ((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
-				.getTransferType(playerId);
+				.loadTransferType(playerId);
 	}
 
 	/**
 	 * Sets transfer type.
 	 *
-	 * @param playerId the player id
 	 * @param type     the type
 	 */
-	public void setTransferType(int playerId, int type) {
+	public void setTransferType(TransferType  type) {
 		((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
-				.setTransferType(playerId, type);
+				.storeTransferType(type);
 	}
 
 	/**

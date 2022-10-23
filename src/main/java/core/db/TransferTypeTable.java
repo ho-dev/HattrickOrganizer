@@ -1,7 +1,7 @@
 package core.db;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import module.transfer.TransferType;
+
 import java.sql.Types;
 
 public class TransferTypeTable extends AbstractTable {
@@ -14,28 +14,19 @@ public class TransferTypeTable extends AbstractTable {
 	
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[2];
-		columns[0]= new ColumnDescriptor("PLAYER_ID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("TYPE",Types.INTEGER,true);
-
+        columns = new ColumnDescriptor[]{
+                ColumnDescriptor.Builder.newInstance().setColumnName("PLAYER_ID").setGetter((p) -> ((TransferType) p).getPlayerId()).setSetter((p, v) -> ((TransferType) p).setPlayerId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("TYPE").setGetter((p) -> ((TransferType) p).getTransferType()).setSetter((p, v) -> ((TransferType) p).setTransferType((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+        };
 	}
 
-    void setTransferType(int playerId, int type) {
-        executePreparedDelete(playerId);
-        executePreparedInsert(
-                playerId,
-                type
-        );
+    void storeTransferType(TransferType type) {
+        type.setIsStored(isStored(type.getPlayerId()));
+        store(type);
     }
     
-    int getTransferType(int playerId) {
-        final ResultSet rs = executePreparedSelect(playerId);
-        try {
-            rs.next();
-            return rs.getInt("TYPE"); 
-        } catch (SQLException e) {
-            return -2;
-        }
+    TransferType loadTransferType(int playerId) {
+        return loadOne(TransferType.class, playerId);
     }
 
 }
