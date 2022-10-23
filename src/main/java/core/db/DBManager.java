@@ -206,14 +206,13 @@ public class DBManager {
 			// Do we need to create the database from scratch?
 			if (!existsDB) {
 				try {
-					m_clInstance.executeSQL("SET FILES SPACE TRUE");
 					m_clInstance.createAllTables();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
 				UserConfigurationTable configTable = (UserConfigurationTable) m_clInstance.getTable(UserConfigurationTable.TABLENAME);
-				configTable.store(UserParameter.instance());
-				configTable.store(HOParameter.instance());
+				configTable.storeConfigurations(UserParameter.instance());
+				configTable.storeConfigurations(HOParameter.instance());
 			}
 			else {
 				// Check if there are any updates on the database to be done.
@@ -224,10 +223,6 @@ public class DBManager {
 			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
 		return m_clInstance;
-	}
-
-	private void executeSQL(String sql) {
-		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executeUpdate(sql);
 	}
 
 	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
@@ -397,14 +392,6 @@ public class DBManager {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getAllLevelUp(skill, m_iSpielerID);
 	}
-
-	/**
-	 * Reimport skillup.
-	 */
-//	public void reimportSkillup() {
-//		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
-//				.importFromSpieler();
-//	}
 
 	/**
 	 * Check skillup.
@@ -918,9 +905,9 @@ public class DBManager {
 	 * @param matchid      the matchid
 	 * @return the boolean
 	 */
-	public boolean isMatchLineupInDB(MatchType iMatchType, int matchid) {
-		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupInDB(iMatchType, matchid);
+	public boolean matchLineupIsNotStored(MatchType iMatchType, int matchid) {
+		return !getTable(MatchLineupTable.TABLENAME)
+				.isStored(matchid, iMatchType);
 	}
 
 	/**
@@ -1162,8 +1149,7 @@ public class DBManager {
 	 * @return the scout list
 	 */
 	public Vector<ScoutEintrag> getScoutList() {
-		var ret = new Vector<ScoutEintrag>();
-		ret.addAll(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
+		var ret = new Vector<ScoutEintrag>(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
 		return ret;
 	}
 
@@ -1409,8 +1395,8 @@ public class DBManager {
 	 */
 	public void loadUserParameter() {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
-		table.load(UserParameter.instance());
-		table.load(HOParameter.instance());
+		table.loadConfigurations(UserParameter.instance());
+		table.loadConfigurations(HOParameter.instance());
 	}
 
 	/**
@@ -1418,8 +1404,8 @@ public class DBManager {
 	 */
 	public void saveUserParameter() {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
-		table.store(UserParameter.instance());
-		table.store(HOParameter.instance());
+		table.storeConfigurations(UserParameter.instance());
+		table.storeConfigurations(HOParameter.instance());
 	}
 
 	// ------------------------------- PaarungTable
@@ -1692,6 +1678,7 @@ public class DBManager {
 				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
 				"where spielerId = "+ playerId +
 				" and ROLEID BETWEEN 100 AND 113 and matchtyp " + officialWhere;
+		assert getAdapter() != null;
 		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
 		if (rs == null) {
 			return 0;
@@ -1733,7 +1720,7 @@ public class DBManager {
 				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
 
 		if(officialOnly){
-			var lMatchTypes =  MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue()));
+			var lMatchTypes =  MatchType.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
 			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
 			sql += " AND MATCHTYP IN (" + inValues + ")";
 		}
@@ -1742,6 +1729,7 @@ public class DBManager {
 		// Get all data on the player
 		try {
 			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
+			assert m_clJDBCAdapter != null;
 			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql), playerID);
 			PlayerMatchCBItem playerMatchCBItem;
 			assert rs != null;
@@ -1778,8 +1766,7 @@ public class DBManager {
 						TeamConfidence.toString(team.getConfidence())
 				};
 				//Only if player data has been found, pass it into the return vector
-				if ((player != null) && (details != null)
-						&& (sTSandConfidences != null)) {
+				if (player != null && details != null) {
 					item.setSpieler(player);
 					item.setMatchdetails(details);
 					item.setTeamSpirit(sTSandConfidences[0]);
@@ -1878,6 +1865,8 @@ public class DBManager {
 	}
 	
 	private void createAllTables() throws SQLException {
+		assert m_clJDBCAdapter != null;
+		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
@@ -1947,7 +1936,7 @@ public class DBManager {
 	 */
 	void saveUserParameter(String fieldName, String value) {
 		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
-				.update(fieldName, value);
+				.storeConfiguration(fieldName, value);
 	}
 
 	/**
@@ -2146,22 +2135,6 @@ public class DBManager {
 		var ret = getBoolean(rs,columnLabel);
 		if ( ret != null) return ret;
 		return defaultValue;
-	}
-
-	/**
-	 * Gets double.
-	 *
-	 * @param rs          the rs
-	 * @param columnLabel the column label
-	 * @return the double
-	 */
-	public static Double getDouble(ResultSet rs, String columnLabel) {
-		try {
-			return rs.getDouble(columnLabel);
-		}
-		catch(Exception ignored)
-		{}
-		return null;
 	}
 
 	/**
@@ -2391,6 +2364,7 @@ public class DBManager {
 
 		var ret = new ArrayList<TrainingPerWeek>();
 		try {
+			assert m_clJDBCAdapter != null;
 			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(
 					all?loadTrainingPerWeekMaxStatement.getStatement():loadTrainingPerWeekMinStatement.getStatement(),
 					startDate);

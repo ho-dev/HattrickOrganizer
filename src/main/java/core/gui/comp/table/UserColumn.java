@@ -1,13 +1,9 @@
 package core.gui.comp.table;
 
-import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import javax.swing.table.TableColumn;
 
-
-public class UserColumn extends AbstractTable.Storable {
-
-
+public abstract class UserColumn {
 
     //~ Instance fields ----------------------------------------------------------------------------
 	/** unique column id **/
@@ -30,10 +26,6 @@ public class UserColumn extends AbstractTable.Storable {
 	
 	/** if a column is shown in the jtable. Only displayed columns are saved in db**/
 	protected boolean display = false;
-	/**
-	 * index of the column in model array definition (not in the table display)
-	 */
-	private int modelIndex;
 
 	protected UserColumn(int id,String name, String tooltip){
 		this.id = id;
@@ -124,7 +116,7 @@ public class UserColumn extends AbstractTable.Storable {
 		return getTooltip();
 	}
 
-	/**
+	/*
 	 * Some columns must be displayed, so some columns are not editable
 	 * @return boolean
 	 */
@@ -153,19 +145,4 @@ public class UserColumn extends AbstractTable.Storable {
 		return preferredWidth;
 	}
 
-	/**
-	 * return index of the user column in the model's array definition
-	 * @return int
-	 */
-	public int getModelIndex() {
-		return modelIndex;
-	}
-
-	/**
-	 * set the index of the user column in the model's array definition
-	 * @param modelIndex int
-	 */
-	public void setModelIndex(int modelIndex) {
-		this.modelIndex = modelIndex;
-	}
 }

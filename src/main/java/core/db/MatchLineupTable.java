@@ -41,10 +41,6 @@ public final class MatchLineupTable extends AbstractTable {
 		return loadOne(MatchLineup.class, matchID, iMatchType);
 	}
 
-	boolean isMatchLineupInDB(MatchType matchType, int matchid) {
-		return isStored(matchid, matchType.getId());
-	}
-
 	void storeMatchLineup(MatchLineup lineup) {
 		if ( lineup != null) {
 			lineup.setIsStored(isStored(lineup.getMatchID(), lineup.getMatchType().getId()));
