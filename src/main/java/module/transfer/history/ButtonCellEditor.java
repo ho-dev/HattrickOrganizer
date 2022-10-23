@@ -32,13 +32,13 @@ public class ButtonCellEditor extends AbstractCellEditor
     }
 
     public void actionPerformed(ActionEvent e) {
-        DBManager.instance().removeTransfer(transfer.getTransferID());
+        DBManager.instance().removeTransfer(transfer.getTransferId());
         fireEditingStopped();
         playerDetailPanel.setPlayer(transfer.getPlayerId(), transfer.getPlayerName());
     }
 
     public Object getCellEditorValue() {
-        return transfer.getTransferID();
+        return transfer.getTransferId();
     }
 
     public Component getTableCellEditorComponent(JTable table,
@@ -46,7 +46,7 @@ public class ButtonCellEditor extends AbstractCellEditor
                                                  boolean isSelected,
                                                  int row,
                                                  int column) {
-        transfer = (PlayerTransfer) values.get(row);
+        transfer = values.get(row);
         return button;
     }
 }

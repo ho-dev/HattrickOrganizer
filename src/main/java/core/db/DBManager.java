@@ -1508,10 +1508,25 @@ public class DBManager {
 	 * @param allTransfers the all transfers
 	 * @return the transfers
 	 */
-// Transfer
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
+		setPlayerInfo(ret);
+		return ret;
+	}
+
+	/**
+	 * set the attribute player of each transfer
+	 * @param transfers list of transfers
+	 */
+	private void setPlayerInfo(List<PlayerTransfer> transfers) {
+		for (PlayerTransfer transfer : transfers) {
+			final Player player = getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
+
+			if (player != null) {
+				transfer.setPlayerInfo(player);
+			}
+		}
 	}
 
 	/**
@@ -1522,10 +1537,11 @@ public class DBManager {
 	 * @param sold   the sold
 	 * @return the transfers
 	 */
-	public List<PlayerTransfer> getTransfers(int season, boolean bought,
-			boolean sold) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean sold) {
+		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(season, bought, sold);
+		setPlayerInfo(ret);
+		return ret;
 	}
 
 	/**
@@ -1541,22 +1557,21 @@ public class DBManager {
 	/**
 	 * Update player transfers.
 	 *
-	 * @param transfers the player id
+	 * @param transfer PlayerTransfer
 	 */
-	public void updatePlayerTransfers(List<PlayerTransfer> transfers) {
+	public void storePlayerTransfer(PlayerTransfer transfer) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
-				.updatePlayerTransfers(transfers);
+				.storeTransfer(transfer);
 	}
 
 	/**
-	 * Update team transfers boolean.
-	 *
-	 * @param transfers the transfers
-	 * @return the boolean
+	 * load one player transfer
+	 * @param transferId int
+	 * @return PlayerTransfer
 	 */
-	public List<Player> updateTeamTransfers(List<PlayerTransfer> transfers) {
+	public PlayerTransfer loadPlayerTransfer(int transferId) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
-					.updateTeamTransfers(transfers);
+				.getTransfer(transferId);
 	}
 
 	/**

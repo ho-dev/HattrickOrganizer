@@ -4,21 +4,13 @@ package module.transfer;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
-import core.gui.HOMainFrame;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.player.Player;
 import core.net.MyConnector;
 import core.util.HODateTime;
-import core.util.Helper;
-
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -171,7 +163,7 @@ public final class XMLParser {
             if (element != null) {
                 final NodeList list = element.getElementsByTagName(childnode);
 
-                if ((list != null) && (list.getLength() > 0)) {
+                if (list.getLength() > 0) {
                     final Element child = (Element) list.item(0);
                     core.file.xml.XMLManager.getFirstChildNodeValue(child);
 
@@ -265,7 +257,7 @@ public final class XMLParser {
 
     public static boolean updateTeamTransfers(int teamId) {
         var transfers = getAllTeamTransfers(teamId, HODateTime.now().plus(1, ChronoUnit.DAYS));
-        var players =  DBManager.instance().updateTeamTransfers(transfers);
+        var players =  updateTeamTransfers(transfers);
         if ( players != null) {
             for (var player : players) {
                 updatePlayerTransfers(player.getPlayerID());
@@ -275,10 +267,49 @@ public final class XMLParser {
         return false;
     }
 
+
+    /**
+     * Update transfer data for a team from the HT xml.
+     * Returns false if this fails
+     *
+     * @param transfers player transfers
+     */
+    private static List<Player> updateTeamTransfers(List<PlayerTransfer> transfers) {
+        final List<Player> players = new ArrayList<>();
+        for (PlayerTransfer transfer : transfers) {
+            final Player player = PlayerRetriever.getPlayer(transfer);
+
+            if (player != null) {
+                if (!players.contains(player)) players.add(player);
+                if (transfer.getPlayerId() == 0) {
+                    int playerIdFound = player.getPlayerID();
+                    transfer.setPlayerId(playerIdFound);
+                    player.setIsFired(true);
+                }
+            } else {
+                PlayerTransfer alreadyInDB = DBManager.instance().loadPlayerTransfer(transfer.getTransferId());
+                if (alreadyInDB != null) {
+                    if (transfer.getPlayerId() == 0) {
+                        var pl = PlayerRetriever.getPlayer(alreadyInDB);
+                        if (pl != null) pl.setIsFired(true);
+                    } else {
+                        Player dummy = new Player();
+                        dummy.setPlayerID(transfer.getPlayerId());
+                        if (!players.contains(dummy)) players.add(dummy);
+                    }
+                }
+            }
+            DBManager.instance().storePlayerTransfer(transfer);
+        }
+        return players.stream().filter(i -> !i.isFired()).toList();
+    }
+
     public static void updatePlayerTransfers(int playerID) {
         var transfers = getAllPlayerTransfers(playerID);
         if (transfers.size()>0) {
-            DBManager.instance().updatePlayerTransfers(transfers);
+            for ( var transfer : transfers){
+                DBManager.instance().storePlayerTransfer(transfer);
+            }
         }
         else {
             var notes = DBManager.instance().loadPlayerNotes(playerID);

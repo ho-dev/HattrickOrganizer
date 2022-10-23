@@ -1,18 +1,14 @@
 package core.db;
 
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.HODateTime;
-import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 public class TransferTable extends AbstractTable {
 	final static String TABLENAME = "TRANSFER";
@@ -24,29 +20,53 @@ public class TransferTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[13];
-		columns[0]= new ColumnDescriptor("transferid",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("date",Types.TIMESTAMP,true);
-		columns[2]= new ColumnDescriptor("week",Types.INTEGER,true);
-		columns[3]= new ColumnDescriptor("season",Types.INTEGER,true);
-		columns[4]= new ColumnDescriptor("playerid",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("playername",Types.VARCHAR,true,127);
-		columns[6]= new ColumnDescriptor("buyerid",Types.INTEGER,true);
-		columns[7]= new ColumnDescriptor("buyername",Types.VARCHAR,true,256);
-		columns[8]= new ColumnDescriptor("sellerid",Types.INTEGER,true);
-		columns[9]= new ColumnDescriptor("sellername",Types.VARCHAR,true,256);
-		columns[10]= new ColumnDescriptor("price",Types.INTEGER,true);
-		columns[11]= new ColumnDescriptor("marketvalue",Types.INTEGER,true);
-		columns[12]= new ColumnDescriptor("tsi",Types.INTEGER,true);
+        columns = new ColumnDescriptor[]{
+                ColumnDescriptor.Builder.newInstance().setColumnName("transferid").setGetter((p) -> ((PlayerTransfer) p).getTransferId()).setSetter((p, v) -> ((PlayerTransfer) p).setTransferId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("date").setGetter((p) -> ((PlayerTransfer) p).getDate().toDbTimestamp()).setSetter((p, v) -> ((PlayerTransfer) p).setDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("week").setGetter((p) -> ((PlayerTransfer) p).getWeek()).setSetter((p, v) -> ((PlayerTransfer) p).setWeek((int) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("season").setGetter((p) -> ((PlayerTransfer) p).getSeason()).setSetter((p, v) -> ((PlayerTransfer) p).setSeason((int) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("playerid").setGetter((p) -> ((PlayerTransfer) p).getPlayerId()).setSetter((p, v) -> ((PlayerTransfer) p).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("playername").setGetter((p) -> ((PlayerTransfer) p).getPlayerName()).setSetter((p, v) -> ((PlayerTransfer) p).setPlayerName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("buyerid").setGetter((p) -> ((PlayerTransfer) p).getBuyerid()).setSetter((p, v) -> ((PlayerTransfer) p).setBuyerid((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("buyername").setGetter((p) -> ((PlayerTransfer) p).getBuyerName()).setSetter((p, v) -> ((PlayerTransfer) p).setBuyerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("sellerid").setGetter((p) -> ((PlayerTransfer) p).getSellerid()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerid((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("sellername").setGetter((p) -> ((PlayerTransfer) p).getSellerName()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice(convertCurrency ((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("marketvalue").setGetter((p) -> ((PlayerTransfer) p).getMarketvalue()).setSetter((p, v) -> ((PlayerTransfer) p).setMarketvalue(convertCurrency((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("tsi").setGetter((p) -> ((PlayerTransfer) p).getTsi()).setSetter((p, v) -> ((PlayerTransfer) p).setTsi((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+        };
 	}
 
-	@Override
+    @Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
 			"CREATE INDEX pl_id ON " + getTableName() + "(" + columns[4].getColumnName() + ")",
 			"CREATE INDEX buy_id ON " + getTableName() + "(" + columns[6].getColumnName() + ")",
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
+
+    private double currency_rate = 0.;
+
+    /**
+     * convert currency value in swedish krone to local currency
+     * @param v Integer value to convert
+     * @return Integer converted local currency
+     */
+    private Integer convertCurrency(Integer v) {
+        if ( v != null ){
+            if ( currency_rate == 0.){
+                var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+                if ( xtra != null ){
+                    currency_rate = xtra.getCurrencyRate();
+                }
+                else {
+                    currency_rate = 1.;
+                }
+            }
+            return (int)(v/currency_rate);
+        }
+        return null;
+    }
 
     /**
      * Remove a transfer from the HO database
@@ -67,9 +87,7 @@ public class TransferTable extends AbstractTable {
      * @param transferId Transfer ID
      */
     public PlayerTransfer getTransfer(int transferId) {
-        List<PlayerTransfer> result = loadTransfers(executePreparedSelect( transferId));
-        if (result.size() > 0) return result.get(0);
-        return null;
+        return loadOne(PlayerTransfer.class, transferId);
     }
 
     private final PreparedSelectStatementBuilder getAllTransfersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE playerid = ? ORDER BY date DESC");
@@ -105,79 +123,7 @@ public class TransferTable extends AbstractTable {
         final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
         return getTransfers(teamid, season, bought, sold);
     }
-    
-    /**
-     * Update transfer data for a team from the HT xml.
-     * Returns false if this fails
-     *
-     * @param transfers player transfers
-     */
-    public List<Player> updateTeamTransfers(List<PlayerTransfer> transfers) {
-        try {
-            final List<Player> players = new ArrayList<>();
-            for (PlayerTransfer transfer : transfers) {
-                final Player player = PlayerRetriever.getPlayer(transfer);
 
-                if (player != null) {
-                    if (!players.contains(player)) players.add(player);
-                    if (transfer.getPlayerId() == 0) {
-                        int playerIdFound = player.getPlayerID();
-                        transfer.setPlayerId(playerIdFound);
-                        player.setIsFired(true);
-                    }
-                } else {
-                    PlayerTransfer alreadyInDB = getTransfer(transfer.getTransferID());
-                    if (alreadyInDB != null) {
-                        if (transfer.getPlayerId() == 0) {
-                            var pl = PlayerRetriever.getPlayer(alreadyInDB);
-                            if ( pl != null) pl.setIsFired(true);
-//                            DBManager.instance().saveIsSpielerFired(alreadyInDB.getPlayerId(), true);
-//                            continue;
-                        } else {
-                            Player dummy = new Player();
-                            dummy.setPlayerID(transfer.getPlayerId());
-                            if (!players.contains(dummy)) players.add(dummy);
-                        }
-                    }
-                }
-
-                addTransfer(transfer);
-            }
-
-            return players.stream().filter(i->!i.isFired()).toList();
-
-//            for (Player player : players) {
-//                int playerID = player.getPlayerID();
-//                if (!player.isFired()) {
-//                    updatePlayerTransfers(playerID);
-//                }
-//            }
-//
-//            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-//            return false;
-          }
-
-        return null;
-    }
-    
-    /**
-     * Update transfer data for a player.
-     *
-     * @param transfers Player
-     */
-    public void updatePlayerTransfers(List<PlayerTransfer> transfers) {
-        try {
-            for (final PlayerTransfer transfer : transfers) {
-                addTransfer(transfer);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
     /**
      * Gets a list of transfers.
      *
@@ -229,31 +175,14 @@ public class TransferTable extends AbstractTable {
         }
         return loadTransfers(this.adapter.executePreparedQuery(statement, params.toArray()));
     }
+
 	/**
      * Adds a transfer to the HO database
      *
      * @param transfer Transfer information
      */
-    private void addTransfer(PlayerTransfer transfer) {
-    	removeTransfer(transfer.getTransferID());
-        try {
-            executePreparedInsert(
-                    transfer.getTransferID(),
-                    transfer.getDate().toDbTimestamp(),
-                    transfer.getWeek(),
-                    transfer.getSeason(),
-                    transfer.getPlayerId(),
-                    transfer.getPlayerName(),
-                    transfer.getBuyerid(),
-                    transfer.getBuyerName(),
-                    transfer.getSellerid(),
-                    transfer.getSellerName(),
-                    transfer.getPrice(),
-                    transfer.getMarketvalue(),
-                    transfer.getTsi()
-            );
-        } catch (Exception ignored) {
-        }
+    public void storeTransfer(PlayerTransfer transfer) {
+        store(transfer);
     }
 	
     /**
@@ -264,46 +193,6 @@ public class TransferTable extends AbstractTable {
      * @return List of transfers
      */
     private List<PlayerTransfer> loadTransfers(ResultSet rs) {
-        double curr_rate=1.;
-        var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
-        if ( xtra != null ){
-            curr_rate = xtra.getCurrencyRate();
-        }
-        final List<PlayerTransfer> results = new Vector<>();
-        if (rs == null) {
-            return new Vector<>();
-        }
-        try {
-            while (rs.next()) {
-                PlayerTransfer transfer = new PlayerTransfer(rs.getInt("transferid"),rs.getInt("playerid"));  
-                transfer.setPlayerName( rs.getString("playername"));
-                transfer.setDate(HODateTime.fromDbTimestamp(rs.getTimestamp("date")));
-                transfer.setWeek(rs.getInt("week")); 
-                transfer.setSeason(rs.getInt("season")); 
-
-                transfer.setBuyerid(rs.getInt("buyerid")); 
-                transfer.setBuyerName(rs.getString("buyername"));
-                transfer.setSellerid(rs.getInt("sellerid")); 
-                transfer.setSellerName( rs.getString("sellername"));
-
-                transfer.setPrice((int) (rs.getInt("price") / curr_rate)); 
-                transfer.setMarketvalue((int) (rs.getInt("marketvalue") / curr_rate)); 
-                transfer.setTsi(rs.getInt("tsi")); 
-
-                results.add(transfer);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        for (PlayerTransfer transfer : results) {
-            final Player player = DBManager.instance().getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
-
-            if (player != null) {
-                transfer.setPlayerInfo(player);
-            }
-        }
-
-        return results;
+        return load(PlayerTransfer.class, rs);
     }
 }
