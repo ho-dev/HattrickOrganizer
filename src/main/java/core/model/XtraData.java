@@ -1,21 +1,10 @@
 package core.model;
 
-import core.db.DBManager;
-import core.util.DateTimeUtils;
+import core.db.AbstractTable;
 import core.util.HODateTime;
-import core.util.HOLogger;
-import core.util.Helper;
-
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.Properties;
 
-public class XtraData  {
+public class XtraData extends AbstractTable.Storable {
 
     private String m_sLogoURL;
     private HODateTime m_clEconomyDate;
@@ -27,10 +16,10 @@ public class XtraData  {
 
     /**
      * The ID number of the LeagueLevelUnit.
-     *
      * In week 16 of a season this ID switches to the value of the next season (could be a different one)
      */
     private int m_iLeagueLevelUnitID = -1;
+    private int hrfId;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -57,7 +46,7 @@ public class XtraData  {
     }
 
     /**
-     * Creates a new XtraData object.
+     * Creates a new XtraData object. This constructor is used by AbstractTable
      */
     public XtraData(){}
 
@@ -197,5 +186,13 @@ public class XtraData  {
 
     public void setCountryId(Integer m_iCountryId) {
         this.m_iCountryId = m_iCountryId;
+    }
+
+    public int getHrfId() {
+        return this.hrfId;
+    }
+
+    public void setHrfId(int hrfId) {
+        this.hrfId = hrfId;
     }
 }
