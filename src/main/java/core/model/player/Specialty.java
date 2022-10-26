@@ -26,8 +26,8 @@ public enum Specialty {
     Not_used(7),
     Support(8);
 
-    private int value;
-    private static HashMap<Integer, Specialty> map = new HashMap<>();
+    private final int value;
+    private static final HashMap<Integer, Specialty> map = new HashMap<>();
 
     Specialty(int value) {
         this.value = value;
@@ -40,9 +40,16 @@ public enum Specialty {
         }
     }
 
-    public static Specialty valueOf(Integer s) {
+    public static Specialty getSpecialty(Integer s) {
         if ( s != null) {
             return map.get(s);
+        }
+        return null;
+    }
+
+    public static Integer getValue(Specialty specialty){
+        if ( specialty != null){
+            return specialty.getValue();
         }
         return null;
     }

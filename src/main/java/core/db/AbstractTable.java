@@ -111,12 +111,14 @@ public abstract class AbstractTable {
 
 	protected <T extends  Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
 		var ret = new ArrayList<T>();
+		ColumnDescriptor columnDescriptor = null;
 		try{
 			var constructor = tClass.getConstructor();
 			if (rs != null) {
 				while (rs.next() && 0 != max--) {
 					var object = constructor.newInstance();
 					for (var c : columns) {
+						columnDescriptor = c;
 						var value = switch (c.getType()) {
 							case Types.CHAR, Types.LONGVARCHAR, Types.VARCHAR -> getString(rs, c.getColumnName());
 							case Types.BIT, Types.SMALLINT, Types.TINYINT, Types.BIGINT, Types.INTEGER -> getInteger(rs,c.getColumnName());
@@ -135,7 +137,12 @@ public abstract class AbstractTable {
 			}
 		}
 		catch (Exception exception){
-			HOLogger.instance().error(getClass(), "load: " + exception);
+			var stringBuilder = new StringBuilder("load");
+			if ( columnDescriptor != null){
+				stringBuilder.append(" ").append(columnDescriptor.getColumnName());
+			}
+			stringBuilder.append(": ").append(exception);
+			HOLogger.instance().error(getClass(), stringBuilder.toString());
 		}
 		return ret;
 	}

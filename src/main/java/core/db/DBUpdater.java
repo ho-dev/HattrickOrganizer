@@ -162,6 +162,9 @@ final class DBUpdater {
 			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 			stadiumTable.tryDeleteColumn("GesamtGr");
+
+			var youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+			youthplayerTable.tryChangeColumn("rating", "DOUBLE");
 		}
 		updateDBVersion(dbVersion, 700);
 	}

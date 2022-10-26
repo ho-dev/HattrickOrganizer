@@ -2,15 +2,12 @@ package core.db;
 
 import core.model.player.Specialty;
 import core.util.HODateTime;
-import module.youth.YouthSkillInfo;
 import module.youth.YouthPlayer;
 import core.util.HOLogger;
 import module.training.Skills;
 
 import java.sql.*;
 import java.util.*;
-
-import static core.util.HODateTime.toDbTimestamp;
 
 public class YouthPlayerTable  extends AbstractTable {
 
@@ -26,35 +23,35 @@ public class YouthPlayerTable  extends AbstractTable {
     @Override
     protected void initColumns() {
         var tmp = new ArrayList<>(List.of(
-                new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
-                new ColumnDescriptor("ID", Types.INTEGER, false),
-                new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
-                new ColumnDescriptor("NickName", Types.VARCHAR, true, 100),
-                new ColumnDescriptor("LastName", Types.VARCHAR, true, 100),
-                new ColumnDescriptor("Age", Types.INTEGER, false),
-                new ColumnDescriptor("AgeDays", Types.INTEGER, false),
-                new ColumnDescriptor("ArrivalDate", Types.TIMESTAMP, true),
-                new ColumnDescriptor("PromotionDate", Types.TIMESTAMP, true),
-                new ColumnDescriptor("CanBePromotedIn", Types.INTEGER, false),
-                new ColumnDescriptor("PlayerNumber", Types.VARCHAR, true, 10),
-                new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("PlayerCategoryID", Types.INTEGER, false),
-                new ColumnDescriptor("Cards", Types.INTEGER, false),
-                new ColumnDescriptor("InjuryLevel", Types.INTEGER, true),
-                new ColumnDescriptor("Specialty", Types.INTEGER, true),
-                new ColumnDescriptor("CareerGoals", Types.INTEGER, true),
-                new ColumnDescriptor("CareerHattricks", Types.INTEGER, true),
-                new ColumnDescriptor("LeagueGoals", Types.INTEGER, true),
-                new ColumnDescriptor("FriendlyGoals", Types.INTEGER, true),
-                new ColumnDescriptor("ScoutId", Types.INTEGER, true),
-                new ColumnDescriptor("ScoutingRegionID", Types.INTEGER, true),
-                new ColumnDescriptor("ScoutName", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("YouthMatchID", Types.INTEGER, true),
-                new ColumnDescriptor("positionCode", Types.INTEGER, true),
-                new ColumnDescriptor("playedMinutes", Types.INTEGER, true),
-                new ColumnDescriptor("rating", Types.INTEGER, true),
-                new ColumnDescriptor("YouthMatchDate", Types.TIMESTAMP, true)
+                ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((YouthPlayer) p).getHrfid()).setSetter((p, v) -> ((YouthPlayer) p).setHrfid((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("ID").setGetter((p) -> ((YouthPlayer) p).getId()).setSetter((p, v) -> ((YouthPlayer) p).setId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("FirstName").setGetter((p) -> ((YouthPlayer) p).getFirstName()).setSetter((p, v) -> ((YouthPlayer) p).setFirstName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("NickName").setGetter((p) -> ((YouthPlayer) p).getNickName()).setSetter((p, v) -> ((YouthPlayer) p).setNickName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("LastName").setGetter((p) -> ((YouthPlayer) p).getLastName()).setSetter((p, v) -> ((YouthPlayer) p).setLastName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Age").setGetter((p) -> ((YouthPlayer) p).getAgeYears()).setSetter((p, v) -> ((YouthPlayer) p).setAgeYears((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((p) -> ((YouthPlayer) p).getAgeDays()).setSetter((p, v) -> ((YouthPlayer) p).setAgeDays((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getArrivalDate())).setSetter((p, v) -> ((YouthPlayer) p).setArrivalDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("PromotionDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getPromotionDate())).setSetter((p, v) -> ((YouthPlayer) p).setPromotionDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("CanBePromotedIn").setGetter((p) -> ((YouthPlayer) p).getCanBePromotedIn()).setSetter((p, v) -> ((YouthPlayer) p).setCanBePromotedIn((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerNumber").setGetter((p) -> ((YouthPlayer) p).getPlayerNumber()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerNumber((String) v)).setType(Types.VARCHAR).setLength(10).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p) -> ((YouthPlayer) p).getStatement()).setSetter((p, v) -> ((YouthPlayer) p).setStatement((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p) -> ((YouthPlayer) p).getOwnerNotes()).setSetter((p, v) -> ((YouthPlayer) p).setOwnerNotes((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategoryID").setGetter((p) -> ((YouthPlayer) p).getPlayerCategoryID()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerCategoryID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Cards").setGetter((p) -> ((YouthPlayer) p).getCards()).setSetter((p, v) -> ((YouthPlayer) p).setCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("InjuryLevel").setGetter((p) -> ((YouthPlayer) p).getInjuryLevel()).setSetter((p, v) -> ((YouthPlayer) p).setInjuryLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Specialty").setGetter((p) -> Specialty.getValue(((YouthPlayer) p).getSpecialty())).setSetter((p, v) -> ((YouthPlayer) p).setSpecialty(Specialty.getSpecialty((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("CareerGoals").setGetter((p) -> ((YouthPlayer) p).getCareerGoals()).setSetter((p, v) -> ((YouthPlayer) p).setCareerGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("CareerHattricks").setGetter((p) -> ((YouthPlayer) p).getCareerHattricks()).setSetter((p, v) -> ((YouthPlayer) p).setCareerHattricks((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("LeagueGoals").setGetter((p) -> ((YouthPlayer) p).getLeagueGoals()).setSetter((p, v) -> ((YouthPlayer) p).setLeagueGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("FriendlyGoals").setGetter((p) -> ((YouthPlayer) p).getFriendlyGoals()).setSetter((p, v) -> ((YouthPlayer) p).setFriendlyGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutId").setGetter((p) -> ((YouthPlayer) p).getScoutId()).setSetter((p, v) -> ((YouthPlayer) p).setScoutId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutingRegionID").setGetter((p) -> ((YouthPlayer) p).getScoutingRegionID()).setSetter((p, v) -> ((YouthPlayer) p).setScoutingRegionID((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutName").setGetter((p) -> ((YouthPlayer) p).getScoutName()).setSetter((p, v) -> ((YouthPlayer) p).setScoutName((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchID").setGetter((p) -> ((YouthPlayer) p).getYouthMatchID()).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchID((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("positionCode").setGetter((p) -> ((YouthPlayer) p).getPositionCode()).setSetter((p, v) -> ((YouthPlayer) p).setPositionCode((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("playedMinutes").setGetter((p) -> ((YouthPlayer) p).getPlayedMinutes()).setSetter((p, v) -> ((YouthPlayer) p).setPlayedMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("rating").setGetter((p) -> ((YouthPlayer) p).getRating()).setSetter((p, v) -> ((YouthPlayer) p).setRating((Double) v)).setType(Types.DOUBLE).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getYouthMatchDate())).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
         ));
 
         for ( var skillId : YouthPlayer.skillIds) {
@@ -67,184 +64,43 @@ public class YouthPlayerTable  extends AbstractTable {
     private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
         var prefix = skillId.toString();
         return new ArrayList<>(List.of(
-                new ColumnDescriptor(prefix, Types.INTEGER, true),
-                new ColumnDescriptor(prefix + "Max", Types.INTEGER, true),
-                new ColumnDescriptor(prefix + "Start", Types.INTEGER, true),
-                new ColumnDescriptor(prefix + "IsMaxReached", Types.BOOLEAN, false),
-                new ColumnDescriptor(prefix + "Value", Types.DOUBLE, false),
-                new ColumnDescriptor(prefix + "StartValue", Types.DOUBLE, false),
-                new ColumnDescriptor(prefix + "Top3", Types.BOOLEAN, true)));
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix).setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getCurrentLevel()).setSetter((p, v) -> ((YouthPlayer) p).setCurrentLevel(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Max").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getMax()).setSetter((p, v) -> ((YouthPlayer) p).setMax(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Start").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getStartLevel()).setSetter((p, v) -> ((YouthPlayer) p).setStartLevel(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "IsMaxReached").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).isMaxReached()).setSetter((p, v) -> ((YouthPlayer) p).setIsMaxReached(skillId, (boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Value").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getCurrentValue()).setSetter((p, v) -> ((YouthPlayer) p).setCurrentValue(skillId, (double) v)).setType(Types.DOUBLE).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "StartValue").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getStartValue()).setSetter((p, v) -> ((YouthPlayer) p).setStartValue(skillId, (double) v)).setType(Types.DOUBLE).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Top3").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).isTop3()).setSetter((p, v) -> ((YouthPlayer) p).setIsTop3(skillId, (Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
+        ));
     }
 
     /**
-     * save youth players
+     * delete youth players
      */
-    void storeYouthPlayers(int hrfId, List<YouthPlayer> players) {
-        if (players != null) {
-            // Delete old values
-            executePreparedDelete(hrfId);
-
-            for ( YouthPlayer p: players){
-                storeYouthPlayer(hrfId, p);
-            }
-        }
+    public void deleteYouthPlayers(int hrfId) {
+        executePreparedDelete(hrfId);
     }
 
-    private final PreparedDeleteStatementBuilder deleteYouthPlayerStatementBuilder = new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=? AND ID=?");
+    /**
+     * store youth player
+     * @param hrfId int
+     * @param player YouthPlayer
+     */
     void storeYouthPlayer(int hrfId, YouthPlayer player) {
-        adapter.executePreparedUpdate(deleteYouthPlayerStatementBuilder.getStatement(), hrfId, player.getId());
-
-        var values = new ArrayList<>();
-        values.add(hrfId);
-        values.add(player.getId());
-        values.add(player.getFirstName());
-        values.add(player.getNickName());
-        values.add(player.getLastName());
-        values.add(player.getAgeYears());
-        values.add(player.getAgeDays());
-        values.add(toDbTimestamp(player.getArrivalDate()));
-        values.add(toDbTimestamp(player.getPromotionDate()));
-        values.add(player.getCanBePromotedIn());
-        values.add(player.getPlayerNumber());
-        values.add(player.getStatement());
-        values.add(player.getOwnerNotes());
-        values.add(player.getPlayerCategoryID());
-        values.add(player.getCards());
-        values.add(player.getInjuryLevel());
-        values.add(player.getSpecialty().getValue());
-        values.add(player.getCareerGoals());
-        values.add(player.getCareerHattricks());
-        values.add(player.getLeagueGoals());
-        values.add(player.getFriendlyGoals());
-        values.add(player.getScoutId());
-        values.add(player.getScoutingRegionID());
-        values.add(player.getScoutName());
-        values.add(player.getYouthMatchID());
-        values.add(player.getPositionCode());
-        values.add(player.getPlayedMinutes());
-        values.add(player.getRating());
-        values.add(toDbTimestamp(player.getYouthMatchDate()));
-
-        for ( var skillId: YouthPlayer.skillIds){
-            AppendSkillInfo(values, player, skillId);
-        }
-
-        try {
-            executePreparedInsert(values.toArray());
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "saveYouthPlayer: " + e);
-        }
-        var scoutComments = player.getScoutComments();
-        if (scoutComments.size() > 0) {
-            var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
-            if (youthScoutCommentTable.countScoutComments(player.getId()) == 0) {
-                int i = 0;
-                for (var c : scoutComments) {
-                    youthScoutCommentTable.storeYouthScoutComment(i++, player.getId(), c);
-                }
-            }
-        }
-    }
-
-    private void AppendSkillInfo(ArrayList<Object> values, YouthPlayer player, Skills.HTSkillID skillID) {
-        var skillInfo = player.getSkillInfo(skillID);
-        values.add(skillInfo.getCurrentLevel());
-        values.add(skillInfo.getMax());
-        values.add(skillInfo.getStartLevel());
-        values.add(skillInfo.isMaxReached());
-        values.add(skillInfo.getCurrentValue());
-        values.add(skillInfo.getStartValue());
-        values.add(skillInfo.isTop3());
+        player.setHrfid(hrfId);
+        store(player);
     }
 
     /**
      * load youth player of HRF file id
      */
     List<YouthPlayer> loadYouthPlayers(int hrfID) {
-        final ArrayList<YouthPlayer> ret = new ArrayList<>();
-        if ( hrfID > -1) {
-            var rs = executePreparedSelect(hrfID);
-            try {
-                if (rs != null) {
-                    while (rs.next()) {
-                        var player = createObject(rs);
-                        ret.add(player);
-                    }
-                }
-            } catch (Exception e) {
-                HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthPlayers: " + e);
-            }
-        }
-        return ret;
+        return load(YouthPlayer.class, hrfID);
     }
 
     private final PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
     public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
-        var rs = adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date);
-        try {
-            if (rs != null) {
-                if (rs.next()) {
-                    return createObject(rs);
-                }
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthPlayer: " + e);
-        }
-        return null;
-    }
-
-    private YouthPlayer createObject(ResultSet rs) {
-        YouthPlayer ret = new YouthPlayer();
-        try {
-            ret.setHrfid(rs.getInt("HRF_ID"));
-            ret.setId(rs.getInt("ID"));
-            ret.setAgeDays(rs.getInt("AgeDays"));
-            ret.setAgeYears(rs.getInt("Age"));
-            ret.setArrivalDate(HODateTime.fromDbTimestamp(rs.getTimestamp("ArrivalDate")));
-            ret.setCanBePromotedIn(rs.getInt("CanBePromotedIn"));
-            ret.setCards(rs.getInt("Cards"));
-            ret.setCareerGoals(rs.getInt("CareerGoals"));
-            ret.setCareerHattricks(rs.getInt("CareerHattricks"));
-            ret.setFirstName(rs.getString("FirstName"));
-            ret.setNickName(rs.getString("NickName"));
-            ret.setLastName(rs.getString("LastName"));
-            ret.setFriendlyGoals(rs.getInt("FriendlyGoals"));
-            ret.setInjuryLevel(rs.getInt("InjuryLevel"));
-            ret.setLeagueGoals(rs.getInt("LeagueGoals"));
-            ret.setOwnerNotes(rs.getString("OwnerNotes"));
-            ret.setPlayedMinutes(rs.getInt("PlayedMinutes"));
-            ret.setPlayerCategoryID(rs.getInt("PlayerCategoryID"));
-            ret.setPlayerNumber(rs.getString("PlayerNumber"));
-            ret.setPositionCode(rs.getInt("PositionCode"));
-            ret.setRating(rs.getDouble("Rating"));
-            ret.setScoutId(rs.getInt("ScoutId"));
-            ret.setScoutingRegionID(rs.getInt("ScoutingRegionID"));
-            ret.setScoutName(rs.getString("ScoutName"));
-            ret.setSpecialty(Specialty.valueOf(DBManager.getInteger(rs,"Specialty")));
-            ret.setStatement(rs.getString("Statement"));
-            ret.setYouthMatchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("YouthMatchDate")));
-            ret.setYouthMatchID(rs.getInt("YouthMatchID"));
-            for ( var skillId: YouthPlayer.skillIds){
-                setSkillInfo(ret, rs, skillId);
-            }
-
-        } catch (Exception e) {
-            HOLogger.instance().error(getClass(),e);
-        }
-        return ret;
-    }
-
-    private void setSkillInfo(YouthPlayer youthPlayer, ResultSet rs, Skills.HTSkillID skillID) throws SQLException {
-        var skillinfo = new YouthSkillInfo(skillID);
-        var columnPrefix = skillID.toString();
-        skillinfo.setCurrentLevel(DBManager.getInteger(rs, columnPrefix));
-        skillinfo.setStartLevel(DBManager.getInteger(rs, columnPrefix + "Start"));
-        skillinfo.setMax(DBManager.getInteger(rs, columnPrefix + "Max"));
-        skillinfo.setMaxReached(rs.getBoolean(columnPrefix + "IsMaxReached"));
-        skillinfo.setCurrentValue(rs.getDouble(columnPrefix + "Value"));
-        skillinfo.setStartValue(rs.getDouble(columnPrefix + "StartValue"));
-        skillinfo.setIsTop3(DBManager.getBoolean(rs, columnPrefix + "Top3"));
-        youthPlayer.setSkillInfo(skillinfo);
+        return loadOne(YouthPlayer.class, adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date));
     }
 
     private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(

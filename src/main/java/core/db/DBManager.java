@@ -445,7 +445,12 @@ public class DBManager {
 	 * @param youthPlayers the list of youth players
 	 */
 	public void storeYouthPlayers(int hrfId, List<YouthPlayer> youthPlayers) {
-		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,youthPlayers);
+		var youthplayertable = ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME));
+		youthplayertable.deleteYouthPlayers(hrfId);
+		for ( var youthPlayer : youthPlayers){
+			youthPlayer.setIsStored(false);
+			storeYouthPlayer(hrfId,youthPlayer);
+		}
 	}
 
 	/**
@@ -456,6 +461,18 @@ public class DBManager {
 	 */
 	public void storeYouthPlayer(int hrfId, YouthPlayer youthPlayer) {
 		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId,youthPlayer);
+
+		var scoutComments = youthPlayer.getScoutComments();
+		if (scoutComments.size() > 0) {
+			var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+			if (youthScoutCommentTable.countScoutComments(youthPlayer.getId()) == 0) {
+				int i = 0;
+				for (var c : scoutComments) {
+					youthScoutCommentTable.storeYouthScoutComment(i++, youthPlayer.getId(), c);
+				}
+			}
+		}
+
 	}
 
 	/**
