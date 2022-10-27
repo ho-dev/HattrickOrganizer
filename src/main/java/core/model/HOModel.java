@@ -611,7 +611,7 @@ public class HOModel {
         for (var lineup : this.getYouthMatchLineups()) {
             // create a youth trainings object for each lineup, if it does not exist already
             var youthTraining = youthTrainings.stream()
-                    .filter(t -> t.getMatchId() == lineup.getMatchID())
+                    .filter(t -> t.getYouthMatchId() == lineup.getMatchID())
                     .findFirst()
                     .orElse(null);
             if (youthTraining == null) {

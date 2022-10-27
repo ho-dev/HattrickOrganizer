@@ -149,8 +149,13 @@ final class DBUpdater {
 			migrateSelectedEscapes("USERCONFIGURATION", "where CONFIG_KEY='hrfImport_HRFPath'", "CONFIG_VALUE");
 		}
 
-		var teamTable = dbManager.getTable(TeamTable.TABLENAME);
-		if ( teamTable.tryDeleteColumn("sTrainingsArt")) {
+		var youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+		if (!youthplayerTable.primaryKeyExists()) {
+			youthplayerTable.addPrimaryKey("HRF_ID,ID");
+			youthplayerTable.tryChangeColumn("rating", "DOUBLE");
+
+			var teamTable = dbManager.getTable(TeamTable.TABLENAME);
+			teamTable.tryDeleteColumn("sTrainingsArt");
 			teamTable.tryDeleteColumn("sStimmung");
 			teamTable.tryDeleteColumn("sSelbstvertrauen");
 
@@ -162,9 +167,6 @@ final class DBUpdater {
 			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 			stadiumTable.tryDeleteColumn("GesamtGr");
-
-			var youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
-			youthplayerTable.tryChangeColumn("rating", "DOUBLE");
 		}
 		updateDBVersion(dbVersion, 700);
 	}

@@ -18,6 +18,7 @@ public class YouthPlayerTable  extends AbstractTable {
 
     YouthPlayerTable(JDBCAdapter adapter) {
         super(TABLENAME, adapter);
+        idColumns = 2;
     }
 
     @Override
@@ -74,6 +75,15 @@ public class YouthPlayerTable  extends AbstractTable {
         ));
     }
 
+    @Override
+    protected String[] getConstraintStatements() {
+        return new String[]{" PRIMARY KEY (HRF_ID, ID)"};
+    }
+
+    @Override
+    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+        return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+    }
     /**
      * delete youth players
      */
@@ -89,6 +99,11 @@ public class YouthPlayerTable  extends AbstractTable {
     void storeYouthPlayer(int hrfId, YouthPlayer player) {
         player.setHrfid(hrfId);
         store(player);
+    }
+
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
     }
 
     /**

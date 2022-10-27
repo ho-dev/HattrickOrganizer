@@ -24,7 +24,7 @@ public class YouthTrainingColumn extends UserColumn {
     }
 
     public int getValue(YouthTraining youthTraining){
-        return youthTraining.getMatchId();
+        return youthTraining.getYouthMatchId();
     }
 
     @Override

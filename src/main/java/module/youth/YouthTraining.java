@@ -1,22 +1,27 @@
 package module.youth;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.*;
-import core.model.player.MatchRoleID;
 import core.util.HODateTime;
-import module.lineup.substitution.model.MatchOrderType;
 import module.training.Skills;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class YouthTraining {
+public class YouthTraining extends AbstractTable.Storable {
+
+    public void setYouthMatchId(int v) {
+        this.youthMatchId = v;
+    }
+    public void setYouthMatchType(MatchType v) {
+        this.youthMatchType = v;
+    }
 
     public enum Priority {
         Primary,
@@ -32,13 +37,8 @@ public class YouthTraining {
     private Matchdetails matchdetails;
     private int youthMatchId;
     private MatchType youthMatchType;
-    private YouthTrainingType[] training = new YouthTrainingType[2];
-    private List<YouthTrainerComment> commentList = new ArrayList<>();
-
-    public YouthTraining(int youthMatchId, MatchType matchType) {
-        this.youthMatchId = youthMatchId;
-        this.youthMatchType = matchType;
-    }
+    private final YouthTrainingType[] training = new YouthTrainingType[2];
+    private final List<YouthTrainerComment> commentList = new ArrayList<>();
 
     private void setMatchLineup(MatchLineup youthMatch) {
         this.youthMatchId = youthMatch.getMatchID();
@@ -49,6 +49,11 @@ public class YouthTraining {
     public YouthTraining(MatchLineup lineup) {
         setMatchLineup(lineup);
     }
+
+    /**
+     * constructor is used by AbstractTable
+     */
+    public YouthTraining(){}
 
     public YouthTrainingType getTraining(Priority p) {
         return training[p.ordinal()];
@@ -85,16 +90,7 @@ public class YouthTraining {
         return commentList;
     }
 
-    public void addComment(YouthTrainerComment comment) {
-        commentList.add(comment);
-        var youthplayerID = comment.getYouthPlayerId();
-        var team = matchLineup.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
-
-        var player = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(youthplayerID);
-        player.addComment(comment);
-    }
-
-    public int getMatchId() {
+    public int getYouthMatchId() {
         return this.youthMatchId;
     }
 
