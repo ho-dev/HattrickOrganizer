@@ -461,18 +461,8 @@ public class DBManager {
 	 */
 	public void storeYouthPlayer(int hrfId, YouthPlayer youthPlayer) {
 		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId,youthPlayer);
-
-		var scoutComments = youthPlayer.getScoutComments();
-		if (scoutComments.size() > 0) {
-			var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
-			if (youthScoutCommentTable.countScoutComments(youthPlayer.getId()) == 0) {
-				int i = 0;
-				for (var c : scoutComments) {
-					youthScoutCommentTable.storeYouthScoutComment(i++, youthPlayer.getId(), c);
-				}
-			}
-		}
-
+		var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+		youthScoutCommentTable.storeYouthScoutComments(youthPlayer.getId(), youthPlayer.getScoutComments());
 	}
 
 	/**

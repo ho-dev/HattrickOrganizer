@@ -2,14 +2,8 @@ package core.db;
 
 import core.model.player.CommentType;
 import module.youth.YouthPlayer.ScoutComment;
-import core.util.HOLogger;
 import module.training.Skills;
-import tool.hrfExplorer.HrfExplorer;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class YouthScoutCommentTable extends AbstractTable {
@@ -24,83 +18,30 @@ public class YouthScoutCommentTable extends AbstractTable {
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-                new ColumnDescriptor("YOUTHPLAYER_ID", Types.INTEGER, false),
-                new ColumnDescriptor("INDEX", Types.INTEGER, false),
-                new ColumnDescriptor("Text", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("Type", Types.INTEGER, true),
-                new ColumnDescriptor("Variation", Types.INTEGER, true),
-                new ColumnDescriptor("SkillType", Types.INTEGER, true),
-                new ColumnDescriptor("SkillLevel", Types.INTEGER, true)
+                ColumnDescriptor.Builder.newInstance().setColumnName("YOUTHPLAYER_ID").setGetter((p) -> ((ScoutComment) p).getYouthPlayerId()).setSetter((p, v) -> ((ScoutComment) p).setYouthPlayerId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("INDEX").setGetter((p) -> ((ScoutComment) p).getIndex()).setSetter((p, v) -> ((ScoutComment) p).setIndex( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Text").setGetter((p) -> ((ScoutComment) p).getText()).setSetter((p, v) -> ((ScoutComment) p).setText( (String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Type").setGetter((p) -> ((ScoutComment) p).getType().getValue()).setSetter((p, v) -> ((ScoutComment) p).setType(CommentType.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Variation").setGetter((p) -> ((ScoutComment) p).getVariation()).setSetter((p, v) -> ((ScoutComment) p).setVariation((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("SkillType").setGetter((p) -> Skills.ScoutCommentSkillTypeID.value(((ScoutComment) p).getSkillType())).setSetter((p, v) -> ((ScoutComment) p).setSkillType(Skills.ScoutCommentSkillTypeID.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("SkillLevel").setGetter((p) -> ((ScoutComment) p).getSkillLevel()).setSetter((p, v) -> ((ScoutComment) p).setSkillLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
         };
     }
 
-    private final DBManager.PreparedStatementBuilder countScoutCommentsStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "SELECT count(*) FROM "+getTableName()+" WHERE YOUTHPLAYER_ID=?");
-    public int countScoutComments(int youthplayerid) {
-        var rs = adapter.executePreparedQuery(countScoutCommentsStatementBuilder.getStatement(), youthplayerid);
-        try {
-            if (rs != null && rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException sexc) {
-            HrfExplorer.appendText("" + sexc);
+    public void storeYouthScoutComments(int youthplayerId,  List<ScoutComment> comments) {
+        executePreparedDelete(youthplayerId);
+        for ( var comment : comments){
+            comment.setIsStored(false);
+            comment.setYouthPlayerId(youthplayerId);
+            store(comment);
         }
-        return 0;
     }
-
-    public void storeYouthScoutComment(int i, int youthPlayerId, ScoutComment c) {
-        executePreparedInsert(
-                youthPlayerId,
-                i,
-                c.getText(),
-                ValueOf(c.getType()),
-                c.getVariation(),
-                ValueOf(c.getSkillType()),
-                c.getSkillLevel()
-        );
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, "WHERE YOUTHPLAYER_ID=? order by INDEX");
     }
-
-    private Integer ValueOf(CommentType type) {
-        if (type != null) return type.getValue();
-        return null;
-    }
-
-    private Integer ValueOf(Skills.ScoutCommentSkillTypeID skillType) {
-        if (skillType != null) return skillType.getValue();
-        return null;
-    }
-
     public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
-        final ArrayList<ScoutComment> ret = new ArrayList<>();
-        if ( youthplayer_id > -1) {
-            var rs = executePreparedSelect(youthplayer_id);
-            try {
-                if (rs != null) {
-                    while (rs.next()) {
-                        var comment = createObject(rs);
-                        ret.add(comment);
-                    }
-                }
-            } catch (Exception e) {
-                HOLogger.instance().log(getClass(), "DatenbankZugriff.getYouthScoutComments: " + e);
-            }
-        }
-        return ret;
+        return load(ScoutComment.class, youthplayer_id);
     }
 
-    private ScoutComment createObject(ResultSet rs) {
-        ScoutComment ret = new ScoutComment();
-        try {
-            ret.setYouthPlayerId(rs.getInt("YouthPlayer_Id"));
-            ret.setIndex(rs.getInt("Index"));
-            ret.setText(rs.getString("Text"));
-            ret.setSkillLevel(rs.getInt("SkillLevel"));
-            ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(rs.getInt("SkillType")));
-            ret.setVariation(rs.getInt("Variation"));
-            ret.setType(CommentType.valueOf(rs.getInt("Type")));
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
-        }
-        return ret;
-    }
 }

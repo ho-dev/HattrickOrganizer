@@ -95,15 +95,6 @@ public class YouthPlayer extends AbstractTable.Storable {
     }
 
     /**
-     * Set the scout comments
-     *
-     * @param scoutComments list of scout comments
-     */
-    public void setScoutComments(List<ScoutComment> scoutComments) {
-        this.scoutComments = scoutComments;
-    }
-
-    /**
      * Look for start skill levels, potential and specialties given by the scout.
      * The mentioned skills are tagged as top3 skills.
      */
@@ -735,7 +726,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         this.currentSkills.get(skillId).setIsTop3(v);
     }
 
-    public static class ScoutComment {
+    public static class ScoutComment extends AbstractTable.Storable {
         private int youthPlayerId;
         private int index;
         private String text;

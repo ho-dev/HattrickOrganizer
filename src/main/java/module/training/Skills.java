@@ -44,8 +44,8 @@ public class Skills {
         Leadership(10),
         Experience(11);
 
-        private int value;
-        private static HashMap<Integer, HTSkillID> map = new HashMap<>();
+        private final int value;
+        private static final HashMap<Integer, HTSkillID> map = new HashMap<>();
 
         HTSkillID(int value) {
             this.value = value;
@@ -107,8 +107,8 @@ public class Skills {
         SET_PIECES(7),
         PASSING(8);
 
-        private int value;
-        private static HashMap<Integer, ScoutCommentSkillTypeID> map = new HashMap<>();
+        private final int value;
+        private static final HashMap<Integer, ScoutCommentSkillTypeID> map = new HashMap<>();
 
         ScoutCommentSkillTypeID(int value) {
             this.value = value;
@@ -124,6 +124,13 @@ public class Skills {
         public static ScoutCommentSkillTypeID valueOf(Integer skill) {
             if ( skill != null) {
                 return map.get(skill);
+            }
+            return null;
+        }
+
+        public static Integer value(ScoutCommentSkillTypeID typeID){
+            if ( typeID != null){
+                return typeID.getValue();
             }
             return null;
         }
