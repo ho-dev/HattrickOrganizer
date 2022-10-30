@@ -168,26 +168,21 @@ public class TrainingModel implements PropertyChangeListener {
 		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
 
 		if (previousTraining != null) {
-			var trainingDate = previousTraining.getTrainingDate();
-			//ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
-
-			int nbWeek = 1;
-			HODateTime futureTrainingDate;
+			var trainingWeek = previousTraining.getTrainingWeek().sinceOrigin();
+			long nbWeek = 1;
 			TrainingPerWeek futureTraining;
 
 			while (newfutureTrainings.size() < requiredNBentries) {
 
 				//first iteration equals to nextWeek training then increase per one week per iteration
-				futureTrainingDate = trainingDate.plusDaysAtSameLocalTime(nbWeek*7);
-
-				//ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
-				HODateTime finalFutureTrainingDate = futureTrainingDate;
-				var oFutureTraining = _futureTrainings.stream().filter(t -> finalFutureTrainingDate.equals(t.getTrainingDate())).findFirst();
+				var futureTrainingWeek = trainingWeek + nbWeek;
+				var oFutureTraining = _futureTrainings.stream().filter(t -> futureTrainingWeek == t.getTrainingWeek().sinceOrigin()).findFirst();
 
 				if (oFutureTraining.isPresent()) {
 					// training present in Future Training table => we keep it
 					futureTraining = oFutureTraining.get();
 				} else {
+					var futureTrainingDate = previousTraining.getTrainingDate().plusDaysAtSameLocalTime(nbWeek*7);
 					// training not present in Future Training table => we create a new one from previous training
 					futureTraining = new TrainingPerWeek(futureTrainingDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
 							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
