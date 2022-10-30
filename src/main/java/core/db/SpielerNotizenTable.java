@@ -1,11 +1,7 @@
 package core.db;
 
-import core.model.player.IMatchRoleID;
-import core.util.HOLogger;
-
-import java.sql.ResultSet;
+import core.model.player.Player;
 import java.sql.Types;
-
 
 final class SpielerNotizenTable extends AbstractTable {
 
@@ -18,262 +14,23 @@ final class SpielerNotizenTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[7];
-		columns[0]= new ColumnDescriptor("SpielerID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("Notiz",Types.VARCHAR,false,2048);
-		columns[2]= new ColumnDescriptor("Spielberechtigt",Types.BOOLEAN,false);
-		columns[3]= new ColumnDescriptor("TeamInfoSmilie",Types.VARCHAR,false,127);
-		columns[4]= new ColumnDescriptor("ManuellerSmilie",Types.VARCHAR,false,127);
-		columns[5]= new ColumnDescriptor("userPos",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("isFired",Types.BOOLEAN,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Player.Notes) o).getPlayerId()).setSetter((o, v) -> ((Player.Notes) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Notiz").setGetter((o) -> ((Player.Notes) o).getNote()).setSetter((o, v) -> ((Player.Notes) o).setNote((String) v)).setType(Types.VARCHAR).setLength(2048).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spielberechtigt").setGetter((o) -> ((Player.Notes) o).isEligibleToPlay()).setSetter((o, v) -> ((Player.Notes) o).setEligibleToPlay((boolean) v)).setType(Types.BOOLEAN).setLength(2048).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamInfoSmilie").setGetter((o) -> ((Player.Notes) o).getTeamInfoSmilie()).setSetter((o, v) -> ((Player.Notes) o).setTeamInfoSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ManuellerSmilie").setGetter((o) -> ((Player.Notes) o).getManuelSmilie()).setSetter((o, v) -> ((Player.Notes) o).setManuelSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("userPos").setGetter((o) -> ((Player.Notes) o).getUserPos()).setSetter((o, v) -> ((Player.Notes) o).setUserPos((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("isFired").setGetter((o) -> ((Player.Notes) o).isFired()).setSetter((o, v) -> ((Player.Notes) o).setIsFired((boolean) v)).setType(Types.BOOLEAN).setLength(2048).isNullable(false).build()
+		};
 	}
 
-	byte getSpielerUserPosFlag(int spielerId) {
-		if (spielerId <= 0) {
-			return IMatchRoleID.UNKNOWN;
-		}
-
-		var sql = "SELECT userPos FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return rs.getByte("userPos");
-				}
-				
-				return IMatchRoleID.UNKNOWN;
-				
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerUserPosFlag: " + e);
-		}
-
-		return IMatchRoleID.UNKNOWN;
+	void storeNotes(Player.Notes notes) {
+		store(notes);
 	}
-	
-	String getManuellerSmilie(int spielerId) {
-
-		var sql = "SELECT ManuellerSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return rs.getString("ManuellerSmilie");
-				} else {
-					return "";
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getManuellerSmilie: " + e);
-		}
-
-		return "";
+	public Player.Notes load(int playerId) {
+		var ret =  loadOne(Player.Notes.class, playerId);
+		if ( ret == null) ret = new Player.Notes();
+		return ret;
 	}
-
-	String getSpielerNotiz(int spielerId) {
-
-		var sql = "SELECT Notiz FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return core.db.DBManager.deleteEscapeSequences(rs.getString("Notiz"));
-				} else {
-					return "";
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerNotiz: " + e);
-		}
-
-		return "";
-	}
-	
-	boolean getSpielerSpielberechtigt(int spielerId) {
-
-		var sql = "SELECT Spielberechtigt FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return rs.getBoolean("Spielberechtigt");
-				} else {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielberechtigt: " + e);
-		}
-
-		return true;
-	}
-
-	String getTeamInfoSmilie(int spielerId) {
-
-		var sql = "SELECT TeamInfoSmilie FROM "+getTableName()+" WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return rs.getString("TeamInfoSmilie");
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getTeamInfoSmilie: " + e);
-		}
-
-		return "";
-	}
-
-	boolean getIsSpielerFired(int spielerId) {
-
-		var sql = "SELECT isFired FROM " + getTableName() + " WHERE SpielerID = " + spielerId;
-		var rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					return rs.getBoolean("isFired");
-				} else {
-					return false;
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getIsSpielerFired: " + e);
-		}
-
-		return false;
-	}
-	
-	void saveManuellerSmilie(int spielerId, String smilie) {
-
-		//        String[]                awhereS     =   { "SpielerID" };
-		//        String[]                awhereV     =   { "" + spielerId };
-		if (spielerId > 0) {
-			//erst UPdate versuchen
-			try {
-				var statement = "UPDATE "+getTableName()+" SET ManuellerSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,"","",smilie,true,(byte) -1, false);
-				}
-			} catch (Exception e) {
-				createEntry(spielerId,"","",smilie,true,(byte) -1, false);
-			}
-		}
-	}
-
-	void saveSpielerNotiz(int spielerId, String notiz) {
-
-		if (spielerId > 0) {
-			//erst UPdate versuchen
-			try {
-				var statement = "UPDATE " + getTableName() + " SET Notiz='" + core.db.DBManager.insertEscapeSequences(notiz) + "' WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,notiz,"","",true,(byte) -1, false);
-				}
-			} catch (Exception e) {
-				createEntry(spielerId,notiz,"","",true,(byte) -1, false);
-			}
-		}
-	}
-	
-	void saveSpielerSpielberechtigt(int spielerId, boolean spielberechtigt) {
-
-		//       String[]                awhereS     =   { "SpielerID" };
-		//       String[]                awhereV     =   { "" + spielerId };
-		if (spielerId > 0) {
-			try {
-				//erst UPdate versuchen
-				var statement = "UPDATE " + getTableName() + " SET Spielberechtigt=" + spielberechtigt + " WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,"","","",spielberechtigt,(byte) -1, false);
-				}
-			} catch (Exception e) {
-				createEntry(spielerId,"","","",spielberechtigt,(byte) -1, false);
-			}
-		}
-	}
-
-	void saveSpielerUserPosFlag(int spielerId, byte flag) {
-
-		if (spielerId > 0) {
-			//erst UPdate versuchen
-			try {
-				var statement = "UPDATE " + getTableName() + " SET userPos=" + flag + " WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					createEntry(spielerId,"","","",true, flag, false);
-				}
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	void saveTeamInfoSmilie(int spielerId, String smilie) {
-
-		if (spielerId > 0) {
-			//erst UPdate versuchen
-			try {
-				var statement = "UPDATE " + getTableName() + " SET TeamInfoSmilie='" + smilie + "' WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,"",smilie,"",true,(byte) -1, false);
-				}
-			} catch (Exception e) {
-				createEntry(spielerId,"",smilie,"",true,(byte) -1, false);
-			}
-		}
-	}
-
-	void saveIsSpielerFired(int spielerId, boolean isFired) {
-
-		if (spielerId > 0) {
-			try {
-				//erst UPdate versuchen
-				var statement = "UPDATE " + getTableName() + " SET isFired=" + isFired + " WHERE SpielerID = " + spielerId;
-
-				//Insert falls kein passender Eintrag gefunden wurde
-				if (adapter.executeUpdate(statement) < 1) {
-					//erst Vorhandene Aufstellung löschen
-					//deleteSpielerNotizTabelle( awhereS, awhereV );
-					//insert vorbereiten
-					createEntry(spielerId,"","","",true,(byte) -1, isFired);
-				}
-			} catch (Exception e) {
-				createEntry(spielerId,"","","",true,(byte) -1, isFired);
-			}
-		}
-	}
-
-	private void createEntry(int spielerId, String notiz, String teamSmilie, String manualSmilie, boolean spielberechtigt, byte flag, boolean isFired) {
-		String statement = "INSERT INTO " + getTableName() + " ( SpielerID, Notiz, TeamInfoSmilie, ManuellerSmilie, Spielberechtigt, userPos, isFired ) VALUES(";
-		statement += ("" + spielerId + ",'" + core.db.DBManager.insertEscapeSequences(notiz) + "' ," + "'" + teamSmilie + "'," + "'" + manualSmilie + "'," + spielberechtigt + "," + flag + "," + isFired + ")");
-		adapter.executeUpdate(statement);
-	}
-	
 }

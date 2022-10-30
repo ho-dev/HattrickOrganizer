@@ -1,9 +1,13 @@
 package core.db;
 
 import core.model.enums.DBDataSource;
+import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -18,15 +22,12 @@ final class DBUpdater {
 	JDBCAdapter m_clJDBCAdapter;
 	DBManager dbManager;
 
-	void setDbManager(DBManager dbManager) {
-		this.dbManager = dbManager;
-	}
-
 	void updateDB(int DBVersion) {
 		// Just add new version cases in the switch..case part
 		// and leave the old ones active, so also users which
 		// have skipped a version get their database updated.
 
+		dbManager = DBManager.instance();
 		this.m_clJDBCAdapter = dbManager.getAdapter();
 
 		int version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME)).getDBVersion();
@@ -76,6 +77,30 @@ final class DBUpdater {
 		}
 	}
 
+	private final HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();
+	private PreparedStatement getMigrateEscapesStatement(String table, String column, String where){
+		var sql = "Update "+ table + " SET " + column + "=REPLACE("+column+", ?, ?) " + where;
+		var ret = migrateStatements.get(sql);
+		if ( ret == null ){
+			ret = new DBManager.PreparedStatementBuilder(sql).getStatement();
+			migrateStatements.put(sql, ret);
+		}
+		return ret;
+	}
+	private void migrateEscapes(String table, String ... columns){
+		migrateSelectedEscapes(table, "", columns);
+	}
+	private void migrateSelectedEscapes(String table, String where, String ... columns){
+		for (var column:columns){
+			var now = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
+			m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column, where), "§", "\\");
+			var rows = m_clJDBCAdapter.executePreparedUpdate(getMigrateEscapesStatement(table, column, where),    "#", "'");
+			var finished = HODateTime.now();
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+		}
+	}
+
 	private void updateDBv700(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		if (playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")) {
@@ -88,11 +113,64 @@ final class DBUpdater {
 			playerTable.tryAddColumn("MatchesCurrentTeam", "INTEGER");
 		}
 
-		var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
-		hrfTable.tryDeleteColumn("NAME");
+		if (playerTable.tryDeleteColumn("BONUS")) {
+			playerTable.tryDeleteColumn("OffsetTorwart");
+			playerTable.tryDeleteColumn("OffsetVerteidigung");
+			playerTable.tryDeleteColumn("OffsetSpielaufbau");
+			playerTable.tryDeleteColumn("OffsetFluegel");
+			playerTable.tryDeleteColumn("OffsetTorschuss");
+			playerTable.tryDeleteColumn("OffsetPasspiel");
+			playerTable.tryDeleteColumn("OffsetStandards");
 
+			var hrfTable = dbManager.getTable(HRFTable.TABLENAME);
+			hrfTable.tryDeleteColumn("NAME");
+
+
+			m_clJDBCAdapter.executeUpdate("DROP TABLE IF EXISTS MATCHLINEUPPENALTYTAKER");
+
+			migrateEscapes("MATCHHIGHLIGHTS", "EventText", "SpielerName", "GehilfeName");
+			migrateEscapes("BASICS", "Manager", "TeamName", "YouthTeamName");
+			migrateEscapes("MATCHDETAILS", "ArenaName", "GastName", "HeimName", "Matchreport");
+			migrateEscapes("MATCHLINEUPPLAYER", "VName", "NickName", "Name");
+			migrateEscapes("MATCHLINEUPTEAM", "TeamName");
+			migrateEscapes("MATCHESKURZINFO", "GastName", "HeimName");
+			migrateEscapes("NTTEAM", "SHORTNAME", "COACHNAME", "LEAGUENAME", "NAME");
+			migrateEscapes("PAARUNG", "GastName", "HeimName");
+			migrateEscapes("SCOUT", "Name", "Info");
+			migrateEscapes("SPIELERNOTIZ", "Notiz");
+			migrateEscapes("SPIELER", "ArrivalDate", "MotherclubName", "NickName", "LastName", "FirstName");
+			migrateEscapes("STADION", "StadionName");
+			migrateEscapes("TA_PLAYER", "NAME");
+			migrateEscapes("TRANSFER", "playername", "buyername", "sellername");
+			migrateEscapes("HT_WORLDDETAILS", "COUNTRYNAME");
+			migrateEscapes("XTRADATA", "LogoURL");
+			migrateEscapes("YOUTHPLAYER", "ScoutName", "OwnerNotes", "Statement", "NickName", "LastName", "FirstName");
+			migrateEscapes("YOUTHSCOUTCOMMENT", "Text");
+			migrateSelectedEscapes("USERCONFIGURATION", "where CONFIG_KEY='hrfImport_HRFPath'", "CONFIG_VALUE");
+		}
+
+		var youthplayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+		if (!youthplayerTable.primaryKeyExists()) {
+			youthplayerTable.addPrimaryKey("HRF_ID,ID");
+			youthplayerTable.tryChangeColumn("rating", "DOUBLE");
+
+			var teamTable = dbManager.getTable(TeamTable.TABLENAME);
+			teamTable.tryDeleteColumn("sTrainingsArt");
+			teamTable.tryDeleteColumn("sStimmung");
+			teamTable.tryDeleteColumn("sSelbstvertrauen");
+
+			var matchlineupplayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
+			matchlineupplayerTable.tryDeleteColumn("PositionCode");
+			matchlineupplayerTable.tryDeleteColumn("FIELDPOS");
+			var mmatchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+			mmatchSubstitutionTable.tryDeleteColumn("HRFID");
+			mmatchSubstitutionTable.tryDeleteColumn("LineupName");
+			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+			stadiumTable.tryDeleteColumn("GesamtGr");
+		}
 		updateDBVersion(dbVersion, 700);
 	}
+
 
 	private void updateDBv601(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
@@ -250,7 +328,6 @@ final class DBUpdater {
 			ResultSet rs = m_clJDBCAdapter.executeQuery(statement);
 			try {
 				if (rs != null) {
-					rs.beforeFirst();
 					while (rs.next()) {
 						var training = new int[]{
 								rs.getInt("week"),
@@ -261,6 +338,11 @@ final class DBUpdater {
 				}
 
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.from(ZoneOffset.UTC));
+				var preparedStatement = m_clJDBCAdapter.createPreparedStatement( "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
+						"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
+						"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
+						"WHERE TRAININGDATE> ? LIMIT 1");
+				var updateStatement =  m_clJDBCAdapter.createPreparedStatement("update " + TrainingsTable.TABLENAME + " SET TRAINING_DATE=?, TRAINING_ASSISTANTS_LEVEL=?, COACH_LEVEL=?, SOURCE=? WHERE YEAR=? AND WEEK=?");
 				for (var training : trainings) {
 					// Convert year, week to Date
 					int dayOfWeek = 1;  // 1-7, locale-dependent such as Sunday-Monday in US.
@@ -276,14 +358,8 @@ final class DBUpdater {
 					// COTrainer from VEREIN,HRF_ID
 					// TRAINER from SPIELER,HRF_ID && TRAINER>0
 					// TrainingDate from XTRA,HRF_ID
-					String sql = "select TRAININGDATE,COTRAINER,TRAINER FROM XTRADATA " +
-							"INNER JOIN VEREIN ON VEREIN.HRF_ID=XTRADATA.HRF_ID " +
-							"INNER JOIN SPIELER ON SPIELER.HRF_ID=XTRADATA.HRF_ID AND TRAINER>0 " +
-							"WHERE TRAININGDATE>'" +
-							dateString +
-							"' LIMIT 1";
 
-					rs = m_clJDBCAdapter.executeQuery(sql);
+					rs = m_clJDBCAdapter.executePreparedQuery(preparedStatement, dateString);
 					if (rs != null) {
 						rs.next();
 						var trainingDate = rs.getTimestamp("TRAININGDATE");
@@ -291,22 +367,7 @@ final class DBUpdater {
 						var trainer = rs.getInt("TRAINER");
 
 						// update new columns
-						String update = "update " + TrainingsTable.TABLENAME +
-								" SET" +
-								" TRAINING_DATE='" +
-								trainingDate +
-								"',  TRAINING_ASSISTANTS_LEVEL=" +
-								coTrainer +
-								", COACH_LEVEL=" +
-								trainer +
-								", SOURCE=" +
-								DBDataSource.MANUAL.getValue() +
-								" WHERE YEAR=" +
-								training[1] +
-								" AND WEEK=" +
-								training[0];
-
-						m_clJDBCAdapter.executeUpdate(update);
+						m_clJDBCAdapter.executePreparedUpdate(updateStatement, trainingDate, coTrainer, trainer, DBDataSource.MANUAL.getValue(), training[1], training[0]);
 					}
 				}
 			} catch (Exception e) {
@@ -371,8 +432,8 @@ final class DBUpdater {
 			matchIFATable.tryDropPrimaryKey();
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHESKURZINFO ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHLINEUP ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			matchLineupTable.tryDeleteColumn("SourceSystem");
 			matchLineupTable.tryDeleteColumn("HeimName");
@@ -414,7 +475,7 @@ final class DBUpdater {
 					WHERE
 					    MATCHTYP IN (1001, 1002, 1003, 1004, 1101)""";
 
-			m_clJDBCAdapter.executeQuery(sql);
+			m_clJDBCAdapter.executeUpdate(sql);
 
 			// Set MatchType in all table but YouthTable from entry in MATCHESKURZINFO =============================
 			// use match lineup table to fix match types, since the lineup table holds the youth matches too
@@ -432,14 +493,14 @@ final class DBUpdater {
 			copyMatchTypes("MATCHLINEUP", "YOUTHTRAINING");
 
 			// Update primary key from matchID => (matchID, MATCHTYP) because doublons might otherwise exists
-			m_clJDBCAdapter.executeQuery("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
-			m_clJDBCAdapter.executeQuery("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE IFA_MATCHES ADD PRIMARY KEY (MATCHID, MATCHTYP)");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE MATCHDETAILS ADD PRIMARY KEY (MATCHID, MATCHTYP)");
 
 			HOLogger.instance().debug(getClass(), "Upgrade of DB structure SourceSystem/MatchType is complete ! ");
 		}
 
 		if (!columnExistsInTable("LAST_MATCH_TYPE", "SPIELER")) {
-			m_clJDBCAdapter.executeQuery("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
+			m_clJDBCAdapter.executeUpdate("ALTER TABLE SPIELER ADD COLUMN LAST_MATCH_TYPE INTEGER ");
 		}
 
 		// Delete corrupt entries (wrong week numbers) from TA_PLAYER table
@@ -447,7 +508,8 @@ final class DBUpdater {
 		var hrf = hrfTable.getLatestHrf();
 		if ( hrf.isOK() ) {
 			m_clJDBCAdapter.executeUpdate("DELETE FROM " + TAPlayerTable.TABLENAME
-					+ " WHERE WEEK> (SELECT SAISON*16+SPIELTAG-1 FROM " + basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")");
+					+ " WHERE WEEK> (SELECT SAISON*16+SPIELTAG-1 FROM "
+					+ basicsTable.getTableName() + " WHERE HRF_ID=" + hrf.getHrfId() + ")" );
 		}
 
 		dbManager.getTable(MatchesKurzInfoTable.TABLENAME).tryAddColumn("isObsolete", "BOOLEAN");
@@ -463,9 +525,9 @@ final class DBUpdater {
 
 	private void copyMatchTypes(String fromTable, String toTable) {
 		String sql = "UPDATE " + toTable + " t1 SET MATCHTYP = (SELECT MK.MATCHTYP FROM " + fromTable +" MK WHERE t1.MATCHID = MK.MATCHID)";
-		m_clJDBCAdapter.executeQuery(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 		sql = "UPDATE " + toTable + " SET MATCHTYP = 0 WHERE MATCHTYP IS NULL";
-		m_clJDBCAdapter.executeQuery(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 	}
 
 	private void updateDBv400(int dbVersion) throws SQLException {
@@ -599,12 +661,9 @@ final class DBUpdater {
 		// HO 3.0
 
 		// delete old divider locations
-		m_clJDBCAdapter
-				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
-		m_clJDBCAdapter
-				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
-		m_clJDBCAdapter
-				.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_LowerLefSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_UpperLeftSplitPane'");
+		m_clJDBCAdapter.executeUpdate("DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY='teamAnalyzer_MainSplitPane'");
 
 		//store ArenaId into MATCHESKURZINFO table
 		if (!columnExistsInTable("ArenaId", MatchesKurzInfoTable.TABLENAME)) {
@@ -736,7 +795,7 @@ final class DBUpdater {
 		try {
 			ResultSet rs = m_clJDBCAdapter.executeQuery("select teamid from basics limit 1");
 			if (rs != null) {
-				rs.first();
+				rs.next();
 				int ret = rs.getInt(1);
 				rs.close();
 				return ret;
@@ -748,19 +807,15 @@ final class DBUpdater {
 	}
 
 	private boolean columnExistsInTable(String columnName, String tableName) throws SQLException {
-		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
-				+ tableName.toUpperCase()
-				+ "' AND COLUMN_NAME = '"
-				+ columnName.toUpperCase()
-				+ "'";
+		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '" +
+				tableName.toUpperCase() + "' AND COLUMN_NAME = '" + columnName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
-		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '"
-				+ tableName.toUpperCase() + "'";
+		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName.toUpperCase() + "'";
 		ResultSet rs = this.m_clJDBCAdapter.executeQuery(sql);
 		if (rs != null) return rs.next();
 		return false;
@@ -769,10 +824,10 @@ final class DBUpdater {
 	private void resetUserColumns() {
 		HOLogger.instance().debug(getClass(), "Resetting player overview rows.");
 		String sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 2000 AND 3000";
-		m_clJDBCAdapter.executeQuery(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 
 		HOLogger.instance().debug(getClass(), "Resetting lineup overview rows.");
 		sql = "DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN 3000 AND 4000";
-		m_clJDBCAdapter.executeQuery(sql);
+		m_clJDBCAdapter.executeUpdate(sql);
 	}
 }

@@ -8,6 +8,7 @@ import core.util.HODateTime;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.Vector;
 
 /**
@@ -17,26 +18,17 @@ import java.util.Vector;
 class HrfDbDetails extends HrfDetails {
 	String m_name;
 	int m_hrf_ID;
-	private ResultSet m_result;
-	
+
 	HrfDbDetails(int id) {
 		super();
-		
-		m_result = DBManager.instance().getAdapter().executeQuery("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
+
+		ResultSet m_result = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery("SELECT DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
 		try {
-			while(true)	{
-				assert m_result != null;
-				if (!m_result.next()) break;
+			while(m_result != null && m_result.next())	{
 				m_result.getObject(1);
-				
-				if( m_result.wasNull())	{
-					//HrfExplorer.appendText("Query war NULL");
-				}
-				else
-				{
+				if( !m_result.wasNull())	{
 					HrfExplorer.appendText("Query war nicht NULL");
-					setName("---");
-//					setStr_Datum(m_result.getObject("DATUM").toString().substring(0,19));
+					setName();
 					setDatum(HODateTime.fromDbTimestamp(m_result.getTimestamp("DATUM")));
 					createDates();
 					setLiga(m_result.getString("LIGANAME"));
@@ -106,9 +98,9 @@ class HrfDbDetails extends HrfDetails {
 		m_hrf_ID = m_hrf_id;
 	}
 	/**
-	 * @param m_name The m_name to set.
+	 *
 	 */
-	void setName(String m_name) {
-		this.m_name = m_name;
+	void setName() {
+		this.m_name = "---";
 	}
 }

@@ -3,8 +3,9 @@ package module.transfer.transfertype;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import module.transfer.TransferTypes;
+import module.transfer.TransferType;
 
+import java.io.Serial;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -22,9 +23,10 @@ class TransferTypeTableModel extends AbstractTableModel {
     /**
 	 *
 	 */
-	private static final long serialVersionUID = 2943508984461781906L;
-	private List<TransferredPlayer> values;
-    private String[] colNames = new String[4];
+	@Serial
+    private static final long serialVersionUID = 2943508984461781906L;
+	private final List<TransferredPlayer> values;
+    private final String[] colNames = new String[4];
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -91,8 +93,10 @@ class TransferTypeTableModel extends AbstractTableModel {
             final Object id = getValueAt(row, 0);
 
             try {
-                DBManager.instance().setTransferType(Integer.parseInt("" + id),
-                                        TransferTypes.getTransferCode(type));
+                var transferType = new TransferType();
+                transferType.setPlayerId(Integer.parseInt("" + id));
+                transferType.setTransferType(TransferType.getTransferCode(type));
+                DBManager.instance().setTransferType(transferType);
             } catch (Exception e) {
                 // DO Nothing
             }
@@ -105,21 +109,12 @@ class TransferTypeTableModel extends AbstractTableModel {
     public final Object getValueAt(int rowIndex, int columnIndex) {
         final TransferredPlayer transfer = values.get(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return transfer.getPlayerId();
-
-            case 1:
-                return transfer.getPlayerName();
-
-            case 2:
-                return TransferTypes.getTransferDesc(transfer.getTransferType());
-
-            case 3:
-                return transfer.getIncome();
-
-            default:
-                return ""; //$NON-NLS-1$
-        }
+        return switch (columnIndex) {
+            case 0 -> transfer.getPlayerId();
+            case 1 -> transfer.getPlayerName();
+            case 2 -> TransferType.getTransferDesc(transfer.getTransferType());
+            case 3 -> transfer.getIncome();
+            default -> ""; //$NON-NLS-1$
+        };
     }
 }

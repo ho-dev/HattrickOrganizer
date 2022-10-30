@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Enum for the match order types used in substitutions/orders for the lineup.
- *
  * man marking (4) is an undocumented feature
  * 
  */
@@ -23,7 +22,7 @@ public enum MatchOrderType {
 
 	private final byte id;
 
-	private MatchOrderType(byte id) {
+	MatchOrderType(byte id) {
 		this.id = id;
 	}
 
@@ -34,5 +33,16 @@ public enum MatchOrderType {
 	 */
 	public byte getId() {
 		return this.id;
+	}
+
+	public static MatchOrderType fromInt(Integer i){
+		if ( i != null){
+			switch (  i ){
+				case 1: return SUBSTITUTION;
+				case 3: return POSITION_SWAP;
+				case 4: return MAN_MARKING;
+			}
+		}
+		return null;
 	}
 }

@@ -56,7 +56,7 @@ public class HattrickManager {
                     continue;
                 }
 
-                boolean refresh = !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())
+                boolean refresh = DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())
                         || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
                 var accepted = filter.isAcceptedMatch(new Match(match));
                 if (!filter.isAutomatic() || (accepted && refresh)) {
@@ -84,7 +84,7 @@ public class HattrickManager {
                     }
                     if (filter.isAcceptedMatch(new Match(match))
                             && match.getMatchType().isTournament()
-                            && !DBManager.instance().isMatchLineupInDB(match.getMatchType(), match.getMatchID())) {
+                            && DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())) {
 
                         OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
                     }
@@ -161,14 +161,12 @@ public class HattrickManager {
         return "";
     }
 	
-	   /**
+    /**
      * Check if CHPP rules approve download for a match
-     *
-     * @param match Match to be downloaded
      *
      * @return true if allowed
      */
-    public static boolean isDownloadAllowed(Match match) {
+    public static boolean isDownloadAllowed() {
     	
     	// CHPP-Teles confirms in staff message to bingeling (blaghaid) that this is not a problem
     	// We don't have to worry much about traffic anymore, but may want to check for new functionality.

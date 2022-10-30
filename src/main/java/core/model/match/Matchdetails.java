@@ -1,5 +1,6 @@
 package core.model.match;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -19,16 +20,15 @@ import java.util.regex.Pattern;
 import static core.util.StringUtils.getResultString;
 
 
-public class Matchdetails implements core.model.match.IMatchDetails {
+public class Matchdetails extends AbstractTable.Storable implements core.model.match.IMatchDetails {
 
-    private SourceSystem sourceSystem;
     private String m_sArenaName = "";
     private String m_sGastName = "";
     private String m_sHeimName = "";
     private String m_sMatchreport = "";
     private HODateTime m_clFetchDatum;
     private HODateTime m_clSpielDatum;
-    private ArrayList<MatchEvent> m_vHighlights;
+    private List<MatchEvent> m_vHighlights;
     private int m_iArenaID = -1;
     private int m_iGastId = -1;
 
@@ -230,18 +230,21 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type) {
         var ret = DBManager.instance().loadMatchDetails(type.getId(), matchId);
-        ret.setMatchID(matchId);
-        ret.setMatchType(type);
-        ret.setSourceSystem(type.getSourceSystem());
+        if ( ret != null) {
+            ret.setMatchID(matchId);
+            ret.setMatchType(type);
+        }
         return ret;
     }
 
-    public void setRatingIndirectSetPiecesAtt(int ratingIndirectSetPiecesAtt) {
-        this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+    public void setRatingIndirectSetPiecesAtt(Integer ratingIndirectSetPiecesAtt) {
+        if ( ratingIndirectSetPiecesAtt != null)
+            this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
     }
 
-    public void setRatingIndirectSetPiecesDef(int ratingIndirectSetPiecesDef) {
-        this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+    public void setRatingIndirectSetPiecesDef(Integer ratingIndirectSetPiecesDef) {
+        if ( ratingIndirectSetPiecesDef != null)
+            this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
     }
 
     public int getRatingIndirectSetPiecesDef() {
@@ -272,6 +275,20 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             InitGoalsInParts();
         }
         return guestGoalsInParts[matchPartId.getValue()];
+    }
+
+    public void setHomeGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
+        if ( homeGoalsInParts == null) {
+            homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
+        }
+        homeGoalsInParts[part.getValue()]=goals;
+    }
+
+    public void setGuestGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
+        if ( guestGoalsInParts == null) {
+            guestGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
+        }
+        guestGoalsInParts[part.getValue()]=goals;
     }
 
     private void InitGoalsInParts() {
@@ -343,18 +360,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
             homeGoalsInParts[lastPart] = homeEnd;
             guestGoalsInParts[lastPart] = guestEnd;
         }
-    }
-
-    public void setHomeGoalsInPart(Integer[] homeGoalsInPart) {
-        this.homeGoalsInParts = homeGoalsInPart;
-    }
-
-    public void setGuestGoalsInPart(Integer[] guestGoalsInPart) {
-        this.guestGoalsInParts = guestGoalsInPart;
-    }
-
-    public void setSourceSystem(SourceSystem sourceSystem) {
-        this.sourceSystem = sourceSystem;
     }
 
     public int getHatStats(int teamId) {
@@ -446,11 +451,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         }
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //Konstruktor
-    ////////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates a new instance of Matchdetails
      */
@@ -460,7 +460,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Gibt den Namen zu einer BewertungzurÃ¼ck
+     * returns name of team attitude
      */
     public static String getNameForEinstellung(int einstellung) {
         return switch (einstellung) {
@@ -476,7 +476,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     ////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Gibt den Namen zu einer BewertungzurÃ¼ck
+     * returns name of tactic
      */
     public static String getNameForTaktik(int taktikTyp) {
 
@@ -509,23 +509,15 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     public final int getGuestHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
-        if (highLights != null) {
-            for (MatchEvent iMatchHighlight : highLights) {
-                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                    return iMatchHighlight.getGastTore();
-            }
+        if ( guestGoalsInParts != null){
+            return guestGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
         }
         return -1;
     }
 
     public final int getHomeHalfTimeGoals() {
-        ArrayList<MatchEvent> highLights = downloadHighlightsIfMissing();
-        if (highLights != null) {
-            for (MatchEvent iMatchHighlight : highLights) {
-                if (iMatchHighlight.getMatchEventCategory() == 0 && iMatchHighlight.getiMatchEventID() == 45)
-                    return iMatchHighlight.getHeimTore();
-            }
+        if ( homeGoalsInParts != null){
+            return homeGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
         }
         return -1;
     }
@@ -846,6 +838,9 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         this.m_iGuestHatStats = m_iGuestHatStats;
     }
 
+    public void setGuestHatStats(int v){
+        this.m_iGuestHatStats = v;
+    }
 
     /**
      * Setter for property m_iGuestTacticSkill.
@@ -940,7 +935,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
      *
      * @return Value of property m_vHighlights.
      */
-    public final ArrayList<MatchEvent> downloadHighlightsIfMissing() {
+    public final List<MatchEvent> downloadHighlightsIfMissing() {
         if (getHighlights() == null && maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
             if (m_vHighlights == null || m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
                 HOLogger.instance().info(Matchdetails.class,
@@ -966,7 +961,7 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         return m_vHighlights;
     }
 
-    public ArrayList<MatchEvent> getHighlights() {
+    public List<MatchEvent> getHighlights() {
         if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.size() == 0)) {
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
         }
@@ -1148,13 +1143,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
     }
 
     /**
-     * @return the m_iHomeHatStats
-     */
-    public int getM_iHomeHatStats() {
-        return m_iHomeHatStats;
-    }
-
-    /**
      * Setter for property m_iHomeHatStats
      */
     public void setHomeHatStats() {
@@ -1162,6 +1150,10 @@ public class Matchdetails implements core.model.match.IMatchDetails {
         m_iHomeHatStats += this.m_iHomeMidfield * 3;
         m_iHomeHatStats += this.m_iHomeLeftAtt + this.m_iHomeMidAtt + this.m_iHomeRightAtt;
         this.m_iHomeHatStats = m_iHomeHatStats;
+    }
+
+    public void setHomeHatStats(int v){
+        this.m_iHomeHatStats = v;
     }
 
     /**
@@ -1257,7 +1249,6 @@ public class Matchdetails implements core.model.match.IMatchDetails {
 
     public final void setMatchType(MatchType m_MatchTyp) {
         this.m_MatchTyp = m_MatchTyp;
-        this.sourceSystem = m_MatchTyp.getSourceSystem();
     }
 
     /**

@@ -1,18 +1,17 @@
 package core.db;
 
-import core.util.HOLogger;
+import core.model.enums.MatchType;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
-
-import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MatchSubstitutionTable extends AbstractTable {
-	/** tablename **/
+	/**
+	 * tablename
+	 **/
 	public final static String TABLENAME = "MATCHSUBSTITUTION";
 
 	// Dummy value for ids not used (hrf, team, match)
@@ -20,32 +19,31 @@ public class MatchSubstitutionTable extends AbstractTable {
 
 	protected MatchSubstitutionTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 3;
 	}
 
 	@Override
 	protected void initColumns() {
 
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("MatchID", Types.INTEGER, false),
-				new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-				new ColumnDescriptor("TeamID", Types.INTEGER, false),
-				new ColumnDescriptor("HrfID", Types.INTEGER, false),
-				new ColumnDescriptor("PlayerOrderID", Types.INTEGER, false),
-				new ColumnDescriptor("PlayerIn", Types.INTEGER, false),
-				new ColumnDescriptor("PlayerOut", Types.INTEGER, false),
-				new ColumnDescriptor("OrderType", Types.INTEGER, false),
-				new ColumnDescriptor("MatchMinuteCriteria", Types.INTEGER, false),
-				new ColumnDescriptor("Pos", Types.INTEGER, false),
-				new ColumnDescriptor("Behaviour", Types.INTEGER, false),
-				new ColumnDescriptor("Card", Types.INTEGER, false),
-				new ColumnDescriptor("Standing", Types.INTEGER, false),
-				new ColumnDescriptor("LineupName", Types.VARCHAR, false, 256)
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((Substitution) o).getMatchId()).setSetter((o, v) -> ((Substitution) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((Substitution) o).getMatchType().getId()).setSetter((o, v) -> ((Substitution) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((Substitution) o).getTeamId()).setSetter((o, v) -> ((Substitution) o).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerOrderID").setGetter((o) -> ((Substitution) o).getPlayerOrderId()).setSetter((o, v) -> ((Substitution) o).setPlayerOrderId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerIn").setGetter((o) -> ((Substitution) o).getObjectPlayerID()).setSetter((o, v) -> ((Substitution) o).setObjectPlayerID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerOut").setGetter((o) -> ((Substitution) o).getSubjectPlayerID()).setSetter((o, v) -> ((Substitution) o).setSubjectPlayerID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("OrderType").setGetter((o) -> ((Substitution) o).getOrderType().getId()).setSetter((o, v) -> ((Substitution) o).setOrderType(MatchOrderType.fromInt((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchMinuteCriteria").setGetter((o) -> ((Substitution) o).getMatchMinuteCriteria()).setSetter((o, v) -> ((Substitution) o).setMatchMinuteCriteria((byte)(int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Pos").setGetter((o) -> ((Substitution) o).getRoleId()).setSetter((o, v) -> ((Substitution) o).setRoleId((byte)(int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Behaviour").setGetter((o) -> ((Substitution) o).getBehaviour()).setSetter((o, v) -> ((Substitution) o).setBehaviour((byte)(int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Card").setGetter((o) -> ((Substitution) o).getRedCardCriteria().getId()).setSetter((o, v) -> ((Substitution) o).setRedCardCriteria(RedCardCriteria.getById((byte)(int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Standing").setGetter((o) -> ((Substitution) o).getStanding().getId()).setSetter((o, v) -> ((Substitution) o).setStanding(GoalDiffCriteria.getById((byte)(int) v))).setType(Types.INTEGER).isNullable(false).build()
 		};
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
-		return new String[] {
+		return new String[]{
 				"CREATE INDEX IMATCHSUBSTITUTION_1 ON " + getTableName() + "(PlayerOrderID)",
 				"CREATE INDEX IMATCHSUBSTITUTION_2 ON " + getTableName() + "(MatchID,TeamID)",
 				"CREATE INDEX IMATCHSUBSTITUTION_3 ON " + getTableName() + "(HrfID)"
@@ -54,30 +52,12 @@ public class MatchSubstitutionTable extends AbstractTable {
 
 	/**
 	 * Returns an array with substitution belonging to the match-team.
-	 * 
-	 * @param teamId
-	 *            The teamId for the team in question
-	 * @param matchId
-	 *            The matchId for the match in question
-	 * 
+	 *
+	 * @param teamId  The teamId for the team in question
+	 * @param matchId The matchId for the match in question
 	 */
-	java.util.List<Substitution> getMatchSubstitutionsByMatchTeam(int iMatchType, int teamId, int matchId) {
-		return getSubBySql("SELECT * FROM " + getTableName()
-				+ " WHERE MatchTyp = " + iMatchType
-				+ " AND MatchID = " + matchId
-				+ " AND TeamID = " + teamId);
-	}
-
-	/**
-	 * Returns an array with substitution belonging to given hrfId
-	 * 
-	 * @param hrfId
-	 *            The teamId for the team in question
-	 * 
-	 */
-	java.util.List<Substitution> getMatchSubstitutionsByHrf(int hrfId, String lineupName) {
-		return getSubBySql("SELECT * FROM " + getTableName() + " WHERE HrfID = " + hrfId
-				+ " AND LineupName = '" + lineupName + "'");
+	List<Substitution> getMatchSubstitutionsByMatchTeam(int iMatchType, int teamId, int matchId) {
+		return load(Substitution.class, matchId, iMatchType, teamId);
 	}
 
 	/**
@@ -85,108 +65,21 @@ public class MatchSubstitutionTable extends AbstractTable {
 	 * must be unique for the match. All previous substitutions for the
 	 * team/match combination will be deleted.
 	 */
-	void storeMatchSubstitutionsByMatchTeam(int iMatchType, int matchId, int teamId,
-			java.util.List<Substitution> subs) {
+	void storeMatchSubstitutionsByMatchTeam(MatchType matchType, int matchId, int teamId, List<Substitution> subs) {
 		if ((matchId == DUMMY) || (teamId == DUMMY)) {
 			// Rather not...
 			return;
 		}
-		// D is string dummy
-		storeSub(iMatchType, matchId, teamId, DUMMY, subs, "D");
-	}
-
-	/**
-	 * Stores the substitutions in the database. The ID for each substitution
-	 * must be unique for the match. All previous substitutions for the hrf will
-	 * be deleted.
-	 */
-	void storeMatchSubstitutionsByHrf(int iMatchType, int hrfId, java.util.List<Substitution> subs,
-			String lineupName) {
-		if (hrfId == DUMMY) {
-			// Rather not...
-			return;
-		}
-		storeSub(iMatchType, DUMMY, DUMMY, hrfId, subs, lineupName);
-	}
-
-	private void storeSub(int iMatchType, int matchId, int teamId, int hrfId, java.util.List<Substitution> subs,
-			String lineupName) {
-		String sql = null;
-
-		final String[] where = { "MatchTyp", "MatchID", "TeamID", "HrfID", "LineupName" };
-		final String[] values = { ""+ iMatchType, "" + matchId, "" + teamId, "" + hrfId, "'" + lineupName + "'" };
-
-		// Get rid of any old subs for the inputs.
-		delete(where, values);
-
+		executePreparedDelete(matchId, matchType.getId(), teamId);
 		for (Substitution sub : subs) {
-
 			if (sub == null) {
 				continue;
 			}
-
-			try {
-				sql = "INSERT INTO "
-						+ getTableName()
-						+ " (  MatchTyp, MatchID, TeamID, HrfID, PlayerOrderID, PlayerIn, PlayerOut, OrderType,";
-				sql += " MatchMinuteCriteria, Pos, Behaviour, Card, Standing, LineupName ) VALUES(";
-				sql += iMatchType + "," + matchId + "," + teamId + "," + hrfId + "," + sub.getPlayerOrderId() + ","
-						+ sub.getObjectPlayerID() + "," + sub.getSubjectPlayerID() + ","
-						+ sub.getOrderType().getId() + "," + sub.getMatchMinuteCriteria() + ","
-						+ sub.getRoleId() + "," + sub.getBehaviour() + "," + sub.getRedCardCriteria().getId() + ","
-						+ sub.getStanding().getId() + "," + "'" + lineupName + "')";
-
-				adapter.executeUpdate(sql);
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DB.storeMatchSubstitution Error" + e);
-				HOLogger.instance().log(getClass(), e);
-			}
+			sub.setMatchId(matchId);
+			sub.setMatchType(matchType);
+			sub.setTeamId(teamId);
+			sub.setIsStored(false);
+			store(sub);
 		}
 	}
-
-	private java.util.List<Substitution> getSubBySql(String sql) {
-		Substitution sub;
-		ResultSet rs;
-		List<Substitution> subst = new ArrayList<Substitution>();
-
-		try {
-			rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-			while (rs.next()) {
-				byte orderId = (byte) rs.getInt("OrderType");
-				int playerIn = rs.getInt("PlayerIn");
-				int playerOut = rs.getInt("PlayerOut");
-				sub = new Substitution(rs.getInt("PlayerOrderID"), playerIn, playerOut,
-						orderId, (byte) rs.getInt("MatchMinuteCriteria"),
-						(byte) rs.getInt("Pos"), (byte) rs.getInt("Behaviour"),
-						RedCardCriteria.getById((byte) rs.getInt("Card")),
-						GoalDiffCriteria.getById((byte) rs.getInt("Standing")));
-				subst.add(sub);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.getMatchSubstitutions Error" + e);
-		}
-
-		return subst;
-	}
-	
-	protected void deleteAllMatchSubstitutionsByMatchId(int matchId) {
-		if (matchId <= 0) {
-			return;
-		}
-		final String[] where = { "MatchID", "HrfID" };
-		final String[] values = { String.valueOf(matchId), String.valueOf(DUMMY)};
-		delete(where, values);
-	}
-	
-	protected void deleteAllMatchSubstitutionsByHrfId (int hrfId) {
-		if (hrfId <= 0) {
-			return;
-		}
-		final String[] where = { "MatchID", "HrfID" };
-		final String[] values = { String.valueOf(DUMMY), String.valueOf(hrfId)};
-		delete(where, values);
-		
-	}
-
 }

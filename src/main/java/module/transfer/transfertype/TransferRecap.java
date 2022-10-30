@@ -4,7 +4,7 @@ package module.transfer.transfertype;
 
 
 import module.transfer.PlayerTransfer;
-import module.transfer.TransferTypes;
+import module.transfer.TransferType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ class TransferRecap {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Map of transfer type */
-    private final Map<String,TransferTypeRecap> types = new HashMap<String,TransferTypeRecap>();
+    private final Map<String,TransferTypeRecap> types = new HashMap<>();
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ class TransferRecap {
      * @return Recap information
      */
     final TransferTypeRecap getRecap(int type) {
-        TransferTypeRecap recap = (TransferTypeRecap) types.get("" + type);
+        TransferTypeRecap recap = types.get("" + type);
 
         if (recap == null) {
             recap = new TransferTypeRecap();
@@ -57,7 +57,7 @@ class TransferRecap {
      * @param element Trade information
      */
     final void addWastedOperation(PlayerTransfer element) {
-        final TransferTypeRecap recap = getRecap(TransferTypes.FIRED_PLAYER);
+        final TransferTypeRecap recap = getRecap(TransferType.FIRED_PLAYER);
 
         if (element.getType() == PlayerTransfer.BUY) {
             recap.addOperation(-element.getPrice());

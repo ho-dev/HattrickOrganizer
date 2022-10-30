@@ -1,10 +1,10 @@
 package core.model.Tournament;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
 
-import java.util.Date;
-
-public class TournamentDetails {
+public class TournamentDetails extends AbstractTable.Storable {
+    public TournamentDetails(){}
 
     public int getTournamentId() {
         return tournamentId;

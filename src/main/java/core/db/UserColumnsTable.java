@@ -3,149 +3,142 @@ package core.db;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
-import core.util.HOLogger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-
-
 
 class UserColumnsTable extends AbstractTable {
 	final static String TABLENAME = "USERCOLUMNS";
 
-	protected UserColumnsTable(JDBCAdapter  adapter){
+	protected UserColumnsTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
-
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[4];
-		columns[0]= new ColumnDescriptor("COLUMN_ID",	Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("MODELL_INDEX",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("TABLE_INDEX",	Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("COLUMN_WIDTH",Types.INTEGER,true);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_ID").setGetter((p) -> ((_UserColumn) p).getId()).setSetter((p, v) -> ((_UserColumn) p).setId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MODELL_INDEX").setGetter((p) -> ((_UserColumn) p).getModelIndex()).setSetter((p, v) -> ((_UserColumn) p).setModelIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TABLE_INDEX").setGetter((p) -> ((_UserColumn) p).getIndex()).setSetter((p, v) -> ((_UserColumn) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_WIDTH").setGetter((p) -> ((_UserColumn) p).getPreferredWidth()).setSetter((p, v) -> ((_UserColumn) p).setPreferredWidth((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+		};
 	}
 
-	void deleteModel(int modelId){
-		adapter.executeUpdate("DELETE FROM USERCOLUMNS WHERE COLUMN_ID BETWEEN "+(modelId*1000)+" AND "+((modelId*1000+999)));
+	@Override
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
+		return new PreparedDeleteStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
 	}
 
-	void saveModel(HOTableModel model){
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
+		return new PreparedSelectStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
+	}
 
+	void deleteModel(int modelId) {
+		executePreparedDelete(modelId * 1000, modelId * 1000 + 999);
+	}
+
+	void saveModel(HOTableModel model) {
 		deleteModel(model.getId());
-
-		final StringBuilder sql = new StringBuilder(100);
-		final StringBuilder values = new StringBuilder(20);
-		sql.append("INSERT INTO ");
-		sql.append(getTableName());
-		sql.append("(");
-		sql.append(columns[0].getColumnName());
-		sql.append(",");
-		sql.append(columns[1].getColumnName());
-		sql.append(",");
-		sql.append(columns[2].getColumnName());
-		sql.append(",");
-		sql.append(columns[3].getColumnName());
-		sql.append(") VALUES (");
-
 		UserColumn[] dbcolumns = model.getColumns();
 		for (int i = 0; i < dbcolumns.length; i++) {
-			if (model.getId()==2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
+
+			if (model.getId() == 2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
 				dbcolumns[i].setDisplay(true); // force ID column
 			}
-			if(dbcolumns[i].isDisplay()){
-				values.append((model.getId()*1000)+dbcolumns[i].getId());
-				values.append(",");
-				values.append(i);
-				values.append(",");
-				values.append(dbcolumns[i].getIndex());
-				values.append(",");
-				values.append(dbcolumns[i].getPreferredWidth());
-				values.append(")");
-				adapter.executeUpdate(sql.toString()+values);
-				values.delete(0,values.length());
-			} // if
+
+			if (dbcolumns[i].isDisplay()) {
+				var _userColumn = new _UserColumn();
+				_userColumn.setModelIndex(i);
+				_userColumn.setId(model.getId() * 1000 + dbcolumns[i].getId());
+				_userColumn.setPreferredWidth(dbcolumns[i].getPreferredWidth());
+				_userColumn.setIndex(dbcolumns[i].getIndex());
+				store(_userColumn);
+			}
 		}
 	}
 
-	void insertDefault(HOTableModel model){
-
-		deleteModel(model.getId());
-
-		final StringBuilder sql = new StringBuilder(100);
-		final StringBuilder values = new StringBuilder(20);
-		sql.append("INSERT INTO ");
-		sql.append(getTableName());
-		sql.append("(");
-		sql.append(columns[0].getColumnName());
-		sql.append(",");
-		sql.append(columns[1].getColumnName());
-		sql.append(",");
-		sql.append(columns[2].getColumnName());
-		sql.append(",");
-		sql.append(columns[3].getColumnName());
-		sql.append(") VALUES (");
-
+	void insertDefault(HOTableModel model) {
 		UserColumn[] dbcolumns = model.getColumns();
 		for (int i = 0; i < dbcolumns.length; i++) {
-				dbcolumns[i].setIndex(i);
-				values.append((model.getId()*1000)+dbcolumns[i].getId());
-				values.append(",");
-				values.append(i);
-				values.append(",");
-				values.append(dbcolumns[i].getIndex());
-				values.append(",");
-				values.append(dbcolumns[i].getPreferredWidth());
-				values.append(")");
+			dbcolumns[i].setIndex(i);
+		}
+		saveModel(model);
+	}
 
-			adapter.executeUpdate(sql.toString()+values);
-			values.delete(0,values.length());
+	void loadModel(HOTableModel model) {
+		int count = 0;
+		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
+		UserColumn[] dbcolumns = model.getColumns();
+		for (var userColumn : userColumns) {
+			var modelIndex = userColumn.getModelIndex();
+			if (modelIndex < dbcolumns.length) {
+				var dbColumn = dbcolumns[modelIndex];
+				dbColumn.setPreferredWidth(userColumn.getPreferredWidth());
+				dbColumn.setDisplay(true);
+				dbColumn.setIndex(userColumn.getIndex());
+				count++;
+			}
+		}
+
+		if (count == 0) {
+			insertDefault(model);
+			loadModel(model);
 		}
 	}
 
-	void loadModel(HOTableModel model){
-		int modelIndex;
-		int tableIndex;
-		int width;
+	/**
+	 * kind of a clone of abstract class UserColumn used to load and store user column information
+	 */
+	private static class _UserColumn extends AbstractTable.Storable{
 
-		int count = 0;
-		String sql = "SELECT * " +
-				" FROM " +
-				getTableName() +
-				" WHERE " +
-				columns[0].getColumnName() +
-				" BETWEEN " +
-				model.getId() * 1000 +
-				" AND " +
-				(model.getId() * 1000 + 999);
-		ResultSet rs = adapter.executeQuery(sql);
-		UserColumn[] dbcolumns = model.getColumns();
-		try {
+		private int id;
+		private int modelIndex;
+		private int index;
+		private Integer preferredWidth;
 
-			while (true) {
-				assert rs != null;
-				if (!rs.next()) break;
-				modelIndex 	= rs.getInt(columns[1].getColumnName());
-				if ( modelIndex < dbcolumns.length) {
-					tableIndex = rs.getInt(columns[2].getColumnName());
-					width = rs.getInt(columns[3].getColumnName());
-					dbcolumns[modelIndex].setIndex(tableIndex);
-					dbcolumns[modelIndex].setDisplay(true);
-					dbcolumns[modelIndex].setPreferredWidth(width);
-					count++;
-				}
-			}
+		public _UserColumn(){}
+		/**
+		 * set index
+		 * if columnModel should be saved index will set, or column is loaded
+		 * @param index int
+		 */
+		public final void setIndex(int index) {
+			this.index = index;
+		}
 
-			if (count == 0){
-				insertDefault(model);
-				loadModel(model);
-			}
-			rs.close();
+		/**
+		 * return index of the user column in the model's array definition
+		 * @return int
+		 */
+		public int getModelIndex() {
+			return modelIndex;
+		}
 
-		} catch (SQLException e) {
-			HOLogger.instance().log(getClass(),e);
+		/**
+		 * set the index of the user column in the model's array definition
+		 * @param modelIndex int
+		 */
+		public void setModelIndex(int modelIndex) {
+			this.modelIndex = modelIndex;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public Integer getPreferredWidth() {
+			return preferredWidth;
+		}
+
+		public void setPreferredWidth(Integer preferredWidth) {
+			this.preferredWidth = preferredWidth;
 		}
 	}
 }

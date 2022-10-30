@@ -153,7 +153,7 @@ public class DBCleanupTool {
 				+ ", removeDateOwnFriendlies="+removeDateOwnFriendlies 
 				+ ", removeDateOtherMatches="+removeDateOtherMatches
 				+ ", removeDateOtherFriendlies="+removeDateOtherFriendlies);
-		MatchKurzInfo[] kurzInfos = DBManager.instance().getMatchesKurzInfo(-1);
+		var kurzInfos = DBManager.instance().getMatchesKurzInfo(-1);
 		int counter = 0;
 		int myTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		for (MatchKurzInfo curKurzInfo : kurzInfos) {
@@ -188,11 +188,11 @@ public class DBCleanupTool {
 				// Remove match
 				HOLogger.instance().debug(getClass(), 
 						"Removing match "+curMatchId+" @ "+curMatchDate+ " (myMatch="+isMyMatch+", type="+curMatchType+")");
-	            DBManager.instance().deleteMatch(curMatchId);
+	            DBManager.instance().deleteMatch(curMatchId, curMatchType.getId());
 				counter++;
 			} 
 		}
-		HOLogger.instance().debug(getClass(), "Removed " + counter + "/" + kurzInfos.length + " matches from DB!");
+		HOLogger.instance().debug(getClass(), "Removed " + counter + "/" + kurzInfos.size() + " matches from DB!");
 		if (counter > 0) {
 			reInitHO();
 		}

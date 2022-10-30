@@ -8,10 +8,9 @@ import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
-import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -317,7 +316,7 @@ public class XMLMatchdetailsParser {
 
             	//generate MatchHighlight and add to list
             	final MatchEvent myHighlight = new MatchEvent();
-            	myHighlight.setM_iMatchEventIndex(n+1);
+            	myHighlight.setMatchEventIndex(n+1);
             	myHighlight.setMatchEventID(iMatchEventID);
             	myHighlight.setMinute(iMinute);
             	myHighlight.setPlayerId(iSubjectPlayerID);
@@ -338,7 +337,7 @@ public class XMLMatchdetailsParser {
 					{myHighlight.setM_eInjuryType(Matchdetails.eInjuryType.INJURY);}
 				else if ((iMatchEventID>=401) && (iMatchEventID<=422))
 				{
-					myHighlight.setM_eInjuryType(getInjuryType(iMinute, iSubjectPlayerID, md.getM_Injuries()));
+					myHighlight.setM_eInjuryType(getInjuryType(iSubjectPlayerID, md.getM_Injuries()));
 				}
 				else
 				{
@@ -346,108 +345,7 @@ public class XMLMatchdetailsParser {
 				}
 
             	matchEvents.add(myHighlight);
-
-//            	break if end of match (due to some corrupt xmls)
-//            	if (myHighlight.getMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED) {break;}
-
             }
-/*
-            // check for redcarded highlights
-			for (Integer integer : broken) {
-				final int tmpid = integer;
-				final MatchEvent tmp = matchEvents.get(tmpid);
-
-				String subjectplayername = "";
-				String objectplayername = "";
-				boolean subHome = true;
-				boolean objHome = true;
-				int j = 0;
-
-				while (j < homeTeamPlayers.size()) {
-					if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
-						break;
-					}
-
-					final Vector<String> tmpPlayer = homeTeamPlayers.get(j);
-
-					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
-						subjectplayername = tmpPlayer.get(1);
-					}
-
-					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
-						objectplayername = tmpPlayer.get(1);
-					}
-
-					j++;
-				}
-
-				j = 0;
-
-				while (j < awayTeamPlayers.size()) {
-					if ((!subjectplayername.equals("")) && (!objectplayername.equals(""))) {
-						break;
-					}
-
-					final Vector<String> tmpPlayer = awayTeamPlayers.get(j);
-
-					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getPlayerId()))) {
-						subjectplayername = tmpPlayer.get(1);
-						subHome = false;
-					}
-
-					if (tmpPlayer.get(0).equals(String.valueOf(tmp.getAssistingPlayerId()))) {
-						objectplayername = tmpPlayer.get(1);
-						objHome = false;
-					}
-
-					j++;
-				}
-
-				if (!subjectplayername.equals("")) {
-					String subplayerColor;
-
-					if (subHome) {
-						subplayerColor = "#009900";
-					} else {
-						subplayerColor = "#990000";
-					}
-
-					String objplayerColor;
-
-					if (objHome) {
-						objplayerColor = "#009900";
-					} else {
-						objplayerColor = "#990000";
-					}
-
-					eventtext = tmp.getEventText();
-					boolean replaceend = false;
-
-					if (eventtext.contains(String.valueOf(tmp.getPlayerId()))) {
-						eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?PlayerID="
-										+ tmp.getPlayerId() + ".*?>",
-								"<FONT COLOR=" + subplayerColor + "#><B>");
-						replaceend = true;
-					}
-
-					if (eventtext.contains(String.valueOf(tmp.getAssistingPlayerId()))) {
-						eventtext = eventtext.replaceAll("(?i)<A HREF=\"/Club/Players/Player\\.aspx\\?playerId="
-										+ tmp.getAssistingPlayerId() + ".*?>",
-								"<FONT COLOR=" + objplayerColor + "#><B>");
-						replaceend = true;
-					}
-
-					if (replaceend) {
-						eventtext = eventtext.replaceAll("(?i)</A>", "</B></FONT>");
-					}
-
-					tmp.setPlayerName(subjectplayername);
-					tmp.setSpielerHeim(subHome);
-					tmp.setAssistingPlayerName(objectplayername);
-					tmp.setGehilfeHeim(objHome);
-					tmp.setEventText(eventtext);
-				}
-			}*/
             md.setHighlights(matchEvents);
         } catch (Exception e) {
         	HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -455,29 +353,12 @@ public class XMLMatchdetailsParser {
     }
 
     /**
-     * convert the existing team lineup into a Vector of Vectors (of playerId, playerName)
-     *
-     * @param lineup (of MatchLineupPosition)		team lineup
-     */
-    private static Vector<Vector<String>> parseLineup (Lineup lineup) {
-    	Vector<Vector<String>> players = new Vector<>();
-
-        for ( var p : lineup.getFieldPositions()){
-			final Vector<String> tmpPlayer = new Vector<>();
-            tmpPlayer.add("" + p.getPlayerId());
-            tmpPlayer.add(p.getSpielerName());
-            players.add(tmpPlayer);
-        }
-    	return players;
-    }
-    
-    /**
      * parse match report from previously parsed highlights
      *
      * @param md	match details
      */
     private static void parseMatchReport(Matchdetails md) {
-        ArrayList<MatchEvent> highlights = md.getHighlights();
+        List<MatchEvent> highlights = md.getHighlights();
         final StringBuilder report = new StringBuilder();
 		for (MatchEvent highlight : highlights) {
 			report.append(highlight.getEventText()).append(" ");
@@ -545,7 +426,6 @@ public class XMLMatchdetailsParser {
 			iMatchType = Integer.parseInt(ele.getFirstChild().getNodeValue());
 
 			var matchType = Objects.requireNonNull(MatchType.getById(iMatchType));
-			md.setSourceSystem(matchType.getSourceSystem());
 			md.setMatchType(matchType);
 
 			if (iMatchType == 3) {
@@ -696,7 +576,7 @@ public class XMLMatchdetailsParser {
         }
     }
 
-	private static Matchdetails.eInjuryType getInjuryType(int iMinute, int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
+	private static Matchdetails.eInjuryType getInjuryType(int iPlayerID, ArrayList<Matchdetails.Injury> injuries)
 	{
 		for (Matchdetails.Injury injury : injuries )
 		{

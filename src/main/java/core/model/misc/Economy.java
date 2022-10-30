@@ -1,13 +1,12 @@
 package core.model.misc;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
-
-import java.sql.Timestamp;
 
 /**
  * Model for ECONOMY
  */
-public class Economy {
+public class Economy extends AbstractTable.Storable {
 
     //~ Static fields -----------------------------------------------------------------
     public static final int LV_FANS_SENDING_LOVE_POEMS_TO_YOU = 11;
@@ -23,7 +22,7 @@ public class Economy {
     public static final int LV_FANS_FURIOUS = 1;
     public static final int LV_FANS_MURDEROUS = 0;
     
-    private static HODateTime DATE_NEW_FANLEVELS = HODateTime.fromHT("2008-02-25 00:00:00"); // 25.02.2008
+    private static final HODateTime DATE_NEW_FANLEVELS = HODateTime.fromHT("2008-02-25 00:00:00"); // 25.02.2008
 
     // level constants for the sponsor mood
     public static final int LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU = 9;
@@ -79,6 +78,8 @@ public class Economy {
     protected  int m_iLastCostsBoughtPlayers;
     protected  int m_iLastCostsArenaBuilding;
     protected int m_iSupportersPopularity;
+    private int hrfId;
+    private HODateTime fetchedDate;
 
     //Constructors -------------------------------------------------------------------------------
     public Economy(java.util.Properties properties) {
@@ -510,5 +511,19 @@ public class Economy {
         return m_iLastCostsArenaBuilding;
     }
 
+    public int getHrfId() {
+        return this.hrfId;
+    }
 
+    public void setHrfId(int id){
+        this.hrfId=id;
+    }
+
+    public HODateTime getFetchedDate() {
+        return this.fetchedDate;
+    }
+
+    public void setFetchedDate(HODateTime fetchedDate){
+        this.fetchedDate = fetchedDate;
+    }
 }

@@ -1,15 +1,10 @@
 // %2684565945:hoplugins.toTW%
 package module.teamOfTheWeek.gui;
 
-import core.db.DBManager;
 import core.model.series.Paarung;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.List;
-
-
 
 class MatchLineupPlayer {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -27,16 +22,6 @@ class MatchLineupPlayer {
 		return teamName;
 	}
 
-	void setTeamName(String teamName) {
-		this.teamName = teamName;
-	}
-
-    MatchLineupPlayer() {
-        TeamID = -1;
-        PositionCode = 0;
-        Rating = -1F;
-    }
-
     MatchLineupPlayer(ResultSet rs, List<Paarung> matches) {
         try {
             rs.next();
@@ -46,7 +31,7 @@ class MatchLineupPlayer {
             Rating = rs.getFloat("RATING");
             teamName = getTeamName(matches,TeamID, rs.getInt("MATCHID"));
             
-            nname =DBManager.deleteEscapeSequences(rs.getString("NAME"));
+            nname =rs.getString("NAME");
         } catch (SQLException e) {
             TeamID = -1;
             PositionCode = 0;
@@ -81,24 +66,15 @@ class MatchLineupPlayer {
         return Rating;
     }
 
-    int getSpielerID() {
-        return SpielerID;
-    }
-
-    int getTeamID() {
-        return TeamID;
-    }
-
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("MatchLineupPosition[");
-        buffer.append("TeamID = ").append(TeamID);
-        buffer.append(", PositionCode = ").append(PositionCode);
-        buffer.append(", SpielerID = ").append(SpielerID);
-        buffer.append(", Rating = ").append(Rating);
-        buffer.append(", nname = ").append(nname);
-        buffer.append("]");
-        return buffer.toString();
+        String buffer = "MatchLineupPosition[" +
+                "TeamID = " + TeamID +
+                ", PositionCode = " + PositionCode +
+                ", SpielerID = " + SpielerID +
+                ", Rating = " + Rating +
+                ", nname = " + nname +
+                "]";
+        return buffer;
     }
 }

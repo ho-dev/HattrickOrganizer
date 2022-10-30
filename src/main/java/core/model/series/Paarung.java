@@ -1,11 +1,10 @@
 package core.model.series;
 
-import core.model.misc.Basics;
+import core.db.AbstractTable;
 import core.util.HODateTime;
-import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 
-public class Paarung implements Comparable<Paarung>{
+public class Paarung extends AbstractTable.Storable implements Comparable<Paarung>{
     //~ Instance fields ----------------------------------------------------------------------------
     protected HODateTime m_sDatum;
     protected String m_sGastName = "";

@@ -34,14 +34,14 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	private SliderPanel keeperOffsetSlider;
 	private SliderPanel defendingOffsetSlider;
 	private SliderPanel experienceOffsetSlider;
-	private Player m_clPlayer;
+	private final Player m_clPlayer;
 
 	//~ Constructors -------------------------------------------------------------------------------
 
 	/**
 	 * Creates a new PlayerSubskillOffsetDialog object.
 	 */
-	protected PlayerSubskillOffsetDialog(javax.swing.JFrame owner, Player player) {
+	PlayerSubskillOffsetDialog(javax.swing.JFrame owner, Player player) {
 		super(owner, true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + player.getShortName());
@@ -65,7 +65,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 
 	//~ Methods ------------------------------------------------------------------------------------
 	@Override
-	public final void actionPerformed(ActionEvent actionEvent) {
+	public void actionPerformed(ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(okButton)) {
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.WINGER, wingerOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.PASSING, passingOffsetSlider.getValue() / 100);
@@ -76,10 +76,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.DEFENDING, defendingOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.EXPERIENCE, experienceOffsetSlider.getValue() / 100);
 
-			DBManager.instance().saveSpieler(
-				HOVerwaltung.instance().getModel().getID(),
-				HOVerwaltung.instance().getModel().getCurrentPlayers(),
-				HOVerwaltung.instance().getModel().getBasics().getDatum());
+			DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
 
 			//GUI aktualisieren
 			core.gui.RefreshManager.instance().doReInit();

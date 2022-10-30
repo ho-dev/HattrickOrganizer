@@ -1,6 +1,8 @@
 // %1751165603:de.hattrickorganizer.gui.matches%
 package module.matches;
 
+import core.constants.TeamConfidence;
+import core.constants.TeamSpirit;
 import core.constants.player.PlayerAbility;
 import core.db.DBManager;
 import core.gui.comp.entry.RatingTableEntry;
@@ -119,11 +121,11 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			if (details.getHomeHalfTimeGoals() >= 0) {
 				heimTeamToreLabel.setText(info.getHomeTeamGoals() + " ("
 						+ details.getHomeHalfTimeGoals() + ") ");
-				gastTeamToreLabel.setText(info.getGuestGuestGoals() + " ("
+				gastTeamToreLabel.setText(info.getGuestTeamGoals() + " ("
 						+ details.getGuestHalfTimeGoals() + ") ");
 			} else {
 				heimTeamToreLabel.setText(String.valueOf(info.getHomeTeamGoals()));
-				gastTeamToreLabel.setText(String.valueOf(info.getGuestGuestGoals()));
+				gastTeamToreLabel.setText(String.valueOf(info.getGuestTeamGoals()));
 			}
 
 			String name4matchtyp = info.getMatchType().getName();
@@ -141,10 +143,10 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			}
 			
 			// Sterne für Sieger!
-			if (info.getHomeTeamGoals() > info.getGuestGuestGoals()) {
+			if (info.getHomeTeamGoals() > info.getGuestTeamGoals()) {
 				heimTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 				gastTeamNameLabel.setIcon(null);
-			} else if (info.getHomeTeamGoals() < info.getGuestGuestGoals()) {
+			} else if (info.getHomeTeamGoals() < info.getGuestTeamGoals()) {
 				heimTeamNameLabel.setIcon(null);
 				gastTeamNameLabel.setIcon(ImageUtilities.getStarIcon());
 			} else {
@@ -184,17 +186,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			StyleOfPlay awayStyleOfPlay = matchesModel.getAwayTeamInfo().getStyleOfPlay();
 			
 			// old matches don't have style of play, use string output method from Lineup
-			if (homeStyleOfPlay != null) {
-				homeStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(homeStyleOfPlay));
-			} else {
-				homeStyleOfPlayLabel.setText("");
-			}
-			
-			if (awayStyleOfPlay != null) {
-				awayStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(awayStyleOfPlay));
-			} else {
-				awayStyleOfPlayLabel.setText("");
-			}
+			homeStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(homeStyleOfPlay));
+
+			awayStyleOfPlayLabel.setText(MatchLineupTeam.getStyleOfPlayName(awayStyleOfPlay));
 
 			// Skill
 			if (details.getHomeTacticType() != 0) {
@@ -213,8 +207,11 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 			// Stimmung und Selbstvertrauen
 			int hrfid = DBManager.instance().getHRFID4Date(info.getMatchSchedule().toDbTimestamp());
-			String[] stimmungSelbstvertrauen = DBManager.instance().getStimmmungSelbstvertrauen(
-					hrfid);
+			var team = DBManager.instance().getTeam(hrfid);
+			String[] stimmungSelbstvertrauen  = {
+					TeamSpirit.toString(team.getTeamSpirit()),
+					TeamConfidence.toString(team.getConfidence())
+			};
 
 			if (info.getHomeTeamID() == teamid) {
 				heimStimmungLabel.setText(stimmungSelbstvertrauen[0]);

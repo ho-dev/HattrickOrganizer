@@ -16,7 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.JPanel;
@@ -28,14 +27,14 @@ import javax.swing.table.DefaultTableModel;
 
 public class ManualFilterPanel extends JPanel {
 
-	private static final Vector<String> COLUMN_NAMES = new Vector<String>(Arrays.asList(new String[] { "",
+	private static final Vector<String> COLUMN_NAMES = new Vector<>(Arrays.asList("",
 			Helper.getTranslation("RecapPanel.Game"),
 			Helper.getTranslation("Type"),
 			Helper.getTranslation("ls.match.result"),
 			Helper.getTranslation("Week"),
-			Helper.getTranslation("Season"), "", "" }));
+			Helper.getTranslation("Season"), "", ""));
 
-	List<Match> availableMatches = new ArrayList<Match>();
+	List<Match> availableMatches = new ArrayList<>();
 	private DefaultTableModel tableModel;
 	private JTable table;
 
@@ -56,39 +55,35 @@ public class ManualFilterPanel extends JPanel {
 
 		Vector<Object> rowData;
 
-		for (Iterator<Match> iter = availableMatches.iterator(); iter.hasNext();) {
-			List<Object> matchIds = new ArrayList<Object>();
-			Match element = iter.next();
+		for (Match availableMatch : availableMatches) {
 
 			rowData = new Vector<>();
 
-			boolean isAvailable = DBManager.instance().isMatchInDB(element.getMatchId(), MatchType.getById(element.getMatchType().getMatchTypeId()));
-			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + element.getMatchId());
+			boolean isAvailable = DBManager.instance().isMatchInDB(availableMatch.getMatchId(), MatchType.getById(availableMatch.getMatchType().getMatchTypeId()));
+			boolean isSelected = TeamAnalyzerPanel.filter.getMatches().contains("" + availableMatch.getMatchId());
 
-			rowData.add(Boolean.valueOf(isSelected));
+			rowData.add(isSelected);
 
-			if (element.isHome()) {
-				rowData.add(element.getAwayTeam());
-				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[element.getMatchType().getIconArrayIndex()]));
-				rowData.add(element.getHomeGoals() + " - " + element.getAwayGoals());
+			if (availableMatch.isHome()) {
+				rowData.add(availableMatch.getAwayTeam());
+				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[availableMatch.getMatchType().getIconArrayIndex()]));
+				rowData.add(availableMatch.getHomeGoals() + " - " + availableMatch.getAwayGoals());
 			} else {
-				rowData.add("*" + element.getHomeTeam());
-				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[element.getMatchType().getIconArrayIndex()]));
-				rowData.add(element.getAwayGoals() + " - " + element.getHomeGoals());
+				rowData.add("*" + availableMatch.getHomeTeam());
+				rowData.add(ThemeManager.getIcon(HOIconName.MATCHICONS[availableMatch.getMatchType().getIconArrayIndex()]));
+				rowData.add(availableMatch.getAwayGoals() + " - " + availableMatch.getHomeGoals());
 			}
 
-			rowData.add(element.getWeek() + "");
-			rowData.add(element.getSeason() + "");
+			rowData.add(availableMatch.getWeek() + "");
+			rowData.add(availableMatch.getSeason() + "");
 
-			if ((HattrickManager.isDownloadAllowed(element)) || isAvailable) {
+			if ((HattrickManager.isDownloadAllowed()) || isAvailable) {
 				rowData.add("true");
-				matchIds.add("");
 			} else {
 				rowData.add("false");
-				matchIds.add(element);
 			}
 
-			rowData.add("" + element.getMatchType().getMatchTypeId());
+			rowData.add("" + availableMatch.getMatchType().getMatchTypeId());
 			tableModel.addRow(rowData);
 		}
 
@@ -118,10 +113,9 @@ public class ManualFilterPanel extends JPanel {
 		List<String> list = new ArrayList<>();
 		int i = 0;
 
-		for (Iterator<Match> iter = availableMatches.iterator(); iter.hasNext();) {
-			Match element = iter.next();
-			boolean isSelected = ((Boolean) tableModel.getValueAt(i, 0)).booleanValue();
-			boolean isAvailable = Boolean.valueOf((String) tableModel.getValueAt(i, 6)).booleanValue();
+		for (Match element : availableMatches) {
+			boolean isSelected = (Boolean) tableModel.getValueAt(i, 0);
+			boolean isAvailable = Boolean.parseBoolean((String) tableModel.getValueAt(i, 6));
 
 			if (isSelected && isAvailable) {
 				list.add("" + element.getMatchId());

@@ -1,13 +1,12 @@
 package module.nthrf;
 
+import core.db.AbstractTable;
 import core.file.xml.XMLManager;
-import core.model.misc.Basics;
 import core.util.HODateTime;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import java.sql.Timestamp;
 
-public class NtTeamDetails {
+public class NtTeamDetails extends AbstractTable.Storable {
 
 	private int hrfId;
 	private int teamId;
@@ -191,6 +190,9 @@ public class NtTeamDetails {
 		return hrfId;
 	}
 
+	/**
+	 * constructor is used by AbstractTable.load
+	 */
 	public NtTeamDetails(){}
 
 	public NtTeamDetails(String xmlData) {
@@ -271,10 +273,6 @@ public class NtTeamDetails {
 			//e.printStackTrace();
 		}
 		return null;
-	}
-
-	boolean isParsingSuccess() {
-		return parsingSuccess;
 	}
 
 	@Override

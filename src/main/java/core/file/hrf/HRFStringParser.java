@@ -190,7 +190,7 @@ public class HRFStringParser {
 				}
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {
-					hoModel.addPlayer(new Player(properties, hrfdate));
+					hoModel.addPlayer(new Player(properties, hrfdate, hoModel.getID()));
 				}
 				else if (entity.toString().equalsIgnoreCase(YOUTHPLAYER)) {
 					hoModel.addYouthPlayer(new YouthPlayer(properties));

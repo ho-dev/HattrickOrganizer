@@ -19,8 +19,8 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
 
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
     protected Object[][]o_Data;
-    private String[] o_ColumnNames;
-    private TrainingType o_trainingType;
+    private final String[] o_ColumnNames;
+    private final TrainingType o_trainingType;
 
 
     /**
@@ -69,7 +69,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
         fireTableCellUpdated(iRow, iCol);
 
         if (o_trainingType == TrainingType.PAST_TRAINING) {
-            DBManager.instance().saveTraining(tpw, TrainingManager.instance().getLastTrainingDate(), true);
+            DBManager.instance().saveTraining(tpw, TrainingManager.instance().getLastTrainingDate());
         } else {
             ((FutureTrainingsTableModel) this).getTrainingModel().saveFutureTraining(tpw);
             RefreshManager.instance().doRefresh();
@@ -94,7 +94,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     /**
      * Return number of columns
      *
-     * @return
+     * @return int
      */
     @Override
 	public int getColumnCount() {
@@ -104,7 +104,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     /**
      * Return header for the specified column
      *
-     * @param column
+     * @param column index of column
      *
      * @return column header
      */
@@ -116,7 +116,7 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     /**
      * Returns row number
      *
-     * @return
+     * @return int
      */
     @Override
 	public int getRowCount() {
@@ -126,8 +126,8 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
     /**
      * Returns the cell value
      *
-     * @param row
-     * @param column
+     * @param row index
+     * @param column index
      *
      * @return Object representing the cell value
      */

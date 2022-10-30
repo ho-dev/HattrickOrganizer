@@ -9,27 +9,16 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.HODateTime;
-import core.util.Helper;
-import core.util.HelperWrapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.DayOfWeek;
 import java.time.temporal.ChronoField;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Vector;
-
+import java.util.Objects;
 import javax.swing.*;
-
 import static core.gui.theme.ThemeManager.getColor;
-
+import java.time.*;
 
 class HrfDetails {
 
-	private HelperWrapper m_helper = HelperWrapper.instance();
 	private String m_Str_DatumVorher;
 	private String m_Str_DatumDanach;
 	private HODateTime m_Datum;
@@ -55,22 +44,28 @@ class HrfDetails {
 	private int m_TeamID;
 	private Icon m_bild;
 
-	private ResultSet m_rs = null;
-
 	public HrfDetails() {
 	}
+
+	private static final DBManager.PreparedStatementBuilder maxHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT MAX(DATUM) FROM HRF WHERE DATUM < ?"
+	);
+	private static final DBManager.PreparedStatementBuilder minHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT MIN(DATUM) FROM HRF WHERE DATUM > ?"
+	);
+	private static final DBManager.PreparedStatementBuilder countHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT count(*) FROM HRF WHERE DATUM = ?"
+	);
 
 	/*****************
 	 * Berechnet das vorhergehende und das folgende Datum in der DB und pr�ft,
 	 * ob das File/der Eintrag in DB angelegt ist
 	 */
 	void createDates() {
-		m_rs = DBManager
-				.instance()
-				.getAdapter()
-				.executeQuery(
-						"SELECT MAX(DATUM) FROM HRF WHERE DATUM < '"
-								+ m_Datum.toDbTimestamp() + "'");
+		ResultSet m_rs = Objects.requireNonNull(DBManager
+						.instance()
+						.getAdapter())
+				.executePreparedQuery(maxHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;
@@ -87,12 +82,10 @@ class HrfDetails {
 		} catch (SQLException sexc) {
 			HrfExplorer.appendText("" + sexc);
 		}
-		m_rs = DBManager
-				.instance()
-				.getAdapter()
-				.executeQuery(
-						"SELECT MIN(DATUM) FROM HRF WHERE DATUM > '"
-								+ m_Datum.toDbTimestamp() + "'");
+		m_rs = Objects.requireNonNull(DBManager
+						.instance()
+						.getAdapter())
+				.executePreparedQuery(minHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;
@@ -109,12 +102,10 @@ class HrfDetails {
 		} catch (SQLException sexc) {
 			HrfExplorer.appendText("" + sexc);
 		}
-		m_rs = DBManager
-				.instance()
-				.getAdapter()
-				.executeQuery(
-						"SELECT count(*) FROM HRF WHERE DATUM = '"
-								+ m_Datum.toDbTimestamp() + "'");
+		m_rs = Objects.requireNonNull(DBManager
+						.instance()
+						.getAdapter())
+				.executePreparedQuery(countHrfDateStatementBuilder.getStatement(),m_Datum.toDbTimestamp());
 		try {
 			while (true) {
 				assert m_rs != null;
@@ -135,51 +126,20 @@ class HrfDetails {
 	 *
 	 */
 	void calcDatum() {
-		setKw(m_Datum.instant.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
-		var value = m_Datum.instant.get(ChronoField.DAY_OF_WEEK);
+		var localDate = LocalDate.ofInstant(m_Datum.instant, ZoneId.systemDefault());
+		setKw(localDate.get(ChronoField.ALIGNED_WEEK_OF_YEAR));
+		var value = localDate.getDayOfWeek();
 		String[] tage = HrfExplorer.getTage();
-		switch (value) {
-			case Calendar.MONDAY -> setWochentag(tage[0]);
-			case Calendar.TUESDAY -> setWochentag(tage[1]);
-			case Calendar.WEDNESDAY -> setWochentag(tage[2]);
-			case Calendar.THURSDAY -> setWochentag(tage[3]);
-			case Calendar.FRIDAY -> setWochentag(tage[4]);
-			case Calendar.SATURDAY -> setWochentag(tage[5]);
-			case Calendar.SUNDAY -> setWochentag(tage[6]);
-		}
-	}
-
-	/*****************
-	 * liefert einen Vector mit den Daten bez�glich des Teams
-	 */
-	Vector<Object> getTeamData() {
-		Vector<Object> teamData = new Vector<>();
-		teamData.add(getTeamName());
-		teamData.add(getTeamID());
-		teamData.add(getStimmung());
-		teamData.add(getSelbstvertrauen());
-		teamData.add(getAnzSpieler());
-		teamData.add(getAnzCoTrainer());
-		teamData.add(getAnzTwTrainer());
-		teamData.add(getTrArt());
-		teamData.add(getTrInt());
-		teamData.add(getFans());
-		return teamData;
-	}
-
-	/*****************
-	 * liefert einen Vector mit den Daten bez�glich der Liga
-	 */
-	Vector<Object> getLigaData() {
-		Vector<Object> ligaData = new Vector<>();
-		ligaData.add(getSaison());
-		ligaData.add(getLiga());
-		ligaData.add(getSpieltag());
-		ligaData.add(getPunkte());
-		ligaData.add(getToreFuer());
-		ligaData.add(getToreGegen());
-		ligaData.add(getPlatz());
-		return ligaData;
+		setWochentag(tage[value.getValue()-1]);
+//		switch (value) {
+//			case Calendar.MONDAY -> setWochentag(tage[0]);
+//			case Calendar.TUESDAY -> setWochentag(tage[1]);
+//			case Calendar.WEDNESDAY -> setWochentag(tage[2]);
+//			case Calendar.THURSDAY -> setWochentag(tage[3]);
+//			case Calendar.FRIDAY -> setWochentag(tage[4]);
+//			case Calendar.SATURDAY -> setWochentag(tage[5]);
+//			case Calendar.SUNDAY -> setWochentag(tage[6]);
+//		}
 	}
 
 	/**

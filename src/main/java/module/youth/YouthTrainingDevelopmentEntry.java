@@ -15,12 +15,12 @@ public class YouthTrainingDevelopmentEntry {
     /**
      * The trained player
      */
-    private YouthPlayer player;
+    private final YouthPlayer player;
 
     /**
      * Training information including match details
      */
-    private YouthTraining training;
+    private final YouthTraining training;
 
     /**
      * Skills of the player after the training match
@@ -58,8 +58,7 @@ public class YouthTrainingDevelopmentEntry {
     private void findSpecialty() {
         var matchDetails = training.getMatchDetails();
         var highlights = matchDetails.downloadHighlightsIfMissing().stream()
-                .filter(h -> h.getPlayerId() == player.getId() || h.getAssistingPlayerId() == player.getId())
-                .collect(Collectors.toList());
+                .filter(h -> h.getPlayerId() == player.getId() || h.getAssistingPlayerId() == player.getId()).toList();
         for (var highlight : highlights) {
             if (highlight.getPlayerId() == player.getId()) {
                 switch (highlight.getMatchEventID()) {
@@ -136,7 +135,7 @@ public class YouthTrainingDevelopmentEntry {
      * @return int
      */
     public int getMatchId() {
-        return this.training.getMatchId();
+        return this.training.getYouthMatchId();
     }
 
     /**

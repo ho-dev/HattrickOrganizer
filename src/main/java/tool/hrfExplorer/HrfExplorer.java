@@ -6,7 +6,6 @@ import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -29,11 +28,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -63,7 +58,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 {
 
 	private static final long serialVersionUID = -4187405421481083232L;
-	private MatchKurzInfo[] m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
+	private List<MatchKurzInfo> m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
 	// Members für Farben
 	private Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);
 	private Color hellblau = ThemeManager.getColor(HOColorName.HRF_LIGHTBLUE_BG);

@@ -1,20 +1,20 @@
 package core.training;
 
 import core.constants.TrainingType;
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /**
  * Class that holds all information required to calculate training effect of a given week
  * (e.g. training intensity, stamina part, assistant level, played games ...)
  */
-public class TrainingPerWeek  {
-
-    private final static int myClubID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+public class TrainingPerWeek extends AbstractTable.Storable {
 
     private int o_TrainingIntensity;
     private int o_StaminaShare;
@@ -22,8 +22,8 @@ public class TrainingPerWeek  {
     private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
     private HODateTime o_TrainingDate;
-    private MatchKurzInfo[] o_Matches;
-    private MatchKurzInfo[] o_NTmatches;
+    private List<MatchKurzInfo> o_Matches;
+    private List<MatchKurzInfo> o_NTmatches;
     private DBDataSource o_Source;
 
 
@@ -54,6 +54,11 @@ public class TrainingPerWeek  {
         this(trainingDate,training_type,training_intensity,staminaShare,trainingAssistantsLevel,coachLevel, DBDataSource.GUESS);
     }
 
+    /**
+     * constructor is used by AbstractTable.load
+     */
+    public TrainingPerWeek(){}
+
     public void loadMatches(){
         var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
         var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
@@ -62,7 +67,7 @@ public class TrainingPerWeek  {
         o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
     }
 
-    public MatchKurzInfo[] getMatches() {
+    public List<MatchKurzInfo> getMatches() {
         if ( o_Matches == null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
@@ -72,7 +77,7 @@ public class TrainingPerWeek  {
         return o_Matches;
     }
 
-    public MatchKurzInfo[] getNTmatches() {
+    public List<MatchKurzInfo> getNTmatches() {
         if ( o_NTmatches==null){
             var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
             var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
@@ -123,10 +128,6 @@ public class TrainingPerWeek  {
 
     public DBDataSource getSource() {
         return o_Source;
-    }
-
-    public Integer getSourceAsInt() {
-        return o_Source.getValue();
     }
 
     public void setSource(DBDataSource source) {

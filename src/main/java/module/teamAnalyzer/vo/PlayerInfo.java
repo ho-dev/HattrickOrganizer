@@ -1,5 +1,6 @@
 package module.teamAnalyzer.vo;
 
+import core.db.AbstractTable;
 import core.file.xml.MyHashtable;
 import core.util.HOLogger;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
-public class PlayerInfo {
+public class PlayerInfo extends AbstractTable.Storable {
     private Date lastMatchDate = null;
     private int lastMatchId;
     private int lastMatchPosition;
@@ -34,6 +35,7 @@ public class PlayerInfo {
     int stamina;
     boolean motherClubBonus;
     int loyalty;
+    private int week;
 
     public PlayerInfo(MyHashtable i) {
         this.age = Integer.parseInt(i.get("Age"));
@@ -95,7 +97,7 @@ public class PlayerInfo {
         try {
             return Integer.parseInt(s);
         }
-        catch (NumberFormatException e){}
+        catch (NumberFormatException ignored){}
         return i;
     }
 
@@ -238,7 +240,7 @@ public class PlayerInfo {
      */
     @Override
     public String toString() {
-        String buffer = getPosition(lastMatchPosition) +
+        return getPosition(lastMatchPosition) +
                 " " + name +
                 ", age=" + age +
                 ", experience=" + experience +
@@ -247,7 +249,6 @@ public class PlayerInfo {
                 ", status=" + status +
                 ", motherClubBonus=" + motherClubBonus +
                 ", loyalty=" + loyalty;
-        return buffer;
     }
 
     public Date getLastMatchDate() {
@@ -272,5 +273,13 @@ public class PlayerInfo {
 
     public float getRating() {
         return rating;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
     }
 }

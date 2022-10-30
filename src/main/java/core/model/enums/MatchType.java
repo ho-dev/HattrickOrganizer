@@ -1,13 +1,8 @@
 package core.model.enums;
 
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
 import core.model.match.SourceSystem;
-
-import javax.swing.*;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
@@ -54,10 +49,12 @@ public enum MatchType implements IMatchType {
 		return Stream.of(MatchType.values());
 	}
 
-	public static MatchType getById(int id) {
-		for (MatchType matchType : MatchType.values()) {
-			if (matchType.getId() == id) {
-				return matchType;
+	public static MatchType getById(Integer id) {
+		if ( id != null) {
+			for (MatchType matchType : MatchType.values()) {
+				if (matchType.getId() == id) {
+					return matchType;
+				}
 			}
 		}
 		return null;
@@ -223,13 +220,5 @@ public enum MatchType implements IMatchType {
 			case LADDER -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ladder");
 			default -> "unknown";
 		};
-	}
-
-	public static String getWhereClauseFromSourceSystem(int sourceSystem){
-		var lMatchType =  MatchType.fromSourceSystem(SourceSystem.valueOf(sourceSystem));
-		String res = "(";
-		res += lMatchType.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		res += ")";
-		return res;
 	}
 }

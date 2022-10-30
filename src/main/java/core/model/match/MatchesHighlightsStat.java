@@ -2,44 +2,25 @@ package core.model.match;
 
 import core.model.HOVerwaltung;
 
+import java.util.List;
+
 public class MatchesHighlightsStat {
 
-	private String description;
+	private final String description;
 	private int noGoals;
 	private int goals;
-	private boolean ownTeam;
-	private String types;
-	private String subtyps;
+	private final List<MatchEvent.MatchEventID> subtypes;
 	
-	public MatchesHighlightsStat(String key){
+	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtypes){
 		description = HOVerwaltung.instance().getLanguageString(key);
-		goals=-1;
-		noGoals=-1;
-	}
-	
-	
-	public MatchesHighlightsStat(String key,String subtyps){
-		this(key,"1,2",subtyps);
-	}
-	
-	public MatchesHighlightsStat(String key,String types,String subtyps){
-		description = HOVerwaltung.instance().getLanguageString(key);
-		this.types = types;
-		this.subtyps = subtyps;
+		this.subtypes = subtypes;
 		goals=-1;
 	}
 
-	public void appendDescription(String append){
-		description = description +" "+HOVerwaltung.instance().getLanguageString(append);
-	}
-	
 	public String getDescription() {
 		return description;
 	}
 
-	public int getNoGoals() {
-		return noGoals;
-	}
 	public void setNoGoals(int noGoals) {
 		this.noGoals = noGoals;
 	}
@@ -49,19 +30,8 @@ public class MatchesHighlightsStat {
 	public void setGoals(int goals) {
 		this.goals = goals;
 	}
-	public boolean isOwnTeam() {
-		return ownTeam;
-	}
-	public void setOwnTeam(boolean ownTeam) {
-		this.ownTeam = ownTeam;
-	}
-
-	public String getSubtyps() {
-		return subtyps;
-	}
-
-	public String getTypes() {
-		return types;
+	public List<MatchEvent.MatchEventID> getSubtyps() {
+		return subtypes;
 	}
 
 	public String getTotalString(){

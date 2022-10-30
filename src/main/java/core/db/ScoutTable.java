@@ -1,10 +1,9 @@
 package core.db;
 
-import core.util.HOLogger;
+import core.util.HODateTime;
 import module.transfer.scout.ScoutEintrag;
-
-import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -19,148 +18,58 @@ final class ScoutTable extends AbstractTable {
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[26];
-		columns[0]= new ColumnDescriptor("PlayerID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("Name",Types.VARCHAR,true,127);
-		columns[2]= new ColumnDescriptor("Info",Types.VARCHAR,false,256);
-		columns[3]= new ColumnDescriptor("Age",Types.INTEGER,false);
-		columns[4]= new ColumnDescriptor("Marktwert",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("Speciality",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("Kondition",Types.INTEGER,false);
-		columns[7]= new ColumnDescriptor("Erfahrung",Types.INTEGER,false);
-		columns[8]= new ColumnDescriptor("Form",Types.INTEGER,false);
-		columns[9]= new ColumnDescriptor("Torwart",Types.INTEGER,false);
-		columns[10]= new ColumnDescriptor("Verteidigung",Types.INTEGER,false);
-		columns[11]= new ColumnDescriptor("Spielaufbau",Types.INTEGER,false);
-		columns[12]= new ColumnDescriptor("Fluegel",Types.INTEGER,false);
-		columns[13]= new ColumnDescriptor("Torschuss",Types.INTEGER,false);
-		columns[14]= new ColumnDescriptor("Passpiel",Types.INTEGER,false);
-		columns[15]= new ColumnDescriptor("Standards",Types.INTEGER,false);
-		columns[16]= new ColumnDescriptor("Price",Types.INTEGER,false);
-		columns[17]= new ColumnDescriptor("Deadline",Types.TIMESTAMP,false);
-		columns[18]= new ColumnDescriptor("Wecker",Types.BOOLEAN,false);
-		columns[19]= new ColumnDescriptor("AgeDays",Types.INTEGER,false);
-		columns[20]= new ColumnDescriptor("Agreeability",Types.INTEGER,false);
-		columns[21]= new ColumnDescriptor("baseWage",Types.INTEGER,false);
-		columns[22]= new ColumnDescriptor("Nationality",Types.INTEGER,false);
-		columns[23]= new ColumnDescriptor("Leadership",Types.INTEGER,false);
-		columns[24]= new ColumnDescriptor("Loyalty",Types.INTEGER,false);
-		columns[25]= new ColumnDescriptor("MotherClub",Types.BOOLEAN,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerID").setGetter((o) -> ((ScoutEintrag) o).getPlayerID()).setSetter((o, v) -> ((ScoutEintrag) o).setPlayerID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Name").setGetter((o) -> ((ScoutEintrag) o).getName()).setSetter((o, v) -> ((ScoutEintrag) o).setName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Info").setGetter((o) -> ((ScoutEintrag) o).getInfo()).setSetter((o, v) -> ((ScoutEintrag) o).setInfo((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Age").setGetter((o) -> ((ScoutEintrag) o).getAlter()).setSetter((o, v) -> ((ScoutEintrag) o).setAlter((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((o) -> ((ScoutEintrag) o).getTSI()).setSetter((o, v) -> ((ScoutEintrag) o).setTSI((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Speciality").setGetter((o) -> ((ScoutEintrag) o).getSpeciality()).setSetter((o, v) -> ((ScoutEintrag) o).setSpeciality((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Kondition").setGetter((o) -> ((ScoutEintrag) o).getKondition()).setSetter((o, v) -> ((ScoutEintrag) o).setKondition((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((o) -> ((ScoutEintrag) o).getErfahrung()).setSetter((o, v) -> ((ScoutEintrag) o).setErfahrung((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Form").setGetter((o) -> ((ScoutEintrag) o).getForm()).setSetter((o, v) -> ((ScoutEintrag) o).setForm((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torwart").setGetter((o) -> ((ScoutEintrag) o).getTorwart()).setSetter((o, v) -> ((ScoutEintrag) o).setTorwart((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Verteidigung").setGetter((o) -> ((ScoutEintrag) o).getVerteidigung()).setSetter((o, v) -> ((ScoutEintrag) o).setVerteidigung((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spielaufbau").setGetter((o) -> ((ScoutEintrag) o).getSpielaufbau()).setSetter((o, v) -> ((ScoutEintrag) o).setSpielaufbau((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fluegel").setGetter((o) -> ((ScoutEintrag) o).getFluegelspiel()).setSetter((o, v) -> ((ScoutEintrag) o).setFluegelspiel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torschuss").setGetter((o) -> ((ScoutEintrag) o).getTorschuss()).setSetter((o, v) -> ((ScoutEintrag) o).setTorschuss((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Passpiel").setGetter((o) -> ((ScoutEintrag) o).getPasspiel()).setSetter((o, v) -> ((ScoutEintrag) o).setPasspiel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Standards").setGetter((o) -> ((ScoutEintrag) o).getStandards()).setSetter((o, v) -> ((ScoutEintrag) o).setStandards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Price").setGetter((o) -> ((ScoutEintrag) o).getPrice()).setSetter((o, v) -> ((ScoutEintrag) o).setPrice((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Deadline").setGetter((o) -> ((ScoutEintrag) o).getDeadline()).setSetter((o, v) -> ((ScoutEintrag) o).setDeadline(((HODateTime) v).toDbTimestamp())).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Wecker").setGetter((o) -> ((ScoutEintrag) o).isWecker()).setSetter((o, v) -> ((ScoutEintrag) o).setWecker((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((o) -> ((ScoutEintrag) o).getAgeDays()).setSetter((o, v) -> ((ScoutEintrag) o).setAgeDays((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Agreeability").setGetter((o) -> ((ScoutEintrag) o).getAgreeability()).setSetter((o, v) -> ((ScoutEintrag) o).setAgreeability((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("baseWage").setGetter((o) -> ((ScoutEintrag) o).getbaseWage()).setSetter((o, v) -> ((ScoutEintrag) o).setbaseWage((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Nationality").setGetter((o) -> ((ScoutEintrag) o).getNationality()).setSetter((o, v) -> ((ScoutEintrag) o).setNationality((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Leadership").setGetter((o) -> ((ScoutEintrag) o).getLeadership()).setSetter((o, v) -> ((ScoutEintrag) o).setLeadership((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Loyalty").setGetter((o) -> ((ScoutEintrag) o).getLoyalty()).setSetter((o, v) -> ((ScoutEintrag) o).setLoyalty((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MotherClub").setGetter((o) -> ((ScoutEintrag) o).isHomegrown()).setSetter((o, v) -> ((ScoutEintrag) o).setHomegrown((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build()
+		};
 	}
 
 	/**
 	 * Save players from TransferScout
 	 */
 	void saveScoutList(Vector<ScoutEintrag> list) {
-		String sql = "";
-		String bool = "0";
-		String hg = "0";
 		// What should be done when list = null?? jailbird.
 		if (list != null) {
-			// Delete already existing list
-
-			delete( null,null );
-			for (int i = 0; i < list.size(); i++) {
-				final ScoutEintrag scout = list.elementAt(i);
-
-				if (scout.isWecker()) {
-					bool = "1";
-				} else {
-					bool = "0";
-				}
-				if (scout.isHomegrown())
-					hg = "1";
-				else
-					hg = "0";
-
-				// Prepare insert statement
-				sql =
-					"INSERT INTO "+getTableName()+" (Name, Info, Age, AgeDays, Marktwert, Kondition, Erfahrung,  Form, Torwart, Verteidigung, Spielaufbau, Fluegel, Torschuss, Passpiel, Standards, Deadline, Wecker, PlayerID, Speciality, Price, Agreeability, baseWage, Nationality, Leadership, Loyalty, MotherClub ) VALUES (";
-				sql
-					+= ("'"
-						+ core.db.DBManager.insertEscapeSequences(scout.getName())
-						+ "','"
-						+ core.db.DBManager.insertEscapeSequences(scout.getInfo())
-						+ "',"
-						+ scout.getAlter()
-						+ ","
-						+ scout.getAgeDays()
-						+ ","
-						+ scout.getTSI()
-						+ ","
-						+ scout.getKondition()
-						+ ","
-						+ scout.getErfahrung()
-						+ ","
-						+ scout.getForm()
-						+ ","
-						+ scout.getTorwart()
-						+ ","
-						+ scout.getVerteidigung()
-						+ ","
-						+ scout.getSpielaufbau()
-						+ ","
-						+ scout.getFluegelspiel()
-						+ ","
-						+ scout.getTorschuss()
-						+ ","
-						+ scout.getPasspiel()
-						+ ","
-						+ scout.getStandards()
-						+ ",'"
-						+ scout.getDeadline().toString()
-						+ "',"
-						+ bool
-						+ ", "
-						+ scout.getPlayerID()
-						+ ", "
-						+ scout.getSpeciality()
-						+ ", "
-						+ scout.getPrice()
-						+ ", "
-						+ scout.getAgreeability()
-						+ ", "
-						+ scout.getbaseWage()
-						+ ", "
-						+ scout.getNationality()
-						+ ", "
-						+ scout.getLeadership()
-						+ ", "
-						+ scout.getLoyalty()
-						+ ", "
-						+ hg
-						+ ")");
-
-				try {
-					adapter.executeUpdate(sql);
-				} catch (Exception e) {
-					HOLogger.instance().log(getClass(),"DBZugriff.deleteScoutTabelle: " + e);
-				}
+			for (var scout : list) {
+				store(scout);
 			}
 		}
+	}
+
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
 	}
 	
 	/**
 	 * Load player list for insertion into TransferScout
 	 */
-	Vector<ScoutEintrag> getScoutList() {
-		final Vector<ScoutEintrag> ret = new Vector<ScoutEintrag>();
-
-		try {
-			final String sql =
-				"SELECT * FROM "+getTableName();
-			final ResultSet rs = adapter.executeQuery(sql);
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				final ScoutEintrag scout = new ScoutEintrag(rs);
-				ret.add(scout);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DBZugriff.getScoutList: " + e);
-		}
-
-		return ret;
+	List<ScoutEintrag> getScoutList() {
+		return load(ScoutEintrag.class);
 	}
 	
 }

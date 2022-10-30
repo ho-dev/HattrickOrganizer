@@ -2,10 +2,17 @@
 
 ## Highlights
 
+This contains a very large refactoring of the database interface.
+It still needs a lot of tests, so please do not use it as a production system.
+Please do not forget to back up data.
+
+* faster and more secure database access using prepared statements (#1593)
+
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.0)
 
 ### Database
+* faster and more secure database access using prepared statements (#1593)
 
 ### Squad
 * add last match columns: rating at end of match, position and minutes (#1523)

@@ -1,13 +1,20 @@
 package core.model;
 
-public class StaffMember implements Comparable<StaffMember> {
+import core.db.AbstractTable;
+
+public class StaffMember extends AbstractTable.Storable implements Comparable<StaffMember> {
+
+	private int index;
+
+	public StaffMember(){}
 
 	private String name;
 	private int id;
 	private StaffType staffType;
 	private int level;
 	private int cost;
-	
+	private int hrfId;
+
 	public String getName() {
 		return name;
 	}
@@ -53,14 +60,25 @@ public class StaffMember implements Comparable<StaffMember> {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(getStaffType().getName());
-		sb.append(" - " + getName());
-		sb.append(" - " + core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.level"));
-		sb.append(": " + getLevel());
-
-		return sb.toString();
+		return getStaffType().getName() + " - " + getName() +
+				" - " + HOVerwaltung.instance().getLanguageString("ls.club.staff.level") +
+				": " + getLevel();
 	}
-	
-	
-	
+
+
+	public int getHrfId() {
+		return hrfId;
+	}
+
+	public void setHrfId(int hrfId) {
+		this.hrfId = hrfId;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
 }

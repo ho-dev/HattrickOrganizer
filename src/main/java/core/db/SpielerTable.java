@@ -7,13 +7,10 @@ import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 final class SpielerTable extends AbstractTable {
 
@@ -22,328 +19,133 @@ final class SpielerTable extends AbstractTable {
 
 	SpielerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				new ColumnDescriptor("HRF_ID", Types.INTEGER, false),
-				new ColumnDescriptor("Datum", Types.TIMESTAMP, false),
-				new ColumnDescriptor("GelbeKarten", Types.INTEGER, false),
-				new ColumnDescriptor("SpielerID", Types.INTEGER, false),
-				new ColumnDescriptor("FirstName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("NickName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("LastName", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("Age", Types.INTEGER, false),
-				new ColumnDescriptor("Kondition", Types.INTEGER, false),
-				new ColumnDescriptor("Form", Types.INTEGER, false),
-				new ColumnDescriptor("Torwart", Types.INTEGER, false),
-				new ColumnDescriptor("Verteidigung", Types.INTEGER, false),
-				new ColumnDescriptor("Spielaufbau", Types.INTEGER, false),
-				new ColumnDescriptor("Fluegel", Types.INTEGER, false),
-				new ColumnDescriptor("Torschuss", Types.INTEGER, false),
-				new ColumnDescriptor("Passpiel", Types.INTEGER, false),
-				new ColumnDescriptor("Standards", Types.INTEGER, false),
-				new ColumnDescriptor("SubTorwart", Types.REAL, false),
-				new ColumnDescriptor("SubVerteidigung", Types.REAL, false),
-				new ColumnDescriptor("SubSpielaufbau", Types.REAL, false),
-				new ColumnDescriptor("SubFluegel", Types.REAL, false),
-				new ColumnDescriptor("SubTorschuss", Types.REAL, false),
-				new ColumnDescriptor("SubPasspiel", Types.REAL, false),
-				new ColumnDescriptor("SubStandards", Types.REAL, false),
-				new ColumnDescriptor("OffsetTorwart", Types.REAL, false),
-				new ColumnDescriptor("OffsetVerteidigung", Types.REAL, false),
-				new ColumnDescriptor("OffsetSpielaufbau", Types.REAL, false),
-				new ColumnDescriptor("OffsetFluegel", Types.REAL, false),
-				new ColumnDescriptor("OffsetTorschuss", Types.REAL, false),
-				new ColumnDescriptor("OffsetPasspiel", Types.REAL, false),
-				new ColumnDescriptor("OffsetStandards", Types.REAL, false),
-				new ColumnDescriptor("iSpezialitaet", Types.INTEGER, false),
-				new ColumnDescriptor("iCharakter", Types.INTEGER, false),
-				new ColumnDescriptor("iAnsehen", Types.INTEGER, false),
-				new ColumnDescriptor("iAgressivitaet", Types.INTEGER, false),
-				new ColumnDescriptor("Fuehrung", Types.INTEGER, false),
-				new ColumnDescriptor("Erfahrung", Types.INTEGER, false),
-				new ColumnDescriptor("Gehalt", Types.INTEGER, false),
-				new ColumnDescriptor("Bonus", Types.INTEGER, false),
-				new ColumnDescriptor("Land", Types.INTEGER, false),
-				new ColumnDescriptor("Marktwert", Types.INTEGER, false),
-				new ColumnDescriptor("Verletzt", Types.INTEGER, false),
-				new ColumnDescriptor("ToreFreund", Types.INTEGER, false),
-				new ColumnDescriptor("ToreLiga", Types.INTEGER, false),
-				new ColumnDescriptor("TorePokal", Types.INTEGER, false),
-				new ColumnDescriptor("ToreGesamt", Types.INTEGER, false),
-				new ColumnDescriptor("Hattrick", Types.INTEGER, false),
-				new ColumnDescriptor("Bewertung", Types.INTEGER, false),
-				new ColumnDescriptor("TrainerTyp", Types.INTEGER, false),
-				new ColumnDescriptor("Trainer", Types.INTEGER, false),
-				new ColumnDescriptor("PlayerNumber", Types.INTEGER, false),
-				new ColumnDescriptor("TransferListed", Types.INTEGER, false),
-				new ColumnDescriptor("Caps", Types.INTEGER, false),
-				new ColumnDescriptor("CapsU20", Types.INTEGER, false),
-				new ColumnDescriptor("AgeDays", Types.INTEGER, false),
-				new ColumnDescriptor("TrainingBlock", Types.BOOLEAN, false),
-				new ColumnDescriptor("Loyalty", Types.INTEGER, false),
-				new ColumnDescriptor("HomeGrown", Types.BOOLEAN, false),
-				new ColumnDescriptor("NationalTeamID", Types.INTEGER, true),
-				new ColumnDescriptor("SubExperience", Types.REAL, false),
-				new ColumnDescriptor("LastMatchDate", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("LastMatchRating", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatchId", Types.INTEGER, true),
-				new ColumnDescriptor("LAST_MATCH_TYPE", Types.INTEGER, true),
-				new ColumnDescriptor("ArrivalDate", Types.VARCHAR, true, 100),
-				new ColumnDescriptor("GoalsCurrentTeam", Types.INTEGER, true),
-				new ColumnDescriptor("PlayerCategory", Types.INTEGER, true),
-				new ColumnDescriptor("Statement", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("OwnerNotes", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("LastMatch_PlayedMinutes", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatch_PositionCode", Types.INTEGER, true),
-				new ColumnDescriptor("LastMatch_RatingEndOfGame", Types.INTEGER, true),
-				new ColumnDescriptor("MotherclubId", Types.INTEGER, true),
-				new ColumnDescriptor("MotherclubName", Types.VARCHAR, true, 255),
-				new ColumnDescriptor("MatchesCurrentTeam", Types.INTEGER, true)
+
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p)->((Player)p).getHrfId()).setSetter((p,v)->((Player)p).setHrfId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((p)->((Player)p).getPlayerID()).setSetter((p,v)->((Player)p).setPlayerID((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((p)->((Player)p).getHrfDate().toDbTimestamp()).setSetter((p,v)->((Player)p).setHrfDate((HODateTime)v)).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GelbeKarten").setGetter((p)->((Player)p).getCards()).setSetter((p,v)->((Player)p).setGelbeKarten((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FirstName").setGetter((p)->((Player)p).getFirstName()).setSetter((p,v)->((Player)p).setFirstName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NickName").setGetter((p)->((Player)p).getNickName()).setSetter((p,v)->((Player)p).setNickName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastName").setGetter((p)->((Player)p).getLastName()).setSetter((p,v)->((Player)p).setLastName((String)v)).setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Age").setGetter((p)->((Player)p).getAlter()).setSetter((p,v)->((Player)p).setAge((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Kondition").setGetter((p)->((Player)p).getStamina()).setSetter((p,v)->((Player)p).setStamina((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Form").setGetter((p)->((Player)p).getForm()).setSetter((p,v)->((Player)p).setForm((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torwart").setGetter((p)->((Player)p).getGKskill()).setSetter((p,v)->((Player)p).setTorwart((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Verteidigung").setGetter((p)->((Player)p).getDEFskill()).setSetter((p,v)->((Player)p).setVerteidigung((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spielaufbau").setGetter((p)->((Player)p).getPMskill()).setSetter((p,v)->((Player)p).setSpielaufbau((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fluegel").setGetter((p)->((Player)p).getWIskill()).setSetter((p,v)->((Player)p).setFluegelspiel((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Torschuss").setGetter((p)->((Player)p).getSCskill()).setSetter((p,v)->((Player)p).setTorschuss((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Passpiel").setGetter((p)->((Player)p).getPSskill()).setSetter((p,v)->((Player)p).setPasspiel((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Standards").setGetter((p)->((Player)p).getSPskill()).setSetter((p,v)->((Player)p).setStandards((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubTorwart").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.KEEPER)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.KEEPER,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubVerteidigung").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.DEFENDING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.DEFENDING,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubSpielaufbau").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.PLAYMAKING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubFluegel").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.WINGER)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.WINGER,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubTorschuss").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.SCORING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.SCORING,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubPasspiel").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.PASSING)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.PASSING,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubStandards").setGetter((p)->((Player)p).getSub4SkillAccurate(PlayerSkill.SET_PIECES)).setSetter((p,v)->((Player)p).setSubskill4PlayerSkill(PlayerSkill.SET_PIECES,(float)v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iSpezialitaet").setGetter((p)->((Player)p).getPlayerSpecialty()).setSetter((p,v)->((Player)p).setPlayerSpecialty((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iCharakter").setGetter((p)->((Player)p).getCharakter()).setSetter((p,v)->((Player)p).setCharakter((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iAnsehen").setGetter((p)->((Player)p).getAnsehen()).setSetter((p,v)->((Player)p).setAnsehen((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iAgressivitaet").setGetter((p)->((Player)p).getAgressivitaet()).setSetter((p,v)->((Player)p).setAgressivitaet((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Fuehrung").setGetter((p)->((Player)p).getLeadership()).setSetter((p,v)->((Player)p).setLeadership((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((p)->((Player)p).getExperience()).setSetter((p,v)->((Player)p).setExperience((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Gehalt").setGetter((p)->((Player)p).getSalary()).setSetter((p,v)->((Player)p).setGehalt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((p)->((Player)p).getNationalityAsInt()).setSetter((p,v)->((Player)p).setNationalityAsInt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((p)->((Player)p).getMarktwert()).setSetter((p,v)->((Player)p).setTSI((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Verletzt").setGetter((p)->((Player)p).getInjuryWeeks()).setSetter((p,v)->((Player)p).setInjuryWeeks((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreFreund").setGetter((p)->((Player)p).getToreFreund()).setSetter((p,v)->((Player)p).setToreFreund((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreLiga").setGetter((p)->((Player)p).getSeasonSeriesGoal()).setSetter((p,v)->((Player)p).setToreLiga((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TorePokal").setGetter((p)->((Player)p).getSeasonCupGoal()).setSetter((p,v)->((Player)p).setTorePokal((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ToreGesamt").setGetter((p)->((Player)p).getAllOfficialGoals()).setSetter((p,v)->((Player)p).setAllOfficialGoals((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Hattrick").setGetter((p)->((Player)p).getHattrick()).setSetter((p,v)->((Player)p).setHattrick((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Bewertung").setGetter((p)->((Player)p).getRating()).setSetter((p,v)->((Player)p).setBewertung((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainerTyp").setGetter((p)->TrainerType.toInt(((Player)p).getTrainerTyp())).setSetter((p,v)->((Player)p).setTrainerTyp(TrainerType.fromInt((int)v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Trainer").setGetter((p)->((Player)p).getTrainerSkill()).setSetter((p,v)->((Player)p).setTrainerSkill((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerNumber").setGetter((p)->((Player)p).getTrikotnummer()).setSetter((p,v)->((Player)p).setShirtNumber((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TransferListed").setGetter((p)->((Player)p).getTransferlisted()).setSetter((p,v)->((Player)p).setTransferlisted((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Caps").setGetter((p)->((Player)p).getLaenderspiele()).setSetter((p,v)->((Player)p).setLaenderspiele((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("CapsU20").setGetter((p)->((Player)p).getU20Laenderspiele()).setSetter((p,v)->((Player)p).setU20Laenderspiele((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((p)->((Player)p).getAgeDays()).setSetter((p,v)->((Player)p).setAgeDays((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingBlock").setGetter((p)->((Player)p).hasTrainingBlock()).setSetter((p,v)->((Player)p).setTrainingBlock((boolean)v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Loyalty").setGetter((p)->((Player)p).getLoyalty()).setSetter((p,v)->((Player)p).setLoyalty((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HomeGrown").setGetter((p)->((Player)p).isHomeGrown()).setSetter((p,v)->((Player)p).setHomeGrown((boolean)v)).setType(Types.BOOLEAN).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NationalTeamID").setGetter((p)->((Player)p).getNationalTeamID()).setSetter((p,v)->((Player)p).setNationalTeamId((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubExperience").setGetter((p)->((Player)p).getSubExperience()).setSetter((p,v)->((Player)p).setSubExperience((Double)v)).setType(Types.DOUBLE).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchDate").setGetter((p)->((Player)p).getLastMatchDate()).setSetter((p,v)->((Player)p).setLastMatchDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchRating").setGetter((p)->((Player)p).getLastMatchRating()).setSetter((p,v)->((Player)p).setLastMatchRating((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchId").setGetter((p)->((Player)p).getLastMatchId()).setSetter((p,v)->((Player)p).setLastMatchId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LAST_MATCH_TYPE").setGetter((p)->((Player)p).getLastMatchType().getId()).setSetter((p,v)->((Player)p).setLastMatchType(MatchType.getById((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p)->((Player)p).getArrivalDate()).setSetter((p,v)->((Player)p).setArrivalDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GoalsCurrentTeam").setGetter((p)->((Player)p).getGoalsCurrentTeam()).setSetter((p,v)->((Player)p).setGoalsCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategory").setGetter((p)->((Player)p).getPlayerCategory().getId()).setSetter((p,v)->((Player)p).setPlayerCategory(PlayerCategory.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p)->((Player)p).getPlayerStatement()).setSetter((p,v)->((Player)p).setPlayerStatement((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p)->((Player)p).getOwnerNotes()).setSetter((p,v)->((Player)p).setOwnerNotes((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_PlayedMinutes").setGetter((p)->((Player)p).getLastMatchMinutes()).setSetter((p,v)->((Player)p).setLastMatchMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_PositionCode").setGetter((p)->((Player)p).getLastMatchPosition()).setSetter((p,v)->((Player)p).setLastMatchPosition((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_RatingEndOfGame").setGetter((p)->((Player)p).getLastMatchRatingEndOfGame()).setSetter((p,v)->((Player)p).setLastMatchRatingEndOfGame((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubId").setGetter((p)->((Player)p).getMotherclubId()).setSetter((p,v)->((Player)p).setMotherClubId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubName").setGetter((p)->((Player)p).getMotherclubName()).setSetter((p,v)->((Player)p).setMotherClubName((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p)->((Player)p).getMatchesCurrentTeam()).setSetter((p,v)->((Player)p).setMatchesCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
 		};
 	}
 
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-			"CREATE INDEX iSpieler_1 ON " + getTableName() + "(" + columns[3].getColumnName() + "," + columns[1].getColumnName() + ")",
+			"CREATE INDEX iSpieler_1 ON " + getTableName() + "(" + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")",
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
-	/**
-	 * saves one player to the DB
-	 *
-	 * @param hrfId		hrf id
-	 * @param player	the player to be saved
-	 */
-
-	void saveSpieler(int hrfId, Player player, Timestamp date) {
-		final String[] awhereS = { "HRF_ID", "SpielerId" };
-		final String[] awhereV = { "" + hrfId, "" + player.getPlayerID()};
-		// Delete old values
-		delete(awhereS, awhereV);
-
-		//insert vorbereiten
-
-		String statement = "INSERT INTO " + getTableName() +
-				" ( GelbeKarten , SpielerID , ArrivalDate, FirstName , NickName, LastName , Age , AgeDays , " +
-				"Kondition , Form , Torwart , Verteidigung , Spielaufbau , Fluegel , " +
-				"Torschuss , Passpiel , Standards , SubTorwart , SubVerteidigung , " +
-				"SubSpielaufbau , SubFluegel , SubTorschuss , SubPasspiel , SubStandards , " +
-				"OffsetTorwart , OffsetVerteidigung , OffsetSpielaufbau , OffsetFluegel , " +
-				"OffsetTorschuss , OffsetPasspiel , OffsetStandards , iSpezialitaet , " +
-				"iCharakter , iAnsehen , iAgressivitaet , Fuehrung , Erfahrung , Gehalt , " +
-				"Bonus , Land , Marktwert , Verletzt , ToreFreund , ToreLiga , TorePokal , GoalsCurrentTeam , " +
-				"ToreGesamt , Hattrick , Bewertung , TrainerTyp, Trainer, HRF_ID, Datum, " +
-				"PlayerNumber, TransferListed,  Caps, CapsU20, TrainingBlock, Loyalty, HomeGrown, " +
-				"SubExperience, NationalTeamID, " +
-				"LastMatchDate, LastMatchRating, LastMatchId, LAST_MATCH_TYPE, LastMatch_PositionCode, LastMatch_PlayedMinutes, LastMatch_RatingEndOfGame, " +
-				"Statement, OwnerNotes, PlayerCategory, " +
-				"MotherclubId, MotherclubName, MatchesCurrentTeam" +
-		") VALUES(" +
-				player.getCards() + "," +
-				player.getPlayerID() + "," +
-				"'" + DBManager.insertEscapeSequences(player.getArrivalDate()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getFirstName()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getNickName()) + "'," +
-				"'" + DBManager.insertEscapeSequences(player.getLastName()) + "'," +
-				player.getAlter() + "," +
-				player.getAgeDays() + "," +
-				player.getStamina() + "," +
-				player.getForm() + "," +
-				player.getGKskill() + "," +
-				player.getDEFskill() + "," +
-				player.getPMskill() + "," +
-				player.getWIskill() + "," +
-				player.getSCskill() + "," +
-				player.getPSskill() + "," +
-				player.getSPskill() + "," +
-				player.getSub4SkillAccurate(PlayerSkill.KEEPER) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.DEFENDING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.PLAYMAKING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.WINGER) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.SCORING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.PASSING) + "," +
-				player.getSub4SkillAccurate(PlayerSkill.SET_PIECES) + "," +
-				// Training offsets below
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				"0," +
-				player.getPlayerSpecialty() + "," +
-				player.getCharakter() + "," +
-				player.getAnsehen() + "," +
-				player.getAgressivitaet() + "," +
-				player.getLeadership() + "," +
-				player.getExperience() + "," +
-				player.getSalary() + "," +
-				player.getBonus() + "," +
-				player.getNationalityAsInt() + "," +
-				player.getSaveMarktwert() + "," +
-				player.getInjuryWeeks() + "," +
-				player.getToreFreund() + "," +
-				player.getSeasonSeriesGoal() + "," +
-				player.getSeasonCupGoal() + "," +
-				player.getGoalsCurrentTeam() + "," +
-				player.getAllOfficialGoals() + "," +
-				player.getHattrick() + "," +
-				player.getRating() + "," +
-				TrainerType.toInt(player.getTrainerTyp()) + "," +
-				player.getTrainerSkill() + "," +
-				hrfId + "," +
-				"'" + date.toString() + "'," +
-				player.getTrikotnummer() + "," +
-				player.getTransferlisted() + "," +
-				player.getLaenderspiele() + "," +
-				player.getU20Laenderspiele() + "," +
-				player.hasTrainingBlock() + "," +
-				player.getLoyalty() + "," +
-				player.isHomeGrown() + "," +
-				player.getSubExperience() + "," +
-				player.getNationalTeamID() + "," +
-				"'" + player.getLastMatchDate() + "'," +
-				player.getLastMatchRating() + "," +
-				player.getLastMatchId() + "," +
-				player.getLastMatchType().getId()  + "," +
-				player.getLastMatchPosition() + "," +
-				player.getLastMatchMinutes() + "," +
-				player.getLastMatchRatingEndOfGame() + ",'"
-				+ player.getPlayerStatement() + "', '"
-				+ player.getOwnerNotes() + "', "
-				+ (player.getPlayerCategory()!=null?player.getPlayerCategory().getId():null) + ", "
-				+ player.getMotherclubId() + ", '"
-				+ DBManager.insertEscapeSequences(player.getMotherclubName() ) + "', "
-				+ player.getMatchesCurrentTeam()
-				+ ")";
-		adapter.executeUpdate(statement);
-	}
 
 	/**
-	 * Saves the players in the <code>spieler</code> list.
+	 * store a list of records
+	 * @param players list of players
 	 */
-	void saveSpieler(int hrfId, List<Player> spieler, Timestamp date) {
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
-		if (spieler != null) {
-			// Delete old values
-			delete(awhereS, awhereV);
-
-			for (Player p: spieler) {
-				saveSpieler(hrfId, p, date);
+	void store(List<Player> players) {
+		if (players != null) {
+			for (var p : players) {
+				store(p);
 			}
 		}
 	}
 
-	/**
-	 * get a player from a specific HRF
-	 *
-	 * @param hrfID hrd id
-	 * @param playerId player id
-	 *
-	 *
-	 * @return player
-	 */
-	Player getSpielerFromHrf(int hrfID, int playerId) {
-		ResultSet rs;
-		Player player;
-		String sql;
-
-		sql = "SELECT * from "+getTableName()+" WHERE HRF_ID = " + hrfID + " AND SpielerId="+playerId;
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				rs.beforeFirst();
-
-				if (rs.next()) {
-					player = createObject(rs);
-					return player;
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getSpielerFromHrf: " + e);
-		}
-
-		return null;
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
 	}
 
 	/**
-	 * lädt die Player zum angegeben HRF file ein
+	 * load players of a hrf (download)
+	 * @param hrfID id of hrf
+	 * @return list of pLayers
 	 */
-	List<Player> getSpieler(int hrfID) {
-		ResultSet rs;
-		Player player;
-		String sql;
-		final ArrayList<Player> ret = new ArrayList<>();
-		if ( hrfID > -1) {
-
-			sql = "SELECT * from " + getTableName() + " WHERE HRF_ID = " + hrfID;
-			rs = adapter.executeQuery(sql);
-
-			try {
-				if (rs != null) {
-					rs.beforeFirst();
-
-					while (rs.next()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), player.getSpielerID () );
-						ret.add(player);
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "DatenbankZugriff.getPlayer: " + e);
-			}
-		}
-		return ret;
+	List<Player> loadPlayers(int hrfID) {
+		return load(Player.class, hrfID);
 	}
+
+	private final PreparedSelectStatementBuilder loadAllPlayersStatementBuilder = new PreparedSelectStatementBuilder(this, " t inner join (" +
+			"    select SPIELERID, max(DATUM) as MaxDate from " +
+			getTableName() +
+			"    group by SPIELERID" +
+			") tm on t.SPIELERID = tm.SPIELERID and t.DATUM = tm.MaxDate");
 
 	/**
-	 * gibt alle Player zurück, auch ehemalige
+	 * load all players of database
+	 * @return List of latest records stored in database of all players.
 	 */
-	Vector<Player> getAllSpieler() {
-		ResultSet rs;
-		Player player;
-		String sql;
-		final Vector<Player> ret = new Vector<>();
-
-		sql = "SELECT DISTINCT SpielerID from "+getTableName()+"";
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				final Vector<Integer> idVector = new Vector<>();
-				rs.beforeFirst();
-
-				while (rs.next()) {
-					idVector.add(rs.getInt("SpielerID"));
-				}
-
-				for (Integer integer : idVector) {
-					sql = "SELECT * from " + getTableName() + " WHERE SpielerID=" + integer + " ORDER BY Datum DESC";
-					rs = adapter.executeQuery(sql);
-
-					if (rs != null && rs.first()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), player.getSpielerID () );
-						ret.add(player);
-					}
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getPlayer: " + e);
-		}
-
-		return ret;
+	List<Player> loadAllPlayers() {
+		return load(Player.class, adapter.executePreparedQuery(loadAllPlayersStatementBuilder.getStatement()),-1);
 	}
 
+	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
 
 	/**
 	 * Gibt die letzte Bewertung für den Player zurück // HRF
@@ -352,26 +154,21 @@ final class SpielerTable extends AbstractTable {
 		int bewertung = 0;
 
 		try {
-			final String sql = "SELECT Bewertung from "+getTableName()+" WHERE SpielerID=" + spielerid + " AND Bewertung>0 ORDER BY Datum DESC";
-			final ResultSet rs = adapter.executeQuery(sql);
-
-			if ((rs != null) && rs.first()) {
+			final ResultSet rs = adapter.executePreparedQuery(getLetzteBewertung4SpielerStatementBuilder.getStatement(), spielerid);
+			if ((rs != null) && rs.next()) {
 				bewertung = rs.getInt("Bewertung");
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + spielerid + " : " + e);
 		}
-
 		return bewertung;
 	}
 
-	/**
-	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
-	 */
-	Player getSpielerAtDate(int spielerid, Timestamp time) {
-		ResultSet rs;
-		Player player = null;
-		String sql;
+	private final PreparedSelectStatementBuilder getSpielerNearDateBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
+	private final PreparedSelectStatementBuilder getSpielerNearDateAfterStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
+
+	Player getSpielerNearDate(int spielerid, Timestamp time) {
+		Player player;
 
 		//6 Tage   //1209600000  //14 Tage vorher
 		final int spanne = 518400000;
@@ -383,61 +180,18 @@ final class SpielerTable extends AbstractTable {
 		//--- Zuerst x Tage vor dem Datum suchen -------------------------------
 		//x Tage vorher
 		final Timestamp time2 = new Timestamp(time.getTime() - spanne);
-
-		//HOLogger.instance().log(getClass(),"Time : " + time + " : vor 14 Tage : " + time2 );
-		sql = "SELECT * from "+getTableName()+" WHERE Datum<='" + time + "' AND Datum>='" + time2 + "' AND SpielerID=" + spielerid + " ORDER BY Datum DESC";
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					player = createObject(rs);
-
-					//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"1. Player nicht gefunden für Datum " + time + " und SpielerID " + spielerid);
-		}
+		player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time, time2, spielerid));
 
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
 		if (player == null) {
-			sql = "SELECT * from "+getTableName()+" WHERE Datum>'" + time + "' AND SpielerID=" + spielerid + " ORDER BY Datum";
-			rs = adapter.executeQuery(sql);
-
-			try {
-				if (rs != null) {
-					if (rs.first()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"2. Player nicht gefunden für Datum " + time + " und SpielerID " + spielerid);
-			}
+			player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateAfterStatementBuilder.getStatement(), time, spielerid));
 		}
 
 		//----Dann noch die dopplete Spanne vor der Spanne suchen---------------
 		if (player == null) {
 			//x Tage vorher
 			final Timestamp time3 = new Timestamp(time2.getTime() - (spanne * 2));
-
-			//HOLogger.instance().log(getClass(),"Time : " + time + " : vor 14 Tage : " + time2 );
-			sql = "SELECT * from "+getTableName()+" WHERE Datum<='" + time2 + "' AND Datum>='" + time3 + "' AND SpielerID=" + spielerid + " ORDER BY Datum DESC";
-			rs = adapter.executeQuery(sql);
-
-			try {
-				if (rs != null) {
-					if (rs.first()) {
-						player = createObject(rs);
-
-						//HOLogger.instance().log(getClass(), "Player " + player.getName () + " vom " + rs.getTimestamp ( "Datum" ) );
-					}
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"3. Player nicht gefunden für Datum " + time + " und SpielerID " + spielerid);
-			}
+			player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time2, time3, spielerid));
 		}
 
 		return player;
@@ -445,67 +199,25 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
+	private final PreparedSelectStatementBuilder getSpielerFirstHRFStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? ORDER BY Datum ASC LIMIT 1");
 	/**
-	 * Gibt einen Player zurück aus dem ersten HRF
+	 * load first player appearance
 	 */
 	Player getSpielerFirstHRF(int spielerid) {
-		ResultSet rs;
-		Player player = null;
-		String sql;
-
-		sql = "SELECT * from "+getTableName()+" WHERE SpielerID=" + spielerid + " ORDER BY Datum ASC";
-		rs = adapter.executeQuery(sql);
-
-		try {
-			if (rs != null) {
-				if (rs.first()) {
-					player = createObject(rs);
-
-					//Info, da der Player für den Vergleich in der Spielerübersicht benutzt wird
-					player.setOld(true);
-//					HOLogger.instance().log(getClass(),"Player " + player.getName() + " vom " + rs.getTimestamp("Datum"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"Nicht gefunden SpielerID " + spielerid);
+		var ret = loadOne(Player.class, adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid));
+		if ( ret != null){
+			ret.setOld(true);
 		}
-
-		return player;
+		return ret;
 	}
 
-	/**
-	 * Gibt das Datum des ersten HRFs zurück, in dem der Player aufgetaucht ist
-	 */
-	Timestamp getTimestamp4FirstPlayerHRF(int spielerid) {
-		Timestamp time = null;
-
-		try {
-			final String sql = "SELECT Datum from "+getTableName()+" WHERE SpielerID=" + spielerid + " ORDER BY Datum";
-			final ResultSet rs = adapter.executeQuery(sql);
-
-			if ((rs != null) && rs.first()) {
-				time = rs.getTimestamp("Datum");
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + spielerid + " : " + e);
-		}
-
-		return time;
-	}
-
-	/**
-	 * Gibt einen Player zurï¿½ck mit den Daten kurz vor dem Timestamp
-	 */
+	private final PreparedSelectStatementBuilder getTrainerTypeStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
 	int getTrainerType(int hrfID) {
 		ResultSet rs;
-		String sql;
-
-		sql = "SELECT TrainerTyp FROM "+getTableName()+" WHERE HRF_ID=" + hrfID + " AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc";
-		rs = adapter.executeQuery(sql);
-
+		rs = adapter.executePreparedQuery(getTrainerTypeStatementBuilder.getStatement(), hrfID);
 		try {
 			if (rs != null) {
-				if (rs.first()) {
+				if (rs.next()) {
 					return rs.getInt("TrainerTyp");
 				}
 			}
@@ -515,106 +227,8 @@ final class SpielerTable extends AbstractTable {
 		return -99;
 	}
 
-    /**
-     * Creates a {@link Player} instance populated with values from the db.
-     */
-    private Player createObject(ResultSet rs) {
-    	Player player = new Player();
-        try {
-        	player.setPlayerID(rs.getInt("SpielerID"));
-            player.setFirstName(DBManager.deleteEscapeSequences(rs.getString("FirstName")));
-			player.setNickName(DBManager.deleteEscapeSequences(rs.getString("NickName")));
-			player.setLastName(DBManager.deleteEscapeSequences(rs.getString("LastName")));
-			player.setArrivalDate(DBManager.deleteEscapeSequences(rs.getString("ArrivalDate")));
-            player.setAge(rs.getInt("Age"));
-            player.setAgeDays(rs.getInt("AgeDays"));
-            player.setStamina(rs.getInt("Kondition"));
-            player.setForm(rs.getInt("Form"));
-            player.setTorwart(rs.getInt("Torwart"));
-            player.setVerteidigung(rs.getInt("Verteidigung"));
-            player.setSpielaufbau(rs.getInt("Spielaufbau"));
-            player.setPasspiel(rs.getInt("Passpiel"));
-            player.setFluegelspiel(rs.getInt("Fluegel"));
-            player.setTorschuss(rs.getInt("Torschuss"));
-            player.setStandards(rs.getInt("Standards"));
-            player.setPlayerSpecialty(rs.getInt("iSpezialitaet"));
-            player.setCharakter(rs.getInt("iCharakter"));
-            player.setAnsehen(rs.getInt("iAnsehen"));
-            player.setAgressivitaet(rs.getInt("iAgressivitaet"));
-            player.setExperience(rs.getInt("Erfahrung"));
-            player.setLoyalty(rs.getInt("Loyalty"));
-            player.setHomeGrown(rs.getBoolean("HomeGrown"));
-            player.setLeadership(rs.getInt("Fuehrung"));
-            player.setGehalt(rs.getInt("Gehalt"));
-            player.setNationalityAsInt(rs.getInt("Land"));
-            player.setTSI(rs.getInt("Marktwert"));
-
-            //TSI, values stored before TSIDATE needs to be divided by 1000
-			var tsidate = rs.getTimestamp("Datum");
-            player.setHrfDate(HODateTime.fromDbTimestamp(tsidate));
-            if (tsidate.before(DBManager.TSIDATE)) {
-                player.setTSI(player.getTSI()/1000);
-            }
-
-            //Subskills
-            player.setSubskill4PlayerSkill(PlayerSkill.KEEPER,rs.getFloat("SubTorwart"));
-            player.setSubskill4PlayerSkill(PlayerSkill.DEFENDING,rs.getFloat("SubVerteidigung"));
-            player.setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING,rs.getFloat("SubSpielaufbau"));
-            player.setSubskill4PlayerSkill(PlayerSkill.PASSING,rs.getFloat("SubPasspiel"));
-            player.setSubskill4PlayerSkill(PlayerSkill.WINGER,rs.getFloat("SubFluegel"));
-            player.setSubskill4PlayerSkill(PlayerSkill.SCORING,rs.getFloat("SubTorschuss"));
-			player.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES,rs.getFloat("SubStandards"));
-
-			player.setSubExperience(rs.getDouble("SubExperience"));
-			player.setNationalTeamId(rs.getInt("NationalTeamID"));
-
-            player.setGelbeKarten(rs.getInt("GelbeKarten"));
-            player.setInjuryWeeks(rs.getInt("Verletzt"));
-            player.setToreFreund(rs.getInt("ToreFreund"));
-            player.setToreLiga(rs.getInt("ToreLiga"));
-            player.setTorePokal(rs.getInt("TorePokal"));
-            player.setAllOfficialGoals(rs.getInt("ToreGesamt"));
-            player.setHattrick(rs.getInt("Hattrick"));
-			player.setGoalsCurrentTeam(rs.getInt("GoalsCurrentTeam"));
-            player.setBewertung(rs.getInt("Bewertung"));
-            player.setTrainerTyp(TrainerType.fromInt(rs.getInt("TrainerTyp")));
-            player.setTrainerSkill(rs.getInt("Trainer"));
-            player.setShirtNumber(rs.getInt("PlayerNumber"));
-            player.setTransferlisted(rs.getInt("TransferListed"));
-            player.setLaenderspiele(rs.getInt("Caps"));
-            player.setU20Laenderspiele(rs.getInt("CapsU20"));
-
-            // Training block
-			player.setTrainingBlock(rs.getBoolean("TrainingBlock"));
-
-			// LastMatch
-			try {
-				player.setLastMatchDetails(
-						DBManager.deleteEscapeSequences(rs.getString("LastMatchDate")),
-						DBManager.getInteger(rs,"LastMatchRating"),
-						DBManager.getInteger(rs,"LastMatchId")
-				);
-
-				player.setLastMatchMinutes(DBManager.getInteger(rs, "LastMatch_PlayedMinutes"));
-				player.setLastMatchPosition(DBManager.getInteger(rs, "LastMatch_PositionCode"));
-				player.setLastMatchRatingEndOfGame(DBManager.getInteger(rs, "LastMatch_RatingEndOfGame"));
-
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error retrieving last match details: " + e);
-			}
-
-            player.setLastMatchType(MatchType.getById(rs.getInt("LAST_MATCH_TYPE")));
-			player.setPlayerCategory(PlayerCategory.valueOf(DBManager.getInteger(rs, "PlayerCategory")));
-			player.setPlayerStatement(rs.getString("Statement"));
-			player.setOwnerNotes(rs.getString("OwnerNotes"));
-
-			player.setMotherClubId(DBManager.getInteger(rs, "MotherclubID"));
-			player.setMotherClubName(DBManager.deleteEscapeSequences(rs.getString("MotherClubName")));
-			player.setMatchesCurrentTeam(DBManager.getInteger(rs,"MatchesCurrentTeam"));
-
-		} catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
-        }
-        return player;
-    }
+	private final PreparedSelectStatementBuilder loadPlayerHistoryStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE SpielerID=? Order By Datum ASC");
+	public List<Player> loadPlayerHistory(int spielerId) {
+		return load(Player.class, executePreparedSelect(loadPlayerHistoryStatementBuilder.getStatement(), spielerId));
+	}
 }

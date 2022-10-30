@@ -8,11 +8,9 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 public class MatchExporter {
 	//~ Static fields/initializers -----------------------------------------------------------------
@@ -54,7 +52,7 @@ public class MatchExporter {
 		HOLogger.instance().log(MatchExporter.class, "Collecting MatchData");		
 		List<ExportMatchData> export = new ArrayList<>();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		MatchKurzInfo[] matches = DBManager.instance().getMatchesKurzInfo(teamId);
+		var matches = DBManager.instance().getMatchesKurzInfo(teamId);
 
 		//check all matches
 		for (var match: matches) {
@@ -64,7 +62,7 @@ public class MatchExporter {
 					|| isValidMatch(match, details, startingDate, strict, skipPullBack) && !isFriendly ) {
 
 				//Nun lineup durchlaufen und Spielerdaten holen
-				Vector<MatchLineupPosition> aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), details.getMatchType(), teamId);
+				var aufstellung = DBManager.instance().getMatchLineupPlayers(details.getMatchID(), details.getMatchType(), teamId);
 				Hashtable<Integer, Player> lineUpISpieler = new Hashtable<>();
 
 				boolean dataOK = true;
@@ -120,7 +118,7 @@ public class MatchExporter {
 			HOLogger.instance().debug(MatchExporter.class, "Ignoring match " + info.getMatchID() + ": Walk over");
 			return false;
 		}
-		ArrayList<MatchEvent> highlights = details.downloadHighlightsIfMissing();
+		List<MatchEvent> highlights = details.downloadHighlightsIfMissing();
 		//Aussortieren starten...
 		if (info.getMatchSchedule().isBefore(startingDate)) { //Zu alt !!!
 			return false;

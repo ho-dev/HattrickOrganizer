@@ -11,6 +11,7 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
+import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.sorter.DefaultTableSorter;
@@ -20,7 +21,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -55,34 +55,34 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private static final String SKILL_EXPERIENCE = hov.getLanguageString("ls.player.experience");
 
     private Player player;
-    private JButton updBtn = new JButton();
-    private JLabel age = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
-    private JLabel currTSI = new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"),
+    private final JButton updBtn = new JButton();
+    private final JLabel age = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel currTSI = new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"),
                                         SwingConstants.LEFT);
-    private JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
-    private JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
-    private JLabel fired = new JLabel(HOVerwaltung.instance().getLanguageString("FiredPlayer"), SwingConstants.LEFT);
+    private final JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel fired = new JLabel(HOVerwaltung.instance().getLanguageString("FiredPlayer"), SwingConstants.LEFT);
 
-    private JLabel skill_defense = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_experience = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_keeper = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_passing = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_playmaking = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_scoring = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_setpieces = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_stamina = new JLabel("", SwingConstants.LEFT);
-    private JLabel skill_wing = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_defense = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_experience = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_keeper = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_passing = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_playmaking = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_scoring = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_setpieces = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_stamina = new JLabel("", SwingConstants.LEFT);
+    private final JLabel skill_wing = new JLabel("", SwingConstants.LEFT);
 
-    private JLabel arrow_defense = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_experience = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_keeper = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_passing = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_playmaking = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_scoring = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_setpieces = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_stamina = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JLabel arrow_wing = new JLabel((Icon) null, SwingConstants.CENTER);
-    private JTable playerTable;
+    private final JLabel arrow_defense = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_experience = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_keeper = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_passing = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_playmaking = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_scoring = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_setpieces = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_stamina = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JLabel arrow_wing = new JLabel((Icon) null, SwingConstants.CENTER);
+    private final JTable playerTable;
     private String playerName;
     private int playerId;
 
@@ -94,7 +94,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public PlayerDetailPanel() {
         super(new BorderLayout());
 
-        final TableModel model = new PlayerTransferTableModel(new ArrayList<PlayerTransfer>());
+        final TableModel model = new PlayerTransferTableModel(new ArrayList<>());
         final TeamTransferSorter sorter = new TeamTransferSorter(model);
         playerTable = new JTable(sorter);
         sorter.setTableHeader(playerTable.getTableHeader());
@@ -194,7 +194,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     /** {@inheritDoc} */
     public final void actionPerformed(ActionEvent e) {
         if (this.playerId > 0) {
-        	DBManager.instance().updatePlayerTransfers(this.playerId);
+        	XMLParser.updatePlayerTransfers(this.playerId);
             updatePanel();
         }
     }
@@ -229,7 +229,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         arrow_setpieces.setIcon(null);
         arrow_stamina.setIcon(null);
         arrow_experience.setIcon(null);
-        refreshPlayerTable(new Vector<PlayerTransfer>());
+        refreshPlayerTable(new Vector<>());
     }
 
     /**
@@ -253,7 +253,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void updatePanel() {
         if (playerId > 0) {
-            if (DBManager.instance().getIsSpielerFired(playerId)) {
+            var playerNotes = DBManager.instance().loadPlayerNotes(playerId);
+            if (playerNotes.isFired()) {
                 fired.setVisible(true);
                 updBtn.setEnabled(false);
             } else {
@@ -296,9 +297,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             int valIncome = 0;
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
-            for (final Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
-                final PlayerTransfer transfer = iter.next();
-
+            for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
                     valIncome -= transfer.getPrice();
                 }

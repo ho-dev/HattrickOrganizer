@@ -435,7 +435,7 @@ public final class UserParameter extends Configuration {
         map.put("ProxyHost", String.valueOf(ProxyHost));
         map.put("ProxyPort", String.valueOf(ProxyPort));
         map.put("aufstellungsAssistentPanel_gruppe", String.valueOf(aufstellungsAssistentPanel_gruppe));
-        map.put("hrfImport_HRFPath", DBManager.insertEscapeSequences(String.valueOf(hrfImport_HRFPath)));
+        map.put("hrfImport_HRFPath", String.valueOf(hrfImport_HRFPath));
 //		map.put("htip",String.valueOf(htip));
         map.put("matchLineupImport_Path", String.valueOf(matchLineupImport_Path));
         map.put("spielPlanImport_Path", String.valueOf(spielPlanImport_Path));
@@ -690,7 +690,7 @@ public final class UserParameter extends Configuration {
         ProxyHost = getStringValue(values, "ProxyHost");
         ProxyPort = getStringValue(values, "ProxyPort");
         aufstellungsAssistentPanel_gruppe = getStringValue(values, "aufstellungsAssistentPanel_gruppe");
-        hrfImport_HRFPath = DBManager.deleteEscapeSequences(getStringValue(values, "hrfImport_HRFPath"));
+        hrfImport_HRFPath = getStringValue(values, "hrfImport_HRFPath");
         matchLineupImport_Path = getStringValue(values, "matchLineupImport_Path");
         spielPlanImport_Path = getStringValue(values, "spielPlanImport_Path");
         sprachDatei = getStringValue(values, "sprachDatei");

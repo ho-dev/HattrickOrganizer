@@ -1,11 +1,7 @@
 package core.model.match;
 
 import core.model.enums.MatchType;
-import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -22,10 +18,15 @@ public class MatchLineupPosition  extends MatchRoleID {
     private int m_iStartPosition = -1;
     private int m_iStartBehavior = -1;
     private boolean startSetPiecesTaker = false;
+    private int matchId;
+    private MatchType matchType;
+    private int teamId;
+    private Integer hoPosCode;
 
     /**
      * Creates a new instance of MatchLineupPosition
      */
+    public MatchLineupPosition() {}
     public MatchLineupPosition(int roleID, int spielerID, int behavior) {
         super(roleID, spielerID, (byte) behavior);
     }
@@ -92,7 +93,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sNickName.
      */
     public final java.lang.String getNickName() {
-        return m_sNickName;
+        if ( m_sNickName != null ) return m_sNickName;
+        return "";
     }
 
     /**
@@ -151,7 +153,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sSpielerName.
      */
     public final java.lang.String getSpielerName() {
-        return m_sSpielerName;
+        if ( m_sSpielerName != null ) return m_sSpielerName;
+        return "";
     }
 
     /**
@@ -169,7 +172,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sSpielerVName.
      */
     public final java.lang.String getSpielerVName() {
-        return m_sSpielerVName;
+        if ( m_sSpielerVName != null )return m_sSpielerVName;
+        return "";
     }
 
     /**
@@ -242,4 +246,38 @@ public class MatchLineupPosition  extends MatchRoleID {
         this.startSetPiecesTaker = b;
      }
 
+    public int getMatchId() {
+        return this.matchId;
+    }
+
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
+    }
+
+    public MatchType getMatchType() {
+        return this.matchType;
+    }
+
+    public void setMatchType(MatchType matchTyp) {
+        this.matchType = matchTyp;
+    }
+
+    public int getTeamId() {
+        return this.teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+
+    public Integer getHoPosCode() {
+        if ( hoPosCode == null){
+            hoPosCode = (int)getPosition();
+        }
+        return hoPosCode;
+    }
+
+    public void setHoPosCode(Integer hoPosCode) {
+        this.hoPosCode = hoPosCode;
+    }
 }

@@ -1,14 +1,8 @@
 package core.db;
 
 import core.model.WorldDetailLeague;
-import core.util.HOLogger;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
-
 
 class WorldDetailsTable extends AbstractTable {
 
@@ -19,91 +13,27 @@ class WorldDetailsTable extends AbstractTable {
 	}
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[4];
-		columns[0]= new ColumnDescriptor("LEAGUE_ID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("COUNTRY_ID",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("COUNTRYNAME",Types.VARCHAR,false,128);
-		columns[3]= new ColumnDescriptor("ACTIVE_USER",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUE_ID").setGetter((p) -> ((WorldDetailLeague) p).getLeagueId()).setSetter((p, v) -> ((WorldDetailLeague) p).setLeagueId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COUNTRY_ID").setGetter((p) -> ((WorldDetailLeague) p).getCountryId()).setSetter((p, v) -> ((WorldDetailLeague) p).setCountryId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("COUNTRYNAME").setGetter((p) -> ((WorldDetailLeague) p).getCountryName()).setSetter((p, v) -> ((WorldDetailLeague) p).setCountryName((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ACTIVE_USER").setGetter((p) -> ((WorldDetailLeague) p).getActiveUsers()).setSetter((p, v) -> ((WorldDetailLeague) p).setActiveUsers((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		};
 	}
 
-	
-	
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
+	}
 	void insertWorldDetailsLeague(WorldDetailLeague league){
 		if(league == null)
 			return;
-		
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("insert into ").append(getTableName()).append("(");
-		for (int i = 0; i < columns.length; i++) {
-			statement.append(columns[i].getColumnName());
-			if(i<columns.length-1)
-				statement.append(",");
-		}
-		statement.append(") VALUES (");
-		statement.append(league.getLeagueId()).append(",");
-		statement.append(league.getCountryId()).append(",'");
-		statement.append(DBManager.insertEscapeSequences(league.getCountryName())).append("',");
-		statement.append(league.getActiveUsers()).append(")");
-		adapter.executeQuery(statement.toString());
-	}
-	
-	WorldDetailLeague getWorldDetailLeagueByLeagueId(int leagueId){
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName()).append(" where ");
-		statement.append(columns[0].getColumnName()).append("=").append(leagueId);
-		ResultSet rs = adapter.executeQuery(statement.toString());
-		try {
-			if(rs.next())
-				return createObject(rs);
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return null;
-	}
-	
-	WorldDetailLeague getWorldDetailLeagueByCountryId(int countryId){
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName()).append(" where ");
-		statement.append(columns[1].getColumnName()).append("=").append(countryId);
-		ResultSet rs = adapter.executeQuery(statement.toString());
-		try {
-			if(rs.next())
-				return createObject(rs);
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return null;
-	}
-	
-	List<WorldDetailLeague> getAllWorldDetailLeagues(){
-		ArrayList<WorldDetailLeague> ret = new ArrayList<WorldDetailLeague>();
-		StringBuilder statement = new StringBuilder(100);
-		statement.append("select * from ").append(getTableName());
-		ResultSet rs = adapter.executeQuery(statement.toString());
-		try {
-			while(rs.next()){
-				ret.add(createObject(rs));
-			}
-		} catch (SQLException e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return ret;
-	}
-	
-	private WorldDetailLeague createObject(ResultSet rs){
-		
-		WorldDetailLeague league = new WorldDetailLeague();
-		try {
-				league.setLeagueId(rs.getInt(columns[0].getColumnName()));
-				league.setCountryId(rs.getInt(columns[1].getColumnName()));
-				league.setCountryName(DBManager.deleteEscapeSequences(rs.getString(columns[2].getColumnName())));
-				league.setActiveUsers(rs.getInt(columns[3].getColumnName()));
-		} catch (SQLException ex){
-			HOLogger.instance().error(this.getClass(), ex);
-		}
-		return league;
+		store(league);
 	}
 
+	List<WorldDetailLeague> getAllWorldDetailLeagues(){
+		return load(WorldDetailLeague.class);
+	}
 	
 	@Override
 	protected void insertDefaultValues(){

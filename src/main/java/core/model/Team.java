@@ -1,6 +1,7 @@
 // %233313029:de.hattrickorganizer.model%
 package core.model;
 
+import core.db.AbstractTable;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.util.Properties;
@@ -8,7 +9,7 @@ import java.util.Properties;
 /**
  * Enthält die Daten des Teams (nicht der Player!)
  */
-public final class Team  {
+public final class Team  extends AbstractTable.Storable {
 	// ~ Instance fields
 
 	/** formation xp 343 */
@@ -60,6 +61,7 @@ public final class Team  {
 	private int m_iTrainingslevel;
 
 	private int m_iStaminaTrainingPart;
+	private int hrfId;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -161,6 +163,46 @@ public final class Team  {
 
 	public int getFormationExperience253() {
 		return formationXp253;
+	}
+
+	public void setFormationExperience343(int v) {
+		formationXp343 = v;
+	}
+
+	public void setFormationExperience352(int v) {
+		formationXp352 = v;
+	}
+
+	public void setFormationExperience433(int v) {
+		formationXp433 = v;
+	}
+
+	public void setFormationExperience451(int v) {
+		formationXp451 = v;
+	}
+
+	public void setFormationExperience532(int v) {
+		formationXp532 = v;
+	}
+
+	public void setFormationExperience541(int v) {
+		formationXp541 = v;
+	}
+
+	public void setFormationExperience442(int v) {
+		formationXp442 = v;
+	}
+
+	public void setFormationExperience523(int v) {
+		formationXp523 = v;
+	}
+
+	public void setFormationExperience550(int v) {
+		formationXp550 = v;
+	}
+
+	public void setFormationExperience253(int v) {
+		formationXp253 = v;
 	}
 
 	/**
@@ -267,4 +309,11 @@ public final class Team  {
 		subStimmung = i;
 	}
 
+	public int getHrfId() {
+		return hrfId;
+	}
+
+	public void setHrfId(int hrfId) {
+		this.hrfId = hrfId;
+	}
 }

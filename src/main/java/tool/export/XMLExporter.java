@@ -11,7 +11,6 @@ import core.file.xml.XMLManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.Team;
-import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
@@ -21,11 +20,8 @@ import core.rating.RatingPredictionManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-
 import java.awt.BorderLayout;
-import java.sql.Timestamp;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -48,7 +44,7 @@ public class XMLExporter  {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
+    private final SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
    
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -65,7 +61,6 @@ public class XMLExporter  {
      * Do the export.
      */
     public void doExport() {
-        javax.swing.JWindow waitDialog = null;
 		JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
         try {
             // Date           
@@ -160,7 +155,6 @@ public class XMLExporter  {
 	/**
 	 * Save XMP file.
 	 */
-	@SuppressWarnings("deprecation")
 	public void saveXML(String filename, HODateTime startingDate) {
 				
 		//Alle Matches holen			
@@ -348,6 +342,9 @@ public class XMLExporter  {
 				//Player schreiben
 				for (var p : lineupTeam.getLineup().getAllPositions()) {
 					Player playerData = matchData.getPlayers().get(p.getPlayerId());
+					if ( playerData == null){
+						continue;
+					}
 
 					//Bank + verletzte überspringen
 					if (p.getRoleId() >= IMatchRoleID.startReserves) {
@@ -490,13 +487,14 @@ public class XMLExporter  {
 	 * Check for skillup.
 	 */
 	private String hadSkillup(int skill, Player player, HODateTime matchdate) {
-		Object[] value = player.getLastLevelUp(skill);
+		var value = player.getLastLevelUp(skill);
 
-		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
-			if (((Boolean) value[1]) && ((HODateTime) value[0]).isBefore(matchdate)) {
+		if ( value != null && value.getDate().isBefore(matchdate)) {
+//		if ((value != null) && ((value[0] != null) && (value[1] != null))) {
+//			if (((Boolean) value[1]) && ((HODateTime) value[0]).isBefore(matchdate)) {
 				return "1";
 			}
-		}
+//		}
 
 		return "0";
 	}

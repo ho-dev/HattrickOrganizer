@@ -3,10 +3,7 @@ package core.model.match;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import java.util.List;
 
 /**
  * Helper class to retrieve match related information.
@@ -112,7 +109,7 @@ public class MatchHelper {
    	   			/*
    	   			 * league or cup match -> check highlights
    	   			 */
-   		   		ArrayList<MatchEvent> highlights = details.downloadHighlightsIfMissing();
+   		   		List<MatchEvent> highlights = details.downloadHighlightsIfMissing();
    				for (int i=0; i<highlights.size(); i++) {
    					MatchEvent curHighlight = highlights.get(i);
    					if (curHighlight.getMatchEventID() == MatchEvent.MatchEventID.REGIONAL_DERBY) {
@@ -151,7 +148,7 @@ public class MatchHelper {
    		return (short)location;
 	}
 
-	public boolean hasOverConfidence (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasOverConfidence (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent me : highlights) {
 			if (me.getTeamID() == teamId) {
 				if (me.getMatchEventID() == MatchEvent.MatchEventID.UNDERESTIMATION) {
@@ -162,7 +159,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasTacticalProblems (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasTacticalProblems (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent me : highlights) {
 			if (me.getTeamID() == teamId) {
 				if (me.getMatchEventID() == MatchEvent.MatchEventID.ORGANIZATION_BREAKS) {
@@ -173,7 +170,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasRedCard (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasRedCard (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent me : highlights) {
 			if ((me.getTeamID() == teamId) && (me.isRedCard())) {
 				return true;
@@ -182,7 +179,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasInjury (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasInjury (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent me : highlights) {
 			if ((me.getTeamID() == teamId) && me.isBruisedOrInjured()) {
 				return true;
@@ -191,7 +188,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasWeatherSE (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasWeatherSE (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent hlight : highlights) {
 			if ((hlight.getTeamID() == teamId) && (hlight.isSpecialtyWeatherSE())) {
 				return true;
@@ -200,7 +197,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasManualSubstitution (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasManualSubstitution (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent hlight : highlights) {
 			if (hlight.getTeamID() == teamId) {
 				if (hlight.getMatchEventID() == MatchEvent.MatchEventID.PLAYER_SUBSTITUTION_TEAM_IS_BEHIND ||   // #350
@@ -216,7 +213,7 @@ public class MatchHelper {
 		return false;
 	}
 
-	public boolean hasPullBack (ArrayList<MatchEvent> highlights, int teamId) {
+	public boolean hasPullBack (List<MatchEvent> highlights, int teamId) {
 		for (MatchEvent hlight : highlights) {
 			if (hlight.getTeamID() == teamId) {
 				// Pull back event

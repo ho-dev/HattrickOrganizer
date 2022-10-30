@@ -14,7 +14,7 @@ import module.teamAnalyzer.vo.Team;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static module.lineup.LineupPanel.TITLE_FG;
@@ -30,8 +30,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     private JButton storeButton;
     private JButton deleteButton;
 
-    private ArrayList<MatchKurzInfo> previousPlayedMatches = null;
-    private ArrayList<MatchLineupTeam> templateLineups = null;
+    private List<MatchKurzInfo> previousPlayedMatches = null;
+    private List<MatchLineupTeam> templateLineups = null;
 
     public LineupDatabasePanel(LineupPanel parent) {
         lineupPanel = parent;

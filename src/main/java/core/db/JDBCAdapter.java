@@ -4,11 +4,7 @@ package core.db;
 import core.util.ExceptionUtils;
 import core.util.HOLogger;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * Provides the connection functions to the database
@@ -29,7 +25,8 @@ public class JDBCAdapter {
 	 */
 	public final void disconnect() {
 		try {
-			m_clStatement.execute("SHUTDOWN");
+			var statement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statement.execute("SHUTDOWN");
 			m_clConnection.close();
 			m_clConnection = null;
 		} catch (Exception e) {
@@ -41,28 +38,48 @@ public class JDBCAdapter {
 	/**
 	 * Execute a SQL Select statement
 	 * 
-	 * @param Sql
-	 *            Sql query
+	 * @param sqlStatement
+	 *            Sql query with placeholders
 	 * 
 	 * @return ResultSet of the query
 	 */
-	public final ResultSet executeQuery(String Sql) {
-		ResultSet resultat = null;
-
+	public final ResultSet executeQuery(String sqlStatement) {
 		try {
 			if (m_clConnection.isClosed()) {
 				return null;
 			}
-
-			// HOLogger.instance().log(getClass(), Sql );
-			resultat = m_clStatement.executeQuery(Sql);
-
-			return resultat;
+			return m_clStatement.executeQuery(sqlStatement);
 		} catch (Exception e) {
 			HOLogger.instance().error(
 					getClass(),
-					"JDBCAdapter.executeQuery : " + e + "\nStatement: " + Sql + "\n"
+					"executeQuery : " + e + "\nStatement: " + sqlStatement + "\n"
 							+ ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	public final PreparedStatement createPreparedStatement(String sql) {
+		try {
+			return m_clConnection.prepareStatement(sql);
+		} catch (Exception e) {
+			HOLogger.instance().error(getClass(), "createPreparedStatement : " + e + "\nStatement: " + sql + "\n" + ExceptionUtils.getStackTrace(e));
+		}
+		return null;
+	}
+
+	public final ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object ... params) {
+		if ( preparedStatement==null) return null;
+		try {
+			if (m_clConnection.isClosed()) {
+				return null;
+			}
+			int i = 0;
+			for ( var p: params) {
+				preparedStatement.setObject(++i, p);
+			}
+			return  preparedStatement.executeQuery();
+		} catch (Exception e) {
+			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + preparedStatement.toString() + "\n" 	+ ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}
@@ -72,14 +89,14 @@ public class JDBCAdapter {
 	 * statements that return nothing, such as SQL DDL statements, can be
 	 * executed.
 	 * 
-	 * @param Sql
+	 * @param sqlStatement
 	 *            INSERT, UPDATE or DELETE statement
 	 * 
 	 * @return either the row count for SQL Data Manipulation Language (DML)
 	 *         statements or 0 for SQL statements that return nothing
 	 * 
 	 */
-	public final int executeUpdate(String Sql) {
+	public final int executeUpdate(String sqlStatement) {
 		int ret = 0;
 
 		try {
@@ -87,19 +104,37 @@ public class JDBCAdapter {
 				return 0;
 			}
 			// HOLogger.instance().log(getClass(), Sql );
-			ret = m_clStatement.executeUpdate(Sql);
+			ret = m_clStatement.executeUpdate(sqlStatement);
 			return ret;
 		} catch (Exception e) {
 			HOLogger.instance().error(
 					getClass(),
-					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + Sql + "\n"
+					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + sqlStatement + "\n"
 							+ ExceptionUtils.getStackTrace(e));
 			return 0;
 		}
 	}
 
-	public int executeUpdate_(String sql) throws SQLException {
-		return m_clStatement.executeUpdate(sql);
+	public final int executePreparedUpdate(PreparedStatement preparedStatement, Object ... params) {
+		int ret = 0;
+
+		try {
+			if (m_clConnection.isClosed()) {
+				return 0;
+			}
+			int i = 0;
+			for ( var p: params) {
+				preparedStatement.setObject(++i, p);
+			}
+			ret = preparedStatement.executeUpdate();
+			return ret;
+		} catch (Exception e) {
+			HOLogger.instance().error(
+					getClass(),
+					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + preparedStatement.toString() + "\n"
+							+ ExceptionUtils.getStackTrace(e));
+			return 0;
+		}
 	}
 
 	/**

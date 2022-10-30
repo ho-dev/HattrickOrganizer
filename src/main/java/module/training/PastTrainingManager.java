@@ -6,15 +6,9 @@ import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HODateTime;
-import core.util.HelperWrapper;
-
-import java.sql.Timestamp;
-import java.text.ParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,16 +40,15 @@ public class PastTrainingManager {
 				continue;
 			}
 
-			List<Object[]> levelUps = player.getAllLevelUp(skill);
-			int count = 0;
+			var levelUps = player.getAllLevelUp(skill);
 
-			for (Object[] element : levelUps) {
-				var skillUpDate =  (HODateTime)element[0];
+			for (var element : levelUps) {
+				var skillUpDate =  element.getDate();
 				var trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
 				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(7, ChronoUnit.DAYS);
 				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(7, ChronoUnit.DAYS);
 				var su = getSkillup(trainingDate);
-				su.setValue((Integer) element[2]);
+				su.setValue(element.getValue());
 				su.setType(skill);
 				su.setTrainType(ISkillChange.SKILLUP_REAL);
 				su.setAge(player.getAgeWithDaysAsString(trainingDate));
@@ -68,7 +61,6 @@ public class PastTrainingManager {
 					trainSkillups.add(su);
 				}
 
-				count++;
 			}
 		}
 
@@ -115,7 +107,7 @@ public class PastTrainingManager {
 		return skillup;
 	}
 
-	private class SkillupComperator implements Comparator<ISkillChange> {
+	private static class SkillupComperator implements Comparator<ISkillChange> {
 
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)

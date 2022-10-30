@@ -2,7 +2,6 @@ package module.teamAnalyzer.manager;
 
 import core.db.DBManager;
 import core.model.match.MatchKurzInfo;
-import core.module.config.ModuleConfig;
 import module.matches.MatchesPanel;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
@@ -60,10 +59,7 @@ public class MatchManager {
     private static List<Match> getTeamMatch() {
         List<Match> teamMatches = new ArrayList<>();
         String oldName = SystemManager.getActiveTeamName();
-
-        MatchKurzInfo[] matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager.getActiveTeamId(),
-                                                                                MatchesPanel.OWN_GAMES);
-
+        var matchKurtzInfo = DBManager.instance().getMatchesKurzInfo(SystemManager.getActiveTeamId(), MatchesPanel.OWN_GAMES);
         for (MatchKurzInfo matchInfo : matchKurtzInfo) {
             if (matchInfo.getMatchStatus() != MatchKurzInfo.FINISHED) {
                 continue;

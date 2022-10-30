@@ -1,23 +1,16 @@
 package core.db;
 
 import core.util.HOLogger;
-
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 
 final class ModuleConfigTable extends AbstractTable {
 	final static String TABLENAME = "MODULE_CONFIGURATION";
 
-	protected ModuleConfigTable(JDBCAdapter adapter) {
+	ModuleConfigTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -45,12 +38,14 @@ final class ModuleConfigTable extends AbstractTable {
 		} // for		
 	}
 
+	@Override
+	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+		return new PreparedSelectStatementBuilder(this, "");
+	}
 	 Map<String,Object> findAll() {
 		 final HashMap<String, Object> values = new HashMap<>();
-		 final StringBuilder sql = new StringBuilder(100);
-		 sql.append("SELECT * FROM ").append(getTableName());
 		 try {
-			 final ResultSet rs = adapter.executeQuery(sql.toString());
+			 final ResultSet rs = executePreparedSelect();
 			 if (rs != null) {
 				 while (rs.next()) {
 					 values.put(rs.getString(this.columns[0].getColumnName()), createObject(rs.getString(this.columns[1].getColumnName()), rs.getInt(this.columns[2].getColumnName())));
@@ -62,38 +57,27 @@ final class ModuleConfigTable extends AbstractTable {
 		 }
 		 return values;
 	 }
-	
+
 	private int updateConfig(String key, Object value)  {
-		if(key == null)
-			return -1;
-		StringBuilder sql = new StringBuilder(100);
-		sql.append("UPDATE ").append(getTableName()).append(" SET ").append(this.columns[1].getColumnName());
-		if(value != null)
-			sql.append(" = '").append(value).append("'");
-		else
-			sql.append(" = null ");
-		
-		sql.append(",").append(this.columns[2].getColumnName()).append(" = ").append(getType(value));
-		sql.append(" WHERE ").append(this.columns[0].getColumnName()).append(" = '").append(key).append("'");
-		return adapter.executeUpdate(sql.toString());
+		return executePreparedUpdate(
+				value,
+				getType(value),
+				key
+		);
 	}
 	
 	private void insertConfig(String key, Object value) {
 		if(key == null)
 			return;
-		StringBuilder sql = new StringBuilder(100);
-		sql.append("INSERT INTO ").append(getTableName()).append(" VALUES ('").append(key).append("',");
-		if(value == null)
-			sql.append(" null ");
-		else
-			sql.append("'").append(value).append("',").append(getType(value)).append(")");
-		adapter.executeUpdate(sql.toString());		
+		executePreparedInsert(
+				key,
+				value,
+				getType(value)
+		);
 	}
-	
+
 	void deleteConfig(String key) {
-		String sql = "DELETE FROM " + getTableName() + " WHERE " + this.columns[0].getColumnName() +
-				" = '" + key + "'";
-		adapter.executeUpdate(sql);
+		executePreparedDelete(key);
 	}
 	
 	private int getType(Object obj){
@@ -115,19 +99,14 @@ final class ModuleConfigTable extends AbstractTable {
 	private Object createObject(String value, int type){
 		if(value == null)
 			return value;
-		switch(type){
-		case Types.INTEGER:
-			return Integer.valueOf(value);
-		case Types.DECIMAL:
-			return new BigDecimal(value);
-		case Types.TIMESTAMP:
-			return Timestamp.valueOf(value);
-		case Types.BOOLEAN:
-			return Boolean.valueOf(value);
-		case Types.DATE:
-			return Date.valueOf(value);
-		}
-		return value;
+		return switch (type) {
+			case Types.INTEGER -> Integer.valueOf(value);
+			case Types.DECIMAL -> new BigDecimal(value);
+			case Types.TIMESTAMP -> Timestamp.valueOf(value);
+			case Types.BOOLEAN -> Boolean.valueOf(value);
+			case Types.DATE -> Date.valueOf(value);
+			default -> value;
+		};
 	}
 	
 	@Override

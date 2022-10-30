@@ -2,12 +2,7 @@ package core.db;
 
 
 import core.training.FuturePlayerTraining;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FuturePlayerTrainingTable extends AbstractTable {
@@ -24,74 +19,22 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-                new ColumnDescriptor("playerId", Types.INTEGER, false),
-                new ColumnDescriptor("fromWeek", Types.INTEGER, false),
-                new ColumnDescriptor("fromSeason", Types.INTEGER, false),
-                new ColumnDescriptor("toWeek", Types.INTEGER, true),
-                new ColumnDescriptor("toSeason", Types.INTEGER, true),
-                new ColumnDescriptor("prio", Types.INTEGER, false)
+                ColumnDescriptor.Builder.newInstance().setColumnName("playerId").setGetter((o) -> ((FuturePlayerTraining) o).getPlayerId()).setSetter((o, v) -> ((FuturePlayerTraining) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("fromWeek").setGetter((o) -> ((FuturePlayerTraining) o).getFromWeek()).setSetter((o, v) -> ((FuturePlayerTraining) o).setFromWeek((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("fromSeason").setGetter((o) -> ((FuturePlayerTraining) o).getFromSeason()).setSetter((o, v) -> ((FuturePlayerTraining) o).setFromSeason((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("toWeek").setGetter((o) -> ((FuturePlayerTraining) o).getToWeek()).setSetter((o, v) -> ((FuturePlayerTraining) o).setToWeek((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("toSeason").setGetter((o) -> ((FuturePlayerTraining) o).getToSeason()).setSetter((o, v) -> ((FuturePlayerTraining) o).setToSeason((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("prio").setGetter((o) -> ((FuturePlayerTraining) o).getPriority().getValue()).setSetter((o, v) -> ((FuturePlayerTraining) o).setPriority(FuturePlayerTraining.Priority.valueOf((int) v))).setType(Types.INTEGER).isNullable(false).build()
         };
     }
 
     List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        String query = "select * from " +
-                getTableName() +
-                " where playerId=" +
-                playerId;
-        ResultSet rs = adapter.executeQuery(query);
-        try {
-            if (rs != null) {
-                var ret = new ArrayList<FuturePlayerTraining>();
-                rs.beforeFirst();
-                while (rs.next()) {
-                    ret.add(createFuturePlayerTraining(rs));
-                }
-                return ret;
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DatenbankZugriff.getTraining " + e);
-        }
-        return null;
+        return load(FuturePlayerTraining.class, playerId);
     }
 
-    private FuturePlayerTraining createFuturePlayerTraining(ResultSet rs) throws SQLException {
-        var playerid = rs.getInt("playerId");
-        var fromSeason = rs.getInt("fromSeason");
-        var fromWeek = rs.getInt("fromWeek");
-        var from = HODateTime.fromHTWeek(new HODateTime.HTWeek(fromSeason, fromWeek));
-        HODateTime to = null;
-        var toSeason = DBManager.getInteger(rs, "toSeason");
-        var toWeek = DBManager.getInteger(rs, "toWeek");
-        if (toSeason != null && toWeek != null) {
-            to = HODateTime.fromHTWeek(new HODateTime.HTWeek(toSeason, toWeek));
-        }
-        var prio = FuturePlayerTraining.Priority.valueOf(DBManager.getInteger(rs,"prio"));
-        return new FuturePlayerTraining(playerid, prio, from, to);
-    }
-
-    public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
-        final String[] where = {"playerId"};
-        final String[] werte = {String.valueOf(spielerID)};
-        try {
-            delete(where, werte);
-
-            for (var t : futurePlayerTrainings) {
-                var to = t.getTo();
-                var from = t.getFrom();
-                String sql = "INSERT INTO " +
-                        getTableName() +
-                        " (  playerId, prio, fromSeason, fromWeek, toSeason, toWeek ) VALUES(" +
-                        t.getPlayerId() + ", " +
-                        t.getPriority().getValue() + ", " +
-                        from.toHTWeek().season + ", " +
-                        from.toHTWeek().week + ", " +
-                        (to != null ? to.toHTWeek().season : null) + ", " +
-                        (to != null ? to.toHTWeek().week : null) +
-                        ")";
-                adapter.executeUpdate(sql);
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), e);
+    public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
+        for (var t : futurePlayerTrainings) {
+            store(t);
         }
     }
 }

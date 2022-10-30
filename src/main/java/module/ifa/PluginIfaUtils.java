@@ -1,7 +1,6 @@
 package module.ifa;
 
 import core.db.DBManager;
-import core.db.user.UserManager;
 import core.file.xml.TeamInfo;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLTeamDetailsParser;
@@ -12,7 +11,6 @@ import core.model.WorldDetailsManager;
 import core.model.enums.MatchType;
 import core.net.DownloadDialog;
 import core.net.MyConnector;
-import core.util.DateTimeUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.gif.Quantize;
@@ -21,21 +19,13 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class PluginIfaUtils {
-	public static final boolean HOME = true;
-	public static final boolean AWAY = false;
 
 	private static String getTeamDetails(int teamID) throws Exception {
 		return MyConnector.instance().getTeamdetails(teamID);
@@ -54,7 +44,7 @@ public class PluginIfaUtils {
 		return value;
 	}
 
-	public static boolean updateMatchesTable() {
+	public static void updateMatchesTable() {
 		boolean retry = true;
 
 		HODateTime time;
@@ -88,9 +78,7 @@ public class PluginIfaUtils {
 		} catch (Exception e) {
 			HOMainFrame.instance().resetInformation();
 			HOLogger.instance().error(PluginIfaUtils.class, e);
-			return false;
 		}
-		return true;
 	}
 
 	static BufferedImage quantizeBufferedImage(BufferedImage bufferedImage) throws IOException {
@@ -98,13 +86,13 @@ public class PluginIfaUtils {
 		int[] palette = Quantize.quantizeImage(pixels, 256);
 		int w = pixels.length;
 		int h = pixels[0].length;
-		int[] pix = new int[w * h];
+//		int[] pix = new int[w * h];
 
 		BufferedImage bufIma = new BufferedImage(w, h, 1);
 
 		for (int x = w; x-- > 0;) {
 			for (int y = h; y-- > 0;) {
-				pix[(y * w + x)] = palette[pixels[x][y]];
+//				pix[(y * w + x)] = palette[pixels[x][y]];
 				bufIma.setRGB(x, y, palette[pixels[x][y]]);
 			}
 		}
@@ -140,7 +128,6 @@ public class PluginIfaUtils {
 				/ (double) league.getActiveUsers();
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void insertMatches(HODateTime from, HODateTime to) {
 		StringBuilder errors = new StringBuilder();
 		HODateTime matchDate = null;
@@ -172,7 +159,7 @@ public class PluginIfaUtils {
 				int awayTeamID = Integer
 						.parseInt(parseXmlElement(doc, "AwayTeamID", i, "AwayTeam"));
 				int matchID = Integer.parseInt(parseXmlElement(doc, "MatchID", i, "Match"));
-				if (!DBManager.instance().isIFAMatchinDB(matchID)) {
+				if (!DBManager.instance().isIFAMatchinDB(matchID, matchTypeId)) {
 					int homeTeamGoals = Integer.parseInt(parseXmlElement(doc, "HomeGoals", i,
 							"Match"));
 					int awayTeamGoals = Integer.parseInt(parseXmlElement(doc, "AwayGoals", i,

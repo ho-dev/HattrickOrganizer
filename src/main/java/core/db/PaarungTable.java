@@ -2,76 +2,51 @@ package core.db;
 
 import core.model.series.Paarung;
 import core.util.HODateTime;
-import core.util.HOLogger;
 import module.series.Spielplan;
-
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
-
 
 public final class PaarungTable extends AbstractTable {
 
 	/** tablename **/
 	public final static String TABLENAME = "PAARUNG";
 	
-	protected PaarungTable(JDBCAdapter  adapter){
+	PaarungTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[11];
-		columns[0]= new ColumnDescriptor("LigaID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("Saison",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("HeimName",Types.VARCHAR,false,256);
-		columns[3]= new ColumnDescriptor("GastName",Types.VARCHAR,false,256);
-		columns[4]= new ColumnDescriptor("Datum",Types.VARCHAR,false,256);
-		columns[5]= new ColumnDescriptor("Spieltag",Types.INTEGER,false);
-		columns[6]= new ColumnDescriptor("HeimID",Types.INTEGER,false);
-		columns[7]= new ColumnDescriptor("GastID",Types.INTEGER,false);
-		columns[8]= new ColumnDescriptor("HeimTore",Types.INTEGER,false);
-		columns[9]= new ColumnDescriptor("GastTore",Types.INTEGER,false);
-		columns[10]= new ColumnDescriptor("MatchID",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((o) -> ((Paarung) o).getLigaId()).setSetter((o, v) -> ((Paarung) o).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((o) -> ((Paarung) o).getSaison()).setSetter((o, v) -> ((Paarung) o).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimName").setGetter((o) -> ((Paarung) o).getHeimName()).setSetter((o, v) -> ((Paarung) o).setHeimName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastName").setGetter((o) -> ((Paarung) o).getGastName()).setSetter((o, v) -> ((Paarung) o).setGastName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((Paarung) o).getDatum().toDbTimestamp()).setSetter((o, v) -> ((Paarung) o).setDatum((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Spieltag").setGetter((o) -> ((Paarung) o).getSpieltag()).setSetter((o, v) -> ((Paarung) o).setSpieltag((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimID").setGetter((o) -> ((Paarung) o).getHeimId()).setSetter((o, v) -> ((Paarung) o).setHeimId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastID").setGetter((o) -> ((Paarung) o).getGastId()).setSetter((o, v) -> ((Paarung) o).setGastId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("HeimTore").setGetter((o) -> ((Paarung) o).getToreHeim()).setSetter((o, v) -> ((Paarung) o).setToreHeim((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GastTore").setGetter((o) -> ((Paarung) o).getToreGast()).setSetter((o, v) -> ((Paarung) o).setToreGast((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((Paarung) o).getMatchId()).setSetter((o, v) -> ((Paarung) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build()
+		};
 	}
 
 	/**
 	 * Saves a list of games to a given game schedule, i.e. {@link Spielplan}.
 	 */
 	void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
-		Paarung match = null;
-		String sql = null;
-
-		// Remove existing fixtures for the Spielplan if any exists.
-		if (fixtures != null) {
-			final String[] where = { "LigaID", "Saison" };
-			final String[] werte = { "" + ligaId, "" + saison };
-			delete(where, werte);			
+		if (fixtures == null) {
+			return;
 		}
-
-		for (int i = 0;(fixtures != null) && (i < fixtures.size()); i++) {
-			match = fixtures.get(i);
-
-			try {
-				//insert vorbereiten
-				sql = "INSERT INTO "+getTableName()+" ( LigaID , Saison, HeimName, GastName, Datum, Spieltag, HeimID, GastID, HeimTore, GastTore, MatchID ) VALUES(";
-				sql
-					+= (ligaId
-						+ ","
-						+ saison
-						+ ", '"
-						+ DBManager.insertEscapeSequences(match.getHeimName())
-						+ "', '"
-						+ DBManager.insertEscapeSequences(match.getGastName())
-						+ "', '"
-						+ match.getDatum().toDbTimestamp()
-						+ "', ");
-				sql += (match.getSpieltag() + ", " + match.getHeimId() + ", " + match.getGastId() + ", " + match.getToreHeim() + ", " + match.getToreGast() + ", " + match.getMatchId() + " )");
-				adapter.executeUpdate(sql);
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storePaarung Error" + e);
-				HOLogger.instance().log(getClass(),e);
-			}
+		// Remove existing fixtures for the Spielplan if any exists.
+		executePreparedDelete(ligaId, saison);
+		for ( var fixture : fixtures){
+			fixture.setLigaId(ligaId);
+			fixture.setSaison(saison);
+			fixture.setIsStored(false);
+			store(fixture);
 		}
 	}
 
@@ -79,41 +54,7 @@ public final class PaarungTable extends AbstractTable {
 	 * holt die Paarungen zum Plan aus der DB und added sie
 	 */
 	void getPaarungen(Spielplan plan) {
-		Paarung match = null;
-		String sql = null;
-		ResultSet rs = null;
-
-		try {
-			sql = "SELECT * FROM "+getTableName();
-			sql += (" WHERE LigaID = " + plan.getLigaId() + " AND Saison = " + plan.getSaison());
-
-			rs = adapter.executeQuery(sql);
-
-			assert rs != null;
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				//Paarung auslesen
-				match = new Paarung();
-				match.setDatum(HODateTime.fromDbTimestamp(rs.getTimestamp("Datum")));
-				match.setGastId(rs.getInt("GastID"));
-				match.setGastName(DBManager.deleteEscapeSequences(rs.getString("GastName")));
-				match.setHeimId(rs.getInt("HeimID"));
-				match.setHeimName(DBManager.deleteEscapeSequences(rs.getString("HeimName")));
-				match.setMatchId(rs.getInt("MatchID"));
-				match.setSpieltag(rs.getInt("Spieltag"));
-				match.setToreGast(rs.getInt("GastTore"));
-				match.setToreHeim(rs.getInt("HeimTore"));
-				match.setLigaId(plan.getLigaId());
-				match.setSaison(plan.getSaison());
-
-				//Adden
-				plan.addEintrag(match);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getPaarungen Error" + e);
-			HOLogger.instance().log(getClass(),e);
-		}
+		plan.addFixtures(load(Paarung.class, plan.getLigaId(), plan.getSaison()));
 	}
 
 }

@@ -3,69 +3,36 @@ package core.db;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.series.Spielplan;
-
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Vector;
 
 final class SpielplanTable extends AbstractTable {
 	final static String TABLENAME = "SPIELPLAN";
 	
-	protected SpielplanTable(JDBCAdapter  adapter){
+	SpielplanTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
+		idColumns = 2;
 	}
-	
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[4];
-		columns[0]= new ColumnDescriptor("LigaID",Types.INTEGER,false);
-		columns[1]= new ColumnDescriptor("LigaName",Types.VARCHAR,true,256);
-		columns[2]= new ColumnDescriptor("Saison",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("FetchDate",Types.TIMESTAMP,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((p) -> ((Spielplan) p).getLigaId()).setSetter((p, v) -> ((Spielplan) p).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((p) -> ((Spielplan) p).getSaison()).setSetter((p, v) -> ((Spielplan) p).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName").setGetter((p) -> ((Spielplan) p).getLigaName()).setSetter((p, v) -> ((Spielplan) p).setLigaName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate").setGetter((p) -> ((Spielplan) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((Spielplan) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+		};
 	}
+
+	private final PreparedSelectStatementBuilder getAllSpielplaeneStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY Saison DESC");
 
 	/**
 	 * Returns all the game schedules from the database.
-	 *
-	 * @param withFixtures Includes the games part of the schedule if <code>true</code>.
 	 */
-	List<Spielplan> getAllSpielplaene(boolean withFixtures) {
-		final List<Spielplan> gameSchedules = new ArrayList<>();
-
-		try {
-			var sql = "SELECT * FROM "+getTableName();
-			sql += " ORDER BY Saison DESC ";
-
-			var rs = adapter.executeQuery(sql);
-
-			assert rs != null;
-			rs.beforeFirst();
-
-			while (rs.next()) {
-				// Plan auslesen
-				var plan = new Spielplan();
-
-				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
-				plan.setLigaId(rs.getInt("LigaID"));
-				plan.setLigaName(rs.getString("LigaName"));
-				plan.setSaison(rs.getInt("Saison"));
-
-				gameSchedules.add(plan);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getSpielplan Error" + e);
-		}
-
-		if (withFixtures) {
-			for (Spielplan gameSchedule : gameSchedules) {
-				DBManager.instance().getPaarungen(gameSchedule);
-			}
-		}
-
-		return gameSchedules;
+	List<Spielplan> getAllSpielplaene() {
+		return load(Spielplan.class, adapter.executePreparedQuery(getAllSpielplaeneStatementBuilder.getStatement()));
 	}
 
 	/**
@@ -75,37 +42,11 @@ final class SpielplanTable extends AbstractTable {
 	 * @param saison Season number.
 	 */
 	Spielplan getSpielplan(int ligaId, int saison) {
-		try {
-			var sql = "SELECT * FROM "+getTableName();
-
-			if ((ligaId > -1) && (saison > -1)) {
-				sql += (" WHERE LigaID = " + ligaId + " AND Saison = " + saison);
-			}
-
-			sql += " ORDER BY FetchDate DESC ";
-
-			var rs = adapter.executeQuery(sql);
-
-			assert rs != null;
-			if (rs.first()) {
-				var plan = new Spielplan();
-
-				plan.setFetchDate(HODateTime.fromDbTimestamp(rs.getTimestamp("FetchDate")));
-				plan.setLigaId(rs.getInt("LigaID"));
-				plan.setLigaName(rs.getString("LigaName"));
-				plan.setSaison(rs.getInt("Saison"));
-
-				DBManager.instance().getPaarungen(plan);
-				return plan;
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DB.getSpielplan Error" + e);
-
-			HOLogger.instance().log(getClass(),e);
-		}
-
-		return null;
+		return loadOne(Spielplan.class, ligaId, saison);
 	}
+
+	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(
+			"SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
 
 	/**
 	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der DB gefunden
@@ -115,18 +56,14 @@ final class SpielplanTable extends AbstractTable {
 		int ligaid = -1;
 
 		try {
-			// in the event of league changes, there may be several entries per season=> select the newest
-			final String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=" + seasonid + " ORDER BY FETCHDATE DESC";
-			final ResultSet rs = adapter.executeQuery(sql);
-
+			final ResultSet rs = adapter.executePreparedQuery(getLigaID4SaisonIDStatementBuilder.getStatement(), seasonid);
 			assert rs != null;
-			if (rs.first()) {
+			if (rs.next()) {
 				ligaid = rs.getInt("LigaID");
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLigaID4SeasonID : " + e);
 		}
-
 		return ligaid;
 	}
 	
@@ -137,64 +74,41 @@ final class SpielplanTable extends AbstractTable {
 	 */
 	void storeSpielplan(Spielplan plan) {
 		if (plan != null) {
-			try {
-				boolean update = false;
-
-				try {
-
-					// at the end of a season the league could be changed in case of
-					// league relegation or rise and manager in lower leagues could select new leagues
-
-					// check if update or create
-					// first we have to check if there is a fixture of the current season
-					String sql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison = " + plan.getSaison();
-					ResultSet result = adapter.executeQuery(sql);
-
-					if (result != null && result.next()) {
-						int currentLeague = result.getInt("LigaID");
-						if (currentLeague != plan.getLigaId()) {
-							// if so, and the league id does NOT match, then this plan is not a plan of our team. ignore it!
-							return;
-						}
-						// if the league id matches do an update
-						update = true;
-					}
-				} catch (Exception e) {
-					// if no entry of the current season is found, create a new one
-					update = false;
-				}
-
-				// Update the plan
-				if (update) {
-					String sql =
-						"UPDATE "+getTableName()+" SET LigaName='"
-							+ plan.getLigaName()
-							+ "', FetchDate='"
-							+ plan.getFetchDate().toDbTimestamp()
-							+ "'"
-							+ " WHERE LigaID="
-							+ plan.getLigaId()
-							+ " AND Saison="
-							+ plan.getSaison();
-					adapter.executeUpdate(sql);
-
-				} else {
-					// New schedule, insert it.
-					String sql = "INSERT INTO " + getTableName() +
-							" ( LigaID , LigaName , Saison, FetchDate ) VALUES(" +
-							plan.getLigaId() + ",'" +
-							plan.getLigaName() + "'," +
-							plan.getSaison() + ",'" +
-							plan.getFetchDate().toDbTimestamp() +
-							"')";
-					adapter.executeUpdate(sql);
-				}
-
-				DBManager.instance().storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
-			} catch (Exception e) {
-				HOLogger.instance().log(getClass(),"DB.storeSpielplan Error" + e);
-				HOLogger.instance().log(getClass(),e);
-			}
+			plan.setIsStored(isStored(plan.getLigaId(), plan.getSaison()));
+			store(plan);
 		}
-	}	
+	}
+
+	private final PreparedSelectStatementBuilder loadLatestSpielplanStatementBuilder = new PreparedSelectStatementBuilder(this,
+			" ORDER BY FetchDate DESC LIMIT 1");
+
+	public Spielplan getLatestSpielplan() {
+		return loadOne(Spielplan.class, this.adapter.executePreparedQuery(loadLatestSpielplanStatementBuilder.getStatement()));
+	}
+
+	/**
+	 * load all league ids
+	 */
+	Integer[] getAllLigaIDs() {
+		final Vector<Integer> vligaids = new Vector<>();
+		Integer[] ligaids = null;
+
+		try {
+			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
+			final ResultSet rs = adapter.executeQuery(sql);
+			while (rs != null && rs.next()) {
+				vligaids.add(rs.getInt("LigaID"));
+			}
+
+			ligaids = new Integer[vligaids.size()];
+			for (int i = 0; i < vligaids.size(); i++) {
+				ligaids[i] = vligaids.get(i);
+			}
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getAllLigaIDs : " + e);
+		}
+
+		return ligaids;
+	}
+
 }

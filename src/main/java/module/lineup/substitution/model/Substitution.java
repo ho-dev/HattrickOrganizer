@@ -2,8 +2,9 @@ package module.lineup.substitution.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import core.model.HOModel;
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
+import core.model.enums.MatchType;
 import core.model.player.Player;
 
 
@@ -17,7 +18,7 @@ import core.model.player.Player;
  * @author blaghaid
  * 
  */
-public class Substitution {
+public class Substitution extends AbstractTable.Storable {
 	private int playerOrderID = -1;
 	@SerializedName("playerin")
 	@Expose
@@ -33,11 +34,11 @@ public class Substitution {
 	private byte matchMinuteCriteria = -1;
 	/**
 	 * pos
-	 *
+	 * <p>
 	 * the position the player should take after the substitution,
 	 * 0-13, see positions above for the order.
 	 * -1 means no change.
-	 *
+	 * <p>
 	 * Attention: intellij claims that pos is never used.
 	 * this is wrong. serialization of the json order (should) use it.
 	 */
@@ -54,7 +55,11 @@ public class Substitution {
 	@SerializedName("standing")
 	@Expose
 	private GoalDiffCriteria standing = GoalDiffCriteria.ANY_STANDING;
+	private int matchId;
+	private MatchType matchType;
+	private int teamId;
 
+	public Substitution(){}
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
 			byte orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
@@ -141,6 +146,10 @@ public class Substitution {
 		return orderType;
 	}
 
+	public void setOrderType(MatchOrderType type) {
+		this.orderType = type;
+	}
+
 	public byte getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
@@ -214,5 +223,29 @@ public class Substitution {
 			}
 		}
 		return objectPlayerName;
+	}
+
+	public int getMatchId() {
+		return this.matchId;
+	}
+
+	public void setMatchId(int matchId) {
+		this.matchId = matchId;
+	}
+
+	public MatchType getMatchType() {
+		return this.matchType;
+	}
+
+	public void setMatchType(MatchType matchType) {
+		this.matchType = matchType;
+	}
+
+	public int getTeamId() {
+		return this.teamId;
+	}
+
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
 	}
 }

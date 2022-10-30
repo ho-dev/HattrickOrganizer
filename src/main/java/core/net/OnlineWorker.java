@@ -35,12 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -66,11 +61,7 @@ public class OnlineWorker {
 		// Show wait dialog
 		boolean ok = true;
 		try {
-			HOMainFrame homf = HOMainFrame.instance();
 			HOVerwaltung hov = HOVerwaltung.instance();
-
-			UserParameter up = core.model.UserParameter.instance();
-
 			String hrf = null;
 			try {
 				hrf = ConvertXml2Hrf.createHrf();
@@ -111,7 +102,7 @@ public class OnlineWorker {
 						homodel.saveHRF();
 						homodel.setFixtures(hov.getModel().getFixtures());
 						// Add old players to the model
-						homodel.setFormerPlayers(DBManager.instance().getAllSpieler());
+						homodel.setFormerPlayers(DBManager.instance().loadAllPlayers());
 						// Only update when the model is newer than existing
 						if (HOVerwaltung.isNewModel(homodel)) {
 							// Reimport Skillup
@@ -119,7 +110,7 @@ public class OnlineWorker {
 							// Show
 							hov.setModel(homodel);
 							// reset value of TS, confidence in Lineup Settings Panel after data download
-							HOMainFrame.instance().getLineupPanel().backupRealGameSettings();
+							Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).backupRealGameSettings();
 						}
 						// Info
 						saveHRFToFile(parent,hrf);
@@ -254,7 +245,7 @@ public class OnlineWorker {
 		if (refresh
 				|| !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
-				|| !DBManager.instance().isMatchLineupInDB(info.getMatchType(), matchID)
+				|| DBManager.instance().matchLineupIsNotStored(info.getMatchType(), matchID)
 		) {
 			try {
 				Matchdetails details;
@@ -554,7 +545,7 @@ public class OnlineWorker {
 					int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
 							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
-							|| !DBManager.instance().isMatchLineupInDB(match.getMatchType(), curMatchId);
+							|| DBManager.instance().matchLineupIsNotStored(match.getMatchType(), curMatchId);
 
 					if (refresh) {
 						// No lineup or arenaId in DB
@@ -645,7 +636,6 @@ public class OnlineWorker {
 	 */
 	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
 												   int teamId2) {
-		boolean bOK = false;
 		MatchLineup lineUp2 = null;
 
 		// Wait Dialog zeigen
@@ -692,9 +682,7 @@ public class OnlineWorker {
 	 * @return true on sucess, false on failure
 	 */
 	public static Spielplan downloadLeagueFixtures(int season, int leagueID) {
-		boolean bOK;
 		String leagueFixtures;
-		HOVerwaltung hov = HOVerwaltung.instance();
 		try {
 			HOMainFrame.instance().setWaitInformation();
 			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
@@ -871,19 +859,19 @@ public class OnlineWorker {
 	 */
 	public static void getAllLineups(@Nullable Integer nbGames) {
 
-		final MatchKurzInfo[] infos;
+		final List<MatchKurzInfo> infos;
 
 		if (nbGames == null){
 			infos = DBManager.instance().getMatchesKurzInfo(-1);
 		}
 		else{
-			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false).toArray(new MatchKurzInfo[0]);
+			infos = DBManager.instance().getPlayedMatchInfo(nbGames, false, false);
 		}
 
 		boolean bOK;
 		for (MatchKurzInfo info : infos) {
 			int curMatchId = info.getMatchID();
-			if ((!(info.isObsolet())) && (!DBManager.instance().isMatchLineupInDB(info.getMatchType(), curMatchId))) {
+			if ((!(info.isObsolet())) && (DBManager.instance().matchLineupIsNotStored(info.getMatchType(), curMatchId))) {
 				if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 					bOK = downloadMatchData(curMatchId, info.getMatchType(), false);
 					if (!bOK) {
@@ -1051,7 +1039,6 @@ public class OnlineWorker {
 		}
 		builder.append(day);
 		builder.append(".hrf");
-		String name = calendar.get(Calendar.YEAR) + "-" + month + "-" + day + ".hrf";
 		return builder.toString();
 	}
 
@@ -1127,14 +1114,10 @@ public class OnlineWorker {
 	/**
 	 * Save the passed in data to the passed in file
 	 *
-	 * @param fileName
-	 *            Name of the file to save the data to
-	 * @param content
-	 *            The content to write to the file
-	 *
-	 * @return The saved file
+	 * @param fileName Name of the file to save the data to
+	 * @param content  The content to write to the file
 	 */
-	private static File saveFile(String fileName, String content) throws IOException {
+	private static void saveFile(String fileName, String content) throws IOException {
 		File outFile = new File(fileName);
 		if (outFile.exists()) {
 			outFile.delete();
@@ -1145,7 +1128,6 @@ public class OnlineWorker {
 		out.write(content);
 		out.newLine();
 		out.close();
-		return outFile;
 	}
 
 	public static boolean isSilentDownload() {
@@ -1204,7 +1186,7 @@ public class OnlineWorker {
 		}
 	}
 
-	public static List<NtTeamDetails> downloadNtTeams(List<NtTeamDetails> ntTeams, List<MatchKurzInfo> matches) {
+	public static void downloadNtTeams(List<NtTeamDetails> ntTeams, List<MatchKurzInfo> matches) {
 		var ret = new ArrayList<NtTeamDetails>();
 		for ( var team : ntTeams){
 			ret.add(downloadNtTeam(team.getTeamId()));
@@ -1221,7 +1203,6 @@ public class OnlineWorker {
 				}
 			}
 		}
-		return ret;
 	}
 
 	private static NtTeamDetails downloadNtTeam(int teamId) {

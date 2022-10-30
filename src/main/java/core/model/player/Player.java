@@ -1,9 +1,9 @@
 package core.model.player;
 
 import core.constants.TrainingType;
-import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
 import core.constants.player.Speciality;
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.*;
 import core.model.match.MatchLineupTeam;
@@ -16,7 +16,6 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.HelperWrapper;
-import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -25,28 +24,19 @@ import java.util.*;
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
 
-public class Player {
+public class Player extends AbstractTable.Storable {
 
     /**
      * Cache for player contribution (Hashtable<String, Float>)
      */
-    private static Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
-    private static Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
+    private static final Hashtable<String, Object> PlayerAbsoluteContributionCache = new Hashtable<>();
+    private static final Hashtable<String, Object> PlayerRelativeContributionCache = new Hashtable<>();
     private byte idealPos = IMatchRoleID.UNKNOWN;
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
     private static final String EMPTY = "";
 
-    /**
-     * canPlay
-     */
-    private Boolean m_bCanBeSelectedByAssistant;
-
-    /**
-     * Manual Smilie Filename
-     */
-    private String m_sManuellerSmilie;
 
     /**
      * Name
@@ -61,11 +51,6 @@ public class Player {
     private String m_arrivalDate;
 
     /**
-     * TeamInfo Smilie Filename
-     */
-    private String m_sTeamInfoSmilie;
-
-    /**
      * Download date
      */
     private HODateTime m_clhrfDate;
@@ -74,8 +59,6 @@ public class Player {
      * The player is no longer available in the current HRF
      */
     private boolean m_bOld;
-
-    private byte m_bUserPosFlag = -2;
 
     /**
      * Wing skill
@@ -223,10 +206,6 @@ public class Player {
      */
     private int m_iSpielaufbau = 1;
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Member
-    ////////////////////////////////////////////////////////////////////////////////
-
     /**
      * SpielerID
      */
@@ -352,6 +331,7 @@ public class Player {
     private Integer motherclubId;
     private String motherclubName;
     private Integer matchesCurrentTeam;
+    private int hrf_id;
 
     public int getGameStartingTime() {
         return GameStartingTime;
@@ -373,9 +353,10 @@ public class Player {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, HODateTime hrfdate) {
+    public Player(java.util.Properties properties, HODateTime hrfdate, int hrf_id) {
         // Separate first, nick and last names are available. Utilize them?
 
+        this.hrf_id=hrf_id;
         m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
@@ -532,7 +513,7 @@ public class Player {
      *      [1] = Boolean: false=no skill up found
      *      [2] = skill value
      */
-    public Vector<Object[]> getAllLevelUp(int skill) {
+    public List<Skillup> getAllLevelUp(int skill) {
         return DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
     }
 
@@ -922,7 +903,7 @@ public class Player {
      */
     public byte getIdealPosition() {
         //in case player best position is forced by user
-        final byte flag = getUserPosFlag();
+        final int flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
             if (idealPos == IMatchRoleID.UNKNOWN) {
@@ -944,7 +925,7 @@ public class Player {
             return idealPos;
         }
 
-        return flag;
+        return (byte)flag;
     }
 
     /**
@@ -1037,10 +1018,9 @@ public class Player {
      * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
      * Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
-    public Object[] getLastLevelUp(int skill) {
+    public Skillup getLastLevelUp(int skill) {
         return DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
     }
-
 
     /**
      * Returns the loyalty stat
@@ -1063,12 +1043,8 @@ public class Player {
      * @param manuellerSmilie New value of property m_sManuellerSmilie.
      */
     public void setManuellerSmilie(java.lang.String manuellerSmilie) {
-        if (manuellerSmilie == null) {
-            manuellerSmilie = "";
-        }
-
-        m_sManuellerSmilie = manuellerSmilie;
-        DBManager.instance().saveManuellerSmilie(m_iSpielerID, manuellerSmilie);
+        getNotes().setManuelSmilie(manuellerSmilie);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
@@ -1077,17 +1053,7 @@ public class Player {
      * @return Value of property m_sManuellerSmilie.
      */
     public java.lang.String getInfoSmiley() {
-        if (m_sManuellerSmilie == null) {
-            m_sManuellerSmilie = DBManager.instance().getManuellerSmilie(m_iSpielerID);
-
-            //Steht null in der DB?
-            if (m_sManuellerSmilie == null) {
-                m_sManuellerSmilie = "";
-            }
-        }
-
-        //database.DBZugriff.instance ().getManuellerSmilie( m_iSpielerID );
-        return m_sManuellerSmilie;
+        return getNotes().getManuelSmilie();
     }
 
     /**
@@ -1109,27 +1075,30 @@ public class Player {
     }
 
     public void setFirstName(java.lang.String m_sName) {
-        this.m_sFirstName = m_sName;
+        if ( m_sName != null ) this.m_sFirstName = m_sName;
+        else m_sFirstName = "";
     }
 
     public java.lang.String getFirstName() {
-        return DBManager.deleteEscapeSequences(m_sFirstName);
+        return m_sFirstName;
     }
 
     public void setNickName(java.lang.String m_sName) {
-        this.m_sNickName = m_sName;
+        if ( m_sName != null ) this.m_sNickName = m_sName;
+        else m_sNickName = "";
     }
 
     public java.lang.String getNickName() {
-        return DBManager.deleteEscapeSequences(m_sNickName);
+        return m_sNickName;
     }
 
     public void setLastName(java.lang.String m_sName) {
-        this.m_sLastName = m_sName;
+        if (m_sName != null ) this.m_sLastName = m_sName;
+        else this.m_sLastName = "";
     }
 
     public java.lang.String getLastName() {
-        return DBManager.deleteEscapeSequences(m_sLastName);
+        return m_sLastName;
     }
 
 
@@ -1233,7 +1202,7 @@ public class Player {
     /**
      * Zum speichern! Die Reduzierung des Marktwerts auf TSI wird rückgängig gemacht
      */
-    public int getSaveMarktwert() {
+    public int getMarktwert() {
         if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
             //Echter Marktwert
             return m_iTSI * 1000;
@@ -1241,6 +1210,22 @@ public class Player {
 
         //TSI
         return m_iTSI;
+    }
+
+
+    String latestTSIInjured;
+    String latestTSINotInjured;
+    public String getLatestTSINotInjured(){
+        if (latestTSINotInjured == null){
+            latestTSINotInjured = DBManager.instance().loadLatestTSINotInjured(m_iSpielerID);
+        }
+        return latestTSINotInjured;
+    }
+    public String getLatestTSIInjured(){
+        if (latestTSIInjured == null){
+            latestTSIInjured = DBManager.instance().loadLatestTSIInjured(m_iSpielerID);
+        }
+        return latestTSIInjured;
     }
 
     /**
@@ -1321,21 +1306,15 @@ public class Player {
      * set whether or not that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        m_bCanBeSelectedByAssistant = flag;
-        DBManager.instance().saveSpielerSpielberechtigt(m_iSpielerID,  flag);
+        getNotes().setEligibleToPlay(flag);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
      * get whether or not that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
-        //Only check if not authorized to play: Reduced access!
-        if (m_bCanBeSelectedByAssistant == null) {
-            m_bCanBeSelectedByAssistant = DBManager.instance().getSpielerSpielberechtigt(m_iSpielerID);
-        }
-
-        return m_bCanBeSelectedByAssistant;
-
+        return getNotes().isEligibleToPlay();
     }
 
     /**
@@ -1434,12 +1413,8 @@ public class Player {
      * @param teamInfoSmilie New value of property m_sTeamInfoSmilie.
      */
     public void setTeamInfoSmilie(String teamInfoSmilie) {
-        if (teamInfoSmilie == null) {
-            teamInfoSmilie = "";
-        }
-
-        m_sTeamInfoSmilie = teamInfoSmilie;
-        DBManager.instance().saveTeamInfoSmilie(m_iSpielerID, teamInfoSmilie);
+        getNotes().setTeamInfoSmilie(teamInfoSmilie);
+        DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
@@ -1448,16 +1423,8 @@ public class Player {
      * @return Value of property m_sTeamInfoSmilie.
      */
     public String getTeamGroup() {
-        if (m_sTeamInfoSmilie == null) {
-            m_sTeamInfoSmilie = DBManager.instance().getTeamInfoSmilie(m_iSpielerID);
-
-            //Steht null in der DB?
-            if (m_sTeamInfoSmilie == null) {
-                m_sTeamInfoSmilie = "";
-            }
-        }
-
-        return m_sTeamInfoSmilie.replaceAll("\\.png$", "");
+        var ret = getNotes().getTeamInfoSmilie();
+        return ret.replaceAll("\\.png$", "");
     }
 
     /**
@@ -1650,18 +1617,6 @@ public class Player {
     }
 
     /**
-     * Set last match £461
-     * @param date
-     * @param rating
-     * @param id
-     */
-    public void setLastMatchDetails(String date, Integer  rating, Integer id){
-        m_lastMatchDate = date;
-        m_lastMatchRating = rating;
-        m_lastMatchId = id;
-    }
-
-    /**
      * Setter for property m_iTransferlisted.
      *
      * @param m_iTransferlisted New value of property m_iTransferlisted.
@@ -1715,23 +1670,130 @@ public class Player {
         return m_iU20Laenderspiele;
     }
 
+    public void setHrfId(int hrf_id) {
+        this.hrf_id=hrf_id;
+    }
+
+    public int getHrfId() {
+        return this.hrf_id;
+    }
+
+    public void setLastMatchDate(String v) {
+        this.m_lastMatchDate = v;
+    }
+
+    public void setLastMatchRating(Integer v) {
+        this.m_lastMatchRating=v;
+    }
+
+    public void setLastMatchId(Integer v) {
+        this.m_lastMatchId = v;
+    }
+
+    public static class Notes extends  AbstractTable.Storable{
+
+        public Notes(){}
+
+        private int playerId;
+
+        public int getUserPos() {
+            return userPos;
+        }
+
+        private int userPos = IMatchRoleID.UNKNOWN;
+
+        public String getManuelSmilie() {
+            return manuelSmilie;
+        }
+
+        public String getNote() {
+            return note;
+        }
+
+        public boolean isEligibleToPlay() {
+            return eligibleToPlay;
+        }
+
+        public String getTeamInfoSmilie() {
+            return teamInfoSmilie;
+        }
+
+        public boolean isFired() {
+            return isFired;
+        }
+
+        private String manuelSmilie="";
+        private String note="";
+        private boolean eligibleToPlay=true;
+        private String teamInfoSmilie="";
+        private boolean isFired=false;
+
+        public void setPlayerId(int playerId) {
+            this.playerId=playerId;
+        }
+
+        public void setNote(String note) {
+            this.note=note;
+        }
+
+        public void setEligibleToPlay(boolean spielberechtigt) {
+            this.eligibleToPlay=spielberechtigt;
+        }
+
+        public void setTeamInfoSmilie(String teamInfoSmilie) {
+            this.teamInfoSmilie=teamInfoSmilie;
+        }
+
+        public void setManuelSmilie(String manuellerSmilie) {
+            this.manuelSmilie=manuellerSmilie;
+        }
+
+        public void setUserPos(int userPos) {
+            this.userPos=userPos;
+        }
+
+        public void setIsFired(boolean isFired) {
+            this.isFired=isFired;
+        }
+
+        public int getPlayerId() {
+            return this.playerId;
+        }
+    }
+    private Notes notes;
+    private Notes getNotes(){
+        if ( notes==null){
+            notes = DBManager.instance().loadPlayerNotes(this.getPlayerID());
+        }
+        return notes;
+    }
     public void setUserPosFlag(byte flag) {
-        m_bUserPosFlag = flag;
-        DBManager.instance().saveSpielerUserPosFlag(m_iSpielerID, m_bUserPosFlag);
+        getNotes().setUserPos(flag);
+        DBManager.instance().storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
+    }
+    public void setIsFired(boolean b) {
+        getNotes().setIsFired(b);
+        DBManager.instance().storePlayerNotes(notes);
+    }
+
+    public boolean isFired() {
+        return getNotes().isFired();
     }
 
     /**
      * liefert User Notiz zum Player
      */
-    public byte getUserPosFlag() {
-        if (m_bUserPosFlag < MatchRoleID.UNKNOWN) {
-            m_bUserPosFlag = DBManager.instance().getSpielerUserPosFlag(m_iSpielerID);
-        }
-
-        //database.DBZugriff.instance ().getSpielerNotiz ( m_iSpielerID );
-        return m_bUserPosFlag;
+    public int getUserPosFlag() {
+        return  getNotes().getUserPos();
     }
+
+    public String getNote() {return getNotes().getNote();}
+    public void setNote(String text) {
+        getNotes().setNote(text);
+        DBManager.instance().storePlayerNotes(notes);
+    }
+
 
     /**
      * get Skillvalue 4 skill
@@ -1824,11 +1886,6 @@ public class Player {
         return m_iVerteidigung;
     }
 
-
-    public int getWeatherEffect(Weather weather) {
-        return PlayerSpeciality.getWeatherEffect(weather, iPlayerSpecialty);
-    }
-
     public float getImpactWeatherEffect(Weather weather) {
         return PlayerSpeciality.getImpactWeatherEffect(weather, iPlayerSpecialty);
     }
@@ -1899,39 +1956,6 @@ public class Player {
         }
         return ret;
     }
-
-    /**
-     * Performs skill drops on the player based on age and skills
-     *
-     * @param originalPlayer The player as he was before this week. Used to find a subskill to drop from.
-     * @param weeks          The number of weeks to drop in case of missing info.
-     */
-
-    public void performSkilldrop(Player originalPlayer, int weeks) {
-
-        if (originalPlayer == null) {
-            return;
-        }
-
-        for (int skillType = 0; skillType < EXPERIENCE; skillType++) {
-
-            if ((skillType == FORM) || (skillType == STAMINA)) {
-                continue;
-            }
-
-            if (getValue4Skill(skillType) >= 1) {
-                float drop = weeks * SkillDrops.instance().getSkillDrop(getValue4Skill(skillType), originalPlayer.getAlter(), skillType);
-
-                // Only bother if there is drop, there is something to drop from,
-                //and check that the player has not popped
-                if ((drop > 0) && (originalPlayer.getSub4SkillAccurate(skillType) > 0)
-                        && (getValue4Skill(skillType) == originalPlayer.getValue4Skill(skillType))) {
-                    setSubskill4PlayerSkill(skillType, Math.max(0, getSub4SkillAccurate(skillType) - drop / 100));
-                }
-            }
-        }
-    }
-
 
     /**
      * Calculate the player strength on a specific lineup position
@@ -2062,22 +2086,6 @@ public class Player {
         }
     }
 
-    /**
-     * Performs the subskill reset needed at skill drop.
-     *
-     * @param skillType The ID of the skill to perform drop on.
-     */
-    public void dropSubskills(int skillType) {
-        if (getValue4Skill(skillType) > 0) {
-            // non-existent has no subskill.
-            setSubskill4PlayerSkill(skillType, 0.999f);
-
-        } else {
-            setSubskill4PlayerSkill(skillType, 0);
-        }
-    }
-
-
     //////////////////////////////////////////////////////////////////////////////////
     //equals
     /////////////////////////////////////////////////////////////////////////////////
@@ -2090,25 +2098,6 @@ public class Player {
         }
 
         return equals;
-    }
-
-    /**
-     * prüft ob Skillup vorliegt
-     */
-    protected boolean check4SkillUp(int skill, Player oldPlayer) {
-        if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
-            return oldPlayer.getValue4Skill(skill) < getValue4Skill(skill);
-        return false;
-    }
-
-    /**
-     * Test for whether skilldown has occurred
-     */
-    public boolean check4SkillDown(int skill, Player oldPlayer) {
-        if (skill < EXPERIENCE)
-            if ((oldPlayer != null) && (oldPlayer.getPlayerID() > 0))
-                return oldPlayer.getValue4Skill(skill) > getValue4Skill(skill);
-        return false;
     }
 
     /**
@@ -2141,8 +2130,9 @@ public class Player {
         return this.subExperience;
     }
 
-    public void setSubExperience( double experience){
-        this.subExperience = experience;
+    public void setSubExperience( Double experience){
+        if ( experience != null ) this.subExperience = experience;
+        else this.subExperience=0;
     }
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
@@ -2221,7 +2211,7 @@ public class Player {
         if (prio != null) {
             futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
         }
-        DBManager.instance().storeFuturePlayerTrainings(this.getPlayerID(), futurePlayerTrainings);
+        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
     }
 
     public String getBestPositionInfo(@Nullable Weather weather, boolean useWeatherImpact) {
@@ -2256,7 +2246,7 @@ public class Player {
 
     }
 
-    private static int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
+    private static final int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
 
     /**
      * Calculates skill status of the player
@@ -2359,17 +2349,9 @@ public class Player {
             this.setSubExperience(experienceSub);
         }
     }
-
-    private int getValue4Skill(Skills.HTSkillID skill) {
-        return getValue4Skill(skill.convertToPlayerSkill());
-    }
-
-    private double getSub4Skill(Skills.HTSkillID skill) {
-        return getSub4Skill(skill.convertToPlayerSkill());
-    }
-
     private Player CloneWithoutSubskills() {
         var ret = new Player();
+        ret.setHrfId(this.hrf_id);
         ret.copySkills(this);
         ret.setPlayerID(getPlayerID());
         ret.setAge(getAlter());
@@ -2538,7 +2520,7 @@ public class Player {
          */
         NotInLineup(10);
 
-        private int value;
+        private final int value;
 
         ManMarkingPosition(int v){this.value=v;}
 

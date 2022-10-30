@@ -56,13 +56,13 @@ public class RatingPredictionManager {
 	public static final float DEFAULT_WEATHER_BONUS = 0.05f;
 
     //~ Class fields -------------------------------------------------------------------------------
-	private static HashMap<String, LinkedHashMap<Double, Double>> allStaminaEffect = new HashMap<>();
+	private static final HashMap<String, LinkedHashMap<Double, Double>> allStaminaEffect = new HashMap<>();
 
     // Initialize with default config
     private static RatingPredictionConfig config = RatingPredictionConfig.getInstance();
 	
     /** Cache for player strength (Hashtable<String, Float>) */
-    private static Hashtable<String, Double> playerStrengthCache = new Hashtable<>();
+    private static final Hashtable<String, Double> playerStrengthCache = new Hashtable<>();
 
     
     //~ Instance fields ----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ public class RatingPredictionManager {
     private short stimmung;
     private short substimmung;
     private short taktikType;
-	private Lineup startingLineup;
+	private final Lineup startingLineup;
     private int pullBackMinute;
     private boolean pullBackOverride;
 
@@ -88,7 +88,7 @@ public class RatingPredictionManager {
 	 *           The values will represent the evolution of lineup
 	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
 	 */
-	private Hashtable<Double, Lineup> LineupEvolution;
+	private final Hashtable<Double, Lineup> LineupEvolution;
 
     public RatingPredictionManager(Lineup _startingLineup, Team iteam)
     {
@@ -170,7 +170,7 @@ public class RatingPredictionManager {
 				}
 
 				// we remove all Match Events that have been already treated
-				Iterator itr = events.iterator();
+				var itr = events.iterator();
 				while (itr.hasNext())
 				{
 					Double x = (Double)itr.next();
@@ -297,15 +297,12 @@ public class RatingPredictionManager {
 		switch (pos) {
 			case IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.CENTRAL_DEFENDER_TOWING -> {
 				weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
-				break;
 			}
 			case IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_TOWING -> {
 				weight = getCrowdingPenalty(_lineup, MIDFIELD);
-				break;
 			}
 			case IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> {
 				weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
-				break;
 			}
 			default -> {
 				weight = 1;
@@ -818,7 +815,6 @@ public class RatingPredictionManager {
         double retVal = 0.0F;
         try
         {
-            Object[] lastLvlUp;
             float skill;
             float subSkill;
             skill = player.getValue4Skill(skillType);
@@ -828,8 +824,8 @@ public class RatingPredictionManager {
              * If we know the last level up date from this player or
              * the user has set an offset manually -> use this sub/offset
              */
-            if (subskillFromDB > 0 || 
-            		(lastLvlUp = player.getLastLevelUp(skillType)) != null && lastLvlUp[0] != null && (Boolean) lastLvlUp[1])
+			var lastLvlUp = player.getLastLevelUp(skillType);
+            if (subskillFromDB > 0 || lastLvlUp != null )
                 subSkill = player.getSub4Skill(skillType);
             else
             	/*
@@ -898,8 +894,7 @@ public class RatingPredictionManager {
     private static double _calcPlayerStrength (RatingPredictionParameter params,
     	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
     	// If config changed, we have to clear the cache
-		boolean forceRefresh = false;
-    	if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
+		if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
     		HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
     		playerStrengthCache.clear();
     		playerStrengthCache.put ("lastRebuild", (double) new Date().getTime());
@@ -1206,7 +1201,4 @@ public class RatingPredictionManager {
     	return (float)retVal;
     }
 
-    public static float getWeatherBonus(){
-		return (float) config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "weatherBonus", DEFAULT_WEATHER_BONUS);
-	}
 }

@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import core.constants.TrainingType;
 import core.datatype.CBItem;
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Properties;
 
 
-public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleID>,
+public class MatchRoleID extends AbstractTable.Storable implements java.io.Serializable, Comparable<IMatchRoleID>,
 		IMatchRoleID {
 
 	public enum Sector {
@@ -116,6 +117,8 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
 		}
 	}
+
+	public MatchRoleID(){}
 
 	// //////////////////Load/Save/////////////////
 
@@ -569,10 +572,13 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 * @param spielerId
 	 *            New value of property m_iSpielerId.
 	 */
-	public final void setSpielerId(int spielerId) {
-		setSpielerId(spielerId, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
+	public final void setPlayerIdIfValidForLineup(int spielerId) {
+		setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
 	}
 
+	public final void setPlayerId(int id){
+		this.m_iSpielerId = id;
+	}
 
 	/**
 	 * Setter for property m_iSpielerId. This setter will fail if the provided
@@ -583,7 +589,7 @@ public class MatchRoleID implements java.io.Serializable, Comparable<IMatchRoleI
 	 * @param lineup
 	 *            The lineup that will be used to check for available space.
 	 */
-	public final void setSpielerId(int spielerId, Lineup lineup) {
+	public final void setPlayerIdIfValidForLineup(int spielerId, Lineup lineup) {
 
 		boolean containsPlayer = (m_iSpielerId > 0) || (m_iSpielerId < -10);
 		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10);

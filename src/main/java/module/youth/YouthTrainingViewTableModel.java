@@ -67,7 +67,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(99, "ls.training.id", 0) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
-                        return new ColorLabelEntry(youthTraining.getMatchId()+"", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(youthTraining.getYouthMatchId()+"", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                     @Override
                     public boolean isDisplay() {

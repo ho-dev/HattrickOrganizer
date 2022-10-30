@@ -2,12 +2,8 @@ package core.db;
 
 import core.model.player.CommentType;
 import module.youth.YouthTrainerComment;
-import core.util.HOLogger;
 import module.training.Skills;
-
-import java.sql.ResultSet;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class YouthTrainerCommentTable extends AbstractTable {
@@ -23,50 +19,18 @@ public class YouthTrainerCommentTable extends AbstractTable {
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-                new ColumnDescriptor("YOUTHPLAYER_ID", Types.INTEGER, false),
-                new ColumnDescriptor("MATCH_ID", Types.INTEGER, false),
-                new ColumnDescriptor("INDEX", Types.INTEGER, false),
-                new ColumnDescriptor("Text", Types.VARCHAR, true, 255),
-                new ColumnDescriptor("Type", Types.INTEGER, true),
-                new ColumnDescriptor("Variation", Types.INTEGER, true),
-                new ColumnDescriptor("SkillType", Types.INTEGER, true),
-                new ColumnDescriptor("SkillLevel", Types.INTEGER, true)
+                ColumnDescriptor.Builder.newInstance().setColumnName("YOUTHPLAYER_ID").setGetter((p) -> ((YouthTrainerComment) p).getYouthPlayerId()).setSetter((p, v) -> ((YouthTrainerComment) p).setYouthPlayerId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("MATCH_ID").setGetter((p) -> ((YouthTrainerComment) p).getYouthMatchId()).setSetter((p, v) -> ((YouthTrainerComment) p).setMatchId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("INDEX").setGetter((p) -> ((YouthTrainerComment) p).getIndex()).setSetter((p, v) -> ((YouthTrainerComment) p).setIndex( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Text").setGetter((p) -> ((YouthTrainerComment) p).getText()).setSetter((p, v) -> ((YouthTrainerComment) p).setText( (String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Type").setGetter((p) -> ((YouthTrainerComment) p).getType().getValue()).setSetter((p, v) -> ((YouthTrainerComment) p).setType(CommentType.valueOf( (Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("Variation").setGetter((p) -> ((YouthTrainerComment) p).getVariation()).setSetter((p, v) -> ((YouthTrainerComment) p).setVariation((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("SkillType").setGetter((p) -> ((YouthTrainerComment) p).getSkillType().getValue()).setSetter((p, v) -> ((YouthTrainerComment) p).setSkillType(Skills.ScoutCommentSkillTypeID.valueOf( (Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("SkillLevel").setGetter((p) -> ((YouthTrainerComment) p).getSkillLevel()).setSetter((p, v) -> ((YouthTrainerComment) p).setSkillLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
         };
     }
 
     public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
-        final ArrayList<YouthTrainerComment> ret = new ArrayList<>();
-        var sql = "SELECT * from " + getTableName() + " WHERE YOUTHPLAYER_ID = " + id;
-        var rs = adapter.executeQuery(sql);
-        try {
-            if (rs != null) {
-                rs.beforeFirst();
-                while (rs.next()) {
-                    var comment = createObject(rs);
-                    ret.add(comment);
-                }
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthTrainerComments: " + e);
-        }
-        return ret;
+        return load(YouthTrainerComment.class, id);
     }
-
-    private YouthTrainerComment createObject(ResultSet rs) {
-        var ret = new YouthTrainerComment();
-        try {
-            ret.setYouthPlayerId(rs.getInt("YOUTHPLAYER_ID"));
-            ret.setMatchId(rs.getInt("MATCH_ID"));
-            ret.setIndex(rs.getInt("INDEX"));
-            ret.setText(DBManager.deleteEscapeSequences(rs.getString("TEXT")));
-            ret.setType(CommentType.valueOf(DBManager.getInteger(rs, "TYPE")));
-            ret.setVariation(DBManager.getInteger(rs, "VARIATION"));
-            ret.setSkillType(Skills.ScoutCommentSkillTypeID.valueOf(DBManager.getInteger(rs, "SKILLTYPE")));
-            ret.setSkillLevel(DBManager.getInteger(rs, "SKILLLEVEL"));
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(),e);
-        }
-        return ret;
-    }
-
 }

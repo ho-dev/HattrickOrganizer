@@ -352,7 +352,7 @@ final public class UserColumnFactory {
                 entry.setFGColor((match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
-                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestGuestGoals())) {
+                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() > match.getGuestTeamGoals())) {
                     entry.setFont(entry.getFont().deriveFont(Font.BOLD));
                 } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));
@@ -387,7 +387,7 @@ final public class UserColumnFactory {
                 entry.setFGColor((match.getGuestTeamID() == HOVerwaltung.instance().getModel().getBasics()
                         .getTeamId()) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : ThemeManager.getColor(HOColorName.LABEL_FG));
 
-                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestGuestGoals())) {
+                if ((match.getMatchStatus() == MatchKurzInfo.FINISHED) && (match.getHomeTeamGoals() < match.getGuestTeamGoals())) {
                     entry.setFont(entry.getFont().deriveFont(Font.BOLD));
                 } else {
                     entry.setFont(entry.getFont().deriveFont(Font.PLAIN));
@@ -437,7 +437,10 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                var hatstats = match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats();
+                int hatstats = 0;
+                if (matchDetails!=null){
+                    hatstats = match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats();
+                }
                 return new ColorLabelEntry(hatstats, String.valueOf(hatstats),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -457,7 +460,10 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                var hatstats = match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats();
+                int hatstats = 0;
+                if (matchDetails != null) {
+                    hatstats = match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats();
+                }
                 return new ColorLabelEntry(hatstats, String.valueOf(hatstats),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);

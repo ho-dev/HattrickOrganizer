@@ -1,98 +1,50 @@
 package core.db;
 
+import core.model.enums.MatchType;
 import core.model.match.MatchTeamRating;
-import core.util.HOLogger;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MatchTeamRatingTable extends AbstractTable {
     public final static String TABLENAME = "MATCHTEAMRATING";
 
-    protected MatchTeamRatingTable(JDBCAdapter  adapter){
+    protected MatchTeamRatingTable(JDBCAdapter adapter) {
         super(TABLENAME, adapter);
+        idColumns = 3;
     }
 
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-                new ColumnDescriptor("MatchID", Types.INTEGER, false),
-                new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-                new ColumnDescriptor("TeamID", Types.INTEGER, false),
-                new ColumnDescriptor("FanclubSize", Types.INTEGER, false),
-                new ColumnDescriptor("PowerRating", Types.INTEGER, true),
-                new ColumnDescriptor("GlobalRanking", Types.INTEGER, true),
-                new ColumnDescriptor("RegionRanking", Types.INTEGER, true),
-                new ColumnDescriptor("LeagueRanking", Types.INTEGER, true),
-                new ColumnDescriptor("NumberOfVictories", Types.INTEGER, true),
-                new ColumnDescriptor("NumberOfUndefeated", Types.INTEGER, true)
+                ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchTeamRating) o).getMatchId()).setSetter((o, v) -> ((MatchTeamRating) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchTeamRating) o).getMatchTyp().getId()).setSetter((o, v) -> ((MatchTeamRating) o).setMatchTyp(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchTeamRating) o).getTeamId()).setSetter((o, v) -> ((MatchTeamRating) o).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("FanclubSize").setGetter((o) -> ((MatchTeamRating) o).getFanclubSize()).setSetter((o, v) -> ((MatchTeamRating) o).setFanclubSize((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("PowerRating").setGetter((o) -> ((MatchTeamRating) o).getPowerRating()).setSetter((o, v) -> ((MatchTeamRating) o).setPowerRating((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("GlobalRanking").setGetter((o) -> ((MatchTeamRating) o).getGlobalRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setGlobalRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("RegionRanking").setGetter((o) -> ((MatchTeamRating) o).getRegionRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setRegionRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("LeagueRanking").setGetter((o) -> ((MatchTeamRating) o).getLeagueRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setLeagueRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("NumberOfVictories").setGetter((o) -> ((MatchTeamRating) o).getNumberOfVictories()).setSetter((o, v) -> ((MatchTeamRating) o).setNumberOfVictories((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("NumberOfUndefeated").setGetter((o) -> ((MatchTeamRating) o).getNumberOfUndefeated()).setSetter((o, v) -> ((MatchTeamRating) o).setNumberOfUndefeated((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
         };
     }
 
     @Override
     protected String[] getConstraintStatements() {
-        return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
+        return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
     }
 
-    List<MatchTeamRating> load(int matchID, int matchType ) {
-        var ret = new ArrayList<MatchTeamRating>();
-        try {
-            var sql = "SELECT * FROM " + getTableName()
-                    + " WHERE MatchTyp = " + matchType
-                    + " AND MatchID = " + matchID;
-            var rs = adapter.executeQuery(sql);
-            if (rs != null) {
-                rs.beforeFirst();
-                while (rs.next()) {
-                    ret.add(new MatchTeamRating(rs));
-                }
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DB.MatchTeamRating Error" + e);
-        }
-        return ret;
+    private final PreparedSelectStatementBuilder loadBothTeamRatingStatementBuilder = new PreparedSelectStatementBuilder(this,
+                   "WHERE MatchID = ? AND MatchTyp = ?");
+
+    List<MatchTeamRating> load(int matchID, int matchType) {
+        return load(MatchTeamRating.class, this.adapter.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType));
     }
 
-    private String getColumnNames() {
-        StringBuilder ret = new StringBuilder();
-        String sep = " (";
-        for (var c : columns) {
-            ret.append(sep);
-            ret.append(c.getColumnName());
-            sep = ",";
-        }
-        ret.append(")");
-        return ret.toString();
-    }
-
-    void store(MatchTeamRating teamRating) {
+    void storeTeamRating(MatchTeamRating teamRating) {
         if (teamRating != null) {
-            final String[] where = { "MatchTyp", "MatchID", "TEAMID" };
-            final String[] werte = { "" + teamRating.getMatchTyp().getId(), "" + teamRating.getMatchId(), "" + teamRating.getTeamId() };
-
-            // Remove existing entry
-            delete(where, werte);
-
-            try {
-                var sql = "INSERT INTO "
-                        + getTableName()
-                        + getColumnNames()
-                        + " VALUES("
-                        + teamRating.getMatchId() + ","
-                        + teamRating.getMatchTyp().getId() + ","
-                        + teamRating.getTeamId() + ","
-                        + teamRating.getFanclubSize() + ","
-                        + teamRating.getPowerRating() + ","
-                        + teamRating.getGlobalRanking() + ","
-                        + teamRating.getLeagueRanking() + ","
-                        + teamRating.getRegionRanking() + ","
-                        + teamRating.getNumberOfVictories() + ","
-                        + teamRating.getNumberOfUndefeated() + ")";
-                adapter.executeUpdate(sql);
-            } catch (Exception e) {
-                HOLogger.instance().log(getClass(), "DB.store MatchTeamRating Error" + e);
-                HOLogger.instance().log(getClass(), e);
-            }
+            teamRating.setIsStored(isStored(teamRating.getMatchId(), teamRating.getMatchTyp().getId(), teamRating.getTeamId()));
+            store(teamRating);
         }
     }
 }

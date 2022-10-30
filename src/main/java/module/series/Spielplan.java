@@ -1,10 +1,9 @@
 package module.series;
 
+import core.db.AbstractTable;
 import core.model.series.*;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Spielplan represents a game schedule, i.e. a particular season in a series.
  */
-public class Spielplan  {
+public class Spielplan  extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     protected LigaTabelle m_clTabelle;
@@ -421,5 +420,9 @@ public class Spielplan  {
         	HOLogger.instance().error(getClass(), "Error(generateTabellenVerlauf):" + e);
             return new Tabellenverlauf();
         }
+    }
+
+    public void addFixtures(List<Paarung> fixtures) {
+        m_vEintraege.addAll(fixtures);
     }
 }

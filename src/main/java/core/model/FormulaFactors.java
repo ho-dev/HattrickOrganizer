@@ -4,7 +4,6 @@ import core.file.FileLoader;
 import core.file.xml.XMLManager;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
@@ -201,8 +200,8 @@ public class FormulaFactors {
      * @return the created FactorObject
      */
     public FactorObject readObject(String tagname, Element root) {
-        Element ele = null;
-        final FactorObject factorObject = new FactorObject(null);
+        Element ele;
+        final FactorObject factorObject = new FactorObject();
         try {
             root = (Element) root.getElementsByTagName(tagname).item(0);
 
@@ -249,9 +248,8 @@ public class FormulaFactors {
      */
     public void write2XML(String filename) {
         try {
-            Document doc = null;
-            //Element ele = null;
-            Element tmpEle = null;
+            Document doc;
+            Element tmpEle;
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder builder = factory.newDocumentBuilder();
 
@@ -294,8 +292,8 @@ public class FormulaFactors {
      */
     protected void writeFaktorObj(Document doc, FactorObject obj, Element root, String tagName) {
         // TODO: fix this one setpieces and normlization factor  (unction that should be called (tbc)  rom the preference tab)
-        Element ele = null;
-        Element tmpEle = null;
+        Element ele;
+        Element tmpEle;
 
         tmpEle = doc.createElement(tagName);
         root.appendChild(tmpEle);
@@ -370,7 +368,7 @@ public class FormulaFactors {
      * @param pos
      * @param factorObject
      */
-    public void setPositionFactor(byte pos, FactorObject factorObject){
+    public void setPositionFactor(int pos, FactorObject factorObject){
     	switch(pos){
         case IMatchRoleID.KEEPER:
             this.foGK = factorObject;

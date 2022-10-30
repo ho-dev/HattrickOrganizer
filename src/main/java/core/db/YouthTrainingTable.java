@@ -1,14 +1,9 @@
 package core.db;
 
 import core.model.enums.MatchType;
-import core.util.HOLogger;
 import module.youth.YouthTraining;
 import module.youth.YouthTrainingType;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 
 public class YouthTrainingTable extends AbstractTable{
@@ -22,59 +17,22 @@ public class YouthTrainingTable extends AbstractTable{
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-                new ColumnDescriptor("MATCHID", Types.INTEGER, false),
-                new ColumnDescriptor("MatchTyp", Types.INTEGER, false),
-                new ColumnDescriptor("TRAINING1", Types.INTEGER, true),
-                new ColumnDescriptor("TRAINING2", Types.INTEGER, true)
+                ColumnDescriptor.Builder.newInstance().setColumnName("MATCHID").setGetter((p) -> ((YouthTraining) p).getYouthMatchId()).setSetter((p, v) -> ((YouthTraining) p).setYouthMatchId( (int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((p) -> ((YouthTraining) p).getMatchType().getId()).setSetter((p, v) -> ((YouthTraining) p).setYouthMatchType(MatchType.getById((int)v))).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING1").setGetter((p) -> ((YouthTraining) p).getTraining(YouthTraining.Priority.Primary).getValue()).setSetter((p, v) -> ((YouthTraining) p).setTraining(YouthTraining.Priority.Primary, YouthTrainingType.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("TRAINING2").setGetter((p) -> ((YouthTraining) p).getTraining(YouthTraining.Priority.Secondary).getValue()).setSetter((p, v) -> ((YouthTraining) p).setTraining(YouthTraining.Priority.Secondary, YouthTrainingType.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
         };
     }
 
-    public List<YouthTraining> loadYouthTrainings() {
-        final ArrayList<YouthTraining> ret = new ArrayList<>();
-        var sql = "SELECT * from " + getTableName() ;
-        var rs = adapter.executeQuery(sql);
-        try {
-            if (rs != null) {
-                rs.beforeFirst();
-                while (rs.next()) {
-                    var training = createObject(rs);
-                    ret.add(training);
-                }
-            }
-        } catch (Exception e) {
-            HOLogger.instance().log(getClass(), "DatenbankZugriff.loadYouthTrainings: " + e);
-        }
-        return ret;
+    @Override
+    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
+        return new PreparedSelectStatementBuilder(this, "");
     }
-
-    private YouthTraining createObject(ResultSet rs) throws SQLException {
-        var matchId = rs.getInt("MatchId");
-        var matchType = rs.getInt("MatchTyp");
-        var ret = new YouthTraining(matchId, MatchType.getById(matchType));
-        ret.setTraining(YouthTraining.Priority.Primary, YouthTrainingType.valueOf(DBManager.getInteger(rs, "Training1")));
-        ret.setTraining(YouthTraining.Priority.Secondary, YouthTrainingType.valueOf(DBManager.getInteger(rs, "Training2")));
-        return ret;
+    public List<YouthTraining> loadYouthTrainings() {
+        return load(YouthTraining.class);
     }
 
     public void storeYouthTraining(YouthTraining youthTraining) {
-        var matchId = youthTraining.getMatchId();
-        delete( new String[]{"MatchId"}, new String[]{""+matchId});
-        if ( youthTraining.getTraining(YouthTraining.Priority.Primary) != null ||
-                youthTraining.getTraining(YouthTraining.Priority.Secondary) != null) {
-            StringBuilder sql = new StringBuilder("INSERT INTO " + getTableName()
-                    + " ( MatchId, MatchTyp, Training1, Training2 ) VALUES("
-                    + matchId + ","
-                    + youthTraining.getMatchType().getId());
-            for (var p : YouthTraining.Priority.values()) {
-                var tt = youthTraining.getTraining(p);
-                if (tt == null) {
-                    sql.append(",null");
-                } else {
-                    sql.append(",").append(tt.getValue());
-                }
-            }
-            sql.append(")");
-            adapter.executeUpdate(sql.toString());
-        }
+        store(youthTraining);
     }
 }

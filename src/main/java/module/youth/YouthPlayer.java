@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.CommentType;
@@ -9,7 +10,6 @@ import core.util.HOLogger;
 import module.training.Skills;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -18,7 +18,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static module.training.Skills.HTSkillID.*;
 
-public class YouthPlayer {
+public class YouthPlayer extends AbstractTable.Storable {
     private int hrfid;
     private int id;
     private String nickName;
@@ -70,7 +70,6 @@ public class YouthPlayer {
     /**
      * player's training development.
      * One entry for each training match the player has participated
-     *
      * mapping training match date to development entry
      */
     private TreeMap<HODateTime, YouthTrainingDevelopmentEntry> trainingDevelopment;
@@ -78,7 +77,6 @@ public class YouthPlayer {
 
     /**
      * Create youth player
-     *
      * (used in YouthPlayerTable when player is loaded from database)
      */
     public YouthPlayer() {}
@@ -97,15 +95,6 @@ public class YouthPlayer {
     }
 
     /**
-     * Set the scout comments
-     *
-     * @param scoutComments list of scout comments
-     */
-    public void setScoutComments(List<ScoutComment> scoutComments) {
-        this.scoutComments = scoutComments;
-    }
-
-    /**
      * Look for start skill levels, potential and specialties given by the scout.
      * The mentioned skills are tagged as top3 skills.
      */
@@ -121,7 +110,7 @@ public class YouthPlayer {
                     maxSkill.setMax(c.skillLevel);
                     maxSkill.setIsTop3(true);
                 } else if (c.type == CommentType.PLAYER_HAS_SPECIALTY) {
-                    this.specialty = Specialty.valueOf(c.skillType.getValue());
+                    this.specialty = Specialty.getSpecialty(c.skillType.getValue());
                 }
             }
         }
@@ -702,7 +691,42 @@ public class YouthPlayer {
 
     }
 
-    public static class ScoutComment {
+    public void setCurrentLevel(Skills.HTSkillID skillId, Integer v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setCurrentLevel(v);
+    }
+
+    public void setMax(Skills.HTSkillID skillId, Integer v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setMax(v);
+    }
+
+    public void setStartLevel(Skills.HTSkillID skillId, Integer v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setStartLevel(v);
+    }
+
+    public void setIsMaxReached(Skills.HTSkillID skillId, boolean v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setMaxReached(v);
+    }
+
+    public void setCurrentValue(Skills.HTSkillID skillId, double v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setCurrentValue(v);
+    }
+
+    public void setStartValue(Skills.HTSkillID skillId, double v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setStartValue(v);
+    }
+
+    public void setIsTop3(Skills.HTSkillID skillId, Boolean v) {
+        initSkillInfo();
+        this.currentSkills.get(skillId).setIsTop3(v);
+    }
+
+    public static class ScoutComment extends AbstractTable.Storable {
         private int youthPlayerId;
         private int index;
         private String text;
@@ -792,7 +816,7 @@ public class YouthPlayer {
         playerCategoryID = getInt(properties, "playercategoryid", 0);
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);
-        specialty = Specialty.valueOf(getInt(properties, "specialty", 0));
+        specialty = Specialty.getSpecialty(getInt(properties, "specialty", 0));
         careerGoals = getInt(properties, "careergoals", 0);
         careerHattricks = getInt(properties, "careerhattricks", 0);
         leagueGoals = getInt(properties, "leaguegoals", 0);
@@ -819,6 +843,15 @@ public class YouthPlayer {
         }
         parseScoutComments(properties);
         evaluateScoutComments();
+    }
+
+    private void initSkillInfo() {
+        if (this.currentSkills.size() == 0) {
+            for (var skillId : YouthPlayer.skillIds) {
+                var skillInfo = new YouthSkillInfo(skillId);
+                this.setSkillInfo(skillInfo);
+            }
+        }
     }
 
     private void parseScoutComments(Properties properties) {

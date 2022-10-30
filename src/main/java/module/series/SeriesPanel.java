@@ -56,11 +56,8 @@ public class SeriesPanel extends LazyImagePanel {
 							+ spielplan.toString(), HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 			if (value == JOptionPane.YES_OPTION) {
-				final String[] dbkey = { "Saison", "LigaID" };
-				final String[] dbvalue = { spielplan.getSaison() + "", spielplan.getLigaId() + "" };
-
-				DBManager.instance().deleteSpielplanTabelle(dbkey, dbvalue);
-				DBManager.instance().deletePaarungTabelle(dbkey, dbvalue);
+				DBManager.instance().deleteSpielplanTabelle(spielplan.getSaison(), spielplan.getLigaId());
+				DBManager.instance().deletePaarungTabelle(spielplan.getSaison(), spielplan.getLigaId());
 				this.model.setCurrentSeries(null);
 				RefreshManager.instance().doReInit();
 			}

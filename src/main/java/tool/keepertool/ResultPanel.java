@@ -1,20 +1,17 @@
 package tool.keepertool;
 
 import core.constants.player.PlayerSkill;
+import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
 
 /**
  * Panel where results are shown
@@ -27,10 +24,10 @@ class ResultPanel extends JPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private DecimalFormat df = new DecimalFormat("#.00");
-    private JButton set = new JButton();
-    private JDialog parent;
-    private JTextArea result = new JTextArea();
+	private final DecimalFormat df = new DecimalFormat("#.00");
+    private final JButton set = new JButton();
+    private final JDialog parent;
+    private final JTextArea result = new JTextArea();
     private double average;
     private int id;
 
@@ -116,11 +113,7 @@ class ResultPanel extends JPanel {
                 }
 
                 sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float) decimals);
-                core.db.DBManager.instance().saveSpieler(
-                        HOVerwaltung.instance().getModel().getID(),
-                        HOVerwaltung.instance().getModel().getCurrentPlayers(),
-                        HOVerwaltung.instance().getModel().getBasics().getDatum()
-                );
+                DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
             }
             core.gui.RefreshManager.instance().doReInit();
             parent.setVisible(false);

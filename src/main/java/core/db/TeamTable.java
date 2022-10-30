@@ -1,160 +1,104 @@
 package core.db;
 
-import core.constants.TeamConfidence;
-import core.constants.TeamSpirit;
 import core.model.Team;
-import core.util.HOLogger;
-
-import java.sql.ResultSet;
 import java.sql.Types;
-
-
 
 final class TeamTable extends AbstractTable {
 	public final static String TABLENAME = "TEAM";
 	
-	protected TeamTable(JDBCAdapter  adapter){
+	TeamTable(JDBCAdapter adapter){
 		super(TABLENAME,adapter);
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[19];
-		columns[0]= new ColumnDescriptor("HRF_ID",Types.INTEGER,false,true);
-		columns[1]= new ColumnDescriptor("TrainingsIntensitaet",Types.INTEGER,false);
-		columns[2]= new ColumnDescriptor("TrainingsArt",Types.INTEGER,false);
-		columns[3]= new ColumnDescriptor("sTrainingsArt",Types.VARCHAR,true,127);
-		columns[4]= new ColumnDescriptor("iStimmung",Types.INTEGER,false);
-		columns[5]= new ColumnDescriptor("sStimmung",Types.VARCHAR,true,127);
-		columns[6]= new ColumnDescriptor("iSelbstvertrauen",Types.INTEGER,false);
-		columns[7]= new ColumnDescriptor("sSelbstvertrauen",Types.VARCHAR,true,127);
-		columns[8]= new ColumnDescriptor("iErfahrung541",Types.INTEGER,false);
-		columns[9]= new ColumnDescriptor("iErfahrung433",Types.INTEGER,false);
-		columns[10]= new ColumnDescriptor("iErfahrung352",Types.INTEGER,false);
-		columns[11]= new ColumnDescriptor("iErfahrung451",Types.INTEGER,false);
-		columns[12]= new ColumnDescriptor("iErfahrung532",Types.INTEGER,false);
-		columns[13]= new ColumnDescriptor("iErfahrung343",Types.INTEGER,false);
-		columns[14]= new ColumnDescriptor("StaminaTrainingPart",Types.INTEGER,false);
-		columns[15]= new ColumnDescriptor("iErfahrung442",Types.INTEGER,false);
-		columns[16]= new ColumnDescriptor("iErfahrung523",Types.INTEGER,false);
-		columns[17]= new ColumnDescriptor("iErfahrung550",Types.INTEGER,false);
-		columns[18]= new ColumnDescriptor("iErfahrung253",Types.INTEGER,false);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((Team) p).getHrfId()).setSetter((p, v) -> ((Team) p).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingsIntensitaet").setGetter((p) -> ((Team) p).getTrainingslevel()).setSetter((p, v) -> ((Team) p).setTrainingslevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingsArt").setGetter((p) -> ((Team) p).getTrainingsArtAsInt()).setSetter((p, v) -> ((Team) p).setTrainingsArtAsInt((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iStimmung").setGetter((p) -> ((Team) p).getTeamSpirit()).setSetter((p, v) -> ((Team) p).setTeamSpirit((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iSelbstvertrauen").setGetter((p) -> ((Team) p).getConfidence()).setSetter((p, v) -> ((Team) p).setConfidence((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung541").setGetter((p) -> ((Team) p).getFormationExperience541()).setSetter((p, v) -> ((Team) p).setFormationExperience541((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung433").setGetter((p) -> ((Team) p).getFormationExperience433()).setSetter((p, v) -> ((Team) p).setFormationExperience433((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung352").setGetter((p) -> ((Team) p).getFormationExperience352()).setSetter((p, v) -> ((Team) p).setFormationExperience352((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung451").setGetter((p) -> ((Team) p).getFormationExperience451()).setSetter((p, v) -> ((Team) p).setFormationExperience451((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung532").setGetter((p) -> ((Team) p).getFormationExperience532()).setSetter((p, v) -> ((Team) p).setFormationExperience532((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung343").setGetter((p) -> ((Team) p).getFormationExperience343()).setSetter((p, v) -> ((Team) p).setFormationExperience343((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung442").setGetter((p) -> ((Team) p).getFormationExperience442()).setSetter((p, v) -> ((Team) p).setFormationExperience442((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung523").setGetter((p) -> ((Team) p).getFormationExperience523()).setSetter((p, v) -> ((Team) p).setFormationExperience523((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung550").setGetter((p) -> ((Team) p).getFormationExperience550()).setSetter((p, v) -> ((Team) p).setFormationExperience550((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung253").setGetter((p) -> ((Team) p).getFormationExperience253()).setSetter((p, v) -> ((Team) p).setFormationExperience253((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("StaminaTrainingPart").setGetter((p) -> ((Team) p).getStaminaTrainingPart()).setSetter((p, v) -> ((Team) p).setStaminaTrainingPart((int) v)).setType(Types.INTEGER).isNullable(false).build()
+
+		};
 	}
 
 	/**
 	 * Save the team data for the given HRF id.
 	 */
 	void saveTeam(int hrfId, Team team) {
-		String statement = null;
-		final String[] awhereS = { "HRF_ID" };
-		final String[] awhereV = { "" + hrfId };
-
 		if (team != null) {
-			//delete existing lineup
-			delete( awhereS, awhereV );
-			//prepare insert statment 
-			statement = "INSERT INTO " + getTableName()
-					+ " ( TrainingsIntensitaet , StaminaTrainingPart, TrainingsArt, sTrainingsArt , iStimmung, sStimmung , iSelbstvertrauen, sSelbstvertrauen , iErfahrung541 , iErfahrung433 , iErfahrung352 , iErfahrung451 , iErfahrung532 , iErfahrung343, iErfahrung442, iErfahrung523, iErfahrung550, iErfahrung253, HRF_ID ) VALUES(";
-			statement
-				+= ("" + team.getTrainingslevel()
-					+ "," + team.getStaminaTrainingPart()
-					+ "," + team.getTrainingsArtAsInt()
-					+ ",'" 
-					+ "'," + team.getTeamSpirit()
-					+ ",'" 
-					+ "'," + team.getConfidence()
-					+ ",'" 
-					+ "'," + team.getFormationExperience541()
-					+ "," + team.getFormationExperience433()
-					+ "," + team.getFormationExperience352()
-					+ "," + team.getFormationExperience451()
-					+ "," + team.getFormationExperience532()
-					+ "," + team.getFormationExperience343()
-					+ "," + team.getFormationExperience442()
-					+ "," + team.getFormationExperience523()
-					+ "," + team.getFormationExperience550()
-					+ "," + team.getFormationExperience253()
-					+ "," + hrfId
-					+ " )");
-			adapter.executeUpdate(statement);
+			team.setHrfId(hrfId);
+			team.setIsStored(isStored(hrfId));
+			store(team);
 		}
 	}
 
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
-	 * Selbstvertrauen
-	 */
-	String[] getStimmmungSelbstvertrauen(int hrfid) {
-		final int[] intvalue = new int[2];
-		final String[] returnvalue = new String[2];
-		final String sql = "SELECT iStimmung, iSelbstvertrauen, sStimmung, sSelbstvertrauen FROM "+getTableName()+" WHERE HRF_ID=" + hrfid;
-
-		try {
-			final ResultSet rs = adapter.executeQuery(sql);
-
-			if (rs.first()) {
-				intvalue[0] = rs.getInt("iStimmung");
-				intvalue[1] = rs.getInt("iSelbstvertrauen");
-
-				//Keine Sinnvollen Werte in der DB -> Strings holen
-				if ((intvalue[0] <= 0) && (intvalue[1] <= 0)) {
-					returnvalue[0] = rs.getString("sStimmung");
-					returnvalue[1] = rs.getString("sSelbstvertrauen");
-				} else {
-					returnvalue[0] = TeamSpirit.toString(intvalue[0]);
-					returnvalue[1] = TeamConfidence.toString(intvalue[1]);
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauen : " + e);
-		}
-
-		return returnvalue;
-	}
-
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
-	 * Selbstvertrauen
-	 */
-	int[] getStimmmungSelbstvertrauenValues(int hrfid) {
-		final int[] intvalue = new int[2];
-		final String sql = "SELECT iStimmung, iSelbstvertrauen, sStimmung, sSelbstvertrauen FROM "+getTableName()+" WHERE HRF_ID=" + hrfid;
-
-		try {
-			final ResultSet rs = adapter.executeQuery(sql);
-
-			if (rs.first()) {
-				intvalue[0] = rs.getInt("iStimmung");
-				intvalue[1] = rs.getInt("iSelbstvertrauen");
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauenValues : " + e);
-		}
-
-		return intvalue;
-	}
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
+//	 * Selbstvertrauen
+//	 */
+//	String[] getStimmmungSelbstvertrauen(int hrfid) {
+//		final int[] intvalue = new int[2];
+//		final String[] returnvalue = new String[2];
+//		try {
+//			final ResultSet rs = executePreparedSelect(hrfid);
+//
+//			if (rs.next()) {
+//				intvalue[0] = rs.getInt("iStimmung");
+//				intvalue[1] = rs.getInt("iSelbstvertrauen");
+//
+//				//Keine Sinnvollen Werte in der DB -> Strings holen
+//				if ((intvalue[0] <= 0) && (intvalue[1] <= 0)) {
+//					returnvalue[0] = rs.getString("sStimmung");
+//					returnvalue[1] = rs.getString("sSelbstvertrauen");
+//				} else {
+//					returnvalue[0] = TeamSpirit.toString(intvalue[0]);
+//					returnvalue[1] = TeamConfidence.toString(intvalue[1]);
+//				}
+//			}
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauen : " + e);
+//		}
+//
+//		return returnvalue;
+//	}
+//
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
+//	 * Selbstvertrauen
+//	 */
+//	int[] getStimmmungSelbstvertrauenValues(int hrfid) {
+//		final int[] intvalue = new int[2];
+//		try {
+//			final ResultSet rs = executePreparedSelect(hrfid);
+//
+//			if (rs.next()) {
+//				intvalue[0] = rs.getInt("iStimmung");
+//				intvalue[1] = rs.getInt("iSelbstvertrauen");
+//			}
+//		} catch (Exception e) {
+//			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauenValues : " + e);
+//		}
+//		return intvalue;
+//	}
 	
 	/**
 	 * load the team data for the given HRF id
 	 */
 	Team getTeam(int hrfID) {
-
-		Team team = new Team();
-
-		if(hrfID != -1) {
-
-			ResultSet rs = getSelectByHrfID(hrfID);
-
-			try {
-				if (rs != null) {
-					rs.first();
-					team = new Team(rs);
-					rs.close();
-				}
-			} catch (Exception e) {
-				HOLogger.instance().error(getClass(), "Error while loading Team model: " + e);
-			}
-		}
-		return team;
+		var ret = loadOne(Team.class, hrfID);
+		if ( ret == null) ret = new Team();
+		return ret;
 	}
 }

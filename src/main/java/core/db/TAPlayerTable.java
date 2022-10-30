@@ -2,9 +2,6 @@ package core.db;
 
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Types;
 
 /**
@@ -18,27 +15,29 @@ import java.sql.Types;
 final class TAPlayerTable extends AbstractTable {
 	final static String TABLENAME = "TA_PLAYER";
 
-	protected TAPlayerTable(JDBCAdapter adapter) {
+	TAPlayerTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
+		idColumns = 2;
 	}
 
 	@Override
 	protected void initColumns() {
-		columns = new ColumnDescriptor[14];
-		columns[0] = new ColumnDescriptor("TEAMID", Types.INTEGER, false);
-		columns[1] = new ColumnDescriptor("PLAYERID", Types.INTEGER, true);
-		columns[2] = new ColumnDescriptor("STATUS", Types.INTEGER, true);
-		columns[3] = new ColumnDescriptor("SPECIALEVENT", Types.INTEGER, true);
-		columns[4] = new ColumnDescriptor("TSI", Types.INTEGER, true);
-		columns[5] = new ColumnDescriptor("FORM", Types.INTEGER, true);
-		columns[6] = new ColumnDescriptor("AGE", Types.INTEGER, true);
-		columns[7] = new ColumnDescriptor("EXPERIENCE", Types.INTEGER, true);
-		columns[8] = new ColumnDescriptor("WEEK", Types.INTEGER, true);
-		columns[9] = new ColumnDescriptor("SALARY", Types.INTEGER, true);
-		columns[10] = new ColumnDescriptor("STAMINA", Types.INTEGER, true);
-		columns[11] = new ColumnDescriptor("MOTHERCLUBBONUS", Types.BOOLEAN, true);
-		columns[12] = new ColumnDescriptor("LOYALTY", Types.INTEGER, true);
-		columns[13] = new ColumnDescriptor("NAME", Types.VARCHAR, true, 100);
+		columns = new ColumnDescriptor[]{
+				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYERID").setGetter((p) -> ((PlayerInfo) p).getPlayerId()).setSetter((p, v) -> ((PlayerInfo) p).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("WEEK").setGetter((p) -> ((PlayerInfo) p).getWeek()).setSetter((p, v) -> ((PlayerInfo) p).setWeek((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TEAMID").setGetter((p) -> ((PlayerInfo) p).getTeamId()).setSetter((p, v) -> ((PlayerInfo) p).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("STATUS").setGetter((p) -> ((PlayerInfo) p).getStatus()).setSetter((p, v) -> ((PlayerInfo) p).setStatus((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SPECIALEVENT").setGetter((p) -> ((PlayerInfo) p).getSpecialEvent()).setSetter((p, v) -> ((PlayerInfo) p).setSpecialEvent((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TSI").setGetter((p) -> ((PlayerInfo) p).getTSI()).setSetter((p, v) -> ((PlayerInfo) p).setTSI((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FORM").setGetter((p) -> ((PlayerInfo) p).getForm()).setSetter((p, v) -> ((PlayerInfo) p).setForm((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("AGE").setGetter((p) -> ((PlayerInfo) p).getAge()).setSetter((p, v) -> ((PlayerInfo) p).setAge((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("EXPERIENCE").setGetter((p) -> ((PlayerInfo) p).getExperience()).setSetter((p, v) -> ((PlayerInfo) p).setExperience((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((PlayerInfo) p).getSalary()).setSetter((p, v) -> ((PlayerInfo) p).setSalary((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("STAMINA").setGetter((p) -> ((PlayerInfo) p).getStamina()).setSetter((p, v) -> ((PlayerInfo) p).setStamina((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUBBONUS").setGetter((p) -> ((PlayerInfo) p).getMotherClubBonus()).setSetter((p, v) -> ((PlayerInfo) p).setMotherClubBonus((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LOYALTY").setGetter((p) -> ((PlayerInfo) p).getLoyalty()).setSetter((p, v) -> ((PlayerInfo) p).setLoyalty((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("NAME").setGetter((p) -> ((PlayerInfo) p).getName()).setSetter((p, v) -> ((PlayerInfo) p).setName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build()
+		};
 	}
 
 	@Override
@@ -65,54 +64,14 @@ final class TAPlayerTable extends AbstractTable {
 		return season*16 + week - 1;
 	}
 
-	/**
-	 * Get number of week from weekNumber
-	 * @param weekNumber
-	 * @return number of week [1..16]
-	 */
-	private int getWeekFromWeekNumber(int weekNumber){
-		return weekNumber%16 + 1;
-	}
-
-	/**
-	 * Get number of season from weekNumber
-	 * @param weekNumber
-	 * @return number of season [1..]
-	 */
-	private int getSeasonFromWeekNumber(int weekNumber){
-		return weekNumber/16;
-	}
-
 	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
-		String query = "select * from " + TABLENAME + " where PLAYERID=" + playerId + " and week="
-				+ calcWeekNumber(season, week);
-
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(query);
-
-		try {
-			if (rs.next()) {
-				PlayerInfo info = new PlayerInfo();
-				info.setPlayerId(playerId);
-				info.setAge(rs.getInt("AGE"));
-				info.setForm(rs.getInt("FORM"));
-				info.setTSI(rs.getInt("TSI"));
-				info.setSpecialEvent(rs.getInt("SPECIALEVENT"));
-				info.setTeamId(rs.getInt("TEAMID"));
-				info.setExperience(rs.getInt("EXPERIENCE"));
-				info.setStatus(rs.getInt("STATUS"));
-				info.setSalary(rs.getInt("SALARY"));
-				info.setStamina(rs.getInt("STAMINA"));
-				info.setMotherClubBonus(rs.getBoolean("MOTHERCLUBBONUS"));
-				info.setMotherClubBonus(rs.getBoolean("LOYALTY"));
-				info.setName(rs.getString("NAME"));
-				return info;
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
-		return new PlayerInfo();
+		var ret =  loadOne(PlayerInfo.class, playerId, calcWeekNumber(season, week));
+		if ( ret == null ) ret = new PlayerInfo();
+		return ret;
 	}
+
+	private final PreparedSelectStatementBuilder loadLatestPlayerInfoStatementBuilder = new PreparedSelectStatementBuilder(this,
+			" WHERE PLAYERID = ? ORDER BY WEEK DESC LIMIT 1");
 
 	/**
 	 * Returns the specialEvent code for a player
@@ -123,77 +82,20 @@ final class TAPlayerTable extends AbstractTable {
 	 * @return a numeric code
 	 */
 	PlayerInfo getLatestPlayerInfo(int playerId) {
-		ResultSet rs = DBManager
-				.instance()
-				.getAdapter()
-				.executeQuery(
-						"SELECT max(WEEK) FROM " + TABLENAME +
-								" WHERE" + " PLAYERID=" + playerId +
-								" AND WEEK<=" + calcCurrentWeekNumber()); // because of an error corrupt numbers may be in the database
-
-		try {
-			if (rs.next()) {
-				int week = rs.getInt(1);
-				return getPlayerInfo(playerId, getWeekFromWeekNumber(week), getSeasonFromWeekNumber(week));
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
-		return new PlayerInfo();
+		var ret = loadOne(PlayerInfo.class, this.adapter.executePreparedQuery(loadLatestPlayerInfoStatementBuilder.getStatement(), playerId));
+		if ( ret == null ) ret = new PlayerInfo();
+		return ret;
 	}
 
 	/**
 	 * Add a player to a team
 	 * 
-	 * @param info
+	 * @param info PlayerInfo
 	 */
-	void addPlayer(PlayerInfo info) {
-		DBManager
-				.instance()
-				.getAdapter()
-				.executeUpdate(
-						"insert into " + TABLENAME + " values ("
-								+ info.getTeamId() + ", "
-								+ info.getPlayerId() + ", "
-								+ info.getStatus() + " , "
-								+ info.getSpecialEvent() + ", "
-								+ info.getTSI() + ", "
-								+ info.getForm() + ", "
-								+ info.getAge() + ", "
-								+ info.getExperience() + ", "
-								+ calcCurrentWeekNumber() + ", "
-								+ info.getSalary() + ", "
-								+ info.getStamina()+ ", "
-								+ info.getMotherClubBonus() + ", "
-								+ info.getLoyalty() + ", '"
-								+ DBManager.insertEscapeSequences(info.getName()) +"')");
+	void storePlayer(PlayerInfo info) {
+		var week = calcCurrentWeekNumber();
+		info.setIsStored(isStored(info.getPlayerId(), week));
+		info.setWeek(week);
+		store(info);
 	}
-
-	void updatePlayer(PlayerInfo info) {
-		DBManager
-				.instance()
-				.getAdapter()
-				.executeUpdate(
-						"update " + TABLENAME + " set "
-								+ "   SPECIALEVENT=" + info.getSpecialEvent()
-								+ " , TSI=" + info.getTSI()
-								+ " , FORM=" +info.getForm()
-								+ " , AGE=" + info.getAge()
-								+ " , EXPERIENCE=" + info.getExperience()
-								+ " , STATUS=" + info.getStatus()
-								+ " , SALARY=" + info.getSalary()
-								+ " , STAMINA=" + info.getStamina()
-								+ " , MOTHERCLUBBONUS=" + info.getMotherClubBonus()
-								+ " , LOYALTY =" + info.getLoyalty()
-								+ " , NAME ='" + DBManager.insertEscapeSequences(info.getName())
-								+ "' where PLAYERID=" + info.getPlayerId() + " and WEEK="
-								+ calcCurrentWeekNumber());
-	}
-
-	void deleteOldPlayers() {
-		adapter.executeUpdate("DELETE FROM " + TABLENAME + " WHERE WEEK<"
-				+ (calcCurrentWeekNumber() - 10));
-	}
-
 }

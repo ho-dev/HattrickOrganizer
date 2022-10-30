@@ -1,15 +1,13 @@
 package module.ifa;
 
+import core.db.AbstractTable;
 import core.util.HODateTime;
 
-import java.util.Date;
-
-public class IfaMatch {
+public class IfaMatch extends AbstractTable.Storable {
 
 	private int matchId;
 	private int matchTyp;
 	private HODateTime playedDate;
-	private String playedDateString;
 	private int homeTeamId;
 	private int awayTeamId;
 	private int homeLeagueId;
@@ -17,12 +15,20 @@ public class IfaMatch {
 	private int awayTeamGoals;
 	private int homeTeamGoals;
 
+	/**
+	 * constructor is used by AbstractTable.load
+	 */
+	public IfaMatch(){}
 	public IfaMatch(int matchTyp){
 		this.matchTyp=matchTyp;
 	}
 
 	public int getMatchTyp(){
 		return matchTyp;
+	}
+
+	public void setMatchTyp(int v){
+		this.matchTyp = v;
 	}
 
 	public final int getMatchId() {

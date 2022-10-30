@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/first-interaction@v1
+      continue-on-error: true
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: "Hey, thanks for opening your first issue! 🙂 \n Be sure to check out the wiki and the HT forum for support."

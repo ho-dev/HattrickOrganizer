@@ -5,8 +5,6 @@ import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
 import core.training.type.*;
 import module.training.Skills;
-
-import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,7 @@ public enum YouthTrainingType {
     DefencePositions(DEF_POSITIONS),
     WingAttacking(WING_ATTACKS);
 
-    static WeeklyTrainingType[] trainingTypes = {
+    static final WeeklyTrainingType[] trainingTypes = {
             null,
             IndividualWeeklyTraining.instance(),
             SetPiecesWeeklyTraining.instance(),
@@ -93,22 +91,11 @@ public enum YouthTrainingType {
         return null;
     }
 
-    /**
-     * Gets a list of match lineup positions of priority
-     * 0 - bonus training positions
-     * 1 - full training positions
-     * 2 - partly training positions
-     * 3 - osmosis training positions
-     * @return list of position arrays
-     */
-    public List<int[]> getTrainedPositions() {
-        var ret = new ArrayList<int[]>();
-        var wt = trainingTypes[value];
-        ret.add(wt.getTrainingSkillBonusPositions());
-        ret.add(wt.getTrainingSkillPositions());
-        ret.add(wt.getTrainingSkillPartlyTrainingPositions());
-        ret.add(wt.getTrainingSkillOsmosisTrainingPositions());
-        return ret;
+    public static Integer getValue(YouthTrainingType type){
+        if ( type != null){
+            return type.getValue();
+        }
+        return null;
     }
 
     public List<List<MatchRoleID.Sector>> getTrainedSectors(){

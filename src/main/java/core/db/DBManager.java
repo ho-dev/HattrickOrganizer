@@ -1,7 +1,8 @@
 package core.db;
 
 import core.HO;
-import core.datatype.CBItem;
+import core.constants.TeamConfidence;
+import core.constants.TeamSpirit;
 import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
@@ -9,6 +10,7 @@ import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
+import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
 import core.model.enums.DBDataSource;
@@ -17,11 +19,12 @@ import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
-import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.player.Skillup;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
+import module.transfer.TransferType;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
@@ -42,6 +45,7 @@ import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
 import java.io.File;
 import java.nio.file.Path;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -148,13 +152,13 @@ public class DBManager {
 			}
 
 			// Create new instance
-			DBManager tempInstance = new DBManager();
+			m_clInstance = new DBManager();
 			DBUpdater dbUpdater = new DBUpdater();
-			tempInstance.initAllTables(tempInstance.getAdapter());
+			m_clInstance.initAllTables();
 			// Try connecting to the DB
 			try {
-				tempInstance.connect();
-				dbUpdater.setDbManager(tempInstance);
+				m_clInstance.connect();
+//				dbUpdater.setDbManager(tempInstance);
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
@@ -194,23 +198,21 @@ public class DBManager {
 			}
 
 			// Does DB already exists?
-			final boolean existsDB = tempInstance.checkIfDBExists();
+			final boolean existsDB = m_clInstance.checkIfDBExists();
 
 			// for startup
-			tempInstance.setFirstStart(!existsDB);
+			m_clInstance.setFirstStart(!existsDB);
 
 			// Do we need to create the database from scratch?
 			if (!existsDB) {
 				try {
-					tempInstance.executeSQL("SET FILES SPACE TRUE");
-					tempInstance.createAllTables();
+					m_clInstance.createAllTables();
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
-				UserConfigurationTable configTable = (UserConfigurationTable) tempInstance
-						.getTable(UserConfigurationTable.TABLENAME);
-				configTable.store(UserParameter.instance());
-				configTable.store(HOParameter.instance());
+				UserConfigurationTable configTable = (UserConfigurationTable) m_clInstance.getTable(UserConfigurationTable.TABLENAME);
+				configTable.storeConfigurations(UserParameter.instance());
+				configTable.storeConfigurations(HOParameter.instance());
 			}
 			else {
 				// Check if there are any updates on the database to be done.
@@ -218,15 +220,19 @@ public class DBManager {
 			}
 
 			// tempInstance.updateConfig();
-			m_clInstance = tempInstance;
 			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
-
 		return m_clInstance;
 	}
 
-	private void executeSQL(String sql) {
-		if ( m_clJDBCAdapter != null ) m_clJDBCAdapter.executeUpdate(sql);
+	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
+	protected PreparedStatement getPreparedStatement(String sql) {
+		PreparedStatement ret = preparedStatements.get(sql);
+		if ( ret == null){
+			ret = Objects.requireNonNull(m_clJDBCAdapter).createPreparedStatement(sql);
+			preparedStatements.put(sql, ret);
+		}
+		return ret;
 	}
 
 	public static double getDBConfigVersion() {
@@ -240,22 +246,8 @@ public class DBManager {
 		DBConfigUpdater.updateDBConfig(DBConfigVersion);
 	}
 
-
-	/**
-	 * Null or value string.
-	 *
-	 * @param value the value
-	 * @return the string
-	 */
-	public static String nullOrValue(Timestamp value) {
-		var ret = String.valueOf(value);
-		if (!ret.equals("null")){
-			return "'" + ret + "'";
-		}
-		return ret;
-	}
-
-	private void initAllTables(JDBCAdapter adapter) {
+	private void initAllTables() {
+		var adapter = this.m_clJDBCAdapter;
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
 		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));
 		tables.put(NtTeamTable.TABLENAME, new NtTeamTable(adapter));
@@ -295,7 +287,7 @@ public class DBManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
+//		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
@@ -338,8 +330,10 @@ public class DBManager {
 	 * disconnect from database
 	 */
 	public void disconnect() {
-		m_clJDBCAdapter.disconnect();
-		m_clJDBCAdapter = null;
+		if ( m_clJDBCAdapter != null) {
+			m_clJDBCAdapter.disconnect();
+			m_clJDBCAdapter = null;
+		}
 		m_clInstance = null;
 	}
 
@@ -381,7 +375,7 @@ public class DBManager {
 	 * @param spielerId player ID
 	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
-	public Object[] getLastLevelUp(int skill, int spielerId) {
+	public Skillup getLastLevelUp(int skill, int spielerId) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getLastLevelUp(skill, spielerId);
 	}
@@ -394,17 +388,9 @@ public class DBManager {
 	 * @param m_iSpielerID the m i spieler id
 	 * @return the all level up
 	 */
-	public Vector<Object[]> getAllLevelUp(int skill, int m_iSpielerID) {
+	public List<Skillup> getAllLevelUp(int skill, int m_iSpielerID) {
 		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
 				.getAllLevelUp(skill, m_iSpielerID);
-	}
-
-	/**
-	 * Reimport skillup.
-	 */
-	public void reimportSkillup() {
-		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
-				.importFromSpieler();
 	}
 
 	/**
@@ -425,9 +411,9 @@ public class DBManager {
 	 *
 	 * @return the all spieler
 	 */
-	public Vector<Player> getAllSpieler() {
+	public List<Player> loadAllPlayers() {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getAllSpieler();
+				.loadAllPlayers();
 	}
 
 	/**
@@ -449,7 +435,7 @@ public class DBManager {
 	 */
 	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpieler(hrfID);
+				.loadPlayers(hrfID);
 	}
 
 	/**
@@ -459,7 +445,12 @@ public class DBManager {
 	 * @param youthPlayers the list of youth players
 	 */
 	public void storeYouthPlayers(int hrfId, List<YouthPlayer> youthPlayers) {
-		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayers(hrfId,youthPlayers);
+		var youthplayertable = ((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME));
+		youthplayertable.deleteYouthPlayers(hrfId);
+		for ( var youthPlayer : youthPlayers){
+			youthPlayer.setIsStored(false);
+			storeYouthPlayer(hrfId,youthPlayer);
+		}
 	}
 
 	/**
@@ -470,6 +461,8 @@ public class DBManager {
 	 */
 	public void storeYouthPlayer(int hrfId, YouthPlayer youthPlayer) {
 		((YouthPlayerTable) getTable(YouthPlayerTable.TABLENAME)).storeYouthPlayer(hrfId,youthPlayer);
+		var youthScoutCommentTable = (YouthScoutCommentTable) DBManager.instance().getTable(YouthScoutCommentTable.TABLENAME);
+		youthScoutCommentTable.storeYouthScoutComments(youthPlayer.getId(), youthPlayer.getScoutComments());
 	}
 
 	/**
@@ -507,18 +500,6 @@ public class DBManager {
 	}
 
 	/**
-	 * get a player from a specific HRF
-	 *
-	 * @param hrfID    hrd id
-	 * @param playerId player id
-	 * @return player spieler from hrf
-	 */
-	public Player getSpielerFromHrf(int hrfID, int playerId) {
-		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpielerFromHrf(hrfID, playerId);
-	}
-
-	/**
 	 * Gibt einen Player zurück mit den Daten kurz vor dem Timestamp
 	 *
 	 * @param spielerid the spielerid
@@ -527,7 +508,7 @@ public class DBManager {
 	 */
 	public Player getSpielerAtDate(int spielerid, Timestamp time) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpielerAtDate(spielerid, time);
+				.getSpielerNearDate(spielerid, time);
 	}
 
 	/**
@@ -553,27 +534,12 @@ public class DBManager {
 	}
 
 	/**
-	 * speichert die Player
+	 * store list of Player
 	 *
-	 * @param hrfId  the hrf id
 	 * @param player the player
-	 * @param date   the date
 	 */
-	public void saveSpieler(int hrfId, List<Player> player, HODateTime date) {
-		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-				player, date.toDbTimestamp());
-	}
-
-	/**
-	 * saves one player to the DB
-	 *
-	 * @param hrfId  hrf id
-	 * @param player the player to be saved
-	 * @param date   date to save
-	 */
-	public void saveSpieler(int hrfId, Player player, Timestamp date) {
-		((SpielerTable) getTable(SpielerTable.TABLENAME)).saveSpieler(hrfId,
-				player, date);
+	public void saveSpieler(List<Player> player) {
+		((SpielerTable) getTable(SpielerTable.TABLENAME)).store(player);
 	}
 
 	// ------------------------------- LigaTable
@@ -585,7 +551,7 @@ public class DBManager {
 	 * @return the integer [ ]
 	 */
 	public Integer[] getAllLigaIDs() {
-		return ((LigaTable) getTable(LigaTable.TABLENAME)).getAllLigaIDs();
+		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllLigaIDs();
 	}
 
 	/**
@@ -636,36 +602,44 @@ public class DBManager {
 				.getSpielplan(ligaId, saison);
 	}
 
+	public Spielplan getLatestSpielplan() {
+		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+				.getLatestSpielplan();
+	}
+
 	/**
 	 * speichert einen Spielplan mitsamt Paarungen
 	 *
 	 * @param plan the plan
 	 */
 	public void storeSpielplan(Spielplan plan) {
-		((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.storeSpielplan(plan);
+		if ( plan != null){
+			((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+					.storeSpielplan(plan);
+			storePaarung(plan.getMatches(), plan.getLigaId(), plan.getSaison());
+		}
 	}
 
-	/**
-	 * Delete spielplan tabelle.
-	 *
-	 * @param whereSpalten the where spalten
-	 * @param whereValues  the where values
-	 */
-	public void deleteSpielplanTabelle(String[] whereSpalten,
-			String[] whereValues) {
-		getTable(SpielplanTable.TABLENAME).delete(whereSpalten, whereValues);
+	public void deleteSpielplanTabelle(int saison, int ligaId) {
+		var table = (SpielplanTable)getTable(SpielplanTable.TABLENAME);
+		table.executePreparedDelete(saison, ligaId);
 	}
 
 	/**
 	 * lädt alle Spielpläne aus der DB
 	 *
-	 * @param mitPaarungen inklusive der Paarungen ja/nein
+	 * @param withFixtures inklusive der Paarungen ja/nein
 	 * @return the spielplan [ ]
 	 */
-	public List<Spielplan> getAllSpielplaene(boolean mitPaarungen) {
-		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.getAllSpielplaene(mitPaarungen);
+	public List<Spielplan> getAllSpielplaene(boolean withFixtures) {
+		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
+				.getAllSpielplaene();
+		if (withFixtures) {
+			for (Spielplan gameSchedule : ret) {
+				getPaarungen(gameSchedule);
+			}
+		}
+		return ret;
 	}
 
 	// ------------------------------- MatchLineupPlayerTable
@@ -715,7 +689,7 @@ public class DBManager {
 	 * @param teamID  the team id
 	 * @return the match lineup players
 	 */
-	public Vector<MatchLineupPosition> getMatchLineupPlayers(int matchID,
+	public List<MatchLineupPosition> getMatchLineupPlayers(int matchID,
                                                              MatchType matchType, int teamID) {
 		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
 				.getMatchLineupPlayers(matchID, matchType, teamID);
@@ -743,17 +717,7 @@ public class DBManager {
 	 * @return the basics
 	 */
 	public Basics getBasics(int hrfID) {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).getBasics(hrfID);
-	}
-
-	/**
-	 * load list of hrf combo box items
-	 *
-	 * @return the cb item hrf list
-	 */
-	public List<CBItem> loadCBItemHRFList() {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
-				.loadCBItemHRFList();
+		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).loadBasics(hrfID);
 	}
 
 	/**
@@ -841,7 +805,7 @@ public class DBManager {
 	 * @param date    the date
 	 */
 	public void saveEconomyInDB(int hrfId, Economy economy, HODateTime date) {
-		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date.toDbTimestamp());
+		((EconomyTable) getTable(EconomyTable.TABLENAME)).storeEconomyInfoIntoDB(hrfId, economy, date);
 	}
 
 	// ------------------------------- HRFTable
@@ -880,12 +844,9 @@ public class DBManager {
 
 	/**
 	 * save the HRF info
-	 *
-	 * @param hrfId hrf id
-	 * @param datum date time
 	 */
-	public void saveHRF(int hrfId, HODateTime datum) {
-		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrfId, datum);
+	public void saveHRF(HRF hrf) {
+		((HRFTable) getTable(HRFTable.TABLENAME)).saveHRF(hrf);
 	}
 
 	/**
@@ -895,7 +856,7 @@ public class DBManager {
 	 * @return the hrfid 4 date
 	 */
 	public int getHRFID4Date(Timestamp time) {
-		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfId4Date(time);
+		return ((HRFTable) getTable(HRFTable.TABLENAME)).getHrfIdNearDate(time);
 	}
 
 	/**
@@ -915,138 +876,14 @@ public class DBManager {
 	// ------------------------------- SpielerNotizenTable
 	// -------------------------------------------------
 
-	/**
-	 * Gets manueller smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the manueller smilie
-	 */
-	public String getManuellerSmilie(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getManuellerSmilie(spielerId);
+	public void storePlayerNotes(Player.Notes notes) {
+		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).storeNotes(notes);
 	}
 
-	/**
-	 * Gets team info smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the team info smilie
-	 */
-	public String getTeamInfoSmilie(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getTeamInfoSmilie(spielerId);
+	public Player.Notes loadPlayerNotes(int playerId) {
+		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME)).load(playerId);
 	}
 
-	/**
-	 * Gets spieler notiz.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler notiz
-	 */
-	public String getSpielerNotiz(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerNotiz(spielerId);
-	}
-
-	/**
-	 * Gets spieler spielberechtigt.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler spielberechtigt
-	 */
-	public boolean getSpielerSpielberechtigt(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerSpielberechtigt(spielerId);
-	}
-
-	/**
-	 * Gets spieler user pos flag.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the spieler user pos flag
-	 */
-	public byte getSpielerUserPosFlag(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getSpielerUserPosFlag(spielerId);
-	}
-
-	/**
-	 * Gets is spieler fired.
-	 *
-	 * @param spielerId the spieler id
-	 * @return the is spieler fired
-	 */
-	public boolean getIsSpielerFired(int spielerId) {
-		return ((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.getIsSpielerFired(spielerId);
-	}
-
-	/**
-	 * Save manueller smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @param smilie    the smilie
-	 */
-	public void saveManuellerSmilie(int spielerId, String smilie) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveManuellerSmilie(spielerId, smilie);
-	}
-
-	/**
-	 * Save spieler notiz.
-	 *
-	 * @param spielerId the spieler id
-	 * @param notiz     the notiz
-	 */
-	public void saveSpielerNotiz(int spielerId, String notiz) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerNotiz(spielerId, notiz);
-	}
-
-	/**
-	 * Save spieler spielberechtigt.
-	 *
-	 * @param spielerId       the spieler id
-	 * @param spielberechtigt the spielberechtigt
-	 */
-	public void saveSpielerSpielberechtigt(int spielerId,
-			boolean spielberechtigt) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerSpielberechtigt(spielerId, spielberechtigt);
-	}
-
-	/**
-	 * Save spieler user pos flag.
-	 *
-	 * @param spielerId the spieler id
-	 * @param flag      the flag
-	 */
-	public void saveSpielerUserPosFlag(int spielerId, byte flag) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveSpielerUserPosFlag(spielerId, flag);
-	}
-
-	/**
-	 * Save team info smilie.
-	 *
-	 * @param spielerId the spieler id
-	 * @param smilie    the smilie
-	 */
-	public void saveTeamInfoSmilie(int spielerId, String smilie) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveTeamInfoSmilie(spielerId, smilie);
-	}
-
-	/**
-	 * Save is spieler fired.
-	 *
-	 * @param spielerId the spieler id
-	 * @param isFired   the is fired
-	 */
-	public void saveIsSpielerFired(int spielerId, boolean isFired) {
-		((SpielerNotizenTable) getTable(SpielerNotizenTable.TABLENAME))
-				.saveIsSpielerFired(spielerId, isFired);
-	}
 
 	// ------------------------------- MatchLineupTable
 	// -------------------------------------------------
@@ -1059,8 +896,13 @@ public class DBManager {
 	 * @return the match lineup
 	 */
 	public MatchLineup loadMatchLineup(int iMatchType, int matchID) {
-		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.loadMatchLineup(iMatchType, matchID);
+		var ret =  ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).loadMatchLineup(iMatchType, matchID);
+		if ( ret != null ) {
+			var match = DBManager.instance().loadMatchDetails(iMatchType, matchID);
+			ret.setHomeTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getHomeTeamId()));
+			ret.setGuestTeam(DBManager.instance().loadMatchLineupTeam(iMatchType, matchID, match.getGuestTeamId()));
+		}
+		return ret;
 	}
 
 	/**
@@ -1070,9 +912,9 @@ public class DBManager {
 	 * @param matchid      the matchid
 	 * @return the boolean
 	 */
-	public boolean isMatchLineupInDB(MatchType iMatchType, int matchid) {
-		return ((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.isMatchLineupInDB(iMatchType, matchid);
+	public boolean matchLineupIsNotStored(MatchType iMatchType, int matchid) {
+		return !getTable(MatchLineupTable.TABLENAME)
+				.isStored(matchid, iMatchType.getId());
 	}
 
 	/**
@@ -1128,9 +970,14 @@ public class DBManager {
 	 * @param teamId the teamid or -1 for all matches
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId);
+	}
+
+	public List<MatchKurzInfo> getMatchesKurzInfo(String where, Object ... values) {
+		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
+				.getMatchesKurzInfo(where, values);
 	}
 
 	/**
@@ -1159,35 +1006,16 @@ public class DBManager {
 	 * function that fetch info of match played related to the TrainingPerWeek instance
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public MatchKurzInfo[] loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getOfficialMatchTypes());
-	}
-
-	public MatchKurzInfo[] loadMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate, List<MatchType> matchTypes) {
-		String matchTypeList = matchTypes.stream().map(m -> m.getId()+"").collect(Collectors.joining(","));
-		final String where = String.format("WHERE (HEIMID = %s OR GASTID = %s) AND MATCHDATE BETWEEN '%s' AND '%s' AND MATCHTYP in (%s) AND STATUS in (%s, %s) ORDER BY MatchDate DESC",
-				teamId, teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), matchTypeList, MatchKurzInfo.FINISHED, MatchKurzInfo.UPCOMING);
-
-		return getMatchesKurzInfo(where);
+	public List<MatchKurzInfo> loadOfficialMatchesBetween(int teamId, HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getOfficialMatchTypes());
 	}
 
 	/**
 	 * function that fetch info of NT match played related to the TrainingPerWeek instance
 	 * @return MatchKurzInfo[] related to this TrainingPerWeek instance
 	 */
-	public MatchKurzInfo[] loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
-		return loadMatchesBetween(teamId, firstMatchDate, lastMatchDate, MatchType.getNTMatchType());
-	}
-
-	/**
-	 * Get all matches for the given sql where clause.
-	 *
-	 * @param where The string containing sql where clause
-	 * @return the match kurz info [ ]
-	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(String where) {
-		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(where);
+	public List<MatchKurzInfo> loadNTMatchesBetween(int teamId,HODateTime firstMatchDate, HODateTime lastMatchDate) {
+		return  ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, firstMatchDate.toDbTimestamp(), lastMatchDate.toDbTimestamp(), MatchType.getNTMatchType());
 	}
 
 	/**
@@ -1198,7 +1026,7 @@ public class DBManager {
 	 * @param matchStatus the match status
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(final int teamId, final int matchStatus) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(final int teamId, final int matchStatus) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfo(teamId, matchStatus);
 	}
@@ -1215,17 +1043,6 @@ public class DBManager {
 				.getFirstUpcomingMatchWithTeamId(teamId);
 	}
 
-
-	/**
-	 * Get played match info array list.
-	 *
-	 * @param iNbGames the nb games
-	 * @return the array list
-	 */
-	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames){
-		return getOwnPlayedMatchInfo(iNbGames, false);
-	}
-
 	/**
 	 * Get played match info array list (own team Only)
 	 *
@@ -1233,7 +1050,7 @@ public class DBManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
+	public List<MatchKurzInfo> getOwnPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly){
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, true);
 	}
 
@@ -1244,31 +1061,28 @@ public class DBManager {
 	 * @param bOfficialGamesOnly the b official games only
 	 * @return the array list
 	 */
-	public ArrayList<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
+	public List<MatchKurzInfo> getPlayedMatchInfo(@Nullable Integer iNbGames, boolean bOfficialGamesOnly, boolean ownTeam){
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getPlayedMatchInfo(iNbGames, bOfficialGamesOnly, ownTeam);
 	}
 
 	/**
 	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
 	 * and of type <code>matchtyp</code>.
-	 *
 	 * Important: if teamId is -1, <code>matchtype</code> must be set to
 	 * <code>MatchesPanel.ALL_MATCHS</code>.
-	 *
 	 * @param teamId   The ID of the team, or -1 for all.
 	 * @param iMatchType Type of match, as defined in {@link module.matches.MatchesPanel}
 	 * @param matchLocation Home, Away, Neutral
 	 *
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
 		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.htStart.toDbTimestamp(), true);
 	}
 
 	/**
 	 * Returns an array of {@link MatchKurzInfo} for the team with ID <code>teamId</code>,
 	 * and of type <code>matchtyp</code>.
-	 *
 	 * Important: if teamId is -1, <code>matchtype</code> must be set to
 	 * <code>MatchesPanel.ALL_MATCHS</code>.
 	 *
@@ -1279,7 +1093,7 @@ public class DBManager {
 	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation, Timestamp from, boolean includeUpcoming) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, iMatchType, matchLocation, from, includeUpcoming);
 	}
 
@@ -1289,7 +1103,7 @@ public class DBManager {
 	 * @param teamId the team id
 	 * @return the match kurz info [ ]
 	 */
-	public MatchKurzInfo[] getMatchesKurzInfoUpComing(int teamId) {
+	public List<MatchKurzInfo> getMatchesKurzInfoUpComing(int teamId) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.getMatchesKurzInfoUpComing(teamId);
 	}
@@ -1342,7 +1156,7 @@ public class DBManager {
 	 * @return the scout list
 	 */
 	public Vector<ScoutEintrag> getScoutList() {
-		return ((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList();
+		return new Vector<>(((ScoutTable) getTable(ScoutTable.TABLENAME)).getScoutList());
 	}
 
 	/**
@@ -1421,60 +1235,29 @@ public class DBManager {
 				.getMatchSubstitutionsByMatchTeam(matchType.getId(), teamId, matchId);
 	}
 
-	/**
-	 * Returns an array with substitution belonging to given hrfId and name
-	 *
-	 * @param hrfId      The teamId for the team in question
-	 * @param lineupName The name of the lineup
-	 * @return the match substitutions by hrf
-	 */
-	public List<Substitution> getMatchSubstitutionsByHrf(int hrfId,
-			String lineupName) {
-		return ((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.getMatchSubstitutionsByHrf(hrfId, lineupName);
-	}
-
-	/**
-	 * Gets penalty takers.
-	 *
-	 * @param lineupName the lineup name
-	 * @return the penalty takers
-	 */
-	List<MatchRoleID> getPenaltyTakers(String lineupName) {
-		try {
-			return ((PenaltyTakersTable) getTable(PenaltyTakersTable.TABLENAME))
-					.getPenaltyTakers(lineupName);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	// ------------------------------- TeamTable
-	// -------------------------------------------------
-
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-	 * Stimmung [1] = Selbstvertrauen
-	 *
-	 * @param hrfid the hrfid
-	 * @return the string [ ]
-	 */
-	public String[] getStimmmungSelbstvertrauen(int hrfid) {
-		return ((TeamTable) getTable(TeamTable.TABLENAME))
-				.getStimmmungSelbstvertrauen(hrfid);
-	}
-
-	/**
-	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-	 * Stimmung [1] = Selbstvertrauen
-	 *
-	 * @param hrfid the hrfid
-	 * @return the int [ ]
-	 */
-	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
-		return ((TeamTable) getTable(TeamTable.TABLENAME))
-				.getStimmmungSelbstvertrauenValues(hrfid);
-	}
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
+//	 * Stimmung [1] = Selbstvertrauen
+//	 *
+//	 * @param hrfid the hrfid
+//	 * @return the string [ ]
+//	 */
+//	public String[] getStimmmungSelbstvertrauen(int hrfid) {
+//		return ((TeamTable) getTable(TeamTable.TABLENAME))
+//				.getStimmmungSelbstvertrauen(hrfid);
+//	}
+//
+//	/**
+//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
+//	 * Stimmung [1] = Selbstvertrauen
+//	 *
+//	 * @param hrfid the hrfid
+//	 * @return the int [ ]
+//	 */
+//	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
+//		return ((TeamTable) getTable(TeamTable.TABLENAME))
+//				.getStimmmungSelbstvertrauenValues(hrfid);
+//	}
 
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
@@ -1509,12 +1292,12 @@ public class DBManager {
 				.getTrainingList(fromDate, toDate);
 	}
 
-	public void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate, force);
+	public void saveTraining(TrainingPerWeek training, HODateTime lastTrainingDate) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTraining(training, lastTrainingDate);
 	}
 
-	public void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate, boolean force) {
-		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate, force);
+	public void saveTrainings(List<TrainingPerWeek> trainings, HODateTime lastTrainingDate) {
+		((TrainingsTable) getTable(TrainingsTable.TABLENAME)).saveTrainings(trainings, lastTrainingDate);
 	}
 
 	// ------------------------------- FutureTrainingTable
@@ -1559,7 +1342,7 @@ public class DBManager {
 	 * @return the verein
 	 */
 	public Verein getVerein(int hrfID) {
-		return ((VereinTable) getTable(VereinTable.TABLENAME)).getVerein(hrfID);
+		return ((VereinTable) getTable(VereinTable.TABLENAME)).loadVerein(hrfID);
 	}
 
 	/**
@@ -1581,7 +1364,7 @@ public class DBManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public int getFuturTraining(Timestamp trainingDate) {
+	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
@@ -1618,8 +1401,8 @@ public class DBManager {
 	 */
 	public void loadUserParameter() {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
-		table.load(UserParameter.instance());
-		table.load(HOParameter.instance());
+		table.loadConfigurations(UserParameter.instance());
+		table.loadConfigurations(HOParameter.instance());
 	}
 
 	/**
@@ -1627,8 +1410,8 @@ public class DBManager {
 	 */
 	public void saveUserParameter() {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
-		table.store(UserParameter.instance());
-		table.store(HOParameter.instance());
+		table.storeConfigurations(UserParameter.instance());
+		table.storeConfigurations(HOParameter.instance());
 	}
 
 	// ------------------------------- PaarungTable
@@ -1654,14 +1437,9 @@ public class DBManager {
 		((PaarungTable) getTable(PaarungTable.TABLENAME)).storePaarung(fixtures, ligaId, saison);
 	}
 
-	/**
-	 * Delete paarung tabelle.
-	 *
-	 * @param whereSpalten the where spalten
-	 * @param whereValues  the where values
-	 */
-	public void deletePaarungTabelle(String[] whereSpalten, String[] whereValues) {
-		getTable(PaarungTable.TABLENAME).delete(whereSpalten, whereValues);
+	public void deletePaarungTabelle(int saison, int ligaId) {
+		var table = getTable(PaarungTable.TABLENAME);
+		table.executePreparedDelete(saison, ligaId);
 	}
 
 	// ------------------------------- MatchDetailsTable
@@ -1699,7 +1477,7 @@ public class DBManager {
 	 * @param matchId      the match id
 	 * @return the match highlights
 	 */
-	public ArrayList<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
+	public List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlights(iMatchType, matchId);
 	}
@@ -1723,10 +1501,25 @@ public class DBManager {
 	 * @param allTransfers the all transfers
 	 * @return the transfers
 	 */
-// Transfer
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
+		setPlayerInfo(ret);
+		return ret;
+	}
+
+	/**
+	 * set the attribute player of each transfer
+	 * @param transfers list of transfers
+	 */
+	private void setPlayerInfo(List<PlayerTransfer> transfers) {
+		for (PlayerTransfer transfer : transfers) {
+			final Player player = getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
+
+			if (player != null) {
+				transfer.setPlayerInfo(player);
+			}
+		}
 	}
 
 	/**
@@ -1737,10 +1530,11 @@ public class DBManager {
 	 * @param sold   the sold
 	 * @return the transfers
 	 */
-	public List<PlayerTransfer> getTransfers(int season, boolean bought,
-			boolean sold) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean sold) {
+		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(season, bought, sold);
+		setPlayerInfo(ret);
+		return ret;
 	}
 
 	/**
@@ -1756,22 +1550,21 @@ public class DBManager {
 	/**
 	 * Update player transfers.
 	 *
-	 * @param playerId the player id
+	 * @param transfer PlayerTransfer
 	 */
-	public void updatePlayerTransfers(int playerId) {
+	public void storePlayerTransfer(PlayerTransfer transfer) {
 		((TransferTable) getTable(TransferTable.TABLENAME))
-				.updatePlayerTransfers(playerId);
+				.storeTransfer(transfer);
 	}
 
 	/**
-	 * Update team transfers boolean.
-	 *
-	 * @param teamid the teamid
-	 * @return the boolean
+	 * load one player transfer
+	 * @param transferId int
+	 * @return PlayerTransfer
 	 */
-	public boolean updateTeamTransfers(int teamid) {
+	public PlayerTransfer loadPlayerTransfer(int transferId) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
-					.updateTeamTransfers(teamid);
+				.getTransfer(transferId);
 	}
 
 	/**
@@ -1780,20 +1573,19 @@ public class DBManager {
 	 * @param playerId the player id
 	 * @return the transfer type
 	 */
-	public int getTransferType(int playerId) {
+	public TransferType getTransferType(int playerId) {
 		return ((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
-				.getTransferType(playerId);
+				.loadTransferType(playerId);
 	}
 
 	/**
 	 * Sets transfer type.
 	 *
-	 * @param playerId the player id
 	 * @param type     the type
 	 */
-	public void setTransferType(int playerId, int type) {
+	public void setTransferType(TransferType  type) {
 		((TransferTypeTable) getTable(TransferTypeTable.TABLENAME))
-				.setTransferType(playerId, type);
+				.storeTransferType(type);
 	}
 
 	/**
@@ -1879,7 +1671,6 @@ public class DBManager {
 				anzahlHRF, group);
 	}
 
-
 	/**
 	 * Gets count of played matches.
 	 *
@@ -1888,31 +1679,23 @@ public class DBManager {
 	 * @return the count of played matches
 	 */
 	public int getCountOfPlayedMatches(int playerId, boolean official) {
-		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid ";
-		sqlStmt = sqlStmt + "where spielerId = " + playerId
-				+ " and FIELDPOS>-1 ";
-
-		if (official) {
-			sqlStmt = sqlStmt + "and matchtyp <8";
-		} else {
-			sqlStmt = sqlStmt + "and matchtyp >7";
-		}
-
+		var officialWhere = official ? "<8" : ">7";
+		String sqlStmt = "select count(MATCHESKURZINFO.matchid) as MatchNumber FROM MATCHLINEUPPLAYER " +
+				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
+				"where spielerId = "+ playerId +
+				" and ROLEID BETWEEN 100 AND 113 and matchtyp " + officialWhere;
+		assert getAdapter() != null;
 		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
-
 		if (rs == null) {
 			return 0;
 		}
-
 		int count = 0;
-
 		try {
 			while (rs.next()) {
 				count = rs.getInt("MatchNumber");
 			}
 		} catch (SQLException ignored) {
 		}
-
 		return count;
 	}
 
@@ -1932,35 +1715,30 @@ public class DBManager {
 	 * @param officialOnly whether or not to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
-
 		if(playerID == -1) return new Vector<>();
-
 		final Vector<PlayerMatchCBItem> spielerMatchCBItems = new Vector<>();
-
 		String sql = """
 				SELECT DISTINCT MatchID, MatchDate, Rating, SpielDatum, HeimName, HeimID, GastName, GastID, HoPosCode, MatchTyp
 				FROM MATCHLINEUPPLAYER
 				INNER JOIN MATCHLINEUP ON (MATCHLINEUPPLAYER.MatchID=MATCHLINEUP.MatchID AND MATCHLINEUPPLAYER.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHDETAILS ON (MATCHDETAILS.MatchID=MATCHLINEUP.MatchID AND MATCHDETAILS.MATCHTYP=MATCHLINEUP.MATCHTYP)
 				INNER JOIN MATCHESKURZINFO ON (MATCHESKURZINFO.MATCHID=MATCHLINEUP.MatchID AND MATCHESKURZINFO.MATCHTYP=MATCHLINEUP.MATCHTYP)
-				WHERE MATCHLINEUPPLAYER.SpielerID=%s AND MATCHLINEUPPLAYER.Rating>0""";
+				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
 
 		if(officialOnly){
-			sql += " AND MATCHTYP IN " + MatchType.getWhereClauseFromSourceSystem(SourceSystem.HATTRICK.getValue());
+			var lMatchTypes =  MatchType.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
+			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
+			sql += " AND MATCHTYP IN (" + inValues + ")";
 		}
-
 		sql += " ORDER BY MATCHDETAILS.SpielDatum DESC";
-
 
 		// Get all data on the player
 		try {
 			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
-
-			final ResultSet rs = m_clJDBCAdapter.executeQuery(String.format(sql, playerID));
+			assert m_clJDBCAdapter != null;
+			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql), playerID);
 			PlayerMatchCBItem playerMatchCBItem;
 			assert rs != null;
-			rs.beforeFirst();
-
 			// Get all data on the player
 			while (rs.next()) {
 				playerMatchCBItem = new PlayerMatchCBItem(null,
@@ -1968,36 +1746,33 @@ public class DBManager {
 						(int)(rs.getFloat("Rating") * 2),
 						rs.getInt("HoPosCode"),
 						HODateTime.fromDbTimestamp(rs.getTimestamp("MatchDate")),
-						DBManager.deleteEscapeSequences(rs
-								.getString("HeimName")), rs.getInt("HeimID"),
-						DBManager.deleteEscapeSequences(rs
-								.getString("GastName")), rs.getInt("GastID"),
-						MatchType.getById(rs.getInt("MatchTyp")), null, "", "");
+						rs.getString("HeimName"),
+						rs.getInt("HeimID"),
+						rs.getString("GastName"),
+						rs.getInt("GastID"),
+						MatchType.getById(rs.getInt("MatchTyp")),
+						null,
+						"",
+						"");
 				playerMatchCBItems.add(playerMatchCBItem);
 			}
 
-
 			Timestamp filter;
-
-
-
 			// Get the player data for the matches
 			for (final PlayerMatchCBItem item : playerMatchCBItems) {
-
 				filter = item.getMatchdate().toDbTimestamp();
-
 				// Player
 				final Player player = getSpielerAtDate(playerID, filter);
-
 				// Matchdetails
 				final Matchdetails details = loadMatchDetails(item.getMatchType().getMatchTypeId(), item.getMatchID());
-
 				// Stimmung und Selbstvertrauen
-				final String[] sTSandConfidences = getStimmmungSelbstvertrauen(getHRFID4Date(filter));
-
+				var team = getTeam(getHRFID4Date(filter));
+				final String[] sTSandConfidences = {
+						TeamSpirit.toString(team.getTeamSpirit()),
+						TeamConfidence.toString(team.getConfidence())
+				};
 				//Only if player data has been found, pass it into the return vector
-				if ((player != null) && (details != null)
-						&& (sTSandConfidences != null)) {
+				if (player != null && details != null) {
 					item.setSpieler(player);
 					item.setMatchdetails(details);
 					item.setTeamSpirit(sTSandConfidences[0]);
@@ -2009,9 +1784,9 @@ public class DBManager {
 			HOLogger.instance().log(getClass(),
 					"DatenbankZugriff.getSpieler4Matches : " + e);
 		}
-
 		return spielerMatchCBItems;
 	}
+
 
 	/**
 	 * Delete hrf.
@@ -2019,20 +1794,17 @@ public class DBManager {
 	 * @param hrfid the hrfid
 	 */
 	public void deleteHRF(int hrfid) {
-		final String[] where = { "HRF_ID" };
-		final String[] value = { hrfid + "" };
-
-		getTable(StadionTable.TABLENAME).delete(where, value);
-		getTable(HRFTable.TABLENAME).delete(where, value);
-		getTable(LigaTable.TABLENAME).delete(where, value);
-		getTable(VereinTable.TABLENAME).delete(where, value);
-		getTable(TeamTable.TABLENAME).delete(where, value);
-		getTable(EconomyTable.TABLENAME).delete(where, value);
-		getTable(BasicsTable.TABLENAME).delete(where, value);
-		getTable(SpielerTable.TABLENAME).delete(where, value);
-		getTable(SpielerSkillupTable.TABLENAME).delete(where, value);
-		getTable(XtraDataTable.TABLENAME).delete(where, value);
-		((StaffTable) getTable(StaffTable.TABLENAME)).deleteAllStaffByHrfId(hrfid);
+		getTable(StadionTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(HRFTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(LigaTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(VereinTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(TeamTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(EconomyTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(BasicsTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(SpielerTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(SpielerSkillupTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(XtraDataTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(StaffTable.TABLENAME).executePreparedDelete( hrfid);
 	}
 
 	/**
@@ -2040,21 +1812,14 @@ public class DBManager {
 	 *
 	 * @param matchid The matchid. Must be larger than 0.
 	 */
-	public void deleteMatch(int matchid) {
-		final String[] whereSpalten = { "MatchID" };
-		final String[] whereValues = { "" + matchid };
-		getTable(MatchDetailsTable.TABLENAME).delete(whereSpalten, whereValues);
-		getTable(MatchHighlightsTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchLineupTable.TABLENAME).delete(whereSpalten, whereValues);
-		getTable(MatchLineupTeamTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchLineupPlayerTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		getTable(MatchesKurzInfoTable.TABLENAME).delete(whereSpalten,
-				whereValues);
-		((MatchSubstitutionTable) getTable(MatchSubstitutionTable.TABLENAME))
-				.deleteAllMatchSubstitutionsByMatchId(matchid);
+	public void deleteMatch(int matchid, int matchType) {
+		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchesKurzInfoTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(matchid, matchType);
 	}
 
 	/**
@@ -2080,17 +1845,15 @@ public class DBManager {
 				&& (info.getMatchID() == lineup.getMatchID())
 				&& (info.getMatchStatus() == MatchKurzInfo.FINISHED)) {
 
-			deleteMatch(info.getMatchID());
+			//deleteMatch( info.getMatchID(), info.getMatchType().getId());
 
 			var matches = new ArrayList<MatchKurzInfo>();
 			matches.add(info);
 			((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 					.storeMatchKurzInfos(matches);
 
-			((MatchDetailsTable) getTable(MatchDetailsTable.TABLENAME))
-					.storeMatchDetails(details);
-			((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-					.storeMatchLineup(lineup);
+			storeMatchDetails(details);
+			storeMatchLineup(lineup, null);
 
 			return true;
 		}
@@ -2108,6 +1871,8 @@ public class DBManager {
 	}
 	
 	private void createAllTables() throws SQLException {
+		assert m_clJDBCAdapter != null;
+		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
@@ -2177,17 +1942,7 @@ public class DBManager {
 	 */
 	void saveUserParameter(String fieldName, String value) {
 		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
-				.update(fieldName, value);
-	}
-
-	/**
-	 * Remove a single UserParameter from the DB
-	 *
-	 * @param fieldName the name of the parameter to remove
-	 */
-	void removeUserParameter(String fieldName) {
-		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
-				.remove(fieldName);
+				.storeConfiguration(fieldName, value);
 	}
 
 	/**
@@ -2275,21 +2030,12 @@ public class DBManager {
 	}
 
 	/**
-	 * Add ta player info.
-	 *
-	 * @param info the info
-	 */
-	public void addTAPlayerInfo(PlayerInfo info) {
-		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).addPlayer(info);
-	}
-
-	/**
 	 * Update ta player info.
 	 *
 	 * @param info the info
 	 */
-	public void updateTAPlayerInfo(PlayerInfo info) {
-		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).updatePlayer(info);
+	public void storeTAPlayerInfo(PlayerInfo info) {
+		((TAPlayerTable) getTable(TAPlayerTable.TABLENAME)).storePlayer(info);
 	}
 
 	/**
@@ -2298,9 +2044,9 @@ public class DBManager {
 	 * @param matchId the match id
 	 * @return the boolean
 	 */
-	public boolean isIFAMatchinDB(int matchId) {
+	public boolean isIFAMatchinDB(int matchId, int matchType) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
-				.isMatchInDB(matchId);
+				.isMatchInDB(matchId, matchType);
 	}
 
 	/**
@@ -2352,7 +2098,7 @@ public class DBManager {
 	public static String getString(ResultSet rs, String columnLabel){
 		try {
 			var ret = rs.getString(columnLabel);
-			if (!rs.wasNull()) return deleteEscapeSequences(ret);
+			if (!rs.wasNull()) return ret;
 		} catch (Exception ignored) {
 		}
 		return "";
@@ -2398,75 +2144,6 @@ public class DBManager {
 	}
 
 	/**
-	 * Gets double.
-	 *
-	 * @param rs          the rs
-	 * @param columnLabel the column label
-	 * @return the double
-	 */
-	public static Double getDouble(ResultSet rs, String columnLabel) {
-		try {
-			return rs.getDouble(columnLabel);
-		}
-		catch(Exception ignored)
-		{}
-		return null;
-	}
-
-	/**
-	 * Alle \ entfernen
-	 *
-	 * @param text the text
-	 * @return the string
-	 */
-	public static String deleteEscapeSequences(String text) {
-		if (text == null) {
-			return "";
-		}
-
-		final var buffer = new StringBuilder();
-		final char[] chars = text.toCharArray();
-
-		for (char aChar : chars) {
-			if (aChar == '§') {
-				buffer.append("\\");
-			} else if (aChar != '#') {
-				buffer.append(aChar);
-			} else {
-				buffer.append("'");
-			}
-		}
-
-		return buffer.toString();
-	}
-
-	/**
-	 * ' " und ´ codieren durch \
-	 *
-	 * @param text the text
-	 * @return the string
-	 */
-	public static String insertEscapeSequences(String text) {
-		if (text == null) {
-			return "";
-		}
-		final var buffer = new StringBuilder();
-		final char[] chars = text.toCharArray();
-
-		for (char aChar : chars) {
-			if ((aChar == '"') || (aChar == '\'') || (aChar == '´')) {
-				buffer.append("#");
-			} else if (aChar == 92) {
-				buffer.append("§");
-			} else {
-				buffer.append(aChar);
-			}
-		}
-
-		return buffer.toString();
-	}
-
-	/**
 	 * Gets future player trainings.
 	 *
 	 * @param playerId the player id
@@ -2480,12 +2157,11 @@ public class DBManager {
 	/**
 	 * Store future player trainings.
 	 *
-	 * @param spielerID             the spieler id
 	 * @param futurePlayerTrainings the future player trainings
 	 */
-	public void storeFuturePlayerTrainings(int spielerID, List<FuturePlayerTraining> futurePlayerTrainings) {
+	public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
 		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
-				.storeFuturePlayerTrainings(spielerID, futurePlayerTrainings);
+				.storeFuturePlayerTrainings(futurePlayerTrainings);
 
 	}
 
@@ -2513,11 +2189,16 @@ public class DBManager {
 	 * Store match lineup.
 	 *
 	 * @param lineup the lineup
-	 * @param teamId the team id
+	 * @param teamId the team id, if null both teams are stored
 	 */
 	public void storeMatchLineup(MatchLineup lineup, Integer teamId) {
-		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME))
-				.storeMatchLineup(lineup, teamId);
+		((MatchLineupTable) getTable(MatchLineupTable.TABLENAME)).storeMatchLineup(lineup);
+		if (teamId == null || teamId == lineup.getHomeTeamId()) {
+			storeMatchLineupTeam(lineup.getHomeTeam());
+		}
+		if (teamId == null || teamId == lineup.getGuestTeamId()) {
+			storeMatchLineupTeam(lineup.getGuestTeam());
+		}
 	}
 
 	/**
@@ -2530,14 +2211,8 @@ public class DBManager {
 		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
 	}
 
-	/**
-	 * Load match lineups list.
-	 *
-	 * @param sourcesystem the sourcesystem
-	 * @return the list
-	 */
-	public List<MatchLineup> loadMatchLineups(int sourcesystem) {
-		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadMatchLineups(sourcesystem);
+	public List<MatchLineup> getYouthMatchLineups() {
+		return ((MatchLineupTable)getTable(MatchLineupTable.TABLENAME)).loadYouthMatchLineups();
 	}
 
 	/**
@@ -2578,8 +2253,9 @@ public class DBManager {
 	 */
 	public void storeMatchDetails(Matchdetails details) {
 		((MatchDetailsTable)getTable(MatchDetailsTable.TABLENAME)).storeMatchDetails(details);
+		//Store Match Events
+		((MatchHighlightsTable)getTable(MatchHighlightsTable.TABLENAME)).storeMatchHighlights(details);
 	}
-
 
 	/**
 	 * Gets team logo file name BUT it will triggers download of the logo from internet if it is not yet available.
@@ -2600,20 +2276,24 @@ public class DBManager {
 	 * @param logoURL    the logo url
 	 * @param lastAccess the last access
 	 */
-	public void storeTeamLogoInfo(int teamID, String logoURL, Timestamp lastAccess){
-		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(teamID, logoURL, lastAccess);
+	public void storeTeamLogoInfo(int teamID, String logoURL, HODateTime lastAccess){
+		var info = new TeamLogoInfo();
+		info.setUrl(logoURL);
+		info.setTeamId(teamID);
+		info.setLastAccess(lastAccess);
+		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
 	}
 
 	public List<HRF> getHRFsSince(Timestamp since) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHRFsSince(since);
 	}
 
-	public String getHrfIdPerWeekList(int nWeeks) {
+	public List<Integer> loadHrfIdPerWeekList(int nWeeks) {
 		return ((HRFTable)getTable(HRFTable.TABLENAME)).getHrfIdPerWeekList(nWeeks);
 	}
 
 	public void storeTeamRatings(MatchTeamRating teamrating) {
-		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).store(teamrating);
+		((MatchTeamRatingTable)getTable(MatchTeamRatingTable.TABLENAME)).storeTeamRating(teamrating);
 	}
 
     public List<MatchTeamRating> loadMatchTeamRating( int matchtype, int matchId) {
@@ -2623,8 +2303,11 @@ public class DBManager {
 	// ------------------------------- MatchLineupTeamTable
 	// -------------------------------------------------
 	public MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		return ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME))
-				.getMatchLineupTeam(iMatchType, matchID, teamID);
+		var ret = ((MatchLineupTeamTable) getTable(MatchLineupTeamTable.TABLENAME)).loadMatchLineupTeam(iMatchType, matchID, teamID);
+		if ( ret != null) {
+			ret.loadLineup();
+		}
+		return ret;
 	}
 
 	public MatchLineupTeam loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
@@ -2639,13 +2322,21 @@ public class DBManager {
 
 	public void storeMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).storeMatchLineupTeam(matchLineupTeam);
+
+		//replace players
+		var matchLineupPlayerTable = (MatchLineupPlayerTable) DBManager.instance().getTable(MatchLineupPlayerTable.TABLENAME);
+		matchLineupPlayerTable.storeMatchLineupPlayers(matchLineupTeam.getLineup().getAllPositions(), matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID());
+
+		// replace Substitutions
+		var matchSubstitutionTable = (MatchSubstitutionTable) DBManager.instance().getTable(MatchSubstitutionTable.TABLENAME);
+		matchSubstitutionTable.storeMatchSubstitutionsByMatchTeam(matchLineupTeam.getMatchType(), matchLineupTeam.getMatchId(), matchLineupTeam.getTeamID(), matchLineupTeam.getSubstitutions());
 	}
 
 	public void deleteMatchLineupTeam(MatchLineupTeam matchLineupTeam) {
 		((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).deleteMatchLineupTeam(matchLineupTeam);
 	}
 
-	public ArrayList<MatchLineupTeam> loadTemplateMatchLineupTeams() {
+	public List<MatchLineupTeam> loadTemplateMatchLineupTeams() {
 		return ((MatchLineupTeamTable)getTable(MatchLineupTeamTable.TABLENAME)).getTemplateMatchLineupTeams();
 	}
 
@@ -2654,49 +2345,36 @@ public class DBManager {
 	}
 
 	public NtTeamDetails loadNtTeamDetails(int teamId, Timestamp matchDate) {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(teamId, matchDate);
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeam(teamId, matchDate);
 	}
 
 	public List<NtTeamDetails> loadAllNtTeamDetails() {
-		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).load(getLatestHRF().getHrfId());
+		return ((NtTeamTable)getTable(NtTeamTable.TABLENAME)).loadNTTeams(getLatestHRF().getHrfId());
 	}
 
 	public void storeNtTeamDetails(NtTeamDetails details) {
-		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).store(details);
+		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).storeNTTeam(details);
 	}
+
+	private final String sql = "SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER" +
+			" FROM XTRADATA INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID" +
+			" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID" +
+			" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0" +
+			" INNER JOIN (SELECT TRAININGDATE, %s(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE) IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID" +
+			" WHERE XTRADATA.TRAININGDATE >= ?";
+
+	private final PreparedStatementBuilder loadTrainingPerWeekMaxStatement = new PreparedStatementBuilder(String.format(sql, "max"));
+	private final PreparedStatementBuilder loadTrainingPerWeekMinStatement = new PreparedStatementBuilder(String.format(sql, "min"));
 
 	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
 
 		var ret = new ArrayList<TrainingPerWeek>();
-		// for past trainings the first hrf after training date is the best guess
-		// - add one week to next training date of the week
-		// - use min(hrf) here
-
-		var sql = new StringBuilder();
-		sql.append("SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER")
-				.append(" FROM XTRADATA")
-				.append(" INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID")
-				.append(" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID")
-				.append(" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0")
-				.append(" INNER JOIN (")
-				.append(" SELECT TRAININGDATE,");
-		if ( all ) {
-			sql.append(" min");
-		}
-		else {
-			sql.append(" max");
-		}
-		sql.append("(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE")
-				.append(") IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID")
-				.append(" WHERE XTRADATA.TRAININGDATE >=")
-				.append("'").append(startDate).append("'");
-
 		try {
-
-			final JDBCAdapter ijdbca = DBManager.instance().getAdapter();
-			final ResultSet rs = ijdbca.executeQuery(sql.toString());
+			assert m_clJDBCAdapter != null;
+			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(
+					all?loadTrainingPerWeekMaxStatement.getStatement():loadTrainingPerWeekMinStatement.getStatement(),
+					startDate);
 			if ( rs != null ) {
-				rs.beforeFirst();
 				while (rs.next()) {
 					int trainType = rs.getInt("TRAININGSART");
 					int trainIntensity = rs.getInt("TRAININGSINTENSITAET");
@@ -2715,14 +2393,57 @@ public class DBManager {
 					ret.add( tpw);
 				}
 			}
-
 			return ret;
 		}
 		catch (Exception e) {
 			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
 		}
-
 		return null;
+	}
 
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
+	}
+
+	private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
+	private static final DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(
+			"select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
+
+	public String loadLatestTSINotInjured(int m_iSpielerID) {
+		return loadLatestTSI(preStatementBuilder, m_iSpielerID);
+	}
+	public String loadLatestTSIInjured(int m_iSpielerID) {
+		return loadLatestTSI(postStatementBuilder, m_iSpielerID);
+	}
+
+	private String loadLatestTSI(DBManager.PreparedStatementBuilder preparedStatementBuilder, int m_iSpielerID) {
+		try {
+			ResultSet rs = Objects.requireNonNull(this.getAdapter()).executePreparedQuery(preparedStatementBuilder.getStatement(), m_iSpielerID);
+			if (rs.next()) {
+				return  rs.getString("marktwert");
+			}
+		} catch (Exception ignored) {
+		}
+		return "";
+	}
+
+
+	public static String getPlaceholders(int count){
+		return String.join(",", Collections.nCopies(count, "?"));
+	}
+
+	public static class PreparedStatementBuilder{
+		private final String sql;
+		public PreparedStatementBuilder(String sql){
+			this.sql=sql;
+		}
+		private PreparedStatement statement;
+		public PreparedStatement getStatement() {
+			if (statement == null) {
+				statement = Objects.requireNonNull(DBManager.instance().getAdapter()).createPreparedStatement(sql);
+			}
+			return statement;
+		}
 	}
 }

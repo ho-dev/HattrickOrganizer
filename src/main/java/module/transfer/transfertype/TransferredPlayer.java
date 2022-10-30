@@ -6,7 +6,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import module.transfer.PlayerTransfer;
-import module.transfer.TransferTypes;
+import module.transfer.TransferType;
 
 
 /**
@@ -17,15 +17,15 @@ import module.transfer.TransferTypes;
 class TransferredPlayer {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private String playerName;
+    private final String playerName;
     private boolean bought = false;
     private boolean sold = false;
     private double officialMatch = 0;
-    private int age = 17;
+    private int age;
     private int endWeek = 0;
     private int experience = 0;
     private int experienceSkillups = 0;
-    private int id = 0;
+    private int id;
     private int income;
     private int leadership = 0;
     private int skillups = 0;
@@ -107,10 +107,14 @@ class TransferredPlayer {
      * @return transfer type code
      */
     final int getTransferType() {
-        int type = DBManager.instance().getTransferType(id);
-
-        if (type > -2) {
-            return type;
+        var transferType = DBManager.instance().getTransferType(id);
+        if (transferType != null) {
+            if ( transferType.getTransferType() != null ) {
+                return transferType.getTransferType();
+            }
+            else {
+                return TransferType.UNDEFINED;
+            }
         }
 
         if (bought && !sold) {
@@ -152,7 +156,6 @@ class TransferredPlayer {
             sold = true;
             income += transfer.getPrice();
             endWeek = transfer.getWeek() + (transfer.getSeason() * 16);
-            return;
         }
     }
 
@@ -163,14 +166,14 @@ class TransferredPlayer {
      */
     private int getActualPlayerType() {
         if (skillups > 0) {
-            return TransferTypes.TRAINED_ROSTER;
+            return TransferType.TRAINED_ROSTER;
         }
 
         if (isStarter()) {
-            return TransferTypes.STARTER_ROSTER;
+            return TransferType.STARTER_ROSTER;
         }
 
-        return TransferTypes.BACKUP_ROSTER;
+        return TransferType.BACKUP_ROSTER;
     }
 
     /**
@@ -180,26 +183,26 @@ class TransferredPlayer {
      */
     private int getOldPlayerType() {
         if ((getWeekOnRoster() <= 3) && (skillups == 0)) {
-            return TransferTypes.DAY_TRADING;
+            return TransferType.DAY_TRADING;
         }
 
         if ((getWeekOnRoster() <= 6) && (skillups == 1)) {
-            return TransferTypes.SKILL_TRADING;
+            return TransferType.SKILL_TRADING;
         }
 
         if ((experienceSkillups > 0) && (experience >= 5) && (leadership >= 5)) {
-            return TransferTypes.FUTURE_TRAINER;
+            return TransferType.FUTURE_TRAINER;
         }
 
         if (skillups == 0) {
             if (isStarter()) {
-                return TransferTypes.OLD_STARTER;
+                return TransferType.OLD_STARTER;
             }
 
-            return TransferTypes.OLD_BACKUP;
+            return TransferType.OLD_BACKUP;
         }
 
-        return TransferTypes.OLD_TRAINED;
+        return TransferType.OLD_TRAINED;
     }
 
     /**
@@ -210,12 +213,7 @@ class TransferredPlayer {
      */
     private boolean isStarter() {
         final double ratio = officialMatch / (getWeekOnRoster() + 1);
-
-        if (ratio > 0.35) {
-            return true;
-        }
-
-        return false;
+        return ratio > 0.35;
     }
 
     /**
@@ -225,10 +223,10 @@ class TransferredPlayer {
      */
     private int getTeamPlayerType() {
         if (age > 20) {
-            return TransferTypes.ORIGINAL_ROSTER;
+            return TransferType.ORIGINAL_ROSTER;
         }
 
-        return TransferTypes.YOUTH_PULL;
+        return TransferType.YOUTH_PULL;
     }
 
     /**

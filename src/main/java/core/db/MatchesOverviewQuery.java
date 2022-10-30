@@ -1,31 +1,19 @@
 package core.db;
 
 import core.model.HOVerwaltung;
-import core.model.cup.CupLevel;
-import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HOLogger;
 import module.matches.MatchLocation;
-import module.matches.MatchesPanel;
 import module.matches.statistics.MatchesOverviewCommonPanel;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import static core.model.match.MatchEvent.isGoalEvent;
-
 
 class MatchesOverviewQuery  {
 
-	/**
-	 *
-	 * @param teamId
-	 * @param matchtype
-	 * @param statistic
-	 * @return count of matches
-	 */
 	static int getMatchesKurzInfoStatisticsCount(int teamId, int matchtype, int statistic){
 		int tmp = 0;
 		StringBuilder sql = new StringBuilder(200);
@@ -57,11 +45,11 @@ class MatchesOverviewQuery  {
 				whereAwayClause=" AND HEIMTORE > GASTTORE AND (HEIMTORE - GASTTORE ) >= 5 ))";
 				break;
 		}
-		sql.append(" ((HEIMID = ").append(teamId).append(whereHomeClause);
-		sql.append(" OR (GASTID = ").append(teamId).append(whereAwayClause);
+		sql.append(" ((HEIMID = ?").append(whereHomeClause);
+		sql.append(" OR (GASTID = ?").append(whereAwayClause);
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			if(rs.next()){
 				tmp = rs.getInt("C");
@@ -76,23 +64,22 @@ class MatchesOverviewQuery  {
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
 		int tmp = 0;
-		sql.append("SELECT MK_MatchTyp, DIFFH, DIFF, MK_HEIMID, MK_GASTID, MATCHID \n");
-		sql.append("FROM (SELECT (MATCHHIGHLIGHTS.HEIMTORE - MATCHHIGHLIGHTS.GASTTORE) as DIFFH, (MATCHESKURZINFO.HEIMTORE - MATCHESKURZINFO.GASTTORE) as DIFF, HEIMID, GASTID, MATCHID, TYP, MINUTE, \n" + 
-				    "MATCHHIGHLIGHTS.TEAMID as MH_TEAMID, MATCHESKURZINFO.HEIMID as MK_HEIMID, MATCHESKURZINFO.GASTID as MK_GASTID, MATCHESKURZINFO.MATCHTYP as MK_MatchTyp \n" + 
-				    "FROM\n" + 
-				    "MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID)\n");
-		sql.append(" WHERE TYP = 0 AND MINUTE = 45 AND MH_TEAMID = 0 ");
-		switch(statistic){
-		case MatchesOverviewCommonPanel.LeadingHTLosingFT:
-			sql.append("AND ((MK_HEIMID = "+teamId+" AND DIFFH >0 AND DIFF <0) or (MK_GASTID = "+teamId+" AND DIFFH <0 AND DIFF >0)) ");
-			break;
-		case MatchesOverviewCommonPanel.TrailingHTWinningFT:
-			sql.append("AND ((MK_HEIMID = "+teamId+" AND DIFFH <0 AND DIFF >0) or (MK_GASTID = "+teamId+" AND DIFFH >0 AND DIFF <0)) ");
-			break;
+		sql.append("""
+				SELECT MK_MatchTyp, DIFFH, DIFF, MK_HEIMID, MK_GASTID, MATCHID \s
+				FROM (SELECT (MATCHHIGHLIGHTS.HEIMTORE - MATCHHIGHLIGHTS.GASTTORE) as DIFFH, (MATCHESKURZINFO.HEIMTORE - MATCHESKURZINFO.GASTTORE) as DIFF, HEIMID, GASTID, MATCHID, TYP, MINUTE,\s
+				MATCHHIGHLIGHTS.TEAMID as MH_TEAMID, MATCHESKURZINFO.HEIMID as MK_HEIMID, MATCHESKURZINFO.GASTID as MK_GASTID, MATCHESKURZINFO.MATCHTYP as MK_MatchTyp\s
+				FROM
+				MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID) WHERE TYP = 0 AND MINUTE = 45 AND MH_TEAMID = 0 ");
+				""");
+		switch (statistic) {
+			case MatchesOverviewCommonPanel.LeadingHTLosingFT ->
+					sql.append("AND ((MK_HEIMID = ? AND DIFFH >0 AND DIFF <0) or (MK_GASTID = ? AND DIFFH <0 AND DIFF >0)) ");
+			case MatchesOverviewCommonPanel.TrailingHTWinningFT ->
+					sql.append("AND ((MK_HEIMID = ? AND DIFFH <0 AND DIFF >0) or (MK_GASTID = ? AND DIFFH >0 AND DIFF <0)) ");
 		}
 		sql.append("AND (MK_MatchTyp=2 OR MK_MatchTyp=1 OR MK_MatchTyp=3 )");
 
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
 		try {
 			for (int i = 0; rs.next(); i++) {
 				tmp=i;
@@ -104,40 +91,24 @@ class MatchesOverviewQuery  {
 
 	}
 
-
-	private static String MatchEventsIDListToString(List<MatchEvent.MatchEventID> matchEvents){
-		String res = "";
-		for (MatchEvent.MatchEventID meID : matchEvents)
-		{
-			res += meID.getValue() + ", ";
-		}
-		return res.substring(0, res.length() - 2);
-	}
-
-	/**
-	 * SELECT TYP, COUNT(*)  FROM  MATCHHIGHLIGHTS join MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID
-WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING TYP in (1,2) ORDER BY TYP
-	 * @return
-	 */
-
 	public static MatchesHighlightsStat[] getGoalsByActionType(boolean ownTeam, int iMatchType, MatchLocation matchLocation){
 
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		MatchesHighlightsStat[] rows = new MatchesHighlightsStat[9];
-		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEventsIDListToString(MatchEvent.penaltyME));
-		rows[1] = new MatchesHighlightsStat("highlight_freekick",  MatchEventsIDListToString(MatchEvent.freekickME));
-		rows[2] = new MatchesHighlightsStat("highlight_links", MatchEventsIDListToString(MatchEvent.leftAttackME));
-		rows[3] = new MatchesHighlightsStat("highlight_middle", MatchEventsIDListToString(MatchEvent.CentralAttackME));
-		rows[4] = new MatchesHighlightsStat("highlight_rechts", MatchEventsIDListToString(MatchEvent.RightAttackME));
-		rows[5] = new MatchesHighlightsStat("IFK", MatchEventsIDListToString(MatchEvent.IFKME));
-		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEventsIDListToString(MatchEvent.LSME));
-		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEventsIDListToString(MatchEvent.CounterAttackME));
-		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEventsIDListToString(MatchEvent.specialME));
+		rows[0] = new MatchesHighlightsStat("highlight_penalty", MatchEvent.penaltyME);
+		rows[1] = new MatchesHighlightsStat("highlight_freekick",  MatchEvent.freekickME);
+		rows[2] = new MatchesHighlightsStat("highlight_links", MatchEvent.leftAttackME);
+		rows[3] = new MatchesHighlightsStat("highlight_middle", MatchEvent.CentralAttackME);
+		rows[4] = new MatchesHighlightsStat("highlight_rechts", MatchEvent.RightAttackME);
+		rows[5] = new MatchesHighlightsStat("IFK", MatchEvent.IFKME);
+		rows[6] = new MatchesHighlightsStat("ls.match.event.longshot", MatchEvent.LSME);
+		rows[7] = new MatchesHighlightsStat("highlight_counter", MatchEvent.CounterAttackME);
+		rows[8] = new MatchesHighlightsStat("highlight_special", MatchEvent.specialME);
 
-		for (int i = 0; i < rows.length; i++) {
-			if(!rows[i].isTitle())
-				fillMatchesOverviewChanceRow(ownTeam, teamId, rows[i], iMatchType, matchLocation);
+		for (MatchesHighlightsStat row : rows) {
+			if (!row.isTitle())
+				fillMatchesOverviewChanceRow(ownTeam, teamId, row, iMatchType, matchLocation);
 		}
 		return rows;
 	}
@@ -146,14 +117,16 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static void fillMatchesOverviewChanceRow(boolean ownTeam, int teamId, MatchesHighlightsStat row, int iMatchType, MatchLocation matchLocation){
 		StringBuilder sql = new StringBuilder(200);
 		ResultSet rs;
+		List<Object> params = new ArrayList<>();
 		sql.append("SELECT MATCH_EVENT_ID, COUNT(*) AS C FROM MATCHHIGHLIGHTS JOIN MATCHESKURZINFO ON MATCHHIGHLIGHTS.MATCHID = MATCHESKURZINFO.MATCHID WHERE TEAMID");
 		if(!ownTeam) {sql.append("!");}
-		sql.append("=").append(teamId).append(" AND MATCH_EVENT_ID IN(");
-		sql.append(row.getSubtyps()).append(")");
+		sql.append("=?").append(" AND MATCH_EVENT_ID IN(");
+		params.add(teamId);
+		sql.append(createSubTypePlaceholders(row.getSubtyps(), params)).append(")");
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
-		rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), params.toArray());
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
@@ -177,6 +150,17 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 				HOLogger.instance().log(MatchesOverviewQuery.class, e);
 		}
 		}
+	}
+
+	private static StringBuilder createSubTypePlaceholders(List<MatchEvent.MatchEventID> subtypes, List<Object> params) {
+		var sep = "";
+		var placeholders = new StringBuilder();
+		for (var id : subtypes) {
+			placeholders.append(sep).append("?");
+			params.add(id.getValue());
+			sep = ",";
+		}
+		return placeholders;
 	}
 
 	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId) {
@@ -224,7 +208,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		rows.add(new MatchesOverviewRow("IMatchDetails.WETTER_REGEN",  MatchesOverviewRow.TYPE_WEATHER, Weather.RAINY.getId()));
 		setMatchesOverviewValues(rows,matchtype,true, matchLocation);
 		setMatchesOverviewValues(rows,matchtype,false, matchLocation);
-		return rows.toArray(new MatchesOverviewRow[rows.size()]);
+		return rows.toArray(new MatchesOverviewRow[0]);
 	}
 
 
@@ -246,8 +230,8 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 	private static StringBuilder getMatchLocationWhereClause(MatchLocation matchLocation, int teamId, boolean home) {
 		StringBuilder sql = new StringBuilder(500);
 		switch (matchLocation) {
-			case HOME: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND HeimID=" + teamId); break;
-			case AWAY: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND GastID=" + teamId); break;
+			case HOME: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND HeimID=").append(teamId); break;
+			case AWAY: sql.append(" AND (isNeutral is NULL OR isNeutral=false) AND GastID=").append(teamId); break;
 			case NEUTRAL: sql.append(" AND isNeutral=true");
 			case ALL: sql.append(" AND ").append(home?"HEIMID=":"GASTID=").append(teamId); break;
 		}
@@ -272,7 +256,7 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		sql.append(" where 1=1 ");
 		sql.append(whereClause);
 		try{
-			ResultSet rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
 
 			while(rs.next()){
 				String[] fArray = {"0","",""};
@@ -329,19 +313,20 @@ WHERE TEAMID = 1247417 AND SubTyp in(0,10,20,30,50,60,70,80) GROUP BY TYP HAVING
 		StringBuilder sql = new StringBuilder(500);
 		String from = " FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID ";
 		sql.append("SELECT SUM(ANZAHL) AS A1,SUM(G1) AS G,SUM(U1) AS U,SUM(V1) AS V, SUM(HTORE1) AS HEIMTORE, SUM(GTORE1) AS GASTTORE FROM (");
-		sql.append("select  COUNT(*) AS ANZAHL, 0 AS G1,0 AS U1, 0 AS V1, SUM(HEIMTORE) AS HTORE1, SUM(GASTTORE) AS GTORE1 "+from+" where 1 = 1 ");
+		sql.append("select  COUNT(*) AS ANZAHL, 0 AS G1,0 AS U1, 0 AS V1, SUM(HEIMTORE) AS HTORE1, SUM(GASTTORE) AS GTORE1 ").append(from).append(" where 1 = 1 ");
 		sql.append(whereClause).append(" UNION ");
-		sql.append("SELECT 0 AS ANZAHL,  COUNT(*) AS G1,0 AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 "+from+" where HEIMTORE "+(home?">":"<")+" GASTTORE ");
+		sql.append("SELECT 0 AS ANZAHL,  COUNT(*) AS G1,0 AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from).append(" where HEIMTORE ").append(home ? ">" : "<").append(" GASTTORE ");
 		sql.append(whereClause).append(" UNION ");
-		sql.append("SELECT  0 AS ANZAHL,  0 AS G1,COUNT(*) AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 "+from+" where HEIMTORE = GASTTORE ");
+		sql.append("SELECT  0 AS ANZAHL,  0 AS G1,COUNT(*) AS U1, 0 AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from).append(" where HEIMTORE = GASTTORE ");
 		sql.append(whereClause).append(" UNION ");
-		sql.append("select  0 AS ANZAHL,  0 AS G1, 0 AS U1, COUNT(*) AS V1, 0 AS HTORE1, 0 AS GTORE1 "+from+" where HEIMTORE "+(home?"<":">")+" GASTTORE ");
+		sql.append("select  0 AS ANZAHL,  0 AS G1, 0 AS U1, COUNT(*) AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from).append(" where HEIMTORE ").append(home ? "<" : ">").append(" GASTTORE ");
 		sql.append(whereClause);
 		sql.append(")");
 		try{
-		ResultSet rs = DBManager.instance().getAdapter().executeQuery(sql.toString());
+		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
+			return;
 		}
 
 		if(rs.next()){

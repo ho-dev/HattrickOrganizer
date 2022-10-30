@@ -3,10 +3,7 @@ package core.gui.comp.table;
 import core.model.HOVerwaltung;
 import javax.swing.table.TableColumn;
 
-
 public abstract class UserColumn {
-
-
 
     //~ Instance fields ----------------------------------------------------------------------------
 	/** unique column id **/
@@ -39,6 +36,11 @@ public abstract class UserColumn {
 	protected UserColumn(int id,String name){
 		this(id,name,name);
 	}
+
+	/**
+	 * constructor is used by AbstractTable
+	 */
+	public UserColumn(){}
 	
 	/**
 	 * returns the language dependency name of the column
@@ -55,10 +57,14 @@ public abstract class UserColumn {
 	public final int getId() {
 		return id;
 	}
+
+	public void setId(int v){
+		this.id = v;
+	}
 	
 	/**
 	 * returns the language dependency tooltip of the column
-	 * @return
+	 * @return String
 	 */
 	public final String getTooltip() {
 		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip:HOVerwaltung.instance().getLanguageString(tooltip);
@@ -74,7 +80,7 @@ public abstract class UserColumn {
 
 	/**
 	 * set a column to be showed
-	 * @param display
+	 * @param display boolean
 	 */
 	public final void setDisplay(boolean display) {
 		this.display = display;
@@ -95,7 +101,7 @@ public abstract class UserColumn {
 	/**
 	 * set index
 	 * if columnModel should be saved index will set, or column is loaded
-	 * @param index
+	 * @param index int
 	 */
 	public final void setIndex(int index) {
 		this.index = index;
@@ -110,7 +116,7 @@ public abstract class UserColumn {
 		return getTooltip();
 	}
 
-	/**
+	/*
 	 * Some columns must be displayed, so some columns are not editable
 	 * @return boolean
 	 */
@@ -120,7 +126,7 @@ public abstract class UserColumn {
 
 	/**
 	 * set minWidth and prefWidth in the TableColumn
-	 * @param column
+	 * @param column TableColumn
 	 */
 	public void setSize(TableColumn column){
 		column.setMinWidth(minWidth);
@@ -129,7 +135,7 @@ public abstract class UserColumn {
 	
 	/**
 	 * set preferredWidth for saving to DB
-	 * @param width
+	 * @param width int
 	 */
 	public void setPreferredWidth(int width){
 		preferredWidth = width;
@@ -138,4 +144,5 @@ public abstract class UserColumn {
 	public int getPreferredWidth(){
 		return preferredWidth;
 	}
+
 }

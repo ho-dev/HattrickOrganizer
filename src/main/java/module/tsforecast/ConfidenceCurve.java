@@ -15,18 +15,12 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-// Referenced classes of package hoplugins.tsforecast:
-//            Curve
 
 class ConfidenceCurve extends Curve {
 
@@ -34,11 +28,14 @@ class ConfidenceCurve extends Curve {
 		readConfidenceHistory();
 	}
 
+	private static final DBManager.PreparedStatementBuilder teamStatemenBuilder = new DBManager.PreparedStatementBuilder(
+			"select DATUM, ISELBSTVERTRAUEN from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID order by DATUM"
+			);
+
 	private void readConfidenceHistory() throws SQLException {
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 		ResultSet resultset = m_clJDBC
-				.executeQuery("select DATUM, ISELBSTVERTRAUEN from HRF, TEAM "
-						+ "where HRF.HRF_ID = TEAM.HRF_ID order by DATUM");
+				.executePreparedQuery(teamStatemenBuilder.getStatement());
 		assert resultset != null;
 		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
 			var date = HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM"));

@@ -8,10 +8,6 @@ import tool.keepertool.PlayerItem;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.ResultSet;
-import java.util.Iterator;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -31,12 +27,12 @@ class InjuryDetailPanel extends JPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private JComboBox injuryType = new JComboBox();
-    private JComboBox players = new JComboBox();
-    private JTextField age = new JTextField(8);
-    private JTextField injury = new JTextField(8);
-    private JTextField tsiPost = new JTextField(8);
-    private JTextField tsiPre = new JTextField(8);
+	private final JComboBox injuryType = new JComboBox();
+    private final JComboBox players = new JComboBox();
+    private final JTextField age = new JTextField(8);
+    private final JTextField injury = new JTextField(8);
+    private final JTextField tsiPost = new JTextField(8);
+    private final JTextField tsiPre = new JTextField(8);
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -117,10 +113,7 @@ class InjuryDetailPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayers().iterator();
-             iter.hasNext();) {
-            final Player element = iter.next();
-
+        for (final Player element : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
             if (element.getInjuryWeeks() > 0) {
                 players.addItem(new PlayerItem(element));
             }
@@ -130,55 +123,45 @@ class InjuryDetailPanel extends JPanel {
             players.setEnabled(false);
         }
 
-        players.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    final PlayerItem selected = (PlayerItem) players.getSelectedItem();
+        players.addItemListener(e -> {
+            final PlayerItem selected = (PlayerItem) players.getSelectedItem();
 
-                    if (selected == null) {
-                        return;
-                    }
+            if (selected == null) {
+                return;
+            }
 
-                    final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(selected
-                                                                                           .getId());
+            final Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(selected.getId());
 
-                    if (player == null) {
-                        return;
-                    }
+            if (player == null) {
+                return;
+            }
 
-                    age.setText("" + player.getAlter());
-                    injury.setText("" + player.getInjuryWeeks());
+            age.setText("" + player.getAlter());
+            injury.setText("" + player.getInjuryWeeks());
 
-                    String tsi = "";
+            String tsi = player.getLatestTSINotInjured();
+//
+//            try {
+//                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(preStatementBuilder.getStatement(),player.getPlayerID());
+//                if (rs.next()) {
+//                    tsi = rs.getString("marktwert");
+//                }
+//            } catch (Exception e1) {
+//            }
 
-                    try {
-                        ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert, hrf_id from SPIELER where spielerid="
-                                                                                        + player
-                                                                                          .getPlayerID()
-                                                                                        + " and verletzt=-1 order by hrf_id desc");
+            tsiPre.setText(tsi);
 
-                        if (rs.next()) {
-                            tsi = rs.getString("marktwert");
-                        }
-                    } catch (Exception e1) {
-                    }
+            tsi = player.getLatestTSIInjured();
+//            try {
+//                ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(postStatementBuilder.getStatement(), player.getPlayerID());
+//                if (rs.next()) {
+//                    tsi = rs.getString("marktwert");
+//                }
+//            } catch (Exception e1) {
+//            }
 
-                    tsiPre.setText(tsi);
-
-                    try {
-                        ResultSet rs = DBManager.instance().getAdapter().executeQuery("select marktwert from SPIELER where spielerid="
-                                                                                        + player
-                                                                                          .getPlayerID()
-                                                                                        + " and verletzt>-1 order by hrf_id desc");
-
-                        if (rs.next()) {
-                            tsi = rs.getString("marktwert");
-                        }
-                    } catch (Exception e1) {
-                    }
-
-                    tsiPost.setText(tsi);
-                }
-            });
+            tsiPost.setText(tsi);
+        });
 
         injuryType.setSelectedIndex(0);
         players.setSelectedIndex(0);

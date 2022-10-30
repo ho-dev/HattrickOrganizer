@@ -1,21 +1,17 @@
 // %2277986132:hoplugins.transfers.vo%
 package module.transfer;
 
-
+import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
-
-import java.sql.Timestamp;
-
-
 
 /**
  * Value Object representing a player transfer.
  *
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
-public class PlayerTransfer {
+public class PlayerTransfer extends AbstractTable.Storable {
     //~ Static fields/initializers -----------------------------------------------------------------
 
     /** Type to indicate a BUY transfer */
@@ -87,6 +83,11 @@ public class PlayerTransfer {
         this.playerId = playerid;
     }
 
+    /**
+     * constructor is used by AbstractTable (TransfersTable)
+     */
+    public PlayerTransfer(){}
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -156,8 +157,8 @@ public class PlayerTransfer {
      *
      * @param value Market value of the player on transfer date.
      */
-    public final void setMarketvalue(int value) {
-        this.marketvalue = value;
+    public final void setMarketvalue(Integer value) {
+        if ( value != null ) this.marketvalue = value;
     }
 
     /**
@@ -228,8 +229,8 @@ public class PlayerTransfer {
      *
      * @param price Transfer price.
      */
-    public final void setPrice(int price) {
-        this.price = price;
+    public final void setPrice(Integer price) {
+        if ( price != null ) this.price = price;
     }
 
     /**
@@ -308,8 +309,11 @@ public class PlayerTransfer {
      *
      * @return Id of the transfer
      */
-    public final int getTransferID() {
+    public final int getTransferId() {
         return transferId;
+    }
+    public void setTransferId(int v){
+        this.transferId = v;
     }
 
     /**

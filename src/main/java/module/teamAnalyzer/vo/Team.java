@@ -1,6 +1,7 @@
 // %193722072:hoplugins.teamAnalyzer.vo%
 package module.teamAnalyzer.vo;
 
+import core.db.AbstractTable;
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.util.HODateTime;
@@ -10,8 +11,9 @@ import core.util.HODateTime;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class Team implements Comparable<Team> {
-    //~ Instance fields ----------------------------------------------------------------------------
+public class Team extends AbstractTable.Storable implements Comparable<Team> {
+
+    public Team(){}
 
     /** Name of the team */
     private String name;
