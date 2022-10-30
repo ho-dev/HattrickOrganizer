@@ -91,6 +91,10 @@ public class TrainingPerWeek extends AbstractTable.Storable {
         return o_TrainingDate;
     }
 
+    public HODateTime.HTWeek getTrainingWeek(){
+        return o_TrainingDate.toTrainingWeek();
+    }
+
     public void setTrainingDate(HODateTime trainingDate) {
         o_TrainingDate = trainingDate;
     }

@@ -200,7 +200,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param i amount of days (may be negativ)
      * @return HODateTime
      */
-    public HODateTime plusDaysAtSameLocalTime(int i) {
+    public HODateTime plusDaysAtSameLocalTime(long i) {
         int hour = instant.atZone(DEFAULT_TIMEZONE).getHour();
         int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();
         int second = instant.atZone(DEFAULT_TIMEZONE).getSecond();
@@ -246,7 +246,7 @@ public class HODateTime implements Comparable<HODateTime> {
             }
         }
 
-        public Long sinceOrigin() {
+        public long sinceOrigin() {
             return (season-1) * 16L + week -1L;
         }
     }
