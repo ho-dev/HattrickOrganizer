@@ -93,19 +93,3 @@ jobs:
           body_path: docs/md/release_notes.md
           target_commitish: ${{ steps.read_version_branch.outputs.value }}
           prerelease: ${{ steps.read_version_tag.outputs.value != 'tag_stable'}}
-      #- name: Set current date as env variable
-      #  run: echo "TODAY=$(date +'%d.%m.%Y')" >> $GITHUB_ENV
-      #- name: Update latest.html file for automatic upgrade of dev version
-      #  if: ${{ steps.read_version_tag.outputs.value == 'dev' }}
-      #  run: echo -e "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}" > "./docs/latest.html"
-      #- name: Update latestbeta.html file for automatic upgrade of beta version
-      #  if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value != 'tag_stable') }}
-      #  run: echo -e "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}" > "./docs/latestbeta.html"
-      #- name: Update lateststable.html file for automatic upgrade of stable version
-      #  if: ${{ (steps.read_version_tag.outputs.value != 'dev') && (steps.read_version_tag.outputs.value == 'tag_stable') }}
-      #  run: echo -e "version=${{steps.read_version.outputs.value}}\nreleased=${{env.TODAY}}" > "./docs/lateststable.html"
-      #- name: commiting latest html files for automatic upgrade
-      #  uses: stefanzweifel/git-auto-commit-action@v4
-      #  with:
-      #    commit_message: automatic release action - update latest html files information
-      #    file_pattern: docs/*.html

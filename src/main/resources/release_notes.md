@@ -31,6 +31,7 @@ Please do not forget to back up data.
 ### NT
 
 ### Training
+* fix daylight saving resetting future trainings (#1668)
 
 ### League
 

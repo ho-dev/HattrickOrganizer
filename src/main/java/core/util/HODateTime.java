@@ -200,7 +200,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param i amount of days (may be negativ)
      * @return HODateTime
      */
-    public HODateTime plusDaysAtSameLocalTime(int i) {
+    public HODateTime plusDaysAtSameLocalTime(long i) {
         int hour = instant.atZone(DEFAULT_TIMEZONE).getHour();
         int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();
         int second = instant.atZone(DEFAULT_TIMEZONE).getSecond();
@@ -246,7 +246,7 @@ public class HODateTime implements Comparable<HODateTime> {
             }
         }
 
-        public Long sinceOrigin() {
+        public long sinceOrigin() {
             return (season-1) * 16L + week -1L;
         }
     }
@@ -278,8 +278,26 @@ public class HODateTime implements Comparable<HODateTime> {
     public HTWeek toTrainingWeek(){
         if ( durationBetweenWeekStartAndTrainingDate == null ){
             var nextTrainingDate=HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+            var previousTrainingDate = nextTrainingDate.minus(7, ChronoUnit.DAYS);
+            // check daylight saving
+            var hourNext = nextTrainingDate.instant.atZone(DEFAULT_TIMEZONE).getHour();
+            var hourPrevious = previousTrainingDate.instant.atZone(DEFAULT_TIMEZONE).getHour();
+            var daylightSavingCorrection = 0;
+            if ( hourNext == hourPrevious + 1){
+                daylightSavingCorrection = -1;
+            }
+            else if ( hourNext == hourPrevious -1 ){
+                daylightSavingCorrection = 1;
+            }
+            else if ( hourNext == hourPrevious + 23 ){
+                daylightSavingCorrection = 1;
+            }
+            else if ( hourNext == hourPrevious - 23){
+                daylightSavingCorrection = -1;
+            }
+
             var startOfWeek = HODateTime.fromHTWeek(nextTrainingDate.toHTWeek());
-            durationBetweenWeekStartAndTrainingDate = HODateTime.between(startOfWeek, nextTrainingDate);
+            durationBetweenWeekStartAndTrainingDate = HODateTime.between(startOfWeek, nextTrainingDate).minus(daylightSavingCorrection, ChronoUnit.HOURS);
         }
 
         var trainingDateRelatedDate = new HODateTime(this.instant.minus(durationBetweenWeekStartAndTrainingDate));

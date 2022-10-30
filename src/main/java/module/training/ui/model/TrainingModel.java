@@ -167,36 +167,24 @@ public class TrainingModel implements PropertyChangeListener {
 		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
 		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
 
-		if (previousTraining != null) {
-			var trainingDate = previousTraining.getTrainingDate();
-			//ZonedDateTime zdtrefDate = oTrainingDate.getHattrickTime();
-
-			int nbWeek = 1;
-			HODateTime futureTrainingDate;
+		var futureTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+		if (futureTrainingDate != null && previousTraining != null) {
 			TrainingPerWeek futureTraining;
-
 			while (newfutureTrainings.size() < requiredNBentries) {
-
 				//first iteration equals to nextWeek training then increase per one week per iteration
-				futureTrainingDate = trainingDate.plusDaysAtSameLocalTime(nbWeek*7);
-
-				//ZonedDateTime finalZdtFutureTrainingDate = zdtFutureTrainingDate;
 				HODateTime finalFutureTrainingDate = futureTrainingDate;
-				var oFutureTraining = _futureTrainings.stream().filter(t -> finalFutureTrainingDate.equals(t.getTrainingDate())).findFirst();
-
-				if (oFutureTraining.isPresent()) {
+				var storedFutureTrainings = _futureTrainings.stream().filter(t -> finalFutureTrainingDate.equals(t.getTrainingDate())).toList();
+				if (storedFutureTrainings.size() == 1) {
 					// training present in Future Training table => we keep it
-					futureTraining = oFutureTraining.get();
+					futureTraining = storedFutureTrainings.get(0);
 				} else {
 					// training not present in Future Training table => we create a new one from previous training
 					futureTraining = new TrainingPerWeek(futureTrainingDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
 							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
 				}
-
 				newfutureTrainings.add(futureTraining);
+				futureTrainingDate = futureTrainingDate.plusDaysAtSameLocalTime(7);
 				previousTraining = futureTraining;
-
-				nbWeek++;
 			}
 		}
 		return newfutureTrainings;

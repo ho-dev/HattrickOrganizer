@@ -48,7 +48,9 @@ public final class FutureTrainingTable extends AbstractTable {
 	}
 
 	void storeFutureTrainings(List<TrainingPerWeek> trainings){
+		clearFutureTrainingsTable();
 		for (TrainingPerWeek futureTraining: trainings){
+			futureTraining.setIsStored(false);
 			storeFutureTraining(futureTraining);
 		}
 	}
