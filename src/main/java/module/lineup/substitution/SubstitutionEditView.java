@@ -12,19 +12,11 @@ import module.lineup.substitution.model.Substitution;
 import module.lineup.substitution.positionchooser.PositionChooser;
 import module.lineup.substitution.positionchooser.PositionSelectionEvent.Change;
 import module.teamAnalyzer.vo.PlayerInfo;
-
 import java.awt.*;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import static core.model.player.IMatchRoleID.aSubstitutesMatchRoleID;
 
 /**
@@ -245,15 +237,22 @@ public class SubstitutionEditView extends JPanel {
 		if ( this.whenSlider != null) {
 			this.whenSlider.addChangeListener(e -> whenTextField.setValue(whenSlider.getModel().getValue()));
 
-		// PropertyChangeListener that will update the slider when value in the
-		// "when" textfield changed
-		this.whenTextField.addPropertyChangeListener("value",
-				evt -> {
-					Integer value = (Integer) whenTextField.getValue();
-					whenSlider.setValue(Objects.requireNonNullElse(value, -1));
-					// calculate hatstat change
-					ratingRecalc();
-				});
+			// PropertyChangeListener that will update the slider when value in the
+			// "when" textfield changed
+			this.whenTextField.addPropertyChangeListener("value",
+					evt -> {
+						Integer value = (Integer) whenTextField.getValue();
+						whenSlider.setValue(Objects.requireNonNullElse(value, -1));
+						// calculate hatstat change
+						ratingRecalc();
+					});
+		}
+
+		if ( this.playerComboBox != null){
+			this.playerComboBox.addActionListener(e-> ratingRecalc());
+		}
+		if ( this.playerInComboBox != null){
+			this.playerInComboBox.addActionListener(e-> ratingRecalc());
 		}
 
 		if (this.orderType != MatchOrderType.POSITION_SWAP && this.orderType != MatchOrderType.MAN_MARKING) {
