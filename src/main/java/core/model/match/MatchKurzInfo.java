@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static core.util.StringUtils.getResultString;
 
@@ -371,7 +372,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	}
 
 	public void setCupLevel(CupLevel _CupLevel) {
-		this.m_mtCupLevel = _CupLevel;
+		this.m_mtCupLevel = Objects.requireNonNullElse(_CupLevel, CupLevel.NONE);
 	}
 
 	public CupLevelIndex getCupLevelIndex() {
@@ -379,7 +380,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	}
 
 	public void setCupLevelIndex(CupLevelIndex _CupLevelIndex) {
-		this.m_mtCupLevelIndex = _CupLevelIndex;
+		this.m_mtCupLevelIndex = Objects.requireNonNullElse(_CupLevelIndex, CupLevelIndex.NONE);
 	}
 
 	// --------------------------------------------------------------

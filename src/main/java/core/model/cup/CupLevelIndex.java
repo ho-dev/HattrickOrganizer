@@ -11,7 +11,7 @@ public enum CupLevelIndex {
     SAPPHIRE(3);  // Sapphire cup
 
     private final int id;
-    private static Map map = new HashMap<>();
+    private static final Map<Integer, CupLevelIndex> map = new HashMap<>();
 
     CupLevelIndex(int id) {
         this.id = id;
@@ -23,8 +23,11 @@ public enum CupLevelIndex {
         }
     }
 
-    public static CupLevelIndex fromInt(int iCupLevelIndex) {
-        return (CupLevelIndex) map.get(iCupLevelIndex);
+    public static CupLevelIndex fromInt(Integer iCupLevelIndex) {
+        if ( iCupLevelIndex != null) {
+            return (CupLevelIndex) map.get(iCupLevelIndex);
+        }
+        return null;
     }
 
     public int getId() {
