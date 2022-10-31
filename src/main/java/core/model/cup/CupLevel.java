@@ -11,7 +11,7 @@ public enum CupLevel {
     CONSOLATION(3);  // Consolation cup
 
     private final int id;
-    private static Map map = new HashMap<>();
+    private static final Map<Integer, CupLevel> map = new HashMap<>();
 
     CupLevel(int id) {
         this.id = id;
@@ -23,8 +23,11 @@ public enum CupLevel {
         }
     }
 
-    public static CupLevel fromInt(int iCupLevel) {
-        return (CupLevel) map.get(iCupLevel);
+    public static CupLevel fromInt(Integer iCupLevel) {
+        if (iCupLevel != null) {
+            return (CupLevel) map.get(iCupLevel);
+        }
+        return null;
     }
 
     public int getId() {

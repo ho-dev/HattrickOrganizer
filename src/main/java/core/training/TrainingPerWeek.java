@@ -17,7 +17,7 @@ import java.util.List;
 public class TrainingPerWeek extends AbstractTable.Storable {
 
     private int o_TrainingIntensity;
-    private int o_StaminaShare;
+    private int o_StaminaShare=10;
     private int o_TrainingType;
     private int o_CoachLevel;
     private int o_TrainingAssistantsLevel;
@@ -91,10 +91,6 @@ public class TrainingPerWeek extends AbstractTable.Storable {
         return o_TrainingDate;
     }
 
-    public HODateTime.HTWeek getTrainingWeek(){
-        return o_TrainingDate.toTrainingWeek();
-    }
-
     public void setTrainingDate(HODateTime trainingDate) {
         o_TrainingDate = trainingDate;
     }
@@ -148,8 +144,10 @@ public class TrainingPerWeek extends AbstractTable.Storable {
                 "]";
     }
 
-    public void setStaminaShare(int staminaShare) {
-        this.o_StaminaShare=staminaShare;
+    public void setStaminaShare(Integer staminaShare) {
+        if ( staminaShare != null ) {
+            this.o_StaminaShare = staminaShare;
+        }
     }
 
     public void setCoachLevel(int coachLevel) {
