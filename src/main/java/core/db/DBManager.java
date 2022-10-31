@@ -49,7 +49,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2380,7 +2379,8 @@ public class DBManager {
 					int trainIntensity = rs.getInt("TRAININGSINTENSITAET");
 					int trainStaminaPart = rs.getInt("STAMINATRAININGPART");
 					// subtract one week from next training date to get the past week training date
-					var trainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE")).minus(7, ChronoUnit.DAYS);
+					var nextTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));
+					var trainingDate = nextTrainingDate.plusDaysAtSameLocalTime(-7);
 					int coachLevel = rs.getInt("TRAINER");
 					int trainingAssistantLevel = rs.getInt("COTRAINER");
 					TrainingPerWeek tpw = new TrainingPerWeek(trainingDate,

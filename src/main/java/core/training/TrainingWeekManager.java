@@ -68,10 +68,11 @@ public class TrainingWeekManager {
 				HOLogger.instance().error(TrainingWeekManager.class, "Error while performing getNextWeekTraining(): numRows: " + numRows);
 				// training date changed or hrf from another team loaded (select latest)
 				var ret = trainings.stream().max(Comparator.comparing(TrainingPerWeek::getTrainingDate));
-				return ret.get();
+				if ( ret.isPresent()) {
+					return ret.get();
+				}
 			}
 			return trainings.get(0);
-
 		}
 		return null;
 	}
@@ -108,8 +109,7 @@ public class TrainingWeekManager {
 		}
 
 		var nbWeeks = ChronoUnit.DAYS.between(m_StartDate.instant, nextTrainingDate.instant) / 7;
-		//var currDate = nextTrainingDate.minus((int)nbWeeks * 7, ChronoUnit.DAYS);
-		var currDate = nextTrainingDate.plusDaysAtSameLocalTime(-7 * (int) nbWeeks);
+		var currDate = nextTrainingDate.plusDaysAtSameLocalTime(-7L * nbWeeks);
 		while (!currDate.isAfter(nextTrainingDate)) {
 
 			if ((!m_IncludeUpcomingTrainings) && (currDate.isAfter(getLastUpdateDate()))) {
@@ -157,7 +157,7 @@ public class TrainingWeekManager {
 	private HashMap<Long, TrainingPerWeek> createTPWfromDBentries() {
 
 		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
-		var startDate = m_StartDate.plus(7, ChronoUnit.DAYS);
+		var startDate = m_StartDate.plusDaysAtSameLocalTime(7);
 		for (var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)) {
 			output.put(trainingPerWeek.getTrainingDate().toLocaleHTWeek().sinceOrigin(), trainingPerWeek);
 		}
