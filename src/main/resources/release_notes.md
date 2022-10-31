@@ -44,4 +44,4 @@ Please do not forget to back up data.
 
 ## Translations
 
-Reports by Contributors - June 05, 2022 - August 08, 2022
+Reports by Contributors - October 15, 2022 - October 31, 2022
