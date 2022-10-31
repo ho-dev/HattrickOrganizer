@@ -9,7 +9,6 @@ import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.training.WeeklyTrainingType;
-import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.PastTrainingManager;
 import java.beans.PropertyChangeEvent;
@@ -167,13 +166,12 @@ public class TrainingModel implements PropertyChangeListener {
 		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
 		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
 
-		var futureTrainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
-		if (futureTrainingDate != null && previousTraining != null) {
+		if ( previousTraining != null) {
 			TrainingPerWeek futureTraining;
 			while (newfutureTrainings.size() < requiredNBentries) {
 				//first iteration equals to nextWeek training then increase per one week per iteration
-				HODateTime finalFutureTrainingDate = futureTrainingDate;
-				var storedFutureTrainings = _futureTrainings.stream().filter(t -> finalFutureTrainingDate.equals(t.getTrainingDate())).toList();
+				var futureTrainingDate = previousTraining.getTrainingDate().plusDaysAtSameLocalTime(7);
+				var storedFutureTrainings = _futureTrainings.stream().filter(t -> futureTrainingDate.equals(t.getTrainingDate())).toList();
 				if (storedFutureTrainings.size() == 1) {
 					// training present in Future Training table => we keep it
 					futureTraining = storedFutureTrainings.get(0);
@@ -183,7 +181,6 @@ public class TrainingModel implements PropertyChangeListener {
 							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
 				}
 				newfutureTrainings.add(futureTraining);
-				futureTrainingDate = futureTrainingDate.plusDaysAtSameLocalTime(7);
 				previousTraining = futureTraining;
 			}
 		}
