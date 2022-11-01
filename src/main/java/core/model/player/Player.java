@@ -506,18 +506,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * gives information of skill ups
-     * returns vector of
-     * object[]
-     *      [0] = date of skill up
-     *      [1] = Boolean: false=no skill up found
-     *      [2] = skill value
-     */
-    public List<Skillup> getAllLevelUp(int skill) {
-        return DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
-    }
-
-    /**
      * Setter for property m_iAlter.
      *
      * @param m_iAlter New value of property m_iAlter.
@@ -1014,12 +1002,34 @@ public class Player extends AbstractTable.Storable {
         return m_iLaenderspiele;
     }
 
+    private final HashMap<Integer, Skillup> lastSkillups = new HashMap<>();
     /**
      * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
      * Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
     public Skillup getLastLevelUp(int skill) {
-        return DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
+        if ( lastSkillups.containsKey(skill)){
+            return lastSkillups.get(skill);
+        }
+        var ret =  DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
+        lastSkillups.put(skill, ret);
+        return ret;
+    }
+
+    private List<Skillup> allSkillUps;
+    /**
+     * gives information of skill ups
+     */
+    public List<Skillup> getAllLevelUp(int skill) {
+        if ( allSkillUps == null) {
+            allSkillUps = DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
+        }
+        return allSkillUps;
+    }
+
+    public void resetSkillUpInformation() {
+        lastSkillups.clear();
+        allSkillUps = null;
     }
 
     /**

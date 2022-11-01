@@ -27,7 +27,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((o) -> ((MatchLineupTeam) o).getExperience()).setSetter((o, v) -> ((MatchLineupTeam) o).setExperience((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TeamName").setGetter((o) -> ((MatchLineupTeam) o).getTeamName()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamName((String) v)).setType(Types.VARCHAR).setLength(265).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("StyleOfPlay").setGetter((o) -> (StyleOfPlay.toInt(((MatchLineupTeam) o).getStyleOfPlay()))).setSetter((o, v) -> ((MatchLineupTeam) o).setStyleOfPlay(StyleOfPlay.fromInt((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Attitude").setGetter((o) -> (MatchTeamAttitude.toInt(((MatchLineupTeam) o).getMatchTeamAttitude()))).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchTeamAttitude(MatchTeamAttitude.fromInt((int) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Attitude").setGetter((o) -> (MatchTeamAttitude.toInt(((MatchLineupTeam) o).getMatchTeamAttitude()))).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchTeamAttitude(MatchTeamAttitude.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Tactic").setGetter((o) -> (MatchTacticType.toInt(((MatchLineupTeam) o).getMatchTacticType()))).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchTacticType(MatchTacticType.fromInt((int) v))).setType(Types.INTEGER).isNullable(true).build()
 		};
 	}

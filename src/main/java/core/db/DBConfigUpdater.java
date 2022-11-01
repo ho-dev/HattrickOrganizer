@@ -58,6 +58,7 @@ final class DBConfigUpdater {
 			// Creating entries into TRAININGS table ===========================================================
 			try {
 				String sql = "SELECT TRAININGDATE FROM XTRADATA ORDER BY TRAININGDATE ASC LIMIT 1";
+				assert m_clJDBCAdapter != null;
 				ResultSet rs = m_clJDBCAdapter.executeQuery(sql);
 				assert rs != null;
 				rs.next();
@@ -90,7 +91,7 @@ final class DBConfigUpdater {
 				List<TrainingPerWeek> futureTrainings = new ArrayList<>();
 				List<TrainingPerWeek> futureTrainingsInDB = DBManager.instance().getFutureTrainingsVector();
 
-				int iWeekNumber, iSeasonNumber, nbDays;
+				int nbDays;
 				TrainingPerWeek futureTraining;
 
 				for(TrainingPerWeek futureTrainingDB : futureTrainingsInDB){
@@ -108,7 +109,6 @@ final class DBConfigUpdater {
 				}
 
 				// store futureTrainings in database
-				DBManager.instance().clearFutureTrainingsTable();
 				DBManager.instance().saveFutureTrainings(futureTrainings);
 
 			} catch (Exception e) {

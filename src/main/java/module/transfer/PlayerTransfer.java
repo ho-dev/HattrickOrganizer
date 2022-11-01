@@ -2,6 +2,7 @@
 package module.transfer;
 
 import core.db.AbstractTable;
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
@@ -188,14 +189,14 @@ public class PlayerTransfer extends AbstractTable.Storable {
         return playerId;
     }
 
-    /**
-     * Sets the information about the player on transfer date.
-     *
-     * @param info Player information on transfer date.
-     */
-    public final void setPlayerInfo(Player info) {
-        this.playerInfo = info;
-    }
+//    /**
+//     * Sets the information about the player on transfer date.
+//     *
+//     * @param info Player information on transfer date.
+//     */
+//    public final void setPlayerInfo(Player info) {
+//        this.playerInfo = info;
+//    }
 
     /**
      * Gets the information about the player on transfer date.
@@ -203,6 +204,9 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @return Playerinformation if available. else <code>null</code>
      */
     public final Player getPlayerInfo() {
+        if ( playerInfo == null){
+            playerInfo = DBManager.instance().getSpielerAtDate(this.getPlayerId(), this.getDate().toDbTimestamp());
+        }
         return playerInfo;
     }
 

@@ -772,7 +772,9 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	}
 
 	public void setMatchTeamAttitude(MatchTeamAttitude matchTeamAttitude) {
-		this.lineup.setAttitude(MatchTeamAttitude.toInt(matchTeamAttitude));
+		if ( matchTeamAttitude != null) {
+			this.lineup.setAttitude(MatchTeamAttitude.toInt(matchTeamAttitude));
+		}
 	}
 
 	public void loadLineup() {

@@ -83,6 +83,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			skillup.setPlayerId(nPlayer.getPlayerID());
 			skillup.setValue(newValue);
 			storeSkillup(skillup);
+			nPlayer.resetSkillUpInformation();
 		}
 	}
 }

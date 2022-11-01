@@ -1326,14 +1326,6 @@ public class DBManager {
 				.storeFutureTrainings(trainings);
 	}
 
-	public void clearFutureTrainingsTable(){
-		((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME))
-				.clearFutureTrainingsTable();
-	}
-
-	// ------------------------------- VereinTable
-	// -------------------------------------------------
-
 	/**
 	 * lädt die Basics zum angegeben HRF file ein
 	 *
@@ -1501,25 +1493,23 @@ public class DBManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
-		setPlayerInfo(ret);
-		return ret;
 	}
-
-	/**
-	 * set the attribute player of each transfer
-	 * @param transfers list of transfers
-	 */
-	private void setPlayerInfo(List<PlayerTransfer> transfers) {
-		for (PlayerTransfer transfer : transfers) {
-			final Player player = getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
-
-			if (player != null) {
-				transfer.setPlayerInfo(player);
-			}
-		}
-	}
+//
+//	/**
+//	 * set the attribute player of each transfer
+//	 * @param transfers list of transfers
+//	 */
+//	private void setPlayerInfo(List<PlayerTransfer> transfers) {
+//		for (PlayerTransfer transfer : transfers) {
+//			final Player player = getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
+//
+//			if (player != null) {
+//				transfer.setPlayerInfo(player);
+//			}
+//		}
+//	}
 
 	/**
 	 * Gets transfers.
@@ -1530,10 +1520,8 @@ public class DBManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean sold) {
-		var ret =  ((TransferTable) getTable(TransferTable.TABLENAME))
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(season, bought, sold);
-		setPlayerInfo(ret);
-		return ret;
 	}
 
 	/**
