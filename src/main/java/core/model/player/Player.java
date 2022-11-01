@@ -1016,20 +1016,22 @@ public class Player extends AbstractTable.Storable {
         return ret;
     }
 
-    private List<Skillup> allSkillUps;
+    private final HashMap<Integer, List<Skillup> > allSkillUps = new HashMap<>();
     /**
      * gives information of skill ups
      */
     public List<Skillup> getAllLevelUp(int skill) {
-        if ( allSkillUps == null) {
-            allSkillUps = DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
+        if ( allSkillUps.containsKey(skill)) {
+            return allSkillUps.get(skill);
         }
-        return allSkillUps;
+        var ret = DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
+        allSkillUps.put(skill, ret);
+        return ret;
     }
 
     public void resetSkillUpInformation() {
         lastSkillups.clear();
-        allSkillUps = null;
+        allSkillUps.clear();
     }
 
     /**
