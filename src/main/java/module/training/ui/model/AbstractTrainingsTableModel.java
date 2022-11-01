@@ -2,7 +2,6 @@ package module.training.ui.model;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
-import core.gui.RefreshManager;
 import core.model.enums.DBDataSource;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
@@ -72,11 +71,9 @@ public abstract class AbstractTrainingsTableModel extends AbstractTableModel {
             DBManager.instance().saveTraining(tpw, TrainingManager.instance().getLastTrainingDate());
         } else {
             ((FutureTrainingsTableModel) this).getTrainingModel().saveFutureTraining(tpw);
-            RefreshManager.instance().doRefresh();
         }
     }
 
-    //TODO: isCellEditable() make sure that cells older than 2 seasons are not editable
     /**
      * Cells that are editable should be less than 2 seasons old (otherwise it could be misleading as they won't be considered in skill recalculation)
      * also first column is not editable
