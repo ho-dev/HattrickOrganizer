@@ -4,7 +4,6 @@ import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,9 +104,9 @@ public class TransferTable extends AbstractTable {
     public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
         if (!allTransfers) {
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            return loadTransfers(this.adapter.executePreparedQuery(getTransfersStatementBuilder.getStatement(), playerid, teamid, teamid));
+            return load(PlayerTransfer.class, this.adapter.executePreparedQuery(getTransfersStatementBuilder.getStatement(), playerid, teamid, teamid));
         }
-        return loadTransfers(this.adapter.executePreparedQuery(getAllTransfersStatementBuilder.getStatement(), playerid));
+        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(getAllTransfersStatementBuilder.getStatement(), playerid));
     }
     
     /**
@@ -173,7 +172,7 @@ public class TransferTable extends AbstractTable {
             statement = new PreparedSelectStatementBuilder(this, sql).getStatement();
             getTransferStatements.put(sql, statement);
         }
-        return loadTransfers(this.adapter.executePreparedQuery(statement, params.toArray()));
+        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, params.toArray()));
     }
 
 	/**
@@ -184,15 +183,5 @@ public class TransferTable extends AbstractTable {
     public void storeTransfer(PlayerTransfer transfer) {
         store(transfer);
     }
-	
-    /**
-     * Loads a list of transfers from the HO database.
-     *
-     * @param rs ResultSet
-     *
-     * @return List of transfers
-     */
-    private List<PlayerTransfer> loadTransfers(ResultSet rs) {
-        return load(PlayerTransfer.class, rs);
-    }
+
 }

@@ -129,8 +129,8 @@ public class RatingPredictionManager {
 		Collections.sort(events);
 
 		// we calculate lineup for all event
-		Double t = 0d;
-		Double tNextEvent, tMatchOrder;
+		double t = 0d;
+		double tNextEvent, tMatchOrder;
 		Lineup currentLineup;
 
 		// define time of next event
@@ -160,9 +160,9 @@ public class RatingPredictionManager {
 
 				for(Substitution sub :startingLineup.getSubstitutionList())
 				{
-					tMatchOrder = (double) sub.getMatchMinuteCriteria();
+					tMatchOrder = sub.getMatchMinuteCriteria();
 
-					if (tNextEvent.equals(tMatchOrder))
+					if (tNextEvent == tMatchOrder)
 					{
 						// all matchOrders taking place now are recursively apply on the lineup object
 						currentLineup.UpdateLineupWithMatchOrder(sub);
@@ -173,7 +173,7 @@ public class RatingPredictionManager {
 				var itr = events.iterator();
 				while (itr.hasNext())
 				{
-					Double x = (Double)itr.next();
+					Double x = itr.next();
 					if (Objects.equals(x, tNextEvent))
 						itr.remove();
 				}
@@ -295,18 +295,12 @@ public class RatingPredictionManager {
     	double weight;
 
 		switch (pos) {
-			case IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.CENTRAL_DEFENDER_TOWING -> {
-				weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
-			}
-			case IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_TOWING -> {
-				weight = getCrowdingPenalty(_lineup, MIDFIELD);
-			}
-			case IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> {
-				weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
-			}
-			default -> {
-				weight = 1;
-			}
+			case IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.CENTRAL_DEFENDER_TOWING ->
+					weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
+			case IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_TOWING ->
+					weight = getCrowdingPenalty(_lineup, MIDFIELD);
+			case IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
+			default -> weight = 1;
 		}
     	
     	if ( !(weight > 0)) {
@@ -738,8 +732,7 @@ public class RatingPredictionManager {
             	if (!useLeft && isLeft(pos)
             			|| !useMiddle && isMiddle(pos)
             			|| !useRight && isRight(pos)) {
-            		continue;
-            	} else {
+				} else {
             		int specialty = player.getPlayerSpecialty();
 
 					switch (pos) {
@@ -824,14 +817,15 @@ public class RatingPredictionManager {
              * If we know the last level up date from this player or
              * the user has set an offset manually -> use this sub/offset
              */
-			var lastLvlUp = player.getLastLevelUp(skillType);
-            if (subskillFromDB > 0 || lastLvlUp != null )
-                subSkill = player.getSub4Skill(skillType);
-            else
-            	/*
-            	 * Try to guess the sub based on the skill level
-            	 */
-              subSkill = getSubDeltaFromConfig (config.getPlayerStrengthParameters(), getSkillName(skillType), (int)skill);
+            if (subskillFromDB > 0 || player.getLastLevelUp(skillType) != null ) {
+				subSkill = player.getSub4Skill(skillType);
+			}
+            else {
+				/*
+				 * Try to guess the sub based on the skill level
+				 */
+				subSkill = getSubDeltaFromConfig(config.getPlayerStrengthParameters(), getSkillName(skillType), (int) skill);
+			}
             // subSkill>1, this should not happen
             if (subSkill > 1)
             	subSkill = 1;

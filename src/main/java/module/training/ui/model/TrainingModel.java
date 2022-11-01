@@ -67,7 +67,7 @@ public class TrainingModel implements PropertyChangeListener {
 		return futureTrainings;
 	}
 
-	public void saveFutureTrainings(List<TrainingPerWeek> trainings) {
+	public void updateFutureTrainings(List<TrainingPerWeek> trainings) {
 		for (TrainingPerWeek training : trainings) {
 			DBManager.instance().saveFutureTraining(training);
 		}
@@ -77,7 +77,7 @@ public class TrainingModel implements PropertyChangeListener {
 
 	public void saveFutureTraining(TrainingPerWeek training) {
 		DBManager.instance().saveFutureTraining(training);
-		futureTrainings = null; //force reload
+		//futureTrainings = null; //force reload
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
 

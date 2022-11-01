@@ -6,6 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.constants.TrainingConstants;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
+import core.util.HODateTime;
 import core.util.Helper;
 import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
@@ -23,13 +24,13 @@ import javax.swing.*;
  */
 public class FutureTrainingsEditionPanel extends JPanel {
 
-	private FutureTrainingsTableModel m_FutureTrainingsTableModel;
+	private final FutureTrainingsTableModel m_FutureTrainingsTableModel;
     private JComboBox m_jcbIntensity;
     private JComboBox m_jcbStaminaTrainingPart;
     private JComboBox m_jcbTrainingType;
     private JComboBox m_jcbCoachSkillEditor;
     private JComboBox m_jcbAssitantsTotalLevelEditor;
-    private Set m_selectedTrainingDates;
+    private final Set<HODateTime> m_selectedTrainingDates;
     private final TrainingModel m_TrainingModel;
 
 
@@ -37,7 +38,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         setLayout(new BorderLayout());
         m_TrainingModel = _TrainingModel;
         m_FutureTrainingsTableModel = fm;
-        m_selectedTrainingDates = new HashSet();
+        m_selectedTrainingDates = new HashSet<>();
         for (var i : lsm.getSelectedIndices()){
             TrainingPerWeek tpw = _TrainingModel.getFutureTrainings().get(i);
             m_selectedTrainingDates.add(tpw.getTrainingDate());
@@ -55,7 +56,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
     }
 
 
-    protected void setFutureTrainings() {
+    protected void updateFutureTrainings() {
 
         if((m_jcbTrainingType.getSelectedItem() == null) && (m_jcbIntensity.getSelectedItem() == null) &&
            (m_jcbStaminaTrainingPart.getSelectedItem() == null) && (m_jcbCoachSkillEditor.getSelectedItem() == null) &&
@@ -63,7 +64,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
             return;
         }
 
-        List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<TrainingPerWeek>();
+        List<TrainingPerWeek> futureTrainingsToSave = new ArrayList<>();
 
         for (TrainingPerWeek train: this.m_TrainingModel.getFutureTrainings()) {
 
@@ -97,7 +98,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
             futureTrainingsToSave.add(train);
         }
 
-        m_TrainingModel.saveFutureTrainings(futureTrainingsToSave);
+        m_TrainingModel.updateFutureTrainings(futureTrainingsToSave);
         m_FutureTrainingsTableModel.populate(m_TrainingModel.getFutureTrainings());
         RefreshManager.instance().doRefresh();
     }
@@ -107,11 +108,11 @@ public class FutureTrainingsEditionPanel extends JPanel {
      */
     private void setCBvalues() {
 
-        Set setTrainingType = new HashSet();
-        Set setIntensity = new HashSet();
-        Set setStaminaShare = new HashSet();
-        Set setCoachSkill = new HashSet();
-        Set setTrainingAssistantsLevel = new HashSet();
+        Set<Integer> setTrainingType = new HashSet<>();
+        Set<Integer> setIntensity = new HashSet<>();
+        Set<Integer> setStaminaShare = new HashSet<>();
+        Set<Integer> setCoachSkill = new HashSet<>();
+        Set<Integer> setTrainingAssistantsLevel = new HashSet<>();
 
         for (TrainingPerWeek train: m_TrainingModel.getFutureTrainings()) {
 
@@ -220,7 +221,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
 
 
         JButton button = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
-        button.addActionListener(arg0 -> setFutureTrainings());
+        button.addActionListener(arg0 -> updateFutureTrainings());
         gbc.gridx = 5;
         add(button, gbc);
 
