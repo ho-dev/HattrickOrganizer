@@ -25,6 +25,7 @@ Please do not forget to back up data.
 ### Matches
 
 ### Lineup
+* SubstitutionEditor shows effect on loddarstats (#1626)
 
 ### Statistics
 
