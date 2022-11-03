@@ -39,26 +39,36 @@ public class SubstitutionEditView extends JPanel {
 	private Substitution substitution;
 
 	private static class EffectOnRatingDisplay {
-		private Integer oldValue;
+		private Double oldValue;
 		private final JLabel displayChangeField;
 		private final JLabel labelField;
 
-		public EffectOnRatingDisplay(String label){
+		private final int precision;
+
+		public EffectOnRatingDisplay(String label, int precision){
+			this.precision = (int)Math.pow(10,precision);
 			labelField = new JLabel(label);
 			displayChangeField = new JLabel();
 		}
 
-		public void setOldValue(Integer value){
+		public void setOldValue(Double value){
 			this.oldValue = value;
 			displayChangeField.setText(getChangeText(value));
 		}
 
-		public void setNewValue(Integer value){
+		public void setNewValue(Double value){
 			displayChangeField.setText(getChangeText(value));
 		}
-		private String getChangeText(Integer value) {
+		private String getChangeText(Double value) {
 			if (oldValue == null || value == null) return "";
-			return this.oldValue + "->" + value;
+			return toDecimalString(this.oldValue) + "->" + toDecimalString(value);
+		}
+
+		private String toDecimalString(double value) {
+			var v = (int) value;
+			if (precision == 1) return "" + v;
+			var f = (int) (value * precision) % precision;
+			return "" + v + "." + f;
 		}
 
 		public JLabel getLabelField() {
@@ -71,6 +81,7 @@ public class SubstitutionEditView extends JPanel {
 	}
 
 	private EffectOnRatingDisplay effectOnHatstats;
+	private EffectOnRatingDisplay effectOnLoddarstats;
 
 	private boolean initDone=false;
 
@@ -125,8 +136,11 @@ public class SubstitutionEditView extends JPanel {
 
 	}
 
-	private Integer hatstats() {
-		return lineup.getRatings().getHatStats().get(-90d);	// 90 minutes average
+	private Double hatstats() {
+		return Double.valueOf(lineup.getRatings().getHatStats().get(-90d));	// 90 minutes average
+	}
+	private Double loddarstats() {
+		return lineup.getRatings().getLoddarStat().get(-90d);	// 90 minutes average
 	}
 
 	/**
@@ -143,6 +157,7 @@ public class SubstitutionEditView extends JPanel {
 		this.orderType = sub.getOrderType();
 
 		this.effectOnHatstats.setOldValue(hatstats());
+		this.effectOnLoddarstats.setOldValue(loddarstats());
 
 		if (sub.getSubjectPlayerID() != -1) {
 			ComboBoxModel model = this.playerComboBox.getModel();
@@ -260,6 +275,7 @@ public class SubstitutionEditView extends JPanel {
 				(this.orderType == MatchOrderType.NEW_BEHAVIOUR || substitution.getObjectPlayerID() != -1)) {
 			this.lineup.setRatings();
 			this.effectOnHatstats.setNewValue(hatstats());
+			this.effectOnLoddarstats.setNewValue(loddarstats());
 		}
 	}
 
@@ -322,7 +338,8 @@ public class SubstitutionEditView extends JPanel {
 	}
 
 	private void initComponents() {
-		this.effectOnHatstats = new EffectOnRatingDisplay("HatStats:");
+		this.effectOnHatstats = new EffectOnRatingDisplay("HatStats:", 0);
+		this.effectOnLoddarstats = new EffectOnRatingDisplay("LoddarStats:", 2);
 
 		setLayout(new GridBagLayout());
 
@@ -499,6 +516,17 @@ public class SubstitutionEditView extends JPanel {
 		gbc.gridx = 1;
 		gbc.insets = new Insets(4, 2, 4, 10);
 		add(hatstatsChangeField, gbc);
+
+		JLabel loddarstatsLabel = this.effectOnLoddarstats.getLabelField();
+		gbc.gridx = 0;
+		gbc.gridy++;
+		gbc.insets = new Insets(4, 10, 4, 2);
+		add(loddarstatsLabel, gbc);
+
+		var loddarstatsChangeField = this.effectOnLoddarstats.getDisplayChangeField();
+		gbc.gridx = 1;
+		gbc.insets = new Insets(4, 2, 4, 10);
+		add(loddarstatsChangeField, gbc);
 
 		// dummy to consume all extra space
 		gbc.gridy++;
