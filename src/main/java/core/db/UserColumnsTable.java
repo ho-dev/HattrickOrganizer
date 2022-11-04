@@ -61,7 +61,6 @@ class UserColumnsTable extends AbstractTable {
 		for (int i = 0; i < dbcolumns.length; i++) {
 			dbcolumns[i].setIndex(i);
 		}
-		saveModel(model);
 	}
 
 	void loadModel(HOTableModel model) {
@@ -81,7 +80,6 @@ class UserColumnsTable extends AbstractTable {
 
 		if (count == 0) {
 			insertDefault(model);
-			loadModel(model);
 		}
 	}
 
