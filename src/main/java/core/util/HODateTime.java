@@ -205,11 +205,21 @@ public class HODateTime implements Comparable<HODateTime> {
         int minute = instant.atZone(DEFAULT_TIMEZONE).getMinute();
         int second = instant.atZone(DEFAULT_TIMEZONE).getSecond();
 
-        return new HODateTime(instant.plus(i, ChronoUnit.DAYS).atZone(DEFAULT_TIMEZONE)
+        var ret = new HODateTime(instant.plus(i, ChronoUnit.DAYS).atZone(DEFAULT_TIMEZONE)
                 .withHour(hour)
                 .withMinute(minute)
                 .withSecond(second)
                 .toInstant());
+
+        // day switch
+        var diff = Duration.between(instant, ret.instant);
+        if (diff.compareTo( Duration.ofHours(i*24 + 2)) > 0 ) {
+            ret = ret.minus(1, ChronoUnit.DAYS);
+        }
+        else if (diff.compareTo( Duration.ofHours(i*24 - 2)) < 0 ) {
+            ret = ret.plus(1, ChronoUnit.DAYS);
+        }
+        return ret;
     }
 
     public DayOfWeek DayOfWeek() {
