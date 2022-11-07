@@ -92,7 +92,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private void addListeners() {
 		this.jtfNbWeeks.addFocusListener(new FocusAdapter() {
 			@Override
-			public final void focusLost(FocusEvent focusEvent) {
+			public void focusLost(FocusEvent focusEvent) {
 				Helper.parseInt(HOMainFrame.instance(), jtfNbWeeks, false);
 			}
 		});
@@ -416,7 +416,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 	private void initSpielerCB() {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<PlayerCBItem> playerCBItems = new ArrayList<PlayerCBItem>(players.size());
+		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
 		for (Player player : players) {
 			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
@@ -424,14 +424,14 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 		// Alte Player
 		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		List<PlayerCBItem> spielerOldCBItems = new ArrayList<PlayerCBItem>(players.size());
+		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(players.size());
 		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
 		}
 		Collections.sort(spielerOldCBItems);
 
 		// Zusammenfügen
-		List<PlayerCBItem> cbItems = new ArrayList<PlayerCBItem>(playerCBItems.size()
+		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size()
 				+ spielerOldCBItems.size() + 1);
 		cbItems.addAll(playerCBItems);
 		// Fur die Leerzeile;
@@ -520,13 +520,12 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 				oChartPanel.setAllValues(models, statistikWerte[15], format, HOVerwaltung
 						.instance().getLanguageString("Wochen"), "",
-						false, jcbHelpLines.isSelected());
+						true, jcbHelpLines.isSelected());
 			} else {
 				oChartPanel.setAllValues(null, new double[0], format, HOVerwaltung
 						.instance().getLanguageString("Wochen"), "",
 						false, jcbHelpLines.isSelected());
 			}
-
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}
