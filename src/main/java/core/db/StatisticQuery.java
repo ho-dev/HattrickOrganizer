@@ -175,41 +175,29 @@ public class StatisticQuery {
 		for (ArenaStatistikModel arenaStatistikModel : arenamodels) {
 			final int hrfid = DBManager.instance().getHRFID4Date(arenaStatistikModel.getMatchDate().toDbTimestamp());
 
-			try {
-				//Get the stadium capacities
-				sql = "SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
-				rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(sql);
-				assert rs != null;
-				if (rs.next()) {
-					arenaStatistikModel.setArenaGroesse(rs.getInt("GesamtGr"));
-					arenaStatistikModel.setMaxTerraces(rs.getInt("AnzSteh"));
-					arenaStatistikModel.setMaxBasic(rs.getInt("AnzSitz"));
-					arenaStatistikModel.setMaxRoof(rs.getInt("AnzDach"));
-					arenaStatistikModel.setMaxVip(rs.getInt("AnzLogen"));
+			var stadium = DBManager.instance().getStadion(hrfid);
+			if (stadium != null) {
+				arenaStatistikModel.setArenaGroesse(stadium.getGesamtgroesse());
+				arenaStatistikModel.setMaxTerraces(stadium.getStehplaetze());
+				arenaStatistikModel.setMaxBasic(stadium.getSitzplaetze());
+				arenaStatistikModel.setMaxRoof(stadium.getUeberdachteSitzplaetze());
+				arenaStatistikModel.setMaxVip(stadium.getLogen());
+				maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
+			}
+
+			if (arenaStatistikModel.getZuschaueranzahl() > arenaStatistikModel.getArenaGroesse()) {
+				stadium = DBManager.instance().getStadion(hrfid + 1);
+				if (stadium != null) {
+					arenaStatistikModel.setArenaGroesse(stadium.getGesamtgroesse());
+					arenaStatistikModel.setMaxTerraces(stadium.getStehplaetze());
+					arenaStatistikModel.setMaxBasic(stadium.getSitzplaetze());
+					arenaStatistikModel.setMaxRoof(stadium.getUeberdachteSitzplaetze());
+					arenaStatistikModel.setMaxVip(stadium.getLogen());
 					maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 				}
-				rs.close();
+			}
 
-				// fix bug when visitors exceed the stadium size
-				try {
-					if (arenaStatistikModel.getZuschaueranzahl() > arenaStatistikModel.getArenaGroesse()) {
-						rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery("SELECT GesamtGr, AnzSteh, AnzSitz , AnzDach , AnzLogen FROM " + StadionTable.TABLENAME + " WHERE HRF_ID=" + (hrfid + 1));
-						assert rs != null;
-						if (rs.next()) {
-							arenaStatistikModel.setArenaGroesse(rs.getInt("GesamtGr"));
-							arenaStatistikModel.setMaxTerraces(rs.getInt("AnzSteh"));
-							arenaStatistikModel.setMaxBasic(rs.getInt("AnzSitz"));
-							arenaStatistikModel.setMaxRoof(rs.getInt("AnzDach"));
-							arenaStatistikModel.setMaxVip(rs.getInt("AnzLogen"));
-							maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
-						}
-					}
-				} catch (Exception e) {
-					HOLogger.instance().log(StatisticQuery.class, "Error(>100% handling): " + e);
-				} finally {
-					if (rs != null) rs.close();
-				}
-
+			try {
 				//Fananzahl
 				sql = "SELECT Fans FROM " + VereinTable.TABLENAME + " WHERE HRF_ID=" + hrfid;
 				rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery(sql);
@@ -241,7 +229,6 @@ public class StatisticQuery {
 				HOLogger.instance().log(StatisticQuery.class, e);
 			}
 		}
-
         tablemodel = new ArenaStatistikTableModel(arenamodels, maxArenaGroesse, maxFans);
 
 		return tablemodel;

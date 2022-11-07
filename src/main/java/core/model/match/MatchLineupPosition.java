@@ -242,8 +242,8 @@ public class MatchLineupPosition  extends MatchRoleID {
         return this.startSetPiecesTaker;
     }
 
-    public void setStartSetPiecesTaker(boolean b) {
-        this.startSetPiecesTaker = b;
+    public void setStartSetPiecesTaker(Boolean b) {
+        if ( b != null ) this.startSetPiecesTaker = b;
      }
 
     public int getMatchId() {

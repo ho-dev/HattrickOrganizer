@@ -31,7 +31,6 @@ public class HOLinesChart implements IChart {
         this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, y1_axisMin, y1_axisMax, null, null, false);
     }
 
-
     public HOLinesChart(boolean second_axis, @Nullable String y1_axisName, @Nullable String y2_axisName, @Nullable String y1_axisFormat, String y2_axisFormat)
     {
         this(second_axis, y1_axisName, y2_axisName, y1_axisFormat, y2_axisFormat, null, null, null, null, false);
@@ -83,6 +82,9 @@ public class HOLinesChart implements IChart {
 
         m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setYAxisGroupTickMarksColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
+      //  m_chart.getStyler().setToolTipsAlwaysVisible(true);
+        m_chart.getStyler().setToolTipsEnabled(true);
+        m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
 
         if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
         if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
@@ -231,7 +233,7 @@ public class HOLinesChart implements IChart {
         }
     }
 
-    private final void setShowWithoutUpdate(String name, boolean show) {
+    private void setShowWithoutUpdate(String name, boolean show) {
         if (m_models != null){
             for (LinesChartDataModel m_model : m_models) {
                 if ((m_model != null) && (m_model.getName().equals(name))) {
