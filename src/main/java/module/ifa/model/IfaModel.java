@@ -161,14 +161,17 @@ public class IfaModel {
 	private void createVisitedStatistic() {
 		Map<Integer, IfaStatistic> map = new HashMap<>();
 		for (IfaMatch match : this.visited) {
-			Integer id = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getHomeLeagueId()).getCountryId();
+			var league = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getHomeLeagueId());
+			if (league == null) {
+				continue;
+			}
+			Integer id = league.getCountryId();
 			IfaStatistic stat = map.get(id);
 			if (stat == null) {
 				stat = new IfaStatistic();
 				stat.setCountry(new Country(id));
 				map.put(id, stat);
 			}
-
 			updateStats(stat, match, true);
 		}
 		this.visitedStatistic = new ArrayList<>(map.values());

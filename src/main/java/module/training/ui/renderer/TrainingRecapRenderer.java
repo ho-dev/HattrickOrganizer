@@ -1,4 +1,3 @@
-// %36155679:hoplugins.trainingExperience.ui.renderer%
 package module.training.ui.renderer;
 
 import core.constants.player.PlayerAbility;
@@ -14,6 +13,7 @@ import module.training.ui.model.TrainingModel;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.Icon;
 import javax.swing.JTable;
@@ -29,7 +29,8 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
     /**
 	 *
 	 */
-    private TrainingModel trainingModel;
+    private final TrainingModel trainingModel;
+	@Serial
 	private static final long serialVersionUID = -4088001127909689247L;
 
 	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -54,9 +55,6 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
                                                    boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-        var training = this.trainingModel.getFutureTrainings().get(column);
-		WeeklyTrainingType wt = WeeklyTrainingType.instance(training.getTrainingType());
-
         // Reset default values
         this.setForeground(TABLE_FG);
         if (isSelected)
@@ -70,15 +68,13 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 
         try {
         	String s = (String) table.getValueAt(row, column);
-            int playerId = 0;
-            double realPlayerAge = 0;
+            int playerId;
 
             // fetch playerId (last column) from table
         	playerId = Integer.parseInt((String)table.getValueAt(row, table.getColumnCount()-1));
         	Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(playerId);
-        	realPlayerAge = player.getAlterWithAgeDays();
 
-        	/** If there is some kind of skillup information
+        	/* If there is some kind of skillup information
         	 * in the table cell (s) -> extract it
         	 * (it is in the format "SKILLTYPE SKILLLEVEL CHANGE",
         	 * e.g. "3 10.00 1"  for skillup to outstanding playmaking)
@@ -96,9 +92,11 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         		text = skillLevelName;
         	}
 
-            if (playerId > 0) {
-            	if (!isSelected) {
-            		// Check player's training priority
+            if (player != null) {
+				if (!isSelected && this.trainingModel.getFutureTrainings().size() > column) {
+					// Check player's training priority
+					var training = this.trainingModel.getFutureTrainings().get(column);
+					var	wt = WeeklyTrainingType.instance(training.getTrainingType());
 					var prio = player.getTrainingPriority(wt, training.getTrainingDate());
 					if (prio != null) {
 						switch (prio) {
@@ -120,6 +118,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 				}
             	// Check if player has birthday
             	// every row is an additional week
+				var realPlayerAge = player.getAlterWithAgeDays();
             	int calcPlayerAgePrevCol = (int) (realPlayerAge + column*7d/112d);
             	int calcPlayerAgeThisCol = (int) (realPlayerAge + (column+1)*7d/112d);
             	// Birthday in this week! Set BG color
