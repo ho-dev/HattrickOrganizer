@@ -82,9 +82,9 @@ public class HOLinesChart implements IChart {
 
         m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setYAxisGroupTickMarksColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
-      //  m_chart.getStyler().setToolTipsAlwaysVisible(true);
         m_chart.getStyler().setToolTipsEnabled(true);
         m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
+        m_chart.getStyler().setDecimalPattern("#0.0");
 
         if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
         if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
@@ -133,7 +133,7 @@ public class HOLinesChart implements IChart {
 
         }
 
-        m_panel = new XChartPanel(m_chart);
+        m_panel = new XChartPanel<>(m_chart);
     }
 
 
@@ -171,6 +171,7 @@ public class HOLinesChart implements IChart {
         // TODO: setHasAnnotations not defined in XYChart style
         //m_chart.getStyler().setHasAnnotations(m_hasLabels);
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
+        m_chart.getStyler().setToolTipsAlwaysVisible(m_hasLabels);
 
         var series = m_chart.getSeriesMap();
         String serieName;

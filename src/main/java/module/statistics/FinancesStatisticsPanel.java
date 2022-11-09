@@ -30,6 +30,8 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 	private JTextField c_jtfNumberOfHRF;
 	private JButton c_jbFetch;
 	private JCheckBox jcbHelpLines;
+	private JCheckBox jcbInscribe;
+
 	private JCheckBox c_jcbInclTransferts;
 	private JPanel c_jpCharts;
 	final static String BALANCE_CHART_PANEL = "Balance Chart";
@@ -38,7 +40,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 	private HOLinesChart c_jpBalanceChart;
 	private HOLinesChart c_jpDevelopmentChart;
 	private HODoublePieChart c_jpRevenueAndExpensesChart;
-	private String[] balanceChartPlotsNames = new String[6];
+	private final String[] balanceChartPlotsNames = new String[6];
 	private boolean[] balanceChartPlotsVisible = new boolean[6];
 	private boolean bIncludeTransfer;
 
@@ -57,11 +59,11 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 	}
 
 
-	private void updateCB(boolean bHelpLines){
+	private void updateCB(boolean bHelpLines, boolean doInscribe){
 		switch (iChartType){
-			case 0 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); c_jcbInclTransferts.setVisible(false);}
-			case 1 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); c_jcbInclTransferts.setVisible(true);}
-			case 2 -> {jcbHelpLines.setSelected(false); jcbHelpLines.setEnabled(false); c_jcbInclTransferts.setVisible(false);}
+			case 0 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); jcbInscribe.setSelected(doInscribe); jcbInscribe.setEnabled(true); c_jcbInclTransferts.setVisible(false);}
+			case 1 -> {jcbHelpLines.setSelected(bHelpLines); jcbHelpLines.setEnabled(true); jcbInscribe.setSelected(doInscribe); jcbInscribe.setEnabled(true); c_jcbInclTransferts.setVisible(true);}
+			case 2 -> {jcbHelpLines.setSelected(false); jcbHelpLines.setEnabled(false); jcbInscribe.setSelected(false); jcbInscribe.setEnabled(false); c_jcbInclTransferts.setVisible(false);}
 		}
 	}
 
@@ -74,7 +76,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 				iChartType = c_jcomboChartType.getSelectedIndex();
 
-				updateCB(gup.statistikFinanzenHilfslinien);
+				updateCB(gup.statistikFinanzenHilfslinien, gup.statistikAlleBeschriftung);
 
 				gup.statisticsFinanceChartType = iChartType;
 				CardLayout cl = (CardLayout)(c_jpCharts.getLayout());
@@ -87,6 +89,11 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 				c_jpBalanceChart.setHelpLines(jcbHelpLines.isSelected());
 				c_jpDevelopmentChart.setHelpLines(jcbHelpLines.isSelected());
 				gup.statistikFinanzenHilfslinien = jcbHelpLines.isSelected();
+			}
+			else if (e.getSource() == jcbInscribe) {
+				c_jpBalanceChart.setLabelling(jcbInscribe.isSelected());
+				c_jpDevelopmentChart.setLabelling(jcbInscribe.isSelected());
+				gup.statistikAlleBeschriftung = jcbHelpLines.isSelected();
 			}
 			else if (e.getSource() == c_jcbInclTransferts) {
 				if(c_jcbInclTransferts.isSelected()) {
@@ -105,12 +112,13 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 		};
 		jcbHelpLines.addActionListener(checkBoxActionListener);
+		jcbInscribe.addActionListener(checkBoxActionListener);
 		c_jcbInclTransferts.addActionListener(checkBoxActionListener);
 		c_jbFetch.addActionListener(e -> initStatistik());
 
 		c_jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
 			@Override
-			public final void focusLost(java.awt.event.FocusEvent focusEvent) {
+			public void focusLost(java.awt.event.FocusEvent focusEvent) {
 				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberOfHRF, false);
 			}
 		});
@@ -177,12 +185,19 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbHelpLines, constraints2);
 		panel2.add(jcbHelpLines);
 
+		constraints2.gridy++;
+		constraints2.insets = new Insets(20,0,0,0);  //top padding
+		jcbInscribe = new JCheckBox(getLangStr("Beschriftung"), gup.statistikFinanzenHilfslinien);
+		jcbInscribe.setOpaque(false);
+		layout2.setConstraints(jcbInscribe, constraints2);
+		panel2.add(jcbInscribe);
+
 		// Label Chart Type
 		labelChartType = new JLabel(getLangStr("ls.module.statistic.finance.chart_type"));
 		constraints2.fill = GridBagConstraints.HORIZONTAL;
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridwidth = 1;
-		constraints2.gridy = 2;
+		constraints2.gridy++;
 		layout2.setConstraints(labelChartType, constraints2);
 		panel2.add(labelChartType);
 
@@ -196,7 +211,6 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(c_jcomboChartType, constraints2);
 		c_jcomboChartType.setToolTipText(getLangStr("ls.module.statistic.finance.choose_chart_type"));
 		constraints2.gridx = 1;
-		constraints2.gridy = 2;
 		constraints2.gridwidth = 2;
 		constraints2.insets = new Insets(20,5,0,0);  //top padding
 		panel2.add(c_jcomboChartType, constraints2);
@@ -205,11 +219,11 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		c_jcbInclTransferts.setToolTipText(getLangStr("ls.module.statistic.finance.tt.include_transfer"));
 		constraints2.insets = new Insets(5, 0, 0, 0);
 		constraints2.gridx = 0;
-		constraints2.gridy = 3;
+		constraints2.gridy++;
 		constraints2.gridwidth = 3;
 		panel2.add(c_jcbInclTransferts, constraints2);
 
-		updateCB(gup.statistikFinanzenHilfslinien);
+		updateCB(gup.statistikFinanzenHilfslinien, gup.statistikAlleBeschriftung);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -307,10 +321,10 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 			}
 
 
-			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[17], format, getLangStr("Wochen"), "",false,
+			c_jpDevelopmentChart.setAllValues(modelsDevelopmentChart, data[17], format, getLangStr("Wochen"), "",jcbInscribe.isSelected(),
 					jcbHelpLines.isSelected());
 
-			c_jpBalanceChart.setAllValues(modelsBalanceChart, data[17], format, getLangStr("Wochen"), "",false,
+			c_jpBalanceChart.setAllValues(modelsBalanceChart, data[17], format, getLangStr("Wochen"), "",jcbInscribe.isSelected(),
 					jcbHelpLines.isSelected());
 
 			c_jpRevenueAndExpensesChart.setAllValues(modelsRevExpChart_Revenue, modelsRevExpChart_Expenses);

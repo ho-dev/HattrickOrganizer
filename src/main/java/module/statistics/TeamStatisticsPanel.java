@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
+import java.io.Serial;
 import java.text.NumberFormat;
 import javax.swing.*;
 
@@ -29,6 +30,7 @@ import javax.swing.*;
  * The Team statistics panel
  */
 public class TeamStatisticsPanel extends LazyImagePanel {
+	@Serial
 	private static final long serialVersionUID = -6588840565958987842L;
 	private ImageCheckbox jcbXP;
 	private ImageCheckbox jcbWinger;
@@ -46,6 +48,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private ImageCheckbox jcbWage;
 	private JButton jbApply;
 	private JCheckBox jcbHelpLines;
+	private JCheckBox jcbInscribe;
 	private JComboBox<String> jcbAggType;
 	private JComboBox<String> jcbTeam;
 	private JTextField jtfNumberOfHRF;
@@ -84,7 +87,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private final String avgSC = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
 	private final String sumSP = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
 	private final String avgSP = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-	
+
 	@Override
 	protected void initialize() {
 		initComponents();
@@ -262,6 +265,10 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 				mChart.setHelpLines(jcbHelpLines.isSelected());
 				gup.statistikAlleHilfslinien = jcbHelpLines.isSelected();
 			}
+			else if ( e.getSource() == jcbInscribe){
+				mChart.setLabelling(jcbInscribe.isSelected());
+				gup.statistikAlleBeschriftung = jcbInscribe.isSelected();
+			}
 			// Leadership =========================================================
 			else if (e.getSource() == jcbLeadership.getCheckbox()) {
 				if (bSum) {
@@ -434,6 +441,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 		jbApply.addActionListener(actionListener);
 		jcbHelpLines.addActionListener(actionListener);
+		jcbInscribe.addActionListener(actionListener);
 		jcbLeadership.addActionListener(actionListener);
 		jcbXP.addActionListener(actionListener);
 		jcbTSI.addActionListener(actionListener);
@@ -475,10 +483,11 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		panel2 = new ImagePanel();
 		panel2.setLayout(layout2);
 
+		int gridy = 0;
 		labelWeeks = new JLabel(hov.getLanguageString("Wochen"));
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
-		constraints2.gridy = 1;
+		constraints2.gridy = ++gridy;
 		constraints2.gridwidth = 1;
 		constraints2.insets = new Insets(10,0,0,0);  //top padding
 		layout2.setConstraints(labelWeeks, constraints2);
@@ -502,12 +511,17 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		constraints2.insets = new Insets(20,0,0,0);
 		constraints2.gridwidth = 3;
 		jcbHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), gup.statistikAlleHilfslinien);
-		add(jcbHelpLines, 2, layout2, constraints2);
+		add(jcbHelpLines, ++gridy, layout2, constraints2);
+
+		constraints2.insets = new Insets(20,0,0,0);
+		constraints2.gridwidth = 3;
+		jcbInscribe = new JCheckBox(hov.getLanguageString("Beschriftung"), gup.statistikAlleBeschriftung);
+		add(jcbInscribe, ++gridy, layout2, constraints2);
 
 
 		labelSquad = new JLabel(hov.getLanguageString("Gruppe"));
 		constraints2.gridx = 0;
-		constraints2.gridy = 3;
+		constraints2.gridy = ++gridy;
 		constraints2.gridwidth = 1;
 		constraints2.insets = new Insets(20,0,0,0);  //top padding
 		layout2.setConstraints(labelSquad, constraints2);
@@ -524,7 +538,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 		labelAggType = new JLabel(hov.getLanguageString("ls.agg"));
 		constraints2.gridx = 0;
-		constraints2.gridy = 4;
+		constraints2.gridy = ++gridy;
 		constraints2.gridwidth = 1;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
 		panel2.add(labelAggType, constraints2);
@@ -546,64 +560,64 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		constraints2.insets = new Insets(20,0,0,0);
 		textLabel = bSum ? sumLeadership : avgLeadership;
 		jcbLeadership = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP), gup.statistikAlleFuehrung);
-		add(jcbLeadership, 5, layout2, constraints2);
+		add(jcbLeadership, ++gridy, layout2, constraints2);
 
 		// EXPERIENCE =============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumXP : avgXP;
 		jcbXP = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_XP), gup.statistikAlleErfahrung);
-		add(jcbXP, 6, layout2, constraints2);
+		add(jcbXP, ++gridy, layout2, constraints2);
 
 		// FORM ============================================================================================
 		textLabel = bSum ? sumForm : avgForm;
 		jcbForm = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_FORM), gup.statistikAlleForm);
-		add(jcbForm, 7, layout2, constraints2);
+		add(jcbForm, ++gridy, layout2, constraints2);
 
 		// STAMINA ============================================================================================
 		textLabel = bSum ? sumStamina : avgStamina;
 		jcbStamina = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_STAMINA), gup.statistikAlleKondition);
-		add(jcbStamina, 8, layout2, constraints2);
+		add(jcbStamina, ++gridy, layout2, constraints2);
 
 		// LOYALTY ============================================================================================
 		textLabel = bSum ? sumLoyalty : avgLoyalty;
 		jcbLoyalty = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), gup.statistikAllLoyalty);
-		add(jcbLoyalty, 9, layout2, constraints2);
+		add(jcbLoyalty, ++gridy, layout2, constraints2);
 
 		// KEEPER ============================================================================================
 		textLabel = bSum ? sumGK : avgGK;
 		jcbKeeper = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_GK), gup.statistikAlleTorwart);
-		add(jcbKeeper, 10, layout2, constraints2);
+		add(jcbKeeper, ++gridy, layout2, constraints2);
 
 		// DEFENDING ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumDE : avgDE;
 		jcbDefending = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_DE), gup.statistikAlleVerteidigung);
-		add(jcbDefending, 11, layout2, constraints2);
+		add(jcbDefending, ++gridy, layout2, constraints2);
 
 		// PLAYMAKING ============================================================================================
 		textLabel = bSum ? sumPM : avgPM;
 		jcbPlaymaking = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_PM), gup.statistikAlleSpielaufbau);
-		add(jcbPlaymaking, 12, layout2, constraints2);
+		add(jcbPlaymaking, ++gridy, layout2, constraints2);
 
 		// PASSING ============================================================================================
 		textLabel = bSum ? sumPS : avgPS;
 		jcbPassing = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_PS), gup.statistikAllePasspiel);
-		add(jcbPassing, 13, layout2, constraints2);
+		add(jcbPassing, ++gridy, layout2, constraints2);
 
 		// WINGER ============================================================================================
 		textLabel = bSum ? sumWI : avgWI;
 		jcbWinger = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WI), gup.statistikAlleFluegel);
-		add(jcbWinger, 14, layout2, constraints2);
+		add(jcbWinger, ++gridy, layout2, constraints2);
 
 		// SCORING ============================================================================================
 		textLabel = bSum ? sumSC : avgSC;
 		jcbScoring = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_SC), gup.statistikAlleTorschuss);
-		add(jcbScoring, 15, layout2, constraints2);
+		add(jcbScoring, ++gridy, layout2, constraints2);
 
 		// SETPIECES ============================================================================================
 		textLabel = bSum ? sumSP : avgSP;
 		jcbSetPieces = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_SP), gup.statistikAlleStandards);
-		add(jcbSetPieces, 16, layout2, constraints2);
+		add(jcbSetPieces, ++gridy, layout2, constraints2);
 
 
 		// TSI =============================================================================================
@@ -783,7 +797,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			}
 
 			mChart.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()
-					.getLanguageString("Wochen"), "", false, jcbHelpLines.isSelected());
+					.getLanguageString("Wochen"), "", jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}

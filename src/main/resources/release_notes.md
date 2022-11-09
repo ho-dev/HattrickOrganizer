@@ -28,6 +28,7 @@ Please do not forget to back up data.
 * SubstitutionEditor shows effect on loddarstats (#1626)
 
 ### Statistics
+* add tooltips and labels to series data points (#1199)
 
 ### NT
 
