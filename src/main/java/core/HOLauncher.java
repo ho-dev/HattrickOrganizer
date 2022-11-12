@@ -65,8 +65,12 @@ public class HOLauncher {
 
 						// it is not clear why the process does not release properly the update file, we will try to delete it at next launch ....
 						try {
-							mark_for_deletion.createNewFile();
-							System.out.println("mark_for_deletion file has been created, zip file will be deleted at next launch");
+							if ( mark_for_deletion.createNewFile() ) {
+								System.out.println("mark_for_deletion file has been created, zip file will be deleted at next launch");
+							}
+							else {
+								System.out.println("mark_for_deletion file already exists, zip file will be deleted at next launch");
+							}
 						} catch (IOException ioExceptionError) {
 							System.err.print("mark_for_deletion file could not be created neither: " + ioExceptionError);
 						}
@@ -138,8 +142,10 @@ public class HOLauncher {
 		//    - logs directory
 		//    - users.json
 		//    - update.piz
+		//    - .install4j folder (it is used by this process)
 		dontDeletePaths.add(new File(zipFileDir+ File.separator + "img").toPath());
 		dontDeletePaths.add(new File(zipFileDir+ File.separator + "logs").toPath());
+		dontDeletePaths.add(new File(zipFileDir+ File.separator + ".install4j").toPath());
 		dontDeletePaths.add(backupPath);
 		for ( var p : deletePaths) {
 			var file = p.toFile();
@@ -170,7 +176,9 @@ public class HOLauncher {
 				}
 				if (entry.isDirectory()) {
 					if (!f.exists()) {
-						f.mkdir();
+						if ( !f.mkdir()){
+							System.err.print("can not unpack directory  " + f.getAbsolutePath());
+						}
 					}
 					continue;
 				}
@@ -198,18 +206,5 @@ public class HOLauncher {
 	}
 	private static boolean pathIsPartOfDirectory (Path p, Path dir){
 		return p.toAbsolutePath().normalize().startsWith(dir);
-	}
-
-	private static boolean isValidDestPath(String fileName) {
-		final List<String> updateFolders = List.of("\\.\\/prediction/.*", "\\.\\/[^\\/]*\\.jar", "\\.\\/changelog\\.html", "\\.\\/truststore\\.jks");
-		Pattern pattern;
-
-		for (String regex : updateFolders) {
-			pattern = Pattern.compile(regex, Pattern.MULTILINE);
-			if (pattern.matcher(fileName).matches()) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
