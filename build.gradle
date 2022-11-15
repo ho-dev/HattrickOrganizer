@@ -14,8 +14,8 @@ repositories {
 
 dependencies {
     implementation 'com.install4j:install4j-runtime:8.0.7'
-    implementation 'com.github.scribejava:scribejava-core:8.3.1'
-    implementation 'org.hsqldb:hsqldb:2.5.0'
+    implementation 'com.github.scribejava:scribejava-core:8.3.3'
+    implementation 'org.hsqldb:hsqldb:2.7.1'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation 'com.squareup.okhttp3:okhttp-tls:4.9.3'
@@ -24,10 +24,10 @@ dependencies {
     implementation 'com.github.weisj:darklaf-theme:3.0.2'              //'darklaf-theme:latest.integration'
     implementation 'com.github.weisj:darklaf-property-loader:3.0.2'    //'darklaf-property-loader:latest.integration'
     implementation 'org.javatuples:javatuples:1.2'
-    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation 'org.knowm.xchart:xchart:3.8.0'
-    implementation 'org.jsoup:jsoup:1.14.3'
+    implementation 'org.jsoup:jsoup:1.15.3'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 }
 
@@ -309,9 +309,9 @@ task pushmd(dependsOn: preparingBuild)  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 6.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 6.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 6.0..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 6.1..HEAD --count')
+        def diff = callGit('git diff --shortstat 6.1..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 6.1..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
