@@ -30,8 +30,8 @@ Russian
 Serbian(Cyrillic)
 Slovak
 Slovenian
-Spanish(AG)
 Spanish
+Spanish(AR)
 Svenska
 Turkish
 Ukranian
