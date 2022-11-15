@@ -597,13 +597,19 @@ public class DBManager {
 	 * @return the spielplan
 	 */
 	public Spielplan getSpielplan(int ligaId, int saison) {
-		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.getSpielplan(ligaId, saison);
+		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getSpielplan(ligaId, saison);
+		if ( ret != null ){
+			ret.addFixtures(loadFixtures(ret));
+		}
+		return ret;
 	}
 
 	public Spielplan getLatestSpielplan() {
-		return ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.getLatestSpielplan();
+		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getLatestSpielplan();
+		if ( ret != null ){
+			ret.addFixtures(loadFixtures(ret));
+		}
+		return ret;
 	}
 
 	/**
@@ -635,7 +641,7 @@ public class DBManager {
 				.getAllSpielplaene();
 		if (withFixtures) {
 			for (Spielplan gameSchedule : ret) {
-				getPaarungen(gameSchedule);
+				gameSchedule.addFixtures(loadFixtures(gameSchedule));
 			}
 		}
 		return ret;
@@ -1413,8 +1419,8 @@ public class DBManager {
 	 *
 	 * @param plan Schedule for which the fixtures are retrieved, and to which they are added.
 	 */
-	protected void getPaarungen(Spielplan plan) {
-		((PaarungTable) getTable(PaarungTable.TABLENAME)).getPaarungen(plan);
+	protected List<Paarung> loadFixtures(Spielplan plan) {
+		return ((PaarungTable) getTable(PaarungTable.TABLENAME)).loadFixtures( plan.getLigaId(), plan.getSaison());
 	}
 
 	/**
