@@ -15,7 +15,6 @@ import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
 import org.jetbrains.annotations.Nullable;
-import tool.updater.UpdateHelper;
 import tool.updater.VersionInfo;
 import core.HO;
 import java.io.BufferedReader;
@@ -27,7 +26,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
@@ -40,7 +38,6 @@ import org.w3c.dom.Document;
 
 
 public class MyConnector {
-	private final static SimpleDateFormat HT_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
@@ -156,18 +153,6 @@ public class MyConnector {
 		if (regionId > 0) {
 			url += "&regionID=" + regionId;
 		}
-		return getCHPPWebFile(url);
-	}
-
-	/**
-	 * Fetch training events of player
-	 *
-	 * @param playerId
-	 *            id of the region to fetch
-	 * @return training events xml
-	 */
-	public String getTrainingEvents(int playerId){
-		String url = htUrl + "?file=trainingevents&playerID=" + playerId;
 		return getCHPPWebFile(url);
 	}
 
@@ -394,7 +379,7 @@ public class MyConnector {
 	/**
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
-	public String downloadMatchdetails(int matchId, MatchType matchType) throws IOException {
+	public String downloadMatchdetails(int matchId, MatchType matchType) {
 		String url = htUrl + "?file=matchdetails&version=" + VERSION_MATCHDETAILS;
 		if (matchId > 0) {
 			url += ("&matchID=" + matchId);
@@ -491,7 +476,7 @@ public class MyConnector {
 	 * Get Staff
 	 */
 	
-	public String getStaff(int teamId) throws IOException {
+	public String getStaff(int teamId) {
 		String url = htUrl + "?file=stafflist&version=1.0&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
@@ -524,7 +509,7 @@ public class MyConnector {
 	/**
 	 * Get the training XML data.
 	 */
-	public String getTraining(int teamId) throws IOException {
+	public String getTraining(int teamId) {
 		final String url = htUrl + "?file=training&version=" + VERSION_TRAINING + "&teamId=" + teamId;
 
 		return getCHPPWebFile(url);

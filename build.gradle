@@ -14,9 +14,9 @@ repositories {
 
 dependencies {
     implementation 'com.install4j:install4j-runtime:8.0.7'
-    implementation 'com.github.scribejava:scribejava-core:8.3.2'
+    implementation 'com.github.scribejava:scribejava-core:8.3.3'
     implementation 'org.hsqldb:hsqldb:2.7.1'
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10'
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.squareup.okhttp3:okhttp-tls:4.10.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
@@ -26,9 +26,9 @@ dependencies {
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'org.jetbrains:annotations:23.0.0'
-    implementation 'org.knowm.xchart:xchart:3.8.1'
+    implementation 'org.knowm.xchart:xchart:3.8.2'
     implementation 'org.jsoup:jsoup:1.15.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 
 test {
