@@ -181,7 +181,7 @@ poeditor {
     trans type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
     trans type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
     trans type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
-    trans type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AG).properties"    // Argentina
+    trans type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AR).properties"    // Argentina
 }
 
 
@@ -476,10 +476,10 @@ markdownToHtml {
     markdownToHtml.hardwraps = true
 }
 
-compileJava.dependsOn createLanguageFileList
 markdownToHtml.dependsOn pushmd
 poeditorPull.dependsOn markdownToHtml
-processResources.dependsOn poeditorPull
+createLanguageFileList.dependsOn poeditorPull
+processResources.dependsOn createLanguageFileList
 compileJava.dependsOn processResources
 
 // endregion ======================================================================================================================
