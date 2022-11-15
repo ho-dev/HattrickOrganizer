@@ -166,7 +166,6 @@ public class HOLinesChart implements IChart {
 
         XYSeries serie;
 
-        m_chart.getStyler().setHasAnnotations(m_hasLabels);
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
 
         var series = m_chart.getSeriesMap();
