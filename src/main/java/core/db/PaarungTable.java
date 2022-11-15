@@ -50,11 +50,7 @@ public final class PaarungTable extends AbstractTable {
 		}
 	}
 
-	/**
-	 * holt die Paarungen zum Plan aus der DB und added sie
-	 */
-	void getPaarungen(Spielplan plan) {
-		plan.addFixtures(load(Paarung.class, plan.getLigaId(), plan.getSaison()));
+	public List<Paarung> loadFixtures(int ligaId, int season){
+		return load(Paarung.class, ligaId, season);
 	}
-
 }
