@@ -5,12 +5,10 @@ import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.net.MyConnector;
-import core.util.HOLogger;
 import core.util.Updater;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.File;
 
 public final class UpdateController {
 
@@ -110,7 +108,7 @@ public final class UpdateController {
         }
 
         if (update == JOptionPane.YES_OPTION) {
-            updateHO(updVersion.getFullVersion(), updVersion.getVersion(), versionType);
+            updateHO(updVersion.getFullVersion(), versionType);
         }
     }
 
@@ -127,7 +125,7 @@ public final class UpdateController {
                 .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static String get_HO_zip_download_url(String full_version, double version, String versionType) {
+    public static String get_HO_zip_download_url(String full_version, String versionType) {
 
         return switch (versionType) {
             case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV-JRE.zip";
@@ -136,34 +134,33 @@ public final class UpdateController {
         };
     }
 
-    public static void updateHO(String full_version, double version, String versionType) {
-        updateHO(get_HO_zip_download_url(full_version, version, versionType));
+    public static void updateHO(String full_version, String versionType) {
+        updateHO(get_HO_zip_download_url(full_version, versionType));
     }
-
     public static void updateHO(final String urlString) {
-        if (HO.isPortableVersion()) {
-            // HO! manage the (partial) update
-            File tmp = new File("update.piz");
-            HOMainFrame.instance().resetInformation();
-            if (!UpdateHelper.download(urlString, tmp)) {
-                HOMainFrame.instance().resetInformation();
-                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
-                return;
-            }
-            HOMainFrame.instance().setInformationCompleted();
-
-            JOptionPane.showMessageDialog(null,
-                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                            .getLanguageString("ls.menu.file.update.ho"),
-                    JOptionPane.INFORMATION_MESSAGE);
-
-            HOMainFrame.instance().shutdown();
-        }
-        else {
+//        if (HO.isPortableVersion()) {
+//            // HO! manage the (partial) update
+//            File tmp = new File("update.piz");
+//            HOMainFrame.instance().resetInformation();
+//            if (!UpdateHelper.download(urlString, tmp)) {
+//                HOMainFrame.instance().resetInformation();
+//                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
+//                return;
+//            }
+//            HOMainFrame.instance().setInformationCompleted();
+//
+//            JOptionPane.showMessageDialog(null,
+//                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
+//                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
+//                            .getLanguageString("ls.menu.file.update.ho"),
+//                    JOptionPane.INFORMATION_MESSAGE);
+//
+//            HOMainFrame.instance().shutdown();
+//        }
+//        else {
             // making update via install4J
             Updater.instance().update();
-        }
+//        }
 
     }
 
