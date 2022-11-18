@@ -29,6 +29,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,7 +100,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 			}
 		});
 
-		jbApply.addActionListener(e -> initStatistik());
+		jbApply.addActionListener(e -> changeTimeRange());
 
 		jcbPlayer.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -426,6 +427,15 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		add(panel);
 	}
 
+	private void changeTimeRange() {
+		var selection = jcbPlayer.getSelectedItem();
+		initSpielerCB();
+		if ( selection != null){
+			jcbPlayer.setSelectedItem(selection); // reset selection
+			initStatistik();
+		}
+	}
+
 	private void initSpielerCB() {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
@@ -434,8 +444,13 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		}
 		Collections.sort(playerCBItems);
 
-		// Alte Player
-		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
+		// date from
+		var nWeeks = UserParameter.instance().statistikAnzahlHRF;
+		var latestHRFDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+		var fromDate = latestHRFDate.minus(7*nWeeks, ChronoUnit.DAYS);
+
+		// former players
+		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(players.size());
 		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));

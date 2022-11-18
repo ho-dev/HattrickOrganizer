@@ -29,6 +29,7 @@ Please do not forget to back up data.
 
 ### Statistics
 * add tooltips and labels to series data points (#1199)
+* player statistics no longer shows players that quit the club before selected time range (#1705)
 
 ### NT
 
