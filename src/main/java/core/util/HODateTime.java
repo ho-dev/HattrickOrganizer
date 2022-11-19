@@ -343,7 +343,7 @@ public class HODateTime implements Comparable<HODateTime> {
         }
 
         public static HODuration between(HODateTime from, HODateTime to) {
-            return new HODuration(0, (int) Duration.between(from.instant, to.instant).toDays());
+            return new HODuration(0, (int) Duration.between(from.instant, to.instant).plus(12, ChronoUnit.HOURS).toDays());
         }
 
         public HODuration plus(HODuration diff) {

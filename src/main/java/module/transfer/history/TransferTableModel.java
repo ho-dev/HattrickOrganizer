@@ -3,13 +3,9 @@ package module.transfer.history;
 
 import core.model.HOVerwaltung;
 import module.transfer.PlayerTransfer;
-
-import java.text.SimpleDateFormat;
+import java.io.Serial;
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
-
-
 
 /**
  * TableModel representing the transfers for your own team.
@@ -17,21 +13,11 @@ import javax.swing.table.AbstractTableModel;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 class TransferTableModel extends AbstractTableModel {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = -7041463041956883945L;
-
-	private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    private List<PlayerTransfer> values;
-    private String[] colNames = new String[19];
-
-    //~ Constructors -------------------------------------------------------------------------------
+	@Serial
+    private static final long serialVersionUID = -7041463041956883945L;
+    private final List<PlayerTransfer> values;
+    private final String[] colNames;
 
     /**
      * Creates a TransferTableModel.
@@ -41,25 +27,28 @@ class TransferTableModel extends AbstractTableModel {
     TransferTableModel(List<PlayerTransfer> values) {
         super();
 
-        this.colNames[0] = HOVerwaltung.instance().getLanguageString("Datum"); //$NON-NLS-1$
-        this.colNames[1] = HOVerwaltung.instance().getLanguageString("Season"); //$NON-NLS-1$
-        this.colNames[2] = HOVerwaltung.instance().getLanguageString("Week"); //$NON-NLS-1$
-        this.colNames[3] = HOVerwaltung.instance().getLanguageString("Spieler"); //$NON-NLS-1$
-        this.colNames[4] = ""; //$NON-NLS-1$
-        this.colNames[5] = HOVerwaltung.instance().getLanguageString("FromTo"); //$NON-NLS-1$
-        this.colNames[6] = HOVerwaltung.instance().getLanguageString("Price"); //$NON-NLS-1$
-        this.colNames[7] = HOVerwaltung.instance().getLanguageString("ls.player.tsi"); //$NON-NLS-1$
-        this.colNames[8] = HOVerwaltung.instance().getLanguageString("ls.player.short_leadership");
-        this.colNames[9] = HOVerwaltung.instance().getLanguageString("ls.player.short_experience");
-        this.colNames[10] = HOVerwaltung.instance().getLanguageString("ls.player.short_form");
-        this.colNames[11] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina");
-        this.colNames[12] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper");
-        this.colNames[13] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending");
-        this.colNames[14] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking");
-        this.colNames[15] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing");
-        this.colNames[16] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger");
-        this.colNames[17] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring");
-        this.colNames[18] = HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces");
+        this.colNames = new String[]{
+                HOVerwaltung.instance().getLanguageString("Datum"),
+                HOVerwaltung.instance().getLanguageString("Season"),
+                HOVerwaltung.instance().getLanguageString("Week"),
+                HOVerwaltung.instance().getLanguageString("Spieler"),
+                HOVerwaltung.instance().getLanguageString("ls.player.age"),
+                "",
+                HOVerwaltung.instance().getLanguageString("FromTo"),
+                HOVerwaltung.instance().getLanguageString("Price"),
+                HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
+                HOVerwaltung.instance().getLanguageString("ls.player.short_leadership"),
+                HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
+                HOVerwaltung.instance().getLanguageString("ls.player.short_form"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring"),
+                HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces")
+        };
 
         this.values = values;
     }
@@ -105,9 +94,15 @@ class TransferTableModel extends AbstractTableModel {
                 }
 
             case 4:
-                return transfer.getType();
+
+                if ((transfer.getPlayerName() != null) && (transfer.getPlayerName().length() > 0)) {
+                    return transfer.getPlayerInfo().getAgeWithDaysAsString(transfer.getDate());
+                }
 
             case 5:
+                return transfer.getType();
+
+            case 6:
 
                 if (transfer.getType() == PlayerTransfer.BUY) {
                     return transfer.getSellerName();
@@ -115,13 +110,13 @@ class TransferTableModel extends AbstractTableModel {
                     return transfer.getBuyerName();
                 }
 
-            case 6:
+            case 7:
                 return transfer.getPrice();
 
-            case 7:
+            case 8:
                 return transfer.getTsi();
 
-            case 8:
+            case 9:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getLeadership();
@@ -129,7 +124,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 9:
+            case 10:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getExperience();
@@ -137,7 +132,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 10:
+            case 11:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getForm();
@@ -145,7 +140,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 11:
+            case 12:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getStamina();
@@ -153,7 +148,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 12:
+            case 13:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getGKskill();
@@ -161,7 +156,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 13:
+            case 14:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getDEFskill();
@@ -169,7 +164,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 14:
+            case 15:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getPMskill();
@@ -177,7 +172,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 15:
+            case 16:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getPSskill();
@@ -185,7 +180,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 16:
+            case 17:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getWIskill();
@@ -193,7 +188,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 17:
+            case 18:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getSCskill();
@@ -201,7 +196,7 @@ class TransferTableModel extends AbstractTableModel {
                     return -1;
                 }
 
-            case 18:
+            case 19:
 
                 if (transfer.getPlayerInfo() != null) {
                     return transfer.getPlayerInfo().getSPskill();

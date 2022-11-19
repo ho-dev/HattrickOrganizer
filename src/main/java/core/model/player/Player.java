@@ -578,17 +578,31 @@ public class Player extends AbstractTable.Storable {
         return getAgeWithDaysAsString(HODateTime.now());
     }
     public String getAgeWithDaysAsString(HODateTime t){
-        return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t);
+        return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
     }
+
+    /**
+     * Calculates the player's age at date referencing the current hrf download
+     * @param ageYears int player's age in years in current hrf download
+     * @param ageDays int additional days
+     * @param time HODateTime for which the player's age should be calculated
+     * @return String
+     */
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
-        var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
-        var between = HODateTime.HODuration.between(hrfTime, time);
-        if ( between.seasons>=0 && between.days >=0 ) {
-            var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
-            return age.seasons + " (" + age.days + ")";
-        }
-        // Should not happen (computer might have wrong time settings)
-        return ageYears  + " (" + ageDays + ")";
+        return getAgeWithDaysAsString(ageYears, ageDays,time, HOVerwaltung.instance().getModel().getBasics().getDatum());
+    }
+
+    /**
+     * Calculates the player's age at date referencing the given hrf date
+     * @param ageYears int player's age in years at reference time
+     * @param ageDays int additional days
+     * @param time HODateTime for which the player's age should be calculated
+     * @param hrfTime HODateTime reference date, when player's age was given
+     * @return String
+     */
+    public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time, HODateTime hrfTime) {
+        var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
+        return age.seasons + " (" + age.days + ")";
     }
 
     /**

@@ -31,7 +31,8 @@ Please do not forget to back up data.
 * add tooltips and labels to series data points (#1199)
 * player statistics no longer shows players that quit the club before selected time range (#1705)
 
-### NT
+### Transfer
+* display player's age at transfer date (#1659)
 
 ### Training
 * fix daylight saving resetting future trainings (#1668)
