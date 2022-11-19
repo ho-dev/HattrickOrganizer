@@ -3,12 +3,10 @@ package module.transfer.history;
 import core.gui.comp.panel.ImagePanel;
 import module.transfer.PlayerTransfer;
 import module.transfer.ui.sorter.DefaultTableSorter;
-
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -27,11 +25,11 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
     /**
 	 * 
 	 */
-	private JTable transferTable;
-    private List<PlayerTransfer> transfers = new ArrayList<PlayerTransfer>();
+	private final JTable transferTable;
+    private List<PlayerTransfer> transfers = new ArrayList<>();
     private PlayerDetailPanel playerDetailPanel;
-    private ColorCellRenderer greenColumn = new ColorCellRenderer(ColorCellRenderer.GREEN);
-    private ColorCellRenderer yellowColumn = new ColorCellRenderer(ColorCellRenderer.YELLOW);
+    private final ColorCellRenderer greenColumn = new ColorCellRenderer(ColorCellRenderer.GREEN);
+    private final ColorCellRenderer yellowColumn = new ColorCellRenderer(ColorCellRenderer.YELLOW);
 
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -86,19 +84,17 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         sorter.setTableModel(new TransferTableModel(transfers));
 
         transferTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-        transferTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
-        transferTable.getColumnModel().getColumn(4).setMaxWidth(36);
-        transferTable.getColumnModel().getColumn(5).setPreferredWidth(150);
+        transferTable.getColumnModel().getColumn(5).setCellRenderer(new IconCellRenderer());
+        transferTable.getColumnModel().getColumn(5).setMaxWidth(36);
+        transferTable.getColumnModel().getColumn(6).setPreferredWidth(150);
 
-        transferTable.getColumnModel().getColumn(8).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(8).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(9).setCellRenderer(greenColumn);
         transferTable.getColumnModel().getColumn(9).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(10).setCellRenderer(greenColumn);
         transferTable.getColumnModel().getColumn(10).setPreferredWidth(30);
-
-        transferTable.getColumnModel().getColumn(11).setCellRenderer(yellowColumn);
+        transferTable.getColumnModel().getColumn(11).setCellRenderer(greenColumn);
         transferTable.getColumnModel().getColumn(11).setPreferredWidth(30);
+
         transferTable.getColumnModel().getColumn(12).setCellRenderer(yellowColumn);
         transferTable.getColumnModel().getColumn(12).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(13).setCellRenderer(yellowColumn);
@@ -113,6 +109,8 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         transferTable.getColumnModel().getColumn(17).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(18).setCellRenderer(yellowColumn);
         transferTable.getColumnModel().getColumn(18).setPreferredWidth(30);
+        transferTable.getColumnModel().getColumn(19).setCellRenderer(yellowColumn);
+        transferTable.getColumnModel().getColumn(19).setPreferredWidth(30);
     }
 
     /** {@inheritDoc} */
@@ -122,7 +120,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
             if (transferTable.getSelectedRow() >= 0) {
                 final int index = sorter.modelIndex(transferTable.getSelectedRow());
-                final PlayerTransfer transfer = (PlayerTransfer) this.transfers.get(index);
+                final PlayerTransfer transfer = this.transfers.get(index);
                 this.playerDetailPanel.setPlayer(transfer.getPlayerId(), transfer.getPlayerName());
             } else {
                 this.playerDetailPanel.clearPanel();

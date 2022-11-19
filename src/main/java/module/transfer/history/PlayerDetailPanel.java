@@ -9,6 +9,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.HODateTime;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -20,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -41,8 +43,8 @@ import javax.swing.table.TableModel;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 public class PlayerDetailPanel extends JPanel implements ActionListener {
-	private static final long serialVersionUID = -6855218725568752692L;
-	//~ Instance fields ----------------------------------------------------------------------------
+	@Serial
+    private static final long serialVersionUID = -6855218725568752692L;
 	private static final HOVerwaltung hov = HOVerwaltung.instance();
     private static final String SKILL_PLAYMAKING = hov.getLanguageString("ls.player.skill.playmaking");
     private static final String SKILL_PASSING = hov.getLanguageString("ls.player.skill.passing");
@@ -244,8 +246,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
         playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
-        playerTable.getColumnModel().getColumn(8).setCellRenderer(new ButtonCellRenderer());
-        playerTable.getColumnModel().getColumn(8).setCellEditor(new ButtonCellEditor(this, values));
+        playerTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonCellRenderer());
+        playerTable.getColumnModel().getColumn(9).setCellEditor(new ButtonCellEditor(this, values));
     }
 
     /**
@@ -264,7 +266,9 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
             name.setText(this.playerName);
 
+            HODateTime arrivalDate = null;
             if (player != null) {
+                arrivalDate = HODateTime.fromHT(player.getArrivalDate());
                 age.setText(Integer.toString(this.player.getAlter()));
 
                 if (!player.isOld()) {
@@ -295,19 +299,33 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);
             int valIncome = 0;
+            HODateTime soldDate = null;
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-
             for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
                     valIncome -= transfer.getPrice();
+                    if ( arrivalDate == null || transfer.getDate().isAfter(arrivalDate)) {
+                        arrivalDate = transfer.getDate();
+                    }
                 }
 
                 if (transfer.getSellerid() == teamid) {
                     valIncome += transfer.getPrice();
+                    if (soldDate == null || transfer.getDate().isAfter(soldDate)){
+                        soldDate = transfer.getDate();
+                    }
                 }
             }
 
             income.setText(core.util.Helper.getNumberFormat(true, 0).format(valIncome));
+            if ( arrivalDate != null && soldDate != null) {
+                var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
+                if (activeDuration.seasons > 0) {
+                    var ageText = age.getText();
+                    age.setText(ageText + " +" + activeDuration.seasons);
+                }
+            }
+
             refreshPlayerTable(transfers);
         }
     }
