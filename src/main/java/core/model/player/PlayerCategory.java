@@ -66,4 +66,9 @@ public enum PlayerCategory {
         return null;
     }
 
+    public static int idOf(PlayerCategory category){
+        if (category!=null) return category.getId();
+        return NoCategorySet.id;
+    }
+
 }
