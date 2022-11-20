@@ -1,14 +1,10 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
@@ -27,6 +23,7 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Back);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.CentralDefence);
 		osmosisTrainingSectors.add(MatchRoleID.Sector.Forward);
+		osmosisTrainingSectors.add(MatchRoleID.Sector.Goal);
 
 		_PrimaryTrainingSkillPositions = new int[]{ 
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.rightInnerMidfield,

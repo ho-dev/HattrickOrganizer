@@ -2,11 +2,9 @@ package core.training;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import core.constants.TrainingType;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.type.*;
 import core.util.HOLogger;
 
@@ -50,38 +48,6 @@ public abstract class WeeklyTrainingType {
 	private static final double ASSISTANTTRAININGSPEEDFACTOR = 3.5;
 	private static final double TRAININGSPEEDBASE = 109;
 	private static final double OLDASSISTANTTRAININGSPEEDMAX = 143;
-
-	private static double assistantLevelEffect = 0.032;
-	private static double[] skillFactorArray = {
-			// Skill 1
-			0.36,
-			0.52,
-			0.66,
-			0.77,
-			0.91,
-			// Passable...
-			1,
-			1.11,
-			1.20,
-			1.43,
-			// Outstanding
-			1.72,
-			1.98,
-			2.18,
-			2.43,
-			2.64,
-			// Titanic
-			2.86,
-			3.18,
-			3, 45,
-			4.55,
-			// Skill 19
-			7.00,
-			//  Random from here and down
-			10,
-			15,
-			21
-	};
 
 	protected double factorTrainingTypeKoeff;
 	protected double osmosisKoeff;
@@ -225,41 +191,6 @@ public abstract class WeeklyTrainingType {
 		return dSecondaryTraining;
 	}
 
-	public static double calcTraining(double baseLength, int age, int trainerLevel, int intensity,
-									  int stamina, int curSkill, int assistantLevel) {
-		double ageFactor = Math.pow(1.0404, age - 17) * (UserParameter.instance().TRAINING_OFFSET_AGE + BASE_AGE_FACTOR);
-		double skillFactor = -1.4595 * Math.pow((curSkill + 1d) / 20, 2) + 3.7535 * (curSkill + 1d) / 20 - 0.1349d;
-		if (skillFactor < 0) {
-			skillFactor = 0;
-		}
-
-		double trainerFactor = (1 + (7 - Math.min(trainerLevel, 7.5)) * 0.091) * (UserParameter.instance().TrainerFaktor + BASE_COACH_FACTOR);
-		double coFactor = getAssistantFactor(assistantLevel);
-		double tiFactor = Double.MAX_VALUE;
-		if (intensity > 0) {
-			tiFactor = (1 / (intensity / 100d)) * (UserParameter.instance().TRAINING_OFFSET_INTENSITY + BASE_INTENSITY_FACTOR);
-		}
-		double staminaFactor = Double.MAX_VALUE;
-		if (stamina < 100) {
-			staminaFactor = 1 / (1 - stamina / 100d);
-		}
-
-		// faster training from 2010 up to 9 formidable, then gets linearly smaller
-		double fasterTraining = 0.83746 * Math.log(age) - 1.87426;
-		if (curSkill > 8) {
-			fasterTraining -= (curSkill - 8) * 0.0933;
-		}
-
-		// invert so that you can multiply for trainLength
-		double fasterTrainingFactor = 1. / (1. + fasterTraining);
-
-		double trainLength = baseLength * ageFactor * skillFactor * trainerFactor * coFactor * tiFactor * staminaFactor * fasterTrainingFactor;
-		if (trainLength < 1) {
-			trainLength = 1;
-		}
-		return trainLength;
-	}
-
 	public static double getAssistantFactor(int assistantLevels) {
 		//factor = 1/((1/1.2863) * (1.09 + (0.02 * assistantLevels)));
 		double factor = 1 / ((TRAININGSPEEDBASE + assistantLevels * ASSISTANTTRAININGSPEEDFACTOR) / OLDASSISTANTTRAININGSPEEDMAX);
@@ -275,11 +206,12 @@ public abstract class WeeklyTrainingType {
 
 	/**
 	 * Calculate skill increase of training week (Schum's formula)
-	 *
+	 * T = f(lvl) * K(coach) * K(assist) * K(int) * K(stam) * K(train) * K(age) * K(time),
 	 * Source:
-	 * https://github.com/akasolace/HO/issues/250#issuecomment-541170338
-	 * https://www87.hattrick.org/Forum/Read.aspx?t=17024376&v=4&a=1&n=5
-	 * https://www87.hattrick.org/Club/Manager/?userId=5176908 (Schum)
+	 * <a href="https://github.com/akasolace/HO/issues/250#issuecomment-541170338">...</a>
+	 * <a href="https://www87.hattrick.org/Forum/Read.aspx?t=17024376&v=4&a=1&n=5">...</a>
+	 * <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=9&v=6">...</a>
+	 * <a href="https://www87.hattrick.org/Club/Manager/?userId=5176908">...</a> (Schum)
 	 *
 	 * @param skillLevel int skill level [0..20]
 	 * @param trForPlayer training information
@@ -350,12 +282,13 @@ public abstract class WeeklyTrainingType {
 		/*
 		further coefficients:
 
-		Coach Koeff
-		8 1.040
-		7 1.000
-		6 0.920
-		5 0.834
-		4 0.734
+		Coach	Koeff
+		8	1.0375
+		7	1.0000
+		6	0.9200
+		5	0.8324
+		4	0.7343
+
 		*/
 
 		if (coachLevel < 4 || coachLevel > 8) {
@@ -497,9 +430,8 @@ public abstract class WeeklyTrainingType {
 		return Math.min(1, factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01);
 	}
 
-	protected double trainingCalcError(String s) {
+	protected void trainingCalcError(String s) {
 		HOLogger.instance().error(this.getClass(), s);
-		return 0;
 	}
 
 	/**
