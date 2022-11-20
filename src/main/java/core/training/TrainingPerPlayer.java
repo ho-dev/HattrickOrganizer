@@ -1,10 +1,7 @@
 package core.training;
 
 import core.model.player.Player;
-import core.util.HOLogger;
-
-import java.sql.Timestamp;
-
+import core.util.HODateTime;
 
 /**
  * Holds and calculates how much skill training a player received
@@ -54,25 +51,6 @@ public class TrainingPerPlayer  {
     }
 
     /**
-     * add sub values of another ITrainingPerPlayer instance to this instance
-     * @param values	the instance we take the values from
-     */
-    public void addValues(TrainingPerPlayer values) {
-    	if (_TrainingPair == null) {
-    		if (values != null && values.getTrainingPair() != null) {
-    			_TrainingPair = values.getTrainingPair();
-    		}
-    		else
-    		{
-	    		HOLogger.instance().error(getClass(), "_TrainingPair is null. Aborting addValues.");
-    		}
-    	} else { 
-	    	_TrainingPair.addPrimary(values.getTrainingPair().getPrimary());
-	    	_TrainingPair.addSecondary(values.getTrainingPair().getSecondary());
-    	}
-    }
-
-    /**
      * get the training point for this instance
      * @return	training point
      */
@@ -99,14 +77,14 @@ public class TrainingPerPlayer  {
 		return experienceSub;
 	}
 
-    public float calcSubskillIncrement(int skill, float skillValueBeforeTraining) {
+    public float calcSubskillIncrement(int skill, float skillValueBeforeTraining, HODateTime date) {
 
 		int skillValue = (int)skillValueBeforeTraining;
 		float ret = 0;
 
 		/* Time to perform skill drop */
 		if (SkillDrops.instance().isActive()) {
-			ret -= SkillDrops.instance().getSkillDrop(skillValue, this._Player.getAlter(), skill) / 100;
+			ret -= SkillDrops.instance().getSkillDropAtDate(skillValue, this._Player.getAlter(), skill, date);
 		}
 
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
@@ -129,18 +107,18 @@ public class TrainingPerPlayer  {
 
 		return ret;
 	}
-
-	private String logTrainingMinutes() {
-		if ( this.getTrainingPair() != null){
-			var duration = this.getTrainingPair().getTrainingDuration();
-			if ( duration != null){
-				return duration.getFullTrainingMinutes() +
-						";" + duration.getPartlyTrainingMinutes() +
-						";" + duration.getOsmosisTrainingMinutes();
-			}
-		}
-		return "0;0;0";
-	}
+//
+//	private String logTrainingMinutes() {
+//		if ( this.getTrainingPair() != null){
+//			var duration = this.getTrainingPair().getTrainingDuration();
+//			if ( duration != null){
+//				return duration.getFullTrainingMinutes() +
+//						";" + duration.getPartlyTrainingMinutes() +
+//						";" + duration.getOsmosisTrainingMinutes();
+//			}
+//		}
+//		return "0;0;0";
+//	}
 
 	/**
 	 * Calculate player's age in years at the given training date

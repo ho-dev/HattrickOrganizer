@@ -1,13 +1,12 @@
 package core.training;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import core.constants.player.PlayerSkill;
 import core.file.FileLoader;
 import core.module.config.ModuleConfig;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 
@@ -21,11 +20,8 @@ public class SkillDrops {
 	//	Midfield
 	//	Winger
 	//	Scoring
-	
-	private static int LINES = 13;
-	private static int LINE_LENGTH = 8;
-	
-	
+
+
 	private static double[][] keeper = {
 		{7.2, 8.6, 10.4, 99, 99, 99,  99, 99},
 		{5.4, 6.6, 8.0, 9.8, 99, 99,  99, 99},
@@ -135,7 +131,6 @@ public class SkillDrops {
 		{0, 1, 1.6, 2.5, 3.8, 5.3, 7.4, 10.8}};
 	
 	private boolean active = true;
-	private SkillDrops drops;
 	private static SkillDrops instance = null;
 	
 	private static final String key = "SKILL_DROPS_ACTIVATED";
@@ -174,7 +169,7 @@ public class SkillDrops {
 		
 		return instance;
 	}
-	
+
 	/**
 	 * Returns the skill drop for the provided parameters.
 	 * 
@@ -183,52 +178,204 @@ public class SkillDrops {
 	 * @param skillType As defined in PlayerSkill
 	 * @return A percentage number for the skill to drop. On return 2, a skill of 4.50 should move to 4.52.
 	 */
-	public float getSkillDrop(int skill,  int age,  int skillType) {
+	public double getSkillDrop(int skill, int age, int skillType){
+
+		if ( skillType == PlayerSkill.STAMINA) return 0; // don't calc stamina subs (curious usage in FutureTrainingManager)
+
+		//https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=18&v=6
+		/* formula provided by Schum
+		I'll make a reservation right away.
+		Since we are moving on to calculations, we use the calculation scale, where Excellent = 7 (Excellent = 7).
+
+		Training update.
+
+		In the training update, a decrease in skill cannot occur.
+		But depending on the skill level and age of the player, there is a decrease in the growth of the trained skill.
+
+		And this decrease in DropLevel consists of 2 components.
+		DropLevel = DropL + DropLA
+		DropL depends only on the skill level,
+		DropLA depends on skill level and age.
+
+		L - skill level on the scale of calculations.
+		At L<14, DropL=0.
+
+		At 14<=L<20
+		DropL = a*L^3 + b*L^2 + c*L + d
+		a = 0.000006111
+		b = 0.000808
+		c = -0.026017
+		d = 0.192775
+
+		With L>20, we count according to the same formula, but we add 0.39 to the skill level
+		DropL = a*(L+0.39)^3 + b*(L+0.39)^2 + c*(L+0.39) + d
+		*/
+		double dropL;
+		if ( skill < 14){
+			dropL = 0;
+		}
+		else {
+			var L = skill;
+			if ( skill > 20) L+=0.39;
+			dropL = 0.000006111 * Math.pow(L, 3) + 0.000808 * Math.pow(L, 2) -0.026017*L + 0.192775;
+		}
+
+		/*
+		For Age<31, DropLA = 0
+
+		DropLA = m*L + n
+		The coefficients m and n depend on age.
+
+		DropLA	m	n
+		31	0.00031	0.00031
+		32	0.00118	-0.01625
+		33	0.00264	-0.03551
+		34	0.00468	-0.06086
+		35	0.00732	-0.09104
+		36	0.01066	-0.12554
+		37	0.01460	-0.16021
+
+
+		With L>20, 1 must be added to the skill level.
+		DropLA = m*(L+1) + n
+		*/
+		double dropLA;
+		if ( age< 31) {
+			dropLA = 0;
+		}
+		else {
+			double m, n;
+			switch (age) {
+				case 31 -> {
+					m = 0.00031;
+					n = 0.00031;
+				}
+				case 32 -> {
+					m = 0.00118;
+					n = -0.01625;
+				}
+				case 33 -> {
+					m = 0.00264;
+					n = -0.03551;
+				}
+				case 34 -> {
+					m = 0.00468;
+					n = -0.06086;
+				}
+				case 35 -> {
+					m = 0.00732;
+					n = -0.09104;
+				}
+				case 36 -> {
+					m = 0.01066;
+					n = -0.12554;
+				}
+				default -> {
+					m = 0.01460;
+					n = -0.16021;
+				}
+			}
+			var L = skill;
+			if (skill > 20) L += 1;
+			dropLA = m * L + n;
+		}
+		var dropLevel = dropL + dropLA;
+		if ( dropLevel < 0 ){
+			dropLevel = 0;
+		}
+		/*
+
+		DropAge
+		It's a decline in skill that happens on Mon,
+		and depends on the skill itself and the age of the player.
+
+		Different skills begin to fall when they reach different ages.
+
+		AgeNoDrop
+		GK	29
+		Df	28
+		PM	27
+		Wg	27
+		Ps	27
+		Sc	26
+		SP	30
+
+		Age+	DropAge
+		1	0.0003
+		2	0.0014
+		3	0.0037
+		4	0.0074
+		5	0.0127
+		6	0.0197
+		7	0.0285
+		8	0.0393
+		9	0.0522
+		10	0.0673
+		11	0.0846
+
+		Age+ = Age - AgeNoDrop
+
+		*/
+
+		var ageP = switch (skillType){
+			case PlayerSkill.KEEPER -> age-29;
+			case PlayerSkill.DEFENDING -> age-28;
+			case PlayerSkill.PLAYMAKING, PlayerSkill.WINGER, PlayerSkill.PASSING -> age-27;
+			case PlayerSkill.SCORING -> age-26;
+			case PlayerSkill.SET_PIECES -> age-30;
+			default -> throw new IllegalStateException("Unexpected value: " + skillType);
+		};
+
+		double dropAge = 0;
+		if ( ageP > 0) {
+			dropAge = switch (ageP) {
+				case 1 -> 0.0003;
+				case 2 -> 0.0014;
+				case 3 -> 0.0037;
+				case 4 -> 0.0074;
+				case 5 -> 0.0127;
+				case 6 -> 0.0197;
+				case 7 -> 0.0285;
+				case 8 -> 0.0393;
+				case 9 -> 0.0522;
+				case 10 -> 0.0673;
+				default -> 0.0846;
+			};
+		}
+		return dropLevel + dropAge;
+	}
+
+	private final HODateTime skillDropChanged = HODateTime.fromHT("2017-05-08 00:00:00");
+	public double getSkillDropAtDate(int skill, int age, int skillType, HODateTime date){
+		if ( date.isAfter(skillDropChanged)){
+			return getSkillDrop(skill,age,skillType);
+		}
+		else {
+			return getSkillDropBeforeMay082017(skill, age, skillType);
+		}
+	}
+	private double getSkillDropBeforeMay082017(int skill,  int age,  int skillType) {
 		// skill losses only begin at the age of 28 years
-		if ( age < 28 ) return 0;
+		if (age < 28) return 0;
 		double[][] array;
 		switch (skillType) {
-			case PlayerSkill.KEEPER : {
-				array = keeper;
-				break;
-			}
-			case PlayerSkill.DEFENDING : {
-				array = defending;
-				break;
-			}
-			case PlayerSkill.PLAYMAKING : {
-				array = playmaking; 
-				break;
-			}
-			case PlayerSkill.WINGER : {
-				array = winger;
-				break;
-			}
-			case PlayerSkill.SCORING : {
-				array = scoring;
-				break;
-			}
-			case PlayerSkill.PASSING : {
-				// Ad hoc value choice
-				array = passing;
-				break;
-			}
-			case PlayerSkill.SET_PIECES : {
-				//Ad hoc value choice
-				array = setpieces;
-				break;
-			}
-
-			default: {
+			case PlayerSkill.KEEPER -> array = keeper;
+			case PlayerSkill.DEFENDING -> array = defending;
+			case PlayerSkill.PLAYMAKING -> array = playmaking;
+			case PlayerSkill.WINGER -> array = winger;
+			case PlayerSkill.SCORING -> array = scoring;
+			case PlayerSkill.PASSING -> array = passing;
+			case PlayerSkill.SET_PIECES -> array = setpieces;
+			default -> {
 				return 0;
 			}
 		}
 		/* Top row is the highest skill Last row is for skill level 11 and below */
-		int row = array.length - 1 - Math.min(array.length - 1,  Math.max(0,  skill - 11));
+		int row = array.length - 1 - Math.min(array.length - 1, Math.max(0, skill - 11));
 		/* First column is for age 29 and below */
-		int col = Math.min(array[row].length - 1,  Math.max(0,  age-29));
+		int col = Math.min(array[row].length - 1, Math.max(0, age - 29));
 
-		return (float) array[row][col];
+		return array[row][col] / 100.;
 	}
 	
 	
@@ -247,7 +394,8 @@ public class SkillDrops {
 			while (fileIn.hasNextLine()) {
 			    // read a line, and turn it into the characters
 			    String[] oneLine = fileIn.nextLine().split(",");
-			    if (oneLine.length != LINE_LENGTH) {
+				int LINE_LENGTH = 8;
+				if (oneLine.length != LINE_LENGTH) {
 			    	HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 			    											+ fileName + ". error in line length");
 			    	fileIn.close();
@@ -268,7 +416,8 @@ public class SkillDrops {
 			
 			}
 			fileIn.close();
-		    
+
+			int LINES = 13;
 			if (lines.size() != LINES) {
 				HOLogger.instance().error(getClass(), "Failed to read skill drop file: " 
 														+ fileName + ". wrong number of lines");

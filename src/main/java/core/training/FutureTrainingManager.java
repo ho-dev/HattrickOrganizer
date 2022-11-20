@@ -7,7 +7,6 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
-import core.util.HelperWrapper;
 import module.training.Skills;
 import java.util.*;
 
@@ -34,10 +33,9 @@ public class FutureTrainingManager {
 	};
 
 	/** Active player */
-	private Player player;
-	private List<TrainingPerWeek> futureTrainings;
+	private final Player player;
+	private final List<TrainingPerWeek> futureTrainings;
 	private List<ISkillChange> futureSkillups;
-	private int weeksPassed = 0;
 	private double trainingSpeed;
 
 	/**
@@ -66,7 +64,7 @@ public class FutureTrainingManager {
 		}
 
 		trainingSpeed = 0;
-		weeksPassed = 0;
+		int weeksPassed = 0;
 
 		var trainingPerPlayer = new TrainingPerPlayer(player);
 
@@ -77,7 +75,7 @@ public class FutureTrainingManager {
 				// process skill drops
 				int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
 				for (int i = 0; i < SKILL_INDEX.length; i++) {
-					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, SKILL_INDEX[i]) / 100;
+					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, SKILL_INDEX[i]);
 				}
 
 				double trainingSpeed = 0;
@@ -164,7 +162,7 @@ public class FutureTrainingManager {
 		fp.setPassing(getFinalValue(PlayerSkill.PASSING));
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
 		fp.setSetpieces(getFinalValue(PlayerSkill.SET_PIECES));
-		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7*weeksPassed)/112d)));
+		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7* weeksPassed)/112d)));
 		fp.setPlayerId(player.getPlayerID());
 		return fp;
 	}
@@ -220,8 +218,6 @@ public class FutureTrainingManager {
 
 	/**
 	* Checks if a skillup has happened
-	*
-	*
 	* @return
 	 * 1 if skillup happened
 	 * -1 if skilldrop
@@ -250,27 +246,6 @@ public class FutureTrainingManager {
 			return -1;
 		}
 		return 0;
-	}
-
-	/**
-	 * Gets the primary training for a specific skill
-	 * (e.g. ISpieler.SKILL_SPIELAUFBAU -> ITeam.TA_SPIELAUFBAU)
-	 *  
-	 * @param skillIndex	the skill to use
-	 * @return				the primary training type
-	 */
-	private int getPrimaryTrainingForSkill (int skillIndex) {
-		return switch (skillIndex) {
-			case PlayerSkill.KEEPER -> TrainingType.GOALKEEPING;
-			case PlayerSkill.PLAYMAKING -> TrainingType.PLAYMAKING;
-			case PlayerSkill.PASSING -> TrainingType.SHORT_PASSES;
-			case PlayerSkill.WINGER -> TrainingType.CROSSING_WINGER;
-			case PlayerSkill.DEFENDING -> TrainingType.DEFENDING;
-			case PlayerSkill.SCORING -> TrainingType.SCORING;
-			case PlayerSkill.SET_PIECES -> TrainingType.SET_PIECES;
-			default -> 0;
-		};
-
 	}
 
 	private int getSkillPosition(int skillIndex) {
