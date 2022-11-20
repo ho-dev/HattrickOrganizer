@@ -44,11 +44,6 @@ public abstract class WeeklyTrainingType {
 	public static final float BASE_ASSISTANT_COACH_FACTOR = (float) 1.0;
 	public static final float BASE_INTENSITY_FACTOR = (float) 1.0;
 
-	// training speed constants in percentage
-	private static final double ASSISTANTTRAININGSPEEDFACTOR = 3.5;
-	private static final double TRAININGSPEEDBASE = 109;
-	private static final double OLDASSISTANTTRAININGSPEEDMAX = 143;
-
 	protected double factorTrainingTypeKoeff;
 	protected double osmosisKoeff;
 
@@ -191,18 +186,7 @@ public abstract class WeeklyTrainingType {
 		return dSecondaryTraining;
 	}
 
-	public static double getAssistantFactor(int assistantLevels) {
-		//factor = 1/((1/1.2863) * (1.09 + (0.02 * assistantLevels)));
-		double factor = 1 / ((TRAININGSPEEDBASE + assistantLevels * ASSISTANTTRAININGSPEEDFACTOR) / OLDASSISTANTTRAININGSPEEDMAX);
-
-		factor *= (UserParameter.instance().TRAINING_OFFSET_ASSISTANTS + BASE_ASSISTANT_COACH_FACTOR);
-		//}
-
-		return factor;
-	}
-
 	static double[] coachKoeff = {0.7343, 0.8324, 0.92, 1, 1.0375};
-	//static double[] assistantKoeff = {1, 1.035, 1.07, 1.105, 1.14, 1.175, 1.21, 1.245, 1.28, 1.315, 1.35};
 
 	/**
 	 * Calculate skill increase of training week (Schum's formula)

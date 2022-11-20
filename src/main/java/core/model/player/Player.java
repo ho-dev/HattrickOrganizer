@@ -2302,7 +2302,7 @@ public class Player extends AbstractTable.Storable {
                     var trainingPerPlayer = calculateWeeklyTraining(training);
                     if (trainingPerPlayer != null) {
                         if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
-                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub);
+                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub, training.getTrainingDate());
                             if (valueAfterTraining > valueBeforeTraining) {
                                 if (sub > 1) {
                                     sub -= 1.;
@@ -2356,7 +2356,7 @@ public class Player extends AbstractTable.Storable {
             if (SkillDrops.instance().isActive() && nextWeekTraining != null &&
                     TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate(), this.getHrfDate())) {
                 // calc another skill down
-                sub -= SkillDrops.instance().getSkillDrop(valueBeforeTraining, this.getAlter(), skill) / 100;
+                sub -= SkillDrops.instance().getSkillDropAtDate(valueBeforeTraining, this.getAlter(), skill, nextWeekTraining.getTrainingDate());
                 if (sub < 0) {
                     if (valueAfterTraining < valueBeforeTraining) { // OK
                         sub += 1.;

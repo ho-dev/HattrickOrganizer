@@ -36,6 +36,7 @@ Please do not forget to back up data.
 
 ### Training
 * fix daylight saving resetting future trainings (#1668)
+* fix skill drop calculation - use Schum's formula (#1661)
 
 ### League
 
