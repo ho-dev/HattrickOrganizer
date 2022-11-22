@@ -14,6 +14,7 @@ import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.theme.ThemeManager;
@@ -112,6 +113,11 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
 		DBManager.instance().storeTeamLogoInfo(teamId, OnlineWorker.getLogoURL(teamdetailsDataMap), null);
+		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
+		if (logoFilename!= null && !logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())){
+			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
+			UserManager.instance().save();
+		}
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
@@ -690,6 +696,7 @@ public class ConvertXml2Hrf {
 	 * @param matchId
 	 * 			match id (negative value for lineup templates)
 	 * @param nextLineup
+	 * 			map containing the lineup
 	 */
 	public static String createLineUp(String trainerId, int teamId, int matchtype, int matchId, Map<String, String> nextLineup) {
 		StringBuilder buffer = new StringBuilder();

@@ -44,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import org.hsqldb.error.ErrorCode;
 import java.io.File;
-import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -2255,11 +2254,14 @@ public class DBManager {
 	 * It will also update LAST_ACCESS field
 	 *
 	 * @param teamID the team id
-	 * @param teamLogoFolderPath the team logo root folder path
 	 * @return the team logo file name
 	 */
-	public String getTeamLogoFileName(Path teamLogoFolderPath, int teamID) {
-		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).getTeamLogoFileName(teamLogoFolderPath, teamID);
+	public TeamLogoInfo loadTeamLogoInfo(int teamID) {
+		return ((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).loadTeamLogoInfo(teamID);
+	}
+
+	public void storeTeamLogoInfo(TeamLogoInfo info) {
+		((TeamsLogoTable)getTable(TeamsLogoTable.TABLENAME)).storeTeamLogoInfo(info);
 	}
 
 	/**
