@@ -8,13 +8,11 @@ import java.nio.file.Paths;
 public class User{
 
 	private String dbURL;
-	private String DbUsername = "sa";
-	private String DbPwd = "";
 	private String dbFolder;
 	public BaseUser getBaseUser() {
 		return baseUser;
 	}
-	private BaseUser baseUser;
+	private final BaseUser baseUser;
 
 //    // getters and setters
 	public String getDbName() {return baseUser.dbName;}
@@ -24,15 +22,14 @@ public class User{
 	public final void setName(String _teamName) {this.baseUser.teamName = _teamName;}
 	public int getBackupLevel() {return baseUser.backupLevel;}
 	public boolean isNtTeam() {return baseUser.isNtTeam;}
-	public final void setBackupLevel(int level) {baseUser.backupLevel = level;}
-	public void setNtTeam(boolean _isNtTeam) {baseUser.isNtTeam = _isNtTeam;}
+	public void setClubLogo(String logo){baseUser.clubLogo=logo;}
+	public String getClubLogo(){return baseUser.clubLogo;}
 
 	public String getDbPwd() {
-		return DbPwd;
+		return "";
 	}
-
 	public String getDbUsername() {
-		return DbUsername;
+		return "sa";
 	}
 
 	public final @NotNull String getDbURL() {return dbURL;}
@@ -47,7 +44,7 @@ public class User{
 	}
 
 	public User(String _teamName, String _dbName, int _backupLevel, boolean _isNtTeam) {
-		baseUser = new BaseUser(_teamName, _dbName, _backupLevel, _isNtTeam);
+		baseUser = new BaseUser(_teamName, _dbName, "", _backupLevel, _isNtTeam);
 		this.fillUserInfos();
 	}
 
@@ -57,7 +54,6 @@ public class User{
 		if (HO.isPortableVersion()) this.dbURL = "jdbc:hsqldb:file:" + this.baseUser.dbName + "/database";
 		else this.dbURL = "jdbc:hsqldb:file:" + dbFolder + "/database";
 	}
-
 
 	public static User createDefaultUser() {
 		int _id = UserManager.instance().getAllUser().size() + 1;

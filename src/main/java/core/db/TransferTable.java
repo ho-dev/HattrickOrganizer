@@ -181,6 +181,7 @@ public class TransferTable extends AbstractTable {
      * @param transfer Transfer information
      */
     public void storeTransfer(PlayerTransfer transfer) {
+        transfer.setIsStored(isStored(transfer.getTransferId()));
         store(transfer);
     }
 

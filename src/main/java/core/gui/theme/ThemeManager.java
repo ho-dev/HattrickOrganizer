@@ -13,8 +13,11 @@ import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
 import core.model.UserParameter;
 import core.model.player.PlayerAvatar;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.OSUtils;
+import tool.updater.UpdateHelper;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.*;
@@ -188,9 +191,42 @@ public final class ThemeManager {
 		return getClubLogo(teamID, 36);
 	}
 
+	public String getTeamLogoFilename(int teamID){
+		var info = DBManager.instance().loadTeamLogoInfo(teamID);
+		if ( info != null){
+			return teamLogoPath.resolve(info.getFilename()).toString();
+		}
+		return null;
+	}
+
 	public Icon getClubLogo(int teamID, int width) {
 		int height = Math.round(width * 260f / 210f);
-		String logoPath = DBManager.instance().getTeamLogoFileName(teamLogoPath, teamID);
+		String logoPath = null;
+		var info = DBManager.instance().loadTeamLogoInfo(teamID);
+		if ( info != null ) {
+			var url = info.getUrl();
+			if (url != null && !url.isEmpty() && !url.equals("null")) {
+				// Check if the logo has already been downloaded
+				var filename = teamLogoPath.resolve(info.getFilename()).toString();
+				File logo = new File(filename);
+				if (logo.exists()) {
+					logoPath = filename;
+				} else {
+					// we try to download the logo from HT servers
+					boolean bSuccess = UpdateHelper.download(url, logo);
+					if (bSuccess) {
+						logoPath = filename;
+					}
+					else {
+						HOLogger.instance().error(this.getClass(), "error when trying to download logo of team ID: " + teamID + "\n" + url);
+					}
+				}
+				//we update LAST_ACCESS value
+				info.setLastAccess(HODateTime.now());
+				DBManager.instance().storeTeamLogoInfo(info);
+			}
+		}
+
 		if (logoPath == null) {
 			// default logo is used for teams without logo
 			HOLogger.instance().debug(this.getClass(), "logo not found for team " + teamID);
@@ -306,10 +342,6 @@ public final class ThemeManager {
 		}
 
 		return scaledIcon;
-	}
-
-	public static Image loadImage(String datei) {
-		return instance().classicSchema.loadImageIcon(datei).getImage();
 	}
 
 	public void setCurrentTheme() {

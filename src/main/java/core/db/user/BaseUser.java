@@ -14,16 +14,17 @@ import java.util.List;
 class BaseUser {
     protected String teamName;
     protected String dbName;
+    protected String clubLogo;
     protected int backupLevel;
     protected boolean isNtTeam;
 
-    public BaseUser(String _teamName, String _dbName, int _backupLevel, boolean _isNtTeam) {
+    public BaseUser(String _teamName, String _dbName, String _clubLogo, int _backupLevel, boolean _isNtTeam) {
         this.teamName = _teamName;
         this.dbName = _dbName;
         this.backupLevel = _backupLevel;
         this.isNtTeam = _isNtTeam;
+        this.clubLogo = _clubLogo;
     }
-
 
     public static void serialize(List<BaseUser> baseUsers, String jsonFolder) {
         try {

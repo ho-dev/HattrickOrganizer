@@ -17,43 +17,46 @@ public class PlayerColumn extends UserColumn {
 
 	/**
 	 * constructor
-	 * @param id
-	 * @param name
-	 * @param tooltip
+	 * @param id column identifier
+	 * @param name column header name
+	 * @param tooltip tooltip text
 	 */
 	public PlayerColumn(int id,String name,String tooltip){
 		super(id,name,tooltip);
+		setDisplay(true);
 	}
 	
 	/**
 	 * constructor
-	 * @param id
-	 * @param name
-	 * @param minWidth
+	 * @param id column identifier
+	 * @param name column header name
+	 * @param minWidth minimum width
 	 */
 	public PlayerColumn(int id,String name,int minWidth){
 		this(id,name,name,minWidth);
+		setDisplay(true);
 	}
 	
 	/**
 	 * constructor
-	 * @param id
-	 * @param name
-	 * @param tooltip
-	 * @param minWidth
+	 * @param id column identifier
+	 * @param name column header name
+	 * @param tooltip tooltip text
+	 * @param minWidth minimum width
 	 */
 	public PlayerColumn(int id,String name, String tooltip,int minWidth){
 		super(id,name,tooltip);
 		this.minWidth = minWidth;
 		preferredWidth = minWidth;
+		setDisplay(true);
 	}
 	
 	/**
 	 * returns a TableEntry
 	 * overwritten by all created columns
-	 * @param player
-	 * @param comparePlayer
-	 * @return
+	 * @param player Player
+	 * @param comparePlayer Player status to compare with
+	 * @return IHOTableEntry
 	 */
 	public IHOTableEntry getTableEntry(Player player, @Nullable Player comparePlayer){
 		return new ColorLabelEntry(getValue(player),
@@ -63,8 +66,8 @@ public class PlayerColumn extends UserColumn {
 	/**
 	 * return the individual playerValue
 	 * overwritten by created columns
-	 * @param player
-	 * @return
+	 * @param player Player
+	 * @return player id
 	 */
 	public int getValue(Player player){
 		return player.getPlayerID();

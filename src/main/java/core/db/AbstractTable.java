@@ -133,8 +133,8 @@ public abstract class AbstractTable {
 	 * The count of where values is defined by idColumns
 	 * @param tClass Storable class (extends Abstract.Storable)
 	 * @param whereValues variable arguments descibing the where values (count must match idColumns)
-	 * @param <T>
-	 * @return
+	 * @param <T> the object class to create
+	 * @return one Object of type T
 	 */
 	public <T extends Storable> T loadOne(Class<T> tClass, Object ... whereValues) {
 		return loadOne(tClass, executePreparedSelect(whereValues));
@@ -144,8 +144,8 @@ public abstract class AbstractTable {
 	 * load one object of an externally created result set.
 	 * @param tClass Storable class (extends Abstract.Storable)
 	 * @param rs result set
-	 * @param <T>
-	 * @return
+	 * @param <T> the object class to create
+	 * @return one object of type T
 	 */
 	public <T extends Storable> T loadOne(Class<T> tClass, ResultSet rs) {
 		var list = load(tClass, rs, 1);
@@ -159,7 +159,7 @@ public abstract class AbstractTable {
 	 * load a list of records
 	 * @param tClass Storable class (extends Abstract.Storable)
 	 * @param whereValues variable arguments descibing the where values (count must match idColumns)
-	 * @param <T>
+	 * @param <T> the object class to create
 	 * @return List of objects of type T
 	 */
 	public <T extends Storable> List<T> load(Class<T> tClass, Object ... whereValues) {
@@ -170,8 +170,8 @@ public abstract class AbstractTable {
 	 * load a list of records of an externally created result set
 	 * @param tClass Storable class (extends Abstract.Storable)
 	 * @param rs result set
-	 * @param <T>
-	 * @return
+	 * @param <T> the object class to create
+	 * @return List of objects of type T
 	 */
 	public <T extends Storable> List<T> load(Class<T> tClass, ResultSet rs) {
 		return load(tClass, rs, -1);
@@ -182,8 +182,8 @@ public abstract class AbstractTable {
 	 * @param tClass Storable class (extends Abstract.Storable)
 	 * @param rs result set
 	 * @param max 1 to load one object, -1 to load all objects
-	 * @param <T>
-	 * @return
+	 * @param <T> the object class to create
+	 * @return list of objects of type T
 	 */
 	protected <T extends  Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
 		var ret = new ArrayList<T>();
@@ -228,7 +228,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Float, null if the column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private Float getFloat(ResultSet rs, String columnName) throws SQLException {
 		var ret = rs.getFloat(columnName);
@@ -243,7 +243,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return String, null if column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private String getString(ResultSet rs, String columnName) throws SQLException {
 		var ret = rs.getString(columnName);
@@ -258,7 +258,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return HODateTime, null if the column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private HODateTime getHODateTime(ResultSet rs, String columnName) throws SQLException {
 		var ts = rs.getTimestamp(columnName);
@@ -273,7 +273,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Double, null if column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private Double getDouble(ResultSet rs, String columnName) throws SQLException {
 		var ret = rs.getDouble(columnName);
@@ -288,7 +288,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Boolean, null if column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private Boolean getBoolean(ResultSet rs, String columnName) throws SQLException {
 		var ret = rs.getBoolean(columnName);
@@ -303,7 +303,7 @@ public abstract class AbstractTable {
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Integer, null if column was empty (null)
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	private Integer getInteger(ResultSet rs, String columnName) throws SQLException {
 		var ret = rs.getInt(columnName);
@@ -577,7 +577,7 @@ public abstract class AbstractTable {
 
 	/**
 	 * Create the table
-	 * @throws SQLException
+	 * @throws SQLException sql exception
 	 */
 	public void createTable() throws SQLException {
 		if (!tableExists(getTableName())) {
@@ -656,22 +656,18 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
+	public void tryChangeColumn(String columnName, String type_not_null) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
 			adapter.executeUpdate(sql);
-			return true;
 		}
-		return false;
 	}
 
-	public boolean tryRenameColumn(String from, String to) throws SQLException {
+	public void tryRenameColumn(String from, String to) throws SQLException {
 		if (columnExistsInTable(from)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
 			adapter.executeUpdate(sql);
-			return true;
 		}
-		return false;
 	}
 
 	public boolean tryDeleteColumn(String columnName) throws SQLException {
