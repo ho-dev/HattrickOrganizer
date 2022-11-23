@@ -5,6 +5,7 @@ import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
 import module.playerOverview.SpielerTrainingsVergleichsPanel;
 
+import java.io.Serial;
 import java.util.List;
 
 
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public final class PlayerOverviewModel extends HOTableModel {
 	
+	@Serial
 	private static final long serialVersionUID = 5149408240369536138L;
 	
 	/** all players **/
@@ -25,7 +27,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 * constructor
 	 *
 	 */
-	protected PlayerOverviewModel(UserColumnController.ColumnModelId id ){
+	PlayerOverviewModel(UserColumnController.ColumnModelId id){
 		super(id,"Spieleruebersicht");
 		initialize();
 	}
@@ -35,7 +37,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[58];
+		columns = new UserColumn[59];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -48,7 +50,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 		System.arraycopy(positions, 0, columns, positionIndex, positions.length);
 		
 		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
-		int goalsIndex = 42;//-45
+		int goalsIndex = 42;//-46
 		System.arraycopy(goals, 0, columns, goalsIndex, goals.length);
 		UserColumn[] additionalArray = UserColumnFactory.createPlayerAdditionalArray();
 		columns[1] = additionalArray[0];
@@ -58,7 +60,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[5] = additionalArray[4];
 		columns[6] = additionalArray[5];
 		columns[7] = additionalArray[6];
-		columns[46] = additionalArray[7];
+		columns[58] = additionalArray[7];
 		columns[8] = additionalArray[8];// tsi
 		columns[22] = additionalArray[9]; // lastmatch
 		columns[47] = additionalArray[11];

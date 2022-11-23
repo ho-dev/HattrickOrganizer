@@ -1868,6 +1868,7 @@ public class DBManager {
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
+			HOLogger.instance().info(getClass(),"Create table : " + table.getTableName());
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {

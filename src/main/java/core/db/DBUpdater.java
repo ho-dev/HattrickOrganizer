@@ -168,6 +168,11 @@ final class DBUpdater {
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 			stadiumTable.tryDeleteColumn("GesamtGr");
 		}
+
+		var matchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+		matchSubstitutionTable.tryAddIndex("IMATCHSUBSTITUTION_0", "MatchID,MatchTyp,TeamID");
+		matchSubstitutionTable.tryDropIndex("IMATCHSUBSTITUTION_3");
+
 		updateDBVersion(dbVersion, 700);
 	}
 

@@ -96,7 +96,9 @@ class TransferTableModel extends AbstractTableModel {
             case 4:
 
                 if ((transfer.getPlayerName() != null) && (transfer.getPlayerName().length() > 0)) {
-                    return transfer.getPlayerInfo().getAgeWithDaysAsString(transfer.getDate());
+                    var player = transfer.getPlayerInfo();
+                    if ( player != null ) return player.getAgeWithDaysAsString(transfer.getDate());
+                    return "";
                 }
 
             case 5:

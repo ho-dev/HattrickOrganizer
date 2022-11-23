@@ -41,7 +41,7 @@ final public class UserColumnFactory {
     public static final int RATING = 435;
     public static final int DURATION = 890;
     public static final int AUTO_LINEUP = 510;
-    public static final int LAST_MATCH = 461;
+    public static final int LAST_MATCH_RATING = 461;
 
 
     public static PlayerColumn2[] createPlayerCBItemArray() {
@@ -246,7 +246,7 @@ final public class UserColumnFactory {
                 return true; //false
             }
         };
-        playerBasicArray[0].setDisplay(false);
+        //playerBasicArray[0].setDisplay(false);
 
         playerBasicArray[1] = new PlayerColumn(ID, "ls.player.id", 0) {
             @Override
@@ -741,7 +741,7 @@ final public class UserColumnFactory {
         };
 
         // Last Match date column.
-        playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH, "LastMatchRating", 80) {
+        playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH_RATING, "LastMatchRating", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRating = player.getLastMatchRating();
