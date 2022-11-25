@@ -123,6 +123,8 @@ public class HO {
 		try {
 			if (!UserManager.instance().isSingleUser()) {
 
+				// TODO: Show Icons (maybe system tray icon menu?!)
+
 				JComboBox<String> comboBox = new JComboBox<>(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray(String[]::new));
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
