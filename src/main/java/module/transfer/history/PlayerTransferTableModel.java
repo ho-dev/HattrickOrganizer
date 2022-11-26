@@ -81,7 +81,7 @@ class PlayerTransferTableModel extends AbstractTableModel {
             case 5 -> transfer.getSellerName();
             case 6 -> transfer.getPrice();
             case 7 -> transfer.getTsi();
-            case 8 -> transfer.getPlayerInfo().getAgeWithDaysAsString(transfer.getDate());
+            case 8 -> transfer.getPlayerInfo()!=null?transfer.getPlayerInfo().getAgeWithDaysAsString(transfer.getDate()):"";
             case 9 -> new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
             default -> ""; //$NON-NLS-1$
         };
