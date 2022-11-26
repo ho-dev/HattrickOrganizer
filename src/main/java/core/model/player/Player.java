@@ -1956,7 +1956,9 @@ public class Player extends AbstractTable.Storable {
                             ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         }
                         else {
-                            HOLogger.instance().error(getClass(), "no lineup found in match details " + details.getMatchDate().toLocaleDateTime());
+                            HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
+                                    " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
+                            );
                         }
                     }
                 }
