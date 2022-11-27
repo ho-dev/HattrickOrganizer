@@ -490,4 +490,8 @@ public abstract class WeeklyTrainingType {
 	public List<MatchRoleID.Sector> getOsmosisTrainingSectors() {
 		return this.osmosisTrainingSectors;
 	}
+
+	public boolean isTraining(int skill) {
+		return skill == getPrimaryTrainingSkill() || skill == getSecondaryTrainingSkill();
+	}
 }

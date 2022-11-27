@@ -71,25 +71,25 @@ public class FutureTrainingManager {
 		if (this.futureTrainings.size() >= numberOfWeeks) {
 			// Iterate through all the future training weeks
 			for (int week = 1; week <= numberOfWeeks; week++) {
-
-				// process skill drops
-				int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
-				for (int i = 0; i < SKILL_INDEX.length; i++) {
-					finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, SKILL_INDEX[i]);
-				}
-
-				double trainingSpeed = 0;
-				weeksPassed++;
-
 				TrainingPerWeek trainingPerWeek = this.futureTrainings.get(week - 1);
 				int trainingType = trainingPerWeek.getTrainingType();
 				final WeeklyTrainingType weeklyTrainingType = WeeklyTrainingType.instance(trainingType);
-
-				final TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(player);
-
 				if (weeklyTrainingType != null) {
-
+					final TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(player);
 					var trainingPriority = trainingWeekPlayer.getFutureTrainingPrio(weeklyTrainingType, trainingPerWeek.getTrainingDate());
+
+					// process skill drops
+					int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
+					for (int i = 0; i < SKILL_INDEX.length; i++) {
+						var skill = SKILL_INDEX[i];
+						finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, skill,
+								trainingPriority != null &&
+										trainingPriority != FuturePlayerTraining.Priority.NO_TRAINING &&
+										weeklyTrainingType.isTraining(skill));
+					}
+
+					double trainingSpeed = 0;
+					weeksPassed++;
 
 					if (trainingPriority != null) {
 						switch (trainingPriority) {
