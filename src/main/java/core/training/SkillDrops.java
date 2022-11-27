@@ -176,11 +176,13 @@ public class SkillDrops {
 	 * @param skill The skill level of the player to drop
 	 * @param age The age of the player to drop
 	 * @param skillType As defined in PlayerSkill
+	 *
 	 * @return A percentage number for the skill to drop. On return 2, a skill of 4.50 should move to 4.52.
 	 */
-	public double getSkillDrop(int skill, int age, int skillType){
+	public double getSkillDrop(int skill, int age, int skillType, boolean isTrainedSkill) {
 
-		if ( skillType == PlayerSkill.STAMINA) return 0; // don't calc stamina subs (curious usage in FutureTrainingManager)
+		if (skillType == PlayerSkill.STAMINA)
+			return 0; // don't calc stamina subs (curious usage in FutureTrainingManager)
 
 		//https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=18&v=6
 		/* formula provided by Schum
@@ -211,13 +213,12 @@ public class SkillDrops {
 		DropL = a*(L+0.39)^3 + b*(L+0.39)^2 + c*(L+0.39) + d
 		*/
 		double dropL;
-		if ( skill < 14){
+		if (skill < 14) {
 			dropL = 0;
-		}
-		else {
-			var L = skill;
-			if ( skill > 20) L+=0.39;
-			dropL = 0.000006111 * Math.pow(L, 3) + 0.000808 * Math.pow(L, 2) -0.026017*L + 0.192775;
+		} else {
+			double L = skill;
+			if (skill > 20) L += 0.39;
+			dropL = 0.000006111 * Math.pow(L, 3) + 0.000808 * Math.pow(L, 2) - 0.026017 * L + 0.192775;
 		}
 
 		/*
@@ -227,7 +228,7 @@ public class SkillDrops {
 		The coefficients m and n depend on age.
 
 		DropLA	m	n
-		31	0.00031	0.00031
+		31	0.00031	-0.00434
 		32	0.00118	-0.01625
 		33	0.00264	-0.03551
 		34	0.00468	-0.06086
@@ -240,15 +241,14 @@ public class SkillDrops {
 		DropLA = m*(L+1) + n
 		*/
 		double dropLA;
-		if ( age< 31) {
+		if (age < 31) {
 			dropLA = 0;
-		}
-		else {
+		} else {
 			double m, n;
 			switch (age) {
 				case 31 -> {
 					m = 0.00031;
-					n = 0.00031;
+					n = -0.00434;
 				}
 				case 32 -> {
 					m = 0.00118;
@@ -280,7 +280,7 @@ public class SkillDrops {
 			dropLA = m * L + n;
 		}
 		var dropLevel = dropL + dropLA;
-		if ( dropLevel < 0 ){
+		if (dropLevel < 0) {
 			dropLevel = 0;
 		}
 		/*
@@ -317,17 +317,17 @@ public class SkillDrops {
 
 		*/
 
-		var ageP = switch (skillType){
-			case PlayerSkill.KEEPER -> age-29;
-			case PlayerSkill.DEFENDING -> age-28;
-			case PlayerSkill.PLAYMAKING, PlayerSkill.WINGER, PlayerSkill.PASSING -> age-27;
-			case PlayerSkill.SCORING -> age-26;
-			case PlayerSkill.SET_PIECES -> age-30;
+		var ageP = switch (skillType) {
+			case PlayerSkill.KEEPER -> age - 29;
+			case PlayerSkill.DEFENDING -> age - 28;
+			case PlayerSkill.PLAYMAKING, PlayerSkill.WINGER, PlayerSkill.PASSING -> age - 27;
+			case PlayerSkill.SCORING -> age - 26;
+			case PlayerSkill.SET_PIECES -> age - 30;
 			default -> throw new IllegalStateException("Unexpected value: " + skillType);
 		};
 
 		double dropAge = 0;
-		if ( ageP > 0) {
+		if (ageP > 0) {
 			dropAge = switch (ageP) {
 				case 1 -> 0.0003;
 				case 2 -> 0.0014;
@@ -342,13 +342,15 @@ public class SkillDrops {
 				default -> 0.0846;
 			};
 		}
-		return dropLevel + dropAge;
+		var ret = dropAge;
+		if (isTrainedSkill) ret += dropLevel;  // dropLevel only decreases the training increment
+		return ret;
 	}
 
 	private final HODateTime skillDropChanged = HODateTime.fromHT("2017-05-08 00:00:00");
-	public double getSkillDropAtDate(int skill, int age, int skillType, HODateTime date){
+	public double getSkillDropAtDate(int skill, int age, int skillType, HODateTime date, boolean isTrainedSkill){
 		if ( date.isAfter(skillDropChanged)){
-			return getSkillDrop(skill,age,skillType);
+			return getSkillDrop(skill,age,skillType, isTrainedSkill);
 		}
 		else {
 			return getSkillDropBeforeMay082017(skill, age, skillType);

@@ -79,20 +79,19 @@ public class TrainingPerPlayer  {
 
     public float calcSubskillIncrement(int skill, float skillValueBeforeTraining, HODateTime date) {
 
-		int skillValue = (int)skillValueBeforeTraining;
+		int skillValue = (int) skillValueBeforeTraining;
 		float ret = 0;
 
+		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
+		boolean isTrainedSkill = wt != null && wt.isTraining(skill);
+		if (isTrainedSkill) {
+			ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
+		}
 		/* Time to perform skill drop */
 		if (SkillDrops.instance().isActive()) {
-			ret -= SkillDrops.instance().getSkillDropAtDate(skillValue, this._Player.getAlter(), skill, date);
+			ret -= SkillDrops.instance().getSkillDropAtDate(skillValue, this._Player.getAlter(), skill, date, isTrainedSkill);
 		}
 
-		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
-		if ( wt != null ) {
-			if (skill == wt.getPrimaryTrainingSkill() || skill == wt.getSecondaryTrainingSkill()) {
-				ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
-			}
-		}
 
 		if (ret > 1) ret = 1; // limit 1
 

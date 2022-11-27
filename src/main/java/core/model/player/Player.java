@@ -2353,20 +2353,7 @@ public class Player extends AbstractTable.Storable {
                 experienceSubDone = true;
             }
 
-            // Handle skill drops that happens the monday after training date
-            var nextWeekTraining = TrainingManager.instance().getNextWeekTraining();
-            if (SkillDrops.instance().isActive() && nextWeekTraining != null &&
-                    TrainingManager.instance().getNextWeekTraining().skillDropDayIsBetween(playerBefore.getHrfDate(), this.getHrfDate())) {
-                // calc another skill down
-                sub -= SkillDrops.instance().getSkillDropAtDate(valueBeforeTraining, this.getAlter(), skill, nextWeekTraining.getTrainingDate());
-                if (sub < 0) {
-                    if (valueAfterTraining < valueBeforeTraining) { // OK
-                        sub += 1.;
-                    } else {                                        // No skill down from Hattrick
-                        sub = 0;
-                    }
-                }
-            } else if (valueAfterTraining < valueBeforeTraining) {
+            if (valueAfterTraining < valueBeforeTraining) {
                 sub = .99f;
             } else if (valueAfterTraining > valueBeforeTraining) {
                 sub = 0;
