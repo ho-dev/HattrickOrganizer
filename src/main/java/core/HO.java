@@ -17,8 +17,11 @@ import core.util.OSUtils;
 import java.io.File;
 import javax.swing.*;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+
+import static java.awt.event.KeyEvent.VK_1;
 
 
 public class HO {
@@ -125,6 +128,19 @@ public class HO {
 
 				// TODO: Show Icons (maybe system tray icon menu?!)
 
+				//var ch = JOptionPane.showOptionDialog(null, "message", "Login", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, createOptionsArray(), null );
+
+				JOptionPane pane = new JOptionPane();
+				pane.setOptions(createOptionsArray());
+				JDialog dialog = pane.createDialog(null, "Login");
+				dialog.setVisible(true);
+				Object selectedValue = pane.getValue();
+				if(selectedValue == null){
+					System.exit(0);
+				}
+
+
+
 				JComboBox<String> comboBox = new JComboBox<>(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray(String[]::new));
 				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
 						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -220,6 +236,31 @@ public class HO {
 			interuptionsWindow.setVisible(false);
 			interuptionsWindow.dispose();
 		});
+	}
+
+	private static Object[] createOptionsArray() {
+		var buttons = new ArrayList<JButton>();
+		int keyEvent = VK_1;
+		for ( var user : UserManager.instance().getAllUser() ) {
+			buttons.add(createIconButton(user.getTeamName(), user.getClubLogo(), keyEvent++));
+		}
+		return buttons.toArray();
+	}
+
+	static JButton createIconButton(String teamName, String iconPath, int keyEvent){
+		var icon = new ImageIcon(iconPath);
+		var ret  = new JButton(teamName, icon);
+		ret.setVerticalTextPosition(AbstractButton.BOTTOM);
+		ret.setHorizontalTextPosition(AbstractButton.CENTER);
+		ret.setMnemonic(keyEvent);
+
+		ret.addActionListener(evt -> {
+			var w = SwingUtilities.getWindowAncestor(ret);
+			if (w != null) {
+				w.setVisible(false);
+			}
+		});
+		return ret;
 	}
 
 }
