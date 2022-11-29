@@ -156,7 +156,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 
 	void storeMatchLineupPlayers(List<MatchLineupPosition> matchLineupPositions, MatchType matchType, int matchID, int teamID) {
 		if (matchLineupPositions != null) {
-			executePreparedDelete(matchID, teamID, matchType.getId());
+			executePreparedDelete(matchID, matchType.getId(), teamID);
 			for ( var p : matchLineupPositions){
 				p.setMatchId(matchID);
 				p.setMatchType(matchType);

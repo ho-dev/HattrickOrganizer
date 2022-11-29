@@ -83,9 +83,10 @@ public class HOModel {
         setCurrentPlayers(DBManager.instance().getSpieler(id));
         setFormerPlayers(DBManager.instance().loadAllPlayers());
         setTeam(DBManager.instance().getTeam(id));
-        setLineup(DBManager.instance().loadNextMatchLineup(getClub().getTeamID()));
-        setPreviousLineup(DBManager.instance().loadPreviousMatchLineup(getClub().getTeamID()));
         setBasics(DBManager.instance().getBasics(id));
+        var teamId = getBasics().getTeamId();
+        setLineup(DBManager.instance().loadNextMatchLineup(teamId));
+        setPreviousLineup(DBManager.instance().loadPreviousMatchLineup(teamId));
         setEconomy(DBManager.instance().getEconomy(id));
         setLeague(DBManager.instance().getLiga(id));
         setStadium(DBManager.instance().getStadion(id));
@@ -165,7 +166,7 @@ public class HOModel {
         if (lineup != null) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
             if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
-            lineup.calcStyleOfPlay();
+            calcStyleOfPlay();
         }
         m_clAufstellung = lineup;
     }
@@ -186,6 +187,14 @@ public class HOModel {
         return m_clAufstellung;
     }
 
+    private void calcStyleOfPlay() {
+        if (m_clAufstellung != null) {
+            var trainerType = getTrainer().getTrainerTyp();
+            var tacticAssistants = getClub().getTacticalAssistantLevels();
+            m_clAufstellung.calcStyleOfPlay(trainerType, tacticAssistants);
+        }
+    }
+
     /**
      * returns the lineup (setRatings is NOT called)
      */
@@ -193,7 +202,7 @@ public class HOModel {
         if (m_clAufstellung == null) {
             m_clAufstellung = DBManager.instance().loadNextMatchLineup(HOVerwaltung.instance().getModel().getBasics().getTeamId());
             if (m_clAufstellung != null) {
-                m_clAufstellung.calcStyleOfPlay();
+                calcStyleOfPlay();
             }
             else {
                 // create an empty lineup

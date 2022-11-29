@@ -6,6 +6,7 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import core.model.player.TrainerType;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -201,9 +202,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		this.lineup.setStyleOfPlay(StyleOfPlay.toInt(m_iStyleOfPlay));
 	}
 
-	public void calcStyleOfPlay () {
-		var trainerType = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
-		var tacticAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
+	public void calcStyleOfPlay (TrainerType trainerType, int tacticAssistants) {
 		var styleOfPlay = this.lineup.getStyleOfPlay();
 		switch (trainerType) {
 			case Defensive:
