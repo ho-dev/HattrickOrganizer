@@ -27,6 +27,7 @@ Please do not forget to back up data.
 
 ### Lineup
 * SubstitutionEditor shows effect on loddarstats (#1626)
+* fix bug of cleared next lineup when wrong matches were downloaded from HT (#1721)
 
 ### Statistics
 * add tooltips and labels to series data points (#1199)

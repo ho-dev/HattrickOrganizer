@@ -1,7 +1,5 @@
 package core.model.match;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
 
 public class StyleOfPlay {
 
@@ -29,14 +27,14 @@ public class StyleOfPlay {
 10	100% offensive
 */
 
-   private int val;
+   private final int val;
 
    private StyleOfPlay(int styleOfPlay){
       this.val = styleOfPlay;
    }
 
-   public static StyleOfPlay fromInt(int styleOfPlay) {
-      if ( styleOfPlay < -10 || styleOfPlay > 10) return Neutral(); // old matches has -1000
+   public static StyleOfPlay fromInt(Integer styleOfPlay) {
+      if ( styleOfPlay == null || styleOfPlay < -10 || styleOfPlay > 10) return Neutral(); // old matches has -1000
       return new StyleOfPlay(styleOfPlay);
    }
 
