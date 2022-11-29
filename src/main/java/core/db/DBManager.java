@@ -981,7 +981,7 @@ public class DBManager {
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(String where, Object ... values) {
 		return ((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
-				.getMatchesKurzInfo(where, values);
+				.loadMatchesKurzInfo(where, values);
 	}
 
 	/**

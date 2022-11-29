@@ -85,6 +85,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 	}
 	void update(MatchKurzInfo match) {
+		match.setIsStored(true);
 		store(match);
 	}
 
@@ -146,7 +147,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if(iNbGames != null) {
 			where.append(" LIMIT ").append(iNbGames);
 		}
-		return getMatchesKurzInfo(where.toString(), params.toArray());
+		return loadMatchesKurzInfo(where.toString(), params.toArray());
 	}
 
 	/**
@@ -217,7 +218,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(getMatchTypWhereClause(matchType));
 		sql.append(" ORDER BY MatchDate DESC");
 
-		return getMatchesKurzInfo(sql.toString(), params.toArray());
+		return loadMatchesKurzInfo(sql.toString(), params.toArray());
 	}
 
 	List<MatchKurzInfo> getMatchesKurzInfoUpComing(int teamId) {
@@ -225,7 +226,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if ((teamId < 0)) {
 			return new ArrayList<>();
 		}
-		return getMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC",
+		return loadMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC",
 					teamId,
 					teamId,
 					MatchKurzInfo.UPCOMING,
@@ -233,19 +234,24 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	public MatchKurzInfo loadLastMatchesKurzInfo(int teamId) {
-		var matches = getMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1",
+		return loadOneMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1",
 					teamId,
 					teamId,
 					MatchKurzInfo.FINISHED);
-		return matches.stream().findFirst().orElse(null);
 	}
 
 	public MatchKurzInfo loadNextMatchesKurzInfo(int teamId) {
-		var matches = getMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status=? ORDER BY MatchDate ASC LIMIT 1",
-					teamId,
-					teamId,
-					MatchKurzInfo.UPCOMING);
-		return matches.stream().findFirst().orElse(null);
+		return loadOneMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND MatchDate > ? AND Status = ? ORDER BY MatchDate ASC LIMIT 1",
+				teamId,
+				teamId,
+				HODateTime.now().toDbTimestamp(),
+				MatchKurzInfo.UPCOMING);
+	}
+
+	private MatchKurzInfo loadOneMatchesKurzInfo(String sql, Object ... params) {
+		var matches = loadMatchesKurzInfo(sql, params);
+		if (!matches.isEmpty()) return matches.get(0);
+		return null;
 	}
 
 	private StringBuilder getOfficialMatchTypWhereClause() {
@@ -340,10 +346,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		sql.append( " ORDER BY MatchDate DESC");
-		return getMatchesKurzInfo(sql.toString(), params.toArray());
+		return loadMatchesKurzInfo(sql.toString(), params.toArray());
 	}
 
-	public List<MatchKurzInfo> getMatchesKurzInfo(String sql, Object ... params) {
+	public List<MatchKurzInfo> loadMatchesKurzInfo(String sql, Object ... params) {
 		return load(MatchKurzInfo.class, adapter.executePreparedQuery(getMatchKurzInfoStatement(sql), params));
 	}
 
@@ -368,16 +374,14 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		if ( matchType != null&& matchType != MatchType.NONE)
 			return loadOne(MatchKurzInfo.class, matchid, matchType.getId());
 
-		var matches = getMatchesKurzInfo(" WHERE MATCHID=? ", matchid);
-		return matches.stream().findFirst().orElse(null);
+		return loadOneMatchesKurzInfo(" WHERE MATCHID=? ", matchid);
 	}
 
 	public MatchKurzInfo getLastMatchWithMatchId(int matchId) {
 		// Find latest match with id = matchId
 		// Here we order by MatchDate, which happens to be string, which is somehow risky,
 		// but it seems to be done in other places.
-		var matches = getMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId, MatchKurzInfo.FINISHED);
-		return matches.stream().findFirst().orElse(null);
+		return  loadOneMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId, MatchKurzInfo.FINISHED);
 	}
 
 	/**
@@ -387,11 +391,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	 * @return the first upcoming match with team id
 	 */
 	public MatchKurzInfo getFirstUpcomingMatchWithTeamId(int teamId) {
-		var matches = getMatchesKurzInfo(" WHERE (GastID=? OR HeimID=?) AND Status=? ORDER BY MATCHDATE ASC LIMIT 1",
+		return loadOneMatchesKurzInfo(" WHERE (GastID=? OR HeimID=?) AND Status=? ORDER BY MATCHDATE ASC LIMIT 1",
 				teamId,
 				teamId,
 				MatchKurzInfo.UPCOMING);
-		return matches.stream().findFirst().orElse(null);
 	}
 	private PreparedStatement getMatchKurzInfoStatement(String where) {
 		PreparedStatement ret = preparedStatements.get(where);
@@ -419,7 +422,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		params.addAll(matchTypes);
 		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
 		whereClause.append(" AND MATCHTYP IN (").append(placeholders).append(") ORDER BY MatchDate DESC");
-		return getMatchesKurzInfo(whereClause.toString(), params.toArray());
+		return loadMatchesKurzInfo(whereClause.toString(), params.toArray());
 	}
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp  from, Timestamp to, List<MatchType> matchTypes) {
@@ -433,7 +436,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		params.addAll(typeListAsInt);
 		params.add(MatchKurzInfo.UPCOMING);
 		params.add(MatchKurzInfo.FINISHED);
-		return getMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+ placeholders +") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
+		return loadMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+ placeholders +") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
 				params.toArray()
 		);
 	}
