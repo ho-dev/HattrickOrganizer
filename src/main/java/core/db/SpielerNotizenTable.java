@@ -31,7 +31,7 @@ final class SpielerNotizenTable extends AbstractTable {
 	}
 	public Player.Notes load(int playerId) {
 		var ret =  loadOne(Player.Notes.class, playerId);
-		if ( ret == null) ret = new Player.Notes();
+		if ( ret == null) ret = new Player.Notes(playerId);
 		return ret;
 	}
 }

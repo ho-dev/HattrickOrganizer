@@ -1722,6 +1722,10 @@ public class Player extends AbstractTable.Storable {
 
         private int playerId;
 
+        public Notes(int playerId) {
+            this.playerId = playerId;
+        }
+
         public int getUserPos() {
             return userPos;
         }
