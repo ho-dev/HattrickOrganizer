@@ -31,25 +31,25 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
       - name: Read version
         id: read_version
-        uses: christian-draeger/read-properties@1.0.1
+        uses: christian-draeger/read-properties@1.1.0
         with:
           path: 'version.properties'
           property: 'version'
       - name: Read short version
         id: read_short_version
-        uses: christian-draeger/read-properties@1.0.1
+        uses: christian-draeger/read-properties@1.1.0
         with:
           path: 'version.properties'
           property: 'shortVersion'
       - name: Read version tag
         id: read_version_tag
-        uses: christian-draeger/read-properties@1.0.1
+        uses: christian-draeger/read-properties@1.1.0
         with:
           path: 'version.properties'
           property: 'tag'
       - name: Read branch
         id: read_version_branch
-        uses: christian-draeger/read-properties@1.0.1
+        uses: christian-draeger/read-properties@1.1.0
         with:
           path: 'version.properties'
           property: 'branch'
