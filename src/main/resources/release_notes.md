@@ -8,6 +8,7 @@ Please do not forget to back up data.
 
 * Faster and more secure database access using prepared statements (#1593)
 * Improved formula for calculating skill losses - Schum's formula (#1661)
+* login dialog shows team logos (#1643)
 
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.0)

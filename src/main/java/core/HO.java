@@ -1,12 +1,12 @@
 package core;
 
 import core.db.DBManager;
-import core.db.user.User;
 import core.db.backup.BackupHelper;
 import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.SplashFrame;
 import core.gui.model.UserColumnController;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
@@ -15,6 +15,7 @@ import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import static java.awt.event.KeyEvent.VK_1;
-
 
 public class HO {
 
@@ -126,27 +126,19 @@ public class HO {
 		try {
 			if (!UserManager.instance().isSingleUser()) {
 
-				// TODO: Show Icons (maybe system tray icon menu?!)
+				var options = createOptionsArray();
+				var choice = JOptionPane.showOptionDialog(
+						null,
+						"",
+						"Login",
+						JOptionPane.DEFAULT_OPTION,
+						JOptionPane.PLAIN_MESSAGE,
+						null,
+						options,
+						null );
 
-				//var ch = JOptionPane.showOptionDialog(null, "message", "Login", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, createOptionsArray(), null );
-
-				JOptionPane pane = new JOptionPane();
-				pane.setOptions(createOptionsArray());
-				JDialog dialog = pane.createDialog(null, "Login");
-				dialog.setVisible(true);
-				Object selectedValue = pane.getValue();
-				if(selectedValue == null){
-					System.exit(0);
-				}
-
-
-
-				JComboBox<String> comboBox = new JComboBox<>(UserManager.instance().getAllUser().stream().map(User::getTeamName).toArray(String[]::new));
-				int choice = JOptionPane.showConfirmDialog(null, comboBox, "Login",
-						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-				if (choice == JOptionPane.OK_OPTION) {
-					UserManager.instance().setINDEX(comboBox.getSelectedIndex());
+				if (choice != JOptionPane.CLOSED_OPTION) {
+					UserManager.instance().setINDEX(choice);
 				} else {
 					System.exit(0);
 				}
@@ -248,19 +240,40 @@ public class HO {
 	}
 
 	static JButton createIconButton(String teamName, String iconPath, int keyEvent){
-		var icon = new ImageIcon(iconPath);
-		var ret  = new JButton(teamName, icon);
+		//return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
+		var width = 210;
+		var height = (int)(width*26./21.);
+		Icon scaledIcon;
+		try {
+			var buttonIcon = ImageIO.read(new File(iconPath));
+			var icon = new ImageIcon(buttonIcon);
+			scaledIcon = ImageUtilities.getScaledIcon(icon, width, height);
+		}catch (Exception exception){
+			scaledIcon = new ImageIcon();
+		}
+		var ret  = new JButton(teamName,scaledIcon);
 		ret.setVerticalTextPosition(AbstractButton.BOTTOM);
 		ret.setHorizontalTextPosition(AbstractButton.CENTER);
 		ret.setMnemonic(keyEvent);
 
 		ret.addActionListener(evt -> {
+			var pane = getOptionPane((JComponent)evt.getSource());
+			// set the value of the option pane
+			pane.setValue(ret);
 			var w = SwingUtilities.getWindowAncestor(ret);
 			if (w != null) {
 				w.setVisible(false);
 			}
 		});
 		return ret;
+	}
+
+	private static JOptionPane getOptionPane(JComponent source) {
+		var ret = source;
+		while (ret != null &&  ! (ret instanceof JOptionPane)) {
+			ret = (JComponent) ret.getParent();
+		}
+		return (JOptionPane) ret;
 	}
 
 }
