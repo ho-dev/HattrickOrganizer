@@ -36,7 +36,7 @@ jobs:
           path: 'version.properties'
           properties: 'version shortVersion tag branch'
       - name: Delete previous tag and release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: unkies/delete-tag-and-release@v1
         with:
           delete_release: true
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
