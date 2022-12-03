@@ -30,7 +30,7 @@ jobs:
           POEDITOR_APIKEY: ${{ secrets.POEDITOR_APIKEY }}
           RUN_NUMBER: ${{ github.run_number }}
       - name: Read version properties
-        id: read_version
+        id: read_version_properties
         uses: christian-draeger/read-properties@1.1.0
         with:
           path: 'version.properties'
