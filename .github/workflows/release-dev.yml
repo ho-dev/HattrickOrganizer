@@ -39,7 +39,7 @@ jobs:
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true
-          tag_name: ${{ steps.read_version_tag.outputs.value }}
+          tag_name: ${{ steps.read_version_properties.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
@@ -49,29 +49,29 @@ jobs:
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.read_version.outputs.value }}
-          tag_name: ${{ steps.read_version_tag.outputs.value }}
+          name: ${{ steps.read_version_properties.outputs.version }}
+          tag_name: ${{ steps.read_version_properties.outputs.tag }}
           body_path: docs/md/release_notes.md
-          target_commitish: ${{ steps.read_version_branch.outputs.value }}
+          target_commitish: ${{ steps.read_version_properties.outputs.branch }}
           prerelease: true
       - name: If not dev-release delete previous short version tag
-        if: ${{ steps.read_version_tag.outputs.value != 'dev'}}
+        if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true
-          tag_name: ${{ steps.read_short_version.outputs.value }}
+          tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: If not dev-release create a Release with short version tag
-        if: ${{ steps.read_version_tag.outputs.value != 'dev'}}
+        if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           files: |
             build/artefacts/**
-          name: ${{ steps.read_version.outputs.value }}
-          tag_name: ${{ steps.read_short_version.outputs.value }}
+          name: ${{ steps.read_version_properties.outputs.version }}
+          tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
           body_path: docs/md/release_notes.md
-          target_commitish: ${{ steps.read_version_branch.outputs.value }}
-          prerelease: ${{ steps.read_version_tag.outputs.value != 'tag_stable'}}
+          target_commitish: ${{ steps.read_version_properties.outputs.branch }}
+          prerelease: ${{ steps.read_version_properties.outputs.tag != 'tag_stable'}}
