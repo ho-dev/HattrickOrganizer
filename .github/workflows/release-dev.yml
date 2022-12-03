@@ -36,7 +36,7 @@ jobs:
           path: 'version.properties'
           properties: 'version shortVersion tag branch'
       - name: Delete previous tag and release
-        uses: unkies/delete-tag-and-release@v1
+        uses: unkies/action-gh-delete-release@v0.2.4
         with:
           delete_release: true
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
