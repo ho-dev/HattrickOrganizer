@@ -1,6 +1,5 @@
 package core.db.backup;
 
-import core.db.user.User;
 import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
 import core.util.HOLogger;
@@ -17,8 +16,6 @@ public class BackupHelper {
 
 	// zip and delete db
 	public static void backup(File dbDirectory) {
-		Calendar now = Calendar.getInstance();
-
 		if (!dbDirectory.exists()) {return;}
 
 		File[] filesToBackup = getFilesToBackup(dbDirectory);
@@ -51,7 +48,7 @@ public class BackupHelper {
 		ExampleFileFilter filter = new ExampleFileFilter("zip");
 		filter.setIgnoreDirectories(true);
 		File[] files = dbDirectory.listFiles(filter);
-		if (files.length > UserManager.instance().getCurrentUser().getBackupLevel()) {
+		if (files != null && files.length > UserManager.instance().getCurrentUser().getNumberOfBackups()) {
 			for (int i = 0; i < files.length; i++) {
 				if (i == 0
 						|| (toDelete != null && toDelete.lastModified() > files[i].lastModified())) {

@@ -16,12 +16,17 @@ public class User{
 
 //    // getters and setters
 	public String getDbName() {return baseUser.dbName;}
-	public void setDbName(String _dbName) {this.baseUser.dbName = _dbName; }
+	public void setDbName(String _dbName) {
+		this.baseUser.dbName = _dbName;
+		fillUserInfos();
+	}
 	public String getDbFolder() {return dbFolder;}
 	public final String getTeamName() {return baseUser.teamName;}
-	public final void setName(String _teamName) {this.baseUser.teamName = _teamName;}
-	public int getBackupLevel() {return baseUser.backupLevel;}
+	public final void setTeamName(String _teamName) {this.baseUser.teamName = _teamName;}
+	public int getNumberOfBackups() {return baseUser.numberOfBackups;}
+	public void setNumberOfBackups(int n) { baseUser.numberOfBackups = n;}
 	public boolean isNtTeam() {return baseUser.isNtTeam;}
+	public void setIsNtTeam(boolean b){baseUser.isNtTeam=b;}
 	public void setClubLogo(String logo){baseUser.clubLogo=logo;}
 	public String getClubLogo(){return baseUser.clubLogo;}
 

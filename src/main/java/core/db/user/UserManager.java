@@ -5,6 +5,7 @@ import core.util.OSUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,16 +18,14 @@ public class UserManager {
     private int INDEX = 0;
     private String dbParentFolder;
 
-
-
-    private final String driver = "org.hsqldb.jdbcDriver";
-
     public String getDbParentFolder() {return dbParentFolder;}
     public int getINDEX() {return INDEX; }
     public void setINDEX(int _INDEX) { INDEX = _INDEX;}
-    public String getDriver() {return driver;}
+    public String getDriver() {
+        return "org.hsqldb.jdbcDriver";
+    }
 
-    /** singelton */
+    /** singleton */
     protected static UserManager m_clInstance;
 
     /**
@@ -99,4 +98,13 @@ public class UserManager {
         }
     }
 
+    public void swapUsers(int i1, int i2) {
+        Collections.swap(users, i1, i2);
+        if ( INDEX == i1){
+            INDEX = i2;
+        }
+        else if ( INDEX == i2){
+            INDEX = i1;
+        }
+    }
 }
