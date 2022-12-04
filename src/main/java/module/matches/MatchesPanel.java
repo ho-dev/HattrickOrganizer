@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.*;
@@ -210,7 +209,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		if (value == JOptionPane.YES_OPTION) {
 			for (MatchKurzInfo info : infos) {
-				DBManager.instance().deleteMatch(info.getMatchID(), info.getMatchType().getId());
+				DBManager.instance().deleteMatch(info);
 			}
 			RefreshManager.instance().doReInit();
 		}
