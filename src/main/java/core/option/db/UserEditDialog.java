@@ -12,17 +12,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
+import java.io.Serial;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class DatabaseUserEditDialog extends JDialog {
+public class UserEditDialog extends JDialog {
 
 	private JButton saveButton;
 	private JButton cancelButton;
@@ -34,15 +33,16 @@ public class DatabaseUserEditDialog extends JDialog {
 		return user;
 	}
 
-	private User user;
+	private final User user;
 	private boolean canceled = true;
 	private final boolean isNew;
+	@Serial
 	private static final long serialVersionUID = -98754947290884048L;
 	private JRadioButton ntTeamYes;
 	private JRadioButton ntTeamNo;
 
 
-	public DatabaseUserEditDialog(Window parent, User user, boolean isNew) {
+	public UserEditDialog(Window parent, User user, boolean isNew) {
 		super(parent, ModalityType.APPLICATION_MODAL);
 		this.isNew = isNew;
 		this.user = user;
@@ -54,7 +54,7 @@ public class DatabaseUserEditDialog extends JDialog {
 		checkCanSave();
 	}
 
-	public DatabaseUserEditDialog(Window parent, @Nullable User user) {
+	public UserEditDialog(Window parent, @Nullable User user) {
 		this(parent, user, false);
 	}
 
@@ -65,7 +65,7 @@ public class DatabaseUserEditDialog extends JDialog {
 	private void initData() {
 		this.nameTextField.setText(this.user.getTeamName());
 		this.databaseNameTextField.setText(this.user.getDbName());
-		this.numberOfBackupsTextField.setText(String.valueOf(this.user.getBackupLevel()));
+		this.numberOfBackupsTextField.setText(String.valueOf(this.user.getNumberOfBackups()));
 		if (this.user.isNtTeam())
 			ntTeamYes.setSelected(true);
 		else
@@ -212,8 +212,12 @@ public class DatabaseUserEditDialog extends JDialog {
 		});
 
 		this.saveButton.addActionListener(e -> {
-				user = new User(nameTextField.getText(), databaseNameTextField.getText(), Integer.parseInt(numberOfBackupsTextField.getText()),
-						ntTeamYes.isSelected());
+//				user = new User(nameTextField.getText(), databaseNameTextField.getText(), Integer.parseInt(numberOfBackupsTextField.getText()),
+//						ntTeamYes.isSelected());
+				user.setTeamName(nameTextField.getText());
+				user.setDbName(databaseNameTextField.getText());
+				user.setNumberOfBackups(Integer.parseInt(numberOfBackupsTextField.getText()));
+				user.setIsNtTeam(ntTeamYes.isSelected());
 				canceled = false;
 				dispose();
 		});
@@ -259,7 +263,7 @@ public class DatabaseUserEditDialog extends JDialog {
 	private boolean isChanged() {
 		return (!this.user.getTeamName().equals(this.nameTextField.getText()) ||
 				!this.user.getDbName().equals(this.databaseNameTextField.getText()) ||
-				!String.valueOf(this.user.getBackupLevel()).equals(this.numberOfBackupsTextField.getText()) ||
+				!String.valueOf(this.user.getNumberOfBackups()).equals(this.numberOfBackupsTextField.getText()) ||
 				!(this.user.isNtTeam() == ntTeamYes.isSelected()));
 	}
 

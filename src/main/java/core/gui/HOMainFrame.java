@@ -20,7 +20,7 @@ import core.net.DownloadDialog;
 import core.net.MyConnector;
 import core.net.login.ProxySettings;
 import core.option.OptionenDialog;
-import core.option.db.DatabaseOptionsDialog;
+import core.option.db.UserAdministrationDialog;
 import core.util.*;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
@@ -67,8 +67,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final JMenuItem m_jmSubksillFull = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
 	private final JMenuItem m_jmSubksillRecalc7 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
 	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
-	private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
-	private final JMenuItem databaseOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
+	//private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
+	private final JMenuItem userAdministrationOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
 	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
 	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
 	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
@@ -286,7 +286,9 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (m_clHOMainFrame == null) {
 			return Weather.PARTIALLY_CLOUDY;
 		}
-		return instance().getLineupPanel().getWeather();
+		var lineup =  instance().getLineupPanel();
+		if ( lineup != null ) return lineup.getWeather();
+		return Weather.NULL;
 	}
 
 	/**
@@ -309,8 +311,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 				DownloadDialog.instance();
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
-		} else if (source.equals(databaseOptionsMenu)) {
-			new DatabaseOptionsDialog(this).setVisible(true);
+		} else if (source.equals(userAdministrationOptionsMenu)) {
+			new UserAdministrationDialog(this).setVisible(true);
 		} else if (source.equals(m_jmiDbCleanupTool)) {
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
@@ -487,11 +489,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Options
 		m_jmOptionen.addActionListener(this);
 		m_jmFile.add(m_jmOptionen);
-		databaseMenu.add(databaseOptionsMenu);
-		databaseOptionsMenu.addActionListener(this);
-		databaseMenu.add(m_jmiDbCleanupTool);
+		userAdministrationOptionsMenu.addActionListener(this);
 		m_jmiDbCleanupTool.addActionListener(this);
-		m_jmFile.add(databaseMenu);
+		m_jmFile.add(userAdministrationOptionsMenu);
+		m_jmFile.add(m_jmiDbCleanupTool);
 
 		m_jmFile.addSeparator();
 
@@ -632,7 +633,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void showMatch(final int matchid) {
 		m_jtpTabbedPane.showTab(IModule.MATCHES);
 		final MatchesPanel matchesPanel = (MatchesPanel) getTabbedPane().getModulePanel(IModule.MATCHES);
-		SwingUtilities.invokeLater(() -> matchesPanel.showMatch(matchid));
+		SwingUtilities.invokeLater(() -> {
+			assert matchesPanel != null;
+			matchesPanel.showMatch(matchid);
+		});
 	}
 
 	// ----------------Helper methods---------------------------------
@@ -665,6 +669,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		final var lineupPanel = getLineupPanel();
 
+		assert lineupPanel != null;
 		parameter.aufstellungsAssistentPanel_gruppe = lineupPanel.getAssistantGroup();
 		parameter.aufstellungsAssistentPanel_reihenfolge = lineupPanel.getAssistantOrder();
 		parameter.lineupAssistentPanel_include_group = !lineupPanel.isAssistantSelectedGroupExcluded();
