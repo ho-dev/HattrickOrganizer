@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.*;
@@ -112,13 +111,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 
 	private void addListeners() {
-		this.reloadMatchButton.addActionListener(e -> {
-			int matchid = matchesModel.getMatch().getMatchID();
-			OnlineWorker.downloadMatchData(matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), true);
-			RefreshManager.instance().doReInit();
-			showMatch(matchid);
-			HOMainFrame.instance().setInformationCompleted();
-		});
+		this.reloadMatchButton.addActionListener(e -> reloadSelectedMatches());
 
 		this.deleteButton.addActionListener(e -> deleteSelectedMatches());
 
@@ -179,14 +172,32 @@ public final class MatchesPanel extends LazyImagePanel {
 		}
 	}
 
+	private void reloadSelectedMatches() {
+		HOMainFrame.instance().resetInformation();
+		int matchid = matchesModel.getMatch().getMatchID();
+		int i=0;
+		int n = matchesTable.getSelectedRows().length;
+		for ( var selectedRowNumber : matchesTable.getSelectedRows()){
+			var matchKurzInfo = getMatchKurzInfoOfRow(selectedRowNumber);
+			OnlineWorker.downloadMatchData( matchKurzInfo.getMatchID(), matchKurzInfo.getMatchType(), true);
+			HOMainFrame.instance().updateProgress((int)(++i * 100.0 / n));
+		}
+		RefreshManager.instance().doReInit();
+		showMatch(matchid);
+		HOMainFrame.instance().setInformationCompleted();
+	}
+
+	private MatchKurzInfo getMatchKurzInfoOfRow(int selectedRowNumber) {
+		return  ((MatchesColumnModel) matchesTable.getSorter().getModel())
+				.getMatch((int) ((ColorLabelEntry) matchesTable.getSorter().getValueAt(selectedRowNumber, 7)).getNumber());
+	}
+
 	private void deleteSelectedMatches() {
 		int[] rows = matchesTable.getSelectedRows();
 		MatchKurzInfo[] infos = new MatchKurzInfo[rows.length];
 
 		for (int i = 0; i < rows.length; i++) {
-			infos[i] = ((MatchesColumnModel) matchesTable.getSorter().getModel())
-					.getMatch((int) ((ColorLabelEntry) matchesTable.getSorter().getValueAt(rows[i],
-							7)).getNumber());
+			infos[i] = getMatchKurzInfoOfRow(rows[i]);
 		}
 
 		StringBuilder text = new StringBuilder(100);
@@ -210,7 +221,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		if (value == JOptionPane.YES_OPTION) {
 			for (MatchKurzInfo info : infos) {
-				DBManager.instance().deleteMatch(info.getMatchID(), info.getMatchType().getId());
+				DBManager.instance().deleteMatch(info);
 			}
 			RefreshManager.instance().doReInit();
 		}

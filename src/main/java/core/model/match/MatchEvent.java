@@ -40,8 +40,8 @@ public class MatchEvent extends AbstractTable.Storable {
         return m_iMatchEventIndex;
     }
 
-    public void setMatchEventIndex(int m_iMatchEventIndex) {
-        this.m_iMatchEventIndex = m_iMatchEventIndex;
+    public void setMatchEventIndex(Integer index) {
+        if (index != null )  this.m_iMatchEventIndex = index;
     }
 
     private int m_iMatchEventIndex;
@@ -231,7 +231,7 @@ public class MatchEvent extends AbstractTable.Storable {
         }
 
         public static MatchPartId fromMatchPartId(Integer iMatchPartId) {
-            if ( iMatchPartId== null) return null;
+            if (iMatchPartId == null) return null;
             MatchPartId ret = lookup.get(iMatchPartId);
             if (ret == null) {
                 HOLogger.instance().log(MatchPartId.class, "UNKNOWN_MATCHPART: " + iMatchPartId);
@@ -239,6 +239,10 @@ public class MatchEvent extends AbstractTable.Storable {
             return ret;
         }
 
+        public static Integer toInteger(MatchPartId id){
+            if (id==null)return null;
+            return id.value;
+        }
     }
 
     public Matchdetails.eInjuryType getM_eInjuryType() {
@@ -249,7 +253,7 @@ public class MatchEvent extends AbstractTable.Storable {
         this.m_eInjuryType = m_eInjuryType;
     }
 
-    public void setM_eInjuryType(int i_InjuryType) {
+    public void setM_eInjuryType(Integer i_InjuryType) {
         this.m_eInjuryType = Matchdetails.eInjuryType.fromInteger(i_InjuryType);
     }
 
@@ -935,7 +939,7 @@ public class MatchEvent extends AbstractTable.Storable {
      * Check, if it is a man marking  event
      */
     public boolean isManMarking() {
-        List<Integer> man_markingME = IntStream.range(380, 382).boxed().collect(Collectors.toList());
+        List<Integer> man_markingME = IntStream.range(380, 382).boxed().toList();
         return man_markingME.contains(m_matchEventID.value);
     }
 

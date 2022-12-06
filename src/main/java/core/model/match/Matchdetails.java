@@ -278,17 +278,21 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
     public void setHomeGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
-        if ( homeGoalsInParts == null) {
+        if ( homeGoalsInParts == null && goals != null) {
             homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         }
-        homeGoalsInParts[part.getValue()]=goals;
+        if ( homeGoalsInParts != null) {
+            homeGoalsInParts[part.getValue()] = goals;
+        }
     }
 
     public void setGuestGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
-        if ( guestGoalsInParts == null) {
+        if ( guestGoalsInParts == null && goals != null) {
             guestGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         }
-        guestGoalsInParts[part.getValue()]=goals;
+        if ( guestGoalsInParts != null ) {
+            guestGoalsInParts[part.getValue()] = goals;
+        }
     }
 
     private void InitGoalsInParts() {
@@ -410,13 +414,19 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
             value = newValue;
         }
 
-        public static eInjuryType fromInteger(int x) {
+        public static eInjuryType fromInteger(Integer x) {
+            if (x == null) return null;
             return switch (x) {
                 case 0 -> NA;
                 case 1 -> BRUISE;
                 case 2 -> INJURY;
                 default -> null;
             };
+        }
+
+        public static Integer toInteger(eInjuryType type){
+            if (type==null) return null;
+            return type.value;
         }
 
     }
@@ -509,15 +519,16 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
     public final int getGuestHalfTimeGoals() {
-        if ( guestGoalsInParts != null){
-            return guestGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
-        }
-        return -1;
+        return goalsInPart(guestGoalsInParts, MatchEvent.MatchPartId.FIRST_HALF);
+    }
+    public final int getHomeHalfTimeGoals() {
+        return goalsInPart(homeGoalsInParts, MatchEvent.MatchPartId.FIRST_HALF);
     }
 
-    public final int getHomeHalfTimeGoals() {
-        if ( homeGoalsInParts != null){
-            return homeGoalsInParts[MatchEvent.MatchPartId.FIRST_HALF.getValue()];
+    private int goalsInPart(Integer[] goalsInParts, MatchEvent.MatchPartId partId) {
+        var index = partId.getValue();
+        if (goalsInParts != null && goalsInParts[index] != null) {
+            return goalsInParts[index];
         }
         return -1;
     }

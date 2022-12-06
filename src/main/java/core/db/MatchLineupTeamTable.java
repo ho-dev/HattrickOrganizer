@@ -22,8 +22,8 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchLineupTeam) o).getMatchId()).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchLineupTeam) o).getTeamID()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchLineupTeam) o).getMatchType().getId()).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchLineupTeam) o).getTeamID()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((o) -> ((MatchLineupTeam) o).getExperience()).setSetter((o, v) -> ((MatchLineupTeam) o).setExperience((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TeamName").setGetter((o) -> ((MatchLineupTeam) o).getTeamName()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamName((String) v)).setType(Types.VARCHAR).setLength(265).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("StyleOfPlay").setGetter((o) -> (StyleOfPlay.toInt(((MatchLineupTeam) o).getStyleOfPlay()))).setSetter((o, v) -> ((MatchLineupTeam) o).setStyleOfPlay(StyleOfPlay.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
@@ -40,16 +40,16 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	}
 
 	MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		return loadOne(MatchLineupTeam.class, matchID, teamID, iMatchType);
+		return loadOne(MatchLineupTeam.class, matchID, iMatchType, teamID);
 	}
 
 	void deleteMatchLineupTeam(MatchLineupTeam team) {
-		executePreparedDelete(team.getMatchId(), team.getTeamID(), team.getMatchType().getId());
+		executePreparedDelete(team.getMatchId(), team.getMatchType().getId(), team.getTeamID());
 	}
 
 	void storeMatchLineupTeam(MatchLineupTeam team) {
 		if (team != null) {
-			team.setIsStored(isStored(team.getMatchId(), team.getTeamID(), team.getMatchType().getId()));
+			team.setIsStored(isStored(team.getMatchId(), team.getMatchType().getId(), team.getTeamID()));
 			store(team);
 		}
 	}

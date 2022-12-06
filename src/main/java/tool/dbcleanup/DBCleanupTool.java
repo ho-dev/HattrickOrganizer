@@ -19,7 +19,6 @@ import javax.swing.JFrame;
 
 /**
  * HO Database Cleanup Tool
- * 
  * Removes old HRFs and old matches from the DB to speedup HO
  * 
  * @author flattermann <HO@flattermann.net>
@@ -188,7 +187,7 @@ public class DBCleanupTool {
 				// Remove match
 				HOLogger.instance().debug(getClass(), 
 						"Removing match "+curMatchId+" @ "+curMatchDate+ " (myMatch="+isMyMatch+", type="+curMatchType+")");
-	            DBManager.instance().deleteMatch(curMatchId, curMatchType.getId());
+	            DBManager.instance().deleteMatch(curKurzInfo);
 				counter++;
 			} 
 		}

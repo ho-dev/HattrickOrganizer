@@ -1802,16 +1802,22 @@ public class DBManager {
 	/**
 	 * Deletes all data for the given match
 	 *
-	 * @param matchid The matchid. Must be larger than 0.
+	 * @param info MatchKurzInfo of the match to delete
 	 */
-	public void deleteMatch(int matchid, int matchType) {
+	public void deleteMatch(MatchKurzInfo info) {
+		var matchid = info.getMatchID();
+		var matchType = info.getMatchType();
+
 		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(matchid, matchType);
 		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(matchid, matchType);
 		getTable(MatchLineupTable.TABLENAME).executePreparedDelete(matchid, matchType);
-		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(matchid, matchType);
-		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getHomeTeamID());
+		getTable(MatchLineupTeamTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getGuestTeamID());
+		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getHomeTeamID());
+		getTable(MatchLineupPlayerTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getGuestTeamID());
 		getTable(MatchesKurzInfoTable.TABLENAME).executePreparedDelete(matchid, matchType);
-		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(matchid, matchType);
+		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getHomeTeamID());
+		getTable(MatchSubstitutionTable.TABLENAME).executePreparedDelete(matchid, matchType, info.getGuestTeamID());
 	}
 
 	/**
