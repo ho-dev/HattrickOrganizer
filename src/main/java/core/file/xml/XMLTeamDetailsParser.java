@@ -171,9 +171,10 @@ public class XMLTeamDetailsParser {
 	}
 
 	public static List<TeamInfo> getTeamInfoFromString(String input) {
-		Document doc = XMLManager.parseString(input);
 		List<TeamInfo> ret = new ArrayList<>();
-		
+		if ( input.isEmpty() ) return ret;
+
+		Document doc = XMLManager.parseString(input);
 		Element root = doc.getDocumentElement();
 		root = (Element) root.getElementsByTagName("Teams").item(0);
 
