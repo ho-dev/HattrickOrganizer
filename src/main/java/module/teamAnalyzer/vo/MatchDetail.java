@@ -14,12 +14,12 @@ public class MatchDetail {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** ArrayList of Player performance for this game */
-    private List<PlayerPerformance> playerPerf = new ArrayList<>();
+    private final List<PlayerPerformance> playerPerf = new ArrayList<>();
 
     private int setPiecesTaker = -1;
 
-    /** Match to which the details are reffered */
-    private Match match;
+    /** Match to which the details are referred */
+    private final Match match;
 
     /** Rating on the 7 areas of the pitch */
     private MatchRating rating = new MatchRating();
@@ -35,6 +35,7 @@ public class MatchDetail {
 
     /** Tactic LEvel achieved in the game */
     private int tacticLevel;
+    private boolean isManMarking;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -134,5 +135,13 @@ public class MatchDetail {
 
     public void setSetPiecesTaker(int setPiecesTaker) {
         this.setPiecesTaker = setPiecesTaker;
+    }
+
+    public void setIsMarking(boolean teamManMarking) {
+        this.isManMarking = teamManMarking;
+    }
+
+    public boolean isManMarking() {
+        return isManMarking;
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MatchPopulator {
     //~ Static fields/initializers -----------------------------------------------------------------
-    private static List<MatchDetail> analyzedMatch = new ArrayList<MatchDetail>();
+    private static List<MatchDetail> analyzedMatch = new ArrayList<>();
 
     //~ Methods ------------------------------------------------------------------------------------
     public static List<MatchDetail> getAnalyzedMatch() {
@@ -26,29 +26,23 @@ public class MatchPopulator {
     }
 
     public static void clean() {
-        analyzedMatch = new ArrayList<MatchDetail>();
+        analyzedMatch = new ArrayList<>();
     }
 
     public List<MatchDetail> populate(List<Match> matches) {
-        List<MatchDetail> list = new ArrayList<MatchDetail>();
+        List<MatchDetail> list = new ArrayList<>();
 
-        analyzedMatch = new ArrayList<MatchDetail>();
-        boolean bOK = true;
-        for (Iterator<Match> iter = matches.iterator(); iter.hasNext();) {
-        	bOK = true;
-            Match element = iter.next();
-            if (bOK) {
-	            try {
-	                MatchDetail md = populateMatch(element);
-	                if (md != null) {
-	                    list.add(md);
-	                    analyzedMatch.add(md);
-	                }
-	            } catch (RuntimeException e) {
-	                // DO NOTHING
-	            }
-            } else {
-            	break;
+        analyzedMatch = new ArrayList<>();
+        for (Match match : matches) {
+            Match element = match;
+            try {
+                MatchDetail md = populateMatch(element);
+                if (md != null) {
+                    list.add(md);
+                    analyzedMatch.add(md);
+                }
+            } catch (RuntimeException e) {
+                // DO NOTHING
             }
         }
         return list;
@@ -108,7 +102,7 @@ public class MatchPopulator {
         var matchType = MatchType.getById( aMatch.getMatchType().getMatchTypeId());
     	Matchdetails tmpMatch = Matchdetails.getMatchdetails(aMatch.getMatchId(), matchType);
         MatchDetail matchDetail = new MatchDetail(aMatch);
-        MatchLineupTeam tmpLineupTeam = null;
+        MatchLineupTeam tmpLineupTeam;
 
         if (isHome(tmpMatch)) {
             tmpLineupTeam =  DBManager.instance().loadMatchLineup(matchType.getId(), aMatch.getMatchId()).getHomeTeam();
@@ -152,16 +146,12 @@ public class MatchPopulator {
         matchDetail.setFormation(tmpMatch.getFormation(isHome(tmpMatch)));
         NameManager.addNames(tmpMatch.getLineup(isHome(tmpMatch)));
 
+        matchDetail.setIsMarking(tmpMatch.isTeamManMarking(SystemManager.getActiveTeamId()));
+
         return matchDetail;
     }
     
     private boolean isHome(Matchdetails match) {
-        boolean isHome = false;
-
-        if (match.getHomeTeamId() == SystemManager.getActiveTeamId()) {
-            isHome = true;
-        }
-
-        return isHome;
+        return  match.getHomeTeamId() == SystemManager.getActiveTeamId();
     }
 }

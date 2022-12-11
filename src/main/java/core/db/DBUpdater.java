@@ -1,5 +1,6 @@
 package core.db;
 
+import core.db.user.UserManager;
 import core.model.enums.DBDataSource;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -102,6 +103,17 @@ final class DBUpdater {
 	}
 
 	private void updateDBv700(int dbVersion) throws SQLException {
+		boolean isFixed = false;
+		var users = UserManager.instance().getAllUser();
+		for ( var user : users){
+			if (user.getNumberOfBackups() == 0){	// repair backupLevel
+				user.setNumberOfBackups(3);
+				isFixed=true;
+			}
+		}
+		if ( isFixed){
+			UserManager.instance().save();
+		}
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		if (playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")) {
 			playerTable.tryAddColumn("LastMatch_PositionCode", "INTEGER");

@@ -1566,4 +1566,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         }
         return isWalkoverMatchWin;
     }
+    public boolean isTeamManMarking(int teamId){
+        return this.getHighlights().stream().anyMatch(e-> e.getTeamID()==teamId && e.isManMarking());
+    }
 }
