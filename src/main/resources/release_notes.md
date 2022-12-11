@@ -22,6 +22,7 @@ Please do not forget to back up data.
 * add mother club and matches current team columns (#1401)
 
 ### Team Analyser
+* team analyzer displays man marking tactic (#1741)
 
 ### Rating
 

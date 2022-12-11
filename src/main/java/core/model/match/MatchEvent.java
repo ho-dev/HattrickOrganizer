@@ -13,7 +13,6 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MatchEvent extends AbstractTable.Storable {
@@ -529,7 +528,7 @@ public class MatchEvent extends AbstractTable.Storable {
     }
 
     public boolean isBooked() {
-        return (isYelloCard() || isRedCard());
+        return (isYellowCard() || isRedCard());
     }
 
     public boolean isPenaltyContestGoalEvent() {
@@ -764,7 +763,7 @@ public class MatchEvent extends AbstractTable.Storable {
     }
 
 
-    public boolean isYelloCard() {
+    public boolean isYellowCard() {
         return yellowCardME.contains(this.m_matchEventID);
     }
 
@@ -934,13 +933,15 @@ public class MatchEvent extends AbstractTable.Storable {
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_LEFT_WING,         // #272
             MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_LEFT_WING);           // #282)
 
+    private static final List<Integer> manMarkingMatchEventTypes = IntStream.range(
+            MatchEventID.MAN_MARKING_SUCCESS_SHORT_DISTANCE.value,
+            MatchEventID.MAN_MARKER_PENALTY_NO_MAN_MARKED_IN_OPPONENT_TEAM.value).boxed().toList();
 
     /**
      * Check, if it is a man marking  event
      */
     public boolean isManMarking() {
-        List<Integer> man_markingME = IntStream.range(380, 382).boxed().toList();
-        return man_markingME.contains(m_matchEventID.value);
+        return manMarkingMatchEventTypes.contains(m_matchEventID.value);
     }
 
 

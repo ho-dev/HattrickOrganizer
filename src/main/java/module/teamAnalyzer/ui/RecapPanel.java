@@ -7,19 +7,17 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.model.match.Matchdetails;
-import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import module.teamAnalyzer.ui.model.UiRecapTableModel;
 import module.teamAnalyzer.vo.MatchRating;
 import module.teamAnalyzer.vo.TeamLineup;
-
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Vector;
-
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,16 +29,15 @@ import javax.swing.ScrollPaneConstants;
 
 public class RecapPanel extends JPanel {
     //~ Static fields/initializers -----------------------------------------------------------------
-	private static final long serialVersionUID = 486150690031160261L;
+	@Serial
+    private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
-    private static final String GOALS_SPACE = " - "; //$NON-NLS-1$
 
     //~ Instance fields ----------------------------------------------------------------------------
     private JTable table;
-    private RecapTableSorter sorter;
     private UiRecapTableModel tableModel;
     private RecapListSelectionListener recapListener = null;
-    private String[] columns = {
+    private final String[] columns = {
             HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
             HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
             HOVerwaltung.instance().getLanguageString("ls.match.result"),
@@ -66,8 +63,6 @@ public class RecapPanel extends JPanel {
             "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
             "" //$NON-NLS-1$
     };
-
-    private TeamLineup adjustedLineup;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -186,13 +181,7 @@ public class RecapPanel extends JPanel {
 
         // Columns 16-17
         rowData.add(df2.format(lineup.getRating().getLoddarStats()));
-        int tactic = lineup.getTacticCode();
-        if ( tactic != -1) {
-            rowData.add(Matchdetails.getNameForTaktik(tactic));
-        }
-        else{
-            rowData.add(VALUE_NA);
-        }
+        rowData.add(formatTacticColumn(lineup));
 
         // Column 18
         if (lineup.getTacticCode() <= 0) {
@@ -209,6 +198,23 @@ public class RecapPanel extends JPanel {
         rowData.add(lineup.isHomeMatch());
 
         return rowData;
+    }
+
+    private String formatTacticColumn(TeamLineup lineup) {
+        var str = new StringBuilder();
+        int tactic = lineup.getTacticCode();
+        if (tactic != -1) {
+            str.append(Matchdetails.getNameForTaktik(tactic));
+        }
+        if (lineup.getMatchDetail() != null && lineup.getMatchDetail().isManMarking()) {
+            if (tactic != -1) str.append("/");
+            str.append(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.manmarking"));
+        }
+
+        if (str.isEmpty()) {
+            str.append(VALUE_NA);
+        }
+        return str.toString();
     }
 
     private void setColumnInvisible(int col) {
@@ -253,7 +259,7 @@ public class RecapPanel extends JPanel {
 
         tableModel = new UiRecapTableModel(data, new Vector<>(Arrays.asList(columns)));
 
-        sorter = new RecapTableSorter(tableModel);
+        RecapTableSorter sorter = new RecapTableSorter(tableModel);
         table = new JTable(sorter);
         sorter.setTableHeader(table.getTableHeader());
 
