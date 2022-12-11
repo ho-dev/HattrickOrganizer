@@ -23,8 +23,8 @@ public class User{
 	public String getDbFolder() {return dbFolder;}
 	public final String getTeamName() {return baseUser.teamName;}
 	public final void setTeamName(String _teamName) {this.baseUser.teamName = _teamName;}
-	public int getNumberOfBackups() {return baseUser.numberOfBackups;}
-	public void setNumberOfBackups(int n) { baseUser.numberOfBackups = n;}
+	public int getNumberOfBackups() {return baseUser.backupLevel;}
+	public void setNumberOfBackups(int n) { baseUser.backupLevel = n;}
 	public boolean isNtTeam() {return baseUser.isNtTeam;}
 	public void setIsNtTeam(boolean b){baseUser.isNtTeam=b;}
 	public void setClubLogo(String logo){baseUser.clubLogo=logo;}
