@@ -6,6 +6,7 @@
  */
 package core.file.xml;
 
+import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
 import core.util.HOLogger;
 
@@ -31,10 +32,10 @@ public class XMLWorldDetailsParser {
 	}
 
 	public static List<WorldDetailLeague> parseDetails(Document doc) {
-		Element ele = null;
-		Element root = null;
-		List<WorldDetailLeague> detailsList = new ArrayList<WorldDetailLeague>();
-		NodeList list = null;
+		Element ele;
+		Element root;
+		List<WorldDetailLeague> detailsList = new ArrayList<>();
+		NodeList list;
 		if (doc == null) {
 			return detailsList;
 		}
@@ -46,7 +47,7 @@ public class XMLWorldDetailsParser {
 			root = (Element) root.getElementsByTagName("LeagueList").item(0);
 			list = root.getElementsByTagName("League");
 
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				root = (Element) list.item(i);
 				WorldDetailLeague tmp = new WorldDetailLeague();
 				ele = (Element) root.getElementsByTagName("LeagueID").item(0);
@@ -71,13 +72,33 @@ public class XMLWorldDetailsParser {
 
 		return detailsList;
 	}
-	
+
+	private static Map<String, String> initWorldDetailsMap(){
+		var map = new MyHashtable();
+		var model = HOVerwaltung.instance().getModel();
+		if ( model != null ){
+			var basics = model.getBasics();
+			if ( basics != null){
+				map.put("LeagueID", "" + basics.getLiga());
+				map.put("Season", "" + basics.getSeason());
+				map.put("SeasonOffset", "" + basics.getSeasonOffset());
+				map.put("MatchRound", "" + basics.getSpieltag());
+				map.put("TrainingDate", model.getXtraDaten().getNextTrainingDate().toHT());
+				map.put("EconomyDate", model.getXtraDaten().getEconomyDate().toHT());
+				map.put("SeriesMatchDate", model.getXtraDaten().getSeriesMatchDate().toHT());
+				map.put("CountryID", "" + model.getXtraDaten().getCountryId());
+			}
+		}
+		return map;
+	}
+
 	private static Map<String, String> parseDetails(Document doc, String leagueID) {
-		Element ele = null;
-		Element root = null;
-		Map<String, String> map = new MyHashtable();
-		NodeList list = null;
-		String tempLeagueID = null;
+		Element ele;
+		Element root;
+		Map<String, String> map = initWorldDetailsMap();
+
+		NodeList list;
+		String tempLeagueID;
 
 		if (doc == null) {
 			return map;
@@ -93,7 +114,7 @@ public class XMLWorldDetailsParser {
 			// Einträge adden
 			list = root.getElementsByTagName("League");
 
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				tempLeagueID = XMLManager.getFirstChildNodeValue((Element) ((Element) list.item(i))
 						.getElementsByTagName("LeagueID").item(0));
 
@@ -111,7 +132,7 @@ public class XMLWorldDetailsParser {
 					ele = (Element) root.getElementsByTagName("MatchRound").item(0);
 					map.put("MatchRound", (XMLManager.getFirstChildNodeValue(ele)));
 
-					// Dati
+					// Dates
 					ele = (Element) root.getElementsByTagName("TrainingDate").item(0);
 					map.put("TrainingDate", (XMLManager.getFirstChildNodeValue(ele)));
 					ele = (Element) root.getElementsByTagName("EconomyDate").item(0);

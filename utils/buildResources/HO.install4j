@@ -104,7 +104,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui>
+  <installerGui autoUpdateDescriptorUrl="https://github.com/akasolace/HO/releases/download/tag_stable/updates.xml">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated">
         <startup>
@@ -378,10 +378,43 @@ return console.askOkCancel(message, true);
                 </group>
               </styleOverride>
             </styleOverrides>
+            <actions>
+              <action name="Execute MAC launcher" id="1219" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="launcherId" type="string">606</property>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended()) &amp;&amp; context.getBooleanVariable("isDmg")</condition>
+              </action>
+              <action name="Execute Linux launcher" id="1220" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="launcherId" type="string">274</property>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+              <action name="Execute Win launcher" id="1221" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="launcherId" type="string">497</property>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+              <action name="Execute Portable launcher" id="1222" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="launcherId" type="string">59</property>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+            </actions>
             <formComponents>
               <formComponent id="21" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" insetBottom="10">
                 <serializedBean>
                   <property name="labelText" type="string">${form:finishedMessage}</property>
+                </serializedBean>
+              </formComponent>
+              <formComponent name="Execute launcher" id="1215" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                <serializedBean>
+                  <property name="checkboxText" type="string">${i18n:RunEntryExec("${compiler:sys.fullName}")}</property>
+                  <property name="initiallySelected" type="boolean" value="true" />
+                  <property name="variableName" type="string">executeLauncherAction</property>
                 </serializedBean>
               </formComponent>
             </formComponents>
@@ -1106,6 +1139,11 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1220" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
     <windows name="Windows - JRE" id="485" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}-JRE">
@@ -1114,6 +1152,11 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1220" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" />
     </windows>
     <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
@@ -1166,9 +1209,19 @@ return true;</property>
       </excludedLaunchers>
     </unixArchive>
     <macos name="macOS Single Bundle" id="172" customInstallBaseDir="/Applications" architecture="universal" launcherId="606">
+      <excludedBeans>
+        <bean refId="1220" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" jreBundleSource="none" />
     </macos>
     <macos name="macOS Single Bundle - JRE" id="473" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" customInstallBaseDir="/Applications" architecture="universal" launcherId="606">
+      <excludedBeans>
+        <bean refId="1220" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" />
     </macos>
     <unixInstaller name="Unix Installer" id="1062" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}" installDir=".ho" includeAllDownloadableComponents="true">
@@ -1177,6 +1230,11 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle jreBundleSource="none" />
     </unixInstaller>
     <unixInstaller name="Unix Installer - JRE" id="1064" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-unix${compiler:versionType}-JRE" installDir=".ho" includeAllDownloadableComponents="true">
@@ -1185,6 +1243,11 @@ return true;</property>
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
     </unixInstaller>
     <windows name="Windows (32bits)" id="1203" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}" jreBitType="32">
       <excludedLaunchers>
@@ -1192,6 +1255,11 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1220" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
     <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE" jreBitType="32">
@@ -1200,6 +1268,11 @@ return true;</property>
         <launcher id="274" />
         <launcher id="606" />
       </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1219" />
+        <bean refId="1220" />
+        <bean refId="1222" />
+      </excludedBeans>
       <jreBundle usePack200="false" />
     </windows>
     <windowsArchive name="Windows (32bits) Archive" id="1208" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win-32bits-${compiler:versionType}" installDir="." jreBitType="32">
