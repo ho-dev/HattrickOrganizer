@@ -188,7 +188,7 @@ public class XMLManager {
      */
     public static Document parseString(String inputString) {
         //Fix to remove commented tag
-        if ( inputString == null) return null;
+        if ( inputString == null || inputString.isEmpty()) return null;
         int indexComm = inputString.indexOf("<!--");
 
         while (indexComm > -1) {

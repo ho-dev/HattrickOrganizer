@@ -51,7 +51,7 @@ public class MyConnector {
 	private final static String VERSION_TEAM_DETAILS = "3.5";
 	private final static String VERSION_PLAYERS = "2.5";
 	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
-	private final static String VERSION_WORLDDETAILS = "1.8";
+	private final static String VERSION_WORLDDETAILS = "1.9";
 	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
 	private final static String VERSION_LEAGUE_DETAILS = "1.5";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
