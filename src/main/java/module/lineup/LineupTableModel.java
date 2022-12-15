@@ -20,6 +20,11 @@ public class LineupTableModel extends HOTableModel {
 		initialize();
 	}
 
+	@Override
+	public boolean userCanDisableColumns(){
+		return true;
+	}
+
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
 		columns = new UserColumn[50];
