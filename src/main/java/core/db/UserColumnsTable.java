@@ -66,7 +66,12 @@ class UserColumnsTable extends AbstractTable {
 	void loadModel(HOTableModel model) {
 		int count = 0;
 		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
-		UserColumn[] dbcolumns = model.getColumns();
+		var dbcolumns = model.getColumns();
+		if (model.userCanDisableColumns()) {
+			for (var dbColumn : dbcolumns) {
+				dbColumn.setDisplay(false);
+			}
+		}
 		for (var userColumn : userColumns) {
 			var modelIndex = userColumn.getModelIndex();
 			if (modelIndex < dbcolumns.length) {

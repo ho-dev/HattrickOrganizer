@@ -8,6 +8,7 @@ import core.model.match.Matchdetails;
 import core.model.player.Player;
 import core.net.OnlineWorker;
 
+import java.io.Serial;
 import java.util.Vector;
 
 
@@ -22,6 +23,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	/**
 	 *
 	 */
+	@Serial
 	private static final long serialVersionUID = -2953738895366809237L;
 	private Vector<PlayerMatchCBItem> m_vSpielerMatchCBItem;
 
@@ -34,6 +36,10 @@ public class PlayerAnalysisModel extends HOTableModel {
 		super(id,"SpielerAnalyse");
 		super.instance = instance;
 		initialize();
+	}
+	@Override
+	public boolean userCanDisableColumns(){
+		return true;
 	}
 
 	private void initialize() {

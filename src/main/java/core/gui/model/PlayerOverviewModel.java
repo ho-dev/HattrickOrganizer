@@ -31,6 +31,11 @@ public final class PlayerOverviewModel extends HOTableModel {
 		super(id,"Spieleruebersicht");
 		initialize();
 	}
+
+	@Override
+	public boolean userCanDisableColumns(){
+		return true;
+	}
 	
 	/**
 	 * initialize all columns.

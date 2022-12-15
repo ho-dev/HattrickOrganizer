@@ -3,13 +3,11 @@ package core.gui.comp.table;
 import core.db.DBManager;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.util.HODateTime;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
-import java.sql.Timestamp;
-import java.text.DateFormat;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -24,13 +22,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = -207230110294902139L;
 
 	/** id from ColumnModell, important for saving columns in db */
-	private int id;
+	private final int id;
 
 	/** name of ColumnModell, shows in OptionsPanel **/
-	private String name;
+	private final String name;
 
 	/** count of displayed column **/
 	private int displayedColumnsCount;
@@ -50,8 +49,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/**
 	 * constructor
 	 * 
-	 * @param id
-	 * @param name
+	 * @param id model id
+	 * @param name model name
 	 */
 	protected HOTableModel(UserColumnController.ColumnModelId id, String name) {
 		this.id = id.getValue();
@@ -357,4 +356,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 
+	public boolean userCanDisableColumns() {
+		return false;
+	}
 }
