@@ -83,10 +83,12 @@ public class XMLWorldDetailsParser {
 				map.put("Season", "" + basics.getSeason());
 				map.put("SeasonOffset", "" + basics.getSeasonOffset());
 				map.put("MatchRound", "" + basics.getSpieltag());
-				map.put("TrainingDate", model.getXtraDaten().getNextTrainingDate().toHT());
-				map.put("EconomyDate", model.getXtraDaten().getEconomyDate().toHT());
-				map.put("SeriesMatchDate", model.getXtraDaten().getSeriesMatchDate().toHT());
-				map.put("CountryID", "" + model.getXtraDaten().getCountryId());
+				if (model.getXtraDaten() != null) {
+					map.put("TrainingDate", model.getXtraDaten().getNextTrainingDate().toHT());
+					map.put("EconomyDate", model.getXtraDaten().getEconomyDate().toHT());
+					map.put("SeriesMatchDate", model.getXtraDaten().getSeriesMatchDate().toHT());
+					map.put("CountryID", "" + model.getXtraDaten().getCountryId());
+				}
 			}
 		}
 		return map;
