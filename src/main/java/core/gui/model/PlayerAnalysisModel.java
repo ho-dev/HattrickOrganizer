@@ -39,7 +39,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	}
 	@Override
 	public boolean userCanDisableColumns(){
-		return true;
+		return !DBManager.instance().isFirstStart();
 	}
 
 	private void initialize() {

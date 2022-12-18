@@ -35,8 +35,8 @@ public final class PlayerOverviewModel extends HOTableModel {
 	}
 
 	@Override
-	public boolean userCanDisableColumns(){
-		return true;
+	public boolean userCanDisableColumns() {
+		return !DBManager.instance().isFirstStart();
 	}
 	
 	/**
