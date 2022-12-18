@@ -88,7 +88,6 @@ public class SystemManager {
 
 	/** Reference to the plugin itself */
 	private static TeamAnalyzerPanel plugin;
-	private static int reportedTeamId;
 
 	/**
 	 * Set the active team

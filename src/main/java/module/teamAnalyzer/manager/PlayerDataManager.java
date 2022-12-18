@@ -35,16 +35,10 @@ public class PlayerDataManager {
 
 	public static int getCurrentHTSeason() {
 		return HOVerwaltung.instance().getModel().getBasics().getSeason();
-/*		Calendar date = Calendar.getInstance();
-		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTSeason(date.getTime());*/
 	}
 
 	public static int getCurrentHTWeek() {
 		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-/*		Calendar date = Calendar.getInstance();
-		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTWeek(date.getTime());*/
 	}
 
 	private static void setPlayer(PlayerInfo info) {

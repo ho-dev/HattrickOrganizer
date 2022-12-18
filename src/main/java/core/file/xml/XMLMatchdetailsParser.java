@@ -163,8 +163,8 @@ public class XMLMatchdetailsParser {
 
             	// Convert the ID to type and subtype.
             	iMatchEventID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventTypeID").item(0)));
-            	MatchEvent me = new MatchEvent();
-            	me.setMatchEventID(iMatchEventID);
+//            	MatchEvent me = new MatchEvent();
+//            	me.setMatchEventID(iMatchEventID);
 
             	//get players
             	boolean subHome = true;
@@ -329,6 +329,13 @@ public class XMLMatchdetailsParser {
             	myHighlight.setEventText(eventtext);
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
             	myHighlight.setEventVariation(iEventVariation);
+
+				if ( myHighlight.getMatchEventID() == MatchEvent.MatchEventID.UNKNOWN_MATCHEVENT ){
+					HOLogger.instance().warning(XMLMatchdetailsParser.class, "Unknown event id found in match " +
+							md.getHomeTeamName() + "-" + md.getGuestTeamName() +
+							" in minute " + myHighlight.getMinute() +
+							" text: "  + myHighlight.getEventText());
+				}
 
             	// Treat injury
 				if ((iMatchEventID==90) || ((iMatchEventID==94)))
