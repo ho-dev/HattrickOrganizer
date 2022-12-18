@@ -12,6 +12,7 @@ import core.model.UserParameter;
 import core.model.player.Player;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -27,11 +28,13 @@ import javax.swing.event.ListSelectionListener;
 public class SpielerTrainingsVergleichsPanel extends ImagePanel
     implements Refreshable, ListSelectionListener, ActionListener {
 
-	private static final long serialVersionUID = 7090555271664890027L;
+	@Serial
+    private static final long serialVersionUID = 7090555271664890027L;
 
 	//~ Static fields/initializers -----------------------------------------------------------------
 
     private static List<Player> vergleichsPlayer = new ArrayList<>();
+    private static Integer hrfId;
     private static boolean vergleichsMarkierung;
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -52,32 +55,36 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public static boolean isVergleichsMarkierung() {
+    public static boolean isDevelopmentStageSelected() {
         return vergleichsMarkierung;
     }
 
     /**
      * Gibt die Vergleichsspieler zurück
      */
-    public static List<Player> getVergleichsPlayer() {
+    public static List<Player> getSelectedPlayerDevelopmentStage() {
         return vergleichsPlayer;
     }
 
     public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-        final Object[] hrfs = m_jlHRFs.getSelectedValues();
+        final var hrfs = m_jlHRFs.getSelectedValuesList();
         StringBuilder text = new StringBuilder(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
 
-        if (hrfs.length > 1) {
-            text.append(" (").append(hrfs.length).append(" Files) : ");
+        if (hrfs.size() > 1) {
+            text.append(" (").append(hrfs.size()).append(" Files) : ");
         } else {
             text.append(": ");
         }
 
-        for (int i = 0; (i < hrfs.length) && (i < 11); i++) {
-            text.append("\n").append(hrfs[i].toString());
-
-            if (i == 10) {
-                text.append("\n ... ");
+        int i=0;
+        for (var hrf : hrfs){
+            text.append("\n");
+            if ( i++ < 11){
+                text.append(hrf.toString());
+            }
+            else {
+                text.append(" ... ");
+                break;
             }
         }
 
@@ -92,9 +99,6 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             loadHRFListe(false);
             vergleichsPlayer.clear(); // .removeAllElements();
 
-            // HRF Deleted, recalculate Skillups
-//			DBManager.instance().reimportSkillup();
-
             //Nur manuelles Update der Tabelle, kein reInit, damit die Sortierung bleibt.
             HOMainFrame.instance().getSpielerUebersichtPanel().refreshHRFVergleich();
         }
@@ -108,19 +112,25 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         //nix
     }
 
+    public static Integer getSelectedHrfId(){
+        return hrfId;
+    }
+
     /**
      * Handle valueChanged() events.
      */
 	public final void valueChanged(javax.swing.event.ListSelectionEvent listSelectionEvent) {
 		// Markierung vorhanden
 		if (m_jlHRFs.getSelectedValue() != null) {
-			vergleichsPlayer = DBManager.instance().getSpieler(((CBItem) m_jlHRFs.getSelectedValue()).getId());
+            hrfId = ((CBItem) m_jlHRFs.getSelectedValue()).getId();
+			vergleichsPlayer = DBManager.instance().getSpieler(hrfId);
 			vergleichsMarkierung = true;
 
             m_jbLoeschen.setEnabled(m_jlHRFs.getSelectedIndex() > 0);
 		}
 		// Keine Markierung -> Alles löschen
 		else {
+            hrfId = null;
 			vergleichsPlayer.clear();
 			vergleichsMarkierung = false;
 			m_jbLoeschen.setEnabled(false);

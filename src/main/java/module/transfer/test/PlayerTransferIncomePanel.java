@@ -9,7 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.NumberFormat;
 import java.time.Duration;
-import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,7 +38,7 @@ public class PlayerTransferIncomePanel extends JPanel {
 				buyingDate = t.purchaseDate;
 
 			} else {
-				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
+				buyingDate = DBManager.instance().loadPlayerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
 
 			int purchasePrice = (t.purchasePrice > 0) ? t.purchasePrice / 10 : 0;

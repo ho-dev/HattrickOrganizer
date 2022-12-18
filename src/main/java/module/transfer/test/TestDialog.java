@@ -8,14 +8,10 @@ import core.util.HODateTime;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -95,7 +91,7 @@ public class TestDialog extends JDialog {
 				buyingDate = t.purchaseDate;
 
 			} else {
-				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
+				buyingDate = DBManager.instance().loadPlayerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
 
 			StringBuilder sb = new StringBuilder();

@@ -199,12 +199,12 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
-	private final PreparedSelectStatementBuilder getSpielerFirstHRFStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? ORDER BY Datum ASC LIMIT 1");
+	private final PreparedSelectStatementBuilder getSpielerFirstHRFStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum>? ORDER BY Datum ASC LIMIT 1");
 	/**
 	 * load first player appearance
 	 */
-	Player getSpielerFirstHRF(int spielerid) {
-		var ret = loadOne(Player.class, adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid));
+	Player getSpielerFirstHRF(int spielerid, Timestamp after) {
+		var ret = loadOne(Player.class, adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid, after));
 		if ( ret != null){
 			ret.setOld(true);
 		}

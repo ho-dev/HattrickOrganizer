@@ -515,9 +515,16 @@ public class DBManager {
 	 * @param spielerid the spielerid
 	 * @return the spieler first hrf
 	 */
-	public Player getSpielerFirstHRF(int spielerid) {
+	public Player loadPlayerFirstHRF(int spielerid) {
+		return loadPlayerFirstHRF(spielerid, null);
+	}
+
+	public Player loadPlayerFirstHRF(int spielerid, HODateTime after) {
+		if ( after == null){
+			after = HODateTime.htStart;
+		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpielerFirstHRF(spielerid);
+				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());
 	}
 
 	/**
