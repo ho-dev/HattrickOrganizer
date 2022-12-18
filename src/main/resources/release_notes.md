@@ -20,6 +20,7 @@ Please do not forget to back up data.
 ### Squad
 * add last match columns: rating at end of match, position and minutes (#1523)
 * add mother club and matches current team columns (#1401)
+* fix `ArrayIndexOutOfBoundsException` upon startup, as no column could be displayed (#1757)
 
 ### Team Analyser
 * team analyzer displays man marking tactic (#1741)

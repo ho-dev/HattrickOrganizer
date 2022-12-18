@@ -1,5 +1,6 @@
 package core.gui.model;
 
+import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
@@ -33,8 +34,8 @@ public final class PlayerOverviewModel extends HOTableModel {
 	}
 
 	@Override
-	public boolean userCanDisableColumns(){
-		return true;
+	public boolean userCanDisableColumns() {
+		return !DBManager.instance().isFirstStart();
 	}
 	
 	/**
