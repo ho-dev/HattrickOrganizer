@@ -102,11 +102,11 @@ public class TournamentDetails extends AbstractTable.Storable {
         isMatchesOngoing = matchesOngoing;
     }
 
-    public int getCreator_UserId() {
+    public Integer getCreator_UserId() {
         return creator_UserId;
     }
 
-    public void setCreator_UserId(int creator_UserId) {
+    public void setCreator_UserId(Integer creator_UserId) {
         this.creator_UserId = creator_UserId;
     }
 
@@ -130,7 +130,7 @@ public class TournamentDetails extends AbstractTable.Storable {
     private HODateTime firstMatchRoundDate; // The date of the first match round.
     private HODateTime nextMatchRoundDate; // The date of the next match round. During matches this will be the Next match round.
     private Boolean isMatchesOngoing; // Whether or not the match is currently being played.
-    private int creator_UserId; // The globally unique user id of the tournament creator
+    private Integer creator_UserId; // The globally unique user id of the tournament creator
     private String creator_Loginname; //The 'username' or 'nickname' of the tournament creator
 
 

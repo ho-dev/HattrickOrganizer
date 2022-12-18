@@ -108,7 +108,9 @@ public abstract class AbstractTable {
 	 * @return 1 on success, 0 on error
 	 */
 	private <T extends Storable> int insert(T object) {
-		return executePreparedInsert(Arrays.stream(columns).map(c->c.getter.apply(object)).toArray());
+		return executePreparedInsert(Arrays.stream(columns).map(
+				c->c.getter.apply(object)
+		).toArray());
 	}
 
 	/**
