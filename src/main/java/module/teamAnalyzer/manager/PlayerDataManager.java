@@ -3,6 +3,8 @@ package module.teamAnalyzer.manager;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamAnalyzer.vo.SquadInfo;
+
 import java.util.List;
 
 public class PlayerDataManager {
@@ -41,10 +43,28 @@ public class PlayerDataManager {
 		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
 	}
 
+	public static int calcCurrentWeekNumber(){
+		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
+	}
+
+	/**
+	 * Calculate a number from season and week numbers
+	 * @param season season number [1..]
+	 * @param week week number [1..16]
+	 * @return number
+	 */
+	public static int calcWeekNumber(int season, int week) {
+		return season*16 + week - 1;
+	}
+
 	private static void setPlayer(PlayerInfo info) {
 		if (info.getPlayerId() == 0) {
 			return;
 		}
 		DBManager.instance().storeTAPlayerInfo(info);
 	}
+	public static void update(SquadInfo squadInfo) {
+		DBManager.instance().storeSquadInfo(squadInfo);
+	}
+
 }

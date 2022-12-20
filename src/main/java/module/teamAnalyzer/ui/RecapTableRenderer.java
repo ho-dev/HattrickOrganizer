@@ -3,7 +3,6 @@ package module.teamAnalyzer.ui;
 
 import core.gui.model.MatchesColumnModel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
@@ -11,6 +10,7 @@ import core.model.enums.MatchType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.io.Serial;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -22,12 +22,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author Draghetto
  */
 public class RecapTableRenderer extends DefaultTableCellRenderer {
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
 
-	/**
-	 * 
-	 */
+	@Serial
 	private static final long serialVersionUID = -1496877275674136140L;
 
 	/*
@@ -57,8 +53,8 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 			Icon icon;
 			try {
 				icon = (Icon) table.getValueAt(row,1);
-				matchType = MatchType.getById((Integer) table.getValueAt(row, 22));
-				isHomeMatch = (Boolean) table.getValueAt(row, 23);
+				matchType = MatchType.getById((Integer) table.getValueAt(row, RecapPanel.COLUMN_MATCHTYPEID));
+				isHomeMatch = (Boolean) table.getValueAt(row, RecapPanel.COLUMN_ISHOMETEAM);
 				setBackground(MatchesColumnModel.getColor4Matchtyp(matchType));
 			} catch (Exception e) {
 				// Make the exception visible.

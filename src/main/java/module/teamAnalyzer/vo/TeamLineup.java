@@ -28,6 +28,7 @@ public class TeamLineup {
     private Integer adjustedTacticLevel;
 
     private MatchDetail matchDetail;
+    private SquadInfo squadInfo;
 
     /**
      * Rating of the team on the field
@@ -65,14 +66,6 @@ public class TeamLineup {
      */
     public final SpotLineup getSpotLineup(int spot) {
         return spotLineups.get(spot);
-    }
-
-    public HashMap<Integer, SpotLineup> getSpotLineups() {
-        return spotLineups;
-    }
-
-    public void setSpotLineups(HashMap<Integer, SpotLineup> in) {
-        spotLineups = in;
     }
 
     public void setRating(MatchRating rating) {
@@ -138,6 +131,9 @@ public class TeamLineup {
 
     public void setMatchDetail(MatchDetail matchDetail) {
         this.matchDetail = matchDetail;
+    }
+    public void setSquadInfo(SquadInfo info) {
+        this.squadInfo = info;
     }
 
     public String getName() {
@@ -278,4 +274,53 @@ public class TeamLineup {
         return null;
     }
 
+    public Integer getPlayerCount() {
+        if ( this.squadInfo != null) return squadInfo.getPlayerCount();
+        return null;
+    }
+
+    public Integer getTransferlisted() {
+        if ( this.squadInfo != null) return squadInfo.getTransferListedCount();
+        return null;
+    }
+
+    public Integer getBruised() {
+        if ( this.squadInfo != null) return squadInfo.getBruisedCount();
+        return null;
+    }
+
+    public Integer getInjuredWeeks() {
+        if ( this.squadInfo != null) return squadInfo.getInjuredWeeksCount();
+        return null;
+    }
+
+    public Integer getYellowCards() {
+        if ( this.squadInfo != null) return squadInfo.getSingleYellowCards();
+        return null;
+    }
+
+    public Integer getTwoYellowCards() {
+        if ( this.squadInfo != null) return squadInfo.getTwoYellowCards();
+        return null;
+    }
+
+    public Integer getSuspended() {
+        if ( this.squadInfo != null) return squadInfo.getRedCards();
+        return null;
+    }
+
+    public Integer getTsiSum() {
+        if ( this.squadInfo != null) return squadInfo.gettSISum();
+        return null;
+    }
+
+    public Integer getSalarySum() {
+        if ( this.squadInfo != null) return squadInfo.getSalarySum();
+        return null;
+    }
+
+    public Integer getMotherclubCount() {
+        if ( this.squadInfo != null) return squadInfo.getMotherClubCount();
+        return null;
+    }
 }

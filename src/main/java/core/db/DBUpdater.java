@@ -185,6 +185,10 @@ final class DBUpdater {
 		matchSubstitutionTable.tryAddIndex("IMATCHSUBSTITUTION_0", "MatchID,MatchTyp,TeamID");
 		matchSubstitutionTable.tryDropIndex("IMATCHSUBSTITUTION_3");
 
+		if (!tableExists(SquadInfoTable.TABLENAME)) {
+			dbManager.getTable(SquadInfoTable.TABLENAME).createTable();
+		}
+
 		updateDBVersion(dbVersion, 700);
 	}
 

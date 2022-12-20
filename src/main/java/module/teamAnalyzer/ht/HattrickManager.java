@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import module.teamAnalyzer.vo.SquadInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -95,31 +96,66 @@ public class HattrickManager {
 
     /**
      * Method that download from Hattrick the current players for the team
-     *
+     * player values are aggregated to squad info which is stored separately to get historical trends of the squad development
      * @param teamId teamid to download players for
      */
     public static List<PlayerInfo> downloadPlayers(int teamId) {
         String xml;
         try {
-			xml = MyConnector.instance().downloadPlayers(teamId);
+            xml = MyConnector.instance().downloadPlayers(teamId);
         } catch (Exception e) {
             return null;
         }
 
+        var lastMatchDate = HODateTime.htStart;
         List<PlayerInfo> players = new ArrayList<>();
         var playerInfos = new XMLPlayersParser().parsePlayersFromString(xml);
-        for ( var i : playerInfos ) {
-            players.add(new PlayerInfo(i));
+        for (var i : playerInfos) {
+            var player = new PlayerInfo(i);
+            var matchDate =  player.getLastMatchDate();
+            if ( matchDate != null && matchDate.isAfter(lastMatchDate)){
+                lastMatchDate = matchDate;
+            }
+            players.add(player);
+        }
+        PlayerDataManager.update(players);
+
+        if ( lastMatchDate.isAfter(HODateTime.htStart) ) {
+            var squadInfo = new SquadInfo(teamId, lastMatchDate);
+            for (var player : players) {
+                squadInfo.incrementPlayerCount();
+                if (player.isTransferListed()) squadInfo.incrementTransferListedCount();
+                if (player.getMotherClubBonus()) squadInfo.incrementMotherClubCount();
+
+                squadInfo.addSalary(player.getSalary());
+                squadInfo.addTsi(player.getTSI());
+                var injuryLevel = player.getInjuryLevel();
+                switch (injuryLevel) {
+                    case 0:
+                        squadInfo.incrementBruisedCount();
+                        break;
+                    case -1:
+                        break;
+                    default:
+                        squadInfo.addInjuredWeeksCount(injuryLevel);
+                }
+
+                switch (player.getBookingStatus()) {
+                    case PlayerDataManager.YELLOW -> squadInfo.incrementSingleYellowCards();
+                    case PlayerDataManager.DOUBLE_YELLOW -> squadInfo.incrementTwoYellowCards();
+                    case PlayerDataManager.SUSPENDED -> squadInfo.incrementSuspended();
+                }
+            }
+            PlayerDataManager.update(squadInfo);
         }
 
-        PlayerDataManager.update(players);
         return players;
     }
 
     /**
      * Method that download from Hattrick the team name
      *
-     * @param teamId Tteamid to download name for
+     * @param teamId Teamid to download name for
      *
      * @return Team Name
      *
@@ -134,33 +170,6 @@ public class HattrickManager {
         return "";
     }
 
-    /**
-     * Helper method to get a value from a Node.
-     */
-    private static int getIntValue(Node node, int i, String tag){
-        return getIntValue(node, i, tag, 0);
-    }
-    private static int getIntValue(Node node, int i, String tag, int def) {
-        try {
-            String value = getValue(node, i, tag);
-            return Integer.parseInt(value);
-        } catch (NumberFormatException ignored) {
-        }
-
-        return def;
-    }
-
-    /**
-     * Helper method to get a value from a Node.
-     */
-    private static String getValue(Node node, int i, String tag) {
-        Node n = node.getOwnerDocument().getElementsByTagName(tag).item(i).getFirstChild();
-        if ( n != null ){
-            return n.getNodeValue();
-        }
-        return "";
-    }
-	
     /**
      * Check if CHPP rules approve download for a match
      *

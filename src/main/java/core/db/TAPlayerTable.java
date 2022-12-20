@@ -46,26 +46,8 @@ final class TAPlayerTable extends AbstractTable {
 				+ " (playerid, week)" };
 	}
 
-	/**
-	 * Calculate a number from current season and week numbers
-	 * @return number
-	 */
-	public int calcCurrentWeekNumber(){
-		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
-	}
-
-	/**
-	 * Calculate a number from season and week numbers
-	 * @param season season number [1..]
-	 * @param week week number [1..16]
-	 * @return number
-	 */
-	private int calcWeekNumber(int season, int week) {
-		return season*16 + week - 1;
-	}
-
 	PlayerInfo getPlayerInfo(int playerId, int week, int season) {
-		var ret =  loadOne(PlayerInfo.class, playerId, calcWeekNumber(season, week));
+		var ret =  loadOne(PlayerInfo.class, playerId, PlayerDataManager.calcWeekNumber(season, week));
 		if ( ret == null ) ret = new PlayerInfo();
 		return ret;
 	}
@@ -93,7 +75,7 @@ final class TAPlayerTable extends AbstractTable {
 	 * @param info PlayerInfo
 	 */
 	void storePlayer(PlayerInfo info) {
-		var week = calcCurrentWeekNumber();
+		var week = PlayerDataManager.calcCurrentWeekNumber();
 		info.setIsStored(isStored(info.getPlayerId(), week));
 		info.setWeek(week);
 		store(info);

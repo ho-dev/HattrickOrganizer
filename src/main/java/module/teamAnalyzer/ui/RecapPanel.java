@@ -28,7 +28,9 @@ import javax.swing.ScrollPaneConstants;
 
 
 public class RecapPanel extends JPanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
+    public static final int COLUMN_MATCHTYPEID = 32;
+    public static final int COLUMN_ISHOMETEAM = 33;
+
 	@Serial
     private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
@@ -37,6 +39,7 @@ public class RecapPanel extends JPanel {
     private JTable table;
     private UiRecapTableModel tableModel;
     private RecapListSelectionListener recapListener = null;
+
     private final String[] columns = {
             HOVerwaltung.instance().getLanguageString("RecapPanel.Game"), //$NON-NLS-1$
             HOVerwaltung.instance().getLanguageString("Type"), //$NON-NLS-1$
@@ -60,6 +63,16 @@ public class RecapPanel extends JPanel {
             HOVerwaltung.instance().getLanguageString("ls.team.formation"),
             HOVerwaltung.instance().getLanguageString("ls.team.teamspirit"),
             HOVerwaltung.instance().getLanguageString("ls.team.confidence"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.playercount"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.transferlisted"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.bruised"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.injuredWeeks"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.yellowcards"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.twoyellowcards"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.suspended"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.tsisum"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.salarysum"),
+            HOVerwaltung.instance().getLanguageString("ls.team.squad.motherclubCount"),
             "", //$NON-NLS-1$ columns 20 and 21 are only used by the RecapTableRenderer
             "" //$NON-NLS-1$
     };
@@ -125,8 +138,8 @@ public class RecapPanel extends JPanel {
         }
 
         // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
-        setColumnInvisible(22);
-        setColumnInvisible(23);
+        setColumnInvisible(COLUMN_MATCHTYPEID);
+        setColumnInvisible(COLUMN_ISHOMETEAM);
 
     }
 
@@ -190,10 +203,24 @@ public class RecapPanel extends JPanel {
             rowData.add(PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false));
         }
 
-        // Columns 19-23
+        // Columns 19-21
         rowData.add(lineup.getFormation());
         rowData.add(lineup.getMorale());
         rowData.add(lineup.getSelfConfidence());
+
+        // Column 22-31 (squad info)
+        rowData.add(lineup.getPlayerCount());
+        rowData.add(lineup.getTransferlisted());
+        rowData.add(lineup.getBruised());
+        rowData.add(lineup.getInjuredWeeks());
+        rowData.add(lineup.getYellowCards());
+        rowData.add(lineup.getTwoYellowCards());
+        rowData.add(lineup.getSuspended());
+        rowData.add(lineup.getTsiSum());
+        rowData.add(lineup.getSalarySum());
+        rowData.add(lineup.getMotherclubCount());
+
+        // Column 32-33
         rowData.add(matchType.getMatchTypeId());
         rowData.add(lineup.isHomeMatch());
 
@@ -282,8 +309,8 @@ public class RecapPanel extends JPanel {
         add(scrollPane);
 
         // Hide 'match type' and 'is home match?' columns. (used by RecapTableRenderer)
-        setColumnInvisible(22);
-        setColumnInvisible(23);
+        setColumnInvisible(COLUMN_MATCHTYPEID);
+        setColumnInvisible(COLUMN_ISHOMETEAM);
     }
 
     public String getSelectedTacticType() {
