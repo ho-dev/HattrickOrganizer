@@ -3,15 +3,13 @@ package module.teamAnalyzer.ui;
 import core.gui.comp.panel.LazyPanel;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.SimButtonListener;
 import module.teamAnalyzer.vo.Filter;
 import module.training.ui.comp.DividerListener;
-
 import java.awt.BorderLayout;
-
+import java.io.Serial;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -20,6 +18,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	/** The filters */
 	public static Filter filter = new Filter();
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private JButton simButton;
 	private RecapPanel recapPanel;
@@ -127,5 +126,9 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		getSpecialEventsPanel().reload(teamReport.getSelectedLineup());
 
 		this.simButton.setVisible(SystemManager.isLineup.isSet());
+	}
+
+	public void storeUserSettings() {
+		this.recapPanel.storeUserSettings();
 	}
 }

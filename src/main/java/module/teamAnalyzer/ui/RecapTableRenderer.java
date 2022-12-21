@@ -1,19 +1,14 @@
 // %3338167864:hoplugins.teamAnalyzer.ui%
 package module.teamAnalyzer.ui;
 
-import core.gui.model.MatchesColumnModel;
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.model.enums.MatchType;
-
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.io.Serial;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 
 
 /**
@@ -21,10 +16,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  * 
  * @author Draghetto
  */
-public class RecapTableRenderer extends DefaultTableCellRenderer {
-
-	@Serial
-	private static final long serialVersionUID = -1496877275674136140L;
+public class RecapTableRenderer extends HODefaultTableCellRenderer {
 
 	/*
 	 * (non-Javadoc)
@@ -35,62 +27,24 @@ public class RecapTableRenderer extends DefaultTableCellRenderer {
 	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		var ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		
 		// Once and for all (blaghaid)
-		setForeground(Color.black);
+//		setForeground(Color.black);
 		
 		// Is this 'average' or 'no matches' row?
 		if ((row == 0) && ((table.getRowCount() > 1) || (table.getValueAt(0, 1) == null))) {
-			Font nFont = new Font(this.getFont().getFontName(), Font.BOLD, this.getFont().getSize());
+			Font nFont = new Font(ret.getFont().getFontName(), Font.BOLD, ret.getFont().getSize());
 
-			setFont(nFont);
-			setBackground(ThemeManager.getColor(HOColorName.PLAYER_POS_BG)); 
-			setIcon(null);
-		} else {
-			MatchType matchType;
-			boolean isHomeMatch;
-			Icon icon;
-			try {
-				icon = (Icon) table.getValueAt(row,1);
-				matchType = MatchType.getById((Integer) table.getValueAt(row, RecapPanel.COLUMN_MATCHTYPEID));
-				isHomeMatch = (Boolean) table.getValueAt(row, RecapPanel.COLUMN_ISHOMETEAM);
-				setBackground(MatchesColumnModel.getColor4Matchtyp(matchType));
-			} catch (Exception e) {
-				// Make the exception visible.
-				setBackground(Color.RED);
-				setText("!!!"); //$NON-NLS-1$
-				setToolTipText(e.toString());
-
-				return this;
-			}
-
-			if (column == 1) {// Set icon for match type.
-				//setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]));
-				setIcon(icon);
-				setText(null);
-
-				StringBuilder tipText = new StringBuilder(matchType.getName());
-
-				tipText.append(" - "); //$NON-NLS-1$
-
-				if (isHomeMatch) {
-					tipText.append(HOVerwaltung.instance().getLanguageString("Heim")); //$NON-NLS-1$
-				} else {
-					tipText.append(HOVerwaltung.instance().getLanguageString("Gast")); //$NON-NLS-1$
-				}
-
-				setToolTipText(tipText.toString());
-			} else {
-				setToolTipText(null);
-				setIcon(null);
-			}
+			ret.setFont(nFont);
+			ret.setBackground(ThemeManager.getColor(HOColorName.PLAYER_POS_BG));
+			//ret.setIcon(null);
 		}
 
 		if (isSelected) {
-			setBackground(ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG));
+			ret.setBackground(ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG));
 		}
 
-		return this;
+		return ret;
 	}
 }

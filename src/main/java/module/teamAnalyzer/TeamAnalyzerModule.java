@@ -15,6 +15,8 @@ import javax.swing.KeyStroke;
 
 public final class TeamAnalyzerModule extends DefaultModule {
 
+	private TeamAnalyzerPanel teamAnalyzerPanel=null;
+
 	public TeamAnalyzerModule(){
 		super(true);
 	}
@@ -31,7 +33,8 @@ public final class TeamAnalyzerModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new TeamAnalyzerPanel();
+		teamAnalyzerPanel = new TeamAnalyzerPanel();
+		return teamAnalyzerPanel;
 	}
 
 	@Override
@@ -58,4 +61,10 @@ public final class TeamAnalyzerModule extends DefaultModule {
 		return new TAMenu();
 	}
 
+	@Override
+	public void storeUserSettings(){
+		if ( teamAnalyzerPanel != null){
+			teamAnalyzerPanel.storeUserSettings();
+		}
+	}
 }

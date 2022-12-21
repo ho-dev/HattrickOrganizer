@@ -19,9 +19,6 @@ import java.util.Comparator;
  */
 public abstract class HOTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
 	@Serial
 	private static final long serialVersionUID = -207230110294902139L;
 
