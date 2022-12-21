@@ -20,7 +20,6 @@ import java.util.List;
 
 import module.teamAnalyzer.vo.SquadInfo;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 
 /**
@@ -125,7 +124,7 @@ public class HattrickManager {
             for (var player : players) {
                 squadInfo.incrementPlayerCount();
                 if (player.isTransferListed()) squadInfo.incrementTransferListedCount();
-                if (player.getMotherClubBonus()) squadInfo.incrementMotherClubCount();
+                if (player.getMotherClubBonus()) squadInfo.incrementHomegrownCount();
 
                 squadInfo.addSalary(player.getSalary());
                 squadInfo.addTsi(player.getTSI());

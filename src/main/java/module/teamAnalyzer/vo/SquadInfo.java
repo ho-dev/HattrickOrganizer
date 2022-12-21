@@ -19,7 +19,7 @@ public class SquadInfo extends AbstractTable.Storable {
     private int tSISum=0;
     private int salarySum=0; // Money in SEK
     private int playerCount=0;
-    private int motherClubCount=0;
+    private int homegrownCount =0;
 
     public SquadInfo(int teamId, HODateTime lastMatchDate) {
         this.teamId=teamId;
@@ -27,6 +27,10 @@ public class SquadInfo extends AbstractTable.Storable {
         this.fetchDate = HODateTime.now();
     }
 
+    /**
+     * create squad info
+     * ATTENTION: this is used by SquadInfoTable (do not delete it)
+     */
     public SquadInfo(){}
 
     public int getTeamId() {
@@ -145,16 +149,16 @@ public class SquadInfo extends AbstractTable.Storable {
         this.playerCount = playerCount;
     }
 
-    public int getMotherClubCount() {
-        return motherClubCount;
+    public int getHomegrownCount() {
+        return homegrownCount;
     }
 
-    public void incrementMotherClubCount(){
-        motherClubCount++;
+    public void incrementHomegrownCount(){
+        homegrownCount++;
     }
 
-    public void setMotherClubCount(int motherClubCount) {
-        this.motherClubCount = motherClubCount;
+    public void setHomegrownCount(int homegrownCount) {
+        this.homegrownCount = homegrownCount;
     }
 
     public HODateTime getFetchDate() {

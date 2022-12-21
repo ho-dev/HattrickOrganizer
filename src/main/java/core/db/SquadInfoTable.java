@@ -29,7 +29,7 @@ public class SquadInfoTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("TSISUM").setGetter((p) -> ((SquadInfo) p).gettSISum()).setSetter((p, v) -> ((SquadInfo) p).settSISum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((SquadInfo) p).getSalarySum()).setSetter((p, v) -> ((SquadInfo) p).setSalarySum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("PLAYER").setGetter((p) -> ((SquadInfo) p).getPlayerCount()).setSetter((p, v) -> ((SquadInfo) p).setPlayerCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUB").setGetter((p) -> ((SquadInfo) p).getMotherClubCount()).setSetter((p, v) -> ((SquadInfo) p).setMotherClubCount((int) v)).setType(Types.INTEGER).isNullable(false).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUB").setGetter((p) -> ((SquadInfo) p).getHomegrownCount()).setSetter((p, v) -> ((SquadInfo) p).setHomegrownCount((int) v)).setType(Types.INTEGER).isNullable(false).build()
         };
     }
 

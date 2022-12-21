@@ -39,9 +39,7 @@ public class TeamLineup {
      * Array of the 11 SpotLineup object representing the single spot.
      * Changed to a HashMap with roleID (from HO) as key...
      */
-
-    private HashMap<Integer, SpotLineup> spotLineups = new HashMap<>();
-    //private SpotLineup[] spotLineups = new SpotLineup[11];
+    private final HashMap<Integer, SpotLineup> spotLineups = new HashMap<>();
 
     /**
      * Number of stars
@@ -319,8 +317,8 @@ public class TeamLineup {
         return null;
     }
 
-    public Integer getMotherclubCount() {
-        if ( this.squadInfo != null) return squadInfo.getMotherClubCount();
+    public Integer getHomegrownCount() {
+        if ( this.squadInfo != null) return squadInfo.getHomegrownCount();
         return null;
     }
 }

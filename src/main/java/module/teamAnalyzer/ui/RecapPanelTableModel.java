@@ -12,6 +12,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
+import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.vo.TeamLineup;
@@ -49,13 +50,13 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("Week", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getWeek(), lineup.getWeek() > 0 ? "" + lineup.getWeek() : RecapPanel.VALUE_NA, ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(getMatchDate(lineup), lineup.getWeek() > 0 ? "" + lineup.getWeek() : RecapPanel.VALUE_NA, ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("Season", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getSeason(), lineup.getSeason() > 0 ? "" + lineup.getSeason() : RecapPanel.VALUE_NA, ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(getMatchDate(lineup), lineup.getSeason() > 0 ? "" + lineup.getSeason() : RecapPanel.VALUE_NA, ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("ls.match.ratingsector.midfield", 50) {
@@ -160,81 +161,91 @@ public class RecapPanelTableModel extends HOTableModel {
                         return new ColorLabelEntry(lineup.getSelfConfidence() != null ? "" + lineup.getSelfConfidence() : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
-                new RecapUserColumn("ls.team.squad.playercount", 50) {
+                new RecapUserColumn("ls.team.numplayers", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry(lineup.getPlayerCount(),MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()) );
                     }
                 },
-                new RecapUserColumn("ls.team.squad.transferlisted", 50) {
+                new RecapUserColumn("ls.team.numtransferlisted", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry(lineup.getTransferlisted(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.bruised", 50) {
+                new RecapUserColumn("ls.team.numbruised", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry( lineup.getBruised(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.injuredWeeks", 50) {
+                new RecapUserColumn("ls.team.injuredWeeks", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry( lineup.getInjuredWeeks(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.yellowcards", 50) {
+                new RecapUserColumn("ls.team.numyellowcards", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry(lineup.getYellowCards(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.twoyellowcards", 50) {
+                new RecapUserColumn("ls.team.num2yellowcards", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry(lineup.getTwoYellowCards(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.suspended", 50) {
+                new RecapUserColumn("ls.team.numsuspended", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry(lineup.getSuspended(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.tsisum", 50) {
+                new RecapUserColumn("ls.team.totaltsi", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return createIntegerTableEntry( lineup.getTsiSum(),MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.squad.salarysum", 50) {
+                new RecapUserColumn("ls.team.sumsalary", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry(lineup.getSalarySum(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
+                        return createIntegerTableEntry(lineup.getSalarySum(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
                     }
                 },
-                new RecapUserColumn("ls.team.squad.motherclubCount", 50) {
+                new RecapUserColumn("ls.team.numhomegrown", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry(lineup.getMotherclubCount(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
+                        return createIntegerTableEntry(lineup.getHomegrownCount(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 }
         };
     }
 
+    private double getMatchDate(TeamLineup lineup) {
+        var details = lineup.getMatchDetail();
+        if ( details != null){
+            return details.getMatch().getMatchDate().instant.getEpochSecond();
+        }
+        return Double.POSITIVE_INFINITY;
+    }
     private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp) {
+        return createIntegerTableEntry(ival, color4Matchtyp, false);
+    }
+    private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp, boolean isCurrency) {
         double dval;
         String text;
         if ( ival != null){
-            text = "" + ival;
+            text = Helper.getNumberFormat(isCurrency, 0).format(ival);
             dval = (double) ival;
         }
         else {
             text = "";
             dval = Double.NEGATIVE_INFINITY;
         }
-        return new ColorLabelEntry(dval, text, ColorLabelEntry.FG_STANDARD, color4Matchtyp, SwingConstants.LEFT);
+        return new ColorLabelEntry(dval, text, ColorLabelEntry.FG_STANDARD, color4Matchtyp, SwingConstants.RIGHT);
     }
 
     private ColorLabelEntry getMatchTypeColumnEntry(TeamLineup lineup) {
