@@ -12,7 +12,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -28,9 +27,9 @@ public class FilterPanel extends JPanel implements ActionListener {
 	private static final String CARD_MANUAL = "MANUAL CARD";
 	private static boolean teamComboUpdating = false;
 	private AutoFilterPanel autoPanel;
-	private JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
-	private JComboBox teamCombo = new JComboBox();
-	private JPanel cards = new JPanel(new CardLayout());
+	private final JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
+	private final JComboBox teamCombo = new JComboBox();
+	private final JPanel cards = new JPanel(new CardLayout());
 	private JRadioButton radioAutomatic;
 	private JRadioButton radioManual;
 	private ManualFilterPanel manualPanel;
@@ -85,10 +84,8 @@ public class FilterPanel extends JPanel implements ActionListener {
 			radioAutomatic.setSelected(true);
 			cLayout.show(cards, CARD_AUTOMATIC);
 			autoPanel.reload();
-			return;
 		}
-
-		if (!TeamAnalyzerPanel.filter.isAutomatic()) {
+		else {
 			radioManual.setSelected(true);
 			cLayout.show(cards, CARD_MANUAL);
 			manualPanel.reload();
@@ -151,7 +148,11 @@ public class FilterPanel extends JPanel implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				HOLogger.instance().log(getClass(),
 						"UPDATE for Team " + SystemManager.getActiveTeamId());
-				HattrickManager.downloadPlayers(SystemManager.getActiveTeamId());
+				//HattrickManager.downloadPlayers(SystemManager.getActiveTeamId());
+				// Load squad info of all teams
+				for ( var team  : TeamManager.getTeams()){
+					HattrickManager.downloadPlayers(team.getTeamId());
+				}
 				HattrickManager.downloadMatches(SystemManager.getActiveTeamId(), TeamAnalyzerPanel.filter);
 				HOMainFrame.instance().setInformationCompleted();
 				SystemManager.refresh();
