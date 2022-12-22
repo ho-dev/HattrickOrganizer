@@ -25,6 +25,7 @@ Please do not forget to back up data.
 
 ### Team Analyser
 * team analyzer displays man marking tactic (#1741)
+* add opponents' team development numbers to recap table (#347)
 
 ### Rating
 
