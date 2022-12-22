@@ -67,7 +67,7 @@ class UserColumnsTable extends AbstractTable {
 		int count = 0;
 		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
 		var dbcolumns = model.getColumns();
-		if (model.userCanDisableColumns()) {
+		if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
 			for (var dbColumn : dbcolumns) {
 				dbColumn.setDisplay(false);
 			}
