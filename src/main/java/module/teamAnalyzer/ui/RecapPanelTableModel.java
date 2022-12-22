@@ -275,25 +275,19 @@ public class RecapPanelTableModel extends HOTableModel {
 
         UserColumn[] displayedColumns = getDisplayedColumns();
         int selection = teamReport.getSelection(); // save selection
-//            // Empty model
-//            while (tableModel.getRowCount() > 0) {
-//                tableModel..removeRow(0);
-//            }
-
-        if (teamReport.size() < 2) return; // no matches loaded
-
-        m_clData = new Object[teamReport.size()][columns.length];
-
-
-        for (int i = 0; i < teamReport.size(); i++) {
-//                tableModel.addRow(AddLineup(teamReport.getTeamMatchReport(i)));
-            var lineup = teamReport.getTeamMatchReport(i);
-            int colNum = 0;
-            for (var col : displayedColumns) {
-                m_clData[i][colNum++] = ((RecapUserColumn) col).getTableEntry(lineup);
+        // Empty model
+        m_clData = null;
+        if (teamReport.size() > 1) { // matches loaded
+            m_clData = new Object[teamReport.size()][columns.length];
+            for (int i = 0; i < teamReport.size(); i++) {
+                var lineup = teamReport.getTeamMatchReport(i);
+                int colNum = 0;
+                for (var col : displayedColumns) {
+                    m_clData[i][colNum++] = ((RecapUserColumn) col).getTableEntry(lineup);
+                }
             }
+            teamReport.setSelection(selection); // restore selection
         }
-        teamReport.setSelection(selection); // restore selection
         fireTableDataChanged();
     }
 
