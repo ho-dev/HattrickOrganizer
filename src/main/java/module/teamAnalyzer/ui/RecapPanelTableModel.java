@@ -34,11 +34,19 @@ public class RecapPanelTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return new ColorLabelEntry(lineup.getName(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {
+                        return false;
+                    }
                 },
                 new RecapUserColumn("Type", 20) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return getMatchTypeColumnEntry(lineup);
+                    }
+                    @Override
+                    public boolean isEditable() {
+                        return false;
                     }
                 },
                 new RecapUserColumn("ls.match.result", 40) {
@@ -317,5 +325,10 @@ public class RecapPanelTableModel extends HOTableModel {
             str.append(RecapPanel.VALUE_NA);
         }
         return str.toString();
+    }
+
+    @Override
+    public boolean userCanDisableColumns() {
+        return true;
     }
 }

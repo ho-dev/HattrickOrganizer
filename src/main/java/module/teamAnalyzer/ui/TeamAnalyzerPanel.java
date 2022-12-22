@@ -129,6 +129,8 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	}
 
 	public void storeUserSettings() {
-		this.recapPanel.storeUserSettings();
+		if ( this.recapPanel != null)  {
+			this.recapPanel.storeUserSettings();
+		}
 	}
 }

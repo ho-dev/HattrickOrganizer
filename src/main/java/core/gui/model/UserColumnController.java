@@ -166,13 +166,13 @@ public final class UserColumnController {
 	 * return all model as Vector
 	 * @return
 	 */
-	public Vector<HOTableModel> getAllModels(){
+	public Vector<HOTableModel> getAllModels() {
 		Vector<HOTableModel> v = new Vector<>();
-		
-		v.add( getPlayerOverviewModel() );
-		v.add( getLineupModel() );
-		v.add( getAnalysis1Model() );
-		v.add( getAnalysis2Model() );
+		v.add(getPlayerOverviewModel());
+		v.add(getLineupModel());
+		v.add(getAnalysis1Model());
+		v.add(getAnalysis2Model());
+		v.add(getTeamAnalyzerRecapModell());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;
 	}

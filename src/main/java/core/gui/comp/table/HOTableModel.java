@@ -352,8 +352,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 			if (i + offset >= table.getColumnCount()) break;
 
 			var column = this.getColumns()[i];
+			var index = table.convertColumnIndexToView(i);
 			if (column.isDisplay()) {
-				var index = table.convertColumnIndexToView(i);
 				if (column.getIndex() != index + offset) {
 					changed = true;
 					column.setIndex(index + offset);
