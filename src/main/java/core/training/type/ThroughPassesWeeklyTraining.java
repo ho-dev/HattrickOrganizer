@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
@@ -38,7 +33,7 @@ public class ThroughPassesWeeklyTraining extends WeeklyTrainingType {
 		_PrimaryTrainingSkillOsmosisTrainingPositions = new int[] { IMatchRoleID.keeper,
 				IMatchRoleID.leftForward, IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingBaseLength = ShortPassesWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 2.8 / (float) 0.85
-		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PASSING) / (float) 0.85;
+//		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PASSING) / (float) 0.85;
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {

@@ -85,7 +85,7 @@ public class TrainingPerPlayer  {
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
 		boolean isTrainedSkill = wt != null && wt.isTraining(skill);
 		if (isTrainedSkill) {
-			ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
+			ret += wt.calculateSkillIncreaseOfTrainingWeek( skillValue, this);
 		}
 		/* Time to perform skill drop */
 		if (SkillDrops.instance().isActive()) {

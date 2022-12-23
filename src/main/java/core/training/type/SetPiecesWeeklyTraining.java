@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
@@ -40,9 +35,9 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingSkillBonusPositions = new int[]{ IMatchRoleID.keeper, IMatchRoleID.setPieces };
 		_PrimaryTrainingBaseLength = (float) 0.9938; // old was 0.9
-		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_SETPIECES; // 100%
+//		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_SETPIECES; // 100%
 		_PrimaryTrainingSkillBonus = (float) 0.25;
-		_PrimaryTrainingSkillOsmosisLengthRate = 0;
+		//_PrimaryTrainingSkillOsmosisLengthRate = 0;
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {

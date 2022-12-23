@@ -1,7 +1,6 @@
 package core.model;
 
 import core.HO;
-import core.db.DBManager;
 import core.util.GUIUtils;
 import core.util.HODividerListener;
 import module.lineup.assistant.LineupAssistant;
@@ -215,7 +214,7 @@ public final class UserParameter extends Configuration {
     //Zahlen hinter den Bewertungen anzeigen
     public boolean zahlenFuerSkill = true;
 
-    public float TrainerFaktor = 0f;
+//    public float TrainerFaktor = 0f;
 
 
     //Sonstiges
@@ -227,19 +226,19 @@ public final class UserParameter extends Configuration {
 
     // These defaults are never used anywhere, they are read from db,
     // and are initialized from the config update routine.
-    public float TRAINING_OFFSET_SCORING = 0f;
-    public float TRAINING_OFFSET_WINGER = 0f;
-    public float TRAINING_OFFSET_STAMINA = 0f;
-    public float TRAINING_OFFSET_PASSING = 0f;
-    public float TRAINING_OFFSET_PLAYMAKING = 0f;
-    public float TRAINING_OFFSET_SETPIECES = 0f;
-    public float TRAINING_OFFSET_GOALKEEPING = 0f;
-    public float TRAINING_OFFSET_DEFENDING = 0f;
-    public float TRAINING_OFFSET_OSMOSIS = 0f;
-    //Faktoren
-    public float TRAINING_OFFSET_AGE = 0f;
-    public float TRAINING_OFFSET_ASSISTANTS = 0f;
-    public float TRAINING_OFFSET_INTENSITY = 0f;
+//    public float TRAINING_OFFSET_SCORING = 0f;
+//    public float TRAINING_OFFSET_WINGER = 0f;
+//    public float TRAINING_OFFSET_STAMINA = 0f;
+//    public float TRAINING_OFFSET_PASSING = 0f;
+//    public float TRAINING_OFFSET_PLAYMAKING = 0f;
+//    public float TRAINING_OFFSET_SETPIECES = 0f;
+//    public float TRAINING_OFFSET_GOALKEEPING = 0f;
+//    public float TRAINING_OFFSET_DEFENDING = 0f;
+//    public float TRAINING_OFFSET_OSMOSIS = 0f;
+//    //Faktoren
+//    public float TRAINING_OFFSET_AGE = 0f;
+//    public float TRAINING_OFFSET_ASSISTANTS = 0f;
+//    public float TRAINING_OFFSET_INTENSITY = 0f;
     //Timezone
     public int TimeZoneDifference;
     public boolean TRAINING_SHOW_SKILLDROPS = true;
@@ -570,22 +569,22 @@ public final class UserParameter extends Configuration {
         map.put("tempTabStatistik", String.valueOf(tempTabStatistik));
         map.put("updateCheck", String.valueOf(updateCheck));
         map.put("zahlenFuerSkill", String.valueOf(zahlenFuerSkill));
-        map.put("AlterFaktor", String.valueOf(TRAINING_OFFSET_AGE));
-        map.put("CoTrainerFaktor", String.valueOf(TRAINING_OFFSET_ASSISTANTS));
-        map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
+//        map.put("AlterFaktor", String.valueOf(TRAINING_OFFSET_AGE));
+//        map.put("CoTrainerFaktor", String.valueOf(TRAINING_OFFSET_ASSISTANTS));
+//        map.put("IntensitaetFaktor", String.valueOf(TRAINING_OFFSET_INTENSITY));
         map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
-        map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
+//        map.put("TrainerFaktor", String.valueOf(TrainerFaktor));
         map.put("faktorGeld", String.valueOf(FXrate));
         map.put("zellenbreitenFaktor", String.valueOf(zellenbreitenFaktor));
-        map.put("DAUER_CHANCENVERWERTUNG", String.valueOf(TRAINING_OFFSET_SCORING));
-        map.put("DAUER_FLUEGELSPIEL", String.valueOf(TRAINING_OFFSET_WINGER));
-        map.put("DAUER_KONDITION", String.valueOf(TRAINING_OFFSET_STAMINA));
-        map.put("DAUER_PASSPIEL", String.valueOf(TRAINING_OFFSET_PASSING));
-        map.put("DAUER_SPIELAUFBAU", String.valueOf(TRAINING_OFFSET_PLAYMAKING));
-        map.put("DAUER_STANDARDS", String.valueOf(TRAINING_OFFSET_SETPIECES));
-        map.put("DAUER_TORWART", String.valueOf(TRAINING_OFFSET_GOALKEEPING));
-        map.put("DAUER_VERTEIDIGUNG", String.valueOf(TRAINING_OFFSET_DEFENDING));
-        map.put("DAUER_OSMOSIS", String.valueOf(TRAINING_OFFSET_OSMOSIS));
+//        map.put("DAUER_CHANCENVERWERTUNG", String.valueOf(TRAINING_OFFSET_SCORING));
+//        map.put("DAUER_FLUEGELSPIEL", String.valueOf(TRAINING_OFFSET_WINGER));
+//        map.put("DAUER_KONDITION", String.valueOf(TRAINING_OFFSET_STAMINA));
+//        map.put("DAUER_PASSPIEL", String.valueOf(TRAINING_OFFSET_PASSING));
+//        map.put("DAUER_SPIELAUFBAU", String.valueOf(TRAINING_OFFSET_PLAYMAKING));
+//        map.put("DAUER_STANDARDS", String.valueOf(TRAINING_OFFSET_SETPIECES));
+//        map.put("DAUER_TORWART", String.valueOf(TRAINING_OFFSET_GOALKEEPING));
+//        map.put("DAUER_VERTEIDIGUNG", String.valueOf(TRAINING_OFFSET_DEFENDING));
+//        map.put("DAUER_OSMOSIS", String.valueOf(TRAINING_OFFSET_OSMOSIS));
         map.put("TimeZoneDifference", String.valueOf(TimeZoneDifference));
         map.put("nbDecimals", String.valueOf(nbDecimals));
         map.put("aufstellungsAssistentPanel_reihenfolge", String.valueOf(aufstellungsAssistentPanel_reihenfolge));
@@ -815,22 +814,22 @@ public final class UserParameter extends Configuration {
         updateCheck = getBooleanValue(values, "updateCheck");
         zahlenFuerSkill = getBooleanValue(values, "zahlenFuerSkill");
 
-        TRAINING_OFFSET_AGE = getFloatValue(values, "AlterFaktor");
-        TRAINING_OFFSET_ASSISTANTS = getFloatValue(values, "CoTrainerFaktor");
-        TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
+//        TRAINING_OFFSET_AGE = getFloatValue(values, "AlterFaktor");
+//        TRAINING_OFFSET_ASSISTANTS = getFloatValue(values, "CoTrainerFaktor");
+//        TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
         TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
-        TrainerFaktor = getFloatValue(values, "TrainerFaktor");
+//        TrainerFaktor = getFloatValue(values, "TrainerFaktor");
         FXrate = getFloatValue(values, "faktorGeld");
         zellenbreitenFaktor = getFloatValue(values, "zellenbreitenFaktor");
-        TRAINING_OFFSET_SCORING = getFloatValue(values, "DAUER_CHANCENVERWERTUNG");
-        TRAINING_OFFSET_WINGER = getFloatValue(values, "DAUER_FLUEGELSPIEL");
-        TRAINING_OFFSET_STAMINA = getFloatValue(values, "DAUER_KONDITION");
-        TRAINING_OFFSET_PASSING = getFloatValue(values, "DAUER_PASSPIEL");
-        TRAINING_OFFSET_PLAYMAKING = getFloatValue(values, "DAUER_SPIELAUFBAU");
-        TRAINING_OFFSET_SETPIECES = getFloatValue(values, "DAUER_STANDARDS");
-        TRAINING_OFFSET_GOALKEEPING = getFloatValue(values, "DAUER_TORWART");
-        TRAINING_OFFSET_DEFENDING = getFloatValue(values, "DAUER_VERTEIDIGUNG");
-        TRAINING_OFFSET_OSMOSIS = getFloatValue(values, "DAUER_OSMOSIS");
+//        TRAINING_OFFSET_SCORING = getFloatValue(values, "DAUER_CHANCENVERWERTUNG");
+//        TRAINING_OFFSET_WINGER = getFloatValue(values, "DAUER_FLUEGELSPIEL");
+//        TRAINING_OFFSET_STAMINA = getFloatValue(values, "DAUER_KONDITION");
+//        TRAINING_OFFSET_PASSING = getFloatValue(values, "DAUER_PASSPIEL");
+//        TRAINING_OFFSET_PLAYMAKING = getFloatValue(values, "DAUER_SPIELAUFBAU");
+//        TRAINING_OFFSET_SETPIECES = getFloatValue(values, "DAUER_STANDARDS");
+//        TRAINING_OFFSET_GOALKEEPING = getFloatValue(values, "DAUER_TORWART");
+//        TRAINING_OFFSET_DEFENDING = getFloatValue(values, "DAUER_VERTEIDIGUNG");
+//        TRAINING_OFFSET_OSMOSIS = getFloatValue(values, "DAUER_OSMOSIS");
 
         TimeZoneDifference = getIntValue(values, "TimeZoneDifference");
         nbDecimals = getIntValue(values, "nbDecimals");

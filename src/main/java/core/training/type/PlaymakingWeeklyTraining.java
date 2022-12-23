@@ -2,7 +2,6 @@ package core.training.type;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
@@ -36,7 +35,7 @@ public final class PlaymakingWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.rightCentralDefender, IMatchRoleID.leftForward,
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingBaseLength = (float) 4.6613; // old was 3.1
-		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PLAYMAKING; // 100%
+//		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_PLAYMAKING; // 100%
 		_PrimaryTrainingSkillPartlyLengthRate = (float) 2; // 50%
 	}
 	public static WeeklyTrainingType instance() {

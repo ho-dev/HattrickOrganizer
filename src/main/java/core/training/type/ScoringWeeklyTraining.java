@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public class ScoringWeeklyTraining extends WeeklyTrainingType {
@@ -38,7 +33,7 @@ public class ScoringWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.leftWinger, IMatchRoleID.leftInnerMidfield,
 				IMatchRoleID.centralInnerMidfield, IMatchRoleID.rightInnerMidfield};
 		_PrimaryTrainingBaseLength = (float) 4.8536; // old was 3.2
-		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_SCORING; // 100%
+//		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_SCORING; // 100%
 		//_PrimaryTrainingSkillSecondaryLengthRate = (float) 2; // 50% there are no secondary training positions
 	}
 	public static WeeklyTrainingType instance() {

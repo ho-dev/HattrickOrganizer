@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public final class GoalkeepingWeeklyTraining extends WeeklyTrainingType {
@@ -25,8 +20,8 @@ public final class GoalkeepingWeeklyTraining extends WeeklyTrainingType {
 
 		_PrimaryTrainingSkillPositions = new int[]{ IMatchRoleID.keeper };
 		_PrimaryTrainingBaseLength = (float) 3.0206; // old was 2
-		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_GOALKEEPING; // 100%
-		_PrimaryTrainingSkillOsmosisLengthRate = 0;
+//		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_GOALKEEPING; // 100%
+		//_PrimaryTrainingSkillOsmosisLengthRate = 0;
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {

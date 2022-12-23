@@ -124,7 +124,7 @@ public class FutureTrainingManager {
 						finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
 						pos = getSkillPosition(weeklyTrainingType.getSecondaryTrainingSkill());
 						if (pos != -1) {
-							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
+							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek( (int) finalSkill[pos], trainingPerPlayer);
 						}
 
 						for (int i = 0; i < SKILL_INDEX.length; i++) {
