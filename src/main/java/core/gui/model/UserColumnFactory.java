@@ -507,7 +507,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[21];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[22];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -887,6 +887,23 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var m = player.getMatchesCurrentTeam();
+                String t;
+                if ( m!= null){
+                    t = m.toString();
+                }
+                else {
+                    t = "";
+                    m = 0;
+                }
+                return new ColorLabelEntry(m, t, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
+
+        // htms28
+        playerAdditionalArray[21] = new PlayerColumn(895, "ls.player.htms28", 50) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                var m = player.getHtms28();
                 String t;
                 if ( m!= null){
                     t = m.toString();
