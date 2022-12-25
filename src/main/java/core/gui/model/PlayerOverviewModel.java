@@ -44,7 +44,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[60];
+		columns = new UserColumn[61];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -82,6 +82,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[56] = additionalArray[19];
 		columns[57] = additionalArray[20];
 		columns[59] = additionalArray[21];
+		columns[60] = additionalArray[22];
 	}
 	
     public Player getPlayer(int id) {

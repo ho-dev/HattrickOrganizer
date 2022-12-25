@@ -329,7 +329,8 @@ public class Player extends AbstractTable.Storable {
     private String motherclubName;
     private Integer matchesCurrentTeam;
     private int hrf_id;
-
+    private Integer htms = null;
+    private Integer htms28 = null;
     public int getGameStartingTime() {
         return GameStartingTime;
     }
@@ -338,7 +339,6 @@ public class Player extends AbstractTable.Storable {
         GameStartingTime = gameStartingTime;
     }
 
-    private Integer htms28 = null;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -1720,6 +1720,13 @@ public class Player extends AbstractTable.Storable {
             htms28 = Htms.htms28(getSkills(), this.m_iAlter, this.m_iAgeDays);
         }
         return htms28;
+    }
+
+    public Integer getHtms(){
+        if (htms == null){
+            htms= Htms.htms(getSkills());
+        }
+        return htms;
     }
 
     private Map<Integer, Integer> getSkills() {
