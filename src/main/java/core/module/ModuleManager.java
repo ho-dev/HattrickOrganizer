@@ -31,12 +31,12 @@ public final class ModuleManager {
 	}
 
 	private static final int factor = 10000;
-	private Map<Integer, IModule> all_modules = new HashMap<Integer, IModule>();
+	private final Map<Integer, IModule> all_modules = new HashMap<>();
 	private Map<Integer, IModule> tmpModules;
 
 	private static ModuleManager moduleManager;
 
-	public static final ModuleManager instance() {
+	public static ModuleManager instance() {
 		if (moduleManager == null)
 			moduleManager = new ModuleManager();
 		return moduleManager;
@@ -47,21 +47,21 @@ public final class ModuleManager {
 	}
 
 	private void initMap(Map<Integer, IModule> map) {
-		map.put(Integer.valueOf(IModule.PLAYEROVERVIEW), new PlayerOverviewModule());
-		map.put(Integer.valueOf(IModule.LINEUP), new LineupModule());
-		map.put(Integer.valueOf(IModule.SERIES), new SeriesModule());
-		map.put(Integer.valueOf(IModule.MATCHES), new MatchesModule());
-		map.put(Integer.valueOf(IModule.PLAYERANALYSIS), new PlayerAnalysisModule());
-		map.put(Integer.valueOf(IModule.STATISTICS), new StatisticsModule());
-		map.put(Integer.valueOf(IModule.TRANSFERS), new TransfersModule());
-		map.put(Integer.valueOf(IModule.TRAINING), new TrainingModule());
-		map.put(Integer.valueOf(IModule.MISC), new MiscModule());
-		map.put(Integer.valueOf(IModule.TEAMANALYZER), new TeamAnalyzerModule());
-		map.put(Integer.valueOf(IModule.TSFORECAST), new TSForecastModule());
-		map.put(Integer.valueOf(IModule.SPECIALEVENTS), new SpecialEventsModule());
-		map.put(Integer.valueOf(IModule.TEAM_OF_THE_WEEK), new TeamOfTheWeekModule());
-		map.put(Integer.valueOf(IModule.IFA), new IfaModule());
-		map.put(Integer.valueOf(IModule.YOUTH), new YouthModule());
+		map.put(IModule.PLAYEROVERVIEW, new PlayerOverviewModule());
+		map.put(IModule.LINEUP, new LineupModule());
+		map.put(IModule.SERIES, new SeriesModule());
+		map.put(IModule.MATCHES, new MatchesModule());
+		map.put(IModule.PLAYERANALYSIS, new PlayerAnalysisModule());
+		map.put(IModule.STATISTICS, new StatisticsModule());
+		map.put(IModule.TRANSFERS, new TransfersModule());
+		map.put(IModule.TRAINING, new TrainingModule());
+		map.put(IModule.MISC, new MiscModule());
+		map.put(IModule.TEAMANALYZER, new TeamAnalyzerModule());
+		map.put(IModule.TSFORECAST, new TSForecastModule());
+		map.put(IModule.SPECIALEVENTS, new SpecialEventsModule());
+		map.put(IModule.TEAM_OF_THE_WEEK, new TeamOfTheWeekModule());
+		map.put(IModule.IFA, new IfaModule());
+		map.put(IModule.YOUTH, new YouthModule());
 	}
 
 	private void initialize() {
@@ -76,16 +76,16 @@ public final class ModuleManager {
 	}
 
 	public IModule getModule(int moduleId) {
-		return all_modules.get(Integer.valueOf(moduleId));
+		return all_modules.get(moduleId);
 	}
 
 	public IModule[] getAllModules() {
-		return all_modules.values().toArray(new IModule[all_modules.size()]);
+		return all_modules.values().toArray(new IModule[0]);
 	}
 
 	public IModule[] getTempModules() {
 		if (tmpModules == null) {
-			tmpModules = new HashMap<Integer, IModule>();
+			tmpModules = new HashMap<>();
 			initMap(tmpModules);
 			copy(all_modules, tmpModules);
 		}
@@ -97,14 +97,13 @@ public final class ModuleManager {
 	}
 
 	IModule[] getModules(Map<Integer, IModule> map, boolean isActive) {
-		ArrayList<IModule> tmp = new ArrayList<IModule>();
+		ArrayList<IModule> tmp = new ArrayList<>();
 		Collection<IModule> c = map.values();
-		for (Iterator<IModule> iterator = c.iterator(); iterator.hasNext();) {
-			IModule iModule = iterator.next();
+		for (IModule iModule : c) {
 			if (iModule.isActive() == isActive)
 				tmp.add(iModule);
 		}
-		return tmp.toArray(new IModule[tmp.size()]);
+		return tmp.toArray(new IModule[0]);
 	}
 
 	public void savedModules() {
@@ -175,7 +174,7 @@ public final class ModuleManager {
 			getModule(IModule.STATISTICS).setStatus(IModule.STATUS_STARTUP);
 		}
 
-		getModule(IModule.TRANSFERS).setStatus(IModule.STATUS_STARTUP);
+		//getModule(IModule.TRANSFERS).setStatus(IModule.STATUS_STARTUP);
 		getModule(IModule.TRAINING).setStatus(IModule.STATUS_STARTUP);
 		getModule(IModule.TEAMANALYZER).setStatus(IModule.STATUS_STARTUP);
 	}
