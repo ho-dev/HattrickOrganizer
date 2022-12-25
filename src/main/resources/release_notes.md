@@ -43,6 +43,7 @@ Please do not forget to back up data.
 
 ### Transfer
 * display player's age at transfer date (#1659)
+* Transfer module is no longer an autostart module to speed up the first download (#1753)
 
 ### Training
 * fix daylight saving resetting future trainings (#1668)
