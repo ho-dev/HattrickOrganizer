@@ -647,7 +647,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 80) {
+        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 PlayerStatusLabelEntry entry = new PlayerStatusLabelEntry();
