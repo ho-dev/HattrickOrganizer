@@ -1796,16 +1796,16 @@ public class DBManager {
 	 */
 	public void deleteHRF(int hrfid) {
 		getTable(StadionTable.TABLENAME).executePreparedDelete(hrfid);
-		getTable(HRFTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(LigaTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(VereinTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(TeamTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(EconomyTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(BasicsTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(SpielerTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(SpielerSkillupTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(XtraDataTable.TABLENAME).executePreparedDelete( hrfid);
-		getTable(StaffTable.TABLENAME).executePreparedDelete( hrfid);
+		getTable(HRFTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(LigaTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(VereinTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(TeamTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(EconomyTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(BasicsTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(SpielerTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(SpielerSkillupTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(XtraDataTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(StaffTable.TABLENAME).executePreparedDelete(hrfid);
 	}
 
 	/**

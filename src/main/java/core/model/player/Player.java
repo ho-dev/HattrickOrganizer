@@ -9,6 +9,7 @@ import core.model.*;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
+import core.net.MyConnector;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
@@ -466,22 +467,39 @@ public class Player extends AbstractTable.Storable {
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
             motherclubId = oldPlayer.getMotherclubId();
             motherclubName = oldPlayer.getMotherclubName();
-            if (motherclubId == null) {
+        }
+    }
+
+    public String getMotherclubName() {
+        downloadMotherclubInfoIfMissing();
+        return this.motherclubName;
+    }
+
+    public Integer getMotherclubId() {
+        downloadMotherclubInfoIfMissing();
+        return this.motherclubId;
+    }
+
+    private void downloadMotherclubInfoIfMissing() {
+        if (motherclubId == null) {
+            var connection = MyConnector.instance();
+            var isSilentDownload = connection.isSilentDownload();
+            try {
+                connection.setSilentDownload(true);
+                // try to download missing motherclub info
                 var playerDetails = OnlineWorker.downloadPlayerDetails(this.getPlayerID());
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
                 }
             }
+            catch (Exception e){
+                HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
+            }
+            finally {
+                connection.setSilentDownload(isSilentDownload); // reset
+            }
         }
-    }
-
-    public String getMotherclubName() {
-        return this.motherclubName;
-    }
-
-    public Integer getMotherclubId() {
-        return this.motherclubId;
     }
 
     //~ Methods ------------------------------------------------------------------------------------

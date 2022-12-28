@@ -41,6 +41,11 @@ final class SpielerSkillupTable extends AbstractTable {
 				"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
 	}
 
+	@Override
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+	}
+
 	private void storeSkillup(Skillup skillup) {
 		store(skillup);
 	}
