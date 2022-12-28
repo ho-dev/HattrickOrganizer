@@ -7,12 +7,6 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.net.MyConnector;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 /**
  * @author thomas.werth
  */
