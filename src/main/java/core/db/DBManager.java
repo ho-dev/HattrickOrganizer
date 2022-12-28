@@ -1090,7 +1090,7 @@ public class DBManager {
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
-		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.htStart.toDbTimestamp(), true);
+		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.HT_START.toDbTimestamp(), true);
 	}
 
 	/**

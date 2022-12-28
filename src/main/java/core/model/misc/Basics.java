@@ -1,11 +1,9 @@
 package core.model.misc;
 
 import core.db.AbstractTable;
-import core.db.DBManager;
 import core.db.user.UserManager;
 import core.util.HODateTime;
-import core.util.HOLogger;
-import java.sql.ResultSet;
+
 import java.util.Properties;
 
 /**
@@ -31,10 +29,10 @@ public final class Basics extends AbstractTable.Storable {
     private String m_sTeamName = "";
 
     /** Datum der Erstellung */
-    private HODateTime m_clDatum = HODateTime.htStart;
+    private HODateTime m_clDatum = HODateTime.HT_START;
 
     /** Date of activation */
-    private HODateTime m_tActivationDate = HODateTime.htStart;
+    private HODateTime m_tActivationDate = HODateTime.HT_START;
 
     /** Land */
     private int m_iLand;
