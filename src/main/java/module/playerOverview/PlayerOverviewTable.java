@@ -21,6 +21,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 
 
 /**
@@ -40,6 +41,7 @@ import java.awt.event.MouseEvent;
  */
 public class PlayerOverviewTable extends JTable implements core.gui.Refreshable {
 
+	@Serial
 	private static final long serialVersionUID = -6074136156090331418L;
 	private PlayerOverviewModel tableModel;
 	private TableSorter tableSorter;
@@ -53,13 +55,13 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				int rowindex = getSelectedRow();
-				if (rowindex >= 0) {
+				int rowIndex = getSelectedRow();
+				if (rowIndex >= 0) {
 					// Last match column
 					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
-					Player player = tableSorter.getSpieler(rowindex);
+					Player player = tableSorter.getSpieler(rowIndex);
 					if (player != null) {
 						if (columnName.equalsIgnoreCase(lastMatchRating)) {
 							if (e.isShiftDown()) {
@@ -102,8 +104,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		DBManager.instance().saveHOColumnModel(tableModel);
 	}
 
-	public final void setSpieler(int spielerid) {
-		final int index = tableSorter.getRow4Spieler(spielerid);
+	public final void setSpieler(int playerId) {
+		final int index = tableSorter.getRow4Spieler(playerId);
 
 		if (index >= 0) {
 			this.setRowSelectionInterval(index, index);
@@ -141,7 +143,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 	private int getSortSpalte() {
 		return switch (UserParameter.instance().standardsortierung) {
 			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINUP);
+			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
 			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
 			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
 			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);

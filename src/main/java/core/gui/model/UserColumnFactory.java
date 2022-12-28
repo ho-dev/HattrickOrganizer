@@ -10,8 +10,8 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -21,9 +21,9 @@ import core.util.HODateTime;
 import core.util.Helper;
 import module.playerOverview.PlayerStatusLabelEntry;
 
-import java.awt.*;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 
 /**
  * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
@@ -34,7 +34,7 @@ final public class UserColumnFactory {
 
     public static final int NAME = 1;
     public static final int BEST_POSITION = 40;
-    public static final int LINUP = 50;
+    public static final int LINEUP = 50;
     public static final int GROUP = 60;
     public static final int ID = 440;
     public static final int DATUM = 450;
@@ -243,10 +243,9 @@ final public class UserColumnFactory {
 
             @Override
             public boolean isEditable() {
-                return true; //false
+                return false;
             }
         };
-        //playerBasicArray[0].setDisplay(false);
 
         playerBasicArray[1] = new PlayerColumn(ID, "ls.player.id", 0) {
             @Override
@@ -259,7 +258,7 @@ final public class UserColumnFactory {
 
             @Override
             public boolean isEditable() {
-                return true; //false
+                return false;
             }
 
             @Override
@@ -526,11 +525,6 @@ final public class UserColumnFactory {
                 return new ColorLabelEntry(sort, shirtNumberText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
-
-//            @Override
-//            public boolean isEditable() {
-//                return false;
-//            }
         };
 
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
@@ -607,7 +601,7 @@ final public class UserColumnFactory {
         };
 
         // Position
-        playerAdditionalArray[4] = new PlayerColumn(LINUP, " ", "Aufgestellt", 28) {
+        playerAdditionalArray[4] = new PlayerColumn(LINEUP, " ", "Aufgestellt", 28) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
