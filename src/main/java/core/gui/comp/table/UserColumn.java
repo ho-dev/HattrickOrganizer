@@ -24,7 +24,7 @@ public abstract class UserColumn {
 	/** index of the column in the JTable. position**/
 	protected int index = 0;
 	
-	/** if a column is shown in the jtable. Only displayed columns are saved in db**/
+	/** if a column is shown in the jtable. Only displayed columns are saved in db. **/
 	protected boolean display = false;
 
 	protected UserColumn(int id,String name, String tooltip){
@@ -47,7 +47,7 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getColumnName() {
-		return (columnName.equals("TSI") || columnName.equals(" "))?columnName:HOVerwaltung.instance().getLanguageString(columnName);
+		return (columnName.equals("TSI") || columnName.equals(" ")) ? columnName: HOVerwaltung.instance().getLanguageString(columnName);
 	}
 	
 	/**
@@ -90,7 +90,7 @@ public abstract class UserColumn {
 	}
 
 	/**
-	 * return the currently index of column
+	 * return the current index of column
 	 * only actual if user don´t move the column !!
 	 * @return int
 	 */

@@ -53,7 +53,7 @@ public class BrowserLauncher {
 
 				// Build a command string which looks like
 				// "browser1 "url" || browser2 "url" ||..."
-				StringBuffer cmd = new StringBuffer();
+				StringBuilder cmd = new StringBuilder();
 				for (int i = 0; i < browsers.length; i++)
 					cmd.append((i == 0 ? "" : " || ") + browsers[i] + " \"" + url + "\" ");
 

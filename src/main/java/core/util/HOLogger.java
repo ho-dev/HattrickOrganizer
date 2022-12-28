@@ -17,7 +17,6 @@ public class HOLogger {
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	private static HOLogger clLogger;
-	private static File logsFolder;
 	private static String logsFolderName;
 	public static final int DEBUG = 0;
 	public static final int INFORMATION = 1;
@@ -36,7 +35,7 @@ public class HOLogger {
 		boolean logFolderExist = true;
 
 		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
-		logsFolder = new File(logsFolderName);
+		File logsFolder = new File(logsFolderName);
 		
 		if (!logsFolder.exists()) {
 			logFolderExist = logsFolder.mkdirs();
@@ -46,21 +45,23 @@ public class HOLogger {
 			}
 		}
 
-		if(logFolderExist){
-		try {
-			deleteOldLogs(logsFolder);
-			File logFile = new File(logsFolder, fileName);
+		if (logFolderExist) {
+			try {
+				deleteOldLogs(logsFolder);
+				File logFile = new File(logsFolder, fileName);
 
-			if (logFile.exists()) {
-				if (! logFile.delete()) {System.err.println("Unable to delete " + logFile);}
+				if (logFile.exists()) {
+					if (!logFile.delete()) {
+						System.err.println("Unable to delete " + logFile);
+					}
+				}
+
+				logWriter = new FileWriter(logFile);
+			} catch (Exception e) {
+				errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
+				System.err.println(errorMsg);
+				e.printStackTrace();
 			}
-
-			logWriter = new FileWriter(logFile);
-		} catch (Exception e) {
-			errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
-			System.err.println(errorMsg);
-			e.printStackTrace();
-		}
 		}
 	}
 
@@ -129,8 +130,7 @@ public class HOLogger {
 		String msg;
 		String text;
 		
-		if (obj instanceof Throwable) {
-			Throwable t = (Throwable) obj;
+		if (obj instanceof Throwable t) {
 			text = t.getMessage() + "\n" + ExceptionUtils.getStackTrace(t);
 		} else {
 			text = String.valueOf(obj);
@@ -160,5 +160,4 @@ public class HOLogger {
 			}
 		}
 	}
-
 }

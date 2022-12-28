@@ -3,6 +3,7 @@ package core.db;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
+
 import java.sql.Types;
 
 class UserColumnsTable extends AbstractTable {
@@ -57,29 +58,36 @@ class UserColumnsTable extends AbstractTable {
 	}
 
 	void insertDefault(HOTableModel model) {
-		UserColumn[] dbcolumns = model.getColumns();
-		for (int i = 0; i < dbcolumns.length; i++) {
-			dbcolumns[i].setIndex(i);
+		UserColumn[] dbColumns = model.getColumns();
+		for (int i = 0; i < dbColumns.length; i++) {
+			dbColumns[i].setIndex(i);
+
+			// By default make all columns visible, except ID.
+			if (dbColumns[i].getId() != UserColumnFactory.ID) {
+				dbColumns[i].setDisplay(true);
+			}
 		}
 	}
 
 	void loadModel(HOTableModel model) {
 		int count = 0;
 		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
-		var dbcolumns = model.getColumns();
-		if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
-			for (var dbColumn : dbcolumns) {
-				dbColumn.setDisplay(false);
+		if (userColumns.size() > 0) { // user may not delete all columns
+			var dbcolumns = model.getColumns();
+			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
+				for (var dbColumn : dbcolumns) {
+					dbColumn.setDisplay(false);
+				}
 			}
-		}
-		for (var userColumn : userColumns) {
-			var modelIndex = userColumn.getModelIndex();
-			if (modelIndex < dbcolumns.length) {
-				var dbColumn = dbcolumns[modelIndex];
-				dbColumn.setPreferredWidth(userColumn.getPreferredWidth());
-				dbColumn.setDisplay(true);
-				dbColumn.setIndex(userColumn.getIndex());
-				count++;
+			for (var userColumn : userColumns) {
+				var modelIndex = userColumn.getModelIndex();
+				if (modelIndex < dbcolumns.length) {
+					var dbColumn = dbcolumns[modelIndex];
+					dbColumn.setPreferredWidth(userColumn.getPreferredWidth());
+					dbColumn.setDisplay(true);
+					dbColumn.setIndex(userColumn.getIndex());
+					count++;
+				}
 			}
 		}
 

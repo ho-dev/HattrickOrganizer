@@ -116,7 +116,7 @@ public class LineupTableModel extends HOTableModel {
 
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if (tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINUP
+						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINEUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP) {
 					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(currentPlayer, null);

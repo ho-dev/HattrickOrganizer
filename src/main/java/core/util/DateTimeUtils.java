@@ -165,6 +165,6 @@ public class DateTimeUtils {
 		/**
 		 * Keep the (current) time / leave time unchanged.
 		 */
-		KEEP_TIME;
+		KEEP_TIME
 	}
 }

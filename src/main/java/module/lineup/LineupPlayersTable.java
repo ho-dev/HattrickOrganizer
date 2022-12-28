@@ -81,7 +81,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	protected int getSortSpalte() {
 		return switch (UserParameter.instance().standardsortierung) {
 			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINUP);
+			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
 			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
 			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
 			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);

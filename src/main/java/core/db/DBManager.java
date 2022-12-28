@@ -523,7 +523,7 @@ public class DBManager {
 
 	public Player loadPlayerFirstHRF(int spielerid, HODateTime after) {
 		if ( after == null){
-			after = HODateTime.htStart;
+			after = HODateTime.HT_START;
 		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());
@@ -1090,7 +1090,7 @@ public class DBManager {
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int iMatchType, MatchLocation matchLocation) {
-		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.htStart.toDbTimestamp(), true);
+		return getMatchesKurzInfo(teamId,iMatchType, matchLocation,  HODateTime.HT_START.toDbTimestamp(), true);
 	}
 
 	/**
@@ -2449,8 +2449,8 @@ public class DBManager {
 		((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
 	}
 
-	public SquadInfo loadSquadInfo(int teamId, Timestamp lastMatchDate) {
-		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId, lastMatchDate);
+	public List<SquadInfo> loadSquadInfo(int teamId) {
+		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
 	}
 
 	public static class PreparedStatementBuilder{
