@@ -136,7 +136,8 @@ public class HattrickManager {
                     case -1:
                         break;
                     default:
-                        squadInfo.addInjuredWeeksCount(injuryLevel);
+                        squadInfo.addInjuredWeeksSum(injuryLevel);
+                        squadInfo.incrementInjuredCount();
                 }
 
                 switch (player.getBookingStatus()) {

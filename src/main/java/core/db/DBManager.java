@@ -2449,8 +2449,8 @@ public class DBManager {
 		((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
 	}
 
-	public SquadInfo loadSquadInfo(int teamId, Timestamp lastMatchDate) {
-		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId, lastMatchDate);
+	public List<SquadInfo> loadSquadInfo(int teamId) {
+		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
 	}
 
 	public static class PreparedStatementBuilder{

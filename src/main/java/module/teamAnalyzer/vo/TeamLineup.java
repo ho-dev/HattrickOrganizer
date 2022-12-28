@@ -104,11 +104,7 @@ public class TeamLineup {
 
         buffer.append("TeamLineup[");
 
-        if (spotLineups == null) {
-            buffer.append("spotLineups = " + "null");
-        } else {
-            buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups));
-        }
+        buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups));
 
         buffer.append("]");
 
@@ -287,8 +283,13 @@ public class TeamLineup {
         return null;
     }
 
-    public Integer getInjuredWeeks() {
-        if ( this.squadInfo != null) return squadInfo.getInjuredWeeksCount();
+    public Integer getInjured() {
+        if ( this.squadInfo != null) return squadInfo.getInjuredCount();
+        return null;
+    }
+
+    public Integer getInjuredWeeksSum() {
+        if ( this.squadInfo != null) return squadInfo.getInjuredWeeksSum();
         return null;
     }
 
