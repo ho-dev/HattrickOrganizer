@@ -5,6 +5,7 @@ import module.teamAnalyzer.vo.SquadInfo;
 
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 
 public class SquadInfoTable extends AbstractTable {
     final static String TABLENAME = "SQUAD";
@@ -21,7 +22,8 @@ public class SquadInfoTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("LASTMATCH").setGetter((p) -> ((SquadInfo) p).getLastMatchDate().toDbTimestamp()).setSetter((p, v) -> ((SquadInfo) p).setLastMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("FETCHDATE").setGetter((p) -> ((SquadInfo) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((SquadInfo) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("BRUISED").setGetter((p) -> ((SquadInfo) p).getBruisedCount()).setSetter((p, v) -> ((SquadInfo) p).setBruisedCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("INJURED").setGetter((p) -> ((SquadInfo) p).getInjuredWeeksCount()).setSetter((p, v) -> ((SquadInfo) p).setInjuredWeeksCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("INJURED").setGetter((p) -> ((SquadInfo) p).getInjuredCount()).setSetter((p, v) -> ((SquadInfo) p).setInjuredCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("INJUREDWEEKS").setGetter((p) -> ((SquadInfo) p).getInjuredWeeksSum()).setSetter((p, v) -> ((SquadInfo) p).setInjuredWeeksSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("YELLOWCARDS").setGetter((p) -> ((SquadInfo) p).getSingleYellowCards()).setSetter((p, v) -> ((SquadInfo) p).setSingleYellowCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("TWOYELLOWCARDS").setGetter((p) -> ((SquadInfo) p).getTwoYellowCards()).setSetter((p, v) -> ((SquadInfo) p).setTwoYellowCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("SUSPENDED").setGetter((p) -> ((SquadInfo) p).getRedCards()).setSetter((p, v) -> ((SquadInfo) p).setRedCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
@@ -44,7 +46,8 @@ public class SquadInfoTable extends AbstractTable {
         store(squadInfo);
     }
 
-    public SquadInfo loadSquadInfo(int teamId, Timestamp lastMatchDate) {
-        return loadOne(SquadInfo.class, teamId, lastMatchDate);
+    private final PreparedSelectStatementBuilder loadAllSquadInfoStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAMID=?");
+    public List<SquadInfo> loadSquadInfo(int teamId){
+        return load(SquadInfo.class, adapter.executePreparedQuery(loadAllSquadInfoStatementBuilder.getStatement(), teamId));
     }
 }

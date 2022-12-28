@@ -187,10 +187,10 @@ public class RecapPanelTableModel extends HOTableModel {
                         return createIntegerTableEntry( lineup.getBruised(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
                     }
                 },
-                new RecapUserColumn("ls.team.injuredWeeks", 50) {
+                new RecapUserColumn("ls.team.numinjured", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry( lineup.getInjuredWeeks(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()));
+                        return new ColorLabelEntry(lineup.getInjured() != null ? lineup.getInjured()+"("+lineup.getInjuredWeeksSum()+")" : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.RIGHT);
                     }
                 },
                 new RecapUserColumn("ls.team.numyellowcards", 50) {
