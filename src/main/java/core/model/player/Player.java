@@ -471,16 +471,16 @@ public class Player extends AbstractTable.Storable {
     }
 
     public String getMotherclubName() {
-        DownloadMotherclubInfoIfMissing();
+        downloadMotherclubInfoIfMissing();
         return this.motherclubName;
     }
 
     public Integer getMotherclubId() {
-        DownloadMotherclubInfoIfMissing();
+        downloadMotherclubInfoIfMissing();
         return this.motherclubId;
     }
 
-    private void DownloadMotherclubInfoIfMissing() {
+    private void downloadMotherclubInfoIfMissing() {
         if (motherclubId == null) {
             var connection = MyConnector.instance();
             var isSilentDownload = connection.isSilentDownload();
