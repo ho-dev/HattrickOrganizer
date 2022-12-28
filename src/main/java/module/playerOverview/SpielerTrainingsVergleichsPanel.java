@@ -68,27 +68,28 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
         final var hrfs = m_jlHRFs.getSelectedValuesList();
-        StringBuilder text = new StringBuilder(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+        StringBuilder deleteInfoText = new StringBuilder(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
 
         if (hrfs.size() > 1) {
-            text.append(" (").append(hrfs.size()).append(" Files) : ");
+            deleteInfoText.append(" (").append(hrfs.size()).append(" Files) : ");
         } else {
-            text.append(": ");
+            deleteInfoText.append(": ");
         }
 
+        var MAX_NUMBER_OF_FILENAMES_IN_DELETEINFOTEXT = 11;
         int i=0;
         for (var hrf : hrfs){
-            text.append("\n");
-            if ( i++ < 11){
-                text.append(hrf.toString());
+            deleteInfoText.append("\n");
+            if ( i++ < MAX_NUMBER_OF_FILENAMES_IN_DELETEINFOTEXT){
+                deleteInfoText.append(hrf.toString());
             }
             else {
-                text.append(" ... ");
+                deleteInfoText.append(" ... ");
                 break;
             }
         }
 
-        final int value = JOptionPane.showConfirmDialog(this, text.toString(),
+        final int value = JOptionPane.showConfirmDialog(this, deleteInfoText.toString(),
 				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
         if (value == JOptionPane.OK_OPTION) {
