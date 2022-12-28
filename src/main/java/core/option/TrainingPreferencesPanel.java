@@ -34,8 +34,8 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
     private TrainingAdjustmentPanel m_jtapDefending;
     private TrainingAdjustmentPanel m_jtapOsmosis;
     private SliderPanel m_jslFutureWeeks;
-    private JCheckBox m_jcSkillDrops = new JCheckBox(HOVerwaltung.instance().getLanguageString("skillDrops"));
-    private JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.options.training.showSkillDrops"));
+    private final JCheckBox m_jcSkillDrops = new JCheckBox(HOVerwaltung.instance().getLanguageString("skillDrops"));
+    private final JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.options.training.showSkillDrops"));
 
 
     protected TrainingPreferencesPanel() {

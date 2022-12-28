@@ -2,8 +2,9 @@ package core.option;
 
 /**
  * An instance of this class is created when the option dialog opens.
- * The class stores the information wether a restart or a reInit is needed
- * after changing something in the otions.
+ *
+ * <p>The class stores the information whether a restart or a reInit is needed
+ * after changing something in the options.
  *
  * @author dable
  */

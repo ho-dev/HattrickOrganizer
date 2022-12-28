@@ -3,6 +3,7 @@ package core.db;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
+
 import java.sql.Types;
 
 class UserColumnsTable extends AbstractTable {
@@ -57,9 +58,14 @@ class UserColumnsTable extends AbstractTable {
 	}
 
 	void insertDefault(HOTableModel model) {
-		UserColumn[] dbcolumns = model.getColumns();
-		for (int i = 0; i < dbcolumns.length; i++) {
-			dbcolumns[i].setIndex(i);
+		UserColumn[] dbColumns = model.getColumns();
+		for (int i = 0; i < dbColumns.length; i++) {
+			dbColumns[i].setIndex(i);
+
+			// By default make all columns visible, except ID.
+			if (dbColumns[i].getId() != UserColumnFactory.ID) {
+				dbColumns[i].setDisplay(true);
+			}
 		}
 	}
 

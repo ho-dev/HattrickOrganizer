@@ -150,7 +150,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return return count of displayed columns redundant method, but this is
+	 * Returns count of displayed columns redundant method, but this is
 	 * overwritten method from AbstractTableModel
 	 */
 	@Override

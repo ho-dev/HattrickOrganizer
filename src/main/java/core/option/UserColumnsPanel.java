@@ -19,12 +19,13 @@ import javax.swing.table.TableColumnModel;
 
 
 /**
- * 
+ * Panel to select preferred columns to display in the various HO tables.
+ *
  * @author Thorsten Dietz
  * @since 1.36
  *
  */
-public class UserColumnsPanel extends JPanel implements ActionListener{
+public class UserColumnsPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbColumnModel 	= null;
@@ -58,17 +59,18 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
 	 * return the panel within JTable
 	 * @return JPanel
 	 */
-	private JPanel getMiddlePanel(){
+	private JPanel getMiddlePanel() {
 		JPanel panel = new JPanel();
-		 panel.setLayout(new BorderLayout());
-	     panel.add(createTable());
-	    panel.setPreferredSize(new Dimension(100, 300));
+		panel.setLayout(new BorderLayout());
+		panel.add(createTable());
+		panel.setPreferredSize(new Dimension(100, 300));
 		return panel;
 	}
 	
 	private HOTableModel getSelectedModel(){
 		return (HOTableModel)m_jcbColumnModel.getSelectedItem();
 	}
+
     /**
      * Creates a table with checkboxes for UserColumns of the selected model
      *
