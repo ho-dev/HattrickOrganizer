@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public class CrossingWeeklyTraining extends WeeklyTrainingType {
@@ -40,15 +35,14 @@ public class CrossingWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftForward,
 				IMatchRoleID.centralForward, IMatchRoleID.rightForward};
 		_PrimaryTrainingBaseLength = (float)  3.2341; // old was 2.2
-		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_WINGER; // 100%
+//		_PrimaryTrainingSkillBaseLength = _PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_WINGER; // 100%
 		_PrimaryTrainingSkillPartlyLengthRate = (float) 2; // 50%
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {
         	m_ciInstance = new CrossingWeeklyTraining();
         }
-        List<StaffMember> staff;
-        return m_ciInstance;
+		return m_ciInstance;
     }
 
 }

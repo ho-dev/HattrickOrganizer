@@ -3,7 +3,6 @@ package core.training;
 import java.util.ArrayList;
 import java.util.List;
 import core.constants.TrainingType;
-import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.training.type.*;
 import core.util.HOLogger;
@@ -24,28 +23,28 @@ public abstract class WeeklyTrainingType {
 	protected int[] _PrimaryTrainingSkillPartlyTrainingPositions = new int[0];
 	protected int[] _PrimaryTrainingSkillOsmosisTrainingPositions = new int[0];
 	protected float _PrimaryTrainingSkillBonus = 0;
-	protected float _PrimaryTrainingSkillBaseLength = 0;
+	protected double trainingDurationInWeeks = 0;
 	protected float _PrimaryTrainingSkillPartlyLengthRate = 0;
-	protected float _PrimaryTrainingSkillOsmosisLengthRate = (float) 100 / (OSMOSIS_BASE_PERCENTAGE + UserParameter.instance().TRAINING_OFFSET_OSMOSIS); // 16%
+	//protected float _PrimaryTrainingSkillOsmosisLengthRate = (float) 100 / (OSMOSIS_BASE_PERCENTAGE + UserParameter.instance().TRAINING_OFFSET_OSMOSIS); // 16%
 	/* secondary trainings position never differ from primary trainings positions
 	protected int[] _SecondaryTrainingSkillPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillBonusPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillSecondaryTrainingPositions = new int[0];
 	protected int[] _SecondaryTrainingSkillOsmosisTrainingPositions = new int[0];
 	*/
-	protected float _SecondaryTrainingSkillBonus = 0;
-	protected float _SecondaryTrainingSkillBaseLength = 0;
+//	protected float _SecondaryTrainingSkillBonus = 0;
+//	protected float _SecondaryTrainingSkillBaseLength = 0;
 	//protected float _SecondaryTrainingSkillPartlyLengthRate = 0;
 	//protected float _SecondaryTrainingSkillOsmosisLengthRate = 0;
 	protected float _PrimaryTrainingBaseLength = 0;
-	public static final float OSMOSIS_BASE_PERCENTAGE = (float) 16;
-	public static final float BASE_AGE_FACTOR = (float) 1.0; // old was 0.9
-	public static final float BASE_COACH_FACTOR = (float) 1.0;
-	public static final float BASE_ASSISTANT_COACH_FACTOR = (float) 1.0;
-	public static final float BASE_INTENSITY_FACTOR = (float) 1.0;
+//	public static final float OSMOSIS_BASE_PERCENTAGE = (float) 16;
+//	public static final float BASE_AGE_FACTOR = (float) 1.0; // old was 0.9
+//	public static final float BASE_COACH_FACTOR = (float) 1.0;
+//	public static final float BASE_ASSISTANT_COACH_FACTOR = (float) 1.0;
+//	public static final float BASE_INTENSITY_FACTOR = (float) 1.0;
 
 	protected double factorTrainingTypeKoeff;
-	protected double osmosisKoeff;
+	protected double osmosisKoeff=1./6.;
 
 	public static WeeklyTrainingType instance(int iTrainingType) {
 		return switch (iTrainingType) {
@@ -84,8 +83,15 @@ public abstract class WeeklyTrainingType {
 		return _PrimaryTrainingBaseLength;
 	}
 
-	public float getPrimaryTrainingSkillBaseLength() {
-		return _PrimaryTrainingSkillBaseLength;
+	/**
+	 * Calculate standard training duration from skill level 7 to 8 under nearly optimal conditions
+	 * @return double number of weeks
+	 */
+	public double getTrainingDurationInWeeks() {
+		if (trainingDurationInWeeks == 0) {
+			trainingDurationInWeeks = 1. / calculateSkillIncreaseOfTrainingWeek(7, 7, 10, 100, 10, 17, 90, 0, 0, 0);
+		}
+		return trainingDurationInWeeks;
 	}
 
 	public float getPrimaryTrainingSkillBonus() {
@@ -96,13 +102,13 @@ public abstract class WeeklyTrainingType {
 		return _PrimaryTrainingSkillPartlyLengthRate;
 	}
 
-	public float getPrimaryTrainingSkillOsmosisBaseLengthRate() {
-		return _PrimaryTrainingSkillOsmosisLengthRate;
+	public double getPrimaryTrainingSkillOsmosisBaseLengthRate() {
+		return 1./osmosisKoeff;
 	}
 
-	public float getSecondaryTrainingSkillBaseLength() {
-		return _SecondaryTrainingSkillBaseLength;
-	}
+//	public float getSecondaryTrainingSkillBaseLength() {
+//		return _SecondaryTrainingSkillBaseLength;
+//	}
 
 	public int[] getTrainingSkillPositions() {
 		return _PrimaryTrainingSkillPositions;
@@ -120,71 +126,71 @@ public abstract class WeeklyTrainingType {
 		return _PrimaryTrainingSkillOsmosisTrainingPositions;
 	}
 
-	public double getPrimaryTraining(TrainingWeekPlayer tp) {
-		double dPrimaryTraining = 0;
-		int iMinutes = 0;
-		int tmp = tp.getFullTrainingMinutes();
-		if (tmp > 0) {
-			if (tmp > 90) {
-				tmp = 90;
-			}
-			iMinutes = tmp;
-			dPrimaryTraining = (double) tmp / (double) 90;
-		}
-		if (iMinutes > 0 && _PrimaryTrainingSkillBonus > 0) {
-			tmp = tp.getBonusTrainingMinutes();
-			if (tmp > 0) {
-				dPrimaryTraining += ((double) tmp / (double) 90) * _PrimaryTrainingSkillBonus;
-			}
-		}
-		if (iMinutes < 90) {
-			if (_PrimaryTrainingSkillPartlyLengthRate > 0) {
-				tmp = tp.getPartlyTrainingMinutes();
-				if (tmp > 0) {
-					if (iMinutes + tmp > 90) {
-						tmp = 90 - iMinutes;
-					}
-					iMinutes += tmp;
-					dPrimaryTraining += ((double) tmp / (double) 90) / _PrimaryTrainingSkillPartlyLengthRate;
-				}
-			}
-			if (iMinutes < 90) {
-				if (_PrimaryTrainingSkillOsmosisLengthRate > 0) {
-					tmp = tp.getOsmosisTrainingMinutes();
-					if (tmp > 0) {
-						if (iMinutes + tmp > 90) {
-							tmp = 90 - iMinutes;
-						}
-						//iMinutes += tmp;
-						dPrimaryTraining += ((double) tmp / (double) 90) / _PrimaryTrainingSkillOsmosisLengthRate;
-					}
-				}
-			}
-		}
-		return dPrimaryTraining;
-	}
-
-	public double getSecondaryTraining(TrainingWeekPlayer tp) {
-		double dSecondaryTraining = 0;
-		if (_SecondaryTrainingSkill > 0) {
-			int iMinutes = 0;
-			int tmp = tp.getFullTrainingMinutes();
-			if (tmp > 0) {
-				if (tmp >= 90) {
-					tmp = 90;
-				}
-				iMinutes = tmp;
-				dSecondaryTraining = (double) tmp / (double) 90;
-			}
-			if (iMinutes > 0 && _SecondaryTrainingSkillBonus > 0) {
-				tmp = tp.getBonusTrainingMinutes();
-				if (tmp > 0) {
-					dSecondaryTraining += ((double) tmp / (double) 90) * _SecondaryTrainingSkillBonus;
-				}
-			}
-		}
-		return dSecondaryTraining;
-	}
+//	public double getPrimaryTraining(TrainingWeekPlayer tp) {
+//		double dPrimaryTraining = 0;
+//		int iMinutes = 0;
+//		int tmp = tp.getFullTrainingMinutes();
+//		if (tmp > 0) {
+//			if (tmp > 90) {
+//				tmp = 90;
+//			}
+//			iMinutes = tmp;
+//			dPrimaryTraining = (double) tmp / (double) 90;
+//		}
+//		if (iMinutes > 0 && _PrimaryTrainingSkillBonus > 0) {
+//			tmp = tp.getBonusTrainingMinutes();
+//			if (tmp > 0) {
+//				dPrimaryTraining += ((double) tmp / (double) 90) * _PrimaryTrainingSkillBonus;
+//			}
+//		}
+//		if (iMinutes < 90) {
+//			if (_PrimaryTrainingSkillPartlyLengthRate > 0) {
+//				tmp = tp.getPartlyTrainingMinutes();
+//				if (tmp > 0) {
+//					if (iMinutes + tmp > 90) {
+//						tmp = 90 - iMinutes;
+//					}
+//					iMinutes += tmp;
+//					dPrimaryTraining += ((double) tmp / (double) 90) / _PrimaryTrainingSkillPartlyLengthRate;
+//				}
+//			}
+//			if (iMinutes < 90) {
+//				if (_PrimaryTrainingSkillOsmosisLengthRate > 0) {
+//					tmp = tp.getOsmosisTrainingMinutes();
+//					if (tmp > 0) {
+//						if (iMinutes + tmp > 90) {
+//							tmp = 90 - iMinutes;
+//						}
+//						//iMinutes += tmp;
+//						dPrimaryTraining += ((double) tmp / (double) 90) / _PrimaryTrainingSkillOsmosisLengthRate;
+//					}
+//				}
+//			}
+//		}
+//		return dPrimaryTraining;
+//	}
+//
+//	public double getSecondaryTraining(TrainingWeekPlayer tp) {
+//		double dSecondaryTraining = 0;
+//		if (_SecondaryTrainingSkill > 0) {
+//			int iMinutes = 0;
+//			int tmp = tp.getFullTrainingMinutes();
+//			if (tmp > 0) {
+//				if (tmp >= 90) {
+//					tmp = 90;
+//				}
+//				iMinutes = tmp;
+//				dSecondaryTraining = (double) tmp / (double) 90;
+//			}
+//			if (iMinutes > 0 && _SecondaryTrainingSkillBonus > 0) {
+//				tmp = tp.getBonusTrainingMinutes();
+//				if (tmp > 0) {
+//					dSecondaryTraining += ((double) tmp / (double) 90) * _SecondaryTrainingSkillBonus;
+//				}
+//			}
+//		}
+//		return dSecondaryTraining;
+//	}
 
 	static double[] coachKoeff = {0.7343, 0.8324, 0.92, 1, 1.0375};
 
@@ -197,8 +203,8 @@ public abstract class WeeklyTrainingType {
 	 * <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=9&v=6">...</a>
 	 * <a href="https://www87.hattrick.org/Club/Manager/?userId=5176908">...</a> (Schum)
 	 *
-	 * @param skillLevel int skill level [0..20]
-	 * @param trForPlayer training information
+	 * @param skillLevel             int skill level [0..20]
+	 * @param trForPlayer            training information
 	 * @return skill increase [0..1]
 	 */
 	public double calculateSkillIncreaseOfTrainingWeek(int skillLevel, TrainingPerPlayer trForPlayer) {
@@ -221,6 +227,14 @@ public abstract class WeeklyTrainingType {
 				trForPlayer.getTrainingPair().getTrainingDuration().getOsmosisTrainingMinutes(),
 				trForPlayer.getTrainingPair().getTrainingDuration().getBonusTrainingMinutes()
 		);
+	}
+
+	private double calcFactorSkillLevel(int skillLevel) {
+		if (skillLevel < 9) {
+			return 16.289 * Math.exp(-.1396 * skillLevel);
+		} else {
+			return 54.676 / skillLevel - 1.438;
+		}
 	}
 
 	/**
@@ -255,13 +269,7 @@ public abstract class WeeklyTrainingType {
 		at lvl>=9
 		f(lvl) = 54.676 / lvl - 1.438
 		*/
-
-		double factorSkillLevel;
-		if (skillLevel < 9) {
-			factorSkillLevel = 16.289 * Math.exp(-.1396 * skillLevel);
-		} else {
-			factorSkillLevel = 54.676 / skillLevel - 1.438;
-		}
+		double factorSkillLevel = calcFactorSkillLevel(skillLevel);
 
 		/*
 		further coefficients:
@@ -414,6 +422,7 @@ public abstract class WeeklyTrainingType {
 		return Math.min(1, factorTrainingTypeKoeff * factorTime * factorAge * factorAssistants * factorCoach * factorStamina * factorIntensity * factorSkillLevel * .01);
 	}
 
+
 	protected void trainingCalcError(String s) {
 		HOLogger.instance().error(this.getClass(), s);
 	}
@@ -440,10 +449,8 @@ public abstract class WeeklyTrainingType {
 	 */
 	public double getFullYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
 		double nweeks = (0.5 + 0.1 * currentValue) * (1 + (ageYears - 15) * 0.14);    // approximation
-		if (skillId == _PrimaryTrainingSkill) {
-			nweeks *= this.getPrimaryTrainingSkillBaseLength();
-		} else if (skillId == _SecondaryTrainingSkill) {
-			nweeks *= this.getSecondaryTrainingSkillBaseLength();
+		if (isTraining(skillId)) {
+			nweeks *= this.getTrainingDurationInWeeks();
 		} else {
 			return 0; // skill is not trained
 		}

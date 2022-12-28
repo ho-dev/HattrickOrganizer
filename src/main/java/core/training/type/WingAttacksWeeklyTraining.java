@@ -1,14 +1,9 @@
 package core.training.type;
 
-import java.util.List;
-
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.StaffMember;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 
 public class WingAttacksWeeklyTraining extends WeeklyTrainingType {
@@ -37,7 +32,7 @@ public class WingAttacksWeeklyTraining extends WeeklyTrainingType {
 				IMatchRoleID.leftInnerMidfield, IMatchRoleID.centralInnerMidfield,
 				IMatchRoleID.rightInnerMidfield};
 		_PrimaryTrainingBaseLength = CrossingWeeklyTraining.instance().getBaseTrainingLength(); // old was (float) 2.2 / (float) 0.6
-		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_WINGER) / (float) 0.6 ;
+//		_PrimaryTrainingSkillBaseLength = (_PrimaryTrainingBaseLength + UserParameter.instance().TRAINING_OFFSET_WINGER) / (float) 0.6 ;
 	}
 	public static WeeklyTrainingType instance() {
         if (m_ciInstance == null) {
