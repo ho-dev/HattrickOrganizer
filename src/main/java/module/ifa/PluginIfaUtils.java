@@ -51,7 +51,7 @@ public class PluginIfaUtils {
 		do {
 			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
 
-			if (time != null && !time.isBefore(HODateTime.htStart)) {
+			if (time != null && !time.isBefore(HODateTime.HT_START)) {
 				break;
 			}
 			DownloadDialog.instance();

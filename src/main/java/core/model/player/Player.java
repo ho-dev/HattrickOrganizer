@@ -2262,7 +2262,7 @@ public class Player extends AbstractTable.Storable {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
         for (var t : getFuturePlayerTrainings()) {
             if (t.cut(from, to) ||
-                    t.cut(HODateTime.htStart, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
+                    t.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
                 removeIntervals.add(t);
             }
         }

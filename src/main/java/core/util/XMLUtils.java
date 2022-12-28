@@ -63,9 +63,7 @@ public class XMLUtils {
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			return db.parse(new InputSource(xml));
-		} catch (ParserConfigurationException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
+		} catch (ParserConfigurationException | IOException e) {
 			throw new RuntimeException(e);
 		}
 	}

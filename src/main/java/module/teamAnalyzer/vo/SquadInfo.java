@@ -11,7 +11,8 @@ public class SquadInfo extends AbstractTable.Storable {
 
     private HODateTime fetchDate;
     private int bruisedCount = 0;
-    private int injuredWeeksCount = 0;
+    private int injuredCount = 0;
+    private int injuredWeeksSum = 0;
     private int singleYellowCards = 0;
     private int twoYellowCards = 0;
     private int redCards = 0;
@@ -52,17 +53,28 @@ public class SquadInfo extends AbstractTable.Storable {
     public void setBruisedCount(int bruisedCount) {
         this.bruisedCount = bruisedCount;
     }
-
-    public int getInjuredWeeksCount() {
-        return injuredWeeksCount;
+    public int getInjuredCount() {
+        return injuredCount;
     }
 
-    public void addInjuredWeeksCount(int v){
-        injuredWeeksCount+=v;
+    public void incrementInjuredCount(){
+        injuredCount++;
     }
 
-    public void setInjuredWeeksCount(int injuredWeeksCount) {
-        this.injuredWeeksCount = injuredWeeksCount;
+    public void setInjuredCount(int count) {
+        this.injuredCount = count;
+    }
+
+    public int getInjuredWeeksSum() {
+        return injuredWeeksSum;
+    }
+
+    public void addInjuredWeeksSum(int v){
+        injuredWeeksSum+=v;
+    }
+
+    public void setInjuredWeeksSum(int injuredWeeksCount) {
+        this.injuredWeeksSum = injuredWeeksCount;
     }
 
     public int getSingleYellowCards() {

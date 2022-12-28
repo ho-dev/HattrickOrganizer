@@ -106,7 +106,7 @@ public class HattrickManager {
             return null;
         }
 
-        var lastMatchDate = HODateTime.htStart;
+        var lastMatchDate = HODateTime.HT_START;
         List<PlayerInfo> players = new ArrayList<>();
         var playerInfos = new XMLPlayersParser().parsePlayersFromString(xml);
         for (var i : playerInfos) {
@@ -119,7 +119,7 @@ public class HattrickManager {
         }
         PlayerDataManager.update(players);
 
-        if ( lastMatchDate.isAfter(HODateTime.htStart) ) {
+        if ( lastMatchDate.isAfter(HODateTime.HT_START) ) {
             var squadInfo = new SquadInfo(teamId, lastMatchDate);
             for (var player : players) {
                 squadInfo.incrementPlayerCount();
@@ -136,7 +136,8 @@ public class HattrickManager {
                     case -1:
                         break;
                     default:
-                        squadInfo.addInjuredWeeksCount(injuryLevel);
+                        squadInfo.addInjuredWeeksSum(injuryLevel);
+                        squadInfo.incrementInjuredCount();
                 }
 
                 switch (player.getBookingStatus()) {
