@@ -13,20 +13,21 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * time zone of hattrick
      */
-    public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
 
-    /**
-     * Date time format of chpp files
-     */
-    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
-    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
+    public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
 
     /**
      * the birthday of hattrick
      * Monday, the 22nd of September 1997 (CET)
      *
      */
-    public static final HODateTime htStart = HODateTime.fromHT("1997-09-22 00:00:00");
+    public static final HODateTime HT_START = HODateTime.fromHT("1997-09-22 00:00:00");
+
+    /**
+     * Date time format of chpp files
+     */
+    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
+    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
 
     /**
      * internal time representation
@@ -50,7 +51,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return HODateTime
      */
     public static HODateTime fromHT(String htString) {
-        if ( htString != null && !htString.isEmpty()) {
+        if (!StringUtils.isEmpty(htString)) {
             try {
                 LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
                 return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());
@@ -99,7 +100,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return date time of the start of hattrick week
      */
     public static HODateTime fromHTWeek(HTWeek week) {
-        return new HODateTime(htStart.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
+        return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
     }
 
     static public long toEpochSecond(HODateTime ts){
@@ -271,7 +272,7 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     private static HTWeek calcHTWeek(Instant instant){
-        var dayDiff = ChronoUnit.DAYS.between(htStart.instant, instant);
+        var dayDiff = ChronoUnit.DAYS.between(HT_START.instant, instant);
         return new HTWeek(
                 (int) (dayDiff / (16 * 7) + 1),
                 (int) ((dayDiff % (16 * 7)) / 7) + 1

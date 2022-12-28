@@ -9,8 +9,6 @@ import core.model.enums.MatchType;
 import core.util.HODateTime;
 import module.teamAnalyzer.vo.Team;
 import java.awt.*;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import javax.swing.*;
 
 
@@ -71,7 +69,7 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
             String sDate = "";
             if ( value.getTime() != null) {
                 var matchSchedule = value.getTime();
-                if (matchSchedule.isAfter(HODateTime.htStart)) {
+                if (matchSchedule.isAfter(HODateTime.HT_START)) {
                     sDate = matchSchedule.toLocaleDateTime();
                     var htWeek = matchSchedule.toLocaleHTWeek();
                     int iHTSeason = htWeek.season;

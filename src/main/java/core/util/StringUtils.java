@@ -58,7 +58,7 @@ public class StringUtils {
 		if (homeGoals < 0 || awayGoals < 0)
 			return "  "+ separator;
 
-		final StringBuffer buffer = new StringBuffer();
+		final StringBuilder buffer = new StringBuilder();
 		if (homeGoals < 10) {
 			buffer.append(" ");
 		}
