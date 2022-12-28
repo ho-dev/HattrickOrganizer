@@ -117,6 +117,11 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	@Override
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+	}
+
+	@Override
 	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
 		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
 	}
