@@ -112,19 +112,19 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("RecapPanel.Stars", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getStars(), "" + lineup.getStars(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(lineup.getStars(), String.format("%.1f", lineup.getStars()), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("ls.match.ratingtype.hatstats", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getRating() != null ? "" + lineup.getRating().getHatStats() : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(lineup.getRating() != null ? String.format("%.0f", lineup.getRating().getHatStats()) : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("ls.match.ratingtype.squad", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getRating() != null ? "" + lineup.getRating().getSquad() : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(lineup.getRating() != null ? String.format("%.0f", lineup.getRating().getSquad()) : "", ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("ls.match.ratingtype.smartsquad", 50) {
