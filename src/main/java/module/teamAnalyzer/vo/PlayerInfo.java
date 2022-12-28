@@ -2,17 +2,15 @@ package module.teamAnalyzer.vo;
 
 import core.db.AbstractTable;
 import core.file.xml.MyHashtable;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import module.teamAnalyzer.manager.PlayerDataManager;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
 public class PlayerInfo extends AbstractTable.Storable {
-    private Date lastMatchDate = null;
+    private int injuryLevel;
+    private HODateTime lastMatchDate = null;
     private int lastMatchId;
     private int lastMatchPosition;
     private int lastMatchPlayedMinutes;
@@ -51,7 +49,7 @@ public class PlayerInfo extends AbstractTable.Storable {
         this.status = 0;
 
         int cards = parseIntWithDefault(i.get("Cards"), 0);
-        int injury = parseIntWithDefault(i.get("InjuryLevel"), -1);
+        this.injuryLevel = parseIntWithDefault(i.get("InjuryLevel"), -1);
 
         switch (cards) {
             case 1 -> bookingStatus = PlayerDataManager.YELLOW;
@@ -60,7 +58,7 @@ public class PlayerInfo extends AbstractTable.Storable {
             default -> bookingStatus = 0;
         }
 
-        switch (injury) {
+        switch (injuryLevel) {
             case -1 -> injuryStatus = 0;
             case 0 -> injuryStatus = PlayerDataManager.BRUISED;
             default -> injuryStatus = PlayerDataManager.INJURED;
@@ -79,13 +77,7 @@ public class PlayerInfo extends AbstractTable.Storable {
 
         this.teamId = Integer.parseInt(i.get("TeamID"));
         this.tSI = Integer.parseInt(i.get("MarketValue"));
-
-        try {
-            this.lastMatchDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(i.get("LastMatch_Date"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        this.lastMatchDate = HODateTime.fromHT(i.get("LastMatch_Date"));
         this.rating = Float.parseFloat(i.get("LastMatch_Rating"));
         this.lastMatchId = Integer.parseInt(i.get("LastMatch_id"));
         this.lastMatchPosition = Integer.parseInt(i.get("LastMatch_PositionCode"));
@@ -113,6 +105,14 @@ public class PlayerInfo extends AbstractTable.Storable {
 
     public PlayerInfo() {
 
+    }
+
+    public int getInjuryLevel(){
+        return injuryLevel;
+    }
+
+    public int getBookingStatus(){
+        return bookingStatus;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -251,24 +251,8 @@ public class PlayerInfo extends AbstractTable.Storable {
                 ", loyalty=" + loyalty;
     }
 
-    public Date getLastMatchDate() {
+    public HODateTime getLastMatchDate() {
         return lastMatchDate;
-    }
-
-    public int getLastMatchId() {
-        return lastMatchId;
-    }
-
-    public int getLastMatchPosition() {
-        return lastMatchPosition;
-    }
-
-    public int getLastMatchPlayedMinutes() {
-        return lastMatchPlayedMinutes;
-    }
-
-    public float getLastMatchRatingEndOfGame() {
-        return lastMatchRatingEndOfGame;
     }
 
     public float getRating() {
@@ -281,5 +265,9 @@ public class PlayerInfo extends AbstractTable.Storable {
 
     public void setWeek(int week) {
         this.week = week;
+    }
+
+    public boolean isTransferListed(){
+        return transferListedStatus != 0;
     }
 }

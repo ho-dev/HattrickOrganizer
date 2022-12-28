@@ -24,6 +24,7 @@ import core.model.player.Skillup;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
+import module.teamAnalyzer.vo.SquadInfo;
 import module.transfer.TransferType;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
@@ -289,6 +290,7 @@ public class DBManager {
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
+		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(adapter));
 	}
 
 	/**
@@ -515,9 +517,16 @@ public class DBManager {
 	 * @param spielerid the spielerid
 	 * @return the spieler first hrf
 	 */
-	public Player getSpielerFirstHRF(int spielerid) {
+	public Player loadPlayerFirstHRF(int spielerid) {
+		return loadPlayerFirstHRF(spielerid, null);
+	}
+
+	public Player loadPlayerFirstHRF(int spielerid, HODateTime after) {
+		if ( after == null){
+			after = HODateTime.htStart;
+		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getSpielerFirstHRF(spielerid);
+				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());
 	}
 
 	/**
@@ -2434,6 +2443,14 @@ public class DBManager {
 
 	public static String getPlaceholders(int count){
 		return String.join(",", Collections.nCopies(count, "?"));
+	}
+
+	public void storeSquadInfo(SquadInfo squadInfo) {
+		((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
+	}
+
+	public SquadInfo loadSquadInfo(int teamId, Timestamp lastMatchDate) {
+		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId, lastMatchDate);
 	}
 
 	public static class PreparedStatementBuilder{

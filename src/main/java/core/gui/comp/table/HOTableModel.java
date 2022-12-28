@@ -3,7 +3,6 @@ package core.gui.comp.table;
 import core.db.DBManager;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
@@ -19,9 +18,6 @@ import java.util.Comparator;
  */
 public abstract class HOTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
 	@Serial
 	private static final long serialVersionUID = -207230110294902139L;
 
@@ -301,27 +297,36 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * @param table the table object
 	 */
 	public void restoreUserSettings(JTable table) {
+		restoreUserSettings(table, 0);
+	}
+	public void restoreUserSettings(JTable table, int offset) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).setIdentifier(i);
+			table.getColumnModel().getColumn(i).setIdentifier(i+offset);
 		}
 		Arrays.stream(this.columns)
+				.skip(offset)
+				.limit(table.getColumnCount())
 				.filter(UserColumn::isDisplay)
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
-				.forEach(i -> setColumnSettings(i, table));
+				.forEach(i -> setColumnSettings(i, table, offset));
+	}
+	public void restoreUserSettings(FixedColumnsTable table) {
+		restoreUserSettings(table.getFixedTable(), 0);
+		restoreUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
 	}
 
 	/**
 	 * Set column order and width
 	 *
 	 * @param userColumn user column holding user's settings
-	 * @param table the table object
+	 * @param table      the table object
 	 */
-	private void setColumnSettings(UserColumn userColumn, JTable table) {
+	private void setColumnSettings(UserColumn userColumn, JTable table, int offset) {
 		var column = table.getColumn(userColumn.getId());
 		column.setPreferredWidth(userColumn.getPreferredWidth());
 		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
-		if ( index != userColumn.getIndex()) {
-			table.moveColumn(index, userColumn.getIndex());
+		if ( index != userColumn.getIndex()-offset) {
+			table.moveColumn(index, userColumn.getIndex()-offset);
 		}
 	}
 
@@ -332,31 +337,46 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * @param table table object
 	 */
 	public void storeUserSettings(JTable table) {
+		var changed = storeUserSettings(table, 0);
+		if (changed){
+			DBManager.instance().saveHOColumnModel(this);
+		}
+	}
+
+	private boolean storeUserSettings(JTable table, int offset) {
+		boolean changed = false;
 		// column order and width
 		var tableColumnModel = table.getColumnModel();
+		for (int i = 0; i < this.getColumnCount(); i++) {
+			if (i < offset) continue;
+			if (i + offset >= table.getColumnCount()) break;
 
-		boolean changed = false;
-		int i=0;
-		for ( var column : this.getColumns()){
-			if ( column.isDisplay()) {
-				var index = table.convertColumnIndexToView(i++);
-				if ( column.getIndex() != index) {
+			var column = this.getColumns()[i];
+			var index = table.convertColumnIndexToView(i);
+			if (column.isDisplay()) {
+				if (column.getIndex() != index + offset) {
 					changed = true;
-					column.setIndex(index);
+					column.setIndex(index + offset);
 				}
-				if ( column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
+				if (column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
 					changed = true;
 					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
 				}
 			}
 		}
-		if ( changed){
+		return changed;
+	}
+
+	public void storeUserSettings(FixedColumnsTable table) {
+		var changed = storeUserSettings(table.getFixedTable(), 0);
+		changed = changed || storeUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
+		if (changed){
 			DBManager.instance().saveHOColumnModel(this);
 		}
 	}
 
-
 	public boolean userCanDisableColumns() {
 		return false;
 	}
+
 }

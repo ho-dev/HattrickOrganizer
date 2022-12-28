@@ -1,7 +1,6 @@
 package module.teamAnalyzer.manager;
 
 import core.model.HOVerwaltung;
-import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.model.player.IMatchRoleID;
 import core.prediction.engine.TeamData;
@@ -21,7 +20,7 @@ import java.util.TreeSet;
 public class TeamLineupBuilder {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private TeamLineup teamLineup = new TeamLineup();
+    private final TeamLineup teamLineup = new TeamLineup();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -47,6 +46,11 @@ public class TeamLineupBuilder {
 
     public TeamLineupBuilder setMatchDetail(MatchDetail m){
         this.teamLineup.setMatchDetail(m);
+        return this;
+    }
+
+    public TeamLineupBuilder setSquadInfo(SquadInfo m){
+        this.teamLineup.setSquadInfo(m);
         return this;
     }
 

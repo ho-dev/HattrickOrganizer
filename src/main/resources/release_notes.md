@@ -21,6 +21,7 @@ Please do not forget to back up data.
 * add last match columns: rating at end of match, position and minutes (#1523)
 * add mother club and matches current team columns (#1401)
 * fix `ArrayIndexOutOfBoundsException` upon startup, as no column could be displayed (#1757)
+* fix player compare when sold player is bought back again (#1624)
 
 ### Team Analyser
 * team analyzer displays man marking tactic (#1741)

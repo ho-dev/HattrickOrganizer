@@ -7,7 +7,6 @@ import core.util.HODateTime;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,7 @@ public class WagesSumPanel extends JPanel {
 			Transfer t = Transfer.getTransfer(player.getPlayerID());
 			HODateTime buyingDate;
 			if (player.isHomeGrown()) {
-				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
+				buyingDate = DBManager.instance().loadPlayerFirstHRF(player.getPlayerID()).getHrfDate();
 			} else {
 				buyingDate = t.purchaseDate;
 			}

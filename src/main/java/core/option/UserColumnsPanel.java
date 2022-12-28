@@ -1,5 +1,6 @@
 package core.option;
 
+import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
@@ -14,6 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 
@@ -26,11 +28,13 @@ import javax.swing.table.TableColumnModel;
  */
 public class UserColumnsPanel extends JPanel implements ActionListener{
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbColumnModel 	= null;
 	private JTable table 				= null;
 	private final String [] columnNames = new String[]{" ", HOVerwaltung.instance().getLanguageString("column")};
 	private final Icon lockedImage = ThemeManager.getIcon(HOIconName.LOCKED);
+
 	protected UserColumnsPanel(){
 		initComponents();
 	}
@@ -131,6 +135,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener{
 			if (doDisplay && col.getPreferredWidth()<25){
 				col.setPreferredWidth(25);
 			}
+			DBManager.instance().saveHOColumnModel(getSelectedModel());
 			OptionManager.instance().setRestartNeeded();
 		}
 		

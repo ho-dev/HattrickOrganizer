@@ -8,6 +8,7 @@ package core.file.xml;
 
 import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
@@ -78,17 +79,24 @@ public class XMLWorldDetailsParser {
 		var model = HOVerwaltung.instance().getModel();
 		if ( model != null ){
 			var basics = model.getBasics();
-			if ( basics != null){
+			var xtra = model.getXtraDaten();
+			if ( basics != null && xtra != null){
+				var trainingDate = xtra.getNextTrainingDate();
+				var economyDate = xtra.getEconomyDate();
+				var seriesMatchDate = xtra.getSeriesMatchDate();
+				var now = HODateTime.now();
+				while (trainingDate.isBefore(now)) trainingDate = trainingDate.plusDaysAtSameLocalTime(7);
+				while (economyDate.isBefore(now)) economyDate = economyDate.plusDaysAtSameLocalTime(7);
+				while (seriesMatchDate.isBefore(now)) seriesMatchDate = seriesMatchDate.plusDaysAtSameLocalTime(7);
+
 				map.put("LeagueID", "" + basics.getLiga());
 				map.put("Season", "" + basics.getSeason());
 				map.put("SeasonOffset", "" + basics.getSeasonOffset());
 				map.put("MatchRound", "" + basics.getSpieltag());
-				if (model.getXtraDaten() != null) {
-					map.put("TrainingDate", model.getXtraDaten().getNextTrainingDate().toHT());
-					map.put("EconomyDate", model.getXtraDaten().getEconomyDate().toHT());
-					map.put("SeriesMatchDate", model.getXtraDaten().getSeriesMatchDate().toHT());
-					map.put("CountryID", "" + model.getXtraDaten().getCountryId());
-				}
+				map.put("TrainingDate", trainingDate.toHT());
+				map.put("EconomyDate", economyDate.toHT());
+				map.put("SeriesMatchDate", seriesMatchDate.toHT());
+				map.put("CountryID", "" + model.getXtraDaten().getCountryId());
 			}
 		}
 		return map;

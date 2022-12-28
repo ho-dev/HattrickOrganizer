@@ -3,9 +3,9 @@ package module.teamAnalyzer.ui.controller;
 import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RecapPanel;
-import module.teamAnalyzer.ui.RecapTableSorter;
-import module.teamAnalyzer.ui.model.UiRecapTableModel;
+import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.teamAnalyzer.vo.TeamLineup;
+import module.transfer.ui.sorter.DefaultTableSorter;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -21,13 +21,13 @@ public class RecapListSelectionListener implements ListSelectionListener {
 
     private String selectedTacticType = RecapPanel.VALUE_NA;
     private String selectedTacticSkill = RecapPanel.VALUE_NA;
-    private RecapTableSorter sorter;
-    private UiRecapTableModel tableModel;
+    private final DefaultTableSorter sorter;
+    private final RecapPanelTableModel tableModel;
 
     /**
      * Consructor.
      */
-    public RecapListSelectionListener(RecapTableSorter sorter, UiRecapTableModel tableModel) {
+    public RecapListSelectionListener(DefaultTableSorter sorter, RecapPanelTableModel tableModel) {
         this.sorter = sorter;
         this.tableModel = tableModel;
     }

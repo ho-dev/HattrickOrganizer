@@ -3,6 +3,8 @@ package module.teamAnalyzer.manager;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamAnalyzer.vo.SquadInfo;
+
 import java.util.List;
 
 public class PlayerDataManager {
@@ -35,16 +37,24 @@ public class PlayerDataManager {
 
 	public static int getCurrentHTSeason() {
 		return HOVerwaltung.instance().getModel().getBasics().getSeason();
-/*		Calendar date = Calendar.getInstance();
-		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTSeason(date.getTime());*/
 	}
 
 	public static int getCurrentHTWeek() {
 		return HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-/*		Calendar date = Calendar.getInstance();
-		date.add(Calendar.HOUR, UserParameter.instance().TimeZoneDifference);
-		return HTCalendarFactory.getHTWeek(date.getTime());*/
+	}
+
+	public static int calcCurrentWeekNumber(){
+		return calcWeekNumber(PlayerDataManager.getCurrentHTSeason(), PlayerDataManager.getCurrentHTWeek());
+	}
+
+	/**
+	 * Calculate a number from season and week numbers
+	 * @param season season number [1..]
+	 * @param week week number [1..16]
+	 * @return number
+	 */
+	public static int calcWeekNumber(int season, int week) {
+		return season*16 + week - 1;
 	}
 
 	private static void setPlayer(PlayerInfo info) {
@@ -53,4 +63,8 @@ public class PlayerDataManager {
 		}
 		DBManager.instance().storeTAPlayerInfo(info);
 	}
+	public static void update(SquadInfo squadInfo) {
+		DBManager.instance().storeSquadInfo(squadInfo);
+	}
+
 }

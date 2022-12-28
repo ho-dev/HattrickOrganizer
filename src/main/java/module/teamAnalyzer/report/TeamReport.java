@@ -3,18 +3,13 @@ package module.teamAnalyzer.report;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.module.config.ModuleConfig;
 import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
-import module.nthrf.NtTeamDetails;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.manager.TeamLineupBuilder;
-import module.teamAnalyzer.vo.MatchDetail;
-import module.teamAnalyzer.vo.MatchRating;
-import module.teamAnalyzer.vo.PlayerPerformance;
-import module.teamAnalyzer.vo.TeamLineup;
+import module.teamAnalyzer.vo.*;
 
 import java.util.*;
 
@@ -26,26 +21,26 @@ import java.util.*;
  */
 public class TeamReport {
 
-    private int teamId;
+    private final int teamId;
     private TeamLineup adjustedRatingsLineup;
-    private TeamLineup averageRatingslineup;
-    private List<MatchDetail> matchDetails = new ArrayList<>();
+    private final TeamLineup averageRatingslineup;
+    private final List<MatchDetail> matchDetails = new ArrayList<>();
+    private final List<SquadInfo> squadInfo = new ArrayList<>();
     private SpecialEventsPredictionManager specialEventsPredictionManager;
 
     /**
      * handle match selection
      */
     private int selection=0;
-    private TeamReport selectedMatchReport;
 
 
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Map of SpotReport */
-    private Map<Integer,SpotReport> spotReports = new LinkedHashMap<>();
+    private final Map<Integer,SpotReport> spotReports = new LinkedHashMap<>();
 
     /** Match Ratings */
-    private MatchRating rating  = new MatchRating();
+    private final MatchRating rating  = new MatchRating();
 
     /** Average stars */
     private double averageStars = 0d;
@@ -64,7 +59,7 @@ public class TeamReport {
     public TeamReport(int teamId, List<MatchDetail> matchDetails) {
         this.teamId=teamId;
         for (MatchDetail m:matchDetails ) {
-            addMatch(m, SystemManager.isShowUnavailable.isSet());
+            addMatch(m, loadSquadInfo(teamId, m),  SystemManager.isShowUnavailable.isSet());
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
@@ -74,15 +69,19 @@ public class TeamReport {
         }
     }
 
+    private SquadInfo loadSquadInfo(int teamId, MatchDetail m) {
+        return DBManager.instance().loadSquadInfo(teamId, m.getMatch().getMatchDate().toDbTimestamp());
+    }
+
     /**
      * TeamReport of one single match (used internally only)
      *
      * @param matchDetail The match of the report is stored in averageRatingslineup
      */
-    private TeamReport(int teamId, MatchDetail matchDetail) {
+    private TeamReport(int teamId, MatchDetail matchDetail, SquadInfo squadInfo) {
         this.teamId = teamId;
-        addMatch(matchDetail, SystemManager.isShowUnavailable.isSet());
-        this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).build();
+        addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet());
+        this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).setSquadInfo(squadInfo).build();
         if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate().toDbTimestamp()));
         }
@@ -121,7 +120,7 @@ public class TeamReport {
             }
             int matchNumber = selection - offset;
             // create a team report of one single match
-            selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber));
+            TeamReport selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber), squadInfo.get(matchNumber));
             return selectedMatchReport.getTeamMatchReport(0);
         }
     }
@@ -140,7 +139,7 @@ public class TeamReport {
                     .build();
         } else {
             MatchDetail matchDetail = getTeamMatchReport(selection).getMatchDetail();
-            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail))
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, loadSquadInfo(teamId, matchDetail)))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
                     .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
@@ -178,8 +177,9 @@ public class TeamReport {
      * @param matchDetail Match to be analyzed
      * @param showUnavailable consider also unavailable or not
      */
-    public void addMatch(MatchDetail matchDetail, boolean showUnavailable) {
+    public void addMatch(MatchDetail matchDetail, SquadInfo squad, boolean showUnavailable) {
         this.matchDetails.add(matchDetail);
+        this.squadInfo.add(squad);
 
         for (PlayerPerformance playerPerformance : matchDetail.getPerformances()) {
             addPerformance(playerPerformance, showUnavailable);

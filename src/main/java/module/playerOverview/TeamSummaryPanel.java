@@ -8,14 +8,11 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Player;
 import core.util.Helper;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.util.Vector;
 
 /**
  * This panel displays team summary below the list of players in the squad.
@@ -154,7 +151,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        var comparisonPlayers = SpielerTrainingsVergleichsPanel.getVergleichsPlayer();
+        var comparisonPlayers = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage();
         if (comparisonPlayers != null) {
             model.setComparisonPlayers(comparisonPlayers);
             display();

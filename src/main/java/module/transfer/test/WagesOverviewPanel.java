@@ -2,10 +2,8 @@ package module.transfer.test;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -41,7 +39,7 @@ public class WagesOverviewPanel extends JPanel {
 		if (this.player != null) {
 			var buyingDate = Calc.getBuyingDate(player.getPlayerID());
 			if (buyingDate == null) {
-				buyingDate = DBManager.instance().getSpielerFirstHRF(player.getPlayerID()).getHrfDate();
+				buyingDate = DBManager.instance().loadPlayerFirstHRF(player.getPlayerID()).getHrfDate();
 			}
 			var updates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), buyingDate, HODateTime.now());
 			List<Wage> wagesByAge = Wage.getWagesByAge(player.getPlayerID());
@@ -70,8 +68,8 @@ public class WagesOverviewPanel extends JPanel {
 
 	private class MyTableModel extends AbstractTableModel {
 
-		private String[] columnNames = { "Age", "Season", "Week", "Economy update", "Wage payed" };
-		private List<Entry> list;
+		private final String[] columnNames = { "Age", "Season", "Week", "Economy update", "Wage payed" };
+		private final List<Entry> list;
 
 		public MyTableModel(List<Entry> list) {
 			this.list = list;
@@ -106,7 +104,7 @@ public class WagesOverviewPanel extends JPanel {
 		}
 	}
 
-	private class Entry {
+	private static class Entry {
 		int age;
 		HODateTime economyUpdate;
 		int wage;

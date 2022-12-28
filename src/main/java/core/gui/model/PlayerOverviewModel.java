@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
+import core.util.HODateTime;
 import module.playerOverview.SpielerTrainingsVergleichsPanel;
 
 import java.io.Serial;
@@ -114,31 +115,35 @@ public final class PlayerOverviewModel extends HOTableModel {
     /**
      * Returns the {@link Player} with the same ID as the instance passed, or <code>null</code>.
      */
-    private Player getVergleichsSpieler(Player vorlage) {
-        final int id = vorlage.getPlayerID();
+    private Player getPreviousPlayerDevelopmentStage(Player currentDevelopmentStage) {
+        final int id = currentDevelopmentStage.getPlayerID();
 
         for (int i = 0;
-             (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
-             && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
-            final Player vergleichsPlayer = SpielerTrainingsVergleichsPanel.getVergleichsPlayer().get(i);
+			 (SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage() != null)
+             && (i < SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().size()); i++) {
+            final Player selectedDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().get(i);
 
-            if (vergleichsPlayer.getPlayerID() == id) {
-                return vergleichsPlayer;
+            if (selectedDevelopmentStage.getPlayerID() == id) {
+                return selectedDevelopmentStage;
             }
         }
-
-        if (SpielerTrainingsVergleichsPanel.isVergleichsMarkierung()) {
-            return getVergleichsSpielerFirstHRF(vorlage);
+		if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
+			var hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId();
+            return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf);
         }
-
         return null;
     }
     
     /**
      * Returns the {@link Player} from the first HRF in which he appears.
      */
-    private Player getVergleichsSpielerFirstHRF(Player vorlage) {
-        return core.db.DBManager.instance().getSpielerFirstHRF(vorlage.getPlayerID());
+    private Player getFirstPlayerDevelopmentStageAfterSelected(Player vorlage, Integer hrfId) {
+		HODateTime after = null;
+		if ( hrfId!=null) {
+			var hrf = DBManager.instance().loadHRF(hrfId);
+			after = hrf.getDatum();
+		}
+        return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerID(), after);
     }
     
 //  -----initialisierung-----------------------------------------
@@ -153,7 +158,7 @@ public final class PlayerOverviewModel extends HOTableModel {
     	
     	for (int i = 0; i < m_vPlayers.size(); i++) {
     		final Player aktuellerPlayer = m_vPlayers.get(i);
-    		final Player vergleichsPlayer = getVergleichsSpieler(aktuellerPlayer);
+    		final Player vergleichsPlayer = getPreviousPlayerDevelopmentStage(aktuellerPlayer);
     		
     		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
     			m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, vergleichsPlayer);

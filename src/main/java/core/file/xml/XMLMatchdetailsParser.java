@@ -136,8 +136,6 @@ public class XMLMatchdetailsParser {
             //get both teams
             ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
             final String homeTeamID = XMLManager.getFirstChildNodeValue((Element) ele.getElementsByTagName("HomeTeamID").item(0));
-            //var homeTeamPlayers = parseLineup (lineup.getHomeTeam().getLineup());
-            //var awayTeamPlayers = parseLineup (lineup.getGuestTeam().getLineup());
 			ele = (Element) root.getElementsByTagName("EventList").item(0);
 
 			eventList = ele.getElementsByTagName("Event");
@@ -163,8 +161,6 @@ public class XMLMatchdetailsParser {
 
             	// Convert the ID to type and subtype.
             	iMatchEventID = Integer.parseInt(XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName("EventTypeID").item(0)));
-            	MatchEvent me = new MatchEvent();
-            	me.setMatchEventID(iMatchEventID);
 
             	//get players
             	boolean subHome = true;
@@ -184,97 +180,7 @@ public class XMLMatchdetailsParser {
 						objHome=false;
 					}
             	}
-/*
-            	//ignored events
-            	if (iMinute > 0) {
-            		switch (iMatchEventID) {
-            		case 40:
-            		case 45:
-            		case 47:
-            		case 60:
-            		case 61:
-            		case 62:
-            		case 63:
-            		case 64:
-            		case 65:
-            		case 68:
-            		case 70:
-            		case 71:
-            		case 72:
-            		case 75:
-            		case 331:
-            		case 332:
-            		case 333:
-            		case 334:
-					case 335:
-					case 336:
-					case 464:
-					case 471:
-            		case 599:
-					case 700:
-					case 701:
-					case 702:
-					case 703:
-					case 704:
-					case 800:
-					case 801:
-					case 802:
-					case 803:
-					case 804:
-					case 805:
-            			break;
 
-            		default:
-
-            			if (subjectPlayer == null && (iSubjectPlayerID != 0)) {
-            				if (eventtext.contains(String.valueOf(iSubjectPlayerID))) {
-            					String plname = eventtext.substring(eventtext.indexOf(String
-            							.valueOf(iSubjectPlayerID)));
-            					plname = plname.substring(plname.indexOf(">") + 1);
-            					plname = plname.substring(0, plname.indexOf("<"));
-            					subjectplayername = plname;
-
-            					final Vector<String> tmpplay = new Vector<>();
-            					tmpplay.add(String.valueOf(iSubjectPlayerID));
-            					tmpplay.add(plname);
-
-            					if (homeTeamID.equals(String.valueOf(iSubjectTeamID))) {
-            						homeTeamPlayers.add(tmpplay);
-            					} else {
-            						awayTeamPlayers.add(tmpplay);
-            						subHome = false;
-            					}
-            				} else {
-            					subjectplayername = String.valueOf(iSubjectPlayerID);
-            					broken.add(matchEvents.size());
-								HOLogger.instance().log(XMLMatchdetailsParser.class, String.format("Match event ID %d occuring at minute %d in game %s",iMatchEventID, iMinute, lineup.getMatchID()));
-            				}
-            			}
-
-	            		if (objectplayername.equals("") && (iObjectPlayerID != 0)) {
-	            			if (eventtext.contains(String.valueOf(iObjectPlayerID))) {
-	            				String plname = eventtext.substring(eventtext.indexOf(String
-	            						.valueOf(iObjectPlayerID)));
-	            				plname = plname.substring(plname.indexOf(">") + 1);
-	            				plname = plname.substring(0, plname.indexOf("<"));
-	            				objectplayername = plname;
-	
-	            				final Vector<String> tmpplay = new Vector<>();
-	            				tmpplay.add(String.valueOf(iObjectPlayerID));
-	            				tmpplay.add(plname);
-	
-	            				//there is no easy solution to find out for which team this
-	            				//players is playing. it's more possible that he's playing
-	            				//in home team, so we go like this
-	            				homeTeamPlayers.add(tmpplay);
-	            			} else {
-	            				objectplayername = String.valueOf(iObjectPlayerID);
-	            				broken.add(matchEvents.size());
-	            			}
-	            		}
-            		}
-            	}
-*/
             	//modify eventtext
             	if (subjectPlayer != null) {
             		String subplayerColor;
@@ -329,6 +235,13 @@ public class XMLMatchdetailsParser {
             	myHighlight.setEventText(eventtext);
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
             	myHighlight.setEventVariation(iEventVariation);
+
+				if ( myHighlight.getMatchEventID() == MatchEvent.MatchEventID.UNKNOWN_MATCHEVENT ){
+					HOLogger.instance().warning(XMLMatchdetailsParser.class, "Unknown event id found in match " +
+							md.getHomeTeamName() + "-" + md.getGuestTeamName() +
+							" in minute " + myHighlight.getMinute() +
+							" text: "  + myHighlight.getEventText());
+				}
 
             	// Treat injury
 				if ((iMatchEventID==90) || ((iMatchEventID==94)))

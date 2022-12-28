@@ -28,11 +28,11 @@ public class SystemManager {
 	private final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
 	private final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
 	private final static String ISMIXEDLINEUP = "TA_mixedLineup";
-	private final static String ISSTARS = "TA_isStars";
-	private final static String ISTOTALSTRENGTH = "TA_isTotalStrength";
-	private final static String ISSQUAD = "TA_isSquad";
-	private final static String ISSMARTSQUAD = "TA_isSmartSquad";
-	private final static String ISLODDARSTATS = "TA_isLoddarStats";
+//	private final static String ISSTARS = "TA_isStars";
+//	private final static String ISTOTALSTRENGTH = "TA_isTotalStrength";
+//	private final static String ISSQUAD = "TA_isSquad";
+//	private final static String ISSMARTSQUAD = "TA_isSmartSquad";
+//	private final static String ISLODDARSTATS = "TA_isLoddarStats";
 	private final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
 	private final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
 
@@ -70,11 +70,11 @@ public class SystemManager {
 	public static Setting isDescriptionRating = new Setting(ISDESCRIPTIONRATING);
 	public static Setting isShowUnavailable = new Setting(ISSHOWUNAVAILABLE);
 	public static Setting isMixedLineup = new Setting(ISMIXEDLINEUP, false);
-	public static Setting isStars = new Setting(ISSTARS);
-	public static Setting isTotalStrength = new Setting(ISTOTALSTRENGTH);
-	public static Setting isSquad = new Setting(ISSQUAD);
-	public static Setting isSmartSquad = new Setting(ISSMARTSQUAD);
-	public static Setting isLoddarStats = new Setting(ISLODDARSTATS);
+//	public static Setting isStars = new Setting(ISSTARS);
+//	public static Setting isTotalStrength = new Setting(ISTOTALSTRENGTH);
+//	public static Setting isSquad = new Setting(ISSQUAD);
+//	public static Setting isSmartSquad = new Setting(ISSMARTSQUAD);
+//	public static Setting isLoddarStats = new Setting(ISLODDARSTATS);
 	public static Setting isShowPlayerInfo = new Setting(ISSHOWPLAYERINFO, false);
 	public static Setting isCheckTeamName = new Setting(ISCHECKTEAMNAME);
 
@@ -88,7 +88,6 @@ public class SystemManager {
 
 	/** Reference to the plugin itself */
 	private static TeamAnalyzerPanel plugin;
-	private static int reportedTeamId;
 
 	/**
 	 * Set the active team

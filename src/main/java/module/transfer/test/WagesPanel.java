@@ -11,10 +11,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,7 +43,7 @@ public class WagesPanel extends JPanel {
 
 		var buyingDate = Calc.getBuyingDate(playerId);
 		if (buyingDate == null) {
-			buyingDate = DBManager.instance().getSpielerFirstHRF(playerId).getHrfDate();
+			buyingDate = DBManager.instance().loadPlayerFirstHRF(playerId).getHrfDate();
 		}
 		var updates = Calc.getUpdates(HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate(), buyingDate, HODateTime.now());
 		List<Wage> wagesByAge = Wage.getWagesByAge(playerId);

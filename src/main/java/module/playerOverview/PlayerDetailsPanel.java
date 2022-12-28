@@ -51,22 +51,21 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final int MATCH_HISTORY_LENGTH = 3;
     private final static Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
 
-    private Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
-    private Color URL = ThemeManager.getColor(HOColorName.URL_PANEL_BG);
-    private Color FGcolor = ColorLabelEntry.FG_STANDARD;
-    private Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
-    private PlayerOverviewTable m_playerOverviewTable;
-    private Font f;
-    private JLabel jlName = new JLabel("");
-    private JLabel m_jlPlayerDescription = new JLabel("");
+    private final Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
+    private final Color URL = ThemeManager.getColor(HOColorName.URL_PANEL_BG);
+    private final Color FGcolor = ColorLabelEntry.FG_STANDARD;
+    private final Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
+    private final PlayerOverviewTable m_playerOverviewTable;
+    private final JLabel jlName = new JLabel("");
+    private final JLabel m_jlPlayerDescription = new JLabel("");
     private final JPanel jpPlayerGeneral = new JPanel();
     private final JPanel jpPlayerSkill = new JPanel();
     private final JPanel jpPlayerGoalsStats = new JPanel();
     private final JPanel jpPlayerOtherInfos = new JPanel();
     private MatchHistoryPanel jpMatchHistory;
     private JLabel jlPlayerAvatar = new JLabel();
-    private JLabel jlNationality = new JLabel();
-    private JLabel m_jlSpecialty = new JLabel();
+    private final JLabel jlNationality = new JLabel();
+    private final JLabel m_jlSpecialty = new JLabel();
     private final JLabel m_jlInTeamSince = new JLabel();
     private JProgressBar jpbForm, jpbStamina, jpbGK, jpbDE, jpbPM, jpbWI, jpbPS, jpbSC, jpbSP;
     private final ColorLabelEntry m_jclPMchange = new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.CENTER);
@@ -86,10 +85,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JLabel m_jlBestPosition = new JLabel("");
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
-    private PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
+    private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
-    private JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
+    private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
     private final JButton m_jbAnalysisTop = new JButton(getSvgIcon(GOTOANALYSETOP));
     private final JButton m_jbAnalysisBottom = new JButton(getSvgIcon(GOTOANALYSEBOTTOM));
@@ -100,7 +99,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     /**
      * Constructor
      */
-    protected PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
+    PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
         m_playerOverviewTable = playerOverviewTable;
         initComponents();
         RefreshManager.instance().registerRefreshable(this);
@@ -354,22 +353,22 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private Player getComparisonPlayerFirstHRF(Player player) {
         return core.db.DBManager.instance()
-                .getSpielerFirstHRF(player.getPlayerID());
+                .loadPlayerFirstHRF(player.getPlayerID());
     }
 
     private void findComparisonPlayer() {
         final int id = m_clPlayer.getPlayerID();
         for (int i = 0;
-             (SpielerTrainingsVergleichsPanel.getVergleichsPlayer() != null)
-                     && (i < SpielerTrainingsVergleichsPanel.getVergleichsPlayer().size()); i++) {
+             (SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage() != null)
+                     && (i < SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().size()); i++) {
             Player comparisonPlayer = SpielerTrainingsVergleichsPanel
-                    .getVergleichsPlayer().get(i);
+                    .getSelectedPlayerDevelopmentStage().get(i);
             if (comparisonPlayer.getPlayerID() == id) {
                 m_clComparisonPlayer = comparisonPlayer;
                 return;
             }
         }
-        if (SpielerTrainingsVergleichsPanel.isVergleichsMarkierung()) {
+        if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
             m_clComparisonPlayer = getComparisonPlayerFirstHRF(m_clPlayer);
             return;
         }
@@ -380,7 +379,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        f =  new JLabel("").getFont();
+        Font f = new JLabel("").getFont();
         f = f.deriveFont(f.getStyle() | Font.BOLD);
 
         final JPanel panel = new ImagePanel();
@@ -776,8 +775,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         //Buttons
         final JPanel jpButtonsPanel = new JPanel();
         final GridBagLayout layoutButtonPanel = new GridBagLayout();
-        final GridBagConstraints constraintsButtonsPanel = new GridBagConstraints();
-        constraintsButtonsPanel.fill = GridBagConstraints.BOTH;
         jpButtonsPanel.setLayout(layoutButtonPanel);
 
         initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), jpButtonsPanel);
