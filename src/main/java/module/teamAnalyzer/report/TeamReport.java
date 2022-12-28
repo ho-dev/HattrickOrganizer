@@ -58,8 +58,14 @@ public class TeamReport {
      */
     public TeamReport(int teamId, List<MatchDetail> matchDetails) {
         this.teamId=teamId;
+        var squadInfos = loadSquadInfo(teamId);
         for (MatchDetail m:matchDetails ) {
-            addMatch(m, loadSquadInfo(teamId, m),  SystemManager.isShowUnavailable.isSet());
+            // find latest squad info in training week after match
+            var squadInfo = squadInfos.stream().filter(i -> i.getFetchDate().isAfter(m.getMatch().getMatchDate()) &&
+                    i.getFetchDate().isBefore(m.getMatch().getMatchDate().plusDaysAtSameLocalTime(7))).min(Comparator.comparing(SquadInfo::getFetchDate)).orElse(null);
+            // don't use info in other matches
+            if ( squadInfo != null ) squadInfos.remove(squadInfo);
+            addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet());
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
@@ -69,8 +75,8 @@ public class TeamReport {
         }
     }
 
-    private SquadInfo loadSquadInfo(int teamId, MatchDetail m) {
-        return DBManager.instance().loadSquadInfo(teamId, m.getMatch().getMatchDate().toDbTimestamp());
+    private List<SquadInfo> loadSquadInfo(int teamId) {
+        return DBManager.instance().loadSquadInfo(teamId);
     }
 
     /**
@@ -106,7 +112,7 @@ public class TeamReport {
      */
     public TeamLineup getTeamMatchReport(int selection)
     {
-        if (this.matchDetails == null || this.matchDetails.size()==0)return null;
+        if (this.matchDetails.size() == 0)return null;
         if ( selection == 0 ){
             return this.averageRatingslineup;
         }
@@ -139,10 +145,11 @@ public class TeamReport {
                     .build();
         } else {
             MatchDetail matchDetail = getTeamMatchReport(selection).getMatchDetail();
-            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, loadSquadInfo(teamId, matchDetail)))
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
-                    .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted")).build();
+                    .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted"))
+                    .build();
         }
         selectLineup(1); // select the adjusted lineup
     }
