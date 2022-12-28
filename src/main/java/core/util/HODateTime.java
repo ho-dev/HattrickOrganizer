@@ -13,8 +13,13 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * time zone of hattrick
      */
-
     public static final ZoneId DEFAULT_TIMEZONE = ZoneId.of("Europe/Stockholm");
+
+    /**
+     * Date time format of chpp files
+     */
+    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
+    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
 
     /**
      * the birthday of hattrick
@@ -23,11 +28,6 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public static final HODateTime HT_START = HODateTime.fromHT("1997-09-22 00:00:00");
 
-    /**
-     * Date time format of chpp files
-     */
-    private static final DateTimeFormatter cl_Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(DEFAULT_TIMEZONE);
-    private static final DateTimeFormatter cl_ShortFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(DEFAULT_TIMEZONE);
 
     /**
      * internal time representation
@@ -51,7 +51,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return HODateTime
      */
     public static HODateTime fromHT(String htString) {
-        if (!StringUtils.isEmpty(htString)) {
+        if (htString != null && !htString.isEmpty()) {
             try {
                 LocalDateTime htTime = LocalDateTime.parse(htString, cl_Formatter);
                 return new HODateTime(htTime.atZone(DEFAULT_TIMEZONE).toInstant());

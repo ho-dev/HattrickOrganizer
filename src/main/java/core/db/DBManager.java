@@ -523,7 +523,7 @@ public class DBManager {
 
 	public Player loadPlayerFirstHRF(int spielerid, HODateTime after) {
 		if ( after == null){
-			after = HODateTime.htStart;
+			after = HODateTime.HT_START;
 		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());

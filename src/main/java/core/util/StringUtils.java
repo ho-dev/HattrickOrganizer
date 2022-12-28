@@ -52,34 +52,40 @@ public class StringUtils {
 		return (str == null || str.length() == 0);
 	}
 
-	private static String separator = " " + HOVerwaltung.instance().getLanguageString("ls.match.result.separation") + " ";
+	private static String _separator = null;
+	private static String getSeparator(){
+		if (_separator==null ) {
+			_separator = " " + HOVerwaltung.instance().getLanguageString("ls.match.result.separation") + " ";
+		}
+		return _separator;
+	}
 
 	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
 		if (homeGoals < 0 || awayGoals < 0)
-			return "  "+ separator;
+			return "  "+ getSeparator();
 
 		final StringBuilder buffer = new StringBuilder();
 		if (homeGoals < 10) {
 			buffer.append(" ");
 		}
 		buffer.append(homeGoals);
-		buffer.append(separator);
+		buffer.append(getSeparator());
 		buffer.append(awayGoals);
 		if(! resultExtensionAbbreviation.isEmpty()){
-			buffer.append(" "+resultExtensionAbbreviation);
+			buffer.append(" ").append(resultExtensionAbbreviation);
 		}
 		return buffer.toString();
 	}
 
 	public static String capitalizeWord(String str){
-		String words[]=str.split("\\s");
-		String capitalizeWord="";
+		String[] words =str.split("\\s");
+		StringBuilder capitalizeWord= new StringBuilder();
 		for(String w:words){
 			String first=w.substring(0,1);
 			String afterfirst=w.substring(1);
-			capitalizeWord+=first.toUpperCase()+afterfirst+" ";
+			capitalizeWord.append(first.toUpperCase()).append(afterfirst).append(" ");
 		}
-		return capitalizeWord.trim();
+		return capitalizeWord.toString().trim();
 	}
 
 }
