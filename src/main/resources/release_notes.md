@@ -56,6 +56,7 @@ Please do not forget to back up data.
 * duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)
 
 ### Misc
+* fix display of wrong currency and character encoding when ht worldetails table wasn't initialized (#1622)
 
 ## QA Team
 
