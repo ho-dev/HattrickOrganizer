@@ -641,7 +641,7 @@ final public class UserColumnFactory {
             }
         };
 
-        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 80) {
+        playerAdditionalArray[6] = new PlayerColumn(70, "Status", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 PlayerStatusLabelEntry entry = new PlayerStatusLabelEntry();
@@ -649,7 +649,6 @@ final public class UserColumnFactory {
                 return entry;
             }
         };
-
 
         playerAdditionalArray[7] = new PlayerColumn(421, "ls.player.wage", 100) {
             @Override
@@ -713,7 +712,7 @@ final public class UserColumnFactory {
             @Override
             public void setSize(TableColumn column) {
                 column.setMinWidth(Helper.calcCellWidth(90));
-
+                column.setPreferredWidth(preferredWidth);
             }
         };
 
