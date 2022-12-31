@@ -32,7 +32,12 @@ class WorldDetailsTable extends AbstractTable {
 	}
 
 	List<WorldDetailLeague> getAllWorldDetailLeagues(){
-		return load(WorldDetailLeague.class);
+		var ret = load(WorldDetailLeague.class);
+		if ( ret.size() == 0){
+			insertDefaultValues();
+			ret = load(WorldDetailLeague.class);
+		}
+		return ret;
 	}
 	
 	@Override
