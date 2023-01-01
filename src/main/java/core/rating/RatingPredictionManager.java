@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static core.model.player.MatchRoleID.getShortNameForPosition;
 import static core.util.MathUtils.fuzzyEquals;
 
 public class RatingPredictionManager {
@@ -237,8 +238,8 @@ public class RatingPredictionManager {
     		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc, useForm, weather, useWeatherImpact);
     		retVal += curValue;
     	}
+		if ( t==0 ) HOLogger.instance().info(getClass(), "t=" + t + "; before applyCommonProps.GENERAL="+retVal);
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
-
     	return (float)retVal;
     }
 
@@ -279,11 +280,13 @@ public class RatingPredictionManager {
     			if (spec == SPEC_NOTUSED)
     				continue;
     			double curStk = allStk[effPos][spec];
-    			double curWeight = allWeights[effPos][spec];
-    			if (curStk > 0) {
-    				if (curWeight > 0) {retVal += adjustForCrowding(_lineup, curStk, effPos) * curWeight;}
-    				else {retVal += adjustForCrowding(_lineup, curStk, effPos) * curAllSpecWeight;}
-    			}
+				if (curStk > 0) {
+	    			double curWeight = allWeights[effPos][spec];
+					if ( curWeight<=0) curWeight = curAllSpecWeight;
+					var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
+					retVal += inkr;
+					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
+				}
     		}
     	}
     	retVal = applyCommonProps (retVal, params, sectionName);
@@ -313,8 +316,8 @@ public class RatingPredictionManager {
 
     public double applyCommonProps (double inVal, RatingPredictionParameter params, String sectionName) {
     	double retVal = inVal;
-        retVal += params.getParam(sectionName, "squareMod", 0) * Math.pow(retVal, 2); // Avoid if possible! 
-        retVal += params.getParam(sectionName, "cubeMod", 0) * Math.pow(retVal, 3); // Avoid even more! 
+        retVal += params.getParam(sectionName, "squareMod", 0) * Math.pow(inVal, 2); // Avoid if possible!
+        retVal += params.getParam(sectionName, "cubeMod", 0) * Math.pow(inVal, 3); // Avoid even more!
 
     	if (taktikType == Matchdetails.TAKTIK_WINGS)
     		retVal *= params.getParam(sectionName, "tacticAOW", 1);
@@ -480,7 +483,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact);
+			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return CentralDefenseRatings;
 	}
@@ -491,7 +496,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> CentralAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact);
+			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return CentralAttackRatings;
 	}
@@ -503,7 +510,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;//UserParameter.instance().rightDefenceOffset;
 		Hashtable<Double, Double> RightDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact);
+			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return RightDefenseRatings;
 	}
@@ -515,7 +524,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftDefenseRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact));
+			var rating =  calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact);
+			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return LeftDefenseRatings;
 	}
@@ -526,7 +537,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> LeftAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact);
+			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return LeftAttackRatings;
 	}
@@ -537,11 +550,12 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> RightAttackRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact);
+			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return RightAttackRatings;
 	}
-
 
 	public Hashtable<Double, Double> getMFRatings(boolean useForm, boolean useWeatherImpact)
 	{
@@ -549,7 +563,9 @@ public class RatingPredictionManager {
 		double userRatingOffset = 0;
 		Hashtable<Double, Double> MidfieldRatings = new Hashtable<>();
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
-			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact));
+			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact);
+			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + rating);
+			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "MidfieldRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return MidfieldRatings;
 	}
@@ -1194,5 +1210,4 @@ public class RatingPredictionManager {
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
-
 }
