@@ -857,6 +857,7 @@ public class RatingPredictionManager {
 				skill *= player.getImpactWeatherEffect(weather);
 			}
 
+			HOLogger.instance().debug(RatingPredictionManager.class, "Player: " + player.getFullName());
             retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
             		getSkillName(skillType), player.getStamina(), player.getExperience(), skill, player.getForm(), useForm);
 //            System.out.println("calcPlayerStrength for "+player.getSpielerID()
@@ -911,7 +912,7 @@ public class RatingPredictionManager {
     	}
     	String key = params.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm;
     	if (playerStrengthCache.containsKey(key)) {
-//    		HOLogger.instance().debug(RatingPredictionManager.class, "Using from cache: " + key);
+//    		HOLogger.instance().debug(RatingPredictionManager.class, "Using from cache: " + playerStrengthCache.get(key));
     		return playerStrengthCache.get(key);
     	}
     	double stk;
@@ -973,8 +974,8 @@ public class RatingPredictionManager {
 
    		playerStrengthCache.put(key, stk);
 //    	long endTime = new Date().getTime();
-//    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength (" 
-//    			+ "SN=" + sectionName + ",ST" + stamina + ",XP" + xp + ",SK" + skill + ",FO" + form + ",uF" + useForm+ ") took " + (endTime-startTime) + "ms");
+    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength ("
+    			+ "SN=" + sectionName + ", Stamina=" + stamina + ", XP=" + xp + ", skill=" + skill + ", form=" + form + ", uF=" + useForm+ ") =" + stk);
 
 		return stk;
     }
