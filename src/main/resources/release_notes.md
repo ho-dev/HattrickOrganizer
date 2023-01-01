@@ -25,7 +25,7 @@ Please do not forget to back up data.
 * new column HTMS-28, player potential (#1288)
 * fix last match date of walkover matches (#1776)
 
-### Team Analyser
+### Team Analyzer
 * team analyzer displays man marking tactic (#1741)
 * add opponents' team development numbers to recap table (#347)
 
