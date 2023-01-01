@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -27,7 +27,7 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
         double scoreBoost = 1;
-        if (p.hasSpeciality(Speciality.TECHNICAL)) {
+        if (p.hasSpecialty(Specialty.TECHNICAL)) {
             switch (position.getId()) {
                 case IMatchRoleID.leftWinger:
                 case IMatchRoleID.rightWinger:
@@ -54,7 +54,7 @@ public class TechnicalEventPredictionAnalyzer implements ISpecialEventPrediction
     private void getTechHeadEvent( MatchRoleID position, int opponentPosition, double scoreBoost) {
         Player opp = analyse.getOpponentPlayerByPosition(opponentPosition);
         if (opp == null || position.getPlayerId() == 0) return;
-        if (opp.hasSpeciality(Speciality.HEAD)) {
+        if (opp.hasSpecialty(Specialty.HEAD)) {
             Player p = analyse.getPlayer(position.getPlayerId());
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.TECHNICAL_HEAD,

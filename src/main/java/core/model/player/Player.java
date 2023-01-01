@@ -2,7 +2,7 @@ package core.model.player;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSpeciality;
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.*;
@@ -1289,16 +1289,16 @@ public class Player extends AbstractTable.Storable {
         return iPlayerSpecialty;
     }
 
-    public boolean hasSpeciality(Speciality speciality)
+    public boolean hasSpecialty(Specialty speciality)
     {
-        Speciality s = Speciality.values()[iPlayerSpecialty];
+        Specialty s = Specialty.values()[iPlayerSpecialty];
         return s.equals(speciality);
     }
 
     // returns the name of the speciality in the used language
-    public String getSpecialityName() {
-        Speciality s = Speciality.values()[iPlayerSpecialty];
-        if (s.equals(Speciality.NO_SPECIALITY)) {
+    public String getSpecialtyName() {
+        Specialty s = Specialty.values()[iPlayerSpecialty];
+        if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
             return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + s.toString().toLowerCase(Locale.ROOT));
@@ -1307,22 +1307,22 @@ public class Player extends AbstractTable.Storable {
 
     // return the name of the speciality with a break before and in brackets
     // e.g. [br][quick], used for HT-ML export
-    public String getSpecialityExportName() {
-        Speciality s = Speciality.values()[iPlayerSpecialty];
-        if (s.equals(Speciality.NO_SPECIALITY)) {
+    public String getSpecialtyExportName() {
+        Specialty s = Specialty.values()[iPlayerSpecialty];
+        if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
-            return BREAK + O_BRACKET + getSpecialityName() + C_BRACKET;
+            return BREAK + O_BRACKET + getSpecialtyName() + C_BRACKET;
         }
     }
 
     // no break so that the export looks better
-    public String getSpecialityExportNameForKeeper() {
-        Speciality s = Speciality.values()[iPlayerSpecialty];
-        if (s.equals(Speciality.NO_SPECIALITY)) {
+    public String getSpecialtyExportNameForKeeper() {
+        Specialty s = Specialty.values()[iPlayerSpecialty];
+        if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
-            return O_BRACKET + getSpecialityName() + C_BRACKET;
+            return O_BRACKET + getSpecialtyName() + C_BRACKET;
         }
     }
 

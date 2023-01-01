@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -45,27 +45,19 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         int id = position.getPlayerId();
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
-        if (p.hasSpeciality(Speciality.QUICK)) {
+        if (p.hasSpecialty(Specialty.QUICK)) {
 
             switch (position.getId()) {
-                case IMatchRoleID.leftWinger:
-                case IMatchRoleID.leftForward:
-                    getQuickEvents(position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, 0, false);
-                    break;
-                case IMatchRoleID.rightWinger:
-                case IMatchRoleID.rightForward:
-                    getQuickEvents(position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0, false);
-                    break;
-                case IMatchRoleID.centralForward:
-                case IMatchRoleID.centralInnerMidfield:
-                    getQuickEvents(position, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, true);
-                    break;
-                case IMatchRoleID.leftInnerMidfield:
-                    getQuickEvents(position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, IMatchRoleID.middleCentralDefender, false);
-                    break;
-                case IMatchRoleID.rightInnerMidfield:
-                    getQuickEvents(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, IMatchRoleID.middleCentralDefender, false);
-                    break;
+                case IMatchRoleID.leftWinger, IMatchRoleID.leftForward ->
+                        getQuickEvents(position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, 0, false);
+                case IMatchRoleID.rightWinger, IMatchRoleID.rightForward ->
+                        getQuickEvents(position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0, false);
+                case IMatchRoleID.centralForward, IMatchRoleID.centralInnerMidfield ->
+                        getQuickEvents(position, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender, true);
+                case IMatchRoleID.leftInnerMidfield ->
+                        getQuickEvents(position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, IMatchRoleID.middleCentralDefender, false);
+                case IMatchRoleID.rightInnerMidfield ->
+                        getQuickEvents(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, IMatchRoleID.middleCentralDefender, false);
             }
         }
     }
@@ -80,17 +72,17 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         double goalProbabilityFactor = 0;   // used if block100Percent player is a quick one
         ArrayList<IMatchRoleID> involvedOpponents = new ArrayList<>();
         Player p = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
-        if (p == null || !p.hasSpeciality(Speciality.QUICK)) {
+        if (p == null || !p.hasSpecialty(Specialty.QUICK)) {
             goalProbabilityFactor = 1;
             p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick);
-            if (p != null && p.hasSpeciality(Speciality.QUICK)) {
+            if (p != null && p.hasSpecialty(Specialty.QUICK)) {
                 goalProbabilityFactor *= .75;
                 involvedOpponents.add(analyse.getOpponentPosition(block25PercentIfQuick));
             }
 
             if (block25PercentIfQuick2 != 0) {
                 p = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
-                if (p != null && p.hasSpeciality(Speciality.QUICK)) {
+                if (p != null && p.hasSpecialty(Specialty.QUICK)) {
                     goalProbabilityFactor *= .75;
                     involvedOpponents.add(analyse.getOpponentPosition(block25PercentIfQuick2));
                 }

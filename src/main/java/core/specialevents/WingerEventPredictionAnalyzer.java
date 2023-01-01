@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -30,12 +30,10 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
         int id = position.getPlayerId();
         if ( id != 0) {
             switch (position.getId()) {
-                case IMatchRoleID.leftWinger:
-                    getWingerEvents(position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender);
-                    break;
-                case IMatchRoleID.rightWinger:
-                    getWingerEvents( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender);
-                    break;
+                case IMatchRoleID.leftWinger ->
+                        getWingerEvents(position, IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender);
+                case IMatchRoleID.rightWinger ->
+                        getWingerEvents(position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender);
             }
         }
     }
@@ -69,7 +67,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
         MatchRoleID scorerId = analyse.getPosition(passReceiver);
         Player scorer = analyse.getPlayer(scorerId.getPlayerId());
         if ( scorer != null) {
-            if (scorer.hasSpeciality(Speciality.HEAD)) {
+            if (scorer.hasSpecialty(Specialty.HEAD)) {
                 getWingerEvent( position, scorerId, defence, SpecialEventType.WINGER_HEAD, 3);
             } else {
                 getWingerEvent( position, scorerId, defence, SpecialEventType.WINGER_SCORER, 0);

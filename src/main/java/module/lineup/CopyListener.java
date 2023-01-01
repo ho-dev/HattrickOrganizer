@@ -34,10 +34,10 @@ public class CopyListener implements ActionListener {
 	private static final String SPACE = " ";
 	private static final String O_BRACKET = "(";
 	private static final String C_BRACKET = ")";
-	private JMenuItem miPlaintext = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.PlainText"));
-	private JMenuItem miHattickMLDef = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.HattrickML"));
-	private JMenuItem miLineup = new JMenuItem(HOVerwaltung.instance().getLanguageString("Aufstellung"));
-	private JMenuItem miLineupAndRatings = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.LineupAndRatings"));
+	private final JMenuItem miPlaintext = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.PlainText"));
+	private final JMenuItem miHattickMLDef = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.HattrickML"));
+	private final JMenuItem miLineup = new JMenuItem(HOVerwaltung.instance().getLanguageString("Aufstellung"));
+	private final JMenuItem miLineupAndRatings = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.LineupAndRatings"));
 	
 	final JPopupMenu menu = new JPopupMenu();
 
@@ -149,20 +149,20 @@ public class CopyListener implements ActionListener {
 				Player player = p.getSelectedPlayer();
 				switch (positionID) {
 					// ugly that the imported static constants from IMatchRoleID are named in lower case
-					case keeper -> goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportNameForKeeper();
-					case rightBack -> rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case rightCentralDefender -> rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case middleCentralDefender -> middleCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftCentralDefender -> leftCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftBack -> leftWB = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case rightWinger -> rightW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case rightInnerMidfield -> rightIM = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case centralInnerMidfield -> middleIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftInnerMidfield -> leftIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftWinger -> leftW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case rightForward -> rightFW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case centralForward -> middleFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftForward -> leftFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
+					case keeper -> goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportNameForKeeper();
+					case rightBack -> rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case rightCentralDefender -> rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case middleCentralDefender -> middleCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftCentralDefender -> leftCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftBack -> leftWB = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case rightWinger -> rightW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case rightInnerMidfield -> rightIM = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case centralInnerMidfield -> middleIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftInnerMidfield -> leftIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftWinger -> leftW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case rightForward -> rightFW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case centralForward -> middleFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftForward -> leftFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
 					default -> HOLogger.instance().warning(getClass(), "positionID: " + positionID + " not found");
 				}
 			}
@@ -202,20 +202,20 @@ public class CopyListener implements ActionListener {
 				Player player = p.getSelectedPlayer();
 				switch (positionID) {
 					// ugly that the imported static constants from IMatchRoleID are named in lower case
-					case keeper -> goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportNameForKeeper();
-					case rightBack -> rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case rightCentralDefender -> rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case middleCentralDefender -> middleCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftCentralDefender -> leftCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftBack -> leftWB = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case rightWinger -> rightW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case rightInnerMidfield -> rightIM = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case centralInnerMidfield -> middleIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftInnerMidfield -> leftIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftWinger -> leftW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case rightForward -> rightFW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialityExportName();
-					case centralForward -> middleFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
-					case leftForward -> leftFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialityExportName();
+					case keeper -> goalie = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportNameForKeeper();
+					case rightBack -> rightWB = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case rightCentralDefender -> rightCD = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case middleCentralDefender -> middleCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftCentralDefender -> leftCD = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftBack -> leftWB = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case rightWinger -> rightW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case rightInnerMidfield -> rightIM = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case centralInnerMidfield -> middleIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftInnerMidfield -> leftIM = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftWinger -> leftW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case rightForward -> rightFW = p.getTacticSymbol() + SPACE + player.getShortName() + player.getSpecialtyExportName();
+					case centralForward -> middleFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
+					case leftForward -> leftFW = player.getShortName() + SPACE + p.getTacticSymbol() + player.getSpecialtyExportName();
 					default -> HOLogger.instance().warning(getClass(), "positionID: " + positionID + " not found");
 				}
 			}

@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -55,62 +55,53 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         int id = position.getPlayerId();
         if ( id == 0 ) return;
         Player p = analyse.getPlayer(id);
-        if (p.hasSpeciality(Speciality.UNPREDICTABLE)) {
+        if (p.hasSpecialty(Specialty.UNPREDICTABLE)) {
             switch (position.getId()) {
-                case IMatchRoleID.keeper:
-                    getUnpredictableLongPass( position);
-                    break;
-                case IMatchRoleID.rightBack:
-                    getUnpredictableLongPass( position);
-                    getUnpredictableMistake( position);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0);
-                    break;
-                case IMatchRoleID.leftCentralDefender:
-                case IMatchRoleID.middleCentralDefender:
-                case IMatchRoleID.rightCentralDefender:
+                case IMatchRoleID.keeper -> getUnpredictableLongPass(position);
+                case IMatchRoleID.rightBack -> {
                     getUnpredictableLongPass(position);
-                    getUnpredictableMistake( position);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
-                    break;
-                case IMatchRoleID.leftBack:
-                    getUnpredictableLongPass(position);
-                    getUnpredictableMistake( position);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
-                    break;
-
-                case IMatchRoleID.rightInnerMidfield:
-                case IMatchRoleID.centralInnerMidfield:
-                case IMatchRoleID.leftInnerMidfield:
                     getUnpredictableMistake(position);
-                    getUnpredictableScores( position, 0);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
-                    break;
-
-                case IMatchRoleID.rightWinger:
-                    getUnpredictableScores( position, 3);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftBack, IMatchRoleID.leftCentralDefender, 0);
+                }
+                case IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender -> {
+                    getUnpredictableLongPass(position);
+                    getUnpredictableMistake(position);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                }
+                case IMatchRoleID.leftBack -> {
+                    getUnpredictableLongPass(position);
+                    getUnpredictableMistake(position);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
+                }
+                case IMatchRoleID.rightInnerMidfield, IMatchRoleID.centralInnerMidfield, IMatchRoleID.leftInnerMidfield -> {
+                    getUnpredictableMistake(position);
+                    getUnpredictableScores(position, 0);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                }
+                case IMatchRoleID.rightWinger -> {
+                    getUnpredictableScores(position, 3);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, 0);
                     getUnpredictableOwnGoal(position);
-                    break;
-                case IMatchRoleID.leftWinger:
-                    getUnpredictableScores( position, 3);
-                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
-                    getUnpredictableOwnGoal( position);
-                    break;
-
-                case IMatchRoleID.rightForward:
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack,0);
+                }
+                case IMatchRoleID.leftWinger -> {
+                    getUnpredictableScores(position, 3);
+                    getUnpredictableSpecialAction(position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
                     getUnpredictableOwnGoal(position);
-                    break;
-                case IMatchRoleID.leftForward:
-                    getUnpredictableSpecialAction( position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack,0);
+                }
+                case IMatchRoleID.rightForward -> {
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack, 0);
                     getUnpredictableOwnGoal(position);
-                    break;
-                case IMatchRoleID.centralForward:
-                    getUnpredictableSpecialAction( position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                }
+                case IMatchRoleID.leftForward -> {
+                    getUnpredictableSpecialAction(position, IMatchRoleID.rightCentralDefender, IMatchRoleID.rightBack, 0);
                     getUnpredictableOwnGoal(position);
-                    break;
-                default:
-                    break;
+                }
+                case IMatchRoleID.centralForward -> {
+                    getUnpredictableSpecialAction(position, IMatchRoleID.leftCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender);
+                    getUnpredictableOwnGoal(position);
+                }
+                default -> {
+                }
             }
         }
     }
