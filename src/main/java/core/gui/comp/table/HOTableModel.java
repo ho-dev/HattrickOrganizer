@@ -347,9 +347,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 		boolean changed = false;
 		// column order and width
 		var tableColumnModel = table.getColumnModel();
-		for (int i = 0; i < this.getColumnCount(); i++) {
-			if (i < offset) continue;
-			if (i + offset >= table.getColumnCount()) break;
+		var modelColumnCount = this.getColumnCount();
+		for (int i = 0; i < modelColumnCount; i++) {
+			if (i < offset) continue;                                // skip fixed columns in case of scroll table
+			if (offset == 0 && i >= table.getColumnCount()) break;   // fixed columns exceeded
 
 			var column = this.getColumns()[i];
 			var index = table.convertColumnIndexToView(i);

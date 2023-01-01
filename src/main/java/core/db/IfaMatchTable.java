@@ -22,7 +22,7 @@ public class IfaMatchTable extends AbstractTable {
 		columns = new ColumnDescriptor[]{
 				ColumnDescriptor.Builder.newInstance().setColumnName("MATCHID").setGetter((o) -> ((IfaMatch) o).getMatchId()).setSetter((o, v) -> ((IfaMatch) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((IfaMatch) o).getMatchTyp()).setSetter((o, v) -> ((IfaMatch) o).setMatchTyp((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYEDDATE").setGetter((o) -> ((IfaMatch) o).getPlayedDate().toHT()).setSetter((o, v) -> ((IfaMatch) o).setPlayedDate(HODateTime.fromHT((String) v))).setType(Types.VARCHAR).setLength(25).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYEDDATE").setGetter((o) -> ((IfaMatch) o).getPlayedDate().toDbTimestamp()).setSetter((o, v) -> ((IfaMatch) o).setPlayedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMID").setGetter((o) -> ((IfaMatch) o).getHomeTeamId()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMID").setGetter((o) -> ((IfaMatch) o).getAwayTeamId()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMGOALS").setGetter((o) -> ((IfaMatch) o).getHomeTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
