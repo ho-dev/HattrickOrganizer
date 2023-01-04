@@ -23,6 +23,7 @@ Please do not forget to back up data.
 * fix `ArrayIndexOutOfBoundsException` upon startup, as no column could be displayed (#1757)
 * fix player compare when sold player is bought back again (#1624)
 * new column HTMS-28, player potential (#1288)
+* fix last match date of walkover matches (#1776)
 
 ### Team Analyser
 * team analyzer displays man marking tactic (#1741)
