@@ -1,5 +1,6 @@
 package module.teamAnalyzer.ui.controller;
 
+import core.gui.comp.entry.ColorLabelEntry;
 import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RecapPanel;
@@ -44,8 +45,10 @@ public class RecapListSelectionListener implements ListSelectionListener {
 
         if (!lsm.isSelectionEmpty()) {
             int selectedRow = sorter.modelIndex(lsm.getMinSelectionIndex());
-            selectedTacticType = String.valueOf(tableModel.getValueAt(selectedRow, 17));
-            selectedTacticSkill = String.valueOf(tableModel.getValueAt(selectedRow, 18));
+            var colorLabelEntry = (ColorLabelEntry)tableModel.getValueAt(selectedRow, 17);
+            if ( colorLabelEntry != null ) selectedTacticType = colorLabelEntry.getText();
+            colorLabelEntry = (ColorLabelEntry)tableModel.getValueAt(selectedRow,18);
+            if ( colorLabelEntry != null ) selectedTacticSkill = colorLabelEntry.getText();
 
             TeamLineup lineup = SystemManager.getTeamReport().selectLineup(selectedRow);
             int week = 0;

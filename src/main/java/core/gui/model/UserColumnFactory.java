@@ -722,12 +722,7 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRating = player.getLastMatchRating();
                 if (lastMatchRating != null && lastMatchRating > 0) {
-//                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-//                    if (info == null) {
-//                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-//                    } else {
                     return new RatingTableEntry(lastMatchRating, true);
-//                    }
                 }
                 return new RatingTableEntry();
             }
@@ -737,12 +732,9 @@ final public class UserColumnFactory {
         playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH_RATING, "LastMatchRating", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                var lastMatchRating = player.getLastMatchRating();
-                if (lastMatchRating != null && lastMatchRating > 0) {
-                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-                    if (info != null) {
-                        return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
-                    }
+                MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
+                if (info != null) {
+                    return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
                 }
                 return new MatchDateTableEntry(null, MatchType.NONE);
             }

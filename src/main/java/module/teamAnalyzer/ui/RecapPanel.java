@@ -18,7 +18,7 @@ public class RecapPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
     private FixedColumnsTable table;
 
-    private final RecapListSelectionListener recapListener = null;
+    private RecapListSelectionListener recapListener = null;
 
     private RecapPanelTableModel tableModel;
     /**
@@ -39,15 +39,9 @@ public class RecapPanel extends JPanel {
         table = new FixedColumnsTable(2, tableModel);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());
         table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-//        restoreUserSettings();
-
-        table.addListSelectionListener( new RecapListSelectionListener(table.getTableSorter(), tableModel));
+        recapListener = new RecapListSelectionListener(table.getTableSorter(), tableModel);
+        table.addListSelectionListener(recapListener);
         setLayout(new BorderLayout());
-
-//        JScrollPane scrollPane = new JScrollPane(table);
-//
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(table);
     }
 
