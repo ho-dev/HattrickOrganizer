@@ -18,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static core.model.player.IMatchRoleID.*;
+import static core.model.player.MatchRoleID.getPosition;
 import static core.model.player.MatchRoleID.getShortNameForPosition;
 import static core.util.MathUtils.fuzzyEquals;
 
@@ -699,29 +701,6 @@ public class RatingPredictionManager {
     	}
     	return retVal;
     }
-    
-
-    public boolean isLeft (int pos) {
-		return pos == IMatchRoleID.leftCentralDefender
-				|| pos == IMatchRoleID.leftInnerMidfield
-				|| pos == IMatchRoleID.leftBack
-				|| pos == IMatchRoleID.leftWinger
-				|| pos == IMatchRoleID.leftForward;
-    }
-
-    public boolean isRight (int  pos) {
-		return pos == IMatchRoleID.rightCentralDefender
-				|| pos == IMatchRoleID.rightInnerMidfield
-				|| pos == IMatchRoleID.rightBack
-				|| pos == IMatchRoleID.rightWinger
-				|| pos == IMatchRoleID.rightForward;
-    }
-    
-    public boolean isMiddle (int pos) {
-		return pos == IMatchRoleID.centralForward
-				|| pos == IMatchRoleID.centralInnerMidfield
-				|| pos == IMatchRoleID.middleCentralDefender;
-    }
 
     public static float getLoyaltyHomegrownBonus(Player player) {
     	if (player.isHomeGrown()) return 1.5f;
@@ -734,83 +713,40 @@ public class RatingPredictionManager {
             Player player = _lineup.getPlayerByPositionID(pos);
             byte taktik = _lineup.getTactic4PositionID(pos);
             if(player != null) {
-				if ( this.startingLineup.getManMarkingPosition() != null) {
-					var manMarkingOrder = this.startingLineup.getManMarkingOrder();
-					if (manMarkingOrder != null &&
-							player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
-							player.getGameStartingTime() + 5 >= t	// man marking starts 5 minutes after player enters the match
-					) {
-						// create player clone with reduced skill values
-						player = player.createManMarker(this.startingLineup.getManMarkingPosition());
+				int posTactic = -1;
+				switch (pos) {
+					case keeper -> posTactic = getPosition(pos, taktik);
+					case rightCentralDefender, rightBack, rightWinger, rightInnerMidfield, rightForward -> {
+						if (useRight) {
+							posTactic = getPosition(pos, taktik);
+						}
+					}
+					case leftCentralDefender, leftBack, leftWinger, leftInnerMidfield, leftForward -> {
+						if (useLeft) {
+							posTactic = getPosition(pos, taktik);
+						}
+					}
+					case middleCentralDefender, centralInnerMidfield, centralForward -> {
+						if (useMiddle) {
+							posTactic = getPosition(pos, taktik);
+						}
 					}
 				}
-            	// Check sides
-            	if (!useLeft && isLeft(pos)
-            			|| !useMiddle && isMiddle(pos)
-            			|| !useRight && isRight(pos)) {
-				} else {
-            		int specialty = player.getPlayerSpecialty();
 
-					switch (pos) {
-            		case IMatchRoleID.keeper:
-            			retArray[IMatchRoleID.KEEPER][specialty] += calcPlayerStrength(t, player, skillType ,useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		case IMatchRoleID.rightCentralDefender:
-            		case IMatchRoleID.leftCentralDefender:
-            		case IMatchRoleID.middleCentralDefender:
-            			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		case IMatchRoleID.rightBack:
-            		case IMatchRoleID.leftBack:
-            			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.BACK][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.BACK_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.BACK_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.BACK_TOMID][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		case IMatchRoleID.rightWinger:
-            		case IMatchRoleID.leftWinger:
-            			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.WINGER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.WINGER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.WINGER_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.TOWARDS_MIDDLE)
-            				retArray[IMatchRoleID.WINGER_TOMID][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		case IMatchRoleID.rightInnerMidfield:
-            		case IMatchRoleID.leftInnerMidfield:
-            		case IMatchRoleID.centralInnerMidfield:
-            			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.MIDFIELDER][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.OFFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_OFF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.DEFENSIVE)
-            				retArray[IMatchRoleID.MIDFIELDER_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.MIDFIELDER_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		case IMatchRoleID.rightForward:
-            		case IMatchRoleID.leftForward:
-            		case IMatchRoleID.centralForward:
-            			if (taktik == IMatchRoleID.NORMAL)
-            				retArray[IMatchRoleID.FORWARD][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			else if (taktik == IMatchRoleID.DEFENSIVE) {
-            				retArray[IMatchRoleID.FORWARD_DEF][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			} else if (taktik == IMatchRoleID.TOWARDS_WING)
-            				retArray[IMatchRoleID.FORWARD_TOWING][specialty] += calcPlayerStrength(t, player, skillType, useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
-            			break;
-            		}
-            	}
+				if ( posTactic >= 0 ){
+					if ( this.startingLineup.getManMarkingPosition() != null) {
+						var manMarkingOrder = this.startingLineup.getManMarkingOrder();
+						if (manMarkingOrder != null &&
+								player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+								player.getGameStartingTime() + 5 >= t	// man marking starts 5 minutes after player enters the match
+						) {
+							// create player clone with reduced skill values
+							player = player.createManMarker(this.startingLineup.getManMarkingPosition());
+						}
+					}
+					int specialty = player.getPlayerSpecialty();
+					retArray[posTactic][specialty] += calcPlayerStrength(t, player, skillType ,useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
+				}
             }
         }
         return retArray;
