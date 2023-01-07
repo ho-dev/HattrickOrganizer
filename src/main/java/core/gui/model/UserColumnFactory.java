@@ -732,9 +732,12 @@ final public class UserColumnFactory {
         playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH_RATING, "LastMatchRating", 80) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-                if (info != null) {
-                    return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
+                var matchId = player.getLastMatchId();
+                if ( matchId != null ) {
+                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
+                    if (info != null) {
+                        return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
+                    }
                 }
                 return new MatchDateTableEntry(null, MatchType.NONE);
             }
