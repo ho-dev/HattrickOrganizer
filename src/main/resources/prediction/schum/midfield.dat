@@ -1,0 +1,54 @@
+# based on information from schum's thread
+
+[general]
+delta                = 0.75 # fixed
+home                 = 1.20
+awayDerby            = 1.10
+pic                  = 0.84
+mots                 = 1.106
+teamSpiritPreMulti   = 0.147832 # err=0.003676
+teamSpiritPower      = 0.417779 # err=0.005549
+tacticCounter        = 0.93
+tacticLongshots      = 0.96
+maxXpDelta           = 0.73
+
+
+[playmaking_allsides]
+CD_norm    = 0.03470781015
+CD_off     = 0.05553249624
+CD_tw      = 0.02082468609
+WB_norm    = 0.02082468609
+WB_off     = 0.02776624812
+WB_def     = 0.01388312406
+WB_tm      = 0.02776624812
+IM_norm    = 0.1388312406
+IM_off     = 0.13188967857
+IM_def     = 0.13188967857
+IM_tw      = 0.12494811654
+WI_norm    = 0.06247405827
+WI_off     = 0.04164937218
+WI_def     = 0.04164937218
+WI_tm      = 0.07635718233
+FW_norm    = 0.03470781015
+FW_def     = 0.04859093421
+FW_tw      = 0.02082468609
+
+[xp_allsides]
+FW_norm    = 1
+FW_def     = 1
+FW_tw      = 1
+WB_norm    = 1
+WB_off     = 1
+WB_def     = 1
+WB_tm      = 1
+WI_norm    = 1
+WI_off     = 1
+WI_def     = 1
+WI_tm      = 1
+IM_norm    = 1
+IM_off     = 1
+IM_def     = 1
+IM_tw      = 1
+CD_norm    = 1
+CD_off     = 1
+CD_tw      = 1

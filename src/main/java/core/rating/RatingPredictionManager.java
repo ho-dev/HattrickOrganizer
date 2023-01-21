@@ -8,6 +8,7 @@ import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
+import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
@@ -253,29 +254,11 @@ public class RatingPredictionManager {
     		HOLogger.instance().debug(this.getClass(), "parseError: "+sectionName+" resolves to Skill "+skillType+", Side "+sideType);
     		return 0;
     	}
-    	double[][] allStk;
-    	switch (sideType) {
-		case THISSIDE:
-			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthLeft(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-			else
-				allStk = getAllPlayerStrengthRight(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-			break;
-		case OTHERSIDE:
-			if (side2calc == LEFT)
-				allStk = getAllPlayerStrengthRight(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-			else
-				allStk = getAllPlayerStrengthLeft(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-			break;
-		case MIDDLE:
-			allStk = getAllPlayerStrengthMiddle(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-	   		break;
-		default:
-			allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType);
-			break;
-    	}
+		var useLeft = useSide(LEFT, side2calc, sideType);
+		var useMiddle =useSide(MIDDLE, side2calc, sideType);
+		var useRight = useSide(RIGHT, side2calc, sideType);
+    	double[][] allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, useLeft, useMiddle, useRight);
     	double[][] allWeights = getAllPlayerWeights(params, sectionName);
-
     	for (int effPos=0; effPos < allStk.length; effPos++) {
 			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
     		for (int spec=0; spec < SPEC_ALL; spec++) {
@@ -285,38 +268,49 @@ public class RatingPredictionManager {
 				if (curStk > 0) {
 	    			double curWeight = allWeights[effPos][spec];
 					if ( curWeight<=0) curWeight = curAllSpecWeight;
-					var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
+					//var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
+					var inkr = curStk * curWeight;
 					retVal += inkr;
 					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
 				}
     		}
     	}
-    	retVal = applyCommonProps (retVal, params, sectionName);
+
+		// calc Schum experience effect
+		var xpSectionName = "xp_" + getSectionName(sideType);
+		if ( params.hasSection(xpSectionName) ) {
+			if ( t==0 && sectionName.equals("playmaking_allsides")){
+				HOLogger.instance().debug(getClass(), "midfiled exp");
+			}
+			var inkr =  getAllPlayerXpEffect(_lineup, params, xpSectionName, useLeft, useMiddle, useRight);
+			retVal += inkr;
+			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
+		}
+
+		retVal = applyCommonProps (retVal, params, sectionName);
     	return retVal;
     }
-    
-    private double adjustForCrowding(Lineup _lineup, double stk, int pos) {
-    	
-    	double weight;
 
-		switch (pos) {
-			case IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.CENTRAL_DEFENDER_TOWING ->
-					weight = getCrowdingPenalty(_lineup, CENTRALDEFENSE);
-			case IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_TOWING ->
-					weight = getCrowdingPenalty(_lineup, MIDFIELD);
-			case IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> weight = getCrowdingPenalty(_lineup, CENTRALATTACK);
-			default -> weight = 1;
-		}
-    	
-    	if ( !(weight > 0)) {
-    		// It is probably not set in the config
-    		weight = 1;
-    	}
-    	
-    	return stk * weight;
-    }
+	private boolean useSide(int useSide, int side2Calc, int sideType) {
+		return switch (sideType) {
+			case THISSIDE -> useSide == side2Calc;
+			case OTHERSIDE -> useSide != side2Calc;
+			case MIDDLE -> useSide == MIDDLE;
+			default ->    // all sides
+					true;
+		};
+	}
 
-    public double applyCommonProps (double inVal, RatingPredictionParameter params, String sectionName) {
+	private String getSectionName(int sideType) {
+		return switch (sideType) {
+			case THISSIDE -> "thisside";
+			case OTHERSIDE -> "otherside";
+			case MIDDLE -> "middle";
+			default -> "allsides";
+		};
+	}
+
+	public double applyCommonProps (double inVal, RatingPredictionParameter params, String sectionName) {
     	double retVal = inVal;
         retVal += params.getParam(sectionName, "squareMod", 0) * Math.pow(inVal, 2); // Avoid if possible!
         retVal += params.getParam(sectionName, "cubeMod", 0) * Math.pow(inVal, 3); // Avoid even more!
@@ -646,22 +640,6 @@ public class RatingPredictionManager {
     	}
     	return weights;
     }
-    
-    public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, true, true);
-    }
-
-    public double[][] getAllPlayerStrengthLeft (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, true, false, false);
-    }
-
-    public double[][] getAllPlayerStrengthRight (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, false, false, true);
-    }
-
-    public double[][] getAllPlayerStrengthMiddle (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType) {
-    	return getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact,  skillType, false, true, false);
-    }
 
     public int getNumIMs (Lineup _lineup) {
     	int retVal = 0;
@@ -706,34 +684,61 @@ public class RatingPredictionManager {
     	if (player.isHomeGrown()) return 1.5f;
     	else return (float)((player.getLoyalty()-1)/19.0);
     }
-    
-    public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
+
+	private double getAllPlayerXpEffect(Lineup lineup, RatingPredictionParameter params, String xpSectionName, boolean useLeft, boolean useMiddle, boolean useRight) {
+		double ret = 0;
+		for (int pos : IMatchRoleID.aFieldMatchRoleID) {
+			Player player = lineup.getPlayerByPositionID(pos);
+			if (player != null) {
+				var posTactic = getRelevantPositionTactic(lineup.getTactic4PositionID(pos), pos, useLeft, useMiddle, useRight);
+				if (posTactic != null) {
+					var key = MatchRoleID.getPositionPropertyKey(posTactic);
+					var v = params.getParam(xpSectionName, key, 0);
+					if ( v > 0) {
+						var maxXpDelta = params.getParam(RatingPredictionParameter.GENERAL, "maxXpDelta", 0);
+						var xp = player.getExperience() + player.getSubExperience();
+						ret += _calcPlayerExperienceEffect(config.getPlayerStrengthParameters(), maxXpDelta, xp);
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+	private Byte getRelevantPositionTactic(byte taktik, int pos, boolean useLeft, boolean useMiddle, boolean useRight) {
+		switch (pos) {
+			case keeper:
+				return getPosition(pos, taktik);
+			case rightCentralDefender, rightBack, rightWinger, rightInnerMidfield, rightForward: {
+				if (useRight) {
+					return getPosition(pos, taktik);
+				}
+				break;
+			}
+			case leftCentralDefender, leftBack, leftWinger, leftInnerMidfield, leftForward: {
+				if (useLeft) {
+					return getPosition(pos, taktik);
+				}
+				break;
+			}
+			case middleCentralDefender, centralInnerMidfield, centralForward: {
+				if (useMiddle) {
+					return getPosition(pos, taktik);
+				}
+				break;
+			}
+		}
+		return null;
+	}
+
+	public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
     	double[][] retArray = new double[IMatchRoleID.NUM_POSITIONS][SPEC_ALL];
         for(int pos : IMatchRoleID.aFieldMatchRoleID) {
             Player player = _lineup.getPlayerByPositionID(pos);
-            byte taktik = _lineup.getTactic4PositionID(pos);
             if(player != null) {
-				int posTactic = -1;
-				switch (pos) {
-					case keeper -> posTactic = getPosition(pos, taktik);
-					case rightCentralDefender, rightBack, rightWinger, rightInnerMidfield, rightForward -> {
-						if (useRight) {
-							posTactic = getPosition(pos, taktik);
-						}
-					}
-					case leftCentralDefender, leftBack, leftWinger, leftInnerMidfield, leftForward -> {
-						if (useLeft) {
-							posTactic = getPosition(pos, taktik);
-						}
-					}
-					case middleCentralDefender, centralInnerMidfield, centralForward -> {
-						if (useMiddle) {
-							posTactic = getPosition(pos, taktik);
-						}
-					}
-				}
-
-				if ( posTactic >= 0 ){
+				byte taktik = _lineup.getTactic4PositionID(pos);
+				var posTactic = getRelevantPositionTactic(taktik, pos, useLeft, useMiddle, useRight);
+				if ( posTactic != null ){
 					if ( this.startingLineup.getManMarkingPosition() != null) {
 						var manMarkingOrder = this.startingLineup.getManMarkingOrder();
 						if (manMarkingOrder != null &&
@@ -745,7 +750,14 @@ public class RatingPredictionManager {
 						}
 					}
 					int specialty = player.getPlayerSpecialty();
-					retArray[posTactic][specialty] += calcPlayerStrength(t, player, skillType ,useForm, _lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING, weather, useWeatherImpact);
+					retArray[(int)posTactic][specialty] += calcPlayerStrength(
+							t,
+							player,
+							skillType,
+							useForm,
+							_lineup.getTacticType() == IMatchDetails.TAKTIK_PRESSING,
+							weather, useWeatherImpact,
+							getCrowdingPenalty(_lineup, getPosition(pos, NORMAL)));
 				}
             }
         }
@@ -753,10 +765,10 @@ public class RatingPredictionManager {
     }
 
 	public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing) {
-    	return calcPlayerStrength(t, player, skillType, useForm, isPressing, null, false);
+    	return calcPlayerStrength(t, player, skillType, useForm, isPressing, null, false, 1);
 	}
 
-    public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, @Nullable Weather weather, boolean useWeatherImpact) {
+    public static float calcPlayerStrength(double t, Player player, int skillType, boolean useForm, boolean isPressing, @Nullable Weather weather, boolean useWeatherImpact, double overcrowdingPenalty) {
         double retVal = 0.0F;
         try
         {
@@ -770,7 +782,7 @@ public class RatingPredictionManager {
              * the user has set an offset manually -> use this sub/offset
              */
             if (subskillFromDB > 0 || player.getLastLevelUp(skillType) != null ) {
-				subSkill = player.getSub4Skill(skillType);
+				subSkill = subskillFromDB;
 			}
             else {
 				/*
@@ -793,12 +805,8 @@ public class RatingPredictionManager {
 				skill *= player.getImpactWeatherEffect(weather);
 			}
 
-			HOLogger.instance().debug(RatingPredictionManager.class, "Player: " + player.getFullName());
-            retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
-            		getSkillName(skillType), player.getStamina(), player.getExperience(), skill, player.getForm(), useForm);
-//            System.out.println("calcPlayerStrength for "+player.getSpielerID()
-//            		+", st="+skillType+", s="+skill+", k="+player.getKondition()
-//            		+", xp="+player.getErfahrung()+", f="+player.getForm()+": "+retVal);
+			//HOLogger.instance().debug(RatingPredictionManager.class, "Player: " + player.getFullName());
+            retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(), getSkillName(skillType), player.getStamina(), player.getExperience() + player.getSubExperience(), skill, player.getForm(), useForm, overcrowdingPenalty);
         }
         catch(Exception e) {
         	e.printStackTrace();
@@ -837,84 +845,103 @@ public class RatingPredictionManager {
 		//    	System.out.println(delta);
     	return (float)params.getParam(useSection, "skillSubDeltaForLevel"+skill, 0);
     }
-    
-    private static double _calcPlayerStrength (RatingPredictionParameter params,
-    	String sectionName, double stamina, double xp, double skill, double form, boolean useForm) {
-    	// If config changed, we have to clear the cache
+
+    private static double _calcPlayerExperienceEffect(RatingPredictionParameter playerStrengthParameters, double maxXpDelta, double experience) {
+		if (maxXpDelta <= 0) return 0;
+		// TODO: Caching
+		double xp = 1;
+		var ret = xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "constantEffK", 0);
+		xp *= experience; // x
+		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "linearEffK", 1);
+		xp *= experience; // x^2
+		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quadraticEffK", 0);
+		xp *= experience; // x^3
+		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "cubicEffK", 0);
+		xp *= experience; // x^4
+		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quarticEffK", 0);
+		return ret * maxXpDelta;
+	}
+
+    private static double _calcPlayerStrength (RatingPredictionParameter playerStrengthParameters,
+    	String sectionName, double stamina, double xp, double skill, double form, boolean useForm, double overcrowdingPenalty) {
+		// If config changed, we have to clear the cache
 		if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
-    		HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
-    		playerStrengthCache.clear();
-    		playerStrengthCache.put ("lastRebuild", (double) new Date().getTime());
-    	}
-    	String key = params.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm;
-    	if (playerStrengthCache.containsKey(key)) {
-//    		HOLogger.instance().debug(RatingPredictionManager.class, "Using from cache: " + playerStrengthCache.get(key));
-    		return playerStrengthCache.get(key);
-    	}
-    	double stk;
-    	String useSection = sectionName;
-    	if (!params.hasSection(sectionName))
-    		useSection = RatingPredictionParameter.GENERAL;
-
-    	form += params.getParam(useSection, "formDelta", 0);
-
-    	// Compute Xp Effect
-		if (params.getParam(useSection, "multiXpLog10", 99) != 99) {xp = params.getParam(useSection, "multiXpLog10", 0) * Math.log10(xp);}
-		else {
-			xp += params.getParam(useSection, "xpDelta", 0);
-			xp = Math.min(xp, params.getParam(useSection, "xpMax", 99999));
-			xp *= params.getParam(useSection, "xpMultiplier", 1);
-			xp = Math.pow(xp, params.getParam(useSection, "xpPower", 1));
-			xp *= params.getParam(useSection, "finalXpMultiplier", 1);
-			xp += params.getParam(useSection, "finalXpDelta", 0);
+			HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
+			playerStrengthCache.clear();
+			playerStrengthCache.put("lastRebuild", (double) new Date().getTime());
 		}
-		xp = Math.max(xp, params.getParam(useSection, "xpMin", 0));
+		String key = playerStrengthParameters.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm + "|" + overcrowdingPenalty;
+		if (playerStrengthCache.containsKey(key)) {
+			return playerStrengthCache.get(key);
+		}
 
-		skill += params.getParam(useSection, "skillDelta", 0);
-    	skill = Math.max(skill, params.getParam(useSection, "skillMin", 0));
-		skill = Math.min(skill, params.getParam(useSection, "skillMax", 99999));
-		skill *= params.getParam(useSection, "skillMultiplier", 1);
-		skill = Math.pow(skill, params.getParam(useSection, "skillPower", 1));
+		HOLogger.instance().debug(RatingPredictionManager.class, "sectionName=" + sectionName + " stamina=" + stamina + " xp=" + xp + " skill=" + skill + " form=" + form + " useForm=" + useForm);
 
-    	form = Math.max(form, params.getParam(useSection, "formMin", 0));
-    	form = Math.min(form, params.getParam(useSection, "formMax", 99999));
-    	form *= params.getParam(useSection, "formMultiplier", 1);
-    	form = Math.pow(form, params.getParam(useSection, "formPower", 1));
+		double rating;
+		String useSection = sectionName;
+		if (!playerStrengthParameters.hasSection(sectionName))
+			useSection = RatingPredictionParameter.GENERAL;
+
+		// Compute Xp Effect
+		if (playerStrengthParameters.getParam(useSection, "multiXpLog10", 99) != 99) {
+			xp = playerStrengthParameters.getParam(useSection, "multiXpLog10", 0) * Math.log10(xp);
+		} else {
+			xp += playerStrengthParameters.getParam(useSection, "xpDelta", 0);
+			xp = Math.min(xp, playerStrengthParameters.getParam(useSection, "xpMax", 99999));
+			xp *= playerStrengthParameters.getParam(useSection, "xpMultiplier", 1);
+			xp = Math.pow(xp, playerStrengthParameters.getParam(useSection, "xpPower", 1));
+			xp *= playerStrengthParameters.getParam(useSection, "finalXpMultiplier", 1);
+			xp += playerStrengthParameters.getParam(useSection, "finalXpDelta", 0);
+		}
+		xp = Math.max(xp, playerStrengthParameters.getParam(useSection, "xpMin", 0));
+
+		skill += playerStrengthParameters.getParam(useSection, "skillDelta", 0);
+		skill = Math.max(skill, playerStrengthParameters.getParam(useSection, "skillMin", 0));
+		skill = Math.min(skill, playerStrengthParameters.getParam(useSection, "skillMax", 99999));
+		skill *= playerStrengthParameters.getParam(useSection, "skillMultiplier", 1);
+		skill = Math.pow(skill, playerStrengthParameters.getParam(useSection, "skillPower", 1));
+
+		form += playerStrengthParameters.getParam(useSection, "formDelta", 0);
+		form = Math.max(form, playerStrengthParameters.getParam(useSection, "formMin", 0));
+		form = Math.min(form, playerStrengthParameters.getParam(useSection, "formMax", 99999));
+		form *= playerStrengthParameters.getParam(useSection, "formMultiplier", 1);
+		form = Math.pow(form, playerStrengthParameters.getParam(useSection, "formPower", 1));
 
 
-    	if (params.getParam(useSection, "skillLog", 0) > 0)
-    		skill = Math.log(skill)/Math.log(params.getParam(useSection, "skillLog", 0));
-    	if (params.getParam(useSection, "formLog", 0) > 0)
-    		form = Math.log(form)/Math.log(params.getParam(useSection, "formLog", 0));
+		if (playerStrengthParameters.getParam(useSection, "skillLog", 0) > 0)
+			skill = Math.log(skill) / Math.log(playerStrengthParameters.getParam(useSection, "skillLog", 0));
+		if (playerStrengthParameters.getParam(useSection, "formLog", 0) > 0)
+			form = Math.log(form) / Math.log(playerStrengthParameters.getParam(useSection, "formLog", 0));
 
 
-    	skill *= params.getParam(useSection, "finalSkillMultiplier", 1);
-    	form *= params.getParam(useSection, "finalFormMultiplier", 1);
+		skill *= playerStrengthParameters.getParam(useSection, "finalSkillMultiplier", 1);
+		form *= playerStrengthParameters.getParam(useSection, "finalFormMultiplier", 1);
 
-    	
-    	skill += params.getParam(useSection, "finalSkillDelta", 0);
-    	form += params.getParam(useSection, "finalFormDelta", 0);
 
-    	
-    	stk = skill;
-    	if (useForm && params.getParam(useSection, "resultMultiForm", 0) > 0)
-    		stk *= params.getParam(useSection, "resultMultiForm", 0);
-    	if (params.getParam(useSection, "resultMultiXp", 0) > 0)
-    		stk *= params.getParam(useSection, "resultMultiXp", 0) * xp;
-		stk += params.getParam(useSection, "resultAddXp", 0) * xp;
+		skill += playerStrengthParameters.getParam(useSection, "finalSkillDelta", 0);
+		form += playerStrengthParameters.getParam(useSection, "finalFormDelta", 0);
 
-   		if (useForm)
-   			stk *= form;
 
-//		HOLogger.instance().debug(RatingPredictionManager.class, "Adding to cache: " + key + "=" + stk);
+		rating = skill;
+		if (useForm && playerStrengthParameters.getParam(useSection, "resultMultiForm", 0) > 0)
+			rating *= playerStrengthParameters.getParam(useSection, "resultMultiForm", 0);
+		if (playerStrengthParameters.getParam(useSection, "resultMultiXp", 0) > 0)
+			rating *= playerStrengthParameters.getParam(useSection, "resultMultiXp", 0) * xp;
 
-   		playerStrengthCache.put(key, stk);
-//    	long endTime = new Date().getTime();
-    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength ("
-    			+ "SN=" + sectionName + ", Stamina=" + stamina + ", XP=" + xp + ", skill=" + skill + ", form=" + form + ", uF=" + useForm+ ") =" + stk);
+		if (useForm) {
+			rating *= form;
+		}
 
-		return stk;
-    }
+		rating *= overcrowdingPenalty;
+
+		rating += playerStrengthParameters.getParam(useSection, "resultAddXp", 0) * xp;
+
+		playerStrengthCache.put(key, rating);
+		HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength ("
+				+ "SN=" + sectionName + ", Stamina=" + stamina + ", XP=" + xp + ", skill=" + skill + ", form=" + form + ", uF=" + useForm + ", overcrowdingPenalty=" + overcrowdingPenalty + ") =" + rating);
+
+		return rating;
+	}
 
     private void init(Team team)
     {
@@ -1058,7 +1085,7 @@ public class RatingPredictionManager {
             Player ispieler = startingLineup.getPlayerByPositionID(i);
             byte taktik = startingLineup.getTactic4PositionID(i);
             if(ispieler != null) {
-            	passing =  calcPlayerStrength(-1, ispieler, PASSING, true, false, null, false);
+            	passing =  calcPlayerStrength(-1, ispieler, PASSING, true, false, null, false, 1);
             	// Zus. MF/IV/ST
                 if(taktik == 7 || taktik == 6 || taktik == 5)
                     passing *= params.getParam("extraMulti");
@@ -1089,8 +1116,8 @@ public class RatingPredictionManager {
         {
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-				retVal += (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, true, weather, true));
-				retVal += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, true, weather, true));
+				retVal += (params.getParam("counter", "multiPs", 1.0) * calcPlayerStrength(-1, player, PASSING, true, true, weather, true, 1));
+				retVal += (params.getParam("counter", "multiDe", 1.0) * calcPlayerStrength(-1, player, DEFENDING, true, true, weather, true, 1));
             }
         }
         retVal *= params.getParam("counter", "postMulti", 1.0);
@@ -1110,7 +1137,7 @@ public class RatingPredictionManager {
         {
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
-            	defense = calcPlayerStrength(-2, player, DEFENDING, true, true, weather, true);
+            	defense = calcPlayerStrength(-2, player, DEFENDING, true, true, weather, true, 1);
                 if (player.getPlayerSpecialty() == PlayerSpeciality.POWERFUL) {
                 	defense *= 2;
                 }
@@ -1137,8 +1164,8 @@ public class RatingPredictionManager {
         {
 			Player player = startingLineup.getPlayerByPositionID(pos);
 			if(player != null) {
-				retVal += (params.getParam("longshots", "multiSc", 1.0) * calcPlayerStrength(-1, player, SCORING, true, true, weather, true));
-				retVal += (params.getParam("longshots", "multiSp", 1.0) * calcPlayerStrength(-1, player, SETPIECES, true, true, weather, true));
+				retVal += (params.getParam("longshots", "multiSc", 1.0) * calcPlayerStrength(-1, player, SCORING, true, true, weather, true, 1));
+				retVal += (params.getParam("longshots", "multiSp", 1.0) * calcPlayerStrength(-1, player, SETPIECES, true, true, weather, true, 1));
 			}
         }
 

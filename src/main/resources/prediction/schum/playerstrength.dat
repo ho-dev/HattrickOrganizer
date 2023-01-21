@@ -31,17 +31,26 @@ homegrownbonus=0.5
 loyaltyMax=1
 loyaltySkillMax=20 
 
+# Form parameters
 formMin=0
 formMax=8
-formDelta=-0.5
+formDelta=0
 formMultiplier=0.125	# 1/8
-formPower=0.45
+formPower=0.6225
 resultMultiForm=1
 
-multiXpLog10=1.33333333333333333333333333333333333333333333333333333333333		# 4/3
-resultAddXp=1
+# experience
+# Fit schum's experience factor K
+quarticEffK=-0.00000862
+cubicEffK=0.00056438
+quadraticEffK=-0.01507852
+linearEffK=0.20426157
+constantEffK=-0.18965312
 
-skillDelta=0
+multiXpLog10=1.33333333333333333333333333333333333333333333333333333333333		# 4/3
+#resultAddXp=1
+
+skillDelta=-1
 skillMin=0
 
 #percentage per which a player is impacted positively/negatively by the weather

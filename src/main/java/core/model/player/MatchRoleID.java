@@ -232,39 +232,6 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	}
 
 	/**
-	 * Gibt zu einer Positionsid den Namen zurück
-	 */
-	public static String getNameForID(int id) {
-		return switch (id) {
-			case keeper -> "keeper";
-			case rightBack -> "rightBack";
-			case rightCentralDefender -> "rightCentralDefender";
-			case leftCentralDefender -> "leftCentralDefender";
-			case middleCentralDefender -> "middleCentralDefender";
-			case leftBack -> "leftBack";
-			case rightWinger -> "rightWinger";
-			case rightInnerMidfield -> "rightInnerMidfield";
-			case centralInnerMidfield -> "centralInnerMidfield";
-			case leftInnerMidfield -> "leftInnerMidfield";
-			case leftWinger -> "leftWinger";
-			case rightForward -> "rightForward";
-			case centralForward -> "centralForward";
-			case leftForward -> "leftForward";
-			case substCD1, substCD2 -> "substDefender";
-			case substWB1, substWB2 -> "substWingback";
-			case substIM1, substIM2 -> "substInsideMid";
-			case substWI1, substWI2 -> "substWinger";
-			case substGK1, substGK2 -> "substKeeper";
-			case substFW1, substFW2 -> "substForward";
-			case substXT1, substXT2 -> "substExtra";
-			default -> "";
-		};
-
-	}
-
-
-
-	/**
 	 * Returns the name of a positionsid
 	 */
 	public static String getNameForPosition(byte posId) {
@@ -515,6 +482,31 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		return UNKNOWN;
 	}
 
+	public static String getPositionPropertyKey(byte position) {
+		return switch (position) {
+			case KEEPER -> "keeper";
+			case BACK_TOMID -> "WB_tm";
+			case BACK_OFF -> "WB_off";
+			case BACK_DEF -> "WB_def";
+			case BACK -> "WB_norm";
+			case CENTRAL_DEFENDER_TOWING -> "CD_tw";
+			case CENTRAL_DEFENDER_OFF -> "CD_off";
+			case CENTRAL_DEFENDER -> "CD_norm";
+			case WINGER_TOMID -> "WI_tm";
+			case WINGER_OFF -> "WI_off";
+			case WINGER_DEF -> "WI_def";
+			case WINGER -> "WI_norm";
+			case MIDFIELDER_TOWING -> "IM_tw";
+			case MIDFIELDER_OFF -> "IM_off";
+			case MIDFIELDER_DEF -> "IM_def";
+			case MIDFIELDER -> "IM_norm";
+			case FORWARD_DEF -> "FW_def";
+			case FORWARD_TOWING -> "FW_tw";
+			case FORWARD -> "FW_norm";
+			default -> "";
+		};
+	}
+
 	/**
 	 * Setter for property m_iId.
 	 *
@@ -636,8 +628,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 
 	@Override
 	public final int compareTo(@NotNull IMatchRoleID obj) {
-		if (obj instanceof MatchRoleID) {
-			final MatchRoleID position = (MatchRoleID) obj;
+		if (obj instanceof final MatchRoleID position) {
 
 			// Beide aufgestellt ?
 			if ((this.getId() < IMatchRoleID.startReserves)
