@@ -590,56 +590,45 @@ public class RatingPredictionManager {
     
 
     public static double[][] getAllPlayerWeights (RatingPredictionParameter params, String sectionName) {
-    	double[][] weights = new double[IMatchRoleID.NUM_POSITIONS][NUM_SPEC];
+		double[][] weights = new double[IMatchRoleID.NUM_POSITIONS][NUM_SPEC];
 		double modCD = params.getParam(sectionName, "allCDs", 1);
 		double modWB = params.getParam(sectionName, "allWBs", 1);
 		double modIM = params.getParam(sectionName, "allIMs", 1);
 		double modWI = params.getParam(sectionName, "allWIs", 1);
 		double modFW = params.getParam(sectionName, "allFWs", 1);
-    	for (int specialty=0; specialty<NUM_SPEC; specialty++) {
-    		if (specialty == SPEC_NOTUSED)
-    			continue;
-    		String specialtyName = getSpecialtyName(specialty, true);
-    		weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName);
-    		weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName);	// alias for keeper
-    		weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD;
-    		weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] += params.getParam(sectionName, "cd" + specialtyName) * modCD;	// alias for cd_norm
-    		weights[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD;
-    		weights[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD;
-    		weights[IMatchRoleID.BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB;
-    		weights[IMatchRoleID.BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB;	// alias for wb_norm
-    		weights[IMatchRoleID.BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB;
-    		weights[IMatchRoleID.BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB;
-    		weights[IMatchRoleID.BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB;
-    		weights[IMatchRoleID.MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM;
-    		weights[IMatchRoleID.MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM;	// alias for im_norm
-    		weights[IMatchRoleID.MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM;
-    		weights[IMatchRoleID.MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM;
-    		weights[IMatchRoleID.MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM;
-    		weights[IMatchRoleID.WINGER][specialty] = params.getParam(sectionName, "wi_norm" + specialtyName) * modWI;
-    		weights[IMatchRoleID.WINGER][specialty] += params.getParam(sectionName, "wi" + specialtyName) * modWI;	// alias for wi_norm
-    		weights[IMatchRoleID.WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI;
-    		weights[IMatchRoleID.WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI;
-    		weights[IMatchRoleID.WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI;
-    		weights[IMatchRoleID.FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW;
-    		weights[IMatchRoleID.FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW;	// alias for fw_norm
-    		weights[IMatchRoleID.FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW;
-    		weights[IMatchRoleID.FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW;
-//    		weights[IMatchRoleID.POS_ZUS_INNENV][specialty] = params.getParam(sectionName, "extra_cd" + specialtyName) * modCD;
-//    		weights[IMatchRoleID.POS_ZUS_MITTELFELD][specialty] = params.getParam(sectionName, "extra_im" + specialtyName) * modIM;
-//			weights[IMatchRoleID.POS_ZUS_STUERMER][specialty] = params.getParam(sectionName, "extra_fw" + specialtyName) * modFW;
-//			weights[IMatchRoleID.POS_ZUS_STUERMER_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW;
-//			weights[IMatchRoleID.POS_ZUS_INNENV][specialty] += params.getParam(sectionName, "cd_xtra" + specialtyName) * modCD;	// alias for extra_cd
-//			weights[IMatchRoleID.POS_ZUS_MITTELFELD][specialty] += params.getParam(sectionName, "im_xtra" + specialtyName) * modIM;	// alias for extra_im
-//			weights[IMatchRoleID.POS_ZUS_STUERMER][specialty] += params.getParam(sectionName, "fw_xtra" + specialtyName) * modFW;	// alias for extra_fw
-//			if (extraMulti > 0) {
-//				weights[IMatchRoleID.POS_ZUS_INNENV][specialty] = weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] * extraMulti; // if extraMulti is defined, use extraMulti*CD
-//				weights[IMatchRoleID.POS_ZUS_MITTELFELD][specialty] = weights[IMatchRoleID.MIDFIELDER][specialty] * extraMulti; // if extraMulti is defined, use extraMulti*IM
-//				weights[IMatchRoleID.POS_ZUS_STUERMER][specialty] = weights[IMatchRoleID.FORWARD][specialty] * extraMulti; // if extraMulti is defined, use extraMulti*FW
-//			}
-    	}
-    	return weights;
-    }
+		var maxSkillContribution = params.getParam(RatingPredictionParameter.GENERAL, "maxSkillContribution", 1);
+		for (int specialty = 0; specialty < NUM_SPEC; specialty++) {
+			if (specialty == SPEC_NOTUSED)
+				continue;
+			String specialtyName = getSpecialtyName(specialty, true);
+			weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName) * maxSkillContribution;
+			weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName) * maxSkillContribution;    // alias for keeper
+			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD * maxSkillContribution;
+			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] += params.getParam(sectionName, "cd" + specialtyName) * modCD;    // alias for cd_norm
+			weights[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD * maxSkillContribution;
+			weights[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD * maxSkillContribution;
+			weights[IMatchRoleID.BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB * maxSkillContribution;
+			weights[IMatchRoleID.BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB * maxSkillContribution;    // alias for wb_norm
+			weights[IMatchRoleID.BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB * maxSkillContribution;
+			weights[IMatchRoleID.BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB * maxSkillContribution;
+			weights[IMatchRoleID.BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB * maxSkillContribution;
+			weights[IMatchRoleID.MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM * maxSkillContribution;
+			weights[IMatchRoleID.MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM * maxSkillContribution;    // alias for im_norm
+			weights[IMatchRoleID.MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM * maxSkillContribution;
+			weights[IMatchRoleID.MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM * maxSkillContribution;
+			weights[IMatchRoleID.MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM * maxSkillContribution;
+			weights[IMatchRoleID.WINGER][specialty] = params.getParam(sectionName, "wi_norm" + specialtyName) * modWI * maxSkillContribution;
+			weights[IMatchRoleID.WINGER][specialty] += params.getParam(sectionName, "wi" + specialtyName) * modWI * maxSkillContribution;    // alias for wi_norm
+			weights[IMatchRoleID.WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI * maxSkillContribution;
+			weights[IMatchRoleID.WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI * maxSkillContribution;
+			weights[IMatchRoleID.WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI * maxSkillContribution;
+			weights[IMatchRoleID.FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW * maxSkillContribution;
+			weights[IMatchRoleID.FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW * maxSkillContribution;    // alias for fw_norm
+			weights[IMatchRoleID.FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW * maxSkillContribution;
+			weights[IMatchRoleID.FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW * maxSkillContribution;
+		}
+		return weights;
+	}
 
     public int getNumIMs (Lineup _lineup) {
     	int retVal = 0;
@@ -697,7 +686,7 @@ public class RatingPredictionManager {
 					if ( v > 0) {
 						var maxXpDelta = params.getParam(RatingPredictionParameter.GENERAL, "maxXpDelta", 0);
 						var xp = player.getExperience() + player.getSubExperience();
-						ret += _calcPlayerExperienceEffect(config.getPlayerStrengthParameters(), maxXpDelta, xp);
+						ret += _calcPlayerExperienceEffect(config.getPlayerStrengthParameters(), v*maxXpDelta, xp);
 					}
 				}
 			}
@@ -849,16 +838,16 @@ public class RatingPredictionManager {
     private static double _calcPlayerExperienceEffect(RatingPredictionParameter playerStrengthParameters, double maxXpDelta, double experience) {
 		if (maxXpDelta <= 0) return 0;
 		// TODO: Caching
-		double xp = 1;
-		var ret = xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "constantEffK", 0);
-		xp *= experience; // x
-		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "linearEffK", 1);
-		xp *= experience; // x^2
-		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quadraticEffK", 0);
-		xp *= experience; // x^3
-		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "cubicEffK", 0);
-		xp *= experience; // x^4
-		ret += xp * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quarticEffK", 0);
+		var xp = Math.max(0,experience + playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "xpDelta", 0));
+		var ret = playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "constantEffK", 0);
+		var x = xp; // x
+		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "linearEffK", 1);
+		x *= xp; // x^2
+		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quadraticEffK", 0);
+		x *= xp; // x^3
+		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "cubicEffK", 0);
+		x *= xp; // x^4
+		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quarticEffK", 0);
 		return ret * maxXpDelta;
 	}
 
