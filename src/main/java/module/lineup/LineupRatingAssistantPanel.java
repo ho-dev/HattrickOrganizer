@@ -5,7 +5,6 @@ import core.gui.Updatable;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.assistant.LineupAssistantPanel;
-import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.MatchBanner;
 import module.lineup.ratings.LineupRatingPanel;
@@ -22,7 +21,6 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     private final LineupPanel m_clLineupPanel;
     private LineupRatingPanel lineupRatingPanel;
     private LineupSettingsPanel lineupSettingsPanel;
-    private LineupDatabasePanel lineupDatabasePanel;
     private LineupAssistantPanel lineupAssistantPanel;
     private MatchAndLineupSelectionPanel matchAndLineupPanel;
     private MatchBanner matchBanner;
@@ -62,28 +60,32 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     }
 
     private void initComponents() {
+
+        var pane = new JPanel(new BorderLayout());
+
         var lineupRatingPanel = getLineupRatingPanel();
         var lineupSettingsPanel = getLineupSettingsPanel();
         var lineupAssistantPanel = getLineupAssistantPanel();
 
-        this.lineupDatabasePanel = new LineupDatabasePanel(m_clLineupPanel);
+        LineupDatabasePanel lineupDatabasePanel = new LineupDatabasePanel(m_clLineupPanel);
+        pane.add(lineupRatingPanel, BorderLayout.NORTH);
 
-        // steff 1217
-        setLayout(new BorderLayout());
-        add(lineupRatingPanel, BorderLayout.NORTH);
         var tabView = new JTabbedPane();
         tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.assistant"), new JScrollPane(lineupAssistantPanel));
         tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.lineup_simulator"), new JScrollPane(lineupSettingsPanel));
         tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"), new JScrollPane(lineupDatabasePanel));
-        add(tabView, BorderLayout.CENTER);
+        pane.add(tabView, BorderLayout.CENTER);
 
         var matchPanel = new JPanel(new BorderLayout());
         this.matchAndLineupPanel = new MatchAndLineupSelectionPanel(m_clLineupPanel);
         matchPanel.add(matchAndLineupPanel);
         matchBanner = new MatchBanner(matchAndLineupPanel);
-        matchPanel.add(matchBanner, BorderLayout.EAST);
+        matchPanel.add(matchBanner, BorderLayout.NORTH);
 
-        add(matchPanel, BorderLayout.SOUTH);
+        pane.add(matchPanel, BorderLayout.SOUTH);
+
+        setLayout(new BorderLayout());
+        add(new JScrollPane(pane), BorderLayout.CENTER);
     }
 
     public void refresh() {
@@ -102,11 +104,6 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     @Override
     public final void update() {
         m_clLineupPanel.update();
-    }
-
-    public boolean isSelectedMatchCompetitive() {
-        var selectedMatch = this.matchAndLineupPanel.getSelectedMatch();
-        return selectedMatch != null && selectedMatch.getMatchType().isCompetitive();
     }
 
 }

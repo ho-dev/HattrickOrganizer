@@ -35,7 +35,7 @@ public enum GoalDiffCriteria {
 
 	private final byte id;
 
-	private GoalDiffCriteria(byte id) {
+	GoalDiffCriteria(byte id) {
 		this.id = id;
 	}
 
@@ -51,4 +51,14 @@ public enum GoalDiffCriteria {
 		}
 		return null;
 	}
+
+	public static GoalDiffCriteria parse(String property) {
+		try {
+			return getById(Byte.parseByte(property));
+		}
+		catch(Exception ignore){
+			return ANY_STANDING;
+		}
+	}
+
 }
