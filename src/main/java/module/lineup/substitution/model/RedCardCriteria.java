@@ -33,7 +33,7 @@ public enum RedCardCriteria {
 
 	private final byte id;
 
-	private RedCardCriteria(byte id) {
+	RedCardCriteria(byte id) {
 		this.id = id;
 	}
 
@@ -48,5 +48,14 @@ public enum RedCardCriteria {
 			}
 		}
 		return null;
+	}
+
+	public static RedCardCriteria parse(String id){
+		try {
+			return getById(Byte.parseByte(id));
+		}
+		catch(Exception ignore){
+			return IGNORE;
+		}
 	}
 }
