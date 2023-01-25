@@ -282,15 +282,6 @@ public class Lineup{
 		var playerorderid = Integer.parseInt(playerorderString);
 		if (playerorderid < 0) return null;
 
-		// bugfix: i had a HRF where subst0standing was missing
-		String val = properties.getProperty(prefix + "standing");
-		GoalDiffCriteria goalDiffCriteria;
-		if (StringUtils.isNumeric(val)) {
-			goalDiffCriteria = GoalDiffCriteria.getById(Byte.parseByte(val));
-		} else {
-			goalDiffCriteria = GoalDiffCriteria.ANY_STANDING;
-		}
-
 		return  new Substitution(
 				Integer.parseInt(properties.getProperty(prefix + "playerorderid")),
 				Integer.parseInt(properties.getProperty(prefix + "playerin")),
@@ -299,8 +290,8 @@ public class Lineup{
 				Byte.parseByte(properties.getProperty(prefix + "matchminutecriteria")),
 				Byte.parseByte(properties.getProperty(prefix + "pos")),
 				Byte.parseByte(properties.getProperty(prefix + "behaviour")),
-				RedCardCriteria.getById(Byte.parseByte(properties.getProperty(prefix + "card"))),
-				goalDiffCriteria);
+				RedCardCriteria.parse(properties.getProperty(prefix + "card")),
+				GoalDiffCriteria.parse(properties.getProperty(prefix + "standing")));
 	}
 
 	/**

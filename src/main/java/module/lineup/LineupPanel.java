@@ -4,7 +4,6 @@ import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.Ratings;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.Player;
@@ -37,7 +36,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
 	private LineupPlayersTableNameColumn lineupPlayersTableNameColumn;
-	private List<Updatable> updatables = new ArrayList<>();
+	private final List<Updatable> updatables = new ArrayList<>();
 
 	public LineupPanel() {
 		initComponents();
@@ -248,26 +247,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		this.getLineupRatingPanel().refresh();
 	}
 
-	public void refreshLineupSettingsPanel() {
-		this.getLineupSettingsPanel().refresh();
-	}
-
-	public void resetSettings() {
-		this.getLineupSettingsPanel().resetSettings();
-	}
-
-	public void updateLineupPositions() {
-		this.getLineupPositionsPanel().update();
-	}
-
-	public void setPreviousRatings(Ratings oRatingsBefore) {
-		this.getLineupRatingPanel().setPreviousRatings(oRatingsBefore);
-	}
-
-	public void calculateRatings() {
-		this.getLineupRatingPanel().calculateRatings();
-	}
-
 	public void setAssistantGroupFilter(boolean b) {
 		this.getLineupAssistantPanel().setGroupFilter(b);
 	}
@@ -328,7 +307,4 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		return this.getLineupPositionsPanel().getAllPositions();
 	}
 
-	public boolean isSelectedMatchCompetitive() {
-		return this.getLineupRatingAssistantPanel().isSelectedMatchCompetitive();
-	}
 }
