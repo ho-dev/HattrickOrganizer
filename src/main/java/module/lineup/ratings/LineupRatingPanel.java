@@ -32,7 +32,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
         private final ColorLabelEntry compare = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.CENTER);
         private final ColorLabelEntry number = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);
-        private JLabel text = new JLabel("", SwingConstants.CENTER);
+        private final JLabel text = new JLabel("", SwingConstants.CENTER);
         private Color color;
         private Double rating=0.;
 
@@ -64,7 +64,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             int width = 10;
             int height = 10;
             g.setColor(color);
-            g.fillOval(5, 5, width, height);
+            g.fillOval(5, this.getHeight() - 15, width, height);
         }
 
         public void setColor(Color color) {
@@ -72,6 +72,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         }
 
         public void setRatingRatio(double ratingRatio) {
+            Double COLOR_BORDERS_LIMIT_RATIO = 0.85;
             if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
                 setColor(RATING_BELOW_LIMIT);
             } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
@@ -125,15 +126,14 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private RatingPanel m_jpCentralDefense;
     private RatingPanel m_jpLeftDefense;
     private RatingPanel m_jpRightDefense;
-    private JPanel m_jpHatStats = new JPanel(new BorderLayout());
-    private JPanel m_jpLoddarStats = new JPanel(new BorderLayout());
-    private JPanel m_jpTacticStats = new JPanel(new BorderLayout());
-    private JPanel m_jpFormationStats = new JPanel(new BorderLayout());
-    private NumberFormat m_clFormat;
+    private final JPanel m_jpHatStats = new JPanel(new BorderLayout());
+    private final JPanel m_jpLoddarStats = new JPanel(new BorderLayout());
+    private final JPanel m_jpTacticStats = new JPanel(new BorderLayout());
+    private final JPanel m_jpFormationStats = new JPanel(new BorderLayout());
+    private final NumberFormat m_clFormat;
     private final JButton m_jbCopyRatingButton = new JButton();
     private final JButton m_jbFeedbackButton = new JButton();
-    private Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
-    private final Double COLOR_BORDERS_LIMIT_RATIO = 0.85;
+    private final Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
 
     public LineupRatingPanel() {
         initComponents();
@@ -557,20 +557,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         return HOVerwaltung.instance().getLanguageString(key);
     }
 
-    private CBItem[] getPredictionItems() {
-        final ResourceBundle bundle = HOVerwaltung.instance().getResource();
-        String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
-        CBItem[] allItems = new CBItem[allPredictionNames.length];
-        for (int i = 0; i < allItems.length; i++) {
-            String predictionName = allPredictionNames[i];
-            if (bundle.containsKey("prediction." + predictionName))
-                predictionName = HOVerwaltung.instance().getLanguageString(
-                        "prediction." + predictionName);
-            allItems[i] = new CBItem(predictionName, i);
-        }
-        return allItems;
-    }
-
     public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
@@ -600,20 +586,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
                 }
             }
         }
-    }
-
-    public void setPreviousRatings(Ratings previousRatings) {
-        final double t = m_jpMinuteToggler.getCurrentKey();
-
-        m_jpRightDefense.setRating(previousRatings.getRightDefense().get(t));
-        m_jpCentralDefense.setRating(previousRatings.getCentralDefense().get(t));
-        m_jpLeftDefense.setRating(previousRatings.getLeftDefense().get(t));
-
-        m_jpMidfield.setRating(previousRatings.getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-
-        m_jpRightAttack.setRating(previousRatings.getRightAttack().get(t));
-        m_jpCentralAttack.setRating(previousRatings.getCentralAttack().get(t));
-        m_jpLeftAttack.setRating(previousRatings.getLeftAttack().get(t));
     }
 
     @Override
