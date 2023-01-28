@@ -5,6 +5,7 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class FixedColumnsTable extends JScrollPane {
 
@@ -49,16 +50,27 @@ public class FixedColumnsTable extends JScrollPane {
 
         this.setViewportView(table);
         scroll = table;
+
+        for (int i=0; i<scroll.getColumnCount(); i++){
+            var tm = tableModel.columns[i];
+            var cm = scroll.getColumnModel().getColumn(i);
+            cm.setMinWidth(tm.minWidth);
+        }
+
         fixed = new JTable(scroll.getModel());
         fixed.setFocusable(false);
         fixed.setSelectionModel(scroll.getSelectionModel());
         fixed.getTableHeader().setReorderingAllowed(false);
 
+
         //  Remove the fixed columns from the main table
+        int width = 0;
         int i=0;
         for (; i < fixedColumns; i++) {
             var _columnModel = scroll.getColumnModel();
-            _columnModel.removeColumn(_columnModel.getColumn(0));
+            var column = _columnModel.getColumn(0);
+            width += column.getMinWidth();
+            _columnModel.removeColumn(column);
         }
 
         scroll.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -71,7 +83,7 @@ public class FixedColumnsTable extends JScrollPane {
         }
 
         //  Add the fixed table to the scroll pane
-        fixed.setPreferredScrollableViewportSize(fixed.getPreferredSize());
+        fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
         setRowHeaderView(fixed);
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
 
@@ -119,7 +131,7 @@ public class FixedColumnsTable extends JScrollPane {
 
     /**
      * Add a list selection listener
-     * @param listener
+     * @param listener ListSelectionListener
      */
     public void addListSelectionListener(ListSelectionListener listener) {
         ListSelectionModel rowSM = scroll.getSelectionModel();

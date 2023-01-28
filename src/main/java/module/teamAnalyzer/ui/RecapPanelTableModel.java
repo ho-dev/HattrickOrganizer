@@ -29,7 +29,7 @@ public class RecapPanelTableModel extends HOTableModel {
 
     private RecapUserColumn[] initColumns() {
         return new RecapUserColumn[]{
-                new RecapUserColumn("RecapPanel.Game", 100) {
+                new RecapUserColumn("RecapPanel.Game", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
                         return new ColorLabelEntry(lineup.getName(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
