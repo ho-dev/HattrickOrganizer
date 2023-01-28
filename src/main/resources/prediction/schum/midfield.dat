@@ -6,8 +6,16 @@ home                 = 1.20
 awayDerby            = 1.10
 pic                  = 0.84
 mots                 = 1.106
-teamSpiritPreMulti   = 0.147832 # err=0.003676
-teamSpiritPower      = 0.417779 # err=0.005549
+
+# team spirit formula
+# eff(T) = power((teamspirit + teamspiritOffset) * teamspiritPreMulti, teamspiritPower) * teamspiritPostMulti
+#teamSpiritPreMulti   = 0.147832 # err=0.003676
+#teamSpiritPower      = 0.417779 # err=0.005549
+#teamspiritmulti = 0.1
+#teamspiritOffset = 0.5
+teamspiritPower  = 0.5008
+teamspiritPostMulti = 0.446
+
 tacticCounter        = 0.93
 tacticLongshots      = 0.96
 maxXpDelta           = 0.73
@@ -36,22 +44,22 @@ FW_def.technical = 0.35
 FW_tw      = 0.15
 
 [xp_allsides]
-FW_norm    = 0.2
-FW_def     = 0.2
-FW_def.technical = 0.2
-FW_tw      = 0.2
-WB_norm    = 0.2
-WB_off     = 0.2
-WB_def     = 0.2
-WB_tm      = 0.2
-WI_norm    = 0.2
-WI_off     = 0.2
-WI_def     = 0.2
-WI_tm      = 0.2
-IM_norm    = 0.2
-IM_off     = 0.2
-IM_def     = 0.2
-IM_tw      = 0.2
-CD_norm    = 0.2
-CD_off     = 0.2
-CD_tw      = 0.2
+FW_norm    = 1
+FW_def     = 1
+FW_def.technical = 1
+FW_tw      = 1
+WB_norm    = 1
+WB_off     = 1
+WB_def     = 1
+WB_tm      = 1
+WI_norm    = 1
+WI_off     = 1
+WI_def     = 1
+WI_tm      = 1
+IM_norm    = 1
+IM_off     = 1
+IM_def     = 1
+IM_tw      = 1
+CD_norm    = 1
+CD_off     = 1
+CD_tw      = 1

@@ -57,7 +57,7 @@ public class RatingPredictionManager {
     public static final int SPEC_ALL = SPEC_SUPPORT+1; // 9
     public static final int NUM_SPEC = SPEC_ALL+1; // 10
 	public static final double EPSILON = 0.000001;
-	public static final float DEFAULT_WEATHER_BONUS = 0.05f;
+//	public static final float DEFAULT_WEATHER_BONUS = 0.05f;
 
     //~ Class fields -------------------------------------------------------------------------------
 	private static final HashMap<String, LinkedHashMap<Double, Double>> allStaminaEffect = new HashMap<>();
@@ -78,9 +78,6 @@ public class RatingPredictionManager {
     private short taktikType;
 	private final Lineup startingLineup;
     private int pullBackMinute;
-    private boolean pullBackOverride;
-
-
 
 	/**  Evolution of lineup during the game
 	 *   he keys will represent an array of events (in minutes)
@@ -259,7 +256,10 @@ public class RatingPredictionManager {
 		var useRight = useSide(RIGHT, side2calc, sideType);
     	double[][] allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, useLeft, useMiddle, useRight);
     	double[][] allWeights = getAllPlayerWeights(params, sectionName);
-    	for (int effPos=0; effPos < allStk.length; effPos++) {
+		var maxSkillContribution = params.getParam(RatingPredictionParameter.GENERAL, "maxSkillContribution", 1);
+
+
+		for (int effPos=0; effPos < allStk.length; effPos++) {
 			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
     		for (int spec=0; spec < SPEC_ALL; spec++) {
     			if (spec == SPEC_NOTUSED)
@@ -286,7 +286,7 @@ public class RatingPredictionManager {
 			retVal += inkr;
 			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
 		}
-
+		retVal *= maxSkillContribution;
 		retVal = applyCommonProps (retVal, params, sectionName);
     	return retVal;
     }
@@ -333,8 +333,8 @@ public class RatingPredictionManager {
         retVal *= (1 + params.getParam(sectionName, "teamspiritmulti", 0)
         			*(teamspirit - 5.5));
         // Alternative 2: TS exponentiell
-       	retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamspiritpremulti", 1/4.5)),
-       				params.getParam(sectionName, "teamspiritpower", 0));
+       	retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamspiritpremulti", 1) + params.getParam(sectionName, "teamspiritoffset", 0)),
+       				params.getParam(sectionName, "teamspiritpower", 0)) * params.getParam(sectionName,"teamspiritpostmulti", 1);
         
     	if (heimspiel == IMatchDetails.LOCATION_HOME)
     		retVal *= params.getParam(sectionName, "home", 1);
@@ -362,7 +362,8 @@ public class RatingPredictionManager {
         retVal *= getTrainerEffect(defensive, offensive, neutral);
         
         // PullBack event
-        int actualPullBackMinute = (pullBackOverride ? 0 : pullBackMinute);
+//		boolean pullBackOverride = false;
+		int actualPullBackMinute = pullBackMinute;
         if (actualPullBackMinute >= 0 && actualPullBackMinute <= 90) {
         	retVal *= 1.0 + (90 - actualPullBackMinute) / 90.0
 					* params.getParam(sectionName, "pullback", 0);
@@ -596,36 +597,35 @@ public class RatingPredictionManager {
 		double modIM = params.getParam(sectionName, "allIMs", 1);
 		double modWI = params.getParam(sectionName, "allWIs", 1);
 		double modFW = params.getParam(sectionName, "allFWs", 1);
-		var maxSkillContribution = params.getParam(RatingPredictionParameter.GENERAL, "maxSkillContribution", 1);
 		for (int specialty = 0; specialty < NUM_SPEC; specialty++) {
 			if (specialty == SPEC_NOTUSED)
 				continue;
 			String specialtyName = getSpecialtyName(specialty, true);
-			weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName) * maxSkillContribution;
-			weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName) * maxSkillContribution;    // alias for keeper
-			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD * maxSkillContribution;
+			weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName);
+			weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName);    // alias for keeper
+			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD;
 			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] += params.getParam(sectionName, "cd" + specialtyName) * modCD;    // alias for cd_norm
-			weights[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD * maxSkillContribution;
-			weights[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD * maxSkillContribution;
-			weights[IMatchRoleID.BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB * maxSkillContribution;
-			weights[IMatchRoleID.BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB * maxSkillContribution;    // alias for wb_norm
-			weights[IMatchRoleID.BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB * maxSkillContribution;
-			weights[IMatchRoleID.BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB * maxSkillContribution;
-			weights[IMatchRoleID.BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB * maxSkillContribution;
-			weights[IMatchRoleID.MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM * maxSkillContribution;
-			weights[IMatchRoleID.MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM * maxSkillContribution;    // alias for im_norm
-			weights[IMatchRoleID.MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM * maxSkillContribution;
-			weights[IMatchRoleID.MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM * maxSkillContribution;
-			weights[IMatchRoleID.MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM * maxSkillContribution;
-			weights[IMatchRoleID.WINGER][specialty] = params.getParam(sectionName, "wi_norm" + specialtyName) * modWI * maxSkillContribution;
-			weights[IMatchRoleID.WINGER][specialty] += params.getParam(sectionName, "wi" + specialtyName) * modWI * maxSkillContribution;    // alias for wi_norm
-			weights[IMatchRoleID.WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI * maxSkillContribution;
-			weights[IMatchRoleID.WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI * maxSkillContribution;
-			weights[IMatchRoleID.WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI * maxSkillContribution;
-			weights[IMatchRoleID.FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW * maxSkillContribution;
-			weights[IMatchRoleID.FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW * maxSkillContribution;    // alias for fw_norm
-			weights[IMatchRoleID.FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW * maxSkillContribution;
-			weights[IMatchRoleID.FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW * maxSkillContribution;
+			weights[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD;
+			weights[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD;
+			weights[IMatchRoleID.BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB;
+			weights[IMatchRoleID.BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB;    // alias for wb_norm
+			weights[IMatchRoleID.BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB;
+			weights[IMatchRoleID.BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB;
+			weights[IMatchRoleID.BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB;
+			weights[IMatchRoleID.MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM;
+			weights[IMatchRoleID.MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM;    // alias for im_norm
+			weights[IMatchRoleID.MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM;
+			weights[IMatchRoleID.MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM;
+			weights[IMatchRoleID.MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM;
+			weights[IMatchRoleID.WINGER][specialty] = params.getParam(sectionName, "wi_norm" + specialtyName) * modWI;
+			weights[IMatchRoleID.WINGER][specialty] += params.getParam(sectionName, "wi" + specialtyName) * modWI;    // alias for wi_norm
+			weights[IMatchRoleID.WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI;
+			weights[IMatchRoleID.WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI;
+			weights[IMatchRoleID.WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI;
+			weights[IMatchRoleID.FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW;
+			weights[IMatchRoleID.FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW;    // alias for fw_norm
+			weights[IMatchRoleID.FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW;
+			weights[IMatchRoleID.FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW;
 		}
 		return weights;
 	}
@@ -693,7 +693,6 @@ public class RatingPredictionManager {
 		}
 		return ret;
 	}
-
 	private Byte getRelevantPositionTactic(byte taktik, int pos, boolean useLeft, boolean useMiddle, boolean useRight) {
 		switch (pos) {
 			case keeper:
