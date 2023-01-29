@@ -334,8 +334,8 @@ public class RatingPredictionManager {
         retVal *= (1 + params.getParam(sectionName, "teamspiritmulti", 0)
         			*(teamspirit - 5.5));
         // Alternative 2: TS exponentiell
-       	retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamspiritpremulti", 1/4.5)),
-       				params.getParam(sectionName, "teamspiritpower", 0));
+		retVal *= Math.pow((teamspirit * params.getParam(sectionName, "teamspiritpremulti", 1) + params.getParam(sectionName, "teamspiritoffset", 0)),
+				params.getParam(sectionName, "teamspiritpower", 0)) * params.getParam(sectionName,"teamspiritpostmulti", 1);
         
     	if (heimspiel == IMatchDetails.LOCATION_HOME)
     		retVal *= params.getParam(sectionName, "home", 1);

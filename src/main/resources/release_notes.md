@@ -8,8 +8,8 @@ Please do not forget to back up data.
 
 * Faster and more secure database access using prepared statements (#1593)
 * Improved formula for calculating skill losses - Schum's formula (#1661)
+* fix team spirit influence on midfield rating (#1778)
 * login dialog shows team logos (#1643)
-
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.0)
 
@@ -30,6 +30,7 @@ Please do not forget to back up data.
 * add opponents' team development numbers to recap table (#347)
 
 ### Rating
+* fix team spirit influence on midfield rating (#1778)
 
 ### Matches
 * reload of match details supports selection ranges (#1595)
