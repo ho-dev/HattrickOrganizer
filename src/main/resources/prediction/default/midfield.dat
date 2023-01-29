@@ -10,7 +10,7 @@ awayDerby            = 1.113699
 pic                  = 0.839949
 mots                 = 1.109650
 
-# team spirit formula
+# team spirit formula (fitting schum's numbers)
 # eff(T) = power((teamspirit + teamspiritOffset) * teamspiritPreMulti, teamspiritPower) * teamspiritPostMulti
 #teamSpiritPreMulti   = 0.147832 # err=0.003676
 #teamSpiritPower      = 0.417779 # err=0.005549
