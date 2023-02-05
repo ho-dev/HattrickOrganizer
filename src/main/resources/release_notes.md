@@ -2,10 +2,6 @@
 
 ## Highlights
 
-This contains a very large refactoring of the database interface.
-It still needs a lot of tests, so please do not use it as a production system.
-Please do not forget to back up data.
-
 * Faster and more secure database access using prepared statements (#1593)
 * Improved formula for calculating skill losses - Schum's formula (#1661)
 * fix team spirit influence on midfield rating (#1778)
