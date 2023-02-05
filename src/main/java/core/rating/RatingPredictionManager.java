@@ -812,7 +812,7 @@ public class RatingPredictionManager {
             float subSkill;
             skill = player.getValue4Skill(skillType);
             float subskillFromDB = player.getSub4Skill(skillType);
-//            System.out.println ("t="+skillType+", o="+manualOffset+", s="+subskillFromDB);
+
             /*
              * If we know the last level up date from this player or
              * the user has set an offset manually -> use this sub/offset
@@ -843,9 +843,7 @@ public class RatingPredictionManager {
 
             retVal = _calcPlayerStrength(config.getPlayerStrengthParameters(),
             		getSkillName(skillType), player.getStamina(), player.getExperience(), skill, player.getForm(), useForm);
-//            System.out.println("calcPlayerStrength for "+player.getSpielerID()
-//            		+", st="+skillType+", s="+skill+", k="+player.getKondition()
-//            		+", xp="+player.getErfahrung()+", f="+player.getForm()+": "+retVal);
+
         }
         catch(Exception e) {
         	e.printStackTrace();
@@ -953,13 +951,7 @@ public class RatingPredictionManager {
    		if (useForm)
    			stk *= form;
 
-//		HOLogger.instance().debug(RatingPredictionManager.class, "Adding to cache: " + key + "=" + stk);
-
    		playerStrengthCache.put(key, stk);
-//    	long endTime = new Date().getTime();
-//    	HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength (" 
-//    			+ "SN=" + sectionName + ",ST" + stamina + ",XP" + xp + ",SK" + skill + ",FO" + form + ",uF" + useForm+ ") took " + (endTime-startTime) + "ms");
-
 		return stk;
     }
 
