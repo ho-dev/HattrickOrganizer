@@ -61,8 +61,15 @@ Please do not forget to back up data.
 ### Misc
 * fix display of wrong currency and character encoding when ht worldetails table wasn't initialized (#1622)
 
-## QA Team
-
 ## Translations
 
-Reports by Contributors - October 15, 2022 - October 31, 2022
+Reports by Contributors - October 15, 2022 - February 04, 2023
+
+* Jan 131
+* Lidegand 14
+* wsbrenk 13
+* Moorhuhninho 13
+* TeamBMW 5
+* sich 2
+
+Total 178
