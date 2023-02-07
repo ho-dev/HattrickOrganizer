@@ -85,18 +85,18 @@ public class FormLabel extends JLabel implements IHOTableEntry {
         byte[] formDisplayed;
         if (form.length > MAX_NUM_FORM_STREAK_ENTRIES) {
             // Find the first non-unknown result, starting from the end.
-            int index = form.length-1;
+            int index = form.length - 1;
             while (index >= 0 && form[index] == 0) {
                 index--;
             }
 
             if (index >= 0) {
                 // pick the last 9 non-unknown results, unless there are fewer.
-                int lengthStreak = Math.min(index+1, MAX_NUM_FORM_STREAK_ENTRIES);
+                int lengthStreak = Math.min(index + 1, MAX_NUM_FORM_STREAK_ENTRIES);
                 formDisplayed = new byte[lengthStreak];
-
-                int start = Math.max(index-MAX_NUM_FORM_STREAK_ENTRIES+1, 0);
-                System.arraycopy(form, start, formDisplayed, 0, lengthStreak);
+                for (int i = 0; i < lengthStreak; i++) {
+                    formDisplayed[i] = form[index - i];       // reverse order (same as in hattrick)
+                }
             } else {
                 formDisplayed = new byte[0];
             }
@@ -109,20 +109,10 @@ public class FormLabel extends JLabel implements IHOTableEntry {
 
     private void selectResultColour(Graphics2D g2, byte cur) {
         switch (cur) {
-            case SerieTableEntry.H_SIEG:
-            case SerieTableEntry.A_SIEG:
-                g2.setColor(WIN_COLOR);
-                break;
-            case SerieTableEntry.H_UN:
-            case SerieTableEntry.A_UN:
-                g2.setColor(DRAW_COLOR);
-                break;
-            case SerieTableEntry.H_NIED:
-            case SerieTableEntry.A_NIED:
-                g2.setColor(DEFEAT_COLOR);
-                break;
-            default:
-                g2.setColor(UNKNOWN_COLOR);
+            case SerieTableEntry.H_SIEG, SerieTableEntry.A_SIEG -> g2.setColor(WIN_COLOR);
+            case SerieTableEntry.H_UN, SerieTableEntry.A_UN -> g2.setColor(DRAW_COLOR);
+            case SerieTableEntry.H_NIED, SerieTableEntry.A_NIED -> g2.setColor(DEFEAT_COLOR);
+            default -> g2.setColor(UNKNOWN_COLOR);
         }
     }
 }

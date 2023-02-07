@@ -54,14 +54,15 @@ public class HistoryCurve extends Curve {
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
-		ResultSet resultset = m_clJDBC.executePreparedQuery(readSpiritHistoryStatementBuilder.getStatement(), ibasics.getDatum().toDbTimestamp(), start);
-		assert resultset != null;
-		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
-			double dSpirit = resultset.getInt("ISTIMMUNG") + 0.5D;
-			if (dSpirit > m_dMaxSpirit)
-				dSpirit = m_dMaxSpirit;
-			m_clPoints.add(new Point(HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM")), dSpirit));
+		var start = ibasics.getDatum().minus(WEEKS_BACK * 7, ChronoUnit.DAYS).toDbTimestamp();
+		ResultSet rs = m_clJDBC.executePreparedQuery(readSpiritHistoryStatementBuilder.getStatement(), ibasics.getDatum().toDbTimestamp(), start);
+		if (rs != null) {
+			while (rs.next()) {
+				double dSpirit = rs.getInt("ISTIMMUNG") + 0.5D;
+				if (dSpirit > m_dMaxSpirit)
+					dSpirit = m_dMaxSpirit;
+				m_clPoints.add(new Point(HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM")), dSpirit));
+			}
 		}
 	}
 

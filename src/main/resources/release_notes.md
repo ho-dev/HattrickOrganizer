@@ -50,6 +50,7 @@
 * fix error in training calculation due to incorrectly loaded cup matches (#1714)
 
 ### League
+* fix order of last 5 matches - use the same as hattrick (#1793)
 
 ### Youth
 * duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)

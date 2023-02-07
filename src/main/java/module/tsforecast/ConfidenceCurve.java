@@ -36,12 +36,13 @@ class ConfidenceCurve extends Curve {
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 		ResultSet resultset = m_clJDBC
 				.executePreparedQuery(teamStatemenBuilder.getStatement());
-		assert resultset != null;
-		for (boolean flag = resultset.first(); flag; flag = resultset.next()) {
-			var date = HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM"));
-			if (start.isBefore(date)
-					&& !HOVerwaltung.instance().getModel().getBasics().getDatum().isBefore(date)) {
-				m_clPoints.add(new Point(date,1 + resultset.getInt("ISELBSTVERTRAUEN")));
+		if( resultset != null ) {
+			while (resultset.next()) {
+				var date = HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM"));
+				if (start.isBefore(date)
+						&& !HOVerwaltung.instance().getModel().getBasics().getDatum().isBefore(date)) {
+					m_clPoints.add(new Point(date, 1 + resultset.getInt("ISELBSTVERTRAUEN")));
+				}
 			}
 		}
 	}
