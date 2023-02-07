@@ -56,7 +56,7 @@ jobs:
           prerelease: true
       - name: If not dev-release delete previous short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: ClementTsang/delete-tag-and-release@v0.3.1
         with:
           delete_release: true
           tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
