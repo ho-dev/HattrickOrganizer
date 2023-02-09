@@ -35,6 +35,7 @@
 * SubstitutionEditor shows effect on loddarstats (#1626)
 * fix bug of cleared next lineup when wrong matches were downloaded from HT (#1721)
 * lineup rating pane is scrollable (#1783)
+* fix error in lineup position panel (#1795)
 
 ### Statistics
 * add tooltips and labels to series data points (#1199)
@@ -63,10 +64,10 @@
 Reports by Contributors - October 15, 2022 - February 04, 2023
 
 * Jan 131
+* sich 16
 * Lidegand 14
 * wsbrenk 13
 * Moorhuhninho 13
 * TeamBMW 5
-* sich 2
 
-Total 178
+Total 192
