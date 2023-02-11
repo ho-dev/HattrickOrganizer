@@ -24,16 +24,9 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
 import javax.swing.table.*;
 
 /**
@@ -52,7 +45,6 @@ import javax.swing.table.*;
  */
 public class OutputPanel extends LazyImagePanel {
 
-    private static int fixedColumns=1;
     private JTable fixedOutputTable;
     private JTable outputTable;
     private JButton importButton;
@@ -75,7 +67,6 @@ public class OutputPanel extends LazyImagePanel {
         registerRefreshable(true);
         update();
         setNeedsRefresh(false);
-
     }
 
     @Override
@@ -193,6 +184,7 @@ public class OutputPanel extends LazyImagePanel {
 
         // Setup column models
         for (int i=0; i< outputTable.getModel().getColumnCount(); i++){
+            int fixedColumns = 1;
             if ( i < fixedColumns){
                 var col = outputTable.getColumnModel().getColumn(0);
                 outputTable.getColumnModel().removeColumn(col);
@@ -263,7 +255,7 @@ public class OutputPanel extends LazyImagePanel {
         trainingPrioPopUp = new FutureTrainingPrioPopup(this, model);
     }
 
-    private class OutputTable extends JTable {
+    private static class OutputTable extends JTable {
 
         public OutputTable(TableModel dm) {
             super(dm);

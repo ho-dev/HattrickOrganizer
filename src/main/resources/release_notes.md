@@ -49,6 +49,7 @@
 * fix daylight saving resetting future trainings (#1668)
 * fix skill drop calculation - use Schum's formula (#1661)
 * fix error in training calculation due to incorrectly loaded cup matches (#1714)
+* changing training priorities in prediction table will update player details views (#1798)
 
 ### League
 * fix order of last 5 matches - use the same as hattrick (#1793)
