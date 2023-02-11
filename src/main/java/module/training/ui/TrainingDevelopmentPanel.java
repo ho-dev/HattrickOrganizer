@@ -2,7 +2,6 @@ package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
@@ -22,12 +21,12 @@ import javax.swing.SwingConstants;
 public class TrainingDevelopmentPanel extends LazyPanel {
 
 	private SkillupTable table;
-	private TrainingModel model;
+	private final TrainingModel model;
 
 	private JLabel title;
 
 	/**
-	 * Creates a new SkillupPanel object.
+	 * Creates a new TrainingDevelopmentPanel object.
 	 */
 	public TrainingDevelopmentPanel(TrainingModel model) {
 		this.model = model;
@@ -54,7 +53,7 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-		List<ISkillChange> skillups = new ArrayList<ISkillChange>();
+		List<ISkillChange> skillups = new ArrayList<>();
 		if (this.model.getActivePlayer() != null) {
 			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
 			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());

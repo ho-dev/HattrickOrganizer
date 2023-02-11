@@ -130,35 +130,4 @@ public class TrainingManager implements PropertyChangeListener {
         }
     }
 
-	@Deprecated
-	private void logPlayerProgress (Player before, Player after) {
-
-		if ((after == null) || (before == null)) {
-			// crash due to non paranoid logging is too silly
-			return;
-		}
-
-		int playerID = after.getPlayerID();
-		String playerName = after.getFullName();
-
-		int age = after.getAlter();
-
-		var changes= new StringBuilder();
-		for ( var s = PlayerSkill.KEEPER; s <= PlayerSkill.EXPERIENCE; s++){
-			var oldValue = before.getValue4Skill(s);
-			var oldSub = before.getSub4Skill(s);
-			var newValue = after.getValue4Skill(s);
-			var newSub = after.getSub4Skill(s);
-			if ( oldSub != newSub || oldValue != newValue){
-				if ( changes.length() != 0 ) changes.append("; ");
-				changes.append(PlayerSkill.toString(s)).append(": ").append(oldValue).append(".").append(oldSub)
-						.append("->").append(newValue).append(".").append(newSub);
-			}
-		}
-		if ( changes.length() > 0){
-			HOLogger.instance().debug(getClass(), playerID + "|" + playerName + "|" + age + "|" + changes);
-		}
-	}
-
-
 }

@@ -110,7 +110,7 @@ public class TrainingModel implements PropertyChangeListener {
 		this.futureTrainingManager = null;
 	}
 
-	private void fireModelChanged(ModelChange change) {
+	public void fireModelChanged(ModelChange change) {
 		for (int i = listeners.size() - 1; i >= 0; i--) {
 			listeners.get(i).modelChanged(change);
 		}
