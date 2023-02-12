@@ -6,18 +6,13 @@ import com.google.gson.JsonObject;
 import core.db.DBManager;
 import core.gui.event.ChangeEventHandler;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.model.misc.Basics;
-import core.module.config.ModuleConfig;
 import core.util.HOLogger;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Main class for the League Promotion/Demotion prediction tool.
@@ -48,12 +43,14 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
      * @return boolean – true if promotion manager can be used, false otherwise.
      */
     public boolean isActive(int seriesId) {
-        List<Integer> supportedLeagues = HttpDataSubmitter.instance().fetchSupportedLeagues();
-        int[] activeWeeks = ModuleConfig.instance().getIntArray("PromotionStatus_ActiveWeeks", new int[] { 14, 15 });
-        int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
-        return UserParameter.instance().promotionManagerTest ||
-                (Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) &&
-                        supportedLeagues.contains(seriesId));
+        // TODO: fix HT-Server. As long as it is not working this feature will be disabled
+        return false;
+//        List<Integer> supportedLeagues = HttpDataSubmitter.instance().fetchSupportedLeagues();
+//        int[] activeWeeks = ModuleConfig.instance().getIntArray("PromotionStatus_ActiveWeeks", new int[] { 14, 15 });
+//        int week = HOVerwaltung.instance().getModel().getBasics().getSpieltag();
+//        return UserParameter.instance().promotionManagerTest ||
+//                (Arrays.stream(activeWeeks).boxed().collect(Collectors.toList()).contains(week) &&
+//                        supportedLeagues.contains(seriesId));
     }
 
     public LeagueStatus getLeagueStatus() {
@@ -89,7 +86,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
     }
 
     public void downloadLeagueData(int leagueId) {
-        final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        final SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
                 continueProcessing = (leagueStatus == LeagueStatus.NOT_AVAILABLE);
@@ -121,7 +118,7 @@ public class LeaguePromotionHandler extends ChangeEventHandler {
     }
 
     public void pollPromotionStatus() {
-        final SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        final SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
                 HOLogger.instance().info(LeaguePromotionHandler.class, "Polling until status available");
