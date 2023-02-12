@@ -54,6 +54,7 @@
 
 ### League
 * fix order of last 5 matches - use the same as hattrick (#1793)
+* disable league promotion feature (#1412)
 
 ### Youth
 * duration format d hh:mm:ss of "can be promoted in" when less than one day is left (#1578)
