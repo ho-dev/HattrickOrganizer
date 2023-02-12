@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class HOLogger {
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static HOLogger clLogger;
 	private static String logsFolderName;
 	public static final int DEBUG = 0;
@@ -29,8 +29,6 @@ public class HOLogger {
 	 * Creates a new instance of Logger
 	 */
 	private HOLogger() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String fileName = "HO-" + dateFormat.format(new Date()) + ".log";
 		String errorMsg;
 		boolean logFolderExist = true;
 
@@ -46,16 +44,14 @@ public class HOLogger {
 		}
 
 		if (logFolderExist) {
+			String fileName = "";
 			try {
 				deleteOldLogs(logsFolder);
-				File logFile = new File(logsFolder, fileName);
-
-				if (logFile.exists()) {
-					if (!logFile.delete()) {
-						System.err.println("Unable to delete " + logFile);
-					}
-				}
-
+				File logFile;
+				do{
+					fileName = "HO-" + HODateTime.toEpochSecond(HODateTime.now()) + ".log";
+					logFile = new File(logsFolder, fileName);
+				} while (logFile.exists());
 				logWriter = new FileWriter(logFile);
 			} catch (Exception e) {
 				errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
@@ -65,16 +61,19 @@ public class HOLogger {
 		}
 	}
 
-	
-	private void deleteOldLogs(File dir){
+	private void deleteOldLogs(File dir) {
 		ExampleFileFilter filter = new ExampleFileFilter("log");
 		filter.setIgnoreDirectories(true);
 		File[] files = dir.listFiles(filter);
-		for (var file : files) {
-			long diff = System.currentTimeMillis() - file.lastModified();
-			long days = (diff / (1000 * 60 * 60 * 24));
-			if (days > 90)
-				if (! file.delete()) {System.err.println("Unable to delete " + file);}
+		if (files != null) {
+			for (var file : files) {
+				long diff = System.currentTimeMillis() - file.lastModified();
+				long days = (diff / (1000 * 60 * 60 * 24));
+				if (days > 90)
+					if (!file.delete()) {
+						System.err.println("Unable to delete " + file);
+					}
+			}
 		}
 	}
 	
