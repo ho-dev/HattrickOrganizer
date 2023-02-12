@@ -12,6 +12,7 @@
 ### Database
 * faster and more secure database access using prepared statements (#1593)
 * refactoring of user administration (#1628)
+* each HO process uses its own log file (#1800)
 
 ### Squad
 * add last match columns: rating at end of match, position and minutes (#1523)
