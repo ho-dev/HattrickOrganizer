@@ -113,7 +113,7 @@ public class PlayerPanel extends JPanel {
 			height = height + 50;
 		}
 
-		return new Dimension(160, height);
+		return new Dimension(200, height);
 	}
 
 	public boolean getContainsPlayer() {

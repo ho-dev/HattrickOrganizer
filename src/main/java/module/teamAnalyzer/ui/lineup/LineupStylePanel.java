@@ -83,6 +83,7 @@ public abstract class LineupStylePanel extends JPanel {
         JPanel m_clLinkerSturm;
         JPanel m_clRechterSturm;
         JPanel m_clCentralSturm;
+        constraints.weightx = 1;
 
         constraints.gridx = 1;
         constraints.gridy = line;
@@ -118,6 +119,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 4;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
 
         JPanel m_clRechteAussenVerteidiger = mainPanel.getMyTeam().getRightWingbackPanel();
 
@@ -177,6 +179,8 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 2;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
+
         m_clTorwart = mainPanel.getMyTeam().getKeeperPanel();
         m_clTorwart.setOpaque(false);
         layout.setConstraints(m_clTorwart, constraints);
@@ -198,6 +202,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 4;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
         m_clRechteFluegel = mainPanel.getMyTeam().getRightWingPanel();
         m_clRechteFluegel.setOpaque(false);
         layout.setConstraints(m_clRechteFluegel, constraints);
@@ -269,6 +274,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 3;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
 
         JPanel m_clLinkerSturm = mainPanel.getOpponentTeam().getLeftForwardPanel();
 
@@ -306,6 +312,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
 
         JPanel m_clRechteAussenVerteidiger = mainPanel.getOpponentTeam().getRightWingbackPanel();
 
@@ -364,6 +371,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 2;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
 
         JPanel m_clTorwart = mainPanel.getOpponentTeam().getKeeperPanel();
 
@@ -381,6 +389,7 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = line;
         constraints.gridwidth = 1;
+        constraints.weightx = 1;
 
         JPanel m_clRechteFluegel = mainPanel.getOpponentTeam().getRightWingPanel();
 
