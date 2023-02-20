@@ -1,24 +1,19 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.entry.RatingTableEntry;
-import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.player.MatchRoleID;
-import core.module.config.ModuleConfig;
-import core.util.HOLogger;
 import core.util.HelperWrapper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.SpotLineup;
+
+import java.awt.*;
 import java.util.Map;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -40,7 +35,7 @@ public class PlayerPanel extends JPanel {
 	protected JLabel jlTransferListedstatus = new JLabel();
 	protected JPanel ratingPanel = new JPanel();
 	protected TacticPanel tacticPanel = new TacticPanel();
-	private final JPanel mainPanel;
+	//private final JPanel mainPanel;
 	private final PlayerInfoPanel infoPanel = new PlayerInfoPanel();
 
 	protected boolean containsPlayer = false;
@@ -49,7 +44,7 @@ public class PlayerPanel extends JPanel {
 	 * Creates a new PlayerPanel object.
 	 */
 	public PlayerPanel() {
-		setLayout(new BorderLayout());
+		//setLayout(new BorderLayout());
 
 		Font nFont = new Font(nameField.getFont().getFontName(), Font.BOLD, nameField.getFont().getSize());
 
@@ -86,34 +81,27 @@ public class PlayerPanel extends JPanel {
 			centerPanel.add(infoPanel, BorderLayout.SOUTH);
 		}
 
-		mainPanel = new ImagePanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-		mainPanel.setPreferredSize(getDefaultSize());
-		mainPanel.add(positionField, BorderLayout.NORTH);
-		mainPanel.add(centerPanel, BorderLayout.CENTER);
-		mainPanel.add(tacticPanel, BorderLayout.SOUTH);
-		add(mainPanel, BorderLayout.CENTER);
+//		mainPanel = new ImagePanel();
+//		mainPanel.setLayout(new BorderLayout());
+//		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+		setLayout(new GridBagLayout());
+		var c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+//		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+//		mainPanel.setPreferredSize(getDefaultSize());
+		add(positionField, c);
+		c.gridy++;
+		add(centerPanel,c);
+		c.gridy++;
+		add(tacticPanel, c);
+		//add(mainPanel, BorderLayout.CENTER);
 	}
 
 	protected Color getBackGround() {
 		return PANEL_BG;
-	}
-
-	public Dimension getDefaultSize() {
-		int height = 70;
-
-		if (!(this instanceof UserTeamPlayerPanel)) {
-			if (SystemManager.isShowPlayerInfo.isSet()) {
-				height = height + 50;
-			}
-		}
-
-		if (SystemManager.isTacticDetail.isSet()) {
-			height = height + 50;
-		}
-
-		return new Dimension(200, height);
 	}
 
 	public boolean getContainsPlayer() {
@@ -125,7 +113,7 @@ public class PlayerPanel extends JPanel {
 	 */
 	public void reload(SpotLineup lineup, int week, int season) {
 		tacticPanel.setVisible(SystemManager.isTacticDetail.isSet());
-		mainPanel.setPreferredSize(getDefaultSize());
+		//mainPanel.setPreferredSize(getDefaultSize());
 
 		if (lineup != null) {
 			containsPlayer = true;			

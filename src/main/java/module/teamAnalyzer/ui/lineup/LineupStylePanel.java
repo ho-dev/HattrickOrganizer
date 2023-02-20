@@ -1,20 +1,15 @@
 // %4118680904:hoplugins.teamAnalyzer.ui.lineup%
 package module.teamAnalyzer.ui.lineup;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
+import java.awt.*;
+import java.io.Serial;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
 /**
  * An abstract Lineup jpanel
- * 
  * Jan 2011 - Modified by blaghaid for 553 changes
- *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public abstract class LineupStylePanel extends JPanel {
@@ -23,7 +18,8 @@ public abstract class LineupStylePanel extends JPanel {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 6857727877436754893L;
+	@Serial
+    private static final long serialVersionUID = 6857727877436754893L;
 
 	/** The main formation panel */
     protected FormationPanel mainPanel;
@@ -32,6 +28,7 @@ public abstract class LineupStylePanel extends JPanel {
     protected GridBagConstraints constraints = new GridBagConstraints();
 
     /** GridBag layout */
+    // TODO use GridLayout to get same width on all columns
     protected GridBagLayout layout = new GridBagLayout();
 
     /** The main panel */
@@ -47,6 +44,11 @@ public abstract class LineupStylePanel extends JPanel {
     public LineupStylePanel(FormationPanel _mainPanel) {
         super();
         mainPanel = _mainPanel;
+
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1;
+
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -64,7 +66,7 @@ public abstract class LineupStylePanel extends JPanel {
     /**
      * Sets the rating bar in the proper line on the grid bag grid
      *
-     * @param line
+     * @param line line number
      */
     protected void setMidfieldRatingBar(int line) {
         constraints.gridx = 0;
@@ -372,12 +374,13 @@ public abstract class LineupStylePanel extends JPanel {
         constraints.gridy = line;
         constraints.gridwidth = 1;
         constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
 
         JPanel m_clTorwart = mainPanel.getOpponentTeam().getKeeperPanel();
 
         m_clTorwart.setOpaque(false);
-        layout.setConstraints(m_clTorwart, constraints);
-        centerPanel.add(m_clTorwart);
+//        layout.setConstraints(m_clTorwart, constraints);
+        centerPanel.add(m_clTorwart, constraints);
     }
 
     /**

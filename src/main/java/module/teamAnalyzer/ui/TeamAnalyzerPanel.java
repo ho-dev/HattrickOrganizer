@@ -43,8 +43,11 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	}
 
 	private void addListeners() {
-		simButton.addActionListener(new SimButtonListener(mainPanel.getMyTeamLineupPanel(),
-				mainPanel.getOpponentTeamLineupPanel(), recapPanel));
+		simButton.addActionListener(
+				new SimButtonListener(
+						mainPanel.getMyTeamLineupPanel(),
+						mainPanel.getOpponentTeamLineupPanel(),
+						recapPanel));
 	}
 
 	private void initComponents() {

@@ -4,6 +4,7 @@ package module.teamAnalyzer.ui.lineup;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.io.Serial;
 
 
 /**
@@ -12,12 +13,9 @@ import java.awt.Insets;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class StandardLineupPanel extends LineupStylePanel {
-    //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4628631085016401394L;
+	@Serial
+    private static final long serialVersionUID = -4628631085016401394L;
 
 	/**
      * Constructor
@@ -27,10 +25,6 @@ public class StandardLineupPanel extends LineupStylePanel {
     public StandardLineupPanel(FormationPanel _mainPanel) {
         super(_mainPanel);
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
 
     /**
      * Setup the layout, with 2 teams displayed
@@ -43,10 +37,10 @@ public class StandardLineupPanel extends LineupStylePanel {
         centerPanel.setOpaque(false);
 
         constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 1;
         constraints.weighty = 0.0;
-        constraints.insets = new Insets(0, 0, 0, 0);
+        constraints.insets = new Insets(5, 5, 5, 5);
         centerPanel.setLayout(layout);
 
         setOpponentPanel(0);
