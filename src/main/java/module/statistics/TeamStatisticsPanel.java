@@ -625,14 +625,14 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
 		constraints2.insets = new Insets(20,0,0,0);
 		jcbTSI = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_TSI), gup.statistikAllTSI);
-		add(jcbTSI, 17, layout2, constraints2);
+		add(jcbTSI, ++gridy, layout2, constraints2);
 
 		// WAGE ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumWage : avgWage;
 		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
 		jcbWage = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WAGE), gup.statistikAllWages);
-		add(jcbWage, 18, layout2, constraints2);
+		add(jcbWage, ++gridy, layout2, constraints2);
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
@@ -681,7 +681,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			NumberFormat format = Helper.DEFAULTDEZIMALFORMAT;
 			NumberFormat fmt2 = Helper.getNumberFormat(true, 0);
 			NumberFormat fmt3 = Helper.getNumberFormat(false, 0);
-
 
 			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
 							jcbTeam.getSelectedItem().toString());
