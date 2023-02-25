@@ -23,11 +23,7 @@ import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
 import tool.updater.UpdateController;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
@@ -57,7 +53,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private final JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
 	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
 	private final boolean isNtTeam;
-
 
 	/**
 	 * Getter for the singleton HOMainFrame instance.
@@ -92,19 +87,21 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				startDownload();
 			}
 			RefreshManager.instance().doReInit();
-			setVisible(false);
-			dispose();
-			m_clDownloadDialog = null;
+			close();
 			if (UserParameter.instance().updateCheck) {
 				UpdateController.check4update(false);
 			}
 		} else if (e.getSource().equals(m_jbAbort)) {
-			setVisible(false);
-			dispose();
-			m_clDownloadDialog = null;
+			close();
 		} else if (e.getSource().equals(m_jbProxy)) {
 			new ProxyDialog(HOMainFrame.instance());
 		}
+	}
+
+	private void close(){
+		setVisible(false);
+		dispose();
+		m_clDownloadDialog = null;
 	}
 
 	/**
@@ -267,7 +264,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		pack();
 
 		final Dimension size = getToolkit().getScreenSize();
-
 		if (size.width > this.getSize().width) {
 			// Center
 			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));
