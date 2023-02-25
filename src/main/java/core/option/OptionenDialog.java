@@ -27,15 +27,9 @@ import javax.swing.JTabbedPane;
  */
 public class OptionenDialog extends JDialog {
 
-	private FormelPanel m_jpFormeln;
-	private GeneralSettingsPanel m_jpSonstigeOptionen;
-	private LineupSettingsPanel m_jpLineupSettings;
-	private TrainingPreferencesPanel m_jpTrainingsOptionen;
-	private UserColumnsPanel m_jpUserColumns;
 	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
 	private JButton saveButton;
 	private JButton cancelButton;
-	private ImagePanel buttonPanel;
 
 	public OptionenDialog(JFrame owner) {
 		super(owner, HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"), true);
@@ -74,12 +68,12 @@ public class OptionenDialog extends JDialog {
 		JTabbedPane tabbedPane = new JTabbedPane();
 
 		// Misc
-		m_jpSonstigeOptionen = new GeneralSettingsPanel();
+		GeneralSettingsPanel m_jpSonstigeOptionen = new GeneralSettingsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"),
 				new JScrollPane(m_jpSonstigeOptionen));
 
 		// Lineup settings
-		m_jpLineupSettings = new LineupSettingsPanel();
+		LineupSettingsPanel m_jpLineupSettings = new LineupSettingsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Aufstellung"), new JScrollPane(m_jpLineupSettings));
 
 		// Modules
@@ -87,12 +81,12 @@ public class OptionenDialog extends JDialog {
 				new ModuleConfigPanel()));
 
 		// Formula
-		m_jpFormeln = new FormelPanel();
+		FormelPanel m_jpFormeln = new FormelPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Formeln"), new JScrollPane(
 				m_jpFormeln));
 
 		// Training
-		m_jpTrainingsOptionen = new TrainingPreferencesPanel();
+		TrainingPreferencesPanel m_jpTrainingsOptionen = new TrainingPreferencesPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane(
 				m_jpTrainingsOptionen));
 
@@ -104,7 +98,7 @@ public class OptionenDialog extends JDialog {
 						m_jpReleaseChannelsPanel));
 
 		// Columns
-		m_jpUserColumns = new UserColumnsPanel();
+		UserColumnsPanel m_jpUserColumns = new UserColumnsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(
 				m_jpUserColumns));
 
@@ -117,7 +111,7 @@ public class OptionenDialog extends JDialog {
 
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-		buttonPanel = new ImagePanel();
+		ImagePanel buttonPanel = new ImagePanel();
 		// Add Buttons
 		saveButton = new JButton();
 		saveButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.save"));
@@ -130,9 +124,9 @@ public class OptionenDialog extends JDialog {
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
 		if (HOMainFrame.instance().getToolkit().getScreenSize().height >= 700) {
-			setSize(new Dimension(450, 700));
+			setSize(new Dimension(540, 700));
 		} else {
-			setSize(new Dimension(450,
+			setSize(new Dimension(540,
 					HOMainFrame.instance().getToolkit().getScreenSize().height - 50));
 		}
 
@@ -143,7 +137,7 @@ public class OptionenDialog extends JDialog {
 					- (getSize().height / 2));
 		}
 
-		setResizable(false);
+//		setResizable(false);
 	}
 
 	private void save() {

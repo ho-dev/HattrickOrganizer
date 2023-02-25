@@ -9,6 +9,9 @@ public abstract class BaseTheme implements Theme {
 
      protected void setFont(int fontSize) {
         UIDefaults uid = UIManager.getLookAndFeelDefaults();
+
+        UIManager.put("Table.rowHeight", fontSize * 1.5);
+
         final String fontName = FontUtil.getFontName(UserParameter.instance().sprachDatei);
         final Font userFont = new Font((fontName != null ? fontName : "SansSerif"), Font.PLAIN, fontSize);
         final Font boldFont = new Font((fontName != null ? fontName : "SansSerif"), Font.BOLD, fontSize);

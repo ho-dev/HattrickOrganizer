@@ -19,13 +19,12 @@ import javax.swing.text.NumberFormatter;
  */
 public final class SliderPanel extends ImagePanel implements ChangeListener {
 
-	private JLabel m_jlLabel;
     private JSlider m_jslSlider;
     private JFormattedTextField m_jtfTextfield;
-    private float m_fFaktor;
+    private final float m_fFaktor;
     private float m_fTextfeldFaktor = 1;
-    private int m_iTextbreite;
-    private int decimals = 0;
+    private final int m_iTextbreite;
+    private final int decimals = 0;
     private boolean bDeactivateTxtLister = false;
 
 
@@ -46,16 +45,10 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         initComponents(text, max, min);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * werte direkt übernehmen public void setValue( int value ) { m_jslSlider.setValue ( value );
-     * }
-     */
     /**
      * Wert mit faktor multiplizieren und auf int casten
      */
-    public final void setValue(float value) {
+    public void setValue(float value) {
         m_jslSlider.setValue((int) (value * m_fFaktor));
     }
 
@@ -65,15 +58,15 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         return m_jslSlider.getValue() / m_fFaktor;
     }
 
-    public final void addChangeListener(ChangeListener listener) {
+    public void addChangeListener(ChangeListener listener) {
         m_jslSlider.addChangeListener(listener);
     }
 
-    public final void removeChangeListener(ChangeListener listener) {
+    public void removeChangeListener(ChangeListener listener) {
         m_jslSlider.removeChangeListener(listener);
     }
 
-    public final void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
+    public void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
         bDeactivateTxtLister = true;
         if (decimals != 0){
             m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor, decimals) + "");}
@@ -94,7 +87,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
 
         setLayout(layout);
 
-        m_jlLabel = new JLabel(text, SwingConstants.LEFT);
+        JLabel m_jlLabel = new JLabel(text, SwingConstants.LEFT);
         m_jlLabel.setMaximumSize(new Dimension(m_iTextbreite, 35));
         m_jlLabel.setPreferredSize(m_jlLabel.getMaximumSize());
         constraints.anchor = GridBagConstraints.WEST;
@@ -118,7 +111,6 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         constraints.gridwidth = 1;
         layout.setConstraints(m_jslSlider, constraints);
         add(m_jslSlider);
-
 
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);

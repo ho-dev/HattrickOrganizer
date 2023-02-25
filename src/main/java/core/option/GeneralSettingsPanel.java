@@ -8,11 +8,13 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
-import java.awt.GridLayout;
+
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -94,7 +96,9 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         add (new JLabel(" "));
 
-        m_jslFontSize = new SliderPanel(HOVerwaltung.instance().getLanguageString("Schriftgroesse"), 16, 8, 1, 1.0f, 120);
+        var width = UserParameter.instance().fontSize * 10;
+
+        m_jslFontSize = new SliderPanel(HOVerwaltung.instance().getLanguageString("Schriftgroesse"), 16, 8, 1, 1.0f, width);
         m_jslFontSize.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Schriftgroesse"));
         m_jslFontSize.setValue(core.model.UserParameter.temp().fontSize);
         m_jslFontSize.addChangeListener(this);
@@ -104,7 +108,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbSkin = new ComboBoxPanel(
                 HOVerwaltung.instance().getLanguageString("options.misc.skin"),
                 registeredThemes.stream().map(Theme::getName).toArray(),
-                120
+                width
         );
         m_jcbSkin.setSelectedItem(core.model.UserParameter.temp().skin);
         m_jcbSkin.addItemListener(this);
@@ -113,9 +117,9 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         final String[] sprachdateien = HOVerwaltung.getLanguageFileNames();
         try {
             java.util.Arrays.sort(sprachdateien);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
-        m_jcbLanguage = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.language"), sprachdateien, 120);
+        m_jcbLanguage = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.language"), sprachdateien, width);
         m_jcbLanguage.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Sprachdatei"));
         m_jcbLanguage.setSelectedItem(core.model.UserParameter.temp().sprachDatei);
         m_jcbLanguage.addItemListener(this);
@@ -123,7 +127,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         // TimeZone selection =========================================================
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();
-        m_jcbTimeZone = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, 120);
+        m_jcbTimeZone = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, width);
         var sZoneIDs = ZoneId.getAvailableZoneIds();
         var sZoneIDCodes = sZoneIDs.stream().map(String::hashCode).collect(Collectors.toSet());
         if (sZoneIDs.size() != sZoneIDCodes.size()){
@@ -139,10 +143,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
                 zoneId = ZoneId.of("Europe/Stockholm");
                 HOLogger.instance().error(getClass(), "System Timezone could not be identified, setting it to 'Europe/Stockholm'");
             }
-
-            int iZoneIDCode = zoneId.getId().hashCode();
-            core.model.UserParameter.temp().TimeZoneDifference = iZoneIDCode;
-
+            core.model.UserParameter.temp().TimeZoneDifference = zoneId.getId().hashCode();
         }
 
         m_jcbTimeZone.setSelectedId(core.model.UserParameter.temp().TimeZoneDifference);
@@ -150,13 +151,13 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbTimeZone.addItemListener(this);
         add(m_jcbTimeZone);
 
-        m_jcbDefaultSorting = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("Defaultsortierung"), DEFAULT_SORTING, 120);
+        m_jcbDefaultSorting = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("Defaultsortierung"), DEFAULT_SORTING, width);
         m_jcbDefaultSorting.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Defaultsortierung"));
         m_jcbDefaultSorting.setSelectedId(core.model.UserParameter.temp().standardsortierung);
         m_jcbDefaultSorting.addItemListener(this);
         add(m_jcbDefaultSorting);
 
-        m_jcbNbDecimals = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.nb_decimals"), NB_DECIMALS, 120);
+        m_jcbNbDecimals = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.nb_decimals"), NB_DECIMALS, width);
         m_jcbNbDecimals.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Nachkommastellen"));
         m_jcbNbDecimals.setSelectedId(core.model.UserParameter.temp().nbDecimals);
         m_jcbNbDecimals.addItemListener(this);
@@ -170,7 +171,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jchShowSkillNumericalValue.addItemListener(this);
         add(m_jchShowSkillNumericalValue);
 
-        m_jslAlternativePositionsTolerance = new SliderPanel(HOVerwaltung.instance().getLanguageString("options.Alternative_Position_Tolerance"), 100, -1, 100, 1f, 120);
+        m_jslAlternativePositionsTolerance = new SliderPanel(HOVerwaltung.instance().getLanguageString("options.Alternative_Position_Tolerance"), 100, -1, 100, 1f, width);
         m_jslAlternativePositionsTolerance.setToolTipText(HOVerwaltung.instance().getLanguageString("options.tt_Alternative_Position_Tolerance"));
         m_jslAlternativePositionsTolerance.setValue(UserParameter.temp().alternativePositionsTolerance);
         m_jslAlternativePositionsTolerance.addChangeListener(this);

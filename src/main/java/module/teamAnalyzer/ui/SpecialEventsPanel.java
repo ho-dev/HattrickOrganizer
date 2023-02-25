@@ -6,9 +6,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
-import core.util.Helper;
 import module.teamAnalyzer.vo.TeamLineup;
-
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -20,7 +18,7 @@ public class SpecialEventsPanel extends JPanel {
     private final JTable table;
     private BaseTableModel tableModel;
     private final JLabel resultLabel;
-    private static HOVerwaltung hov = HOVerwaltung.instance();
+    private static final HOVerwaltung hov = HOVerwaltung.instance();
 
     private final String[] columns = {
             hov.getLanguageString("Event"),
@@ -37,13 +35,8 @@ public class SpecialEventsPanel extends JPanel {
 
         tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));
         table = new JTable(tableModel);
-
-        //table.setDefaultRenderer(Object.class, new RatingTableCellRenderer());
-
         setLayout(new BorderLayout());
-
         JScrollPane scrollPane = new JScrollPane(table);
-
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 

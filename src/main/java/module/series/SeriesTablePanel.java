@@ -13,7 +13,6 @@ import core.model.enums.RatingsStatistics;
 import core.model.series.SerieTableEntry;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
@@ -29,11 +28,11 @@ import java.util.Vector;
 class SeriesTablePanel extends ImagePanel {
 
 	public static final EmptyBorder EMPTY_BORDER = new EmptyBorder(5, 5, 5, 5);
-	private Color TITLE_BACKGROUND = ThemeManager.getColor(HOColorName.LEAGUE_TITLE_BG);
-	private Color TABLE_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
+	private final Color TITLE_BACKGROUND = ThemeManager.getColor(HOColorName.LEAGUE_TITLE_BG);
+	private final Color TABLE_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
 
-	private Color TABLE_EVEN_ROW = ThemeManager.getColor(HOColorName.TABLE_LEAGUE_EVEN);
-	private Color TABLE_ODD_ROW = ThemeManager.getColor(HOColorName.TABLE_LEAGUE_ODD);
+	private final Color TABLE_EVEN_ROW = ThemeManager.getColor(HOColorName.TABLE_LEAGUE_EVEN);
+	private final Color TABLE_ODD_ROW = ThemeManager.getColor(HOColorName.TABLE_LEAGUE_ODD);
 
 	private final String[] COLUMNNAMES = {
 			"",
@@ -53,7 +52,7 @@ class SeriesTablePanel extends ImagePanel {
 			Helper.getTranslation("ls.match.ratingsector.midfield"),
 			Helper.getTranslation("ls.match.ratingsector.attack")
 	};
-	private JTable seriesTable = new JTable();
+	private final JTable seriesTable = new JTable();
 	private Object[][] tableValues;
 	private final Model model;
 	private JComboBox m_jcbStatsAggType;
@@ -127,13 +126,13 @@ class SeriesTablePanel extends ImagePanel {
 		columnModel.getColumn(6).setPreferredWidth(Helper.calcCellWidth(25));
 
 		// Goals For
-		columnModel.getColumn(7).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(7).setPreferredWidth(Helper.calcCellWidth(30));
 
 		// Goals Against
-		columnModel.getColumn(8).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(8).setPreferredWidth(Helper.calcCellWidth(30));
 
 		// Goals Difference
-		columnModel.getColumn(9).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(9).setPreferredWidth(Helper.calcCellWidth(30));
 
 		// Serie
 		columnModel.getColumn(10).setPreferredWidth(Helper.calcCellWidth(90));
@@ -334,9 +333,6 @@ class SeriesTablePanel extends ImagePanel {
 		try {
 			if (this.model.getCurrentSeries() != null) {
 				final Vector<SerieTableEntry> tableEntries = this.model.getCurrentSeries().getTable().getEntries();
-
-				int j;
-
 				for (int i = 0; i < tableEntries.size(); i++) {
 					final SerieTableEntry entry = tableEntries.get(i);
 
