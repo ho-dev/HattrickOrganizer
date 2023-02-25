@@ -37,11 +37,6 @@ public abstract class LineupStylePanel extends JPanel {
     public LineupStylePanel(FormationPanel _mainPanel) {
         super();
         mainPanel = _mainPanel;
-
-//        constraints.insets = new Insets(5, 5, 5, 5);
-//        constraints.fill = GridBagConstraints.HORIZONTAL;
-//        constraints.weightx = 1;
-
     }
 
     //~ Methods ------------------------------------------------------------------------------------
