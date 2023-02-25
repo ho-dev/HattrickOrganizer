@@ -21,10 +21,12 @@
 * fix player compare when sold player is bought back again (#1624)
 * new column HTMS-28, player potential (#1288)
 * fix last match date of walkover matches (#1776)
+* fix npe when player avatar download fails (#1806)
 
 ### Team Analyzer
 * team analyzer displays man marking tactic (#1741)
 * add opponents' team development numbers to recap table (#347)
+* adjust panel layouts for font size 16 (#1805)
 
 ### Rating
 * fix team spirit influence on midfield rating (#1778)
