@@ -141,14 +141,15 @@ public final class PlayerOverviewModel extends HOTableModel {
      */
     private Player getFirstPlayerDevelopmentStageAfterSelected(Player vorlage, Integer hrfId) {
 		HODateTime after = null;
-		if ( hrfId!=null) {
+		if (hrfId != null) {
 			var hrf = DBManager.instance().loadHRF(hrfId);
-			after = hrf.getDatum();
+			if (hrf != null) {
+				after = hrf.getDatum();
+			}
 		}
-        return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerID(), after);
-    }
+		return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerID(), after);
+	}
     
-//  -----initialisierung-----------------------------------------
 
     /**
      * create a data[][] from player-Vector

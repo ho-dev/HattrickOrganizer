@@ -764,7 +764,7 @@ public class RatingPredictionManager {
             float subSkill;
             skill = player.getValue4Skill(skillType);
             float subskillFromDB = player.getSub4Skill(skillType);
-//            System.out.println ("t="+skillType+", o="+manualOffset+", s="+subskillFromDB);
+
             /*
              * If we know the last level up date from this player or
              * the user has set an offset manually -> use this sub/offset

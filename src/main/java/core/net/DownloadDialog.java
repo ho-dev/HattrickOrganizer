@@ -5,7 +5,6 @@ import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.hrf.HRFStringParser;
 import core.gui.HOMainFrame;
-import core.gui.InfoPanel;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
@@ -23,16 +22,9 @@ import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
 import tool.updater.UpdateController;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Arrays;
+import java.awt.event.*;
 import java.util.List;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -45,23 +37,22 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 	// ~ Instance fields--/
 	private static DownloadDialog m_clDownloadDialog;
-	private static HOVerwaltung hov = HOVerwaltung.instance();
-	private JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
+	private static final HOVerwaltung hov = HOVerwaltung.instance();
+	private final JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
-	private JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
-	private JCheckBox m_jchOldFixtures = new JCheckBox(hov.getLanguageString("download.oldseriesdata"), false);
-	private DownloadFilter filterRoot = new DownloadFilter();
-	private CheckBoxTree downloadFilter = new CheckBoxTree();
+	private final JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
+	private final JCheckBox m_jchOldFixtures = new JCheckBox(hov.getLanguageString("download.oldseriesdata"), false);
+	private final DownloadFilter filterRoot = new DownloadFilter();
+	private final CheckBoxTree downloadFilter = new CheckBoxTree();
 
-	private JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),	core.model.UserParameter.instance().xmlDownload);
-	private JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
-	private JCheckBox m_jchFixtures = new JCheckBox(hov.getLanguageString("download.seriesdata"), core.model.UserParameter.instance().fixtures);
-	private JList m_jlOldSeasons = new JList();
-	private SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
-	private JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
-	private JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
-	private boolean isNtTeam;
-
+	private final JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),	core.model.UserParameter.instance().xmlDownload);
+	private final JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
+	private final JCheckBox m_jchFixtures = new JCheckBox(hov.getLanguageString("download.seriesdata"), core.model.UserParameter.instance().fixtures);
+	private final JList m_jlOldSeasons = new JList();
+	private final SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
+	private final JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
+	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
+	private final boolean isNtTeam;
 
 	/**
 	 * Getter for the singleton HOMainFrame instance.
@@ -96,19 +87,21 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				startDownload();
 			}
 			RefreshManager.instance().doReInit();
-			setVisible(false);
-			dispose();
-			m_clDownloadDialog = null;
+			close();
 			if (UserParameter.instance().updateCheck) {
 				UpdateController.check4update(false);
 			}
 		} else if (e.getSource().equals(m_jbAbort)) {
-			setVisible(false);
-			dispose();
-			m_clDownloadDialog = null;
+			close();
 		} else if (e.getSource().equals(m_jbProxy)) {
 			new ProxyDialog(HOMainFrame.instance());
 		}
+	}
+
+	private void close(){
+		setVisible(false);
+		dispose();
+		m_clDownloadDialog = null;
 	}
 
 	/**
@@ -137,11 +130,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * Initialize the GUI components.
 	 */
 	private void initComponents() {
-		setResizable(false);
-		setContentPane(new ImagePanel(null));
+		//setResizable(false);
+		setContentPane(new ImagePanel(new GridBagLayout()));
+		var c = new GridBagConstraints();
 
-		if ( !isNtTeam) {
-			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
+		if (!isNtTeam) {
+			final JPanel normalDownloadPanel = new ImagePanel(new BorderLayout());
 			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 
 			// Download Filter
@@ -167,13 +161,20 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			// Series Data (fixtures)
 			downloadFilter.checkNode(filterRoot.getSeriesData(), UserParameter.instance().fixtures);
 
-			normalDownloadPanel.setLayout(new BorderLayout());
-			normalDownloadPanel.add(new JScrollPane(downloadFilter), BorderLayout.CENTER);
-			normalDownloadPanel.setSize(240, 280);
-			normalDownloadPanel.setLocation(10, 10);
-			getContentPane().add(normalDownloadPanel);
+			var filterPanel = new JPanel(new BorderLayout());
+			filterPanel.add(downloadFilter);
+			var scrollPanel = new JScrollPane(filterPanel);
+			scrollPanel.setPreferredSize(new Dimension(240,280));
+			normalDownloadPanel.add(scrollPanel, BorderLayout.CENTER);
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weighty = 1;
+			c.fill = GridBagConstraints.VERTICAL;
+			c.anchor = GridBagConstraints.NORTHEAST;
+			c.insets = new Insets(10, 10, 10, 10);
+			getContentPane().add(normalDownloadPanel, c);
 
-			final JPanel specialDownload = new ImagePanel(new GridLayout(1, 1, 4, 4));
+			final JPanel specialDownload = new ImagePanel(new BorderLayout());
 			specialDownload.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("Verschiedenes")));
 
 			// Alte Spielpläne
@@ -214,60 +215,55 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
 
 			specialDownload.add(oldFixturePanel);
-
-			specialDownload.setSize(260, 280);
-			specialDownload.setLocation(260, 10);
-			getContentPane().add(specialDownload);
-		}
-		else {
+			c.gridx = 1;
+			getContentPane().add(specialDownload, c);
+		} else {
 			// isNtTeam
 			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
 			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
 			JTextArea ta = new JTextArea();
-			ta.append(hov.getLanguageString("nthrf.hint1")+"\n");
-			ta.append(hov.getLanguageString("nthrf.hint2")+"\n");
-			ta.append(hov.getLanguageString("nthrf.hint3")+"\n");
-			ta.append(hov.getLanguageString("nthrf.hint4")+" '");
-			ta.append(hov.getLanguageString("Start")+"' ");
+			ta.append(hov.getLanguageString("nthrf.hint1") + "\n");
+			ta.append(hov.getLanguageString("nthrf.hint2") + "\n");
+			ta.append(hov.getLanguageString("nthrf.hint3") + "\n");
+			ta.append(hov.getLanguageString("nthrf.hint4") + " '");
+			ta.append(hov.getLanguageString("Start") + "' ");
 			ta.append(hov.getLanguageString("nthrf.hint5"));
 			ta.setEditable(false);
 
 			normalDownloadPanel.setLayout(new BorderLayout());
 			normalDownloadPanel.add(new JScrollPane(ta), BorderLayout.CENTER);
-			normalDownloadPanel.setSize(480, 280);
-			normalDownloadPanel.setLocation(10, 10);
-			getContentPane().add(normalDownloadPanel);
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridwidth = 2;
+			getContentPane().add(normalDownloadPanel, c);
 
 		}
+		var buttonRowPanel = new JPanel(new GridLayout(1, 3, 10, 10));
 		m_jbDownload.setToolTipText(hov.getLanguageString("tt_Download_Start"));
 		m_jbDownload.addActionListener(this);
 		m_jbDownload.setFont(m_jbDownload.getFont().deriveFont(Font.BOLD));
-		m_jbDownload.setSize(140, 30);
-		m_jbDownload.setLocation(10, 300);
 		InputMap buttonKeys = m_jbDownload.getInputMap(JButton.WHEN_FOCUSED);
-		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,false), "pressed");
-		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,true), "released");
-
-		getContentPane().add(m_jbDownload);
+		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "pressed");
+		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
+		buttonRowPanel.add(m_jbDownload);
 
 		m_jbProxy.setToolTipText(hov.getLanguageString("tt_ConfigureProxy"));
 		m_jbProxy.addActionListener(this);
 		m_jbProxy.setFont(m_jbProxy.getFont().deriveFont(Font.BOLD));
-		m_jbProxy.setSize(140, 30);
-		m_jbProxy.setLocation(195, 300);
-
-		getContentPane().add(m_jbProxy);
+		buttonRowPanel.add(m_jbProxy);
 
 		m_jbAbort.setToolTipText(hov.getLanguageString("tt_Download_Abbrechen"));
 		m_jbAbort.addActionListener(this);
-		m_jbAbort.setSize(140, 30);
-		m_jbAbort.setLocation(380, 300);
-		getContentPane().add(m_jbAbort);
+		buttonRowPanel.add(m_jbAbort);
 
-		setSize(550, 395);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 2;
+		c.anchor = GridBagConstraints.CENTER;
+		getContentPane().add(buttonRowPanel, c);
+		pack();
 
 		final Dimension size = getToolkit().getScreenSize();
-
 		if (size.width > this.getSize().width) {
 			// Center
 			this.setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2) - (this.getSize().height / 2));

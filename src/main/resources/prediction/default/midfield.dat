@@ -9,8 +9,16 @@ home                 = 1.199529
 awayDerby            = 1.113699
 pic                  = 0.839949
 mots                 = 1.109650
-teamSpiritPreMulti   = 0.147832
-teamSpiritPower      = 0.417779
+
+# team spirit formula (fitting schum's numbers)
+# eff(T) = power((teamspirit + teamspiritOffset) * teamspiritPreMulti, teamspiritPower) * teamspiritPostMulti
+#teamSpiritPreMulti   = 0.147832 # err=0.003676
+#teamSpiritPower      = 0.417779 # err=0.005549
+#teamspiritmulti = 0.1
+#teamspiritOffset = 0.0
+teamspiritPower  = 0.5008
+teamspiritPostMulti = 0.446
+
 extraMulti           = 1.000
 tacticCounter        = 0.930000
 tacticLongshots      = 0.950323

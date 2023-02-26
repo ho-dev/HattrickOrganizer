@@ -1,9 +1,8 @@
 // %2408129540:hoplugins.teamAnalyzer.ui.lineup%
 package module.teamAnalyzer.ui.lineup;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.*;
+import java.io.Serial;
 
 
 /**
@@ -12,12 +11,9 @@ import java.awt.Insets;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class StandardLineupPanel extends LineupStylePanel {
-    //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4628631085016401394L;
+	@Serial
+    private static final long serialVersionUID = -4628631085016401394L;
 
 	/**
      * Constructor
@@ -28,10 +24,6 @@ public class StandardLineupPanel extends LineupStylePanel {
         super(_mainPanel);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-
     /**
      * Setup the layout, with 2 teams displayed
      */
@@ -41,26 +33,20 @@ public class StandardLineupPanel extends LineupStylePanel {
         setLayout(new BorderLayout());
         setOpaque(false);
         centerPanel.setOpaque(false);
+        centerPanel.setLayout(new GridLayout(8,5));
 
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.insets = new Insets(0, 0, 0, 0);
-        centerPanel.setLayout(layout);
+        setOpponentKeeper();
+        setOpponentDefence();
+        setOpponentMidfield();
+        setOpponentAttack();
+        setMyAttack();
+        setMyMidfield();
+        setMyDefence();
+        setMyKeeper();
 
-        setOpponentPanel(0);
-        setOpponentKeeper(1);
-        setOpponentDefence(2);
-        setOpponentMidfield(3);
-        setOpponentAttack(4);
-        setMyAttack(5);
-        setMyMidfield(6);
-        setMyDefence(7);
-        setMyKeeper(8);
-        setMyPanel(9);
-
+        add(getOpponentTeamNamePanel(), BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
+        add(getOwnTeamNamePanel(), BorderLayout.SOUTH);
     }
 
     /**
@@ -72,20 +58,14 @@ public class StandardLineupPanel extends LineupStylePanel {
         setLayout(new BorderLayout());
         setOpaque(false);
         centerPanel.setOpaque(false);
+        centerPanel.setLayout(new GridLayout(4, 5));
 
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.insets = new Insets(2, 2, 2, 2);
-        centerPanel.setLayout(layout);
+        setOpponentKeeper();
+        setOpponentDefence();
+        setOpponentMidfield();
+        setOpponentAttack();
 
-        setOpponentPanel(0);
-        setOpponentKeeper(1);
-        setOpponentDefence(2);
-        setOpponentMidfield(3);
-        setOpponentAttack(4);
-
+        add(getOpponentTeamNamePanel(), BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
     }
 }

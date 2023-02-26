@@ -67,9 +67,8 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
 
-	private static ActionListener cbActionListener;
 	private Weather m_weather;
-	private boolean m_useWeatherImpact;
+	private final boolean m_useWeatherImpact;
 
 	public LineupPanel getLineupPanel() {
 		return m_clLineupPanel;
@@ -92,7 +91,10 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbFlipSide)) {
 			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().flipSide();
-			HOMainFrame.instance().getLineupPanel().update();
+			var panel = HOMainFrame.instance().getLineupPanel();
+			if ( panel != null ) {
+				panel.update();
+			}
 		}
 	}
 
@@ -137,9 +139,12 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					|| (!sGroup.equals(player.getTeamGroup()) && bSelectedGroupExcluded)) {
 				boolean include = true;
 				if ( bExcludeLast) {
-					var previousLineup = HOVerwaltung.instance().getModel().getPreviousLineup().getLineup();
-					if (previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
-						include = false;
+					var matchlineupTeam = HOVerwaltung.instance().getModel().getPreviousLineup();
+					if ( matchlineupTeam != null) {
+						var previousLineup = matchlineupTeam.getLineup();
+						if (previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+							include = false;
+						}
 					}
 				}
 				if (include) {

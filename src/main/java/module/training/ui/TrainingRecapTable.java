@@ -33,10 +33,10 @@ public class TrainingRecapTable extends JScrollPane {
 
     static final int fixedColumns = 5;
     private final FutureTrainingPrioPopup trainingPrioPopUp;
-    private JTable fixed;
-    private JTable scroll;
+    private final JTable fixed;
+    private final JTable scroll;
 
-    private TrainingModel trainingModel;
+    private final TrainingModel trainingModel;
 
     /**
      * Get Columns name
@@ -94,24 +94,6 @@ public class TrainingRecapTable extends JScrollPane {
         }
     }
 
-    private void addScrollColumns(Vector<String> row) {
-        var colums = new Vector<String>();
-        for ( int i=fixedColumns; i < row.size(); i++){
-            colums.add(row.get(i));
-        }
-        var model = (DefaultTableModel)scroll.getModel();
-        model.addRow(colums);
-    }
-
-    private void addFixedColumns(Vector<String> row) {
-        var colums = new Vector<String>();
-        for ( int i=0; i < fixedColumns; i++){
-            colums.add(row.get(i));
-        }
-        var model = (DefaultTableModel)fixed.getModel();
-        model.addRow(colums);
-    }
-
     private void deleteRows(JTable table) {
         var model = (DefaultTableModel)table.getModel();
         model.setNumRows(0);
@@ -166,7 +148,7 @@ public class TrainingRecapTable extends JScrollPane {
     /**
      * Fixed table renderer to add special background colors depending on training speed
      */
-    private class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
+    private static class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
 
         /* (non-Javadoc)
          * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -217,7 +199,6 @@ public class TrainingRecapTable extends JScrollPane {
             return this;
         }
     }
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new TrainingRecapTable object.
@@ -315,13 +296,7 @@ public class TrainingRecapTable extends JScrollPane {
                 }
             }
         });
-
-
-
-
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Returns the Locked LeftTable

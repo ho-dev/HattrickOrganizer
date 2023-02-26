@@ -7,10 +7,7 @@ import core.model.player.Player;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.table.*;
-
 
 public class TrainingPredictionPanel extends LazyImagePanel  {
 
@@ -28,20 +25,18 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     protected void initialize() {
         initComponents();
         addListeners();
-//        setNeedsRefresh(true);
     }
 
+    private boolean isUpdating=false;
     @Override
     protected void update() {
-        this.recapTable.refresh();
+        if ( !isUpdating) {
+            isUpdating=true;
+            this.recapTable.refresh();
+            this.model.fireModelChanged(ModelChange.FUTURE_TRAINING);
+            isUpdating = false;
+        }
     }
-
-    /**
-     * Reload the panel
-    private void reload() {
-        addRecapTable();
-    }
-     */
 
     private void addListeners() {
         RefreshManager.instance().registerRefreshable(() -> {

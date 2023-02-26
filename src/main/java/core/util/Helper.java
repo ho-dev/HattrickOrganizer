@@ -6,6 +6,7 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
@@ -47,17 +48,6 @@ public class Helper {
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.EXCELLENT), PlayerAbility.EXCELLENT),
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.FORMIDABLE), PlayerAbility.FORMIDABLE) };
 
-    /** Form */
-	public static final CBItem[] EINSTUFUNG_TRAINER = {
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.DISASTROUS), PlayerAbility.DISASTROUS),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.WRETCHED), PlayerAbility.WRETCHED),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.POOR), PlayerAbility.POOR),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.WEAK), PlayerAbility.WEAK),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.INADEQUATE), PlayerAbility.INADEQUATE),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.PASSABLE), PlayerAbility.PASSABLE),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.SOLID), PlayerAbility.SOLID),
-			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.EXCELLENT), PlayerAbility.EXCELLENT) };
-
      /** Spielerpositionen */
 	public static final CBItem[] SPIELERPOSITIONEN = {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.KEEPER), IMatchRoleID.KEEPER),
@@ -94,9 +84,6 @@ public class Helper {
     /** decimal format - 2 fraction digits */
     public static DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
 
-    /** decimal format - 3 fraction digits */
-    public static DecimalFormat DEZIMALFORMAT_3STELLEN = new DecimalFormat("#0.000");
-
     /** Schon eine Meldung angezeigt? */
     public static boolean paneShown;
 
@@ -105,11 +92,8 @@ public class Helper {
      *
      */
     public static int calcCellWidth(int width) {
-        return (int) (((float) width) * core.model.UserParameter.instance().zellenbreitenFaktor);
-    }
-
-
-	////Debug CacheTest------------------------------------------------
+		return (int) (((float) width) * UserParameter.instance().fontSize/12.0);
+	}
 
     /**
      * Überprüft den Inhalt eines Textfields, ob der Wert aus ints mit , getrennt besteht,

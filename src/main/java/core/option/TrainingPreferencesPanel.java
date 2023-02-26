@@ -70,7 +70,7 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
     }
 
     private void initComponents() {
-    	setLayout(new GridLayout(18, 1, 3, 0));
+    	setLayout(new GridLayout(4, 1, 3, 0));
 
 //        JLabel label = new JLabel(Helper.getTranslation("VoraussichtlicheTrainingwochen"));
 //        label.setForeground(TITLE_FG);
@@ -136,7 +136,8 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
         label.setFont(getFont().deriveFont(Font.BOLD));
         add(label);
 
-        m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, 120);
+        var width = UserParameter.instance().fontSize * 10;
+        m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, width);
         m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));
         m_jslFutureWeeks.setValue(core.model.UserParameter.temp().futureWeeks);
         m_jslFutureWeeks.addChangeListener(this);

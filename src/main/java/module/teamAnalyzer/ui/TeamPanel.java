@@ -4,14 +4,12 @@ import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.module.config.ModuleConfig;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.ui.lineup.FormationPanel;
 import module.teamAnalyzer.vo.TeamLineup;
 import module.teamAnalyzer.vo.UserTeamSpotLineup;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
@@ -21,21 +19,21 @@ import javax.swing.*;
 
 public class TeamPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-	private FormationPanel lineupPanel = new FormationPanel();
-    private PlayerPanel keeper = new PlayerPanel();
-    private PlayerPanel leftAttacker = new PlayerPanel();
-    private PlayerPanel leftBack = new PlayerPanel();
-    private PlayerPanel leftCentral = new PlayerPanel();
-    private PlayerPanel leftMidfielder = new PlayerPanel();
-    private PlayerPanel leftWinger = new PlayerPanel();
-    private PlayerPanel rightAttacker = new PlayerPanel();
-    private PlayerPanel rightBack = new PlayerPanel();
-    private PlayerPanel rightCentral = new PlayerPanel();
-    private PlayerPanel rightMidfielder = new PlayerPanel();
-    private PlayerPanel rightWinger = new PlayerPanel();
-    private PlayerPanel middleCentral = new PlayerPanel();
-    private PlayerPanel centralMidfielder = new PlayerPanel();
-    private PlayerPanel centralAttacker = new PlayerPanel ();
+	private final FormationPanel lineupPanel = new FormationPanel();
+    private final PlayerPanel keeper = new PlayerPanel();
+    private final PlayerPanel leftAttacker = new PlayerPanel();
+    private final PlayerPanel leftBack = new PlayerPanel();
+    private final PlayerPanel leftCentral = new PlayerPanel();
+    private final PlayerPanel leftMidfielder = new PlayerPanel();
+    private final PlayerPanel leftWinger = new PlayerPanel();
+    private final PlayerPanel rightAttacker = new PlayerPanel();
+    private final PlayerPanel rightBack = new PlayerPanel();
+    private final PlayerPanel rightCentral = new PlayerPanel();
+    private final PlayerPanel rightMidfielder = new PlayerPanel();
+    private final PlayerPanel rightWinger = new PlayerPanel();
+    private final PlayerPanel middleCentral = new PlayerPanel();
+    private final PlayerPanel centralMidfielder = new PlayerPanel();
+    private final PlayerPanel centralAttacker = new PlayerPanel ();
     JPanel grassPanel = new RasenPanel();
 
     ManMarkingOrderDisplay manMarkingOrderDisplay;
@@ -81,8 +79,8 @@ public class TeamPanel extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(grassPanel);
 
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
     }
 
@@ -276,22 +274,30 @@ public class TeamPanel extends JPanel {
         
         // Don't add the panel of an empty position.
         if (playerPanel.getContainsPlayer()) {
-            playerPanel.setPreferredSize(playerPanel.getDefaultSize());
-        	panel.add(playerPanel);
-        } else {
-        	// But leave a box the size of a player panel...
-        	Box box = new Box(BoxLayout.X_AXIS);
-        	box.setPreferredSize(playerPanel.getDefaultSize());
-        	panel.add(box);
+//            playerPanel.setPreferredSize(playerPanel.getDefaultSize());
+            panel.setLayout(new GridBagLayout());
+            var constraints = new GridBagConstraints();
+            constraints.gridy=0;
+            constraints.gridx=0;
+            constraints.weightx=1;
+            constraints.weighty=1;
+            constraints.insets = new Insets(5, 5, 5, 5);
+            constraints.fill = GridBagConstraints.BOTH;
+            panel.add(playerPanel, constraints);
         }
+//        else {
+//        	// But leave a box the size of a player panel...
+//        	Box box = new Box(BoxLayout.X_AXIS);
+////        	box.setPreferredSize(playerPanel.getDefaultSize());
+//        	panel.add(box);
+//        }
     }
 
     public Lineup getOwnLineup() {
         return HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
     }
 
-    private class ManMarkingOrderDisplay extends JPanel {
-        private final int ARR_SIZE = 8;
+    private static class ManMarkingOrderDisplay extends JPanel {
         int xfrom, yfrom, xto, yto;
         JComponent parent;
         public ManMarkingOrderDisplay(JPanel grassPanel) {
@@ -334,8 +340,9 @@ public class TeamPanel extends JPanel {
             g.setPaint(Color.RED);
             g.setStroke(new BasicStroke(5));
             // Draw horizontal arrow starting in (0, 0)
-            g.drawLine(0, 0, len-ARR_SIZE, 0);
-            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
+            int ARR_SIZE = 8;
+            g.drawLine(0, 0, len- ARR_SIZE, 0);
+            g.fillPolygon(new int[] {len, len- ARR_SIZE, len- ARR_SIZE, len},
                     new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
         }
 
