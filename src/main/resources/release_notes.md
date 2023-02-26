@@ -70,9 +70,9 @@ Reports by Contributors - October 15, 2022 - February 04, 2023
 
 * Jan 131
 * sich 16
+* wsbrenk 16
 * Lidegand 14
-* wsbrenk 13
 * Moorhuhninho 13
 * TeamBMW 5
 
-Total 192
+Total 195
