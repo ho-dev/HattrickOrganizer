@@ -211,24 +211,15 @@ public class RatingPredictionManager {
     private float calcRatings (Double t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
 
     	RatingPredictionParameter params;
-    	switch (type) {
-		case SIDEDEFENSE:
-			params = config.getSideDefenseParameters();
-			break;
-		case CENTRALDEFENSE:
-			params = config.getCentralDefenseParameters();
-			break;
-		case MIDFIELD:
-			params = config.getMidfieldParameters();
-			break;
-		case SIDEATTACK:
-			params = config.getSideAttackParameters();
-			break;
-		case CENTRALATTACK:
-			params = config.getCentralAttackParameters();
-			break;
-		default:
-			return 0;
+		switch (type) {
+			case SIDEDEFENSE -> params = config.getSideDefenseParameters();
+			case CENTRALDEFENSE -> params = config.getCentralDefenseParameters();
+			case MIDFIELD -> params = config.getMidfieldParameters();
+			case SIDEATTACK -> params = config.getSideAttackParameters();
+			case CENTRALATTACK -> params = config.getCentralAttackParameters();
+			default -> {
+				return 0;
+			}
 		}
     	Hashtable<String, Properties> allSections = params.getAllSections();
     	Enumeration<String> allKeys = allSections.keys();
@@ -276,7 +267,7 @@ public class RatingPredictionManager {
     		}
     	}
 
-		// calc Schum experience effect
+		// calc Schum's experience effect
 		var xpSectionName = "xp_" + getSectionName(sideType);
 		if ( params.hasSection(xpSectionName) ) {
 			if ( t==0 && sectionName.equals("playmaking_allsides")){
@@ -378,40 +369,22 @@ public class RatingPredictionManager {
     
     private static String getSpecialtyName (int specialty, boolean withDot) {
     	String retVal = (withDot?".":"");
-    	switch (specialty) {
-		case SPEC_NONE:
-			retVal += "none";
-			break;
-		case SPEC_TECHNICAL:
-			retVal += "technical";
-			break;
-		case SPEC_QUICK:
-			retVal += "quick";
-			break;
-		case SPEC_POWERFUL:
-			retVal += "powerful";
-			break;
-		case SPEC_UNPREDICTABLE:
-			retVal += "unpredictable";
-			break;
-		case SPEC_HEADER:
-			retVal += "header";
-			break;
-		case SPEC_REGAINER:
-			retVal += "regainer";
-			break;
-		case SPEC_NOTUSED:
-			retVal = "";
-			break;
-		case SPEC_SUPPORT:
-			retVal += "support";
-			break;
-		case SPEC_ALL:
+		switch (specialty) {
+			case SPEC_NONE -> retVal += "none";
+			case SPEC_TECHNICAL -> retVal += "technical";
+			case SPEC_QUICK -> retVal += "quick";
+			case SPEC_POWERFUL -> retVal += "powerful";
+			case SPEC_UNPREDICTABLE -> retVal += "unpredictable";
+			case SPEC_HEADER -> retVal += "header";
+			case SPEC_REGAINER -> retVal += "regainer";
+			case SPEC_NOTUSED -> retVal = "";
+			case SPEC_SUPPORT -> retVal += "support";
+			case SPEC_ALL ->
 //			retVal += "all";
-			retVal = "";
-			break;
-		default:
-			return "";
+					retVal = "";
+			default -> {
+				return "";
+			}
 		}
     	return retVal;
     }
@@ -695,25 +668,23 @@ public class RatingPredictionManager {
 	}
 	private Byte getRelevantPositionTactic(byte taktik, int pos, boolean useLeft, boolean useMiddle, boolean useRight) {
 		switch (pos) {
-			case keeper:
+			case keeper -> {
 				return getPosition(pos, taktik);
-			case rightCentralDefender, rightBack, rightWinger, rightInnerMidfield, rightForward: {
+			}
+			case rightCentralDefender, rightBack, rightWinger, rightInnerMidfield, rightForward -> {
 				if (useRight) {
 					return getPosition(pos, taktik);
 				}
-				break;
 			}
-			case leftCentralDefender, leftBack, leftWinger, leftInnerMidfield, leftForward: {
+			case leftCentralDefender, leftBack, leftWinger, leftInnerMidfield, leftForward -> {
 				if (useLeft) {
 					return getPosition(pos, taktik);
 				}
-				break;
 			}
-			case middleCentralDefender, centralInnerMidfield, centralForward: {
+			case middleCentralDefender, centralInnerMidfield, centralForward -> {
 				if (useMiddle) {
 					return getPosition(pos, taktik);
 				}
-				break;
 			}
 		}
 		return null;
