@@ -2,8 +2,15 @@
 
 
 # =================  Loyalty Factor ===============================
-# loyaltyaddition = loyaltyMax*loyalty/loyaltySkillMax
+# loyaltyaddition = loyaltyMax*(loyalty+loyaltyDelta)/loyaltySkillMax
+# if(homegrown) loyaltyaddition+= homegrownbonus
 # =============================================================
+# =================  Parameters ===============================
+homegrownbonus=0.5
+loyaltyMax=1
+loyaltyDelta=-1
+loyaltySkillMax=19
+
 
 # =================  Form Factor ===============================
 # form = form - 0.5			        (formDelta)
@@ -13,24 +20,6 @@
 # form = form^0.45			        (formPower)
 # <=> form-Factor = ((form-0.5)/7)^0.45
 # =============================================================
-
-# =================  XP Factor ===============================
-# <=> XP-Factor = 4/3 * log(xp)
-# =============================================================
-
-# =================  skill adjustment calculation ===============================
-# if (skill = Y and subskill=0) then skill = skill + x	(skillSubDeltaForLevelY)
-# skillc = [(skill + skillDelta) * skillMultiplier] ^ skillPower
-# skillc = skillc + homegrownbonus + loyaltyaddition + XP-Factor	
-# skillc = skillc * resultMultiForm * form	+ resultAddForm *  form	(resultMultiForm)
-# ===================================================================================
-
-
-# =================  Parameters ===============================
-homegrownbonus=0.5
-loyaltyMax=1
-loyaltySkillMax=20 
-
 # Form parameters
 formMin=0
 formMax=8
@@ -39,19 +28,28 @@ formMultiplier=0.125	# 1/8
 formPower=0.6225
 resultMultiForm=1
 
+
+# =================  XP Factor ===============================
+# <=> XP-Factor = 4/3 * log(xp)
+# =============================================================
 # experience
 # Fit schum's experience factor K
+xpDelta=-1
 quarticEffK=-0.00000862
 cubicEffK=0.00056438
 quadraticEffK=-0.01507852
 linearEffK=0.20426157
 constantEffK=-0.18965312
 
-multiXpLog10=1.33333333333333333333333333333333333333333333333333333333333		# 4/3
-#resultAddXp=1
-
+# =================  skill adjustment calculation ===============================
+# if (skill = Y and subskill=0) then skill = skill + x	(skillSubDeltaForLevelY)
+# skillc = [(skill + skillDelta) * skillMultiplier] ^ skillPower
+# skillc = skillc + homegrownbonus + loyaltyaddition + XP-Factor	
+# skillc = skillc * resultMultiForm * form	+ resultAddForm *  form	(resultMultiForm)
+# ===================================================================================
 skillDelta=-1
 skillMin=0
+
 
 #percentage per which a player is impacted positively/negatively by the weather
 weatherBonus=0.05

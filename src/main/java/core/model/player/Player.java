@@ -2061,7 +2061,7 @@ public class Player extends AbstractTable.Storable {
          * (calling RPM.calcPlayerStrength() is quite expensive and this method is used very often)
          */
 
-        float loy = RatingPredictionManager.getLoyaltyHomegrownBonus(this);
+        var loy = RatingPredictionManager.getLoyaltyEffect(this);
 
         String key = fo.getPosition() + ":"
                 + Helper.round(getGKskill() + getSub4Skill(KEEPER) + loy, 2) + "|"

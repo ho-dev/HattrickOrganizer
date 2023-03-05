@@ -7,7 +7,7 @@ import core.rating.RatingPredictionManager;
 
 public class PenaltyTaker {
 
-	private Player player;
+	private final Player player;
 
 	public PenaltyTaker(Player player) {
 		this.player = player;
@@ -18,8 +18,8 @@ public class PenaltyTaker {
 	}
 
 	public double getAbility() {
-		double ability = 0;
-		double loy = (double)RatingPredictionManager.getLoyaltyHomegrownBonus(player);
+		double ability;
+		double loy = RatingPredictionManager.getLoyaltyEffect(player);
 
 		ability = getExperience() * 1.5
 					+ (getSetPieces() + loy) * 0.7

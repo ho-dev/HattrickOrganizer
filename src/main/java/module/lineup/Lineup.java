@@ -13,8 +13,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
-import core.util.Helper;
-import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -416,7 +414,7 @@ public class Lineup{
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), noKeeper)) {
 					double sp = (double) player.getSPskill()
 							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
-							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
+							+ RatingPredictionManager.getLoyaltyEffect(player);
 					if (sp > maxStandard) {
 						maxStandard = sp;
 						form = player.getForm();
@@ -603,11 +601,14 @@ public class Lineup{
 	 */
 	public final byte getEffectivePos4PositionID(int positionsid) {
 		try {
-			return getPositionById(positionsid).getPosition();
+			var posid = getPositionById(positionsid);
+			if ( posid != null){
+				return posid.getPosition();
+			}
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getEffectivePos4PositionID: " + e);
-			return IMatchRoleID.UNKNOWN;
 		}
+		return IMatchRoleID.UNKNOWN;
 	}
 
 	/**
@@ -737,18 +738,24 @@ public class Lineup{
 	 */
 	public Player getPlayerByPositionID(int positionId) {
 		try {
-			return HOVerwaltung.instance().getModel()
-					.getCurrentPlayer(getPositionById(positionId).getPlayerId());
+			var posid = getPositionById(positionId);
+			if ( posid != null) {
+				return HOVerwaltung.instance().getModel()
+						.getCurrentPlayer(posid.getPlayerId());
+			}
 		} catch (Exception e) {
 			HOLogger.instance()
 					.error(getClass(), "getPlayerByPositionID(" + positionId + "): " + e);
-			return null;
 		}
+		return null;
 	}
 
 	public String tryGetPlayerNameByPositionID(int positionId) {
 		try {
-			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getPlayerId()).getShortName();
+			var posid = getPositionById(positionId);
+			if (posid != null){
+				return HOVerwaltung.instance().getModel().getCurrentPlayer(posid.getPlayerId()).getShortName();
+			}
 		} catch (Exception e) {
 			return "           ";
 		}
@@ -869,10 +876,6 @@ public class Lineup{
 
 	public Vector<MatchLineupPosition> getReplacedPositions(){return replacedPositions;}
 
-	public final Vector<MatchLineupPosition> getBenchPositions(){
-		return m_vBenchPositions;
-	}
-
 	/**
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
@@ -985,7 +988,6 @@ public class Lineup{
 
 	/**
 	 * Sets the provided list of match orders as list.
-	 *
 	 * list may contain a maximum of three substitutions
 	 * additional number of position swap and behaviour changes depends on tactic assistant level
 	 * list may contain one man marking order
@@ -1061,11 +1063,14 @@ public class Lineup{
 	 */
 	public final byte getTactic4PositionID(int positionsid) {
 		try {
-			return getPositionById(positionsid).getTactic();
+			var posid = getPositionById(positionsid);
+			if ( posid != null){
+				return posid.getTactic();
+			}
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getTactic4PositionID: " + e);
-			return IMatchRoleID.UNKNOWN;
 		}
+		return IMatchRoleID.UNKNOWN;
 	}
 
 	public final float getTacticLevel(int type) {
@@ -1422,20 +1427,6 @@ public class Lineup{
 	}
 
 	/**
-	 * Calculate player strength for the given position.
-	 */
-	private float calcPlayerStrength(List<Player> players, int playerID, byte position, boolean considerForm, @Nullable Weather weather, boolean useWeatherImpact) {
-		if (players != null) {
-			for (Player player : players) {
-				if (player.getPlayerID() == playerID) {
-					return player.calcPosValue(position, considerForm, weather, useWeatherImpact);
-				}
-			}
-		}
-		return 0.0f;
-	}
-
-	/**
 	 * Initializes the 553 lineup
 	 */
 	private void initPositionen553() {
@@ -1510,7 +1501,8 @@ public class Lineup{
 				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTactic();
 				newRoleId = sub.getRoleId();
 				if ( newRoleId != -1 ) {
-					if (  getPositionById(newRoleId).getPlayerId() == 0){
+					var posid = getPositionById(newRoleId);
+					if (  posid != null && posid.getPlayerId() == 0){
 						if ( newRoleId != matchRoleIDaffectedPlayer.getId() ) {
 							setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
 						}

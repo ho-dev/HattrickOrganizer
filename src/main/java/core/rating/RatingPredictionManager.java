@@ -67,9 +67,13 @@ public class RatingPredictionManager {
 	
     /** Cache for player strength (Hashtable<String, Float>) */
     private static final Hashtable<String, Double> playerStrengthCache = new Hashtable<>();
+	private static Double loyaltyDelta = null;
+	private static Double loyaltySkillMax= null;
+	private static Double homegrownBonus= null;
+	private static Double loyaltyMax=null;
 
-    
-    //~ Instance fields ----------------------------------------------------------------------------
+
+	//~ Instance fields ----------------------------------------------------------------------------
     private short heimspiel;
     private short attitude;
     private short selbstvertrauen;
@@ -99,7 +103,7 @@ public class RatingPredictionManager {
         this.LineupEvolution = this.setLineupEvolution();
     }
 
-    private Hashtable<Double, Lineup> setLineupEvolution()
+	private Hashtable<Double, Lineup> setLineupEvolution()
 	{
 		// Initialize _LineupEvolution and add starting lineup
 		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
@@ -134,7 +138,7 @@ public class RatingPredictionManager {
 		double tNextEvent, tMatchOrder;
 		Lineup currentLineup;
 
-		// define time of next event
+		// define time of next0 event
 		if (events.size() > 0) {
 			tNextEvent = events.get(0);
 		}
@@ -403,7 +407,7 @@ public class RatingPredictionManager {
     }
 
     private static int getSkillByName (String skillName) {
-    	skillName = skillName.toLowerCase(java.util.Locale.ENGLISH);
+    	skillName = skillName.toLowerCase(Locale.ENGLISH);
 		return switch (skillName) {
 			case "goalkeeping" -> GOALKEEPING;
 			case "defending" -> DEFENDING;
@@ -417,7 +421,7 @@ public class RatingPredictionManager {
     }
 
     private static int getSideByName (String sideName) {
-    	sideName = sideName.toLowerCase(java.util.Locale.ENGLISH);
+    	sideName = sideName.toLowerCase(Locale.ENGLISH);
 		return switch (sideName) {
 			case "thisside" -> THISSIDE;
 			case "otherside" -> OTHERSIDE;
@@ -564,7 +568,7 @@ public class RatingPredictionManager {
     
 
     public static double[][] getAllPlayerWeights (RatingPredictionParameter params, String sectionName) {
-		double[][] weights = new double[IMatchRoleID.NUM_POSITIONS][NUM_SPEC];
+		double[][] weights = new double[NUM_POSITIONS][NUM_SPEC];
 		double modCD = params.getParam(sectionName, "allCDs", 1);
 		double modWB = params.getParam(sectionName, "allWBs", 1);
 		double modIM = params.getParam(sectionName, "allIMs", 1);
@@ -574,42 +578,42 @@ public class RatingPredictionManager {
 			if (specialty == SPEC_NOTUSED)
 				continue;
 			String specialtyName = getSpecialtyName(specialty, true);
-			weights[IMatchRoleID.KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName);
-			weights[IMatchRoleID.KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName);    // alias for keeper
-			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD;
-			weights[IMatchRoleID.CENTRAL_DEFENDER][specialty] += params.getParam(sectionName, "cd" + specialtyName) * modCD;    // alias for cd_norm
-			weights[IMatchRoleID.CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD;
-			weights[IMatchRoleID.CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD;
-			weights[IMatchRoleID.BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB;
-			weights[IMatchRoleID.BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB;    // alias for wb_norm
-			weights[IMatchRoleID.BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB;
-			weights[IMatchRoleID.BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB;
-			weights[IMatchRoleID.BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB;
-			weights[IMatchRoleID.MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM;
-			weights[IMatchRoleID.MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM;    // alias for im_norm
-			weights[IMatchRoleID.MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM;
-			weights[IMatchRoleID.MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM;
-			weights[IMatchRoleID.MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM;
+			weights[KEEPER][specialty] = params.getParam(sectionName, "keeper" + specialtyName);
+			weights[KEEPER][specialty] += params.getParam(sectionName, "gk" + specialtyName);    // alias for keeper
+			weights[CENTRAL_DEFENDER][specialty] = params.getParam(sectionName, "cd_norm" + specialtyName) * modCD;
+			weights[CENTRAL_DEFENDER][specialty] += params.getParam(sectionName, "cd" + specialtyName) * modCD;    // alias for cd_norm
+			weights[CENTRAL_DEFENDER_OFF][specialty] = params.getParam(sectionName, "cd_off" + specialtyName) * modCD;
+			weights[CENTRAL_DEFENDER_TOWING][specialty] = params.getParam(sectionName, "cd_tw" + specialtyName) * modCD;
+			weights[BACK][specialty] = params.getParam(sectionName, "wb_norm" + specialtyName) * modWB;
+			weights[BACK][specialty] += params.getParam(sectionName, "wb" + specialtyName) * modWB;    // alias for wb_norm
+			weights[BACK_OFF][specialty] = params.getParam(sectionName, "wb_off" + specialtyName) * modWB;
+			weights[BACK_DEF][specialty] = params.getParam(sectionName, "wb_def" + specialtyName) * modWB;
+			weights[BACK_TOMID][specialty] = params.getParam(sectionName, "wb_tm" + specialtyName) * modWB;
+			weights[MIDFIELDER][specialty] = params.getParam(sectionName, "im_norm" + specialtyName) * modIM;
+			weights[MIDFIELDER][specialty] += params.getParam(sectionName, "im" + specialtyName) * modIM;    // alias for im_norm
+			weights[MIDFIELDER_OFF][specialty] = params.getParam(sectionName, "im_off" + specialtyName) * modIM;
+			weights[MIDFIELDER_DEF][specialty] = params.getParam(sectionName, "im_def" + specialtyName) * modIM;
+			weights[MIDFIELDER_TOWING][specialty] = params.getParam(sectionName, "im_tw" + specialtyName) * modIM;
 			weights[IMatchRoleID.WINGER][specialty] = params.getParam(sectionName, "wi_norm" + specialtyName) * modWI;
 			weights[IMatchRoleID.WINGER][specialty] += params.getParam(sectionName, "wi" + specialtyName) * modWI;    // alias for wi_norm
-			weights[IMatchRoleID.WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI;
-			weights[IMatchRoleID.WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI;
-			weights[IMatchRoleID.WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI;
-			weights[IMatchRoleID.FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW;
-			weights[IMatchRoleID.FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW;    // alias for fw_norm
-			weights[IMatchRoleID.FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW;
-			weights[IMatchRoleID.FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW;
+			weights[WINGER_OFF][specialty] = params.getParam(sectionName, "wi_off" + specialtyName) * modWI;
+			weights[WINGER_DEF][specialty] = params.getParam(sectionName, "wi_def" + specialtyName) * modWI;
+			weights[WINGER_TOMID][specialty] = params.getParam(sectionName, "wi_tm" + specialtyName) * modWI;
+			weights[FORWARD][specialty] = params.getParam(sectionName, "fw_norm" + specialtyName) * modFW;
+			weights[FORWARD][specialty] += params.getParam(sectionName, "fw" + specialtyName) * modFW;    // alias for fw_norm
+			weights[FORWARD_DEF][specialty] = params.getParam(sectionName, "fw_def" + specialtyName) * modFW;
+			weights[FORWARD_TOWING][specialty] = params.getParam(sectionName, "fw_tw" + specialtyName) * modFW;
 		}
 		return weights;
 	}
 
     public int getNumIMs (Lineup _lineup) {
     	int retVal = 0;
-    	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
+    	for(int pos : aFieldMatchRoleID) {
     		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
-            	if (pos == IMatchRoleID.rightInnerMidfield || pos == IMatchRoleID.leftInnerMidfield ||
-            			pos == IMatchRoleID.centralInnerMidfield)
+            	if (pos == rightInnerMidfield || pos == leftInnerMidfield ||
+            			pos == centralInnerMidfield)
             		retVal++;
             }
     	}
@@ -618,11 +622,11 @@ public class RatingPredictionManager {
 
     public int getNumFWs (Lineup _lineup) {
     	int retVal = 0;
-    	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
+    	for(int pos : aFieldMatchRoleID) {
     		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
-            	if (pos == IMatchRoleID.rightForward || pos == IMatchRoleID.leftForward ||
-            			pos == IMatchRoleID.centralForward)
+            	if (pos == rightForward || pos == leftForward ||
+            			pos == centralForward)
             		retVal++;
             }
     	}
@@ -631,25 +635,53 @@ public class RatingPredictionManager {
 
     public int getNumCDs (Lineup _lineup) {
     	int retVal = 0;
-    	for(int pos : IMatchRoleID.aFieldMatchRoleID) {
+    	for(int pos : aFieldMatchRoleID) {
     		Player player = _lineup.getPlayerByPositionID(pos);
             if (player != null) {
-            	if (pos == IMatchRoleID.rightCentralDefender || pos == IMatchRoleID.leftCentralDefender ||
-            			pos == IMatchRoleID.middleCentralDefender)
+            	if (pos == rightCentralDefender || pos == leftCentralDefender ||
+            			pos == middleCentralDefender)
             		retVal++;
             }
     	}
     	return retVal;
     }
 
-    public static float getLoyaltyHomegrownBonus(Player player) {
-    	if (player.isHomeGrown()) return 1.5f;
-    	else return (float)((player.getLoyalty()-1)/19.0);
+    public static double getLoyaltyEffect(Player player) {
+		var ret = getLoyaltyMax()*(player.getLoyalty()+getLoyaltyDelta())/getLoyaltySkillMax();
+    	if (player.isHomeGrown()) {
+			ret += getHomegrownBonus();
+		}
+		return ret;
     }
+	public static double getLoyaltyMax() {
+		if (loyaltyMax==null){
+			loyaltyMax=config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "loyaltyMax", 1.);
+		}
+		return loyaltyMax;
+	}
+
+	private static double getLoyaltyDelta() {
+		if (loyaltyDelta == null) {
+			loyaltyDelta = config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "loyaltyDelta", -1.);
+		}
+		return loyaltyDelta;
+	}
+	private static double getLoyaltySkillMax() {
+		if (loyaltySkillMax == null) {
+			loyaltySkillMax = config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "loyaltySkillMAx", 19.);
+		}
+		return loyaltySkillMax;
+	}
+	private static double getHomegrownBonus() {
+		if (homegrownBonus == null) {
+			homegrownBonus = config.getPlayerStrengthParameters().getParam(RatingPredictionParameter.GENERAL, "homegrownBonus", 0.5);
+		}
+		return homegrownBonus;
+	}
 
 	private double getAllPlayerXpEffect(Lineup lineup, RatingPredictionParameter params, String xpSectionName, boolean useLeft, boolean useMiddle, boolean useRight) {
 		double ret = 0;
-		for (int pos : IMatchRoleID.aFieldMatchRoleID) {
+		for (int pos : aFieldMatchRoleID) {
 			Player player = lineup.getPlayerByPositionID(pos);
 			if (player != null) {
 				var posTactic = getRelevantPositionTactic(lineup.getTactic4PositionID(pos), pos, useLeft, useMiddle, useRight);
@@ -691,8 +723,8 @@ public class RatingPredictionManager {
 	}
 
 	public double[][] getAllPlayerStrength (double t, Lineup _lineup, boolean useForm, Weather weather, boolean useWeatherImpact, int skillType, boolean useLeft, boolean useMiddle, boolean useRight) {
-    	double[][] retArray = new double[IMatchRoleID.NUM_POSITIONS][SPEC_ALL];
-        for(int pos : IMatchRoleID.aFieldMatchRoleID) {
+    	double[][] retArray = new double[NUM_POSITIONS][SPEC_ALL];
+        for(int pos : aFieldMatchRoleID) {
             Player player = _lineup.getPlayerByPositionID(pos);
             if(player != null) {
 				byte taktik = _lineup.getTactic4PositionID(pos);
@@ -755,7 +787,7 @@ public class RatingPredictionManager {
             skill = skill + subSkill;
             
             // Add loyalty and homegrown bonuses
-            skill += getLoyaltyHomegrownBonus(player);
+            skill += getLoyaltyEffect(player);
 
             // consider weather impact
 			// is it where it should be ? maybe weather impact should  be considered before loyalty and homegrown bonus, as always HT is not clear
@@ -828,6 +860,10 @@ public class RatingPredictionManager {
 			HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
 			playerStrengthCache.clear();
 			playerStrengthCache.put("lastRebuild", (double) new Date().getTime());
+			loyaltyDelta = null;
+			loyaltySkillMax = null;
+			homegrownBonus = null;
+			loyaltyMax = null;
 		}
 		String key = playerStrengthParameters.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm + "|" + overcrowdingPenalty;
 		if (playerStrengthCache.containsKey(key)) {
@@ -1039,7 +1075,7 @@ public class RatingPredictionManager {
     	RatingPredictionParameter params = config.getTacticsParameters();
     	double retVal = 0;
     	float passing;
-        for(int i : IMatchRoleID.aFieldMatchRoleID)
+        for(int i : aFieldMatchRoleID)
         {
             Player ispieler = startingLineup.getPlayerByPositionID(i);
             byte taktik = startingLineup.getTactic4PositionID(i);
@@ -1069,7 +1105,7 @@ public class RatingPredictionManager {
 		Weather weather = HOMainFrame.getWeather();
 		double retVal = 0;
     	RatingPredictionParameter params = config.getTacticsParameters();
-		List<Integer> allDefenders = Arrays.asList(IMatchRoleID.rightBack, IMatchRoleID.rightCentralDefender, IMatchRoleID.middleCentralDefender, IMatchRoleID.leftCentralDefender, IMatchRoleID.leftBack);
+		List<Integer> allDefenders = Arrays.asList(rightBack, rightCentralDefender, middleCentralDefender, leftCentralDefender, leftBack);
 
         for(int pos : allDefenders)
         {
@@ -1092,7 +1128,7 @@ public class RatingPredictionManager {
 		final Weather weather = HOMainFrame.getWeather();
     	double retVal = 0;
 		double defense;
-		for(int pos : IMatchRoleID.aOutfieldMatchRoleID)
+		for(int pos : aOutfieldMatchRoleID)
         {
             Player player = startingLineup.getPlayerByPositionID(pos);
             if(player != null) {
@@ -1119,7 +1155,7 @@ public class RatingPredictionManager {
        	RatingPredictionParameter params = config.getTacticsParameters();
     	double retVal = 0;
 
-        for(int pos : IMatchRoleID.aOutfieldMatchRoleID)
+        for(int pos : aOutfieldMatchRoleID)
         {
 			Player player = startingLineup.getPlayerByPositionID(pos);
 			if(player != null) {

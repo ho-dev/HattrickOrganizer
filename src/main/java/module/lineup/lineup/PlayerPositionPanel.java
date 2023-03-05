@@ -642,7 +642,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 item.setValues(spielerName,
                         player.getSPskill()
                                 + player.getSub4Skill(PlayerSkill.SET_PIECES)
-                                + RatingPredictionManager.getLoyaltyHomegrownBonus(player),
+                                + (float)RatingPredictionManager.getLoyaltyEffect(player),
                         player, true);
                 return item;
             } else if (m_iPositionID == IMatchRoleID.captain) {
