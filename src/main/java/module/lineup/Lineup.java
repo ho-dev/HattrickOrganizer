@@ -756,9 +756,9 @@ public class Lineup{
 			if (posid != null){
 				return HOVerwaltung.instance().getModel().getCurrentPlayer(posid.getPlayerId()).getShortName();
 			}
-		} catch (Exception e) {
-			return "           ";
+		} catch (Exception ignored) {
 		}
+		return "           ";
 	}
 
 	public void printLineup() {
