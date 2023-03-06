@@ -52,6 +52,7 @@ final class ScoutTable extends AbstractTable {
 	 * Save players from TransferScout
 	 */
 	void saveScoutList(Vector<ScoutEintrag> list) {
+		executePreparedDelete();
 		// What should be done when list = null?? jailbird.
 		if (list != null) {
 			for (var scout : list) {
@@ -64,7 +65,12 @@ final class ScoutTable extends AbstractTable {
 	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
 		return new PreparedSelectStatementBuilder(this, "");
 	}
-	
+
+	@Override
+	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
+		return new PreparedDeleteStatementBuilder(this, "");
+	}
+
 	/**
 	 * Load player list for insertion into TransferScout
 	 */
