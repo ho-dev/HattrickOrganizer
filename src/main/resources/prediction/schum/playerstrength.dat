@@ -1,6 +1,5 @@
 [general]
 
-
 # =================  Loyalty Factor ===============================
 # loyaltyaddition = loyaltyMax*(loyalty+loyaltyDelta)/loyaltySkillMax
 # if(homegrown) loyaltyaddition+= homegrownbonus
