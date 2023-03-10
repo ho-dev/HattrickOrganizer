@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
 public class DBManager {
 
 	/** database versions */
-	private static final int DBVersion = 700; // HO 7.0 version
+	private static final int DBVersion = 701; // HO 7.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version

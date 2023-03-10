@@ -68,6 +68,8 @@ final class DBUpdater {
 					case 602:
 						updateDBv700(DBVersion);
 					case 700:
+						updateDBv701(DBVersion);
+					case 701:
 				}
 
 			} catch (Exception e) {
@@ -100,6 +102,23 @@ final class DBUpdater {
 			var finished = HODateTime.now();
 			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
 		}
+	}
+
+	// fix https://github.com/akasolace/HO/issues/1817
+	private void updateDBv701(int dbVersion) throws SQLException {
+		var teamTable = dbManager.getTable(TeamTable.TABLENAME);
+		teamTable.tryDeleteColumn("sTrainingsArt");
+		teamTable.tryDeleteColumn("sStimmung");
+		teamTable.tryDeleteColumn("sSelbstvertrauen");
+		var matchlineupplayerTable = dbManager.getTable(MatchLineupPlayerTable.TABLENAME);
+		matchlineupplayerTable.tryDeleteColumn("PositionCode");
+		matchlineupplayerTable.tryDeleteColumn("FIELDPOS");
+		var mmatchSubstitutionTable = dbManager.getTable(MatchSubstitutionTable.TABLENAME);
+		mmatchSubstitutionTable.tryDeleteColumn("HRFID");
+		mmatchSubstitutionTable.tryDeleteColumn("LineupName");
+		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+		stadiumTable.tryDeleteColumn("GesamtGr");
+		updateDBVersion(dbVersion, 701);
 	}
 
 	private void updateDBv700(int dbVersion) throws SQLException {
