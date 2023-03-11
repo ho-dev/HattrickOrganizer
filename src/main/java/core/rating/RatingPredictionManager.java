@@ -94,8 +94,9 @@ public class RatingPredictionManager {
 	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
 	 */
 	private final Hashtable<Double, Lineup> LineupEvolution;
+	private double userRatingOffset;
 
-    public RatingPredictionManager(Lineup _startingLineup, Team iteam)
+	public RatingPredictionManager(Lineup _startingLineup, Team iteam)
     {
         this.startingLineup = _startingLineup;
 		if (RatingPredictionManager.config == null) RatingPredictionManager.config = RatingPredictionConfig.getInstance();
@@ -226,7 +227,7 @@ public class RatingPredictionManager {
 			}
 		}
     	Hashtable<String, Properties> allSections = params.getAllSections();
-    	Enumeration<String> allKeys = allSections.keys();
+		Enumeration<String> allKeys = allSections.keys();
     	double retVal = 0;
     	while (allKeys.hasMoreElements()) {
     		String sectionName = allKeys.nextElement();
@@ -839,7 +840,11 @@ public class RatingPredictionManager {
 
     private static double _calcPlayerExperienceEffect(RatingPredictionParameter playerStrengthParameters, double maxXpDelta, double experience) {
 		if (maxXpDelta <= 0) return 0;
-		// TODO: Caching
+		validatePlayerStrengthCache();
+		var key = "XP|" + experience;
+		if ( playerStrengthCache.containsKey(key)){
+			return playerStrengthCache.get(key);
+		}
 		var xp = Math.max(0,experience + playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "xpDelta", 0));
 		var ret = playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "constantEffK", 0);
 		var x = xp; // x
@@ -850,21 +855,16 @@ public class RatingPredictionManager {
 		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "cubicEffK", 0);
 		x *= xp; // x^4
 		ret += x * playerStrengthParameters.getParam(RatingPredictionParameter.GENERAL, "quarticEffK", 0);
-		return ret * maxXpDelta;
+		ret *= maxXpDelta;
+		playerStrengthCache.put(key, ret);
+		return ret;
 	}
 
     private static double _calcPlayerStrength (RatingPredictionParameter playerStrengthParameters,
     	String sectionName, double stamina, double xp, double skill, double form, boolean useForm, double overcrowdingPenalty) {
 		// If config changed, we have to clear the cache
-		if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
-			HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
-			playerStrengthCache.clear();
-			playerStrengthCache.put("lastRebuild", (double) new Date().getTime());
-			loyaltyDelta = null;
-			loyaltySkillMax = null;
-			homegrownBonus = null;
-			loyaltyMax = null;
-		}
+
+		validatePlayerStrengthCache();
 		String key = playerStrengthParameters.toString() + "|" + sectionName + "|" + stamina + "|" + xp + "|" + skill + "|" + form + "|" + useForm + "|" + overcrowdingPenalty;
 		if (playerStrengthCache.containsKey(key)) {
 			return playerStrengthCache.get(key);
@@ -938,7 +938,19 @@ public class RatingPredictionManager {
 		return rating;
 	}
 
-    private void init(Team team)
+	private static void validatePlayerStrengthCache() {
+		if (!playerStrengthCache.containsKey("lastRebuild") || playerStrengthCache.get("lastRebuild") < config.getLastParse()) {
+			HOLogger.instance().debug(RatingPredictionManager.class, "Rebuilding RPM cache!");
+			playerStrengthCache.clear();
+			playerStrengthCache.put("lastRebuild", (double) new Date().getTime());
+			loyaltyDelta = null;
+			loyaltySkillMax = null;
+			homegrownBonus = null;
+			loyaltyMax = null;
+		}
+	}
+
+	private void init(Team team)
     {
         try
         {
@@ -1120,8 +1132,6 @@ public class RatingPredictionManager {
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
-
-
 
     public final float getTacticLevelPressing() {
     	RatingPredictionParameter params = config.getTacticsParameters();
