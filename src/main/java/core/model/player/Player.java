@@ -915,31 +915,34 @@ public class Player extends AbstractTable.Storable {
         return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal, weather, useWeatherImpact);
     }
 
-
-
     /**
      * Calculate Player Ideal Position (weather impact not relevant here)
      */
+    public byte calculateIdealPosition(){
+        final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+        float maxStk = -1.0f;
+        byte currPosition;
+        float contrib;
+
+        for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+            if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+            currPosition = allPos[i].getPosition();
+            contrib = calcPosValue(currPosition, true, true, null, false);
+            if (contrib > maxStk) {
+                maxStk = contrib;
+                idealPos = currPosition;
+            }
+        }
+        return idealPos ;
+    }
+
     public byte getIdealPosition() {
         //in case player best position is forced by user
         final int flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
             if (idealPos == IMatchRoleID.UNKNOWN) {
-                final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-                float maxStk = -1.0f;
-                byte currPosition;
-                float contrib;
-
-                for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
-                    if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-                    currPosition = allPos[i].getPosition();
-                    contrib = calcPosValue(currPosition, true, true, null, false);
-                    if (contrib > maxStk) {
-                        maxStk = contrib;
-                        idealPos = currPosition;
-                    }
-                }
+                idealPos = calculateIdealPosition();
             }
             return idealPos;
         }
@@ -1868,7 +1871,6 @@ public class Player extends AbstractTable.Storable {
         getNotes().setNote(text);
         DBManager.instance().storePlayerNotes(notes);
     }
-
 
     /**
      * get Skillvalue 4 skill
