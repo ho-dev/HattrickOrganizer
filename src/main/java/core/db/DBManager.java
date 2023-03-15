@@ -1815,7 +1815,7 @@ public class DBManager {
 	 */
 	public void deleteMatch(MatchKurzInfo info) {
 		var matchid = info.getMatchID();
-		var matchType = info.getMatchType();
+		var matchType = info.getMatchType().getId();
 
 		getTable(MatchDetailsTable.TABLENAME).executePreparedDelete(matchid, matchType);
 		getTable(MatchHighlightsTable.TABLENAME).executePreparedDelete(matchid, matchType);
