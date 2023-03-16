@@ -668,14 +668,18 @@ public class HOModel {
     }
 
     public TrainingPerWeek getTraining() {
-        var team = this.getTeam();
-        return new TrainingPerWeek(
-                this.getXtraDaten().getTrainingDateAfterWeeks(-1), // previous training
-                team.getTrainingsArtAsInt(),
-                team.getTrainingslevel(),
-                team.getStaminaTrainingPart(),
-                this.getClub().getCoTrainer(),
-                this.getTrainer().getTrainerSkill(),
-                DBDataSource.HRF);
+        var xtra = this.getXtraDaten();
+        if (xtra != null) {
+            var team = this.getTeam();
+            return new TrainingPerWeek(
+                    xtra.getTrainingDateAfterWeeks(-1), // previous training
+                    team.getTrainingsArtAsInt(),
+                    team.getTrainingslevel(),
+                    team.getStaminaTrainingPart(),
+                    this.getClub().getCoTrainer(),
+                    this.getTrainer().getTrainerSkill(),
+                    DBDataSource.HRF);
+        }
+        return null;
     }
 }
