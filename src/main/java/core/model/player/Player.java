@@ -385,6 +385,15 @@ public class Player extends AbstractTable.Storable {
         m_iNationalitaet = Integer.parseInt(properties.getProperty("countryid", "0"));
         m_iTSI = Integer.parseInt(properties.getProperty("mkt", "0"));
 
+        // sub skills
+        m_dSubSpielaufbau = Double.parseDouble(properties.getProperty("speSub", "0"));
+        m_dSubTorschuss = Double.parseDouble(properties.getProperty("malSub", "0"));
+        m_dSubPasspiel = Double.parseDouble(properties.getProperty("fraSub", "0"));
+        m_dSubFluegelspiel = Double.parseDouble(properties.getProperty("yttSub", "0"));
+        m_dSubStandards = Double.parseDouble(properties.getProperty("fasSub", "0"));
+        m_dSubVerteidigung = Double.parseDouble(properties.getProperty("bacSub", "0"));
+        m_dSubTorwart = Double.parseDouble(properties.getProperty("mlvSub", "0"));
+
         // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
         m_dSubFluegelspiel = Double.parseDouble(properties.getProperty("yttsub", "0"));
         m_dSubPasspiel = Double.parseDouble(properties.getProperty("frasub", "0"));
