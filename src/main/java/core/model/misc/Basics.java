@@ -3,7 +3,9 @@ package core.model.misc;
 import core.db.AbstractTable;
 import core.db.user.UserManager;
 import core.util.HODateTime;
+import core.util.HOLogger;
 
+import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 /**
@@ -79,7 +81,12 @@ public final class Basics extends AbstractTable.Storable {
         setYouthTeamId(getInteger(properties, "youthteamid"));
         m_sTeamName = properties.getProperty("teamname", "");
         m_sManager = properties.getProperty("owner", "");
-        m_tActivationDate = HODateTime.fromHT(properties.getProperty( "activationdate"));
+        try {
+            m_tActivationDate = HODateTime.fromHT(properties.getProperty("activationdate"));
+        }
+        catch (DateTimeParseException ex){
+            HOLogger.instance().debug(getClass(), "No activation date in hrf file " + ex);
+        }
         m_iLand = getInt(properties, "countryid", 0);
         m_iLiga = getInt(properties, "leagueid", 0);
         m_iSeason = getInt(properties, "season", 0);

@@ -23,7 +23,7 @@
 * fix last match date of walkover matches (#1776)
 * fix npe when player avatar download fails (#1806)
 * fix best position display in skill tester (#1822)
-* import sub skills from hrf files of portal tracker (#1829)
+* fix import of hrf files from portal tracker (#1829)
 
 ### Team Analyzer
 * team analyzer displays man marking tactic (#1741)
