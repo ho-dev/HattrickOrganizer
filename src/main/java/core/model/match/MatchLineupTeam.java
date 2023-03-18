@@ -205,20 +205,15 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	public void calcStyleOfPlay (TrainerType trainerType, int tacticAssistants) {
 		var styleOfPlay = this.lineup.getStyleOfPlay();
 		switch (trainerType) {
-			case Defensive:
-				this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, styleOfPlay));
-				break;
-			case Offensive:
-				this.lineup.setStyleOfPlay(max(10 - 2 * tacticAssistants, styleOfPlay));
-				break;
-			default:
-			case Balanced:
+			case Defensive -> this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, styleOfPlay));
+			case Offensive -> this.lineup.setStyleOfPlay(max(10 - 2 * tacticAssistants, styleOfPlay));
+			case Balanced -> {
 				if (styleOfPlay >= 0) {
 					this.lineup.setStyleOfPlay(min(tacticAssistants, styleOfPlay));
 				} else {
 					this.lineup.setStyleOfPlay(max(tacticAssistants, styleOfPlay));
 				}
-				break;
+			}
 		}
 	}
 
@@ -779,7 +774,8 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	public void loadLineup() {
 		var players = DBManager.instance().getMatchLineupPlayers(this.matchId, this.matchType, this.teamId);
 		var substitutions = DBManager.instance().getMatchSubstitutionsByMatchTeam(this.matchId, this.matchType, this.teamId);
-		this.lineup = new Lineup(players, substitutions);
+		this.lineup.setPlayers(players);
+		this.lineup.setSubstitionList(substitutions);
 		resetMinutesOfPlayersInSectors();
 	}
 
