@@ -45,7 +45,7 @@ public class MyConnector {
 	public final static String VERSION_ECONOMY = "1.3";
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
-	private final static String VERSION_MATCHORDERS_NT = "2.1";
+//	private final static String VERSION_MATCHORDERS_NT = "2.1";
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_TEAM_DETAILS = "3.5";
@@ -320,12 +320,7 @@ public class MyConnector {
 	 */
 	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
 		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
-		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
-			url += "&version=" + VERSION_MATCHORDERS_NT;
-		}
-		else {
-			url += "&version=" + VERSION_MATCHORDERS + "&teamId=" + teamId;
-		}
+		url += "&version=" + VERSION_MATCHORDERS + "&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
 
@@ -344,15 +339,9 @@ public class MyConnector {
 	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder();
-		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
-			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS_NT);
-		}
-		else
-		{
-			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
-			if (teamId>0) {
-				urlpara.append("&teamId=").append(teamId);
-			}
+		urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
+		if (teamId > 0) {
+			urlpara.append("&teamId=").append(teamId);
 		}
 
 		if (matchId > 0) {
