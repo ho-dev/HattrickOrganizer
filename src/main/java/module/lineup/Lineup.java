@@ -13,8 +13,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
-import core.util.Helper;
-import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -77,14 +75,6 @@ public class Lineup{
 	MatchLineupPosition setPiecesTaker;
 	private Player.ManMarkingPosition manMarkingPosition;
 
-	public Lineup(List<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
-		initPositionen553(); // reset all
-		for (var position : matchLineupPositions){
-			setPosition(position);
-		}
-		this.substitutions = substitutions;
-	}
-
 	private void setCaptain(MatchLineupPosition position) {
 		this.captain = position;
 		this.m_iKapitaen = position.getPlayerId();
@@ -101,6 +91,13 @@ public class Lineup{
 
 	public void setManMarkingPosition(Player.ManMarkingPosition manMarkingPosition) {
 		this.manMarkingPosition = manMarkingPosition;
+	}
+
+	public void setPlayers(List<MatchLineupPosition> matchLineupPositions) {
+		initPositionen553(); // reset all
+		for (var position : matchLineupPositions){
+			setPosition(position);
+		}
 	}
 
 	private static class Settings {
@@ -985,7 +982,6 @@ public class Lineup{
 
 	/**
 	 * Sets the provided list of match orders as list.
-	 *
 	 * list may contain a maximum of three substitutions
 	 * additional number of position swap and behaviour changes depends on tactic assistant level
 	 * list may contain one man marking order
@@ -1419,20 +1415,6 @@ public class Lineup{
 			if (pos.getPlayerId() != 0) numPlayers++;
 		}
 		return numPlayers != 11;
-	}
-
-	/**
-	 * Calculate player strength for the given position.
-	 */
-	private float calcPlayerStrength(List<Player> players, int playerID, byte position, boolean considerForm, @Nullable Weather weather, boolean useWeatherImpact) {
-		if (players != null) {
-			for (Player player : players) {
-				if (player.getPlayerID() == playerID) {
-					return player.calcPosValue(position, considerForm, weather, useWeatherImpact);
-				}
-			}
-		}
-		return 0.0f;
 	}
 
 	/**
