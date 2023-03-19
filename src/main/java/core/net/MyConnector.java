@@ -319,8 +319,10 @@ public class MyConnector {
 	 * @return The api content (xml)
 	 */
 	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
-		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
-		url += "&version=" + VERSION_MATCHORDERS + "&teamId=" + teamId;
+		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString() + "&version=" + VERSION_MATCHORDERS;
+		if (!HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			url += "&teamId=" + teamId;
+		}
 		return getCHPPWebFile(url);
 	}
 
@@ -340,7 +342,7 @@ public class MyConnector {
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder();
 		urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
-		if (teamId > 0) {
+		if (teamId > 0 && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
 			urlpara.append("&teamId=").append(teamId);
 		}
 
