@@ -17,6 +17,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 	private int leagueId;
 	private String leagueName;
 	private String homePageUrl;
+	private String logo;
 	private int xp253=0;
 	private int xp343=0;
 	private int xp352=0;
@@ -228,6 +229,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 
             // root HomePage
 			homePageUrl = getString(teamRoot, "HomePage");
+			logo = getString(teamRoot, "Logo");
 
             // formation XP
 			xp253 = getInteger(teamRoot, "Experience253", 0);
@@ -235,6 +237,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 			xp451 = getInteger(teamRoot, "Experience451",0);
 			xp442 = getInteger(teamRoot, "Experience442",0);
 			xp433 = getInteger(teamRoot, "Experience433",0);
+			xp343 = getInteger(teamRoot, "Experience343",0);
 			xp523 = getInteger(teamRoot, "Experience523",0);
 			xp532 = getInteger(teamRoot, "Experience532",0);
 			xp541 = getInteger(teamRoot, "Experience541",0);
