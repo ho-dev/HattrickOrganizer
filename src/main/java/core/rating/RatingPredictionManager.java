@@ -1187,4 +1187,8 @@ public class RatingPredictionManager {
     	return (float)retVal;
     }
 
+	public float getTacticLevelCreative() {
+		// TODO find formula
+		return 0;
+	}
 }

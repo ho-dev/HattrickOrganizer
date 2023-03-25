@@ -326,6 +326,9 @@ public class Lineup{
 	public final float getTacticLevelLongShots() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
 	}
+	public final float getTacticLevelCreative() {
+		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelCreative());
+	}
 
 	/**
 	 * Setter for property m_iAttitude.
@@ -1070,6 +1073,7 @@ public class Lineup{
 			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
 			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
 			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
+			case IMatchDetails.TAKTIK_CREATIVE -> getTacticLevelCreative();
 			default -> 0.0f;
 		};
 	}
