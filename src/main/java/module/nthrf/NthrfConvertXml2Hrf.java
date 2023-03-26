@@ -8,7 +8,6 @@ import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
 import core.file.xml.*;
-import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
@@ -35,14 +34,14 @@ import static core.model.player.IMatchRoleID.*;
 class NthrfConvertXml2Hrf {
 	private StringBuffer m_sHRFBuffer;
 	private long teamId = 0;
-	private HelperWrapper helper;
+//	private HelperWrapper helper;
 
 	/**
 	 * Create the HRF file.
 	 */
 	final String createHrf(long teamId, MyConnector dh) throws Exception {
 		m_sHRFBuffer = new StringBuffer();
-		helper = HelperWrapper.instance();
+//		helper = HelperWrapper.instance();
 		this.teamId = teamId;
 		try {
 			debug("About to load data for teamId " + teamId);
@@ -68,13 +67,11 @@ class NthrfConvertXml2Hrf {
 			var matches = XMLMatchesParser.parseMatchesFromString(xml);
 //			List<MatchKurzInfo> matches = XMLMatchArchivParser.parseMatchesFromString(xml);
 			// lineup
-			var lastFinishedMatch = matches.stream().filter(m->m.getMatchStatus()==MatchKurzInfo.FINISHED).sorted(Comparator.comparing(MatchKurzInfo::getMatchSchedule).reversed()).findFirst();
-			MatchLineup lastLineup = null;
+			var lastFinishedMatch = matches.stream().filter(m -> m.getMatchStatus() == MatchKurzInfo.FINISHED).max(Comparator.comparing(MatchKurzInfo::getMatchSchedule));
 			if (lastFinishedMatch.isPresent()) {
 				var match = lastFinishedMatch.get();
 				var matchLineupString = dh.downloadMatchLineup(match.getMatchID(), (int)teamId, match.getMatchType());
 				if (!matchLineupString.isEmpty()) {
-					lastLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
 				}
 
 //
@@ -104,8 +101,8 @@ class NthrfConvertXml2Hrf {
 			debug("created club");
 			createTeam(details);			// ok
 			debug("created team details");
-			if (lineup != null)
-				createLineUp(trainer, lineup.getTeam((int)teamId));	// ok, TODO
+//			if (lineup != null)
+//				createLineUp(trainer, lineup.getTeam((int)teamId));	// ok, TODO
 			debug("created lineup");
 			createEconomy(); 				// ok, TODO
 			debug("created economy");
@@ -115,8 +112,8 @@ class NthrfConvertXml2Hrf {
 			debug("created players");
 			createWorld(world, details, trainer);	// ok, TODO
 			debug("created world");
-			if (lineup != null)
-				createLastLineUp(trainer, lastLineup);		//ok, TODO
+//			if (lineup != null)
+//				createLastLineUp(trainer, lastLineup);		//ok, TODO
 			debug("created last lineup");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -308,7 +305,7 @@ class NthrfConvertXml2Hrf {
 
 		try {
 			var l = team.getLineup();
-			l.getPositionById(100).getPlayerId()
+			l.getPositionById(100).getPlayerId();
 			// IMatchRoleID.INNENVERTEIDIGER
 
 			m_sHRFBuffer.append("trainer=").append(trainer.getPlayerId()).append("\n");

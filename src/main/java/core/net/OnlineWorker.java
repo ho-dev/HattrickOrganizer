@@ -2,6 +2,7 @@ package core.net;
 
 import core.db.DBManager;
 import core.file.ExampleFileFilter;
+import core.file.hrf.HRFStringBuilder;
 import core.file.hrf.HRFStringParser;
 import core.file.xml.*;
 import core.gui.HOMainFrame;
@@ -564,56 +565,42 @@ public class OnlineWorker {
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
 			switch (m.getMatchType()) {
-				case INTSPIEL:
-				case NATIONALCOMPNORMAL:
-				case NATIONALCOMPCUPRULES:
-				case NATIONALFRIENDLY:
-				case PREPARATION:
-				case LEAGUE:
-				case QUALIFICATION:
-				case CUP:
-				case FRIENDLYNORMAL:
-				case FRIENDLYCUPRULES:
-				case INTFRIENDLYNORMAL:
-				case INTFRIENDLYCUPRULES:
-				case MASTERS:
+				case INTSPIEL, NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY, PREPARATION, LEAGUE, QUALIFICATION, CUP, FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES, MASTERS -> {
 					if (UserParameter.instance().downloadCurrentMatchlist) {
 						ret.add(m);
 					}
-					break;
-				case TOURNAMENTGROUP:
+				}
+				case TOURNAMENTGROUP -> {
 					// this is TOURNAMENTGROUP but more specifically a division battle
-					if (m.getMatchTypeExtended() == MatchTypeExtended.DIVISIONBATTLE){
+					if (m.getMatchTypeExtended() == MatchTypeExtended.DIVISIONBATTLE) {
 						if (UserParameter.instance().downloadDivisionBattleMatches) {
 							// we add the game only if user selected division battle category
 							ret.add(m);
 						}
-					}
-					else{
+					} else {
 						// this is TOURNAMENTGROUP but not a division battle
 						if (UserParameter.instance().downloadTournamentGroupMatches) {
 							ret.add(m);
 						}
 					}
-					break;
-				case TOURNAMENTPLAYOFF:
+				}
+				case TOURNAMENTPLAYOFF -> {
 					if (UserParameter.instance().downloadTournamentPlayoffMatches) {
 						ret.add(m);
 					}
-					break;
-				case SINGLE:
+				}
+				case SINGLE -> {
 					if (UserParameter.instance().downloadSingleMatches) {
 						ret.add(m);
 					}
-					break;
-				case LADDER:
+				}
+				case LADDER -> {
 					if (UserParameter.instance().downloadLadderMatches) {
 						ret.add(m);
 					}
-					break;
-				default:
-					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
-					break;
+				}
+				default ->
+						HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 			}
 		}
 		return ret;
@@ -895,22 +882,20 @@ public class OnlineWorker {
 		try {
 			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, teamId);
-			
+
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
 				String trainerID = "-1";
-				try
-				{
+				try {
 					trainerID = String.valueOf(HOVerwaltung.instance().getModel().getTrainer()
-						.getPlayerID());
-					
-				}
-				catch (Exception e)
-				{	
+							.getPlayerID());
+
+				} catch (Exception e) {
 					//It is possible that NTs struggle here.
 				}
-				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
-				return new MatchLineupTeam(getProperties(lineupData));
+				var hrfStringBuilder = new HRFStringBuilder();
+				hrfStringBuilder.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
+				return new MatchLineupTeam(getProperties(hrfStringBuilder.createHRF().toString()));
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";

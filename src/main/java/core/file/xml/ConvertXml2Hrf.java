@@ -6,32 +6,20 @@
  */
 package core.file.xml;
 
-import core.constants.TeamConfidence;
-import core.constants.TeamSpirit;
-import core.constants.TrainingType;
-import core.constants.player.PlayerAggressiveness;
-import core.constants.player.PlayerAgreeability;
-import core.constants.player.PlayerHonesty;
-import core.constants.player.PlayerSpeciality;
 import core.db.DBManager;
 import core.db.user.UserManager;
+import core.file.hrf.HRFStringBuilder;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.enums.MatchType;
-import core.model.player.IMatchRoleID;
 import core.model.player.PlayerAvatar;
 import core.net.OnlineWorker;
 import core.util.Helper;
-import module.youth.YouthPlayer;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
-import core.util.HOLogger;
-import module.lineup.substitution.model.Substitution;
-import core.HO;
-import module.training.Skills;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -55,9 +43,6 @@ public class ConvertXml2Hrf {
 	 * Create the HRF data and return it in one string.
 	 */
 	public static @Nullable String createHrf() throws IOException {
-		// init
-		StringBuilder buffer = new StringBuilder();
-
 		int progressIncrement = 3;
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
 		final MyConnector mc = MyConnector.instance();
@@ -238,22 +223,23 @@ public class ConvertXml2Hrf {
 			matchLineupTeam.setMatchTacticType(MatchTacticType.fromInt(lastTactic));
 		}
 
+		var hrfSgtringBuilder = new HRFStringBuilder();
 		// Abschnitte erstellen
 		// basics
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_basics"), progressIncrement);
-		createBasics(teamdetailsDataMap, worldDataMap, buffer);
+		hrfSgtringBuilder.createBasics(teamdetailsDataMap, worldDataMap);
 
 		// Liga
-		createLeague(ligaDataMap, buffer);
+		hrfSgtringBuilder.createLeague(ligaDataMap);
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_league"), progressIncrement);
 
 		// Club
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_club"), progressIncrement);
-		createClub(clubDataMap, economyDataMap, teamdetailsDataMap, buffer);
+		hrfSgtringBuilder.createClub(clubDataMap, economyDataMap, teamdetailsDataMap);
 
 		// team
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_team"), progressIncrement);
-		createTeam(trainingDataMap, buffer);
+		hrfSgtringBuilder.createTeam(trainingDataMap);
 
 		// lineup
 		var trainerId = String.valueOf(teamdetailsDataMap.get("TrainerID"));
@@ -264,847 +250,43 @@ public class ConvertXml2Hrf {
 			matchType = upcomingMatch.getMatchType().getId();
 		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement);
-		buffer.append(createLineUp(trainerId, teamId, matchType, matchId, nextLineupDataMap));
+		hrfSgtringBuilder.createLineUp(trainerId, teamId, matchType, matchId, nextLineupDataMap);
 
 		// economy
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement);
-		createEconomy(economyDataMap, buffer);
+		hrfSgtringBuilder.createEconomy(economyDataMap);
 
 		// Arena
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement);
-		createArena(arenaDataMap, buffer);
+		hrfSgtringBuilder.createArena(arenaDataMap);
 
 		// players
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement);
-		createPlayers(matchLineupTeam, playersData, buffer);
+		hrfSgtringBuilder.createPlayers(matchLineupTeam, playersData);
 
 		// youth players
 		if ( youthplayers != null){
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement);
-			appendYouthPlayers(youthplayers, buffer);
+			hrfSgtringBuilder.appendYouthPlayers(youthplayers);
 		}
 
 		// xtra Data
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_world"), progressIncrement);
-		createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap, worldDataMap, buffer);
+		hrfSgtringBuilder.createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap, worldDataMap);
 
-		// lineup from the last match
+		// lineup of the last match
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
-		createLastLineUp(teamdetailsDataMap, matchLineupTeam, buffer);
+		hrfSgtringBuilder.createLastLineUp(teamdetailsDataMap, matchLineupTeam);
 
 		// staff
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);
-		createStaff(staffData, buffer);
+		hrfSgtringBuilder.createStaff(staffData);
 
-		return buffer.toString();
-	}
-
-	/**
-	 * Create the arena data.
-	 */
-	private static void createArena(Map<String, String> arenaDataMap, StringBuilder buffer) {
-		buffer.append("[arena]").append('\n');
-		buffer.append("arenaname=").append(arenaDataMap.get("ArenaName"))
-				.append('\n');
-		buffer.append("arenaid=").append(arenaDataMap.get("ArenaID"))
-				.append('\n');
-		buffer.append("antalStaplats=").append(arenaDataMap.get("Terraces"))
-				.append('\n');
-		buffer.append("antalSitt=").append(arenaDataMap.get("Basic"))
-				.append('\n');
-		buffer.append("antalTak=").append(arenaDataMap.get("Roof"))
-				.append('\n');
-		buffer.append("antalVIP=").append(arenaDataMap.get("VIP")).append('\n');
-		buffer.append("seatTotal=").append(arenaDataMap.get("Total"))
-				.append('\n');
-		buffer.append("expandingStaplats=")
-				.append(arenaDataMap.get("ExTerraces")).append('\n');
-		buffer.append("expandingSitt=").append(arenaDataMap.get("ExBasic"))
-				.append('\n');
-		buffer.append("expandingTak=").append(arenaDataMap.get("ExRoof"))
-				.append('\n');
-		buffer.append("expandingVIP=").append(arenaDataMap.get("ExVIP"))
-				.append('\n');
-		buffer.append("expandingSseatTotal=")
-				.append(arenaDataMap.get("ExTotal")).append('\n');
-		buffer.append("isExpanding=").append(arenaDataMap.get("isExpanding"))
-				.append('\n');
-
-		// Achtung bei keiner Erweiterung = 0!
-		buffer.append("ExpansionDate=")
-				.append(arenaDataMap.get("ExpansionDate")).append('\n');
+		return hrfSgtringBuilder.createHRF().toString();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////
 	// Helper
 	// //////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Create the basic data.
-	 */
-	private static void createBasics(Map<String, String> teamdetailsDataMap,
-			Map<String, String> worldDataMap, StringBuilder buffer) {
-		buffer.append("[basics]\n");
-		buffer.append("application=HO\n");
-		buffer.append("appversion=").append(HO.VERSION).append('\n');
-		buffer.append("date=").append(teamdetailsDataMap.get("FetchedDate")).append('\n');
-		buffer.append("season=").append(worldDataMap.get("Season")).append('\n');
-		buffer.append("seasonOffset=").append(worldDataMap.get("SeasonOffset")).append('\n');
-		buffer.append("matchround=").append(worldDataMap.get("MatchRound")).append('\n');
-		buffer.append("teamID=").append(teamdetailsDataMap.get("TeamID")).append('\n');
-		buffer.append("teamName=").append(teamdetailsDataMap.get("TeamName")).append('\n');
-		buffer.append("youthTeamID=").append(teamdetailsDataMap.get("YouthTeamID")).append('\n');
-		buffer.append("youthTeamName=").append(teamdetailsDataMap.get("YouthTeamName")).append('\n');
-		buffer.append("activationDate=").append(teamdetailsDataMap.get("ActivationDate")).append('\n');
-		buffer.append("owner=").append(teamdetailsDataMap.get("Loginname")).append('\n');
-		buffer.append("ownerHomepage=").append(teamdetailsDataMap.get("HomePage")).append('\n');
-		buffer.append("countryID=").append(worldDataMap.get("CountryID")).append('\n');
-		buffer.append("leagueID=").append(teamdetailsDataMap.get("LeagueID")).append('\n');
-		buffer.append("regionID=").append(teamdetailsDataMap.get("RegionID")).append('\n');
-		buffer.append("hasSupporter=").append(teamdetailsDataMap.get("HasSupporter")).append('\n');
-		buffer.append("LastLeagueStatisticsMatchRound=").append(0).append('\n');  		//TODO: fix this
-		buffer.append("LastLeagueStatisticsSeason=").append(0).append('\n');   		//TODO: fix this
-	}
-
-	/**
-	 * Create the club data.
-	 */
-	private static void createClub(Map<String, String> clubDataMap, Map<String, String> economyDataMap,
-								   Map<String, String> teamdetailsDataMap, StringBuilder buffer) {
-		buffer.append("[club]\n");
-		buffer.append("hjTranare=").append(clubDataMap.get("AssistantTrainers")).append('\n');
-		buffer.append("psykolog=").append(clubDataMap.get("Psychologists")).append('\n');
-		buffer.append("presstalesman=").append(clubDataMap.get("PressSpokesmen")).append('\n');
-		buffer.append("lakare=").append(clubDataMap.get("Doctors")).append('\n');
-		buffer.append("financialDirectorLevels=").append(clubDataMap.get("FinancialDirectorLevels")).append('\n');
-		buffer.append("formCoachLevels=").append(clubDataMap.get("FormCoachLevels")).append('\n');
-		buffer.append("tacticalAssistantLevels=").append(clubDataMap.get("TacticalAssistantLevels")).append('\n');
-		buffer.append("juniorverksamhet=").append(clubDataMap.get("YouthLevel")).append('\n');
-		buffer.append("undefeated=").append(teamdetailsDataMap.get("NumberOfUndefeated")).append('\n');
-		buffer.append("victories=").append(teamdetailsDataMap.get("NumberOfVictories")).append('\n');
-		buffer.append("fanclub=").append(economyDataMap.get("FanClubSize")).append('\n');
-		buffer.append("GlobalRanking=").append(teamdetailsDataMap.get("GlobalRanking")).append('\n');
-		buffer.append("LeagueRanking=").append(teamdetailsDataMap.get("LeagueRanking")).append('\n');
-		buffer.append("RegionRanking=").append(teamdetailsDataMap.get("RegionRanking")).append('\n');
-		buffer.append("PowerRating=").append(teamdetailsDataMap.get("PowerRating")).append('\n');
-	}
-
-	/**
-	 * Add the economy data to the HRF buffer
-	 */
-	private static void createEconomy(Map<String, String> economyDataMap,  StringBuilder buffer) {
-
-		buffer.append("[economy]").append('\n');
-
-		buffer.append("Cash=").append(economyDataMap.get("Cash")).append('\n');
-		buffer.append("ExpectedCash=").append(economyDataMap.get("ExpectedCash")).append('\n');
-
-		if (economyDataMap.get("SponsorsPopularity") != null) {
-			buffer.append("SupportersPopularity=").append(economyDataMap.get("SupportersPopularity")).append('\n');
-			buffer.append("SponsorsPopularity=").append(economyDataMap.get("SponsorsPopularity")).append('\n');
-			buffer.append("PlayingMatch=false").append('\n');
-		}
-		else {
-			buffer.append("PlayingMatch=true").append('\n');
-		}
-
-		// recreate defect IncomeTemporary field for compatibility reasons
-		int iIncomeTemporary =  Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) +
-				Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) +
-				Integer.parseInt(economyDataMap.get("IncomeTemporary"));
-		int iCostsTemporary =  Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("CostsArenaBuilding"));
-		int iLastIncomeTemporary =  Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) +
-				Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")) +
-				Integer.parseInt(economyDataMap.get("LastIncomeTemporary"));
-		int iLastCostsTemporary =  Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("LastCostsArenaBuilding"));
-
-		buffer.append("IncomeSpectators=").append(economyDataMap.get("IncomeSpectators")).append('\n');
-		buffer.append("IncomeSponsors=").append(economyDataMap.get("IncomeSponsors")).append('\n');
-		buffer.append("IncomeSponsorsBonus=").append(economyDataMap.get("IncomeSponsorsBonus")).append('\n');
-		buffer.append("IncomeFinancial=").append(economyDataMap.get("IncomeFinancial")).append('\n');
-		buffer.append("IncomeSoldPlayers=").append(economyDataMap.get("IncomeSoldPlayers")).append('\n');
-		buffer.append("IncomeSoldPlayersCommission=").append(economyDataMap.get("IncomeSoldPlayersCommission")).append('\n');
-		buffer.append("IncomeTemporary=").append(iIncomeTemporary).append('\n');  // recreate defect IncomeTemporary field for compatibility reasons
-		buffer.append("IncomeSum=").append(economyDataMap.get("IncomeSum")).append('\n');
-		buffer.append("CostsArena=").append(economyDataMap.get("CostsArena")).append('\n');
-		buffer.append("CostsPlayers=").append(economyDataMap.get("CostsPlayers")).append('\n');
-		buffer.append("CostsFinancial=").append(economyDataMap.get("CostsFinancial")).append('\n');
-		buffer.append("CostsStaff=").append(economyDataMap.get("CostsStaff")).append('\n');
-		buffer.append("CostsBoughtPlayers=").append(economyDataMap.get("CostsBoughtPlayers")).append('\n');
-		buffer.append("CostsArenaBuilding=").append(economyDataMap.get("CostsArenaBuilding")).append('\n');
-		buffer.append("CostsTemporary=").append(iCostsTemporary).append('\n'); // recreate defect CostsTemporary field for compatibility reasons
-		buffer.append("CostsYouth=").append(economyDataMap.get("CostsYouth")).append('\n');
-		buffer.append("CostsSum=").append(economyDataMap.get("CostsSum")).append('\n');
-		buffer.append("ExpectedWeeksTotal=").append(economyDataMap.get("ExpectedWeeksTotal")).append('\n');
-		buffer.append("LastIncomeSpectators=").append(economyDataMap.get("LastIncomeSpectators")).append('\n');
-		buffer.append("LastIncomeSponsors=").append(economyDataMap.get("LastIncomeSponsors")).append('\n');
-		buffer.append("LastIncomeSponsorsBonus=").append(economyDataMap.get("LastIncomeSponsorsBonus")).append('\n');
-		buffer.append("LastIncomeFinancial=").append(economyDataMap.get("LastIncomeFinancial")).append('\n');
-		buffer.append("LastIncomeSoldPlayers=").append(economyDataMap.get("LastIncomeSoldPlayers")).append('\n');
-		buffer.append("LastIncomeSoldPlayersCommission=").append(economyDataMap.get("LastIncomeSoldPlayersCommission")).append('\n');
-		buffer.append("LastIncomeTemporary=").append(iLastIncomeTemporary).append('\n');  // recreate defect LastIncomeTemporary field for compatibility reasons
-		buffer.append("LastIncomeSum=").append(economyDataMap.get("LastIncomeSum")).append('\n');
-		buffer.append("lastCostsArena=").append(economyDataMap.get("LastCostsArena")).append('\n');
-		buffer.append("LastCostsPlayers=").append(economyDataMap.get("LastCostsPlayers")).append('\n');
-		buffer.append("LastCostsFinancial=").append(economyDataMap.get("LastCostsFinancial")).append('\n');
-		buffer.append("lastCostsPersonal=").append(economyDataMap.get("LastCostsStaff")).append('\n');
-		buffer.append("LastCostsBoughtPlayers=").append(economyDataMap.get("LastCostsBoughtPlayers")).append('\n');
-		buffer.append("LastCostsArenaBuilding=").append(economyDataMap.get("LastCostsArenaBuilding")).append('\n');
-		buffer.append("LastCostsTemporary=").append(iLastCostsTemporary).append('\n'); // recreate defect LastCostsTemporary field for compatibility reasons
-		buffer.append("LastCostsYouth=").append(economyDataMap.get("LastCostsYouth")).append('\n');
-		buffer.append("LastCostsSum=").append(economyDataMap.get("LastCostsSum")).append('\n');
-		buffer.append("LastWeeksTotal=").append(economyDataMap.get("LastWeeksTotal")).append('\n');
-	}
-
-	private static String getPlayerIdByPositionValue(MatchLineupTeam team, int position){
-		var matchLineupPosition = team.getPlayerByPosition(position);
-		if ( matchLineupPosition != null){
-			return matchLineupPosition.getPlayerId() + "\n";
-		}
-		return "0\n";
-	}
-	private static String getBehaviourByPositionValue(MatchLineupTeam team, int position){
-		var matchLineupPosition = team.getPlayerByPosition(position);
-		if ( matchLineupPosition != null){
-			return matchLineupPosition.getBehaviour() + "\n";
-		}
-		return "0\n";
-	}
-
-	/**
-	 * Create last lineup section.
-	 */
-	private static void createLastLineUp(Map<String, String> teamdetailsDataMap,
-										 MatchLineupTeam matchLineupTeam,
-										 StringBuilder buffer) {
-		buffer.append("[lastlineup]").append('\n');
-		buffer.append("trainer=").append(teamdetailsDataMap.get("TrainerID"))
-				.append('\n');
-
-		try {
-			if (matchLineupTeam != null ) {
-				buffer.append("installning=").append(MatchTeamAttitude.toInt(matchLineupTeam.getMatchTeamAttitude())).append('\n');
-				buffer.append("tactictype=").append(MatchTacticType.toInt(matchLineupTeam.getMatchTacticType())).append('\n');
-				// The field is coachmodifier in matchOrders and StyleOfPlay in MatchLineup
-				// but we both named it styleOfPlay
-				buffer.append("styleOfPlay=").append(StyleOfPlay.toInt(matchLineupTeam.getStyleOfPlay())).append('\n');
-				buffer.append("keeper=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.keeper));
-				buffer.append("rightBack=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightBack));
-				buffer.append("insideBack1=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightCentralDefender));
-				buffer.append("insideBack2=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftCentralDefender));
-				buffer.append("insideBack3=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.middleCentralDefender));
-				buffer.append("leftBack=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftBack));
-				buffer.append("rightWinger=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightWinger));
-				buffer.append("insideMid1=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightInnerMidfield));
-				buffer.append("insideMid2=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftInnerMidfield));
-				buffer.append("insideMid3=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.centralInnerMidfield));
-				buffer.append("leftWinger=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftWinger));
-				buffer.append("forward1=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.rightForward));
-				buffer.append("forward2=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.leftForward));
-				buffer.append("forward3=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.centralForward));
-				buffer.append("substBack=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substCD1));
-				buffer.append("substInsideMid=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substIM1));
-				buffer.append("substWinger=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substWI1));
-				buffer.append("substKeeper=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substGK1));
-				buffer.append("substForward=")
-						.append(getPlayerIdByPositionValue(matchLineupTeam, IMatchRoleID.substFW1));
-				buffer.append("captain=")
-						.append(matchLineupTeam.getLineup().getCaptain())
-						.append('\n');
-				buffer.append("kicker1=")
-						.append(matchLineupTeam.getLineup().getKicker())
-						.append('\n');
-
-				buffer.append("behrightBack=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightBack));
-				buffer.append("behinsideBack1=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightCentralDefender));
-				buffer.append("behinsideBack2=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftCentralDefender));
-				buffer.append("behinsideBack3=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.middleCentralDefender));
-				buffer.append("behleftBack=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftBack));
-				buffer.append("behrightWinger=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightWinger));
-				buffer.append("behinsideMid1=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightInnerMidfield));
-				buffer.append("behinsideMid2=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftInnerMidfield));
-				buffer.append("behinsideMid3=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.centralInnerMidfield));
-				buffer.append("behleftWinger=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftWinger));
-				buffer.append("behforward1=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.rightForward));
-				buffer.append("behforward2=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.leftForward));
-				buffer.append("behforward3=")
-						.append(getBehaviourByPositionValue(matchLineupTeam, IMatchRoleID.centralForward));
-
-				int i = 0;
-				for (Substitution sub : matchLineupTeam.getSubstitutions()) {
-					if (sub != null) {
-						buffer.append("subst").append(i).append("playerOrderID=")
-								.append(sub.getPlayerOrderId()).append('\n');
-						buffer.append("subst").append(i).append("playerIn=")
-								.append(sub.getObjectPlayerID()).append('\n');
-						buffer.append("subst").append(i).append("playerOut=")
-								.append(sub.getSubjectPlayerID()).append('\n');
-						buffer.append("subst").append(i).append("orderType=")
-								.append(sub.getOrderType().getId()).append('\n');
-						buffer.append("subst").append(i)
-								.append("matchMinuteCriteria=")
-								.append(sub.getMatchMinuteCriteria()).append('\n');
-						buffer.append("subst").append(i).append("pos=")
-								.append(sub.getRoleId()).append('\n');
-						buffer.append("subst").append(i).append("behaviour=")
-								.append(sub.getBehaviour()).append('\n');
-						buffer.append("subst").append(i).append("card=")
-								.append(sub.getRedCardCriteria().getId())
-								.append('\n');
-						buffer.append("subst").append(i).append("standing=")
-								.append(sub.getStanding().getId()).append('\n');
-						i++;
-					}
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().debug(ConvertXml2Hrf.class,
-					"Error(last lineup): " + e);
-		}
-	}
-
-	/**
-	 * Create the league data.
-	 */
-	private static void createLeague(Map<String, String> ligaDataMap, StringBuilder buffer) {
-		buffer.append("[league]\n");
-		buffer.append("serie=").append(ligaDataMap.get("LeagueLevelUnitName"))
-				.append('\n');
-		buffer.append("spelade=").append(ligaDataMap.get("Matches"))
-				.append('\n');
-		buffer.append("gjorda=").append(ligaDataMap.get("GoalsFor"))
-				.append('\n');
-		buffer.append("inslappta=").append(ligaDataMap.get("GoalsAgainst"))
-				.append('\n');
-		buffer.append("poang=").append(ligaDataMap.get("Points")).append('\n');
-		buffer.append("placering=").append(ligaDataMap.get("Position"))
-				.append('\n');
-	}
-
-	private static String getPlayerForNextLineup(String position, Map<?, ?> next) {
-		if (next != null) {
-			final Object ret = next.get(position);
-			if (ret != null) {
-				return ret.toString();
-			}
-		}
-		return "0";
-	}
-
-	private static String getPlayerOrderForNextLineup(String position,
-			Map<?, ?> map) {
-		if (map != null) {
-			String ret = (String) map.get(position);
-
-			if (ret != null) {
-				ret = ret.trim();
-				if (!"null".equals(ret) && !"".equals(ret)) {
-					return ret.trim();
-				}
-			}
-		}
-		return "0";
-	}
-
-	/**
-	 * Creates the lineup data.
-	 *  @param trainerId
-	 *            The playerId of the trainer of the club.
-	 * @param teamId
-	 * 			team id (-1 for lineup templates)
-	 * @param matchtype
-	 * 			match type (None for lineup templates)
-	 * @param matchId
-	 * 			match id (negative value for lineup templates)
-	 * @param nextLineup
-	 * 			map containing the lineup
-	 */
-	public static String createLineUp(String trainerId, int teamId, int matchtype, int matchId, Map<String, String> nextLineup) {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("[lineup]").append('\n');
-
-		if (nextLineup != null) {
-
-			try {
-				buffer.append("teamid=").append(teamId).append('\n');
-				buffer.append("matchid=").append(matchId).append('\n');
-				buffer.append("matchtyp=").append(matchtype).append('\n');
-				buffer.append("trainer=").append(trainerId).append('\n');
-				buffer.append("installning=").append(nextLineup.get("Attitude")).append('\n');
-				buffer.append("styleOfPlay=").append(nextLineup.get("StyleOfPlay")).append('\n');
-				buffer.append("tactictype=").append(nextLineup.get("TacticType")).append('\n');
-				buffer.append("keeper=").append(getPlayerForNextLineup("KeeperID", nextLineup))	.append('\n');
-				buffer.append("rightBack=").append(getPlayerForNextLineup("RightBackID", nextLineup)).append('\n');
-				buffer.append("rightCentralDefender=").append(getPlayerForNextLineup("RightCentralDefenderID",nextLineup)).append('\n');
-				buffer.append("leftCentralDefender=").append(getPlayerForNextLineup("LeftCentralDefenderID",nextLineup)).append('\n');
-				buffer.append("middleCentralDefender=").append(getPlayerForNextLineup("MiddleCentralDefenderID",nextLineup)).append('\n');
-				buffer.append("leftBack=").append(getPlayerForNextLineup("LeftBackID", nextLineup))	.append('\n');
-				buffer.append("rightwinger=").append(getPlayerForNextLineup("RightWingerID", nextLineup)).append('\n');
-				buffer.append("rightInnerMidfield=").append(getPlayerForNextLineup("RightInnerMidfieldID",nextLineup)).append('\n');
-				buffer.append("leftInnerMidfield=").append(getPlayerForNextLineup("LeftInnerMidfieldID",nextLineup)).append('\n');
-				buffer.append("middleInnerMidfield=").append(getPlayerForNextLineup("CentralInnerMidfieldID",nextLineup)).append('\n');
-				buffer.append("leftwinger=").append(getPlayerForNextLineup("LeftWingerID", nextLineup)).append('\n');
-				buffer.append("rightForward=").append(getPlayerForNextLineup("RightForwardID", nextLineup)).append('\n');
-				buffer.append("leftForward=").append(getPlayerForNextLineup("LeftForwardID", nextLineup)).append('\n');
-				buffer.append("centralForward=").append(getPlayerForNextLineup("CentralForwardID",nextLineup)).append('\n');
-				buffer.append("substgk1=").append(getPlayerForNextLineup("substGK1ID", nextLineup)).append('\n');
-				buffer.append("substgk2=").append(getPlayerForNextLineup("substGK2ID", nextLineup)).append('\n');
-				buffer.append("substcd1=").append(getPlayerForNextLineup("substCD1ID", nextLineup)).append('\n');
-				buffer.append("substcd2=").append(getPlayerForNextLineup("substCD2ID", nextLineup)).append('\n');
-				buffer.append("substwb1=").append(getPlayerForNextLineup("substWB1ID", nextLineup)).append('\n');
-				buffer.append("substwb2=").append(getPlayerForNextLineup("substWB2ID", nextLineup)).append('\n');
-				buffer.append("substim1=").append(getPlayerForNextLineup("substIM1ID",nextLineup)).append('\n');
-				buffer.append("substim2=").append(getPlayerForNextLineup("substIM2ID",nextLineup)).append('\n');
-				buffer.append("substwi1=").append(getPlayerForNextLineup("substWI1ID", nextLineup)).append('\n');
-				buffer.append("substwi2=").append(getPlayerForNextLineup("substWI2ID", nextLineup)).append('\n');
-				buffer.append("substfw1=").append(getPlayerForNextLineup("substFW1ID", nextLineup)).append('\n');
-				buffer.append("substfw2=").append(getPlayerForNextLineup("substFW2ID", nextLineup)).append('\n');
-				buffer.append("substxt1=").append(getPlayerForNextLineup("substXT1ID", nextLineup)).append('\n');
-				buffer.append("substxt2=").append(getPlayerForNextLineup("substXT2ID", nextLineup)).append('\n');
-				buffer.append("captain=").append(getPlayerForNextLineup("CaptainID", nextLineup)).append('\n');
-				buffer.append("kicker1=").append(getPlayerForNextLineup("KickerID", nextLineup)).append('\n');
-
-				buffer.append("order_rightback=").append(getPlayerOrderForNextLineup("RightBackOrder",	nextLineup)).append('\n');
-				buffer.append("order_rightCentralDefender=").append(getPlayerOrderForNextLineup("RightCentralDefenderOrder", nextLineup)).append('\n');
-				buffer.append("order_leftCentralDefender=").append(getPlayerOrderForNextLineup("LeftCentralDefenderOrder", nextLineup)).append('\n');
-				buffer.append("order_middleCentralDefender=").append(getPlayerOrderForNextLineup("MiddleCentralDefenderOrder", nextLineup)).append('\n');
-				buffer.append("order_leftBack=").append(getPlayerOrderForNextLineup("LeftBackOrder",nextLineup)).append('\n');
-				buffer.append("order_rightWinger=").append(getPlayerOrderForNextLineup("RightWingerOrder",	nextLineup)).append('\n');
-				buffer.append("order_rightInnerMidfield=").append(getPlayerOrderForNextLineup("RightInnerMidfieldOrder", nextLineup)).append('\n');
-				buffer.append("order_leftInnerMidfield=").append(getPlayerOrderForNextLineup("LeftInnerMidfieldOrder", nextLineup)).append('\n');
-				buffer.append("order_centralInnerMidfield=").append(getPlayerOrderForNextLineup("CentralInnerMidfieldOrder", nextLineup)).append('\n');
-				buffer.append("order_leftWinger=").append(getPlayerOrderForNextLineup("LeftWingerOrder",nextLineup)).append('\n');
-				buffer.append("order_rightForward=").append(getPlayerOrderForNextLineup("RightForwardOrder",nextLineup)).append('\n');
-				buffer.append("order_leftForward=").append(getPlayerOrderForNextLineup("LeftForwardOrder",nextLineup)).append('\n');
-				buffer.append("order_centralForward=").append(getPlayerOrderForNextLineup("CentralForwardOrder",	nextLineup)).append('\n');
-
-				int iSub=-1;
-				String playerOrderIdString;
-				while ((playerOrderIdString = getMatchOrderInfo( nextLineup, ++iSub, "playerOrderID")) != null ) {
-					buffer.append(playerOrderIdString)
-							.append(getMatchOrderInfo(nextLineup, iSub, "playerIn"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "playerOut"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "orderType"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "matchMinuteCriteria"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "pos"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "behaviour"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "card"))
-							.append(getMatchOrderInfo(nextLineup, iSub, "standing"));
-				}
-
-				for (int i = 0; i < 11; i++) {
-					String key = "PenaltyTaker" + i;
-					buffer.append("penalty").append(i).append("=")
-							.append(getPlayerForNextLineup(key, nextLineup))
-							.append('\n');
-				}
-
-			} catch (Exception e) {
-				HOLogger.instance().debug(ConvertXml2Hrf.class,
-						"Error(lineup): " + e);
-			}
-		}
-		return buffer.toString();
-	}
-
-	private static String getMatchOrderInfo(Map<String, String> nextLineup, int i, String key) {
-		String _key = "subst"+i+key;
-		var value = nextLineup.get(_key);
-		if ( value != null)	return _key + "=" + value + '\n';
-		return null;
-	}
-
-	/**
-	 * Create the player data.
-	 */
-	private static void createPlayers(MatchLineupTeam matchLineupTeam, List<MyHashtable> playersData, StringBuilder buffer) {
-
-		for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
-			var ht = playersData.get(i);
-
-			buffer.append("[player").append(ht.get("PlayerID"))
-					.append(']').append('\n');
-
-			if (ht.get("NickName").length() > 0) {
-				buffer.append("name=");
-				buffer.append(ht.get("FirstName")).append(" '");
-				buffer.append(ht.get("NickName")).append("' ");
-				buffer.append(ht.get("LastName")).append('\n');
-			} else {
-				buffer.append("name=");
-				buffer.append(ht.get("FirstName")).append(' ');
-				buffer.append(ht.get("LastName")).append('\n');
-			}
-			buffer.append("firstname=").append(ht.get("FirstName"))
-					.append('\n');
-			buffer.append("nickname=").append(ht.get("NickName"))
-					.append('\n');
-			buffer.append("lastname=").append(ht.get("LastName"))
-					.append('\n');
-			buffer.append("ald=").append(ht.get("Age")).append('\n');
-			buffer.append("agedays=").append(ht.get("AgeDays"))
-					.append('\n');
-			buffer.append("arrivaldate=").append(ht.get("ArrivalDate"))
-					.append('\n');
-			buffer.append("ska=").append(ht.get("InjuryLevel"))
-					.append('\n');
-			buffer.append("for=").append(ht.get("PlayerForm"))
-					.append('\n');
-			buffer.append("uth=").append(ht.get("StaminaSkill"))
-					.append('\n');
-			buffer.append("spe=").append(ht.get("PlaymakerSkill"))
-					.append('\n');
-			buffer.append("mal=").append(ht.get("ScorerSkill"))
-					.append('\n');
-			buffer.append("fra=").append(ht.get("PassingSkill"))
-					.append('\n');
-			buffer.append("ytt=").append(ht.get("WingerSkill"))
-					.append('\n');
-			buffer.append("fas=").append(ht.get("SetPiecesSkill"))
-					.append('\n');
-			buffer.append("bac=").append(ht.get("DefenderSkill"))
-					.append('\n');
-			buffer.append("mlv=").append(ht.get("KeeperSkill"))
-					.append('\n');
-			buffer.append("rut=").append(ht.get("Experience"))
-					.append('\n');
-			buffer.append("loy=").append(ht.get("Loyalty"))
-					.append('\n');
-			buffer.append("homegr=")
-					.append(ht.get("MotherClubBonus")).append('\n');
-			buffer.append("led=").append(ht.get("Leadership"))
-					.append('\n');
-			buffer.append("sal=").append(ht.get("Salary"))
-					.append('\n');
-			buffer.append("mkt=").append(ht.get("MarketValue"))
-					.append('\n');
-			buffer.append("gev=").append(ht.get("CareerGoals"))
-					.append('\n');
-			buffer.append("gtl=").append(ht.get("LeagueGoals"))
-					.append('\n');
-			buffer.append("gtc=").append(ht.get("CupGoals"))
-					.append('\n');
-			buffer.append("gtt=").append(ht.get("FriendliesGoals"))
-					.append('\n');
-			buffer.append("GoalsCurrentTeam=").append(ht.get("GoalsCurrentTeam"))
-					.append('\n');
-			buffer.append("MatchesCurrentTeam=").append(ht.get("MatchesCurrentTeam"))
-					.append('\n');
-			buffer.append("hat=").append(ht.get("CareerHattricks"))
-					.append('\n');
-			buffer.append("CountryID=").append(ht.get("CountryID"))
-					.append('\n');
-			buffer.append("warnings=").append(ht.get("Cards"))
-					.append('\n');
-			buffer.append("speciality=").append(ht.get("Specialty"))
-					.append('\n');
-			buffer.append("specialityLabel=")
-					.append(PlayerSpeciality.toString(Integer.parseInt(ht.get(
-							"Specialty")))).append('\n');
-			buffer.append("gentleness=")
-					.append(ht.get("Agreeability")).append('\n');
-			buffer.append("gentlenessLabel=")
-					.append(PlayerAgreeability.toString(Integer.parseInt(ht
-							.get("Agreeability")))).append('\n');
-			buffer.append("honesty=").append(ht.get("Honesty")).append('\n');
-			buffer.append("honestyLabel=")
-					.append(PlayerHonesty.toString(Integer.parseInt(ht.get(
-							"Honesty")))).append('\n');
-			buffer.append("Aggressiveness=")
-					.append(ht.get("Aggressiveness")).append('\n');
-			buffer.append("AggressivenessLabel=")
-					.append(PlayerAggressiveness.toString(Integer.parseInt(ht
-							.get("Aggressiveness")))).append('\n');
-
-			if (ht.get("TrainerSkill") != null) {
-				buffer.append("TrainerType=")
-						.append(ht.get("TrainerType")).append('\n');
-				buffer.append("TrainerSkill=")
-						.append(ht.get("TrainerSkill")).append('\n');
-			} else {
-				buffer.append("TrainerType=").append('\n');
-				buffer.append("TrainerSkill=").append('\n');
-			}
-			var matchId = ht.get("LastMatch_id");
-			if (matchId!= null && !matchId.equals("0")) {
-				buffer.append("LastMatch_Date=")
-						.append(ht.get("LastMatch_Date")).append('\n');
-				buffer.append("LastMatch_Rating=")
-						.append(ht.get("LastMatch_Rating")).append('\n');
-				buffer.append("LastMatch_id=")
-						.append(matchId).append('\n');
-				buffer.append("LastMatch_PositionCode=")
-						.append(ht.get("LastMatch_PositionCode")).append('\n');
-				buffer.append("LastMatch_PlayedMinutes=")
-						.append(ht.get("LastMatch_PlayedMinutes")).append('\n');
-				buffer.append("LastMatch_RatingEndOfGame=")
-						.append(ht.get("LastMatch_RatingEndOfGame")).append('\n');
-			} else {
-				buffer.append("LastMatch_Date=").append('\n');
-				buffer.append("LastMatch_Rating=").append('\n');
-				buffer.append("LastMatch_id=0").append('\n');
-				buffer.append("LastMatch_PositionCode=").append('\n');
-				buffer.append("LastMatch_PlayedMinutes=").append('\n');
-				buffer.append("LastMatch_RatingEndOfGame=").append('\n');
-			}
-
-			String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");
-			buffer.append("LastMatch_Type=")
-					.append(lastMatchType)
-					.append('\n');
-
-			if ((matchLineupTeam != null)
-					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))) != null)
-					&& (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID")))
-					.getRating() >= 0)) {
-				buffer.append("rating=")
-						.append((int) (matchLineupTeam
-								.getPlayerByID(
-										Integer.parseInt(ht.get("PlayerID"))).getRating() * 2))
-						.append('\n');
-			} else {
-				buffer.append("rating=0").append('\n');
-			}
-
-			if ((ht.get("PlayerNumber") != null)
-					|| (!ht.get("PlayerNumber").equals(""))) {
-				buffer.append("PlayerNumber=").append(ht.get("PlayerNumber"))
-						.append('\n');
-			}
-
-			buffer.append("TransferListed=").append(ht.get("TransferListed"))
-					.append('\n');
-			buffer.append("NationalTeamID=").append(ht.get("NationalTeamID"))
-					.append('\n');
-			buffer.append("Caps=").append(ht.get("Caps")).append('\n');
-			buffer.append("CapsU20=").append(ht.get("CapsU20")).append('\n');
-			buffer.append("PlayerCategoryId=").append(ht.get("PlayerCategoryId")).append('\n');
-			// TODO: since we transport all data through the hrf file, we have to loose the new lines
-			buffer.append("Statement=").append(ht.get("Statement").replace('\n', ' ')).append('\n');
-			buffer.append("OwnerNotes=").append(ht.get("OwnerNotes").replace('\n', ' ')).append('\n');
-		}
-	}
-
-	/**
-	 * Append youth player data to buffer
-	 */
-	private static void appendYouthPlayers(List<MyHashtable> playersData, StringBuilder buffer) {
-
-		for (var player: playersData ) {
-
-			buffer.append("[youthplayer").append(player.get("YouthPlayerID")).append(']').append('\n');
-
-			appendHRFLine(buffer, player, "FirstName");
-			appendHRFLine(buffer, player, "NickName");
-			appendHRFLine(buffer, player, "LastName");
-			appendHRFLine(buffer, player, "Age");
-			appendHRFLine(buffer, player, "AgeDays");
-			appendHRFLine(buffer, player, "ArrivalDate");
-			appendHRFLine(buffer, player, "CanBePromotedIn");
-			appendHRFLine(buffer, player, "PlayerNumber");
-			appendHRFLine(buffer, player, "Statement");
-			appendHRFLine(buffer, player, "OwnerNotes");
-			appendHRFLine(buffer, player, "PlayerCategoryID");
-
-			appendHRFLine(buffer, player, "Cards");
-			appendHRFLine(buffer, player, "InjuryLevel");
-			appendHRFLine(buffer, player, "Specialty");
-			appendHRFLine(buffer, player, "CareerGoals");
-			appendHRFLine(buffer, player, "CareerHattricks");
-			appendHRFLine(buffer, player, "LeagueGoals");
-			appendHRFLine(buffer, player, "FriendlyGoals");
-
-			for ( var skillId: YouthPlayer.skillIds){
-				appendHRFSkillLines(buffer, player, skillId);
-			}
-
-			appendHRFLine(buffer, player, "ScoutId");
-			appendHRFLine(buffer, player, "ScoutName");
-			appendHRFLine(buffer, player, "ScoutingRegionID");
-
-			for (int i = 0; appendScoutComment(buffer, player, i); i++);
-
-			appendHRFLine(buffer, player, "YouthMatchID");
-			appendHRFLine(buffer, player, "YouthMatchDate");
-			appendHRFLine(buffer, player, "PositionCode");
-			appendHRFLine(buffer, player, "PlayedMinutes");
-			appendHRFLine(buffer, player, "Rating");
-		}
-	}
-
-	private static boolean appendScoutComment(StringBuilder buffer, MyHashtable player, int i) {
-		var prefix = "ScoutComment"+i;
-
-		var text = player.get(prefix+"Text");
-		if ( text != null){
-			appendHRFLine(buffer, player, prefix+"Text");
-			appendHRFLine(buffer, player, prefix+"Type");
-			appendHRFLine(buffer, player, prefix+"Variation");
-			appendHRFLine(buffer, player, prefix+"SkillType");
-			appendHRFLine(buffer, player, prefix+"SkillLevel");
-			return true;
-		}
-		return false;
-	}
-
-	private static void appendHRFSkillLines(StringBuilder buffer, MyHashtable player, Skills.HTSkillID skillId) {
-		var skill = skillId.toString() + "Skill";
-		appendHRFLine(buffer, player, skill);
-		appendHRFLine(buffer, player, skill+"IsAvailable");
-		appendHRFLine(buffer, player, skill+"IsMaxReached");
-		appendHRFLine(buffer, player, skill+"MayUnlock");
-		skill += "Max";
-		appendHRFLine(buffer, player, skill);
-		appendHRFLine(buffer, player, skill+"IsAvailable");
-		appendHRFLine(buffer, player, skill+"MayUnlock");
-	}
-
-	private static void appendHRFLine(StringBuilder buffer, MyHashtable player, String key) {
-		buffer.append(key).append("=").append(player.get(key)).append('\n');
-	}
-
-	/**
-	 * Create team related data (training, confidence, formation experience,
-	 * etc.).
-	 */
-	private static void createTeam(Map<String, String> trainingDataMap,
-			StringBuilder buffer) {
-		buffer.append("[team]" + "\n");
-		buffer.append("trLevel=").append(trainingDataMap.get("TrainingLevel"))
-				.append('\n');
-		buffer.append("staminaTrainingPart=")
-				.append(trainingDataMap.get("StaminaTrainingPart"))
-				.append('\n');
-		buffer.append("trTypeValue=")
-				.append(trainingDataMap.get("TrainingType")).append('\n');
-		buffer.append("trType=")
-				.append(TrainingType.toString(Integer.parseInt(trainingDataMap
-						.get("TrainingType")))).append('\n');
-
-		if ((trainingDataMap.get("Morale") != null)
-				&& (trainingDataMap.get("SelfConfidence") != null)) {
-			buffer.append("stamningValue=")
-					.append(trainingDataMap.get("Morale")).append('\n');
-			buffer.append("stamning=")
-					.append(TeamSpirit.toString(Integer
-							.parseInt(trainingDataMap.get("Morale"))))
-					.append('\n');
-			buffer.append("sjalvfortroendeValue=")
-					.append(trainingDataMap.get("SelfConfidence")).append('\n');
-			buffer.append("sjalvfortroende=")
-					.append(TeamConfidence.toString(Integer
-							.parseInt(trainingDataMap.get("SelfConfidence")))).append('\n');
-		} else {
-			buffer.append("playingMatch=true");
-		}
-
-		buffer.append("exper433=").append(trainingDataMap.get("Experience433"))
-				.append('\n');
-		buffer.append("exper451=").append(trainingDataMap.get("Experience451"))
-				.append('\n');
-		buffer.append("exper352=").append(trainingDataMap.get("Experience352"))
-				.append('\n');
-		buffer.append("exper532=").append(trainingDataMap.get("Experience532"))
-				.append('\n');
-		buffer.append("exper343=").append(trainingDataMap.get("Experience343"))
-				.append('\n');
-		buffer.append("exper541=").append(trainingDataMap.get("Experience541"))
-				.append('\n');
-		if (trainingDataMap.get("Experience442") != null) {
-			buffer.append("exper442=")
-					.append(trainingDataMap.get("Experience442")).append('\n');
-		}
-		if (trainingDataMap.get("Experience523") != null) {
-			buffer.append("exper523=")
-					.append(trainingDataMap.get("Experience523")).append('\n');
-		}
-		if (trainingDataMap.get("Experience550") != null) {
-			buffer.append("exper550=")
-					.append(trainingDataMap.get("Experience550")).append('\n');
-		}
-		if (trainingDataMap.get("Experience253") != null) {
-			buffer.append("exper253=")
-					.append(trainingDataMap.get("Experience253")).append('\n');
-		}
-	}
-
-	/**
-	 * Create the world data.
-	 */
-	private static void createWorld(Map<String, String> clubDataMap,
-			Map<String, String> teamdetailsDataMap, Map<String, String> trainingDataMap,
-			Map<String, String> worldDataMap, StringBuilder buffer) {
-		buffer.append("[xtra]\n");
-		buffer.append("TrainingDate=").append(worldDataMap.get("TrainingDate"))
-				.append('\n');
-		buffer.append("EconomyDate=").append(worldDataMap.get("EconomyDate"))
-				.append('\n');
-		buffer.append("SeriesMatchDate=")
-				.append(worldDataMap.get("SeriesMatchDate")).append('\n');
-		buffer.append("CountryId=")
-				.append(worldDataMap.get("CountryId")).append('\n');
-		buffer.append("CurrencyRate=")
-				.append(worldDataMap.get("CurrencyRate")
-						.replace(',', '.')).append('\n');
-		buffer.append("LogoURL=").append(teamdetailsDataMap.get("LogoURL"))
-				.append('\n');
-		buffer.append("HasPromoted=").append(clubDataMap.get("HasPromoted"))
-				.append('\n');
-
-		buffer.append("TrainerID=").append(trainingDataMap.get("TrainerID"))
-				.append('\n');
-		buffer.append("TrainerName=")
-				.append(trainingDataMap.get("TrainerName")).append('\n');
-		buffer.append("ArrivalDate=")
-				.append(trainingDataMap.get("ArrivalDate")).append('\n');
-		buffer.append("LeagueLevelUnitID=")
-				.append(teamdetailsDataMap.get("LeagueLevelUnitID"))
-				.append('\n');
-	}
-
-	private static void createStaff(List<MyHashtable> staffList, StringBuilder buffer) {
-		
-		buffer.append("[staff]").append('\n');
-		
-		for (int i = 0; (staffList != null) && (i < staffList.size()); i++) {
-			MyHashtable hash = staffList.get(i);
-			
-			buffer.append("staff").append(i).append("Name=").append(hash.get("Name")).append('\n');
-			buffer.append("staff").append(i).append("StaffId=").append(hash.get("StaffId")).append('\n');
-			buffer.append("staff").append(i).append("StaffType=").append(hash.get("StaffType")).append('\n');
-			buffer.append("staff").append(i).append("StaffLevel=").append(hash.get("StaffLevel")).append('\n');
-			buffer.append("staff").append(i).append("Cost=").append(hash.get("Cost")).append('\n');
-		}
-	}
 
 }
