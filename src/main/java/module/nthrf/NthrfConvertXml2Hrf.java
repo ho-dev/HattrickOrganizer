@@ -7,13 +7,20 @@ import core.constants.player.PlayerAggressiveness;
 import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
+import core.db.DBManager;
+import core.db.user.UserManager;
+import core.file.hrf.HRFStringBuilder;
 import core.file.xml.*;
+import core.gui.HOMainFrame;
+import core.gui.theme.ThemeManager;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.net.MyConnector;
+import core.net.OnlineWorker;
 import core.util.HOLogger;
+import core.util.Helper;
 import core.util.HelperWrapper;
 import core.HO;
 
@@ -44,20 +51,30 @@ class NthrfConvertXml2Hrf {
 //		helper = HelperWrapper.instance();
 		this.teamId = teamId;
 		try {
-			debug("About to load data for teamId " + teamId);
+			int progressIncrement=5;
+			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
+			//debug("About to load data for teamId " + teamId);
 			// leagueId / countryId
 			HashMap<Integer, Integer> countryMapping = getCountryMapping(dh);
-			debug("Got " + (countryMapping != null ? countryMapping.keySet().size() : "null") + " country mappings.");
+			//debug("Got " + (countryMapping != null ? countryMapping.keySet().size() : "null") + " country mappings.");
 
 			// nt team detail
 			String xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalteamdetails&version=1.9&teamid=" + teamId);
-			NtTeamDetails details = new NtTeamDetails(xml);
-			debug("Got team details");
+			NtTeamDetails details = new NtTeamDetails);
+			var detailsMap = details.parseDetails(xml);
+//			debug("Got team details");
 
 			// world details
+			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=worlddetails");
 			Map<String, String> world = XMLWorldDetailsParser.parseWorldDetailsFromString(xml, String.valueOf(details.getLeagueId()));
-			debug("Got world details");
+//			debug("Got world details");
+			var hrfStringBuilder = new HRFStringBuilder();
+			hrfStringBuilder.createBasics(detailsMap, world);
+
+			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
+			OnlineWorker.downloadTeamLogo(detailsMap);
+
 
 			// nt matches
 			GregorianCalendar cal = new GregorianCalendar();

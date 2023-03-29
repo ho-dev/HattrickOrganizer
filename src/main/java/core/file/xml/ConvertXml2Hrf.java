@@ -97,12 +97,7 @@ public class ConvertXml2Hrf {
 		if (teamdetailsDataMap.size() == 0) return null;
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
-		DBManager.instance().storeTeamLogoInfo(teamId, OnlineWorker.getLogoURL(teamdetailsDataMap), null);
-		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
-		if (logoFilename!= null && !logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())){
-			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
-			UserManager.instance().save();
-		}
+		OnlineWorker.downloadTeamLogo(teamdetailsDataMap);
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));

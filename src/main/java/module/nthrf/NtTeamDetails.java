@@ -2,9 +2,17 @@ package module.nthrf;
 
 import core.db.AbstractTable;
 import core.file.xml.XMLManager;
+import core.file.xml.XMLTeamDetailsParser;
 import core.util.HODateTime;
+import core.util.HOLogger;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.Map;
+
+import static core.file.xml.XMLManager.xmlIntValue2Hash;
+import static core.file.xml.XMLManager.xmlValue2Hash;
 
 public class NtTeamDetails extends AbstractTable.Storable {
 
@@ -196,86 +204,69 @@ public class NtTeamDetails extends AbstractTable.Storable {
 	 */
 	public NtTeamDetails(){}
 
-	public NtTeamDetails(String xmlData) {
-	    parseDetails(XMLManager.parseString(xmlData));
-	}
+	public Map<String, String> parseDetails(String xmlData) {
+		var doc = XMLManager.parseString(xmlData);
+		var hash = new core.file.xml.MyHashtable();
 
-	private void parseDetails(Document doc) {
-        if (doc == null) {
-            return;
+		if (doc == null) {
+            return hash;
         }
         try {
-
             Element root = doc.getDocumentElement();
-            Element ele = (Element)root.getElementsByTagName("FetchedDate").item(0);
-            fetchedDate = HODateTime.fromHT(XMLManager.getFirstChildNodeValue(ele));
+			var value = xmlValue2Hash(hash, root, "FetchedDate");
+            fetchedDate = HODateTime.fromHT(value);
 
-            // root Team
+			// root Team
             var teamRoot = (Element) root.getElementsByTagName("Team").item(0);
 
-			teamId = getInteger(teamRoot, "TeamID", -1);
-			teamName = getString(teamRoot, "TeamName");
-			teamNameShort = getString(teamRoot, "ShortTeamName");
+			teamId = xmlIntValue2Hash(hash, teamRoot, "TeamID", -1);
+			teamName = xmlValue2Hash(hash, teamRoot, "TeamName");
+			teamNameShort = xmlValue2Hash(hash, teamRoot, "ShortTeamName");
 
             // root national coach
             root = (Element) teamRoot.getElementsByTagName("NationalCoach").item(0);
-			coachId = getInteger(root, "NationalCoachUserID");
-			coachName = getString(root, "NationalCoachLoginname");
+
+			value = xmlValue2Hash(hash, root, "NationalCoachUserID", "UserId" );
+			coachId = NumberUtils.toInt(value, -1);
+			coachName = xmlValue2Hash(hash, root, "NationalCoachLoginname", "Loginname" );
 
             // root League
             root = (Element) teamRoot.getElementsByTagName("League").item(0);
-			leagueId = getInteger(root, "LeagueID", -1);
-			leagueName = getString(root, "LeagueName");
+
+			leagueId = xmlIntValue2Hash(hash, root, "LeagueID", -1);
+			leagueName = xmlValue2Hash(hash, root, "LeagueName");
 
             // root HomePage
-			homePageUrl = getString(teamRoot, "HomePage");
-			logo = getString(teamRoot, "Logo");
+			homePageUrl = xmlValue2Hash(hash, teamRoot, "HomePage");
+			logo = xmlValue2Hash(hash, teamRoot, "Logo");
 
             // formation XP
-			xp253 = getInteger(teamRoot, "Experience253", 0);
-			xp352 = getInteger(teamRoot, "Experience352",0);
-			xp451 = getInteger(teamRoot, "Experience451",0);
-			xp442 = getInteger(teamRoot, "Experience442",0);
-			xp433 = getInteger(teamRoot, "Experience433",0);
-			xp343 = getInteger(teamRoot, "Experience343",0);
-			xp523 = getInteger(teamRoot, "Experience523",0);
-			xp532 = getInteger(teamRoot, "Experience532",0);
-			xp541 = getInteger(teamRoot, "Experience541",0);
-			xp550 = getInteger(teamRoot, "Experience550",0);
+			xp253 = xmlIntValue2Hash(hash, teamRoot, "Experience253", 0);
+			xp352 = xmlIntValue2Hash(hash, teamRoot, "Experience352", 0);
+			xp451 = xmlIntValue2Hash(hash, teamRoot, "Experience451",0);
+			xp442 = xmlIntValue2Hash(hash, teamRoot, "Experience442",0);
+			xp433 = xmlIntValue2Hash(hash, teamRoot, "Experience433",0);
+			xp343 = xmlIntValue2Hash(hash, teamRoot, "Experience343",0);
+			xp523 = xmlIntValue2Hash(hash, teamRoot, "Experience523",0);
+			xp532 = xmlIntValue2Hash(hash, teamRoot, "Experience532",0);
+			xp541 = xmlIntValue2Hash(hash, teamRoot, "Experience541",0);
+			xp550 = xmlIntValue2Hash(hash, teamRoot, "Experience550",0);
 
 			// morale etc.
-			morale = getInteger(teamRoot, "Morale");
-			selfConfidence = getInteger(teamRoot, "SelfConfidence");
-			supportersPopularity = getInteger(teamRoot, "SupportersPopularity",0);
-			ratingScore = getInteger(teamRoot, "RatingScore",0);
-			fanclubSize = getInteger(teamRoot, "FanClubSize",0);
-			rank = getInteger(teamRoot, "Rank",0);
+			morale = xmlIntValue2Hash(hash, teamRoot, "Morale", -1);
+
+			selfConfidence = xmlIntValue2Hash(hash, teamRoot, "SelfConfidence", -1);
+			supportersPopularity = xmlIntValue2Hash(hash, teamRoot, "SupportersPopularity",0);
+			ratingScore = xmlIntValue2Hash(hash, teamRoot, "RatingScore",0);
+			fanclubSize = xmlIntValue2Hash(hash, teamRoot, "FanClubSize",0);
+			rank = xmlIntValue2Hash(hash, teamRoot, "Rank",0);
 
             parsingSuccess = true;
         } catch (Exception e) {
         	parsingSuccess = false;
         	e.printStackTrace();
         }
-	}
-
-	private int getInteger(Element root, String tag, int def) {
-		var ret = getInteger(root, tag);
-		if ( ret != null) return ret;
-		return def;
-	}
-
-	private String getString(Element root, String tag) {
-		var ele = (Element) root.getElementsByTagName(tag).item(0);
-		return XMLManager.getFirstChildNodeValue(ele);
-	}
-
-	private Integer getInteger(Element root, String tag) {
-		try {
-			return Integer.parseInt(getString(root, tag));
-		} catch (NumberFormatException ignored) {
-			//e.printStackTrace();
-		}
-		return null;
+		return hash;
 	}
 
 	@Override

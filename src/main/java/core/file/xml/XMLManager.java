@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -108,12 +109,19 @@ public class XMLManager {
         return null;
     }
 
-    public static void xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
-        hash.put(hashKey, xmlValue(element, xmlKey));
+    public static String xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
+        var value =  xmlValue(element, xmlKey);
+        hash.put(hashKey, value);
+        return value;
     }
 
-    public static void xmlValue2Hash(Map<String, String> hash, Element element, String key) {
-        xmlValue2Hash(hash, element, key, key);
+    public static String xmlValue2Hash(Map<String, String> hash, Element element, String key) {
+        return xmlValue2Hash(hash, element, key, key);
+    }
+
+    public static int xmlIntValue2Hash(Map<String, String> hash, Element element, String key, int def) {
+        var val = xmlValue2Hash(hash, element, key, key);
+        return NumberUtils.toInt(val, def);
     }
 
     public static void xmlAttribute2Hash(Map<String, String> hash, Element root, String xmlElementname, String xmlAttributename) {

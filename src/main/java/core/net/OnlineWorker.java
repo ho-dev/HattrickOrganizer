@@ -1,12 +1,14 @@
 package core.net;
 
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
 import core.file.hrf.HRFStringBuilder;
 import core.file.hrf.HRFStringParser;
 import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
+import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
@@ -23,6 +25,7 @@ import core.util.StringUtils;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.Spielplan;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -406,16 +409,6 @@ public class OnlineWorker {
 		return 0;
 	}
 
-	public static String getLogoURL(Map<String, String> team)
-	{
-		String str = team.get("LogoURL");
-		if ( (str == null) || (str.equals(""))) {
-			return null;
-		}
-		else {
-			return str;
-		}
-	}
 
 	/**
 	 * Loads the data for the given match from HT and updates the data for this
@@ -1200,5 +1193,19 @@ public class OnlineWorker {
 	public static Player downloadPlayerDetails(int playerID) {
 		var xml = MyConnector.instance().downloadPlayerDetails(playerID);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
+	}
+
+	public static void downloadTeamLogo(Map<String, String> team) {
+		String url = team.get("LogoURL");
+		if (StringUtils.isEmpty(url)) return;
+		var teamIdString = team.get("TeamID");
+		var teamId = NumberUtils.toInt(teamIdString);
+
+		DBManager.instance().storeTeamLogoInfo(teamId, url, null);
+		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
+		if (logoFilename != null && !logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
+			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
+			UserManager.instance().save();
+		}
 	}
 }
