@@ -26,6 +26,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.Serial;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -34,7 +35,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
@@ -51,65 +51,66 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-	private static final long serialVersionUID = -3287232092187457640L;
+	@Serial
+    private static final long serialVersionUID = -3287232092187457640L;
 	private static int iTempSpielerID = -1001;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ColorLabelEntry jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final ColorLabelEntry jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
     		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-    private DoubleLabelEntries jpRatingWingback = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingbackDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingbackTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingbackOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWinger = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingerDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingerTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingWingerOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingDefender = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingDefenderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingDefenderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingMidfielder = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingMidfielderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingMidfielderDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingMidfielderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingForward = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingForwardTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingForwardDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-    private DoubleLabelEntries jpRatingKeeper = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-    private JButton jbAddTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("AddTempspieler"));
-    private JButton jbRemove = new JButton(HOVerwaltung.instance().getLanguageString("ScoutEntfernen"));
-    private JButton jbAdd = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
-    private JButton jbMiniScout = new JButton(HOVerwaltung.instance().getLanguageString("ScoutMini"));
-    private JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
-    private JButton jbRemoveAll = new JButton(HOVerwaltung.instance().getLanguageString("Scout.RemoveAll"));
-    private JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbWinger = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbForm = new JComboBox(Helper.EINSTUFUNG_FORM);
-    private JComboBox jcbStamina = new JComboBox(Helper.EINSTUFUNG_KONDITION);
-    private JComboBox jcbPassing = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
-    private JComboBox jcbPlaymaking = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbSetPieces = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbScoring = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbKeeper = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbDefending = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
-    private JComboBox jcbLeadership = new JComboBox(PlayerAbility.ITEMS);
-    private JCheckBox jchHomegrown = new JCheckBox();
-    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": <br /></p></html>");
-    private JTextArea jtaCopyPaste = new JTextArea(5, 20);
-    private JTextArea jtaNotes = new JTextArea();
-    private JTextField jtfAge = new JTextField("17.0");
-    private JTextField jtfTSI = new JTextField("1000");
-    private JTextField jtfPrice = new JTextField("0");
-	private JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
+    private final DoubleLabelEntries jpRatingWingback = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingbackDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingbackTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingbackOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWinger = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingerDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingerTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingWingerOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingDefender = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingDefenderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingDefenderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingMidfielder = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingMidfielderTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingMidfielderDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingMidfielderOffensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingForward = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingForwardTowardsWing = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingForwardDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+    private final DoubleLabelEntries jpRatingKeeper = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
+    private final JButton jbAddTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("AddTempspieler"));
+    private final JButton jbRemove = new JButton(HOVerwaltung.instance().getLanguageString("ScoutEntfernen"));
+    private final JButton jbAdd = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
+    private final JButton jbMiniScout = new JButton(HOVerwaltung.instance().getLanguageString("ScoutMini"));
+    private final JButton jbApply = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+    private final JButton jbRemoveAll = new JButton(HOVerwaltung.instance().getLanguageString("Scout.RemoveAll"));
+    private final JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbWinger = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbForm = new JComboBox(Helper.EINSTUFUNG_FORM);
+    private final JComboBox jcbStamina = new JComboBox(Helper.EINSTUFUNG_KONDITION);
+    private final JComboBox jcbPassing = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
+    private final JComboBox jcbPlaymaking = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbSetPieces = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbScoring = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbKeeper = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbDefending = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
+    private final JComboBox jcbLeadership = new JComboBox(PlayerAbility.ITEMS);
+    private final JCheckBox jchHomegrown = new JCheckBox();
+    private final JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": <br /></p></html>");
+    private final JTextArea jtaCopyPaste = new JTextArea(5, 20);
+    private final JTextArea jtaNotes = new JTextArea();
+    private final JTextField jtfAge = new JTextField("17.0");
+    private final JTextField jtfTSI = new JTextField("1000");
+    private final JTextField jtfPrice = new JTextField("0");
+	private final JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
     private ScoutEintrag clScoutEntry;
-    private SpinnerDateModel clSpinnerModel = new SpinnerDateModel();
-    private JSpinner jsSpinner = new JSpinner(clSpinnerModel);
-    private JTextField jtfName = new JTextField();
-    private JTextField jtfPlayerID = new JTextField("0");
-    private TransferScoutPanel clOwner;
+    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel();
+    private final JTextField jtDeadline = new JTextField();
+    private final JTextField jtfName = new JTextField();
+    private final JTextField jtfPlayerID = new JTextField("0");
+    private final TransferScoutPanel clOwner;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -518,7 +519,9 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 Helper.setComboBoxFromID(jcbPlaymaking,player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                jsSpinner.setValue(pc.getDeadline());
+                //
+                // jsSpinner.setValue(pc.getDeadline());
+                jtDeadline.setText(player.getExpiryDate());
 
                 setLabels();
             }
@@ -628,8 +631,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
         panel.add(label);
-        jsSpinner.addFocusListener(this);
-        panel.add(jsSpinner);
+        panel.add(jtDeadline);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
         panel.add(label);

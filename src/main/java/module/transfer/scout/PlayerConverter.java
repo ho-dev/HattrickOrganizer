@@ -23,7 +23,7 @@ public class PlayerConverter {
 	final private List<Integer> skillvalues;
 	final private List<String> specialities;
 	final private List<Integer> specialitiesvalues;
-	final private static Set<String> NORMALCHARS = new HashSet<String>();
+	final private static Set<String> NORMALCHARS = new HashSet<>();
     java.util.Date deadLineDate;
 
     public static final int SUCCESS = 0; // No error detected
@@ -38,7 +38,7 @@ public class PlayerConverter {
 
 	static {
 		for (int m = 97; m <= 122; m++) { // a-z
-			NORMALCHARS.add(new String(new char[] { (char) m }));
+			NORMALCHARS.add(String.valueOf((char) m));
 		}
 	}
 
@@ -49,13 +49,13 @@ public class PlayerConverter {
      */
     public PlayerConverter() {
 
-        errorFields = new ArrayList<String>();
-        notSupportedFields = new ArrayList<String>();
+        errorFields = new ArrayList<>();
+        notSupportedFields = new ArrayList<>();
         status = SUCCESS;
-        skills = new ArrayList<String>();
-        skillvalues = new ArrayList<Integer>();
-        specialities = new ArrayList<String>();
-        specialitiesvalues = new ArrayList<Integer>();
+        skills = new ArrayList<>();
+        skillvalues = new ArrayList<>();
+        specialities = new ArrayList<>();
+        specialitiesvalues = new ArrayList<>();
         deadLineDate = new java.sql.Date(System.currentTimeMillis());
 
         try{
@@ -94,9 +94,9 @@ public class PlayerConverter {
                 int k = p;
 
                 while ((k < skills.size())
-                       && (skills.get(k - 1).toString().length() > skills.get(k).toString().length())) {
-                    final String t = skills.get(k - 1).toString();
-                    skills.set(k - 1, skills.get(k).toString());
+                       && (skills.get(k - 1).length() > skills.get(k).length())) {
+                    final String t = skills.get(k - 1);
+                    skills.set(k - 1, skills.get(k));
                     skills.set(k, t);
 
                     final Integer i = skillvalues.get(k - 1);
@@ -135,10 +135,10 @@ public class PlayerConverter {
                 int k = p;
 
                 while ((k < specialities.size())
-                       && (specialities.get(k - 1).toString().length() > specialities.get(k).toString()
+                       && (specialities.get(k - 1).length() > specialities.get(k)
                                                                                      .length())) {
-                    final String t = specialities.get(k - 1).toString();
-                    specialities.set(k - 1, specialities.get(k).toString());
+                    final String t = specialities.get(k - 1);
+                    specialities.set(k - 1, specialities.get(k));
                     specialities.set(k, t);
 
                     final Integer i = specialitiesvalues.get(k - 1);
@@ -191,57 +191,93 @@ public class PlayerConverter {
      *
      * @return Player a Player object
      *
-     * @throws Exception Throws exception on some parse errors
      */
-    public final Player buildHTCopyButton(String text) throws Exception {
+    public final Player buildHTCopyButton(String text) {
         status = SUCCESS;
 
         final Player player = new Player();
-        String txtTmp;
+        StringBuilder txtTmp;
 
         Scanner sc = new Scanner(text);
         String row;
-        List<String> rows = new ArrayList<String>();
+        List<String> rows = new ArrayList<>();
         while (sc.hasNextLine()) {
             row = sc.nextLine();
             row = row.trim();
-            if (!row.isEmpty())
-                rows.add(row);
+            rows.add(row);
         }
         sc.close();
 
+        /*
+example without specialty:
+Samuel Galeón [playerid=475611169]
+17 Jahre und 18 Tage, nächster Geburtstag: 01.07.2023
+
+Nationalität: España
+
+Er ist ein angenehmer Zeitgenosse und darüber hinaus ausgeglichen und aufrichtig. Seine Erfahrung ist erbärmlich und seine Führungsqualitäten sind armselig. Seine Treue zum Verein ist göttlich.
+Aktueller Verein: Zaratustra S.A.D seit dem 27.03.2023 Heimatverein-Bonus
+TSI: 630
+Gehalt: [money]3500[/money]/Woche
+Gelbe Karten: 0
+Verletzungen : gesund
+
+[table][tr][th]Form[/th][td]passabel (6)[/td][/tr][tr][th]Kondition[/th][td]schwach (4)[/td][/tr][/table]
+[table][tr][th]Torwart[/th][td]katastrophal (1)[/td][/tr][tr][th]Verteidigung[/th][td]durchschnittlich (5)[/td][/tr][tr][th]Spielaufbau[/th][td][b]gut[/b] (7)[/td][/tr][tr][th]Flügelspiel[/th][td]armselig (3)[/td][/tr][tr][th]Passspiel[/th][td]armselig (3)[/td][/tr][tr][th]Torschuss[/th][td]schwach (4)[/td][/tr][tr][th]Standards[/th][td]armselig (3)[/td][/tr][/table]
+Deadline: 30.03.2023 12:47
+Mindestgebot: [money]500000[/money]
+
+example with specialty:
+Manouchehr Monfared [playerid=475612073]
+17 Jahre und 14 Tage, nächster Geburtstag: 05.07.2023
+
+Nationalität: Iran
+
+Er ist eine umstrittene Person und darüber hinaus introvertiert und ehrlich. Seine Erfahrung ist katastrophal und seine Führungsqualitäten sind erbärmlich. Seine Treue zum Verein ist göttlich.
+Aktueller Verein: NELL CITY seit dem 27.03.2023 Heimatverein-Bonus
+TSI: 830
+Gehalt: [money]3100[/money]/Woche
+Spezialität: [b]unberechenbar[/b]
+Gelbe Karten: 0
+Verletzungen : gesund
+
+[table][tr][th]Form[/th][td]passabel (6)[/td][/tr][tr][th]Kondition[/th][td]schwach (4)[/td][/tr][/table]
+[table][tr][th]Torwart[/th][td]katastrophal (1)[/td][/tr][tr][th]Verteidigung[/th][td][b]passabel[/b] (6)[/td][/tr][tr][th]Spielaufbau[/th][td][b]passabel[/b] (6)[/td][/tr][tr][th]Flügelspiel[/th][td]schwach (4)[/td][/tr][tr][th]Passspiel[/th][td]schwach (4)[/td][/tr][tr][th]Torschuss[/th][td]schwach (4)[/td][/tr][tr][th]Standards[/th][td]schwach (4)[/td][/tr][/table]
+Deadline: 30.03.2023 14:01
+Mindestgebot: [money]0[/money]
+        */
+
+        int offsSpeciality = rows.size() - 17;
         // Set index rows
-        int offsetIndexRowSpeciality = 0;
-        if (rows.size()>11){
-            offsetIndexRowSpeciality = 1;
-        }
         int indexRowNamePlayerId = 0;
         int indexRowAge = 1;
-        int indexRowExperience = 3;
-        int indexMotherClub = 4;
-        int indexRowTSI = 5;
-        int indexRowSpecialty = 7;
-        int indexRowWarning = 7 + offsetIndexRowSpeciality;
-        int indexRowInjure = 8 + offsetIndexRowSpeciality;
-        int indexRowFormStamina = 9 + offsetIndexRowSpeciality;
-        int indexRowSkills = 10 + offsetIndexRowSpeciality;
+        int indexRowExperience = 5;
+        int indexRowTSI = 7;
+        int indexRowSpecialty = 9;
+        int indexRowWarning = 9 + offsSpeciality;
+        int indexRowInjure = 11 + offsSpeciality;
+        int indexRowFormStamina = 13 + offsSpeciality;
+        int indexRowSkills = 14 + offsSpeciality;
+        // TODO
+        int indexRowDeadline = 15 + offsSpeciality;
+        int indexRoxPrice = 16 + offsSpeciality;
 
         // Extract Name and PlayerId
         row = rows.get(indexRowNamePlayerId);
         sc = new Scanner(row);
         // Player Name
         sc.useDelimiter("\\[playerid=");
-        txtTmp = sc.next().trim();
-        if(!txtTmp.equals("")) {
-            player.setPlayerName(txtTmp);
+        txtTmp = new StringBuilder(sc.next().trim());
+        if (!txtTmp.toString().equals("")) {
+            player.setPlayerName(txtTmp.toString());
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.id"));
         }
         // Player Id
         sc.useDelimiter("\\]");
-        txtTmp = sc.next().trim().substring(10);
-        if(!txtTmp.equals("")) {
-            player.setPlayerID(Integer.parseInt(txtTmp));
+        txtTmp = new StringBuilder(sc.next().trim().substring(10));
+        if (!txtTmp.toString().equals("")) {
+            player.setPlayerID(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.name"));
         }
@@ -250,9 +286,9 @@ public class PlayerConverter {
         row = rows.get(indexRowAge);
         sc = new Scanner(row);
         sc.useDelimiter(" ");
-        txtTmp = sc.next().trim();
-        if(!txtTmp.equals("")) {
-            player.setAge(Integer.parseInt(txtTmp));
+        txtTmp = new StringBuilder(sc.next().trim());
+        if (!txtTmp.toString().equals("")) {
+            player.setAge(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
         }
@@ -260,13 +296,13 @@ public class PlayerConverter {
         sc.useDelimiter(" ");
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
-                txtTmp = sc.next().trim();
+                txtTmp = new StringBuilder(sc.next().trim());
             } else {
                 sc.next();
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setAgeDays(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setAgeDays(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("s.player.age.days"));
         }
@@ -278,9 +314,9 @@ public class PlayerConverter {
         sc.useDelimiter(pattern);
         // Experience
         boolean found = false;
-        while (sc.hasNext() && !found){
-            for (int index=0;index<skills.size();index++) {
-                if(sc.hasNext(skills.get(index))) {
+        while (sc.hasNext() && !found) {
+            for (int index = 0; index < skills.size(); index++) {
+                if (sc.hasNext(skills.get(index))) {
                     player.setExperience(skillvalues.get(index));
                     found = true;
                     break;
@@ -288,14 +324,14 @@ public class PlayerConverter {
             }
             sc.next();
         }
-        if(!found){
+        if (!found) {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
         }
         // Leadership
         found = false;
-        while (sc.hasNext() && !found){
-            for (int index=0;index<skills.size();index++) {
-                if(sc.hasNext(skills.get(index))) {
+        while (sc.hasNext() && !found) {
+            for (int index = 0; index < skills.size(); index++) {
+                if (sc.hasNext(skills.get(index))) {
                     player.setLeadership(skillvalues.get(index));
                     found = true;
                     break;
@@ -303,7 +339,7 @@ public class PlayerConverter {
             }
             sc.next();
         }
-        if(!found){
+        if (!found) {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
         }
 
@@ -339,24 +375,24 @@ public class PlayerConverter {
         row = rows.get(indexRowTSI);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = "";
-        String c = "";
+        txtTmp = new StringBuilder();
+        String c;
         while (sc.hasNext()) {
-            if (sc.hasNextShort() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextShort()) {
+                txtTmp.append(sc.next().trim());
             } else {
                 c = sc.next();
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setTSI(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setTSI(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
         }
         // Speciality
         row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
-        for (int index=1;index<specialities.size();index++) {
-            if(row.contains(specialities.get(index))) {
+        for (int index = 1; index < specialities.size(); index++) {
+            if (row.contains(specialities.get(index))) {
                 player.setSpeciality(specialitiesvalues.get(index));
                 break;
             }
@@ -365,20 +401,19 @@ public class PlayerConverter {
         row = rows.get(indexRowWarning);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = "";
-        c = "";
+        txtTmp = new StringBuilder();
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
             } else {
                 c = sc.next();
                 // System.out.println(c);
-                if (c.equals("-")){
-                    txtTmp = txtTmp + c;
+                if (c.equals("-")) {
+                    txtTmp.append(c);
                 }
             }
         }
-        if(!txtTmp.equals("")) {
+        if (!txtTmp.toString().equals("")) {
             player.setBooked(row.trim());
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.warningstatus"));
@@ -387,31 +422,31 @@ public class PlayerConverter {
         row = rows.get(indexRowInjure);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
             } else {
                 c = sc.next();
-                if (c.equals("+") || c.equals("∞")){  //TODO Acciaccato ma gioca
-                    txtTmp = txtTmp + c;
+                if (c.equals("+") || c.equals("∞")) {  //TODO Acciaccato ma gioca
+                    txtTmp.append(c);
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setInjury(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setInjury(Integer.parseInt(txtTmp.toString()));
         }
         //Form and Stamina
         row = rows.get(indexRowFormStamina);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         boolean findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -420,17 +455,17 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setForm(Integer.parseInt(txtTmp));
-        }else {
+        if (!txtTmp.toString().equals("")) {
+            player.setForm(Integer.parseInt(txtTmp.toString()));
+        } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.form"));
         }
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -439,8 +474,8 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setStamina(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setStamina(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
         }
@@ -448,12 +483,12 @@ public class PlayerConverter {
         row = rows.get(indexRowSkills);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -462,18 +497,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setGoalKeeping(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setGoalKeeping(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
         }
         //Defense
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -482,18 +517,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setDefense(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setDefense(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
         }
         //PlayMaking
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -502,18 +537,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setPlayMaking(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setPlayMaking(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
         }
         //Wing
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -522,18 +557,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setWing(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setWing(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
         }
         //Passing
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -542,18 +577,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setPassing(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
         }
         //Attack
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -562,18 +597,18 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setAttack(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setAttack(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
         }
         //Set Pieces
-        txtTmp = "";
+        txtTmp = new StringBuilder();
         c = "";
         findValue = false;
         while (sc.hasNext()) {
-            if (sc.hasNextInt() ) {
-                txtTmp = txtTmp + sc.next().trim();
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
                 c = sc.next();
@@ -582,27 +617,33 @@ public class PlayerConverter {
                 }
             }
         }
-        if(!txtTmp.equals("")) {
-            player.setSetPieces(Integer.parseInt(txtTmp));
+        if (!txtTmp.toString().equals("")) {
+            player.setSetPieces(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
         }
 
-        //Price - Price is not present in HT copy button
-        /*
-        txtTmp = "";
-        if(!txtTmp.equals("")) {
-            player.setPrice(Integer.parseInt(txtTmp));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("scout_price"));
+        row = rows.get(indexRowDeadline);
+        sc = new Scanner(row);
+        sc.useDelimiter(": ");
+        if (sc.hasNext()) sc.next();
+        if (sc.hasNext()) player.setExpiryDate(sc.next().trim());
+        sc.close();
+
+        row = rows.get(indexRoxPrice);
+        sc = new Scanner(row);
+        // Player Name
+        sc.useDelimiter("\\[money\\]");
+        sc.next();
+        txtTmp = new StringBuilder(sc.next());
+        sc.close();
+        sc = new Scanner(txtTmp.toString());
+        sc.useDelimiter("\\[/money\\]");
+        if ( sc.hasNextBigInteger()){
+            txtTmp = new StringBuilder(sc.next());
+            player.setPrice(Integer.parseInt(txtTmp.toString()));
         }
-        */
-        addNotSupportedField(HOVerwaltung.instance().getLanguageString("scout_price"));
-
-        //Deadline - Date and Time expired is not present in HT copy button
-        //setDeadline(player);
-        addNotSupportedField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-
+        sc.close();
         return player;
     }
 
@@ -612,7 +653,7 @@ public class PlayerConverter {
             // This error to shown error for empty input
             status = EMPTY_INPUT_ERROR;
         }else{
-            if(text.indexOf("[playerid=")>=0){
+            if(text.contains("[playerid=")){
                 player = this.buildHTCopyButton(text);
             }else {
                 player = this.buildClassicPage(text);
@@ -637,28 +678,27 @@ public class PlayerConverter {
      *
      * @return Player a Player object
      *
-     * @throws Exception Throws exception on some parse errors
      */
-    public final Player buildClassicPage(String text) throws Exception {
+    public final Player buildClassicPage(String text) {
         status = 0;
 
         final Player player = new Player();
 
         // Init some helper variables
         String mytext = text;
-        final List<String> lines = new ArrayList<String>();
-        int p = -1;
-        String tmp = "";
+        final List<String> lines = new ArrayList<>();
+        int p;
+        String tmp;
 
         // Detect linefeed
         //  \n will do for linux and windows
         //  \r is for mac
         String feed = "";
 
-        if (text.indexOf("\n") >= 0) {
+        if (text.contains("\n")) {
             feed = "\n";
         } else {
-            if (text.indexOf("\r") >= 0) {
+            if (text.contains("\r")) {
                 feed = "\r";
             }
         }
@@ -688,15 +728,15 @@ public class PlayerConverter {
             }
 
             //-- get name and store club name
-            tmp = lines.get(0).toString();
+            tmp = lines.get(0);
             player.setPlayerName(tmp.substring(tmp.indexOf("»")+1).trim());
             String teamname = tmp.substring(0, tmp.indexOf("»")).trim();
 
             //-- get playerid
             int found_at_line = -1;
-            int n = 0;
+            int n;
             for (int m = 0; m<10; m++) {
-            	tmp = lines.get(m).toString();
+            	tmp = lines.get(m);
 
             	try {
             		// Players from China etc. have Brackets in their names!!!
@@ -708,12 +748,11 @@ public class PlayerConverter {
 						break;
 					}
             	} catch (Exception e) {
-					if (p < 0) continue;
-				}
+                }
             }
 
             //-- get age
-            tmp = lines.get(found_at_line + 1).toString();
+            tmp = lines.get(found_at_line + 1);
 
             String age = "";
             p = 0;
@@ -743,7 +782,7 @@ public class PlayerConverter {
             }
 
             if (!age.equals("")) {
-                player.setAge(Integer.valueOf(age).intValue());
+                player.setAge(Integer.parseInt(age));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
             }
@@ -780,32 +819,28 @@ public class PlayerConverter {
             }
 
             if (!ageDays.equals("")) {
-                player.setAgeDays(Integer.valueOf(ageDays).intValue());
+                player.setAgeDays(Integer.parseInt(ageDays));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
             }
 
             // clean lines till here
             if (found_at_line > 0) {
-            	for (int m=0; m<=(found_at_line+1); m++) {
-            		lines.remove(0);
-            	}
+                lines.subList(0, found_at_line + 2).clear();
             }
             // remove club line and all lines until the time info (e.g. "since 06.04.2008")
             boolean teamfound = false;
-            boolean datefound = false;
             for (int m = 0; m<12; m++) {
-            	tmp = lines.get(m).toString();
-            	if (tmp.indexOf(teamname)>-1) {
+            	tmp = lines.get(m);
+            	if (tmp.contains(teamname)) {
             		teamfound = true;
             	}
-            	if (teamfound && !datefound) {
+            	if (teamfound) {
             		lines.remove(m);
             		m--;
             	}
-            	if (teamfound && tmp.indexOf("(")>-1 && tmp.indexOf(")")>-1) {
-            		datefound = true;
-            		break;
+            	if (teamfound && tmp.contains("(") && tmp.contains(")")) {
+                    break;
             	}
             }
 
@@ -814,10 +849,10 @@ public class PlayerConverter {
 
             while (p < lines.size()) {
                 //Search for TSI-line (ending in numbers)
-                tmp = lines.get(p).toString();
+                tmp = lines.get(p);
 
                 if ((tmp.charAt(tmp.length() - 1) >= '0') && (tmp.charAt(tmp.length() - 1) <= '9') ) {
-                	if (tmp.length()>9 && tmp.substring(tmp.length()-9, tmp.length()).indexOf(".")>-1) {
+                	if (tmp.length()>9 && tmp.substring(tmp.length() - 9).contains(".")) {
                 		p++;
                 		continue;
                 	}
@@ -828,19 +863,19 @@ public class PlayerConverter {
                 p++;
             }
             //-- get tsi
-            String tsi = "";
+            StringBuilder tsi = new StringBuilder();
             p = 0;
 
             while (p < tmp.length()) {
                 if ((tmp.charAt(p) >= '0') && (tmp.charAt(p) <= '9')) {
-                    tsi = tsi + tmp.charAt(p);
+                    tsi.append(tmp.charAt(p));
                 }
 
                 p++;
             }
 
-            if (!tsi.equals("")) {
-                player.setTSI(Integer.valueOf(tsi).intValue());
+            if (!tsi.toString().equals("")) {
+                player.setTSI(Integer.parseInt(tsi.toString()));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
             }
@@ -848,7 +883,7 @@ public class PlayerConverter {
             // -- check for line wage / season (since FoxTrick 0.4.8.2)
 			String wage = "";
 			p = 0;
-			tmp = lines.get(found_at_line + 2).toString();
+			tmp = lines.get(found_at_line + 2);
 			// extract spaces
 			tmp = tmp.replace(" ", "");
 			// get first number
@@ -871,15 +906,15 @@ public class PlayerConverter {
 			//player.setBaseWage(i);
 
             // -- check bookings
-            tmp = lines.get(found_at_line+2).toString();
+            tmp = lines.get(found_at_line+2);
             try {
-            	if (tmp.indexOf(":") > -1 && tmp.indexOf("0") == -1) {
+            	if (tmp.contains(":") && !tmp.contains("0")) {
             		player.setBooked(tmp);
             	}
             } catch (Exception e) { /* ignore */ }
 
             //-- Get injury
-            tmp = lines.get(found_at_line+3).toString();
+            tmp = lines.get(found_at_line+3);
             try {
             	String injury = "";
             	for (int j = 0; j < tmp.length(); j++) {
@@ -890,7 +925,7 @@ public class PlayerConverter {
             	}
 
             	if (!injury.equals("")) {
-            		player.setInjury(Integer.valueOf(injury).intValue());
+            		player.setInjury(Integer.parseInt(injury));
             	}
             } catch (Exception e) { /* ignore */ }
 
@@ -904,13 +939,13 @@ public class PlayerConverter {
             p = 0;
             for (int m = 6; m < 8; m++) {
             	// Delete all rows not containing our year
-            	tmp = lines.get(m).toString();
+            	tmp = lines.get(m);
 
             	if (p > 14) { // already 10 lines deleted - there must be something wrong, break
             		break;
             	}
 
-            	if ((tmp.indexOf(year) > -1) || (tmp.indexOf(year2) > -1)) {
+            	if ((tmp.contains(year)) || (tmp.contains(year2))) {
             		found_at_line = m;
             		break;
             	} else {
@@ -922,10 +957,10 @@ public class PlayerConverter {
             String exp = getDeadlineString(tmp);
 
             // Extract minimal bid
-            tmp = lines.get(found_at_line+1).toString();
+            tmp = lines.get(found_at_line+1);
             n = 0;
             int k = 0;
-            String bid = "";
+            StringBuilder bid = new StringBuilder();
             while (k < tmp.length()) {
                 if ((tmp.charAt(k) < '0') || (tmp.charAt(k) > '9')) {
                     n++;
@@ -939,17 +974,16 @@ public class PlayerConverter {
             k = 0;
             while (k < tmp.length()) {
                 if ((tmp.charAt(k) >= '0') && (tmp.charAt(k) <= '9')) {
-                    bid += tmp.charAt(k);
+                    bid.append(tmp.charAt(k));
                 }
-
                 k++;
             }
 
             // Extract current bid if any
-            tmp = lines.get(found_at_line + 2).toString();
+            tmp = lines.get(found_at_line + 2);
             n = 0;
             k = 0;
-            String curbid = "";
+            StringBuilder curbid = new StringBuilder();
             while (k < tmp.length()) {
                 if ((tmp.charAt(k) < '0') || (tmp.charAt(k) > '9')) {
                     n++;
@@ -963,7 +997,7 @@ public class PlayerConverter {
             k = 0;
             while (k < tmp.length()) {
                 if ((tmp.charAt(k) >= '0') && (tmp.charAt(k) <= '9')) {
-                    curbid += tmp.charAt(k);
+                    curbid.append(tmp.charAt(k));
                 } else if ((tmp.charAt(k) != ' ') && curbid.length()>0) { // avoid to add numbers from bidding team names
                 	break;
                 }
@@ -971,7 +1005,7 @@ public class PlayerConverter {
                 k++;
             }
 
-            player.setPrice(getPrice(bid, curbid));
+            player.setPrice(getPrice(bid.toString(), curbid.toString()));
 
             //--------------------------------------------
 
@@ -1007,28 +1041,24 @@ public class PlayerConverter {
             }
 
             char[] cs = new char[teamname.length()];
-            for (int cl = 0; cl < cs.length; cl++) {
-                cs[cl] = '*';
-            }
+            Arrays.fill(cs, '*');
             mytext = mytext.replaceAll(Pattern.quote(teamname), new String(cs)).toLowerCase(java.util.Locale.ENGLISH);
 
             cs = new char[name.length()];
-            for (int cl = 0; cl < cs.length; cl++) {
-                cs[cl] = '*';
-            }
+            Arrays.fill(cs, '*');
             mytext = mytext.replaceAll(Pattern.quote(name.toLowerCase(java.util.Locale.ENGLISH)), new String(cs)).toLowerCase(java.util.Locale.ENGLISH);
 
             // We can search all the skills in text now
             p = skills.size() - 1;
 
-            final List<List<Object>> foundskills = new ArrayList<List<Object>>();
+            final List<List<Object>> foundskills = new ArrayList<>();
 
             while (p >= 0) {
-                final String singleskill = skills.get(p).toString();
+                final String singleskill = skills.get(p);
                 k = mytext.indexOf(singleskill);
 
                 if (k >= 0) {
-                    final List<Object> pair = new ArrayList<Object>();
+                    final List<Object> pair = new ArrayList<>();
                     pair.add(k);
                     pair.add(singleskill);
                     pair.add(p);
@@ -1036,9 +1066,7 @@ public class PlayerConverter {
 
                     final char[] ct = new char[singleskill.length()];
 
-                    for (int cl = 0; cl < ct.length; cl++) {
-                        ct[cl] = '*';
-                    }
+                    Arrays.fill(ct, '*');
 
                     mytext = mytext.replaceFirst(singleskill, new String(ct));
                 } else {
@@ -1089,10 +1117,10 @@ public class PlayerConverter {
             // We can search the speciality in text now
             p = specialities.size() - 1;
 
-            final List<List<Object>> foundspecialities = new ArrayList<List<Object>>();
+            final List<List<Object>> foundspecialities = new ArrayList<>();
 
             while (p > 0) {
-                final String singlespeciality = specialities.get(p).toString();
+                final String singlespeciality = specialities.get(p);
                 k = mytext.indexOf(singlespeciality);
 
                 if (k >= 0) {
@@ -1106,7 +1134,7 @@ public class PlayerConverter {
                 		}
                 	}
                 	if (!skip) {
-                		final List<Object> pair = new ArrayList<Object>();
+                		final List<Object> pair = new ArrayList<>();
                 		pair.add(k);
                 		pair.add(singlespeciality);
                 		pair.add(p);
@@ -1115,9 +1143,7 @@ public class PlayerConverter {
 
                     final char[] ct = new char[singlespeciality.length()];
 
-                    for (int cl = 0; cl < ct.length; cl++) {
-                        ct[cl] = '*';
-                    }
+                    Arrays.fill(ct, '*');
 
                     mytext = mytext.replaceFirst(singlespeciality, new String(ct));
                 } else {
@@ -1175,7 +1201,7 @@ public class PlayerConverter {
     /**
      * Set parsed skills in the player object. Bar style.
      */
-    private void setSkillsBarStyle(Player player, final List<List<Object>> foundskills) throws Exception {
+    private void setSkillsBarStyle(Player player, final List<List<Object>> foundskills) {
     	// player skills (long default format with bars)
     	player.setForm(skillvalues.get((Integer) (foundskills.get(0)).get(2)));
     	player.setStamina(skillvalues.get((Integer) (foundskills.get(1)).get(2)));
@@ -1194,20 +1220,20 @@ public class PlayerConverter {
     /**
      * Set parsed skills in the player object. Classic style with 2 skills per line.
      */
-    private void setSkillsClassicStyle(Player player, final List<List<Object>> foundskills) throws Exception {
+    private void setSkillsClassicStyle(Player player, final List<List<Object>> foundskills) {
     	// player skills (2er format without bars)
 	    player.setForm(skillvalues.get((Integer) (foundskills.get(0)).get(2)));
 	    player.setStamina(skillvalues.get((Integer) (foundskills.get(1)).get(2)));
 	    player.setExperience(skillvalues.get((Integer) (foundskills.get(2)).get(2)));
 	    player.setLeadership(skillvalues.get((Integer) (foundskills.get(3)).get(2)));
 
-   	    player.setGoalKeeping((Integer) skillvalues.get((Integer) (foundskills.get(6)).get(2)));
-	    player.setDefense((Integer) skillvalues.get((Integer) (foundskills.get(10)).get(2)));
-	    player.setPlayMaking((Integer) skillvalues.get((Integer) (foundskills.get(7)).get(2)));
-	    player.setWing((Integer) skillvalues.get((Integer) (foundskills.get(9)).get(2)));
-	    player.setPassing((Integer) skillvalues.get((Integer) (foundskills.get(8)).get(2)));
-	    player.setAttack((Integer) skillvalues.get((Integer) (foundskills.get(11)).get(2)));
-	    player.setSetPieces((Integer) skillvalues.get((Integer) (foundskills.get(12)).get(2)));
+   	    player.setGoalKeeping(skillvalues.get((Integer) (foundskills.get(6)).get(2)));
+	    player.setDefense(skillvalues.get((Integer) (foundskills.get(10)).get(2)));
+	    player.setPlayMaking(skillvalues.get((Integer) (foundskills.get(7)).get(2)));
+	    player.setWing(skillvalues.get((Integer) (foundskills.get(9)).get(2)));
+	    player.setPassing(skillvalues.get((Integer) (foundskills.get(8)).get(2)));
+	    player.setAttack(skillvalues.get((Integer) (foundskills.get(11)).get(2)));
+	    player.setSetPieces(skillvalues.get((Integer) (foundskills.get(12)).get(2)));
     }
 
     public static int getPrice(String bid, String curbid) {
@@ -1223,7 +1249,7 @@ public class PlayerConverter {
 
     public static String getDeadlineString(String tmp) {
         // get deadline
-        String exp = "";
+        String exp;
         int p = 0;
         int k = 0;
 
@@ -1306,11 +1332,11 @@ public class PlayerConverter {
 
         p = 0;
 
-        String part4 = "";
+        StringBuilder part4 = new StringBuilder();
 
         while (p < tmp.length()) {
             if ((tmp.charAt(p) >= '0') && (tmp.charAt(p) <= '9')) {
-                part4 = part4 + tmp.charAt(p);
+                part4.append(tmp.charAt(p));
             }
 
             p++;
