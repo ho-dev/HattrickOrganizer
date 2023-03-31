@@ -72,10 +72,11 @@
 Reports by Contributors - October 15, 2022 - February 04, 2023
 
 * Jan 131
+* Fresty di Lot 39
 * sich 16
 * wsbrenk 16
 * Lidegand 14
 * Moorhuhninho 13
 * TeamBMW 5
 
-Total 195
+Total 234
