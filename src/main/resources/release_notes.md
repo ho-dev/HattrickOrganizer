@@ -49,6 +49,7 @@
 ### Transfer
 * display player's age at transfer date (#1659)
 * Transfer module is no longer an autostart module to speed up the first download (#1760)
+* fix copy+paste feature in transfer scout (#1841)
 
 ### Training
 * fix daylight saving resetting future trainings (#1668)
