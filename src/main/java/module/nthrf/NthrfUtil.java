@@ -4,7 +4,6 @@ import core.file.ExampleFileFilter;
 import core.file.xml.XMLManager;
 import core.model.HOVerwaltung;
 import core.net.MyConnector;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,10 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.swing.JFileChooser;
-
-import core.net.OnlineWorker;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -65,12 +61,10 @@ public class NthrfUtil {
 //			}
 
             if (file != null) {
-                x2h.writeHRF(file);
-                debug("wrote file " + (file != null ? file.getAbsolutePath() : "null"));
+                x2h.writeHRF(file, hrf);
+                debug("wrote file " + file.getAbsolutePath());
                 // save folder setting
-                if(file!=null) {
-                	core.model.UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
-                }
+                core.model.UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
             } else {
                 debug("Could not write file, nothing selected!");
                 return "";
@@ -88,13 +82,13 @@ public class NthrfUtil {
      * Get the teamIDs and names of all national teams of the authenticated manager.
      */
     public static List<String[]> getNtTeams() {
-    	List<String[]> ret = new ArrayList<String[]>();
+    	List<String[]> ret = new ArrayList<>();
         try {
             String xmldata = MyConnector.instance().getHattrickXMLFile("/chppxml.axd?file=team");
             final Document doc = XMLManager.parseString(xmldata);
-            Element ele = null;
-            Element root = null;
-            Element nt = null;
+            Element ele;
+            Element root;
+            Element nt;
 
             if (doc == null) {
                 return null;
@@ -125,40 +119,10 @@ public class NthrfUtil {
     }
 
     /**
-     * Get the trainer.
-     */
-    public static NtPlayer getTrainer(NtPlayersParser players) {
-        try {
-            for (Iterator<NtPlayer> i = players.getAllPlayers().iterator(); i.hasNext(); ) {
-                NtPlayer pl = i.next();
-                if (pl.isTrainer()) {
-                    return pl;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Get the player in a lineup according to his position code.
-     */
-    public static NtPlayerPosition getPlayerPositionByRole(NtLineupParser lineup, int roleId) {
-        for (Iterator<NtPlayerPosition> i=lineup.getAllPlayers().iterator(); i.hasNext(); ) {
-            NtPlayerPosition pp = i.next();
-            if (roleId == pp.getRoleId()) {
-                return pp;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the countryId according to a nativeLeagueId of a player.
      */
     public static int getCountryId(int nativeLeagueId, HashMap<Integer, Integer> countryMapping) {
-        int ret = countryMapping.get(Integer.valueOf(nativeLeagueId)).intValue();
+        int ret = countryMapping.get(nativeLeagueId);
         if (ret > 0) {
             return ret;
         }

@@ -310,8 +310,7 @@ public class OnlineWorker {
 							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
 							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
 									&& info.getArenaId() != getArenaId(otherTeam));
-							DBManager.instance().storeTeamLogoInfo(otherId, getLogoURL(otherTeam), null);
-
+							downloadTeamLogo(otherTeam);
 						} else {
 							// Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
@@ -1184,13 +1183,14 @@ public class OnlineWorker {
 
 	private static NtTeamDetails downloadNtTeam(int teamId) {
 		var xml = MyConnector.instance().downloadNtTeamDetails(teamId);
-		NtTeamDetails details = new NtTeamDetails(xml);
+		NtTeamDetails details = new NtTeamDetails();
+		details.parseDetails(xml);
 		details.setHrfId(DBManager.instance().getLatestHRF().getHrfId());
 		DBManager.instance().storeNtTeamDetails(details);
 		return details;
 	}
 
-	public static Player downloadPlayerDetails(int playerID) {
+	public static Player downloadPlayerDetails(String playerID) {
 		var xml = MyConnector.instance().downloadPlayerDetails(playerID);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
@@ -1203,9 +1203,51 @@ public class OnlineWorker {
 
 		DBManager.instance().storeTeamLogoInfo(teamId, url, null);
 		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
-		if (logoFilename != null && !logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
+		if (logoFilename != null &&
+				teamId == HOVerwaltung.instance().getModel().getBasics().getTeamId() &&
+				!logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
 			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
 			UserManager.instance().save();
 		}
+	}
+
+	public static MatchLineupTeam downloadLastLineup(List<MatchKurzInfo> matches, int teamId){
+		MatchLineupTeam matchLineupTeam = null;
+		MatchLineup matchLineup = null;
+		var finishedMatchesAvailable = matches.stream().anyMatch(f->f.getMatchStatus()==MatchKurzInfo.FINISHED);
+		if ( finishedMatchesAvailable) {
+			var matchLineupString = MyConnector.instance().downloadMatchLineup(-1, teamId, MatchType.LEAGUE);
+			if (!matchLineupString.isEmpty()) {
+				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
+			}
+		}
+
+		int lastAttitude = 0;
+		int lastTactic = 0;
+		// Identify team, important for player ratings
+		if (matchLineup != null) {
+			Matchdetails md = XMLMatchdetailsParser
+					.parseMatchdetailsFromString(
+							MyConnector.instance().downloadMatchdetails(matchLineup.getMatchID(),
+									matchLineup.getMatchTyp()), null);
+
+			if (matchLineup.getHomeTeamId() == teamId) {
+				matchLineupTeam = matchLineup.getHomeTeam();
+				if (md != null) {
+					lastAttitude = md.getHomeEinstellung();
+					lastTactic = md.getHomeTacticType();
+				}
+			} else {
+				matchLineupTeam = matchLineup.getGuestTeam();
+				if (md != null) {
+					lastAttitude = md.getGuestEinstellung();
+					lastTactic = md.getGuestTacticType();
+				}
+			}
+			matchLineupTeam.setMatchTeamAttitude(MatchTeamAttitude.fromInt(lastAttitude));
+			matchLineupTeam.setMatchTacticType(MatchTacticType.fromInt(lastTactic));
+		}
+
+		return matchLineupTeam;
 	}
 }

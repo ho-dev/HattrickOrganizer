@@ -15,9 +15,11 @@ import core.model.match.MatchTeamAttitude;
 import core.model.match.StyleOfPlay;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
+import core.util.StringUtils;
 import module.lineup.substitution.model.Substitution;
 import module.training.Skills;
 import module.youth.YouthPlayer;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -216,7 +218,7 @@ public class HRFStringBuilder {
     /**
      * Create last lineup section.
      */
-    public void createLastLineUp(Map<String, String> teamdetailsDataMap, MatchLineupTeam matchLineupTeam) {
+    public void createLastLineUp(MatchLineupTeam matchLineupTeam, Map<String, String> teamdetailsDataMap) {
         lastLineupStringBuilder = new StringBuilder("[lastlineup]\n");
 
         appendKeyValue(lastLineupStringBuilder, "trainer", teamdetailsDataMap.get("TrainerID"));
@@ -416,86 +418,93 @@ public class HRFStringBuilder {
             var lastName = ht.get("LastName");
             var nickName = ht.get("NickName");
             if (nickName.length() > 0) {
-                appendKeyValue(playersStringBuilder,"name", firstName+" '"+nickName+"' "+lastName);
+                appendKeyValue(playersStringBuilder, "name", firstName + " '" + nickName + "' " + lastName);
             } else {
-                appendKeyValue(playersStringBuilder,"name", firstName+" "+lastName);
+                appendKeyValue(playersStringBuilder, "name", firstName + " " + lastName);
             }
-            appendKeyValue(playersStringBuilder,"firstname",ht.get("FirstName"));
-            appendKeyValue(playersStringBuilder,"nickname",ht.get("NickName"));
-            appendKeyValue(playersStringBuilder,"lastname",ht.get("LastName"));
-            appendKeyValue(playersStringBuilder,"ald",ht.get("Age"));
-            appendKeyValue(playersStringBuilder,"agedays",ht.get("AgeDays"));
-            appendKeyValue(playersStringBuilder,"arrivaldate",ht.get("ArrivalDate"));
-            appendKeyValue(playersStringBuilder,"ska",ht.get("InjuryLevel"));
-            appendKeyValue(playersStringBuilder,"for",ht.get("PlayerForm"));
-            appendKeyValue(playersStringBuilder,"uth",ht.get("StaminaSkill"));
-            appendKeyValue(playersStringBuilder,"spe",ht.get("PlaymakerSkill"));
-            appendKeyValue(playersStringBuilder,"mal",ht.get("ScorerSkill"));
-            appendKeyValue(playersStringBuilder,"fra",ht.get("PassingSkill"));
-            appendKeyValue(playersStringBuilder,"ytt",ht.get("WingerSkill"));
-            appendKeyValue(playersStringBuilder,"fas",ht.get("SetPiecesSkill"));
-            appendKeyValue(playersStringBuilder,"bac",ht.get("DefenderSkill"));
-            appendKeyValue(playersStringBuilder,"mlv",ht.get("KeeperSkill"));
-            appendKeyValue(playersStringBuilder,"rut",ht.get("Experience"));
-            appendKeyValue(playersStringBuilder,"loy",ht.get("Loyalty"));
-            appendKeyValue(playersStringBuilder,"homegr", ht.get("MotherClubBonus"));
-            appendKeyValue(playersStringBuilder,"led",ht.get("Leadership"));
-            appendKeyValue(playersStringBuilder,"sal",ht.get("Salary"));
-            appendKeyValue(playersStringBuilder,"mkt",ht.get("MarketValue"));
-            appendKeyValue(playersStringBuilder,"gev",ht.get("CareerGoals"));
-            appendKeyValue(playersStringBuilder,"gtl",ht.get("LeagueGoals"));
-            appendKeyValue(playersStringBuilder,"gtc",ht.get("CupGoals"));
-            appendKeyValue(playersStringBuilder,"gtt",ht.get("FriendliesGoals"));
-            appendKeyValue(playersStringBuilder,"GoalsCurrentTeam",ht.get("GoalsCurrentTeam"));
-            appendKeyValue(playersStringBuilder,"MatchesCurrentTeam",ht.get("MatchesCurrentTeam"));
-            appendKeyValue(playersStringBuilder,"hat",ht.get("CareerHattricks"));
-            appendKeyValue(playersStringBuilder,"CountryID",ht.get("CountryID"));
-            appendKeyValue(playersStringBuilder,"warnings",ht.get("Cards"));
-            appendKeyValue(playersStringBuilder,"speciality",ht.get("Specialty"));
-            appendKeyValue(playersStringBuilder,"specialityLabel", PlayerSpeciality.toString(Integer.parseInt(ht.get("Specialty"))));
-            appendKeyValue(playersStringBuilder,"gentleness", ht.get("Agreeability"));
-            appendKeyValue(playersStringBuilder,"gentlenessLabel", PlayerAgreeability.toString(Integer.parseInt(ht.get("Agreeability"))));
-            appendKeyValue(playersStringBuilder,"honesty",ht.get("Honesty"));
-            appendKeyValue(playersStringBuilder,"honestyLabel", PlayerHonesty.toString(Integer.parseInt(ht.get("Honesty"))));
-            appendKeyValue(playersStringBuilder,"Aggressiveness", ht.get("Aggressiveness"));
-            appendKeyValue(playersStringBuilder,"AggressivenessLabel", PlayerAggressiveness.toString(Integer.parseInt(ht.get("Aggressiveness"))));
+            appendKeyValue(playersStringBuilder, "firstname", ht.get("FirstName"));
+            appendKeyValue(playersStringBuilder, "nickname", ht.get("NickName"));
+            appendKeyValue(playersStringBuilder, "lastname", ht.get("LastName"));
+            appendKeyValue(playersStringBuilder, "ald", ht.get("Age"));
+            appendKeyValue(playersStringBuilder, "agedays", ht.get("AgeDays"));
+            appendKeyValue(playersStringBuilder, "arrivaldate", ht.get("ArrivalDate"));
+            appendKeyValue(playersStringBuilder, "ska", ht.get("InjuryLevel"));
+            appendKeyValue(playersStringBuilder, "for", ht.get("PlayerForm"));
+            appendKeyValue(playersStringBuilder, "uth", ht.get("StaminaSkill"));
+            appendKeyValue(playersStringBuilder, "spe", ht.get("PlaymakerSkill"));
+            appendKeyValue(playersStringBuilder, "mal", ht.get("ScorerSkill"));
+            appendKeyValue(playersStringBuilder, "fra", ht.get("PassingSkill"));
+            appendKeyValue(playersStringBuilder, "ytt", ht.get("WingerSkill"));
+            appendKeyValue(playersStringBuilder, "fas", ht.get("SetPiecesSkill"));
+            appendKeyValue(playersStringBuilder, "bac", ht.get("DefenderSkill"));
+            appendKeyValue(playersStringBuilder, "mlv", ht.get("KeeperSkill"));
+            appendKeyValue(playersStringBuilder, "rut", ht.get("Experience"));
+            appendKeyValue(playersStringBuilder, "loy", ht.get("Loyalty"));
+            appendKeyValue(playersStringBuilder, "homegr", ht.get("MotherClubBonus"));
+            appendKeyValue(playersStringBuilder, "led", ht.get("Leadership"));
+            appendKeyValue(playersStringBuilder, "sal", ht.get("Salary"));
+            appendKeyValue(playersStringBuilder, "mkt", ht.get("MarketValue"));
+            appendKeyValue(playersStringBuilder, "gev", ht.get("CareerGoals"));
+            appendKeyValue(playersStringBuilder, "gtl", ht.get("LeagueGoals"));
+            appendKeyValue(playersStringBuilder, "gtc", ht.get("CupGoals"));
+            appendKeyValue(playersStringBuilder, "gtt", ht.get("FriendliesGoals"));
+            appendKeyValue(playersStringBuilder, "GoalsCurrentTeam", ht.get("GoalsCurrentTeam"));
+            appendKeyValue(playersStringBuilder, "MatchesCurrentTeam", ht.get("MatchesCurrentTeam"));
+            appendKeyValue(playersStringBuilder, "hat", ht.get("CareerHattricks"));
+            appendKeyValue(playersStringBuilder, "CountryID", ht.get("CountryID"));
+            appendKeyValue(playersStringBuilder, "warnings", ht.get("Cards"));
+            appendKeyValue(playersStringBuilder, "speciality", ht.get("Specialty"));
+            appendKeyValue(playersStringBuilder, "specialityLabel", PlayerSpeciality.toString(Integer.parseInt(ht.get("Specialty"))));
+            appendKeyValue(playersStringBuilder, "gentleness", ht.get("Agreeability"));
+            appendKeyValue(playersStringBuilder, "gentlenessLabel", PlayerAgreeability.toString(Integer.parseInt(ht.get("Agreeability"))));
+            appendKeyValue(playersStringBuilder, "honesty", ht.get("Honesty"));
+            appendKeyValue(playersStringBuilder, "honestyLabel", PlayerHonesty.toString(Integer.parseInt(ht.get("Honesty"))));
+            appendKeyValue(playersStringBuilder, "Aggressiveness", ht.get("Aggressiveness"));
+            appendKeyValue(playersStringBuilder, "AggressivenessLabel", PlayerAggressiveness.toString(Integer.parseInt(ht.get("Aggressiveness"))));
 
-                appendKeyValue(playersStringBuilder,"TrainerType", ht.get("TrainerType"));
-                appendKeyValue(playersStringBuilder,"TrainerSkill", ht.get("TrainerSkill"));
+            appendKeyValue(playersStringBuilder, "TrainerType", ht.get("TrainerType"));
+            appendKeyValue(playersStringBuilder, "TrainerSkill", ht.get("TrainerSkill"));
 
-                appendKeyValue(playersStringBuilder,"LastMatch_Date", ht.get("LastMatch_Date"));
-                appendKeyValue(playersStringBuilder,"LastMatch_Rating", ht.get("LastMatch_Rating"));
-                appendKeyValue(playersStringBuilder,"LastMatch_id", ht.get("LastMatch_id"));
-                appendKeyValue(playersStringBuilder,"LastMatch_PositionCode", ht.get("LastMatch_PositionCode"));
-                appendKeyValue(playersStringBuilder,"LastMatch_PlayedMinutes", ht.get("LastMatch_PlayedMinutes"));
-                appendKeyValue(playersStringBuilder,"LastMatch_RatingEndOfGame", ht.get("LastMatch_RatingEndOfGame"));
+            appendKeyValue(playersStringBuilder, "LastMatch_Date", ht.get("LastMatch_Date"));
+            appendKeyValue(playersStringBuilder, "LastMatch_Rating", ht.get("LastMatch_Rating"));
+            appendKeyValue(playersStringBuilder, "LastMatch_id", ht.get("LastMatch_id"));
+            appendKeyValue(playersStringBuilder, "LastMatch_PositionCode", ht.get("LastMatch_PositionCode"));
+            appendKeyValue(playersStringBuilder, "LastMatch_PlayedMinutes", ht.get("LastMatch_PlayedMinutes"));
+            appendKeyValue(playersStringBuilder, "LastMatch_RatingEndOfGame", ht.get("LastMatch_RatingEndOfGame"));
 
             String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");
-            appendKeyValue(playersStringBuilder,"LastMatch_Type", lastMatchType);
+            appendKeyValue(playersStringBuilder, "LastMatch_Type", lastMatchType);
 
             if ((matchLineupTeam != null)
                     && (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))) != null)
                     && (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID")))
                     .getRating() >= 0)) {
-                appendKeyValue(playersStringBuilder,"rating", (int) (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))).getRating() * 2));
+                appendKeyValue(playersStringBuilder, "rating", (int) (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))).getRating() * 2));
             } else {
-                appendKeyValue(playersStringBuilder,"rating" , "0");
+                appendKeyValue(playersStringBuilder, "rating", "0");
             }
 
             if ((ht.get("PlayerNumber") != null)
                     || (!ht.get("PlayerNumber").equals(""))) {
-                appendKeyValue(playersStringBuilder,"PlayerNumber",ht.get("PlayerNumber"));
+                appendKeyValue(playersStringBuilder, "PlayerNumber", ht.get("PlayerNumber"));
             }
 
-            appendKeyValue(playersStringBuilder,"TransferListed",ht.get("TransferListed"));
-            appendKeyValue(playersStringBuilder,"NationalTeamID",ht.get("NationalTeamID"));
-            appendKeyValue(playersStringBuilder,"Caps",ht.get("Caps"));
-            appendKeyValue(playersStringBuilder,"CapsU20",ht.get("CapsU20"));
-            appendKeyValue(playersStringBuilder,"PlayerCategoryId",ht.get("PlayerCategoryId"));
+            appendKeyValue(playersStringBuilder, "TransferListed", ht.get("TransferListed"));
+            appendKeyValue(playersStringBuilder, "NationalTeamID", ht.get("NationalTeamID"));
+            appendKeyValue(playersStringBuilder, "Caps", ht.get("Caps"));
+            appendKeyValue(playersStringBuilder, "CapsU20", ht.get("CapsU20"));
+            appendKeyValue(playersStringBuilder, "PlayerCategoryId", ht.get("PlayerCategoryId"));
             // TODO: since we transport all data through the hrf file, we have to loose the new lines
-            appendKeyValue(playersStringBuilder,"Statement",ht.get("Statement").replace('\n', ' '));
-            appendKeyValue(playersStringBuilder,"OwnerNotes",ht.get("OwnerNotes").replace('\n', ' '));
+            appendKeyValue(playersStringBuilder, "Statement", serializeMultiLine(ht.get("Statement")));
+            appendKeyValue(playersStringBuilder, "OwnerNotes", serializeMultiLine(ht.get("OwnerNotes")));
         }
+    }
+
+    private String serializeMultiLine(String value){
+        if ( value != null ){
+            return value.replaceAll("\\R", "<br>");
+        }
+        return "";
     }
 
     /**
@@ -584,7 +593,8 @@ public class HRFStringBuilder {
         appendKeyValue(teamStringBuilder,"trLevel",trainingDataMap.get("TrainingLevel"));
         appendKeyValue(teamStringBuilder,"staminaTrainingPart", trainingDataMap.get("StaminaTrainingPart"));
         appendKeyValue(teamStringBuilder,"trTypeValue", trainingDataMap.get("TrainingType"));
-        appendKeyValue(teamStringBuilder,"trType",TrainingType.toString(Integer.parseInt(trainingDataMap.get("TrainingType"))));
+        var training = NumberUtils.toInt( trainingDataMap.get("TrainingType"), 0);
+        appendKeyValue(teamStringBuilder,"trType",TrainingType.toString(training));
 
         if ((trainingDataMap.get("Morale") != null)
                 && (trainingDataMap.get("SelfConfidence") != null)) {
@@ -612,20 +622,25 @@ public class HRFStringBuilder {
      * Create the world data.
      */
     public void createWorld(Map<String, String> clubDataMap,
-                                   Map<String, String> teamdetailsDataMap, Map<String, String> trainingDataMap,
-                                   Map<String, String> worldDataMap) {
+                            Map<String, String> teamdetailsDataMap,
+                            Map<String, String> trainingDataMap,
+                            Map<String, String> worldDataMap) {
         xtraStringBuilder = new StringBuilder("[xtra]\n");
-        appendKeyValue(xtraStringBuilder,"TrainingDate",worldDataMap.get("TrainingDate"));
-        appendKeyValue(xtraStringBuilder,"EconomyDate",worldDataMap.get("EconomyDate"));
-        appendKeyValue(xtraStringBuilder,"SeriesMatchDate",worldDataMap.get("SeriesMatchDate"));
-        appendKeyValue(xtraStringBuilder,"CountryId",worldDataMap.get("CountryId"));
-        appendKeyValue(xtraStringBuilder,"CurrencyRate",worldDataMap.get("CurrencyRate").replace(',', '.'));
-        appendKeyValue(xtraStringBuilder,"LogoURL",teamdetailsDataMap.get("LogoURL"));
-        appendKeyValue(xtraStringBuilder,"HasPromoted",clubDataMap.get("HasPromoted"));
-        appendKeyValue(xtraStringBuilder,"TrainerID",trainingDataMap.get("TrainerID"));
-        appendKeyValue(xtraStringBuilder,"TrainerName", trainingDataMap.get("TrainerName"));
-        appendKeyValue(xtraStringBuilder,"ArrivalDate", trainingDataMap.get("ArrivalDate"));
-        appendKeyValue(xtraStringBuilder,"LeagueLevelUnitID", teamdetailsDataMap.get("LeagueLevelUnitID"));
+        appendKeyValue(xtraStringBuilder, "TrainingDate", worldDataMap.get("TrainingDate"));
+        appendKeyValue(xtraStringBuilder, "EconomyDate", worldDataMap.get("EconomyDate"));
+        appendKeyValue(xtraStringBuilder, "SeriesMatchDate", worldDataMap.get("SeriesMatchDate"));
+        appendKeyValue(xtraStringBuilder, "CountryId", worldDataMap.get("CountryID"));
+        var currencyRate = worldDataMap.get("CurrencyRate");
+        if (!StringUtils.isEmpty(currencyRate)) {
+            currencyRate = currencyRate.replace(',', '.');
+        }
+        appendKeyValue(xtraStringBuilder, "CurrencyRate", currencyRate);
+        appendKeyValue(xtraStringBuilder, "LogoURL", teamdetailsDataMap.get("LogoURL"));
+        appendKeyValue(xtraStringBuilder, "HasPromoted", clubDataMap.get("HasPromoted"));
+        appendKeyValue(xtraStringBuilder, "TrainerID", trainingDataMap.get("TrainerID"));
+        appendKeyValue(xtraStringBuilder, "TrainerName", trainingDataMap.get("TrainerName"));
+        appendKeyValue(xtraStringBuilder, "ArrivalDate", trainingDataMap.get("ArrivalDate"));
+        appendKeyValue(xtraStringBuilder, "LeagueLevelUnitID", teamdetailsDataMap.get("LeagueLevelUnitID"));
     }
 
     public void createStaff(List<MyHashtable> staffList) {

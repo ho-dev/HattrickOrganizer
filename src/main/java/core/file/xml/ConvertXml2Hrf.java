@@ -6,25 +6,23 @@
  */
 package core.file.xml;
 
-import core.db.DBManager;
-import core.db.user.UserManager;
 import core.file.hrf.HRFStringBuilder;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.*;
-import core.model.enums.MatchType;
 import core.model.player.PlayerAvatar;
 import core.net.OnlineWorker;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
 import org.jetbrains.annotations.Nullable;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import static core.net.OnlineWorker.downloadLastLineup;
 
 /**
  * Convert the necessary xml data into a HRF file.
@@ -114,7 +112,7 @@ public class ConvertXml2Hrf {
 		var lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId");
 		if ( lastPremierId != null && lastPremierId == usersPremierTeamId ){
 		//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
-			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
+			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("not"));
 			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
 		} else {
 			// We need to get hold of the currency info for the primary team, no matter which team we download.
@@ -178,45 +176,9 @@ public class ConvertXml2Hrf {
 				break;
 			}
 		}
+		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
+		MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, teamId);
 
-		MatchLineup matchLineup = null;
-		var finishedMatchesAvailable = matches.stream().anyMatch(f->f.getMatchStatus()==MatchKurzInfo.FINISHED);
-		if ( finishedMatchesAvailable) {
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
-			var matchLineupString = mc.downloadMatchLineup(-1, teamId, MatchType.LEAGUE);
-			if (!matchLineupString.isEmpty()) {
-				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
-			}
-		}
-
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_details"), progressIncrement);
-
-		MatchLineupTeam matchLineupTeam = null;
-		int lastAttitude = 0;
-		int lastTactic = 0;
-		// Identify team, important for player ratings
-		if (matchLineup != null) {
-			Matchdetails md = XMLMatchdetailsParser
-					.parseMatchdetailsFromString(
-							mc.downloadMatchdetails(matchLineup.getMatchID(),
-									matchLineup.getMatchTyp()), null);
-
-			if (matchLineup.getHomeTeamId() == Integer.parseInt(teamdetailsDataMap.get("TeamID"))) {
-				matchLineupTeam = matchLineup.getHomeTeam();
-				if (md != null) {
-					lastAttitude = md.getHomeEinstellung();
-					lastTactic = md.getHomeTacticType();
-				}
-			} else {
-				matchLineupTeam = matchLineup.getGuestTeam();
-				if (md != null) {
-					lastAttitude = md.getGuestEinstellung();
-					lastTactic = md.getGuestTacticType();
-				}
-			}
-			matchLineupTeam.setMatchTeamAttitude(MatchTeamAttitude.fromInt(lastAttitude));
-			matchLineupTeam.setMatchTacticType(MatchTacticType.fromInt(lastTactic));
-		}
 
 		var hrfSgtringBuilder = new HRFStringBuilder();
 		// Abschnitte erstellen
@@ -271,7 +233,7 @@ public class ConvertXml2Hrf {
 
 		// lineup of the last match
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
-		hrfSgtringBuilder.createLastLineUp(teamdetailsDataMap, matchLineupTeam);
+		hrfSgtringBuilder.createLastLineUp(matchLineupTeam, teamdetailsDataMap);
 
 		// staff
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);

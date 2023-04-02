@@ -2,15 +2,10 @@ package module.nthrf;
 
 import core.db.AbstractTable;
 import core.file.xml.XMLManager;
-import core.file.xml.XMLTeamDetailsParser;
 import core.util.HODateTime;
-import core.util.HOLogger;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import java.util.Map;
-
 import static core.file.xml.XMLManager.xmlIntValue2Hash;
 import static core.file.xml.XMLManager.xmlValue2Hash;
 
@@ -25,7 +20,6 @@ public class NtTeamDetails extends AbstractTable.Storable {
 	private int leagueId;
 	private String leagueName;
 	private String homePageUrl;
-	private String logo;
 	private int xp253=0;
 	private int xp343=0;
 	private int xp352=0;
@@ -63,9 +57,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 	public void setLeagueName(String leagueName) {
 		this.leagueName = leagueName;
 	}
-	public void setHomePageUrl(String homePageUrl) {
-		this.homePageUrl = homePageUrl;
-	}
+
 	public int getXp253() {
 		return xp253;
 	}
@@ -147,9 +139,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 	public String getLeagueName() {
 		return leagueName;
 	}
-	public String getHomePageUrl() {
-		return homePageUrl;
-	}
+
 	public int getXp433() {
 		return xp433;
 	}
@@ -238,7 +228,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 
             // root HomePage
 			homePageUrl = xmlValue2Hash(hash, teamRoot, "HomePage");
-			logo = xmlValue2Hash(hash, teamRoot, "Logo");
+			String logo = xmlValue2Hash(hash, teamRoot, "Logo", "LogoURL");
 
             // formation XP
 			xp253 = xmlIntValue2Hash(hash, teamRoot, "Experience253", 0);

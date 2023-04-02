@@ -61,8 +61,11 @@ public class XMLManager {
     }
 
     public static String xmlValue(Element element, String xmlKey) {
-        var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
-        return XMLManager.getFirstChildNodeValue(ele);
+        if (element != null) {
+            var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
+            return XMLManager.getFirstChildNodeValue(ele);
+        }
+        return "";
     }
 
     public static Integer xmlIntegerValue(Element ele, String xmlKey) {
