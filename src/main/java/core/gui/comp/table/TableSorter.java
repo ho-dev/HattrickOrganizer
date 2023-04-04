@@ -11,6 +11,7 @@ import module.lineup.LineupTableModel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,8 @@ import javax.swing.table.TableModel;
  */
 public class TableSorter extends TableMap {
 
-	private static final long serialVersionUID = 1132334126127788944L;
+	@Serial
+    private static final long serialVersionUID = 1132334126127788944L;
 	private final List<Integer> sortingColumns;
     private int[] indexes;
     private boolean ascending;
@@ -188,10 +190,13 @@ public class TableSorter extends TableMap {
 
     @Override
 	public final Object getValueAt(int i, int j) {
-        if ( getRowCount() == 0 ){
+        if (indexes.length <= i || i < 0) {
             return null;
         }
-        if (i < 0 || j < 0 ) {
+        if (getRowCount() <= indexes[i] || getColumnCount() <= j) {
+            return null;
+        }
+        if (j < 0) {
             return null;
         }
 
@@ -308,9 +313,8 @@ public class TableSorter extends TableMap {
     public final void initsort() {
         // Sort, including when m_iInitSortColumnIndex is first column
         if (m_iInitSortColumnIndex >= 0) {
-            final int j = m_iInitSortColumnIndex;
             final boolean flag = ascending;
-            sortByColumn(j, flag);
+            sortByColumn(m_iInitSortColumnIndex, flag);
         }
     }
 

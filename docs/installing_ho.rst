@@ -283,4 +283,4 @@ Add another team to HO
 *********************************
 
 It is possible to have multiple teams managed by HO! (c.f.
-:ref:``second_team``)
+:ref:`second_team`)
