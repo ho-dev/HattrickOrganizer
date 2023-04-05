@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import static core.net.OnlineWorker.downloadLastLineup;
+import static core.net.OnlineWorker.downloadNextMatchOrder;
 
 class NthrfConvertXml2Hrf {
 
@@ -57,6 +58,9 @@ class NthrfConvertXml2Hrf {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
 			MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, (int) teamId);
 
+			// TODO nt orders download gives no match data available
+			var nextLineupDataMap = downloadNextMatchOrder(matches, (int)teamId);
+
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
 			List<MyHashtable> playersData = NtPlayersParser.parsePlayersFromString(xml);
@@ -69,6 +73,7 @@ class NthrfConvertXml2Hrf {
 			var empty = new MyHashtable();
 			hrfStringBuilder.createPlayers(matchLineupTeam, playersData);
 			hrfStringBuilder.createLastLineUp(matchLineupTeam, detailsMap);
+			hrfStringBuilder.createLineUp("", (int)teamId, nextLineupDataMap);
 			hrfStringBuilder.createTeam(detailsMap);
 			hrfStringBuilder.createClub(empty, detailsMap, detailsMap);
 			hrfStringBuilder.createArena(detailsMap);

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static core.net.OnlineWorker.downloadLastLineup;
+import static core.net.OnlineWorker.downloadNextMatchOrder;
 
 /**
  * Convert the necessary xml data into a HRF file.
@@ -162,20 +163,7 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 
-		// Automatisch alle MatchLineups runterladen
-		Map<String, String> nextLineupDataMap = null;
-		MatchKurzInfo upcomingMatch = null;
-		for (var match : matches) {
-			if ((match.getMatchStatus() == MatchKurzInfo.UPCOMING)){
-				upcomingMatch = match;
-				// Match is always from the normal system, and league will do
-				// the trick as the type.
-				nextLineupDataMap = XMLMatchOrderParser
-						.parseMatchOrderFromString(mc.getMatchOrder(
-								match.getMatchID(), match.getMatchType(), teamId));
-				break;
-			}
-		}
+		Map<String, String> nextLineupDataMap = downloadNextMatchOrder(matches, teamId);
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
 		MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, teamId);
 
@@ -200,14 +188,8 @@ public class ConvertXml2Hrf {
 
 		// lineup
 		var trainerId = String.valueOf(teamdetailsDataMap.get("TrainerID"));
-		int matchId = -1;
-		int matchType = 0;
-		if ( upcomingMatch != null){
-			matchId = upcomingMatch.getMatchID();
-			matchType = upcomingMatch.getMatchType().getId();
-		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement);
-		hrfSgtringBuilder.createLineUp(trainerId, teamId, matchType, matchId, nextLineupDataMap);
+		hrfSgtringBuilder.createLineUp(trainerId, teamId, nextLineupDataMap);
 
 		// economy
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement);
@@ -241,6 +223,7 @@ public class ConvertXml2Hrf {
 
 		return hrfSgtringBuilder.createHRF().toString();
 	}
+
 
 	// //////////////////////////////////////////////////////////////////////////////
 	// Helper

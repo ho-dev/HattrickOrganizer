@@ -9,6 +9,7 @@ import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
 import core.file.xml.MyHashtable;
+import core.model.enums.MatchType;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchTacticType;
 import core.model.match.MatchTeamAttitude;
@@ -307,16 +308,14 @@ public class HRFStringBuilder {
      *            The playerId of the trainer of the club.
      * @param teamId
      * 			team id (-1 for lineup templates)
-     * @param matchtype
-     * 			match type (None for lineup templates)
-     * @param matchId
-     * 			match id (negative value for lineup templates)
      * @param nextLineup
      * 			map containing the lineup
      */
-    public void createLineUp(String trainerId, int teamId, int matchtype, int matchId, Map<String, String> nextLineup) {
+    public void createLineUp(String trainerId, int teamId, Map<String, String> nextLineup) {
         lineupStringBuilder = new StringBuilder("[lineup]\n");
         if (nextLineup != null) {
+            var matchId = NumberUtils.toInt(nextLineup.get("MatchId"),0);
+            var matchtype = NumberUtils.toInt(nextLineup.get("MatchType"), MatchType.NONE.getMatchTypeId());
 
             try {
                 appendKeyValue(lineupStringBuilder,"teamid",teamId);
@@ -543,7 +542,9 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutName");
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutingRegionID");
 
-            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++);
+            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {
+                ;
+            }
 
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchID");
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchDate");

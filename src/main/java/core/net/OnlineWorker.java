@@ -886,7 +886,7 @@ public class OnlineWorker {
 					//It is possible that NTs struggle here.
 				}
 				var hrfStringBuilder = new HRFStringBuilder();
-				hrfStringBuilder.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
+				hrfStringBuilder.createLineUp(trainerID, teamId, map);
 				return new MatchLineupTeam(getProperties(hrfStringBuilder.createHRF().toString()));
 			}
 		} catch (Exception e) {
@@ -1250,4 +1250,19 @@ public class OnlineWorker {
 
 		return matchLineupTeam;
 	}
+
+	public static Map<String, String> downloadNextMatchOrder(List<MatchKurzInfo> matches, int teamId) {
+		try {
+			// next upcoming match
+			var match = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo).get();
+			// Match is always from the normal system, and league will do
+			// the trick as the type.
+			return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().getMatchOrder(
+							match.getMatchID(), match.getMatchType(), teamId));
+		}
+		catch (Exception ignore) {
+		}
+		return new MyHashtable();
+	}
+
 }

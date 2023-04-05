@@ -6,19 +6,14 @@
  */
 package core.file.xml;
 
-
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
-
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 
 /**
  * Parser for the matchorders.
@@ -27,24 +22,10 @@ import org.w3c.dom.NodeList;
  */
 public class XMLMatchOrderParser {
 
-	/** List of positions used in property files */
-	private final static String[] PLAYERPOSITIONS = { "Keeper", "RightBack", "RightCentralDefender",
-			"MiddleCentralDefender", "LeftCentralDefender", "LeftBack", "RightWinger", "RightInnerMidfield",
-			"CentralInnerMidfield", "LeftInnerMidfield", "LeftWinger", "RightForward", "CentralForward",
-			"LeftForward", "SubstKeeper", "SubstBack", "SubstInsideMid", "SubstWinger", "SubstForward",
-			"Kicker", "Captain" };
-
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
 	private XMLMatchOrderParser() {
-	}
-
-	/**
-	 * Parse match orders from a file.
-	 */
-	public static Map<String, String> parseMatchOrder(File datei) {
-		return parseDetails(XMLManager.parseFile(datei));
 	}
 
 	public static Map<String, String> parseMatchOrderFromString(String xmlData) {
@@ -54,7 +35,7 @@ public class XMLMatchOrderParser {
 	/**
 	 * Create a player from the given XML.
 	 */
-	private static void addPlayer(Element ele, Map<String, String> map) throws Exception {
+	private static void addPlayer(Element ele, Map<String, String> map) {
 		Element tmp;
 		int roleID = -1;
 		String behavior = "-1";
@@ -88,206 +69,176 @@ public class XMLMatchOrderParser {
 		}
 
 		switch (roleID) {
-
-		case IMatchRoleID.keeper:
-			map.put("KeeperID", spielerID);
-			map.put("KeeperName", name);
-			map.put("KeeperOrder", "0");
-			break;
-
-		case IMatchRoleID.rightBack:
-			map.put("RightBackID", spielerID);
-			map.put("RightBackName", name);
-			map.put("RightBackOrder", behavior);
-			break;
-
-		case IMatchRoleID.rightCentralDefender:
-			if (!map.containsKey("RightCentralDefenderID")) {
-				map.put("RightCentralDefenderID", spielerID);
-				map.put("RightCentralDefenderName", name);
-				map.put("RightCentralDefenderOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.keeper -> {
+				map.put("KeeperID", spielerID);
+				map.put("KeeperName", name);
+				map.put("KeeperOrder", "0");
 			}
-			break;
-
-		case IMatchRoleID.middleCentralDefender:
-			if (!map.containsKey("MiddleCentralDefenderID")) {
-				map.put("MiddleCentralDefenderID", spielerID);
-				map.put("MiddleCentralDefenderName", name);
-				map.put("MiddleCentralDefenderOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.rightBack -> {
+				map.put("RightBackID", spielerID);
+				map.put("RightBackName", name);
+				map.put("RightBackOrder", behavior);
 			}
-			break;
-
-		case IMatchRoleID.leftCentralDefender:
-			map.put("LeftCentralDefenderID", spielerID);
-			map.put("LeftCentralDefenderName", name);
-			map.put("LeftCentralDefenderOrder", behavior);
-			break;
-
-		case IMatchRoleID.leftBack:
-			map.put("LeftBackID", spielerID);
-			map.put("LeftBackName", name);
-			map.put("LeftBackOrder", behavior);
-			break;
-
-		case IMatchRoleID.leftWinger:
-			if (!map.containsKey("LeftWingerID")) {
-				map.put("LeftWingerID", spielerID);
-				map.put("LeftWingerName", name);
-				map.put("LeftWingerOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.rightCentralDefender -> {
+				if (!map.containsKey("RightCentralDefenderID")) {
+					map.put("RightCentralDefenderID", spielerID);
+					map.put("RightCentralDefenderName", name);
+					map.put("RightCentralDefenderOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
 			}
-			break;
-
-		case IMatchRoleID.leftInnerMidfield:
-			if (!map.containsKey("LeftInnerMidfieldID")) {
-				map.put("LeftInnerMidfieldID", spielerID);
-				map.put("LeftInnerMidfieldName", name);
-				map.put("LeftInnerMidfieldOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.middleCentralDefender -> {
+				if (!map.containsKey("MiddleCentralDefenderID")) {
+					map.put("MiddleCentralDefenderID", spielerID);
+					map.put("MiddleCentralDefenderName", name);
+					map.put("MiddleCentralDefenderOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
 			}
-			break;
-
-		case IMatchRoleID.centralInnerMidfield:
-			if (!map.containsKey("CentralInnerMidfieldID")) {
-				map.put("CentralInnerMidfieldID", spielerID);
-				map.put("CentralInnerMidfieldName", name);
-				map.put("CentralInnerMidfieldOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.leftCentralDefender -> {
+				map.put("LeftCentralDefenderID", spielerID);
+				map.put("LeftCentralDefenderName", name);
+				map.put("LeftCentralDefenderOrder", behavior);
 			}
-			break;
-
-		case IMatchRoleID.rightInnerMidfield:
-			map.put("RightInnerMidfieldID", spielerID);
-			map.put("RightInnerMidfieldName", name);
-			map.put("RightInnerMidfieldOrder", behavior);
-			break;
-
-		case IMatchRoleID.rightWinger:
-			if (!map.containsKey("RightWingerID")) {
-				map.put("RightWingerID", spielerID);
-				map.put("RightWingerName", name);
-				map.put("RightWingerOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.leftBack -> {
+				map.put("LeftBackID", spielerID);
+				map.put("LeftBackName", name);
+				map.put("LeftBackOrder", behavior);
 			}
-			break;
-
-		case IMatchRoleID.rightForward:
-			if (!map.containsKey("RightForward")) {
-				map.put("RightForwardID", spielerID);
-				map.put("RightForwardName", name);
-				map.put("RightForwardOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.leftWinger -> {
+				if (!map.containsKey("LeftWingerID")) {
+					map.put("LeftWingerID", spielerID);
+					map.put("LeftWingerName", name);
+					map.put("LeftWingerOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
 			}
-			break;
-
-		case IMatchRoleID.centralForward:
-			if (!map.containsKey("CentralForward")) {
-				map.put("CentralForwardID", spielerID);
-				map.put("CentralForwardName", name);
-				map.put("CentralForwardOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.leftInnerMidfield -> {
+				if (!map.containsKey("LeftInnerMidfieldID")) {
+					map.put("LeftInnerMidfieldID", spielerID);
+					map.put("LeftInnerMidfieldName", name);
+					map.put("LeftInnerMidfieldOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
 			}
-			break;
-
-		case IMatchRoleID.leftForward:
-			if (!map.containsKey("LeftForward")) {
-				map.put("LeftForwardID", spielerID);
-				map.put("LeftForwardName", name);
-				map.put("LeftForwardOrder", behavior);
-			} else {
-				addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+			case IMatchRoleID.centralInnerMidfield -> {
+				if (!map.containsKey("CentralInnerMidfieldID")) {
+					map.put("CentralInnerMidfieldID", spielerID);
+					map.put("CentralInnerMidfieldName", name);
+					map.put("CentralInnerMidfieldOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
 			}
-			break;
-
-		case IMatchRoleID.substGK1:
-			map.put("substGK1ID", spielerID);
-			map.put("substGK1Name", name);
-			break;
-
-		case IMatchRoleID.substGK2:
-			map.put("substGK2ID", spielerID);
-			map.put("substGK2Name", name);
-			break;
-
-		case IMatchRoleID.substCD1:
-			map.put("substCD1ID", spielerID);
-			map.put("substCD1Name", name);
-			break;
-
-		case IMatchRoleID.substCD2:
-			map.put("substCD2ID", spielerID);
-			map.put("substCD2Name", name);
-			break;
-
-		case IMatchRoleID.substWB1:
-			map.put("substWB1ID", spielerID);
-			map.put("substWB1Name", name);
-			break;
-
-		case IMatchRoleID.substWB2:
-			map.put("substWB2ID", spielerID);
-			map.put("substWB2Name", name);
-			break;
-
-		case IMatchRoleID.substIM1:
-			map.put("substIM1ID", spielerID);
-			map.put("substIM1Name", name);
-			break;
-
-		case IMatchRoleID.substIM2:
-			map.put("substIM2ID", spielerID);
-			map.put("substIM2Name", name);
-			break;
-
-		case IMatchRoleID.substWI1:
-			map.put("substWI1ID", spielerID);
-			map.put("substWI1Name", name);
-			break;
-
-		case IMatchRoleID.substWI2:
-			map.put("substWI2ID", spielerID);
-			map.put("substWI2Name", name);
-			break;
-
-		case IMatchRoleID.substFW1:
-			map.put("substFW1ID", spielerID);
-			map.put("substFW1Name", name);
-			break;
-
-		case IMatchRoleID.substFW2:
-			map.put("substFW2ID", spielerID);
-			map.put("substFW2Name", name);
-			break;
-
-		case IMatchRoleID.substXT1:
-			map.put("substXT1ID", spielerID);
-			map.put("substXT1Name", name);
-			break;
-
-		case IMatchRoleID.substXT2:
-			map.put("substXT2ID", spielerID);
-			map.put("substXT2Name", name);
-			break;
-
-		case IMatchRoleID.setPieces:
-			map.put("KickerID", spielerID);
-			map.put("KickerName", name);
-			break;
-
-		case IMatchRoleID.captain:
-			map.put("CaptainID", spielerID);
-			map.put("CaptainName", name);
-			break;
+			case IMatchRoleID.rightInnerMidfield -> {
+				map.put("RightInnerMidfieldID", spielerID);
+				map.put("RightInnerMidfieldName", name);
+				map.put("RightInnerMidfieldOrder", behavior);
+			}
+			case IMatchRoleID.rightWinger -> {
+				if (!map.containsKey("RightWingerID")) {
+					map.put("RightWingerID", spielerID);
+					map.put("RightWingerName", name);
+					map.put("RightWingerOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
+			}
+			case IMatchRoleID.rightForward -> {
+				if (!map.containsKey("RightForward")) {
+					map.put("RightForwardID", spielerID);
+					map.put("RightForwardName", name);
+					map.put("RightForwardOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
+			}
+			case IMatchRoleID.centralForward -> {
+				if (!map.containsKey("CentralForward")) {
+					map.put("CentralForwardID", spielerID);
+					map.put("CentralForwardName", name);
+					map.put("CentralForwardOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
+			}
+			case IMatchRoleID.leftForward -> {
+				if (!map.containsKey("LeftForward")) {
+					map.put("LeftForwardID", spielerID);
+					map.put("LeftForwardName", name);
+					map.put("LeftForwardOrder", behavior);
+				} else {
+					addAdditionalPlayer(map, roleID, spielerID, name, behavior);
+				}
+			}
+			case IMatchRoleID.substGK1 -> {
+				map.put("substGK1ID", spielerID);
+				map.put("substGK1Name", name);
+			}
+			case IMatchRoleID.substGK2 -> {
+				map.put("substGK2ID", spielerID);
+				map.put("substGK2Name", name);
+			}
+			case IMatchRoleID.substCD1 -> {
+				map.put("substCD1ID", spielerID);
+				map.put("substCD1Name", name);
+			}
+			case IMatchRoleID.substCD2 -> {
+				map.put("substCD2ID", spielerID);
+				map.put("substCD2Name", name);
+			}
+			case IMatchRoleID.substWB1 -> {
+				map.put("substWB1ID", spielerID);
+				map.put("substWB1Name", name);
+			}
+			case IMatchRoleID.substWB2 -> {
+				map.put("substWB2ID", spielerID);
+				map.put("substWB2Name", name);
+			}
+			case IMatchRoleID.substIM1 -> {
+				map.put("substIM1ID", spielerID);
+				map.put("substIM1Name", name);
+			}
+			case IMatchRoleID.substIM2 -> {
+				map.put("substIM2ID", spielerID);
+				map.put("substIM2Name", name);
+			}
+			case IMatchRoleID.substWI1 -> {
+				map.put("substWI1ID", spielerID);
+				map.put("substWI1Name", name);
+			}
+			case IMatchRoleID.substWI2 -> {
+				map.put("substWI2ID", spielerID);
+				map.put("substWI2Name", name);
+			}
+			case IMatchRoleID.substFW1 -> {
+				map.put("substFW1ID", spielerID);
+				map.put("substFW1Name", name);
+			}
+			case IMatchRoleID.substFW2 -> {
+				map.put("substFW2ID", spielerID);
+				map.put("substFW2Name", name);
+			}
+			case IMatchRoleID.substXT1 -> {
+				map.put("substXT1ID", spielerID);
+				map.put("substXT1Name", name);
+			}
+			case IMatchRoleID.substXT2 -> {
+				map.put("substXT2ID", spielerID);
+				map.put("substXT2Name", name);
+			}
+			case IMatchRoleID.setPieces -> {
+				map.put("KickerID", spielerID);
+				map.put("KickerName", name);
+			}
+			case IMatchRoleID.captain -> {
+				map.put("CaptainID", spielerID);
+				map.put("CaptainName", name);
+			}
 		}
 		
 		// Penalty positions
@@ -330,13 +281,12 @@ public class XMLMatchOrderParser {
 			map.put(key + "Role", String.valueOf(roleID));
 			map.put(key + "Name", name);
 			map.put(key + "Behaviour", behavior);
-			return;
 		}
 		// max. 4 additional/repositioned players in the new lineup?
 	}
 
-	private static void addPlayerOrder(Element ele, Map<String, String> map, int num) throws Exception {
-		Element tmp = null;
+	private static void addPlayerOrder(Element ele, Map<String, String> map, int num) {
+		Element tmp;
 		String playerOrderID = "" + num;
 		String playerIn = "-1";
 		String playerOut = "-1";
@@ -454,6 +404,8 @@ public class XMLMatchOrderParser {
 			hash.put("AwayTeamName", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
 			hash.put("MatchDate", (XMLManager.getFirstChildNodeValue(ele)));
+			ele = (Element) root.getElementsByTagName("MatchType").item(0);
+			hash.put("MatchType", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("ArenaID").item(0);
 			hash.put("ArenaID", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("ArenaName").item(0);
@@ -469,21 +421,21 @@ public class XMLMatchOrderParser {
 			// Treatment of Players in starting Lineup
 			Element Positions = (Element) doc.getElementsByTagName("Positions").item(0);
 			list = Positions.getElementsByTagName("Player");
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				addPlayer((Element) list.item(i), hash);
 			}
 
 			// Treatment of Players on the bench
 			Element Bench = (Element) doc.getElementsByTagName("Bench").item(0);
 			list = Bench.getElementsByTagName("Player");
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				addPlayer((Element) list.item(i), hash);
 			}
 
 			// Treatment of Penalty Takers
 			Element Kickers = (Element) doc.getElementsByTagName("Kickers").item(0);
 			list = Kickers.getElementsByTagName("Player");
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				addPlayer((Element) list.item(i), hash);
 			}
 
@@ -502,7 +454,7 @@ public class XMLMatchOrderParser {
 			Element child = (Element) root.getElementsByTagName("PlayerOrders").item(0);
 
 			list = child.getElementsByTagName("PlayerOrder");
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				addPlayerOrder((Element) list.item(i), hash, i);
 			}
 
