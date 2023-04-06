@@ -1,11 +1,14 @@
 package core.net;
 
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
+import core.file.hrf.HRFStringBuilder;
 import core.file.hrf.HRFStringParser;
 import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
+import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
@@ -22,6 +25,7 @@ import core.util.StringUtils;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.Spielplan;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -306,8 +310,7 @@ public class OnlineWorker {
 							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
 							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
 									&& info.getArenaId() != getArenaId(otherTeam));
-							DBManager.instance().storeTeamLogoInfo(otherId, getLogoURL(otherTeam), null);
-
+							downloadTeamLogo(otherTeam);
 						} else {
 							// Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
@@ -405,16 +408,6 @@ public class OnlineWorker {
 		return 0;
 	}
 
-	public static String getLogoURL(Map<String, String> team)
-	{
-		String str = team.get("LogoURL");
-		if ( (str == null) || (str.equals(""))) {
-			return null;
-		}
-		else {
-			return str;
-		}
-	}
 
 	/**
 	 * Loads the data for the given match from HT and updates the data for this
@@ -564,56 +557,42 @@ public class OnlineWorker {
 		ArrayList<MatchKurzInfo> ret = new ArrayList<>();
 		for (MatchKurzInfo m: matches) {
 			switch (m.getMatchType()) {
-				case INTSPIEL:
-				case NATIONALCOMPNORMAL:
-				case NATIONALCOMPCUPRULES:
-				case NATIONALFRIENDLY:
-				case PREPARATION:
-				case LEAGUE:
-				case QUALIFICATION:
-				case CUP:
-				case FRIENDLYNORMAL:
-				case FRIENDLYCUPRULES:
-				case INTFRIENDLYNORMAL:
-				case INTFRIENDLYCUPRULES:
-				case MASTERS:
+				case INTSPIEL, NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY, PREPARATION, LEAGUE, QUALIFICATION, CUP, FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES, MASTERS -> {
 					if (UserParameter.instance().downloadCurrentMatchlist) {
 						ret.add(m);
 					}
-					break;
-				case TOURNAMENTGROUP:
+				}
+				case TOURNAMENTGROUP -> {
 					// this is TOURNAMENTGROUP but more specifically a division battle
-					if (m.getMatchTypeExtended() == MatchTypeExtended.DIVISIONBATTLE){
+					if (m.getMatchTypeExtended() == MatchTypeExtended.DIVISIONBATTLE) {
 						if (UserParameter.instance().downloadDivisionBattleMatches) {
 							// we add the game only if user selected division battle category
 							ret.add(m);
 						}
-					}
-					else{
+					} else {
 						// this is TOURNAMENTGROUP but not a division battle
 						if (UserParameter.instance().downloadTournamentGroupMatches) {
 							ret.add(m);
 						}
 					}
-					break;
-				case TOURNAMENTPLAYOFF:
+				}
+				case TOURNAMENTPLAYOFF -> {
 					if (UserParameter.instance().downloadTournamentPlayoffMatches) {
 						ret.add(m);
 					}
-					break;
-				case SINGLE:
+				}
+				case SINGLE -> {
 					if (UserParameter.instance().downloadSingleMatches) {
 						ret.add(m);
 					}
-					break;
-				case LADDER:
+				}
+				case LADDER -> {
 					if (UserParameter.instance().downloadLadderMatches) {
 						ret.add(m);
 					}
-					break;
-				default:
-					HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
-					break;
+				}
+				default ->
+						HOLogger.instance().warning(OnlineWorker.class, "Unknown Matchtyp:" + m.getMatchType() + ". Is not downloaded!");
 			}
 		}
 		return ret;
@@ -895,22 +874,20 @@ public class OnlineWorker {
 		try {
 			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, teamId);
-			
+
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
 				String trainerID = "-1";
-				try
-				{
+				try {
 					trainerID = String.valueOf(HOVerwaltung.instance().getModel().getTrainer()
-						.getPlayerID());
-					
-				}
-				catch (Exception e)
-				{	
+							.getPlayerID());
+
+				} catch (Exception e) {
 					//It is possible that NTs struggle here.
 				}
-				String lineupData = ConvertXml2Hrf.createLineUp(trainerID, teamId, matchType.getId(), matchId, map);
-				return new MatchLineupTeam(getProperties(lineupData));
+				var hrfStringBuilder = new HRFStringBuilder();
+				hrfStringBuilder.createLineUp(trainerID, teamId, map);
+				return new MatchLineupTeam(getProperties(hrfStringBuilder.createHRF().toString()));
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";
@@ -1206,14 +1183,86 @@ public class OnlineWorker {
 
 	private static NtTeamDetails downloadNtTeam(int teamId) {
 		var xml = MyConnector.instance().downloadNtTeamDetails(teamId);
-		NtTeamDetails details = new NtTeamDetails(xml);
+		NtTeamDetails details = new NtTeamDetails();
+		details.parseDetails(xml);
 		details.setHrfId(DBManager.instance().getLatestHRF().getHrfId());
 		DBManager.instance().storeNtTeamDetails(details);
 		return details;
 	}
 
-	public static Player downloadPlayerDetails(int playerID) {
+	public static Player downloadPlayerDetails(String playerID) {
 		var xml = MyConnector.instance().downloadPlayerDetails(playerID);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
+
+	public static void downloadTeamLogo(Map<String, String> team) {
+		String url = team.get("LogoURL");
+		if (StringUtils.isEmpty(url)) return;
+		var teamIdString = team.get("TeamID");
+		var teamId = NumberUtils.toInt(teamIdString);
+
+		DBManager.instance().storeTeamLogoInfo(teamId, url, null);
+		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
+		if (logoFilename != null &&
+				teamId == HOVerwaltung.instance().getModel().getBasics().getTeamId() &&
+				!logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
+			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
+			UserManager.instance().save();
+		}
+	}
+
+	public static MatchLineupTeam downloadLastLineup(List<MatchKurzInfo> matches, int teamId){
+		MatchLineupTeam matchLineupTeam = null;
+		MatchLineup matchLineup = null;
+		var finishedMatchesAvailable = matches.stream().anyMatch(f->f.getMatchStatus()==MatchKurzInfo.FINISHED);
+		if ( finishedMatchesAvailable) {
+			var matchLineupString = MyConnector.instance().downloadMatchLineup(-1, teamId, MatchType.LEAGUE);
+			if (!matchLineupString.isEmpty()) {
+				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
+			}
+		}
+
+		int lastAttitude = 0;
+		int lastTactic = 0;
+		// Identify team, important for player ratings
+		if (matchLineup != null) {
+			Matchdetails md = XMLMatchdetailsParser
+					.parseMatchdetailsFromString(
+							MyConnector.instance().downloadMatchdetails(matchLineup.getMatchID(),
+									matchLineup.getMatchTyp()), null);
+
+			if (matchLineup.getHomeTeamId() == teamId) {
+				matchLineupTeam = matchLineup.getHomeTeam();
+				if (md != null) {
+					lastAttitude = md.getHomeEinstellung();
+					lastTactic = md.getHomeTacticType();
+				}
+			} else {
+				matchLineupTeam = matchLineup.getGuestTeam();
+				if (md != null) {
+					lastAttitude = md.getGuestEinstellung();
+					lastTactic = md.getGuestTacticType();
+				}
+			}
+			matchLineupTeam.setMatchTeamAttitude(MatchTeamAttitude.fromInt(lastAttitude));
+			matchLineupTeam.setMatchTacticType(MatchTacticType.fromInt(lastTactic));
+		}
+
+		return matchLineupTeam;
+	}
+
+	public static Map<String, String> downloadNextMatchOrder(List<MatchKurzInfo> matches, int teamId) {
+		try {
+			// next upcoming match
+			var match = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo).get();
+			// Match is always from the normal system, and league will do
+			// the trick as the type.
+			return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().getMatchOrder(
+							match.getMatchID(), match.getMatchType(), teamId));
+		}
+		catch (Exception ignore) {
+		}
+		return new MyHashtable();
+	}
+
 }
