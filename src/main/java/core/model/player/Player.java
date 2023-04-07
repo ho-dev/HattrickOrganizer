@@ -14,6 +14,7 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionManager;
 import core.training.*;
 import core.util.*;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -436,8 +437,8 @@ public class Player extends AbstractTable.Storable {
 
         m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
-        m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsU20", "0"));
-        nationalTeamId = Integer.parseInt(properties.getProperty("nationalTeamID", "0"));
+        m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsu20", "0"));
+        nationalTeamId = Integer.parseInt(properties.getProperty("nationalteamid", "0"));
 
         // #461-lastmatch
         m_lastMatchDate = properties.getProperty("lastmatch_date");
@@ -454,7 +455,7 @@ public class Player extends AbstractTable.Storable {
                 Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
         ));
 
-        playerCategory = PlayerCategory.valueOf(Integer.parseInt(properties.getProperty("playercategoryid", "0")));
+        playerCategory = PlayerCategory.valueOf(NumberUtils.toInt(properties.getProperty("playercategoryid"),0));
         playerStatement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
 
@@ -487,7 +488,7 @@ public class Player extends AbstractTable.Storable {
             try {
                 connection.setSilentDownload(true);
                 // try to download missing motherclub info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(this.getPlayerID());
+                var playerDetails = OnlineWorker.downloadPlayerDetails(""+this.getPlayerID());
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
@@ -915,31 +916,34 @@ public class Player extends AbstractTable.Storable {
         return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal, weather, useWeatherImpact);
     }
 
-
-
     /**
      * Calculate Player Ideal Position (weather impact not relevant here)
      */
+    public byte calculateIdealPosition(){
+        final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
+        float maxStk = -1.0f;
+        byte currPosition;
+        float contrib;
+
+        for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
+            if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
+            currPosition = allPos[i].getPosition();
+            contrib = calcPosValue(currPosition, true, true, null, false);
+            if (contrib > maxStk) {
+                maxStk = contrib;
+                idealPos = currPosition;
+            }
+        }
+        return idealPos ;
+    }
+
     public byte getIdealPosition() {
         //in case player best position is forced by user
         final int flag = getUserPosFlag();
 
         if (flag == IMatchRoleID.UNKNOWN) {
             if (idealPos == IMatchRoleID.UNKNOWN) {
-                final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-                float maxStk = -1.0f;
-                byte currPosition;
-                float contrib;
-
-                for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
-                    if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-                    currPosition = allPos[i].getPosition();
-                    contrib = calcPosValue(currPosition, true, true, null, false);
-                    if (contrib > maxStk) {
-                        maxStk = contrib;
-                        idealPos = currPosition;
-                    }
-                }
+                idealPos = calculateIdealPosition();
             }
             return idealPos;
         }
@@ -1868,7 +1872,6 @@ public class Player extends AbstractTable.Storable {
         getNotes().setNote(text);
         DBManager.instance().storePlayerNotes(notes);
     }
-
 
     /**
      * get Skillvalue 4 skill

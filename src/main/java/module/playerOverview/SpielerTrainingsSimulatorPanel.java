@@ -11,6 +11,7 @@ import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -317,9 +318,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
-        m_jpBestPos.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition())
+        tempPlayer.calculateIdealPosition();
+        var idealPosition = tempPlayer.getIdealPosition();
+        m_jpBestPos.setText(MatchRoleID.getNameForPosition(idealPosition)
                 + " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true, null, false)) + ")");
+                .format(tempPlayer.calcPosValue(idealPosition, true, null, false)) + ")");
 
         for (int i = 0; i < playerPositionValues.length; i++) {
             showWithCompare(playerPositionValues[i], playerPosition[i]);
@@ -333,9 +336,14 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
 
-        labelEntry.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(tempPlayer.calcPosValue(playerPosition, true, null, false)));
+        var playerAbsoluteValue = m_clPlayer.calcPosValue(playerPosition, true, false, null, false);
+        var tmpAbsoluteValue = tempPlayer.calcPosValue(playerPosition, true, false, null, false);
+        var tmpRelativeValue = tempPlayer.calcPosValue(playerPosition, true, true, null, false);
+        var nbDecimals = core.model.UserParameter.instance().nbDecimals;
+        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpRelativeValue) + "%  " +
+                Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
 
+        labelEntry.getLeft().setText(leftLabelText);
 
         byte[] alternativePosition = tempPlayer.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
@@ -347,8 +355,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             }
         }
 
-        labelEntry.getRight().setSpecialNumber(tempPlayer.calcPosValue(playerPosition, true, null, false)
-                - m_clPlayer.calcPosValue(playerPosition, true, null, false), false);
+        labelEntry.getRight().setSpecialNumber(tmpAbsoluteValue-playerAbsoluteValue, false);
     }
 
     private int getAge() {

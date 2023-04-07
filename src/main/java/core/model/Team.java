@@ -3,6 +3,8 @@ package core.model;
 
 import core.db.AbstractTable;
 import core.util.HOLogger;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.sql.ResultSet;
 import java.util.Properties;
 
@@ -70,21 +72,21 @@ public final class Team  extends AbstractTable.Storable {
 	// Konstruktor
 	// //////////////////////////////////////////////////////////////////////////////
 	public Team(Properties properties) throws Exception {
-		m_iTrainingslevel = Integer.parseInt(properties.getProperty("trlevel", "0"));
-		m_iStaminaTrainingPart = Integer.parseInt(properties.getProperty("staminatrainingpart", "0"));
-		m_iStimmungInt = Integer.parseInt(properties.getProperty("stamningvalue", "0"));
-		m_iSelbstvertrauen = Integer.parseInt(properties.getProperty("sjalvfortroendevalue", "0"));
-		formationXp433 = Integer.parseInt(properties.getProperty("exper433", "0"));
-		formationXp451 = Integer.parseInt(properties.getProperty("exper451", "0"));
-		formationXp352 = Integer.parseInt(properties.getProperty("exper352", "0"));
-		formationXp532 = Integer.parseInt(properties.getProperty("exper532", "0"));
-		formationXp343 = Integer.parseInt(properties.getProperty("exper343", "0"));
-		formationXp541 = Integer.parseInt(properties.getProperty("exper541", "0"));
-		formationXp442 = Integer.parseInt(properties.getProperty("exper442", "0"));
-		formationXp523 = Integer.parseInt(properties.getProperty("exper523", "0"));
-		formationXp550 = Integer.parseInt(properties.getProperty("exper550", "0"));
-		formationXp253 = Integer.parseInt(properties.getProperty("exper253", "0"));
-		m_iTrainingsArt = Integer.parseInt(properties.getProperty("trtypevalue", "-1"));
+		m_iStaminaTrainingPart = NumberUtils.toInt(properties.getProperty("staminatrainingpart"), 0);
+		m_iStimmungInt = NumberUtils.toInt(properties.getProperty("stamningvalue"),0);
+		m_iTrainingslevel = NumberUtils.toInt(properties.getProperty("trlevel"),0);
+		m_iSelbstvertrauen = NumberUtils.toInt(properties.getProperty("sjalvfortroendevalue"),0);
+		formationXp433 = NumberUtils.toInt(properties.getProperty("exper433"),0);
+		formationXp451 = NumberUtils.toInt(properties.getProperty("exper451"),0);
+		formationXp352 = NumberUtils.toInt(properties.getProperty("exper352"),0);
+		formationXp532 = NumberUtils.toInt(properties.getProperty("exper532"),0);
+		formationXp343 = NumberUtils.toInt(properties.getProperty("exper343"),0);
+		formationXp541 = NumberUtils.toInt(properties.getProperty("exper541"),0);
+		formationXp442 = NumberUtils.toInt(properties.getProperty("exper442"),0);
+		formationXp523 = NumberUtils.toInt(properties.getProperty("exper523"),0);
+		formationXp550 = NumberUtils.toInt(properties.getProperty("exper550"),0);
+		formationXp253 = NumberUtils.toInt(properties.getProperty("exper253"),0);
+		m_iTrainingsArt = NumberUtils.toInt(properties.getProperty("trtypevalue"),-1);
 		subStimmung = 2;
 	}
 

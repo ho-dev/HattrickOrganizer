@@ -139,7 +139,7 @@ public class RatingPredictionManager {
 		double tNextEvent, tMatchOrder;
 		Lineup currentLineup;
 
-		// define time of next0 event
+		// define time of next event
 		if (events.size() > 0) {
 			tNextEvent = events.get(0);
 		}
@@ -1179,4 +1179,9 @@ public class RatingPredictionManager {
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
+
+	public float getTacticLevelCreative() {
+		// TODO find formula
+		return 0;
+	}
 }

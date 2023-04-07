@@ -45,7 +45,7 @@ public class MyConnector {
 	public final static String VERSION_ECONOMY = "1.3";
 	private final static String VERSION_TRAINING = "2.1";
 	private final static String VERSION_MATCHORDERS = "3.0";
-	private final static String VERSION_MATCHORDERS_NT = "2.1";
+//	private final static String VERSION_MATCHORDERS_NT = "2.1";
 	private final static String VERSION_MATCHLINEUP = "2.0";
 	private final static String VERSION_MATCHDETAILS = "3.0";
 	private final static String VERSION_TEAM_DETAILS = "3.5";
@@ -111,10 +111,6 @@ public class MyConnector {
 	 */
 	public static void setDebugSave(boolean debugSave) {
 		DEBUGSAVE = debugSave;
-	}
-
-	public static String getResourceSite() {
-		return getPluginSite();
 	}
 
 	public static String getHOSite() {
@@ -323,12 +319,9 @@ public class MyConnector {
 	 * @return The api content (xml)
 	 */
 	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
-		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
-		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
-			url += "&version=" + VERSION_MATCHORDERS_NT;
-		}
-		else {
-			url += "&version=" + VERSION_MATCHORDERS + "&teamId=" + teamId;
+		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString() + "&version=" + VERSION_MATCHORDERS;
+		if (!HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			url += "&teamId=" + teamId;
 		}
 		return getCHPPWebFile(url);
 	}
@@ -348,15 +341,9 @@ public class MyConnector {
 	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
 		StringBuilder urlpara = new StringBuilder();
-		if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
-			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS_NT);
-		}
-		else
-		{
-			urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
-			if (teamId>0) {
-				urlpara.append("&teamId=").append(teamId);
-			}
+		urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
+		if (teamId > 0 && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
+			urlpara.append("&teamId=").append(teamId);
 		}
 
 		if (matchId > 0) {
@@ -463,13 +450,21 @@ public class MyConnector {
 		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS + "&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
-	public String downloadPlayerDetails(int playerID) {
+	public String downloadPlayerDetails(String playerID) {
 		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&playerID=" + playerID);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {
-		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST +"&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
-		return getCHPPWebFile(url);
+		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST + "&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
+		var silent = setSilentDownload(true);
+		// try unlock skills
+		var ret = getCHPPWebFile(url);
+		setSilentDownload(silent);
+		if (StringUtils.isEmpty(ret)) {
+			// get details without unlock skills
+			ret = getCHPPWebFile(url.replace("unlockskills", "details"));
+		}
+		return ret;
 	}
 
 	/**
@@ -637,7 +632,6 @@ public class MyConnector {
 		return getNonCHPPWebFile(url, false);
 	}
 
-
 	/**
 	 * Get a web page using a URLconnection.
 	 */
@@ -659,57 +653,53 @@ public class MyConnector {
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
-				case 200:
-				case 201:
-					// We are done!
-					returnString = readStream(getResultStream(response));
-					if (DEBUGSAVE) {
-						saveCHPP(surl, returnString);
+					case 200, 201 -> {
+						// We are done!
+						returnString = readStream(getResultStream(response));
+						if (DEBUGSAVE) {
+							saveCHPP(surl, returnString);
+						}
+						String sError = XMLCHPPPreParser.getError(returnString);
+						if (sError.length() > 0) {
+							throw new RuntimeException(sError);
+						}
+						tryAgain = false;
 					}
-					String sError = XMLCHPPPreParser.getError(returnString);
-					if (sError.length() > 0) {
-						throw new RuntimeException(sError);
-					}
-					tryAgain = false;
-					break;
-				case 401:
-					if ( !silentDownload) {
-						if (authDialog == null) {
+					case 401 -> {
+						if (!silentDownload) {
+							if (authDialog == null) {
 
-							HOMainFrame mainFrame = null;
+								HOMainFrame mainFrame = null;
 
-							// If the main frame is not in the process of loading, use it,
-							// otherwise use null frame.
+								// If the main frame is not in the process of loading, use it,
+								// otherwise use null frame.
 
-							if (!HOMainFrame.launching.get()) {
-								mainFrame = HOMainFrame.instance();
+								if (!HOMainFrame.launching.get()) {
+									mainFrame = HOMainFrame.instance();
+								}
+
+								// disable WaitCursor to unblock GUI
+								if (mainFrame != null) {
+									CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+								}
+								authDialog = new OAuthDialog(mainFrame, m_OAService, "");
 							}
-
-							// disable WaitCursor to unblock GUI
-							if (mainFrame != null) {
-								CursorToolkit.stopWaitCursor(mainFrame.getRootPane());
+							authDialog.setVisible(true);
+							// A way out for a user unable to authorize for some reason
+							if (authDialog.getUserCancel()) {
+								return null;
 							}
-							authDialog = new OAuthDialog(mainFrame, m_OAService, "");
-						}
-						authDialog.setVisible(true);
-						// A way out for a user unable to authorize for some reason
-						if (authDialog.getUserCancel()) {
-							return null;
-						}
-						m_OAAccessToken = authDialog.getAccessToken();
-						if (m_OAAccessToken == null) {
-							m_OAAccessToken = createOAAccessToken();
+							m_OAAccessToken = authDialog.getAccessToken();
+							if (m_OAAccessToken == null) {
+								m_OAAccessToken = createOAAccessToken();
+							}
+						} else {
+							throw new RuntimeException("HTTP Response Code 401: CHPP Connection failed.");
 						}
 					}
-					else {
-						throw new RuntimeException("HTTP Response Code 401: CHPP Connection failed.");
-					}
-					break;
-				case 407:
-					throw new RuntimeException(
+					case 407 -> throw new RuntimeException(
 							"HTTP Response Code 407: Proxy authentication required.");
-				default:
-					throw new RuntimeException("HTTP Response Code: " + iResponse);
+					default -> throw new RuntimeException("HTTP Response Code: " + iResponse);
 				}
 			}
 		} catch (Exception sox) {
@@ -803,11 +793,11 @@ public class MyConnector {
 					iResponse = response.getCode();
 				}
 				switch (iResponse) {
-					case 200:
-					case 201:
+					case 200, 201 -> {
 						// We are done!
 						return getResultStream(response);
-					case 401:
+					}
+					case 401 -> {
 						// disable WaitCursor to unblock GUI
 						CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
 						if (authDialog == null) {
@@ -821,16 +811,14 @@ public class MyConnector {
 						m_OAAccessToken = authDialog.getAccessToken();
 						if (m_OAAccessToken == null) {
 							m_OAAccessToken = new OAuth1AccessToken(
-									Helper.decryptString(core.model.UserParameter.instance().AccessToken),
-									Helper.decryptString(core.model.UserParameter.instance().TokenSecret));
+									Helper.decryptString(UserParameter.instance().AccessToken),
+									Helper.decryptString(UserParameter.instance().TokenSecret));
 						}
-						// Try again...
-						break;
-					case 407:
-						throw new RuntimeException(
-								"Download Error\nHTTP Response Code 407: Proxy authentication required.");
-					default:
-						throw new RuntimeException("Download Error\nHTTP Response Code: " + iResponse);
+					}
+					// Try again...
+					case 407 -> throw new RuntimeException(
+							"Download Error\nHTTP Response Code 407: Proxy authentication required.");
+					default -> throw new RuntimeException("Download Error\nHTTP Response Code: " + iResponse);
 				}
 			}
 		} catch (Exception sox) {
@@ -951,8 +939,10 @@ public class MyConnector {
 		return silentDownload;
 	}
 
-	public void setSilentDownload(boolean silentDownload) {
+	public boolean setSilentDownload(boolean silentDownload) {
+		var ret = this.silentDownload;
 		this.silentDownload = silentDownload;
+		return ret;
 	}
 
 	public String downloadNtTeamDetails(int teamId) {

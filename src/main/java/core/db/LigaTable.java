@@ -35,8 +35,10 @@ public final class LigaTable extends AbstractTable {
 	 * store league
 	 */
 	void saveLiga(int hrfId, Liga liga) {
-		liga.setHrfId(hrfId);
-		store(liga);
+		if ( liga != null) {
+			liga.setHrfId(hrfId);
+			store(liga);
+		}
 	}
 
 	Liga getLiga(int hrfID) {

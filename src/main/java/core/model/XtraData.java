@@ -2,6 +2,8 @@ package core.model;
 
 import core.db.AbstractTable;
 import core.util.HODateTime;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.Properties;
 
 public class XtraData extends AbstractTable.Storable {
@@ -27,7 +29,7 @@ public class XtraData extends AbstractTable.Storable {
      * Creates a new instance of XtraData
      */
     public XtraData(Properties properties) {
-        m_dCurrencyRate = Double.parseDouble(properties.getProperty("currencyrate", "1"));
+        m_dCurrencyRate = NumberUtils.toDouble(properties.getProperty("currencyrate"), 1);
         m_iCountryId = getInteger(properties, "countryid", null);
         m_bHasPromoted = Boolean.parseBoolean(properties.getProperty("haspromoted", "FALSE"));
         m_sLogoURL = properties.getProperty("logourl", "");
@@ -177,7 +179,7 @@ public class XtraData extends AbstractTable.Storable {
 
     public HODateTime getTrainingDateAfterWeeks(int nWeek)
     {
-        return m_TrainingDate.plusDaysAtSameLocalTime(nWeek*7);
+        return m_TrainingDate.plusDaysAtSameLocalTime(nWeek* 7L);
     }
 
     public Integer getCountryId() {

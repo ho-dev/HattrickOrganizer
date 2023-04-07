@@ -13,14 +13,11 @@ import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.util.HOLogger;
 import core.util.IOUtils;
-import module.lineup.Lineup;
 import tool.arenasizer.Stadium;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -145,7 +142,6 @@ public class HRFStringParser {
 	 */
 	private static HOModel createHOModel(List<Properties> propertiesList, HODateTime hrfdate) throws Exception {
 
-		Verein club = null;
 		final HOModel hoModel = new HOModel(hrfdate);
 		int trainerID = -1;
 
@@ -169,8 +165,7 @@ public class HRFStringParser {
 				}
 				// club
 				else if (entity.toString().equalsIgnoreCase(CLUB)) {
-					club = new Verein(properties);
-					hoModel.setClub(club);
+					hoModel.setClub(new Verein(properties));
 				}
 				// team
 				else if (entity.toString().equalsIgnoreCase(TEAM)) {
@@ -235,10 +230,8 @@ public class HRFStringParser {
 			}
 		}
 
-		if ( club != null)	return hoModel;
-		return null;	// corrupt hrf file?!
+		return hoModel;
 	}
-
 
 	private static List<StaffMember> parseStaff(Properties props) {
 

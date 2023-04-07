@@ -57,13 +57,13 @@ final class NtTeamTable extends AbstractTable {
 	}
 
 	private final PreparedSelectStatementBuilder selectBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
-	private final PreparedSelectStatementBuilder selectTeamStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
+	private final PreparedSelectStatementBuilder selectTeamStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL ORDER BY HRF_ID DESC LIMIT 1");
 	public NtTeamDetails loadNTTeam(int teamId, Timestamp matchDate) {
 		if ( matchDate!=null){
-			return loadOne(NtTeamDetails.class, executePreparedSelect(selectBeforeStatementBuilder.getStatement(), teamId, matchDate));
+			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectBeforeStatementBuilder.getStatement(), teamId, matchDate));
 		}
 		else {
-			return loadOne(NtTeamDetails.class, executePreparedSelect(selectTeamStatementBuilder.getStatement(), teamId));
+			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectTeamStatementBuilder.getStatement(), teamId));
 		}
 	}
 

@@ -4,6 +4,8 @@ package core.model.misc;
 import core.db.AbstractTable;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -15,9 +17,6 @@ import java.util.Properties;
  * Allgemeine Informationen über den Verein
  */
 public final class Verein extends AbstractTable.Storable {
-	
-	// for locale indepemdent parsing of input with commas
-    final DecimalFormat DF = new DecimalFormat("0", new DecimalFormatSymbols(Locale.GERMANY));
 
     /** Team Name */
     private String m_sTeamName;
@@ -89,21 +88,21 @@ public final class Verein extends AbstractTable.Storable {
      * Creates a new Club object based on properties (e.g. from an hrf file).
      */
     public Verein(Properties properties) throws Exception {
-        m_iAssistantTrainerLevels = DF.parse(properties.getProperty("hjtranare", "0")).intValue();
-        m_iSportPsychologistLevels = DF.parse(properties.getProperty("psykolog", "0")).intValue();
-        m_iSpokePersonLevels = DF.parse(properties.getProperty("presstalesman", "0")).intValue();
-        m_iMedicLevels = DF.parse(properties.getProperty("lakare", "0")).intValue();
-        m_iJugend = DF.parse(properties.getProperty("juniorverksamhet", "0")).intValue();
-        m_iFans = DF.parse(properties.getProperty("fanclub", "0")).intValue();
-        m_iUngeschlagen = DF.parse(properties.getProperty("undefeated", "0")).intValue();
-        m_iSiege = DF.parse(properties.getProperty("victories", "0")).intValue();
-        m_iFinancialDirectorLevels = DF.parse(properties.getProperty("financialdirectorlevels", "0")).intValue();
-        m_iFormCoachLevels = DF.parse(properties.getProperty("formcoachlevels", "0")).intValue();
-        m_iTacticalAssistantLevels = DF.parse(properties.getProperty("tacticalassistantlevels", "0")).intValue();
-        m_iGlobalRanking = DF.parse(properties.getProperty("globalranking", "0")).intValue();
-        m_iLeagueRanking = DF.parse(properties.getProperty("leagueranking", "0")).intValue();
-        m_iRegionRanking = DF.parse(properties.getProperty("regionranking", "0")).intValue();
-        m_iPowerRating = DF.parse(properties.getProperty("powerrating", "0")).intValue();
+        m_iAssistantTrainerLevels = NumberUtils.toInt(properties.getProperty("hjtranare"), 0);
+        m_iSportPsychologistLevels = NumberUtils.toInt(properties.getProperty("psykolog"), 0);
+        m_iSpokePersonLevels = NumberUtils.toInt(properties.getProperty("presstalesman"),0);
+        m_iMedicLevels = NumberUtils.toInt(properties.getProperty("lakare"),0);
+        m_iJugend = NumberUtils.toInt(properties.getProperty("juniorverksamhet"),0);
+        m_iFans = NumberUtils.toInt(properties.getProperty("fanclub"),0);
+        m_iUngeschlagen = NumberUtils.toInt(properties.getProperty("undefeated"),0);
+        m_iSiege = NumberUtils.toInt(properties.getProperty("victories"),0);
+        m_iFinancialDirectorLevels = NumberUtils.toInt(properties.getProperty("financialdirectorlevels"),0);
+        m_iFormCoachLevels = NumberUtils.toInt(properties.getProperty("formcoachlevels"),0);
+        m_iTacticalAssistantLevels = NumberUtils.toInt(properties.getProperty("tacticalassistantlevels"),0);
+        m_iGlobalRanking = NumberUtils.toInt(properties.getProperty("globalranking"),0);
+        m_iLeagueRanking = NumberUtils.toInt(properties.getProperty("leagueranking"),0);
+        m_iRegionRanking = NumberUtils.toInt(properties.getProperty("regionranking"),0);
+        m_iPowerRating = NumberUtils.toInt(properties.getProperty("powerrating"),0);
     }
 
     /**

@@ -157,8 +157,8 @@ public class XMLWorldDetailsParser {
 					
 					// Remove for ugly second team fix
 					
-//					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
-//					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
+					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
+					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
 
 					// fertig
 					break;

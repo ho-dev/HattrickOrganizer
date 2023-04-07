@@ -1,6 +1,7 @@
 package tool.arenasizer;
 
 import core.db.AbstractTable;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * Enthält die Stadiendaten
@@ -58,23 +59,19 @@ public class Stadium extends AbstractTable.Storable {
      */
     public Stadium(java.util.Properties properties) {
         m_sStadienname = properties.getProperty("arenaname", "");
-        m_iStadiumId = Integer.parseInt(properties.getProperty("arenaid", "0"));
-        //m_iGesamtgroesse = Integer.parseInt(properties.getProperty("seattotal", "0"));
-        m_iStehplaetze = Integer.parseInt(properties.getProperty("antalstaplats", "0"));
-        m_iSitzplaetze = Integer.parseInt(properties.getProperty("antalsitt", "0"));
-        m_iUeberdachteSitzplaetze = Integer.parseInt(properties.getProperty("antaltak", "0"));
-        m_iLogen = Integer.parseInt(properties.getProperty("antalvip", "0"));
-
-        m_iAusbauStehplaetze = Integer.parseInt(properties.getProperty("expandingstaplats", "0"));
-        m_iAusbauSitzplaetze = Integer.parseInt(properties.getProperty("expandingsitt", "0"));
-        m_iAusbauUeberdachteSitzplaetze = Integer.parseInt(properties.getProperty("expandingtak",
-                                                                                  "0"));
-        m_iAusbauLogen = Integer.parseInt(properties.getProperty("expandingvip", "0"));
-
-        m_bAusbau = Integer.parseInt(properties.getProperty("isexpanding", "0")) > 0;
-
+        m_iStadiumId = NumberUtils.toInt(properties.getProperty("arenaid"),0);
+        //m_iGesamtgroesse = NumberUtils.toInt(properties.getProperty("seattotal"),0);
+        m_iStehplaetze = NumberUtils.toInt(properties.getProperty("antalstaplats"),0);
+        m_iSitzplaetze = NumberUtils.toInt(properties.getProperty("antalsitt"),0);
+        m_iUeberdachteSitzplaetze = NumberUtils.toInt(properties.getProperty("antaltak"),0);
+        m_iLogen = NumberUtils.toInt(properties.getProperty("antalvip"),0);
+        m_iAusbauStehplaetze = NumberUtils.toInt(properties.getProperty("expandingstaplats"),0);
+        m_iAusbauSitzplaetze = NumberUtils.toInt(properties.getProperty("expandingsitt"),0);
+        m_iAusbauUeberdachteSitzplaetze = NumberUtils.toInt(properties.getProperty("expandingtak"),0);
+        m_iAusbauLogen = NumberUtils.toInt(properties.getProperty("expandingvip"),0);
+        m_bAusbau = NumberUtils.toInt(properties.getProperty("isexpanding"), 0) > 0;
         if (m_bAusbau) {
-            m_iAusbauKosten = Integer.parseInt(properties.getProperty("expandcost", "0"));
+            m_iAusbauKosten = NumberUtils.toInt(properties.getProperty("expandcost"),0);
         }
     }
 

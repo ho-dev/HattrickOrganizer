@@ -75,14 +75,6 @@ public class Lineup{
 	MatchLineupPosition setPiecesTaker;
 	private Player.ManMarkingPosition manMarkingPosition;
 
-	public Lineup(List<MatchLineupPosition> matchLineupPositions, List<Substitution> substitutions) {
-		initPositionen553(); // reset all
-		for (var position : matchLineupPositions){
-			setPosition(position);
-		}
-		this.substitutions = substitutions;
-	}
-
 	private void setCaptain(MatchLineupPosition position) {
 		this.captain = position;
 		this.m_iKapitaen = position.getPlayerId();
@@ -99,6 +91,13 @@ public class Lineup{
 
 	public void setManMarkingPosition(Player.ManMarkingPosition manMarkingPosition) {
 		this.manMarkingPosition = manMarkingPosition;
+	}
+
+	public void setPlayers(List<MatchLineupPosition> matchLineupPositions) {
+		initPositionen553(); // reset all
+		for (var position : matchLineupPositions){
+			setPosition(position);
+		}
 	}
 
 	private static class Settings {
@@ -326,6 +325,9 @@ public class Lineup{
 	 */
 	public final float getTacticLevelLongShots() {
 		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
+	}
+	public final float getTacticLevelCreative() {
+		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelCreative());
 	}
 
 	/**
@@ -1079,6 +1081,7 @@ public class Lineup{
 			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
 			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
 			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
+			case IMatchDetails.TAKTIK_CREATIVE -> getTacticLevelCreative();
 			default -> 0.0f;
 		};
 	}
