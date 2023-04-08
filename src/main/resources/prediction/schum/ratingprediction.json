@@ -1,0 +1,99 @@
+{
+
+  "ratings" : {
+    "defence" : {
+      "central" : {
+        "contributions": []
+      },
+      "side": {
+        "contributions": []
+
+      }
+    },
+    "midfield" : {
+      "central" : {
+        "contributions": []
+
+      }
+    },
+    "attack" : {
+      "central" : {
+        "contributions": []
+
+      },
+      "side": {
+        "contributions": []
+
+      }
+    }
+  },
+
+  "contribution" : {
+    "args" : ["skillname", "sector", "orientation"],
+    "result" : {
+      "product" : [
+        {"expression" : {"name":"overcrowding", "args" : "/sector"}}
+      ]
+    }
+  },
+
+  "overcrowding" : {
+    "args" : ["sector"],
+    "result" : {
+
+    }
+  },
+
+  "skill" : {
+    "args": [
+      "name"
+    ],
+    "result": {
+      "max": [
+        0,
+        {
+          "sum": [
+            -1,
+            {
+              "playervalue": "/name"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "form" : {
+    "args" : ["formValue"],
+    "result" : {
+      "polynom" : {
+        "value" : "/formValue",
+        "coefficients" : [-0.18965312, 0.20426157, -0.01507852, 0.00056438, -0.00000862]
+      }
+    }
+  },
+
+  "strength" : {
+    "args": [
+      "skillvalue", "formValue", "loyalty", "isHomegrown"
+    ],
+    "result": {
+      "product" : {
+        "expression" : { "name": "/form" , "args" : ["/formValue"]},
+        "sum": [ "/skillValue",
+          {
+            "product": [
+              0.0526,
+              "/loyalty"
+            ]
+          },
+          {
+            "if" : { "condition" : "/isHomegrown",  "then" : 0.5}
+          }
+        ]
+
+      }
+    }
+  }
+
+}
