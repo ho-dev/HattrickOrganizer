@@ -16,10 +16,9 @@ import core.training.*;
 import core.util.*;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
-
 import java.time.Duration;
 import java.util.*;
-
+import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
 
@@ -444,7 +443,10 @@ public class Player extends AbstractTable.Storable {
         m_lastMatchDate = properties.getProperty("lastmatch_date");
         if (m_lastMatchDate != null && !m_lastMatchDate.isEmpty()) {
             m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id", "0"));
-            lastMatchPosition = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
+            var pos  = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
+            if ( isFieldMatchRoleId(pos)) {
+                lastMatchPosition = pos;
+            }
             lastMatchMinutes = Integer.parseInt(properties.getProperty("lastmatch_playedminutes", "0"));
             // rating is stored as number of half stars
             m_lastMatchRating = (int) (2 * Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));

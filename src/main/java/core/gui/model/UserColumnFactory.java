@@ -25,6 +25,8 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 
+import static core.model.player.MatchRoleID.isFieldMatchRoleId;
+
 /**
  * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
  * different {@link core.gui.comp.table.HOTableModel} table models.  Each column has a name,
@@ -851,7 +853,7 @@ final public class UserColumnFactory {
                 var position = player.getLastMatchPosition();
                 double sort;
                 String text;
-                if (position == null) {
+                if (position == null || !isFieldMatchRoleId(position)) {
                     text = "";
                     sort = 1000;
                 } else {
