@@ -49,7 +49,7 @@ public class IfaModel {
 	public double getMaxCoolness() {
 		return this.maxCoolness;
 	}
-	
+
 	public Summary getVisitedSummary() {
 		if (this.visitedSummary == null) {
 			this.visitedSummary = new Summary(getVisitedStatistic());
@@ -162,9 +162,7 @@ public class IfaModel {
 		Map<Integer, IfaStatistic> map = new HashMap<>();
 		for (IfaMatch match : this.visited) {
 			var league = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getHomeLeagueId());
-			if (league == null) {
-				continue;
-			}
+			if (league == null) continue;
 			Integer id = league.getCountryId();
 			IfaStatistic stat = map.get(id);
 			if (stat == null) {
@@ -180,14 +178,15 @@ public class IfaModel {
 	private void createHostedStatistic() {
 		Map<Integer, IfaStatistic> map = new HashMap<>();
 		for (IfaMatch match : this.hosted) {
-			Integer id = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getAwayLeagueId()).getCountryId();
+			var league = WorldDetailsManager.instance().getWorldDetailLeagueByLeagueId(match.getAwayLeagueId());
+			if (league == null) continue;
+			Integer id = league.getCountryId();
 			IfaStatistic stat = map.get(id);
 			if (stat == null) {
 				stat = new IfaStatistic();
 				stat.setCountry(new Country(id));
 				map.put(id, stat);
 			}
-
 			updateStats(stat, match, false);
 		}
 		this.hostedStatistic = new ArrayList<>(map.values());
