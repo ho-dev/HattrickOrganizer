@@ -7,22 +7,18 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
+import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import module.series.Spielplan;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.Serial;
 import java.util.List;
-import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -35,6 +31,7 @@ import javax.swing.event.ChangeListener;
 
 public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = 7990572479100871307L;
 	private LineupPanel bestOfWeek;
 	private LineupPanel bestOfYear;
@@ -42,6 +39,8 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	private LineupPanel worstOfYear;
 	private JComboBox seasonCombo;
 	private JSpinner weekSpinner;
+
+	private List<Paarung> matches;
 
 	@Override
 	protected void initialize() {
@@ -55,7 +54,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	
 	private void reloadData(boolean isSeason) {
 		int week = ((Number) weekSpinner.getValue()).intValue();
-		MatchLineupPlayer[] sl = calcBestLineup(week, true);
+		var sl = calcBestLineup(week, true);
 
 		if (sl == null) {
 			return;
@@ -73,19 +72,12 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		}
 	}
 
-	private MatchLineupPlayer[] calcBestLineup(int week, boolean best) {
+	private MatchLineupPosition[] calcBestLineup(int week, boolean best) {
 		Spielplan plan = (Spielplan) seasonCombo.getSelectedItem();
 		if (plan == null) {
 			return null;
 		}
-		Map<String, MatchLineupPlayer> spieler = getPlayers(week, plan, best);
-		MatchLineupPlayer[] mlp = new MatchLineupPlayer[11];
-
-		for (int i = 0; i < 11; i++) {
-			mlp[i] = spieler.get("" + (i + 1));
-		}
-
-		return mlp;
+		return  getPlayers(week, plan, best);
 	}
 
 	private JLabel createLabel(String text, Color farbe, int Bordertype) {
@@ -96,7 +88,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		return bla;
 	}
 
-	private void fillLineup(LineupPanel lineupPanel, MatchLineupPlayer[] sl, boolean noStars) {
+	private void fillLineup(LineupPanel lineupPanel, MatchLineupPosition[] sl, boolean noStars) {
 		if (!noStars) {
 			fillPanel(lineupPanel.getKeeperPanel(), sl[0]);
 			fillPanel(lineupPanel.getLeftWingbackPanel(), sl[1]);
@@ -127,19 +119,20 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		lineupPanel.updateUI();
 	}
 
-	private void fillPanel(JPanel panel, MatchLineupPlayer mlp) {
+	private void fillPanel(JPanel panel, MatchLineupPosition mlp) {
 		fillPanel(panel, mlp, false);
 	}
 
-	private void fillPanel(JPanel panel, MatchLineupPlayer mlp, boolean noStars) {
+	private void fillPanel(JPanel panel, MatchLineupPosition mlp, boolean noStars) {
 		panel.setOpaque(false);
+		if ( mlp == null) return;
 
-		String posi = MatchRoleID.getNameForPosition((byte) mlp.getPositionCode());
+		String posi = MatchRoleID.getNameForPosition(mlp.getPosition());
 
 		panel.removeAll();
 
-		JLabel spielername = createLabel(mlp.getNname(), Color.black, 1);
-		JLabel teamname = createLabel(mlp.getTeamName(), Color.black, 1);
+		JLabel spielername = createLabel(mlp.getSpielerName(), Color.black, 1);
+		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, 1);
 		JLabel position = createLabel(posi, Color.black, 0);
 		position.setOpaque(false);
 
@@ -171,6 +164,14 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		mainPanel.add(leftPanel, BorderLayout.CENTER);
 
 		panel.add(mainPanel);
+	}
+
+	private String getTeamName(int teamId) {
+		for ( var match : matches){
+			if ( match.getHeimId() == teamId) return match.getHeimName();
+			else if ( match.getGastId() == teamId) return match.getGastName();
+		}
+		return "";
 	}
 
 	private void fillSeasonCombo(JComboBox seasonCombo) {
@@ -231,8 +232,8 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	}
 
-	private int toInt(float i) {
-		return (int) (i * 2.0F);
+	private int toInt(double i) {
+		return (int) (i * 2.0);
 	}
 
 	@Override
@@ -256,7 +257,6 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 				week = max_week;
 		} catch (Exception e) {
 			/* new database */
-			week = 1;
 			max_week = 1;
 		}
 
@@ -272,108 +272,41 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	}
 
-	private Map<String, MatchLineupPlayer> getPlayers(int week, Spielplan plan, boolean isBest) {
-		JDBCAdapter db = DBManager.instance().getAdapter();
-		List<Paarung> matchIDs;
+	private MatchLineupPosition[] getPlayers(int week, Spielplan plan, boolean isBest) {
 		if (week > 0)
-			matchIDs = plan.getPaarungenBySpieltag(week);
+			matches = plan.getPaarungenBySpieltag(week);
 		else {
-			matchIDs = plan.getPaarungenBySpieltag(1);
+			matches = plan.getPaarungenBySpieltag(1);
 			for (week = 2; week < 15; week++)
-				matchIDs.addAll(plan.getPaarungenBySpieltag(week));
+				matches.addAll(plan.getPaarungenBySpieltag(week));
 		}
 		// TODO For match of year attention of doubles
-		Map<String, MatchLineupPlayer> spieler = new HashMap<>();
-		List<MatchLineupPlayer> players = getPlayetAt(db, matchIDs, IMatchRoleID.KEEPER, 1,
-				isBest);
-		spieler.put("1", players.get(0));
-		players = getPlayetAt(db, matchIDs, IMatchRoleID.BACK, 2, isBest);
-		spieler.put("2", players.get(0));
-		spieler.put("5", players.get(1));
-		players = getPlayetAt(db, matchIDs, IMatchRoleID.CENTRAL_DEFENDER, 2, isBest);
-		spieler.put("3", players.get(0));
-		spieler.put("4", players.get(1));
-		players = getPlayetAt(db, matchIDs, IMatchRoleID.WINGER, 2, isBest);
-		spieler.put("6", players.get(0));
-		spieler.put("9", players.get(1));
-		players = getPlayetAt(db, matchIDs, IMatchRoleID.MIDFIELDER, 2, isBest);
-		spieler.put("7", players.get(0));
-		spieler.put("8", players.get(1));
-		players = getPlayetAt(db, matchIDs, IMatchRoleID.FORWARD, 2, isBest);
-		spieler.put("10", players.get(0));
-		spieler.put("11", players.get(1));
-		return spieler;
-	}
-
-	private List<MatchLineupPlayer> getPlayetAt(JDBCAdapter db, List<Paarung> matchIDs,
-			int position, int number, boolean isBest) {
-		ResultSet rs;
-		String posClase = "";
-
-		switch (position) {
-			case IMatchRoleID.KEEPER -> {
-				posClase += " FIELDPOS=" + IMatchRoleID.keeper + " ";
-				break;
-			}
-			case IMatchRoleID.CENTRAL_DEFENDER -> {
-				posClase += " (FIELDPOS=" + IMatchRoleID.leftCentralDefender + " OR FIELDPOS="
-						+ IMatchRoleID.middleCentralDefender + " OR FIELDPOS="
-						+ IMatchRoleID.rightCentralDefender + ") ";
-				break;
-			}
-			case IMatchRoleID.BACK -> {
-				posClase += " (FIELDPOS=" + IMatchRoleID.leftBack + " OR FIELDPOS="
-						+ IMatchRoleID.rightBack + ") ";
-				break;
-			}
-			case IMatchRoleID.WINGER -> {
-				posClase += " (FIELDPOS=" + IMatchRoleID.leftWinger + " OR FIELDPOS="
-						+ IMatchRoleID.rightWinger + ") ";
-				break;
-			}
-			case IMatchRoleID.MIDFIELDER -> {
-				posClase += " (FIELDPOS=" + IMatchRoleID.leftInnerMidfield + " OR FIELDPOS="
-						+ IMatchRoleID.centralInnerMidfield + " OR FIELDPOS="
-						+ IMatchRoleID.rightInnerMidfield + ") ";
-				break;
-			}
-			case IMatchRoleID.FORWARD -> {
-				posClase += " (FIELDPOS=" + IMatchRoleID.leftForward + " OR FIELDPOS="
-						+ IMatchRoleID.centralForward + " OR FIELDPOS="
-						+ IMatchRoleID.rightForward + ") ";
-				break;
-			}
-		}
-
-		StringBuilder matchClause = new StringBuilder();
-		for (Paarung matchID : matchIDs) {
-			if (matchClause.length() > 1) {
-				matchClause.append(" OR ");
-			}
-			matchClause.append(" MATCHID=").append(matchID.getMatchId());
-		}
-
-		String sql = "SELECT DISTINCT MATCHID, SPIELERID, NAME, RATING, HOPOSCODE, TEAMID FROM MATCHLINEUPPLAYER WHERE "
-				+ posClase;
-		if (matchClause.length() > 1) {
-			sql += " AND (" + matchClause + ") ";
-		}
-		sql += "ORDER BY RATING ";
-
-		if (isBest) {
-			sql += " DESC";
-		} else {
-			sql += " ASC";
-		}
-
-		rs = db.executeQuery(sql);
-
-		List<MatchLineupPlayer> ret = new ArrayList<>();
-
-		for (int i = 0; i < number; i++) {
-			ret.add(new MatchLineupPlayer(rs, matchIDs));
-		}
-
+		var ret = new MatchLineupPosition[11];
+		var players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.KEEPER, 1, isBest);
+		ret[0] = getPlayer(players,0);
+		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.BACK, 2, isBest);
+		ret[1] = getPlayer(players,0);
+		ret[4] = getPlayer(players,1);
+		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.CENTRAL_DEFENDER, 2, isBest);
+		ret[2] = getPlayer(players,0);
+		ret[3] = getPlayer(players,1);
+		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.WINGER, 2, isBest);
+		ret[5] = getPlayer(players,0);
+		ret[8] = getPlayer(players,1);
+		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.MIDFIELDER, 2, isBest);
+		ret[6] = getPlayer(players,0);
+		ret[7] = getPlayer(players,1);
+		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.FORWARD, 2, isBest);
+		ret[9] = getPlayer(players,0);
+		ret[10] = getPlayer(players,1);
 		return ret;
 	}
+
+	private MatchLineupPosition getPlayer(List<MatchLineupPosition> players, int index){
+		if ( index < players.size()){
+			return players.get(index);
+		}
+		return null;
+	}
+
 }
