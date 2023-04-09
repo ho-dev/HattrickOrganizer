@@ -719,8 +719,20 @@ public class DBManager {
 				.getMatchInserts(objectPlayerID);
 	}
 
+	/**
+	 * Get the top or flop players of given lineup position in given matches
+	 *
+	 * @param position lineup position sector
+	 * @param matches list of matches
+	 * @param isBest true: the best player is listed first
+	 * @return stored lineup positions
+	 */
+	public List<MatchLineupPosition> loadTopFlopRatings(List<Paarung> matches, int position, int count, boolean isBest) {
+		return ((MatchLineupPlayerTable) getTable(MatchLineupPlayerTable.TABLENAME))
+				.loadTopFlopRatings(matches, position, count, isBest);
+	}
 
-	// ------------------------------- BasicsTable
+		// ------------------------------- BasicsTable
 	// -------------------------------------------------
 
 	/**
