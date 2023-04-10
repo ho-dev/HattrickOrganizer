@@ -1,6 +1,5 @@
 package core.db;
 
-import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupPosition;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
@@ -183,7 +182,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	public List<MatchLineupPosition> loadTopFlopRatings( List<Paarung> matches, int position, int count, boolean isBest){
 		var args = new ArrayList<>();
 		var sql = new StringBuilder("SELECT * FROM ");
-		sql.append(TABLENAME).append(" WHERE SpielerID != 0 AND RoleID IN (");
+		sql.append(TABLENAME).append(" WHERE SpielerID != 0 AND RATING>0 AND RoleID IN (");
 
 		switch (position) {
 			case IMatchRoleID.KEEPER -> {
