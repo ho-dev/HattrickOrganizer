@@ -2,7 +2,6 @@
 package module.teamOfTheWeek.gui;
 
 import core.db.DBManager;
-import core.db.JDBCAdapter;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
@@ -12,20 +11,13 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import module.series.Spielplan;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTabbedPane;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -114,18 +106,17 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 			fillPanel(lineupPanel.getLeftForwardPanel(), sl[9], true);
 			fillPanel(lineupPanel.getRightForwardPanel(), sl[10], true);
 		}
-
-		lineupPanel.setTeamName("");
 		lineupPanel.updateUI();
 	}
 
-	private void fillPanel(JPanel panel, MatchLineupPosition mlp) {
+	private void fillPanel(JComponent panel, MatchLineupPosition mlp) {
 		fillPanel(panel, mlp, false);
 	}
 
-	private void fillPanel(JPanel panel, MatchLineupPosition mlp, boolean noStars) {
-		panel.setOpaque(false);
-		if ( mlp == null) return;
+	private void fillPanel(JComponent panel, MatchLineupPosition mlp, boolean noStars) {
+		if (mlp == null) return;
+		var playerDetailsPanel = new JLayeredPane();
+		playerDetailsPanel.setOpaque(true);
 
 		String posi = MatchRoleID.getNameForPosition(mlp.getPosition());
 
@@ -136,34 +127,31 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		JLabel position = createLabel(posi, Color.black, 0);
 		position.setOpaque(false);
 
-		JPanel spielerdetails = new JPanel();
-		spielerdetails.setBorder(BorderFactory.createEtchedBorder());
-		spielerdetails.setBackground(Color.white);
-		spielerdetails.setLayout(new BorderLayout());
-		spielerdetails.add(spielername, BorderLayout.NORTH);
-		spielerdetails.add(teamname, BorderLayout.SOUTH);
+		playerDetailsPanel.setLayout(new GridBagLayout());
+		var constraints = new GridBagConstraints();
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.weightx = 1;
+
+		playerDetailsPanel.setBorder(BorderFactory.createEtchedBorder());
+		playerDetailsPanel.setBackground(Color.white);
+		constraints.gridy = 0;
+		playerDetailsPanel.add(position, constraints);
+		constraints.gridy++;
+		playerDetailsPanel.add(spielername, constraints);
+		constraints.gridy++;
+		playerDetailsPanel.add(teamname, constraints);
 		JPanel sternzahl = (JPanel) new core.gui.comp.entry.RatingTableEntry(
 				toInt(mlp.getRating())).getComponent(false);
 		sternzahl.setOpaque(false);
 		sternzahl.setBorder(BorderFactory.createEtchedBorder());
 
-		JPanel leftPanel = new JPanel();
-		leftPanel.setOpaque(false);
-		leftPanel.setLayout(new BorderLayout());
-		leftPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-		leftPanel.setPreferredSize(new Dimension(180, 80));
-		leftPanel.add(position, BorderLayout.NORTH);
-		leftPanel.add(spielerdetails, BorderLayout.CENTER);
-
 		if (!noStars) {
-			leftPanel.add(sternzahl, BorderLayout.SOUTH);
+			constraints.gridy++;
+			playerDetailsPanel.add(sternzahl, constraints);
 		}
 
-		JPanel mainPanel = new ImagePanel();
-		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-		mainPanel.add(leftPanel, BorderLayout.CENTER);
-
-		panel.add(mainPanel);
+		panel.add(playerDetailsPanel);
 	}
 
 	private String getTeamName(int teamId) {
