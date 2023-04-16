@@ -3,7 +3,25 @@
   "ratings" : {
     "defence" : {
       "central" : {
-        "contributions": []
+        "contributions": [
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","gk", "normal"]}, 0.135452380952381]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "normal"]}, {"expression" : "overcrowding", "args" : ["cd"]}, 0.07068]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "offensive"]},{ "expression" : "overcrowding", "args" : ["cd"]}, 0.0651]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "wing"]}, {"expression" : "overcrowding", "args" :["cd"]}, 0.07998]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "normal"]}, 0.07068]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "offensive"]}, 0.0651]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "defensive"]}, 0.07998]},
+          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "middle"]}, 0.1302]},
+
+          {"product" : [ {"expression":"playerExperience", "args": ["gk", "normal"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["cd", "normal"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["cd", "offensive"]},0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["cd", "wing"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["wb", "normal"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["wb", "offensive"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["wb", "defensive"]}, 0.48]},
+          {"product" : [ {"expression":"playerExperience", "args": ["wb", "middle"]}, 0.48]}
+        ]
       },
       "side": {
         "contributions": []
@@ -28,72 +46,86 @@
     }
   },
 
-  "contribution" : {
-    "args" : ["skillname", "sector", "orientation"],
-    "result" : {
-      "product" : [
-        {"expression" : {"name":"overcrowding", "args" : "/sector"}}
-      ]
-    }
-  },
-
-  "overcrowding" : {
-    "args" : ["sector"],
-    "result" : {
-
-    }
-  },
-
-  "skill" : {
-    "args": [
-      "name"
-    ],
-    "result": {
-      "max": [
-        0,
-        {
-          "sum": [
-            -1,
-            {
-              "playervalue": "/name"
-            }
+  "expressions" : [
+    {
+      "name": "overcrowding",
+      "args": [
+        "sector"
+      ],
+      "result": { "expression" :  "overcrowdingFactor", "args" : ["/sector", { "count" :  {"playersInSector" :  ["/sector"]}}]}
+    },
+    {
+      "name" : "overcrowdingFactor",
+      "args" : ["sector", "count"],
+      "result" : {
+        "sum" : [
+          { "if" :  {"==" :  ["/sector", "im"]}, "then" : {"arrayValue" :  [1,1,0.935, 0.825], "index" :  "/count"}},
+          { "if" :  {"==" :  ["/sector", "cd"]}, "then" : {"arrayValue" :  [1,1,0.964, 0.9], "index" :  "/count"}},
+          { "if" :  {"==" :  ["/sector", "fw"]}, "then" : {"arrayValue" :  [1,1,0.945, 0.865], "index" :  "/count"}}
+        ]
+      }
+    },
+    {
+      "name" : "skill",
+      "args" : ["skillValue"],
+      "result" : {
+        "max" : [0, {"sum" :  [-1, "/skillValue"]}]
+      }
+    },
+    {
+      "name": "form",
+      "args": [
+        "formValue"
+      ],
+      "result": {
+        "polynomial": {
+          "value": "/formValue",
+          "coefficients": [
+            0.048,
+            0.191,
+            -0.009
           ]
         }
-      ]
-    }
-  },
-
-  "form" : {
-    "args" : ["formValue"],
-    "result" : {
-      "polynom" : {
-        "value" : "/formValue",
-        "coefficients" : [-0.18965312, 0.20426157, -0.01507852, 0.00056438, -0.00000862]
       }
-    }
-  },
-
-  "strength" : {
-    "args": [
-      "skillvalue", "formValue", "loyalty", "isHomegrown"
-    ],
-    "result": {
-      "product" : {
-        "expression" : { "name": "/form" , "args" : ["/formValue"]},
-        "sum": [ "/skillValue",
-          {
-            "product": [
-              0.0526,
-              "/loyalty"
-            ]
-          },
-          {
-            "if" : { "condition" : "/isHomegrown",  "then" : 0.5}
+    },
+    {
+      "name": "experience",
+      "args": [
+        "experienceValue"
+      ],
+      "result": {
+        "polynomial": {
+          "value": "/experienceValue",
+          "coefficients": [
+            -0.18965312,
+            0.20426157,
+            -0.01507852,
+            0.00056438,
+            -0.00000862
+          ]
+        }
+      }
+    },
+    {
+      "name": "playerStrength",
+      "args": ["skillName", "sector", "orientation"
+      ],
+      "result": {
+        "product": [
+          {"expression": "form", "args": [{"value": ["form", "/sector", "/orientation"]}]},
+          {"sum": [
+            {"expression": "skill", "args": [{"value": ["/skillName", "/sector", "/orientation"]}]},
+            {"product": [0.0526, {"value": ["loyalty", "/sector", "/orientation"]}]},
+            {"if": {"value": ["isHomegrown", "/sector", "/orientation"]}, "then": 0.5}]
           }
         ]
-
       }
+    },
+    {
+      "name": "playerExperience",
+      "args": [ "sector", "orientation"
+      ],
+      "result": {"expression": "experience", "args": [{"value": ["experience", "/sector", "/orientation"]}]}
     }
-  }
-
+  ]
 }
