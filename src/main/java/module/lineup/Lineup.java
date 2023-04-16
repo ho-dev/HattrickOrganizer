@@ -13,6 +13,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
+import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -219,22 +220,22 @@ public class Lineup{
 			m_vBenchPositions.add(new MatchLineupPosition(IMatchRoleID.substXT2, Integer.parseInt(properties.getProperty("substxt2", "0")), (byte) 0));
 
 			var tactic = properties.getProperty("tactictype");
-			if (tactic == null || tactic.equals("null")) // to avoid exception when match is finish
+			if (StringUtils.isEmpty(tactic)|| tactic.equals("null")) // to avoid exception when match is finish
 				settings.m_iTacticType = 0;
 			else
 				settings.m_iTacticType = Integer.parseInt(tactic);
 
 			String attitude = properties.getProperty("installning", "0");
-			if (attitude.equals("null") || attitude.equals("")) // to avoid exception when match is finish
+			if (StringUtils.isEmpty(attitude) || attitude.equals("null") ) // to avoid exception when match is finish
 				settings.m_iAttitude = 0;
 			else
 				settings.m_iAttitude = Integer.parseInt(attitude);
 
 			var propStyleOfPlay = properties.getProperty("styleofplay");
-			if (propStyleOfPlay == null || properties.getProperty("styleofplay").equals("null")) // to avoid exception when match is finish
+			if (StringUtils.isEmpty(propStyleOfPlay) || propStyleOfPlay.equals("null")) // to avoid exception when match is finish
 				settings.m_iStyleOfPlay = 0;
 			else
-				settings.m_iStyleOfPlay = Integer.parseInt(properties.getProperty("styleofplay", "0"));
+				settings.m_iStyleOfPlay = Integer.parseInt(propStyleOfPlay);
 
 			// and read the sub contents
 			int iSub = 0;
@@ -603,11 +604,12 @@ public class Lineup{
 	 */
 	public final byte getEffectivePos4PositionID(int positionsid) {
 		try {
-			return getPositionById(positionsid).getPosition();
+			var pos =getPositionById(positionsid);
+			if ( pos != null ) return pos.getPosition();
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getEffectivePos4PositionID: " + e);
-			return IMatchRoleID.UNKNOWN;
 		}
+		return IMatchRoleID.UNKNOWN;
 	}
 
 	/**
@@ -634,7 +636,7 @@ public class Lineup{
 		this.m_iArenaId=id;
 	}
 	public final int getArenaId() {
-		if (m_iArenaId == -1 && !isUpcomingMatchLoaded()) {
+		if (m_iArenaId == -1) {
 			getUpcomingMatch();
 		}
 		return m_iArenaId;
@@ -737,21 +739,22 @@ public class Lineup{
 	 */
 	public Player getPlayerByPositionID(int positionId) {
 		try {
-			return HOVerwaltung.instance().getModel()
-					.getCurrentPlayer(getPositionById(positionId).getPlayerId());
+			var pos = getPositionById(positionId);
+			if ( pos != null ) return HOVerwaltung.instance().getModel().getCurrentPlayer(pos.getPlayerId());
 		} catch (Exception e) {
 			HOLogger.instance()
 					.error(getClass(), "getPlayerByPositionID(" + positionId + "): " + e);
-			return null;
 		}
+		return null;
 	}
 
 	public String tryGetPlayerNameByPositionID(int positionId) {
 		try {
-			return HOVerwaltung.instance().getModel().getCurrentPlayer(getPositionById(positionId).getPlayerId()).getShortName();
-		} catch (Exception e) {
-			return "           ";
+			var player = getPlayerByPositionID(positionId);
+			if ( player != null) return player.getShortName();
+		} catch (Exception ignored) {
 		}
+		return "           ";
 	}
 
 	public void printLineup() {
@@ -869,24 +872,17 @@ public class Lineup{
 
 	public Vector<MatchLineupPosition> getReplacedPositions(){return replacedPositions;}
 
-	public final Vector<MatchLineupPosition> getBenchPositions(){
-		return m_vBenchPositions;
-	}
-
 	/**
 	 * Place a player to a certain position and check/solve dependencies.
 	 */
-	public final byte setSpielerAtPosition(int positionsid, int spielerid, byte tactic) {
+	public final void setSpielerAtPosition(int positionsid, int spielerid, byte tactic) {
 		final MatchLineupPosition pos = getPositionById(positionsid);
-
 		if (pos != null) {
 			setSpielerAtPosition(positionsid, spielerid);
 			pos.setTaktik(tactic);
 
-			return pos.getPosition();
+			pos.getPosition();
 		}
-
-		return IMatchRoleID.UNKNOWN;
 	}
 
 	/**
@@ -1060,11 +1056,12 @@ public class Lineup{
 	 */
 	public final byte getTactic4PositionID(int positionsid) {
 		try {
-			return getPositionById(positionsid).getTactic();
+			var pos = getPositionById(positionsid);
+			if (pos != null) return pos.getTactic();
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getTactic4PositionID: " + e);
-			return IMatchRoleID.UNKNOWN;
 		}
+		return IMatchRoleID.UNKNOWN;
 	}
 
 	public final float getTacticLevel(int type) {
@@ -1464,7 +1461,7 @@ public class Lineup{
 	/**
 	 * Amend the lineup by applying the Given MatchOrder
 	 */
-	public void UpdateLineupWithMatchOrder(Substitution sub){
+	public void UpdateLineupWithMatchOrder(Substitution sub) {
 		MatchRoleID matchRoleIDPlayer, matchRoleIDaffectedPlayer;
 		int newRoleId;
 		byte tactic;
@@ -1473,21 +1470,18 @@ public class Lineup{
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
 				matchRoleIDaffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDaffectedPlayer == null)
-				{
+				if (matchRoleIDaffectedPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
 
 				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-				if (matchRoleIDPlayer==null)
-				{
+				if (matchRoleIDPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
 					break;
 				}
 				ObjectPlayer = this.getPlayerByPositionID(matchRoleIDPlayer.getId());
-				if (ObjectPlayer == null)
-				{
+				if (ObjectPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
 					break;
 				}
@@ -1495,18 +1489,17 @@ public class Lineup{
 				tactic = sub.getBehaviour();
 				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTactic();
 				newRoleId = sub.getRoleId();
-				if ( newRoleId != -1 ) {
-					if (  getPositionById(newRoleId).getPlayerId() == 0){
-						if ( newRoleId != matchRoleIDaffectedPlayer.getId() ) {
+				if (newRoleId != -1) {
+					var pos = getPositionById(newRoleId);
+					if (pos != null && pos.getPlayerId() == 0) {
+						if (newRoleId != matchRoleIDaffectedPlayer.getId()) {
 							setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
 						}
-					}
-					else {
+					} else {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
 						break;
 					}
-				}
-				else {
+				} else {
 					newRoleId = matchRoleIDaffectedPlayer.getId();
 				}
 				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
@@ -1515,15 +1508,14 @@ public class Lineup{
 			case POSITION_SWAP:
 				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
 				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-				if ( matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null ){
+				if (matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null) {
 					matchRoleIDaffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
 					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
-				}
-				else {
-					if ( matchRoleIDaffectedPlayer == null ){
+				} else {
+					if (matchRoleIDaffectedPlayer == null) {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
 					}
-					if ( matchRoleIDPlayer == null ){
+					if (matchRoleIDPlayer == null) {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
 					}
 				}
@@ -1532,19 +1524,21 @@ public class Lineup{
 			case NEW_BEHAVIOUR:
 				newRoleId = sub.getRoleId();
 				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDaffectedPlayer == null)
-				{
+				if (matchRoleIDaffectedPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
-				if ( newRoleId == -1 )  newRoleId = matchRoleIDaffectedPlayer.getId();
-				else if ( newRoleId != matchRoleIDaffectedPlayer.getId()
-						&& getPositionById(newRoleId).getPlayerId() > 0 ){
-					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
-					break;
+				if (newRoleId == -1) {
+					newRoleId = matchRoleIDaffectedPlayer.getId();
+				} else if (newRoleId != matchRoleIDaffectedPlayer.getId()) {
+					var pos = getPositionById(newRoleId);
+					if (pos != null && pos.getPlayerId() > 0) {
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
+						break;
+					}
 				}
 				tactic = sub.getBehaviour();
-				if ( tactic == -1)  tactic = MatchRoleID.NORMAL;
+				if (tactic == -1) tactic = MatchRoleID.NORMAL;
 				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
 				break;
 
