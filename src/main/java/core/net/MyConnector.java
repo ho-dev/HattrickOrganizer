@@ -318,7 +318,7 @@ public class MyConnector {
 	 *            The match type connected to the match
 	 * @return The api content (xml)
 	 */
-	public String getMatchOrder(int matchId, MatchType matchType, int teamId) {
+	public String downloadMatchOrder(int matchId, MatchType matchType, int teamId) {
 		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString() + "&version=" + VERSION_MATCHORDERS;
 		if (!HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
 			url += "&teamId=" + teamId;

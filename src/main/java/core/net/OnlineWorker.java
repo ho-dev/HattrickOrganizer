@@ -873,7 +873,7 @@ public class OnlineWorker {
 
 		try {
 			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			String xml = MyConnector.instance().getMatchOrder(matchId, matchType, teamId);
+			String xml = MyConnector.instance().downloadMatchOrder(matchId, matchType, teamId);
 
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
@@ -960,8 +960,7 @@ public class OnlineWorker {
 			file = askForHRFPath(parent, file);
 		}
 
-		if ((file != null)) {
-			file.getPath();
+		if (file != null) {
 			// Save Path
 			UserParameter.instance().hrfImport_HRFPath = file.getParentFile().getAbsolutePath();
 
@@ -1257,7 +1256,7 @@ public class OnlineWorker {
 			var match = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo).get();
 			// Match is always from the normal system, and league will do
 			// the trick as the type.
-			return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().getMatchOrder(
+			return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().downloadMatchOrder(
 							match.getMatchID(), match.getMatchType(), teamId));
 		}
 		catch (Exception ignore) {
