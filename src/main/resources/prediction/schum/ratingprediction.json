@@ -3,50 +3,55 @@
   "ratings" : {
     "defence" : {
       "central" : {
-        "contributions": [
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","gk", "normal"]}, 0.135452380952381]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "normal"]}, {"expression" : "overcrowding", "args" : ["cd"]}, 0.07068]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "offensive"]},{ "expression" : "overcrowding", "args" : ["cd"]}, 0.0651]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","cd", "wing"]}, {"expression" : "overcrowding", "args" :["cd"]}, 0.07998]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "normal"]}, 0.07068]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "offensive"]}, 0.0651]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "defensive"]}, 0.07998]},
-          {"product" : [ {"expression":"playerStrength", "args": ["defending","wb", "middle"]}, 0.1302]},
+        "sum": [
+          {"expression":"playerStrength", "args": ["defending","gk", "normal", 0.135452380952381]},
+          {"expression":"playerStrength", "args": ["defending","cd", "normal", 0.07068]}, {"expression" : "overcrowding", "args" : ["cd"]},
+          {"expression":"playerStrength", "args": ["defending","cd", "offensive", 0.0651]},{ "expression" : "overcrowding", "args" : ["cd"]},
+          {"expression":"playerStrength", "args": ["defending","cd", "wing", 0.07998]}, {"expression" : "overcrowding", "args" :["cd"]},
+          {"expression":"playerStrength", "args": ["defending","wb", "normal", 0.07068]},
+          {"expression":"playerStrength", "args": ["defending","wb", "offensive", 0.0651]},
+          {"expression":"playerStrength", "args": ["defending","wb", "defensive", 0.07998]},
+          {"expression":"playerStrength", "args": ["defending","wb", "middle", 0.1302]},
 
-          {"product" : [ {"expression":"playerExperience", "args": ["gk", "normal"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["cd", "normal"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["cd", "offensive"]},0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["cd", "wing"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["wb", "normal"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["wb", "offensive"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["wb", "defensive"]}, 0.48]},
-          {"product" : [ {"expression":"playerExperience", "args": ["wb", "middle"]}, 0.48]}
+          {"expression":"playerExperience", "args": ["gk", "normal", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["cd", "normal", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["cd", "offensive", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["cd", "wing", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["wb", "normal", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["wb", "offensive", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["wb", "defensive", {"expression": "devineCentralDefenceExpContribution"}]},
+          {"expression":"playerExperience", "args": ["wb", "middle", {"expression": "devineCentralDefenceExpContribution"}]}
         ]
       },
       "side": {
-        "contributions": []
+        "sum": []
 
       }
     },
     "midfield" : {
       "central" : {
-        "contributions": []
+        "sum": []
 
       }
     },
     "attack" : {
       "central" : {
-        "contributions": []
+        "sum": []
 
       },
       "side": {
-        "contributions": []
+        "sum": []
 
       }
     }
   },
 
   "expressions" : [
+    {"name" :  "devineCentralDefenceExpContribution" ,"result" :  0.48},
+    {"name" :  "devineSideDefenceExpContribution" ,"result" :  0.345},
+    {"name" :  "devineMidfieldExpContribution" ,"result" :  0.730},
+    {"name" :  "devineCentralAttackExpContribution" ,"result" :  0.450},
+    {"name" :  "devineSideAttackExpContribution" ,"result" :  0.375},
     {
       "name": "overcrowding",
       "args": [
@@ -108,10 +113,11 @@
     },
     {
       "name": "playerStrength",
-      "args": ["skillName", "sector", "orientation"
+      "args": ["skillName", "sector", "orientation", "weight"
       ],
       "result": {
         "product": [
+          "/weight",
           {"expression": "form", "args": [{"value": ["form", "/sector", "/orientation"]}]},
           {"sum": [
             {"expression": "skill", "args": [{"value": ["/skillName", "/sector", "/orientation"]}]},
@@ -123,9 +129,17 @@
     },
     {
       "name": "playerExperience",
-      "args": [ "sector", "orientation"
+      "args": [
+        "sector",
+        "orientation",
+        "weight"
       ],
-      "result": {"expression": "experience", "args": [{"value": ["experience", "/sector", "/orientation"]}]}
+      "result": {
+        "product": [
+          "/weight",
+          {"expression": "experience", "args": [{"value": ["experience", "/sector", "/orientation"]}]}
+        ]
+      }
     }
   ]
 }
