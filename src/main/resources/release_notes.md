@@ -69,7 +69,7 @@
 
 ## Translations
 
-Reports by Contributors - October 15, 2022 - February 04, 2023
+Reports by Contributors - October 15, 2022 - April 22, 2023
 
 * Jan 131
 * Fresty di Lot 39
