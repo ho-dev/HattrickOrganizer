@@ -113,7 +113,7 @@ public class ConvertXml2Hrf {
 		var lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId");
 		if ( lastPremierId != null && lastPremierId == usersPremierTeamId ){
 		//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
-			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("not"));
+			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
 			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
 		} else {
 			// We need to get hold of the currency info for the primary team, no matter which team we download.

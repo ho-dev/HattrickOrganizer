@@ -1,19 +1,9 @@
 // %2956927164:plugins%
 package module.teamOfTheWeek.gui;
 
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-import core.model.UserParameter;
-
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import java.awt.*;
+import java.io.Serial;
+import javax.swing.*;
 
 
 /**
@@ -21,20 +11,20 @@ import javax.swing.JPanel;
  */
 class LineupPanel extends JPanel {
 
-	private static final long serialVersionUID = -1373544624896628833L;
+    @Serial
+    private static final long serialVersionUID = -1373544624896628833L;
 
-    private JLabel m_jlTeamName;
-    private JPanel m_clLeftBack= new JPanel();
-    private JPanel m_clLeftWinger= new JPanel();
-    private JPanel m_clLeftCentralDefender= new JPanel();
-    private JPanel m_clLeftMidfield= new JPanel();
-    private JPanel m_clLeftForward= new JPanel();
-    private JPanel m_clRightBack= new JPanel();
-    private JPanel m_clRightWinger= new JPanel();
-    private JPanel m_clRightCentralDefender= new JPanel();
-    private JPanel m_clRightMidfield= new JPanel();
-    private JPanel m_clRightForward= new JPanel();
-    private JPanel m_clKeeper= new JPanel();
+    private final JComponent m_clLeftBack = new JPanel();
+    private final JComponent m_clLeftWinger = new JPanel();
+    private final JComponent m_clLeftCentralDefender = new JPanel();
+    private final JComponent m_clLeftMidfield = new JPanel();
+    private final JComponent m_clLeftForward = new JPanel();
+    private final JComponent m_clRightBack = new JPanel();
+    private final JComponent m_clRightWinger = new JPanel();
+    private final JComponent m_clRightCentralDefender = new JPanel();
+    private final JComponent m_clRightMidfield = new JPanel();
+    private final JComponent m_clRightForward = new JPanel();
+    private final JComponent m_clKeeper = new JPanel();
 
     LineupPanel() {
         super();
@@ -42,195 +32,159 @@ class LineupPanel extends JPanel {
         initComponents();
     }
 
-    final JPanel getKeeperPanel() {
+    final JComponent getKeeperPanel() {
         return m_clKeeper;
     }
 
-    final JPanel getLeftCentralDefenderPanel() {
+    final JComponent getLeftCentralDefenderPanel() {
         return m_clLeftCentralDefender;
     }
 
-    final JPanel getLeftForwardPanel() {
+    final JComponent getLeftForwardPanel() {
         return m_clLeftForward;
     }
 
-    final JPanel getLeftMidfieldPanel() {
+    final JComponent getLeftMidfieldPanel() {
         return m_clLeftMidfield;
     }
 
-    final JPanel getLeftWingPanel() {
+    final JComponent getLeftWingPanel() {
         return m_clLeftWinger;
     }
 
-    final JPanel getLeftWingbackPanel() {
+    final JComponent getLeftWingbackPanel() {
         return m_clLeftBack;
     }
 
- 
-    final JPanel getRightCentralDefenderPanel() {
+
+    final JComponent getRightCentralDefenderPanel() {
         return m_clRightCentralDefender;
     }
 
-    final JPanel getRightForwardPanel() {
+    final JComponent getRightForwardPanel() {
         return m_clRightForward;
     }
 
-    final JPanel getRightMidfieldPanel() {
+    final JComponent getRightMidfieldPanel() {
         return m_clRightMidfield;
     }
 
-    final JPanel getRightWingPanel() {
+    final JComponent getRightWingPanel() {
         return m_clRightWinger;
     }
 
-    final JPanel getRightWingbackPanel() {
+    final JComponent getRightWingbackPanel() {
         return m_clRightBack;
     }
 
     //-- Getter/Setter ----------------------------------------------------------
 
-    final void setTeamName(String teamname) {
-        m_jlTeamName.setText(teamname);
-    }
-
-    final String getTeamName() {
-        return m_jlTeamName.getText();
-    }
-
-     private void initComponents() {
+    private void initComponents() {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        final javax.swing.JPanel centerPanel = new javax.swing.JPanel();
+        var centerPanel = new JPanel();
         centerPanel.setOpaque(false);
 
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.CENTER;
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
         constraints.insets = new Insets(2, 2, 2, 2);
 
         centerPanel.setLayout(layout);
 
+        constraints.gridx = 1;
+        constraints.gridy = 4;
+        constraints.gridwidth = 2;
 
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            constraints.gridwidth = 4;
-       
-
-        m_jlTeamName = new JLabel();
-        m_jlTeamName.setOpaque(false);
-        m_jlTeamName.setForeground(ThemeManager.getColor(HOColorName.LABEL_ONGREEN_FG));
-        m_jlTeamName.setFont(m_jlTeamName.getFont().deriveFont(Font.BOLD, UserParameter.instance().fontSize + 3));
-        layout.setConstraints(m_jlTeamName, constraints);
-        centerPanel.add(m_jlTeamName);
-
-            constraints.gridx = 0;
-            constraints.gridy = 4;
-            constraints.gridwidth = 4;
-        
         m_clKeeper.setOpaque(false);
-        layout.setConstraints(m_clKeeper, constraints);
-        centerPanel.add(m_clKeeper);
-       
-            constraints.gridx = 0;
-            constraints.gridy = 5;
-            constraints.gridwidth = 1;
+        centerPanel.add(m_clKeeper, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        constraints.gridwidth = 1;
 
         m_clRightBack.setOpaque(false);
-        layout.setConstraints(m_clRightBack, constraints);
-        centerPanel.add(m_clRightBack);
-        
-            constraints.gridx = 1;
-            constraints.gridy = 5;
-            constraints.gridwidth = 1;
- 
+        centerPanel.add(m_clRightBack, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 5;
+        constraints.gridwidth = 1;
+
         m_clRightCentralDefender.setOpaque(false);
-        layout.setConstraints(m_clRightCentralDefender, constraints);
-        centerPanel.add(m_clRightCentralDefender);
-        
-            constraints.gridx = 2;
-            constraints.gridy = 5;
-            constraints.gridwidth = 1;
+        centerPanel.add(m_clRightCentralDefender, constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 5;
+        constraints.gridwidth = 1;
 
         m_clLeftCentralDefender.setOpaque(false);
-        layout.setConstraints(m_clLeftCentralDefender, constraints);
-        centerPanel.add(m_clLeftCentralDefender);
+        centerPanel.add(m_clLeftCentralDefender, constraints);
 
-            constraints.gridx = 3;
-            constraints.gridy = 5;
-            constraints.gridwidth = 1;
-        
+        constraints.gridx = 3;
+        constraints.gridy = 5;
+        constraints.gridwidth = 1;
+
         m_clLeftBack.setOpaque(false);
-        layout.setConstraints(m_clLeftBack, constraints);
-        centerPanel.add(m_clLeftBack);
-       
-            constraints.gridx = 0;
-            constraints.gridy = 6;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clLeftBack, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        constraints.gridwidth = 1;
+
         m_clRightWinger.setOpaque(false);
-        layout.setConstraints(m_clRightWinger, constraints);
-        centerPanel.add(m_clRightWinger);
-        
-            constraints.gridx = 1;
-            constraints.gridy = 6;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clRightWinger,constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 6;
+        constraints.gridwidth = 1;
+
         m_clRightMidfield.setOpaque(false);
-        layout.setConstraints(m_clRightMidfield, constraints);
-        centerPanel.add(m_clRightMidfield);
-        
-            constraints.gridx = 2;
-            constraints.gridy = 6;
-            constraints.gridwidth = 1;
-       
-       m_clLeftMidfield.setOpaque(false);
-        layout.setConstraints(m_clLeftMidfield, constraints);
-        centerPanel.add(m_clLeftMidfield);
-        
-            constraints.gridx = 3;
-            constraints.gridy = 6;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clRightMidfield, constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 6;
+        constraints.gridwidth = 1;
+
+        m_clLeftMidfield.setOpaque(false);
+        centerPanel.add(m_clLeftMidfield, constraints);
+
+        constraints.gridx = 3;
+        constraints.gridy = 6;
+        constraints.gridwidth = 1;
+
         m_clLeftWinger.setOpaque(false);
-        layout.setConstraints(m_clLeftWinger, constraints);
-        centerPanel.add(m_clLeftWinger);
-        
-            constraints.gridx = 1;
-            constraints.gridy = 7;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clLeftWinger, constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 7;
+        constraints.gridwidth = 1;
+
         m_clLeftForward.setOpaque(false);
-        layout.setConstraints(m_clLeftForward, constraints);
-        centerPanel.add(m_clLeftForward);
-        
-            constraints.gridx = 2;
-            constraints.gridy = 7;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clLeftForward, constraints);
+
+        constraints.gridx = 2;
+        constraints.gridy = 7;
+        constraints.gridwidth = 1;
+
         m_clRightForward.setOpaque(false);
-        layout.setConstraints(m_clRightForward, constraints);
-        centerPanel.add(m_clRightForward);
-       
-            constraints.gridx = 0;
-            constraints.gridy = 1;
-            constraints.gridwidth = 1;
-        
+        centerPanel.add(m_clRightForward, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
 
         final JLabel label = new JLabel();
         label.setOpaque(true);
-        layout.setConstraints(label, constraints);
-        centerPanel.add(label);
+        centerPanel.add(label, constraints);
 
-       
-            constraints.gridx = 1;
-            constraints.gridy = 1;
-            constraints.gridwidth = 1;
-        
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
 
         add(centerPanel, BorderLayout.CENTER);
     }
+
 }

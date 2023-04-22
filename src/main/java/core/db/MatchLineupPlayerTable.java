@@ -2,12 +2,16 @@ package core.db;
 
 import core.model.match.MatchLineupPosition;
 import core.model.enums.MatchType;
+import core.model.player.IMatchRoleID;
+import core.model.series.Paarung;
 import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import static core.model.player.IMatchRoleID.aPositionBehaviours;
+
+import static core.model.player.IMatchRoleID.*;
 
 public final class MatchLineupPlayerTable extends AbstractTable {
 
@@ -173,5 +177,65 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	private final PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
 	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
 		return load(MatchLineupPosition.class, adapter.executePreparedQuery(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID));
+	}
+
+	public List<MatchLineupPosition> loadTopFlopRatings( List<Paarung> matches, int position, int count, boolean isBest){
+		var args = new ArrayList<>();
+		var sql = new StringBuilder("SELECT * FROM ");
+		sql.append(TABLENAME).append(" WHERE SpielerID != 0 AND RATING>0 AND RoleID IN (");
+
+		switch (position) {
+			case IMatchRoleID.KEEPER -> {
+				args.add(keeper);
+				sql.append("?)");
+			}
+			case IMatchRoleID.CENTRAL_DEFENDER -> {
+				args.add(leftCentralDefender);
+				args.add(middleCentralDefender);
+				args.add(rightCentralDefender);
+				sql.append("?,?,?)");
+			}
+			case IMatchRoleID.BACK -> {
+				args.add(leftBack);
+				sql.append("?)");
+			}
+			case IMatchRoleID.WINGER -> {
+				args.add(leftWinger);
+				args.add(rightWinger);
+				sql.append("?,?)");
+			}
+			case IMatchRoleID.MIDFIELDER -> {
+				args.add(leftInnerMidfield);
+				args.add(centralInnerMidfield);
+				args.add(rightInnerMidfield);
+				sql.append("?,?,?)");
+			}
+			case IMatchRoleID.FORWARD -> {
+				args.add(leftForward);
+				args.add(centralForward);
+				args.add(rightForward);
+				sql.append("?,?,?)");
+			}
+		}
+
+		if (!matches.isEmpty()) {
+			sql.append(" AND MatchID IN ");
+			var sep = '(';
+			for (Paarung match : matches) {
+				args.add(match.getMatchId());
+				sql.append(sep).append('?');
+				sep = ',';
+			}
+			sql.append(')');
+		}
+		sql.append(" ORDER BY RATING ");
+
+		if (isBest) {
+			sql.append("DESC");
+		} else {
+			sql.append("ASC");
+		}
+		sql.append(" LIMIT ").append(count);
+		return load(MatchLineupPosition.class, adapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), args.toArray()));
 	}
 }
