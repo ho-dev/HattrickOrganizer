@@ -114,7 +114,7 @@ public class ConvertXml2Hrf {
 		if ( lastPremierId != null && lastPremierId == usersPremierTeamId ){
 		//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
-			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
+			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
 		} else {
 			// We need to get hold of the currency info for the primary team, no matter which team we download.
 			usersPremierTeamInfo = XMLWorldDetailsParser.updateTeamInfoWithCurrency(usersPremierTeamInfo, mc.getWorldDetails(usersPremierTeamInfo.getLeagueId()));
@@ -122,7 +122,7 @@ public class ConvertXml2Hrf {
 			ModuleConfig.instance().setString("CountryId", usersPremierTeamInfo.getCountryId());
 			ModuleConfig.instance().setInteger("UsersPremierTeamId", usersPremierTeamInfo.getTeamId());
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
-			worldDataMap.put("CountryId", ModuleConfig.instance().getString("CountryId"));
+			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
 		}
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
