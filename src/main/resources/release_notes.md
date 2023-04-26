@@ -2,6 +2,7 @@
 
 ## Highlights
 
+bug fixes 
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A8.0)
 
@@ -18,6 +19,7 @@
 ### Lineup
 
 ### Statistics
+* fix currency of secondary teams (#1856)
 
 ### Transfer
 
