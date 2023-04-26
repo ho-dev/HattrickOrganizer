@@ -39,8 +39,8 @@ test {
 //  Version ============================================================
 // Development_stage (DEV:0  BETA:1  STABLE:2)
 def major = '7'
-def minor = '0'
-def development_stage = 2
+def minor = '1'
+def development_stage = 1
 def releaseArtefacts = true
 def development_tag = ["dev", "beta", "tag_stable"]
 def version_type = ["-DEV", "-BETA", ""]
@@ -309,9 +309,9 @@ task pushmd(dependsOn: preparingBuild)  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 6.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 6.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 6.0..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 7.0..HEAD --count')
+        def diff = callGit('git diff --shortstat 7.0..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 7.0..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
