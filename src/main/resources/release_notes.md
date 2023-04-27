@@ -15,6 +15,7 @@ bug fixes
 ### Rating
 
 ### Matches
+* fix missing player names in match highlights panel (#1857)
 
 ### Lineup
 
