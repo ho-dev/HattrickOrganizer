@@ -9,6 +9,7 @@ bug fixes
 ### Database
 
 ### Squad
+* fix click on “Last Match” column when the column has been moved.
 
 ### Team Analyzer
 
