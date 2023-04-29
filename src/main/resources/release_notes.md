@@ -66,6 +66,7 @@
 
 ### Misc
 * fix display of wrong currency and character encoding when ht worldetails table wasn't initialized (#1622)
+* Add a Linux-friendly default theme, called “Gnome.”
 
 ## Translations
 

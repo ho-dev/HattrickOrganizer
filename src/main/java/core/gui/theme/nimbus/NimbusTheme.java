@@ -20,6 +20,7 @@ public class NimbusTheme extends BaseTheme {
 
 	public final static String THEME_NAME = "Nimbus";
 
+	@Override
 	public String getName() {
 		return THEME_NAME;
 	}
@@ -32,13 +33,14 @@ public class NimbusTheme extends BaseTheme {
 	public boolean enableTheme(int fontSize) {
 		try {
 			LookAndFeelInfo nimbus = null;
+
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            nimbus = info;
-		            break;
-		        }
-		    }
-			
+				if ("Nimbus".equals(info.getName())) {
+					nimbus = info;
+					break;
+				}
+			}
+
 			if (nimbus != null) {
 				if (OSUtils.isMac()) {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -61,7 +63,7 @@ public class NimbusTheme extends BaseTheme {
 
 				setFont(fontSize);
 				UIDefaults uid = UIManager.getLookAndFeelDefaults();
-				
+
 				uid.put("Table.intercellSpacing", new DimensionUIResource(1, 1));
 				uid.put("Table.showGrid", Boolean.TRUE);
 				uid.put("Table.gridColor", new ColorUIResource(214, 217, 223));
