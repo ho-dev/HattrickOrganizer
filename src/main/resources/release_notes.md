@@ -24,6 +24,7 @@
 * fix npe when player avatar download fails (#1806)
 * fix best position display in skill tester (#1822)
 * fix import of hrf files from portal tracker (#1829)
+* fix click on “Last Match” column when the column has been moved.
 
 ### Team Analyzer
 * team analyzer displays man marking tactic (#1741)
