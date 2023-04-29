@@ -14,6 +14,11 @@ public class XtraData extends AbstractTable.Storable {
     private HODateTime m_TrainingDate;
     private boolean m_bHasPromoted;
     private double m_dCurrencyRate = -1.0d;
+
+    /**
+     * Id of the user's premier team
+     * (same currency with all teams of the user)
+     */
     private Integer m_iCountryId;
 
     /**
