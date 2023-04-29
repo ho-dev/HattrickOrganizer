@@ -1,6 +1,7 @@
 package module.lineup.substitution.model;
 
 import com.google.gson.annotations.SerializedName;
+import core.util.HOLogger;
 
 public enum RedCardCriteria {
 
@@ -47,7 +48,8 @@ public enum RedCardCriteria {
 				return criteria;
 			}
 		}
-		return null;
+		HOLogger.instance().error(RedCardCriteria.class, "getById ignores unknown id: "+id);
+		return IGNORE;
 	}
 
 	public static RedCardCriteria parse(String id){
