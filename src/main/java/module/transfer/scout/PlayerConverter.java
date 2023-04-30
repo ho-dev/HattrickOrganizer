@@ -4,7 +4,6 @@ package module.transfer.scout;
 import core.constants.player.PlayerSpeciality;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -24,7 +23,6 @@ public class PlayerConverter {
 	final private List<String> specialities;
 	final private List<Integer> specialitiesvalues;
 	final private static Set<String> NORMALCHARS = new HashSet<>();
-    java.util.Date deadLineDate;
 
     public static final int SUCCESS = 0; // No error detected
     public static final int WARNING = 1; // One or some fields don't detected
@@ -56,7 +54,7 @@ public class PlayerConverter {
         skillvalues = new ArrayList<>();
         specialities = new ArrayList<>();
         specialitiesvalues = new ArrayList<>();
-        deadLineDate = new java.sql.Date(System.currentTimeMillis());
+//        deadLineDate = new java.sql.Date(System.currentTimeMillis());
 
         try{
             // Get all skills for active language
@@ -423,7 +421,6 @@ Mindestgebot: [money]0[/money]
         sc = new Scanner(row);
         sc.useDelimiter("");
         txtTmp = new StringBuilder();
-        c = "";
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
@@ -442,14 +439,13 @@ Mindestgebot: [money]0[/money]
         sc = new Scanner(row);
         sc.useDelimiter("");
         txtTmp = new StringBuilder();
-        c = "";
         boolean findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -461,7 +457,6 @@ Mindestgebot: [money]0[/money]
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.form"));
         }
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
@@ -484,14 +479,13 @@ Mindestgebot: [money]0[/money]
         sc = new Scanner(row);
         sc.useDelimiter("");
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -504,14 +498,13 @@ Mindestgebot: [money]0[/money]
         }
         //Defense
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -524,14 +517,13 @@ Mindestgebot: [money]0[/money]
         }
         //PlayMaking
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -544,14 +536,13 @@ Mindestgebot: [money]0[/money]
         }
         //Wing
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -564,14 +555,13 @@ Mindestgebot: [money]0[/money]
         }
         //Passing
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -584,14 +574,13 @@ Mindestgebot: [money]0[/money]
         }
         //Attack
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -604,14 +593,13 @@ Mindestgebot: [money]0[/money]
         }
         //Set Pieces
         txtTmp = new StringBuilder();
-        c = "";
         findValue = false;
         while (sc.hasNext()) {
             if (sc.hasNextInt()) {
                 txtTmp.append(sc.next().trim());
                 findValue = true;
             } else {
-                c = sc.next();
+                sc.next();
                 if (findValue) {
                     break;
                 }
@@ -627,7 +615,15 @@ Mindestgebot: [money]0[/money]
         sc = new Scanner(row);
         sc.useDelimiter(": ");
         if (sc.hasNext()) sc.next();
-        if (sc.hasNext()) player.setExpiryDate(sc.next().trim());
+        if (sc.hasNext()) {
+            var datetime = sc.next();
+            sc.close();
+            sc = new Scanner(datetime);
+            sc.useDelimiter(" ");
+            var dateString = sc.next();
+            var timeString = sc.next();
+            player.setExpiryDate(dateString, timeString);
+        }
         sc.close();
 
         row = rows.get(indexRoxPrice);
@@ -665,10 +661,6 @@ Mindestgebot: [money]0[/money]
     private void addErrorField(String fieldName){
         this.errorFields.add(fieldName);
         this.status = WARNING;
-    }
-
-    private void addNotSupportedField(String fieldName){
-        this.notSupportedFields.add(fieldName);
     }
 
     /**
@@ -742,12 +734,12 @@ Mindestgebot: [money]0[/money]
             		// Players from China etc. have Brackets in their names!!!
             		// Therefore we need lastIndexOf
             		// This also deals with player categories
-					if ((p = tmp.indexOf("(")) > -1 && (n = tmp.indexOf(")")) > -1 && Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()) > 100000) {
+					if (tmp.contains("(") && (n = tmp.indexOf(")")) > -1 && Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()) > 100000) {
 						player.setPlayerID(Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()));
 						found_at_line = m;
 						break;
 					}
-            	} catch (Exception e) {
+            	} catch (Exception ignored) {
                 }
             }
 
@@ -1011,15 +1003,13 @@ Mindestgebot: [money]0[/money]
 
             // exp is of format: ddmmyyyyhhmm
             try {
-				player.setExpiryDate(exp.substring(0, 2) + "." + exp.substring(2, 4) + "."
-				                     + exp.substring(6, 8));
-				player.setExpiryTime(exp.substring(8, 10) + ":" + exp.substring(10, 12));
+				var dateString = exp.substring(0, 2) + "." + exp.substring(2, 4) + "." + exp.substring(6, 8);
+                var timeString = exp.substring(8, 10) + ":" + exp.substring(10, 12);
+                player.setExpiryDate(dateString, timeString);
 			} catch (RuntimeException e) {
 				// error getting deadline - just set current date
-				f = new SimpleDateFormat("dd.MM.yyyy");
-				player.setExpiryDate(f.format(new Date()));
-				f = new SimpleDateFormat("HH:mm");
-				player.setExpiryTime(f.format(new Date()));
+				player.setExpiryDate(new SimpleDateFormat("dd.MM.yyyy").format(new Date()),
+                                     new SimpleDateFormat("HH:mm").format(new Date()));
 				if (status == 0) {
                     addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
                 }
@@ -1191,7 +1181,7 @@ Mindestgebot: [money]0[/money]
                 player.setSpeciality(0);
             }
 
-            setDeadline(player);
+//            setDeadline(player);
         }else{
             status = ERROR;
         }
@@ -1400,23 +1390,24 @@ Mindestgebot: [money]0[/money]
         return exp;
     }
 
-    public java.util.Date getDeadline(){
-        return deadLineDate;
-    }
+//    public java.util.Date getDeadline(){
+//        return deadLineDate;
+//    }
 
-    public void setDeadline(Player player){
-        if(player.getExpiryDate() == null || player.getExpiryTime() == null || player.getExpiryDate().isEmpty() || player.getExpiryTime().isEmpty()){
-            this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-        } else {
-            try {
-                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-                        java.util.Locale.GERMANY);
-                deadLineDate = simpleFormat.parse(player.getExpiryDate() + " "
-                        + player.getExpiryTime());
-            } catch (Exception e) {
-                HOLogger.instance().debug(getClass(), e);
-                this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-            }
-        }
-    }
+//    public void setDeadline(Player player){
+//        if(player.getExpiryDate() == null){
+//            this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+//        } else {
+//            try {
+//                deadLineDate = LocalDateTime.ofInstant(player.getExpiryDate().instant, ZoneId.systemDefault());
+//                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
+//                        java.util.Locale.GERMANY);
+//                deadLineDate = simpleFormat.parse(player.getExpiryDate() + " "
+//                        + player.getExpiryTime());
+//            } catch (Exception e) {
+//                HOLogger.instance().debug(getClass(), e);
+//                this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+//            }
+//        }
+//    }
 }

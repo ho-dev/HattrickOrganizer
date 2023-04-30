@@ -27,7 +27,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -50,7 +52,8 @@ import javax.swing.SwingConstants;
  */
 class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, FocusListener {
 
-	private static final long serialVersionUID = -2092930481559683730L;
+	@Serial
+    private static final long serialVersionUID = -2092930481559683730L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 	private JButton jbApply = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.ok"));
@@ -244,7 +247,8 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 Helper.setComboBoxFromID(jcbPlaymaking, player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                jsSpinner.setValue(pc.getDeadline());
+                var deadline =player.getExpiryDate();
+                jsSpinner.setValue(Date.from(deadline.instant));
 
                 spielervalueChanged();
             }

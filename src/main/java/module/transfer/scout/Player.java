@@ -1,6 +1,12 @@
 // %3800124443:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
 
+import core.util.HODateTime;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Player used for PlayerConverter (TransferScout)
  *
@@ -9,8 +15,7 @@ package module.transfer.scout;
 public class Player {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private String expiryDate;
-    private String expiryTime;
+    private HODateTime expiryDate;
     private String playerName;
     private int age;
     private int ageDays;
@@ -140,10 +145,10 @@ public class Player {
     /**
      * Setter for expiryDate
      *
-     * @param string Set expiryDate to string
+     * @param date Set expiryDate
      */
-    public final void setExpiryDate(String string) {
-        expiryDate = string;
+    public final void setExpiryDate(HODateTime date) {
+        expiryDate = date;
     }
 
     /**
@@ -151,26 +156,8 @@ public class Player {
      *
      * @return Returns expiryDate
      */
-    public final String getExpiryDate() {
+    public final HODateTime getExpiryDate() {
         return expiryDate;
-    }
-
-    /**
-     * Setter for expiryTime
-     *
-     * @param string Set expiryTime to string
-     */
-    public final void setExpiryTime(String string) {
-        expiryTime = string;
-    }
-
-    /**
-     * Getter for expiryTime
-     *
-     * @return Returns expiryTime
-     */
-    public final String getExpiryTime() {
-        return expiryTime;
     }
 
     /**
@@ -463,25 +450,7 @@ public class Player {
     public final int getAgreeability() {
         return agreeability;
     }
-    
-    /**
-     * Setter for baseWage
-     *
-     * @param i Set baseWage to i
-     */
-    public final void setBaseWage(int i) {
-    	baseWage = i;
-    }
 
-    /**
-     * Getter for baseWage
-     *
-     * @return Returns baseWage
-     */
-    public final int getBaseWage() {
-        return baseWage;
-    }
-    
     /**
      * Setter for nationality
      *
@@ -557,30 +526,37 @@ public class Player {
      */
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append("playerName = " + playerName);
-        buffer.append(", price = " + price);
-        buffer.append(", playerId = " + playerId);
-        buffer.append(", speciality = " + speciality);
-        buffer.append(", TSI = " + tsi);
-        buffer.append(", Age = " + age +"."+ageDays);
-        buffer.append(", expiryDate = " + expiryDate + " " + expiryTime);
-        buffer.append(", experience = " + experience);
-        buffer.append(", form = " + form);
-        buffer.append(", stamina = " + stamina);
-        buffer.append(", goalKeeping = " + goalKeeping);
-        buffer.append(", playMaking = " + playMaking);
-        buffer.append(", passing = " + passing);
-        buffer.append(", wing = " + wing);
-        buffer.append(", defense = " + defense);
-        buffer.append(", attack = " + attack);
-        buffer.append(", setPieces = " + setPieces);
-        buffer.append(", loyalty = " + loyalty);
-        buffer.append(", homegrown = " + homegrown);
-        buffer.append(", agreeability = " + agreeability);
-        buffer.append(", baseWage = " + baseWage);
-        buffer.append(", nationality = " + nationality);
-        buffer.append(", info = " + getInfo());
+        final StringBuilder buffer = new StringBuilder();
+        buffer.append("playerName = ").append(playerName);
+        buffer.append(", price = ").append(price);
+        buffer.append(", playerId = ").append(playerId);
+        buffer.append(", speciality = ").append(speciality);
+        buffer.append(", TSI = ").append(tsi);
+        buffer.append(", Age = ").append(age).append(".").append(ageDays);
+        buffer.append(", expiryDate = ");
+        if ( expiryDate!= null) buffer.append(expiryDate.toLocaleDateTime());
+        buffer.append(", experience = ").append(experience);
+        buffer.append(", form = ").append(form);
+        buffer.append(", stamina = ").append(stamina);
+        buffer.append(", goalKeeping = ").append(goalKeeping);
+        buffer.append(", playMaking = ").append(playMaking);
+        buffer.append(", passing = ").append(passing);
+        buffer.append(", wing = ").append(wing);
+        buffer.append(", defense = ").append(defense);
+        buffer.append(", attack = ").append(attack);
+        buffer.append(", setPieces = ").append(setPieces);
+        buffer.append(", loyalty = ").append(loyalty);
+        buffer.append(", homegrown = ").append(homegrown);
+        buffer.append(", agreeability = ").append(agreeability);
+        buffer.append(", baseWage = ").append(baseWage);
+        buffer.append(", nationality = ").append(nationality);
+        buffer.append(", info = ").append(getInfo());
         return buffer.toString();
+    }
+
+    public void setExpiryDate(String dateString, String timeString) {
+        var datetimeformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        var localDateTime = LocalDateTime.parse(dateString+" "+ timeString, datetimeformatter);
+        setExpiryDate(new HODateTime(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 }

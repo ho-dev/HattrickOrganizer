@@ -11,6 +11,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.module.IModule;
@@ -27,18 +28,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serial;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 /**
@@ -106,9 +100,10 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private final JTextField jtfPrice = new JTextField("0");
 	private final JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
     private ScoutEintrag clScoutEntry;
-    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel();
-    private final JTextField jtDeadline = new JTextField();
     private final JTextField jtfName = new JTextField();
+    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
+    private final JSpinner jsSpinner = new JSpinner(clSpinnerModel);
+    //private final JTextField jtfName = new JTextField();
     private final JTextField jtfPlayerID = new JTextField("0");
     private final TransferScoutPanel clOwner;
 
@@ -467,12 +462,13 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {
-                jtfPlayerID.setText(player.getPlayerID() + "");
+                jtfPlayerID.setText(String.valueOf(player.getPlayerID()));
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(player.getPrice() + "");
-                jtfTSI.setText(player.getTSI() + "");
+                var price = Helper.getNumberFormat(true, 0).format(player.getPrice()/ UserParameter.instance().FXrate);
+                jtfPrice.setText(price);
+                jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
                 jcbSpeciality.removeItemListener(this);
@@ -520,8 +516,9 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
                 // Normally not working. Thus last positioned
                 //
-                // jsSpinner.setValue(pc.getDeadline());
-                jtDeadline.setText(player.getExpiryDate());
+                var deadline =player.getExpiryDate();
+                jsSpinner.setValue(Date.from(deadline.instant));
+                //jtDeadline.setText(player.getExpiryDate());
 
                 setLabels();
             }
@@ -631,7 +628,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
         panel.add(label);
-        panel.add(jtDeadline);
+        jsSpinner.addFocusListener(this);
+        panel.add(jsSpinner);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
         panel.add(label);
