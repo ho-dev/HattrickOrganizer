@@ -8,15 +8,11 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.vo.Team;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.*;
 
 /**
  * Panel to filter opponents matches.
@@ -160,6 +156,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 		});
 
 		JPanel teamPanel = new ImagePanel();
+		teamPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
 		teamPanel.setLayout(new BorderLayout());
 		teamPanel.add(downloadButton, BorderLayout.NORTH);
@@ -180,11 +177,16 @@ public class FilterPanel extends JPanel implements ActionListener {
 		ButtonGroup groupRadio = new ButtonGroup();
 		JPanel buttonPanel = new ImagePanel();
 
-		buttonPanel.setLayout(new BorderLayout());
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
 		groupRadio.add(radioAutomatic);
 		groupRadio.add(radioManual);
-		buttonPanel.add(radioAutomatic, BorderLayout.WEST);
-		buttonPanel.add(radioManual, BorderLayout.EAST);
+
+		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(radioAutomatic);
+		buttonPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		buttonPanel.add(radioManual);
+		buttonPanel.add(Box.createHorizontalGlue());
+
 		topPanel.add(teamPanel, BorderLayout.NORTH);
 		topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
