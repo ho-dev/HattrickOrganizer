@@ -380,7 +380,7 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
+				if (m_clAssi.isPlayerInLineup(player.getPlayerID(), m_vFieldPositions)) {
 					int curPlayerId = player.getPlayerID();
 					float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup()
 							.getAverageExperience(curPlayerId);
@@ -414,7 +414,7 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), noKeeper)) {
+				if (m_clAssi.isPlayerInLineup(player.getPlayerID(), noKeeper)) {
 					double sp = (double) player.getSPskill()
 							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
 							+ RatingPredictionManager.getLoyaltyHomegrownBonus(player);
@@ -448,7 +448,7 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
+				if (m_clAssi.isPlayerInLineup(player.getPlayerID(), m_vFieldPositions)) {
 					value += player.getExperience();
 					if (captainsId > 0) {
 						if (captainsId == player.getPlayerID()) {
