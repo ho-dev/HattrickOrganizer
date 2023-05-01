@@ -3,7 +3,6 @@ package module.transfer.scout;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
-//import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.HyperLinkLabel;
@@ -15,6 +14,7 @@ import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.module.IModule;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -33,6 +33,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.*;
+
+import static core.util.Helper.formatCurrency;
+import static core.util.Helper.parseCurrency;
 
 
 /**
@@ -97,7 +100,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private final JTextArea jtaNotes = new JTextArea();
     private final JTextField jtfAge = new JTextField("17.0");
     private final JTextField jtfTSI = new JTextField("1000");
-    private final JTextField jtfPrice = new JTextField("0");
+    private final JTextField jtfPrice = new JTextField(formatCurrency(0));
 	private final JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
     private ScoutEintrag clScoutEntry;
     private final JTextField jtfName = new JTextField();
@@ -198,6 +201,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
+            tempPlayer.setHrfDate(HODateTime.now());
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
@@ -207,7 +211,11 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		}
     	else {
             clScoutEntry.setPlayerID(Integer.parseInt(jtfPlayerID.getText()));
-            clScoutEntry.setPrice(Integer.parseInt(jtfPrice.getText()));
+            var price = parseCurrency(jtfPrice.getText());
+            if (price != null) {
+                price = (int) (price * UserParameter.instance().FXrate);
+                clScoutEntry.setPrice(price);
+            }
             clScoutEntry.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             clScoutEntry.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             clScoutEntry.setTSI(Integer.parseInt(jtfTSI.getText()));
@@ -291,11 +299,11 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void setCBs() {
         clSpinnerModel.setValue(clScoutEntry.getDeadline());
-        jtfPlayerID.setText(clScoutEntry.getPlayerID() + "");
+        jtfPlayerID.setText(String.valueOf(clScoutEntry.getPlayerID()));
         jtfName.setText(clScoutEntry.getName());
-        jtfPrice.setText(clScoutEntry.getPrice() + "");
+        jtfPrice.setText(formatCurrency(clScoutEntry.getPrice() / UserParameter.instance().FXrate));
         jtfAge.setText(clScoutEntry.getAlter() + "." + clScoutEntry.getAgeDays());
-        jtfTSI.setText(clScoutEntry.getTSI() + "");
+        jtfTSI.setText(String.valueOf(clScoutEntry.getTSI()));
         jtaNotes.setText(clScoutEntry.getInfo());
         jcbSpeciality.removeItemListener(this);
         jcbExperience.removeItemListener(this);
@@ -466,8 +474,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                var price = Helper.getNumberFormat(true, 0).format(player.getPrice()/ UserParameter.instance().FXrate);
-                jtfPrice.setText(price);
+                jtfPrice.setText(formatCurrency(player.getPrice()/UserParameter.instance().FXrate));
                 jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
@@ -515,10 +522,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 Helper.setComboBoxFromID(jcbPlaymaking,player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                //
                 var deadline =player.getExpiryDate();
                 jsSpinner.setValue(Date.from(deadline.instant));
-                //jtDeadline.setText(player.getExpiryDate());
 
                 setLabels();
             }

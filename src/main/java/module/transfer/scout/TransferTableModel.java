@@ -4,10 +4,13 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.HomegrownEntry;
 import core.gui.comp.entry.PlayerLabelEntry;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.Helper;
 
+import java.io.Serial;
 import java.util.Objects;
 import java.util.Vector;
 import javax.swing.JLabel;
@@ -20,7 +23,8 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TransferTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = -7723286963812074041L;
+	@Serial
+    private static final long serialVersionUID = -7723286963812074041L;
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
@@ -243,8 +247,6 @@ public class TransferTableModel extends AbstractTableModel {
     /**
      *  Returns the name for the column of columnIndex.
      *  Return null if there is no match.
-     *
-     *
      * @param columnIndex  the column being queried
      * @return a string containing the name of <code>column</code>
      */
@@ -382,7 +384,7 @@ public class TransferTableModel extends AbstractTableModel {
             //Name
             m_clData[i][1] = new PlayerLabelEntry(aktuellerPlayer, null, 0f, false, false);
             //Price
-            m_clData[i][2] = new ColorLabelEntry(aktuellerScoutEintrag.getPrice()+"",
+            m_clData[i][2] = new ColorLabelEntry(Helper.formatCurrency(aktuellerScoutEintrag.getPrice()/ UserParameter.instance().FXrate),
                                                  ColorLabelEntry.FG_STANDARD,
                                                  ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             //Ablaufdatum

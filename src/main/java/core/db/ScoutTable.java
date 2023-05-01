@@ -53,9 +53,9 @@ final class ScoutTable extends AbstractTable {
 	 */
 	void saveScoutList(Vector<ScoutEintrag> list) {
 		executePreparedDelete();
-		// What should be done when list = null?? jailbird.
 		if (list != null) {
 			for (var scout : list) {
+				scout.setIsStored(false);
 				store(scout);
 			}
 		}
