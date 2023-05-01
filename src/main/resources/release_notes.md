@@ -28,6 +28,7 @@
 ### Youth
 
 ### Misc
+* Add a Linux-friendly default theme, called “Gnome.”
 
 ## Translations
 

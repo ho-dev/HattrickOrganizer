@@ -8,6 +8,7 @@ import core.db.user.UserManager;
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
+import core.gui.theme.gnome.GnomeTheme;
 import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
@@ -34,6 +35,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.*;
 
+/**
+ * Manages all the HO Themes.
+ */
 public final class ThemeManager {
 
 	/** Name of the default theme. */
@@ -45,7 +49,6 @@ public final class ThemeManager {
 	private final static Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
 	private final static File playerAvatarDir = new File(String.valueOf(playerAvatarPath));
 	private final static Map<String, Theme> themes = new LinkedHashMap<>();
-
 	private final static ThemeManager MANAGER = new ThemeManager();
 
 	HOClassicSchema classicSchema = new HOClassicSchema();
@@ -60,12 +63,17 @@ public final class ThemeManager {
 	}
 
 	private void initialize() {
+
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
 // Comment out those themes for now as they are not ready yet.
 //		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
 		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
+
+		if (OSUtils.isLinux()) {
+			themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
+		}
 
 		if (!teamLogoDir.exists()) {
 			try {
@@ -145,7 +153,7 @@ public final class ThemeManager {
 		return tmp;
 	}
 
-	private Icon getIconImpl(String key){
+	private Icon getIconImpl(String key) {
 		Object tmp = classicSchema.get(key);
 		if(tmp == null)
 			return null;
@@ -282,7 +290,7 @@ public final class ThemeManager {
 			avatarPath = playerAvatarPath.resolve(avatar.getPlayerID() + ".png").toString();
 			avatarImg = new File(avatarPath);
 
-			if (! avatarImg.exists()) {
+			if (!avatarImg.exists()) {
 				missingAvatars.add(avatar);
 			}
 		}
@@ -291,18 +299,16 @@ public final class ThemeManager {
 		int i=1;
 		int iMax = missingAvatars.size();
 
-		for (var avatar:missingAvatars){
+		for (var avatar:missingAvatars) {
 			HOLogger.instance().info(this.getClass(), "Donwloading player's avatar: %s/%s".formatted(i, iMax));
 			HOMainFrame.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
-			try{
+			try {
 				avatar.generateAvatar(playerAvatarPath);
-				}
-			catch (IOException e) {
-					HOLogger.instance().error(ThemeManager.class, "Error processing Player Avatar for player: " + avatar.getPlayerID());
-				}
-				i ++;
+			} catch (IOException e) {
+				HOLogger.instance().error(ThemeManager.class, "Error processing Player Avatar for player: " + avatar.getPlayerID());
 			}
-
+			i++;
+		}
 	}
 
 	public Icon getPlayerAvatar(int playerID){
@@ -315,7 +321,7 @@ public final class ThemeManager {
 		String avatarPath = playerAvatarPath.resolve(playerID + ".png").toString();
 		File avatarImg = new File(avatarPath);
 
-		if (! avatarImg.exists()) {
+		if (!avatarImg.exists()) {
 			HOLogger.instance().log(this.getClass(), "avatar for player " + playerID + " not found locally. It will be downloaded");
 			return getScaledIcon(HOIconName.NO_CLUB_LOGO, width, height);
 		}
