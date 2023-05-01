@@ -161,6 +161,24 @@ public class Player {
     }
 
     /**
+     * Setter for baseWage
+     *
+     * @param i Set baseWage to i
+     */
+    public final void setBaseWage(int i) {
+        baseWage = i;
+    }
+
+    /**
+     * Getter for baseWage
+     *
+     * @return Returns baseWage
+     */
+    public final int getBaseWage() {
+        return baseWage;
+    }
+
+    /**
      * Setter for form
      *
      * @param i Set form to i
