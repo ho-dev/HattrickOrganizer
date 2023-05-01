@@ -198,7 +198,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                var price = Helper.getNumberFormat(true, 0).format(player.getPrice()/ UserParameter.instance().FXrate);
+                var price = Helper.formatCurrency(player.getPrice()/ UserParameter.instance().FXrate);
                 jtfPrice.setText(price);
                 jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
