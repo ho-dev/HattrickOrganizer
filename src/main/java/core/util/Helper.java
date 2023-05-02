@@ -1,6 +1,4 @@
-// %1586804725:de.hattrickorganizer.tools%
 package core.util;
-
 
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
@@ -9,22 +7,20 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
-
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Vector;
-
 import javax.swing.*;
 
-
 /**
- * Klasse mit Hilfsmethoden, die in mehreren Dialogen/Panels benutzt werden
+ * Helper class
+ * Methods are used in several dialogs or panels
  */
 public class Helper {
 
 	/**
-	 * Form
+	 * Form selections
 	 */
 	public static final CBItem[] EINSTUFUNG_FORM = {
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.NON_EXISTENT), PlayerAbility.NON_EXISTENT),
@@ -38,7 +34,7 @@ public class Helper {
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.EXCELLENT), PlayerAbility.EXCELLENT)};
 
 	/**
-	 * Kondition
+	 * Stamina selections
 	 */
 	public static final CBItem[] EINSTUFUNG_KONDITION = {
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.NON_EXISTENT), PlayerAbility.NON_EXISTENT),
@@ -53,7 +49,7 @@ public class Helper {
 			new CBItem(PlayerAbility.getNameForSkill(PlayerAbility.FORMIDABLE), PlayerAbility.FORMIDABLE)};
 
 	/**
-	 * Spielerpositionen
+	 * Lineup position selections
 	 */
 	public static final CBItem[] SPIELERPOSITIONEN = {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.KEEPER), IMatchRoleID.KEEPER),
@@ -78,38 +74,46 @@ public class Helper {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING)};
 
 
+	/**
+	 * Currency formatter
+	 * Matches country of user's premier team
+	 */
 	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam());
 
 	/**
-	 * wird für das Parsen in parseFloat benötigt
+	 * Integer format
+	 * used by parser in parseFloat
 	 */
 	public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
 
 	/**
-	 * decimal format - 1 fraction digit
+	 * Decimal format
+	 * - 1 fraction digit
 	 */
 	public static DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
 
 	/**
-	 * decimal format - 2 fraction digits
+	 * Decimal format
+	 * - 2 fraction digits
 	 */
 	public static DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
 
 	/**
-	 * Schon eine Meldung angezeigt?
+	 * Prevent recursive displaying of message pane
 	 */
 	public static boolean paneShown;
 
 	/**
-	 * Errechnet die Spaltenbreite für den User-Schriftgrösse
+	 * Calculate cell width
 	 */
 	public static int calcCellWidth(int width) {
 		return (int) (((float) width) * UserParameter.instance().fontSize / 12.0);
 	}
 
 	/**
-	 * Überprüft den Inhalt eines Textfields, ob der Wert aus ints mit , getrennt besteht,
-	 * ansonsten setzt er den Wert auf 0
+	 * Check contents of text fields
+	 * Returns integer array if text is a comma separated integer list
+	 * 	null, if not
 	 */
 	public static int[] generateIntArray(String text) {
 		// String message = "";
@@ -172,6 +176,11 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * Select combo box entry given by id
+	 * @param combobox JComboBox
+	 * @param id is searched in combo box model
+	 */
 	public static void setComboBoxFromID(JComboBox<? extends ComboItem> combobox, int id) {
 		final javax.swing.ComboBoxModel<? extends ComboItem> model = combobox.getModel();
 		for (int i = 0; i < model.getSize(); i++) {
@@ -186,8 +195,9 @@ public class Helper {
 	}
 
 	/**
-	 * Überprüft den Inhalt eines Textfields, ob der Wert ein int ist, ansonsten setzt er den Wert
-	 * auf 0
+	 * Check the contents of a text field
+	 * Return true, if text field contains an integer value
+	 * 		false, if text field cannot be parsed as intger, field is set to 0
 	 */
 	public static boolean parseInt(Window parent, JTextField field, boolean negativErlaubt) {
 		String message = "";
@@ -241,7 +251,8 @@ public class Helper {
 	}
 
 	/**
-	 * Zeigt eine Meldung per JOptionPane an, aber immer nur eine!
+	 * Display a message dialog
+	 * Recursions are prevented
 	 */
 	public static void showMessage(Component parent, String message, String titel, int typ) {
 		//new gui.ShowMessageThread( parent, message, titel, typ );
@@ -253,13 +264,14 @@ public class Helper {
 		}
 	}
 
-	/*
-	 *sortieren eines doppelintArrays
+	/**
+	 * Sort a two dimensional in array
+	 * @param toSort array
+	 * @param spaltenindex column index
+	 * @return array
 	 */
 	public static int[][] sortintArray(int[][] toSort, int spaltenindex) {
-		//Sicherheit!
 		try {
-			//Sicherheit!
 			if ((toSort == null) || (toSort.length == 0) || (toSort[0].length == 0)) {
 				return null;
 			}
@@ -267,15 +279,14 @@ public class Helper {
 			final int[][] ergebnis = new int[toSort.length][toSort[0].length];
 			final int[] sortSpalte = new int[toSort.length];
 
-			//Spalte zum Sortieren holen
+			// find sort column
 			for (int i = 0; i < toSort.length; i++) {
 				sortSpalte[i] = toSort[i][spaltenindex];
 			}
 
-			//Spalte sortieren
 			java.util.Arrays.sort(sortSpalte);
 
-			//Alle Einträge durchlaufen und nach Wert im toSort suchen und den Wert dann in das Ergebnis kopieren
+			// scan all entries, search value in toSort and copy the value to the result
 			for (int i = 0; i < toSort.length; i++) {
 				for (int[] ints : toSort) {
 					if (sortSpalte[i] == ints[spaltenindex]) {
@@ -285,8 +296,6 @@ public class Helper {
 				}
 			}
 
-			//Referenz umbiegen
-			// = ergebnis;
 			return ergebnis;
 		} catch (Exception e) {
 			HOLogger.instance().log(Helper.class, "Helper.sortintArray:  " + e);
@@ -340,7 +349,8 @@ public class Helper {
 
 
 	/**
-	 * entschlüsselt einen String der zuvor mit der Crypt methode verschlüsselt wurde
+	 * Decrypt string
+	 * encrypted by method crypt
 	 */
 	public static String decryptString(String text) {
 		byte[] encoded;
@@ -371,7 +381,7 @@ public class Helper {
 	}
 
 	/**
-	 * verschlüsselt einen String der nur aus Zahlen und Buchstaben besteht
+	 * Encrypt a string consisting on numbers and characters only
 	 */
 	public static String cryptString(String text) {
 		byte[] encoded;
@@ -380,7 +390,6 @@ public class Helper {
 			return "";
 		}
 
-		//prüfen ob nur zahlen eingegeben sind !!!
 		for (int j = 0; j < text.length(); j++) {
 			if (!Character.isLetterOrDigit(text.charAt(j))) {
 				return null;
@@ -398,9 +407,9 @@ public class Helper {
 
 			encoded[i] -= 7;
 
-			//check ob Zeichen gleich slash = 92 ?
+			//check for slash character = 92 ?
 			if (encoded[i] == 92) {
-				//Dann mit tilde ersetzen ~ = 126
+				// replace it by  ~ = 126
 				encoded[i] = 126;
 			}
 		}
@@ -409,11 +418,9 @@ public class Helper {
 	}
 
 	/**
-	 * Kopiert einen Vector in einen Array
-	 *
-	 * @param src  der Vektor der kopiert werden soll
-	 * @param dest Array der Vector aufnehmen soll, muss bereits erstellt sein und die größe =
-	 *             Vector.size() haben
+	 * Copy vector to array
+	 * @param src  vector
+	 * @param dest result array, has to be constructed by caller with correct size (Vector.size()
 	 */
 	public static <T> void copyVector2Array(Vector<T> src, T[] dest) {
 		for (int i = 0;
@@ -424,10 +431,9 @@ public class Helper {
 	}
 
 	/**
-	 * Kopiert einen Vector in einen Array
-	 *
-	 * @param src  der Array der kopiert werden soll
-	 * @param dest Vektor der den Array aufnehmen soll
+	 * Copy array to vector
+	 * @param src  array
+	 * @param dest vector
 	 */
 	public static <T> void copyArray2Vector(T[] src, Vector<T> dest) {
 		for (int i = 0; (src != null) && (dest != null) && (i < src.length); i++) {
@@ -435,6 +441,12 @@ public class Helper {
 		}
 	}
 
+	/**
+	 * Find maximum value of an array
+	 * (works only for values >=0)
+	 * @param werte double[]
+	 * @return maximum value
+	 */
 	public static double getMaxValue(double[] werte) {
 		double max = 0;
 		for (int i = 0; (werte != null) && (i < werte.length); i++) {
@@ -445,10 +457,21 @@ public class Helper {
 		return (max);
 	}
 
+	/**
+	 * Find translation string of key
+	 * @param key String (see poeditor)
+	 * @return String, translation
+	 */
 	public static String getTranslation(String key) {
 		return core.model.HOVerwaltung.instance().getLanguageString(key);
 	}
 
+	/**
+	 * Find translation replacing placeholders with values in argument list
+	 * @param key String (see poeditor)
+	 * @param messageArguments place holder values
+	 * @return String translation
+	 */
 	public static String getTranslation(String key, Object... messageArguments) {
 		return core.model.HOVerwaltung.instance().getLanguageString(key, messageArguments);
 	}
