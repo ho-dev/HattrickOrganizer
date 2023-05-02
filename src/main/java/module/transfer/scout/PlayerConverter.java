@@ -245,6 +245,8 @@ Deadline: 30.03.2023 14:01
 Mindestgebot: [money]0[/money]
         */
 
+        // text block contains 17 lines, when specialty is given, otherwise one less (16)
+        // line index of all pending lines has to be reduced by one, when specialty line is missing
         int offsSpeciality = rows.size() - 17;
         // Set index rows
         int indexRowNamePlayerId = 0;
@@ -256,9 +258,9 @@ Mindestgebot: [money]0[/money]
         int indexRowInjure = 11 + offsSpeciality;
         int indexRowFormStamina = 13 + offsSpeciality;
         int indexRowSkills = 14 + offsSpeciality;
-        // TODO
         int indexRowDeadline = 15 + offsSpeciality;
         int indexRoxPrice = 16 + offsSpeciality;
+        // TODO: wage
 
         // Extract Name and PlayerId
         row = rows.get(indexRowNamePlayerId);
