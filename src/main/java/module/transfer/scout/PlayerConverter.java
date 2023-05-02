@@ -734,7 +734,7 @@ Mindestgebot: [money]0[/money]
             		// Players from China etc. have Brackets in their names!!!
             		// Therefore we need lastIndexOf
             		// This also deals with player categories
-					if (tmp.contains("(") && (n = tmp.indexOf(")")) > -1 && Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()) > 100000) {
+					if (tmp.contains("(") && tmp.contains(")") && Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()) > 100000) {
 						player.setPlayerID(Integer.parseInt(tmp.substring(tmp.lastIndexOf("(")+1, tmp.lastIndexOf(")")).trim()));
 						found_at_line = m;
 						break;
@@ -1181,7 +1181,6 @@ Mindestgebot: [money]0[/money]
                 player.setSpeciality(0);
             }
 
-//            setDeadline(player);
         }else{
             status = ERROR;
         }

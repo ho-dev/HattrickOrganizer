@@ -6,6 +6,7 @@ import core.util.HODateTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * Player used for PlayerConverter (TransferScout)
@@ -573,8 +574,8 @@ public class Player {
     }
 
     public void setExpiryDate(String dateString, String timeString) {
-        var datetimeformatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        var localDateTime = LocalDateTime.parse(dateString+" "+ timeString, datetimeformatter);
+        var datetimeformatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
+        var localDateTime = LocalDateTime.parse(dateString+", "+ timeString, datetimeformatter);
         setExpiryDate(new HODateTime(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 }
