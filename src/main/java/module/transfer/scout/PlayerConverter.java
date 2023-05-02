@@ -1390,25 +1390,4 @@ Mindestgebot: [money]0[/money]
         }
         return exp;
     }
-
-//    public java.util.Date getDeadline(){
-//        return deadLineDate;
-//    }
-
-//    public void setDeadline(Player player){
-//        if(player.getExpiryDate() == null){
-//            this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-//        } else {
-//            try {
-//                deadLineDate = LocalDateTime.ofInstant(player.getExpiryDate().instant, ZoneId.systemDefault());
-//                final java.text.SimpleDateFormat simpleFormat = new java.text.SimpleDateFormat("dd.MM.yy HH:mm",
-//                        java.util.Locale.GERMANY);
-//                deadLineDate = simpleFormat.parse(player.getExpiryDate() + " "
-//                        + player.getExpiryTime());
-//            } catch (Exception e) {
-//                HOLogger.instance().debug(getClass(), e);
-//                this.addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-//            }
-//        }
-//    }
 }
