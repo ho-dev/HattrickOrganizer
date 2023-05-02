@@ -4,12 +4,9 @@ import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
 import java.sql.Timestamp;
 import java.time.*;
-import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
 
 public class HODateTime implements Comparable<HODateTime> {
 
@@ -80,6 +77,11 @@ public class HODateTime implements Comparable<HODateTime> {
         return null;
     }
 
+    /**
+     * Convert to database timestamp
+     * @param time HODatetime
+     * @return Timestamp
+     */
     public static Timestamp toDbTimestamp(HODateTime time) {
         if (time != null) {
             return time.toDbTimestamp();
@@ -106,6 +108,11 @@ public class HODateTime implements Comparable<HODateTime> {
         return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
     }
 
+    /**
+     * Convert to seconds since epoch (1-1-1070)
+     * @param ts HODateTime
+     * @return long, seconds since epoch
+     */
     static public long toEpochSecond(HODateTime ts){
         if ( ts!= null) return ts.instant.getEpochSecond();
         return 0L;
@@ -129,6 +136,11 @@ public class HODateTime implements Comparable<HODateTime> {
         return toLocaleDate(FormatStyle.MEDIUM);
     }
 
+    /**
+     * Convert date only string
+     * @param style, FormatStyle
+     * @return String
+     */
     public String toLocaleDate(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
@@ -142,16 +154,33 @@ public class HODateTime implements Comparable<HODateTime> {
     public String toLocaleDateTime() {
         return toLocaleDateTime(FormatStyle.MEDIUM);
     }
+
+    /**
+     * Convert HODateTime to date and time string
+     * @param in HODateTime
+     * @return String
+     */
     public static String toLocaleDateTime(HODateTime in){
         if ( in != null) return in.toLocaleDateTime(FormatStyle.MEDIUM);
         return "";
     }
 
+    /**
+     * Convert to date and time string
+     * @param style, FormatStyle
+     * @return String
+     */
     public String toLocaleDateTime(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
 
+    /**
+     * Convert HODateTime to date and time string
+     * @param in, HODateTime
+     * @param style, FormatStyle
+     * @return String
+     */
     public static String toLocaleDateTime(HODateTime in, FormatStyle style){
         if ( in != null) return in.toLocaleDateTime(style);
         return "";
