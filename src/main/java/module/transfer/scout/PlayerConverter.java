@@ -3,8 +3,14 @@ package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;
 import core.model.HOVerwaltung;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -624,7 +630,7 @@ Mindestgebot: [money]0[/money]
             sc.useDelimiter(" ");
             var dateString = sc.next();
             var timeString = sc.next();
-            player.setExpiryDate(dateString, timeString);
+            player.setExpiryDate(parseLocalDateTime(dateString, timeString));
         }
         sc.close();
 
@@ -644,6 +650,22 @@ Mindestgebot: [money]0[/money]
         sc.close();
         return player;
     }
+
+    /**
+     * Convert date and time strings of player description to HODatetime
+     * Format of date and time string differs with locale settings
+     * @param dateString String, date part of given date and time string
+     * @param timeString String, time part
+     * @return HODateTime
+     */
+    private static HODateTime parseLocalDateTime(String dateString, String timeString ){
+        var formatter = new DateTimeFormatterBuilder().append(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                .appendLiteral(' ')
+                .append(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)).toFormatter(Locale.getDefault());
+        var localDateTime = LocalDateTime.parse(dateString+" "+ timeString, formatter);
+        return new HODateTime(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
 
     public final Player build(String text) throws Exception {
         Player player = null;
@@ -1007,11 +1029,11 @@ Mindestgebot: [money]0[/money]
             try {
 				var dateString = exp.substring(0, 2) + "." + exp.substring(2, 4) + "." + exp.substring(6, 8);
                 var timeString = exp.substring(8, 10) + ":" + exp.substring(10, 12);
-                player.setExpiryDate(dateString, timeString);
+                player.setExpiryDate(parseLocalDateTime(dateString, timeString));
 			} catch (RuntimeException e) {
 				// error getting deadline - just set current date
-				player.setExpiryDate(new SimpleDateFormat("dd.MM.yyyy").format(new Date()),
-                                     new SimpleDateFormat("HH:mm").format(new Date()));
+				player.setExpiryDate(parseLocalDateTime(new SimpleDateFormat("dd.MM.yyyy").format(new Date()),
+                                     new SimpleDateFormat("HH:mm").format(new Date())));
 				if (status == 0) {
                     addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
                 }

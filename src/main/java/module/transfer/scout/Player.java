@@ -1,12 +1,6 @@
 // %3800124443:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
-
 import core.util.HODateTime;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 /**
  * Player used for PlayerConverter (TransferScout)
@@ -571,11 +565,5 @@ public class Player {
         buffer.append(", nationality = ").append(nationality);
         buffer.append(", info = ").append(getInfo());
         return buffer.toString();
-    }
-
-    public void setExpiryDate(String dateString, String timeString) {
-        var datetimeformatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT);
-        var localDateTime = LocalDateTime.parse(dateString+", "+ timeString, datetimeformatter);
-        setExpiryDate(new HODateTime(localDateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 }
