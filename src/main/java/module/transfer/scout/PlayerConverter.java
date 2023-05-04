@@ -259,6 +259,7 @@ Mindestgebot: [money]0[/money]
         int indexRowAge = 1;
         int indexRowExperience = 5;
         int indexRowTSI = 7;
+        int indexRowWage = 8;
         int indexRowSpecialty = 9;
         int indexRowWarning = 9 + offsSpeciality;
         int indexRowInjure = 11 + offsSpeciality;
@@ -266,7 +267,6 @@ Mindestgebot: [money]0[/money]
         int indexRowSkills = 14 + offsSpeciality;
         int indexRowDeadline = 15 + offsSpeciality;
         int indexRoxPrice = 16 + offsSpeciality;
-        // TODO: wage
 
         // Extract Name and PlayerId
         row = rows.get(indexRowNamePlayerId);
@@ -395,6 +395,16 @@ Mindestgebot: [money]0[/money]
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
         }
+        sc.close();
+
+        // Wage
+        row = rows.get(indexRowWage);
+        var wage = scanMoney(row);
+        if ( wage != null){
+            player.setBaseWage(wage);
+        }
+
+
         // Speciality
         row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
         for (int index = 1; index < specialities.size(); index++) {
@@ -403,6 +413,7 @@ Mindestgebot: [money]0[/money]
                 break;
             }
         }
+
         // Warnings
         row = rows.get(indexRowWarning);
         sc = new Scanner(row);
@@ -635,20 +646,32 @@ Mindestgebot: [money]0[/money]
         sc.close();
 
         row = rows.get(indexRoxPrice);
-        sc = new Scanner(row);
+        var price = scanMoney(row);
+        if ( price != null) player.setPrice(price);
+        return player;
+    }
+
+    /**
+     * Extract money value from string
+     * @param row String containing money pattern
+     * @return Integer, null when no money pattern is given
+     */
+    private Integer scanMoney(String row) {
+        var sc = new Scanner(row);
         // Player Name
         sc.useDelimiter("\\[money\\]");
         sc.next();
-        txtTmp = new StringBuilder(sc.next());
+        var txtTmp = new StringBuilder(sc.next());
         sc.close();
         sc = new Scanner(txtTmp.toString());
         sc.useDelimiter("\\[/money\\]");
+        Integer ret = null;
         if ( sc.hasNextBigInteger()){
             txtTmp = new StringBuilder(sc.next());
-            player.setPrice(Integer.parseInt(txtTmp.toString()));
+            ret = Integer.parseInt(txtTmp.toString());
         }
         sc.close();
-        return player;
+        return ret;
     }
 
     /**
