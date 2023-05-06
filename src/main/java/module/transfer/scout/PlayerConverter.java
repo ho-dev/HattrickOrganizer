@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * Parses a player out of a text copied from HT. Tries also to give error informations but this may
+ * Parses a player out of a text copied from HT. Tries also to give error information but this may
  * be wrong!
  *
  * @author Marco Senn
@@ -60,7 +60,6 @@ public class PlayerConverter {
         skillvalues = new ArrayList<>();
         specialities = new ArrayList<>();
         specialitiesvalues = new ArrayList<>();
-//        deadLineDate = new java.sql.Date(System.currentTimeMillis());
 
         try{
             // Get all skills for active language
@@ -132,7 +131,7 @@ public class PlayerConverter {
                 }
             }
 
-            // Sort specialities by length (shortest first)
+            // Sort specialities by length (the shortest first)
             p = specialities.size() - 1;
 
             while (p > 0) {
@@ -493,143 +492,20 @@ Mindestgebot: [money]0[/money]
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
         }
-        //Keeper
+
+        // scan skills
         row = rows.get(indexRowSkills);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setGoalKeeping(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
-        }
-        //Defense
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setDefense(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
-        }
-        //PlayMaking
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setPlayMaking(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
-        }
-        //Wing
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setWing(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
-        }
-        //Passing
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setPassing(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
-        }
-        //Attack
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setAttack(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
-        }
-        //Set Pieces
-        txtTmp = new StringBuilder();
-        findValue = false;
-        while (sc.hasNext()) {
-            if (sc.hasNextInt()) {
-                txtTmp.append(sc.next().trim());
-                findValue = true;
-            } else {
-                sc.next();
-                if (findValue) {
-                    break;
-                }
-            }
-        }
-        if (!txtTmp.toString().equals("")) {
-            player.setSetPieces(Integer.parseInt(txtTmp.toString()));
-        } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
-        }
+        player.setGoalKeeping(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper")));
+        player.setDefense(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.defending")));
+        player.setPlayMaking(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking")));
+        player.setWing(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.winger")));
+        player.setPassing(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.passing")));
+        player.setAttack(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring")));
+        player.setSetPieces(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces")));
 
+        // scan deadline
         row = rows.get(indexRowDeadline);
         sc = new Scanner(row);
         sc.useDelimiter(": ");
@@ -649,6 +525,28 @@ Mindestgebot: [money]0[/money]
         var price = scanMoney(row);
         if ( price != null) player.setPrice(price);
         return player;
+    }
+
+    private int scanSkill(Scanner sc, String languageString) {
+        var txtTmp = new StringBuilder();
+        var findValue = false;
+        while (sc.hasNext()) {
+            if (sc.hasNextInt()) {
+                txtTmp.append(sc.next().trim());
+                findValue = true;
+            } else {
+                sc.next();
+                if (findValue) {
+                    break;
+                }
+            }
+        }
+        if (!txtTmp.toString().equals("")) {
+            return Integer.parseInt(txtTmp.toString());
+        } else {
+            addErrorField(languageString);
+        }
+        return 0;
     }
 
     /**
