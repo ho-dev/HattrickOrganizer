@@ -260,7 +260,7 @@ Mindestgebot: [money]0[/money]
         int indexRowTSI = 7;
         int indexRowWage = 8;
         int indexRowSpecialty = 9;
-        int indexRowWarning = 9 + offsSpeciality;
+        int indexRowWarning = 10 + offsSpeciality;
         int indexRowInjure = 11 + offsSpeciality;
         int indexRowFormStamina = 13 + offsSpeciality;
         int indexRowSkills = 14 + offsSpeciality;
