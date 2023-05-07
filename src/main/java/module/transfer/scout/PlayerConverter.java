@@ -5,6 +5,8 @@ import core.constants.player.PlayerSpeciality;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -507,19 +509,16 @@ Mindestgebot: [money]0[/money]
 
         // scan deadline
         row = rows.get(indexRowDeadline);
-        sc = new Scanner(row);
-        sc.useDelimiter(": ");
-        if (sc.hasNext()) sc.next();
-        if (sc.hasNext()) {
-            var datetime = sc.next();
-            sc.close();
-            sc = new Scanner(datetime);
-            sc.useDelimiter(" ");
-            var dateString = sc.next();
-            var timeString = sc.next();
-            player.setExpiryDate(parseLocalDateTime(dateString, timeString));
+        String deadlineString = getDeadlineString(row);
+        try {
+            player.setExpiryDate(new HODateTime(
+                    new SimpleDateFormat("ddMMyyyyHHmm")
+                            .parse(deadlineString)
+                            .toInstant()
+            ));
+        } catch (ParseException e) {
+            HOLogger.instance().warning(PlayerConverter.class, "Error parsing deadline date: " + e.getMessage());
         }
-        sc.close();
 
         row = rows.get(indexRoxPrice);
         var price = scanMoney(row);
