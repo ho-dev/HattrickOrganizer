@@ -24,6 +24,7 @@ bug fixes
 * fix currency of secondary teams (#1856)
 
 ### Transfer
+* fix bugs in transfer scout panel (#1858)
 
 ### Training
 
