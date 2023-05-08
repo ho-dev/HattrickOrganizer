@@ -142,9 +142,78 @@
       }
     },
     {
+      "staminaGradient": {
+        "args" : ["staminaValue", "isPressing"],
+        "result" : {
+          "min" : [
+            -3.25,
+            {
+              "product" : [
+                {"if" :  "/isPressing", "then":  1.1},
+                {"sum" :  [
+                  -5.95,
+                  {"quotient" :  [{"product" :["/staminaValue", 27]},70]}
+                ]}
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "staminaStartvalue": {
+        "args" : ["staminaValue"],
+        "result": {
+          "sum" : [
+            102,
+            { "if" :  { "ge":  ["/staminaValue", 7]},
+              "then" :  {"sum" :  [23, {"quotient" :  [{"product":  [{"sum":  ["/staminaValue", -7]}, 100]}, 7]}]},
+              "else" :  {"quotient" :  [{"product" :  ["/staminaValue", 23]},7]}
+            }
+          ]
+        }
+      }
+    },
+    {
       "stamina" : {
-        "args": ["minute", "startMinute", "staminaValue"],
-        "result": {}
+        "args": ["minute", "startMinute", "staminaValue", "isPressing"],
+        "instructions" : [
+          { "variable": "gradient", "value" : {"expression":  "$expressions.staminaGradient", "args":  ["/staminaValue", "isPressing"]}},
+          { "variable": "startValue", "value" : { "expression" : "$expressions.staminaStartValue", "args" : ["/staminaValue"]}},
+          { "variable": "ret", "value" : "/startValue"},
+          { "for" :  [
+            { "int" :  "i", "values":  [{"sum": ["/startMinute", 5]}, "minute", 5]},
+            { "set" :  "/ret", "value": {"sum": ["/ret", "/gradient"]}}
+          ]}
+        ],
+        "result": {
+
+          "quotient" : [
+            { "min" :  [
+              100,
+              {"sum": [
+                "/startValue",
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 10]}, {"ge": ["minute", 10]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 15]}, {"ge": ["minute", 15]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 20]}, {"ge": ["minute", 20]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 25]}, {"ge": ["minute", 25]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 30]}, {"ge": ["minute", 30]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 35]}, {"ge": ["minute", 35]}]}, "then" :   "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 40]}, {"ge": ["minute", 40]}]}, "then" :  "/gradient"},
+
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 45]}, {"ge": ["minute", 45]}]}, "then" :  "/gradient"},
+
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
+                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"}
+              ]}
+            ]},
+            100
+          ]
+        }
       }
     },
     {
