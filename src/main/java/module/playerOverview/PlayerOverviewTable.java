@@ -25,7 +25,7 @@ import java.io.Serial;
 
 
 /**
- * The main player table.
+ * The Squad table, listing all the players on the team.
  *
  * <p>The actual model for that table is defined in {@link PlayerOverviewModel}, which defines
  * all the columns to be displayed; the columns are initiated by a factory, {@link UserColumnFactory},
@@ -52,13 +52,20 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
+
+		// Add a mouse listener that, when clicking on the “Last match” column
+		// - opens the Hattrick page for the player if you shift-click,
+		// - or opens the match in HO if you double-click.
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				int rowIndex = getSelectedRow();
 				if (rowIndex >= 0) {
 					// Last match column
-					String columnName = tableSorter.getColumnName(columnAtPoint(e.getPoint()));
+					int columnAtPoint = columnAtPoint(e.getPoint());
+					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
+					// based on preferences.
+					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
 					Player player = tableSorter.getSpieler(rowIndex);
@@ -68,7 +75,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 								int matchId = player.getLastMatchId();
 								// TODO: get match type ?
 								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+								HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
 							} else if (e.getClickCount() == 2) {
 								HOMainFrame.instance().showMatch(player.getLastMatchId());
 							}
@@ -162,7 +169,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 			tableSorter = new TableSorter(tableModel,
 					tableModel.getPositionInArray(UserColumnFactory.ID),
 					getSortSpalte(),
-					tableModel.getPositionInArray(UserColumnFactory.NAME));
+					tableModel.getPositionInArray(UserColumnFactory.NAME)
+			);
 
 			ToolTipHeader header = new ToolTipHeader(getColumnModel());
 			header.setToolTipStrings(tableModel.getTooltips());

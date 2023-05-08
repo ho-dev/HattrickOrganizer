@@ -3,11 +3,11 @@ package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
-//import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.Player;
 import core.model.player.MatchRoleID;
 import core.util.HOLogger;
@@ -27,7 +27,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -50,40 +53,40 @@ import javax.swing.SwingConstants;
  */
 class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, FocusListener {
 
-	private static final long serialVersionUID = -2092930481559683730L;
+	@Serial
+    private static final long serialVersionUID = -2092930481559683730L;
 
     //~ Instance fields ----------------------------------------------------------------------------
-	private JButton jbApply = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.ok"));
-    private JButton jbApplyScout = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.apply"));
-    private JButton jbCancel = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
-    private JComboBox jcbAttacking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbDefense = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbLeadership = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbExperience = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbForm = new JComboBox(core.util.Helper.EINSTUFUNG_FORM);
-    private JComboBox jcbKeeper = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbPassing = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbPlaymaking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
-    private JComboBox jcbStamina = new JComboBox(core.util.Helper.EINSTUFUNG_KONDITION);
-    private JComboBox jcbStandards = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbWinger = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JComboBox jcbLoyalty = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
-    private JCheckBox jchHomegrown = new JCheckBox();
-    private JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt")
-                                         + ": 0.0");
-    private JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp<br />&nbsp</p></html>");
-    private JTextArea jtaCopyPaste = new JTextArea(5, 20);
-    private JTextArea jtaNotes = new JTextArea(5, 20);
-    private JTextField jtfAge = new JTextField("17.0");
-    private JTextField jtfName = new JTextField();
-    private JTextField jtfPlayerID = new JTextField("0");
-    private JTextField jtfPrice = new JTextField("0");
-    private JTextField jtfTSI = new JTextField("1000");
-    private JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
-    private SpinnerDateModel clSpinnerModel = new SpinnerDateModel();
-    private JSpinner jsSpinner = new JSpinner(clSpinnerModel);
-    private TransferEingabePanel clOwner;
+	private final JButton jbApply = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+    private final JButton jbApplyScout = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+    private final JButton jbCancel = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+    private final JComboBox jcbAttacking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbDefense = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbLeadership = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbExperience = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbForm = new JComboBox(core.util.Helper.EINSTUFUNG_FORM);
+    private final JComboBox jcbKeeper = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbPassing = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbPlaymaking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
+    private final JComboBox jcbStamina = new JComboBox(core.util.Helper.EINSTUFUNG_KONDITION);
+    private final JComboBox jcbStandards = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbWinger = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JComboBox jcbLoyalty = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
+    private final JCheckBox jchHomegrown = new JCheckBox();
+    private final JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt") + ": 0.0");
+    private final JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp<br />&nbsp</p></html>");
+    private final JTextArea jtaCopyPaste = new JTextArea(5, 20);
+    private final JTextArea jtaNotes = new JTextArea(5, 20);
+    private final JTextField jtfAge = new JTextField("17.0");
+    private final JTextField jtfName = new JTextField();
+    private final JTextField jtfPlayerID = new JTextField("0");
+    private final JTextField jtfPrice = new JTextField("0");
+    private final JTextField jtfTSI = new JTextField("1000");
+    private final JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
+    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
+    private final JSpinner jsSpinner = new JSpinner(clSpinnerModel);
+    private final TransferEingabePanel clOwner;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -185,19 +188,19 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void copyPaste() {
         final PlayerConverter pc = new PlayerConverter();
         String message = "";
-        List<String> errorFields = new ArrayList<>();
 
         try {
             final module.transfer.scout.Player player;
             player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {
-                jtfPlayerID.setText(player.getPlayerID() + "");
+                jtfPlayerID.setText(String.valueOf(player.getPlayerID()));
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(player.getPrice() + "");
-                jtfTSI.setText(player.getTSI() + "");
+                var price = Helper.formatCurrency(player.getPrice()/ UserParameter.instance().FXrate);
+                jtfPrice.setText(price);
+                jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
                 jcbSpeciality.removeItemListener(this);
@@ -244,7 +247,8 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 Helper.setComboBoxFromID(jcbPlaymaking, player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                jsSpinner.setValue(pc.getDeadline());
+                var deadline =player.getExpiryDate();
+                jsSpinner.setValue(Date.from(deadline.instant));
 
                 spielervalueChanged();
             }
@@ -315,13 +319,19 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
             || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPrice, false)) {
+            || Helper.parseCurrency(jtfPrice.getText())==null) {
             return entry;
         }
         entry.setPlayerID(Integer.parseInt(jtfPlayerID.getText()));
         entry.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         entry.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-        entry.setPrice(Integer.parseInt(jtfPrice.getText()));
+        var price = Helper.parseCurrency(jtfPrice.getText());
+        if ( price != null){
+            entry.setPrice((int)(price * UserParameter.instance().FXrate));
+        }
+        else {
+            entry.setPrice(0);
+        }
         entry.setTSI(Integer.parseInt(jtfTSI.getText()));
         entry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         entry.setErfahrung(((CBItem) jcbLeadership.getSelectedItem()).getId());
@@ -339,7 +349,6 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         entry.setHomegrown(jchHomegrown.isSelected());
         entry.setName(jtfName.getText());
         entry.setInfo(jtaNotes.getText());
-        //entry.setDeadline(new java.sql.Timestamp( zeitlong ) );
         entry.setDeadline(new java.sql.Timestamp(clSpinnerModel.getDate().getTime()));
         return entry;
     }

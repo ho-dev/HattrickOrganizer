@@ -1,13 +1,14 @@
 package core.datatype;
 
 /**
+ * Combo item that associates an ID to a String.
+ *
  * @author thomas.werth
- * @version
  */
 public class CBItem implements ComboItem {
 
-	private String m_sText;
-	private int m_iId;
+	private final String m_sText;
+	private final int m_iId;
 
 	public CBItem(String text, int id) {
 		m_sText = text;
@@ -26,12 +27,8 @@ public class CBItem implements ComboItem {
 
 	@Override
 	public final boolean equals(Object obj) {
-		if (obj instanceof CBItem) {
-			final CBItem temp = (CBItem) obj;
-
-			if (this.getId() == temp.getId()) {
-				return true;
-			}
+		if (obj instanceof CBItem temp) {
+			return this.getId() == temp.getId();
 		}
 		return false;
 	}

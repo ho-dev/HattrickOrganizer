@@ -211,35 +211,41 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			}
 		}
 
-		final List<Player> vPlayer = new Vector<>();
-		final List<Player> allePlayer = hoModel.getCurrentPlayers();
+		final List<Player> selectablePlayers = new Vector<>();
+		final List<Player> allPlayers = hoModel.getCurrentPlayers();
 
-		for ( Player player: allePlayer){
+		for (Player player: allPlayers) {
 
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()
-					&& (((this.getGroup().trim().equals("") || player.getTeamGroup().equals(
-							this.getGroup())) && !isSelectedGroupExcluded()) || (!player
-							.getTeamGroup().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
+					&& (((this.getGroup().trim().equals("")
+					|| player.getTeamGroup().equals(this.getGroup())) && !isSelectedGroupExcluded())
+					|| (!player.getTeamGroup().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
-				if ( m_jcbxNotLast.isSelected()) {
+				if (isExcludeLastMatch()) {
 					var previousLineup = hoModel.getPreviousLineup();
 					if (previousLineup != null && previousLineup.getLineup().isPlayerInStartingEleven(player.getPlayerID())) {
 						include = false;
 					}
 				}
 				if (include) {
-					vPlayer.add(player);
+					selectablePlayers.add(player);
 				}
 			}
 		}
 
-		hoModel.getCurrentLineupTeamRecalculated().getLineup().optimizeLineup(vPlayer,
-				(byte) ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId(),
-				m_jcbxConsiderForm.isSelected(), m_jcbxIdealPositionFirst.isSelected(),
-				m_jcbxConsiderInjuredPlayers.isSelected(), m_jcbxConsiderSuspendedPlayers.isSelected());
-		mainFrame.setInformation(
-				HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
+		hoModel.getCurrentLineupTeamRecalculated()
+				.getLineup()
+				.optimizeLineup(
+						selectablePlayers,
+						(byte) ((CBItem)m_jcbPriority.getSelectedItem()).getId(),
+						isConsiderForm(),
+						isIdealPositionZuerst(),
+						isIgnoreInjured(),
+						isIgnoreSuspended()
+				);
+
+		mainFrame.setInformation(HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
 		mainFrame.getLineupPanel().update();
 
 		// gui.RefreshManager.instance ().doRefresh ();

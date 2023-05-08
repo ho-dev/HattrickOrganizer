@@ -556,8 +556,7 @@ public class LineupAssistant {
 	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions) {
 		// Remove "red" positions from the position selection of the AssistantPanel.
 		Vector<MatchLineupPosition> returnVec = new Vector<>();
-		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
-				.getLineupPanel().getAssistantPositionsStatus();
+		Map<Integer, Boolean> statusMap = HOMainFrame.instance().getLineupPanel().getAssistantPositionsStatus();
 		for (var pos : positions) {
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
 				returnVec.add(pos);
