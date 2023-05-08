@@ -1,6 +1,7 @@
 package module.lineup.substitution.model;
 
 import com.google.gson.annotations.SerializedName;
+import core.util.HOLogger;
 
 /**
  * GoalDiffCriteria for substitutions.
@@ -49,7 +50,8 @@ public enum GoalDiffCriteria {
 				return standing;
 			}
 		}
-		return null;
+		HOLogger.instance().error(GoalDiffCriteria.class, "getById ignores unknown id: "+id);
+		return ANY_STANDING;
 	}
 
 	public static GoalDiffCriteria parse(String property) {

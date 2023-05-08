@@ -11,11 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 public class AutoFilterPanel extends JPanel implements ActionListener, KeyListener {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -90,6 +86,8 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
     private void jbInit() {
     	Filter filter = TeamAnalyzerPanel.filter;
         JPanel main = new ImagePanel();
+        main.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
 
         main.setLayout(new BorderLayout());
         setLayout(new BorderLayout());
