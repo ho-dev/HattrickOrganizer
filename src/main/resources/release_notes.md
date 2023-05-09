@@ -19,6 +19,7 @@ bug fixes
 * fix missing player names in match highlights panel (#1857)
 
 ### Lineup
+* fix nt team selection options of style of play combo box (#1873)
 
 ### Statistics
 * fix currency of secondary teams (#1856)
