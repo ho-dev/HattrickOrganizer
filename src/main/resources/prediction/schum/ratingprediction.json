@@ -89,6 +89,7 @@
   "expressions" : [
     {
       "overcrowding" : {
+        "_description" : "overcrowing(sector) = overcrowdingFactor(sector, nPlayersInSector)",
         "args": ["sector"],
         "result": {
           "expression": "overcrowdingFactor", "args": ["/sector", { "count": { "playersInSector": ["/sector"]}}]
@@ -97,6 +98,7 @@
     },
     {
       "overcrowdingFactor" : {
+        "_description" : "overcrowdingFactor(sector,count) = overcrowdingCoefficients[sector][count]",
         "args": ["sector", "count"],
         "result": {
           "value": "$.objects.overcrowdingCoefficients.sectors./sector[/count]"
@@ -105,6 +107,7 @@
     },
     {
       "skill" : {
+        "_description" : "skill(value) = max(0, value-1)",
         "args": ["skillValue"],
         "result": {
           "max": [0, { "sum": [-1, "/skillValue"]}]
@@ -113,6 +116,7 @@
     },
     {
       "form" : {
+        "_description" : "form(x) = -0.009x^2+0.191x+0.048",
         "args": [
           "formValue"
         ],
@@ -126,6 +130,7 @@
     },
     {
       "experience": {
+        "_description" : "experience(x) =  -0.00000862x^4+0.00056438x^3-0.01507852x^2+0.20426157x-0.18965312",
         "args": ["experienceValue"],
         "result": {
           "polynomial": {
@@ -143,6 +148,7 @@
     },
     {
       "staminaGradient": {
+        "_description" : "stamina gradient per 5 minutes",
         "args" : ["staminaValue", "isPressing"],
         "result" : {
           "min" : [
@@ -183,37 +189,16 @@
           { "variable": "ret", "value" : "/startValue"},
           { "for" :  [
             { "int" :  "i", "values":  [{"sum": ["/startMinute", 5]}, "minute", 5]},
-            { "set" :  "/ret", "value": {"sum": ["/ret", "/gradient"]}}
-          ]}
-        ],
-        "result": {
-
-          "quotient" : [
-            { "min" :  [
-              100,
-              {"sum": [
-                "/startValue",
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 10]}, {"ge": ["minute", 10]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 15]}, {"ge": ["minute", 15]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 20]}, {"ge": ["minute", 20]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 25]}, {"ge": ["minute", 25]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 30]}, {"ge": ["minute", 30]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 35]}, {"ge": ["minute", 35]}]}, "then" :   "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 40]}, {"ge": ["minute", 40]}]}, "then" :  "/gradient"},
-
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 45]}, {"ge": ["minute", 45]}]}, "then" :  "/gradient"},
-
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"},
-                { "if" :  {"and" :  [{"lt" : ["/startMinute", 5]}, {"ge": ["minute", 5]}]}, "then" :  "/gradient"}
-              ]}
-            ]},
-            100
-          ]
-        }
+            { "set" :  "/ret", "value": {"sum":
+                                          [ "/ret",
+                                            "/gradient",
+                                            {"if": {"and": [{"ge": ["/i", 45]}, {"lt": ["/i", 50]}]}, "then": { "min" :  [18.75, {"sum": ["/startValue", {"product" :  [-1,"/ret"]}]}]}},
+                                            {"if": {"and": [{"ge": ["/i", 90]}, {"lt": ["/i", 95]}]}, "then": { "min" :  [6.25, {"sum": ["/startValue", {"product" :  [-1,"/ret"]}]}]}}
+                                          ]
+                                        }
+            }
+        ]}],
+        "result": { "quotient" : [{ "min" :  [100, "/ret"]}, 100]}
       }
     },
     {
@@ -233,7 +218,6 @@
           ]
         }
       }
-
     },
     {
       "playerExperience" : {
