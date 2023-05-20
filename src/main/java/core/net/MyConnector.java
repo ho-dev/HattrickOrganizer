@@ -364,7 +364,7 @@ public class MyConnector {
 	}
 
 	/**
-	 * lädt die Aufstellungsbewertung zu einem Spiel
+	 * Download match details, including match events
 	 */
 	public String downloadMatchdetails(int matchId, MatchType matchType) {
 		String url = htUrl + "?file=matchdetails&version=" + VERSION_MATCHDETAILS;
@@ -451,7 +451,7 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
-		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&playerID=" + playerID);
+		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&includeMatchInfo=true&playerID=" + playerID);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {
