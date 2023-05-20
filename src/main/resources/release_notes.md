@@ -10,6 +10,7 @@ bug fixes
 
 ### Squad
 * fix click on “Last Match” column when the column has been moved.
+* show last match info of nt teams (#1878)
 
 ### Team Analyzer
 
