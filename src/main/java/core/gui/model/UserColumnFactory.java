@@ -19,6 +19,7 @@ import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
+import core.util.StringUtils;
 import module.playerOverview.PlayerStatusLabelEntry;
 
 import javax.swing.*;
@@ -253,7 +254,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getPlayerID(),
-                        player.getPlayerID() + "",
+                        String.valueOf(player.getPlayerID()),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
@@ -364,7 +365,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHomeTeamName() + "",
+                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHomeTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getHeimID() == HOVerwaltung.instance().getModel().getBasics()
@@ -400,7 +401,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGuestTeamName() + "",
+                ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGuestTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
                 entry.setFGColor((spielerCBItem.getGastID() == HOVerwaltung.instance().getModel().getBasics()
@@ -485,7 +486,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(MatchKurzInfo match) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(match.getMatchType());
-                return new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
+                return new ColorLabelEntry(match.getMatchID(), String.valueOf(match.getMatchID()),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT);
             }
@@ -493,7 +494,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
 //                final Color background = MatchesColumnModel.getColor4Matchtyp(spielerCBItem.getMatchTyp());
-                return new ColorLabelEntry(spielerCBItem.getMatchID() + "",
+                return new ColorLabelEntry(String.valueOf(spielerCBItem.getMatchID()),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
             }
@@ -735,10 +736,17 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var matchId = player.getLastMatchId();
-                if ( matchId != null ) {
+                if (matchId != null && matchId > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
                     if (info != null) {
                         return new MatchDateTableEntry(info.getMatchSchedule(), info.getMatchTypeExtended());
+                    } else {
+                        var dateAsString = player.getLastMatchDate();
+                        if (!StringUtils.isEmpty(dateAsString)) {
+                            var date = HODateTime.fromHT(dateAsString);
+                            var matchType = player.getLastMatchType();
+                            return new MatchDateTableEntry(date, matchType);
+                        }
                     }
                 }
                 return new MatchDateTableEntry(null, MatchType.NONE);
