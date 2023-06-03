@@ -21,7 +21,6 @@ import java.util.*;
 
 import static core.model.player.IMatchRoleID.*;
 import static core.model.player.MatchRoleID.getPosition;
-import static core.model.player.MatchRoleID.getShortNameForPosition;
 import static core.util.MathUtils.fuzzyEquals;
 
 public class RatingPredictionManager {
@@ -234,7 +233,7 @@ public class RatingPredictionManager {
     		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc, useForm, weather, useWeatherImpact);
     		retVal += curValue;
     	}
-		if ( t==0 ) HOLogger.instance().info(getClass(), "t=" + t + "; before applyCommonProps.GENERAL="+retVal);
+//		if ( t==0 ) HOLogger.instance().info(getClass(), "t=" + t + "; before applyCommonProps.GENERAL="+retVal);
     	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
     	return (float)retVal;
     }
@@ -267,7 +266,7 @@ public class RatingPredictionManager {
 					//var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
 					var inkr = curStk * curWeight;
 					retVal += inkr;
-					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
+//					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
 				}
     		}
     	}
@@ -275,12 +274,12 @@ public class RatingPredictionManager {
 		// calc Schum's experience effect
 		var xpSectionName = "xp_" + getSectionName(sideType);
 		if ( params.hasSection(xpSectionName) ) {
-			if ( t==0 && sectionName.equals("playmaking_allsides")){
-				HOLogger.instance().debug(getClass(), "midfiled exp");
-			}
+//			if ( t==0 && sectionName.equals("playmaking_allsides")){
+//				HOLogger.instance().debug(getClass(), "midfiled exp");
+//			}
 			var inkr =  getAllPlayerXpEffect(_lineup, params, xpSectionName, useLeft, useMiddle, useRight);
 			retVal += inkr;
-			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
+//			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
 		}
 		retVal *= maxSkillContribution;
 		retVal = applyCommonProps (retVal, params, sectionName);
@@ -460,7 +459,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALDEFENSE, useForm, weather, useWeatherImpact);
 			CentralDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralDefenseRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return CentralDefenseRatings;
 	}
@@ -473,7 +472,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), CENTRALATTACK, useForm, weather, useWeatherImpact);
 			CentralAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralAttackRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "CentralAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return CentralAttackRatings;
 	}
@@ -487,7 +486,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, RIGHT, useForm, weather, useWeatherImpact);
 			RightDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightDefenseRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return RightDefenseRatings;
 	}
@@ -501,7 +500,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating =  calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEDEFENSE, LEFT, useForm, weather, useWeatherImpact);
 			LeftDefenseRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftDefenseRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftDefenseRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return LeftDefenseRatings;
 	}
@@ -514,7 +513,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, LEFT, useForm, weather, useWeatherImpact);
 			LeftAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftAttackRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "LeftAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return LeftAttackRatings;
 	}
@@ -527,7 +526,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), SIDEATTACK, RIGHT, useForm, weather, useWeatherImpact);
 			RightAttackRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightAttackRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "RightAttackRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return RightAttackRatings;
 	}
@@ -540,7 +539,7 @@ public class RatingPredictionManager {
 		for (Map.Entry<Double,Lineup> tLineup : LineupEvolution.entrySet()) {
 			var rating = calcRatings(tLineup.getKey(), tLineup.getValue(), MIDFIELD, useForm, weather, useWeatherImpact);
 			MidfieldRatings.put(tLineup.getKey(), userRatingOffset + rating);
-			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "MidfieldRatings["+tLineup.getKey()+"]="+rating);
+//			if ( tLineup.getKey()==0 ) HOLogger.instance().debug(getClass(), "MidfieldRatings["+tLineup.getKey()+"]="+rating);
 		}
 		return MidfieldRatings;
 	}
@@ -870,7 +869,7 @@ public class RatingPredictionManager {
 			return playerStrengthCache.get(key);
 		}
 
-		HOLogger.instance().debug(RatingPredictionManager.class, "sectionName=" + sectionName + " stamina=" + stamina + " xp=" + xp + " skill=" + skill + " form=" + form + " useForm=" + useForm);
+//		HOLogger.instance().debug(RatingPredictionManager.class, "sectionName=" + sectionName + " stamina=" + stamina + " xp=" + xp + " skill=" + skill + " form=" + form + " useForm=" + useForm);
 
 		double rating;
 		String useSection = sectionName;
@@ -932,8 +931,8 @@ public class RatingPredictionManager {
 		rating += playerStrengthParameters.getParam(useSection, "resultAddXp", 0) * xp;
 
 		playerStrengthCache.put(key, rating);
-		HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength ("
-				+ "SN=" + sectionName + ", Stamina=" + stamina + ", XP=" + xp + ", skill=" + skill + ", form=" + form + ", uF=" + useForm + ", overcrowdingPenalty=" + overcrowdingPenalty + ") =" + rating);
+//		HOLogger.instance().debug(RatingPredictionManager.class, "calcPlayerStrength ("
+//				+ "SN=" + sectionName + ", Stamina=" + stamina + ", XP=" + xp + ", skill=" + skill + ", form=" + form + ", uF=" + useForm + ", overcrowdingPenalty=" + overcrowdingPenalty + ") =" + rating);
 
 		return rating;
 	}
