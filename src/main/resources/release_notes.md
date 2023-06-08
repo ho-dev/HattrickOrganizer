@@ -21,6 +21,7 @@ bug fixes
 
 ### Lineup
 * fix nt team selection options of style of play combo box (#1873)
+* fix download error of substitutions with undocumented goal difference criteria (#1881)
 
 ### Statistics
 * fix currency of secondary teams (#1856)
