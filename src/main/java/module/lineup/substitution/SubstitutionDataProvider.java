@@ -2,10 +2,8 @@ package module.lineup.substitution;
 
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
-import core.model.player.IMatchRoleID;
-import core.model.player.Player;
 import module.lineup.Lineup;
-import module.lineup.substitution.model.Substitution;
+import module.lineup.substitution.model.GoalDiffCriteria;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.vo.PlayerInfo;
@@ -16,23 +14,17 @@ import java.util.List;
 import java.util.Map;
 
 import static core.model.player.IMatchRoleID.aFieldAndSubsMatchRoleID;
-import static core.model.player.IMatchRoleID.aFieldMatchRoleID;
 
 public class SubstitutionDataProvider {
-
-	public static void getSubstitutions() {
-		List<Substitution> subs = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc()
-				.getSubstitutionList();
-	}
 
 	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition() {
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 
 		for (Integer i : aFieldAndSubsMatchRoleID) {
-			Player player = lineup.getPlayerByPositionID(i);
+			var player = lineup.getPlayerByPositionID(i);
 			if (player != null) {
-				positionMap.put(i,	new PlayerPositionItem(Integer.valueOf(i), lineup.getPlayerByPositionID(i)));
+				positionMap.put(i,	new PlayerPositionItem(i, lineup.getPlayerByPositionID(i)));
 			}
 		}
 		return positionMap;
@@ -40,26 +32,26 @@ public class SubstitutionDataProvider {
 
 
 	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions) {
-		List<PlayerPositionItem> playerItems = new ArrayList<PlayerPositionItem>();
+		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		for (Integer i : aMatchRoleID) {
-			Player player = lineup.getPlayerByPositionID(i);
+			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
-				playerItems.add(new PlayerPositionItem(Integer.valueOf(i), player));
+				playerItems.add(new PlayerPositionItem(i, player));
 			}
 		}
 		return playerItems;
 	}
 
 	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions) {
-		List<PlayerPositionItem> playerItems = new ArrayList<PlayerPositionItem>();
+		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
 		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
 		for (int i = start; i <= end; i++) {
-			Player player = lineup.getPlayerByPositionID(i);
+			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
-				playerItems.add(new PlayerPositionItem(Integer.valueOf(i), player));
+				playerItems.add(new PlayerPositionItem(i, player));
 			}
 		}
 		return playerItems;
@@ -72,19 +64,13 @@ public class SubstitutionDataProvider {
 	 * @return an array with standing items
 	 */
 	public static CBItem[] getStandingItems() {
-		CBItem[] standingValues = {
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalAny"), -1),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalTied"), 0),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalLead"), 1),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalDown"), 2),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT1"), 3),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalDownMT1"), 4),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalNotDown"), 5),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalNotLead"), 6),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT2"), 7),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.GoalDownMT2"), 8),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.MatchIsNotTied"), 9)};
-				return standingValues;
+		var values = GoalDiffCriteria.values();
+		CBItem[] ret = new CBItem[values.length];
+		int i = 0;
+		for (var goalDifferenceCriteria : GoalDiffCriteria.values()){
+			ret[i++] = new CBItem(LanguageStringLookup.getStanding(goalDifferenceCriteria), goalDifferenceCriteria.getId());
+		}
+		return ret;
 	}
 
 	/**
@@ -94,7 +80,7 @@ public class SubstitutionDataProvider {
 	 * @return an array with red card items
 	 */
 	public static CBItem[] getRedCardItems() {
-		CBItem[] redcardValues = {
+		return new CBItem[]{
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedIgnore"), -1),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMy"), 1),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOpp"), 2),
@@ -108,14 +94,13 @@ public class SubstitutionDataProvider {
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppFW"), 23),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppWB"), 24),
 				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppWi"), 25), };
-		return redcardValues;
 	}
 
 	/**
 	 * Returns an {@link CBItem} array with all behaviours which can be chosen
 	 * for a substitution.
 	 *
-	 * @return an array with behaviour items
+	 * @return a list of behaviour items
 	 */
 	public static List<CBItem> getBehaviourItems(boolean withInheritItem) {
 		List<CBItem> behaviourValues = new ArrayList<>();

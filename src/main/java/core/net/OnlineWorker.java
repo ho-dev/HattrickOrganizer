@@ -1213,9 +1213,10 @@ public class OnlineWorker {
 	public static MatchLineupTeam downloadLastLineup(List<MatchKurzInfo> matches, int teamId){
 		MatchLineupTeam matchLineupTeam = null;
 		MatchLineup matchLineup = null;
-		var finishedMatchesAvailable = matches.stream().anyMatch(f->f.getMatchStatus()==MatchKurzInfo.FINISHED);
-		if ( finishedMatchesAvailable) {
-			var matchLineupString = MyConnector.instance().downloadMatchLineup(-1, teamId, MatchType.LEAGUE);
+		var lastFinishedMatch = matches.stream().filter(f->f.getMatchStatus()==MatchKurzInfo.FINISHED).max(MatchKurzInfo::compareTo);
+		if ( lastFinishedMatch.isPresent()) {
+			var match = lastFinishedMatch.get();
+			var matchLineupString = MyConnector.instance().downloadMatchLineup(match.getMatchID(), teamId, match.getMatchType());
 			if (!matchLineupString.isEmpty()) {
 				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
 			}
@@ -1253,11 +1254,12 @@ public class OnlineWorker {
 	public static Map<String, String> downloadNextMatchOrder(List<MatchKurzInfo> matches, int teamId) {
 		try {
 			// next upcoming match
-			var match = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo).get();
-			// Match is always from the normal system, and league will do
-			// the trick as the type.
-			return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().downloadMatchOrder(
-							match.getMatchID(), match.getMatchType(), teamId));
+			var nextMatch = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo);
+			if ( nextMatch.isPresent()){
+				var match = nextMatch.get();
+				return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().downloadMatchOrder(
+						match.getMatchID(), match.getMatchType(), teamId));
+			}
 		}
 		catch (Exception ignore) {
 		}

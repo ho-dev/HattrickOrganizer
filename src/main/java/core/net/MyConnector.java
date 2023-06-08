@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -90,18 +89,6 @@ public class MyConnector {
 		return m_clInstance;
 	}
 
-	public static boolean hasInternetAccess(){
-		try {
-			URL url = new URL("http://www.hattrick.org");
-			URLConnection connection = url.openConnection();
-			connection.connect();
-			return true;
-		}
-		catch (IOException e) {
-			return false;
-		}
-	}
-
 	/**
 	 * Sets the DEBUGSAVE flag. Setting the flag to true will save downloaded
 	 * CHPP files.
@@ -112,15 +99,6 @@ public class MyConnector {
 	public static void setDebugSave(boolean debugSave) {
 		DEBUGSAVE = debugSave;
 	}
-
-	public static String getHOSite() {
-		return "http://ho1.sourceforge.net/";
-	}
-
-	public static String getPluginSite() {
-		return getHOSite() + "onlinefiles";
-	}
-
 
 	/**
 	 * Fetch a specific arena
@@ -364,7 +342,7 @@ public class MyConnector {
 	}
 
 	/**
-	 * lädt die Aufstellungsbewertung zu einem Spiel
+	 * Download match details, including match events
 	 */
 	public String downloadMatchdetails(int matchId, MatchType matchType) {
 		String url = htUrl + "?file=matchdetails&version=" + VERSION_MATCHDETAILS;
@@ -451,7 +429,7 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
-		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&playerID=" + playerID);
+		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&includeMatchInfo=true&playerID=" + playerID);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {
