@@ -39,6 +39,8 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - April 22, 2023 - April 22, 2023
+Reports by Contributors - April 22, 2023 - June 08, 2023
 
-Total 0
+* wsbrenk 4
+
+Total 4
