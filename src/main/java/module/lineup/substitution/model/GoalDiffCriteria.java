@@ -32,7 +32,15 @@ public enum GoalDiffCriteria {
 	@SerializedName("8")
 	DOWN_BY_MORE_THAN_TWO((byte) 8),
 	@SerializedName("9")
-	MATCH_IS_NOT_TIED((byte) 9);
+	MATCH_IS_NOT_TIED((byte) 9),
+	@SerializedName("10")
+	NOT_IN_THE_LEAD_BY_MORE_THAN_ONE((byte) 10),
+	@SerializedName("11")
+	NOT_DOWN_BY_MORE_THAN_ONE((byte) 11),
+	@SerializedName("12")
+	NOT_IN_THE_LEAD_BY_MORE_THAN_TWO((byte) 12),
+	@SerializedName("13")
+	NOT_DOWN_BY_MORE_THAN_TWO((byte) 13);
 
 	private final byte id;
 
