@@ -203,7 +203,7 @@ public class HRFStringBuilder {
     private static String getPlayerIdByPositionValue(MatchLineupTeam team, int position){
         var matchLineupPosition = team.getPlayerByPosition(position);
         if ( matchLineupPosition != null){
-            return ""+matchLineupPosition.getPlayerId();
+            return String.valueOf(matchLineupPosition.getPlayerId());
         }
         return "0";
     }
@@ -211,7 +211,7 @@ public class HRFStringBuilder {
     private static String getBehaviourByPositionValue(MatchLineupTeam team, int position){
         var matchLineupPosition = team.getPlayerByPosition(position);
         if ( matchLineupPosition != null){
-            return ""+ matchLineupPosition.getBehaviour();
+            return String.valueOf(matchLineupPosition.getBehaviour());
         }
         return "0";
     }
@@ -314,7 +314,7 @@ public class HRFStringBuilder {
     public void createLineUp(String trainerId, int teamId, Map<String, String> nextLineup) {
         lineupStringBuilder = new StringBuilder("[lineup]\n");
         if (nextLineup != null) {
-            var matchId = NumberUtils.toInt(nextLineup.get("MatchId"),0);
+            var matchId = NumberUtils.toInt(nextLineup.get("MatchID"),0);
             var matchtype = NumberUtils.toInt(nextLineup.get("MatchType"), MatchType.NONE.getMatchTypeId());
 
             try {
@@ -542,9 +542,7 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutName");
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutingRegionID");
 
-            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {
-                ;
-            }
+            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {}
 
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchID");
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchDate");
