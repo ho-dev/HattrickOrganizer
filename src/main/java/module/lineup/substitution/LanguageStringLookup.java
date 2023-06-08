@@ -70,6 +70,10 @@ public class LanguageStringLookup {
 			case IN_THE_LEAD_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalLeadMT2");
 			case DOWN_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalDownMT2");
 			case MATCH_IS_NOT_TIED -> HOVerwaltung.instance().getLanguageString("subs.MatchIsNotTied");
+			case NOT_IN_THE_LEAD_BY_MORE_THAN_ONE -> HOVerwaltung.instance().getLanguageString("subs.GoalNotLeadMT1");
+			case NOT_DOWN_BY_MORE_THAN_ONE -> HOVerwaltung.instance().getLanguageString("subs.GoalNotDownMT1");
+			case NOT_IN_THE_LEAD_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalNotLeadMT2");
+			case NOT_DOWN_BY_MORE_THAN_TWO -> HOVerwaltung.instance().getLanguageString("subs.GoalNotDownMT2");
 			default -> "";
 		};
 	}
