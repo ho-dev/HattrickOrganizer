@@ -41,7 +41,9 @@ bug fixes
 
 Reports by Contributors - April 22, 2023 - June 08, 2023
 
+* Achilles 272
+* sich 4
 * Lidegand 4
 * wsbrenk 4
 
-Total 4
+Total 288
