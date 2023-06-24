@@ -10,7 +10,7 @@ bug fixes
 
 ### Squad
 * fix click on “Last Match” column when the column has been moved.
-* show last match info of nt teams (#1878)
+* fix last match info of nt teams (#1878)
 
 ### Team Analyzer
 
@@ -39,6 +39,11 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - April 22, 2023 - April 22, 2023
+Reports by Contributors - April 22, 2023 - June 24, 2023
 
-Total 0
+* Achilles 272
+* sich 4
+* Lidegand 4
+* wsbrenk 4
+
+Total 288
