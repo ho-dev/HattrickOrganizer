@@ -39,7 +39,7 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - April 22, 2023 - June 08, 2023
+Reports by Contributors - April 22, 2023 - June 24, 2023
 
 * Achilles 272
 * sich 4
