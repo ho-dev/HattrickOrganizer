@@ -275,11 +275,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
-        m_jlCareerGoals.setText(m_clPlayer.getAllOfficialGoals() + "");
-        m_jlTeamGoals.setText(m_clPlayer.getGoalsCurrentTeam() +"");
-        m_jlHattricks.setText(m_clPlayer.getHattrick() + "");
-        m_jlSeasonSeriesGoals.setText(m_clPlayer.getSeasonSeriesGoal() + "");
-        m_jlSeasonCupGoals.setText(m_clPlayer.getSeasonCupGoal() + "");
+        m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getAllOfficialGoals()));
+        m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getGoalsCurrentTeam()));
+        m_jlHattricks.setText(String.valueOf(m_clPlayer.getHattrick()));
+        m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getSeasonSeriesGoal()));
+        m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getSeasonCupGoal()));
 
         var bestPosition = m_clPlayer.getIdealPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
@@ -325,13 +325,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         formatBar(jpbForm, m_clPlayer.getForm(), true);
         //m_clPlayer.getValue4Skill(6)
         formatBar(jpbStamina, m_clPlayer.getStamina(), true);
-        formatBar(jpbGK, m_clPlayer.getSkill(PlayerSkill.KEEPER, true));
-        formatBar(jpbDE, m_clPlayer.getSkill(PlayerSkill.DEFENDING, true));
-        formatBar(jpbPM, m_clPlayer.getSkill(PlayerSkill.PLAYMAKING, true));
-        formatBar(jpbWI, m_clPlayer.getSkill(PlayerSkill.WINGER, true));
-        formatBar(jpbPS, m_clPlayer.getSkill(PlayerSkill.PASSING, true));
-        formatBar(jpbSC, m_clPlayer.getSkill(PlayerSkill.SCORING, true));
-        formatBar(jpbSP, m_clPlayer.getSkill(PlayerSkill.SET_PIECES, true));
+        formatBar(jpbGK, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.KEEPER), 2));
+        formatBar(jpbDE, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.DEFENDING), 2));
+        formatBar(jpbPM, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.PLAYMAKING), 2));
+        formatBar(jpbWI, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.WINGER), 2));
+        formatBar(jpbPS, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.PASSING), 2));
+        formatBar(jpbSC, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.SCORING), 2));
+        formatBar(jpbSP, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.SET_PIECES), 2));
 
         // Refresh Match History Panel
         jpMatchHistory.reset();
@@ -1052,7 +1052,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                                 int matchId = lMatchIDs.get(match_index);
                                 if (e.isShiftDown()) {
                                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-                                    HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+                                    HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
                                 } else {
                                     HOMainFrame.instance().showMatch(matchId);
                                 }
@@ -1121,9 +1121,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 _temp.setIcon(null);
             }
 
-            for (int i=0; i < lMatchIDs.size(); i++){
-                lMatchIDs.set(i, -1);
-            }
+            lMatchIDs.replaceAll(ignored -> -1);
 
         }
 

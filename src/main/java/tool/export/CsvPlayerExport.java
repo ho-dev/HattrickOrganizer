@@ -13,7 +13,6 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,13 +27,11 @@ import core.constants.player.PlayerSpeciality;
 
 /**
  * CsvPlayerExport
- *
  * Export all players as CSV file
  *
  * @author flattermann <HO@flattermann.net>
  */
 public class CsvPlayerExport {
-	private static String NAME = "CSV PlayerExport";
 	private static final String defaultFilename = "playerexport.csv";
 	// Force using dot as decimal point despite of locale
 	private static final DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.US);
@@ -48,7 +45,6 @@ public class CsvPlayerExport {
 	}
 
 	public void showSaveDialog() {
-		JWindow waitDialog = null;
 		// File
 		File file = new File(defaultFilename);
 
@@ -140,36 +136,36 @@ public class CsvPlayerExport {
 							+ "\n");
 			for (Player curPlayer : list) {
 				String[] outCols = {
-						"" + curPlayer.getFullName(),
-						"" + curPlayer.getPlayerID(),
-						"" + curPlayer.getTrikotnummer(),
-						"" + curPlayer.getAlter(),
-						"" + curPlayer.getAgeDays(),
-						"" + curPlayer.getTSI(),
-						"" + (int) (curPlayer.getSalary() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate()),
-						"" + curPlayer.getCards(),
+						curPlayer.getFullName(),
+						String.valueOf(curPlayer.getPlayerID()),
+						String.valueOf(curPlayer.getTrikotnummer()),
+						String.valueOf(curPlayer.getAlter()),
+						String.valueOf(curPlayer.getAgeDays()),
+						String.valueOf(curPlayer.getTSI()),
+						String.valueOf((int) (curPlayer.getSalary() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate())),
+						String.valueOf(curPlayer.getCards()),
 						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
 						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks() > 9 ? "∞" : curPlayer.getInjuryWeeks()),
 
 						curPlayer.isHomeGrown() ? "♥" : "",
-						"" + PlayerAgreeability.toString(curPlayer.getCharakter()),
-						"" + PlayerAggressiveness.toString(curPlayer.getAgressivitaet()),
-						"" + PlayerHonesty.toString(curPlayer.getAnsehen()),
+						PlayerAgreeability.toString(curPlayer.getCharakter()),
+						PlayerAggressiveness.toString(curPlayer.getAgressivitaet()),
+						PlayerHonesty.toString(curPlayer.getAnsehen()),
 						//
-						"" + PlayerSpeciality.toString(curPlayer.getPlayerSpecialty()),
-						"" + curPlayer.getExperience(),
-						"" + curPlayer.getLeadership(),
-						"" + curPlayer.getForm(),
+						PlayerSpeciality.toString(curPlayer.getPlayerSpecialty()),
+						String.valueOf(curPlayer.getExperience()),
+						String.valueOf(curPlayer.getLeadership()),
+						String.valueOf(curPlayer.getForm()),
 						// ls.player.skill_short
 						"" + curPlayer.getStamina(),
 						"" + (curPlayer.getLoyalty()),
-						df3.format(curPlayer.getGKskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.KEEPER)),
-						df3.format(curPlayer.getDEFskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.DEFENDING)),
-						df3.format(curPlayer.getWIskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.WINGER)),
-						df3.format(curPlayer.getPMskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.PLAYMAKING)),
-						df3.format(curPlayer.getPSskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.PASSING)),
-						df3.format(curPlayer.getSCskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.SCORING)),
-						df3.format(curPlayer.getSPskill() + curPlayer.getSub4SkillAccurate(PlayerSkill.SET_PIECES)),
+						df3.format(curPlayer.getGKskill() + curPlayer.getSub4Skill(PlayerSkill.KEEPER)),
+						df3.format(curPlayer.getDEFskill() + curPlayer.getSub4Skill(PlayerSkill.DEFENDING)),
+						df3.format(curPlayer.getWIskill() + curPlayer.getSub4Skill(PlayerSkill.WINGER)),
+						df3.format(curPlayer.getPMskill() + curPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)),
+						df3.format(curPlayer.getPSskill() + curPlayer.getSub4Skill(PlayerSkill.PASSING)),
+						df3.format(curPlayer.getSCskill() + curPlayer.getSub4Skill(PlayerSkill.SCORING)),
+						df3.format(curPlayer.getSPskill() + curPlayer.getSub4Skill(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
 						df2.format(curPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)),
 						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)),

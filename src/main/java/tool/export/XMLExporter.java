@@ -176,10 +176,10 @@ public class XMLExporter  {
 			///Team  Info + ManagerName adden
 			tmpEle = doc.createElement("TeamName");
 			root.appendChild(tmpEle);
-			tmpEle.appendChild(doc.createTextNode("" + HOVerwaltung.instance().getModel().getBasics().getTeamName()));
+			tmpEle.appendChild(doc.createTextNode(HOVerwaltung.instance().getModel().getBasics().getTeamName()));
 			tmpEle = doc.createElement("ManagerName");
 			root.appendChild(tmpEle);
-			tmpEle.appendChild(doc.createTextNode("" + HOVerwaltung.instance().getModel().getBasics().getManager()));
+			tmpEle.appendChild(doc.createTextNode(HOVerwaltung.instance().getModel().getBasics().getManager()));
 
 			//Exporter Version adden
 			tmpEle = doc.createElement("XMLExporterVersion");
@@ -192,7 +192,7 @@ public class XMLExporter  {
 				root.appendChild(tmpEle);
 				ele = doc.createElement("MatchID");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchID()));
+				ele.appendChild(doc.createTextNode(String.valueOf(matchData.getInfo().getMatchID())));
 				ele = doc.createElement("Datum");
 				tmpEle.appendChild(ele);
 				ele.appendChild(doc.createTextNode(matchData.getInfo().getMatchSchedule().toHT()));
@@ -207,7 +207,7 @@ public class XMLExporter  {
 
 				ele = doc.createElement("MatchType");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + matchData.getInfo().getMatchType()));
+				ele.appendChild(doc.createTextNode(String.valueOf(matchData.getInfo().getMatchType())));
 				ele = doc.createElement("Heimspiel");
 				tmpEle.appendChild(ele);
 
@@ -234,7 +234,7 @@ public class XMLExporter  {
 				//HRF ID vermerken
 				ele = doc.createElement("HRFID");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + hrfID));
+				ele.appendChild(doc.createTextNode(String.valueOf(hrfID)));
 
 				MatchLineupTeam lineupTeam;
 				Matchdetails details = matchData.getDetails();
@@ -249,91 +249,91 @@ public class XMLExporter  {
 				//Daten schreiben
 				ele = doc.createElement("TeamID");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + HOVerwaltung.instance().getModel().getBasics().getTeamId()));
+				ele.appendChild(doc.createTextNode(String.valueOf(HOVerwaltung.instance().getModel().getBasics().getTeamId())));
 				ele = doc.createElement("System");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.determineSystem()));
+				ele.appendChild(doc.createTextNode(String.valueOf(lineupTeam.determineSystem())));
 				ele = doc.createElement("Eingespieltheit");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + getTeamErfahrung(team, lineupTeam.determineSystem())));
+				ele.appendChild(doc.createTextNode(String.valueOf(getTeamErfahrung(team, lineupTeam.determineSystem()))));
 				ele = doc.createElement("TrainerType");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + DBManager.instance().getTrainerType(hrfID)));
+				ele.appendChild(doc.createTextNode(String.valueOf(DBManager.instance().getTrainerType(hrfID))));
 				ele.appendChild(doc.createComment(" 0=Defense, 2= Normal, 1=Offense Trainer, -99 NOT Found "));
 
 				if (heimspiel) {
 					ele = doc.createElement("Einstellung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeEinstellung()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeEinstellung())));
 					ele = doc.createElement("Spezialtaktik");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeTacticType()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeTacticType())));
 					ele = doc.createElement("SpezialtaktikSkill");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeTacticSkill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeTacticSkill())));
 					ele = doc.createElement("LeftAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeLeftAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeLeftAtt())));
 					ele = doc.createElement("LeftDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeLeftDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeLeftDef())));
 					ele = doc.createElement("MidAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeMidAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeMidAtt())));
 					ele = doc.createElement("MidDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeMidDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeMidDef())));
 					ele = doc.createElement("Midfield");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeMidfield()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeMidfield())));
 					ele = doc.createElement("RightAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeRightAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeRightAtt())));
 					ele = doc.createElement("RightDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getHomeRightDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getHomeRightDef())));
 				} else {
 					ele = doc.createElement("Einstellung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestEinstellung()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestEinstellung())));
 					ele = doc.createElement("Spezialtaktik");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestTacticType()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestTacticType())));
 					ele = doc.createElement("SpezialtaktikSkill");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestTacticSkill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestTacticSkill())));
 					ele = doc.createElement("LeftAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestLeftAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestLeftAtt())));
 					ele = doc.createElement("LeftDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestLeftDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestLeftDef())));
 					ele = doc.createElement("MidAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestMidAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestMidAtt())));
 					ele = doc.createElement("MidDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestMidDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestMidDef())));
 					ele = doc.createElement("Midfield");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestMidfield()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestMidfield())));
 					ele = doc.createElement("RightAtt");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestRightAtt()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestRightAtt())));
 					ele = doc.createElement("RightDef");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + details.getGuestRightDef()));
+					ele.appendChild(doc.createTextNode(String.valueOf(details.getGuestRightDef())));
 				}
 
 				ele = doc.createElement("Stimmung");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + getTeamStimmung(team)));
+				ele.appendChild(doc.createTextNode(String.valueOf(getTeamStimmung(team))));
 				ele = doc.createElement("Selbstvertrauen");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + getTeamSelbstvertrauen(team)));
+				ele.appendChild(doc.createTextNode(String.valueOf(getTeamSelbstvertrauen(team))));
 				ele = doc.createElement("Erfahrung");
 				tmpEle.appendChild(ele);
-				ele.appendChild(doc.createTextNode("" + lineupTeam.getExperience()));
+				ele.appendChild(doc.createTextNode(String.valueOf(lineupTeam.getExperience())));
 
 				//lineup
 				Element lineupEle = doc.createElement("Lineup");
@@ -359,109 +359,109 @@ public class XMLExporter  {
 
 					ele = doc.createElement("SpielerID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getPlayerId()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getPlayerId())));
 					ele = doc.createElement("Spezialitaet");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getPlayerSpecialty()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getPlayerSpecialty())));
 					ele = doc.createElement("RoleID");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getRoleId()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getRoleId())));
 					ele = doc.createElement("Tactic");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getBehaviour()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getBehaviour())));
 					ele = doc.createElement("HOPosition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getPosition()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getPosition())));
 					ele = doc.createElement("HTPositionCode");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getRoleId()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getRoleId())));
 					ele = doc.createElement("Bewertung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getRating()));
+					ele.appendChild(doc.createTextNode(String.valueOf(p.getRating())));
 					ele = doc.createElement("Name");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + p.getSpielerName()));
+					ele.appendChild(doc.createTextNode(p.getSpielerName()));
 					ele = doc.createElement("Alter");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getAlter()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getAlter())));
 					ele = doc.createElement("AgeDays");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getAgeDays()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getAgeDays())));
 					ele = doc.createElement("TSI");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getTSI()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getTSI())));
 					ele = doc.createElement("Form");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getForm()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getForm())));
 					ele = doc.createElement("Kondition");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getStamina()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getStamina())));
 					ele = doc.createElement("Erfahrung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getExperience()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getExperience())));
 					ele = doc.createElement("Torwart");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getGKskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getGKskill())));
 					ele = doc.createElement("Verteidigung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getDEFskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getDEFskill())));
 					ele = doc.createElement("Passspiel");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getPSskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getPSskill())));
 					ele = doc.createElement("Fluegel");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getWIskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getWIskill())));
 					ele = doc.createElement("Torschuss");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSCskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSCskill())));
 					ele = doc.createElement("Standards");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSPskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSPskill())));
 					ele = doc.createElement("Spielaufbau");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getPMskill()));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getPMskill())));
 					ele = doc.createElement("SubTorwart");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.KEEPER)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.KEEPER))));
 					ele = doc.createElement("SubTorwartHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.KEEPER, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.KEEPER, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubVerteidigung");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.DEFENDING)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.DEFENDING))));
 					ele = doc.createElement("SubVerteidigungHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.DEFENDING, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.DEFENDING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubPassspiel");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.PASSING)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.PASSING))));
 					ele = doc.createElement("SubPassspielHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PASSING, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.PASSING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubFluegel");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.WINGER)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.WINGER))));
 					ele = doc.createElement("SubFluegelHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.WINGER, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.WINGER, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubTorschuss");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.SCORING)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.SCORING))));
 					ele = doc.createElement("SubTorschussHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SCORING, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.SCORING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubStandards");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.SET_PIECES)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.SET_PIECES))));
 					ele = doc.createElement("SubStandardsHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.SET_PIECES, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.SET_PIECES, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubSpielaufbau");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + playerData.getSub4SkillAccurate(PlayerSkill.PLAYMAKING)));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.PLAYMAKING))));
 					ele = doc.createElement("SubSpielaufbauHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode("" + hadSkillup(PlayerSkill.PLAYMAKING, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.PLAYMAKING, playerData, details.getMatchDate())));
 				}
 			}
 
@@ -506,7 +506,7 @@ public class XMLExporter  {
 			if (m_sUserRegionID.equals("-1")) {
 				if (HOVerwaltung.instance().getModel().getBasics().getRegionId() > 0) {
 					// Since HO 1.401, the regionId exists in Basics
-					m_sUserRegionID = "" + HOVerwaltung.instance().getModel().getBasics().getRegionId();
+					m_sUserRegionID = String.valueOf(HOVerwaltung.instance().getModel().getBasics().getRegionId());
 				} else {
 					//saugen
 					m_sUserRegionID = MyConnector.instance().fetchRegionID(teamID);

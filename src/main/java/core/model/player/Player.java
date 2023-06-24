@@ -312,6 +312,7 @@ public class Player extends AbstractTable.Storable {
     private Integer m_lastMatchRating;
     private Integer lastMatchRatingEndOfGame;
 
+    // TODO this should not be an attribute of Player. Move it to lineup (MatchLineupPosition or something like this)
     /**
      * specifying at what time –in minutes- that player entered the field
      * This parameter is only used by RatingPredictionManager to calculate the stamina effect
@@ -490,7 +491,7 @@ public class Player extends AbstractTable.Storable {
             try {
                 connection.setSilentDownload(true);
                 // try to download missing motherclub info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(""+this.getPlayerID());
+                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
@@ -1403,22 +1404,13 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * berechnet den Subskill pro position
+     * Get skill value including subskill
+     * @param iSkill skill id
+     * @return double
      */
-    public float getSub4Skill(int skill) {
-        return Math.min(0.99f, Helper.round(getSub4SkillAccurate(skill), 2));
+    public double getSkill(int iSkill) {
+        return getValue4Skill(iSkill) + getSub4Skill(iSkill);
     }
-
-    public float getSkill(int iSkill, boolean inclSubSkill) {
-        if(inclSubSkill) {
-            return getValue4Skill(iSkill) + getSub4Skill(iSkill);
-        }
-        else{
-            return getValue4Skill(iSkill);
-
-        }
-    }
-
 
     /**
      * Returns accurate subskill number. If you need subskill for UI
@@ -1427,7 +1419,7 @@ public class Player extends AbstractTable.Storable {
      * @param skill skill number
      * @return subskill between 0.0-0.999
      */
-    public float getSub4SkillAccurate(int skill) {
+    public double getSub4Skill(int skill) {
         double value = switch (skill) {
             case KEEPER -> m_dSubTorwart;
             case PLAYMAKING -> m_dSubSpielaufbau;
@@ -1443,7 +1435,7 @@ public class Player extends AbstractTable.Storable {
         return (float) Math.min(0.999, value);
     }
 
-    public void setSubskill4PlayerSkill(int skill, float value) {
+    public void setSubskill4PlayerSkill(int skill, double value) {
         switch (skill) {
             case KEEPER -> m_dSubTorwart = value;
             case PLAYMAKING -> m_dSubSpielaufbau = value;
@@ -1896,11 +1888,10 @@ public class Player extends AbstractTable.Storable {
         };
     }
 
-
-    public float getSkillValue(int skill){
+    public double getSkillValue(int skill){
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
-    public void setSkillValue(int skill, float value){
+    public void setSkillValue(int skill, double value){
         int intVal = (int)value;
         setValue4Skill(skill, intVal);
         setSubskill4PlayerSkill(skill, value - intVal);

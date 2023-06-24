@@ -101,6 +101,16 @@ public class Lineup{
 		}
 	}
 
+	public List<MatchLineupPosition> getPlayersInSector(MatchRoleID.Sector sector) {
+		var ret = new ArrayList<MatchLineupPosition>();
+		for ( var p : getFieldPositions()){
+			if ( p.getSector() == sector){
+				ret.add(p);
+			}
+		}
+		return ret;
+	}
+
 	private static class Settings {
 		/** Attitude */
 		@SerializedName("speechLevel")
@@ -1464,8 +1474,6 @@ public class Lineup{
 	public void setPullBackMinute(int pullBackMinute) {
 		this.pullBackMinute = pullBackMinute;
 	}
-
-
 
 	/**
 	 * Amend the lineup by applying the Given MatchOrder
