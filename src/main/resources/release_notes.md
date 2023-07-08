@@ -4,32 +4,26 @@
 
 bug fixes 
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A8.0)
+## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.2)
 
 ### Database
 
 ### Squad
-* fix click on “Last Match” column when the column has been moved.
-* fix last match info of nt teams (#1878)
 
 ### Team Analyzer
 
 ### Rating
 
 ### Matches
-* fix missing player names in match highlights panel (#1857)
 
 ### Lineup
-* fix nt team selection options of style of play combo box (#1873)
-* fix download error of substitutions with undocumented goal difference criteria (#1881)
 
 ### Statistics
-* fix currency of secondary teams (#1856)
 
 ### Transfer
-* fix bugs in transfer scout panel (#1858)
 
 ### Training
+* handle new trainer types which are no longer listed as player (#1889)
 
 ### League
 
@@ -39,11 +33,7 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - April 22, 2023 - June 24, 2023
+Reports by Contributors - June 24, 2023 - July 08, 2023
+* Miccoli17 1
 
-* Achilles 272
-* sich 4
-* Lidegand 4
-* wsbrenk 4
-
-Total 288
+Total 1
