@@ -101,16 +101,6 @@ public class Lineup{
 		}
 	}
 
-	public List<MatchLineupPosition> getPlayersInSector(MatchRoleID.Sector sector) {
-		var ret = new ArrayList<MatchLineupPosition>();
-		for ( var p : getFieldPositions()){
-			if ( p.getSector() == sector){
-				ret.add(p);
-			}
-		}
-		return ret;
-	}
-
 	private static class Settings {
 		/** Attitude */
 		@SerializedName("speechLevel")
@@ -686,55 +676,56 @@ public class Lineup{
 
 	private boolean isUpcomingMatchLoaded() { return m_iArenaId>=0; }
 
+	public boolean setUpcomingMatch(MatchKurzInfo match){
+
+		if (match == null) {
+			m_sLocation = 0;
+			m_iArenaId = 0;
+			m_iRegionId = 0;
+			m_cWeather = Weather.NULL;
+			m_cWeatherForecast = Weather.Forecast.NULL;
+			HOLogger.instance().warning(getClass(), "no match to determine location");
+			return false;
+		}
+
+		if (match.getMatchType().isOfficial()) {
+			if (match.isNeutral()) {
+				m_sLocation = IMatchDetails.LOCATION_NEUTRAL;
+			}
+			if (match.isDerby()) {
+				m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
+			}
+			if (!match.isNeutral() && !match.isDerby()) {
+				if (match.isHomeMatch()) {
+					m_sLocation = IMatchDetails.LOCATION_HOME;
+				} else {
+					m_sLocation = IMatchDetails.LOCATION_AWAY;
+				}
+			}
+		} else {
+			m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
+		}
+
+		m_iArenaId = match.getArenaId();
+		m_iRegionId = match.getRegionId();
+		m_cWeather = match.getWeather();
+		if (m_cWeather == null) m_cWeather = Weather.NULL;
+		m_cWeatherForecast = match.getWeatherForecast();
+		if (m_cWeatherForecast == null) m_cWeatherForecast = Weather.Forecast.NULL;
+
+		return true;
+	}
+
 	private void getUpcomingMatch() {
 		try {
 			final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-
 			MatchKurzInfo match = DBManager.instance().getFirstUpcomingMatchWithTeamId(teamId);
-
-			if (match == null) {
-				m_sLocation = 0;
-				m_iArenaId = 0;
-				m_iRegionId = 0;
-				m_cWeather = Weather.NULL;
-				m_cWeatherForecast = Weather.Forecast.NULL;
-				HOLogger.instance().warning(getClass(), "no match to determine location");
-				return;
-			}
-
-			if (match.getMatchType().isOfficial()) {
-				if (match.isNeutral()) {
-					m_sLocation = IMatchDetails.LOCATION_NEUTRAL;
-				}
-				if (match.isDerby()) {
-					m_sLocation = IMatchDetails.LOCATION_AWAYDERBY;
-				}
-				if (!match.isNeutral() && !match.isDerby()) {
-					if (match.isHomeMatch()) {
-						m_sLocation = IMatchDetails.LOCATION_HOME;
-					} else {
-						m_sLocation = IMatchDetails.LOCATION_AWAY;
-					}
-				}
-			} else {
-				m_sLocation = IMatchDetails.LOCATION_TOURNAMENT;
-			}
-
-			m_iArenaId = match.getArenaId();
-			m_iRegionId = match.getRegionId();
-			m_cWeather = match.getWeather();
-			if (m_cWeather == null) m_cWeather = Weather.NULL;
-			m_cWeatherForecast = match.getWeatherForecast();
-			if (m_cWeatherForecast == null) m_cWeatherForecast = Weather.Forecast.NULL;
-
-
+			setUpcomingMatch(match);
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "getUpcomingMatch: " + e);
 			m_sLocation = 0;
 		}
-
 	}
-
 
 	/**
 	 * Umrechnung von double auf 1-80 int

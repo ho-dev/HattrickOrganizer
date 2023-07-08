@@ -34,9 +34,9 @@ public class TrainingPerPlayer  {
     }
 
     /**
-     * Getter for property spieler.
+     * Getter for property player.
      *
-     * @return Value of property spieler.
+     * @return Value of property player.
      */
     public final Player getPlayer() {
         return this._Player;
