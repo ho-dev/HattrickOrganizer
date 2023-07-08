@@ -162,13 +162,13 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	private List<TrainingPerWeek> adjustFutureTrainingsVector(List<TrainingPerWeek> _futureTrainings, int requiredNBentries) {
-		List<TrainingPerWeek> newfutureTrainings = new ArrayList<>();
+		List<TrainingPerWeek> newFutureTrainings = new ArrayList<>();
 		TrainingPerWeek previousTraining = TrainingManager.instance().getNextWeekTraining();
 		HOLogger.instance().debug(TrainingModel.class, "Previous training date: " + previousTraining);
 
 		if ( previousTraining != null) {
 			TrainingPerWeek futureTraining;
-			while (newfutureTrainings.size() < requiredNBentries) {
+			while (newFutureTrainings.size() < requiredNBentries) {
 				//first iteration equals to nextWeek training then increase per one week per iteration
 				var futureTrainingDate = previousTraining.getTrainingDate().plusDaysAtSameLocalTime(7);
 				var storedFutureTrainings = _futureTrainings.stream().filter(t -> futureTrainingDate.equals(t.getTrainingDate())).toList();
@@ -180,10 +180,10 @@ public class TrainingModel implements PropertyChangeListener {
 					futureTraining = new TrainingPerWeek(futureTrainingDate, previousTraining.getTrainingType(), previousTraining.getTrainingIntensity(),
 							previousTraining.getStaminaShare(), previousTraining.getTrainingAssistantsLevel(), previousTraining.getCoachLevel(), DBDataSource.GUESS);
 				}
-				newfutureTrainings.add(futureTraining);
+				newFutureTrainings.add(futureTraining);
 				previousTraining = futureTraining;
 			}
 		}
-		return newfutureTrainings;
+		return newFutureTrainings;
 	}
 }
