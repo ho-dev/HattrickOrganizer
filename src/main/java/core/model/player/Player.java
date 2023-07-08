@@ -437,7 +437,13 @@ public class Player extends AbstractTable.Storable {
         m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsu20", "0"));
-        nationalTeamId = Integer.parseInt(properties.getProperty("nationalteamid", "0"));
+        var ntTeamId = properties.getProperty("nationalteamid", "0");
+        if ( ntTeamId.isEmpty()){
+            nationalTeamId=0;
+        }
+        else {
+            nationalTeamId = Integer.parseInt(ntTeamId);
+        }
 
         // #461-lastmatch
         m_lastMatchDate = properties.getProperty("lastmatch_date");
@@ -489,8 +495,8 @@ public class Player extends AbstractTable.Storable {
             var isSilentDownload = connection.isSilentDownload();
             try {
                 connection.setSilentDownload(true);
-                // try to download missing motherclub info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(""+this.getPlayerID());
+                // try to download missing mother club info
+                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();

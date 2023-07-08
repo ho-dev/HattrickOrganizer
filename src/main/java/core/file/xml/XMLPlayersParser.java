@@ -38,6 +38,13 @@ public class XMLPlayersParser {
         return createListe(doc);
     }
 
+    public final MyHashtable parsePlayerDetails(String inputStream){
+        Document doc = XMLManager.parseString(inputStream);
+        Element root = doc.getDocumentElement();
+        Element ele = (Element) root.getElementsByTagName("Player").item(0);
+        return createPlayerDetails(ele);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     //Parser Helper private
     ////////////////////////////////////////////////////////////////////////////////

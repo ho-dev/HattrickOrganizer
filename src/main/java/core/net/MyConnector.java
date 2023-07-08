@@ -450,7 +450,7 @@ public class MyConnector {
 	 */
 	
 	public String getStaff(int teamId) {
-		String url = htUrl + "?file=stafflist&version=1.0&teamId=" + teamId;
+		String url = htUrl + "?file=stafflist&version=1.1&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	
