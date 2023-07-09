@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* Support for Hattrick's coach changes
 
 
 ## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A8.0)
@@ -16,6 +17,7 @@
 ### Matches
 
 ### Lineup
+* coaches who are not allowed to play are now disabled for HO lineups (#1891)
 
 ### Statistics
 
