@@ -58,13 +58,13 @@ import java.util.stream.Collectors;
 public class DBManager {
 
 	/** database versions */
-	private static final int DBVersion = 701; // HO 7.0 version
+	private static final int DBVersion = 800; // HO 8.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 601;
-	private static final double DBConfigVersion = 7d; // HO 7.0 version
+	private static final int previousDBVersion = 701;
+	private static final double DBConfigVersion = 8d; // HO 8.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -424,7 +424,7 @@ public class DBManager {
 	 */
 	public int getLetzteBewertung4Spieler(int spielerid) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getLetzteBewertung4Spieler(spielerid);
+				.getLatestRatingOfPlayer(spielerid);
 	}
 
 	/**
@@ -1941,7 +1941,7 @@ public class DBManager {
 	 * @param value     the target value
 	 */
 	void saveUserParameter(String fieldName, int value) {
-		saveUserParameter(fieldName, "" + value);
+		saveUserParameter(fieldName, String.valueOf(value));
 	}
 
 	/**
@@ -1951,7 +1951,7 @@ public class DBManager {
 	 * @param value     the target value
 	 */
 	void saveUserParameter(String fieldName, double value) {
-		saveUserParameter(fieldName, "" + value);
+		saveUserParameter(fieldName, String.valueOf(value));
 	}
 
 	/**

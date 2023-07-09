@@ -332,6 +332,12 @@ public class Player extends AbstractTable.Storable {
     private int hrf_id;
     private Integer htms = null;
     private Integer htms28 = null;
+
+    /**
+     * Externally recruited coaches are no longer allowed to be part of the lineup
+     */
+    private boolean lineupDisabled = false;
+
     public int getGameStartingTime() {
         return GameStartingTime;
     }
@@ -353,7 +359,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, HODateTime hrfdate, int hrf_id) {
+    public Player(Properties properties, HODateTime hrfdate, int hrf_id) {
         // Separate first, nick and last names are available. Utilize them?
 
         this.hrf_id=hrf_id;
@@ -469,7 +475,7 @@ public class Player extends AbstractTable.Storable {
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
-        final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
+        final HOModel oldmodel = HOVerwaltung.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
@@ -979,7 +985,7 @@ public class Player extends AbstractTable.Storable {
         positions.sort((PositionContribute player1, PositionContribute player2) -> Float.compare(player2.getRating(), player1.getRating()));
 
         byte[] alternativePositions = new byte[positions.size()];
-        float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
+        float tolerance = 1f - UserParameter.instance().alternativePositionsTolerance;
 
         int i;
         final float threshold = positions.get(0).getRating() * tolerance;
@@ -1097,7 +1103,7 @@ public class Player extends AbstractTable.Storable {
      *
      * @param manuellerSmilie New value of property m_sManuellerSmilie.
      */
-    public void setManuellerSmilie(java.lang.String manuellerSmilie) {
+    public void setManuellerSmilie(String manuellerSmilie) {
         getNotes().setManuelSmilie(manuellerSmilie);
         DBManager.instance().storePlayerNotes(notes);
     }
@@ -1107,7 +1113,7 @@ public class Player extends AbstractTable.Storable {
      *
      * @return Value of property m_sManuellerSmilie.
      */
-    public java.lang.String getInfoSmiley() {
+    public String getInfoSmiley() {
         return getNotes().getManuelSmilie();
     }
 
@@ -1129,30 +1135,30 @@ public class Player extends AbstractTable.Storable {
         return m_iTSI;
     }
 
-    public void setFirstName(java.lang.String m_sName) {
+    public void setFirstName(String m_sName) {
         if ( m_sName != null ) this.m_sFirstName = m_sName;
         else m_sFirstName = "";
     }
 
-    public java.lang.String getFirstName() {
+    public String getFirstName() {
         return m_sFirstName;
     }
 
-    public void setNickName(java.lang.String m_sName) {
+    public void setNickName(String m_sName) {
         if ( m_sName != null ) this.m_sNickName = m_sName;
         else m_sNickName = "";
     }
 
-    public java.lang.String getNickName() {
+    public String getNickName() {
         return m_sNickName;
     }
 
-    public void setLastName(java.lang.String m_sName) {
+    public void setLastName(String m_sName) {
         if (m_sName != null ) this.m_sLastName = m_sName;
         else this.m_sLastName = "";
     }
 
-    public java.lang.String getLastName() {
+    public String getLastName() {
         return m_sLastName;
     }
 
@@ -1174,7 +1180,7 @@ public class Player extends AbstractTable.Storable {
     }
 
 
-    public java.lang.String getFullName() {
+    public String getFullName() {
 
         if (getNickName().isEmpty())
         {
@@ -1773,6 +1779,14 @@ public class Player extends AbstractTable.Storable {
         return ret;
     }
 
+    public boolean isLineupDisabled() {
+        return lineupDisabled;
+    }
+
+    public void setLineupDisabled(Boolean lineupDisabled) {
+        this.lineupDisabled = Objects.requireNonNullElse(lineupDisabled, false);
+    }
+
     public static class Notes extends  AbstractTable.Storable{
 
         public Notes(){}
@@ -2126,7 +2140,7 @@ public class Player extends AbstractTable.Storable {
 
 
     public float calcPosValue(byte pos, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
-        return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals, weather, useWeatherImpact);
+        return calcPosValue(pos, useForm, normalized, UserParameter.instance().nbDecimals, weather, useWeatherImpact);
     }
 
     public float calcPosValue(byte pos, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
@@ -2157,7 +2171,7 @@ public class Player extends AbstractTable.Storable {
             return 0.0f;
         }
 
-        return core.util.Helper.round(es, nb_decimals);
+        return Helper.round(es, nb_decimals);
     }
 
 
