@@ -418,24 +418,12 @@ public class Player extends AbstractTable.Storable {
         m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
         matchesCurrentTeam = Integer.parseInt(properties.getProperty("matchescurrentteam", "0"));
 
-        if (properties.get("rating") != null) {
-            m_iBewertung = Integer.parseInt(properties.getProperty("rating", "0"));
-        }
+        this.lineupDisabled = getBooleanIfNotNull(properties, "lineupdisabled");
+        this.m_iBewertung = getIntegerIfNotNull(properties, "rating", 0);
+        this.m_iTrainerTyp = TrainerType.fromInt(getIntegerIfNotNull(properties, "trainertype", -1));
+        this.m_iTrainer = getIntegerIfNotNull(properties, "trainerskill", 0);
 
-        String temp = properties.getProperty("trainertype", "-1");
-
-        if ((temp != null) && !temp.equals("")) {
-            m_iTrainerTyp = TrainerType.fromInt(Integer.parseInt(temp));
-        }
-
-        temp = properties.getProperty("trainerskill", "0");
-
-        if ((temp != null) && !temp.equals("")) {
-            m_iTrainer = Integer.parseInt(temp);
-        }
-
-        temp = properties.getProperty("playernumber", "");
-
+        var temp = properties.getProperty("playernumber", "");
         if ((temp != null) && !temp.equals("") && !temp.equals("null")) {
             shirtNumber = Integer.parseInt(temp);
         }
@@ -443,13 +431,7 @@ public class Player extends AbstractTable.Storable {
         m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsu20", "0"));
-        var ntTeamId = properties.getProperty("nationalteamid", "0");
-        if ( ntTeamId.isEmpty()){
-            nationalTeamId=0;
-        }
-        else {
-            nationalTeamId = Integer.parseInt(ntTeamId);
-        }
+        this.nationalTeamId = getIntegerIfNotNull(properties, "nationalteamid", 0);
 
         // #461-lastmatch
         m_lastMatchDate = properties.getProperty("lastmatch_date");
@@ -483,6 +465,22 @@ public class Player extends AbstractTable.Storable {
             motherclubId = oldPlayer.getMotherclubId();
             motherclubName = oldPlayer.getMotherclubName();
         }
+    }
+
+    private int getIntegerIfNotNull(Properties properties, String key, int defaultValue) {
+        var value = properties.getProperty(key);
+        if ( value == null || value.isEmpty()){
+            return defaultValue;
+        }
+        return Integer.parseInt(value);
+    }
+
+    private boolean getBooleanIfNotNull(Properties properties, String key) {
+        var value = properties.getProperty(key);
+        if ( value == null || value.isEmpty()){
+            return false;
+        }
+        return Boolean.parseBoolean(value);
     }
 
     public String getMotherclubName() {

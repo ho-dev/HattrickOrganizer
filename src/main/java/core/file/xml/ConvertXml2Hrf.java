@@ -137,7 +137,9 @@ public class ConvertXml2Hrf {
 		}
 		if ( !found){
 			var xml = MyConnector.instance().downloadPlayerDetails(trainerId);
-			playersData.add(new XMLPlayersParser().parsePlayerDetails(xml));
+			var properties = new XMLPlayersParser().parsePlayerDetails(xml);
+			properties.put("LineupDisabled", "true");
+			playersData.add(properties);
 		}
 
 
