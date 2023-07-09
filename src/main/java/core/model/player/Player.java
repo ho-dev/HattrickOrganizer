@@ -332,6 +332,12 @@ public class Player extends AbstractTable.Storable {
     private int hrf_id;
     private Integer htms = null;
     private Integer htms28 = null;
+
+    /**
+     * Externally recruited coaches are no longer allowed to be part of the lineup
+     */
+    private boolean lineupDisabled = false;
+
     public int getGameStartingTime() {
         return GameStartingTime;
     }
@@ -353,7 +359,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(java.util.Properties properties, HODateTime hrfdate, int hrf_id) {
+    public Player(Properties properties, HODateTime hrfdate, int hrf_id) {
         // Separate first, nick and last names are available. Utilize them?
 
         this.hrf_id=hrf_id;
@@ -412,24 +418,12 @@ public class Player extends AbstractTable.Storable {
         m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
         matchesCurrentTeam = Integer.parseInt(properties.getProperty("matchescurrentteam", "0"));
 
-        if (properties.get("rating") != null) {
-            m_iBewertung = Integer.parseInt(properties.getProperty("rating", "0"));
-        }
+        this.lineupDisabled = getBooleanIfNotNull(properties, "lineupdisabled");
+        this.m_iBewertung = getIntegerIfNotNull(properties, "rating", 0);
+        this.m_iTrainerTyp = TrainerType.fromInt(getIntegerIfNotNull(properties, "trainertype", -1));
+        this.m_iTrainer = getIntegerIfNotNull(properties, "trainerskill", 0);
 
-        String temp = properties.getProperty("trainertype", "-1");
-
-        if ((temp != null) && !temp.equals("")) {
-            m_iTrainerTyp = TrainerType.fromInt(Integer.parseInt(temp));
-        }
-
-        temp = properties.getProperty("trainerskill", "0");
-
-        if ((temp != null) && !temp.equals("")) {
-            m_iTrainer = Integer.parseInt(temp);
-        }
-
-        temp = properties.getProperty("playernumber", "");
-
+        var temp = properties.getProperty("playernumber", "");
         if ((temp != null) && !temp.equals("") && !temp.equals("null")) {
             shirtNumber = Integer.parseInt(temp);
         }
@@ -437,7 +431,7 @@ public class Player extends AbstractTable.Storable {
         m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
         m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
         m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsu20", "0"));
-        nationalTeamId = Integer.parseInt(properties.getProperty("nationalteamid", "0"));
+        this.nationalTeamId = getIntegerIfNotNull(properties, "nationalteamid", 0);
 
         // #461-lastmatch
         m_lastMatchDate = properties.getProperty("lastmatch_date");
@@ -463,7 +457,7 @@ public class Player extends AbstractTable.Storable {
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
-        final core.model.HOModel oldmodel = core.model.HOVerwaltung.instance().getModel();
+        final HOModel oldmodel = HOVerwaltung.instance().getModel();
         final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
@@ -471,6 +465,22 @@ public class Player extends AbstractTable.Storable {
             motherclubId = oldPlayer.getMotherclubId();
             motherclubName = oldPlayer.getMotherclubName();
         }
+    }
+
+    private int getIntegerIfNotNull(Properties properties, String key, int defaultValue) {
+        var value = properties.getProperty(key);
+        if ( value == null || value.isEmpty()){
+            return defaultValue;
+        }
+        return Integer.parseInt(value);
+    }
+
+    private boolean getBooleanIfNotNull(Properties properties, String key) {
+        var value = properties.getProperty(key);
+        if ( value == null || value.isEmpty()){
+            return false;
+        }
+        return Boolean.parseBoolean(value);
     }
 
     public String getMotherclubName() {
@@ -489,8 +499,8 @@ public class Player extends AbstractTable.Storable {
             var isSilentDownload = connection.isSilentDownload();
             try {
                 connection.setSilentDownload(true);
-                // try to download missing motherclub info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(""+this.getPlayerID());
+                // try to download missing mother club info
+                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
@@ -973,7 +983,7 @@ public class Player extends AbstractTable.Storable {
         positions.sort((PositionContribute player1, PositionContribute player2) -> Float.compare(player2.getRating(), player1.getRating()));
 
         byte[] alternativePositions = new byte[positions.size()];
-        float tolerance = 1f - core.model.UserParameter.instance().alternativePositionsTolerance;
+        float tolerance = 1f - UserParameter.instance().alternativePositionsTolerance;
 
         int i;
         final float threshold = positions.get(0).getRating() * tolerance;
@@ -1091,7 +1101,7 @@ public class Player extends AbstractTable.Storable {
      *
      * @param manuellerSmilie New value of property m_sManuellerSmilie.
      */
-    public void setManuellerSmilie(java.lang.String manuellerSmilie) {
+    public void setManuellerSmilie(String manuellerSmilie) {
         getNotes().setManuelSmilie(manuellerSmilie);
         DBManager.instance().storePlayerNotes(notes);
     }
@@ -1101,7 +1111,7 @@ public class Player extends AbstractTable.Storable {
      *
      * @return Value of property m_sManuellerSmilie.
      */
-    public java.lang.String getInfoSmiley() {
+    public String getInfoSmiley() {
         return getNotes().getManuelSmilie();
     }
 
@@ -1123,30 +1133,30 @@ public class Player extends AbstractTable.Storable {
         return m_iTSI;
     }
 
-    public void setFirstName(java.lang.String m_sName) {
+    public void setFirstName(String m_sName) {
         if ( m_sName != null ) this.m_sFirstName = m_sName;
         else m_sFirstName = "";
     }
 
-    public java.lang.String getFirstName() {
+    public String getFirstName() {
         return m_sFirstName;
     }
 
-    public void setNickName(java.lang.String m_sName) {
+    public void setNickName(String m_sName) {
         if ( m_sName != null ) this.m_sNickName = m_sName;
         else m_sNickName = "";
     }
 
-    public java.lang.String getNickName() {
+    public String getNickName() {
         return m_sNickName;
     }
 
-    public void setLastName(java.lang.String m_sName) {
+    public void setLastName(String m_sName) {
         if (m_sName != null ) this.m_sLastName = m_sName;
         else this.m_sLastName = "";
     }
 
-    public java.lang.String getLastName() {
+    public String getLastName() {
         return m_sLastName;
     }
 
@@ -1168,7 +1178,7 @@ public class Player extends AbstractTable.Storable {
     }
 
 
-    public java.lang.String getFullName() {
+    public String getFullName() {
 
         if (getNickName().isEmpty())
         {
@@ -1352,18 +1362,19 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * set whether or not that player can be selected by the assistant
+     * set whether that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
+        if (this.isLineupDisabled()) flag = false;
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
-     * get whether or not that player can be selected by the assistant
+     * get whether that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
-        return getNotes().isEligibleToPlay();
+        return !this.isLineupDisabled() && getNotes().isEligibleToPlay();
     }
 
     /**
@@ -1767,6 +1778,14 @@ public class Player extends AbstractTable.Storable {
         return ret;
     }
 
+    public boolean isLineupDisabled() {
+        return lineupDisabled;
+    }
+
+    public void setLineupDisabled(Boolean lineupDisabled) {
+        this.lineupDisabled = Objects.requireNonNullElse(lineupDisabled, false);
+    }
+
     public static class Notes extends  AbstractTable.Storable{
 
         public Notes(){}
@@ -2120,7 +2139,7 @@ public class Player extends AbstractTable.Storable {
 
 
     public float calcPosValue(byte pos, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
-        return calcPosValue(pos, useForm, normalized, core.model.UserParameter.instance().nbDecimals, weather, useWeatherImpact);
+        return calcPosValue(pos, useForm, normalized, UserParameter.instance().nbDecimals, weather, useWeatherImpact);
     }
 
     public float calcPosValue(byte pos, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
@@ -2151,7 +2170,7 @@ public class Player extends AbstractTable.Storable {
             return 0.0f;
         }
 
-        return core.util.Helper.round(es, nb_decimals);
+        return Helper.round(es, nb_decimals);
     }
 
 

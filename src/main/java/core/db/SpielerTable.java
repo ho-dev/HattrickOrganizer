@@ -14,7 +14,7 @@ import java.util.*;
 
 final class SpielerTable extends AbstractTable {
 
-	/** tablename **/
+	/** Table name **/
 	final static String TABLENAME = "SPIELER";
 
 	SpielerTable(JDBCAdapter adapter) {
@@ -92,7 +92,8 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatch_RatingEndOfGame").setGetter((p)->((Player)p).getLastMatchRatingEndOfGame()).setSetter((p,v)->((Player)p).setLastMatchRatingEndOfGame((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubId").setGetter((p)->((Player)p).getMotherclubId()).setSetter((p,v)->((Player)p).setMotherClubId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubName").setGetter((p)->((Player)p).getMotherclubName()).setSetter((p,v)->((Player)p).setMotherClubName((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p)->((Player)p).getMatchesCurrentTeam()).setSetter((p,v)->((Player)p).setMatchesCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p)->((Player)p).getMatchesCurrentTeam()).setSetter((p,v)->((Player)p).setMatchesCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LineupDisabled").setGetter((p)->((Player)p).isLineupDisabled()).setSetter((p,v)->((Player)p).setLineupDisabled((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
 		};
 	}
 
@@ -103,9 +104,8 @@ final class SpielerTable extends AbstractTable {
 			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
 	}
 
-
 	/**
-	 * store a list of records
+	 * Store a list of records
 	 * @param players list of players
 	 */
 	void store(List<Player> players) {
@@ -153,18 +153,18 @@ final class SpielerTable extends AbstractTable {
 			"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
 
 	/**
-	 * Gibt die letzte Bewertung für den Player zurück // HRF
+	 * Get latest rating of player
 	 */
-	int getLetzteBewertung4Spieler(int spielerid) {
+	int getLatestRatingOfPlayer(int playerId) {
 		int bewertung = 0;
 
 		try {
-			final ResultSet rs = adapter.executePreparedQuery(getLetzteBewertung4SpielerStatementBuilder.getStatement(), spielerid);
+			final ResultSet rs = adapter.executePreparedQuery(getLetzteBewertung4SpielerStatementBuilder.getStatement(), playerId);
 			if ((rs != null) && rs.next()) {
 				bewertung = rs.getInt("Bewertung");
 			}
 		} catch (Exception e) {
-			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + spielerid + " : " + e);
+			HOLogger.instance().log(getClass(),"DatenbankZugriff.getLetzteBewertung4Spieler : " + playerId + " : " + e);
 		}
 		return bewertung;
 	}

@@ -70,6 +70,8 @@ final class DBUpdater {
 					case 700:
 						updateDBv701(DBVersion);
 					case 701:
+						updateDBv800(DBVersion);
+					case 800:
 				}
 
 			} catch (Exception e) {
@@ -78,6 +80,12 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv800(int dbVersion) throws SQLException {
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");
+		updateDBVersion(dbVersion, 800);
 	}
 
 	private final HashMap<String, PreparedStatement> migrateStatements = new HashMap<>();

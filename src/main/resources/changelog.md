@@ -1,3 +1,45 @@
+# Changelist HO! 7.1
+
+## Some numbers
+* 11 commits
+* 34 files changed, 1085 insertions(+), 1213 deletions(-)
+* Contributors:
+  * 9 wsbrenk
+  * 2 Sébastien Le Callonnec
+
+## Highlights
+* bug fixes
+
+## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.1)
+
+### Squad
+* fix click on “Last Match” column when the column has been moved.
+* fix last match info of nt teams (#1878)
+
+### Matches
+* fix missing player names in match highlights panel (#1857)
+
+### Lineup
+* fix nt team selection options of style of play combo box (#1873)
+* fix download error of substitutions with undocumented goal difference criteria (#1881)
+
+### Statistics
+* fix currency of secondary teams (#1856)
+
+### Transfer
+* fix bugs in transfer scout panel (#1858)
+
+## Translations
+
+Reports by Contributors - April 22, 2023 - June 24, 2023
+
+* Achilles 272
+* sich 4
+* Lidegand 4
+* wsbrenk 4
+
+Total 288
+
 # Changelist HO! 7.0
 
 ## Some numbers
@@ -98,7 +140,7 @@ Total 234
 * 11 commits
 * 22 files changed, 469 insertions(+), 493 deletions(-)
 * Contributors:
-  11	wsbrenk
+  * 11	wsbrenk
 
 ## Highlights
 * bug fixes
