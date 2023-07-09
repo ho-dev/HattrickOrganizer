@@ -1362,18 +1362,19 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * set whether or not that player can be selected by the assistant
+     * set whether that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
+        if (this.isLineupDisabled()) flag = false;
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
     }
 
     /**
-     * get whether or not that player can be selected by the assistant
+     * get whether that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
-        return getNotes().isEligibleToPlay();
+        return !this.isLineupDisabled() && getNotes().isEligibleToPlay();
     }
 
     /**

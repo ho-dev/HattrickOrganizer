@@ -141,6 +141,7 @@ public class HOModel {
 
     /**
      * Returns all current players
+     * (including the lineup disabled ones)
      */
     public final List<Player> getCurrentPlayers() {
         if (m_vPlayer == null) {

@@ -18,6 +18,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemListener;
+import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,8 +38,6 @@ import javax.swing.RowFilter;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -46,6 +45,7 @@ import javax.swing.table.TableRowSorter;
 
 public class PenaltyTakersView extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = -5089904466636200088L;
 	private JTable playersTable;
 	private JTable takersTable;
@@ -78,7 +78,9 @@ public class PenaltyTakersView extends JPanel {
 	public void setPlayers(List<Player> players) {
 		this.players = new ArrayList<>();
 		for (Player player : players) {
-			this.players.add(new PenaltyTaker(player));
+			if (!player.isLineupDisabled()) {
+				this.players.add(new PenaltyTaker(player));
+			}
 		}
 		getPlayersTableModel().setPenaltyTakers(this.players);
 	}
@@ -537,8 +539,9 @@ public class PenaltyTakersView extends JPanel {
 
 	private class PenaltyTakersTableModel extends AbstractTableModel {
 
+		@Serial
 		private static final long serialVersionUID = 3044881352777003621L;
-		private String[] columnNames;
+		private final String[] columnNames;
 		private List<PenaltyTaker> data = new ArrayList<>();
 
 		public PenaltyTakersTableModel() {
@@ -626,8 +629,9 @@ public class PenaltyTakersView extends JPanel {
 		}
 	}
 
-	private class InLineupRenderer extends DefaultTableCellRenderer {
+	private static class InLineupRenderer extends DefaultTableCellRenderer {
 
+		@Serial
 		private static final long serialVersionUID = 2815809080926324953L;
 
 		@Override
@@ -648,10 +652,11 @@ public class PenaltyTakersView extends JPanel {
 
 	}
 
-	private class DoubleRenderer extends DefaultTableCellRenderer {
+	private static class DoubleRenderer extends DefaultTableCellRenderer {
 
+		@Serial
 		private static final long serialVersionUID = -9094435304652745951L;
-		private NumberFormat format;
+		private final NumberFormat format;
 
 		public DoubleRenderer() {
 			this.format = NumberFormat.getNumberInstance();
@@ -672,6 +677,7 @@ public class PenaltyTakersView extends JPanel {
 
 	private class SkillRenderer extends DoubleRenderer {
 
+		@Serial
 		private static final long serialVersionUID = 3943598594307257068L;
 
 		@Override
@@ -685,8 +691,9 @@ public class PenaltyTakersView extends JPanel {
 		}
 	}
 
-	private class PlayerNameRenderer extends DefaultTableCellRenderer {
+	private static class PlayerNameRenderer extends DefaultTableCellRenderer {
 
+		@Serial
 		private static final long serialVersionUID = 1970459130002883259L;
 
 		@Override
