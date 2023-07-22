@@ -33,7 +33,9 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - June 24, 2023 - July 08, 2023
+Reports by Contributors - June 24, 2023 - July 22, 2023
+* Moorhuhninho 4
 * Miccoli17 1
+* wsbrenk 1
 
-Total 1
+Total 6
