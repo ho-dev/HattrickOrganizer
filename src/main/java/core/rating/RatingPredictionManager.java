@@ -170,7 +170,8 @@ public class RatingPredictionManager {
 					if (tNextEvent == tMatchOrder)
 					{
 						// all matchOrders taking place now are recursively apply on the lineup object
-						currentLineup.UpdateLineupWithMatchOrder(sub);
+						//currentLineup.UpdateLineupWithMatchOrder(sub);
+						Lineup.applySubstitution(currentLineup.getFieldPositions(), sub);
 					}
 				}
 
@@ -763,10 +764,10 @@ public class RatingPredictionManager {
         double retVal = 0.0F;
         try
         {
-            float skill;
-            float subSkill;
+            double skill;
+            double subSkill;
             skill = player.getValue4Skill(skillType);
-            float subskillFromDB = player.getSub4Skill(skillType);
+            var subskillFromDB = player.getSub4Skill(skillType);
 
             /*
              * If we know the last level up date from this player or

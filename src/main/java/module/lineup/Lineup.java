@@ -1466,19 +1466,104 @@ public class Lineup{
 		this.pullBackMinute = pullBackMinute;
 	}
 
+	public List<MatchLineupPosition> getFieldPlayers(int minute){
+		var ret = new ArrayList<>(this.getFieldPositions());
+		this.substitutions.stream()
+				.filter(s->s.getMatchMinuteCriteria()<=minute)
+				.sorted(Comparator.comparingInt(Substitution::getMatchMinuteCriteria))
+				.forEach(s->applySubstitution(ret, s));
+		return ret;
+	}
+
+	public static void applySubstitution(List<MatchLineupPosition> positions, Substitution s) {
+		switch (s.getOrderType()) {
+
+			case SUBSTITUTION -> {
+				var substitutedPlayer = positions.stream().filter(p -> p.getPlayerId() == s.getSubjectPlayerID()).findFirst();
+				if (substitutedPlayer.isPresent()) {
+					var substituted = substitutedPlayer.get();
+					var behaviour = s.getBehaviour();
+					if ( behaviour == -1 ) behaviour = substituted.getBehaviour();
+					var roleId = getRoleIdAfterSubstitution(positions, s, substituted);
+					if ( roleId == -1) {
+						return; // invalid role id
+					}
+					positions.remove(substitutedPlayer.get());
+					positions.add(new MatchLineupPosition(roleId, s.getObjectPlayerID(), behaviour, s.getMatchMinuteCriteria()));
+				}
+				else {
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", s.getSubjectPlayerID()));
+				}
+			}
+			case POSITION_SWAP -> {
+				var player1 = positions.stream().filter(p->p.getPlayerId() == s.getSubjectPlayerID()).findFirst();
+				if ( player1.isPresent()){
+					var player2 = positions.stream().filter(p->p.getPlayerId() == s.getObjectPlayerID()).findFirst();
+					if ( player2.isPresent()){
+						// do not change existing positions, since they are used in caches of prediction models, create new ones
+						positions.remove(player1.get());
+						positions.remove(player2.get());
+						positions.add(new MatchLineupPosition(player1.get().getRoleId(), player2.get().getPlayerId(), player2.get().getBehaviour(), player2.get().getStartMinute()));
+						positions.add(new MatchLineupPosition(player2.get().getRoleId(), player1.get().getPlayerId(), player1.get().getBehaviour(), player1.get().getStartMinute()));
+					}
+					else {
+						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", s.getObjectPlayerID()));
+					}
+				}
+				else{
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", s.getSubjectPlayerID()));
+				}
+			}
+			case NEW_BEHAVIOUR -> {
+				var player = positions.stream().filter(p->p.getPlayerId() == s.getSubjectPlayerID()).findFirst();
+				if ( player.isPresent()){
+					var roleId = getRoleIdAfterSubstitution(positions, s, player.get());
+					if ( roleId == -1) return;
+					var behaviour = s.getBehaviour();
+					if ( behaviour == -1 ) behaviour = MatchRoleID.NORMAL;
+					positions.remove(player.get());
+					positions.add(new MatchLineupPosition(roleId, player.get().getPlayerId(), behaviour, player.get().getStartMinute()));
+				}
+				else {
+					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", s.getSubjectPlayerID()));
+				}
+			}
+			case MAN_MARKING -> {
+				//TODO
+			}
+		}
+	}
+
+	private static byte getRoleIdAfterSubstitution(List<MatchLineupPosition> positions, Substitution s, MatchLineupPosition substituted) {
+		var roleId = s.getRoleId();
+		if ( roleId == -1){
+			roleId = (byte)substituted.getRoleId();
+		}
+		else if ( roleId != (byte) substituted.getRoleId()){
+			// Check if position is free
+			int r = roleId;
+			var playerAtRoleid = positions.stream().filter(p->p.getRoleId()==r).findFirst();
+			if ( playerAtRoleid.isPresent()){
+				HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", s.getObjectPlayerID()));
+				return -1; // invalid
+			}
+		}
+		return roleId;
+	}
+
 	/**
 	 * Amend the lineup by applying the Given MatchOrder
 	 */
 	public void UpdateLineupWithMatchOrder(Substitution sub) {
-		MatchRoleID matchRoleIDPlayer, matchRoleIDaffectedPlayer;
+		MatchRoleID matchRoleIDPlayer, matchRoleIDAffectedPlayer;
 		int newRoleId;
 		byte tactic;
 
 		Player ObjectPlayer;
 		switch (sub.getOrderType()) {
 			case SUBSTITUTION:
-				matchRoleIDaffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDaffectedPlayer == null) {
+				matchRoleIDAffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
+				if (matchRoleIDAffectedPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
@@ -1495,32 +1580,32 @@ public class Lineup{
 				}
 				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
 				tactic = sub.getBehaviour();
-				if (tactic == -1) tactic = matchRoleIDaffectedPlayer.getTactic();
+				if (tactic == -1) tactic = matchRoleIDAffectedPlayer.getTactic();
 				newRoleId = sub.getRoleId();
 				if ( newRoleId != -1 ) {
 					var posid = getPositionById(newRoleId);
 					if (  posid != null && posid.getPlayerId() == 0){
-						if ( newRoleId != matchRoleIDaffectedPlayer.getId() ) {
-							setSpielerAtPosition(matchRoleIDaffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
+						if ( newRoleId != matchRoleIDAffectedPlayer.getId() ) {
+							setSpielerAtPosition(matchRoleIDAffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
 						}
 					} else {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
 						break;
 					}
 				} else {
-					newRoleId = matchRoleIDaffectedPlayer.getId();
+					newRoleId = matchRoleIDAffectedPlayer.getId();
 				}
 				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
 				break;
 
 			case POSITION_SWAP:
-				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
+				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
 				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-				if (matchRoleIDaffectedPlayer != null && matchRoleIDPlayer != null) {
-					matchRoleIDaffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
+				if (matchRoleIDAffectedPlayer != null && matchRoleIDPlayer != null) {
+					matchRoleIDAffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
 					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
 				} else {
-					if (matchRoleIDaffectedPlayer == null) {
+					if (matchRoleIDAffectedPlayer == null) {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
 					}
 					if (matchRoleIDPlayer == null) {
@@ -1531,14 +1616,14 @@ public class Lineup{
 
 			case NEW_BEHAVIOUR:
 				newRoleId = sub.getRoleId();
-				matchRoleIDaffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDaffectedPlayer == null) {
+				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
+				if (matchRoleIDAffectedPlayer == null) {
 					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
 					break;
 				}
 				if (newRoleId == -1) {
-					newRoleId = matchRoleIDaffectedPlayer.getId();
-				} else if (newRoleId != matchRoleIDaffectedPlayer.getId()) {
+					newRoleId = matchRoleIDAffectedPlayer.getId();
+				} else if (newRoleId != matchRoleIDAffectedPlayer.getId()) {
 					var pos = getPositionById(newRoleId);
 					if (pos != null && pos.getPlayerId() > 0) {
 						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));

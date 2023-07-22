@@ -33,6 +33,11 @@ public class MatchLineupPosition  extends MatchRoleID {
 
     protected Map<RatingPredictionModel.RatingSector, Double> ratings = new HashMap<>();
 
+    public MatchLineupPosition(int roleId, int playerId, byte behaviour, int startMinute) {
+        super(roleId, playerId,behaviour);
+        this.startMinute = startMinute;
+    }
+
     public double getRating(RatingPredictionModel.RatingSector s){
         return ratings.getOrDefault(s, 0.);
     }
