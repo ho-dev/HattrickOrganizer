@@ -8,6 +8,8 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -79,12 +81,20 @@ public class LineupTableModel extends HOTableModel {
 		return null;
 	}
 
-
-	public final void setValues(List<Player> player) {
-		m_vPlayers = player;
+	/**
+	 * Init the player list
+	 * Disabled players are not applied
+	 * @param players current players in team (may include disabled coaches)
+	 */
+	public final void setValues(List<Player> players) {
+		this.m_vPlayers = new ArrayList<>();
+		for ( var player : players){
+			if (!player.isLineupDisabled()){
+				this.m_vPlayers.add(player);
+			}
+		}
 		initData();
 	}
-
 
 	/**
 	 * create a data[][] from player-Vector

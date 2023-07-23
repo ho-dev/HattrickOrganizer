@@ -203,7 +203,7 @@ public class HRFStringBuilder {
     private static String getPlayerIdByPositionValue(MatchLineupTeam team, int position){
         var matchLineupPosition = team.getPlayerByPosition(position);
         if ( matchLineupPosition != null){
-            return ""+matchLineupPosition.getPlayerId();
+            return String.valueOf(matchLineupPosition.getPlayerId());
         }
         return "0";
     }
@@ -211,7 +211,7 @@ public class HRFStringBuilder {
     private static String getBehaviourByPositionValue(MatchLineupTeam team, int position){
         var matchLineupPosition = team.getPlayerByPosition(position);
         if ( matchLineupPosition != null){
-            return ""+ matchLineupPosition.getBehaviour();
+            return String.valueOf(matchLineupPosition.getBehaviour());
         }
         return "0";
     }
@@ -314,7 +314,7 @@ public class HRFStringBuilder {
     public void createLineUp(String trainerId, int teamId, Map<String, String> nextLineup) {
         lineupStringBuilder = new StringBuilder("[lineup]\n");
         if (nextLineup != null) {
-            var matchId = NumberUtils.toInt(nextLineup.get("MatchId"),0);
+            var matchId = NumberUtils.toInt(nextLineup.get("MatchID"),0);
             var matchtype = NumberUtils.toInt(nextLineup.get("MatchType"), MatchType.NONE.getMatchTypeId());
 
             try {
@@ -483,20 +483,28 @@ public class HRFStringBuilder {
                 appendKeyValue(playersStringBuilder, "rating", "0");
             }
 
-            if ((ht.get("PlayerNumber") != null)
-                    || (!ht.get("PlayerNumber").equals(""))) {
-                appendKeyValue(playersStringBuilder, "PlayerNumber", ht.get("PlayerNumber"));
-            }
+            appendKeyValueIfNotNull(ht, playersStringBuilder, "PlayerNumber", "");
 
             appendKeyValue(playersStringBuilder, "TransferListed", ht.get("TransferListed"));
             appendKeyValue(playersStringBuilder, "NationalTeamID", ht.get("NationalTeamID"));
             appendKeyValue(playersStringBuilder, "Caps", ht.get("Caps"));
             appendKeyValue(playersStringBuilder, "CapsU20", ht.get("CapsU20"));
             appendKeyValue(playersStringBuilder, "PlayerCategoryId", ht.get("PlayerCategoryId"));
-            // TODO: since we transport all data through the hrf file, we have to loose the new lines
+            // We transport all data through the hrf file.
+            // We have to replace the new lines
             appendKeyValue(playersStringBuilder, "Statement", serializeMultiLine(ht.get("Statement")));
             appendKeyValue(playersStringBuilder, "OwnerNotes", serializeMultiLine(ht.get("OwnerNotes")));
+
+            appendKeyValueIfNotNull(ht, playersStringBuilder, "LineupDisabled", "false");
         }
+    }
+
+    private void appendKeyValueIfNotNull(MyHashtable ht, StringBuilder s, String key, String defaultValue) {
+        var property = ht.get(key);
+        if (property == null || property.isEmpty()) {
+            property = defaultValue;
+        }
+        appendKeyValue(s, key, property);
     }
 
     private String serializeMultiLine(String value){
@@ -542,9 +550,7 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutName");
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutingRegionID");
 
-            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {
-                ;
-            }
+            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {}
 
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchID");
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchDate");

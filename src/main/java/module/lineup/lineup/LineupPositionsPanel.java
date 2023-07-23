@@ -134,13 +134,14 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Apply the Group Filter
 		for (Player player: allPlayers) {
+			if (player.isLineupDisabled()) continue;
 			// No Filter
 			if (!bGroupFiltered || (sGroup.equals(player.getTeamGroup()) && !bSelectedGroupExcluded)
 					|| (!sGroup.equals(player.getTeamGroup()) && bSelectedGroupExcluded)) {
 				boolean include = true;
-				if ( bExcludeLast) {
+				if (bExcludeLast) {
 					var matchlineupTeam = HOVerwaltung.instance().getModel().getPreviousLineup();
-					if ( matchlineupTeam != null) {
+					if (matchlineupTeam != null) {
 						var previousLineup = matchlineupTeam.getLineup();
 						if (previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
 							include = false;

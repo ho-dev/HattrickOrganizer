@@ -20,7 +20,7 @@ public class PlausibilityCheck {
 		}
 		
 		// check if there is a subjectPlayer
-		if (subjectPlayerID <= 0 || !LineupAssistant.isPlayerInTeam(subjectPlayerID)) {
+		if (subjectPlayerID <= 0 || LineupAssistant.isPlayerEnabledForLineup(subjectPlayerID)) {
 			return switch (substitution.getOrderType()) {
 				case SUBSTITUTION -> Error.SUBSTITUTION_PLAYER_MISSING;
 				case POSITION_SWAP -> Error.POSITIONSWAP_PLAYER_MISSING;
@@ -36,7 +36,7 @@ public class PlausibilityCheck {
 					return Error.PLAYERIN_NOT_REAL;
 				}
 
-				if (objectPlayerID <= 0 || !LineupAssistant.isPlayerInTeam(objectPlayerID)) {
+				if (objectPlayerID <= 0 || LineupAssistant.isPlayerEnabledForLineup(objectPlayerID)) {
 					if (substitution.getOrderType() == SUBSTITUTION) {
 						return Error.SUBSTITUTION_PLAYER_MISSING;
 					} else if (substitution.getOrderType() == POSITION_SWAP) {

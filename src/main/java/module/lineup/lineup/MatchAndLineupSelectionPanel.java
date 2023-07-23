@@ -433,7 +433,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     @Override
     public void refresh() {
-//        HOLogger.instance().log(getClass(), " refresh() has been called");
         removeListeners();
         updateComponents();
         addListeners();
@@ -441,38 +440,32 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     // each time updateStyleOfPlayBox gets called we need to add all elements back so that we can load stored lineups
     // so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
-    private void updateStyleOfPlayComboBox()
-    {
+    private void updateStyleOfPlayComboBox() {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
         var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
-        // NT Team can select whatever Style of Play they like
-        if (!UserManager.instance().getCurrentUser().isNtTeam()) {
 
-            // remove all combo box items and add new ones.
-            List<Integer> legalValues = getValidStyleOfPlayValues();
-
-            m_jcbStyleOfPlay.removeAllItems();
-
-            for (int value : legalValues) {
-                CBItem cbItem;
-                if (value == 0) {
-                    cbItem = new CBItem(neutral_sop, value);
-                } else if (value > 0) {
-                    cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
-                } else {
-                    cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
-                }
-                m_jcbStyleOfPlay.addItem(cbItem);
+        // remove all combo box items and add new ones.
+        List<Integer> legalValues = getValidStyleOfPlayValues();
+        m_jcbStyleOfPlay.removeAllItems();
+        for (int value : legalValues) {
+            CBItem cbItem;
+            if (value == 0) {
+                cbItem = new CBItem(neutral_sop, value);
+            } else if (value > 0) {
+                cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
+            } else {
+                cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
             }
-
-            // Set trainer default value
-            setStyleOfPlay(getDefaultTrainerStyleOfPlay());
-            // Attempt to set the old value. If it is not possible it will do nothing.
-            setStyleOfPlay(oldValue);
+            m_jcbStyleOfPlay.addItem(cbItem);
         }
-        var item = (CBItem)(m_jcbStyleOfPlay.getSelectedItem());
+
+        // Set trainer default value
+        setStyleOfPlay(getDefaultTrainerStyleOfPlay());
+        // Attempt to set the old value. If it is not possible it will do nothing.
+        setStyleOfPlay(oldValue);
+        var item = (CBItem) (m_jcbStyleOfPlay.getSelectedItem());
         var ret = 0;
-        if ( item != null) ret = item.getId();
+        if (item != null) ret = item.getId();
 
         lineup.setStyleOfPlay(ret);
     }
@@ -493,16 +486,18 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         int min=-10, max=10;
 
-        switch (trainer) {
-            case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
-            case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive
-            case Balanced -> {     			                   // Neutral
-                min = - tacticalAssistants;
-                max = tacticalAssistants;
+        // NT Team can select whatever Style of Play they like
+        if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+            switch (trainer) {
+                case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
+                case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive
+                case Balanced -> {                                   // Neutral
+                    min = -tacticalAssistants;
+                    max = tacticalAssistants;
+                }
+                default -> HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
             }
-            default -> HOLogger.instance().error(getClass(), "Illegal trainer type found: " + trainer);
         }
-
         return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
     }
 

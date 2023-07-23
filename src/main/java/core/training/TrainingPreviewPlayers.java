@@ -27,7 +27,7 @@ public class TrainingPreviewPlayers implements Refreshable {
 
     private final HashMap<Player, TrainingPreviewPlayer> players = new HashMap<>();
     private int nextWeekTraining = -1;
-    private boolean isFuturMatchInit =false;
+    private boolean isFutureMatchInit =false;
     private WeeklyTrainingType weekTrainTyp = null;
     private List<MatchStatistics> lMatchStats = null;
     private List<Lineup> lineups = null;
@@ -83,15 +83,14 @@ public class TrainingPreviewPlayers implements Refreshable {
      * refresh object
      */
     public void refresh() {
-        if (players != null)
-            players.clear();
+        players.clear();
         if (lMatchStats != null)
             lMatchStats.clear();
         if (lineups != null)
             lineups.clear();
         nextWeekTraining = -1;
         weekTrainTyp = null;
-        isFuturMatchInit = false;
+        isFutureMatchInit = false;
     }
 
     /**
@@ -195,12 +194,12 @@ public class TrainingPreviewPlayers implements Refreshable {
      */
     private List<MatchStatistics> getMatchesForTraining() {
 
-        if (!isFuturMatchInit) {
+        if (!isFutureMatchInit) {
             var lastTraining = TrainingManager.instance().getNextWeekTraining();
 
             this.lMatchStats = new ArrayList<>();
             this.lineups = new ArrayList<>();
-            this.isFuturMatchInit = true;
+            this.isFutureMatchInit = true;
 
             if (lastTraining != null) {
                 weekTrainTyp = WeeklyTrainingType.instance(lastTraining.getTrainingType());

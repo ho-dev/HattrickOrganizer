@@ -10,6 +10,7 @@ import core.model.player.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -96,172 +97,158 @@ public class LineupAssistant {
 		byte[] order;
 		// nun reihenfolge beachten und unbesetzte füllen
 		switch (sectorsStrengthPriority) {
-		case AW_MF_ST:
+			case AW_MF_ST -> {
+				order = new byte[18];
+				// DEFENCE
+				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[3] = IMatchRoleID.BACK;
+				order[4] = IMatchRoleID.BACK_DEF;
+				order[5] = IMatchRoleID.BACK_OFF;
+				order[6] = IMatchRoleID.BACK_TOMID;
+				// MIDFIELD
+				order[7] = IMatchRoleID.MIDFIELDER;
+				order[8] = IMatchRoleID.MIDFIELDER_OFF;
+				order[9] = IMatchRoleID.MIDFIELDER_DEF;
+				order[10] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[11] = IMatchRoleID.WINGER;
+				order[12] = IMatchRoleID.WINGER_DEF;
+				order[13] = IMatchRoleID.WINGER_OFF;
+				order[14] = IMatchRoleID.WINGER_TOMID;
+				// FORWARD
+				order[15] = IMatchRoleID.FORWARD;
+				order[16] = IMatchRoleID.FORWARD_DEF;
+				order[17] = IMatchRoleID.FORWARD_TOWING;
+			}
+			case AW_ST_MF -> {
+				order = new byte[18];
+				// DEFENCE
+				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[3] = IMatchRoleID.BACK;
+				order[4] = IMatchRoleID.BACK_DEF;
+				order[5] = IMatchRoleID.BACK_OFF;
+				order[6] = IMatchRoleID.BACK_TOMID;
+				// FORWARD
+				order[7] = IMatchRoleID.FORWARD;
+				order[8] = IMatchRoleID.FORWARD_DEF;
+				order[9] = IMatchRoleID.FORWARD_TOWING;
 
-			order = new byte[18];
-			// DEFENCE
-			order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[3] = IMatchRoleID.BACK;
-			order[4] = IMatchRoleID.BACK_DEF;
-			order[5] = IMatchRoleID.BACK_OFF;
-			order[6] = IMatchRoleID.BACK_TOMID;
-			// MIDFIELD
-			order[7] = IMatchRoleID.MIDFIELDER;
-			order[8] = IMatchRoleID.MIDFIELDER_OFF;
-			order[9] = IMatchRoleID.MIDFIELDER_DEF;
-			order[10] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[11] = IMatchRoleID.WINGER;
-			order[12] = IMatchRoleID.WINGER_DEF;
-			order[13] = IMatchRoleID.WINGER_OFF;
-			order[14] = IMatchRoleID.WINGER_TOMID;
-			// FORWARD
-			order[15] = IMatchRoleID.FORWARD;
-			order[16] = IMatchRoleID.FORWARD_DEF;
-			order[17] = IMatchRoleID.FORWARD_TOWING;
-			break;
+				// MIDFIELD
+				order[10] = IMatchRoleID.MIDFIELDER;
+				order[11] = IMatchRoleID.MIDFIELDER_OFF;
+				order[12] = IMatchRoleID.MIDFIELDER_DEF;
+				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[14] = IMatchRoleID.WINGER;
+				order[15] = IMatchRoleID.WINGER_DEF;
+				order[16] = IMatchRoleID.WINGER_OFF;
+				order[17] = IMatchRoleID.WINGER_TOMID;
+			}
+			case MF_AW_ST -> {
+				order = new byte[18];
 
-		case AW_ST_MF:
+				// MIDFIELD
+				order[0] = IMatchRoleID.MIDFIELDER;
+				order[1] = IMatchRoleID.MIDFIELDER_OFF;
+				order[2] = IMatchRoleID.MIDFIELDER_DEF;
+				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[4] = IMatchRoleID.WINGER;
+				order[5] = IMatchRoleID.WINGER_DEF;
+				order[6] = IMatchRoleID.WINGER_OFF;
+				order[7] = IMatchRoleID.WINGER_TOMID;
+				// DEFENCE
+				order[8] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[9] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[10] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[11] = IMatchRoleID.BACK;
+				order[12] = IMatchRoleID.BACK_DEF;
+				order[13] = IMatchRoleID.BACK_OFF;
+				order[14] = IMatchRoleID.BACK_TOMID;
+				// FORWARD
+				order[15] = IMatchRoleID.FORWARD;
+				order[16] = IMatchRoleID.FORWARD_DEF;
+				order[17] = IMatchRoleID.FORWARD_TOWING;
+			}
+			case MF_ST_AW -> {
+				order = new byte[18];
 
-			order = new byte[18];
-			// DEFENCE
-			order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[3] = IMatchRoleID.BACK;
-			order[4] = IMatchRoleID.BACK_DEF;
-			order[5] = IMatchRoleID.BACK_OFF;
-			order[6] = IMatchRoleID.BACK_TOMID;
-			// FORWARD
-			order[7] = IMatchRoleID.FORWARD;
-			order[8] = IMatchRoleID.FORWARD_DEF;
-			order[9] = IMatchRoleID.FORWARD_TOWING;
+				// MIDFIELD
+				order[0] = IMatchRoleID.MIDFIELDER;
+				order[1] = IMatchRoleID.MIDFIELDER_OFF;
+				order[2] = IMatchRoleID.MIDFIELDER_DEF;
+				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[4] = IMatchRoleID.WINGER;
+				order[5] = IMatchRoleID.WINGER_DEF;
+				order[6] = IMatchRoleID.WINGER_OFF;
+				order[7] = IMatchRoleID.WINGER_TOMID;
+				// FORWARD
+				order[8] = IMatchRoleID.FORWARD;
+				order[9] = IMatchRoleID.FORWARD_DEF;
+				order[10] = IMatchRoleID.FORWARD_TOWING;
+				// DEFENCE
+				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[14] = IMatchRoleID.BACK;
+				order[15] = IMatchRoleID.BACK_DEF;
+				order[16] = IMatchRoleID.BACK_OFF;
+				order[17] = IMatchRoleID.BACK_TOMID;
+			}
+			case ST_MF_AW -> {
+				order = new byte[18];
 
-			// MIDFIELD
-			order[10] = IMatchRoleID.MIDFIELDER;
-			order[11] = IMatchRoleID.MIDFIELDER_OFF;
-			order[12] = IMatchRoleID.MIDFIELDER_DEF;
-			order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[14] = IMatchRoleID.WINGER;
-			order[15] = IMatchRoleID.WINGER_DEF;
-			order[16] = IMatchRoleID.WINGER_OFF;
-			order[17] = IMatchRoleID.WINGER_TOMID;
+				// FORWARD
+				order[0] = IMatchRoleID.FORWARD;
+				order[1] = IMatchRoleID.FORWARD_DEF;
+				order[2] = IMatchRoleID.FORWARD_TOWING;
+				// MIDFIELD
+				order[3] = IMatchRoleID.MIDFIELDER;
+				order[4] = IMatchRoleID.MIDFIELDER_OFF;
+				order[5] = IMatchRoleID.MIDFIELDER_DEF;
+				order[6] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[7] = IMatchRoleID.WINGER;
+				order[8] = IMatchRoleID.WINGER_DEF;
+				order[9] = IMatchRoleID.WINGER_OFF;
+				order[10] = IMatchRoleID.WINGER_TOMID;
 
-			break;
-
-		case MF_AW_ST:
-
-			order = new byte[18];
-
-			// MIDFIELD
-			order[0] = IMatchRoleID.MIDFIELDER;
-			order[1] = IMatchRoleID.MIDFIELDER_OFF;
-			order[2] = IMatchRoleID.MIDFIELDER_DEF;
-			order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[4] = IMatchRoleID.WINGER;
-			order[5] = IMatchRoleID.WINGER_DEF;
-			order[6] = IMatchRoleID.WINGER_OFF;
-			order[7] = IMatchRoleID.WINGER_TOMID;
-			// DEFENCE
-			order[8] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[9] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[10] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[11] = IMatchRoleID.BACK;
-			order[12] = IMatchRoleID.BACK_DEF;
-			order[13] = IMatchRoleID.BACK_OFF;
-			order[14] = IMatchRoleID.BACK_TOMID;
-			// FORWARD
-			order[15] = IMatchRoleID.FORWARD;
-			order[16] = IMatchRoleID.FORWARD_DEF;
-			order[17] = IMatchRoleID.FORWARD_TOWING;
-			break;
-
-		case MF_ST_AW:
-
-			order = new byte[18];
-
-			// MIDFIELD
-			order[0] = IMatchRoleID.MIDFIELDER;
-			order[1] = IMatchRoleID.MIDFIELDER_OFF;
-			order[2] = IMatchRoleID.MIDFIELDER_DEF;
-			order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[4] = IMatchRoleID.WINGER;
-			order[5] = IMatchRoleID.WINGER_DEF;
-			order[6] = IMatchRoleID.WINGER_OFF;
-			order[7] = IMatchRoleID.WINGER_TOMID;
-			// FORWARD
-			order[8] = IMatchRoleID.FORWARD;
-			order[9] = IMatchRoleID.FORWARD_DEF;
-			order[10] = IMatchRoleID.FORWARD_TOWING;
-			// DEFENCE
-			order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[14] = IMatchRoleID.BACK;
-			order[15] = IMatchRoleID.BACK_DEF;
-			order[16] = IMatchRoleID.BACK_OFF;
-			order[17] = IMatchRoleID.BACK_TOMID;
-
-			break;
-
-		case ST_MF_AW:
-
-			order = new byte[18];
-
-			// FORWARD
-			order[0] = IMatchRoleID.FORWARD;
-			order[1] = IMatchRoleID.FORWARD_DEF;
-			order[2] = IMatchRoleID.FORWARD_TOWING;
-			// MIDFIELD
-			order[3] = IMatchRoleID.MIDFIELDER;
-			order[4] = IMatchRoleID.MIDFIELDER_OFF;
-			order[5] = IMatchRoleID.MIDFIELDER_DEF;
-			order[6] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[7] = IMatchRoleID.WINGER;
-			order[8] = IMatchRoleID.WINGER_DEF;
-			order[9] = IMatchRoleID.WINGER_OFF;
-			order[10] = IMatchRoleID.WINGER_TOMID;
-
-			// DEFENCE
-			order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[14] = IMatchRoleID.BACK;
-			order[15] = IMatchRoleID.BACK_DEF;
-			order[16] = IMatchRoleID.BACK_OFF;
-			order[17] = IMatchRoleID.BACK_TOMID;
-			break;
-
-		case ST_AW_MF:
-
-			order = new byte[18];
-			// FORWARD
-			order[0] = IMatchRoleID.FORWARD;
-			order[1] = IMatchRoleID.FORWARD_DEF;
-			order[2] = IMatchRoleID.FORWARD_TOWING;
-			// DEFENCE
-			order[3] = IMatchRoleID.CENTRAL_DEFENDER;
-			order[4] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-			order[5] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-			order[6] = IMatchRoleID.BACK;
-			order[7] = IMatchRoleID.BACK_DEF;
-			order[8] = IMatchRoleID.BACK_OFF;
-			order[9] = IMatchRoleID.BACK_TOMID;
-			// MIDFIELD
-			order[10] = IMatchRoleID.MIDFIELDER;
-			order[11] = IMatchRoleID.MIDFIELDER_OFF;
-			order[12] = IMatchRoleID.MIDFIELDER_DEF;
-			order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-			order[14] = IMatchRoleID.WINGER;
-			order[15] = IMatchRoleID.WINGER_DEF;
-			order[16] = IMatchRoleID.WINGER_OFF;
-			order[17] = IMatchRoleID.WINGER_TOMID;
-
-			break;
-
-		default:
-			return;
+				// DEFENCE
+				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[14] = IMatchRoleID.BACK;
+				order[15] = IMatchRoleID.BACK_DEF;
+				order[16] = IMatchRoleID.BACK_OFF;
+				order[17] = IMatchRoleID.BACK_TOMID;
+			}
+			case ST_AW_MF -> {
+				order = new byte[18];
+				// FORWARD
+				order[0] = IMatchRoleID.FORWARD;
+				order[1] = IMatchRoleID.FORWARD_DEF;
+				order[2] = IMatchRoleID.FORWARD_TOWING;
+				// DEFENCE
+				order[3] = IMatchRoleID.CENTRAL_DEFENDER;
+				order[4] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
+				order[5] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
+				order[6] = IMatchRoleID.BACK;
+				order[7] = IMatchRoleID.BACK_DEF;
+				order[8] = IMatchRoleID.BACK_OFF;
+				order[9] = IMatchRoleID.BACK_TOMID;
+				// MIDFIELD
+				order[10] = IMatchRoleID.MIDFIELDER;
+				order[11] = IMatchRoleID.MIDFIELDER_OFF;
+				order[12] = IMatchRoleID.MIDFIELDER_DEF;
+				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
+				order[14] = IMatchRoleID.WINGER;
+				order[15] = IMatchRoleID.WINGER_DEF;
+				order[16] = IMatchRoleID.WINGER_OFF;
+				order[17] = IMatchRoleID.WINGER_TOMID;
+			}
+			default -> {
+				return;
+			}
 
 			// break;
 		}
@@ -345,21 +332,21 @@ public class LineupAssistant {
 	}
 
 	/**
-	 * Checks if there is a player with a specified id in the current team.
+	 * Checks if there is a player with a specified id in the current team and not disabled for lineup.
 	 * 
 	 * @param playerID
 	 *            the id of the player
-	 * @return <code>true</code> if there is player with the specified id in the
+	 * @return <code>true</code> if there is not disabled player with the specified id in the
 	 *         team, <code>false</code> otherwise.
 	 */
-	public static boolean isPlayerInTeam(int playerID) {
+	public static boolean isPlayerEnabledForLineup(int playerID) {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
 			if (player.getPlayerID() == playerID) {
-				return true;
+				return player.isLineupDisabled();
 			}
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -530,34 +517,12 @@ public class LineupAssistant {
 				}
 			}
 		}
-
-		// now fill the additional XYZ positions
-		for (int i = 0; (zusPos != null) && (players != null) && (i < zusPos.size()); i++) {
-			pos = (MatchRoleID) zusPos.elementAt(i);
-
-			// ignore already assigned positions and leave ReserveBank empty
-			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
-				continue;
-			}
-
-			// only exact position
-			if (pos.getPosition() == position) {
-				player = getBestPlayerIdealPosOnly(position, considerForm, ignoreInjury,
-						ignoreRedCarded, players, positions);
-
-				// occupy position
-				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
-				}
-			}
-		}
 	}
 
 	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions) {
 		// Remove "red" positions from the position selection of the AssistantPanel.
 		Vector<MatchLineupPosition> returnVec = new Vector<>();
-		Map<Integer, Boolean> statusMap = HOMainFrame.instance()
-				.getLineupPanel().getAssistantPositionsStatus();
+		Map<Integer, Boolean> statusMap = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAssistantPositionsStatus();
 		for (var pos : positions) {
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
 				returnVec.add(pos);

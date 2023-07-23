@@ -3,7 +3,6 @@ package module.transfer.scout;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
-//import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.HyperLinkLabel;
@@ -11,9 +10,11 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.module.IModule;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -27,18 +28,14 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serial;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+
+import static core.util.Helper.formatCurrency;
+import static core.util.Helper.parseCurrency;
 
 
 /**
@@ -103,12 +100,12 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private final JTextArea jtaNotes = new JTextArea();
     private final JTextField jtfAge = new JTextField("17.0");
     private final JTextField jtfTSI = new JTextField("1000");
-    private final JTextField jtfPrice = new JTextField("0");
-	private final JLabel jtfEPV = new JLabel("",SwingConstants.RIGHT);
+    private final JTextField jtfPrice = new JTextField(formatCurrency(0));
+    private final JTextField jtfWage = new JTextField(formatCurrency(0));
     private ScoutEintrag clScoutEntry;
-    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel();
-    private final JTextField jtDeadline = new JTextField();
     private final JTextField jtfName = new JTextField();
+    private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
+    private final JSpinner jsSpinner = new JSpinner(clSpinnerModel);
     private final JTextField jtfPlayerID = new JTextField("0");
     private final TransferScoutPanel clOwner;
 
@@ -203,6 +200,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
+            tempPlayer.setHrfDate(HODateTime.now());
+            tempPlayer.setGehalt(parseCurrencyValue(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
@@ -212,13 +211,14 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		}
     	else {
             clScoutEntry.setPlayerID(Integer.parseInt(jtfPlayerID.getText()));
-            clScoutEntry.setPrice(Integer.parseInt(jtfPrice.getText()));
+            clScoutEntry.setPrice(parseCurrencyValue(jtfPrice.getText()));
             clScoutEntry.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             clScoutEntry.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             clScoutEntry.setTSI(Integer.parseInt(jtfTSI.getText()));
             clScoutEntry.setName(jtfName.getText());
             clScoutEntry.setInfo(jtaNotes.getText());
             clScoutEntry.setDeadline(new java.sql.Timestamp(clSpinnerModel.getDate().getTime()));
+            clScoutEntry.setbaseWage(parseCurrencyValue(jtfWage.getText()));
             if (actionEvent.getSource().equals(jbAdd)) {
                 clOwner.addScoutEintrag(clScoutEntry);
             } else if (actionEvent.getSource().equals(jbRemove)) {
@@ -228,6 +228,20 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             }
         }
         checkFields();
+    }
+
+    /**
+     * Parse a currency value given in player description text
+     * if a value can be parsed it is converted to swedish currency (standard money currency in HO)
+     * @param text String, that's parsed
+     * @return int, currency in swedish krone, 0 if no value can be parsed from string
+     */
+    private int parseCurrencyValue(String text) {
+        var price = parseCurrency(text);
+        if (price != null) {
+            return (int) (price * UserParameter.instance().FXrate);
+        }
+        return 0;
     }
 
     /**
@@ -246,7 +260,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     public final void focusLost(FocusEvent focusEvent) {
         if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
             || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPrice, false)) {
+            || Helper.parseCurrency( jtfPrice.getText()) == null) {
             return;
         }
         checkFields();
@@ -296,11 +310,12 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void setCBs() {
         clSpinnerModel.setValue(clScoutEntry.getDeadline());
-        jtfPlayerID.setText(clScoutEntry.getPlayerID() + "");
+        jtfPlayerID.setText(String.valueOf(clScoutEntry.getPlayerID()));
         jtfName.setText(clScoutEntry.getName());
-        jtfPrice.setText(clScoutEntry.getPrice() + "");
+        jtfPrice.setText(formatCurrency(clScoutEntry.getPrice() / UserParameter.instance().FXrate));
+        jtfWage.setText(formatCurrency(clScoutEntry.getbaseWage() / UserParameter.instance().FXrate));
         jtfAge.setText(clScoutEntry.getAlter() + "." + clScoutEntry.getAgeDays());
-        jtfTSI.setText(clScoutEntry.getTSI() + "");
+        jtfTSI.setText(String.valueOf(clScoutEntry.getTSI()));
         jtaNotes.setText(clScoutEntry.getInfo());
         jcbSpeciality.removeItemListener(this);
         jcbExperience.removeItemListener(this);
@@ -367,9 +382,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
         tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
-//        EPVData data = new EPVData(tempPlayer);
-//		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
-//		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
         byte bIdealPosition = tempPlayer.getIdealPosition();
         jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
                 + " ("
@@ -467,12 +479,13 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             player = pc.build(jtaCopyPaste.getText());
 
             if (player != null) {
-                jtfPlayerID.setText(player.getPlayerID() + "");
+                jtfPlayerID.setText(String.valueOf(player.getPlayerID()));
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(player.getPrice() + "");
-                jtfTSI.setText(player.getTSI() + "");
+                jtfPrice.setText(formatCurrency(player.getPrice()/UserParameter.instance().FXrate));
+                jtfWage.setText(formatCurrency(player.getBaseWage()/UserParameter.instance().FXrate));
+                jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
                 jcbSpeciality.removeItemListener(this);
@@ -519,9 +532,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 Helper.setComboBoxFromID(jcbPlaymaking,player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                //
-                // jsSpinner.setValue(pc.getDeadline());
-                jtDeadline.setText(player.getExpiryDate());
+                var deadline =player.getExpiryDate();
+                jsSpinner.setValue(Date.from(deadline.instant));
 
                 setLabels();
             }
@@ -623,24 +635,29 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         jtfTSI.addFocusListener(this);
         panel.add(jtfTSI);
 
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.wage"));
+        panel.add(label);
+        jtfWage.setHorizontalAlignment(JLabel.RIGHT);
+        jtfWage.addFocusListener(this);
+        panel.add(jtfWage);
+
+
+
         label = new JLabel(HOVerwaltung.instance().getLanguageString("scout_price"));
         panel.add(label);
         jtfPrice.setHorizontalAlignment(JLabel.RIGHT);
         jtfPrice.addFocusListener(this);
         panel.add(jtfPrice);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
-        panel.add(label);
-        panel.add(jtDeadline);
-
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
         panel.add(label);
         jcbSpeciality.addItemListener(this);
         panel.add(jcbSpeciality);
 
-		label = new JLabel("");
-		panel.add(label);
-		panel.add(jtfEPV);
+        label = new JLabel(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+        panel.add(label);
+        jsSpinner.addFocusListener(this);
+        panel.add(jsSpinner);
 
         label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
         panel.add(label);
