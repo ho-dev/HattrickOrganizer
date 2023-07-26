@@ -10,6 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
 import core.training.TrainingPerWeek;
 import module.youth.YouthPlayer;
@@ -52,6 +53,7 @@ public class HOModel {
     private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
     private List<YouthTraining> youthTrainings;
+    private RatingPredictionModel ratingPredictionModel;
 
     //~ Constructors -------------------------------------------------------------------------------
     public HOModel(HODateTime fetchDate) {
@@ -220,6 +222,14 @@ public class HOModel {
     public final @NotNull Lineup getLineupWithoutRatingRecalc() {
         var team = getCurrentLineupTeam();
         return team.getLineup();
+    }
+
+    public final @NotNull RatingPredictionModel getRatingPredictionModel(){
+        if ( this.ratingPredictionModel == null){
+            var team = getTeam();
+            this.ratingPredictionModel = new RatingPredictionModel(getTrainer(), team.getTeamSpirit(), team.getConfidence());
+        }
+        return this.ratingPredictionModel;
     }
 
     /**

@@ -560,6 +560,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
+
             var team = homodel.getCurrentLineupTeamRecalculated();
             if ( team != null ) {
                 final Lineup currentLineup = team.getLineup();

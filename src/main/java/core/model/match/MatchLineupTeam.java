@@ -203,7 +203,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	}
 
 	public void calcStyleOfPlay (TrainerType trainerType, int tacticAssistants) {
-		var styleOfPlay = this.lineup.getStyleOfPlay();
+		var styleOfPlay = this.lineup.getCoachModifier();
 		switch (trainerType) {
 			case Defensive -> this.lineup.setStyleOfPlay(min(-10 + 2 * tacticAssistants, styleOfPlay));
 			case Offensive -> this.lineup.setStyleOfPlay(max(10 - 2 * tacticAssistants, styleOfPlay));
@@ -211,7 +211,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 				if (styleOfPlay >= 0) {
 					this.lineup.setStyleOfPlay(min(tacticAssistants, styleOfPlay));
 				} else {
-					this.lineup.setStyleOfPlay(max(tacticAssistants, styleOfPlay));
+					this.lineup.setStyleOfPlay(max(-tacticAssistants, styleOfPlay));
 				}
 			}
 		}
@@ -223,7 +223,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * @return Value of property m_iStyleOfPlay.
 	 */
 	public final StyleOfPlay getStyleOfPlay() {
-		return StyleOfPlay.fromInt(this.lineup.getStyleOfPlay());
+		return StyleOfPlay.fromInt(this.lineup.getCoachModifier());
 	}
 	
 	// returns offensive, defensive or neutral depending on styleOfPlay

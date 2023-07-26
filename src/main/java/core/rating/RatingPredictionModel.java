@@ -99,7 +99,7 @@ public class RatingPredictionModel {
         return contribution;
     }
 
-    public double getRating(Lineup lineup, RatingSector s, int minute) {
+    public double calcRating(Lineup lineup, RatingSector s, int minute) {
         var ret = 0.;
         var overcrowdingPenalty = getOvercrowdingPenalty(countPlayersInRatingSector(lineup, s), s);
         for (var p : lineup.getFieldPlayers(minute)) {
@@ -199,7 +199,14 @@ public class RatingPredictionModel {
         }
     };
 
-    protected double calcTrainer(RatingSector s) {
+    /**
+     *
+     * @param s
+     * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
+     * @return
+     */
+    protected double calcTrainer(RatingSector s, int coachModifier) {
+        // TODO coach modifier
         switch (s) {
             case Defence_Left, Defence_Right, Defence_Central -> {
                 switch (trainer.getTrainerTyp()) {
@@ -259,7 +266,7 @@ public class RatingPredictionModel {
                 r *= spirit;
             }
             case Defence_Left, Defence_Right -> {
-                r *= calcTrainer(s);
+                r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInTheMiddle -> r *= 0.85;
                     case PlayCreatively -> r *= 0.93;
@@ -268,7 +275,7 @@ public class RatingPredictionModel {
                 }
             }
             case Defence_Central -> {
-                r *= calcTrainer(s);
+                r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInWings -> r *= 0.85;
                     case PlayCreatively -> r *= 0.93;
@@ -277,7 +284,7 @@ public class RatingPredictionModel {
                 }
             }
             case Attack_Central, Attack_Left, Attack_Right -> {
-                r *= calcTrainer(s);
+                r *= calcTrainer(s, lineup.getCoachModifier());
                 if (Objects.requireNonNull(MatchTacticType.fromInt(lineup.getTacticType())) == MatchTacticType.LongShots) {
                     r *= 0.96;
                 }

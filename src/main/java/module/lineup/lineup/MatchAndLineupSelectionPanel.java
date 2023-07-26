@@ -442,7 +442,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     // so we need addAllStyleOfPlayItems() after every updateStyleOfPlayBox()
     private void updateStyleOfPlayComboBox() {
         var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-        var oldValue = StyleOfPlay.fromInt(lineup.getStyleOfPlay());
+        var oldValue = StyleOfPlay.fromInt(lineup.getCoachModifier());
 
         // remove all combo box items and add new ones.
         List<Integer> legalValues = getValidStyleOfPlayValues();

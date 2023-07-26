@@ -12,9 +12,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-import module.lineup.substitution.model.GoalDiffCriteria;
-import module.lineup.substitution.model.RedCardCriteria;
-import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -70,6 +67,8 @@ public class RatingPredictionManager {
 	private static Double loyaltySkillMax= null;
 	private static Double homegrownBonus= null;
 	private static Double loyaltyMax=null;
+	private final RatingPredictionModel model;
+	private final Team team;
 
 
 	//~ Instance fields ----------------------------------------------------------------------------
@@ -92,219 +91,267 @@ public class RatingPredictionManager {
 	 *           The values will represent the evolution of lineup
 	 *          e.g.    {0:'starting_lineup', 5:'starting_lineup', …....... 71:'lineup_after_sub1'}
 	 */
-	private final Hashtable<Double, Lineup> LineupEvolution;
-	private double userRatingOffset;
+//	private final Hashtable<Double, Lineup> LineupEvolution;
+//	private double userRatingOffset;
 
-	public RatingPredictionManager(Lineup _startingLineup, Team iteam)
-    {
-        this.startingLineup = _startingLineup;
-		if (RatingPredictionManager.config == null) RatingPredictionManager.config = RatingPredictionConfig.getInstance();
-        init(iteam);
-        this.LineupEvolution = this.setLineupEvolution();
-    }
-
-	private Hashtable<Double, Lineup> setLineupEvolution()
-	{
-		// Initialize _LineupEvolution and add starting lineup
-		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
-
-		// reset start time
-		for (var mid: startingLineup.getFieldPositions()) {
-			Player player = startingLineup.getPlayerByPositionID(mid.getId());
-			if (player != null) {
-				player.setGameStartingTime(0);
-			}
-		}
-
-		_LineupEvolution.put(0d, startingLineup.duplicate());
-
-		// list at which time occurs all events others than game start
-		List<Double> events = new ArrayList<>();
-
-		for(Substitution sub :startingLineup.getSubstitutionList())
-		{
-			if ((sub.getMatchMinuteCriteria() != -1) &&
-			   (sub.getRedCardCriteria() == RedCardCriteria.IGNORE) &&
-				(sub.getStanding() == GoalDiffCriteria.ANY_STANDING)) {
-				events.add((double)(sub.getMatchMinuteCriteria()));
-			}
-
-	     }
-
-		Collections.sort(events);
-
-		// we calculate lineup for all event
-		double t = 0d;
-		double tNextEvent, tMatchOrder;
-		Lineup currentLineup;
-
-		// define time of next event
-		if (events.size() > 0) {
-			tNextEvent = events.get(0);
-		}
-		else
-		{
-			tNextEvent = 125d;
-		}
-
-		while(t<120d)
-		{
-			// use Lineup at last event as reference
-			currentLineup = _LineupEvolution.get(t).duplicate();
-
-			//if no match event between now and the next step of 5 minutes, we jump to the next step
-			if ((t+5-(t+5)%5)<tNextEvent + 3*EPSILON) t = t + 5 - (t + 5) % 5;
-
-			//else I treat next occurring match events
-			else
-			{
-				t = tNextEvent;
-
-				// In case the match order happen in whole 5 minutes, it is shifted by 2 Epsilon to be visible in the graphs
-				if (t%5<0.00001) t += 2*EPSILON;
-
-				for(Substitution sub :startingLineup.getSubstitutionList())
-				{
-					tMatchOrder = sub.getMatchMinuteCriteria();
-
-					if (tNextEvent == tMatchOrder)
-					{
-						// all matchOrders taking place now are recursively apply on the lineup object
-						//currentLineup.UpdateLineupWithMatchOrder(sub);
-						Lineup.applySubstitution(currentLineup.getFieldPositions(), sub);
-					}
-				}
-
-				// we remove all Match Events that have been already treated
-				var itr = events.iterator();
-				while (itr.hasNext())
-				{
-					Double x = itr.next();
-					if (Objects.equals(x, tNextEvent))
-						itr.remove();
-				}
-
-
-				// define time of next event
-				if (events.size() > 0) {
-					tNextEvent = events.get(0);
-				}
-				else
-				{
-					tNextEvent = 125d;
-				}
-			}
-			_LineupEvolution.put(t, currentLineup);
-		}
-
-		// we add time just after break in order to visualize respectively halftime and endgame rest effect
-		_LineupEvolution.put(45+EPSILON, _LineupEvolution.get(45d).duplicate());
-		_LineupEvolution.put(90+EPSILON, _LineupEvolution.get(90d).duplicate());
-
-
-		return _LineupEvolution;
-
+	public RatingPredictionManager(RatingPredictionModel model){
+		this.model = model;
 	}
 
+	private double calcAverageRating(Lineup lineup, RatingPredictionModel.RatingSector s, int minutes) {
+		var staminaChanges = new TreeSet<Byte>();
+		for (byte i = 0; i < minutes; i += 5) {
+			staminaChanges.add(i);
+		}
+		staminaChanges.addAll(lineup.getLineupChangeMinutes());
+		var iStart = 0;
+		var lastRating = 0.;
+		var sumRating = 0.;
+		for (var m : staminaChanges) {
+			var rating = getRating(lineup, s, m);
+			sumRating += lastRating * (m-iStart);
+			lastRating = rating;
+			iStart = m;
+		}
+		sumRating += lastRating * (minutes-iStart);
+		return sumRating/minutes;
+	}
 
+	/**
+	 * Rating revision -> sector -> minute -> rating
+	 */
+	private final Map<Long, Map<RatingPredictionModel.RatingSector, Map<Integer, Double>>> ratingCache = new HashMap<>();
+	public double getRating(Lineup lineup, RatingPredictionModel.RatingSector s, int minute) {
 
-    private float calcRatings (Double t, Lineup lineup, int type, boolean useForm, Weather weather, boolean useWeatherImpact) {
-
-    	return calcRatings (t, lineup, type, ALLSIDES, useForm, weather, useWeatherImpact);
-    }
-    
-    private float calcRatings (Double t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
-
-    	RatingPredictionParameter params;
-		switch (type) {
-			case SIDEDEFENSE -> params = config.getSideDefenseParameters();
-			case CENTRALDEFENSE -> params = config.getCentralDefenseParameters();
-			case MIDFIELD -> params = config.getMidfieldParameters();
-			case SIDEATTACK -> params = config.getSideAttackParameters();
-			case CENTRALATTACK -> params = config.getCentralAttackParameters();
-			default -> {
-				return 0;
+		var revision = ratingCache.get(lineup.getRatingRevision());
+		if (revision == null) {
+			ratingCache.clear(); // remove old revisions
+			ratingCache.put(lineup.getRatingRevision(), new HashMap<>());
+		}
+		var sector = revision.get(s);
+		if ( sector != null){
+			var rating = sector.get(minute);
+			if ( rating != null){
+				return rating;
 			}
 		}
-    	Hashtable<String, Properties> allSections = params.getAllSections();
-		Enumeration<String> allKeys = allSections.keys();
-    	double retVal = 0;
-    	while (allKeys.hasMoreElements()) {
-    		String sectionName = allKeys.nextElement();
-    		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc, useForm, weather, useWeatherImpact);
-    		retVal += curValue;
-    	}
-//		if ( t==0 ) HOLogger.instance().info(getClass(), "t=" + t + "; before applyCommonProps.GENERAL="+retVal);
-    	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
-    	return (float)retVal;
-    }
+		else {
+			sector = new HashMap<>();
+		}
 
-    private double calcPartialRating (double t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
-    	int skillType = sectionNameToSkillAndSide(sectionName)[0];
-    	int sideType = sectionNameToSkillAndSide(sectionName)[1];
-    	double retVal = 0;
-    	if (skillType == -1 || sideType == -1) {
-    		HOLogger.instance().debug(this.getClass(), "parseError: "+sectionName+" resolves to Skill "+skillType+", Side "+sideType);
-    		return 0;
-    	}
-		var useLeft = useSide(LEFT, side2calc, sideType);
-		var useMiddle =useSide(MIDDLE, side2calc, sideType);
-		var useRight = useSide(RIGHT, side2calc, sideType);
-    	double[][] allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, useLeft, useMiddle, useRight);
-    	double[][] allWeights = getAllPlayerWeights(params, sectionName);
-		var maxSkillContribution = params.getParam(RatingPredictionParameter.GENERAL, "maxSkillContribution", 1);
+		var ret = this.model.calcRating(lineup, s, minute);
+		sector.put(minute, ret);
+		return ret;
+	}
 
+//	public RatingPredictionManager(Lineup _startingLineup, Team iteam)
+//    {
+//        this.startingLineup = _startingLineup;
+//		if (RatingPredictionManager.config == null) RatingPredictionManager.config = RatingPredictionConfig.getInstance();
+//        init(iteam);
+//        this.LineupEvolution = this.setLineupEvolution();
+//    }
 
-		for (int effPos=0; effPos < allStk.length; effPos++) {
-			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
-    		for (int spec=0; spec < SPEC_ALL; spec++) {
-    			if (spec == SPEC_NOTUSED)
-    				continue;
-    			double curStk = allStk[effPos][spec];
-				if (curStk > 0) {
-	    			double curWeight = allWeights[effPos][spec];
-					if ( curWeight<=0) curWeight = curAllSpecWeight;
-					//var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
-					var inkr = curStk * curWeight;
-					retVal += inkr;
-//					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
-				}
-    		}
-    	}
-
-		// calc Schum's experience effect
-		var xpSectionName = "xp_" + getSectionName(sideType);
-		if ( params.hasSection(xpSectionName) ) {
-//			if ( t==0 && sectionName.equals("playmaking_allsides")){
-//				HOLogger.instance().debug(getClass(), "midfiled exp");
+//	private Hashtable<Double, Lineup> setLineupEvolution()
+//	{
+//		// Initialize _LineupEvolution and add starting lineup
+//		Hashtable<Double, Lineup> _LineupEvolution = new Hashtable<>();
+//
+//		// reset start time
+//		for (var mid: startingLineup.getFieldPositions()) {
+//			Player player = startingLineup.getPlayerByPositionID(mid.getId());
+//			if (player != null) {
+//				player.setGameStartingTime(0);
 //			}
-			var inkr =  getAllPlayerXpEffect(_lineup, params, xpSectionName, useLeft, useMiddle, useRight);
-			retVal += inkr;
-//			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
-		}
-		retVal *= maxSkillContribution;
-		retVal = applyCommonProps (retVal, params, sectionName);
-    	return retVal;
-    }
+//		}
+//
+//		_LineupEvolution.put(0d, startingLineup.duplicate());
+//
+//		// list at which time occurs all events others than game start
+//		List<Double> events = new ArrayList<>();
+//
+//		for(Substitution sub :startingLineup.getSubstitutionList())
+//		{
+//			if ((sub.getMatchMinuteCriteria() != -1) &&
+//			   (sub.getRedCardCriteria() == RedCardCriteria.IGNORE) &&
+//				(sub.getStanding() == GoalDiffCriteria.ANY_STANDING)) {
+//				events.add((double)(sub.getMatchMinuteCriteria()));
+//			}
+//
+//	     }
+//
+//		Collections.sort(events);
+//
+//		// we calculate lineup for all event
+//		double t = 0d;
+//		double tNextEvent, tMatchOrder;
+//		Lineup currentLineup;
+//
+//		// define time of next event
+//		if (events.size() > 0) {
+//			tNextEvent = events.get(0);
+//		}
+//		else
+//		{
+//			tNextEvent = 125d;
+//		}
+//
+//		while(t<120d)
+//		{
+//			// use Lineup at last event as reference
+//			currentLineup = _LineupEvolution.get(t).duplicate();
+//
+//			//if no match event between now and the next step of 5 minutes, we jump to the next step
+//			if ((t+5-(t+5)%5)<tNextEvent + 3*EPSILON) t = t + 5 - (t + 5) % 5;
+//
+//			//else I treat next occurring match events
+//			else
+//			{
+//				t = tNextEvent;
+//
+//				// In case the match order happen in whole 5 minutes, it is shifted by 2 Epsilon to be visible in the graphs
+//				if (t%5<0.00001) t += 2*EPSILON;
+//
+//				for(Substitution sub :startingLineup.getSubstitutionList())
+//				{
+//					tMatchOrder = sub.getMatchMinuteCriteria();
+//
+//					if (tNextEvent == tMatchOrder)
+//					{
+//						// all matchOrders taking place now are recursively apply on the lineup object
+//						//currentLineup.UpdateLineupWithMatchOrder(sub);
+//						Lineup.applySubstitution(currentLineup.getFieldPositions(), sub);
+//					}
+//				}
+//
+//				// we remove all Match Events that have been already treated
+//				var itr = events.iterator();
+//				while (itr.hasNext())
+//				{
+//					Double x = itr.next();
+//					if (Objects.equals(x, tNextEvent))
+//						itr.remove();
+//				}
+//
+//
+//				// define time of next event
+//				if (events.size() > 0) {
+//					tNextEvent = events.get(0);
+//				}
+//				else
+//				{
+//					tNextEvent = 125d;
+//				}
+//			}
+//			_LineupEvolution.put(t, currentLineup);
+//		}
+//
+//		// we add time just after break in order to visualize respectively halftime and endgame rest effect
+//		_LineupEvolution.put(45+EPSILON, _LineupEvolution.get(45d).duplicate());
+//		_LineupEvolution.put(90+EPSILON, _LineupEvolution.get(90d).duplicate());
+//
+//
+//		return _LineupEvolution;
+//
+//	}
 
-	private boolean useSide(int useSide, int side2Calc, int sideType) {
-		return switch (sideType) {
-			case THISSIDE -> useSide == side2Calc;
-			case OTHERSIDE -> useSide != side2Calc;
-			case MIDDLE -> useSide == MIDDLE;
-			default ->    // all sides
-					true;
-		};
-	}
+//    private float calcRatings (Double t, Lineup lineup, int type, boolean useForm, Weather weather, boolean useWeatherImpact) {
+//
+//    	return calcRatings (t, lineup, type, ALLSIDES, useForm, weather, useWeatherImpact);
+//    }
+//
+//    private float calcRatings (Double t, Lineup _lineup, int type, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
+//
+//    	RatingPredictionParameter params;
+//		switch (type) {
+//			case SIDEDEFENSE -> params = config.getSideDefenseParameters();
+//			case CENTRALDEFENSE -> params = config.getCentralDefenseParameters();
+//			case MIDFIELD -> params = config.getMidfieldParameters();
+//			case SIDEATTACK -> params = config.getSideAttackParameters();
+//			case CENTRALATTACK -> params = config.getCentralAttackParameters();
+//			default -> {
+//				return 0;
+//			}
+//		}
+//    	Hashtable<String, Properties> allSections = params.getAllSections();
+//		Enumeration<String> allKeys = allSections.keys();
+//    	double retVal = 0;
+//    	while (allKeys.hasMoreElements()) {
+//    		String sectionName = allKeys.nextElement();
+//    		double curValue = calcPartialRating (t, _lineup, params, sectionName, side2calc, useForm, weather, useWeatherImpact);
+//    		retVal += curValue;
+//    	}
+////		if ( t==0 ) HOLogger.instance().info(getClass(), "t=" + t + "; before applyCommonProps.GENERAL="+retVal);
+//    	retVal = applyCommonProps (retVal, params, RatingPredictionParameter.GENERAL);
+//    	return (float)retVal;
+//    }
+//
+//    private double calcPartialRating (double t, Lineup _lineup, RatingPredictionParameter params, String sectionName, int side2calc, boolean useForm, Weather weather, boolean useWeatherImpact) {
+//    	int skillType = sectionNameToSkillAndSide(sectionName)[0];
+//    	int sideType = sectionNameToSkillAndSide(sectionName)[1];
+//    	double retVal = 0;
+//    	if (skillType == -1 || sideType == -1) {
+//    		HOLogger.instance().debug(this.getClass(), "parseError: "+sectionName+" resolves to Skill "+skillType+", Side "+sideType);
+//    		return 0;
+//    	}
+//		var useLeft = useSide(LEFT, side2calc, sideType);
+//		var useMiddle =useSide(MIDDLE, side2calc, sideType);
+//		var useRight = useSide(RIGHT, side2calc, sideType);
+//    	double[][] allStk = getAllPlayerStrength(t, _lineup, useForm, weather, useWeatherImpact, skillType, useLeft, useMiddle, useRight);
+//    	double[][] allWeights = getAllPlayerWeights(params, sectionName);
+//		var maxSkillContribution = params.getParam(RatingPredictionParameter.GENERAL, "maxSkillContribution", 1);
+//
+//
+//		for (int effPos=0; effPos < allStk.length; effPos++) {
+//			double curAllSpecWeight = allWeights[effPos][SPEC_ALL];
+//    		for (int spec=0; spec < SPEC_ALL; spec++) {
+//    			if (spec == SPEC_NOTUSED)
+//    				continue;
+//    			double curStk = allStk[effPos][spec];
+//				if (curStk > 0) {
+//	    			double curWeight = allWeights[effPos][spec];
+//					if ( curWeight<=0) curWeight = curAllSpecWeight;
+//					//var inkr = adjustForCrowding(_lineup, curStk, effPos) * curWeight;
+//					var inkr = curStk * curWeight;
+//					retVal += inkr;
+////					if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + sectionName + "; t=" + t + "; retArray["+getShortNameForPosition((byte)effPos)+"]["+getSpecialtyName(spec, false)+"]="+inkr);
+//				}
+//    		}
+//    	}
+//
+//		// calc Schum's experience effect
+//		var xpSectionName = "xp_" + getSectionName(sideType);
+//		if ( params.hasSection(xpSectionName) ) {
+////			if ( t==0 && sectionName.equals("playmaking_allsides")){
+////				HOLogger.instance().debug(getClass(), "midfiled exp");
+////			}
+//			var inkr =  getAllPlayerXpEffect(_lineup, params, xpSectionName, useLeft, useMiddle, useRight);
+//			retVal += inkr;
+////			if ( t == 0 ) HOLogger.instance().info(getClass(), "section=" + xpSectionName + "; t=" + t + "; ret="+inkr);
+//		}
+//		retVal *= maxSkillContribution;
+//		retVal = applyCommonProps (retVal, params, sectionName);
+//    	return retVal;
+//    }
 
-	private String getSectionName(int sideType) {
-		return switch (sideType) {
-			case THISSIDE -> "thisside";
-			case OTHERSIDE -> "otherside";
-			case MIDDLE -> "middle";
-			default -> "allsides";
-		};
-	}
+//	private boolean useSide(int useSide, int side2Calc, int sideType) {
+//		return switch (sideType) {
+//			case THISSIDE -> useSide == side2Calc;
+//			case OTHERSIDE -> useSide != side2Calc;
+//			case MIDDLE -> useSide == MIDDLE;
+//			default ->    // all sides
+//					true;
+//		};
+//	}
+//
+//	private String getSectionName(int sideType) {
+//		return switch (sideType) {
+//			case THISSIDE -> "thisside";
+//			case OTHERSIDE -> "otherside";
+//			case MIDDLE -> "middle";
+//			default -> "allsides";
+//		};
+//	}
 
 	public double applyCommonProps (double inVal, RatingPredictionParameter params, String sectionName) {
     	double retVal = inVal;
@@ -1066,7 +1113,7 @@ public class RatingPredictionManager {
     	// neutral to either defensive or offensive depending on what the style is.
     	
     	double outlier;
-    	var styleOfPlay = this.startingLineup.getStyleOfPlay();
+    	var styleOfPlay = this.startingLineup.getCoachModifier();
     	if (styleOfPlay >= 0) {
     		outlier = offensive;
     	} else {

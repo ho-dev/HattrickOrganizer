@@ -21,6 +21,7 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -101,6 +102,10 @@ public class Lineup{
 		}
 	}
 
+	public long getRatingRevision() {
+		return ratingRevision;
+	}
+
 	private static class Settings {
 		/** Attitude */
 		@SerializedName("speechLevel")
@@ -142,6 +147,8 @@ public class Lineup{
 
 
 	private Ratings oRatings;
+
+	private long ratingRevision=0;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -338,6 +345,7 @@ public class Lineup{
 	 *            New value of property m_iAttitude.
 	 */
 	public final void setAttitude(int m_iAttitude) {
+		this.ratingRevision++;
 		this.settings.m_iAttitude = m_iAttitude;
 	}
 
@@ -361,10 +369,11 @@ public class Lineup{
 	}
 
 	public void setStyleOfPlay(int style) {
+		ratingRevision++;
 		settings.m_iStyleOfPlay = style;
 	}
 	
-	public int getStyleOfPlay() {
+	public int getCoachModifier() {
 		return settings.m_iStyleOfPlay;
 	}
 
@@ -621,6 +630,7 @@ public class Lineup{
 	 *            New value of property m_sHeimspiel.
 	 */
 	public final void setLocation(short location) {
+		ratingRevision++;
 		this.m_sLocation = location;
 	}
 
@@ -635,6 +645,7 @@ public class Lineup{
 	}
 
 	public final void setArenaId(int id){
+		ratingRevision++;
 		this.m_iArenaId=id;
 	}
 	public final int getArenaId() {
@@ -645,6 +656,7 @@ public class Lineup{
 	}
 
 	public void setRegionId(int id){
+		ratingRevision++;
 		this.m_iRegionId=id;
 	}
 	public final int getRegionId()
@@ -655,6 +667,7 @@ public class Lineup{
 
 	public final  void setWeather( Weather weather)
 	{
+		ratingRevision++;
 		this.m_cWeather = weather;
 	}
 
@@ -677,6 +690,8 @@ public class Lineup{
 	private boolean isUpcomingMatchLoaded() { return m_iArenaId>=0; }
 
 	public boolean setUpcomingMatch(MatchKurzInfo match){
+
+		ratingRevision++;
 
 		if (match == null) {
 			m_sLocation = 0;
@@ -823,6 +838,7 @@ public class Lineup{
 	public final void setPosition(MatchLineupPosition position)
 	{
 		if ( position.isFieldMatchRoleId()){
+			ratingRevision++;
 			setPosition(this.m_vFieldPositions, position);
 		}
 		else if (position.isSubstitutesMatchRoleId() || position.isBackupsMatchRoleId()){
@@ -855,6 +871,7 @@ public class Lineup{
 	 * Clears all positions of content by creating a new, empty lineup.
 	 */
 	public final void clearLineup() {
+		ratingRevision++;
 		initPositionen553();
 	}
 
@@ -904,6 +921,7 @@ public class Lineup{
 					MatchRoleID oldPlayerRole = getPositionByPlayerId(playerID);
 					if (oldPlayerRole != null) {
 						if (position.isFieldMatchRoleId()) {
+							ratingRevision++;
 							//if player changed is in starting eleven it has to be remove from previous occupied positions
 							oldPlayerRole.setPlayerIdIfValidForLineup(0, this);
 							if (oldPlayerRole.isSubstitutesMatchRoleId()) {
@@ -918,6 +936,7 @@ public class Lineup{
 						} else {
 							// position is on bench (or backup), remove him from field position, but not from other bench positions
 							if (oldPlayerRole.isFieldMatchRoleId()) {
+								ratingRevision++;
 								oldPlayerRole.setPlayerIdIfValidForLineup(0, this);
 							}
 						}
@@ -936,6 +955,7 @@ public class Lineup{
 		for(Substitution substitution: this.substitutions){
 			if (substitution.getOrderType() == MatchOrderType.SUBSTITUTION &&
 					substitution.getObjectPlayerID() == playerID){
+				ratingRevision++;
 				this.substitutions.remove(substitution);
 				break;
 			}
@@ -996,6 +1016,7 @@ public class Lineup{
 	 * @param subs List of match orders
 	 */
 	public void setSubstitionList(List<Substitution> subs) {
+		ratingRevision++;
 		if (subs == null) {
 			this.substitutions = new ArrayList<>();
 		} else {
@@ -1023,6 +1044,7 @@ public class Lineup{
 	 * Does nothing if no man marking order exists.
 	 */
 	public void removeManMarkingOrder() {
+		ratingRevision++;
 		for ( var s : this.substitutions){
 			if ( s.getOrderType() == MatchOrderType.MAN_MARKING) {
 				this.substitutions.remove(s);
@@ -1092,6 +1114,7 @@ public class Lineup{
 	 *            New value of property m_iTacticType.
 	 */
 	public final void setTacticType(int m_iTacticType) {
+		ratingRevision++;
 		this.settings.m_iTacticType = m_iTacticType;
 	}
 
@@ -1170,7 +1193,7 @@ public class Lineup{
 		clone.setCaptain(this.getCaptain());
 		clone.setTacticType(this.getTacticType());
 		clone.setAttitude(this.getAttitude());
-		clone.setStyleOfPlay(this.getStyleOfPlay());
+		clone.setStyleOfPlay(this.getCoachModifier());
 
 		clone.substitutions = copySubstitutions();
 		return clone;
@@ -1433,6 +1456,8 @@ public class Lineup{
 	 */
 	private void initPositionen553() {
 
+		ratingRevision++;
+
 		m_vFieldPositions = new Vector<>();
 		for ( int i=IMatchRoleID.keeper; i<= IMatchRoleID.leftForward; i++) {
 			m_vFieldPositions.add(new MatchLineupPosition(i, 0, (byte)0 ));
@@ -1473,6 +1498,10 @@ public class Lineup{
 				.sorted(Comparator.comparingInt(Substitution::getMatchMinuteCriteria))
 				.forEach(s->applySubstitution(ret, s));
 		return ret;
+	}
+
+	public Set<Byte> getLineupChangeMinutes(){
+		return this.substitutions.stream().map(Substitution::getMatchMinuteCriteria).collect(Collectors.toSet());
 	}
 
 	public static void applySubstitution(List<MatchLineupPosition> positions, Substitution s) {

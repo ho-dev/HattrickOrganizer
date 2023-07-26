@@ -230,7 +230,7 @@ public class CopyListener implements ActionListener {
 		String level = (tacticLevel != 0) ? " (" + tacticLevel + ")" : "";
 		int attitude = lineupData.getAttitude();
 		String attitudeName = lineupData.getAttitudeName(attitude);
-		var styleOfPlay = StyleOfPlay.fromInt(lineupData.getStyleOfPlay());
+		var styleOfPlay = StyleOfPlay.fromInt(lineupData.getCoachModifier());
 		String styleOfPlayName = MatchLineupTeam.getStyleOfPlayName(styleOfPlay);
 		
 		String header = "[table][tr][th colspan=8 align=center]" + hov.getLanguageString("Aufstellung") + 

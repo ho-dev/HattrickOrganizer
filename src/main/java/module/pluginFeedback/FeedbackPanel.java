@@ -232,7 +232,7 @@ public class FeedbackPanel extends JFrame {
                 (lineup.getTacticType() != MatchRating.TacticTypeStringToInt(requirementsTacticType))) return false;
 
         // return false if style of play not properly set
-        if ((lineup.getStyleOfPlay() * 10) != HTRatings.getStyle_of_play()) return false;
+        if ((lineup.getCoachModifier() * 10) != HTRatings.getStyle_of_play()) return false;
 
         // return false if HOLineup not fully included in required Lineup
         for (var obj : lineup.getAllPositions()) {
