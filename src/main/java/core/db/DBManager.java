@@ -403,6 +403,11 @@ public class DBManager {
 				.importNewSkillup(homodel);
 	}
 
+	public void storeSkillup(Skillup skillup){
+		getTable(SpielerSkillupTable.TABLENAME)
+				.store(skillup);
+	}
+
 	// ------------------------------- SpielerTable
 	// -------------------------------------------------
 

@@ -315,7 +315,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         else {
             m_jlInTeamSince.setText("");
         }
-        if (m_clPlayer.isHomeGrown()) m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
+        if (m_clPlayer.isHomeGrown()){
+            m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
+        }
+        else {
+            m_jlInTeamSince.setIcon(null);
+        }
 
         m_jbStatistics.setEnabled(true);
         m_jbAnalysisTop.setEnabled(true);

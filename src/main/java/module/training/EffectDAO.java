@@ -89,7 +89,7 @@ public class EffectDAO {
                 }
                 while (tDateset.next()) {
                     var trainDate = HODateTime.fromDbTimestamp(tDateset.getTimestamp(3));
-                    var htWeek =trainDate.toHTWeek();
+                    var htWeek =trainDate.toLocaleHTWeek();
                     trainingDates.add(new TrainWeekEffect(htWeek.week, htWeek.season, tDateset.getInt(1), first_in_week));
                     first_in_week = tDateset.getInt(1);
                 }
