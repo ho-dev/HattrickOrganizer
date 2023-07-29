@@ -1,3 +1,27 @@
+# Changelist HO! 7.2
+
+## Some numbers
+* 2 commits
+* 8 files changed, 90 insertions(+), 31 deletions(-)
+* Contributors:
+  * 2 wsbrenk
+
+## Highlights
+* bug fixes
+
+## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.2)
+
+### Training
+* handle new trainer types which are no longer listed as player (#1889)
+
+## Translations
+Reports by Contributors - June 24, 2023 - July 22, 2023
+
+* Moorhuhninho 4
+* Miccoli17 1
+* wsbrenk 1
+Total 6
+
 # Changelist HO! 7.1
 
 ## Some numbers
