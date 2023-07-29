@@ -275,11 +275,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
-        m_jlCareerGoals.setText(m_clPlayer.getAllOfficialGoals() + "");
-        m_jlTeamGoals.setText(m_clPlayer.getGoalsCurrentTeam() +"");
-        m_jlHattricks.setText(m_clPlayer.getHattrick() + "");
-        m_jlSeasonSeriesGoals.setText(m_clPlayer.getSeasonSeriesGoal() + "");
-        m_jlSeasonCupGoals.setText(m_clPlayer.getSeasonCupGoal() + "");
+        m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getAllOfficialGoals()));
+        m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getGoalsCurrentTeam()));
+        m_jlHattricks.setText(String.valueOf(m_clPlayer.getHattrick()));
+        m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getSeasonSeriesGoal()));
+        m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getSeasonCupGoal()));
 
         var bestPosition = m_clPlayer.getIdealPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
@@ -315,7 +315,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         else {
             m_jlInTeamSince.setText("");
         }
-        if (m_clPlayer.isHomeGrown()) m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
+        if (m_clPlayer.isHomeGrown()){
+            m_jlInTeamSince.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN));
+        }
+        else {
+            m_jlInTeamSince.setIcon(null);
+        }
 
         m_jbStatistics.setEnabled(true);
         m_jbAnalysisTop.setEnabled(true);
@@ -1052,7 +1057,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                                 int matchId = lMatchIDs.get(match_index);
                                 if (e.isShiftDown()) {
                                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-                                    HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+                                    HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
                                 } else {
                                     HOMainFrame.instance().showMatch(matchId);
                                 }
@@ -1121,9 +1126,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 _temp.setIcon(null);
             }
 
-            for (int i=0; i < lMatchIDs.size(); i++){
-                lMatchIDs.set(i, -1);
-            }
+            lMatchIDs.replaceAll(ignored -> -1);
 
         }
 
