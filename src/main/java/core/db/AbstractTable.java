@@ -50,7 +50,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * derived table class has to create the colums array
+	 * derived table class has to create the columns array
 	 */
 	protected abstract void initColumns();
 
@@ -91,7 +91,7 @@ public abstract class AbstractTable {
 	 * stores the given object.
 	 * if the object is already stored in database, update is called otherwise insert
 	 * @param object that should be stored
-	 * @param <T> Storable class (extends Abstract.Storable)
+	 * @param <T> Storable class (extends AbstractStorable)
 	 */
 	public <T extends Storable> void store(T object){
 		if (object.isStored()) {
@@ -104,7 +104,7 @@ public abstract class AbstractTable {
 	/**
 	 * create a new record of the storable object
 	 * @param object that should be created
-	 * @param <T> Storable class (extends Abstract.Starable)
+	 * @param <T> Storable class (extends AbstractStorable)
 	 * @return 1 on success, 0 on error
 	 */
 	private <T extends Storable> int insert(T object) {
@@ -118,7 +118,7 @@ public abstract class AbstractTable {
 	 * The first columns of the table are used in the where clause, the remaining as set values.
 	 * Count of id columns is defined by field idcolumns.
 	 * @param object that should be updated
-	 * @param <T> Storable class (extends Abstract.Stobable)
+	 * @param <T> Storable class (extends AbstractStorable)
 	 * @return 1 on success, 0 on error
 	 */
 	private <T extends Storable> int update(T object) {
@@ -134,7 +134,7 @@ public abstract class AbstractTable {
 	 * the specified where values must match the first id columns of the table.
 	 * The count of where values is defined by idColumns
 	 * @param tClass Storable class (extends Abstract.Storable)
-	 * @param whereValues variable arguments descibing the where values (count must match idColumns)
+	 * @param whereValues variable arguments describing the where values (count must match idColumns)
 	 * @param <T> the object class to create
 	 * @return one Object of type T
 	 */
@@ -144,7 +144,7 @@ public abstract class AbstractTable {
 
 	/**
 	 * load one object of an externally created result set.
-	 * @param tClass Storable class (extends Abstract.Storable)
+	 * @param tClass Storable class (extends AbstractStorable)
 	 * @param rs result set
 	 * @param <T> the object class to create
 	 * @return one object of type T
@@ -159,8 +159,8 @@ public abstract class AbstractTable {
 
 	/**
 	 * load a list of records
-	 * @param tClass Storable class (extends Abstract.Storable)
-	 * @param whereValues variable arguments descibing the where values (count must match idColumns)
+	 * @param tClass Storable class (extends AbstractStorable)
+	 * @param whereValues variable arguments describing the where values (count must match idColumns)
 	 * @param <T> the object class to create
 	 * @return List of objects of type T
 	 */
@@ -170,7 +170,7 @@ public abstract class AbstractTable {
 
 	/**
 	 * load a list of records of an externally created result set
-	 * @param tClass Storable class (extends Abstract.Storable)
+	 * @param tClass Storable class (extends AbstractStorable)
 	 * @param rs result set
 	 * @param <T> the object class to create
 	 * @return List of objects of type T
@@ -181,7 +181,7 @@ public abstract class AbstractTable {
 
 	/**
 	 * load a list of records
-	 * @param tClass Storable class (extends Abstract.Storable)
+	 * @param tClass Storable class (extends AbstractStorable)
 	 * @param rs result set
 	 * @param max 1 to load one object, -1 to load all objects
 	 * @param <T> the object class to create
@@ -374,9 +374,9 @@ public abstract class AbstractTable {
 
 
 	/**
-	 * create sql string of the standard update statment.
-	 * the first colums of table are used in the where clause, the remaining columns in the SET part.
-	 * The count of where values if given by the field idcolumns
+	 * create sql string of the standard update statement.
+	 * the first columns of table are used in the where clause, the remaining columns in the SET part.
+	 * The count of where values if given by the field id columns
 	 * @return sql string of the prepared statement
 	 */
 	private String createUpdateStatement() {

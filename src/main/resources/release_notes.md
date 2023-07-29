@@ -4,7 +4,7 @@
 
 bug fixes 
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.2)
+## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.3)
 
 ### Database
 
@@ -23,7 +23,7 @@ bug fixes
 ### Transfer
 
 ### Training
-* handle new trainer types which are no longer listed as player (#1889)
+* reset skill ups when hrfs were deleted (#1899)
 
 ### League
 
@@ -33,9 +33,6 @@ bug fixes
 
 ## Translations
 
-Reports by Contributors - June 24, 2023 - July 22, 2023
-* Moorhuhninho 4
-* Miccoli17 1
-* wsbrenk 1
+Reports by Contributors - July 22, 2023 - July 29, 2023
 
-Total 6
+Total 0
