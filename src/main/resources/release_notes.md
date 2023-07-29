@@ -9,6 +9,7 @@ bug fixes
 ### Database
 
 ### Squad
+* fix display of wrong homegrown heart in player details (#1901)
 
 ### Team Analyzer
 
@@ -23,7 +24,7 @@ bug fixes
 ### Transfer
 
 ### Training
-* reset skill ups when hrfs were deleted (#1899)
+* training recalculation restores skill ups when hrfs were deleted (#1899)
 
 ### League
 
