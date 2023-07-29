@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static core.constants.player.PlayerSkill.EXPERIENCE;
-import static core.model.match.IMatchDetails.TAKTIK_PRESSING;
+import static core.constants.player.PlayerSkill.*;
+import static core.model.match.IMatchDetails.*;
 import static core.model.player.IMatchRoleID.*;
 import static java.lang.Math.*;
 import static java.util.Map.entry;
@@ -54,15 +54,13 @@ public class RatingPredictionModel {
         right
     }
 
-    private final Player trainer;
     private final int teamSpirit;
     private final int confidence;
 
-    public RatingPredictionModel(Player trainer, int teamSpirit, int confidence) {
+    public RatingPredictionModel(int teamSpirit, int confidence) {
         if (ratingContributionParameterMap == null) {
             initRatingContributionParameterMap();
         }
-        this.trainer = trainer;
         this.teamSpirit = teamSpirit;
         this.confidence = confidence;
     }
@@ -99,7 +97,7 @@ public class RatingPredictionModel {
         return contribution;
     }
 
-    public double calcRating(Lineup lineup, RatingSector s, int minute) {
+    public double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
         var ret = 0.;
         var overcrowdingPenalty = getOvercrowdingPenalty(countPlayersInRatingSector(lineup, s), s);
         for (var p : lineup.getFieldPlayers(minute)) {
@@ -110,6 +108,63 @@ public class RatingPredictionModel {
         }
         ret *= calcSector(lineup, s);
         return ret;
+    }
+
+    public double calcTacticsRating(Lineup lineup, int tactic){
+        switch (tactic){
+            case TAKTIK_KONTER -> {
+                return calcCounterAttack(lineup);
+            }
+            case TAKTIK_PRESSING -> {
+                return calcPressing(lineup);
+            }
+            case TAKTIK_LONGSHOTS -> {
+                return calcLongshots(lineup);
+            }
+        }
+        return 1;
+    }
+
+    private double calcLongshots(Lineup lineup) {
+        var sumScoring = 0.;
+        var sumSetPieces = 0.;
+        var n = 0;
+        for ( var p: lineup.getFieldPositions()){
+            var player = p.getPlayer();
+            if ( player != null){
+                n++;
+                sumScoring += calcSkillRating(player.getSkill(SCORING));
+                sumSetPieces += calcSkillRating(player.getSkill(SET_PIECES));
+            }
+        }
+
+        //Tactic Level = 1.66*SC + 0.55*SP - 7.6
+        return 1.66 * sumScoring/n + 0.55*sumSetPieces/n - 7.6;
+    }
+
+    /**
+     *
+     * https://www88.hattrick.org/Forum/Read.aspx?t=16741488&v=4&a=1&n=24
+     * @param lineup
+     * @return
+     */
+    protected double calcCounterAttack(Lineup lineup) {
+        var defence = lineup.getFieldPositions().stream().filter(i->i.getRoleId() >= rightBack && i.getRoleId() <= leftBack && i.getPlayerId() > 0).toList();
+        var a = 0.;
+        var f = 0.;
+        var n = 0;
+        for( var p: defence) {
+            var player = p.getPlayer();
+            var form = player.getForm();
+            var passing = calcSkillRating(player.getSkill(PASSING));
+            var defending = calcSkillRating(player.getSkill(DEFENDING));
+            n++;
+            f += form;
+            a += 2*passing + defending;
+        }
+        a *= f/n;
+        // 0,017272a + 1,042313
+        return 0.01727 * a + 1.042313;
     }
 
     static abstract class Cache<T1, T2> extends HashMap<T1, HashMap<T2, Double>> {
@@ -206,36 +261,25 @@ public class RatingPredictionModel {
      * @return
      */
     protected double calcTrainer(RatingSector s, int coachModifier) {
-        // TODO coach modifier
         switch (s) {
             case Defence_Left, Defence_Right, Defence_Central -> {
-                switch (trainer.getTrainerTyp()) {
-                    case Balanced -> {
-                        return 1.02;
-                    }
-                    case Defensive -> {
-                        return 1.15;
-                    }
-                    case Offensive -> {
-                        return 0.90;
-                    }
-                    default -> {
-                    }
+                if ( coachModifier <= 0){
+                    // Balanced or Defensive
+                    return 1.02 - coachModifier * (1.15 - 1.02)/10.;
+                }
+                else {
+                    // Offensive
+                    return 1.02 - coachModifier * (1.02 - 0.9)/10.;
                 }
             }
             case Attack_Central, Attack_Left, Attack_Right -> {
-                switch (trainer.getTrainerTyp()) {
-                    case Balanced -> {
-                        return 1.02;
-                    }
-                    case Defensive -> {
-                        return 0.9;
-                    }
-                    case Offensive -> {
-                        return 1.1;
-                    }
-                    default -> {
-                    }
+                if ( coachModifier <=0 ){
+                    // Balanced or Defensive
+                    return 1.02 - coachModifier * (0.9 - 1.02)/10.;
+                }
+                else {
+                    // Offensive
+                    return 1.02 - coachModifier * (1.02 - 1.1)/10.;
                 }
             }
         }

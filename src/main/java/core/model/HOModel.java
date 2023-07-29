@@ -227,7 +227,7 @@ public class HOModel {
     public final @NotNull RatingPredictionModel getRatingPredictionModel(){
         if ( this.ratingPredictionModel == null){
             var team = getTeam();
-            this.ratingPredictionModel = new RatingPredictionModel(getTrainer(), team.getTeamSpirit(), team.getConfidence());
+            this.ratingPredictionModel = new RatingPredictionModel(team.getTeamSpirit(), team.getConfidence());
         }
         return this.ratingPredictionModel;
     }

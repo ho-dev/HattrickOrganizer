@@ -139,7 +139,7 @@ public class RatingPredictionManager {
 			sector = new HashMap<>();
 		}
 
-		var ret = this.model.calcRating(lineup, s, minute);
+		var ret = this.model.calcSectorRating(lineup, s, minute);
 		sector.put(minute, ret);
 		return ret;
 	}
