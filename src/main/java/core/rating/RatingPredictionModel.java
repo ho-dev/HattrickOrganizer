@@ -121,8 +121,25 @@ public class RatingPredictionModel {
             case TAKTIK_LONGSHOTS -> {
                 return calcLongshots(lineup);
             }
+            case TAKTIK_MIDDLE, TAKTIK_WINGS ->{
+                return calcPassing(lineup);
+            }
+            case TAKTIK_CREATIVE -> {
+                return calcCreative(lineup);
+            }
         }
         return 1;
+    }
+
+    private double calcPassing(Lineup lineup) {
+        var sumPassing = 0.;
+        for ( var p: lineup.getFieldPositions()){
+            var player = p.getPlayer();
+            if ( player != null){
+                sumPassing += calcSkillRating(player.getSkill(PASSING));
+            }
+        }
+        return sumPassing/5.-2.;
     }
 
     private double calcLongshots(Lineup lineup) {
