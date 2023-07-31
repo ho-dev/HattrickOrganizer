@@ -1,6 +1,7 @@
 package core.rating;
 
 import core.constants.player.PlayerSkill;
+import core.constants.player.PlayerSpeciality;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchTacticType;
@@ -18,6 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static core.constants.player.PlayerSkill.*;
 import static core.model.match.IMatchDetails.*;
 import static core.model.player.IMatchRoleID.*;
+import static core.rating.RatingPredictionManager.SPEC_POWERFUL;
+import static core.rating.RatingPredictionManager.calcPlayerStrength;
 import static java.lang.Math.*;
 import static java.util.Map.entry;
 
@@ -97,6 +100,17 @@ public class RatingPredictionModel {
         return contribution;
     }
 
+    public double getPlayerTacticStrength(MatchLineupPosition p, int playerSkill, Weather weather, int tacticType, int minute ){
+        var player = p.getPlayer();
+        if ( player != null){
+            var ret = playerTaticStrengthCache.get(player, playerSkill);
+            ret *= weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
+            ret *= staminaCache.get((double) player.getStamina(), minute, p.getStartMinute(), tacticType);
+            return ret;
+        }
+        return 0;
+    }
+
     public double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
         var ret = 0.;
         var overcrowdingPenalty = getOvercrowdingPenalty(countPlayersInRatingSector(lineup, s), s);
@@ -110,28 +124,43 @@ public class RatingPredictionModel {
         return ret;
     }
 
-    public double calcTacticsRating(Lineup lineup, int tactic){
+    public double calcTacticsRating(Lineup lineup, int tactic, int minute){
         switch (tactic){
             case TAKTIK_KONTER -> {
-                return calcCounterAttack(lineup);
+                return calcCounterAttack(lineup, minute);
             }
             case TAKTIK_PRESSING -> {
-                return calcPressing(lineup);
+                return calcPressing(lineup, minute);
             }
             case TAKTIK_LONGSHOTS -> {
-                return calcLongshots(lineup);
+                return calcLongshots(lineup, minute);
             }
             case TAKTIK_MIDDLE, TAKTIK_WINGS ->{
-                return calcPassing(lineup);
+                return calcPassing(lineup, minute);
             }
             case TAKTIK_CREATIVE -> {
-                return calcCreative(lineup);
+                return calcCreative(lineup, minute);
             }
         }
         return 1;
     }
 
-    private double calcPassing(Lineup lineup) {
+    private double calcPressing(Lineup lineup, int minute) {
+        double ret = 0;
+        for ( var p : lineup.getFieldPlayers(minute)){
+            var defending = getPlayerTacticStrength(p, DEFENDING, lineup.getWeather(), lineup.getTacticType(), minute);
+            if ( defending > 0 ){
+                var player = p.getPlayer();
+                if ( player.getPlayerSpecialty() == PlayerSpeciality.POWERFUL){
+                    defending *= 2;
+                }
+            }
+            ret += defending;
+        }
+        return 0.085 * ret + 0.075;
+    }
+
+    private double calcPassing(Lineup lineup, int minute) {
         var sumPassing = 0.;
         for ( var p: lineup.getFieldPositions()){
             var player = p.getPlayer();
@@ -142,7 +171,7 @@ public class RatingPredictionModel {
         return sumPassing/5.-2.;
     }
 
-    private double calcLongshots(Lineup lineup) {
+    private double calcLongshots(Lineup lineup, int minute) {
         var sumScoring = 0.;
         var sumSetPieces = 0.;
         var n = 0;
@@ -160,12 +189,13 @@ public class RatingPredictionModel {
     }
 
     /**
-     *
      * https://www88.hattrick.org/Forum/Read.aspx?t=16741488&v=4&a=1&n=24
+     *
      * @param lineup
+     * @param minute
      * @return
      */
-    protected double calcCounterAttack(Lineup lineup) {
+    protected double calcCounterAttack(Lineup lineup, int minute) {
         var defence = lineup.getFieldPositions().stream().filter(i->i.getRoleId() >= rightBack && i.getRoleId() <= leftBack && i.getPlayerId() > 0).toList();
         var a = 0.;
         var f = 0.;
@@ -257,6 +287,14 @@ public class RatingPredictionModel {
         }
     };
 
+    protected Cache<Player, Integer> playerTaticStrengthCache = new Cache<>() {
+        @Override
+        public double calc(Player player, Integer skill) {
+            return calcPlayerTacticStrength(player, skill);
+        }
+
+    };
+
     protected Cache<Double, RatingSector> experienceCache = new Cache<>() {
         @Override
         public double calc(Double skillValue, RatingSector ratingSector) {
@@ -270,6 +308,14 @@ public class RatingPredictionModel {
             return calcWeather(specialty, weather);
         }
     };
+
+    protected double calcPlayerTacticStrength(Player player, Integer skill) {
+        var ret = calcStrength(player, skill);
+        var xp = calcSkillRating(player.getSkillValue(EXPERIENCE));
+        var f = Math.log10(xp) * 4. / 3.;
+        ret += f;
+        return ret;
+    }
 
     /**
      *
