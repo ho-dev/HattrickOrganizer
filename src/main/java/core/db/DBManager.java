@@ -44,7 +44,6 @@ import module.youth.YouthTraining;
 import org.hsqldb.error.ErrorCode;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
-//import org.hsqldb.error.ErrorCode;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
