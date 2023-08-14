@@ -90,7 +90,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	@Override
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbFlipSide)) {
-			HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().flipSide();
+			HOVerwaltung.instance().getModel().getCurrentLineup().flipSide();
 			var panel = HOMainFrame.instance().getLineupPanel();
 			if ( panel != null ) {
 				panel.update();
@@ -120,7 +120,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		List<Player> substitutes = new ArrayList<>();
 		List<Player> allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		List<Player> filteredPlayers = new ArrayList<>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
 		for (Player player: allPlayers) {
 			// the first 11

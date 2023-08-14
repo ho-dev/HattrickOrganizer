@@ -121,8 +121,8 @@ public class TrainingRecapTable extends JScrollPane {
             byte bIdealPosition = player.getIdealPosition();
             row.add(MatchRoleID.getNameForPosition(bIdealPosition)
                     + " ("
-                    +  player.getIdealPositionStrength(true, true, 1, null, false)
-                    + "%)");
+                    +  player.getIdealPositionRating()
+                    + ")");
             row.add(Integer.toString(ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getPlayerID()));
 

@@ -18,7 +18,6 @@ import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JWindow;
 
 import core.constants.player.PlayerAggressiveness;
 import core.constants.player.PlayerAgreeability;
@@ -134,6 +133,9 @@ public class CsvPlayerExport {
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive") + "\","
 							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing") + "\","
 							+ "\n");
+
+			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+
 			for (Player curPlayer : list) {
 				String[] outCols = {
 						curPlayer.getFullName(),
@@ -167,25 +169,25 @@ public class CsvPlayerExport {
 						df3.format(curPlayer.getSCskill() + curPlayer.getSub4Skill(PlayerSkill.SCORING)),
 						df3.format(curPlayer.getSPskill() + curPlayer.getSub4Skill(PlayerSkill.SET_PIECES)),
 						// ls.player.position_short
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)),
-						df2.format(curPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false))
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.KEEPER)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.CENTRAL_DEFENDER)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.CENTRAL_DEFENDER_OFF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.CENTRAL_DEFENDER_TOWING)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.BACK)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.BACK_OFF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.BACK_DEF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.BACK_TOMID)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.MIDFIELDER)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.MIDFIELDER_OFF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.MIDFIELDER_DEF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.MIDFIELDER_TOWING)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.WINGER)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.WINGER_OFF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.WINGER_DEF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.WINGER_TOMID)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.FORWARD)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.FORWARD_DEF)),
+						df2.format(ratingPredictionModel.getPlayerRating(curPlayer, IMatchRoleID.FORWARD_TOWING))
 				};
 				for (int col = 0; col < outCols.length; col++) {
 					if (col > 0)
@@ -207,8 +209,7 @@ public class CsvPlayerExport {
 			writer.close();
 			HOLogger.instance().info(getClass(), "CSV Export complete.");
 		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "CSV Export error!");
-			e.printStackTrace();
+			HOLogger.instance().error(getClass(), "CSV Export error: " + e);
 		}
 	}
 }

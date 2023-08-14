@@ -70,7 +70,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JButton m_jbStartAssistant = new JButton();
 
 
-	private HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<>();
+	private final HashMap<PlayerPositionPanel, LineupAssistantSelectorOverlay> positions = new HashMap<>();
 
 	// UI items for additions to the LineupPositionsPanel
 
@@ -127,17 +127,15 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
 			// Empty all positions
-			var lineup = hoModel.getLineupWithoutRatingRecalc();
-			if (lineup != null) {
-				lineup.resetStartingLineup();
-				lineup.resetPositionOrders();
-				lineup.resetSubstituteBench();
-				lineup.setKicker(0);
-				lineup.setCaptain(0);
-				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
-				mainFrame.getLineupPanel().update();
-			}
-		}
+			var lineup = hoModel.getCurrentLineup();
+            lineup.resetStartingLineup();
+            lineup.resetPositionOrders();
+            lineup.resetSubstituteBench();
+            lineup.setKicker(0);
+            lineup.setCaptain(0);
+            HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
+            mainFrame.getLineupPanel().update();
+        }
 		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
 		}
@@ -204,11 +202,9 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			if (!entry.getValue().isSelected()) {
-				var lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
-				if (lineup != null) {
-					lineup.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
-				}
-			}
+				var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+                lineup.setSpielerAtPosition(entry.getKey().getPositionsID(), 0);
+            }
 		}
 
 		final List<Player> selectablePlayers = new Vector<>();
@@ -218,7 +214,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 			//If the player is eligible to play and either all groups are selected or the one to which the player belongs
 			if (player.getCanBeSelectedByAssistant()
-					&& (((this.getGroup().trim().equals("")
+					&& (((this.getGroup().trim().isEmpty()
 					|| player.getTeamGroup().equals(this.getGroup())) && !isSelectedGroupExcluded())
 					|| (!player.getTeamGroup().equals(this.getGroup()) && isSelectedGroupExcluded()))) {
 				boolean include = true;
@@ -234,7 +230,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			}
 		}
 
-		hoModel.getCurrentLineupTeamRecalculated()
+		hoModel.getCurrentLineupTeam()
 				.getLineup()
 				.optimizeLineup(
 						selectablePlayers,

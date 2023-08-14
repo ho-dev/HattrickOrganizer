@@ -79,11 +79,12 @@ final public class UserColumnFactory {
                         -MatchRoleID.getSortId((byte) spielerCBItem.getPosition(), false),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                var r = ratingPredictionModel.getPlayerRating(spielerCBItem.getSpieler(), (byte)spielerCBItem.getPosition());
                 colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem.getPosition())
                         + " ("
-                        + spielerCBItem.getSpieler().calcPosValue((byte) spielerCBItem
-                                .getPosition(),
-                        true, null, false) + ")");
+                        + r
+                        + ")");
                 return colorLabelEntry;
             }
         };
@@ -239,7 +240,7 @@ final public class UserColumnFactory {
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+                var team = HOVerwaltung.instance().getModel().getCurrentLineup();
                 var pos = team.getPositionById(player.getPlayerID());
                 return new PlayerLabelEntry(player, pos, 0f, false, false);
             }
@@ -573,12 +574,11 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
 
                 byte idealPosition = player.getIdealPosition();
-
                 String posValue = MatchRoleID.getNameForPosition(idealPosition)
                         + " ("
-                        + player.getIdealPositionStrength(true, true, 1, null, false)
+                        + player.getIdealPositionRating()
                         + "%)";
-                byte[] alternativePosition = player.getAlternativeBestPositions();
+                var alternativePosition = player.getAlternativeBestPositions();
                 for (byte altPos : alternativePosition) {
                     if (altPos == idealPosition) {
                         posValue += " *";
@@ -588,7 +588,7 @@ final public class UserColumnFactory {
 
                 ColorLabelEntry tmp = new ColorLabelEntry(
                         -MatchRoleID.getSortId(idealPosition, false)
-                                + (player.getIdealPositionStrength(true, null, false) / 100.0f),
+                                + (player.getIdealPositionRating() / 100.0f),
                         posValue,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -608,7 +608,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
-                var team = model.getLineupWithoutRatingRecalc();
+                var team = model.getCurrentLineup();
                 final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
                 if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
                     final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(

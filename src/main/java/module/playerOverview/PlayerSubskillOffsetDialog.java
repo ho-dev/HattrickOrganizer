@@ -151,7 +151,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	private SliderPanel createSliderPanel(JPanel panel, String languageString, int skill) {
 		SliderPanel ret = new SliderPanel(Helper.getTranslation(languageString),100, 0, 1, 1f,80);
 
-		ret.setValue(m_clPlayer.getSub4Skill(skill) * 100f);
+		ret.setValue((float)m_clPlayer.getSub4Skill(skill) * 100f);
 		panel.add(ret);
 		return ret;
 	}

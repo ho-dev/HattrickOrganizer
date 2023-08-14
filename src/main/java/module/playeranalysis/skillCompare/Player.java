@@ -1,6 +1,10 @@
 package module.playeranalysis.skillCompare;
 
+import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
+
+import static core.model.player.IMatchRoleID.KEEPER;
+import static core.model.player.IMatchRoleID.UNKNOWN;
 
 /**
  * @author KickMuck
@@ -79,7 +83,7 @@ public class Player
 	private float m_OldPosVal_F;
 	private float m_OldPosVal_F_D;
 	private float m_OldPosVal_F_TW;
-	private byte m_BestPosition;
+	//private byte m_BestPosition;
 	private float m_BestPositionRating;
 	private byte m_OldBestPosition;
 	private float m_OldBestPositionRating;
@@ -112,82 +116,25 @@ public class Player
 	{
 		String s = "";
 		switch (position) {
-			case IMatchRoleID.KEEPER -> {
-				s += getPosVal_GK() + ";" + (getPosVal_GK() - getOldPosVal_GK());
-				break;
-			}
-			case IMatchRoleID.CENTRAL_DEFENDER -> {
-				s += getPosVal_CD() + ";" + (getPosVal_CD() - getOldPosVal_CD());
-				break;
-			}
-			case IMatchRoleID.CENTRAL_DEFENDER_OFF -> {
-				s += getPosVal_CD_O() + ";" + (getPosVal_CD_O() - getOldPosVal_CD_O());
-				break;
-			}
-			case IMatchRoleID.CENTRAL_DEFENDER_TOWING -> {
-				s += getPosVal_CD_TW() + ";" + (getPosVal_CD_TW() - getOldPosVal_CD_TW());
-				break;
-			}
-			case IMatchRoleID.BACK -> {
-				s += getPosVAL_WB() + ";" + (getPosVAL_WB() - getOldPosVal_WB());
-				break;
-			}
-			case IMatchRoleID.BACK_TOMID -> {
-				s += getPosVal_WB_TM() + ";" + (getPosVal_WB_TM() - getOldPosVal_WB_TM());
-				break;
-			}
-			case IMatchRoleID.BACK_OFF -> {
-				s += getPosVal_WB_O() + ";" + (getPosVal_WB_O() - getOldPosVal_WB_O());
-				break;
-			}
-			case IMatchRoleID.BACK_DEF -> {
-				s += getPosVal_WB_D() + ";" + (getPosVal_WB_D() - getOldPosVAL_WB_D());
-				break;
-			}
-			case IMatchRoleID.MIDFIELDER -> {
-				s += getPosVal_IM() + ";" + (getPosVal_IM() - getOldPosVal_IM());
-				break;
-			}
-			case IMatchRoleID.MIDFIELDER_OFF -> {
-				s += getPosVal_IM_O() + ";" + (getPosVal_IM_O() - getOldPosVal_IM_O());
-				break;
-			}
-			case IMatchRoleID.MIDFIELDER_DEF -> {
-				s += getPosVal_IM_D() + ";" + (getPosVal_IM_D() - getOldPosVal_IM_D());
-				break;
-			}
-			case IMatchRoleID.MIDFIELDER_TOWING -> {
-				s += getPosVal_IM_TW() + ";" + (getPosVal_IM_TW() - getOldPosVal_IM_TW());
-				break;
-			}
-			case IMatchRoleID.WINGER -> {
-				s += getPosVal_W() + ";" + (getPosVal_W() - getOldPosVal_W());
-				break;
-			}
-			case IMatchRoleID.WINGER_OFF -> {
-				s += getPosVal_W_O() + ";" + (getPosVal_W_O() - getOldPosVal_W_O());
-				break;
-			}
-			case IMatchRoleID.WINGER_DEF -> {
-				s += getPosVal_W_D() + ";" + (getPosVal_W_D() - getOldPosVal_W_D());
-				break;
-			}
-			case IMatchRoleID.WINGER_TOMID -> {
-				s += getPosVal_W_TM() + ";" + (getPosVal_W_TM() - getOldPosVal_W_TM());
-				break;
-			}
-			case IMatchRoleID.FORWARD -> {
-				s += getPosVal_F() + ";" + (getPosVal_F() - getOldPosVal_F());
-				break;
-			}
-			case IMatchRoleID.FORWARD_DEF -> {
-				s += getPosVal_F_D() + ";" + (getPosVal_F_D() - getOldPosVal_F_D());
-				break;
-			}
-			case IMatchRoleID.FORWARD_TOWING -> {
-				s += getPosVal_F_TW() + ";" + (getPosVal_F_TW() - getOldPosVal_F_TW());
-				break;
-			}
+			case KEEPER -> s += getPosVal_GK() + ";" + (getPosVal_GK() - getOldPosVal_GK());
+			case IMatchRoleID.CENTRAL_DEFENDER -> s += getPosVal_CD() + ";" + (getPosVal_CD() - getOldPosVal_CD());
+			case IMatchRoleID.CENTRAL_DEFENDER_OFF -> s += getPosVal_CD_O() + ";" + (getPosVal_CD_O() - getOldPosVal_CD_O());
+			case IMatchRoleID.CENTRAL_DEFENDER_TOWING -> s += getPosVal_CD_TW() + ";" + (getPosVal_CD_TW() - getOldPosVal_CD_TW());
+			case IMatchRoleID.BACK -> s += getPosVAL_WB() + ";" + (getPosVAL_WB() - getOldPosVal_WB());
+			case IMatchRoleID.BACK_TOMID -> s += getPosVal_WB_TM() + ";" + (getPosVal_WB_TM() - getOldPosVal_WB_TM());
+			case IMatchRoleID.BACK_OFF -> s += getPosVal_WB_O() + ";" + (getPosVal_WB_O() - getOldPosVal_WB_O());
+			case IMatchRoleID.BACK_DEF -> s += getPosVal_WB_D() + ";" + (getPosVal_WB_D() - getOldPosVAL_WB_D());
+			case IMatchRoleID.MIDFIELDER -> s += getPosVal_IM() + ";" + (getPosVal_IM() - getOldPosVal_IM());
+			case IMatchRoleID.MIDFIELDER_OFF -> s += getPosVal_IM_O() + ";" + (getPosVal_IM_O() - getOldPosVal_IM_O());
+			case IMatchRoleID.MIDFIELDER_DEF -> s += getPosVal_IM_D() + ";" + (getPosVal_IM_D() - getOldPosVal_IM_D());
+			case IMatchRoleID.MIDFIELDER_TOWING -> s += getPosVal_IM_TW() + ";" + (getPosVal_IM_TW() - getOldPosVal_IM_TW());
+			case IMatchRoleID.WINGER -> s += getPosVal_W() + ";" + (getPosVal_W() - getOldPosVal_W());
+			case IMatchRoleID.WINGER_OFF -> s += getPosVal_W_O() + ";" + (getPosVal_W_O() - getOldPosVal_W_O());
+			case IMatchRoleID.WINGER_DEF -> s += getPosVal_W_D() + ";" + (getPosVal_W_D() - getOldPosVal_W_D());
+			case IMatchRoleID.WINGER_TOMID -> s += getPosVal_W_TM() + ";" + (getPosVal_W_TM() - getOldPosVal_W_TM());
+			case IMatchRoleID.FORWARD -> s += getPosVal_F() + ";" + (getPosVal_F() - getOldPosVal_F());
+			case IMatchRoleID.FORWARD_DEF -> s += getPosVal_F_D() + ";" + (getPosVal_F_D() - getOldPosVal_F_D());
+			case IMatchRoleID.FORWARD_TOWING -> s += getPosVal_F_TW() + ";" + (getPosVal_F_TW() - getOldPosVal_F_TW());
 		}
 		return s;
 	}
@@ -204,122 +151,22 @@ public class Player
 	{
 		double combined = 0;
 		switch (skill) {
-			case 0 -> {
-				combined = getExperience() + (getOldExperience() * 0.01);
-				break;
-			}
-			case 1 -> {
-				combined = getForm() + (getOldForm() * 0.01);
-				break;
-			}
-			case 2 -> {
-				combined = getStamina() + (getOldStamina() * 0.01);
-				break;
-			}
-			case 3 -> {
-				combined = getKeeping() + (getOldKeeping() * 0.01);
-				break;
-			}
-			case 4 -> {
-				combined = getDefending() + (getOldDefending() * 0.01);
-				break;
-			}
-			case 5 -> {
-				combined = getPlaymaking() + (getOldPlaymaking() * 0.01);
-				break;
-			}
-			case 6 -> {
-				combined = getPassing() + (getOldPassing() * 0.01);
-				break;
-			}
-			case 7 -> {
-				combined = getWinger() + (getOldWinger() * 0.01);
-				break;
-			}
-			case 8 -> {
-				combined = getScoring() + (getOldScoring() * 0.01);
-				break;
-			}
-			case 9 -> {
-				combined = getSetPieces() + (getOldSetPieces() * 0.01);
-				break;
-			}
-			case 10 -> {
-				combined = getLoyalty() + (getOldLoyalty() * 0.01);
-				break;
-			}
-			case 11 -> {
-				combined = getHomeGrown() + (getOldHomeGrown() * 0.01);
-				break;
-			}
+			case 0 -> combined = getExperience() + (getOldExperience() * 0.01);
+			case 1 -> combined = getForm() + (getOldForm() * 0.01);
+			case 2 -> combined = getStamina() + (getOldStamina() * 0.01);
+			case 3 -> combined = getKeeping() + (getOldKeeping() * 0.01);
+			case 4 -> combined = getDefending() + (getOldDefending() * 0.01);
+			case 5 -> combined = getPlaymaking() + (getOldPlaymaking() * 0.01);
+			case 6 -> combined = getPassing() + (getOldPassing() * 0.01);
+			case 7 -> combined = getWinger() + (getOldWinger() * 0.01);
+			case 8 -> combined = getScoring() + (getOldScoring() * 0.01);
+			case 9 -> combined = getSetPieces() + (getOldSetPieces() * 0.01);
+			case 10 -> combined = getLoyalty() + (getOldLoyalty() * 0.01);
+			case 11 -> combined = getHomeGrown() + (getOldHomeGrown() * 0.01);
 		}
 		return combined;
 	}
-	
-	/* @function getSkillCompareAsString(int skill)
-	 * returns a string in the format ("5;-1") where 
-	 * 5  is the new skill value and -1 the change to the original skill
-	 * 
-	 * int skill
-	 * 
-	 * return: String
-	 */
-	public String getSkillCompareAsString(int skill)
-	{
-		String s = "";
-		switch (skill) {
-			case 0 -> {
-				s += getExperience() + ";" + (getExperience() - getOldExperience());
-				break;
-			}
-			case 1 -> {
-				s += getForm() + ";" + (getForm() - getOldForm());
-				break;
-			}
-			case 2 -> {
-				s += getStamina() + ";" + (getStamina() - getOldStamina());
-				break;
-			}
-			case 3 -> {
-				s += getKeeping() + ";" + (getKeeping() - getOldKeeping());
-				break;
-			}
-			case 4 -> {
-				s += getDefending() + ";" + (getDefending() - getOldDefending());
-				break;
-			}
-			case 5 -> {
-				s += getPlaymaking() + ";" + (getPlaymaking() - getOldPlaymaking());
-				break;
-			}
-			case 6 -> {
-				s += getPassing() + ";" + (getPassing() - getOldPassing());
-				break;
-			}
-			case 7 -> {
-				s += getWinger() + ";" + (getWinger() - getOldWinger());
-				break;
-			}
-			case 8 -> {
-				s += getScoring() + ";" + (getScoring() - getOldScoring());
-				break;
-			}
-			case 9 -> {
-				s += getSetPieces() + ";" + (getSetPieces() - getOldSetPieces());
-				break;
-			}
-			case 10 -> {
-				s += getLoyalty() + ";" + (getLoyalty() - getOldLoyalty());
-				break;
-			}
-			case 11 -> {
-				s += getHomeGrown() + ";" + getOldHomeGrown();
-				break;
-			}
-		}
-		return s;
-	}
-	
+
 	/* @function changeSkill(int skill, int wert)
 	 * Function that changes the values of the players
 	 * Called by changePlayerSkillValues() 
@@ -327,57 +174,23 @@ public class Player
 	public void changeSkill(int skill, int wert)
 	{
 		switch (skill) {
-			case 0 -> {
-				m_Player.setExperience(wert);
-				break;
-			}
-			case 1 -> {
-				m_Player.setForm(wert);
-				break;
-			}
-			case 2 -> {
-				m_Player.setStamina(wert);
-				break;
-			}
-			case 3 -> {
-				m_Player.setTorwart(wert);
-				break;
-			}
-			case 4 -> {
-				m_Player.setVerteidigung(wert);
-				break;
-			}
-			case 5 -> {
-				m_Player.setSpielaufbau(wert);
-				break;
-			}
-			case 6 -> {
-				m_Player.setPasspiel(wert);
-				break;
-			}
-			case 7 -> {
-				m_Player.setFluegelspiel(wert);
-				break;
-			}
-			case 8 -> {
-				m_Player.setTorschuss(wert);
-				break;
-			}
-			case 9 -> {
-				m_Player.setStandards(wert);
-				break;
-			}
-			case 10 -> {
-				m_Player.setLoyalty(wert);
-				break;
-			}
+			case 0 -> m_Player.setExperience(wert);
+			case 1 -> m_Player.setForm(wert);
+			case 2 -> m_Player.setStamina(wert);
+			case 3 -> m_Player.setTorwart(wert);
+			case 4 -> m_Player.setVerteidigung(wert);
+			case 5 -> m_Player.setSpielaufbau(wert);
+			case 6 -> m_Player.setPasspiel(wert);
+			case 7 -> m_Player.setFluegelspiel(wert);
+			case 8 -> m_Player.setTorschuss(wert);
+			case 9 -> m_Player.setStandards(wert);
+			case 10 -> m_Player.setLoyalty(wert);
 			case 11 -> {
 				if (wert == 2)
 					m_Player.setHomeGrown(true);
 				else if (wert == 1)
 					m_Player.setHomeGrown(false);
-				break;
-			}
+            }
 		}
 	}
 	
@@ -509,108 +322,73 @@ public class Player
 	public void setNewSkillValues(int skill, int wert)
 	{
 		switch (skill) {
-			case 0 -> {
-				setExperience(wert);
-				break;
-			}
-			case 1 -> {
-				setForm(wert);
-				break;
-			}
-			case 2 -> {
-				setStamina(wert);
-				break;
-			}
-			case 3 -> {
-				setKeeping(wert);
-				break;
-			}
-			case 4 -> {
-				setDefending(wert);
-				break;
-			}
-			case 5 -> {
-				setPlaymaking(wert);
-				break;
-			}
-			case 6 -> {
-				setPassing(wert);
-				break;
-			}
-			case 7 -> {
-				setWinger(wert);
-				break;
-			}
-			case 8 -> {
-				setScoring(wert);
-				break;
-			}
-			case 9 -> {
-				setSetPieces(wert);
-				break;
-			}
-			case 10 -> {
-				setLoyalty(wert);
-				break;
-			}
-			case 11 -> {
-				setHomeGrown(wert);
-				break;
-			}
+			case 0 -> setExperience(wert);
+			case 1 -> setForm(wert);
+			case 2 -> setStamina(wert);
+			case 3 -> setKeeping(wert);
+			case 4 -> setDefending(wert);
+			case 5 -> setPlaymaking(wert);
+			case 6 -> setPassing(wert);
+			case 7 -> setWinger(wert);
+			case 8 -> setScoring(wert);
+			case 9 -> setSetPieces(wert);
+			case 10 -> setLoyalty(wert);
+			case 11 -> setHomeGrown(wert);
 		}
 	}
 	
 	public void setOldPositionValues()
 	{
-		setOldPos_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true, null, false));
-		setOldPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true, null, false));
-		setOldPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true, null, false));
-		setOldPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true, null, false));
-		setOldPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true, null, false));
-		setOldPosVal_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true, null, false));
-		setOldPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true, null, false));
-		setOldPosVal_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true, null, false));
-		setOldPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true, null, false));
-		setOldPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true, null, false));
-		setOldPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true, null, false));
-		setOldPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true, null, false));
-		setOldPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true, null, false));
-		setOldPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true, null, false));
-		setOldPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true, null, false));
-		setOldPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true, null, false));
-		setOldPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true, null, false));
-		setOldPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true, null, false));
-		setOldPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true, null, false));
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		setOldPos_GK((float)ratingPredictionModel.getPlayerRating(m_Player, KEEPER));
+		setOldPosVal_CD((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER));
+		setOldPosVal_CD_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
+		setOldPosVal_CD_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_OFF));
+		setOldPosVal_WB((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK));
+		setOldPosVal_WB_TM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_TOMID));
+		setOldPosVal_WB_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_OFF));
+		setOldPosVal_WB_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_DEF));
+		setOldPosVal_IM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER));
+		setOldPosVal_IM_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_OFF));
+		setOldPosVal_IM_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_DEF));
+		setOldPosVal_IM_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_TOWING));
+		setOldPosVal_W((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER));
+		setOldPosVal_W_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_DEF));
+		setOldPosVal_W_TM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_TOMID));
+		setOldPosVal_W_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_OFF));
+		setOldPosVal_F((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD));
+		setOldPosVal_F_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD_DEF));
+		setOldPosVal_F_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD_TOWING));
 		setOldBestPosition(m_Player.getIdealPosition());
-		setOldBestPositionRating(m_Player.getIdealPositionStrength(true, true, 1, null, false));
+		setOldBestPositionRating((float)m_Player.getIdealPositionRating());
 	}
 	
 	public void setNewPositionValues()
 	{
-		setPosVal_GK(m_Player.calcPosValue(IMatchRoleID.KEEPER,true, null, false));
-		setPosVal_CD(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,true, null, false));
-		setPosVal_CD_TW(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING,true, null, false));
-		setPosVal_CD_O(m_Player.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF,true, null, false));
-		setPosVal_WB(m_Player.calcPosValue(IMatchRoleID.BACK,true, null, false));
-		setPosVAL_WB_TM(m_Player.calcPosValue(IMatchRoleID.BACK_TOMID,true, null, false));
-		setPosVal_WB_O(m_Player.calcPosValue(IMatchRoleID.BACK_OFF,true, null, false));
-		setPosVAL_WB_D(m_Player.calcPosValue(IMatchRoleID.BACK_DEF,true, null, false));
-		setPosVal_IM(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER,true, null, false));
-		setPosVal_IM_O(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_OFF,true, null, false));
-		setPosVal_IM_D(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_DEF,true, null, false));
-		setPosVal_IM_TW(m_Player.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING,true, null, false));
-		setPosVal_W(m_Player.calcPosValue(IMatchRoleID.WINGER,true, null, false));
-		setPosVal_W_D(m_Player.calcPosValue(IMatchRoleID.WINGER_DEF,true, null, false));
-		setPosVal_W_TM(m_Player.calcPosValue(IMatchRoleID.WINGER_TOMID,true, null, false));
-		setPosVal_W_O(m_Player.calcPosValue(IMatchRoleID.WINGER_OFF,true, null, false));
-		setPosVal_F(m_Player.calcPosValue(IMatchRoleID.FORWARD,true, null, false));
-		setPosVal_F_D(m_Player.calcPosValue(IMatchRoleID.FORWARD_DEF,true, null, false));
-		setPosVal_F_TW(m_Player.calcPosValue(IMatchRoleID.FORWARD_TOWING,true, null, false));
-		setBestPosition(m_Player.getIdealPosition());
-		setBestPositionRating(m_Player.getIdealPositionStrength(true, true, 1, null, false));
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		setPosVal_GK((float)ratingPredictionModel.getPlayerRating(m_Player, KEEPER));
+		setPosVal_CD((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER));
+		setPosVal_CD_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
+		setPosVal_CD_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_OFF));
+		setPosVal_WB((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK));
+		setPosVAL_WB_TM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_TOMID));
+		setPosVal_WB_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_OFF));
+		setPosVAL_WB_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.BACK_DEF));
+		setPosVal_IM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER));
+		setPosVal_IM_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_OFF));
+		setPosVal_IM_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_DEF));
+		setPosVal_IM_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.MIDFIELDER_TOWING));
+		setPosVal_W((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER));
+		setPosVal_W_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_DEF));
+		setPosVal_W_TM((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_TOMID));
+		setPosVal_W_O((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.WINGER_OFF));
+		setPosVal_F((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD));
+		setPosVal_F_D((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD_DEF));
+		setPosVal_F_TW((float)ratingPredictionModel.getPlayerRating(m_Player, IMatchRoleID.FORWARD_TOWING));
+		setBestPositionRating((float)m_Player.getIdealPositionRating());
 		changePlayerSkillValues(false);
 	}
-	
+
 	public int getAge() {
 		return m_Age;
 	}
@@ -618,11 +396,10 @@ public class Player
 		m_Age = val;
 	}
 	public byte getBestPosition() {
-		return m_BestPosition;
+		if ( m_Player != null) return m_Player.getIdealPosition();
+		return UNKNOWN;
 	}
-	public void setBestPosition(byte val) {
-		m_BestPosition = val;
-	}
+
 	public byte getOldBestPosition() {
 		return m_OldBestPosition;
 	}
@@ -713,21 +490,15 @@ public class Player
 	public void setOldStamina(int val) {
 		m_OldStamina = val;
 	}
-	public String getFirstName() {
-		return m_FirstName;
-	}
+
 	public void setFirstName(String name) {
 		m_FirstName = name;
 	}
-	public String getNickName() {
-		return m_NickName;
-	}
+
 	public void setNickName(String name) {
 		m_NickName = name;
 	}
-	public String getLastName() {
-		return m_LastName;
-	}
+
 	public void setLastName(String name) {
 		m_LastName = name;
 	}

@@ -16,11 +16,11 @@ import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.MyConnector;
-import core.rating.RatingPredictionManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import java.awt.BorderLayout;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -66,7 +66,9 @@ public class XMLExporter  {
             // Date           
             m_clSpinnerModel.setCalendarField(java.util.Calendar.MONTH);
             ((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
-            m_clSpinnerModel.setValue(RatingPredictionManager.LAST_CHANGE);
+
+			var instant = HODateTime.fromHT("2009-05-18 00:00:00").instant;
+            m_clSpinnerModel.setValue(Date.from(instant));
 	
             JFrame owner = HOMainFrame.instance();
             final JDialog dialog = new JDialog(owner, HOVerwaltung.instance().getLanguageString("xmlexport.startdate"));

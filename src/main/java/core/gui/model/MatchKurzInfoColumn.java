@@ -10,7 +10,7 @@ import core.model.match.Matchdetails;
  * @author Thorsten Dietz
  * @since 1.36
  */
-class MatchKurzInfoColumn extends UserColumn {
+public class MatchKurzInfoColumn extends UserColumn {
 
 	/**
 	 * constructor

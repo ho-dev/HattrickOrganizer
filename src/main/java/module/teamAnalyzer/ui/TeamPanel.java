@@ -4,6 +4,7 @@ import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.rating.RatingPredictionModel;
 import module.lineup.Lineup;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -191,6 +192,8 @@ public class TeamPanel extends JPanel {
         Lineup lineup = getOwnLineup();
         if ( lineup == null ) return;
 
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
             UserTeamPlayerPanel pp = new UserTeamPlayerPanel();
@@ -203,9 +206,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setSpecialEvent(player.getPlayerSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
-                spotLineup.setRating(player.calcPosValue(lineup.getEffectivePos4PositionID(spot),
-                                                          true, null, false));
-
+                spotLineup.setRating(ratingPredictionModel.getPlayerRating(player, lineup.getEffectivePos4PositionID(spot)));
 
                 int cards = player.getCards();
                 int injury =  player.getInjuryWeeks();
@@ -255,14 +256,14 @@ public class TeamPanel extends JPanel {
         fillPanel(lineupPanel.getMyTeam().getCentralForwardPanel(), list.get(IMatchRoleID.centralForward));
         fillPanel(lineupPanel.getMyTeam().getCentralMidfieldPanel(), list.get(IMatchRoleID.centralInnerMidfield));
         fillPanel(lineupPanel.getMyTeam().getMiddleCentralDefenderPanel(), list.get(IMatchRoleID.middleCentralDefender));
-        
-        lineupPanel.getMyTeam().setLeftAttack(convertRating(lineup.getRatings().getLeftAttack().get(-90d)));
-        lineupPanel.getMyTeam().setLeftDefence(convertRating(lineup.getRatings().getLeftDefense().get(-90d)));
-        lineupPanel.getMyTeam().setRightAttack(convertRating(lineup.getRatings().getRightAttack().get(-90d)));
-        lineupPanel.getMyTeam().setRightDefence(convertRating(lineup.getRatings().getRightDefense().get(-90d)));
-        lineupPanel.getMyTeam().setMiddleAttack(convertRating(lineup.getRatings().getCentralAttack().get(-90d)));
-        lineupPanel.getMyTeam().setMiddleDefence(convertRating(lineup.getRatings().getCentralDefense().get(-90d)));
-        lineupPanel.getMyTeam().setMidfield(convertRating(lineup.getRatings().getMidfield().get(-90d)));
+
+        lineupPanel.getMyTeam().setLeftAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Left, 90)));
+        lineupPanel.getMyTeam().setLeftDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Left, 90)));
+        lineupPanel.getMyTeam().setRightAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Right, 90)));
+        lineupPanel.getMyTeam().setRightDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Right, 90)));
+        lineupPanel.getMyTeam().setMiddleAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Central, 90)));
+        lineupPanel.getMyTeam().setMiddleDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Central, 90)));
+        lineupPanel.getMyTeam().setMidfield(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Midfield, 90)));
     }
 
     private int convertRating(double rating) {
@@ -294,7 +295,7 @@ public class TeamPanel extends JPanel {
     }
 
     public Lineup getOwnLineup() {
-        return HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        return HOVerwaltung.instance().getModel().getCurrentLineup();
     }
 
     private static class ManMarkingOrderDisplay extends JPanel {

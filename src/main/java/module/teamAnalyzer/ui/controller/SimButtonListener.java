@@ -39,7 +39,7 @@ public class SimButtonListener implements ActionListener {
 
     /** The opponent team */
     TeamLineupData opponentTeam;
-    private RecapPanel recapPanel;
+    private final RecapPanel recapPanel;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ public class SimButtonListener implements ActionListener {
                                                                    myTeam.getMiddleAttack(),
                                                                    myTeam.getRightAttack());
 
-        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         TeamData myTeamValues = manager.generateTeamData(myTeam.getTeamPanel().getText(),
         		myTeamRatings, lineup.getTacticType(), getTacticLevel());
 
@@ -117,19 +117,11 @@ public class SimButtonListener implements ActionListener {
      * @return the actual tactic level as shown in HO LIneup tab
      */
     private int getTacticLevel() {
-        double tacticLevel = 1d;
-        var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
-
-        switch (lineup.getTacticType()) {
-            case IMatchDetails.TAKTIK_KONTER -> tacticLevel = lineup.getTacticLevelCounter();
-            case IMatchDetails.TAKTIK_MIDDLE -> tacticLevel = lineup.getTacticLevelAimAow();
-            case IMatchDetails.TAKTIK_PRESSING -> tacticLevel = lineup.getTacticLevelPressing();
-            case IMatchDetails.TAKTIK_WINGS -> tacticLevel = lineup.getTacticLevelAimAow();
-            case IMatchDetails.TAKTIK_LONGSHOTS -> tacticLevel = lineup.getTacticLevelLongShots();
-        }
-        // Re-Scale to HT ratings (...,solid=6,...,divine=19)
-        tacticLevel -= 1;
-        return (int)Math.max(tacticLevel, 0);
+        var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var r = ratingPredictionModel.getTacticRating(lineup, 0);
+        if (r > 0) r += 1;
+        return (int) r;
     }
 
     /**

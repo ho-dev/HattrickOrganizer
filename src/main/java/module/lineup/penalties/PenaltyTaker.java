@@ -1,9 +1,8 @@
 package module.lineup.penalties;
 
 import core.constants.player.PlayerSkill;
-import core.constants.player.PlayerSpeciality;
+import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.rating.RatingPredictionManager;
 
 public class PenaltyTaker {
 
@@ -18,17 +17,8 @@ public class PenaltyTaker {
 	}
 
 	public double getAbility() {
-		double ability;
-		double loy = RatingPredictionManager.getLoyaltyEffect(player);
-
-		ability = getExperience() * 1.5
-					+ (getSetPieces() + loy) * 0.7
-					+ (getScoring() + loy) * 0.3;
-
-		if (getPlayer().getPlayerSpecialty() == PlayerSpeciality.TECHNICAL) {
-			ability *= 1.1;
-		}
-		return ability;
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		return ratingPredictionModel.getPlayerPenaltyStrength(player);
 	}
 
 	public double getScoring() {

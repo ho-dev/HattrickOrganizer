@@ -8,30 +8,27 @@ import core.model.player.Player;
 
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
+import java.util.Objects;
 
 import javax.swing.*;
 
 /**
  * Overview of all the players on the team (main class of the package)
  */
-public class SpielerUebersichtsPanel extends ImagePanel {
+public class PlayerOverviewPanel extends ImagePanel {
 
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
 	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
-	private LineupPlayersTableNameColumn spielerUebersichtTableName;
+	private LineupPlayersTableNameColumn playerOverviewTableName;
 	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
-
-	public PlayerOverviewTable getPlayerOverviewTable() {
-		return playerOverviewTable;
-	}
 
 	/**
 	 * Creates a new SpielerUebersichtsPanel object. (Players view panel)
 	 */
-	public SpielerUebersichtsPanel() {
+	public PlayerOverviewPanel() {
 		initComponents();
 		addTableSelectionListeners();
 	}
@@ -43,7 +40,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 *            the id of the player to select.
 	 */
 	public void setPlayer(Player player) {
-		spielerUebersichtTableName.setPlayer(player.getPlayerID());
+		playerOverviewTableName.setPlayer(player.getPlayerID());
 		playerOverviewTable.setSpieler(player.getPlayerID());
 		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
@@ -90,7 +87,7 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	public final void update() {
 		refresh();
-		HOMainFrame.instance().getLineupPanel().refresh();
+		Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).refresh();
 	}
 
 	// ----------init-----------------------------------------------
@@ -168,9 +165,9 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 		playerOverviewTable = new PlayerOverviewTable();
 
 		// table with the player's name
-		spielerUebersichtTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getSorter());
+		playerOverviewTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getSorter());
 
-		JScrollPane scrollpane = new JScrollPane(spielerUebersichtTableName);
+		JScrollPane scrollpane = new JScrollPane(playerOverviewTableName);
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollpane.setPreferredSize(new Dimension(170, 100));
 
@@ -227,18 +224,16 @@ public class SpielerUebersichtsPanel extends ImagePanel {
 	 */
 	private void addTableSelectionListeners() {
 		playerOverviewTable.getSelectionModel().addListSelectionListener(
-				e -> {
-					selectRow(spielerUebersichtTableName, playerOverviewTable.getSelectedRow());
-				});
+				e -> selectRow(playerOverviewTableName, playerOverviewTable.getSelectedRow()));
 
-		spielerUebersichtTableName.getSelectionModel().addListSelectionListener(
+		playerOverviewTableName.getSelectionModel().addListSelectionListener(
 				e -> {
-					int row = spielerUebersichtTableName.getSelectedRow();
+					int row = playerOverviewTableName.getSelectedRow();
 					if (row == -1) {
 						var player = HOMainFrame.instance().getSelectedPlayer();
 						if ( player != null){
 							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerID());
-							selectRow(spielerUebersichtTableName,row);
+							selectRow(playerOverviewTableName,row);
 							return;
 						}
 					}

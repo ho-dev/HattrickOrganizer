@@ -31,6 +31,7 @@ import module.statistics.StatistikMainPanel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
@@ -285,7 +286,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
                 + " ("
                 + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
-                m_clPlayer.calcPosValue(bestPosition, true, null, false))
+                m_clPlayer.getIdealPositionRating())
                 + ")");
 
         int iSpecialty = m_clPlayer.getPlayerSpecialty();
@@ -894,7 +895,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     public CBItem[] getPositions() {
 
         final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-        byte[] altPositions = m_clPlayer.getAlternativeBestPositions();
+        var altPositions = m_clPlayer.getAlternativeBestPositions();
 
         CBItem[] positions = new CBItem[allPos.length + 1];
 
@@ -908,10 +909,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             text = new StringBuilder(MatchRoleID.getNameForPosition(allPo.getPosition())
                     + " ("
                     + Helper.getNumberFormat(false, 1).format(
-                    m_clPlayer.calcPosValue(allPo.getPosition(), true, true, null, false))
+                    m_clPlayer.getIdealPositionRating())
                     + "%)");
-            for (byte altPos : altPositions
-            ) {
+            for (byte altPos : altPositions) {
                 if (altPos == allPo.getPosition()) {
                     text.append(" *");
                 }
@@ -982,7 +982,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
              g.setColor(c.getForeground());
              g.fillRect(vr.x, vr.y, amountFull, vr.height);
 
-             if (progressBar.isStringPainted() && !progressBar.getString().equals("")) {
+             if (progressBar.isStringPainted() && !progressBar.getString().isEmpty()) {
                  paintString(g, 0, 0, or.width, or.height, amountFull, insets);
              }
             g.setColor(saved);
@@ -1126,7 +1126,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 _temp.setIcon(null);
             }
 
-            lMatchIDs.replaceAll(ignored -> -1);
+            Collections.fill(lMatchIDs, -1);
 
         }
 

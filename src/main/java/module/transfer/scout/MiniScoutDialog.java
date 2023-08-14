@@ -28,7 +28,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -260,13 +259,13 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         jtaCopyPaste.setText("");
 
-        if (message.equals("")) {
+        if (message.isEmpty()) {
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -278,7 +277,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
                 case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                 default -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -290,7 +289,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
     private String getFieldsTextList(List<String> fields){
         StringBuilder errorFieldsTxt = new StringBuilder();
-        if (fields.size()>0){
+        if (!fields.isEmpty()){
             //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
@@ -608,6 +607,6 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
         jlRating.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition()) + " ("
-                         + tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true, null, false) + ")");
+                         + tempPlayer.getIdealPositionRating() + ")");
     }
 }

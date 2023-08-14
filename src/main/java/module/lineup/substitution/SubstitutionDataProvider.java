@@ -19,7 +19,7 @@ public class SubstitutionDataProvider {
 
 	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition() {
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<>();
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
 		for (Integer i : aFieldAndSubsMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
@@ -34,7 +34,7 @@ public class SubstitutionDataProvider {
 	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		for (Integer i : aMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
@@ -47,7 +47,7 @@ public class SubstitutionDataProvider {
 	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
-		Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		for (int i = start; i <= end; i++) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {

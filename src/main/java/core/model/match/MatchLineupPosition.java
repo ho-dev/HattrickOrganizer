@@ -4,10 +4,6 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.rating.RatingPredictionModel;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -28,24 +24,13 @@ public class MatchLineupPosition  extends MatchRoleID {
     private MatchType matchType;
     private int teamId;
     private Integer hoPosCode;
-    private int startMinute;
+    private int startMinute=0;
     private Player player = null;
-
-    protected Map<RatingPredictionModel.RatingSector, Double> ratings = new HashMap<>();
 
     public MatchLineupPosition(int roleId, int playerId, byte behaviour, int startMinute) {
         super(roleId, playerId,behaviour);
         this.startMinute = startMinute;
     }
-
-    public double getRating(RatingPredictionModel.RatingSector s){
-        return ratings.getOrDefault(s, 0.);
-    }
-
-    protected void setRating(RatingPredictionModel.RatingSector s, double value){
-        ratings.put(s, value);
-    }
-
 
     /**
      * Creates a new instance of MatchLineupPosition
@@ -53,6 +38,11 @@ public class MatchLineupPosition  extends MatchRoleID {
     public MatchLineupPosition() {}
     public MatchLineupPosition(int roleID, int spielerID, int behavior) {
         super(roleID, spielerID, (byte) behavior);
+    }
+
+    public MatchLineupPosition(int roleId, byte behaviour, Player player){
+        super(roleId, player.getPlayerID(), behaviour);
+        this.player = player;
     }
 
     public MatchLineupPosition(int roleID, int spielerID, int behavior, double rating, String name, int status) {

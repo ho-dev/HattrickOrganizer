@@ -25,7 +25,7 @@ import core.util.*;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.matches.MatchesPanel;
-import module.playerOverview.SpielerUebersichtsPanel;
+import module.playerOverview.PlayerOverviewPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
@@ -271,8 +271,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return ((PlayerAnalysisModulePanel) getTabbedPane().getModulePanel(IModule.PLAYERANALYSIS));
 	}
 
-	public SpielerUebersichtsPanel getSpielerUebersichtPanel() {
-		return ((SpielerUebersichtsPanel) getTabbedPane().getModulePanel(IModule.PLAYEROVERVIEW));
+	public PlayerOverviewPanel getSpielerUebersichtPanel() {
+		return ((PlayerOverviewPanel) getTabbedPane().getModulePanel(IModule.PLAYEROVERVIEW));
 	}
 
 	public HOTabbedPane getTabbedPane() {

@@ -3,7 +3,6 @@ package module.playerOverview;
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSpeciality;
 import core.datatype.CBItem;
-//import core.epv.EPVData;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
@@ -11,7 +10,6 @@ import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -29,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemListener;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -46,13 +45,14 @@ import javax.swing.SwingConstants;
 final class SpielerTrainingsSimulatorPanel extends ImagePanel
         implements core.gui.Refreshable, ItemListener, ActionListener, FocusListener {
 
+    @Serial
     private static final long serialVersionUID = 7657564758631332932L;
 
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static Dimension CBSIZE = new Dimension(Helper.calcCellWidth(120),
+    private static final Dimension CBSIZE = new Dimension(Helper.calcCellWidth(120),
             Helper.calcCellWidth(25));
-    private static Dimension PFEILSIZE = new Dimension(20, 20);
+    private static final Dimension PFEILSIZE = new Dimension(20, 20);
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -141,7 +141,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private final JComboBox m_jcbSpeciality = new JComboBox(PlayerSpeciality.ITEMS);
     private final JComboBox m_jcbLoyalty = new JComboBox(PlayerAbility.ITEMS);
     private final JCheckBox m_jchHomegrown = new JCheckBox();
-    private JTextField jtfAge = new JTextField("17.0");
+    private final JTextField jtfAge = new JTextField("17.0");
     private final JLabel m_jlErfahrung = new JLabel();
     private final JLabel m_jlFluegel = new JLabel();
     private final JLabel m_jlForm = new JLabel();
@@ -163,7 +163,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     /**
      * Creates a new SpielerTrainingsSimulatorPanel object.
      */
-    protected SpielerTrainingsSimulatorPanel() {
+    SpielerTrainingsSimulatorPanel() {
         initComponents();
     }
 
@@ -318,11 +318,11 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         }
         m_jlHomeGrown.setIcon(ImageUtilities.getImageIcon4Veraenderung(hg, true));
 
-        tempPlayer.calculateIdealPosition();
+        var r = tempPlayer.getIdealPositionRating();
         var idealPosition = tempPlayer.getIdealPosition();
         m_jpBestPos.setText(MatchRoleID.getNameForPosition(idealPosition)
                 + " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(tempPlayer.calcPosValue(idealPosition, true, null, false)) + ")");
+                .format(r) + ")");
 
         for (int i = 0; i < playerPositionValues.length; i++) {
             showWithCompare(playerPositionValues[i], playerPosition[i]);
@@ -335,17 +335,18 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 
-        var playerAbsoluteValue = m_clPlayer.calcPosValue(playerPosition, true, false, null, false);
-        var tmpAbsoluteValue = tempPlayer.calcPosValue(playerPosition, true, false, null, false);
-        var tmpRelativeValue = tempPlayer.calcPosValue(playerPosition, true, true, null, false);
+        var playerAbsoluteValue = ratingPredictionModel.getPlayerRating(m_clPlayer, playerPosition);
+        var tmpAbsoluteValue = ratingPredictionModel.getPlayerRating(tempPlayer, playerPosition);
+        //var tmpRelativeValue = tempPlayer.calcPosValue(playerPosition, true, true, null, false);
         var nbDecimals = core.model.UserParameter.instance().nbDecimals;
-        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpRelativeValue) + "%  " +
-                Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
-
+//        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpRelativeValue) + "%  " +
+//                Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
+        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
         labelEntry.getLeft().setText(leftLabelText);
 
-        byte[] alternativePosition = tempPlayer.getAlternativeBestPositions();
+        var alternativePosition = tempPlayer.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == playerPosition) {
                 labelEntry.getLeft().setBold(true);
@@ -355,7 +356,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             }
         }
 
-        labelEntry.getRight().setSpecialNumber(tmpAbsoluteValue-playerAbsoluteValue, false);
+        labelEntry.getRight().setSpecialNumber((float) (tmpAbsoluteValue-playerAbsoluteValue), false);
     }
 
     private int getAge() {

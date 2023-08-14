@@ -1,6 +1,5 @@
 package module.lineup.lineup;
 
-import core.constants.player.PlayerSkill;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Updatable;
@@ -17,7 +16,6 @@ import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.rating.RatingPredictionManager;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
 import module.lineup.Lineup;
@@ -157,7 +155,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
-            final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+            final Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
             final Player player = getSelectedPlayer();
             setPlayerTooltip(player);
@@ -194,7 +192,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 //Adjust tactic values
                 setTactic(getTactic(), player);
             } else if (itemEvent.getSource().equals(m_jcbTactic)) {
-                Objects.requireNonNull(lineup.getPositionById(m_iPositionID)).setTaktik(getTactic());
+                Objects.requireNonNull(lineup.getPositionById(m_iPositionID)).setBehaviour(getTactic());
             }
 
             if (player != null) {
@@ -234,7 +232,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         var plCandidates = new ArrayList<>(inCandidates);
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
-        Lineup lineup = model.getLineupWithoutRatingRecalc();
+        Lineup lineup = model.getCurrentLineup();
 
         m_weather = weather;
         m_useWeatherImpact = useWeatherImpact;
@@ -326,7 +324,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         m_useWeatherImpact = useWeatherImpact;
 
         //Get currently setup player in that position
-        var team = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        var team = HOVerwaltung.instance().getModel().getCurrentLineup();
         final MatchRoleID position = team.getPositionById(m_iPositionID);
         if (position != null) {
             selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
@@ -383,7 +381,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         if (iSelectedPlayerId == -1) {
             switch (m_iPositionID){
                 case IMatchRoleID.setPieces -> lineup.setKicker(0);
@@ -423,7 +421,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
         // list of all players currently set as subs
         List<Player> lSubs = new ArrayList<>();
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         for (Player player : allPlayers) {
             if (lineup.isPlayerASub(player.getPlayerID())) {
                 lSubs.add(player);
@@ -508,7 +506,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     private void initLabel() {
-        final Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        final Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         final int nextWeekTrain = TrainingPreviewPlayers.instance().getNextWeekTraining();
 
         if (m_iPositionID == IMatchRoleID.setPieces) {
@@ -621,15 +619,12 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         }
     }
 
-
     private void addTactic(@Nullable Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
-            text += " ("
-                    + currentPlayer.calcPosValue(MatchRoleID.getPosition(m_iPositionID,
-                    playerPosition),
-                    true, m_weather, m_useWeatherImpact) + ")";
+            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            var r = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition);
+            text += " (" + r  + ")";
         }
-
         m_jcbTactic.addItem(new CBItem(text, playerPosition));
     }
     //-------------private-------------------------------------------------
@@ -639,26 +634,30 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             String spielerName = player.getShortName();
 
             if (m_iPositionID == IMatchRoleID.setPieces) {
+                var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                var setPiecesRating = ratingPredictionModel.getPlayerSetPiecesStrength(player);
                 item.setValues(spielerName,
-                        player.getSPskill()
-                                + player.getSub4Skill(PlayerSkill.SET_PIECES)
-                                + (float)RatingPredictionManager.getLoyaltyEffect(player),
+                        (float) setPiecesRating,
                         player, true);
                 return item;
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(spielerName,
                         Helper.round(
-                                HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getAverageExperience(player.getPlayerID()),
+                                HOVerwaltung.instance().getModel().getCurrentLineup().getAverageExperience(player.getPlayerID()),
                                 core.model.UserParameter.instance().nbDecimals),
                         player, true);
                 return item;
             } else {
-                final MatchRoleID position = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc().getPositionById(m_iPositionID);
+                var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
+                final var position = lineup.getPositionById(m_iPositionID);
 
                 if ( position != null ){
-                    float value = player.calcPosValue(position.getPosition(), true, weather, useWeatherImpact);
+                    var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                    var value = ratingPredictionModel.getPlayerRating(player, position.getRoleId(), position.getBehaviour(), 0, useWeatherImpact?weather:Weather.UNKNOWN);
 
-                    byte[] alternativePositions = player.getAlternativeBestPositions();
+//                    float value = player.calcPosValue(position.getPosition(), true, weather, useWeatherImpact);
+
+                    var alternativePositions = player.getAlternativeBestPositions();
                     boolean bestPosition = false;
                     for (byte altPos : alternativePositions) {
                         if (altPos == position.getPosition()) {
@@ -667,7 +666,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         }
                     }
 
-                    item.setValues(spielerName, value, player, bestPosition);
+                    item.setValues(spielerName,(float) value, player, bestPosition);
                     return item;
                 }
 

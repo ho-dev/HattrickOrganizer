@@ -2,16 +2,12 @@ package module.lineup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.Ratings;
-import core.model.Team;
 import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.rating.RatingPredictionManager;
 import core.util.HOLogger;
 import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
@@ -25,7 +21,6 @@ import java.util.stream.Collectors;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -144,10 +139,6 @@ public class Lineup{
 	private int m_iRegionId = -1;
 	private Weather m_cWeather = Weather.NULL;
 	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
-
-
-	private Ratings oRatings;
-
 	private long ratingRevision=0;
 
 	// ~ Constructors
@@ -299,44 +290,45 @@ public class Lineup{
 				GoalDiffCriteria.parse(properties.getProperty(prefix + "standing")));
 	}
 
-	/**
-	 * get the tactic level for AiM/AoW
-	 * 
-	 * @return tactic level
-	 */
-	public final float getTacticLevelAimAow() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelAowAim());
-	}
-
-	/**
-	 * get the tactic level for counter
-	 * 
-	 * @return tactic level
-	 */
-	public final float getTacticLevelCounter() {
-		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam())).getTacticLevelCounter();
-	}
-
-	/**
-	 * get the tactic level for pressing
-	 * 
-	 * @return tactic level
-	 */
-	public final float getTacticLevelPressing() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelPressing());
-	}
-
-	/**
-	 * get the tactic level for Long Shots
-	 * 
-	 * @return tactic level
-	 */
-	public final float getTacticLevelLongShots() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
-	}
-	public final float getTacticLevelCreative() {
-		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelCreative());
-	}
+//	/**
+//	 * get the tactic level for AiM/AoW
+//	 *
+//	 * @return tactic level
+//	 */
+//	public final float getTacticLevelAimAow() {
+//		return HOVerwaltung.instance().getModel().getRatingPredictionModel().getTacticRating()
+//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelAowAim());
+//	}
+//
+//	/**
+//	 * get the tactic level for counter
+//	 *
+//	 * @return tactic level
+//	 */
+//	public final float getTacticLevelCounter() {
+//		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam())).getTacticLevelCounter();
+//	}
+//
+//	/**
+//	 * get the tactic level for pressing
+//	 *
+//	 * @return tactic level
+//	 */
+//	public final float getTacticLevelPressing() {
+//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelPressing());
+//	}
+//
+//	/**
+//	 * get the tactic level for Long Shots
+//	 *
+//	 * @return tactic level
+//	 */
+//	public final float getTacticLevelLongShots() {
+//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
+//	}
+//	public final float getTacticLevelCreative() {
+//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelCreative());
+//	}
 
 	/**
 	 * Setter for property m_iAttitude.
@@ -391,7 +383,7 @@ public class Lineup{
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
 					int curPlayerId = player.getPlayerID();
-					float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup()
+					float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeam().getLineup()
 							.getAverageExperience(curPlayerId);
 					if (maxValue < curCaptainsValue) {
 						maxValue = curCaptainsValue;
@@ -422,11 +414,13 @@ public class Lineup{
 		}
 
 		if (players != null) {
+			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), noKeeper)) {
-					double sp = (double) player.getSPskill()
-							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
-							+ RatingPredictionManager.getLoyaltyEffect(player);
+//					double sp = (double) player.getSPskill()
+//							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
+//							+ RatingPredictionManager.getLoyaltyEffect(player);
+					var sp = ratingPredictionModel.getPlayerSetPiecesStrength(player);
 					if (sp > maxStandard) {
 						maxStandard = sp;
 						form = player.getForm();
@@ -480,63 +474,66 @@ public class Lineup{
 		return value;
 	}
 
-	public void setRatings() {
-		final RatingPredictionManager rpManager;
-		Ratings oRatings = new Ratings();
-		boolean bForm = true;
+//	public void setRatings() {
+//		final RatingPredictionManager rpManager;
+//		Ratings oRatings = new Ratings();
+//		boolean bForm = true;
+//
+//		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
+//			var hoModel = HOVerwaltung.instance().getModel();
+//			var ratingPredictionModel = hoModel.getRatingPredictionModel();
+//			var lineup = hoModel.getLineupWithoutRatingRecalc();
+//			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam());
+//			oRatings.setLeftDefense(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Left, 90));
+//			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
+//			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
+//			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
+//			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
+//			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
+//			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
+//			oRatings.computeHatStats();
+//			oRatings.computeLoddarStats();
+//			this.oRatings = oRatings;
+//		} else {
+//			this.oRatings = new Ratings();
+//		}
+//	}
 
-		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
-			rpManager = new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam());
-			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
-			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
-			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
-			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
-			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
-			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
-			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
-			oRatings.computeHatStats();
-			oRatings.computeLoddarStats();
-			this.oRatings = oRatings;
-		} else {
-			this.oRatings = new Ratings();
-		}
-	}
-
-	/**
-	 * This version of the function is called during HOModel creation to avoid back looping
-	 */
-	 public void setRatings(int hrfID) {
-		 final RatingPredictionManager rpManager;
-		 Ratings oRatings = new Ratings();
-		 boolean bForm = true;
-
-		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
-			Team _team = DBManager.instance().getTeam(hrfID);
-			rpManager = new RatingPredictionManager(this, _team);
-			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
-			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
-			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
-			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
-			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
-			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
-			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
-			oRatings.computeHatStats();
-			oRatings.computeLoddarStats();
-			this.oRatings = oRatings;
-		}
-		else {
-			this.oRatings = new Ratings(); }
-	}
+//	/**
+//	 * This version of the function is called during HOModel creation to avoid back looping
+//	 */
+//	 public void setRatings(int hrfID) {
+//		 final RatingPredictionManager rpManager;
+//		 Ratings oRatings = new Ratings();
+//		 boolean bForm = true;
+//
+//		if ((HOVerwaltung.instance().getModel() != null) && HOVerwaltung.instance().getModel().getID() != -1) {
+//			Team _team = DBManager.instance().getTeam(hrfID);
+//			rpManager = new RatingPredictionManager(this, _team);
+//			oRatings.setLeftDefense(rpManager.getLeftDefenseRatings(bForm, true));
+//			oRatings.setCentralDefense(rpManager.getCentralDefenseRatings(bForm, true));
+//			oRatings.setRightDefense(rpManager.getRightDefenseRatings(bForm, true));
+//			oRatings.setMidfield(rpManager.getMFRatings(bForm, true));
+//			oRatings.setLeftAttack(rpManager.getLeftAttackRatings(bForm, true));
+//			oRatings.setCentralAttack(rpManager.getCentralAttackRatings(bForm, true));
+//			oRatings.setRightAttack(rpManager.getRightAttackRatings(bForm, true));
+//			oRatings.computeHatStats();
+//			oRatings.computeLoddarStats();
+//			this.oRatings = oRatings;
+//		}
+//		else {
+//			this.oRatings = new Ratings(); }
+//	}
 
 
 
-	public Ratings getRatings() {
-		    if(oRatings == null)
-			{
-				setRatings();
-			}
-			return oRatings;
-		}
+//	public Ratings getRatings() {
+//		    if(oRatings == null)
+//			{
+//				setRatings();
+//			}
+//			return oRatings;
+//		}
 
 
 
@@ -904,7 +901,7 @@ public class Lineup{
 		final MatchLineupPosition pos = getPositionById(positionsid);
 		if (pos != null) {
 			setSpielerAtPosition(positionsid, spielerid);
-			pos.setTaktik(tactic);
+			pos.setBehaviour(tactic);
 
 			pos.getPosition();
 		}
@@ -1096,16 +1093,16 @@ public class Lineup{
 		return IMatchRoleID.UNKNOWN;
 	}
 
-	public final float getTacticLevel(int type) {
-		return switch (type) {
-			case IMatchDetails.TAKTIK_PRESSING -> getTacticLevelPressing();
-			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
-			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
-			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
-			case IMatchDetails.TAKTIK_CREATIVE -> getTacticLevelCreative();
-			default -> 0.0f;
-		};
-	}
+//	public final float getTacticLevel(int type) {
+//		return switch (type) {
+//			case IMatchDetails.TAKTIK_PRESSING -> getTacticLevelPressing();
+//			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
+//			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
+//			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
+//			case IMatchDetails.TAKTIK_CREATIVE -> getTacticLevelCreative();
+//			default -> 0.0f;
+//		};
+//	}
 
 	/**
 	 * Setter for property m_iTacticType.
@@ -1173,66 +1170,31 @@ public class Lineup{
 		setAutoKapitaen(null);
 	}
 
-	/**
-	 * Clone this lineup, creates and returns a new Lineup object.
-	 */
-	public final @NotNull Lineup duplicate() {
-
-		Lineup clone = new Lineup();
-		clone.setPenaltyTakers(getPenaltyTakers());
-		clone.setLocation(getLocation());
-		clone.setPullBackMinute(getPullBackMinute());
-		clone.setWeather(getWeather());
-		clone.setWeatherForecast(getWeatherForecast());
-		clone.setArenaId(getArenaId());
-		clone.setRegionId(getRegionId());
-
-		clone.m_vFieldPositions = copyPositions(m_vFieldPositions);
-		clone.m_vBenchPositions = copyPositions(m_vBenchPositions);
-		clone.setKicker(this.getKicker());
-		clone.setCaptain(this.getCaptain());
-		clone.setTacticType(this.getTacticType());
-		clone.setAttitude(this.getAttitude());
-		clone.setStyleOfPlay(this.getCoachModifier());
-
-		clone.substitutions = copySubstitutions();
-		return clone;
-	}
-
-	private Vector<MatchLineupPosition> copyPositions(Vector<MatchLineupPosition> positions) {
-		Vector<MatchLineupPosition> ret = new Vector<>();
-		for (var p : positions) {
-			ret.add(new MatchLineupPosition(p.getRoleId(),
-					p.getPlayerId(),
-					p.getBehaviour(),
-					p.getRating(),
-					p.getSpielerVName(),
-					p.getNickName(),
-					p.getSpielerName(),
-					p.getStatus(),
-					p.getRatingStarsEndOfMatch(),
-					p.getStartPosition(),
-					p.getStartBehavior(),
-					p.isStartSetPiecesTaker()));
-		}
-		return ret;
-	}
-
-	private List<Substitution> copySubstitutions() {
-		var ret = new ArrayList<Substitution>();
-		for ( var s: this.substitutions) {
-			ret.add(new Substitution(s.getPlayerOrderId(),
-					s.getObjectPlayerID(),
-					s.getSubjectPlayerID(),
-					s.getOrderType().getId(),
-					s.getMatchMinuteCriteria(),
-					s.getRoleId(),
-					s.getBehaviour(),
-					s.getRedCardCriteria(),
-					s.getStanding()));
-		}
-		return ret;
-	}
+//	/**
+//	 * Clone this lineup, creates and returns a new Lineup object.
+//	 */
+//	public final @NotNull Lineup duplicate() {
+//
+//		Lineup clone = new Lineup();
+//		clone.setPenaltyTakers(getPenaltyTakers());
+//		clone.setLocation(getLocation());
+//		clone.setPullBackMinute(getPullBackMinute());
+//		clone.setWeather(getWeather());
+//		clone.setWeatherForecast(getWeatherForecast());
+//		clone.setArenaId(getArenaId());
+//		clone.setRegionId(getRegionId());
+//
+//		clone.m_vFieldPositions = copyPositions(m_vFieldPositions);
+//		clone.m_vBenchPositions = copyPositions(m_vBenchPositions);
+//		clone.setKicker(this.getKicker());
+//		clone.setCaptain(this.getCaptain());
+//		clone.setTacticType(this.getTacticType());
+//		clone.setAttitude(this.getAttitude());
+//		clone.setStyleOfPlay(this.getCoachModifier());
+//
+//		clone.substitutions = copySubstitutions();
+//		return clone;
+//	}
 
 	public final String getCurrentTeamFormationString() {
 		final int iNbDefs = getNbDefenders();
@@ -1500,7 +1462,7 @@ public class Lineup{
 		return ret;
 	}
 
-	public Set<Byte> getLineupChangeMinutes(){
+	public Set<Integer> getLineupChangeMinutes(){
 		return this.substitutions.stream().map(Substitution::getMatchMinuteCriteria).collect(Collectors.toSet());
 	}
 
@@ -1580,98 +1542,98 @@ public class Lineup{
 		return roleId;
 	}
 
-	/**
-	 * Amend the lineup by applying the Given MatchOrder
-	 */
-	public void UpdateLineupWithMatchOrder(Substitution sub) {
-		MatchRoleID matchRoleIDPlayer, matchRoleIDAffectedPlayer;
-		int newRoleId;
-		byte tactic;
-
-		Player ObjectPlayer;
-		switch (sub.getOrderType()) {
-			case SUBSTITUTION:
-				matchRoleIDAffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDAffectedPlayer == null) {
-					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
-					break;
-				}
-
-				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-				if (matchRoleIDPlayer == null) {
-					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
-					break;
-				}
-				ObjectPlayer = this.getPlayerByPositionID(matchRoleIDPlayer.getId());
-				if (ObjectPlayer == null) {
-					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
-					break;
-				}
-				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
-				tactic = sub.getBehaviour();
-				if (tactic == -1) tactic = matchRoleIDAffectedPlayer.getTactic();
-				newRoleId = sub.getRoleId();
-				if ( newRoleId != -1 ) {
-					var posid = getPositionById(newRoleId);
-					if (  posid != null && posid.getPlayerId() == 0){
-						if ( newRoleId != matchRoleIDAffectedPlayer.getId() ) {
-							setSpielerAtPosition(matchRoleIDAffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
-						}
-					} else {
-						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
-						break;
-					}
-				} else {
-					newRoleId = matchRoleIDAffectedPlayer.getId();
-				}
-				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
-				break;
-
-			case POSITION_SWAP:
-				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-				if (matchRoleIDAffectedPlayer != null && matchRoleIDPlayer != null) {
-					matchRoleIDAffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
-					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
-				} else {
-					if (matchRoleIDAffectedPlayer == null) {
-						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
-					}
-					if (matchRoleIDPlayer == null) {
-						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
-					}
-				}
-				break;
-
-			case NEW_BEHAVIOUR:
-				newRoleId = sub.getRoleId();
-				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-				if (matchRoleIDAffectedPlayer == null) {
-					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
-					break;
-				}
-				if (newRoleId == -1) {
-					newRoleId = matchRoleIDAffectedPlayer.getId();
-				} else if (newRoleId != matchRoleIDAffectedPlayer.getId()) {
-					var pos = getPositionById(newRoleId);
-					if (pos != null && pos.getPlayerId() > 0) {
-						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
-						break;
-					}
-				}
-				tactic = sub.getBehaviour();
-				if (tactic == -1) tactic = MatchRoleID.NORMAL;
-				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
-				break;
-
-			case MAN_MARKING:
-				// TODO: handle man marking orders
-				break;
-			default:
-				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
-				break;
-		}
-	}
+//	/**
+//	 * Amend the lineup by applying the Given MatchOrder
+//	 */
+//	public void UpdateLineupWithMatchOrder(Substitution sub) {
+//		MatchRoleID matchRoleIDPlayer, matchRoleIDAffectedPlayer;
+//		int newRoleId;
+//		byte tactic;
+//
+//		Player ObjectPlayer;
+//		switch (sub.getOrderType()) {
+//			case SUBSTITUTION:
+//				matchRoleIDAffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
+//				if (matchRoleIDAffectedPlayer == null) {
+//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
+//					break;
+//				}
+//
+//				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
+//				if (matchRoleIDPlayer == null) {
+//					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
+//					break;
+//				}
+//				ObjectPlayer = this.getPlayerByPositionID(matchRoleIDPlayer.getId());
+//				if (ObjectPlayer == null) {
+//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
+//					break;
+//				}
+//				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
+//				tactic = sub.getBehaviour();
+//				if (tactic == -1) tactic = matchRoleIDAffectedPlayer.getTactic();
+//				newRoleId = sub.getRoleId();
+//				if ( newRoleId != -1 ) {
+//					var posid = getPositionById(newRoleId);
+//					if (  posid != null && posid.getPlayerId() == 0){
+//						if ( newRoleId != matchRoleIDAffectedPlayer.getId() ) {
+//							setSpielerAtPosition(matchRoleIDAffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
+//						}
+//					} else {
+//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
+//						break;
+//					}
+//				} else {
+//					newRoleId = matchRoleIDAffectedPlayer.getId();
+//				}
+//				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
+//				break;
+//
+//			case POSITION_SWAP:
+//				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
+//				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
+//				if (matchRoleIDAffectedPlayer != null && matchRoleIDPlayer != null) {
+//					matchRoleIDAffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
+//					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
+//				} else {
+//					if (matchRoleIDAffectedPlayer == null) {
+//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
+//					}
+//					if (matchRoleIDPlayer == null) {
+//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
+//					}
+//				}
+//				break;
+//
+//			case NEW_BEHAVIOUR:
+//				newRoleId = sub.getRoleId();
+//				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
+//				if (matchRoleIDAffectedPlayer == null) {
+//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
+//					break;
+//				}
+//				if (newRoleId == -1) {
+//					newRoleId = matchRoleIDAffectedPlayer.getId();
+//				} else if (newRoleId != matchRoleIDAffectedPlayer.getId()) {
+//					var pos = getPositionById(newRoleId);
+//					if (pos != null && pos.getPlayerId() > 0) {
+//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
+//						break;
+//					}
+//				}
+//				tactic = sub.getBehaviour();
+//				if (tactic == -1) tactic = MatchRoleID.NORMAL;
+//				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
+//				break;
+//
+//			case MAN_MARKING:
+//				// TODO: handle man marking orders
+//				break;
+//			default:
+//				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
+//				break;
+//		}
+//	}
 
 	public void adjustBackupPlayers() {
 		Player player = this.getPlayerByPositionID(IMatchRoleID.substGK1);

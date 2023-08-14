@@ -168,7 +168,7 @@ public class HOModel {
     public final void setLineup(@Nullable MatchLineupTeam lineup) {
         if (lineup != null) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
-            if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
+            if (lineup.getTeamName().isEmpty()) lineup.setTeamName(getBasics().getTeamName());
             calcStyleOfPlay();
         }
         m_clAufstellung = lineup;
@@ -181,14 +181,14 @@ public class HOModel {
 
     //--------- Lineup ----------------------------------
 
-    /**
-     * returns the lineup (setRatings is called)
-     */
-    public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
-        getCurrentLineupTeam();
-        m_clAufstellung.getLineup().setRatings();
-        return m_clAufstellung;
-    }
+//    /**
+//     * returns the lineup (setRatings is called)
+//     */
+//    public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
+//        getCurrentLineupTeam();
+//        m_clAufstellung.getLineup().setRatings();
+//        return m_clAufstellung;
+//    }
 
     private void calcStyleOfPlay() {
         if (m_clAufstellung != null) {
@@ -219,7 +219,7 @@ public class HOModel {
     /**
      * returns the lineup
      */
-    public final @NotNull Lineup getLineupWithoutRatingRecalc() {
+    public final @NotNull Lineup getCurrentLineup() {
         var team = getCurrentLineupTeam();
         return team.getLineup();
     }

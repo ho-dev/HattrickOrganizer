@@ -13,6 +13,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -32,8 +33,6 @@ public class CopyListener implements ActionListener {
 	private static final String LF = System.getProperty("line.separator", "\n");
 	private static final String EMPTY = "";
 	private static final String SPACE = " ";
-	private static final String O_BRACKET = "(";
-	private static final String C_BRACKET = ")";
 	private final JMenuItem miPlaintext = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.PlainText"));
 	private final JMenuItem miHattickMLDef = new JMenuItem(HOVerwaltung.instance().getLanguageString("Lineup.CopyRatings.HattrickML"));
 	private final JMenuItem miLineup = new JMenuItem(HOVerwaltung.instance().getLanguageString("Aufstellung"));
@@ -139,7 +138,7 @@ public class CopyListener implements ActionListener {
 	private String getLineupRatingPanel() {
 		if (lineupRatingPanel == null) return EMPTY;
 	  	//LineupPositionsPanel lPanel = HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel();
-		ArrayList<PlayerPositionPanel> pos = HOMainFrame.instance().getLineupPanel().getAllPositions();
+		ArrayList<PlayerPositionPanel> pos = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAllPositions();
 		String goalie, rightWB, rightCD, middleCD, leftCD, leftWB, rightW, rightIM, middleIM, leftIM, leftW, rightFW, middleFW, leftFW;
 		goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
 		for (PlayerPositionPanel p : pos) {
@@ -168,14 +167,10 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		var lineupData = hov.getModel().getCurrentLineupTeamRecalculated().getLineup();
+		var lineupData = hov.getModel().getCurrentLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
-		int tacticType = lineupData.getTacticType();
-		String tacticName = Matchdetails.getShortTacticName(tacticType);
-		int tacticLevel = (int) lineupData.getTacticLevel(tacticType);
-		String level = (tacticLevel != 0) ? SPACE + O_BRACKET + tacticLevel + C_BRACKET : EMPTY;
-		
+
 		String header = "[table][tr][th colspan=5 align=center]" + hov.getLanguageString("Aufstellung") + 
 					SPACE + systemName + "[/th][/tr]" + LF;
 		String keeper = "[tr][td colspan=5 align=center]" + goalie + "[/td][/tr]" + LF;
@@ -221,12 +216,13 @@ public class CopyListener implements ActionListener {
 			}
 		}
 		HOVerwaltung hov = HOVerwaltung.instance();
-		Lineup lineupData = hov.getModel().getCurrentLineupTeamRecalculated().getLineup();
+		Lineup lineupData = hov.getModel().getCurrentLineup();
 		byte system = lineupData.getCurrentTeamFormationCode();
 		String systemName = lineupData.getSystemName(system);
 		int tacticType = lineupData.getTacticType();
 		String tacticName = Matchdetails.getShortTacticName(tacticType);
-		int tacticLevel = (int) lineupData.getTacticLevel(tacticType);
+		var ratingPredictionModel = hov.getModel().getRatingPredictionModel();
+		var tacticLevel = ratingPredictionModel.getTacticRating(lineupData, 0);
 		String level = (tacticLevel != 0) ? " (" + tacticLevel + ")" : "";
 		int attitude = lineupData.getAttitude();
 		String attitudeName = lineupData.getAttitudeName(attitude);

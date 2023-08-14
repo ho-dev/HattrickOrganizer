@@ -2,7 +2,6 @@ package module.lineup.ratings;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
@@ -24,11 +23,11 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private final class SingleChart {
 
 		private HOLinesChart oChartPanel;
-		private LinesChartDataModel[] data = new LinesChartDataModel[2];
-		private double[] m_Data;
-		private double m_AvgValue;
-		private NumberFormat m_fmt;
-		private final String m_SerieName;
+		private final LinesChartDataModel[] data = new LinesChartDataModel[2];
+		private final double[] m_Data;
+		private final double m_AvgValue;
+		private final NumberFormat m_fmt;
+		private final String m_SeriesName;
 		private final boolean m_isType2;
 
 		public SingleChart(double avgValue, double[] values, NumberFormat format, String serieName) {
@@ -38,7 +37,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		public SingleChart(double avgValue, double[] values, NumberFormat format, String serieName, boolean bType2) {
 			m_Data = values;
 			m_fmt = format;
-			m_SerieName = serieName;
+			m_SeriesName = serieName;
 			m_isType2 = bType2;
 			m_AvgValue = avgValue;
 			initComponents();
@@ -63,9 +62,9 @@ public final class MultipleRatingChartsPanel extends JPanel {
 			data1.setNotVisibleLegend();
 			data[1] = data1;
 
-			oChartPanel = new HOLinesChart(false, m_SerieName, null, null, null, null, null, null, null, false);
+			oChartPanel = new HOLinesChart(false, m_SeriesName, null, null, null, null, null, null, null, false);
 			oChartPanel.setAllValues(data, xAxisDataCaptions, false, showHelpLines.isSelected());
-			oChartPanel.setTitle(m_SerieName);
+			oChartPanel.setTitle(m_SeriesName);
 		}
 
 		public void setHelpLines(boolean state) {
@@ -81,12 +80,11 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		}
 	}
 
-	private HOVerwaltung hov = HOVerwaltung.instance();
-	private UserParameter userParameter = UserParameter.instance();
-	private JPanel controlsPanel = new JPanel();
-	private JPanel chartsPanel = new JPanel(new GridBagLayout());
-	private JCheckBox showHelpLines = new JCheckBox(Helper.getTranslation("Hilflinien"), userParameter.MultipleRatingChartsPanel_HelpLines);
-	private RatingChartData chartData;
+	private final UserParameter userParameter = UserParameter.instance();
+	private final JPanel controlsPanel = new JPanel();
+	private final JPanel chartsPanel = new JPanel(new GridBagLayout());
+	private final JCheckBox showHelpLines = new JCheckBox(Helper.getTranslation("Hilflinien"), userParameter.MultipleRatingChartsPanel_HelpLines);
+	private final RatingChartData chartData;
 	private ArrayList<Integer> xAxisDataCaptions;
 	private SingleChart leftDefense;
 	private SingleChart centralDefense;
@@ -118,15 +116,15 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		
-		leftDefense = new SingleChart(chartData.getLeftDefenseAvg(), chartData.getLeftDefense(),fmt , Helper.getTranslation("ls.match.ratingsector.leftdefence"));
+		leftDefense = new SingleChart(chartData.getLeftDefenceAvg(), chartData.getLeftDefence(),fmt , Helper.getTranslation("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 1;
-		centralDefense = new SingleChart(chartData.getCentralDefenseAvg(), chartData.getCentralDefense(),	fmt, Helper.getTranslation("ls.match.ratingsector.centraldefence"));
+		centralDefense = new SingleChart(chartData.getCentralDefenceAvg(), chartData.getCentralDefence(),	fmt, Helper.getTranslation("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 2;
-		rightDefense = new SingleChart(chartData.getRightDefenseAvg(), chartData.getRightDefense(),	Helper.DEFAULTDEZIMALFORMAT, Helper.getTranslation("ls.match.ratingsector.rightdefence"));
+		rightDefense = new SingleChart(chartData.getRightDefenceAvg(), chartData.getRightDefence(),	Helper.DEFAULTDEZIMALFORMAT, Helper.getTranslation("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 0;

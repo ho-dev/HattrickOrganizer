@@ -4,6 +4,7 @@ package core.gui.model;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
+import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
@@ -20,12 +21,12 @@ import javax.swing.table.TableColumn;
  * @author Thorsten Dietz
  * @since 1.36
  */
-class PlayerPositionColumn extends PlayerColumn {
+public class PlayerPositionColumn extends PlayerColumn {
 
     /**
      * position id
      **/
-    private byte position;
+    private final byte position;
 
     /**
      * constructor
@@ -57,11 +58,10 @@ class PlayerPositionColumn extends PlayerColumn {
      * @return
      */
     public ColorLabelEntry getEntryValue(Player player) {
-        ColorLabelEntry temp = new ColorLabelEntry(player.calcPosValue(position, true, null, false),
-                getBackgroundColor(), false,
-                core.model.UserParameter.instance().nbDecimals);
-
-        byte[] alternativePosition = player.getAlternativeBestPositions();
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var r = ratingPredictionModel.getPlayerRating(player, position);
+        ColorLabelEntry temp = new ColorLabelEntry(r, getBackgroundColor(), false, core.model.UserParameter.instance().nbDecimals);
+        var alternativePosition = player.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
             if (altPos == position) {
                 temp.setBold(true);
@@ -86,9 +86,10 @@ class PlayerPositionColumn extends PlayerColumn {
                     getBackgroundColor(),
                     SwingConstants.RIGHT);
         }
-
-        return new ColorLabelEntry(player.calcPosValue(position, true, null, false)
-                - comparePlayer.calcPosValue(position, true, null, false),
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var playerRating = ratingPredictionModel.getPlayerRating(player, position);
+        var comparePlayerRating = ratingPredictionModel.getPlayerRating(comparePlayer, position);
+        return new ColorLabelEntry((float) (playerRating - comparePlayerRating),
                 getBackgroundColor(), false, false,
                 core.model.UserParameter.instance().nbDecimals);
 
@@ -105,16 +106,10 @@ class PlayerPositionColumn extends PlayerColumn {
     }
 
     private Color getBackgroundColor() {
-        switch (position) {
-            case IMatchRoleID.KEEPER:
-            case IMatchRoleID.CENTRAL_DEFENDER:
-            case IMatchRoleID.BACK:
-            case IMatchRoleID.MIDFIELDER:
-            case IMatchRoleID.WINGER:
-            case IMatchRoleID.FORWARD:
-                return ColorLabelEntry.BG_PLAYERSPOSITIONVALUES;
-            default:
-                return ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES;
-        }
+        return switch (position) {
+            case IMatchRoleID.KEEPER, IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.BACK, IMatchRoleID.MIDFIELDER, IMatchRoleID.WINGER, IMatchRoleID.FORWARD ->
+                    ColorLabelEntry.BG_PLAYERSPOSITIONVALUES;
+            default -> ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES;
+        };
     }
 }

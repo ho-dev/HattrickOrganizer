@@ -68,7 +68,7 @@ public class SubstitutionEditView extends JPanel {
 			var v = (int) value;
 			if (precision == 1) return "" + v;
 			var f = (int) (value * precision) % precision;
-			return "" + v + "." + f;
+			return v + "." + f;
 		}
 
 		public JLabel getLabelField() {
@@ -137,10 +137,14 @@ public class SubstitutionEditView extends JPanel {
 	}
 
 	private Double hatstats() {
-		return Double.valueOf(lineup.getRatings().getHatStats().get(-90d));	// 90 minutes average
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		return ratingPredictionModel.getAverage90HatStats(lineup);
+		//return Double.valueOf(lineup.getRatings().getHatStats().get(-90d));	// 90 minutes average
 	}
 	private Double loddarstats() {
-		return lineup.getRatings().getLoddarStat().get(-90d);	// 90 minutes average
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		return ratingPredictionModel.getAverage90LoddarStats(lineup);
+//		return lineup.getRatings().getLoddarStat().get(-90d);	// 90 minutes average
 	}
 
 	/**
@@ -202,7 +206,7 @@ public class SubstitutionEditView extends JPanel {
 			Helper.setComboBoxFromID(this.behaviourComboBox, sub.getBehaviour());
 			Helper.setComboBoxFromID(this.redCardsComboBox, sub.getRedCardCriteria().getId());
 			Helper.setComboBoxFromID(this.standingComboBox, sub.getStanding().getId());
-			this.whenTextField.setValue((int) sub.getMatchMinuteCriteria());
+			this.whenTextField.setValue(sub.getMatchMinuteCriteria());
 		}
 		initDone = true;
 	}
@@ -273,7 +277,7 @@ public class SubstitutionEditView extends JPanel {
 		this.substitution = getSubstitution(-1);
 		if (substitution.getSubjectPlayerID() !=  -1 &&
 				(this.orderType == MatchOrderType.NEW_BEHAVIOUR || substitution.getObjectPlayerID() != -1)) {
-			this.lineup.setRatings();
+//			this.lineup.setRatings();
 			this.effectOnHatstats.setNewValue(hatstats());
 			this.effectOnLoddarstats.setNewValue(loddarstats());
 		}

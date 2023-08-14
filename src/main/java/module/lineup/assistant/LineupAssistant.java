@@ -7,12 +7,15 @@ import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.rating.RatingPredictionModel;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
 import java.util.stream.Collectors;
+
+import static core.rating.RatingPredictionModel.getBehaviour;
 
 public class LineupAssistant {
 	/** Order for lineup assistent */
@@ -22,7 +25,6 @@ public class LineupAssistant {
 	public static final byte MF_AW_ST = 3;
 	public static final byte ST_AW_MF = 4;
 	public static final byte ST_MF_AW = 5;
-	private Weather weather = Weather.PARTIALLY_CLOUDY;
 
 	public LineupAssistant() {
 	}
@@ -66,7 +68,6 @@ public class LineupAssistant {
 							   boolean bSuspended, Weather weather) {
 
 		lPositions = filterPositions(lPositions);
-		this.weather = weather;
 
 		// only setup player in ideal position
 		if (idealPosFirst) {
@@ -327,7 +328,7 @@ public class LineupAssistant {
 	public final void resetPositionOrders(Vector<MatchLineupPosition> positions) {
 		if ( positions==null) return;
 		for  ( var pos : positions){
-			pos.setTaktik((byte)0);
+			pos.setBehaviour((byte)0);
 		}
 	}
 
@@ -355,27 +356,29 @@ public class LineupAssistant {
 	protected final Player getBestPlayerForPosition(byte position, boolean considerForm,
 													boolean ignoredInjury, boolean ignoreRedCarded, List<Player> players,
 													List<MatchLineupPosition> positions) {
-		Player player;
 		Player bestPlayer = null;
-		float maxRating = -1.0f;
-		float currentRating;
+		double maxRating = -1.0f;
 
-		for (int i = 0; (players != null) && (i < players.size()); i++) {
-			player = players.get(i);
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 
-			// stk inklusive Wetter effekt errechnen
-			currentRating = player.calcPosValue(position, considerForm, weather, true);
+		if ( players != null) {
+			for ( var player : players){
 
-			if ((!isPlayerInLineup(player.getPlayerID(), positions))
-					&& ((bestPlayer == null) || (maxRating < currentRating))
-					&& ((ignoreRedCarded) || (!player.isRedCarded()))
-					&& ((ignoredInjury) || (player.getInjuryWeeks() < 1))
-					&& (player.getCanBeSelectedByAssistant())) {
-				bestPlayer = player;
-				maxRating = currentRating;
+				var r = ratingPredictionModel.getPlayerRating(player, RatingPredictionModel.getPlayerRatingPosition(position), getBehaviour(position));
+
+				// stk inklusive Wetter effekt errechnen
+//				currentRating = player.calcPosValue(position, considerForm, weather, true);
+
+				if ((!isPlayerInLineup(player.getPlayerID(), positions))
+						&& ((bestPlayer == null) || (maxRating < r))
+						&& ((ignoreRedCarded) || (!player.isRedCarded()))
+						&& ((ignoredInjury) || (player.getInjuryWeeks() < 1))
+						&& (player.getCanBeSelectedByAssistant())) {
+					bestPlayer = player;
+					maxRating = r;
+				}
 			}
 		}
-
 		return bestPlayer;
 	}
 
@@ -496,7 +499,6 @@ public class LineupAssistant {
 													 List<MatchLineupPosition> positions) {
 		MatchRoleID pos;
 		Player player;
-		final Vector<IMatchRoleID> zusPos = new Vector<>();
 
 		for (int i = 0; (positions != null) && (players != null) && (i < positions.size()); i++) {
 			pos = positions.get(i);

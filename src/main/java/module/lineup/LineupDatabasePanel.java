@@ -20,9 +20,8 @@ import java.util.Objects;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 public class LineupDatabasePanel extends JPanel implements Refreshable {
-    private final int MAX_PREVIOUS_LINEUP = 10;
 
-    private LineupPanel lineupPanel;
+    private final LineupPanel lineupPanel;
     private JComboBox<Team> m_jcbLoadLineup;
     private JCheckBox includeHTIntegrated;
     private JCheckBox includeTemplates;
@@ -169,6 +168,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         m_jcbLoadLineup.removeAllItems();
         Team oTeam;
         if (previousPlayedMatches == null || bForceRefresh || refreshMatchlist) {
+            int MAX_PREVIOUS_LINEUP = 10;
             previousPlayedMatches = DBManager.instance().getOwnPlayedMatchInfo(MAX_PREVIOUS_LINEUP, !includeHTIntegrated.isSelected());
         }
         if (includeTemplates.isSelected() && (templateLineups == null || bForceRefresh || refreshTemplates)) {
@@ -260,7 +260,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         }
         var name = templateName.getText();
         var lineupTeam = new MatchLineupTeam(MatchType.NONE, -1, name, templateId, 0);
-        lineupTeam.setLineup(HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
+        lineupTeam.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
         DBManager.instance().storeMatchLineupTeam(lineupTeam);
 
         if ( isNewTemplate) {

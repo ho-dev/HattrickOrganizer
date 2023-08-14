@@ -3,7 +3,6 @@ package module.lineup.ratings;
 import core.model.HOVerwaltung;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.rating.RatingPredictionManager;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +29,7 @@ public final class MinuteTogglerPanel extends JPanel {
 
 	private final List<JLabel> toggleKeys = new ArrayList<>();
 	private final List<JLabel> toggleKeysET = new ArrayList<>();
-	private List<Double> toggleLabels = null;
+	private List<Integer> toggleLabels = null;
 	private final LineupRatingPanel parent;
 	private int current = -1; //default to regular time average
 	
@@ -41,12 +40,12 @@ public final class MinuteTogglerPanel extends JPanel {
 	public void load() {
 		if (toggleLabels != null) return;
 		toggleLabels = new ArrayList<>();
-		for(double d = 0; d<=120;d+=5.0){
+		for(int d = 0; d<120;d+=5){
 			toggleLabels.add(d);
 		}
-		var EPSILON = 0.000001;
-		toggleLabels.add(45d+EPSILON);
-		toggleLabels.add(90d+EPSILON);
+//		var EPSILON = 0.000001;
+//		toggleLabels.add(45d+EPSILON);
+//		toggleLabels.add(90d+EPSILON);
 		// LABELs with substitution minutes
 		//toggleLabels = new ArrayList<>(HOVerwaltung.instance().getModel().getLineup().getRatings().getLeftDefense().keySet());
 		initComponents();
@@ -121,8 +120,8 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 		add(prevButton, constraints);
-		toggleLabels.remove(-90d);  //remove 90' and 120'
-		toggleLabels.remove(-120d); //average placeholder labels
+//		toggleLabels.remove(-90);  //remove 90' and 120'
+//		toggleLabels.remove(-120); //average placeholder labels
 		Collections.sort(toggleLabels);
 		for(final int[] i={0};i[0]<toggleLabels.size();i[0]++) {
 			JLabel toggleLabel = new JLabel(String.valueOf(toggleLabels.get(i[0]).longValue()), SwingConstants.CENTER);
@@ -144,18 +143,18 @@ public final class MinuteTogglerPanel extends JPanel {
 			if(i[0]%2 == 0) toggleLabel.setBackground(Color.LIGHT_GRAY);
 			else toggleLabel.setBackground(Color.WHITE);
 			toggleLabel.setOpaque(true);
-			if(toggleLabels.get(i[0]) == (45d + RatingPredictionManager.EPSILON)) {
-				toggleLabel.setText(String.valueOf(45));
-				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
-			}
-			if(toggleLabels.get(i[0]) == (90d + RatingPredictionManager.EPSILON)) {
-				toggleLabel.setText(String.valueOf(90));
-				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
-			}
-			if(toggleLabels.get(i[0]) <= 90d) {
+//			if(toggleLabels.get(i[0]) == (45d + RatingPredictionManager.EPSILON)) {
+//				toggleLabel.setText(String.valueOf(45));
+//				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
+//			}
+//			if(toggleLabels.get(i[0]) == (90d + RatingPredictionManager.EPSILON)) {
+//				toggleLabel.setText(String.valueOf(90));
+//				toggleLabel.setBorder(BorderFactory.createMatteBorder(0, 6, 0, 0, Color.RED));
+//			}
+			if(toggleLabels.get(i[0]) < 90) {
 				add(toggleLabel, constraints);
 				toggleKeys.add(toggleLabel);
-			} else if(toggleLabels.get(i[0]) <= 120d) {
+			} else if(toggleLabels.get(i[0]) < 120) {
 				toggleKeysET.add(toggleLabel);
 			}
 		}
@@ -262,9 +261,9 @@ public final class MinuteTogglerPanel extends JPanel {
 		target.setBackground(fg);
 	}
 
-	public Double getCurrentKey() {
+	public Integer getCurrentKey() {
 		if(current >= 0) return toggleLabels.get(current);
-		else if(current == -2) return -120d;
-		else return -90d;
+		else if(current == -2) return -120;
+		else return -90;
 	}
 }

@@ -34,6 +34,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import static core.model.player.IMatchRoleID.*;
 import static core.util.Helper.formatCurrency;
 import static core.util.Helper.parseCurrency;
 
@@ -178,7 +179,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             final core.model.player.Player tempPlayer = new core.model.player.Player();
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerID(getNextTempSpielerID());
-            if (jtfName.getText().trim().equals("")) {
+            if (jtfName.getText().trim().isEmpty()) {
                 tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             } else {
                 tempPlayer.setLastName(jtfName.getText());
@@ -382,49 +383,50 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
         tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         byte bIdealPosition = tempPlayer.getIdealPosition();
         jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
                 + " ("
-                +  tempPlayer.getIdealPositionStrength(true, true, 1, null, false)
-                + "%)");
-        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)) + "");
+                +  tempPlayer.getIdealPositionRating()
+                + ")");
+        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.keeper, NORMAL)));
         jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, NORMAL)));
         jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, TOWARDS_WING)));
         jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, OFFENSIVE)));
         jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, NORMAL)));
         jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, TOWARDS_MIDDLE)));
         jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, OFFENSIVE)));
         jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, DEFENSIVE)));
         jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, NORMAL)));
         jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, TOWARDS_WING)));
         jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, OFFENSIVE)));
         jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, DEFENSIVE)));
         jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, NORMAL)));
         jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, TOWARDS_MIDDLE)));
         jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, OFFENSIVE)));
         jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, DEFENSIVE)));
         jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, NORMAL)));
         jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, TOWARDS_WING)));
         jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)) + "");
+                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, DEFENSIVE)));
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         clScoutEntry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
@@ -545,13 +547,13 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         jtaCopyPaste.setText("");
 
-        if (message.equals("")) {
+        if (message.isEmpty()) {
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -563,7 +565,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                 default -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -575,7 +577,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
     private String getFieldsTextList(List<String> fields){
         StringBuilder errorFieldsTxt = new StringBuilder();
-        if (fields.size()>0){
+        if (!fields.isEmpty()){
             //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
