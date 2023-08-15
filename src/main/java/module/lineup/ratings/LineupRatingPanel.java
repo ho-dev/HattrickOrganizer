@@ -12,6 +12,7 @@ import core.rating.RatingPredictionModel;
 import core.util.Helper;
 import module.lineup.CopyListener;
 import module.lineup.Lineup;
+import module.lineup.LineupPanel;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -22,6 +23,8 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 
 public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable {
+
+    private final LineupPanel lineupPanel;
 
     class RatingPanel extends JPanel {
 
@@ -129,7 +132,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final JButton m_jbFeedbackButton = new JButton();
     private final Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
 
-    public LineupRatingPanel() {
+    public LineupRatingPanel(LineupPanel lineupPanel) {
+        this.lineupPanel = lineupPanel;
         initComponents();
 
         if (core.model.UserParameter.instance().nbDecimals == 1) {
@@ -545,6 +549,14 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         public abstract double loddar(Lineup lineup);
     }
 
+    public int getSelectedMatchMinute(){
+        return m_jpMinuteToggler.getCurrentKey();
+    }
+
+    public void refreshRatings(){
+        this.lineupPanel.update();
+    }
+
     public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
@@ -558,7 +570,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
             MinuteRating minuteRating;
             final int minute = m_jpMinuteToggler.getCurrentKey();
-            if ( minute < -0){
+            if (minute < 0) {
                 // -90 -> average
                 // -120 -> average incl. extra time
                 minuteRating = new MinuteRating() {
@@ -566,52 +578,53 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
                     public double get(Lineup lineup, RatingPredictionModel.RatingSector s) {
                         return ratingPredictionModel.getAverageRating(lineup, s, -minute);
                     }
+
                     @Override
-                    public double hatstats(Lineup lineup){
+                    public double hatstats(Lineup lineup) {
                         return ratingPredictionModel.getAverageHatStats(lineup, -minute);
                     }
 
                     @Override
-                    public double loddar(Lineup lineup){
+                    public double loddar(Lineup lineup) {
                         return ratingPredictionModel.getAverageLoddarStats(lineup, -minute);
                     }
                 };
-            }
-            else {
+            } else {
                 minuteRating = new MinuteRating() {
                     @Override
                     public double get(Lineup lineup, RatingPredictionModel.RatingSector s) {
                         return ratingPredictionModel.getRating(lineup, s, minute);
                     }
+
                     @Override
-                    public double hatstats(Lineup lineup){
+                    public double hatstats(Lineup lineup) {
                         return ratingPredictionModel.getHatStats(lineup, minute);
                     }
 
                     @Override
-                    public double loddar(Lineup lineup){
+                    public double loddar(Lineup lineup) {
                         return ratingPredictionModel.getLoddarStats(lineup, minute);
                     }
                 };
             }
 
 
-                m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Right));
-                m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Central));
-                m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Left));
-                m_jpMidfield.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Midfield));
-                m_jpLeftAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Left));
-                m_jpCentralAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Central));
-                m_jpRightAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Right));
+            m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Right));
+            m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Central));
+            m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Left));
+            m_jpMidfield.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Midfield));
+            m_jpLeftAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Left));
+            m_jpCentralAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Central));
+            m_jpRightAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Right));
 
-                setLoddar(Helper.round(minuteRating.loddar(currentLineup), 2));
-                setiHatStats((int)minuteRating.hatstats(currentLineup));
-                int iTacticType = currentLineup.getTacticType();
-                setTactic(iTacticType, (float)ratingPredictionModel.getTacticRating(currentLineup, minute));
-                setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
+            setLoddar(Helper.round(minuteRating.loddar(currentLineup), 2));
+            setiHatStats((int) minuteRating.hatstats(currentLineup));
+            int iTacticType = currentLineup.getTacticType();
+            setTactic(iTacticType, (float) ratingPredictionModel.getTacticRating(currentLineup, minute));
+            setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
 
-                // Recalculate Borders
-                calcRatingRatio();
+            // Recalculate Borders
+            calcRatingRatio();
         }
     }
 

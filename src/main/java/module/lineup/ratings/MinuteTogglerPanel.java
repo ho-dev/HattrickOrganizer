@@ -71,7 +71,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				current = -1;
 				avg90Clock.setIcon(whiteGreenClock);
 				revalidate();
-				parent.calculateRatings();
+				parent.refreshRatings();
 			}
 		});
 
@@ -85,7 +85,7 @@ public final class MinuteTogglerPanel extends JPanel {
 				current = -2;
 				avg120Clock.setIcon(whiteRedClock);
 				revalidate();
-				parent.calculateRatings();
+				parent.refreshRatings();
 			}
 		});
 
@@ -116,7 +116,7 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftBackward(1);
 				revalidate();
-				parent.calculateRatings();
+				parent.refreshRatings();
 			}
 		});
 		add(prevButton, constraints);
@@ -136,7 +136,7 @@ public final class MinuteTogglerPanel extends JPanel {
 					current = labelIndex;
 					reverseColor(toggleKeys.get(labelIndex));
 					revalidate();
-					parent.calculateRatings();
+					parent.refreshRatings();
 				}
 			});
 			toggleLabel.setForeground(Color.BLACK);
@@ -164,7 +164,7 @@ public final class MinuteTogglerPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				shiftForward(1);
 				revalidate();
-				parent.calculateRatings();
+				parent.refreshRatings();
 			}
 		});
 		add(nextButton, constraints);
@@ -186,7 +186,7 @@ public final class MinuteTogglerPanel extends JPanel {
 						reverseColor(key);
 						current = toggleKeys.size() - 1;
 						reverseColor(toggleKeys.get(current));
-						parent.calculateRatings();
+						parent.refreshRatings();
 					}
 				} else {
 					for(JLabel ETKey: toggleKeysET) {

@@ -874,7 +874,8 @@ public class RatingPredictionModel {
     }
 
     protected double calcSkillRating(double skill) {
-        return max(0, skill - 1);
+        var s = max(0, skill - 1);
+        return s; // + .015 * s * s;
     }
 
     protected boolean isRoleSideRestricted(int roleID, Side side, @NotNull SideRestriction sideRestriction) {
@@ -923,12 +924,12 @@ public class RatingPredictionModel {
 
     protected static void initRatingContributionParameterMap() {
         ratingContributionParameterMap = new HashMap<>();
-        initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.none, NORMAL, 0.599619047619048);
+        initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.none, NORMAL, .149904761904762);
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.Goal, SideRestriction.none, NORMAL, 0.069125);
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.thisSide_only, NORMAL, 0.147778142772);
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.thisSide_only, OFFENSIVE, 0.11367549444);
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.thisSide_only, TOWARDS_WING, 0.230192876241);
-        initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.middle_only, NORMAL, 0.73889071386);
+        initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.middle_only, NORMAL, .073889071386);
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.middle_only, OFFENSIVE, 0.05683774722);
 
         initAllSpecialties(RatingContributionParameter.SideDefence, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.thisSide_only, NORMAL, 0.261453637212);
