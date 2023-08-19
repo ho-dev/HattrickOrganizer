@@ -31,6 +31,7 @@
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
+* Update Install4j to latest version (10.0.6) (#1849)
 
 ## Translations
 
