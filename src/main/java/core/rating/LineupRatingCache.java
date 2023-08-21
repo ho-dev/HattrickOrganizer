@@ -21,6 +21,7 @@ abstract class LineupRatingCache extends HashMap<Long, Map<RatingPredictionModel
             }
         } else {
             sector = new HashMap<>();
+            revision.put(s, sector);
         }
 
         var ret = calc(lineup, s, minute);

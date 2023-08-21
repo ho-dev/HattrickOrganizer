@@ -561,7 +561,7 @@ public class XMLExporter  {
 		if (team == null) {
 			return -1;
 		}
-		return team.getTeamSpirit();
+		return team.getTeamSpiritLevel();
 	}
 	
 }

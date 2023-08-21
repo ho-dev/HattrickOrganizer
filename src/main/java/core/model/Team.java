@@ -64,6 +64,7 @@ public final class Team  extends AbstractTable.Storable {
 
 	private int m_iStaminaTrainingPart;
 	private int hrfId;
+	private long ratingRevision=0;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -214,6 +215,7 @@ public final class Team  extends AbstractTable.Storable {
 	 *            New value of property m_iSelbstvertrauen.
 	 */
 	public void setConfidence(int m_iSelbstvertrauen) {
+		ratingRevision++;
 		this.m_iSelbstvertrauen = m_iSelbstvertrauen;
 	}
 
@@ -232,7 +234,9 @@ public final class Team  extends AbstractTable.Storable {
 	 * @param m_iStimmung
 	 *            New value of property m_iStimmung.
 	 */
-	public void setTeamSpirit(int m_iStimmung) {
+	public void setTeamSpiritLevel(int m_iStimmung)
+	{
+		ratingRevision++;
 		this.m_iStimmungInt = m_iStimmung;
 	}
 
@@ -241,9 +245,10 @@ public final class Team  extends AbstractTable.Storable {
 	 * 
 	 * @return Value of property m_iStimmung.
 	 */
-	public int getTeamSpirit() {
+	public int getTeamSpiritLevel() {
 		return m_iStimmungInt;
 	}
+	public double getTeamSpirit(){return m_iStimmungInt + subStimmung/5.;}
 
 	/**
 	 * Setter for property m_iTrainingsArt.
@@ -308,6 +313,7 @@ public final class Team  extends AbstractTable.Storable {
 	 * Set the sublevel of the team spirit.
 	 */
 	public void setSubTeamSpirit(int i) {
+		ratingRevision++;
 		subStimmung = i;
 	}
 
@@ -317,5 +323,9 @@ public final class Team  extends AbstractTable.Storable {
 
 	public void setHrfId(int hrfId) {
 		this.hrfId = hrfId;
+	}
+
+	public long getRatingRevision() {
+		return ratingRevision;
 	}
 }

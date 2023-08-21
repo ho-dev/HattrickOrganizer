@@ -71,8 +71,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 	private JTextField c_jtfNumberHRF;
 	private HOLinesChart c_jpChart;
 
-	private final String sSum = "\u03A3 ";
-	private final String sAvg = "\u00D8 ";
+	private final String sSum = "Σ ";
+	private final String sAvg = "Ø ";
 
 	private final String avgRating = sAvg + HOVerwaltung.instance().getLanguageString("Rating");
 	private final String sumStars = sSum + HOVerwaltung.instance().getLanguageString("RecapPanel.Stars");
@@ -532,7 +532,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				int hrfid = DBManager.instance().getHRFID4Date(matchDateTimestamp);
 				var teamInfo = DBManager.instance().getTeam(hrfid);
 				int[] stimmungSelbstvertrauen  = {
-						teamInfo.getTeamSpirit(),
+						teamInfo.getTeamSpiritLevel(),
 						teamInfo.getConfidence()
 				};
 

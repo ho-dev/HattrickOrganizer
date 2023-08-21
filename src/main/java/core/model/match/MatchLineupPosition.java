@@ -304,8 +304,14 @@ public class MatchLineupPosition  extends MatchRoleID {
     }
 
     public Player getPlayer() {
-        if ( player == null && this.getPlayerId() != 0){
-            player = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId());
+
+        if ( player == null || this.getPlayerId() != player.getPlayerID()){
+            if (this.getPlayerId() != 0 ) {
+                player = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId());
+            }
+            else {
+                player = null;
+            }
         }
         return player;
     }

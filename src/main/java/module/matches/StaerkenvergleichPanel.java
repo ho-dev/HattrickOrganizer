@@ -209,7 +209,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 			int hrfid = DBManager.instance().getHRFID4Date(info.getMatchSchedule().toDbTimestamp());
 			var team = DBManager.instance().getTeam(hrfid);
 			String[] stimmungSelbstvertrauen  = {
-					TeamSpirit.toString(team.getTeamSpirit()),
+					TeamSpirit.toString(team.getTeamSpiritLevel()),
 					TeamConfidence.toString(team.getConfidence())
 			};
 

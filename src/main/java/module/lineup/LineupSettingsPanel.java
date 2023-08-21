@@ -116,7 +116,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
 		if (homodel.getTeam() != null) {
-			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
+			m_iRealTeamSpirit = homodel.getTeam().getTeamSpiritLevel();
 			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
 			m_iRealConfidence = homodel.getTeam().getConfidence();
 			m_iRealTrainerType = homodel.getTrainer().getTrainerTyp().toInt();
@@ -184,7 +184,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			m_jcbSubTeamSpirit.setEnabled(false);
 			m_jcbTeamConfidence.setEnabled(false);
 
-			homodel.getTeam().setTeamSpirit(6); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			homodel.getTeam().setTeamSpiritLevel(6); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 			homodel.getTeam().setSubTeamSpirit(2);
 			homodel.getTeam().setConfidence(6);  // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 
@@ -215,7 +215,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		var team = homodel.getTeam();
 		if ( team != null){
 			if(bLineupSimulation) {
-				setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
+				setTeamSpirit(team.getTeamSpiritLevel(), team.getSubTeamSpirit());
 				setConfidence(team.getConfidence());
 				setTrainerType(homodel.getTrainer().getTrainerTyp().toInt());
 			}
@@ -278,7 +278,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				var lineup = homodel.getCurrentLineup();
                 lineup.setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
             } else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
-				homodel.getTeam().setTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
+				homodel.getTeam().setTeamSpiritLevel(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
 				homodel.getTeam().setSubTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbTeamConfidence)) {
@@ -490,7 +490,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	}
 
 	public void resetSettings() {
-		homodel.getTeam().setTeamSpirit(m_iRealTeamSpirit);
+		homodel.getTeam().setTeamSpiritLevel(m_iRealTeamSpirit);
 		homodel.getTeam().setSubTeamSpirit(m_iRealSubTeamSpirit);
 		homodel.getTeam().setConfidence(m_iRealConfidence);
 		homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(m_iRealTrainerType));

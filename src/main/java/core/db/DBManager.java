@@ -1786,7 +1786,7 @@ public class DBManager {
 				// Stimmung und Selbstvertrauen
 				var team = getTeam(getHRFID4Date(filter));
 				final String[] sTSandConfidences = {
-						TeamSpirit.toString(team.getTeamSpirit()),
+						TeamSpirit.toString(team.getTeamSpiritLevel()),
 						TeamConfidence.toString(team.getConfidence())
 				};
 				//Only if player data has been found, pass it into the return vector
