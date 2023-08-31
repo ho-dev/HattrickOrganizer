@@ -699,7 +699,8 @@ public class RatingPredictionModel {
     }
 
     protected double calcTeamSpirit(double teamSpirit) {
-        return 0.1 + 0.425 * sqrt(teamSpirit + .5);
+        var val = calcSkillRating(teamSpirit);
+        return 0.1 + 0.425 * sqrt(val);
     }
 
     protected double calcWeather(Specialty specialty, Weather weather) {
