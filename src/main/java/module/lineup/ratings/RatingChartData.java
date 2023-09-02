@@ -31,12 +31,16 @@ public final class RatingChartData {
 		}
 
 		public double[] getValues(boolean isExtraTime) {
-			if ( isExtraTime) return values;
-			else return Arrays.copyOfRange(values, RTStartIdx, RTEndIdx);
+			if (isExtraTime){
+				return values;
+			}
+			return Arrays.copyOfRange(values, RTStartIdx, RTEndIdx);
 		}
 		public double getAverage(boolean isExtraTime){
-			if (isExtraTime) return average120Minutes;
-			else return average90Minutes;
+			if (isExtraTime){
+				return average120Minutes;
+			}
+			return average90Minutes;
 		}
 	}
 
@@ -95,7 +99,7 @@ public final class RatingChartData {
 			var ratingChangeMinutes = RatingPredictionModel.getRatingChangeMinutes(lineup, isExtraTime?120:90);
 			mapKeys = new ArrayList<>(ratingChangeMinutes);
 			mapKeys.sort(Collections.reverseOrder());
-			RTStartIdx = mapKeys.indexOf(90);
+			RTStartIdx = mapKeys.indexOf(85);
 			RTEndIdx = mapKeys.size();
 		}
 		if(chartCaptions == null) {
