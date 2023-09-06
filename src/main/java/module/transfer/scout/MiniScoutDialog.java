@@ -532,7 +532,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         copyPastePanel.setLayout(new BorderLayout());
         jlExplainGuide = new JLabel(HOVerwaltung.instance().getLanguageString("ExplainHowToUseTransferScout"));
         copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
-        JLabel linkLabel = new HyperLinkLabel("https://github.com/akasolace/HO/wiki/Transfer-Scout", "https://github.com/akasolace/HO/wiki/Transfer-Scout");
+        JLabel linkLabel = new HyperLinkLabel("https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout", "https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout");
         copyPastePanel.add(linkLabel, BorderLayout.CENTER);
         copyPastePanel.add(new JScrollPane(jtaCopyPaste),BorderLayout.SOUTH);
         panel.add(copyPastePanel, BorderLayout.NORTH);

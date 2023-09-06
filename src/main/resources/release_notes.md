@@ -3,7 +3,7 @@
 ## Highlights
 
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A8.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
 ### Database
 
@@ -43,3 +43,5 @@ Reports by Contributors - April 22, 2023 - April 22, 2023
 * TeamBMW 5
 
 Total 234
+
+Total 0
