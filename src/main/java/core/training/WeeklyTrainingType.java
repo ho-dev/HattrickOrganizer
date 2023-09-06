@@ -198,7 +198,7 @@ public abstract class WeeklyTrainingType {
 	 * Calculate skill increase of training week (Schum's formula)
 	 * T = f(lvl) * K(coach) * K(assist) * K(int) * K(stam) * K(train) * K(age) * K(time),
 	 * Source:
-	 * <a href="https://github.com/akasolace/HO/issues/250#issuecomment-541170338">...</a>
+	 * <a href="https://github.com/ho-dev/HattrickOrganizer/issues/250#issuecomment-541170338">...</a>
 	 * <a href="https://www87.hattrick.org/Forum/Read.aspx?t=17024376&v=4&a=1&n=5">...</a>
 	 * <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=9&v=6">...</a>
 	 * <a href="https://www87.hattrick.org/Club/Manager/?userId=5176908">...</a> (Schum)

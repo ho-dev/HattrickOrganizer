@@ -4,7 +4,7 @@
 * Support for Hattrick's coach changes
 
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A8.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
 ### Database
 

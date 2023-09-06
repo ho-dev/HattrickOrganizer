@@ -12,9 +12,9 @@ import javax.swing.*;
 
 public final class UpdateController {
 
-    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/akasolace/HO/releases/download/dev/release_notes.html";
-    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/akasolace/HO/releases/download/beta/release_notes.html";
-    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/akasolace/HO/releases/download/tag_stable/release_notes.html";
+    private static final String RELEASE_NOTES_DEV_URL = "https://github.com/ho-dev/HattrickOrganizer/releases/download/dev/release_notes.html";
+    private static final String RELEASE_NOTES_BETA_URL = "https://github.com/ho-dev/HattrickOrganizer/releases/download/beta/release_notes.html";
+    private static final String RELEASE_NOTES_STABLE_URL = "https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/release_notes.html";
 
     /**
      * Check the external site for the latest version according to user preference regarding release channel
@@ -128,9 +128,9 @@ public final class UpdateController {
     public static String get_HO_zip_download_url(String full_version, String versionType) {
 
         return switch (versionType) {
-            case "DEV" -> "https://github.com/akasolace/HO/releases/download/dev/HO-" + full_version + "-portable-win-DEV-JRE.zip";
-            case "BETA" -> "https://github.com/akasolace/HO/releases/download/beta/HO-" + full_version + "-portable-win-BETA-JRE.zip";
-            default -> "https://github.com/akasolace/HO/releases/download/tag_stable/HO-" + full_version + "-portable-win-JRE.zip";
+            case "DEV" -> "https://github.com/ho-dev/HattrickOrganizer/releases/download/dev/HO-" + full_version + "-portable-win-DEV-JRE.zip";
+            case "BETA" -> "https://github.com/ho-dev/HattrickOrganizer/releases/download/beta/HO-" + full_version + "-portable-win-BETA-JRE.zip";
+            default -> "https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/HO-" + full_version + "-portable-win-JRE.zip";
         };
     }
 
