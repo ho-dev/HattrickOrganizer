@@ -178,7 +178,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             final core.model.player.Player tempPlayer = new core.model.player.Player();
             tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerID(getNextTempSpielerID());
-            if (jtfName.getText().trim().equals("")) {
+            if (jtfName.getText().trim().isEmpty()) {
                 tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
             } else {
                 tempPlayer.setLastName(jtfName.getText());
@@ -387,44 +387,44 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 + " ("
                 +  tempPlayer.getIdealPositionStrength(true, true, 1, null, false)
                 + "%)");
-        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)) + "");
-        jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)) + "");
-        jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true, null, false)) + "");
-        jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true, null, false)) + "");
-        jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true, null, false)) + "");
-        jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true, null, false)) + "");
-        jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true, null, false)) + "");
-        jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true, null, false)) + "");
-        jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true, null, false)) + "");
-        jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true, null, false)) + "");
-        jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true, null, false)) + "");
-        jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true, null, false)) + "");
-        jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true, null, false)) + "");
-        jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true, null, false)) + "");
-        jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true, null, false)) + "");
-        jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true, null, false)) + "");
-        jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true, null, false)) + "");
-        jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false)) + "");
-        jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-        		.format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)) + "");
+        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.KEEPER, true, null, false)));
+        jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER, true, null, false)));
+        jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_TOWING, true, null, false)));
+        jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER_OFF, true, null, false)));
+        jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.BACK, true, null, false)));
+        jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.BACK_TOMID, true, null, false)));
+        jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.BACK_OFF, true, null, false)));
+        jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.BACK_DEF, true, null, false)));
+        jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER, true, null, false)));
+        jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_TOWING, true, null, false)));
+        jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_OFF, true, null, false)));
+        jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.MIDFIELDER_DEF, true, null, false)));
+        jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.WINGER, true, null, false)));
+        jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_TOMID, true, null, false)));
+        jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_OFF, true, null, false)));
+        jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.WINGER_DEF, true, null, false)));
+        jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD, true, null, false)));
+        jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_TOWING, true, null, false)));
+        jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+                .format(tempPlayer.calcPosValue(IMatchRoleID.FORWARD_DEF, true, null, false)));
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         clScoutEntry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
@@ -545,13 +545,13 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
         jtaCopyPaste.setText("");
 
-        if (message.equals("")) {
+        if (message.isEmpty()) {
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
                     message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -563,7 +563,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
                 default -> {
                     message = HOVerwaltung.instance().getLanguageString("scout_success");
-                    if (pc.getNotSupportedFields().size() > 0) {
+                    if (!pc.getNotSupportedFields().isEmpty()) {
                         message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
@@ -575,7 +575,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 
     private String getFieldsTextList(List<String> fields){
         StringBuilder errorFieldsTxt = new StringBuilder();
-        if (fields.size()>0){
+        if (!fields.isEmpty()){
             //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
@@ -754,7 +754,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         copyPastePanel.setLayout(new BorderLayout());
         jlExplainGuide = new JLabel(HOVerwaltung.instance().getLanguageString("ExplainHowToUseTransferScout"));
         copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
-        JLabel linkLabel = new HyperLinkLabel("https://github.com/akasolace/HO/wiki/Transfer-Scout", "https://github.com/akasolace/HO/wiki/Transfer-Scout");
+        JLabel linkLabel = new HyperLinkLabel("https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout", "https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout");
         copyPastePanel.add(linkLabel, BorderLayout.CENTER);
         copyPastePanel.add(new JScrollPane(jtaCopyPaste),BorderLayout.SOUTH);
         panel.add(copyPastePanel, BorderLayout.NORTH);

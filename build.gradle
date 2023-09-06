@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.install4j:install4j-runtime:8.0.7'
+    implementation 'com.install4j:install4j-runtime:10.0.6'
     implementation 'com.github.scribejava:scribejava-core:8.3.3'
     implementation 'org.hsqldb:hsqldb:2.7.1'
     implementation 'com.google.code.gson:gson:2.10'

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.7" transformSequenceNumber="9">
+<install4j version="10.0.6" transformSequenceNumber="10">
   <directoryPresets config="." />
   <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="14">
     <languages skipLanguageSelection="true">
@@ -37,7 +37,7 @@
     </variables>
     <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.3+7" />
   </application>
-  <files defaultFileMode="666" defaultDirMode="777" preserveSymlinks="false">
+  <files defaultFileMode="666" defaultDirMode="777">
     <mountPoints>
       <mountPoint id="58" />
     </mountPoints>
@@ -104,7 +104,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui autoUpdateDescriptorUrl="https://github.com/akasolace/HO/releases/download/tag_stable/updates.xml">
+  <installerGui autoUpdateDescriptorUrl="https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/updates.xml">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated">
         <startup>
@@ -1118,7 +1118,7 @@ return true;</property>
     </styles>
   </installerGui>
   <mediaSets>
-    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}" installDir=".">
+    <windowsArchive name="Windows Archive" id="64" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}" installDir="." architecture="64">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
@@ -1126,14 +1126,14 @@ return true;</property>
       </excludedLaunchers>
       <jreBundle jreBundleSource="none" />
     </windowsArchive>
-    <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}-JRE" installDir=".">
+    <windowsArchive name="Windows Archive - JRE" id="481" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win${compiler:versionType}-JRE" installDir="." architecture="64">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
         <launcher id="606" />
       </excludedLaunchers>
     </windowsArchive>
-    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}">
+    <windows name="Windows" id="60" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}" architecture="64">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
@@ -1146,7 +1146,7 @@ return true;</property>
       </excludedBeans>
       <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
-    <windows name="Windows - JRE" id="485" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}-JRE">
+    <windows name="Windows - JRE" id="485" mediaFileName="HOSetup-${compiler:HO_version}${compiler:versionType}-JRE" architecture="64">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
@@ -1159,7 +1159,7 @@ return true;</property>
       </excludedBeans>
       <jreBundle usePack200="false" />
     </windows>
-    <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+    <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="ho-dev@github">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
@@ -1168,7 +1168,7 @@ return true;</property>
       <jreBundle jreBundleSource="none" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
-    <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+    <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="ho-dev@github">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
@@ -1249,7 +1249,7 @@ return true;</property>
         <bean refId="1222" />
       </excludedBeans>
     </unixInstaller>
-    <windows name="Windows (32bits)" id="1203" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}" jreBitType="32">
+    <windows name="Windows (32bits)" id="1203" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}" architecture="32">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
@@ -1262,7 +1262,7 @@ return true;</property>
       </excludedBeans>
       <jreBundle usePack200="false" jreBundleSource="none" />
     </windows>
-    <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE" jreBitType="32">
+    <windows name="Windows (32bits) - JRE" id="1206" mediaFileName="HOSetup-32bits-${compiler:HO_version}${compiler:versionType}-JRE" architecture="32">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="274" />
@@ -1275,7 +1275,7 @@ return true;</property>
       </excludedBeans>
       <jreBundle usePack200="false" />
     </windows>
-    <windowsArchive name="Windows (32bits) Archive" id="1208" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win-32bits-${compiler:versionType}" installDir="." jreBitType="32">
+    <windowsArchive name="Windows (32bits) Archive" id="1208" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win-32bits-${compiler:versionType}" installDir="." architecture="32">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />
@@ -1283,7 +1283,7 @@ return true;</property>
       </excludedLaunchers>
       <jreBundle jreBundleSource="none" />
     </windowsArchive>
-    <windowsArchive name="Windows (32bits) Archive - JRE" id="1211" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win(32bits)${compiler:versionType}-JRE" installDir="." jreBitType="32">
+    <windowsArchive name="Windows (32bits) Archive - JRE" id="1211" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}-portable-win(32bits)${compiler:versionType}-JRE" installDir="." architecture="32">
       <excludedLaunchers>
         <launcher id="274" />
         <launcher id="497" />

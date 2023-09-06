@@ -34,7 +34,7 @@ Total 6
 ## Highlights
 * bug fixes
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.1)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A7.1)
 
 ### Squad
 * fix click on “Last Match” column when the column has been moved.
@@ -83,7 +83,7 @@ Total 288
 * fix team spirit influence on midfield rating (#1778)
 * login dialog shows team logos (#1643)
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A7.0)
 
 ### Database
 * faster and more secure database access using prepared statements (#1593)
@@ -169,7 +169,7 @@ Total 234
 ## Highlights
 * bug fixes
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.1)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A6.1)
 
 ### Installer/Update
 * fix update error of portable version (#1654)
@@ -228,7 +228,7 @@ Reports by Contributors - August 05, 2022 - October 15, 2022
 * refactoring of lineup panel (#1267)
 * enable more than three teams (#1415)
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A6.0)
 
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
@@ -342,7 +342,7 @@ Reports by Contributors - Dec 20, 2021 - August 05, 2022
 * refactoring of lineup panel (#1267)
 * enable more than three teams (#1415)
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A6.0)
 
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
@@ -509,7 +509,7 @@ The translation status varies a lot from one language to another. If you can hel
   - improving consistency of dark themes
   - preview of new module youth academy (#367)
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A5.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A5.0)
 
 ### GUI
   - theming of training bar indicators (#803)
@@ -942,7 +942,7 @@ The translation status varies a lot from one language to another. If you can hel
 
   - Rating
     - **Timeline allowing to see rating evolution over time**
-    - **re-introduce [User Feedback](https://github.com/akasolace/HO/wiki/FeedBack) in order to allow among other things prediction rating improvement #38 #131**
+    - **re-introduce [User Feedback](https://github.com/ho-dev/HattrickOrganizer/wiki/FeedBack) in order to allow among other things prediction rating improvement #38 #131**
     - **Formulas will not use anymore the stars but absolutes and relatives players evaluation’s value #212**
       - In squad and Lineup, are calculated both the absolute and the relative contribution of a player to the ratings
       - The absolute is more or less what would be the sum of his contribution to the 7 sectors
@@ -958,7 +958,7 @@ The translation status varies a lot from one language to another. If you can hel
 
 
 
- - NTHRF: Module is removed, now you can add your NT team in your own HO - see [wiki](https://github.com/akasolace/HO/wiki/NTHRF-since-HO-2.0)
+ - NTHRF: Module is removed, now you can add your NT team in your own HO - see [wiki](https://github.com/ho-dev/HattrickOrganizer/wiki/NTHRF-since-HO-2.0)
 
  - Misc
    - **Support for all kind of matches #21**

@@ -41,7 +41,7 @@ Latest stable version
 
 All versions of HO! can be downloaded from the release page but usually
 you will want only to use the latest `stable
-version <https://github.com/akasolace/HO/releases/latest>`__
+version <https://github.com/ho-dev/HattrickOrganizer/releases/latest>`__
 
 Directory structure
 ****************************************************
