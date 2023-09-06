@@ -6,7 +6,6 @@ import core.gui.comp.HyperLinkLabel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 
@@ -54,7 +53,7 @@ public class Credits {
 		hoPanel.add(hoLabel, gbc);
 
 		gbc.gridx = 1;
-		JLabel linkLabel = new HyperLinkLabel("https://akasolace.github.io/HO/");
+		JLabel linkLabel = new HyperLinkLabel("https://github.com/ho-dev/HattrickOrganizer/");
 		hoPanel.add(linkLabel, gbc);
 
 		gbc.gridy = 4;
@@ -76,7 +75,7 @@ public class Credits {
 		int result = JOptionPane.showOptionDialog(parent, creditsPanel, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 		if (result == JOptionPane.YES_OPTION) {
 			try {
-				BrowserLauncher.openURL("https://raw.githubusercontent.com/akasolace/HO/master/LICENSE");
+				BrowserLauncher.openURL("https://raw.githubusercontent.com/ho-dev/HattrickOrganizer/master/LICENSE");
 			} catch (Exception ex) {
 				HOLogger.instance().log(HOMainFrame.class, ex);
 			}

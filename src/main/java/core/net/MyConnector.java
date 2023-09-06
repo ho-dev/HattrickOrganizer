@@ -335,7 +335,7 @@ public class MyConnector {
 		String result = readStream(postWebFileWithBodyParameters(htUrl + urlpara, paras, true,
 				"set_matchorder"));
 		String sError = XMLCHPPPreParser.getError(result);
-		if (sError.length() > 0) {
+		if (!sError.isEmpty()) {
 			throw new RuntimeException(sError);
 		}
 		return result;
@@ -548,15 +548,15 @@ public class MyConnector {
 	}
 
 	public VersionInfo getLatestStableVersion() {
-		return getVersion("https://github.com/akasolace/HO/releases/download/tag_stable/version.properties");
+		return getVersion("https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/version.properties");
 	}
 
 	public VersionInfo getLatestVersion() {
-		return getVersion("https://github.com/akasolace/HO/releases/download/dev/version.properties");
+		return getVersion("https://github.com/ho-dev/HattrickOrganizer/releases/download/dev/version.properties");
 	}
 
 	public VersionInfo getLatestBetaVersion() {
-		return getVersion("https://github.com/akasolace/HO/releases/download/beta/version.properties");
+		return getVersion("https://github.com/ho-dev/HattrickOrganizer/releases/download/beta/version.properties");
 	}
 
 	// ///////////////////////////////////////////////////////////////////////////////
@@ -584,7 +584,7 @@ public class MyConnector {
 	 */
 	public String fetchRegionID(int teamId) {
 		String xml = fetchTeamDetails(teamId);
-		if ( xml.length()>0){
+		if (!xml.isEmpty()){
 			return XMLTeamDetailsParser.fetchRegionID(xml);
 		}
 		return "-1";
@@ -623,7 +623,7 @@ public class MyConnector {
 			while (tryAgain) {
 				OAuthRequest request = new OAuthRequest(Verb.GET, surl);
 				infoHO(request);
-				if (m_OAAccessToken == null || m_OAAccessToken.getToken().length() == 0) {
+				if (m_OAAccessToken == null || m_OAAccessToken.getToken().isEmpty()) {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);
@@ -638,7 +638,7 @@ public class MyConnector {
 							saveCHPP(surl, returnString);
 						}
 						String sError = XMLCHPPPreParser.getError(returnString);
-						if (sError.length() > 0) {
+						if (!sError.isEmpty()) {
 							throw new RuntimeException(sError);
 						}
 						tryAgain = false;
@@ -763,7 +763,7 @@ public class MyConnector {
 				}
 				infoHO(request);
 				request.addHeader("Content-Type", "application/x-www-form-urlencoded");
-				if (m_OAAccessToken == null || m_OAAccessToken.getToken().length() == 0) {
+				if (m_OAAccessToken == null || m_OAAccessToken.getToken().isEmpty()) {
 					iResponse = 401;
 				} else {
 					m_OAService.signRequest(m_OAAccessToken, request);

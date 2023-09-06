@@ -5,7 +5,7 @@
 * refactoring of lineup panel (#1267)
 * enable more than three teams (#1415)
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A6.0)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A6.0)
 
 ### Database
 * reducing data base file's disk space accelerates HO startup duration (#958)
