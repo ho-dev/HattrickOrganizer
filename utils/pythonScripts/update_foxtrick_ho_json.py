@@ -15,7 +15,7 @@ helpers = [("9100817", "DavidatorusF")]
 ho_json_str = """
 {
 	"type": "ho",
-	"url": "https://akasolace.github.io/HO/",
+	"url": "https://ho-dev.github.io/HattrickOrganizer/",
 	"duties" : {
 		"developer" : {
 			"alt": "HO developer"

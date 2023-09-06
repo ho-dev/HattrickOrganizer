@@ -104,7 +104,7 @@ Categories=Game</desktopFile>
       </iconImageFiles>
     </launcher>
   </launchers>
-  <installerGui autoUpdateDescriptorUrl="https://github.com/akasolace/HO/releases/download/tag_stable/updates.xml">
+  <installerGui autoUpdateDescriptorUrl="https://github.com/ho-dev/HattrickOrganizer/releases/download/tag_stable/updates.xml">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" actionElevationType="elevated">
         <startup>
@@ -1159,7 +1159,7 @@ return true;</property>
       </excludedBeans>
       <jreBundle usePack200="false" />
     </windows>
-    <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+    <linuxDeb name="Linux Deb" id="63" dependencies="openjdk-11-jre" description="Hattrick Organizer !" maintainerEmail="ho-dev@github">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />
@@ -1168,7 +1168,7 @@ return true;</property>
       <jreBundle jreBundleSource="none" />
       <postInstallScript>chmod 777 /opt/${compiler:sys.shortName}</postInstallScript>
     </linuxDeb>
-    <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="akasolace@ho">
+    <linuxDeb name="Linux Deb  - JRE" id="471" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" description="Hattrick Organizer !" maintainerEmail="ho-dev@github">
       <excludedLaunchers>
         <launcher id="59" />
         <launcher id="497" />

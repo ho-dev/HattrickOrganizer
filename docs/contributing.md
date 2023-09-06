@@ -31,7 +31,7 @@ You will need your own fork to work on the code. Go to the HO project page and h
 ~~~
 git clone https://github.com/your-user-name/HO.git HO-yourname
 cd HO-yourname
-git remote add upstream https://github.com/akasolace/ho.git 
+git remote add upstream https://github.com/ho-dev/HattrickOrganizer.git 
 ~~~
 
 This creates the directory HO-yourname and connects your repository to the upstream (main project) HO repository.
@@ -110,8 +110,8 @@ If you added the upstream repository as described above you will see something l
 ~~~
 origin  git@github.com:yourname/HO.git (fetch)
 origin  git@github.com:yourname/HO.git (push)
-upstream        git://github.com/akasolace/ho.git (fetch)
-upstream        git://github.com/akasolace/ho.git (push)
+upstream        git://github.com/ho-dev/HattrickOrganizer.git (fetch)
+upstream        git://github.com/ho-dev/HattrickOrganizer.git (push)
 ~~~
 
 Now your code is on GitHub, but it is not yet a part of the HO project. For that to happen, a pull request needs to be submitted on GitHub.

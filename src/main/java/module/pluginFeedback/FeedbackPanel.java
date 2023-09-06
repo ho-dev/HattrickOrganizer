@@ -57,7 +57,7 @@ public class FeedbackPanel extends JFrame {
         Matcher matcher;
         String regex;
 
-        if (input.equals("")) {
+        if (input.isEmpty()) {
             return false;
         }
 
@@ -290,7 +290,7 @@ public class FeedbackPanel extends JFrame {
     private boolean fetchRequiredLineup() {
 
         try {
-            URL url = new URL("https://akasolace.github.io/HO/feedback.json");
+            URL url = new URL("https://ho-dev.github.io/HattrickOrganizer/feedback.json");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
@@ -329,28 +329,24 @@ public class FeedbackPanel extends JFrame {
             String tw = "(" + hoi.getLanguageString("ls.player.behaviour.towardswing.short").toUpperCase() + ")";
 
             switch (order) {
-                case IMatchRoleID.NORMAL:
-                    break;
-                case IMatchRoleID.OFFENSIVE:
-                    s_order += " " + off + " " + down_arrow;
-                    break;
-                case IMatchRoleID.DEFENSIVE:
-                    s_order += " " + def + " " + up_arrow;
-                    break;
-                case IMatchRoleID.TOWARDS_WING:
+                case IMatchRoleID.NORMAL -> {
+                }
+                case IMatchRoleID.OFFENSIVE -> s_order += " " + off + " " + down_arrow;
+                case IMatchRoleID.DEFENSIVE -> s_order += " " + def + " " + up_arrow;
+                case IMatchRoleID.TOWARDS_WING -> {
                     if (righSide.contains(pos)) {
                         s_order = left_arrow + " " + s_order + " " + tw;
                     } else {
                         s_order = s_order + " " + tw + " " + right_arrow;
                     }
-                    break;
-                case IMatchRoleID.TOWARDS_MIDDLE:
+                }
+                case IMatchRoleID.TOWARDS_MIDDLE -> {
                     if (!righSide.contains(pos)) {
                         s_order = left_arrow + " " + s_order + " " + tm;
                     } else {
                         s_order = s_order + " " + tm + " " + right_arrow;
                     }
-                    break;
+                }
             }
             jl.setText(s_order);
         }
@@ -691,7 +687,7 @@ public class FeedbackPanel extends JFrame {
 
     }
 
-    private class SimpleLineup {
+    private static class SimpleLineup {
         String server_url;
         String server_status;
         String lineupName;

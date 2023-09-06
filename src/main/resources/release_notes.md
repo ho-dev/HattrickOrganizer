@@ -4,7 +4,7 @@
 
 bug fixes 
 
-## [Detailed Changelog](https://github.com/akasolace/HO/issues?q=milestone%3A7.3)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
 ### Database
 

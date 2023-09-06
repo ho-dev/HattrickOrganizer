@@ -1,6 +1,6 @@
 
 <div align="left">
-  <img src="https://cdn.jsdelivr.net/gh/akasolace/ho@master/utils/buildResources/Logo_stable.png" alt="HO logo">
+  <img src="https://cdn.jsdelivr.net/gh/ho-dev/hattrickOrganizer@master/utils/buildResources/Logo_stable.png" alt="HO logo">
 </div>
 
 **Helper Tool for online-manager [Hattrick](http://www.hattrick.org)**
@@ -8,15 +8,15 @@
 <tr>
   <td>Latest Release</td>
   <td>
-    <a href="https://github.com/akasolace/HO/releases/tag/7.0">
-    <img src="https://img.shields.io/badge/HO-7.0-brightgreen.svg" alt="latest release" />
+    <a href="https://github.com/ho-dev/HattrickOrganizer/releases/tag/7.2">
+    <img src="https://img.shields.io/badge/HO-7.2-brightgreen.svg" alt="latest release" />
     </a>
   </td>
 </tr>
 <tr>
   <td>Latest Beta Version</td>
   <td>
-    <a href="https://github.com/akasolace/HO/releases/tag/beta">
+    <a href="https://github.com/ho-dev/HattrickOrganizer/releases/tag/beta">
     <img src="https://img.shields.io/badge/HO-BETA-blue.svg" alt="latest beta version" />
     </a>
   </td>
@@ -24,7 +24,7 @@
 <tr>
   <td>Latest Development Version</td>
   <td>
-    <a href="https://github.com/akasolace/HO/releases/tag/dev">
+    <a href="https://github.com/ho-dev/HattrickOrganizer/releases/tag/dev">
     <img src="https://img.shields.io/badge/HO-DEV-red.svg" alt="latest development version" />
     </a>
   </td>
@@ -32,7 +32,7 @@
 <tr>
   <td>License</td>
   <td>
-    <a href="https://github.com/akasolace/HO/blob/master/LICENSE">
+    <a href="https://github.com/ho-dev/HattrickOrganizer/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/licence-LGPL%203.0-lightgrey.svg" alt="license" />
     </a>
 </td>
@@ -49,7 +49,7 @@
   <td>Lines of code</td>
   <td>
    <a href='https://github.com/Aaronepower/tokei'>
-   <img src='https://tokei.rs/b1/github/akasolace/ho?category=code' alt='Lines of code' />
+   <img src='https://tokei.rs/b1/github/ho-dev/hattrickorganizer?category=code' alt='Lines of code' />
   </a>
 </td>
 </tr>
