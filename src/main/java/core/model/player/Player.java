@@ -451,8 +451,8 @@ public class Player extends AbstractTable.Storable {
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
-            motherclubId = oldPlayer.getMotherclubId();
-            motherclubName = oldPlayer.getMotherclubName();
+            motherclubId = oldPlayer.getOrDownloadMotherclubId();
+            motherclubName = oldPlayer.getOrDownloadMotherclubName();
         }
     }
 
@@ -472,12 +472,12 @@ public class Player extends AbstractTable.Storable {
         return Boolean.parseBoolean(value);
     }
 
-    public String getMotherclubName() {
+    public String getOrDownloadMotherclubName() {
         downloadMotherclubInfoIfMissing();
         return this.motherclubName;
     }
 
-    public Integer getMotherclubId() {
+    public Integer getOrDownloadMotherclubId() {
         downloadMotherclubInfoIfMissing();
         return this.motherclubId;
     }
@@ -502,6 +502,14 @@ public class Player extends AbstractTable.Storable {
                 connection.setSilentDownload(isSilentDownload); // reset
             }
         }
+    }
+
+    private String getMotherclubName() {
+        return this.motherclubName;
+    }
+
+    private Integer getMotherclubId() {
+        return this.motherclubId;
     }
 
     //~ Methods ------------------------------------------------------------------------------------

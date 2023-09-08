@@ -869,6 +869,7 @@ public class RatingPredictionModel {
                 r *= spirit;
             }
             case Defence_Left, Defence_Right -> {
+                r *= 0.418305;
                 r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInTheMiddle -> r *= 0.85;
@@ -878,6 +879,7 @@ public class RatingPredictionModel {
                 }
             }
             case Defence_Central -> {
+                r*= 0.255046;
                 r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInWings -> r *= 0.85;
