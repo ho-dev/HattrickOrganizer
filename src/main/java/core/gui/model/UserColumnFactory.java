@@ -876,7 +876,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[19] = new PlayerColumn(893, "ls.player.motherclub.name", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getMotherclubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                return new ColorLabelEntry(player.getOrDownloadMotherclubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 
