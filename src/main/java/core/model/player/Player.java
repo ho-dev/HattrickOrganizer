@@ -512,11 +512,12 @@ public class Player extends AbstractTable.Storable {
         }
     }
 
-    private String getMotherclubName() {
+
+    public String getMotherclubName() {
         return this.motherclubName;
     }
 
-    private Integer getMotherclubId() {
+    public Integer getMotherclubId() {
         return this.motherclubId;
     }
 
