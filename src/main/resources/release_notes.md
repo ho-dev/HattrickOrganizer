@@ -11,6 +11,7 @@ bug fixes
 
 ### Squad
 * fix display of wrong homegrown heart in player details (#1901)
+* fix recursive download of mother club info. Handle chpp error in playerdetails file (#1913)
 
 ### Team Analyzer
 

@@ -418,19 +418,19 @@ public class Player extends AbstractTable.Storable {
 
         String temp = properties.getProperty("trainertype", "-1");
 
-        if ((temp != null) && !temp.equals("")) {
+        if ((temp != null) && !temp.isEmpty()) {
             m_iTrainerTyp = TrainerType.fromInt(Integer.parseInt(temp));
         }
 
         temp = properties.getProperty("trainerskill", "0");
 
-        if ((temp != null) && !temp.equals("")) {
+        if ((temp != null) && !temp.isEmpty()) {
             m_iTrainer = Integer.parseInt(temp);
         }
 
         temp = properties.getProperty("playernumber", "");
 
-        if ((temp != null) && !temp.equals("") && !temp.equals("null")) {
+        if ((temp != null) && !temp.isEmpty() && !temp.equals("null")) {
             shirtNumber = Integer.parseInt(temp);
         }
 
@@ -474,17 +474,17 @@ public class Player extends AbstractTable.Storable {
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
             m_bTrainingBlock = oldPlayer.hasTrainingBlock();
-            motherclubId = oldPlayer.getMotherclubId();
-            motherclubName = oldPlayer.getMotherclubName();
+            motherclubId = oldPlayer.getOrDownloadMotherclubId();
+            motherclubName = oldPlayer.getOrDownloadMotherclubName();
         }
     }
 
-    public String getMotherclubName() {
+    public String getOrDownloadMotherclubName() {
         downloadMotherclubInfoIfMissing();
         return this.motherclubName;
     }
 
-    public Integer getMotherclubId() {
+    public Integer getOrDownloadMotherclubId() {
         downloadMotherclubInfoIfMissing();
         return this.motherclubId;
     }
@@ -498,6 +498,7 @@ public class Player extends AbstractTable.Storable {
                 // try to download missing mother club info
                 var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
                 if (playerDetails != null) {
+                    // do not use download again since this could lead to endless recursion if the playerdetails file has errors
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
                 }
@@ -509,6 +510,14 @@ public class Player extends AbstractTable.Storable {
                 connection.setSilentDownload(isSilentDownload); // reset
             }
         }
+    }
+
+    private String getMotherclubName() {
+        return this.motherclubName;
+    }
+
+    private Integer getMotherclubId() {
+        return this.motherclubId;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -2226,7 +2235,7 @@ public class Player extends AbstractTable.Storable {
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
             futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerID());
-            if (futurePlayerTrainings.size()>0) {
+            if (!futurePlayerTrainings.isEmpty()) {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
@@ -2358,7 +2367,7 @@ public class Player extends AbstractTable.Storable {
             var valueBeforeTraining = playerBefore.getValue4Skill(skill);
             var valueAfterTraining = this.getValue4Skill(skill);
 
-            if (trainingWeeks.size() > 0) {
+            if (!trainingWeeks.isEmpty()) {
                 if ( valueAfterTraining > valueBeforeTraining) {
                     // Check if skill up is available
                     var skillUps = this.getAllLevelUp(skill);
@@ -2382,7 +2391,7 @@ public class Player extends AbstractTable.Storable {
                             sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub, training.getTrainingDate());
                             if (valueAfterTraining > valueBeforeTraining) {
                                 if (sub > 1) {
-                                    sub -= 1.;
+                                    sub -= 1.F;
                                 } else {
                                     sub = 0.f;
                                 }
