@@ -22,9 +22,11 @@ import static core.model.player.IMatchRoleID.WINGER;
 import static java.lang.Math.*;
 import static java.util.Map.entry;
 
+/**
+ * The rating calculations used in this class is based on Schum's formula Σ [ (S+Eff(L)) * K(F) * C * K(P) + Eff(Exp) ]
+ * released in <a href="https://www86.hattrick.org/Forum/Read.aspx?t=17404127&n=59&v=0&mr=0">...</a>
+ */
 public class RatingPredictionModel {
-
-
 
     public enum RatingSector {
         Defence_Left,
@@ -189,9 +191,7 @@ public class RatingPredictionModel {
             }
         }
         ret *= calcSector(lineup, s);
-
-        //return pow(ret, 1.165) + 0.75;
-        return ret + .75;
+        return pow(ret, 1.165) + 0.75;
     }
 
     /**
@@ -750,8 +750,8 @@ public class RatingPredictionModel {
 
     /**
      * Add the player's rating contributions to all rating sectors
-     * @param p
-     * @return
+     * @param p Player
+     * @return double
      */
     protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute){
         var ret = 0.;
@@ -846,7 +846,13 @@ public class RatingPredictionModel {
     }
 
     protected double calcSector(Lineup lineup, @NotNull RatingSector s) {
-        var r = 1.;
+        var r = switch (s){
+            case Midfield -> 0.116;
+            case Defence_Left, Defence_Right -> 0.281;
+            case Defence_Central -> 0.171;
+            case Attack_Central ->  0.178;
+            case Attack_Left, Attack_Right -> 0.209;
+        };
         switch (s) {
             case Midfield -> {
                 switch (lineup.getAttitude()) {
@@ -869,7 +875,6 @@ public class RatingPredictionModel {
                 r *= spirit;
             }
             case Defence_Left, Defence_Right -> {
-                r *= 0.418305;
                 r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInTheMiddle -> r *= 0.85;
@@ -879,7 +884,6 @@ public class RatingPredictionModel {
                 }
             }
             case Defence_Central -> {
-                r*= 0.255046;
                 r *= calcTrainer(s, lineup.getCoachModifier());
                 switch (MatchTacticType.fromInt(lineup.getTacticType())) {
                     case AttackInWings -> r *= 0.85;
