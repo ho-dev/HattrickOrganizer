@@ -481,7 +481,6 @@ public class Player extends AbstractTable.Storable {
         downloadMotherclubInfoIfMissing();
         return this.motherclubId;
     }
-
     private void downloadMotherclubInfoIfMissing() {
         if (motherclubId == null) {
             var connection = MyConnector.instance();
