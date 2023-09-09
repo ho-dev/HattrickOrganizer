@@ -2,12 +2,14 @@
 
 ## Highlights
 
-bug fixes 
+Hattrick organizer development moved to https://github.com/ho-dev/HattrickOrganizer
+
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A7.3)
 
 ### Installer
 * fix installation process on mac os systems (#1849)
+* the URL of hattrick organizer development changed to https://github.com/ho-dev/HattrickOrganizer (#1736)
 
 ### Squad
 * fix display of wrong homegrown heart in player details (#1901)
