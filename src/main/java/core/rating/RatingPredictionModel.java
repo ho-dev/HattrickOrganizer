@@ -201,16 +201,28 @@ public class RatingPredictionModel {
      */
     protected double calcRatingSectorScale(RatingSector s, double ret) {
         if ( ret > 0) {
-            ret *= switch (s) {
-                case Midfield -> .325;
-                case Defence_Left, Defence_Right -> .840;
-                case Defence_Central -> .508;
-                case Attack_Central -> .554;
-                case Attack_Left, Attack_Right -> .692;
-            };
+            ret *= getRatingSectorScaleFactor(s);
             return pow(ret, 1.2) / 4. + 1.;
         }
         return 0.75;
+    }
+
+    protected double calcPlayerScale(RatingSector s, double ret){
+        if ( ret > 0 ){
+            ret *= getRatingSectorScaleFactor(s);
+            return pow(ret, 1.2) / 4.;
+        }
+        return 0;
+    }
+
+    protected double getRatingSectorScaleFactor(RatingSector s) {
+        return switch (s) {
+            case Midfield -> .325;
+            case Defence_Left, Defence_Right -> .840;
+            case Defence_Central -> .508;
+            case Attack_Central -> .554;
+            case Attack_Left, Attack_Right -> .692;
+        };
     }
 
     /**
@@ -270,7 +282,6 @@ public class RatingPredictionModel {
         }
         return r;
     }
-
 
     /**
      * Get the rating contribution of a single player in lineup.
@@ -827,15 +838,15 @@ public class RatingPredictionModel {
     };
 
     /**
-     * Add the player's rating contributions to all rating sectors
+     * Calculate the sum of the player's rating contributions to all rating sectors
      * @param p Player
      * @return double
      */
-    protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute){
+    protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute) {
         var ret = 0.;
-        for ( var s : RatingSector.values()){
-            var c = getPositionContribution(p, roleId, behaviour,  Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.  );
-            ret += c;
+        for (var s : RatingSector.values()) {
+            var c = getPositionContribution(p, roleId, behaviour, Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.);
+            ret += calcPlayerScale(s,c);
         }
         return ret;
     }
