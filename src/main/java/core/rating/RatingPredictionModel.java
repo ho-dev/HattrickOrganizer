@@ -174,7 +174,6 @@ public class RatingPredictionModel {
      * The contributions of all players of the lineup in the requested match minute are added, taking into account
      * the overcrowding penalty at the specified match minute.
      * The sum is multiplied by the sector related factors (team factors, lineup settings)
-     * The result is modified by an exponent of 1.165 and added with constant value 0.75.
      * @param lineup match order
      * @param s rating sector
      * @param minute match minute
@@ -191,8 +190,87 @@ public class RatingPredictionModel {
             }
         }
         ret *= calcSector(lineup, s);
-        return pow(ret, 1.165) + 0.75;
+        return calcRatingSectorScale(s, ret);
     }
+
+    /**
+     * Transform skill scale to rating sector scale
+     * @param s Rating sector
+     * @param ret Skill scale rating sum
+     * @return Sector rating
+     */
+    protected double calcRatingSectorScale(RatingSector s, double ret) {
+        if ( ret > 0) {
+            ret *= switch (s) {
+                case Midfield -> .325;
+                case Defence_Left, Defence_Right -> .840;
+                case Defence_Central -> .508;
+                case Attack_Central -> .554;
+                case Attack_Left, Attack_Right -> .692;
+            };
+            return pow(ret, 1.2) / 4. + 1.;
+        }
+        return 0.75;
+    }
+
+    /**
+     * Calculate the effect of the lineup settings to the sector ratings
+     * @param lineup Lineup
+     * @param s Rating sector
+     * @return Sector factor
+     */
+    protected double calcSector(Lineup lineup, @NotNull RatingSector s) {
+        var r = 1.;
+        switch (s) {
+            case Midfield -> {
+                switch (lineup.getAttitude()) {
+                    case IMatchDetails.EINSTELLUNG_PIC -> r *= 0.83945;
+                    case IMatchDetails.EINSTELLUNG_MOTS -> r *= 1.1149;
+                    default -> {
+                    }
+                }
+                switch (lineup.getLocation()) {
+                    case IMatchDetails.LOCATION_AWAYDERBY -> r *= 1.11493;
+                    case IMatchDetails.LOCATION_HOME -> r *= 1.19892;
+                    default -> {
+                    }
+                }
+                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
+                    case CounterAttacks -> r *= 0.93;
+                    case LongShots -> r *= 0.96;
+                }
+                var spirit = calcTeamSpirit(team.getTeamSpirit());
+                r *= spirit;
+            }
+            case Defence_Left, Defence_Right -> {
+                r *= calcTrainer(s, lineup.getCoachModifier());
+                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
+                    case AttackInTheMiddle -> r *= 0.85;
+                    case PlayCreatively -> r *= 0.93;
+                    default -> {
+                    }
+                }
+            }
+            case Defence_Central -> {
+                r *= calcTrainer(s, lineup.getCoachModifier());
+                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
+                    case AttackInWings -> r *= 0.85;
+                    case PlayCreatively -> r *= 0.93;
+                    default -> {
+                    }
+                }
+            }
+            case Attack_Central, Attack_Left, Attack_Right -> {
+                r *= calcTrainer(s, lineup.getCoachModifier());
+                if (Objects.requireNonNull(MatchTacticType.fromInt(lineup.getTacticType())) == MatchTacticType.LongShots) {
+                    r *= 0.96;
+                }
+                r *= calcConfidence(team.getConfidence());
+            }
+        }
+        return r;
+    }
+
 
     /**
      * Get the rating contribution of a single player in lineup.
@@ -230,20 +308,20 @@ public class RatingPredictionModel {
             contribution *= weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
             contribution *= staminaCache.get((double) player.getStamina(), minute, startMinute, tacticType);
 
-            if ( minute == 0) {
-                HOLogger.instance().debug(getClass(), "getPositionContribution " + player.getFullName()
-                        + " " + MatchRoleID.getNameForPosition(MatchRoleID.getPosition(roleId, behaviour))
-                        + " " + weather.toString()
-                        + " " + tacticType
-                        + " " + sector.toString()
-                        + " minute " + minute
-                        + " k(P)=" + overcrowdingPenalty
-                        + " (S+L)*K(F)*C=" + c
-                        + " (S+L)*K(F)*C*K(P)=" + p
-                        + " +Exp " + exp
-                        + "= " + contribution
-                );
-            }
+//            if ( minute == 0) {
+//                HOLogger.instance().debug(getClass(), "getPositionContribution " + player.getFullName()
+//                        + " " + MatchRoleID.getNameForPosition(MatchRoleID.getPosition(roleId, behaviour))
+//                        + " " + weather.toString()
+//                        + " " + tacticType
+//                        + " " + sector.toString()
+//                        + " minute " + minute
+//                        + " k(P)=" + overcrowdingPenalty
+//                        + " (S+L)*K(F)*C=" + c
+//                        + " (S+L)*K(F)*C*K(P)=" + p
+//                        + " +Exp " + exp
+//                        + "= " + contribution
+//                );
+//            }
         }
 
         return contribution;
@@ -817,9 +895,10 @@ public class RatingPredictionModel {
     }
 
     /**
-     * @param s
+     * Calculate the factor of the coach modifier
+     * @param s Rating sector
      * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
-     * @return
+     * @return Double
      */
     protected double calcTrainer(@NotNull RatingSector s, int coachModifier) {
         switch (s) {
@@ -845,71 +924,13 @@ public class RatingPredictionModel {
         return 1.;
     }
 
-    protected double calcSector(Lineup lineup, @NotNull RatingSector s) {
-        var r = switch (s){
-            case Midfield -> 0.116;
-            case Defence_Left, Defence_Right -> 0.281;
-            case Defence_Central -> 0.171;
-            case Attack_Central ->  0.178;
-            case Attack_Left, Attack_Right -> 0.209;
-        };
-        switch (s) {
-            case Midfield -> {
-                switch (lineup.getAttitude()) {
-                    case IMatchDetails.EINSTELLUNG_PIC -> r *= 0.83945;
-                    case IMatchDetails.EINSTELLUNG_MOTS -> r *= 1.1149;
-                    default -> {
-                    }
-                }
-                switch (lineup.getLocation()) {
-                    case IMatchDetails.LOCATION_AWAYDERBY -> r *= 1.11493;
-                    case IMatchDetails.LOCATION_HOME -> r *= 1.19892;
-                    default -> {
-                    }
-                }
-                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
-                    case CounterAttacks -> r *= 0.93;
-                    case LongShots -> r *= 0.96;
-                }
-                var spirit = calcTeamSpirit(team.getTeamSpirit());
-                r *= spirit;
-            }
-            case Defence_Left, Defence_Right -> {
-                r *= calcTrainer(s, lineup.getCoachModifier());
-                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
-                    case AttackInTheMiddle -> r *= 0.85;
-                    case PlayCreatively -> r *= 0.93;
-                    default -> {
-                    }
-                }
-            }
-            case Defence_Central -> {
-                r *= calcTrainer(s, lineup.getCoachModifier());
-                switch (MatchTacticType.fromInt(lineup.getTacticType())) {
-                    case AttackInWings -> r *= 0.85;
-                    case PlayCreatively -> r *= 0.93;
-                    default -> {
-                    }
-                }
-            }
-            case Attack_Central, Attack_Left, Attack_Right -> {
-                r *= calcTrainer(s, lineup.getCoachModifier());
-                if (Objects.requireNonNull(MatchTacticType.fromInt(lineup.getTacticType())) == MatchTacticType.LongShots) {
-                    r *= 0.96;
-                }
-                r *= calcConfidence(team.getConfidence());
-            }
-        }
-        return r;
-    }
 
     protected double calcConfidence(double confidence) {
-        return 0.8 + 0.05 * confidence;
+        return 0.8 + 0.05 * (confidence+.5);
     }
 
     protected double calcTeamSpirit(double teamSpirit) {
-        var val = calcSkillRating(teamSpirit);
-        return 0.1 + 0.425 * sqrt(val);
+        return 0.1 + 0.425 * sqrt(teamSpirit);
     }
 
     protected double calcWeather(Specialty specialty, Weather weather) {

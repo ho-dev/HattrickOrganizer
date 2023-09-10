@@ -43,9 +43,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final CBItem[] SUB_TEAM_SPIRIT = {
 			new CBItem(getTranslation("verylow"), 0),
 			new CBItem(getTranslation("low"), 1),
-			new CBItem(getTranslation("Durchschnitt"), 2),
-			new CBItem(getTranslation("high"), 3),
-			new CBItem(getTranslation("veryhigh"), 4) };
+			//new CBItem(getTranslation("Durchschnitt"), 2),
+			new CBItem(getTranslation("high"), 2),
+			new CBItem(getTranslation("veryhigh"), 3) };
 	private final JComboBox<CBItem> m_jcbSubTeamSpirit = new JComboBox<>(SUB_TEAM_SPIRIT);
 
 	/** weather combo boxes */
