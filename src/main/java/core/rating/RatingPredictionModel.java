@@ -2,6 +2,7 @@ package core.rating;
 
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
+import core.model.HOVerwaltung;
 import core.model.Team;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchLineupPosition;
@@ -10,7 +11,6 @@ import core.model.match.Weather;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.player.Specialty;
-import core.util.HOLogger;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
@@ -314,10 +314,15 @@ public class RatingPredictionModel {
         return 0.1 + 0.425 * sqrt(teamSpirit);
     }
 
+    public List<String> getCopyrights() {
+        return copyrights;
+    }
+
+    private final List<String> copyrights = new ArrayList<>();
+    private String copyrightSchumTranslated = null;
     /**
      * Get the rating contribution of a single player in lineup.
-     * (To save computing power and cache storage no right hand side positions are calculated. If a right hand side
-     * calculation is requested the position side and sector side are toggled, which will give the same correct result)
+     * © Schum - the author of the formulas,
      * If the player's lineup position contributes to the given sector, this contribution is
      * multiplied with the given overcrowding penalty, then
      * add the calculated experience contribution of the sector, then
@@ -335,6 +340,11 @@ public class RatingPredictionModel {
      * @return double
      */
     public double getPositionContribution(Player player, int roleId, byte behaviour, Weather weather, int tacticType, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
+        if ( copyrightSchumTranslated == null){
+            // the author of the formulas";
+            copyrightSchumTranslated = "© Schum - " + HOVerwaltung.instance().getLanguageString("ls.copyright.authoroftheformulas");
+            copyrights.add(copyrightSchumTranslated);
+        }
         if ( player == null) return 0.;
 //        var isRightHandSidePosition = isRightHandSidePosition(roleId);
 //        var p = isRightHandSidePosition?togglePositionSide(roleId):roleId;
@@ -419,14 +429,14 @@ public class RatingPredictionModel {
                                         var strength =  calcStrength(player, skillType);
                                         var res = strength*c;
                                         ret += res;
-                                        HOLogger.instance().debug(getClass(), "calcContribution " + player.getFullName()
-                                                + " " + s.toString()
-                                                + " " + PlayerSkill.toString(skillType)
-                                                + " (S+L)*K(F)=" + strength
-                                                + " C=" + c
-                                                + " (S+L)*K(F)*C=" + res
-                                                + " Sum=" + ret
-                                        );
+//                                        HOLogger.instance().debug(getClass(), "calcContribution " + player.getFullName()
+//                                                + " " + s.toString()
+//                                                + " " + PlayerSkill.toString(skillType)
+//                                                + " (S+L)*K(F)=" + strength
+//                                                + " C=" + c
+//                                                + " (S+L)*K(F)*C=" + res
+//                                                + " Sum=" + ret
+//                                        );
                                     }
                                 }
                             }
@@ -841,7 +851,6 @@ public class RatingPredictionModel {
                 return RatingPredictionModel.RatingSector.Attack_Left;
             }
         }
-
         return s;
     }
 

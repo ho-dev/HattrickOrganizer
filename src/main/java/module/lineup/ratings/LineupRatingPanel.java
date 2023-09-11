@@ -129,7 +129,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final JPanel m_jpFormationStats = new JPanel(new BorderLayout());
     private final NumberFormat m_clFormat;
     private final JButton m_jbCopyRatingButton = new JButton();
-    private final JButton m_jbFeedbackButton = new JButton();
+//    private final JButton m_jbFeedbackButton = new JButton();
+    private final JLabel copyrights = new JLabel("", SwingConstants.CENTER);
+
     private final Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
 
     public LineupRatingPanel(LineupPanel lineupPanel) {
@@ -423,8 +425,8 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         gbcRatingPanelLayout.gridx = 1;
         gbcRatingPanelLayout.gridheight = 1;
         gbcRatingPanelLayout.insets = new Insets(5, 8, 0, 8);
-        ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
-        jpSharing.add(m_jbFeedbackButton);
+        //ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
+        //jpSharing.add(m_jbFeedbackButton);
 
         m_jbCopyRatingButton.setIcon(ImageUtilities.getCopyIcon(22, TITLE_FG));
         m_jbCopyRatingButton.addActionListener(new CopyListener(this));
@@ -443,6 +445,14 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         //gbcMainLayout.gridy = 7;
         mainLayout.setConstraints(jpSharing, gbcMainLayout);
         mainPanel.add(jpSharing);
+
+        var copyrightsPanel = new JPanel();
+        copyrightsPanel.add(copyrights);
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 9;
+        gbcMainLayout.gridwidth = 3;
+        mainLayout.setConstraints(copyrightsPanel, gbcMainLayout);
+        mainPanel.add(copyrightsPanel);
 
         //create final panel =============================================
         add(mainPanel);
@@ -469,7 +479,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
     private void initToolTips() {
         m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
-        m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
+//        m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
     }
 
     public String getMidfieldRating() {
@@ -625,6 +635,12 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
             // Recalculate Borders
             calcRatingRatio();
+
+            var builder = new StringBuilder();
+            for ( var cr : ratingPredictionModel.getCopyrights()){
+                builder.append(cr).append('\n');
+            }
+            copyrights.setText(builder.toString());
         }
     }
 
