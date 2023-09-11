@@ -574,16 +574,11 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
 
                 byte idealPosition = player.getIdealPosition();
-                String posValue = MatchRoleID.getNameForPosition(idealPosition)
-                        + " ("
-                        + player.getIdealPositionRating()
-                        + "%)";
-                var alternativePosition = player.getAlternativeBestPositions();
-                for (byte altPos : alternativePosition) {
-                    if (altPos == idealPosition) {
-                        posValue += " *";
-                        break;
-                    }
+                String posValue = String.format("%s (%.2f)",
+                        MatchRoleID.getNameForPosition(idealPosition),
+                        player.getIdealPositionRating());
+                if ( player.isAnAlternativeBestPosition(idealPosition) ) {
+                    posValue += " *";
                 }
 
                 ColorLabelEntry tmp = new ColorLabelEntry(

@@ -17,8 +17,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.time.Duration;
 import java.util.*;
-import static core.model.player.MatchRoleID.getPosition;
-import static core.model.player.MatchRoleID.isFieldMatchRoleId;
+
+import static core.constants.player.PlayerSkill.KEEPER;
+import static core.constants.player.PlayerSkill.WINGER;
+import static core.model.player.MatchRoleID.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
@@ -910,8 +912,8 @@ public class Player extends AbstractTable.Storable {
             referencePlayer.setAge(28);
             referencePlayer.setAgeDays(0);
             referencePlayer.setPlayerID(MAX_VALUE);
-            referencePlayer.setForm(7);
-            referencePlayer.setStamina(7);
+            referencePlayer.setForm(8);
+            referencePlayer.setStamina(9);
             referencePlayer.setSkillValue(KEEPER, 1.);
             referencePlayer.setSkillValue(DEFENDING, 20.);
             referencePlayer.setSkillValue(PLAYMAKING, 20.);
@@ -929,8 +931,8 @@ public class Player extends AbstractTable.Storable {
             referenceKeeper.setAge(28);
             referenceKeeper.setAgeDays(0);
             referenceKeeper.setPlayerID(MAX_VALUE);
-            referenceKeeper.setForm(7);
-            referenceKeeper.setStamina(7);
+            referenceKeeper.setForm(8);
+            referenceKeeper.setStamina(9);
             referenceKeeper.setSkillValue(KEEPER, 20.);
             referenceKeeper.setSkillValue(DEFENDING, 20.);
             referenceKeeper.setSkillValue(SET_PIECES, 20.);
@@ -1024,6 +1026,11 @@ public class Player extends AbstractTable.Storable {
         return (byte)flag;
     }
 
+    public double getPositionRating(byte position) {
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        return  ratingPredictionModel.getPlayerRating(this, position);
+    }
+
     static class PlayerPositionRating {
         public PlayerPositionRating(Integer p, Byte behaviour, double d) {
             this.roleId = p;
@@ -1064,10 +1071,10 @@ public class Player extends AbstractTable.Storable {
 
     List<PlayerPositionRating> getAllPositionRatings(){
         var ret = new ArrayList<PlayerPositionRating>();
-        var ratinPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         for ( var p : RatingPredictionModel.playerRatingPositions){
             for ( var behaviour : MatchRoleID.getBehaviours(p)){
-                var d = ratinPredictionModel.getPlayerRating(this, p, behaviour);
+                var d = ratingPredictionModel.getPlayerRating(this, p, behaviour);
                 ret.add(new PlayerPositionRating(p, behaviour, d));
             }
         }
@@ -1075,13 +1082,13 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Calculate Player Alternative Best Positions (weather impact not relevant here)
+     * Calculate player alternative best positions (weather impact not relevant here)
      */
     public List<Byte> getAlternativeBestPositions() {
         Double threshold = null;
         float tolerance = 1f - UserParameter.instance().alternativePositionsTolerance;
         var ret  = new ArrayList<Byte>();
-        var allPositionRatings = getAllPositionRatings().stream().sorted(Comparator.comparing(PlayerPositionRating::getRating)).toList();
+        var allPositionRatings = getAllPositionRatings().stream().sorted(Comparator.comparing(PlayerPositionRating::getRating, Comparator.reverseOrder())).toList();
         for ( var p : allPositionRatings){
             if ( threshold == null ){
                 threshold = p.getRating() * tolerance;

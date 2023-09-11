@@ -149,7 +149,6 @@ public class RatingPredictionModel {
 
     /**
      * Calculate average rating of lineup sector for 90 or 120 minutes match time
-     *
      * @param lineup  match order
      * @param s       rating sector
      * @param minutes match duration to calculate average for
@@ -207,14 +206,28 @@ public class RatingPredictionModel {
         return 0.75;
     }
 
+    /**
+     * Transform skill scale to player rating
+     * @param s Rating sector
+     * @param ret Skill scale rating value
+     * @return Player rating
+     */
     protected double calcPlayerScale(RatingSector s, double ret){
         if ( ret > 0 ){
             ret *= getRatingSectorScaleFactor(s);
+            if ( s == RatingSector.Midfield) {
+                ret *= 3; // midfield weight like hatstats
+            }
             return pow(ret, 1.2) / 4.;
         }
         return 0;
     }
 
+    /**
+     * Get rating sector scaling factor
+     * @param s Rating sector
+     * @return scaling factor
+     */
     protected double getRatingSectorScaleFactor(RatingSector s) {
         return switch (s) {
             case Midfield -> .325;
@@ -284,6 +297,24 @@ public class RatingPredictionModel {
     }
 
     /**
+     * Calculate the confidence factor
+     * @param confidence Confidence value without any sublevel (.5 is used)
+     * @return Confidence factor
+     */
+    protected double calcConfidence(double confidence) {
+        return 0.8 + 0.05 * (confidence+.5);
+    }
+
+    /**
+     * Calculate the team spirit factor
+     * @param teamSpirit Team spirit including any sublevel
+     * @return Team spirit factor
+     */
+    protected double calcTeamSpirit(double teamSpirit) {
+        return 0.1 + 0.425 * sqrt(teamSpirit);
+    }
+
+    /**
      * Get the rating contribution of a single player in lineup.
      * (To save computing power and cache storage no right hand side positions are calculated. If a right hand side
      * calculation is requested the position side and sector side are toggled, which will give the same correct result)
@@ -311,9 +342,7 @@ public class RatingPredictionModel {
 
         var contribution = contributionCache.get(sector, roleId, player, behaviour);
         if (contribution > 0) {
-            var c = contribution;
             contribution *= overcrowdingPenalty;
-            var p = contribution;
             var exp = experienceCache.get(player.getSkillValue(EXPERIENCE), sector );
             contribution += exp;
             contribution *= weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
@@ -628,7 +657,6 @@ public class RatingPredictionModel {
         return se.computeIfAbsent(sideRestriction, k -> new HashMap<>());
     }
 
-
     /**
      * A map of overcrowding penalties of the central lineup sectors
      */
@@ -672,7 +700,7 @@ public class RatingPredictionModel {
      * Get player count of a lineup sector
      * @param positions Lineup positions
      * @param sector Lineup sector
-     * @return int
+     * @return Number of players in given lineup sector
      */
     private int countPlayersInSector(List<MatchLineupPosition> positions, MatchRoleID.Sector sector) {
         var countPlayersInSector = 0;
@@ -696,6 +724,47 @@ public class RatingPredictionModel {
             return calcStamina(stamina, minute, startMinute, tacticType);
         }
     };
+
+    /**
+     * Cache of experience rating contribution to a rating sector
+     * If the requested value is missing, it will be calculated.
+     */
+    Cache<Double, RatingSector> experienceCache = new Cache<>() {
+        @Override
+        public double calc(Double skillValue, RatingSector ratingSector) {
+            return calcExperience(ratingSector, skillValue);
+        }
+    };
+
+    /**
+     * Calculate the experience rating contribution to a rating sector (Eff(Exp))
+     * @param ratingSector Rating sector
+     * @param skillValue Experience skill value
+     * @return Experience rating contribution to the rating sector
+     */
+    protected double calcExperience(@NotNull RatingSector ratingSector, double skillValue) {
+        var exp = calcSkillRating(skillValue);
+        var k = -0.00000725 * pow(exp, 4) + 0.0005 * pow(exp, 3) - .01336 * pow(exp, 2) + 0.176 * exp;
+
+        switch (ratingSector) {
+            case Defence_Left, Defence_Right -> {
+                return k * 0.345;
+            }
+            case Defence_Central -> {
+                return k * 0.48;
+            }
+            case Midfield -> {
+                return k * 0.73;
+            }
+            case Attack_Left, Attack_Right -> {
+                return k * 0.375;
+            }
+            case Attack_Central -> {
+                return k * 0.450;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + ratingSector);
+        }
+    }
 
     /**
      * Calculate the stamina factor
@@ -776,6 +845,90 @@ public class RatingPredictionModel {
         return s;
     }
 
+    /**
+     * Get the player rating
+     * Multiplying the weather factor to the weather independent rating value.
+     * @param p Player
+     * @param roleId lineup position
+     * @param behaviour behaviour
+     * @param minute match minute
+     * @param weather weather
+     * @return Player rating value
+     */
+    public double getPlayerRating(@NotNull Player p, int roleId, byte behaviour, int minute, Weather weather) {
+        return weatherCache.get(Specialty.getSpecialty(p.getPlayerSpecialty()), weather)
+                * getPlayerRating(p, roleId, behaviour, minute);
+    }
+
+    /**
+     * Get the weather independent player rating.
+     * @param p Player
+     * @param roleId lineup position
+     * @param behaviour behaviour
+     * @param minute match minute
+     * @return Weather independent player rating
+     */
+    public double getPlayerRating(Player p, int roleId, byte behaviour, int minute) {
+        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, minute); // calc left sides only
+    }
+
+    /**
+     * Get the weather independent player rating at match beginning
+     * @param p Player
+     * @param roleId lineup position
+     * @param behaviour behaviour
+     * @return Weather independent player rating at match beginning
+     */
+    public double getPlayerRating(Player p, int roleId, byte behaviour){
+        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 0);
+    }
+    public double getPlayerRating(Player p, byte positionWithBehaviour){
+        return playerRatingCache.get(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour), 0);
+    }
+
+    /**
+     * The cache of player rating results.
+     * If the requested value is missing, it will be calculated.
+     */
+    Cache4<Player, Integer, Byte, Integer> playerRatingCache = new Cache4<>() {
+        @Override
+        public double calc(Player player, Integer roleId, Byte behaviour, Integer minute) {
+            return calcPlayerRating(player, roleId, behaviour, minute);
+        }
+    };
+
+    /**
+     * Calculate the sum of the player's rating contributions to all rating sectors
+     * @param p Player
+     * @return double
+     */
+    protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute) {
+        var ret = 0.;
+        for (var s : RatingSector.values()) {
+            var c = getPositionContribution(p, roleId, behaviour, Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.);
+            ret += calcPlayerScale(s,c);
+        }
+        return ret;
+    }
+
+
+    public double getPlayerRatingEndOfMatch(Player p, int roleId, byte behaviour){
+        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 90);
+    }
+    public double getPlayerRatingEndOfExtraTime(Player p, int roleId, byte behaviour){
+        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 120);
+    }
+
+    public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute){
+        Player reference;
+        if (  roleId == KEEPER){
+            reference = Player.getReferenceKeeper();
+        }
+        else {
+            reference = Player.getReferencePlayer();
+        }
+        return  getPlayerRating(p, roleId, behaviour, minute) /  getPlayerRating(reference, roleId, behaviour, minute);
+    }
 
     Cache<Player, Integer> playerTaticStrengthCache = new Cache<>() {
         @Override
@@ -783,13 +936,6 @@ public class RatingPredictionModel {
             return calcPlayerTacticStrength(player, skill);
         }
 
-    };
-
-    Cache<Double, RatingSector> experienceCache = new Cache<>() {
-        @Override
-        public double calc(Double skillValue, RatingSector ratingSector) {
-            return calcExperience(ratingSector, skillValue);
-        }
     };
 
     Cache<Specialty, Weather> weatherCache = new Cache<>() {
@@ -830,60 +976,6 @@ public class RatingPredictionModel {
             default -> throw new IllegalStateException("Unexpected value: " + positionWithBehaviour);
         };
     }
-    Cache4<Player, Integer, Byte, Integer> playerRatingCache = new Cache4<>() {
-        @Override
-        public double calc(Player player, Integer roleId, Byte behaviour, Integer minute) {
-            return calcPlayerRating(player, roleId, behaviour, minute);
-        }
-    };
-
-    /**
-     * Calculate the sum of the player's rating contributions to all rating sectors
-     * @param p Player
-     * @return double
-     */
-    protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute) {
-        var ret = 0.;
-        for (var s : RatingSector.values()) {
-            var c = getPositionContribution(p, roleId, behaviour, Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.);
-            ret += calcPlayerScale(s,c);
-        }
-        return ret;
-    }
-
-    public double getPlayerRating(Player p, byte positionWithBehaviour){
-        return playerRatingCache.get(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour), 0);
-    }
-    public double getPlayerRating(Player p, int roleId, byte behaviour){
-        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 0);
-    }
-    public double getPlayerRatingEndOfMatch(Player p, int roleId, byte behaviour){
-        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 90);
-    }
-    public double getPlayerRatingEndOfExtraTime(Player p, int roleId, byte behaviour){
-        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 120);
-    }
-
-    public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute){
-        Player reference;
-        if (  roleId == KEEPER){
-            reference = Player.getReferenceKeeper();
-        }
-        else {
-            reference = Player.getReferencePlayer();
-        }
-        return  getPlayerRating(p, roleId, behaviour, minute) /  getPlayerRating(reference, roleId, behaviour, minute);
-    }
-
-    public double getPlayerRating(Player p, int roleId, byte behaviour, int minute) {
-        return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, minute); // calc left sides only
-    }
-
-    public double getPlayerRating(@NotNull Player p, int roleId, byte behaviour, int minute, Weather weather) {
-        return weatherCache.get(Specialty.getSpecialty(p.getPlayerSpecialty()), weather)
-                * getPlayerRating(p, roleId, behaviour, minute);
-    }
-
     private final Map<Player, Double> playerPenaltyMap = new HashMap<>();
     public double getPlayerPenaltyStrength(Player player) {
         var ret = playerPenaltyMap.get(player);
@@ -935,15 +1027,6 @@ public class RatingPredictionModel {
         return 1.;
     }
 
-
-    protected double calcConfidence(double confidence) {
-        return 0.8 + 0.05 * (confidence+.5);
-    }
-
-    protected double calcTeamSpirit(double teamSpirit) {
-        return 0.1 + 0.425 * sqrt(teamSpirit);
-    }
-
     protected double calcWeather(Specialty specialty, Weather weather) {
         if ( specialty != null) {
             switch (specialty) {
@@ -962,44 +1045,19 @@ public class RatingPredictionModel {
         }
         return 1;
     }
-
-    protected double calcExperience(@NotNull RatingSector ratingSector, double skillValue) {
-        var exp = calcSkillRating(skillValue);
-        var k = -0.00000725 * pow(exp, 4) + 0.0005 * pow(exp, 3) - .01336 * pow(exp, 2) + 0.176 * exp;
-
-        switch (ratingSector) {
-            case Defence_Left, Defence_Right -> {
-                return k * 0.345;
-            }
-            case Defence_Central -> {
-                return k * 0.48;
-            }
-            case Midfield -> {
-                return k * 0.73;
-            }
-            case Attack_Left, Attack_Right -> {
-                return k * 0.375;
-            }
-            case Attack_Central -> {
-                return k * 0.450;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + ratingSector);
-        }
-    }
-
-    protected double calcStrength(@NotNull Player player, Integer playerSkill) {
+   protected double calcStrength(@NotNull Player player, Integer playerSkill) {
         var skillRating = calcSkillRating(player.getSkill(playerSkill));
         var loyalty  = calcLoyalty(player);
         var form = calcForm(player);
         var ret =  (skillRating + loyalty) * form;
-        HOLogger.instance().debug(getClass(), "calcStrength " + player.getFullName()
-                + " " + PlayerSkill.toString(playerSkill)
-                + "=" + skillRating
-                + " Loyalty=" + loyalty
-                + " form=" + player.getForm()
-                + " K(F)= " + form
-                + " (S+L)*K(F)= " + ret
-        );
+//        HOLogger.instance().debug(getClass(), "calcStrength " + player.getFullName()
+//                + " " + PlayerSkill.toString(playerSkill)
+//                + "=" + skillRating
+//                + " Loyalty=" + loyalty
+//                + " form=" + player.getForm()
+//                + " K(F)= " + form
+//                + " (S+L)*K(F)= " + ret
+//        );
         return ret;
     }
 
@@ -1017,6 +1075,7 @@ public class RatingPredictionModel {
     protected double calcSkillRating(double skill) {
         return max(0, skill - 1);
     }
+
 
     protected boolean isRoleSideRestricted(int roleID, Side side, @NotNull SideRestriction sideRestriction) {
         switch (sideRestriction) {
@@ -1294,7 +1353,4 @@ public class RatingPredictionModel {
         // 0,017272a + 1,042313
         return 0.01727 * a + 1.042313;
     }
-
-
-
 }

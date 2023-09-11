@@ -908,9 +908,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
             text = new StringBuilder(MatchRoleID.getNameForPosition(allPo.getPosition())
                     + " ("
-                    + Helper.getNumberFormat(false, 1).format(
-                    m_clPlayer.getIdealPositionRating())
-                    + "%)");
+                    + Helper.getNumberFormat(false, 2).format(
+                    m_clPlayer.getPositionRating(allPo.getPosition()))
+                    + ")");
             for (byte altPos : altPositions) {
                 if (altPos == allPo.getPosition()) {
                     text.append(" *");
