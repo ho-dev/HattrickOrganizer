@@ -364,7 +364,7 @@ public class LineupAssistant {
 		if ( players != null) {
 			for ( var player : players){
 
-				var r = ratingPredictionModel.getPlayerRating(player, RatingPredictionModel.getPlayerRatingPosition(position), getBehaviour(position));
+				var r = ratingPredictionModel.getPlayerMatchAverageRating(player, RatingPredictionModel.getPlayerRatingPosition(position), getBehaviour(position));
 
 				// stk inklusive Wetter effekt errechnen
 //				currentRating = player.calcPosValue(position, considerForm, weather, true);

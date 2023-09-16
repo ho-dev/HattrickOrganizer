@@ -59,7 +59,7 @@ public class PlayerPositionColumn extends PlayerColumn {
      */
     public ColorLabelEntry getEntryValue(Player player) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        var r = ratingPredictionModel.getPlayerRating(player, position);
+        var r = ratingPredictionModel.getPlayerMatchAverageRating(player, position);
         ColorLabelEntry temp = new ColorLabelEntry(r, getBackgroundColor(), false, core.model.UserParameter.instance().nbDecimals);
         var alternativePosition = player.getAlternativeBestPositions();
         for (byte altPos : alternativePosition) {
@@ -87,8 +87,8 @@ public class PlayerPositionColumn extends PlayerColumn {
                     SwingConstants.RIGHT);
         }
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        var playerRating = ratingPredictionModel.getPlayerRating(player, position);
-        var comparePlayerRating = ratingPredictionModel.getPlayerRating(comparePlayer, position);
+        var playerRating = ratingPredictionModel.getPlayerMatchAverageRating(player, position);
+        var comparePlayerRating = ratingPredictionModel.getPlayerMatchAverageRating(comparePlayer, position);
         return new ColorLabelEntry((float) (playerRating - comparePlayerRating),
                 getBackgroundColor(), false, false,
                 core.model.UserParameter.instance().nbDecimals);

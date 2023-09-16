@@ -206,7 +206,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setSpecialEvent(player.getPlayerSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
-                spotLineup.setRating(ratingPredictionModel.getPlayerRating(player, lineup.getEffectivePos4PositionID(spot)));
+                spotLineup.setRating(ratingPredictionModel.getPlayerMatchAverageRating(player, lineup.getEffectivePos4PositionID(spot)));
 
                 int cards = player.getCards();
                 int injury =  player.getInjuryWeeks();

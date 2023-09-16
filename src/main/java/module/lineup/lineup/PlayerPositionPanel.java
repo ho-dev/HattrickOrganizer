@@ -620,7 +620,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private void addTactic(@Nullable Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
             var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-            var r = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition);
+            var r = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID, playerPosition);
             text += " (" + r  + ")";
         }
         m_jcbTactic.addItem(new CBItem(text, playerPosition));

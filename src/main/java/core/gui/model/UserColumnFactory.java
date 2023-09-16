@@ -80,7 +80,7 @@ final public class UserColumnFactory {
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-                var r = ratingPredictionModel.getPlayerRating(spielerCBItem.getSpieler(), (byte)spielerCBItem.getPosition());
+                var r = ratingPredictionModel.getPlayerMatchAverageRating(spielerCBItem.getSpieler(), (byte)spielerCBItem.getPosition());
                 colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem.getPosition())
                         + " ("
                         + r

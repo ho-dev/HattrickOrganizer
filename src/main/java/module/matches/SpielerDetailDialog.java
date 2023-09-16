@@ -1297,14 +1297,14 @@ final class SpielerDetailDialog extends JDialog {
 	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 		labelEntry.getLeft().setText(
-				Helper.round(ratingPredictionModel.getPlayerRating(m_clPlayer, playerPosition), core.model.UserParameter.instance().nbDecimals) + "");
+				Helper.round(ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition), core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRight().clear();
 	}
 
 	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer, Player m_clVergleichsPlayer) {
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-		var r = ratingPredictionModel.getPlayerRating(m_clPlayer, playerPosition);
+		var r = ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition);
 		labelEntry.getLeft().setText(Helper.round(r, core.model.UserParameter.instance().nbDecimals) + "");
-		labelEntry.getRight().setSpecialNumber((float) (r - ratingPredictionModel.getPlayerRating(m_clVergleichsPlayer, playerPosition)), false);
+		labelEntry.getRight().setSpecialNumber((float) (r - ratingPredictionModel.getPlayerMatchAverageRating(m_clVergleichsPlayer, playerPosition)), false);
 	}
 }

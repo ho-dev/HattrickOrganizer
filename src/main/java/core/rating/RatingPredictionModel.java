@@ -320,6 +320,7 @@ public class RatingPredictionModel {
 
     private final List<String> copyrights = new ArrayList<>();
     private String copyrightSchumTranslated = null;
+
     /**
      * Get the rating contribution of a single player in lineup.
      * © Schum - the author of the formulas,
@@ -384,7 +385,7 @@ public class RatingPredictionModel {
      * A map of contribution factors of each player to the different rating sectors
      * If the value is not available in the cache it is calculated and stored in the cache.
      */
-    Cache4<RatingSector, Integer, Player, Byte> contributionCache = new Cache4<>() {
+    RatingCalculationCache4<RatingSector, Integer, Player, Byte> contributionCache = new RatingCalculationCache4<>() {
         @Override
         public double calc(RatingSector sector, Integer roleId, Player player, Byte behaviour) {
             return calcContribution(player, roleId, behaviour, sector);
@@ -728,7 +729,7 @@ public class RatingPredictionModel {
      * match tactic
      * If the value is not found in cache, it is calculated and stored in the cache
      */
-    Cache4<Double, Integer, Integer, Integer> staminaCache = new Cache4<>() {
+    RatingCalculationCache4<Double, Integer, Integer, Integer> staminaCache = new RatingCalculationCache4<>() {
         @Override
         public double calc(Double stamina, Integer minute, Integer startMinute, Integer tacticType) {
             return calcStamina(stamina, minute, startMinute, tacticType);
@@ -739,7 +740,7 @@ public class RatingPredictionModel {
      * Cache of experience rating contribution to a rating sector
      * If the requested value is missing, it will be calculated.
      */
-    Cache<Double, RatingSector> experienceCache = new Cache<>() {
+    RatingCalculationCache2<Double, RatingSector> experienceCache = new RatingCalculationCache2<>() {
         @Override
         public double calc(Double skillValue, RatingSector ratingSector) {
             return calcExperience(ratingSector, skillValue);
@@ -888,10 +889,10 @@ public class RatingPredictionModel {
      * @param behaviour behaviour
      * @return Weather independent player rating at match beginning
      */
-    public double getPlayerRating(Player p, int roleId, byte behaviour){
+    public double getPlayerRatingMatchBeginning(Player p, int roleId, byte behaviour){
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 0);
     }
-    public double getPlayerRating(Player p, byte positionWithBehaviour){
+    public double getPlayerRatingMatchBeginning(Player p, byte positionWithBehaviour){
         return playerRatingCache.get(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour), 0);
     }
 
@@ -899,7 +900,7 @@ public class RatingPredictionModel {
      * The cache of player rating results.
      * If the requested value is missing, it will be calculated.
      */
-    Cache4<Player, Integer, Byte, Integer> playerRatingCache = new Cache4<>() {
+    RatingCalculationCache4<Player, Integer, Byte, Integer> playerRatingCache = new RatingCalculationCache4<>() {
         @Override
         public double calc(Player player, Integer roleId, Byte behaviour, Integer minute) {
             return calcPlayerRating(player, roleId, behaviour, minute);
@@ -920,6 +921,29 @@ public class RatingPredictionModel {
         return ret;
     }
 
+    public double getPlayerMatchAverageRating(Player p, byte positionWithBehaviour){
+        return getPlayerRatingMatchBeginning(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour)) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
+    }
+
+    public double getPlayerMatchAverageRating(Player p, int roleId, byte behaviour){
+        return getPlayerRatingMatchBeginning(p, roleId, behaviour) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
+    }
+
+    private final RatingCalculationCache<Double> matchAverageStaminaFactorCache = new RatingCalculationCache<>() {
+        @Override
+        public double calc(Double stamina) {
+            return calcMatchAverageStaminaFactor(stamina);
+        }
+    };
+
+    private double getMatchAverageStaminaFactor(double skill) {
+        return matchAverageStaminaFactorCache.get(skill);
+    }
+
+    protected double calcMatchAverageStaminaFactor(double stamina) {
+        var ret = -.0033 * stamina * stamina + .085 * stamina + .51;
+        return min(1., ret);
+    }
 
     public double getPlayerRatingEndOfMatch(Player p, int roleId, byte behaviour){
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 90);
@@ -939,7 +963,7 @@ public class RatingPredictionModel {
         return  getPlayerRating(p, roleId, behaviour, minute) /  getPlayerRating(reference, roleId, behaviour, minute);
     }
 
-    Cache<Player, Integer> playerTaticStrengthCache = new Cache<>() {
+    RatingCalculationCache2<Player, Integer> playerTaticStrengthCache = new RatingCalculationCache2<>() {
         @Override
         public double calc(Player player, Integer skill) {
             return calcPlayerTacticStrength(player, skill);
@@ -947,7 +971,7 @@ public class RatingPredictionModel {
 
     };
 
-    Cache<Specialty, Weather> weatherCache = new Cache<>() {
+    RatingCalculationCache2<Specialty, Weather> weatherCache = new RatingCalculationCache2<>() {
         @Override
         public double calc(Specialty specialty, Weather weather) {
             return calcWeather(specialty, weather);

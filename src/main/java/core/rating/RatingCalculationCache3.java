@@ -1,13 +1,14 @@
 package core.rating;
 
 import java.util.HashMap;
-import java.util.Map;
 
-abstract class Cache3<T1, T2, T3> extends HashMap<T1, Map<T2, Map<T3, Double>>> {
+abstract class RatingCalculationCache3<T1, T2, T3> {
+    private final HashMap<T1, HashMap<T2, HashMap<T3, Double>>> theCache = new HashMap<>();
+
     public double get(T1 t1, T2 t2, T3 t3) {
         Double d;
-        Map<T3, Double> b = null;
-        var a = this.get(t1);
+        HashMap<T3, Double> b = null;
+        var a = theCache.get(t1);
 
         if (a != null) {
             b = a.get(t2);
@@ -27,7 +28,7 @@ abstract class Cache3<T1, T2, T3> extends HashMap<T1, Map<T2, Map<T3, Double>>> 
             a = new HashMap<>();
         }
         a.put(t2, b);
-        this.put(t1, a);
+        theCache.put(t1, a);
         return r;
     }
 

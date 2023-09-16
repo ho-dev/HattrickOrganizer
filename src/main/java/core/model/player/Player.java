@@ -1028,14 +1028,17 @@ public class Player extends AbstractTable.Storable {
 
     public double getPositionRating(byte position) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        return  ratingPredictionModel.getPlayerRating(this, position);
+        return  ratingPredictionModel.getPlayerMatchAverageRating(this, position);
     }
 
     static class PlayerPositionRating {
-        public PlayerPositionRating(Integer p, Byte behaviour, double d) {
+        private final double relativeRating;
+
+        public PlayerPositionRating(Integer p, Byte behaviour, double rating, double ralativeRating) {
             this.roleId = p;
             this.behaviour = behaviour;
-            this.rating = d;
+            this.rating = rating;
+            this.relativeRating = ralativeRating;
         }
 
         public double getRating() {
@@ -1067,6 +1070,10 @@ public class Player extends AbstractTable.Storable {
         }
 
         byte behaviour;
+
+        public double getRelativeRating() {
+            return relativeRating;
+        }
     }
 
     List<PlayerPositionRating> getAllPositionRatings(){
@@ -1074,8 +1081,8 @@ public class Player extends AbstractTable.Storable {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         for ( var p : RatingPredictionModel.playerRatingPositions){
             for ( var behaviour : MatchRoleID.getBehaviours(p)){
-                var d = ratingPredictionModel.getPlayerRating(this, p, behaviour);
-                ret.add(new PlayerPositionRating(p, behaviour, d));
+                var d = ratingPredictionModel.getPlayerMatchAverageRating(this, p, behaviour);
+                ret.add(new PlayerPositionRating(p, behaviour, d, ratingPredictionModel.calcRelativePlayerRating(this, p, behaviour, 0)));
             }
         }
         return ret;
@@ -1542,6 +1549,7 @@ public class Player extends AbstractTable.Storable {
             case SCORING -> m_dSubTorschuss;
             case SET_PIECES -> m_dSubStandards;
             case EXPERIENCE -> subExperience;
+            case STAMINA -> 0.5;
             default -> 0;
         };
 

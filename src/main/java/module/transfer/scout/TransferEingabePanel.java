@@ -390,43 +390,43 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 +  tempPlayer.getIdealPositionRating()
                 + ")");
         jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.keeper, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.keeper, NORMAL)));
         jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, NORMAL)));
         jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, TOWARDS_WING)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, TOWARDS_WING)));
         jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, IMatchRoleID.leftCentralDefender, OFFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, OFFENSIVE)));
         jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, NORMAL)));
         jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, TOWARDS_MIDDLE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, TOWARDS_MIDDLE)));
         jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, OFFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, OFFENSIVE)));
         jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftBack, DEFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, DEFENSIVE)));
         jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, NORMAL)));
         jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, TOWARDS_WING)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, TOWARDS_WING)));
         jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, OFFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, OFFENSIVE)));
         jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftInnerMidfield, DEFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, DEFENSIVE)));
         jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, NORMAL)));
         jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, TOWARDS_MIDDLE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, TOWARDS_MIDDLE)));
         jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, OFFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, OFFENSIVE)));
         jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftWinger, DEFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, DEFENSIVE)));
         jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, NORMAL)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, NORMAL)));
         jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, TOWARDS_WING)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, TOWARDS_WING)));
         jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
-                .format(ratingPredictionModel.getPlayerRating(tempPlayer, leftForward, DEFENSIVE)));
+                .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, DEFENSIVE)));
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
         clScoutEntry.setForm(((CBItem) jcbForm.getSelectedItem()).getId());

@@ -337,8 +337,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 
-        var playerAbsoluteValue = ratingPredictionModel.getPlayerRating(m_clPlayer, playerPosition);
-        var tmpAbsoluteValue = ratingPredictionModel.getPlayerRating(tempPlayer, playerPosition);
+        var playerAbsoluteValue = ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition);
+        var tmpAbsoluteValue = ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, playerPosition);
         //var tmpRelativeValue = tempPlayer.calcPosValue(playerPosition, true, true, null, false);
         var nbDecimals = core.model.UserParameter.instance().nbDecimals;
 //        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpRelativeValue) + "%  " +
