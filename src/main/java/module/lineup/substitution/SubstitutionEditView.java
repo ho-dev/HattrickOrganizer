@@ -277,6 +277,7 @@ public class SubstitutionEditView extends JPanel {
 		this.substitution = getSubstitution(-1);
 		if (substitution.getSubjectPlayerID() !=  -1 &&
 				(this.orderType == MatchOrderType.NEW_BEHAVIOUR || substitution.getObjectPlayerID() != -1)) {
+			this.lineup.setSubstitutionsUpdated();
 //			this.lineup.setRatings();
 			this.effectOnHatstats.setNewValue(hatstats());
 			this.effectOnLoddarstats.setNewValue(loddarstats());

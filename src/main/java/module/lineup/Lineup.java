@@ -101,7 +101,11 @@ public class Lineup{
 		return ratingRevision;
 	}
 
-	private static class Settings {
+    public void setSubstitutionsUpdated() {
+		ratingRevision++;
+    }
+
+    private static class Settings {
 		/** Attitude */
 		@SerializedName("speechLevel")
 		@Expose
