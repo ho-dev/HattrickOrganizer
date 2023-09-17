@@ -165,6 +165,12 @@ public class Substitution extends AbstractTable.Storable {
 	public void setRoleId(byte roleId)
 	{
 		this.roleId = roleId;
+		if ( roleId > 99 && roleId <= 113){
+			this.pos = (byte) (roleId-100);
+		}
+		else {
+			this.pos = -1;
+		}
 	}
 
 	public byte getBehaviour() {
