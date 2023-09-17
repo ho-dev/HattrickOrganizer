@@ -798,16 +798,29 @@ public class RatingPredictionModel {
         }
 
         var r = r0;
-        for (var m = startMinute; m < minute; m += 5) {
-            if (startMinute < 45 && m >= 45 && m < 50) {
+        var m = min(45, minute);
+        if (startMinute < m) {
+            r += (m - startMinute) * delta / 5.;
+        }
+        var from = max(45, startMinute);
+        if (minute >= 45) {
+            if (startMinute < 45) {
                 r = min(r0, r + 120.75 - 102);
-            } else if (startMinute < 90 && m >= 90 && m < 95) {
-                r = min(r0, r + 127 - 120.75);
-            } else {
-                r += delta;
+            }
+            m = min(90, minute);
+            if (from < m) {
+                r += (m - from) * delta / 5.;
             }
         }
-
+        if (minute >= 90) {
+            from = max(90, startMinute);
+            if (startMinute < 90) {
+                r = min(r0, r + 127 - 120.75);
+            }
+            if (s < minute) {
+                r += (minute - from) * delta / 5.;
+            }
+        }
         return min(1, r / 100.);
     }
 

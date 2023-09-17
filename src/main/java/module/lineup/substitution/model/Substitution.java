@@ -39,8 +39,8 @@ public class Substitution extends AbstractTable.Storable {
 	 * 0-13, see positions above for the order.
 	 * -1 means no change.
 	 * <p>
-	 * Attention: intellij claims that pos is never used.
-	 * this is wrong. serialization of the json order (should) use it.
+	 * ATTENTION: intellij claims that pos is never used.
+	 * this is wrong. serialization of the json order use it.
 	 */
 	@SerializedName("pos")
 	@Expose

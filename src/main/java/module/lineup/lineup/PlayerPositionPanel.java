@@ -54,10 +54,10 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private final int layerIndex = 0;
     private Weather m_weather;
     private boolean m_useWeatherImpact;
-    private int matchMinute;
+    private Integer matchMinute;
 
     //constructor
-    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather, boolean useWeatherImpact, int matchMinute) {
+    protected PlayerPositionPanel(Updatable updater, int positionsID, @Nullable Weather weather, boolean useWeatherImpact, Integer matchMinute) {
         super(false);
 
         m_clUpdater = updater;
@@ -74,7 +74,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     protected PlayerPositionPanel(Updatable updater, int positionsID) {
-        this(updater, positionsID, null, false, 0);
+        this(updater, positionsID, null, false, null);
     }
 
     public int getPositionsID() {
@@ -272,7 +272,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     m_jcbPlayer.setEnabled(true); // To be sure
                     iSelectedPlayerId = selectedPlayer.getPlayerID();
                 } else {
-                    // We want to enable the combobox if there is room in the lineup or if it is a substitue position
+                    // We want to enable the combobox if there is room in the lineup or if it is a substitute position
                     m_jcbPlayer.setEnabled((lineup.hasFreePosition()) || (m_iPositionID >= IMatchRoleID.startReserves));
                 }
 
@@ -528,11 +528,11 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
                 Font defaultFont = m_jlPosition.getFont();
                 int fontSize = defaultFont.getSize();
-                String fontFamilly = defaultFont.getFamily();
+                String fontFamily = defaultFont.getFamily();
                 String hexColor = ImageUtilities.getHexColor(HOColorName.RED);
 
-                final String  nameForPosition1 = "<html> <font family=" + fontFamilly +  "size=" + fontSize + "pt>";
-                final String  nameForPosition2 = "</font> <font family=" + fontFamilly + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
+                final String  nameForPosition1 = "<html> <font family=" + fontFamily +  "size=" + fontSize + "pt>";
+                final String  nameForPosition2 = "</font> <font family=" + fontFamily + "size=" + fontSize + "pt color=" + hexColor + ">&nbsp&nbsp";
                 final String  nameForPosition3 = "</font></html>";
                 final String nameForPosition = nameForPosition1 + getNameForLineupPosition(position.getPosition()) + nameForPosition2 + getTacticSymbol() + nameForPosition3;
 
@@ -620,8 +620,14 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private void addTactic(@Nullable Player currentPlayer, String text, byte playerPosition) {
         if (currentPlayer != null) {
             var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-            var r = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID, playerPosition);
-            text += " (" + r  + ")";
+            double rating;
+            if ( matchMinute == null || matchMinute < 0 || matchMinute >= 120) {
+                rating = ratingPredictionModel.getPlayerMatchAverageRating(currentPlayer, m_iPositionID, playerPosition);
+            }
+            else {
+                rating = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition, matchMinute);
+            }
+            text += " (" + rating  + ")";
         }
         m_jcbTactic.addItem(new CBItem(text, playerPosition));
     }
@@ -648,7 +654,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 final var position = lineup.getPositionById(m_iPositionID);
 
                 if (position != null) {
-                    var minute = 0;
                     var roleId = position.getRoleId();
 
                     switch (roleId) {
@@ -658,11 +663,16 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         case substWI1, substWI2 -> roleId = leftWinger;
                         case substIM1, substIM2 -> roleId = leftInnerMidfield;
                         case substFW1, substFW2 -> roleId = leftForward;
-                        default -> minute = this.matchMinute;
                     }
 
                     var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-                    var value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), minute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                    double value;
+                    if ( this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120){
+                        value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour());
+                    }
+                    else {
+                        value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                    }
                     var alternativePositions = player.getAlternativeBestPositions();
                     boolean bestPosition = false;
                     for (byte altPos : alternativePositions) {
