@@ -32,7 +32,19 @@ public class Substitution extends AbstractTable.Storable {
 	@SerializedName("min")
 	@Expose
 	private int matchMinuteCriteria = -1;
-	// json attribute 0-13
+	/**
+	 * pos
+	 * <p>
+	 * the position the player should take after the substitution,
+	 * 0-13, see positions above for the order.
+	 * -1 means no change.
+	 * <p>
+	 * Attention: intellij claims that pos is never used.
+	 * this is wrong. serialization of the json order (should) use it.
+	 */
+	@SerializedName("pos")
+	@Expose
+	private byte pos = -1;			// json attribute 0-13
 	private byte roleId = -1;		// 100-113
 	@SerializedName("beh")
 	@Expose
