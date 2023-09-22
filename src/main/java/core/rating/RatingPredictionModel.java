@@ -230,11 +230,11 @@ public class RatingPredictionModel {
      */
     protected double getRatingSectorScaleFactor(RatingSector s) {
         return switch (s) {
-            case Midfield -> .325;
-            case Defence_Left, Defence_Right -> .840;
-            case Defence_Central -> .508;
-            case Attack_Central -> .554;
-            case Attack_Left, Attack_Right -> .692;
+            case Midfield -> .298;
+            case Defence_Left, Defence_Right -> .811;
+            case Defence_Central -> .496;
+            case Attack_Central -> .526;
+            case Attack_Left, Attack_Right -> .634;
         };
     }
 
@@ -934,6 +934,12 @@ public class RatingPredictionModel {
         return ret;
     }
 
+    /**
+     * Get the player's match average rating
+     * @param p Player
+     * @param positionWithBehaviour Lineup position and behaviour
+     * @return double
+     */
     public double getPlayerMatchAverageRating(Player p, byte positionWithBehaviour){
         return getPlayerRatingMatchBeginning(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour)) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
     }
@@ -942,6 +948,10 @@ public class RatingPredictionModel {
         return getPlayerRatingMatchBeginning(p, roleId, behaviour) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
     }
 
+    /**
+     * Map of match average stamina factors
+     * If the requested value is not contained, it is calculated and added to the map.
+     */
     private final RatingCalculationCache<Double> matchAverageStaminaFactorCache = new RatingCalculationCache<>() {
         @Override
         public double calc(Double stamina) {
@@ -949,10 +959,21 @@ public class RatingPredictionModel {
         }
     };
 
+    /**
+     * Get the match average stamina factor
+     * @param skill Stamina skill value
+     * @return double
+     */
     private double getMatchAverageStaminaFactor(double skill) {
         return matchAverageStaminaFactorCache.get(skill);
     }
 
+    /**
+     * Calculate the match average stamina factor
+     * Formula fitting the values published by Schum.
+     * @param stamina
+     * @return
+     */
     protected double calcMatchAverageStaminaFactor(double stamina) {
         var ret = -.0033 * stamina * stamina + .085 * stamina + .51;
         return min(1., ret);
@@ -965,6 +986,14 @@ public class RatingPredictionModel {
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 120);
     }
 
+    /**
+     * Calculate the player rating related to an optimal reference player
+     * @param p PLayer
+     * @param roleId Lineup position
+     * @param behaviour Behaviour
+     * @param minute match minute
+     * @return Double
+     */
     public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute){
         Player reference;
         if (  roleId == KEEPER){
@@ -1108,8 +1137,8 @@ public class RatingPredictionModel {
     }
 
     protected double calcForm(@NotNull Player player) {
-        var form = calcSkillRating(player.getSkill(PlayerSkill.FORM));
-        return 0.378 * sqrt(form);
+        var form = min(7., calcSkillRating(.5 + player.getSkill(PlayerSkill.FORM)));
+        return 0.378 * sqrt(form);  // form 0.5 .. 7.0
     }
 
     protected double calcLoyalty(@NotNull Player player) {
@@ -1121,7 +1150,6 @@ public class RatingPredictionModel {
     protected double calcSkillRating(double skill) {
         return max(0, skill - 1);
     }
-
 
     protected boolean isRoleSideRestricted(int roleID, Side side, @NotNull SideRestriction sideRestriction) {
         switch (sideRestriction) {
