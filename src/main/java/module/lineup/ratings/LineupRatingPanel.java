@@ -619,13 +619,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             }
 
 
-            m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Right));
-            m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Central));
-            m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Defence_Left));
-            m_jpMidfield.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Midfield));
-            m_jpLeftAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Left));
-            m_jpCentralAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Central));
-            m_jpRightAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.Attack_Right));
+            m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT));
+            m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL));
+            m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT));
+            m_jpMidfield.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.MIDFIELD));
+            m_jpLeftAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_LEFT));
+            m_jpCentralAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_CENTRAL));
+            m_jpRightAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT));
 
             setLoddar(Helper.round(minuteRating.loddar(currentLineup), 2));
             setiHatStats((int) minuteRating.hatstats(currentLineup));

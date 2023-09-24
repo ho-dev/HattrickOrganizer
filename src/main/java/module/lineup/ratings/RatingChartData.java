@@ -111,97 +111,97 @@ public final class RatingChartData {
 
 	double[] getLeftDefence() {
 		if(leftDefence == null) {
-			leftDefence = new RatingChartValues(Defence_Left);
+			leftDefence = new RatingChartValues(DEFENCE_LEFT);
 		}
 		return leftDefence.getValues(isExtraTime);
 	}
 
 	double getLeftDefenceAvg() {
 		if(leftDefence == null) {
-			leftDefence = new RatingChartValues(Defence_Left);
+			leftDefence = new RatingChartValues(DEFENCE_LEFT);
 		}
 		return leftDefence.getAverage(isExtraTime);
 	}
 
 	double[] getCentralDefence() {
 		if(centralDefence == null) {
-			centralDefence = new RatingChartValues(Defence_Central);
+			centralDefence = new RatingChartValues(DEFENCE_CENTRAL);
 		}
 		return centralDefence.getValues(isExtraTime);
 	}
 
 	double getCentralDefenceAvg() {
 		if(centralDefence == null) {
-			centralDefence = new RatingChartValues(Defence_Central);
+			centralDefence = new RatingChartValues(DEFENCE_CENTRAL);
 		}
 		return centralDefence.getAverage(isExtraTime);
 	}
 
 	double[] getRightDefence() {
 		if(rightDefence  == null) {
-			rightDefence = new RatingChartValues(Defence_Right);
+			rightDefence = new RatingChartValues(DEFENCE_RIGHT);
 		}
 		return rightDefence.getValues(isExtraTime);
 	}
 
 	double getRightDefenceAvg() {
 		if(rightDefence == null) {
-			rightDefence = new RatingChartValues(Defence_Right);
+			rightDefence = new RatingChartValues(DEFENCE_RIGHT);
 		}
 		return rightDefence.getAverage(isExtraTime);
 	}
 	double[] getMidfield() {
 		if(midfield == null) {
-			midfield = new RatingChartValues(Midfield);
+			midfield = new RatingChartValues(MIDFIELD);
 		}
 		return midfield.getValues(isExtraTime);
 	}
 
 	double getMidfieldAvg() {
 		if(midfield == null) {
-			midfield = new RatingChartValues(Midfield);
+			midfield = new RatingChartValues(MIDFIELD);
 		}
 		return midfield.getAverage(isExtraTime);
 	}
 
 	double[] getLeftAttack() {
 		if(leftAttack == null) {
-			leftAttack = new RatingChartValues(Attack_Left);
+			leftAttack = new RatingChartValues(ATTACK_LEFT);
 		}
 		return leftAttack.getValues(isExtraTime);
 	}
 
 	double getLeftAttackAvg() {
 		if(leftAttack == null) {
-			leftAttack = new RatingChartValues(Attack_Left);
+			leftAttack = new RatingChartValues(ATTACK_LEFT);
 		}
 		return leftAttack.getAverage(isExtraTime);
 	}
 
 	double[] getCentralAttack() {
 		if(centralAttack == null) {
-			centralAttack = new RatingChartValues(Attack_Central);
+			centralAttack = new RatingChartValues(ATTACK_CENTRAL);
 		}
 		return centralAttack.getValues(isExtraTime);
 	}
 
 	double getCentralAttackAvg() {
 		if(centralAttack == null) {
-			centralAttack = new RatingChartValues(Attack_Central);
+			centralAttack = new RatingChartValues(ATTACK_CENTRAL);
 		}
 		return centralAttack.getAverage(isExtraTime);
 	}
 
 	double[] getRightAttack() {
 		if(rightAttack == null) {
-			rightAttack = new RatingChartValues(Attack_Right);
+			rightAttack = new RatingChartValues(ATTACK_RIGHT);
 		}
 		return rightAttack.getValues(isExtraTime);
 	}
 
 	double getRightAttackAvg() {
 		if(rightAttack == null) {
-			rightAttack = new RatingChartValues(Attack_Right);
+			rightAttack = new RatingChartValues(ATTACK_RIGHT);
 		}
 		return rightAttack.getAverage(isExtraTime);
 	}

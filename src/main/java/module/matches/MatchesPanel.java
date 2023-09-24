@@ -304,13 +304,13 @@ public final class MatchesPanel extends LazyImagePanel {
 		var ratingPredictionModel = hoModel.getRatingPredictionModel();
 
 		TeamRatings teamRatings = manager.generateTeamRatings(
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Midfield, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Left, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Central, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Right, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Left, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Central, 90))),
-				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Right, 90))));
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.MIDFIELD, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_LEFT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_CENTRAL, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT, 90))));
 
 		int tactic = lineup.getTacticType();
 		return manager.generateTeamData(HOVerwaltung.instance().getModel().getBasics().getTeamName(), teamRatings, tactic, getTacticStrength(lineup));

@@ -257,13 +257,13 @@ public class TeamPanel extends JPanel {
         fillPanel(lineupPanel.getMyTeam().getCentralMidfieldPanel(), list.get(IMatchRoleID.centralInnerMidfield));
         fillPanel(lineupPanel.getMyTeam().getMiddleCentralDefenderPanel(), list.get(IMatchRoleID.middleCentralDefender));
 
-        lineupPanel.getMyTeam().setLeftAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Left, 90)));
-        lineupPanel.getMyTeam().setLeftDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Left, 90)));
-        lineupPanel.getMyTeam().setRightAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Right, 90)));
-        lineupPanel.getMyTeam().setRightDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Right, 90)));
-        lineupPanel.getMyTeam().setMiddleAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Attack_Central, 90)));
-        lineupPanel.getMyTeam().setMiddleDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Defence_Central, 90)));
-        lineupPanel.getMyTeam().setMidfield(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.Midfield, 90)));
+        lineupPanel.getMyTeam().setLeftAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_LEFT, 90)));
+        lineupPanel.getMyTeam().setLeftDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT, 90)));
+        lineupPanel.getMyTeam().setRightAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT, 90)));
+        lineupPanel.getMyTeam().setRightDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT, 90)));
+        lineupPanel.getMyTeam().setMiddleAttack(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_CENTRAL, 90)));
+        lineupPanel.getMyTeam().setMiddleDefence(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL, 90)));
+        lineupPanel.getMyTeam().setMidfield(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.MIDFIELD, 90)));
     }
 
     private int convertRating(double rating) {

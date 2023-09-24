@@ -296,7 +296,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				lineupPanel.updateStyleOfPlayComboBox();
 			} else if (event.getSource().equals(m_jcbWeather)) {
 				Lineup lineup = homodel.getCurrentLineup();
-                lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
+                lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is override
                 lineup.setWeather(getWeather());
                 lineupPanel.refreshLineupPositionsPanel();
             } else if (event.getSource().equals(this.m_jcbPredictionModel)) {

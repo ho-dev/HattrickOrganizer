@@ -968,9 +968,9 @@ public class Player extends AbstractTable.Storable {
 //        return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal, weather, useWeatherImpact);
 //    }
 
-    public double getIdealPositionRating(){
-        var maxRating =  getMaxRating();
-        if ( maxRating != null){
+    public double getIdealPositionRating() {
+        var maxRating = getMaxRating();
+        if (maxRating != null) {
             return maxRating.getRating();
         }
         return 0;
@@ -1112,7 +1112,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * return whether or not the position is one of the best position for the player
+     * return whether the position is one of the best position for the player
      */
     public boolean isAnAlternativeBestPosition(byte position){
         return getAlternativeBestPositions().contains(position);

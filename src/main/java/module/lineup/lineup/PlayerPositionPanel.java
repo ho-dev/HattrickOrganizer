@@ -668,7 +668,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                     var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
                     double value;
                     if ( this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120){
-                        value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour());
+                        value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour(), this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
                     }
                     else {
                         value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
