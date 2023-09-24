@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 final class ModuleConfigTable extends AbstractTable {
 	final static String TABLENAME = "MODULE_CONFIGURATION";
@@ -26,16 +25,12 @@ final class ModuleConfigTable extends AbstractTable {
 	 * update & insert method
 	 */
 	void saveConfig(Map<String, Object> values) {
-		int updated;
-		String key;
-
-		final Set<String> keys = values.keySet();
-		for (String s : keys) {
-			key = s;
-			updated = updateConfig(key, values.get(key));
-			if (updated == 0)
-				insertConfig(key, values.get(key));
-		} // for		
+		for (var entry : values.entrySet()) {
+			var updated = updateConfig(entry.getKey(), entry.getValue());
+			if (updated == 0) {
+				insertConfig(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 
 	@Override
@@ -111,7 +106,7 @@ final class ModuleConfigTable extends AbstractTable {
 	
 	@Override
 	protected void insertDefaultValues(){
-		if(findAll().size() == 0){
+		if(findAll().isEmpty()){
 			HashMap<String, Object> defaults = new HashMap<>();
 			defaults.put("TA_numericRating", Boolean.FALSE);
 			defaults.put("TA_descriptionRating", Boolean.TRUE);

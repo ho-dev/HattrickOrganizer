@@ -142,6 +142,20 @@ public class ConvertXml2Hrf {
 			playersData.add(properties);
 		}
 
+		var trainerId = String.valueOf(teamdetailsDataMap.get("TrainerID"));
+		// If trainer is not in players data, download trainer info from player details
+		var found = false;
+		for ( var p : playersData){
+			if ( p.get("PlayerID").equals(trainerId)){
+				found=true;
+				break;
+			}
+		}
+		if ( !found){
+			var xml = MyConnector.instance().downloadPlayerDetails(trainerId);
+			playersData.add(new XMLPlayersParser().parsePlayerDetails(xml));
+		}
+
 
 		// Download players' avatar
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
