@@ -38,7 +38,8 @@ Hattrick organizer development moved to https://github.com/ho-dev/HattrickOrgani
 
 ## Translations
 
-Reports by Contributors - July 22, 2023 - July 29, 2023
+Reports by Contributors - July 22, 2023 - September 24, 2023
+* Georgi 10
 * Dušan 1
 
 Total 1
