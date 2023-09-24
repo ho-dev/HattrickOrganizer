@@ -8,8 +8,8 @@
 <tr>
   <td>Latest Release</td>
   <td>
-    <a href="https://github.com/ho-dev/HattrickOrganizer/releases/tag/7.2">
-    <img src="https://img.shields.io/badge/HO-7.2-brightgreen.svg" alt="latest release" />
+    <a href="https://github.com/ho-dev/HattrickOrganizer/releases/tag/7.3">
+    <img src="https://img.shields.io/badge/HO-7.3-brightgreen.svg" alt="latest release" />
     </a>
   </td>
 </tr>
