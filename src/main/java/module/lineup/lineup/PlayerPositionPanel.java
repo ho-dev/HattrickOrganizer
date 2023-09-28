@@ -665,20 +665,21 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         case substFW1, substFW2 -> roleId = leftForward;
                     }
 
-                    var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-                    double value;
-                    if ( this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120){
-                        value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour(), this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
-                    }
-                    else {
-                        value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
-                    }
-                    var alternativePositions = player.getAlternativeBestPositions();
+                    double value=0.;
                     boolean bestPosition = false;
-                    for (byte altPos : alternativePositions) {
-                        if (altPos == position.getPosition()) {
-                            bestPosition = true;
-                            break;
+                    if ( roleId != substXT2 && roleId != substXT1) {
+                        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                        if (this.matchMinute == null || this.matchMinute < 0 || this.matchMinute > 120) {
+                            value = ratingPredictionModel.getPlayerMatchAverageRating(player, roleId, position.getBehaviour(), this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                        } else {
+                            value = ratingPredictionModel.getPlayerRating(player, roleId, position.getBehaviour(), this.matchMinute, this.m_useWeatherImpact ? this.m_weather : Weather.UNKNOWN);
+                        }
+                        var alternativePositions = player.getAlternativeBestPositions();
+                        for (byte altPos : alternativePositions) {
+                            if (altPos == position.getPosition()) {
+                                bestPosition = true;
+                                break;
+                            }
                         }
                     }
 

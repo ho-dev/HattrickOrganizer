@@ -207,34 +207,17 @@ public class RatingPredictionModel {
     }
 
     /**
-     * Transform skill scale to player rating
-     * @param s Rating sector
-     * @param ret Skill scale rating value
-     * @return Player rating
-     */
-    protected double calcPlayerScale(RatingSector s, double ret){
-        if ( ret > 0 ){
-            ret *= getRatingSectorScaleFactor(s);
-            if ( s == RatingSector.MIDFIELD) {
-                ret *= 3; // midfield weight like hatstats
-            }
-            return pow(ret, 1.2) / 4.;
-        }
-        return 0;
-    }
-
-    /**
      * Get rating sector scaling factor
      * @param s Rating sector
      * @return scaling factor
      */
     protected double getRatingSectorScaleFactor(RatingSector s) {
         return switch (s) {
-            case MIDFIELD -> .298;
-            case DEFENCE_LEFT, DEFENCE_RIGHT -> .811;
-            case DEFENCE_CENTRAL -> .496;
-            case ATTACK_CENTRAL -> .526;
-            case ATTACK_LEFT, ATTACK_RIGHT -> .634;
+            case MIDFIELD -> .312;
+            case DEFENCE_LEFT, DEFENCE_RIGHT -> .834;
+            case DEFENCE_CENTRAL -> .501;
+            case ATTACK_CENTRAL -> .513;
+            case ATTACK_LEFT, ATTACK_RIGHT -> .615;
         };
     }
 
@@ -931,9 +914,11 @@ public class RatingPredictionModel {
         var ret = 0.;
         for (var s : RatingSector.values()) {
             var c = getPositionContribution(p, roleId, behaviour, s, minute);
-            ret += calcPlayerScale(s,c);
+            c *= getRatingSectorScaleFactor(s);
+            if ( s == RatingSector.MIDFIELD) c *= 3; // fit to hatstats
+            ret += c;
         }
-        return ret;
+        return pow(ret, 1.2) / 4.;
     }
 
     /**
@@ -976,7 +961,7 @@ public class RatingPredictionModel {
     /**
      * Calculate the match average stamina factor
      * Formula fitting the values published by Schum.
-     * @param stamina
+     * @param stamina Stamina skill value
      * @return
      */
     protected double calcMatchAverageStaminaFactor(double stamina) {
