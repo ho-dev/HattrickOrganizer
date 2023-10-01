@@ -179,17 +179,6 @@ public class HOModel {
         DBManager.instance().storeMatchLineupTeam(matchLineupTeam);
     }
 
-    //--------- Lineup ----------------------------------
-
-//    /**
-//     * returns the lineup (setRatings is called)
-//     */
-//    public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
-//        getCurrentLineupTeam();
-//        m_clAufstellung.getLineup().setRatings();
-//        return m_clAufstellung;
-//    }
-
     private void calcStyleOfPlay() {
         if (m_clAufstellung != null) {
             var trainerType = getTrainer().getTrainerTyp();

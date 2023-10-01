@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Objects;
 import java.util.Properties;
 
 public class RatingPredictionParameter  {
@@ -108,7 +107,7 @@ public class RatingPredictionParameter  {
     	if (allProps.containsKey(section)) {
     		Properties props = allProps.get(section);
     		String propString = props.getProperty(key, "" + defVal);
-    		if (!Objects.equals(propString, "")) {
+    		if (!propString.isEmpty()) {
     			return Double.parseDouble(propString);
     		}
     	}

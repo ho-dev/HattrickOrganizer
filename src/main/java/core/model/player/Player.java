@@ -309,14 +309,6 @@ public class Player extends AbstractTable.Storable {
     // real rating value is rating/2.0f
     private Integer m_lastMatchRating;
     private Integer lastMatchRatingEndOfGame;
-
-    // TODO this should not be an attribute of Player. Move it to lineup (MatchLineupPosition or something like this)
-    /**
-     * specifying at what time –in minutes- that player entered the field
-     * This parameter is only used by RatingPredictionManager to calculate the stamina effect
-     * along the course of the game
-     */
-//    private int GameStartingTime = 0;
     private Integer nationalTeamId;
     private double subExperience;
 
@@ -948,29 +940,6 @@ public class Player extends AbstractTable.Storable {
         return referencePlayer;
     }
 
-
-//    /**
-//     * calculate the contribution for the ideal position
-//     */
-//    public float getIdealPositionStrength(boolean mitForm, @Nullable Weather weather, boolean useWeatherImpact) {
-//        return getIdealPositionStrength(mitForm, false, weather, useWeatherImpact);
-//    }
-//
-//
-//    /**
-//     * calculate the contribution for the ideal position
-//     */
-//    public float getIdealPositionStrength(boolean mitForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
-//        return getIdealPositionStrength(mitForm, normalized, 2, weather, useWeatherImpact);
-//    }
-//
-//    /**
-//     * calculate the contribution for the ideal position
-//     */
-//    public float getIdealPositionStrength(boolean mitForm, boolean normalized, int nb_decimal, @Nullable Weather weather, boolean useWeatherImpact) {
-//        return calcPosValue(getIdealPosition(), mitForm, normalized, nb_decimal, weather, useWeatherImpact);
-//    }
-
     public double getIdealPositionRating() {
         var maxRating = getMaxRating();
         if (maxRating != null) {
@@ -978,27 +947,6 @@ public class Player extends AbstractTable.Storable {
         }
         return 0;
     }
-
-    /**
-     * Calculate Player Ideal Position (weather impact not relevant here)
-     */
-//    public byte calculateIdealPosition(){
-//        final FactorObject[] allPos = FormulaFactors.instance().getAllObj();
-//        float maxStk = -1.0f;
-//        byte currPosition;
-//        float contrib;
-//
-//        for (int i = 0; (allPos != null) && (i < allPos.length); i++) {
-//            if (allPos[i].getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
-//            currPosition = allPos[i].getPosition();
-//            contrib = calcPosValue(currPosition, true, true, null, false);
-//            if (contrib > maxStk) {
-//                maxStk = contrib;
-//                idealPos = currPosition;
-//            }
-//        }
-//        return idealPos ;
-//    }
 
     private PlayerPositionRating getMaxRating(){
         var maxRating = getAllPositionRatings().stream().max(Comparator.comparing(PlayerPositionRating::getRating));

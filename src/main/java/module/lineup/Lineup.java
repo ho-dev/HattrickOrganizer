@@ -143,6 +143,11 @@ public class Lineup{
 	private int m_iRegionId = -1;
 	private Weather m_cWeather = Weather.NULL;
 	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
+
+	/**
+	 * The rating revision number gets incremented each time a rating relevant property gets changes.
+	 * This is used by rating calculating caches, that will reset, when they see a new revision number.
+	 */
 	private long ratingRevision=0;
 
 	// ~ Constructors
