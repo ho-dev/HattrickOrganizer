@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* refactoring rating prediction (implement Schum rating)
 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
@@ -12,6 +13,7 @@
 ### Team Analyzer
 
 ### Rating
+* implement schum rating prediction (#1782)
 
 ### Matches
 
@@ -32,7 +34,7 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - September 23, 2023
+Reports by Contributors - September 24, 2023 - September 24, 2023
 
 
 Total 0
