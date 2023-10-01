@@ -27,7 +27,7 @@ public final class PlayerOverviewModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new SpielerUebersichtsPanel();
+		return new PlayerOverviewPanel();
 	}
 
 	public KeyStroke getKeyStroke() {

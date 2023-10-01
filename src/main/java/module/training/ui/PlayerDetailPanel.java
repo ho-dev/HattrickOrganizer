@@ -3,7 +3,6 @@ package module.training.ui;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
-import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
@@ -19,6 +18,7 @@ import module.training.ui.model.TrainingModel;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.Serial;
 
 import javax.swing.*;
 
@@ -29,6 +29,7 @@ import javax.swing.*;
  */
 public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
+    @Serial
     private static final long serialVersionUID = -6606934473344186243L;
     private static final int skillNumber = 9;
     private JLabel playerLabel;
@@ -36,8 +37,6 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private HTColorBar[] levelBar;
     private JLabel[] skillLabel;
     private final TrainingModel model;
-
-    private int playerId;
 
     /**
      * Creates the panel and its components
@@ -72,7 +71,6 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
      */
     private void loadFromModel() {
         if (this.model.getActivePlayer() == null) {
-            this.playerId = -1;
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             m_jtaNotes.setEditable(false);
             m_jtaNotes.setText("");
@@ -84,10 +82,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             return;
         }
 
-        this.playerId = this.model.getActivePlayer().getPlayerID();
         // sets player number
         String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
-                + this.model.getActivePlayer().getIdealPositionStrength(true, false, 2, null, false) + ")";
+                + this.model.getActivePlayer().getIdealPositionRating() + ")";
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
@@ -98,17 +95,17 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
         for (int i = 0; i < skillNumber; i++) {
             int skillIndex = Skills.getSkillAtPosition(i);
-            float skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
+            var skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
             skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
             FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
             double finalValue = getSkillValue(fp, skillIndex);
 
             float skillValueInt = (int) skillValue;
-            float skillValueDecimal = skillValue - skillValueInt;
+            var skillValueDecimal = skillValue - skillValueInt;
 
             levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(i), skillValueInt);
-            levelBar[i].setSkillDecimalLevel(skillValueDecimal / getSkillMaxValue(i));
+            levelBar[i].setSkillDecimalLevel((float) (skillValueDecimal / getSkillMaxValue(i)));
             levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
         }
     }

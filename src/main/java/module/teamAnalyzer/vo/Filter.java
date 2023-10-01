@@ -213,8 +213,7 @@ public class Filter {
 
         // Match types
         var _matchType = match.getMatchType();
-        if (_matchType instanceof MatchType) {
-            var matchType = (MatchType) _matchType;
+        if (_matchType instanceof MatchType matchType) {
             if (matchType.isFriendly()) {
                 return friendly;
 
@@ -232,7 +231,7 @@ public class Filter {
             };
         } else {
             // challenger cup
-            return cup;
+            return friendly;
         }
     }
     

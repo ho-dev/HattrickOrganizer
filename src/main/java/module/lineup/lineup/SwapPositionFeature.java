@@ -5,8 +5,6 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import module.lineup.Lineup;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,11 +66,6 @@ public class SwapPositionFeature {
 				swapPositionsManager
 						.markAsSwapCandidate(SwapPositionFeature.this);
 			}
-		}
-
-		private boolean playerIsSelectedOnThisPosition() {
-			Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
-			return lineup.getPlayerByPositionID(getPositionsID()) != null;
 		}
 	}
 

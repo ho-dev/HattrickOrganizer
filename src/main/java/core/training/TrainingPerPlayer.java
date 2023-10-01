@@ -34,9 +34,9 @@ public class TrainingPerPlayer  {
     }
 
     /**
-     * Getter for property spieler.
+     * Getter for property player.
      *
-     * @return Value of property spieler.
+     * @return Value of property player.
      */
     public final Player getPlayer() {
         return this._Player;
@@ -77,7 +77,7 @@ public class TrainingPerPlayer  {
 		return experienceSub;
 	}
 
-    public float calcSubskillIncrement(int skill, float skillValueBeforeTraining, HODateTime date) {
+    public float calcSubskillIncrement(int skill, double skillValueBeforeTraining, HODateTime date) {
 
 		int skillValue = (int) skillValueBeforeTraining;
 		float ret = 0;

@@ -64,7 +64,10 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private LineupPositionsPanel getLineupPositionsPanel() {
 		if ( lineupPositionsPanel == null){
-			lineupPositionsPanel = new LineupPositionsPanel(this, getLineupRatingAssistantPanel().getLineupSettingsPanel().getWeather(), true);
+			lineupPositionsPanel = new LineupPositionsPanel(
+					this,
+					getLineupRatingAssistantPanel().getLineupSettingsPanel().getWeather(), true,
+					getLineupRatingAssistantPanel().getLineupRatingPanel().getSelectedMatchMinute());
 		}
 		return lineupPositionsPanel;
 	}
@@ -307,4 +310,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		return this.getLineupPositionsPanel().getAllPositions();
 	}
 
+	public int getSelectedMatchMinute() {
+		return this.lineupRatingAssistantPanel.getLineupRatingPanel().getSelectedMatchMinute();
+	}
 }

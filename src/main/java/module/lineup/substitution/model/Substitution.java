@@ -31,7 +31,7 @@ public class Substitution extends AbstractTable.Storable {
 	private MatchOrderType orderType;
 	@SerializedName("min")
 	@Expose
-	private byte matchMinuteCriteria = -1;
+	private int matchMinuteCriteria = -1;
 	/**
 	 * pos
 	 * <p>
@@ -39,8 +39,8 @@ public class Substitution extends AbstractTable.Storable {
 	 * 0-13, see positions above for the order.
 	 * -1 means no change.
 	 * <p>
-	 * Attention: intellij claims that pos is never used.
-	 * this is wrong. serialization of the json order (should) use it.
+	 * ATTENTION: intellij claims that pos is never used.
+	 * this is wrong. serialization of the json order use it.
 	 */
 	@SerializedName("pos")
 	@Expose
@@ -61,7 +61,7 @@ public class Substitution extends AbstractTable.Storable {
 
 	public Substitution(){}
 	public Substitution(int playerOrderID, int playerIn, int subjectPlayerID,
-			byte orderType, byte matchMinuteCriteria, byte roleId, byte behaviour,
+			byte orderType, int matchMinuteCriteria, byte roleId, byte behaviour,
 			RedCardCriteria card, GoalDiffCriteria standing) {
 		this.playerOrderID = playerOrderID;
 		this.objectPlayerID = playerIn;
@@ -150,11 +150,11 @@ public class Substitution extends AbstractTable.Storable {
 		this.orderType = type;
 	}
 
-	public byte getMatchMinuteCriteria() {
+	public int getMatchMinuteCriteria() {
 		return matchMinuteCriteria;
 	}
 
-	public void setMatchMinuteCriteria(byte matchMinuteCriteria) {
+	public void setMatchMinuteCriteria(int matchMinuteCriteria) {
 		this.matchMinuteCriteria = matchMinuteCriteria;
 	}
 
@@ -165,11 +165,11 @@ public class Substitution extends AbstractTable.Storable {
 	public void setRoleId(byte roleId)
 	{
 		this.roleId = roleId;
-		if ( roleId > 99){
+		if ( roleId > 99 && roleId <= 113){
 			this.pos = (byte) (roleId-100);
 		}
 		else {
-			this.pos = roleId;
+			this.pos = -1;
 		}
 	}
 

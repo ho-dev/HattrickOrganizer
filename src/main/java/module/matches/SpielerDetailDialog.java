@@ -24,7 +24,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
-import module.playerOverview.PlayerDetailsPanel;
 import module.playerOverview.PlayerStatusLabelEntry;
 
 import java.awt.BorderLayout;
@@ -34,6 +33,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -50,6 +50,7 @@ import javax.swing.SwingConstants;
  */
 final class SpielerDetailDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 7104209757847006926L;
 	private final Dimension COMPONENTENSIZE3 = new Dimension(Helper.calcCellWidth(100),
 			Helper.calcCellWidth(18));
@@ -183,14 +184,14 @@ final class SpielerDetailDialog extends JDialog {
 	private final RatingTableEntry m_jpRating = new RatingTableEntry();
 	private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry();
 
-	private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[] { m_jpWertTor,
+	private final DoubleLabelEntries[] playerPositionValues = new DoubleLabelEntries[]{m_jpWertTor,
 			m_jpWertInnenVert, m_jpWertInnenVertAus, m_jpWertInnenVertOff, m_jpWertAussenVert,
 			m_jpWertAussenVertIn, m_jpWertAussenVertOff, m_jpWertAussenVertDef, m_jpWertMittelfeld,
 			m_jpWertMittelfeldAus, m_jpWertMittelfeldOff, m_jpWertMittelfeldDef, m_jpWertFluegel,
 			m_jpWertFluegelIn, m_jpWertFluegelOff, m_jpWertFluegelDef, m_jpWertSturm,
-			m_jpWertSturmAus, m_jpWertSturmDef };
+			m_jpWertSturmAus, m_jpWertSturmDef};
 
-	private final byte[] playerPosition = new byte[] { IMatchRoleID.KEEPER,
+	private final byte[] playerPosition = new byte[]{IMatchRoleID.KEEPER,
 			IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_TOWING,
 			IMatchRoleID.CENTRAL_DEFENDER_OFF, IMatchRoleID.BACK,
 			IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF,
@@ -250,7 +251,7 @@ final class SpielerDetailDialog extends JDialog {
 		m_jpAlter.setText(m_clPlayer.getAlter() + "");
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityAsInt()));
 
-		var lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+		var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
 				&& (lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
@@ -282,48 +283,41 @@ final class SpielerDetailDialog extends JDialog {
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
-			m_jpGehalt.getLeft().setText(gehalttext + "" + bonus);
+			m_jpGehalt.getLeft().setText(gehalttext + bonus);
 			m_jpGehalt.getRight().clear();
 			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
 			m_jpMartwert.getRight().clear();
-			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
+			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()));
 			m_jpForm2.clear();
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()));
 			m_jpKondition2.clear();
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)));
 			m_jpTorwart2.clear();
 			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)));
 			m_jpVerteidigung2.clear();
 			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)));
 			m_jpSpielaufbau2.clear();
 			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.PASSING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)));
 			m_jpPasspiel2.clear();
 			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.WINGER))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)));
 			m_jpFluegelspiel2.clear();
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
 			m_jpStandards2.clear();
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.SCORING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));
 			m_jpTorschuss2.clear();
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()) + "");
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()));
 			m_jpErfahrung2.clear();
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()));
 			m_jpFuehrung2.clear();
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer.getIdealPosition())
-					+ " (" + m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false) + ")");
+					+ " (" + m_clPlayer.getIdealPositionRating() + ")");
 			for (int i = 0; i < playerPositionValues.length; i++) {
 				showNormal(playerPositionValues[i], playerPosition[i], m_clPlayer);
 			}
@@ -339,84 +333,77 @@ final class SpielerDetailDialog extends JDialog {
 						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
 			}
 
-			m_jpGehalt.getLeft().setText(gehalttext + "" + bonus);
+			m_jpGehalt.getLeft().setText(gehalttext + bonus);
 			m_jpGehalt.getRight().setSpecialNumber((gehalt2 - gehalt), true);
 			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
 			m_jpMartwert.getRight().setSpecialNumber(
 					(m_clVergleichsPlayer.getTSI() - m_clPlayer.getTSI()), false);
-			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()) + "");
+			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()));
 			m_jpForm2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isOld(),
 					true);
-			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()) + "");
+			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()));
 			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getStamina()
 					- m_clPlayer.getStamina(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.KEEPER))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)));
 			m_jpTorwart2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getGKskill() - m_clPlayer.getGKskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.KEEPER)
 							- m_clPlayer.getSub4Skill(PlayerSkill.KEEPER),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)));
 			m_jpVerteidigung2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getDEFskill() - m_clPlayer.getDEFskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.DEFENDING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)));
 			m_jpSpielaufbau2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getPMskill() - m_clPlayer.getPMskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.PASSING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)));
 			m_jpPasspiel2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getPSskill() - m_clPlayer.getPSskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PASSING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.PASSING),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.WINGER))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)));
 			m_jpFluegelspiel2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getWIskill() - m_clPlayer.getWIskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.WINGER)
 							- m_clPlayer.getSub4Skill(PlayerSkill.WINGER),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
 			m_jpStandards2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getSPskill() - m_clPlayer.getSPskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
 							- m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
 					!m_clVergleichsPlayer.isOld(), true);
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
-					+ m_clPlayer.getSub4Skill(PlayerSkill.SCORING))
-					+ "");
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));
 			m_jpTorschuss2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getSCskill() - m_clPlayer.getSCskill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SCORING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.SCORING),
 					!m_clVergleichsPlayer.isOld(), true);
-			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()) + "");
+			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()));
 			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getExperience()
 					- m_clPlayer.getExperience(), !m_clPlayer.isOld(), true);
-			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()) + "");
+			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()));
 			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getLeadership()
 					- m_clPlayer.getLeadership(), !m_clVergleichsPlayer.isOld(), true);
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer
 					.getIdealPosition())
 					+ " ("
-					+ m_clPlayer.calcPosValue(m_clPlayer.getIdealPosition(), true, null, false) + ")");
+					+ m_clPlayer.getIdealPositionRating() + ")");
 
 			for (int i = 0; i < playerPositionValues.length; i++) {
 				showWithCompare(playerPositionValues[i], playerPosition[i], m_clPlayer,
@@ -1102,20 +1089,20 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 1.0;
 
-		RatingTableEntry ratingentry = new RatingTableEntry((int)(rating[0] * 2));
+		RatingTableEntry ratingentry = new RatingTableEntry((int) (rating[0] * 2));
 
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 1;
-		ratingentry = new RatingTableEntry((int)(rating[1] * 2));
+		ratingentry = new RatingTableEntry((int) (rating[1] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 2;
-		ratingentry = new RatingTableEntry((int)Math.round(rating[2] * 2));
+		ratingentry = new RatingTableEntry(Math.round(rating[2] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
@@ -1171,7 +1158,7 @@ final class SpielerDetailDialog extends JDialog {
 				.getLanguageString("Rating")
 				+ " "
 				+ MatchRoleID.getNameForPosition(MatchRoleID
-						.getPosition(matchplayer.getRoleId(), matchplayer.getBehaviour()))));
+				.getPosition(matchplayer.getRoleId(), matchplayer.getBehaviour()))));
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 0;
@@ -1201,7 +1188,7 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 1.0;
-		ratingentry = new RatingTableEntry((int)(ratingPos[0] * 2));
+		ratingentry = new RatingTableEntry((int) (ratingPos[0] * 2));
 
 		// ratingentry.getComponent ( false ).setPreferredSize ( new Dimension(
 		// 120, 14 ) );
@@ -1210,13 +1197,13 @@ final class SpielerDetailDialog extends JDialog {
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 1;
-		ratingentry = new RatingTableEntry((int)(ratingPos[1] * 2));
+		ratingentry = new RatingTableEntry((int) (ratingPos[1] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
 		subconstraints.gridx = 1;
 		subconstraints.gridy = 2;
-		ratingentry = new RatingTableEntry((int)Math.round(ratingPos[2] * 2));
+		ratingentry = new RatingTableEntry(Math.round(ratingPos[2] * 2));
 		sublayout.setConstraints(ratingentry.getComponent(false), subconstraints);
 		subpanel.add(ratingentry.getComponent(false));
 
@@ -1263,7 +1250,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	/**
 	 * init a label
-	 * 
+	 *
 	 * @param y
 	 * @param constraints
 	 * @param layout
@@ -1271,7 +1258,7 @@ final class SpielerDetailDialog extends JDialog {
 	 * @param label
 	 */
 	private void initBlueLabel(int y, GridBagConstraints constraints, GridBagLayout layout,
-			JPanel panel, JLabel label) {
+							   JPanel panel, JLabel label) {
 		setPosition(constraints, 12, y);
 		constraints.weightx = 0.0;
 		layout.setConstraints(label, constraints);
@@ -1280,7 +1267,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	/**
 	 * init a value field
-	 * 
+	 *
 	 * @param y
 	 * @param constraints
 	 * @param layout
@@ -1288,7 +1275,7 @@ final class SpielerDetailDialog extends JDialog {
 	 * @param component
 	 */
 	private void initBlueField(int y, GridBagConstraints constraints, GridBagLayout layout,
-			JPanel panel, JComponent component) {
+							   JPanel panel, JComponent component) {
 		setPosition(constraints, 13, y);
 		constraints.weightx = 1.0;
 		layout.setConstraints(component, constraints);
@@ -1297,7 +1284,7 @@ final class SpielerDetailDialog extends JDialog {
 
 	/**
 	 * set position in gridBag
-	 * 
+	 *
 	 * @param c
 	 * @param x
 	 * @param y
@@ -1308,20 +1295,16 @@ final class SpielerDetailDialog extends JDialog {
 	}
 
 	private void showNormal(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer) {
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 		labelEntry.getLeft().setText(
-				Helper.round(m_clPlayer.calcPosValue(playerPosition, true, null, false),
-						core.model.UserParameter.instance().nbDecimals) + "");
+				Helper.round(ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition), core.model.UserParameter.instance().nbDecimals) + "");
 		labelEntry.getRight().clear();
 	}
 
-	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition,
-                                 Player m_clPlayer, Player m_clVergleichsPlayer) {
-		labelEntry.getLeft().setText(
-				Helper.round(m_clPlayer.calcPosValue(playerPosition, true, null, false),
-						core.model.UserParameter.instance().nbDecimals) + "");
-
-		labelEntry.getRight().setSpecialNumber(
-				m_clPlayer.calcPosValue(playerPosition, true, null, false)
-						- m_clVergleichsPlayer.calcPosValue(playerPosition, true, null, false), false);
+	private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition, Player m_clPlayer, Player m_clVergleichsPlayer) {
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		var r = ratingPredictionModel.getPlayerMatchAverageRating(m_clPlayer, playerPosition);
+		labelEntry.getLeft().setText(Helper.round(r, core.model.UserParameter.instance().nbDecimals) + "");
+		labelEntry.getRight().setSpecialNumber((float) (r - ratingPredictionModel.getPlayerMatchAverageRating(m_clVergleichsPlayer, playerPosition)), false);
 	}
 }

@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 
+import static core.model.player.IMatchRoleID.*;
+
 /**
  * @author Volker Fischer
  * @version 0.2a    31.10.2001
@@ -384,6 +386,8 @@ public class TransferTableModel extends AbstractTableModel {
             aktuellerPlayer.setSpielaufbau(aktuellerScoutEintrag.getSpielaufbau());
             aktuellerPlayer.setLoyalty(aktuellerScoutEintrag.getLoyalty());
             aktuellerPlayer.setHomeGrown(aktuellerScoutEintrag.isHomegrown());
+
+            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
             //ID
             m_clData[i][0] = new ColorLabelEntry(aktuellerScoutEintrag.getPlayerID() + "",
                     ColorLabelEntry.FG_STANDARD,
@@ -401,12 +405,11 @@ public class TransferTableModel extends AbstractTableModel {
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             //Beste Position
-            m_clData[i][4] = new ColorLabelEntry(MatchRoleID
-                    .getSortId(aktuellerPlayer.getIdealPosition(), false)
-                    - (aktuellerPlayer.getIdealPositionStrength(true, null, false) / 100.0f),
+            m_clData[i][4] = new ColorLabelEntry(
+                    MatchRoleID.getSortId(aktuellerPlayer.getIdealPosition(), false) - (aktuellerPlayer.getIdealPositionRating() / 100.0f),
                     MatchRoleID.getNameForPosition(aktuellerPlayer.getIdealPosition())
                             + " ("
-                            + aktuellerPlayer.calcPosValue(aktuellerPlayer.getIdealPosition(), true, null, false) + ")",
+                            + aktuellerPlayer.getIdealPositionRating() + ")",
                     ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             //Age
             m_clData[i][5] = new ColorLabelEntry(aktuellerScoutEintrag.getAlterWithAgeDays(),
@@ -479,128 +482,128 @@ public class TransferTableModel extends AbstractTableModel {
                     SwingConstants.RIGHT);
 
             //Wert Torwart
-            m_clData[i][20] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(IMatchRoleID.KEEPER,
-                    true, null, false),
+            m_clData[i][20] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, IMatchRoleID.keeper, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger
-            m_clData[i][21] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(IMatchRoleID.CENTRAL_DEFENDER,
-                    true, null, false),
+            m_clData[i][21] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, IMatchRoleID.leftCentralDefender, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger Nach Aussen
-            m_clData[i][22] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.CENTRAL_DEFENDER_TOWING,
-                    true, null, false),
+            m_clData[i][22] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, IMatchRoleID.leftCentralDefender, TOWARDS_WING),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Innnenverteidiger Offensiv
-            m_clData[i][23] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.CENTRAL_DEFENDER_OFF,
-                    true, null, false),
+            m_clData[i][23] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, IMatchRoleID.leftCentralDefender, OFFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger
-            m_clData[i][24] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK,
-                    true, null, false),
+            m_clData[i][24] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftBack, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Nach Innen
-            m_clData[i][25] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_TOMID,
-                    true, null, false),
+            m_clData[i][25] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftBack, TOWARDS_MIDDLE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Offensiv
-            m_clData[i][26] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_OFF,
-                    true, null, false),
+            m_clData[i][26] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftBack, OFFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Aussenverteidiger Defensiv
-            m_clData[i][27] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.BACK_DEF,
-                    true, null, false),
+            m_clData[i][27] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftBack, DEFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld
-            m_clData[i][28] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER,
-                    true, null, false),
+            m_clData[i][28] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftInnerMidfield, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Nach Aussen
-            m_clData[i][29] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_TOWING,
-                    true, null, false),
+            m_clData[i][29] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftInnerMidfield, TOWARDS_WING),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Offensiv
-            m_clData[i][30] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_OFF,
-                    true, null, false),
+            m_clData[i][30] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftInnerMidfield, OFFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Mittelfeld Defensiv
-            m_clData[i][31] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.MIDFIELDER_DEF,
-                    true, null, false),
+            m_clData[i][31] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftInnerMidfield, DEFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel
-            m_clData[i][32] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER,
-                    true, null, false),
+            m_clData[i][32] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftWinger, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Nach Innen
-            m_clData[i][33] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_TOMID,
-                    true, null, false),
+            m_clData[i][33] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftWinger, TOWARDS_MIDDLE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Offensiv
-            m_clData[i][34] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_OFF,
-                    true, null, false),
+            m_clData[i][34] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftWinger, OFFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Flügel Defensiv
-            m_clData[i][35] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.WINGER_DEF,
-                    true, null, false),
+            m_clData[i][35] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftWinger, DEFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Sturm
-            m_clData[i][36] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD,
-                    true, null, false),
+            m_clData[i][36] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftForward, NORMAL),
                     ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Sturm Defensiv
-            m_clData[i][37] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD_DEF,
-                    true, null, false),
+            m_clData[i][37] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftForward, DEFENSIVE),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);
 
             //Wert Sturm Nach Aussen
-            m_clData[i][38] = new ColorLabelEntry(aktuellerPlayer.calcPosValue(MatchRoleID.FORWARD_TOWING,
-                    true, null, false),
+            m_clData[i][38] = new ColorLabelEntry(
+                    ratingPredictionModel.getPlayerMatchAverageRating(aktuellerPlayer, leftForward, TOWARDS_WING),
                     ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
                     false,
                     core.model.UserParameter.instance().nbDecimals);

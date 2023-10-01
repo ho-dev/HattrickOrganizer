@@ -4,7 +4,6 @@ import core.file.FileLoader;
 import core.util.HOLogger;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
@@ -20,7 +19,7 @@ public class RatingPredictionParameter  {
     public static final int RIGHT = 5;
 
     public static final String GENERAL = "general";
-    private Hashtable<String, Properties> allProps = new Hashtable<String, Properties>();
+    private final Hashtable<String, Properties> allProps = new Hashtable<>();
     private long lastParse;
     private String filename; 
     
@@ -82,11 +81,11 @@ public class RatingPredictionParameter  {
     }
     
     public Hashtable<String, Properties> getAllSections () {
-    	Hashtable<String, Properties> sections = new Hashtable<String, Properties>();
+    	Hashtable<String, Properties> sections = new Hashtable<>();
     	Enumeration<String> allKeys = allProps.keys();
     	while (allKeys.hasMoreElements()) {
     		String curName = allKeys.nextElement();
-    		if (!curName.equals(GENERAL)) {
+    		if (!curName.equals(GENERAL) && !curName.startsWith("xp_")) {
     			Properties curSection = allProps.get(curName);
     			sections.put(curName, curSection);
     		}
@@ -108,7 +107,7 @@ public class RatingPredictionParameter  {
     	if (allProps.containsKey(section)) {
     		Properties props = allProps.get(section);
     		String propString = props.getProperty(key, "" + defVal);
-    		if (propString != "") {
+    		if (!propString.isEmpty()) {
     			return Double.parseDouble(propString);
     		}
     	}

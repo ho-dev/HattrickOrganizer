@@ -26,6 +26,7 @@ import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
+import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.lineup.Lineup;
@@ -81,18 +82,11 @@ public final class MatchesPanel extends LazyImagePanel {
 	private JButton reloadMatchButton;
 	private JButton simulateMatchButton;
 	private JComboBox m_jcbSpieleFilter;
-	private JPanel matchesOverviewPanel;
-	private JPanel linupPanel;
 	private JSplitPane horizontalLeftSplitPane;
 	private JSplitPane verticalSplitPane;
-	private JTabbedPane matchDetailsTabbedPane;
-	private TeamsRatingPanel m_jpTeamsRatingPanel;
-	private MatchReportPanel matchReportPanel;
-	private SpielHighlightPanel matchHighlightPanel;
 	private MatchesTable matchesTable;
 	private MatchesOverviewTable matchesOverviewTable;
 	private MatchesHighlightsTable matchesHighlightsTable;
-	private StaerkenvergleichPanel teamsComparePanel;
 	private MatchesModel matchesModel;
 
 
@@ -147,21 +141,21 @@ public final class MatchesPanel extends LazyImagePanel {
 		if ((matchesModel.getMatch() != null)
 				&& (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			List<MatchLineupPosition> teamspieler = DBManager.instance().getMatchLineupPlayers(
+			List<MatchLineupPosition> positions = DBManager.instance().getMatchLineupPlayers(
 					matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), teamid);
-			Lineup aufstellung = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+			Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
-			aufstellung.clearLineup(); // To make sure the old one is
+			lineup.clearLineup(); // To make sure the old one is
 			// gone.
 
-			if (teamspieler != null) {
-				for (MatchLineupPosition player : teamspieler) {
+			if (positions != null) {
+				for (MatchLineupPosition player : positions) {
 					if (player.getRoleId() == IMatchRoleID.setPieces) {
-						aufstellung.setKicker(player.getPlayerId());
+						lineup.setKicker(player.getPlayerId());
 					} else if (player.getRoleId() == IMatchRoleID.captain) {
-						aufstellung.setCaptain(player.getPlayerId());
+						lineup.setCaptain(player.getPlayerId());
 					} else {
-						aufstellung.setSpielerAtPosition(player.getRoleId(), player.getPlayerId(),
+						lineup.setSpielerAtPosition(player.getRoleId(), player.getPlayerId(),
 								player.getBehaviour());
 					}
 				}
@@ -305,34 +299,29 @@ public final class MatchesPanel extends LazyImagePanel {
 	 * Get the team data for the own team (current linep).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
-		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineupTeamRecalculated().getLineup();
+		var hoModel = HOVerwaltung.instance().getModel();
+		var lineup = hoModel.getCurrentLineup();
+		var ratingPredictionModel = hoModel.getRatingPredictionModel();
+
 		TeamRatings teamRatings = manager.generateTeamRatings(
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getMidfield().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftDefense().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralDefense().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightDefense().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getLeftAttack().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getCentralAttack().get(-90d))),
-				getRatingValue(RatingUtil.getIntValue4Rating(lineup.getRatings().getRightAttack().get(-90d))));
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.MIDFIELD, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_LEFT, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_CENTRAL, 90))),
+				getRatingValue(RatingUtil.getIntValue4Rating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT, 90))));
 
 		int tactic = lineup.getTacticType();
-		return manager.generateTeamData(HOVerwaltung.instance().getModel().getBasics()
-				.getTeamName(), teamRatings, tactic, getTacticStrength(lineup, tactic));
+		return manager.generateTeamData(HOVerwaltung.instance().getModel().getBasics().getTeamName(), teamRatings, tactic, getTacticStrength(lineup));
 	}
 
 	/**
 	 * Get the tactic strength of the given lineup.
 	 */
-	private int getTacticStrength(Lineup lineup, int tacticType) {
-		double tacticLevel = switch (tacticType) {
-			case IMatchDetails.TAKTIK_KONTER -> lineup.getTacticLevelCounter();
-			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> lineup.getTacticLevelAimAow();
-			case IMatchDetails.TAKTIK_PRESSING -> lineup.getTacticLevelPressing();
-			case IMatchDetails.TAKTIK_LONGSHOTS -> lineup.getTacticLevelLongShots();
-			default -> 1d;
-		};
-		tacticLevel -= 1;
-		return (int) Math.max(tacticLevel, 0);
+	private int getTacticStrength(Lineup lineup) {
+		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+		return (int)ratingPredictionModel.getTacticRating(lineup, 0);
 	}
 
 	private void doReInit() {
@@ -376,7 +365,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		horizontalLeftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
 				initMatchesTable(), initSpieldetails());
 
-		linupPanel = new JPanel(new GridLayout(2, 1));
+		JPanel linupPanel = new JPanel(new GridLayout(2, 1));
 		aufstellungHeimPanel = new AufstellungsSternePanel(true);
 		linupPanel.add(aufstellungHeimPanel);
 		aufstellungGastPanel = new AufstellungsSternePanel(false);
@@ -398,26 +387,26 @@ public final class MatchesPanel extends LazyImagePanel {
 	 */
 	private Component initSpieldetails() {
 		JPanel mainpanel = new ImagePanel(new BorderLayout());
-		matchDetailsTabbedPane = new JTabbedPane();
+		JTabbedPane matchDetailsTabbedPane = new JTabbedPane();
 
 		// Allgemein
-		teamsComparePanel = new StaerkenvergleichPanel(this.matchesModel);
+		StaerkenvergleichPanel teamsComparePanel = new StaerkenvergleichPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Allgemein"),
 				new JScrollPane(teamsComparePanel));
 
 
 		// Rating Panel
-		m_jpTeamsRatingPanel = new TeamsRatingPanel(this.matchesModel);
+		TeamsRatingPanel m_jpTeamsRatingPanel = new TeamsRatingPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.ratings"),
 				new JScrollPane(m_jpTeamsRatingPanel));
 
 		// Highlights
-		matchHighlightPanel = new SpielHighlightPanel(this.matchesModel);
+		SpielHighlightPanel matchHighlightPanel = new SpielHighlightPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Highlights"),
 				new JScrollPane(matchHighlightPanel));
 
 		// Match report
-		matchReportPanel = new MatchReportPanel(this.matchesModel);
+		MatchReportPanel matchReportPanel = new MatchReportPanel(this.matchesModel);
 		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Matchbericht"),
 				matchReportPanel);
 
@@ -483,7 +472,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		// Statistics tab ===================================
 		matchesOverviewTable = new MatchesOverviewTable(UserParameter.instance().spieleFilter);
 		JScrollPane scrollpane1 = new JScrollPane(matchesOverviewTable);
-		matchesOverviewPanel = new JPanel(new BorderLayout());
+		JPanel matchesOverviewPanel = new JPanel(new BorderLayout());
 		matchesOverviewPanel.add(scrollpane1, BorderLayout.SOUTH);
 
 		// Statistics Goals tab ===================================
@@ -510,24 +499,16 @@ public final class MatchesPanel extends LazyImagePanel {
 	private JPanel getMatchesLocationButtonsPanel() {
 
 		JRadioButton all = new JRadioButton(MatchLocation.getText(MatchLocation.ALL) + "  ", MatchLocation.ALL == UserParameter.instance().matchLocation);
-		all.addChangeListener(e -> {
-			refreshOnButtonSelected(e, MatchLocation.ALL);
-		});
+		all.addChangeListener(e -> refreshOnButtonSelected(e, MatchLocation.ALL));
 
 		JRadioButton home = new JRadioButton(MatchLocation.getText(MatchLocation.HOME) + "  ", MatchLocation.HOME == UserParameter.instance().matchLocation);
-		home.addChangeListener(e -> {
-			refreshOnButtonSelected(e, MatchLocation.HOME);
-		});
+		home.addChangeListener(e -> refreshOnButtonSelected(e, MatchLocation.HOME));
 
 		JRadioButton away = new JRadioButton(MatchLocation.getText(MatchLocation.AWAY) + "  ", MatchLocation.AWAY == UserParameter.instance().matchLocation);
-		away.addChangeListener(e -> {
-			refreshOnButtonSelected(e, MatchLocation.AWAY);
-		});
+		away.addChangeListener(e -> refreshOnButtonSelected(e, MatchLocation.AWAY));
 
 		JRadioButton neutral = new JRadioButton(MatchLocation.getText(MatchLocation.NEUTRAL) + "  ", MatchLocation.NEUTRAL == UserParameter.instance().matchLocation);
-		neutral.addChangeListener(e -> {
-			refreshOnButtonSelected(e, MatchLocation.NEUTRAL);
-		});
+		neutral.addChangeListener(e -> refreshOnButtonSelected(e, MatchLocation.NEUTRAL));
 
 		ButtonGroup matchesLocationButtons = new ButtonGroup();
 		matchesLocationButtons.add(all);

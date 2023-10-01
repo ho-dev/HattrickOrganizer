@@ -38,7 +38,7 @@ mDEf: outfield players defence skill average
 
  */
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -71,7 +71,7 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
     private void getCornerEvents(MatchRoleID setPiecesTaker, MatchRoleID passReceiver, double offIFK, double oppDefIFK) {
         Player p = analyse.getPlayer(setPiecesTaker.getPlayerId());
         Player scorer = analyse.getPlayer(passReceiver.getPlayerId());
-        if ( scorer.hasSpeciality(Speciality.HEAD)) {
+        if ( scorer.hasSpecialty(Specialty.HEAD)) {
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(setPiecesTaker, SpecialEventType.CORNER_HEAD,
                     .3, 10, -10,
                     .5*p.getSPskill() + offIFK - oppDefIFK);

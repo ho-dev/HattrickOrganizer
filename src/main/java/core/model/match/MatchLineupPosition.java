@@ -1,7 +1,9 @@
 package core.model.match;
 
+import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.player.MatchRoleID;
+import core.model.player.Player;
 
 public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -22,6 +24,13 @@ public class MatchLineupPosition  extends MatchRoleID {
     private MatchType matchType;
     private int teamId;
     private Integer hoPosCode;
+    private int startMinute=0;
+    private Player player = null;
+
+    public MatchLineupPosition(int roleId, int playerId, byte behaviour, int startMinute) {
+        super(roleId, playerId,behaviour);
+        this.startMinute = startMinute;
+    }
 
     /**
      * Creates a new instance of MatchLineupPosition
@@ -29,6 +38,11 @@ public class MatchLineupPosition  extends MatchRoleID {
     public MatchLineupPosition() {}
     public MatchLineupPosition(int roleID, int spielerID, int behavior) {
         super(roleID, spielerID, (byte) behavior);
+    }
+
+    public MatchLineupPosition(int roleId, byte behaviour, Player player){
+        super(roleId, player.getPlayerID(), behaviour);
+        this.player = player;
     }
 
     public MatchLineupPosition(int roleID, int spielerID, int behavior, double rating, String name, int status) {
@@ -83,7 +97,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @param m_sNickName New value of property m_sNickName.
      */
-    public final void setNickName(java.lang.String m_sNickName) {
+    public final void setNickName(String m_sNickName) {
         this.m_sNickName = m_sNickName;
     }
 
@@ -92,7 +106,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @return Value of property m_sNickName.
      */
-    public final java.lang.String getNickName() {
+    public final String getNickName() {
         if ( m_sNickName != null ) return m_sNickName;
         return "";
     }
@@ -143,7 +157,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @param m_sSpielerName New value of property m_sSpielerName.
      */
-    public final void setSpielerName(java.lang.String m_sSpielerName) {
+    public final void setSpielerName(String m_sSpielerName) {
         this.m_sSpielerName = m_sSpielerName;
     }
 
@@ -152,7 +166,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @return Value of property m_sSpielerName.
      */
-    public final java.lang.String getSpielerName() {
+    public final String getSpielerName() {
         if ( m_sSpielerName != null ) return m_sSpielerName;
         return "";
     }
@@ -162,7 +176,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @param m_sSpielerVName New value of property m_sSpielerVName.
      */
-    public final void setSpielerVName(java.lang.String m_sSpielerVName) {
+    public final void setSpielerVName(String m_sSpielerVName) {
         this.m_sSpielerVName = m_sSpielerVName;
     }
 
@@ -171,7 +185,7 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @return Value of property m_sSpielerVName.
      */
-    public final java.lang.String getSpielerVName() {
+    public final String getSpielerVName() {
         if ( m_sSpielerVName != null )return m_sSpielerVName;
         return "";
     }
@@ -280,4 +294,26 @@ public class MatchLineupPosition  extends MatchRoleID {
     public void setHoPosCode(Integer hoPosCode) {
         this.hoPosCode = hoPosCode;
     }
+
+    public int getStartMinute() {
+        return startMinute;
+    }
+
+    public void setStartMinute(int startMinute) {
+        this.startMinute = startMinute;
+    }
+
+    public Player getPlayer() {
+
+        if ( player == null || this.getPlayerId() != player.getPlayerID()){
+            if (this.getPlayerId() != 0 ) {
+                player = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId());
+            }
+            else {
+                player = null;
+            }
+        }
+        return player;
+    }
+
 }

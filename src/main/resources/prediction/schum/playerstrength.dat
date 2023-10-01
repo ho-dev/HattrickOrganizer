@@ -1,0 +1,78 @@
+[general]
+
+# =================  Loyalty Factor ===============================
+# loyaltyaddition = loyaltyMax*(loyalty+loyaltyDelta)/loyaltySkillMax
+# if(homegrown) loyaltyaddition+= homegrownbonus
+# =============================================================
+# =================  Parameters ===============================
+homegrownbonus=0.5
+loyaltyMax=1
+loyaltyDelta=-1
+loyaltySkillMax=19
+
+
+# =================  Form Factor ===============================
+# form = form - 0.5			        (formDelta)
+# if (form < 0) then form = 0		(formMin)
+# if (form > 7) then form = 7		(formMax)
+# form = form/7				        (formMultiplier)
+# form = form^0.45			        (formPower)
+# <=> form-Factor = ((form-0.5)/7)^0.45
+# =============================================================
+# Form parameters
+formMin=0
+formMax=8
+formDelta=0
+formMultiplier=0.125	# 1/8
+formPower=0.6225
+resultMultiForm=1
+
+
+# =================  XP Factor ===============================
+# <=> XP-Factor = 4/3 * log(xp)
+# =============================================================
+# experience
+# Fit schum's experience factor K
+xpDelta=-1
+quarticEffK=-0.00000862
+cubicEffK=0.00056438
+quadraticEffK=-0.01507852
+linearEffK=0.20426157
+constantEffK=-0.18965312
+
+# =================  skill adjustment calculation ===============================
+# if (skill = Y and subskill=0) then skill = skill + x	(skillSubDeltaForLevelY)
+# skillc = [(skill + skillDelta) * skillMultiplier] ^ skillPower
+# skillc = skillc + homegrownbonus + loyaltyaddition + XP-Factor	
+# skillc = skillc * resultMultiForm * form	+ resultAddForm *  form	(resultMultiForm)
+# ===================================================================================
+skillDelta=-1
+skillMin=0
+
+
+#percentage per which a player is impacted positively/negatively by the weather
+weatherBonus=0.05
+
+# 9 multipliers for crowding penalties. 1-2-3 central defenders/midfielders/forwards
+1CdMulti=1
+2CdMulti=0.96
+3CdMulti=0.91
+1MfMulti=1
+2MfMulti=0.92
+3MfMulti=0.82
+1FwMulti=1
+2FwMulti=0.94
+3FwMulti=0.865
+
+# SkillSubDeltas:
+# Default is to add 0.5 subskill for skills 0 (non existant) up to 7 (solid)
+# Uncomment the next line to ignore the skillSubDeltas
+#[ignore]
+skillSubDeltaForLevel0=0.5
+skillSubDeltaForLevel1=0.5
+skillSubDeltaForLevel2=0.5
+skillSubDeltaForLevel3=0.5
+skillSubDeltaForLevel4=0.5
+skillSubDeltaForLevel5=0.5
+skillSubDeltaForLevel6=0.5
+skillSubDeltaForLevel7=0.5

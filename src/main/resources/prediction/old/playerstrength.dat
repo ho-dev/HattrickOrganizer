@@ -32,9 +32,9 @@ loyaltyMax=1
 loyaltySkillMax=20 
 
 formMin=0
-formMax=7
+formMax=8
 formDelta=-0.5
-formMultiplier=0.142857142857143	# 1/7
+formMultiplier=0.125	# 1/8
 formPower=0.45
 resultMultiForm=1
 

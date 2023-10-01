@@ -19,13 +19,12 @@ import javax.swing.JCheckBox;
 public final class CombinedRatingChartPanel extends JPanel {
 
 	private final class Datum {
-		private ImageCheckbox checkbox;
-		private Color m_ColorSerie;
-		private LinesChartDataModel model;
-		private String paramName;
-		private String m_SerieName;
-		private Boolean m_bSecondAxis;
-		private double m_Ymax;
+		private final ImageCheckbox checkbox;
+		private final Color m_ColorSerie;
+		private final String paramName;
+		private final String m_SerieName;
+		private final Boolean m_bSecondAxis;
+		private final double m_Ymax;
 
 		public Datum(String text, Color colorSerie, String userParamName, boolean second_axis, double d_max) {
 			paramName = userParamName;
@@ -45,18 +44,16 @@ public final class CombinedRatingChartPanel extends JPanel {
 			try {
 				return (boolean) userParameter.getClass().getField(paramName).get(userParameter);
 				}
-			catch(java.lang.NoSuchFieldException e) {}
-			catch(java.lang.IllegalAccessException e) {}
-			return false;
+			catch(NoSuchFieldException | IllegalAccessException ignored) {}
+            return false;
 		}
 
 		private void setUserParameter(Boolean selected) {
 			try {
 				userParameter.getClass().getField(paramName).set(userParameter, selected);
 				}
-			catch(java.lang.NoSuchFieldException e) {}
-			catch(java.lang.IllegalAccessException e) {}
-		}
+			catch(NoSuchFieldException | IllegalAccessException ignored) {}
+        }
 
 		private void init() {
 			checkbox.addActionListener(e -> {
@@ -67,6 +64,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 
 
 		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
+			LinesChartDataModel model;
 			if (! m_bSecondAxis) {
 				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, format);
 			}
@@ -81,12 +79,12 @@ public final class CombinedRatingChartPanel extends JPanel {
 			return checkbox;
 		}
 	}
-	private HOVerwaltung hov = HOVerwaltung.instance();
-	private UserParameter userParameter = UserParameter.instance();
-	private RatingChartData chartData;
-	private JPanel controlsPanel = new JPanel();
+	private final HOVerwaltung hov = HOVerwaltung.instance();
+	private final UserParameter userParameter = UserParameter.instance();
+	private final RatingChartData chartData;
+	private final JPanel controlsPanel = new JPanel();
 	private HOLinesChart oChartPanel;
-	private JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), userParameter.CombinedRatingChartPanel_HelpLines);
+	private final JCheckBox showHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), userParameter.CombinedRatingChartPanel_HelpLines);
 	private Datum leftDefense;
 	private Datum centralDefense;
 	private Datum rightDefense;
@@ -105,9 +103,9 @@ public final class CombinedRatingChartPanel extends JPanel {
 
 	void prepareChart() {
 		LinesChartDataModel[] data = new LinesChartDataModel[9];
-		data[0] = leftDefense.getChartModel(chartData.getLeftDefense(), Helper.DEFAULTDEZIMALFORMAT);
-		data[1] = centralDefense.getChartModel(chartData.getCentralDefense(), Helper.DEFAULTDEZIMALFORMAT);
-		data[2] = rightDefense.getChartModel(chartData.getRightDefense(), Helper.DEFAULTDEZIMALFORMAT);
+		data[0] = leftDefense.getChartModel(chartData.getLeftDefence(), Helper.DEFAULTDEZIMALFORMAT);
+		data[1] = centralDefense.getChartModel(chartData.getCentralDefence(), Helper.DEFAULTDEZIMALFORMAT);
+		data[2] = rightDefense.getChartModel(chartData.getRightDefence(), Helper.DEFAULTDEZIMALFORMAT);
 		data[3] = midfield.getChartModel(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT);
 		data[4] = leftAttack.getChartModel(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT);
 		data[5] = centralAttack.getChartModel(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT);

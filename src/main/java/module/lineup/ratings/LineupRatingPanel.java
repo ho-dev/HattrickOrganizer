@@ -1,25 +1,21 @@
 package module.lineup.ratings;
 
 import core.constants.player.PlayerAbility;
-import core.datatype.CBItem;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.RasenPanel;
 import core.gui.theme.HOColorName;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.*;
 import core.model.match.IMatchDetails;
-import core.rating.RatingPredictionConfig;
+import core.rating.RatingPredictionModel;
 import core.util.Helper;
 import module.lineup.CopyListener;
 import module.lineup.Lineup;
-import module.pluginFeedback.FeedbackPanel;
+import module.lineup.LineupPanel;
 
 import java.awt.*;
 import java.text.NumberFormat;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javax.swing.*;
 
 import static core.model.UserParameter.GOALKEEPER_AT_TOP;
@@ -27,6 +23,8 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 
 public final class LineupRatingPanel extends RasenPanel implements core.gui.Refreshable {
+
+    private final LineupPanel lineupPanel;
 
     class RatingPanel extends JPanel {
 
@@ -72,7 +70,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         }
 
         public void setRatingRatio(double ratingRatio) {
-            Double COLOR_BORDERS_LIMIT_RATIO = 0.85;
+            double COLOR_BORDERS_LIMIT_RATIO = 0.85;
             if (ratingRatio <= COLOR_BORDERS_LIMIT_RATIO) {
                 setColor(RATING_BELOW_LIMIT);
             } else if (ratingRatio >= 1.0 / COLOR_BORDERS_LIMIT_RATIO) {
@@ -103,7 +101,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         }
     }
 
-    final static boolean IS_FEEDBACK_PLUGIN_ENABLED = false;
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
     private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
     private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
@@ -132,10 +129,13 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final JPanel m_jpFormationStats = new JPanel(new BorderLayout());
     private final NumberFormat m_clFormat;
     private final JButton m_jbCopyRatingButton = new JButton();
-    private final JButton m_jbFeedbackButton = new JButton();
+//    private final JButton m_jbFeedbackButton = new JButton();
+    private final JLabel copyrights = new JLabel("", SwingConstants.CENTER);
+
     private final Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));
 
-    public LineupRatingPanel() {
+    public LineupRatingPanel(LineupPanel lineupPanel) {
+        this.lineupPanel = lineupPanel;
         initComponents();
 
         if (core.model.UserParameter.instance().nbDecimals == 1) {
@@ -422,23 +422,11 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         jpSharing.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
         //jpSharing.setBorder(BORDER_RATING_DEFAULT);
 
-        m_jbFeedbackButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.UPLOAD, Map.of("strokeColor", TITLE_FG), 24, 24));
-        m_jbFeedbackButton.addActionListener(e -> new FeedbackPanel());
-        if (!IS_FEEDBACK_PLUGIN_ENABLED) {
-            m_jbFeedbackButton.setVisible(false);
-        }
-
-        m_jbFeedbackButton.setPreferredSize(new Dimension(24, 24));
-        m_jbFeedbackButton.setMinimumSize(new Dimension(24, 24));
-        m_jbFeedbackButton.setMaximumSize(new Dimension(24, 24));
-        m_jbFeedbackButton.setBorderPainted(false);
-        m_jbFeedbackButton.setContentAreaFilled(false);
-        m_jbFeedbackButton.setBorderPainted(false);
         gbcRatingPanelLayout.gridx = 1;
         gbcRatingPanelLayout.gridheight = 1;
         gbcRatingPanelLayout.insets = new Insets(5, 8, 0, 8);
-        ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
-        jpSharing.add(m_jbFeedbackButton);
+        //ratingPanelLayout.setConstraints(m_jbFeedbackButton, gbcRatingPanelLayout);
+        //jpSharing.add(m_jbFeedbackButton);
 
         m_jbCopyRatingButton.setIcon(ImageUtilities.getCopyIcon(22, TITLE_FG));
         m_jbCopyRatingButton.addActionListener(new CopyListener(this));
@@ -457,6 +445,14 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         //gbcMainLayout.gridy = 7;
         mainLayout.setConstraints(jpSharing, gbcMainLayout);
         mainPanel.add(jpSharing);
+
+        var copyrightsPanel = new JPanel();
+        copyrightsPanel.add(copyrights);
+        gbcMainLayout.gridx = 0;
+        gbcMainLayout.gridy = 9;
+        gbcMainLayout.gridwidth = 3;
+        mainLayout.setConstraints(copyrightsPanel, gbcMainLayout);
+        mainPanel.add(copyrightsPanel);
 
         //create final panel =============================================
         add(mainPanel);
@@ -483,7 +479,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
 
     private void initToolTips() {
         m_jbCopyRatingButton.setToolTipText(getLangStr("Lineup.CopyRatings.ToolTip"));
-        m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
+//        m_jbFeedbackButton.setToolTipText(getLangStr("Lineup.Feedback.ToolTip"));
     }
 
     public String getMidfieldRating() {
@@ -557,34 +553,94 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         return HOVerwaltung.instance().getLanguageString(key);
     }
 
+    abstract static class MinuteRating {
+        public abstract double get(Lineup lineup, RatingPredictionModel.RatingSector s);
+        public abstract double hatstats(Lineup lineup);
+        public abstract double loddar(Lineup lineup);
+    }
+
+    public int getSelectedMatchMinute(){
+        return m_jpMinuteToggler.getCurrentKey();
+    }
+
+    public void refreshRatings(){
+        this.lineupPanel.update();
+    }
+
     public void calculateRatings() {
         if (HOVerwaltung.instance().getModel().getTeam() != null) {
             final HOModel homodel = HOVerwaltung.instance().getModel();
-            var team = homodel.getCurrentLineupTeamRecalculated();
-            if ( team != null ) {
-                final Lineup currentLineup = team.getLineup();
-                m_jpMinuteToggler.load();
-                clear();
-                if (currentLineup.getRatings().getLeftDefense().size() != 0 &&
-                        currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()) != null) {
 
-                    m_jpRightDefense.setRating(currentLineup.getRatings().getRightDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpCentralDefense.setRating(currentLineup.getRatings().getCentralDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpLeftDefense.setRating(currentLineup.getRatings().getLeftDefense().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpMidfield.setRating(currentLineup.getRatings().getMidfield().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpLeftAttack.setRating(currentLineup.getRatings().getLeftAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpCentralAttack.setRating(currentLineup.getRatings().getCentralAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                    m_jpRightAttack.setRating(currentLineup.getRatings().getRightAttack().get(m_jpMinuteToggler.getCurrentKey()));
-                    setLoddar(Helper.round(currentLineup.getRatings().getLoddarStat().get(m_jpMinuteToggler.getCurrentKey()), 2));
-                    setiHatStats(currentLineup.getRatings().getHatStats().get(m_jpMinuteToggler.getCurrentKey()));
-                    int iTacticType = currentLineup.getTacticType();
-                    setTactic(iTacticType, currentLineup.getTacticLevel(iTacticType));
-                    setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
+            var team = homodel.getCurrentLineupTeam();
+            final Lineup currentLineup = team.getLineup();
+            m_jpMinuteToggler.load();
+            clear();
 
-                    // Recalculate Borders
-                    calcRatingRatio();
-                }
+            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+
+            MinuteRating minuteRating;
+            final int minute = m_jpMinuteToggler.getCurrentKey();
+            if (minute < 0) {
+                // -90 -> average
+                // -120 -> average incl. extra time
+                minuteRating = new MinuteRating() {
+                    @Override
+                    public double get(Lineup lineup, RatingPredictionModel.RatingSector s) {
+                        return ratingPredictionModel.getAverageRating(lineup, s, -minute);
+                    }
+
+                    @Override
+                    public double hatstats(Lineup lineup) {
+                        return ratingPredictionModel.getAverageHatStats(lineup, -minute);
+                    }
+
+                    @Override
+                    public double loddar(Lineup lineup) {
+                        return ratingPredictionModel.getAverageLoddarStats(lineup, -minute);
+                    }
+                };
+            } else {
+                minuteRating = new MinuteRating() {
+                    @Override
+                    public double get(Lineup lineup, RatingPredictionModel.RatingSector s) {
+                        return ratingPredictionModel.getRating(lineup, s, minute);
+                    }
+
+                    @Override
+                    public double hatstats(Lineup lineup) {
+                        return ratingPredictionModel.getHatStats(lineup, minute);
+                    }
+
+                    @Override
+                    public double loddar(Lineup lineup) {
+                        return ratingPredictionModel.getLoddarStats(lineup, minute);
+                    }
+                };
             }
+
+
+            m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT));
+            m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL));
+            m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT));
+            m_jpMidfield.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.MIDFIELD));
+            m_jpLeftAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_LEFT));
+            m_jpCentralAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_CENTRAL));
+            m_jpRightAttack.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.ATTACK_RIGHT));
+
+            setLoddar(Helper.round(minuteRating.loddar(currentLineup), 2));
+            setiHatStats((int) minuteRating.hatstats(currentLineup));
+            int iTacticType = currentLineup.getTacticType();
+            setTactic(iTacticType, (float) ratingPredictionModel.getTacticRating(currentLineup, minute));
+            setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
+
+            // Recalculate Borders
+            calcRatingRatio();
+
+            var builder = new StringBuilder();
+            for ( var cr : ratingPredictionModel.getCopyrights()){
+                builder.append(cr).append('\n');
+            }
+            copyrights.setText(builder.toString());
         }
     }
 

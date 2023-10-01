@@ -1,0 +1,52 @@
+# based on information from Schum's thread
+
+[general]
+delta                = 0.75 # fixed
+trainerOff           = 0.9 # fixed
+trainerDef           = 1.15 # fixed
+trainerNeutral       = 1.02 # fixed
+tacticAOW            = 0.85
+tacticCreative       = 0.93
+defleadPercentDef    = 0.000000 # fixed
+pullback             = 0.125
+maxXpDelta           = 0.48
+
+
+[goalkeeping_allsides]
+keeper     = 0.135452380952381
+
+[defending_allsides]
+keeper     = 0.066225
+CD_norm    = 0.186
+CD_off     = 0.13578
+CD_tw      = 0.12462
+WB_norm    = 0.07068
+WB_off     = 0.0651
+WB_def     = 0.07998
+WB_tm      = 0.1302
+IM_norm    = 0.0744
+IM_off     = 0.02976
+IM_def     = 0.10788
+IM_tw      = 0.06138
+WI_norm    = 0.0372
+WI_off     = 0.02418
+WI_def     = 0.0465
+WI_tm      = 0.0465
+
+[xp_allsides]
+keeper = 1
+WB_norm    = 1
+WB_off     = 1
+WB_def     = 1
+WB_tm      = 1
+WI_norm    = 1
+WI_off     = 1
+WI_def     = 1
+WI_tm      = 1
+IM_norm    = 1
+IM_off     = 1
+IM_def     = 1
+IM_tw      = 1
+CD_norm    = 1
+CD_off     = 1
+CD_tw      = 1

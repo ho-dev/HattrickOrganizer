@@ -4,7 +4,6 @@ import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.datatype.CBItem;
 import core.gui.Refreshable;
-import core.gui.comp.panel.ComboBoxTitled;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
@@ -13,15 +12,11 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
-import core.model.match.StyleOfPlay;
 import core.model.match.Weather;
 import core.model.player.Player;
 import core.model.player.TrainerType;
 import core.rating.RatingPredictionConfig;
-import core.rating.RatingPredictionManager;
 import core.util.Helper;
-import module.lineup.lineup.MatchAndLineupSelectionPanel;
-import module.lineup.ratings.LineupRatingPanel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -48,9 +43,9 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final CBItem[] SUB_TEAM_SPIRIT = {
 			new CBItem(getTranslation("verylow"), 0),
 			new CBItem(getTranslation("low"), 1),
-			new CBItem(getTranslation("Durchschnitt"), 2),
-			new CBItem(getTranslation("high"), 3),
-			new CBItem(getTranslation("veryhigh"), 4) };
+			//new CBItem(getTranslation("Durchschnitt"), 2),
+			new CBItem(getTranslation("high"), 2),
+			new CBItem(getTranslation("veryhigh"), 3) };
 	private final JComboBox<CBItem> m_jcbSubTeamSpirit = new JComboBox<>(SUB_TEAM_SPIRIT);
 
 	/** weather combo boxes */
@@ -121,7 +116,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 		//the following values are stored to allow reverting to real value after playing with the various lineup settings
 		if (homodel.getTeam() != null) {
-			m_iRealTeamSpirit = homodel.getTeam().getTeamSpirit();
+			m_iRealTeamSpirit = homodel.getTeam().getTeamSpiritLevel();
 			m_iRealSubTeamSpirit = homodel.getTeam().getSubTeamSpirit();
 			m_iRealConfidence = homodel.getTeam().getConfidence();
 			m_iRealTrainerType = homodel.getTrainer().getTrainerTyp().toInt();
@@ -189,7 +184,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			m_jcbSubTeamSpirit.setEnabled(false);
 			m_jcbTeamConfidence.setEnabled(false);
 
-			homodel.getTeam().setTeamSpirit(6); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
+			homodel.getTeam().setTeamSpiritLevel(6); // Set Team Spirit to content (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 			homodel.getTeam().setSubTeamSpirit(2);
 			homodel.getTeam().setConfidence(6);  // Set Team Spirit to wonderful (cf: https://www.hattrick.org/Help/Rules/Tournaments.aspx)
 
@@ -220,7 +215,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		var team = homodel.getTeam();
 		if ( team != null){
 			if(bLineupSimulation) {
-				setTeamSpirit(team.getTeamSpirit(), team.getSubTeamSpirit());
+				setTeamSpirit(team.getTeamSpiritLevel(), team.getSubTeamSpirit());
 				setConfidence(team.getConfidence());
 				setTrainerType(homodel.getTrainer().getTrainerTyp().toInt());
 			}
@@ -248,14 +243,12 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				setTacticalAssistants(m_iRealTacticalAssistantsLevel);
 			}
 		}
-		final Lineup currentLineup = homodel.getLineupWithoutRatingRecalc();
-		if ( currentLineup != null) {
-			setManMarking(currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
-			setLocation(currentLineup.getLocation());
-			setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
-			setPullBackMinute(currentLineup.getPullBackMinute());
-		}
-	}
+		final Lineup currentLineup = homodel.getCurrentLineup();
+        setManMarking(currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
+        setLocation(currentLineup.getLocation());
+        setWeather(currentLineup.getWeather(), currentLineup.getWeatherForecast());
+        setPullBackMinute(currentLineup.getPullBackMinute());
+    }
 
 	public void setConfidence(int iTeamConfidence) {
 		Helper.setComboBoxFromID(m_jcbTeamConfidence, iTeamConfidence);
@@ -282,12 +275,10 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	public void itemStateChanged(ItemEvent event) {
 		if (event.getStateChange() == ItemEvent.SELECTED) {
 			if (event.getSource().equals(m_jcbPullBackMinute)) {
-				var lineup = homodel.getLineupWithoutRatingRecalc();
-				if (lineup != null) {
-					lineup.setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
-				}
-			} else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
-				homodel.getTeam().setTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
+				var lineup = homodel.getCurrentLineup();
+                lineup.setPullBackMinute(((CBItem) Objects.requireNonNull(m_jcbPullBackMinute.getSelectedItem())).getId());
+            } else if (event.getSource().equals(m_jcbMainTeamSpirit)) {
+				homodel.getTeam().setTeamSpiritLevel(((CBItem) Objects.requireNonNull(m_jcbMainTeamSpirit.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbSubTeamSpirit)) {
 				homodel.getTeam().setSubTeamSpirit(((CBItem) Objects.requireNonNull(m_jcbSubTeamSpirit.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbTeamConfidence)) {
@@ -297,29 +288,23 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 				homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(trainerType));
 				lineupPanel.updateStyleOfPlayComboBox();
 			} else if (event.getSource().equals(m_jcbLocation)) {
-				var lineup = homodel.getLineupWithoutRatingRecalc();
-				if (lineup != null) {
-					lineup.setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
-				}
-			} else if (event.getSource().equals(m_jcbTacticalAssistants)) {
+				var lineup = homodel.getCurrentLineup();
+                lineup.setLocation((short) ((CBItem) Objects.requireNonNull(m_jcbLocation.getSelectedItem())).getId());
+            } else if (event.getSource().equals(m_jcbTacticalAssistants)) {
 				var tacticalAssistantLevel = ((CBItem) Objects.requireNonNull(m_jcbTacticalAssistants.getSelectedItem())).getId();
 				homodel.getClub().setTacticalAssistantLevels(tacticalAssistantLevel);
 				lineupPanel.updateStyleOfPlayComboBox();
 			} else if (event.getSource().equals(m_jcbWeather)) {
-				Lineup lineup = homodel.getLineupWithoutRatingRecalc();
-				if (lineup != null) {
-					lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is overriden
-					lineup.setWeather(getWeather());
-					lineupPanel.refreshLineupPositionsPanel();
-				}
-			} else if (event.getSource().equals(this.m_jcbPredictionModel)) {
+				Lineup lineup = homodel.getCurrentLineup();
+                lineup.setWeatherForecast(Weather.Forecast.TODAY); // weather forecast is override
+                lineup.setWeather(getWeather());
+                lineupPanel.refreshLineupPositionsPanel();
+            } else if (event.getSource().equals(this.m_jcbPredictionModel)) {
 				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
 			} else if (event.getSource().equals(m_jcbManMarkingPosition)) {
-				var lineup = homodel.getLineupWithoutRatingRecalc();
-				if (lineup != null) {
-					lineup.setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
-				}
-			}
+				var lineup = homodel.getCurrentLineup();
+                lineup.setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
+            }
 			refresh();
 		}
 	}
@@ -505,7 +490,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	}
 
 	public void resetSettings() {
-		homodel.getTeam().setTeamSpirit(m_iRealTeamSpirit);
+		homodel.getTeam().setTeamSpiritLevel(m_iRealTeamSpirit);
 		homodel.getTeam().setSubTeamSpirit(m_iRealSubTeamSpirit);
 		homodel.getTeam().setConfidence(m_iRealConfidence);
 		homodel.getTrainer().setTrainerTyp(TrainerType.fromInt(m_iRealTrainerType));

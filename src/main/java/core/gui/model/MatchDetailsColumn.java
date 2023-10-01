@@ -10,7 +10,7 @@ import core.model.match.Matchdetails;
  * @since V1.36
  *
  */
-class MatchDetailsColumn extends UserColumn {
+public class MatchDetailsColumn extends UserColumn {
 
 
 	/**
@@ -37,7 +37,7 @@ class MatchDetailsColumn extends UserColumn {
 	}
 	/**
 	 * overwritten by created Columns
-	 * @param matchdetails
+	 * @param match
 	 * @return TableEntry
 	 */
 	public IHOTableEntry getTableEntry(Matchdetails match){

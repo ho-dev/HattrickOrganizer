@@ -112,7 +112,7 @@ public class TeamReport {
      */
     public TeamLineup getTeamMatchReport(int selection)
     {
-        if (this.matchDetails.size() == 0)return null;
+        if (this.matchDetails.isEmpty())return null;
         if ( selection == 0 ){
             return this.averageRatingslineup;
         }
@@ -200,7 +200,7 @@ public class TeamReport {
 
     private void addSpecialEvents(MatchDetail matchDetail)
     {
-        Lineup lineup = HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc();
+        Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
         if ( this.specialEventsPredictionManager == null){
             this.specialEventsPredictionManager = new SpecialEventsPredictionManager();

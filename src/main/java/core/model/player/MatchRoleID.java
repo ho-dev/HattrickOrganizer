@@ -9,10 +9,11 @@ import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.NotNull;
-import java.io.DataInputStream;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -65,7 +66,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	/** TaktikAnweisungen */
 	@SerializedName("behaviour")
 	@Expose
-	private byte m_bTaktik = -1;
+	private byte behaviour = -1;
 
 	/** ID */
 	private int m_iId = -1;
@@ -92,7 +93,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 */
 
 	/* byte position, */
-	public MatchRoleID(int id, int spielerId, byte taktik) {
+	public MatchRoleID(int id, int playerId, byte behaviour) {
 		// m_bPosition = position;
 
 		if ((id < IMatchRoleID.setPieces) && (id != -1) && (id != 0)) {
@@ -100,8 +101,8 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		}
 
 		m_iId = id;
-		m_iSpielerId = spielerId;
-		m_bTaktik = taktik;
+		m_iSpielerId = playerId;
+		this.behaviour = behaviour;
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		// m_bPosition = position;
 		m_iId = sp.getId();
 		m_iSpielerId = sp.getPlayerId();
-		m_bTaktik = sp.getTactic();
+		behaviour = sp.getTactic();
 
 		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
 			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
@@ -120,32 +121,32 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 
 	public MatchRoleID(){}
 
-	// //////////////////Load/Save/////////////////
-
-	/**
-	 * Konstruktor lädt die MatchRoleID aus einem InputStream
-	 *
-	 * @param dis
-	 *            Der InputStream aus dem gelesen wird
-	 */
-	public MatchRoleID(DataInputStream dis) {
-		// DataInputStream dis = null;
-		// byte data[] = null;
-		try {
-			// Einzulesenden Strom konvertieren
-			// bais = new ByteArrayInputStream(data);
-			// dis = new DataInputStream (bais);
-			// Daten auslesen
-			m_iId = dis.readInt();
-			m_iSpielerId = dis.readInt();
-			m_bTaktik = dis.readByte();
-
-			// Und wieder schliessen
-			// dis.close ();
-		} catch (IOException ioe) {
-			HOLogger.instance().log(getClass(), ioe);
-		}
-	}
+//	// //////////////////Load/Save/////////////////
+//
+//	/**
+//	 * Konstruktor lädt die MatchRoleID aus einem InputStream
+//	 *
+//	 * @param dis
+//	 *            Der InputStream aus dem gelesen wird
+//	 */
+//	public MatchRoleID(DataInputStream dis) {
+//		// DataInputStream dis = null;
+//		// byte data[] = null;
+//		try {
+//			// Einzulesenden Strom konvertieren
+//			// bais = new ByteArrayInputStream(data);
+//			// dis = new DataInputStream (bais);
+//			// Daten auslesen
+//			m_iId = dis.readInt();
+//			m_iSpielerId = dis.readInt();
+//			m_bTaktik = dis.readByte();
+//
+//			// Und wieder schliessen
+//			// dis.close ();
+//		} catch (IOException ioe) {
+//			HOLogger.instance().log(getClass(), ioe);
+//		}
+//	}
 
 	// ~ Methods
 	// ------------------------------------------------------------------------------------
@@ -155,48 +156,33 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * loading the position image
 	 */
 	public static int getHTPosidForHOPosition4Image(byte posId) {
-		switch (posId) {
-		case KEEPER:
-			return keeper;
-
-		case CENTRAL_DEFENDER:
-		case CENTRAL_DEFENDER_TOWING:
-		case CENTRAL_DEFENDER_OFF:
-			return rightCentralDefender;
-
-		case BACK:
-		case BACK_TOMID:
-		case BACK_OFF:
-		case BACK_DEF:
-			return rightBack;
-
-		case MIDFIELDER:
-		case MIDFIELDER_OFF:
-		case MIDFIELDER_DEF:
-		case MIDFIELDER_TOWING:
-			return rightInnerMidfield;
-
-		case WINGER:
-		case WINGER_TOMID:
-		case WINGER_OFF:
-		case WINGER_DEF:
-			return rightWinger;
-
-		case FORWARD:
-		case FORWARD_TOWING:
-		case FORWARD_DEF:
-			return rightForward;
-
-		case SUBSTITUTED1:
-		case SUBSTITUTED2:
-		case SUBSTITUTED3:
-			return FirstPlayerReplaced;
-
-		default: {
-			HOLogger.instance().log(MatchRoleID.class, "Position not recognized: " + posId);
-			return FirstPlayerReplaced;
-		}
-		}
+        switch (posId) {
+            case KEEPER -> {
+                return keeper;
+            }
+            case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> {
+                return rightCentralDefender;
+            }
+            case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
+                return rightBack;
+            }
+            case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> {
+                return rightInnerMidfield;
+            }
+            case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
+                return rightWinger;
+            }
+            case FORWARD, FORWARD_TOWING, FORWARD_DEF -> {
+                return rightForward;
+            }
+            case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> {
+                return FirstPlayerReplaced;
+            }
+            default -> {
+                HOLogger.instance().log(MatchRoleID.class, "Position not recognized: " + posId);
+                return FirstPlayerReplaced;
+            }
+        }
 	}
 
 	/**
@@ -230,39 +216,6 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
 		};
 	}
-
-	/**
-	 * Gibt zu einer Positionsid den Namen zurück
-	 */
-	public static String getNameForID(int id) {
-		return switch (id) {
-			case keeper -> "keeper";
-			case rightBack -> "rightBack";
-			case rightCentralDefender -> "rightCentralDefender";
-			case leftCentralDefender -> "leftCentralDefender";
-			case middleCentralDefender -> "middleCentralDefender";
-			case leftBack -> "leftBack";
-			case rightWinger -> "rightWinger";
-			case rightInnerMidfield -> "rightInnerMidfield";
-			case centralInnerMidfield -> "centralInnerMidfield";
-			case leftInnerMidfield -> "leftInnerMidfield";
-			case leftWinger -> "leftWinger";
-			case rightForward -> "rightForward";
-			case centralForward -> "centralForward";
-			case leftForward -> "leftForward";
-			case substCD1, substCD2 -> "substDefender";
-			case substWB1, substWB2 -> "substWingback";
-			case substIM1, substIM2 -> "substInsideMid";
-			case substWI1, substWI2 -> "substWinger";
-			case substGK1, substGK2 -> "substKeeper";
-			case substFW1, substFW2 -> "substForward";
-			case substXT1, substXT2 -> "substExtra";
-			default -> "";
-		};
-
-	}
-
-
 
 	/**
 	 * Returns the name of a positionsid
@@ -323,59 +276,46 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 				train == TrainingType.SHOOTING)
 			return true;
 
-		switch (posId) {
-			case KEEPER:
-				if (train == TrainingType.GOALKEEPING ||
-						train == TrainingType.DEF_POSITIONS)
-					return true;
-				break;
-			case CENTRAL_DEFENDER:
-			case CENTRAL_DEFENDER_TOWING:
-			case CENTRAL_DEFENDER_OFF:
-				if (train == TrainingType.DEFENDING ||
-						train == TrainingType.DEF_POSITIONS ||
-						train == TrainingType.THROUGH_PASSES)
-					return true;
-				break;
-			case BACK:
-			case BACK_TOMID:
-			case BACK_OFF:
-			case BACK_DEF:
-				if (train == TrainingType.DEF_POSITIONS ||
-						train == TrainingType.THROUGH_PASSES ||
-						train == TrainingType.DEFENDING)
-					return true;
-				break;
-			case MIDFIELDER:
-			case MIDFIELDER_OFF:
-			case MIDFIELDER_DEF:
-			case MIDFIELDER_TOWING:
-				if (train == TrainingType.DEF_POSITIONS ||
-						train == TrainingType.PLAYMAKING ||
-						train == TrainingType.THROUGH_PASSES ||
-						train == TrainingType.SHORT_PASSES)
-					return true;
-				break;
-			case WINGER:
-			case WINGER_TOMID:
-			case WINGER_OFF:
-			case WINGER_DEF:
-				if (train == TrainingType.WING_ATTACKS ||
-						train == TrainingType.DEF_POSITIONS ||
-						train == TrainingType.CROSSING_WINGER ||
-						train == TrainingType.THROUGH_PASSES ||
-						train == TrainingType.SHORT_PASSES)
-					return true;
-				break;
-			case FORWARD:
-			case FORWARD_DEF:
-			case FORWARD_TOWING:
-				if (train == TrainingType.SCORING ||
-						train == TrainingType.WING_ATTACKS ||
-						train == TrainingType.SHORT_PASSES)
-					return true;
-				break;
-		}
+        switch (posId) {
+            case KEEPER -> {
+                if (train == TrainingType.GOALKEEPING ||
+                        train == TrainingType.DEF_POSITIONS)
+                    return true;
+            }
+            case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> {
+                if (train == TrainingType.DEFENDING ||
+                        train == TrainingType.DEF_POSITIONS ||
+                        train == TrainingType.THROUGH_PASSES)
+                    return true;
+            }
+            case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
+                if (train == TrainingType.DEF_POSITIONS ||
+                        train == TrainingType.THROUGH_PASSES ||
+                        train == TrainingType.DEFENDING)
+                    return true;
+            }
+            case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> {
+                if (train == TrainingType.DEF_POSITIONS ||
+                        train == TrainingType.PLAYMAKING ||
+                        train == TrainingType.THROUGH_PASSES ||
+                        train == TrainingType.SHORT_PASSES)
+                    return true;
+            }
+            case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
+                if (train == TrainingType.WING_ATTACKS ||
+                        train == TrainingType.DEF_POSITIONS ||
+                        train == TrainingType.CROSSING_WINGER ||
+                        train == TrainingType.THROUGH_PASSES ||
+                        train == TrainingType.SHORT_PASSES)
+                    return true;
+            }
+            case FORWARD, FORWARD_DEF, FORWARD_TOWING -> {
+                if (train == TrainingType.SCORING ||
+                        train == TrainingType.WING_ATTACKS ||
+                        train == TrainingType.SHORT_PASSES)
+                    return true;
+            }
+        }
 		return false;
 	}
 
@@ -385,28 +325,22 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	public static boolean isPartialTrainPosition(byte posId, int train) {
 
 		if (train == TrainingType.CROSSING_WINGER || train == TrainingType.PLAYMAKING) {
-			switch (posId) {
-				case BACK:
-				case BACK_TOMID:
-				case BACK_OFF:
-				case BACK_DEF:
-					if (train == TrainingType.CROSSING_WINGER)
-						return true;
-					break;
-				case WINGER:
-				case WINGER_TOMID:
-				case WINGER_OFF:
-				case WINGER_DEF:
-					if (train == TrainingType.PLAYMAKING)
-						return true;
-					break;
-			}
+            switch (posId) {
+                case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
+                    if (train == TrainingType.CROSSING_WINGER)
+                        return true;
+                }
+                case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
+                    if (train == TrainingType.PLAYMAKING)
+                        return true;
+                }
+            }
 		}
 		return false;
 	}
 
 	public byte getPosition() {
-		return MatchRoleID.getPosition(m_iId, m_bTaktik);
+		return MatchRoleID.getPosition(m_iId, behaviour);
 	}
 
 	/**
@@ -415,102 +349,83 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * @return Value of property m_bPosition.
 	 */
 	public static byte getPosition(int id, byte taktik) {
-		switch (id) {
-		case keeper:
-			return KEEPER;
-
-		case rightBack:
-		case leftBack: {
-			if (taktik == TOWARDS_MIDDLE) {
-				return BACK_TOMID;
-			} else if (taktik == OFFENSIVE) {
-				return BACK_OFF;
-			} else if (taktik == DEFENSIVE) {
-				return BACK_DEF;
-			} else {
-				return BACK;
-			}
-		}
-
-		case middleCentralDefender:
-		case rightCentralDefender:
-		case leftCentralDefender: {
-			if (taktik == TOWARDS_WING) {
-				return CENTRAL_DEFENDER_TOWING;
-			} else if (taktik == OFFENSIVE) {
-				return CENTRAL_DEFENDER_OFF;
-			} else {
-				return CENTRAL_DEFENDER;
-			}
-		}
-
-		case rightWinger:
-		case leftWinger: {
-			if (taktik == TOWARDS_MIDDLE) {
-				return WINGER_TOMID;
-			} else if (taktik == OFFENSIVE) {
-				return WINGER_OFF;
-			} else if (taktik == DEFENSIVE) {
-				return WINGER_DEF;
-			} else {
-				return WINGER;
-			}
-		}
-
-		case centralInnerMidfield:
-		case rightInnerMidfield:
-		case leftInnerMidfield: {
-			if (taktik == TOWARDS_WING) {
-				return MIDFIELDER_TOWING;
-			} else if (taktik == OFFENSIVE) {
-				return MIDFIELDER_OFF;
-			} else if (taktik == DEFENSIVE) {
-				return MIDFIELDER_DEF;
-			} else {
-				return MIDFIELDER;
-			}
-		}
-
-		case centralForward:
-		case rightForward:
-		case leftForward: {
-			if (taktik == DEFENSIVE) {
-				return FORWARD_DEF;
-			} else if (taktik == TOWARDS_WING) {
-				return FORWARD_TOWING;
-			} else {
-				return FORWARD;
-			}
-		}
-
-		case substCD1:
-		case substCD2:
-			return CENTRAL_DEFENDER;
-
-		case substWB1:
-		case substWB2:
-			return BACK;
-
-		case substIM1:
-		case substIM2:
-			return MIDFIELDER;
-
-		case substWI1:
-		case substWI2:
-			return WINGER;
-
-		case substGK1:
-		case substGK2:
-			return KEEPER;
-
-		case substFW1:
-		case substFW2:
-			return FORWARD;
-
-		case substXT1:
-		case substXT2:
-			return EXTRA;
-		}
+        switch (id) {
+            case keeper -> {
+                return KEEPER;
+            }
+            case rightBack, leftBack -> {
+                if (taktik == TOWARDS_MIDDLE) {
+                    return BACK_TOMID;
+                } else if (taktik == OFFENSIVE) {
+                    return BACK_OFF;
+                } else if (taktik == DEFENSIVE) {
+                    return BACK_DEF;
+                } else {
+                    return BACK;
+                }
+            }
+            case middleCentralDefender, rightCentralDefender, leftCentralDefender -> {
+                if (taktik == TOWARDS_WING) {
+                    return CENTRAL_DEFENDER_TOWING;
+                } else if (taktik == OFFENSIVE) {
+                    return CENTRAL_DEFENDER_OFF;
+                } else {
+                    return CENTRAL_DEFENDER;
+                }
+            }
+            case rightWinger, leftWinger -> {
+                if (taktik == TOWARDS_MIDDLE) {
+                    return WINGER_TOMID;
+                } else if (taktik == OFFENSIVE) {
+                    return WINGER_OFF;
+                } else if (taktik == DEFENSIVE) {
+                    return WINGER_DEF;
+                } else {
+                    return WINGER;
+                }
+            }
+            case centralInnerMidfield, rightInnerMidfield, leftInnerMidfield -> {
+                if (taktik == TOWARDS_WING) {
+                    return MIDFIELDER_TOWING;
+                } else if (taktik == OFFENSIVE) {
+                    return MIDFIELDER_OFF;
+                } else if (taktik == DEFENSIVE) {
+                    return MIDFIELDER_DEF;
+                } else {
+                    return MIDFIELDER;
+                }
+            }
+            case centralForward, rightForward, leftForward -> {
+                if (taktik == DEFENSIVE) {
+                    return FORWARD_DEF;
+                } else if (taktik == TOWARDS_WING) {
+                    return FORWARD_TOWING;
+                } else {
+                    return FORWARD;
+                }
+            }
+            case substCD1, substCD2 -> {
+                return CENTRAL_DEFENDER;
+            }
+            case substWB1, substWB2 -> {
+                return BACK;
+            }
+            case substIM1, substIM2 -> {
+                return MIDFIELDER;
+            }
+            case substWI1, substWI2 -> {
+                return WINGER;
+            }
+            case substGK1, substGK2 -> {
+                return KEEPER;
+            }
+            case substFW1, substFW2 -> {
+                return FORWARD;
+            }
+            case substXT1, substXT2 -> {
+                return EXTRA;
+            }
+        }
 
 		return UNKNOWN;
 	}
@@ -573,7 +488,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 *            New value of property m_iSpielerId.
 	 */
 	public final void setPlayerIdIfValidForLineup(int spielerId) {
-		setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getLineupWithoutRatingRecalc());
+		setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getCurrentLineup());
 	}
 
 	public final void setPlayerId(int id){
@@ -621,8 +536,8 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * @param m_bTaktik
 	 *            New value of property m_bTaktik.
 	 */
-	public final void setTaktik(byte m_bTaktik) {
-		this.m_bTaktik = m_bTaktik;
+	public final void setBehaviour(byte m_bTaktik) {
+		this.behaviour = m_bTaktik;
 	}
 
 	/**
@@ -631,13 +546,42 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * @return Value of property m_bTaktik.
 	 */
 	public final byte getTactic() {
-		return m_bTaktik;
+		return behaviour;
 	}
+
+	static public List<Byte> getBehaviours(int roleId){
+		switch (roleId){
+			case keeper -> {
+				return List.of(NORMAL);
+			}
+			case leftBack, rightBack, leftWinger, rightWinger -> {
+				return List.of(NORMAL, OFFENSIVE, DEFENSIVE, TOWARDS_MIDDLE);
+			}
+			case leftCentralDefender, rightCentralDefender -> {
+				return List.of(NORMAL, OFFENSIVE, TOWARDS_WING);
+			}
+			case middleCentralDefender -> {
+				return List.of(NORMAL, OFFENSIVE);
+			}
+			case leftInnerMidfield, rightInnerMidfield -> {
+				return List.of(NORMAL, OFFENSIVE, DEFENSIVE, TOWARDS_WING);
+			}
+			case centralInnerMidfield -> {
+				return List.of(NORMAL, OFFENSIVE, DEFENSIVE);
+			}
+			case leftForward, rightForward -> {
+				return List.of(NORMAL, DEFENSIVE, TOWARDS_WING);
+			}
+			case centralForward -> {
+				return List.of(NORMAL, DEFENSIVE);
+			}
+		}
+        return List.of();
+    }
 
 	@Override
 	public final int compareTo(@NotNull IMatchRoleID obj) {
-		if (obj instanceof MatchRoleID) {
-			final MatchRoleID position = (MatchRoleID) obj;
+		if (obj instanceof final MatchRoleID position) {
 
 			// Beide aufgestellt ?
 			if ((this.getId() < IMatchRoleID.startReserves)
@@ -680,7 +624,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 			// Daten schreiben in Strom
 			das.writeInt(m_iId);
 			das.writeInt(m_iSpielerId);
-			das.writeByte(m_bTaktik);
+			das.writeByte(behaviour);
 
 			/*
 			 * //Strom konvertieren in Byte data = baos.toByteArray();

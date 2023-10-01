@@ -607,6 +607,6 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 //		double price = HOVerwaltung.instance().getModel().getEPV().getPrice(data);
 //		jtfEPV.setText(NumberFormat.getCurrencyInstance().format(price));
         jlRating.setText(MatchRoleID.getNameForPosition(tempPlayer.getIdealPosition()) + " ("
-                         + tempPlayer.calcPosValue(tempPlayer.getIdealPosition(), true, null, false) + ")");
+                         + tempPlayer.getIdealPositionRating() + ")");
     }
 }

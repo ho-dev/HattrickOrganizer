@@ -20,13 +20,13 @@ import javax.swing.table.TableColumn;
  * @author Thorsten Dietz
  * @since 1.36
  */
-class PlayerSkillColumn extends PlayerColumn {
+public class PlayerSkillColumn extends PlayerColumn {
 	
 	/** id for the skill **/
-	private int skill;
+	private final int skill;
 	
 	/** different color for some skills **/
-	private Color background;
+	private final Color background;
 	
 	/**
 	 * constructor
@@ -97,23 +97,22 @@ class PlayerSkillColumn extends PlayerColumn {
 	 * @return
 	 */
 	private int getSkill(Player player){
-		switch(skill){
-		case PlayerSkill.KEEPER: 		return player.getGKskill();
-		case PlayerSkill.DEFENDING: 	return player.getDEFskill();
-		case PlayerSkill.PASSING: 		return player.getPSskill();
-		case PlayerSkill.WINGER: 		return player.getWIskill();
-		case PlayerSkill.PLAYMAKING: 	return player.getPMskill();
-		case PlayerSkill.SET_PIECES: 		return player.getSPskill();
-		case PlayerSkill.SCORING: 		return player.getSCskill();
-		case PlayerSkill.EXPERIENCE: 	return player.getExperience();
-		case PlayerSkill.FORM: 			return player.getForm();
-		case PlayerSkill.STAMINA: 		return player.getStamina();
-		case PlayerSkill.LEADERSHIP:		return player.getLeadership();
-		case PlayerSkill.LOYALTY: 		return player.getLoyalty();
-		
-		}
-		return 0;
-	}
+        return switch (skill) {
+            case PlayerSkill.KEEPER -> player.getGKskill();
+            case PlayerSkill.DEFENDING -> player.getDEFskill();
+            case PlayerSkill.PASSING -> player.getPSskill();
+            case PlayerSkill.WINGER -> player.getWIskill();
+            case PlayerSkill.PLAYMAKING -> player.getPMskill();
+            case PlayerSkill.SET_PIECES -> player.getSPskill();
+            case PlayerSkill.SCORING -> player.getSCskill();
+            case PlayerSkill.EXPERIENCE -> player.getExperience();
+            case PlayerSkill.FORM -> player.getForm();
+            case PlayerSkill.STAMINA -> player.getStamina();
+            case PlayerSkill.LEADERSHIP -> player.getLeadership();
+            case PlayerSkill.LOYALTY -> player.getLoyalty();
+            default -> 0;
+        };
+    }
 	
 	/**
 	 * overwrite the method from UserColumn

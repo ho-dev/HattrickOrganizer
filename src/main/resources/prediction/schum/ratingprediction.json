@@ -1,0 +1,231 @@
+{
+
+  "ratings" : {
+    "_description" : "Rating formulas",
+    "defence" : {
+      "_description" : "Rating formulas of the defence lines",
+      "central" : {
+        "_description" : "Rating formula of the central defence line",
+        "sum": [
+          {"expression":"$expressions.playerStrength", "args": ["goalkeeping","gk", "normal", 0.135452380952381]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","gk", "normal", 0.066225]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "normal", 0.07068]}, {"expression" : "$expressions.overcrowding", "args" : ["cd"]}]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "offensive", 0.0651]},{ "expression" : "$expressions.overcrowding", "args" : ["cd"]}]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "wing", 0.07998]}, {"expression" : "$expressions.overcrowding", "args" :["cd"]}]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "normal", 0.07068]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "offensive", 0.0651]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "defensive", 0.07998]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "middle", 0.1302]},
+
+          {"expression":"$expressions.playerExperience", "args": ["gk", "normal",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "normal",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "offensive",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "wing",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "normal",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "offensive", "$objects.devineExperienceContribution.cd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "defensive",  "$objects.devineExperienceContribution.cd"]},
+          {"expression":"p$expressions.layerExperience", "args": ["wb", "middle",  "$objects.devineExperienceContribution.cd"]}
+        ]
+      },
+      "side": {
+        "_description" : "Rating formula of the side defence lines",
+        "sum": [
+          {"expression":"$expressions.playerStrength", "args": ["goalkeeping","gk", "normal", 0.135452380952381]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","gk", "normal", 0.066225]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "normal", 0.07068]}, {"expression" : "$expressions.overcrowding", "args" : ["cd"]}]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "offensive", 0.0651]},{ "expression" : "$expressions.overcrowding", "args" : ["cd"]}]},
+          { "product" : [{"expression":"$expressions.playerStrength", "args": ["defending","cd", "wing", 0.07998]}, {"expression" : "$expressions.overcrowding", "args" :["cd"]}]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "normal", 0.07068]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "offensive", 0.0651]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "defensive", 0.07998]},
+          {"expression":"$expressions.playerStrength", "args": ["defending","wb", "middle", 0.1302]},
+
+          {"expression":"$expressions.playerExperience", "args": ["gk", "normal",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "normal",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "offensive",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["cd", "wing",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "normal",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "offensive", "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "defensive",  "$objects.devineExperienceContribution.sd"]},
+          {"expression":"$expressions.playerExperience", "args": ["wb", "middle",  "$objects.devineExperienceContribution.sd"]}
+        ]
+      }
+    },
+    "midfield" : {
+      "central" : {
+        "sum": []
+
+      }
+    },
+    "attack" : {
+      "central" : {
+        "sum": []
+
+      },
+      "side": {
+        "sum": []
+
+      }
+    }
+  },
+
+  "objects": [
+    {
+      "overcrowdingCoefficients" : {
+        "cd" :  [1,1,0.964, 0.9],
+        "fw" :  [1,1,0.945, 0.865],
+        "im" :  [1,1,0.935, 0.825]
+      },
+      "devineExperienceContribution" : {
+        "cd" :  0.48,
+        "sd" :  0.345,
+        "fw" :  0.45,
+        "sf" :  0.375,
+        "im" :  0.73
+      }
+    }
+  ],
+
+  "expressions" : [
+    {
+      "overcrowding" : {
+        "_description" : "overcrowing(sector) = overcrowdingFactor(sector, nPlayersInSector)",
+        "args": ["sector"],
+        "result": {
+          "expression": "overcrowdingFactor", "args": ["/sector", { "count": { "playersInSector": ["/sector"]}}]
+        }
+      }
+    },
+    {
+      "overcrowdingFactor" : {
+        "_description" : "overcrowdingFactor(sector,count) = overcrowdingCoefficients[sector][count]",
+        "args": ["sector", "count"],
+        "result": {
+          "value": "$.objects.overcrowdingCoefficients.sectors./sector[/count]"
+        }
+      }
+    },
+    {
+      "skill" : {
+        "_description" : "skill(value) = max(0, value-1)",
+        "args": ["skillValue"],
+        "result": {
+          "max": [0, { "sum": [-1, "/skillValue"]}]
+        }
+      }
+    },
+    {
+      "form" : {
+        "_description" : "form(x) = -0.009x^2+0.191x+0.048",
+        "args": [
+          "formValue"
+        ],
+        "result": {
+          "polynomial": {
+            "value": "/formValue",
+            "coefficients": [0.048, 0.191, -0.009]
+          }
+        }
+      }
+    },
+    {
+      "experience": {
+        "_description" : "experience(x) =  -0.00000862x^4+0.00056438x^3-0.01507852x^2+0.20426157x-0.18965312",
+        "args": ["experienceValue"],
+        "result": {
+          "polynomial": {
+            "value": "/experienceValue",
+            "coefficients": [
+              -0.18965312,
+              0.20426157,
+              -0.01507852,
+              0.00056438,
+              -0.00000862
+            ]
+          }
+        }
+      }
+    },
+    {
+      "staminaGradient": {
+        "_description" : "stamina gradient per 5 minutes",
+        "args" : ["staminaValue", "isPressing"],
+        "result" : {
+          "min" : [
+            -3.25,
+            {
+              "product" : [
+                {"if" :  "/isPressing", "then":  1.1},
+                {"sum" :  [
+                  -5.95,
+                  {"quotient" :  [{"product" :["/staminaValue", 27]},70]}
+                ]}
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "staminaStartvalue": {
+        "args" : ["staminaValue"],
+        "result": {
+          "sum" : [
+            102,
+            { "if" :  { "ge":  ["/staminaValue", 7]},
+              "then" :  {"sum" :  [23, {"quotient" :  [{"product":  [{"sum":  ["/staminaValue", -7]}, 100]}, 7]}]},
+              "else" :  {"quotient" :  [{"product" :  ["/staminaValue", 23]},7]}
+            }
+          ]
+        }
+      }
+    },
+    {
+      "stamina" : {
+        "args": ["minute", "startMinute", "staminaValue", "isPressing"],
+        "instructions" : [
+          { "variable": "gradient", "value" : {"expression":  "$expressions.staminaGradient", "args":  ["/staminaValue", "isPressing"]}},
+          { "variable": "startValue", "value" : { "expression" : "$expressions.staminaStartValue", "args" : ["/staminaValue"]}},
+          { "variable": "ret", "value" : "/startValue"},
+          { "for" :  [
+            { "int" :  "i", "values":  [{"sum": ["/startMinute", 5]}, "minute", 5]},
+            { "set" :  "/ret", "value": {"sum":
+                                          [ "/ret",
+                                            "/gradient",
+                                            {"if": {"and": [{"ge": ["/i", 45]}, {"lt": ["/i", 50]}]}, "then": { "min" :  [18.75, {"sum": ["/startValue", {"product" :  [-1,"/ret"]}]}]}},
+                                            {"if": {"and": [{"ge": ["/i", 90]}, {"lt": ["/i", 95]}]}, "then": { "min" :  [6.25, {"sum": ["/startValue", {"product" :  [-1,"/ret"]}]}]}}
+                                          ]
+                                        }
+            }
+        ]}],
+        "result": { "quotient" : [{ "min" :  [100, "/ret"]}, 100]}
+      }
+    },
+    {
+      "playerStrength": {
+        "args": ["skillName", "sector", "orientation", "weight"],
+        "result": {
+          "product": [
+            "/weight",
+            {"expression": "$expressions.form", "args": [{"value": ["form", "/sector", "/orientation"]}]},
+            {
+              "sum": [
+                {"expression": "$expressions.skill", "args": [{"value": ["/skillName", "/sector", "/orientation"]}]},
+                {"product": [0.0526, {"value": ["loyalty", "/sector", "/orientation"]}]},
+                {"if": {"value": ["isHomegrown", "/sector", "/orientation"]}, "then": 0.5}
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "playerExperience" : {
+        "args": ["sector", "orientation", "weight"],
+        "result": {
+          "product": ["/weight", {"expression": "$expressions.experience","args": [{"value": ["$expressions.experience", "/sector", "/orientation"]}]}]
+        }
+      }
+    }
+  ]
+}

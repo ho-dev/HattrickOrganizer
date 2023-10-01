@@ -50,7 +50,14 @@ public final class Team  extends AbstractTable.Storable {
 	/** Stimmung */
 	private int m_iStimmungInt;
 
-	private int subStimmung;
+	/**
+	 * Combo box index of team spirit sub levels
+	 * 0 - min (.0)
+	 * 1 - low (.25)
+	 * 2 - high (.5)
+	 * 3 - very height (.75)
+	 */
+	private int teamSpiritSubIndex;
 
 	/** TrainingsArt */
 	private int m_iTrainingsArt;
@@ -64,6 +71,7 @@ public final class Team  extends AbstractTable.Storable {
 
 	private int m_iStaminaTrainingPart;
 	private int hrfId;
+	private long ratingRevision=0;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -87,7 +95,7 @@ public final class Team  extends AbstractTable.Storable {
 		formationXp550 = NumberUtils.toInt(properties.getProperty("exper550"),0);
 		formationXp253 = NumberUtils.toInt(properties.getProperty("exper253"),0);
 		m_iTrainingsArt = NumberUtils.toInt(properties.getProperty("trtypevalue"),-1);
-		subStimmung = 2;
+		teamSpiritSubIndex = 2;
 	}
 
 
@@ -95,6 +103,7 @@ public final class Team  extends AbstractTable.Storable {
 	 * Creates a new Team object.
 	 */
 	public Team() {
+		teamSpiritSubIndex = 2;
 	}
 
 
@@ -121,7 +130,7 @@ public final class Team  extends AbstractTable.Storable {
 			HOLogger.instance().log(getClass(), "Error(Team rs): " + e);
 		}
 		m_iTrainingsArt = rs.getInt("TrainingsArt");
-		subStimmung = 2;
+		teamSpiritSubIndex = 2;
 	}
 
 	// ~ Methods
@@ -214,6 +223,7 @@ public final class Team  extends AbstractTable.Storable {
 	 *            New value of property m_iSelbstvertrauen.
 	 */
 	public void setConfidence(int m_iSelbstvertrauen) {
+		ratingRevision++;
 		this.m_iSelbstvertrauen = m_iSelbstvertrauen;
 	}
 
@@ -232,7 +242,9 @@ public final class Team  extends AbstractTable.Storable {
 	 * @param m_iStimmung
 	 *            New value of property m_iStimmung.
 	 */
-	public void setTeamSpirit(int m_iStimmung) {
+	public void setTeamSpiritLevel(int m_iStimmung)
+	{
+		ratingRevision++;
 		this.m_iStimmungInt = m_iStimmung;
 	}
 
@@ -241,9 +253,10 @@ public final class Team  extends AbstractTable.Storable {
 	 * 
 	 * @return Value of property m_iStimmung.
 	 */
-	public int getTeamSpirit() {
+	public int getTeamSpiritLevel() {
 		return m_iStimmungInt;
 	}
+	public double getTeamSpirit(){return m_iStimmungInt + teamSpiritSubIndex *.25;}
 
 	/**
 	 * Setter for property m_iTrainingsArt.
@@ -301,14 +314,15 @@ public final class Team  extends AbstractTable.Storable {
 	 * Get the sublevel of the team spirit.
 	 */
 	public int getSubTeamSpirit() {
-		return subStimmung;
+		return teamSpiritSubIndex;
 	}
 
 	/**
 	 * Set the sublevel of the team spirit.
 	 */
 	public void setSubTeamSpirit(int i) {
-		subStimmung = i;
+		ratingRevision++;
+		teamSpiritSubIndex = i;
 	}
 
 	public int getHrfId() {
@@ -317,5 +331,9 @@ public final class Team  extends AbstractTable.Storable {
 
 	public void setHrfId(int hrfId) {
 		this.hrfId = hrfId;
+	}
+
+	public long getRatingRevision() {
+		return ratingRevision;
 	}
 }

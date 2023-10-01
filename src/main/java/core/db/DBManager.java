@@ -41,9 +41,9 @@ import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
 import module.youth.YouthTraining;
+import org.hsqldb.error.ErrorCode;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
-import org.hsqldb.error.ErrorCode;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -1786,7 +1786,7 @@ public class DBManager {
 				// Stimmung und Selbstvertrauen
 				var team = getTeam(getHRFID4Date(filter));
 				final String[] sTSandConfidences = {
-						TeamSpirit.toString(team.getTeamSpirit()),
+						TeamSpirit.toString(team.getTeamSpiritLevel()),
 						TeamConfidence.toString(team.getConfidence())
 				};
 				//Only if player data has been found, pass it into the return vector

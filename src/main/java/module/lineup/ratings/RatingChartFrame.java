@@ -17,18 +17,18 @@ import javax.swing.JRadioButton;
 
 class RatingChartFrame extends JFrame {
 
-	private HOVerwaltung hov = HOVerwaltung.instance();
-	private UserParameter userParameter = UserParameter.instance();
-	private JRadioButton combinedChartButton = new JRadioButton(hov.getLanguageString("lineup.CombinedChart"));
-	private JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
-	private ButtonGroup chartButtonGroup = new ButtonGroup();
-	private JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"), userParameter.RatingChartFrame_ET);
-	private JPanel controlsPanel = new JPanel();
-	private JPanel placeholderChart = new JPanel();
-	private RatingChartData chartData = new RatingChartData();
-	private CombinedRatingChartPanel[] combinedChart = new CombinedRatingChartPanel[1];
-	private MultipleRatingChartsPanel[] multiChart = new MultipleRatingChartsPanel[1];
-	private Dimension chartSize = new Dimension(900,700);
+	private final HOVerwaltung hov = HOVerwaltung.instance();
+	private final UserParameter userParameter = UserParameter.instance();
+	private final JRadioButton combinedChartButton = new JRadioButton(hov.getLanguageString("lineup.CombinedChart"));
+	private final JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
+	private final ButtonGroup chartButtonGroup = new ButtonGroup();
+	private final JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"), userParameter.RatingChartFrame_ET);
+	private final JPanel controlsPanel = new JPanel();
+	private final JPanel placeholderChart = new JPanel();
+	private final RatingChartData chartData = new RatingChartData();
+	private final CombinedRatingChartPanel[] combinedChart = new CombinedRatingChartPanel[1];
+	private final MultipleRatingChartsPanel[] multiChart = new MultipleRatingChartsPanel[1];
+	private final Dimension chartSize = new Dimension(900,700);
 
 	class ChartButtonHandler implements ItemListener {
 		JPanel[] source;
@@ -60,7 +60,7 @@ class RatingChartFrame extends JFrame {
 			if(e.getSource() == combinedChartButton) userParameter.RatingChartFrame_Combined = selected;
 			else if(e.getSource() == multiChartButton) userParameter.RatingChartFrame_Multiple = selected;
 		}
-	};
+	}
 
 	RatingChartFrame() {
 		super(HOVerwaltung.instance().getLanguageString("RatingChartFrame"));
@@ -76,19 +76,16 @@ class RatingChartFrame extends JFrame {
 	placeholderChart.setPreferredSize(chartSize);
 	combinedChartButton.addItemListener(new ChartButtonHandler(combinedChart));
 	multiChartButton.addItemListener(new ChartButtonHandler(multiChart));
-	etToggler.addItemListener(new ItemListener() {
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			boolean selected;
-			if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
-			else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
-			else return;
-			chartData.setET(selected);
-			userParameter.RatingChartFrame_ET = selected;
-			if(combinedChart[0] != null) combinedChart[0].prepareChart();
-			if(multiChart[0] != null) multiChart[0].prepareCharts();
-		}
-	});
+	etToggler.addItemListener(e -> {
+        boolean selected;
+        if (e.getStateChange() == ItemEvent.SELECTED) selected = true;
+        else if (e.getStateChange() == ItemEvent.DESELECTED) selected = false;
+        else return;
+        chartData.setExtraTime(selected);
+        userParameter.RatingChartFrame_ET = selected;
+        if(combinedChart[0] != null) combinedChart[0].prepareChart();
+        if(multiChart[0] != null) multiChart[0].prepareCharts();
+    });
 	controlsPanel.add(combinedChartButton);
 	controlsPanel.add(multiChartButton);
 	controlsPanel.add(etToggler);

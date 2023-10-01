@@ -1,7 +1,7 @@
 
 
 ## Highlights
-* Support for Hattrick's coach changes
+* refactoring rating prediction (implement Schum rating)
 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
@@ -13,11 +13,11 @@
 ### Team Analyzer
 
 ### Rating
+* implement schum rating prediction (#1782)
 
 ### Matches
 
 ### Lineup
-* coaches who are not allowed to play are now disabled for HO lineups (#1891)
 
 ### Statistics
 
@@ -31,10 +31,10 @@
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
-* Update Install4j to latest version (10.0.6) (#1849)
 
 ## Translations
 
-Reports by Contributors - April 22, 2023 - April 22, 2023
+Reports by Contributors - September 24, 2023 - September 24, 2023
+
 
 Total 0

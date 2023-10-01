@@ -196,11 +196,11 @@ public class Skills {
     /**
      * Returns the Skill value for the player
      *
-     * @param player player which should be inspected
+     * @param player     player which should be inspected
      * @param skillIndex constant index value of the skill we want to see
      * @return The Skill value or 0 if the index is incorrect
      */
-    public static float getSkillValue(Player player, int skillIndex) {
+    public static double getSkillValue(Player player, int skillIndex) {
         return switch (skillIndex) {
             case PlayerSkill.KEEPER -> player.getGKskill() + player.getSub4Skill(skillIndex);
             case PlayerSkill.PLAYMAKING -> player.getPMskill() + player.getSub4Skill(skillIndex);

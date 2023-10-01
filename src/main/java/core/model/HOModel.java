@@ -10,6 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
 import core.training.TrainingPerWeek;
 import module.youth.YouthPlayer;
@@ -52,6 +53,7 @@ public class HOModel {
     private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
     private List<YouthTraining> youthTrainings;
+    private RatingPredictionModel ratingPredictionModel;
 
     //~ Constructors -------------------------------------------------------------------------------
     public HOModel(HODateTime fetchDate) {
@@ -166,7 +168,7 @@ public class HOModel {
     public final void setLineup(@Nullable MatchLineupTeam lineup) {
         if (lineup != null) {
             if (lineup.getTeamID() < 0) lineup.setTeamID(getBasics().getTeamId());
-            if (lineup.getTeamName().equals("")) lineup.setTeamName(getBasics().getTeamName());
+            if (lineup.getTeamName().isEmpty()) lineup.setTeamName(getBasics().getTeamName());
             calcStyleOfPlay();
         }
         m_clAufstellung = lineup;
@@ -175,17 +177,6 @@ public class HOModel {
     public void storeLineup(MatchLineupTeam matchLineupTeam) {
         setLineup(matchLineupTeam);
         DBManager.instance().storeMatchLineupTeam(matchLineupTeam);
-    }
-
-    //--------- Lineup ----------------------------------
-
-    /**
-     * returns the lineup (setRatings is called)
-     */
-    public final MatchLineupTeam getCurrentLineupTeamRecalculated() {
-        getCurrentLineupTeam();
-        m_clAufstellung.getLineup().setRatings();
-        return m_clAufstellung;
     }
 
     private void calcStyleOfPlay() {
@@ -217,9 +208,17 @@ public class HOModel {
     /**
      * returns the lineup
      */
-    public final @NotNull Lineup getLineupWithoutRatingRecalc() {
+    public final @NotNull Lineup getCurrentLineup() {
         var team = getCurrentLineupTeam();
         return team.getLineup();
+    }
+
+    public final @NotNull RatingPredictionModel getRatingPredictionModel(){
+        if ( this.ratingPredictionModel == null){
+            var team = getTeam();
+            this.ratingPredictionModel = new RatingPredictionModel(team);
+        }
+        return this.ratingPredictionModel;
     }
 
     /**

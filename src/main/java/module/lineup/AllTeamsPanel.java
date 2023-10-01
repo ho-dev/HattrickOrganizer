@@ -1,5 +1,6 @@
 package module.lineup;
 
+import core.gui.HOMainFrame;
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
@@ -12,8 +13,10 @@ import core.util.Helper;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.swing.*;
 
 
@@ -22,7 +25,8 @@ import javax.swing.*;
  */
 public final class AllTeamsPanel extends JPanel implements ActionListener {
 
-	private static final long serialVersionUID = 955755336335567688L;
+	@Serial
+    private static final long serialVersionUID = 955755336335567688L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -66,7 +70,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     private void setGroup(String sGroup) {
         final HOModel model = HOVerwaltung.instance().getModel();
         final List<Player> lPlayers = model.getCurrentPlayers();
-        final Lineup lineup = model.getCurrentLineupTeamRecalculated().getLineup();
+        final Lineup lineup = model.getCurrentLineup();
 
         //Remove all players on the group and put the new ones in
         for (Player player : lPlayers) {
@@ -80,7 +84,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
             }
         }
 
-        core.gui.HOMainFrame.instance().getLineupPanel().update();
+        Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
     }
 
     private void initComponents() {

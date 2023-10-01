@@ -27,7 +27,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
 
     public final LineupRatingPanel getLineupRatingPanel() {
         if (lineupRatingPanel == null) {
-            lineupRatingPanel = new LineupRatingPanel();
+            lineupRatingPanel = new LineupRatingPanel(this.m_clLineupPanel);
         }
         return lineupRatingPanel;
     }

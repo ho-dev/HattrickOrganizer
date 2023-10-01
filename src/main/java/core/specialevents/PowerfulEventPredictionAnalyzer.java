@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.constants.player.Speciality;
+import core.constants.player.Specialty;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -33,7 +33,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         int id = position.getPlayerId();
         if (id == 0) return;
         Player p = analyse.getPlayer(id);
-        if (p.hasSpeciality(Speciality.POWERFUL)) {
+        if (p.hasSpecialty(Specialty.POWERFUL)) {
 
             switch (position.getId()) {
                 case IMatchRoleID.leftForward:
@@ -96,7 +96,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
                 MatchRoleID mid = this.analyse.getPosition(i);
                 if (mid.getPlayerId() != 0 && mid.getTactic() == taktik) {
                     Player p = analyse.getPlayer(mid.getPlayerId());
-                    if (p.hasSpeciality(Speciality.POWERFUL)) {
+                    if (p.hasSpecialty(Specialty.POWERFUL)) {
                         overcrowding++;
                     }
                 }
@@ -115,7 +115,6 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
 
     private void getPowerfulNormalForward(MatchRoleID position) {
         if (position.getPlayerId() == 0) return;
-        ;
         double overcrowdingFactor = getOvercrowding(position, IMatchRoleID.rightForward, IMatchRoleID.leftForward, IMatchRoleID.NORMAL);
 
         double defence = 0;

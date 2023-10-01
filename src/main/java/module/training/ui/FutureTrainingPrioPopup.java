@@ -10,18 +10,17 @@ import module.training.ui.model.TrainingModel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.Instant;
 
 public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListener {
 
-    private JMenuItem fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.fulltrain"));
-    private JMenuItem partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.partialtrain"));
-    private JMenuItem osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain"));
-    private JMenuItem noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.notrain"));
-    private JMenuItem bestPositionTrainingMenuItem = new JMenuItem("");
+    private final JMenuItem fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.fulltrain"));
+    private final JMenuItem partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.partialtrain"));
+    private final JMenuItem osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain"));
+    private final JMenuItem noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.notrain"));
+    private final JMenuItem bestPositionTrainingMenuItem = new JMenuItem("");
 
-    private LazyImagePanel panel;
-    private TrainingModel model;
+    private final LazyImagePanel panel;
+    private final TrainingModel model;
     private int[] cols;
 
     public FutureTrainingPrioPopup(LazyImagePanel panel, TrainingModel model ) {
@@ -91,7 +90,7 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
 
     public void updateActivePlayer() {
         if ( model.getActivePlayer() != null) {
-            bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo(null, false));
+            bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo());
         }
     }
 }

@@ -5,7 +5,7 @@ import core.gui.comp.table.UserColumn;
 
 
 // TODO: investigate wh a second player column is required
-class PlayerColumn2 extends UserColumn {
+public class PlayerColumn2 extends UserColumn {
 
 
 	protected PlayerColumn2(int id, String name){
