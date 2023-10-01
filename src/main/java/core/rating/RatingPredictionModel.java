@@ -66,6 +66,7 @@ public class RatingPredictionModel {
      * Create a new rating prediction model
      * The team object not only provides the parameters necessary to calculate lineup rations as team spirit and confidence
      * but also a rating revision number which changes if one of the relevant parameters was changed.
+     *
      * @param team Team
      */
     public RatingPredictionModel(Team team) {
@@ -92,8 +93,9 @@ public class RatingPredictionModel {
     /**
      * Get rating
      * The team rating revision is checked. If team parameters were changed the rating cache is cleared.
+     *
      * @param lineup match order
-     * @param s rating sector
+     * @param s      rating sector
      * @param minute match minute [0...120]
      * @return double
      */
@@ -118,13 +120,14 @@ public class RatingPredictionModel {
     /**
      * Get match average rating
      * The team rating revision is checked. If team parameters were changed the rating cache is cleared.
-     * @param lineup match order
-     * @param s rating sector
+     *
+     * @param lineup  match order
+     * @param s       rating sector
      * @param minutes match duration to calculate average for [90|120]
      * @return double
      */
     public double getAverageRating(Lineup lineup, RatingSector s, int minutes) {
-        if ( team.getRatingRevision() != teamRatingRevision){
+        if (team.getRatingRevision() != teamRatingRevision) {
             ratingCache.clear();
             teamRatingRevision = team.getRatingRevision();
         }
@@ -134,11 +137,12 @@ public class RatingPredictionModel {
     /**
      * Get a list of minutes when the rating of the lineup possibly changes.
      * This happens every 5 minutes and each time the lineup changes during the match (e. g. substitutions happens)
-     * @param lineup match order
+     *
+     * @param lineup  match order
      * @param minutes match duration to calculate average for [90|120]
      * @return TreeSet of integer
      */
-    static public @NotNull TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes){
+    static public @NotNull TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes) {
         var staminaChanges = new TreeSet<Integer>();
         for (int i = 0; i < minutes; i += 5) {
             staminaChanges.add(i);
@@ -149,6 +153,7 @@ public class RatingPredictionModel {
 
     /**
      * Calculate average rating of lineup sector for 90 or 120 minutes match time
+     *
      * @param lineup  match order
      * @param s       rating sector
      * @param minutes match duration to calculate average for
@@ -173,8 +178,9 @@ public class RatingPredictionModel {
      * The contributions of all players of the lineup in the requested match minute are added, taking into account
      * the overcrowding penalty at the specified match minute.
      * The sum is multiplied by the sector related factors (team factors, lineup settings)
+     *
      * @param lineup match order
-     * @param s rating sector
+     * @param s      rating sector
      * @param minute match minute
      * @return double
      */
@@ -194,12 +200,13 @@ public class RatingPredictionModel {
 
     /**
      * Transform skill scale to rating sector scale
-     * @param s Rating sector
+     *
+     * @param s   Rating sector
      * @param ret Skill scale rating sum
      * @return Sector rating
      */
     protected double calcRatingSectorScale(RatingSector s, double ret) {
-        if ( ret > 0) {
+        if (ret > 0) {
             ret *= getRatingSectorScaleFactor(s);
             return pow(ret, 1.2) / 4. + 1.;
         }
@@ -208,6 +215,7 @@ public class RatingPredictionModel {
 
     /**
      * Get rating sector scaling factor
+     *
      * @param s Rating sector
      * @return scaling factor
      */
@@ -223,8 +231,9 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the effect of the lineup settings to the sector ratings
+     *
      * @param lineup Lineup
-     * @param s Rating sector
+     * @param s      Rating sector
      * @return Sector factor
      */
     protected double calcSector(Lineup lineup, @NotNull RatingSector s) {
@@ -281,15 +290,17 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the confidence factor
+     *
      * @param confidence Confidence value without any sublevel (.5 is used)
      * @return Confidence factor
      */
     protected double calcConfidence(double confidence) {
-        return 0.8 + 0.05 * (confidence+.5);
+        return 0.8 + 0.05 * (confidence + .5);
     }
 
     /**
      * Calculate the team spirit factor
+     *
      * @param teamSpirit Team spirit including any sublevel
      * @return Team spirit factor
      */
@@ -312,14 +323,15 @@ public class RatingPredictionModel {
      * add the calculated experience contribution of the sector, then
      * multiply the weather effect and
      * multiply the stamina effect
-     * @param player Player
-     * @param roleId the lineup position of the player
-     * @param behaviour the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
-     * @param weather Weather
-     * @param tacticType int The tactic is used to calculate the stamina factor
-     * @param sector rating sector
-     * @param minute match minute
-     * @param startMinute player's match start minute (0 or substitution time)
+     *
+     * @param player              Player
+     * @param roleId              the lineup position of the player
+     * @param behaviour           the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
+     * @param weather             Weather
+     * @param tacticType          int The tactic is used to calculate the stamina factor
+     * @param sector              rating sector
+     * @param minute              match minute
+     * @param startMinute         player's match start minute (0 or substitution time)
      * @param overcrowdingPenalty overcrowding factor of middle sectors
      * @return double
      */
@@ -359,9 +371,11 @@ public class RatingPredictionModel {
         }
         return contribution;
     }
+
     public double getPositionContribution(@NotNull MatchLineupPosition p, Weather weather, int tacticType, RatingSector s, int minute, double overcrowdingPenalty) {
         return getPositionContribution(p.getPlayer(), p.getRoleId(), p.getBehaviour(), weather, tacticType, s, minute, p.getStartMinute(), overcrowdingPenalty);
     }
+
     private double getPositionContribution(Player p, int roleId, byte behaviour, RatingSector s, int minute) {
         return getPositionContribution(p, roleId, behaviour, Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.);
     }
@@ -384,10 +398,11 @@ public class RatingPredictionModel {
      * In that case the side restrictions of the parameters are checked if they were fulfilled by the player's position.
      * In that case if the behaviour and specialty corresponding factor is available it is multiplied with the
      * calculated player strength of the skill type from the parameter map.
-     * @param player Player
-     * @param roleId Player's match position
+     *
+     * @param player    Player
+     * @param roleId    Player's match position
      * @param behaviour Player's behaviour
-     * @param s Rating sector
+     * @param s         Rating sector
      * @return double
      */
     protected double calcContribution(Player player, int roleId, Byte behaviour, RatingSector s) {
@@ -398,22 +413,22 @@ public class RatingPredictionModel {
                 var side = params.side;
                 var contributions = params.contributionParameter;
                 var factor = ratingContributionParameterMap.get(contributions);
-                for ( var f : factor.entrySet()){
+                for (var f : factor.entrySet()) {
                     var skillType = f.getKey();
                     var lineupSectors = f.getValue();
-                    for ( var lineupSector : lineupSectors.entrySet()){
+                    for (var lineupSector : lineupSectors.entrySet()) {
                         var sector = lineupSector.getKey();
                         if (MatchRoleID.getSector(roleId) == sector) {
                             var sideRestrictions = lineupSector.getValue();
-                            for ( var r : sideRestrictions.entrySet()){
+                            for (var r : sideRestrictions.entrySet()) {
                                 var sideRestriction = r.getKey();
-                                if (!isRoleSideRestricted(roleId, side, sideRestriction)){
+                                if (!isRoleSideRestricted(roleId, side, sideRestriction)) {
                                     var behaviours = r.getValue();
                                     var specialties = behaviours.get(behaviour);
-                                    if ( specialties != null){
+                                    if (specialties != null) {
                                         var c = specialties.get(Specialty.getSpecialty(player.getPlayerSpecialty()));
-                                        var strength =  calcStrength(player, skillType);
-                                        var res = strength*c;
+                                        var strength = calcStrength(player, skillType);
+                                        var res = strength * c;
                                         ret += res;
 //                                        HOLogger.instance().debug(getClass(), "calcContribution " + player.getFullName()
 //                                                + " " + s.toString()
@@ -491,144 +506,144 @@ public class RatingPredictionModel {
     protected static void initRatingContributionParameterMap() {
         ratingContributionParameterMap = new HashMap<>();
         double factorSideDefence = 1.; //  .25;
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .61* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .25* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, NORMAL, .52* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .61 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .25 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, NORMAL, .52 * factorSideDefence);
         initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .4 * factorSideDefence);
         initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .81 * factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.MIDDLE_ONLY, NORMAL, .26* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.MIDDLE_ONLY, OFFENSIVE, .2* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.MIDDLE_ONLY, NORMAL, .26 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.MIDDLE_ONLY, OFFENSIVE, .2 * factorSideDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, NORMAL, .92* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .74* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, NORMAL, .92 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .74 * factorSideDefence);
         initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .75* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .75 * factorSideDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, NORMAL, .19* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .09* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .27* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .24* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, NORMAL, .095* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, OFFENSIVE, .045* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, DEFENSIVE, .135* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, NORMAL, .19 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .09 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .27 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .24 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, NORMAL, .095 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, OFFENSIVE, .045 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, DEFENSIVE, .135 * factorSideDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .35* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .22* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .61* factorSideDefence);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .29* factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .35 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .22 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .61 * factorSideDefence);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .29 * factorSideDefence);
 
         double factorCentralDefence = 1.; // .14;
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .87*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .35*factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.KEEPER, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .87 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Goal, SideRestriction.NONE, NORMAL, .35 * factorCentralDefence);
         initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, NORMAL, factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, OFFENSIVE, .73*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, TOWARDS_WING, .67*factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, OFFENSIVE, .73 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, TOWARDS_WING, .67 * factorCentralDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, NORMAL, .38*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, OFFENSIVE, .35*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, DEFENSIVE, .43*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, TOWARDS_MIDDLE, .7*factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, NORMAL, .38 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, OFFENSIVE, .35 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, DEFENSIVE, .43 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Back, SideRestriction.NONE, TOWARDS_MIDDLE, .7 * factorCentralDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .4*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .16*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .58*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .33*factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .4 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .16 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .58 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .33 * factorCentralDefence);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .2*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .13*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .25*factorCentralDefence);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .25*factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .2 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .13 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .25 * factorCentralDefence);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_DEFENCE, PlayerSkill.DEFENDING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .25 * factorCentralDefence);
 
         double factorMidfield = 1.; // .09;
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, NORMAL, .25*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, OFFENSIVE, .4*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, TOWARDS_WING, .15*factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, NORMAL, .25 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, OFFENSIVE, .4 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.CentralDefence, SideRestriction.NONE, TOWARDS_WING, .15 * factorMidfield);
 
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, NORMAL, .15*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, OFFENSIVE, .2*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, DEFENSIVE, .1*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, TOWARDS_MIDDLE, .2*factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, NORMAL, .15 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, OFFENSIVE, .2 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, DEFENSIVE, .1 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Back, SideRestriction.NONE, TOWARDS_MIDDLE, .2 * factorMidfield);
 
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, 1*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .95*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .95*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .9*factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, 1 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .95 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .95 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .9 * factorMidfield);
 
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .45*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .3*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .3*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .55*factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .45 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .3 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .3 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .55 * factorMidfield);
 
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .25*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .35*factorMidfield);
-        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .15*factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .25 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .35 * factorMidfield);
+        initAllSpecialties(RatingContributionParameterSet.MIDFIELD, PlayerSkill.PLAYMAKING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .15 * factorMidfield);
 
         double factorCentralAttack = 1.; // .13;
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .33*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .49*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .18*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .23*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .33 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .49 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .18 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, TOWARDS_WING, .23 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .11*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .13*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .05*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .16*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, NORMAL, .11 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, OFFENSIVE, .13 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, DEFENSIVE, .05 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.NONE, TOWARDS_MIDDLE, .16 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .33*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .53*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .23*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .33 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .53 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .23 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .22*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .31*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .13*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, NORMAL, .22 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, OFFENSIVE, .31 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.InnerMidfield, SideRestriction.NONE, DEFENSIVE, .13 * factorCentralAttack);
 
         initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .56*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .66*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .56 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.CENTRAL_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, TOWARDS_WING, .66 * factorCentralAttack);
 
         double factorSideAttack = 1.; // .45;
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, NORMAL, .13*factorSideAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, OFFENSIVE, 0.18*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, DEFENSIVE, 0.07*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .14*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, 0.31*factorCentralAttack);
-        initSpecialty(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, Specialty.Technical, 0.41*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, NORMAL, .13 * factorSideAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, OFFENSIVE, 0.18 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.MIDDLE_ONLY, DEFENSIVE, 0.07 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .14 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, 0.31 * factorCentralAttack);
+        initSpecialty(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, Specialty.Technical, 0.41 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, NORMAL, .26*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, 0.36*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, 0.14*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.31*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, NORMAL, .26 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, 0.36 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, 0.14 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.31 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .26*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .29*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, 0.21*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, 0.15*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .26 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .29 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, 0.21 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, 0.15 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.21*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, 0.06*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.21 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.PASSING, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, 0.06 * factorCentralAttack);
 
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.26*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, NORMAL, .59*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .69*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .45*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .35*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .59*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .86*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.CentralDefence, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, 0.26 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, NORMAL, .59 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, .69 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .45 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Back, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .35 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.InnerMidfield, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .59 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, NORMAL, .86 * factorCentralAttack);
         initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, OFFENSIVE, factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .69*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .74*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .24*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .13*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .64*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, .21*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, DEFENSIVE, .69 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Wing, SideRestriction.THIS_SIDE_ONLY, TOWARDS_MIDDLE, .74 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .24 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .13 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .64 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.WINGER, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, .21 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .27*factorCentralAttack);
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .13*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, NORMAL, .27 * factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.NONE, DEFENSIVE, .13 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, .19*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.OPPOSITE_SIDE_ONLY, TOWARDS_WING, .19 * factorCentralAttack);
 
-        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .51*factorCentralAttack);
+        initAllSpecialties(RatingContributionParameterSet.SIDE_ATTACK, PlayerSkill.SCORING, MatchRoleID.Sector.Forward, SideRestriction.THIS_SIDE_ONLY, TOWARDS_WING, .51 * factorCentralAttack);
     }
 
     private static void initSpecialty(RatingContributionParameterSet ratingContributionParameter, int skill, MatchRoleID.Sector sector, SideRestriction sideRestriction, byte behaviour, Specialty specialty, double v) {
@@ -677,8 +692,9 @@ public class RatingPredictionModel {
     /**
      * Get the overcrowding penalty factor
      * If no penalty factor is found in the map, the factor 1 is returned.
+     *
      * @param countPlayersInSector Player count of the lineup sector
-     * @param sector Lineup sector
+     * @param sector               Lineup sector
      * @return double
      */
     protected double getOvercrowdingPenalty(int countPlayersInSector, MatchRoleID.Sector sector) {
@@ -694,8 +710,9 @@ public class RatingPredictionModel {
 
     /**
      * Get player count of a lineup sector
+     *
      * @param positions Lineup positions
-     * @param sector Lineup sector
+     * @param sector    Lineup sector
      * @return Number of players in given lineup sector
      */
     private int countPlayersInSector(List<MatchLineupPosition> positions, MatchRoleID.Sector sector) {
@@ -734,8 +751,9 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the experience rating contribution to a rating sector (Eff(Exp))
+     *
      * @param ratingSector Rating sector
-     * @param skillValue Experience skill value
+     * @param skillValue   Experience skill value
      * @return Experience rating contribution to the rating sector
      */
     protected double calcExperience(@NotNull RatingSector ratingSector, double skillValue) {
@@ -764,10 +782,11 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the stamina factor
-     * @param stamina Stamina skill value
-     * @param minute Match minute
+     *
+     * @param stamina     Stamina skill value
+     * @param minute      Match minute
      * @param startMinute Player's match start minute
-     * @param tacticType Match tactic
+     * @param tacticType  Match tactic
      * @return double
      */
     protected double calcStamina(double stamina, int minute, int startMinute, int tacticType) {
@@ -810,12 +829,13 @@ public class RatingPredictionModel {
     }
 
     static List<Integer> rhsPositions = List.of(rightBack, rightCentralDefender, rightInnerMidfield, rightWinger, rightForward);
-    boolean isRightHandSidePosition(int roleId){
+
+    boolean isRightHandSidePosition(int roleId) {
         return rhsPositions.contains(roleId);
     }
 
-    int togglePositionSide(int roleId){
-        switch (roleId){
+    int togglePositionSide(int roleId) {
+        switch (roleId) {
             case rightBack -> {
                 return leftBack;
             }
@@ -835,8 +855,8 @@ public class RatingPredictionModel {
         return roleId;
     }
 
-    RatingPredictionModel.RatingSector toggleRatingSectorSide(@NotNull RatingPredictionModel.RatingSector s){
-        switch (s){
+    RatingPredictionModel.RatingSector toggleRatingSectorSide(@NotNull RatingPredictionModel.RatingSector s) {
+        switch (s) {
             case DEFENCE_LEFT -> {
                 return RatingPredictionModel.RatingSector.DEFENCE_RIGHT;
             }
@@ -856,11 +876,12 @@ public class RatingPredictionModel {
     /**
      * Get the player rating
      * Multiplying the weather factor to the weather independent rating value.
-     * @param p Player
-     * @param roleId lineup position
+     *
+     * @param p         Player
+     * @param roleId    lineup position
      * @param behaviour behaviour
-     * @param minute match minute
-     * @param weather weather
+     * @param minute    match minute
+     * @param weather   weather
      * @return Player rating value
      */
     public double getPlayerRating(@NotNull Player p, int roleId, byte behaviour, int minute, Weather weather) {
@@ -870,10 +891,11 @@ public class RatingPredictionModel {
 
     /**
      * Get the weather independent player rating.
-     * @param p Player
-     * @param roleId lineup position
+     *
+     * @param p         Player
+     * @param roleId    lineup position
      * @param behaviour behaviour
-     * @param minute match minute
+     * @param minute    match minute
      * @return Weather independent player rating
      */
     public double getPlayerRating(Player p, int roleId, byte behaviour, int minute) {
@@ -882,15 +904,17 @@ public class RatingPredictionModel {
 
     /**
      * Get the weather independent player rating at match beginning
-     * @param p Player
-     * @param roleId lineup position
+     *
+     * @param p         Player
+     * @param roleId    lineup position
      * @param behaviour behaviour
      * @return Weather independent player rating at match beginning
      */
-    public double getPlayerRatingMatchBeginning(Player p, int roleId, byte behaviour){
+    public double getPlayerRatingMatchBeginning(Player p, int roleId, byte behaviour) {
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 0);
     }
-    public double getPlayerRatingMatchBeginning(Player p, byte positionWithBehaviour){
+
+    public double getPlayerRatingMatchBeginning(Player p, byte positionWithBehaviour) {
         return playerRatingCache.get(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour), 0);
     }
 
@@ -907,6 +931,7 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the sum of the player's rating contributions to all rating sectors
+     *
      * @param p Player
      * @return double
      */
@@ -915,7 +940,7 @@ public class RatingPredictionModel {
         for (var s : RatingSector.values()) {
             var c = getPositionContribution(p, roleId, behaviour, s, minute);
             c *= getRatingSectorScaleFactor(s);
-            if ( s == RatingSector.MIDFIELD) c *= 3; // fit to hatstats
+            if (s == RatingSector.MIDFIELD) c *= 3; // fit to hatstats
             ret += c;
         }
         return pow(ret, 1.2) / 4.;
@@ -923,16 +948,19 @@ public class RatingPredictionModel {
 
     /**
      * Get the player's match average rating
-     * @param p Player
+     *
+     * @param p                     Player
      * @param positionWithBehaviour Lineup position and behaviour
      * @return double
      */
-    public double getPlayerMatchAverageRating(Player p, byte positionWithBehaviour){
+    public double getPlayerMatchAverageRating(Player p, byte positionWithBehaviour) {
         return getPlayerRatingMatchBeginning(p, getPlayerRatingPosition(positionWithBehaviour), getBehaviour(positionWithBehaviour)) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
     }
-    public double getPlayerMatchAverageRating(Player p, int roleId, byte behaviour){
+
+    public double getPlayerMatchAverageRating(Player p, int roleId, byte behaviour) {
         return getPlayerRatingMatchBeginning(p, roleId, behaviour) * getMatchAverageStaminaFactor(p.getSkill(STAMINA));
     }
+
     public double getPlayerMatchAverageRating(Player player, int roleId, byte behaviour, Weather weather) {
         return weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather)
                 * getPlayerMatchAverageRating(player, roleId, behaviour);
@@ -951,6 +979,7 @@ public class RatingPredictionModel {
 
     /**
      * Get the match average stamina factor
+     *
      * @param skill Stamina skill value
      * @return double
      */
@@ -961,6 +990,7 @@ public class RatingPredictionModel {
     /**
      * Calculate the match average stamina factor
      * Formula fitting the values published by Schum.
+     *
      * @param stamina Stamina skill value
      * @return
      */
@@ -969,30 +999,31 @@ public class RatingPredictionModel {
         return min(1., ret);
     }
 
-    public double getPlayerRatingEndOfMatch(Player p, int roleId, byte behaviour){
+    public double getPlayerRatingEndOfMatch(Player p, int roleId, byte behaviour) {
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 90);
     }
-    public double getPlayerRatingEndOfExtraTime(Player p, int roleId, byte behaviour){
+
+    public double getPlayerRatingEndOfExtraTime(Player p, int roleId, byte behaviour) {
         return playerRatingCache.get(p, togglePositionSide(roleId), behaviour, 120);
     }
 
     /**
      * Calculate the player rating related to an optimal reference player
-     * @param p PLayer
-     * @param roleId Lineup position
+     *
+     * @param p         PLayer
+     * @param roleId    Lineup position
      * @param behaviour Behaviour
-     * @param minute match minute
+     * @param minute    match minute
      * @return Double
      */
-    public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute){
+    public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute) {
         Player reference;
-        if (  roleId == KEEPER){
+        if (roleId == KEEPER) {
             reference = Player.getReferenceKeeper();
-        }
-        else {
+        } else {
             reference = Player.getReferencePlayer();
         }
-        return  getPlayerRating(p, roleId, behaviour, minute) /  getPlayerRating(reference, roleId, behaviour, minute);
+        return getPlayerRating(p, roleId, behaviour, minute) / getPlayerRating(reference, roleId, behaviour, minute);
     }
 
     RatingCalculationCache2<Player, Integer> playerTaticStrengthCache = new RatingCalculationCache2<>() {
@@ -1020,28 +1051,31 @@ public class RatingPredictionModel {
 
     public static List<Integer> playerRatingPositions = List.of(keeper, leftBack, leftCentralDefender, leftWinger, leftInnerMidfield, leftForward);
 
-    public static Integer getPlayerRatingPosition(byte positionWithBehaviour){
-        return switch (positionWithBehaviour){
+    public static Integer getPlayerRatingPosition(byte positionWithBehaviour) {
+        return switch (positionWithBehaviour) {
             case KEEPER -> keeper;
             case CENTRAL_DEFENDER, CENTRAL_DEFENDER_OFF, CENTRAL_DEFENDER_TOWING -> leftCentralDefender;
             case BACK, BACK_OFF, BACK_TOMID, BACK_DEF -> leftBack;
             case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> leftInnerMidfield;
-            case WINGER, WINGER_OFF, WINGER_DEF,  WINGER_TOMID -> leftWinger;
-            case FORWARD, FORWARD_DEF, FORWARD_TOWING ->leftForward;
+            case WINGER, WINGER_OFF, WINGER_DEF, WINGER_TOMID -> leftWinger;
+            case FORWARD, FORWARD_DEF, FORWARD_TOWING -> leftForward;
             default -> throw new IllegalStateException("Unexpected value: " + positionWithBehaviour);
         };
     }
-    public static Byte getBehaviour(byte positionWithBehaviour){
-        return switch (positionWithBehaviour){
-            case FORWARD, WINGER, KEEPER,  MIDFIELDER, BACK, CENTRAL_DEFENDER -> NORMAL;
-            case WINGER_OFF, CENTRAL_DEFENDER_OFF, MIDFIELDER_OFF, BACK_OFF-> OFFENSIVE;
-            case FORWARD_TOWING, MIDFIELDER_TOWING , CENTRAL_DEFENDER_TOWING -> TOWARDS_WING;
+
+    public static Byte getBehaviour(byte positionWithBehaviour) {
+        return switch (positionWithBehaviour) {
+            case FORWARD, WINGER, KEEPER, MIDFIELDER, BACK, CENTRAL_DEFENDER -> NORMAL;
+            case WINGER_OFF, CENTRAL_DEFENDER_OFF, MIDFIELDER_OFF, BACK_OFF -> OFFENSIVE;
+            case FORWARD_TOWING, MIDFIELDER_TOWING, CENTRAL_DEFENDER_TOWING -> TOWARDS_WING;
             case WINGER_TOMID, BACK_TOMID -> TOWARDS_MIDDLE;
             case FORWARD_DEF, WINGER_DEF, MIDFIELDER_DEF, BACK_DEF -> DEFENSIVE;
             default -> throw new IllegalStateException("Unexpected value: " + positionWithBehaviour);
         };
     }
+
     private final Map<Player, Double> playerPenaltyMap = new HashMap<>();
+
     public double getPlayerPenaltyStrength(Player player) {
         var ret = playerPenaltyMap.get(player);
         if (ret != null) return ret;
@@ -1064,7 +1098,8 @@ public class RatingPredictionModel {
 
     /**
      * Calculate the factor of the coach modifier
-     * @param s Rating sector
+     *
+     * @param s             Rating sector
      * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
      * @return Double
      */
@@ -1093,7 +1128,7 @@ public class RatingPredictionModel {
     }
 
     protected double calcWeather(Specialty specialty, Weather weather) {
-        if ( specialty != null) {
+        if (specialty != null) {
             switch (specialty) {
                 case Technical -> {
                     if (weather == Weather.RAINY) return 0.95;
@@ -1110,11 +1145,12 @@ public class RatingPredictionModel {
         }
         return 1;
     }
-   protected double calcStrength(@NotNull Player player, Integer playerSkill) {
+
+    protected double calcStrength(@NotNull Player player, Integer playerSkill) {
         var skillRating = calcSkillRating(player.getSkill(playerSkill));
-        var loyalty  = calcLoyalty(player);
+        var loyalty = calcLoyalty(player);
         var form = calcForm(player);
-        var ret =  (skillRating + loyalty) * form;
+        var ret = (skillRating + loyalty) * form;
 //        HOLogger.instance().debug(getClass(), "calcStrength " + player.getFullName()
 //                + " " + PlayerSkill.toString(playerSkill)
 //                + "=" + skillRating
@@ -1173,8 +1209,8 @@ public class RatingPredictionModel {
         return false;
     }
 
-    public double getPlayerSetPiecesStrength(Player p){
-        return getPlayerTacticStrength(new MatchLineupPosition(setPieces, NORMAL, p ), SET_PIECES, null, TAKTIK_NORMAL, 0);
+    public double getPlayerSetPiecesStrength(Player p) {
+        return getPlayerTacticStrength(new MatchLineupPosition(setPieces, NORMAL, p), SET_PIECES, null, TAKTIK_NORMAL, 0);
     }
 
     public double getPlayerTacticStrength(@NotNull MatchLineupPosition p, int playerSkill, Weather weather, int tacticType, int minute) {
@@ -1206,9 +1242,10 @@ public class RatingPredictionModel {
         return 4 * hatStats;
     }
 
-    public double getHatStats(Lineup lineup, int minute){
+    public double getHatStats(Lineup lineup, int minute) {
         return hatStatsCache.get(lineup, minute);
     }
+
     public double getAverageHatStats(Lineup lineup, int minutes) {
         if (minutes == 90) return getAverage90HatStats(lineup);
         return getAverage120HatStats(lineup);
@@ -1217,6 +1254,7 @@ public class RatingPredictionModel {
     public double getAverage90HatStats(Lineup lineup) {
         return hatStatsCache.getAverage90(lineup);
     }
+
     public double getAverage120HatStats(Lineup lineup) {
         return hatStatsCache.getAverage120(lineup);
     }
@@ -1275,26 +1313,29 @@ public class RatingPredictionModel {
         final double midfieldFactor = MIDFIELD_SHIFT + hq(dMD);
 
         // Calculate and return the LoddarStats rating
-        return  80 * midfieldFactor * (defenseStrength + attackStrength);
+        return 80 * midfieldFactor * (defenseStrength + attackStrength);
     }
 
     private double hq(double value) {
         // Convert reduced float rating (1.00....20.99) to original integer HT rating (1...80) one +0.5 is because of correct rounding to integer
-        int x = (int)(((value - 1.0f) * 4.0f) + 1.0f);
+        int x = (int) (((value - 1.0f) * 4.0f) + 1.0f);
         return (2.0 * x) / (x + 80.0);
     }
 
-    public double getLoddarStats(Lineup lineup, int minute){
+    public double getLoddarStats(Lineup lineup, int minute) {
         return loddarStatsCache.get(lineup, minute);
     }
+
     public double getAverageLoddarStats(Lineup lineup, int minutes) {
         if (minutes == 90) return getAverage90LoddarStats(lineup);
         return getAverage120LoddarStats(lineup);
     }
-    public double getAverage90LoddarStats(Lineup lineup){
+
+    public double getAverage90LoddarStats(Lineup lineup) {
         return loddarStatsCache.getAverage90(lineup);
     }
-    public double getAverage120LoddarStats(Lineup lineup){
+
+    public double getAverage120LoddarStats(Lineup lineup) {
         return loddarStatsCache.getAverage120(lineup);
     }
 
@@ -1304,7 +1345,8 @@ public class RatingPredictionModel {
             return calcTacticsRating(lineup, minute);
         }
     };
-    public double getTacticRating(Lineup lineup, int minute){
+
+    public double getTacticRating(Lineup lineup, int minute) {
         return tacticRatingCache.get(lineup, minute);
     }
 

@@ -539,6 +539,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iAlter New value of property m_iAlter.
      */
     public void setAge(int m_iAlter) {
+        schumRankBenchmark = null;
         this.m_iAlter = m_iAlter;
     }
 
@@ -557,6 +558,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iAgeDays New value of property m_iAgeDays.
      */
     public void setAgeDays(int m_iAgeDays) {
+        schumRankBenchmark = null;
         this.m_iAgeDays = m_iAgeDays;
     }
 
@@ -762,6 +764,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iFluegelspiel New value of property m_iFluegelspiel.
      */
     public void setFluegelspiel(int m_iFluegelspiel) {
+        schumRank = null;
         this.m_iFluegelspiel = m_iFluegelspiel;
     }
 
@@ -1356,6 +1359,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iPasspiel New value of property m_iPasspiel.
      */
     public void setPasspiel(int m_iPasspiel) {
+        schumRank = null;
         this.m_iPasspiel = m_iPasspiel;
     }
 
@@ -1459,6 +1463,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iSpielaufbau New value of property m_iSpielaufbau.
      */
     public void setSpielaufbau(int m_iSpielaufbau) {
+        schumRank = null;
         this.m_iSpielaufbau = m_iSpielaufbau;
     }
 
@@ -1511,6 +1516,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iStandards New value of property m_iStandards.
      */
     public void setStandards(int m_iStandards) {
+        schumRank = null;
         this.m_iStandards = m_iStandards;
     }
 
@@ -1557,6 +1563,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setSubskill4PlayerSkill(int skill, double value) {
+        schumRank = null;
         switch (skill) {
             case KEEPER -> m_dSubTorwart = value;
             case PLAYMAKING -> m_dSubSpielaufbau = value;
@@ -1667,6 +1674,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iTorschuss New value of property m_iTorschuss.
      */
     public void setTorschuss(int m_iTorschuss) {
+        schumRank = null;
         this.m_iTorschuss = m_iTorschuss;
     }
 
@@ -1685,6 +1693,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iTorwart New value of property m_iTorwart.
      */
     public void setTorwart(int m_iTorwart) {
+        schumRank = null;
         this.m_iTorwart = m_iTorwart;
     }
 
@@ -1970,6 +1979,7 @@ public class Player extends AbstractTable.Storable {
         return notes;
     }
     public void setUserPosFlag(byte flag) {
+        schumRankBenchmark = null;
         getNotes().setUserPos(flag);
         DBManager.instance().storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
@@ -2033,6 +2043,7 @@ public class Player extends AbstractTable.Storable {
      * @param value the new skill value
      */
     public void setValue4Skill(int skill, int value) {
+        schumRank = null;
         switch (skill) {
             case KEEPER -> setTorwart(value);
             case PLAYMAKING -> setSpielaufbau(value);
@@ -2074,6 +2085,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iVerteidigung New value of property m_iVerteidigung.
      */
     public void setVerteidigung(int m_iVerteidigung) {
+        schumRank = null;
         this.m_iVerteidigung = m_iVerteidigung;
     }
 
@@ -2549,6 +2561,89 @@ public class Player extends AbstractTable.Storable {
             this.setSubExperience(experienceSub);
         }
     }
+
+    /**
+     * Schum rank is a player training assessment, created by the hattrick team manager Schum, Russia
+     * The following coefficients defines a polynomial fit of the table Schum provided in <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=73&v=0&mr=0">...</a>
+     * SchumRank(skill) = C0 + C1*skill + C2*skill^2 + C3*skill^3 + C4*skill^4 + C5*skill^5 + C6*skill^6
+     */
+    Map<Integer, Double[]> schumRankFitCoefficients = Map.of(
+            KEEPER,     new Double[]{-2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0.},
+            DEFENDING,  new Double[]{8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864},
+            WINGER,     new Double[]{0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0.},
+            PLAYMAKING, new Double[]{-5.70730805, 6.57044707, -1.78506428, 0.27138439, -0.01625170, 0.00036649, 0.},
+            SCORING,    new Double[]{-6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0.},
+            PASSING,    new Double[]{2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0.},
+            SET_PIECES, new Double[]{-1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0.}
+    );
+
+    /**
+     * Calculated Schum rank.
+     * Should be reset, if the player skills are changed
+     */
+    private Double schumRank = null;
+
+    /**
+     * Calculated Schum rank benchmark
+     * Should be reset, if the player's ideal position (keeper or not) is set.
+     */
+    private Double schumRankBenchmark = null;
+
+    /**
+     * Calculate the Schum rank
+     * Sum of the polynomial functions defined above.
+     * @return Double
+     */
+    private double calcSchumRank()
+    {
+        double ret = 0.;
+        for ( var entry : schumRankFitCoefficients.entrySet()){
+            var value = getSkillValue(entry.getKey());
+            var x = 1.;
+            for ( var c : entry.getValue()){
+                ret += c*x;
+                x *= value;
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Schum suggests highlighting values in the range 220 up to 240 (or 195 up to 215 in case of keepers)
+     * @return true, if schum rank is in this optimal range
+     */
+    public boolean isExcellentSchumRank() {
+        var r = getSchumRank();
+        var lower = this.getIdealPosition() == KEEPER ? 195 : 220;
+        return r >= lower && r <= lower + 20;
+    }
+
+    /**
+     * Calculate a Schum rank value, that could be reached with optimal training.
+     * It only depends on the player age.
+     * @return double
+     */
+    private double calcSchumRankBenchmark() {
+        var ret = getIdealPosition()==KEEPER?25.:50.;
+        var k = 1.0;
+        for ( int age = 17; age < this.getAlter(); age++){
+            ret += 16. * k;
+            k = 54. / (age+37);
+        }
+
+        return ret + getAgeDays()/112. * 16. * k;
+    }
+
+    public double getSchumRank(){
+        if ( schumRank == null) schumRank = calcSchumRank();
+        return schumRank;
+    }
+
+    public double getSchumRankBenchmark(){
+        if ( schumRankBenchmark == null) schumRankBenchmark = calcSchumRankBenchmark();
+        return schumRankBenchmark;
+    }
+
     private Player CloneWithoutSubskills() {
         var ret = new Player();
         ret.setHrfId(this.hrf_id);

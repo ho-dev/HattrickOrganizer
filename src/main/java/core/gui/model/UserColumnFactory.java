@@ -37,6 +37,7 @@ final public class UserColumnFactory {
 
     public static final int NAME = 1;
     public static final int BEST_POSITION = 40;
+    public static final int SCHUM_RANK_BENCHMARK = 898;
     public static final int LINEUP = 50;
     public static final int GROUP = 60;
     public static final int ID = 440;
@@ -510,7 +511,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[23];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[25];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -922,6 +923,25 @@ final public class UserColumnFactory {
                     m = 0;
                 }
                 return new ColorLabelEntry(m, t, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        };
+        // Schum-rank rating column.
+        playerAdditionalArray[23] = new PlayerColumn(897, "ls.player.schum-rank", 40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                var schumrank = player.getSchumRank();
+                String t = String.format("%.2f", schumrank);
+                return new ColorLabelEntry(schumrank, t, ColorLabelEntry.FG_STANDARD, player.isExcellentSchumRank()?Color.green:ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        };
+        playerAdditionalArray[24] = new PlayerColumn(SCHUM_RANK_BENCHMARK, "ls.player.schum-rank-benchmark", 40) { // 898
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                var schumrank = player.getSchumRank();
+                var benchmark = player.getSchumRankBenchmark();
+                var r = schumrank/benchmark*100;
+                String t = String.format("%.2f / %.2f%%", benchmark, r);
+                return new ColorLabelEntry(r, t, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         };
 

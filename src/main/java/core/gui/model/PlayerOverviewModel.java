@@ -44,7 +44,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[61];
+		columns = new UserColumn[63];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 		
@@ -83,6 +83,8 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[57] = additionalArray[20];
 		columns[59] = additionalArray[21];
 		columns[60] = additionalArray[22];
+		columns[61] = additionalArray[23]; // schum-rank
+		columns[62] = additionalArray[24]; // schum-rank benchmark
 	}
 	
     public Player getPlayer(int id) {
@@ -181,6 +183,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 				if(tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINEUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
+						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.SCHUM_RANK_BENCHMARK
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP)
 					m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer,null);
 			}
