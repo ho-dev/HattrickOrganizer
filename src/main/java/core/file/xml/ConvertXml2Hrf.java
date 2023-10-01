@@ -92,7 +92,7 @@ public class ConvertXml2Hrf {
 		}
 
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
-		if (teamdetailsDataMap.size() == 0) return null;
+		if (teamdetailsDataMap.isEmpty()) return null;
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
 		OnlineWorker.downloadTeamLogo(teamdetailsDataMap);
