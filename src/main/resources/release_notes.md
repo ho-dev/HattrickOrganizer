@@ -9,6 +9,7 @@
 ### Database
 
 ### Squad
+* fix length of owner notes in players' database table (#1816)
 
 ### Team Analyzer
 
@@ -34,7 +35,9 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - September 24, 2023
+Reports by Contributors - September 24, 2023 - October 02, 2023
 
+* Lidegand 3
+* wsbrenk 3
 
-Total 0
+Total 6
