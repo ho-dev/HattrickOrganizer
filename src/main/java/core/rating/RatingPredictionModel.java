@@ -184,7 +184,7 @@ public class RatingPredictionModel {
      * @param minute match minute
      * @return double
      */
-    public double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
+    protected double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
         var ret = 0.;
         var positions = lineup.getFieldPlayers(minute);
         for (var p : positions) {

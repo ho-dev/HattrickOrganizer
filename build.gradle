@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'groovy'
     id 'application'
     id 'de.jansauer.poeditor' version '1.1.0'
     id 'org.kordamp.gradle.markdown' version '2.2.0'
@@ -28,6 +29,7 @@ dependencies {
     implementation 'org.knowm.xchart:xchart:3.8.3'
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.19'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
 }
 

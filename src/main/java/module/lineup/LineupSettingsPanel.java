@@ -300,7 +300,11 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
                 lineup.setWeather(getWeather());
                 lineupPanel.refreshLineupPositionsPanel();
             } else if (event.getSource().equals(this.m_jcbPredictionModel)) {
-				RatingPredictionConfig.setInstancePredictionType(((CBItem) Objects.requireNonNull(m_jcbPredictionModel.getSelectedItem())).getId());
+				var ratingPredictionManager = homodel.getRatingPredictionManager();
+				var selected = (CBItem)m_jcbPredictionModel.getSelectedItem();
+				if ( selected != null) {
+					ratingPredictionManager.getRatingPredictionModel(selected.getText(), homodel.getTeam());
+				}
 			} else if (event.getSource().equals(m_jcbManMarkingPosition)) {
 				var lineup = homodel.getCurrentLineup();
                 lineup.setManMarkingPosition(Player.ManMarkingPosition.fromId(((CBItem) Objects.requireNonNull(m_jcbManMarkingPosition.getSelectedItem())).getId()));
@@ -477,13 +481,12 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 	private CBItem[] getPredictionItems() {
 		final ResourceBundle bundle = HOVerwaltung.instance().getResource();
-		String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
-		CBItem[] allItems = new CBItem[allPredictionNames.length];
+		//String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
+		var ratingPredictionManager = homodel.getRatingPredictionManager();
+		var allPredictionNames = ratingPredictionManager.getAllPredictionModelNames();
+		CBItem[] allItems = new CBItem[allPredictionNames.size()];
 		for (int i = 0; i < allItems.length; i++) {
-			String predictionName = allPredictionNames[i];
-			if (bundle.containsKey("prediction." + predictionName))
-				predictionName = HOVerwaltung.instance().getLanguageString(
-						"prediction." + predictionName);
+			String predictionName = allPredictionNames.get(i);
 			allItems[i] = new CBItem(predictionName, i);
 		}
 		return allItems;

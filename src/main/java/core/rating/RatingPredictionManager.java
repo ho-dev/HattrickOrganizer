@@ -1,26 +1,88 @@
-//package core.rating;
-//
-//import core.constants.player.PlayerSkill;
-//import core.constants.player.PlayerSpeciality;
-//import core.gui.HOMainFrame;
-//import core.model.Team;
-//import core.model.match.IMatchDetails;
-//import core.model.match.Matchdetails;
-//import core.model.match.Weather;
-//import core.model.player.IMatchRoleID;
-//import core.model.player.MatchRoleID;
-//import core.model.player.Player;
-//import core.util.HOLogger;
-//import module.lineup.Lineup;
-//import org.jetbrains.annotations.Nullable;
-//
-//import java.util.*;
-//
-//import static core.model.player.IMatchRoleID.*;
-//import static core.model.player.MatchRoleID.getPosition;
-//import static core.util.MathUtils.fuzzyEquals;
-//
-//public class RatingPredictionManager {
+package core.rating;
+
+import core.model.Team;
+import core.util.HOLogger;
+import groovy.lang.ExpandoMetaClass;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.MetaClassRegistry;
+import org.codehaus.groovy.reflection.MixinInMetaClass;
+import org.codehaus.groovy.runtime.metaclass.MetaClassRegistryImpl;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+public class RatingPredictionManager {
+
+    private GroovyClassLoader loader = null;
+    private RatingPredictionModel ratingPredictionModel;
+    private static final String predictionDirectory = "prediction";
+    private static String ratingPredictionModelName = null;
+
+    public List<String> getAllPredictionModelNames(){
+        var ret = new ArrayList<String>();
+        ret.add("Schum (default)");
+        var dirs = new File(predictionDirectory).listFiles();
+        if ( dirs != null) {
+            for (var f : dirs) {
+                if ( f.isDirectory()){
+                    ret.add(f.getName());
+                }
+            }
+        }
+        return ret;
+    }
+
+    public  RatingPredictionModel getRatingPredictionModel(){
+        return this.ratingPredictionModel;
+    }
+
+    public RatingPredictionModel getRatingPredictionModel(String modelName, Team t){
+        if (modelName.equals(ratingPredictionModelName)){
+            return this.ratingPredictionModel;
+        }
+        return createRatingPredictionModel(modelName, t);
+    }
+
+    private RatingPredictionModel createRatingPredictionModel(String modelName, Team team) {
+        var groovyModelDir = new File(predictionDirectory + File.separator + modelName);
+        if (groovyModelDir.isDirectory()) {
+            var files = groovyModelDir.listFiles();
+            var groovyModelFile = Arrays.stream(Objects.requireNonNull(groovyModelDir.listFiles((dir, name) -> name.toLowerCase().endsWith("ratingpredictionmodel.groovy")))).findFirst();
+            if (groovyModelFile.isPresent()){
+                if ( loader == null) loader = new GroovyClassLoader();
+                try {
+                    var groovyClass = loader.parseClass(groovyModelFile.get());
+                    var emc = new ExpandoMetaClass(RatingPredictionModel.class, false, true);
+                    var classes = new ArrayList<Class>();
+                    classes.add(groovyClass);
+                    MixinInMetaClass.mixinClassesToMetaClass(emc, classes);
+
+                    MetaClassRegistry mcreg = MetaClassRegistryImpl.getInstance(MetaClassRegistryImpl.LOAD_DEFAULT);
+                    mcreg.setMetaClass(RatingPredictionModel.class, emc);
+                    emc.initialize();
+
+                    var javaClass = emc.getJavaClass();
+
+                    var model = javaClass.getConstructor().newInstance();
+
+                    ratingPredictionModelName = groovyModelDir.getName();
+
+                    ratingPredictionModel = (RatingPredictionModel) model;
+                    return ratingPredictionModel;
+
+                } catch (Exception e) {
+                    HOLogger.instance().error(getClass(), "Can not load groovy rating model class " + groovyModelFile.get().getName() + ". Default model is used instead. " + e);
+                }
+            }
+        }
+        ratingPredictionModelName = "Schum (default)";
+        ratingPredictionModel = new RatingPredictionModel(team);
+        return ratingPredictionModel;
+    }
+}
+
 //	//~ Class constants ----------------------------------------------------------------------------
 //    private static final int THISSIDE = RatingPredictionParameter.THISSIDE;
 //    private static final int OTHERSIDE = RatingPredictionParameter.OTHERSIDE;
