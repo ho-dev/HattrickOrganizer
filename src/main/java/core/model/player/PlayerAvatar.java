@@ -68,9 +68,9 @@ public class PlayerAvatar {
             y0 = FirstLayer.y();
 
             for (Layer layer : m_layers.stream().skip(1).toList()) {
-                    url = new URL(layer.urlElement());
-                    img = ImageIO.read(url.openStream());
-                    g.drawImage(img, layer.x() - x0, layer.y() - y0, null);
+                url = new URL(layer.urlElement());
+                img = ImageIO.read(url.openStream());
+                g.drawImage(img, layer.x() - x0, layer.y() - y0, null);
             }
 
             // Save as new image
