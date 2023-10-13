@@ -10,6 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Manage the rating prediction models
+ * Default model is implemented by the class RatingPredictionModel
+ * Groovy classes overriding this default can be loaded from the prediction directory
+ */
 public class RatingPredictionManager {
 
     private GroovyClassLoader loader = null;
@@ -17,6 +22,12 @@ public class RatingPredictionManager {
     private static final String predictionDirectory = "prediction";
     private static String ratingPredictionModelName = null;
 
+    /**
+     * Get a list of all available prediction models
+     * The default model is named "Schum (default)".
+     * Further models are names of subdirectories of the directory "prediction".
+     * @return List of strings
+     */
     public List<String> getAllPredictionModelNames(){
         var ret = new ArrayList<String>();
         ret.add("Schum (default)");
@@ -31,10 +42,20 @@ public class RatingPredictionManager {
         return ret;
     }
 
+    /**
+     * Get the loaded rating prediction model.
+     * @return RatingPredictionModel
+     */
     public  RatingPredictionModel getRatingPredictionModel(){
         return this.ratingPredictionModel;
     }
 
+    /**
+     * Load a rating prediction model, if not loaded already.
+     * @param modelName Name of the model (subdirectory name of prediction directory)
+     * @param t Team
+     * @return RatingPredictionModel
+     */
     public RatingPredictionModel getRatingPredictionModel(String modelName, Team t){
         if (modelName.equals(ratingPredictionModelName)){
             return this.ratingPredictionModel;
@@ -42,6 +63,14 @@ public class RatingPredictionManager {
         return createRatingPredictionModel(modelName, t);
     }
 
+    /**
+     * Create a rating prediction model.
+     * If the model name exists in the prediction directory the file *RatingPredictionModel.groovy is loaded.
+     * If the model cannot be loaded from prediction directory the default model is created.
+     * @param modelName Name of the model
+     * @param team Team
+     * @return RatingPredictionModel
+     */
     private RatingPredictionModel createRatingPredictionModel(String modelName, Team team) {
         var groovyModelDir = new File(predictionDirectory + File.separator + modelName);
         if (groovyModelDir.isDirectory()) {
