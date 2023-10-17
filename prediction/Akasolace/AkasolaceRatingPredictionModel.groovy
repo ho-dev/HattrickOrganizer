@@ -2,37 +2,74 @@ import module.lineup.*
 import core.rating.RatingPredictionModel
 import core.rating.RatingPredictionModel.*
 import core.model.Team
+import core.model.player.*
+
+import static java.lang.Math.min
+import static java.lang.Math.pow
 
 @groovy.transform.InheritConstructors
-class TestRatingPredictionModel extends RatingPredictionModel {
+class AkasolaceRatingPredictionModel extends RatingPredictionModel {
 
-    TestRatingPredictionModel(Team team) {
+    AkasolaceRatingPredictionModel(Team team) {
         super(team)
     }
 
-    @Override
-    double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
-        addCopyright("© test")
-        return 1
-    }
+//    @Override
+//    double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
+//        addCopyright("© test")
+//        return 1
+//    }
 
     /**
      * Get the rating contribution of a single player in lineup.
      *
-     * @param player              Player
-     * @param roleId              the lineup position of the player
-     * @param behaviour           the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
-     * @param sector              rating sector
-     * @param minute              match minute
-     * @param startMinute         player's match start minute (0 or substitution time)
+     * @param player Player
+     * @param roleId the lineup position of the player
+     * @param behaviour the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
+     * @param sector rating sector
+     * @param minute match minute
+     * @param startMinute player's match start minute (0 or substitution time)
      * @param overcrowdingPenalty overcrowding factor of middle sectors
      * @return double
      */
-//    @Override
-//    double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
-//        return 1;
-//    }
+    @Override
+    double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
+        addCopyright("© Akasolace")
 
+        if (manMarkingOrder != null &&
+                player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+                startMinute + 5 <= minute    // man marking starts 5 minutes after player enters the match
+        ) {
+            // create player clone with reduced skill values
+            player = player.getPlayerAsManMarker(manMarkingPosition);
+        }
+
+        var contribution = getContribution(player, roleId, behaviour, sector);
+
+        if (contribution > 0) {
+            contribution *= overcrowdingPenalty;
+            contribution *= getStamina((double) player.getStamina(), minute, startMinute, tacticType);
+
+            return contribution;
+        }
+    }
+
+    /**
+     * Transform skill scale to rating sector scale
+     *
+     * @param s   Rating sector
+     * @param ret Skill scale rating sum
+     * @return Sector rating
+     */
+    protected double calcRatingSectorScale(RatingSector s, double ret) {
+        if (ret > 0) {
+            ret *= getRatingSectorScaleFactor(s);
+            return pow(ret, 1.2) / 4. + 1.;
+        }
+        return 0.75;
+    }
+
+    // TODO: static methods can not be override.
     /**
      * Initialize a rating contribution parameter
      *
@@ -149,10 +186,10 @@ class TestRatingPredictionModel extends RatingPredictionModel {
      * @param skillValue Experience skill value
      * @return Experience rating contribution to the rating sector
      */
-//    @Override
-//    protected double calcExperience(RatingSector ratingSector, double skillValue) {
-//        return 1;
-//    }
+    @Override
+    protected double calcExperience(RatingSector ratingSector, double exp) {
+        return 4/3*Math.log10(exp);
+    }
 
     /**
      * Calculate the stamina factor
@@ -197,10 +234,16 @@ class TestRatingPredictionModel extends RatingPredictionModel {
      * @param playerSkill , Skill
      * @return Double
      */
-//    @Override
-//    double calcStrength(@NotNull Player player, Integer playerSkill) {
-//        return 1;
-//    }
+    @Override
+    double calcStrength(Player player, Integer playerSkill) {
+        var skillRating = calcSkillRating(player.getSkill(playerSkill));
+        var loyalty = calcLoyalty(player);
+        var weather = calcWether(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
+        var form = calcForm(player);
+        var experience = calcExperience(player);
+        var ret = ((skillRating + loyalty) * weather + experience) * form;
+        return ret;
+    }
 
     /**
      * Calculate player's loyalty impact on rating
@@ -229,10 +272,11 @@ class TestRatingPredictionModel extends RatingPredictionModel {
      * @param player , Player
      * @return , Double
      */
-//    @Override
-//    double calcForm(@NotNull Player player) {
-//        return 1;
-//    }
+    @Override
+    double calcForm(Player player) {
+        var form = max(1, min(8, player.getSkill(PlayerSkill.FORM)));
+        return Math.pow(0.125 * form, 2/3);
+    }
 
     /**
      * Calculate the sum of the player's rating contributions to all rating sectors

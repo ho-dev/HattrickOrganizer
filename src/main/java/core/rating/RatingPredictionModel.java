@@ -12,6 +12,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.player.Specialty;
 import module.lineup.Lineup;
+import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import static core.constants.player.PlayerSkill.*;
@@ -27,6 +28,11 @@ import static java.util.Map.entry;
  * released in <a href="https://www86.hattrick.org/Forum/Read.aspx?t=17404127&n=59&v=0&mr=0">...</a>
  */
 public class RatingPredictionModel {
+
+    protected Substitution manMarkingOrder;
+    protected Player.ManMarkingPosition manMarkingPosition;
+    protected Weather weather;
+    protected int tacticType;
 
     public enum RatingSector {
         DEFENCE_LEFT,
@@ -191,12 +197,17 @@ public class RatingPredictionModel {
         }
         addCopyright(copyrightSchumTranslated);
 
+        this.manMarkingOrder = lineup.getManMarkingOrder();
+        this.manMarkingPosition = lineup.getManMarkingPosition();
+        this.weather = lineup.getWeather();
+        this.tacticType = lineup.getTacticType();
+
         var ret = 0.;
         var positions = lineup.getFieldPlayers(minute);
         for (var p : positions) {
             if (p.getPlayerId() != 0) {
                 var overcrowdingPenalty = getOvercrowdingPenalty(countPlayersInSector(positions, p.getSector()), p.getSector());
-                var contribution = getPositionContribution(p, lineup.getWeather(), lineup.getTacticType(), s, minute, overcrowdingPenalty);
+                var contribution = getPositionContribution(p, s, minute, overcrowdingPenalty);
                 ret += contribution;
             }
         }
@@ -338,19 +349,25 @@ public class RatingPredictionModel {
      * @param player              Player
      * @param roleId              the lineup position of the player
      * @param behaviour           the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
-     * @param weather             Weather
-     * @param tacticType          int The tactic is used to calculate the stamina factor
      * @param sector              rating sector
      * @param minute              match minute
      * @param startMinute         player's match start minute (0 or substitution time)
      * @param overcrowdingPenalty overcrowding factor of middle sectors
      * @return double
      */
-    private double getPositionContribution(Player player, int roleId, byte behaviour, Weather weather, int tacticType, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
+    protected double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
         if (player == null) return 0.;
 //        var isRightHandSidePosition = isRightHandSidePosition(roleId);
 //        var p = isRightHandSidePosition?togglePositionSide(roleId):roleId;
 //        var s = isRightHandSidePosition?toggleRatingSectorSide(sector):sector;
+
+        if (manMarkingOrder != null &&
+                player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+                startMinute + 5 <= minute    // man marking starts 5 minutes after player enters the match
+        ) {
+            // create player clone with reduced skill values
+            player = player.getPlayerAsManMarker(manMarkingPosition);
+        }
 
         var contribution = contributionCache.get(sector, roleId, player, behaviour);
         if (contribution > 0) {
@@ -378,12 +395,12 @@ public class RatingPredictionModel {
         return contribution;
     }
 
-    private double getPositionContribution(@NotNull MatchLineupPosition p, Weather weather, int tacticType, RatingSector s, int minute, double overcrowdingPenalty) {
-        return getPositionContribution(p.getPlayer(), p.getRoleId(), p.getBehaviour(), weather, tacticType, s, minute, p.getStartMinute(), overcrowdingPenalty);
+    private double getPositionContribution(@NotNull MatchLineupPosition p, RatingSector s, int minute, double overcrowdingPenalty) {
+        return getPositionContribution(p.getPlayer(), p.getRoleId(), p.getBehaviour(), s, minute, p.getStartMinute(), overcrowdingPenalty);
     }
 
     private double getPositionContribution(Player p, int roleId, byte behaviour, RatingSector s, int minute) {
-        return getPositionContribution(p, roleId, behaviour, Weather.UNKNOWN, TAKTIK_NORMAL, s, minute, 0, 1.);
+        return getPositionContribution(p, roleId, behaviour, s, minute, 0, 1.);
     }
 
     /**
@@ -396,6 +413,9 @@ public class RatingPredictionModel {
             return calcContribution(player, roleId, behaviour, sector);
         }
     };
+    protected double getContribution(Player p, Integer roleId, Byte behaviour, RatingSector s){
+        return contributionCache.get(s, roleId, p, behaviour);
+    }
 
     /**
      * Calculate the player's contribution factor to a given rating sector.
@@ -769,6 +789,9 @@ public class RatingPredictionModel {
             return calcStamina(stamina, minute, startMinute, tacticType);
         }
     };
+    protected double getStamina(double stamina, int minute, int startMinute, int tacticType){
+        return staminaCache.get(stamina, minute, startMinute, tacticType);
+    }
 
     /**
      * Cache of experience rating contribution to a rating sector
@@ -970,6 +993,7 @@ public class RatingPredictionModel {
      * @return double
      */
     protected double calcPlayerRating(Player p, int roleId, byte behaviour, int minute) {
+        this.manMarkingOrder = null;
         var ret = 0.;
         for (var s : RatingSector.values()) {
             var c = getPositionContribution(p, roleId, behaviour, s, minute);
