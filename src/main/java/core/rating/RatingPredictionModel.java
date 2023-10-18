@@ -338,6 +338,27 @@ public class RatingPredictionModel {
     }
 
     /**
+     * Get Player of lineup position
+     * If the player is man marking a copy with reduced skill values is returned, if match minute is more than 5 minutes after match entry
+     * @param p Match lineup position
+     * @param minute match minute
+     * @return Player, null, if position is an empty one
+     */
+    protected Player getPlayer(MatchLineupPosition p, int minute){
+        var ret = p.getPlayer();
+        if ( ret != null){
+            if (manMarkingOrder != null &&
+                    ret.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+                    p.getStartMinute() + 5 <= minute    // man marking starts 5 minutes after player enters the match
+            ) {
+                // create player clone with reduced skill values
+                return ret.getPlayerAsManMarker(manMarkingPosition);
+            }
+        }
+        return ret;
+    }
+
+    /**
      * Get the rating contribution of a single player in lineup.
      * © Schum - the author of the formulas,
      * If the player's lineup position contributes to the given sector, this contribution is
@@ -360,14 +381,6 @@ public class RatingPredictionModel {
 //        var isRightHandSidePosition = isRightHandSidePosition(roleId);
 //        var p = isRightHandSidePosition?togglePositionSide(roleId):roleId;
 //        var s = isRightHandSidePosition?toggleRatingSectorSide(sector):sector;
-
-        if (manMarkingOrder != null &&
-                player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
-                startMinute + 5 <= minute    // man marking starts 5 minutes after player enters the match
-        ) {
-            // create player clone with reduced skill values
-            player = player.getPlayerAsManMarker(manMarkingPosition);
-        }
 
         var contribution = contributionCache.get(sector, roleId, player, behaviour);
         if (contribution > 0) {
@@ -396,7 +409,7 @@ public class RatingPredictionModel {
     }
 
     private double getPositionContribution(@NotNull MatchLineupPosition p, RatingSector s, int minute, double overcrowdingPenalty) {
-        return getPositionContribution(p.getPlayer(), p.getRoleId(), p.getBehaviour(), s, minute, p.getStartMinute(), overcrowdingPenalty);
+        return getPositionContribution(getPlayer(p, minute), p.getRoleId(), p.getBehaviour(), s, minute, p.getStartMinute(), overcrowdingPenalty);
     }
 
     private double getPositionContribution(Player p, int roleId, byte behaviour, RatingSector s, int minute) {

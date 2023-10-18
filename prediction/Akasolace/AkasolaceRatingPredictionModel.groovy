@@ -3,11 +3,11 @@ import core.rating.RatingPredictionModel
 import core.rating.RatingPredictionModel.*
 import core.model.Team
 import core.model.player.*
+import core.constants.player.*
 
 import static java.lang.Math.min
 import static java.lang.Math.pow
 
-@groovy.transform.InheritConstructors
 class AkasolaceRatingPredictionModel extends RatingPredictionModel {
 
     AkasolaceRatingPredictionModel(Team team) {
@@ -36,22 +36,19 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
         addCopyright("© Akasolace")
 
-        if (manMarkingOrder != null &&
-                player.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
-                startMinute + 5 <= minute    // man marking starts 5 minutes after player enters the match
-        ) {
-            // create player clone with reduced skill values
-            player = player.getPlayerAsManMarker(manMarkingPosition);
-        }
-
-        var contribution = getContribution(player, roleId, behaviour, sector);
-
+        double contribution = getContribution(player, roleId, behaviour, sector);
         if (contribution > 0) {
+
+            var weather = calcWeather(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
+            var form = calcForm(player);
+            var experience = calcExperience(sector, player.getSkillValue(PlayerSkill.EXPERIENCE));
+            contribution *= weather;
+            contribution += experience;
+            contribution *= form;
             contribution *= overcrowdingPenalty;
             contribution *= getStamina((double) player.getStamina(), minute, startMinute, tacticType);
-
-            return contribution;
         }
+        return contribution;
     }
 
     /**
@@ -62,11 +59,8 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @return Sector rating
      */
     protected double calcRatingSectorScale(RatingSector s, double ret) {
-        if (ret > 0) {
-            ret *= getRatingSectorScaleFactor(s);
-            return pow(ret, 1.2) / 4. + 1.;
-        }
-        return 0.75;
+        ret *= getRatingSectorScaleFactor(s);
+        return pow(ret, 1.165) + 0.75;
     }
 
     // TODO: static methods can not be override.
@@ -129,10 +123,18 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @param s Rating sector
      * @return scaling factor
      */
-//    @Override
-//    double getRatingSectorScaleFactor(RatingSector s) {
-//        return 1;
-//    }
+    @Override
+    double getRatingSectorScaleFactor(RatingSector s) {
+        switch (s) {
+            case RatingSector.MIDFIELD: return 0.111;
+            case RatingSector.DEFENCE_LEFT:
+            case RatingSector.DEFENCE_RIGHT: return  0.255;
+            case RatingSector.DEFENCE_CENTRAL: return  0.155555;
+            case RatingSector.ATTACK_CENTRAL: return  0.16175;
+            case RatingSector.ATTACK_LEFT:
+            case RatingSector.ATTACK_RIGHT: return  0.191;
+        };
+    }
 
     /**
      * Calculate the confidence factor
@@ -188,7 +190,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      */
     @Override
     protected double calcExperience(RatingSector ratingSector, double exp) {
-        return 4/3*Math.log10(exp);
+        return 4.0/3.0*Math.log10(exp);
     }
 
     /**
@@ -238,11 +240,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     double calcStrength(Player player, Integer playerSkill) {
         var skillRating = calcSkillRating(player.getSkill(playerSkill));
         var loyalty = calcLoyalty(player);
-        var weather = calcWether(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
-        var form = calcForm(player);
-        var experience = calcExperience(player);
-        var ret = ((skillRating + loyalty) * weather + experience) * form;
-        return ret;
+        return skillRating+loyalty;
     }
 
     /**
@@ -274,8 +272,8 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      */
     @Override
     double calcForm(Player player) {
-        var form = max(1, min(8, player.getSkill(PlayerSkill.FORM)));
-        return Math.pow(0.125 * form, 2/3);
+        var form = Math.max((Double)1.0, Math.min(8, player.getSkill(PlayerSkill.FORM)))
+        return pow(0.125 * form, 2.0/3.0)
     }
 
     /**
