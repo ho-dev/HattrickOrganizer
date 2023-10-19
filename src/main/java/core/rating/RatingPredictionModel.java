@@ -426,6 +426,16 @@ public class RatingPredictionModel {
             return calcContribution(player, roleId, behaviour, sector);
         }
     };
+
+    /**
+     * Get value from contribution cache
+     * (Attention: Method is used by AkasolaceRatingPredictionModel.groovy)
+     * @param p Player
+     * @param roleId Lineup position
+     * @param behaviour Behaviour
+     * @param s Rating sector
+     * @return double
+     */
     protected double getContribution(Player p, Integer roleId, Byte behaviour, RatingSector s){
         return contributionCache.get(s, roleId, p, behaviour);
     }
@@ -781,11 +791,7 @@ public class RatingPredictionModel {
      * @return Number of players in given lineup sector
      */
     protected int countPlayersInSector(List<MatchLineupPosition> positions, MatchRoleID.Sector sector) {
-        var countPlayersInSector = 0;
-        for (var p : positions) {
-            if (p.getSector() == sector) countPlayersInSector++;
-        }
-        return countPlayersInSector;
+        return (int)positions.stream().filter(p->p.getPlayerId() > 0 && p.getSector() == sector).count();
     }
 
     /**
@@ -1080,7 +1086,7 @@ public class RatingPredictionModel {
      * Formula fitting the values published by Schum.
      *
      * @param stamina Stamina skill value
-     * @return
+     * @return double
      */
     protected double calcMatchAverageStaminaFactor(double stamina) {
         var ret = -.0033 * stamina * stamina + .085 * stamina + .51;
@@ -1302,7 +1308,7 @@ public class RatingPredictionModel {
     /**
      * Calculate player's form impact on rating
      * @param player, Player
-     * @return, Double
+     * @return Double
      */
     protected double calcForm(@NotNull Player player) {
         var form = min(7., calcSkillRating(.5 + player.getSkill(PlayerSkill.FORM)));
@@ -1458,8 +1464,8 @@ public class RatingPredictionModel {
 
     /**
      * Get 120 minutes hatstats average
-     * @param lineup
-     * @return
+     * @param lineup Lineup
+     * @return Double
      */
     public double getAverage120HatStats(Lineup lineup) {
         return hatStatsCache.getAverage120(lineup);

@@ -36,19 +36,19 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
         addCopyright("© Akasolace")
 
-        double contribution = getContribution(player, roleId, behaviour, sector);
+        double contribution = getContribution(player, roleId, behaviour, sector)
         if (contribution > 0) {
 
-            var weather = calcWeather(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
-            var form = calcForm(player);
-            var experience = calcExperience(sector, player.getSkillValue(PlayerSkill.EXPERIENCE));
-            contribution *= weather;
-            contribution += experience;
-            contribution *= form;
-            contribution *= overcrowdingPenalty;
-            contribution *= getStamina((double) player.getStamina(), minute, startMinute, tacticType);
+            var weather = calcWeather(Specialty.getSpecialty(player.getPlayerSpecialty()), weather)
+            var form = calcForm(player)
+            var experience = calcExperience(sector, player.getSkillValue(PlayerSkill.EXPERIENCE))
+            contribution *= weather
+            contribution += experience
+            contribution *= form
+            contribution *= overcrowdingPenalty
+            contribution *= getStamina((double) player.getStamina(), minute, startMinute, tacticType)
         }
-        return contribution;
+        return contribution
     }
 
     /**
@@ -59,8 +59,8 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @return Sector rating
      */
     protected double calcRatingSectorScale(RatingSector s, double ret) {
-        ret *= getRatingSectorScaleFactor(s);
-        return pow(ret, 1.165) + 0.75;
+        ret *= getRatingSectorScaleFactor(s)
+        return pow(ret, 1.165) + 0.75
     }
 
     // TODO: static methods can not be override.
@@ -126,14 +126,15 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     @Override
     double getRatingSectorScaleFactor(RatingSector s) {
         switch (s) {
-            case RatingSector.MIDFIELD: return 0.111;
+            case RatingSector.MIDFIELD: return 0.111
             case RatingSector.DEFENCE_LEFT:
-            case RatingSector.DEFENCE_RIGHT: return  0.255;
-            case RatingSector.DEFENCE_CENTRAL: return  0.155555;
-            case RatingSector.ATTACK_CENTRAL: return  0.16175;
+            case RatingSector.DEFENCE_RIGHT: return  0.255
+            case RatingSector.DEFENCE_CENTRAL: return  0.155555
+            case RatingSector.ATTACK_CENTRAL: return  0.16175
             case RatingSector.ATTACK_LEFT:
-            case RatingSector.ATTACK_RIGHT: return  0.191;
-        };
+            case RatingSector.ATTACK_RIGHT: return  0.191
+        }
+        return 0
     }
 
     /**
@@ -142,10 +143,11 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @param confidence Confidence value without any sublevel (.5 is used)
      * @return Confidence factor
      */
-//    @Override
-//    double calcConfidence(double confidence) {
-//        return 1;
-//    }
+    @Override
+    double calcConfidence(double confidence) {
+        //(1.0 + params.getParam(sectionName, "confidence", 0) * (float)(selbstvertrauen - 5));
+        return 1.0 + 0.0525 * (confidence - 5)
+    }
 
     /**
      * Calculate the team spirit factor
@@ -153,10 +155,12 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @param teamSpirit Team spirit including any sublevel
      * @return Team spirit factor
      */
-//    @Override
-//    double calcTeamSpirit(double teamSpirit) {
-//        return 1;
-//    }
+    @Override
+    double calcTeamSpirit(double teamSpirit) {
+//        teamspiritPower  = 0.5008
+//        teamspiritPostMulti = 0.446
+        return 0.446 * pow(teamSpirit, 0.5008)
+    }
 
     /**
      * Get the overcrowding penalty factor
@@ -190,7 +194,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      */
     @Override
     protected double calcExperience(RatingSector ratingSector, double exp) {
-        return 4.0/3.0*Math.log10(exp);
+        return 4.0/3.0*Math.log10(exp)
     }
 
     /**
@@ -238,9 +242,9 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      */
     @Override
     double calcStrength(Player player, Integer playerSkill) {
-        var skillRating = calcSkillRating(player.getSkill(playerSkill));
-        var loyalty = calcLoyalty(player);
-        return skillRating+loyalty;
+        var skillRating = player.getSkill(playerSkill)
+        var loyalty = calcLoyalty(player)
+        return skillRating+loyalty
     }
 
     /**
