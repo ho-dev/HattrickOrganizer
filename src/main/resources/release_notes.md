@@ -19,6 +19,7 @@
 ### Matches
 
 ### Lineup
+* fix missing player id column in lineup assistant's player table (#1930)
 
 ### Statistics
 
