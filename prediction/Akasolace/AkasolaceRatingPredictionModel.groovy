@@ -38,12 +38,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
 
         double contribution = getContribution(player, roleId, behaviour, sector)
         if (contribution > 0) {
-
-            var weather = calcWeather(Specialty.getSpecialty(player.getPlayerSpecialty()), weather)
             var form = calcForm(player)
-            var experience = calcExperience(sector, player.getSkillValue(PlayerSkill.EXPERIENCE))
-            contribution *= weather
-            contribution += experience
             contribution *= form
             contribution *= overcrowdingPenalty
             contribution *= getStamina((double) player.getStamina(), minute, startMinute, tacticType)
@@ -63,7 +58,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
         return pow(ret, 1.165) + 0.75
     }
 
-    // TODO: static methods can not be override.
+    // TODO: static methods can not be override. Is static okay???
     /**
      * Initialize a rating contribution parameter
      *
@@ -140,7 +135,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     /**
      * Calculate the confidence factor
      *
-     * @param confidence Confidence value without any sublevel (.5 is used)
+     * @param confidence Confidence value without any sublevel
      * @return Confidence factor
      */
     @Override
@@ -192,8 +187,7 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
      * @param skillValue Experience skill value
      * @return Experience rating contribution to the rating sector
      */
-    @Override
-    protected double calcExperience(RatingSector ratingSector, double exp) {
+    protected double calcExperience(double exp) {
         return 4.0/3.0*Math.log10(exp)
     }
 
@@ -244,7 +238,9 @@ class AkasolaceRatingPredictionModel extends RatingPredictionModel {
     double calcStrength(Player player, Integer playerSkill) {
         var skillRating = player.getSkill(playerSkill)
         var loyalty = calcLoyalty(player)
-        return skillRating+loyalty
+        var weather = calcWeather(Specialty.getSpecialty(player.getPlayerSpecialty()), weather)
+        var experience = calcExperience(player.getSkill(PlayerSkill.EXPERIENCE))
+        return (skillRating+loyalty) * weather + experience
     }
 
     /**
