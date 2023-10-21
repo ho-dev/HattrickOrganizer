@@ -627,7 +627,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             else {
                 rating = ratingPredictionModel.getPlayerRating(currentPlayer, m_iPositionID, playerPosition, matchMinute);
             }
-            text += " (" + rating  + ")";
+            text += String.format(" (%.2f)", rating);
         }
         m_jcbTactic.addItem(new CBItem(text, playerPosition));
     }
