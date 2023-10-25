@@ -73,7 +73,7 @@ public class UserManager {
 
 
     public void save() {
-        List<BaseUser> lBaseUsers = users.stream().map(User::getBaseUser).collect(Collectors.toList());
+        List<BaseUser> lBaseUsers = users.stream().map(User::getBaseUser).toList();
         serialize(lBaseUsers, dbParentFolder);
     }
 

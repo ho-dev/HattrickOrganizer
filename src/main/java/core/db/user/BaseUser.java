@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-class BaseUser {
+public class BaseUser {
     protected String teamName;
     protected String dbName;
     protected String clubLogo;

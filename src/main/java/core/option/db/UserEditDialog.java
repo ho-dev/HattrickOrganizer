@@ -217,7 +217,7 @@ public class UserEditDialog extends JDialog {
 				user.setTeamName(nameTextField.getText());
 				user.setDbName(databaseNameTextField.getText());
 				user.setNumberOfBackups(Integer.parseInt(numberOfBackupsTextField.getText()));
-				user.setIsNtTeam(ntTeamYes.isSelected());
+				user.setNtTeam(ntTeamYes.isSelected());
 				canceled = false;
 				dispose();
 		});
