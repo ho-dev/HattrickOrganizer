@@ -2,6 +2,7 @@ package core.gui;
 
 import core.HO;
 import core.db.DBManager;
+import core.db.backup.BackupDialog;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
@@ -476,6 +477,15 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		// Import HRF
 		m_jmImportItem.addActionListener(this);
 		m_jmFile.add(m_jmImportItem);
+		m_jmFile.addSeparator();
+
+		JMenuItem dbBackupMenu = new JMenuItem("DB Backup");
+		dbBackupMenu.addActionListener(e -> {
+			BackupDialog dialog = new BackupDialog();
+			dialog.setVisible(true);
+		});
+
+		m_jmFile.add(dbBackupMenu);
 		m_jmFile.addSeparator();
 
 		// Subksill recalculation
