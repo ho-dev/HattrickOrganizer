@@ -85,6 +85,7 @@ final class DBUpdater {
 	private void updateDBv800(int dbVersion) throws SQLException {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");
+		playerTable.tryAddColumn("ContractDate", "VARCHAR(100)");
 		playerTable.tryChangeColumn("OwnerNotes", "VARCHAR(512)");
 		updateDBVersion(dbVersion, 800);
 	}

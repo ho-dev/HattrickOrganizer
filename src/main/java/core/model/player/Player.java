@@ -46,6 +46,19 @@ public class Player extends AbstractTable.Storable {
      */
     private String m_arrivalDate;
 
+    public String getContractDate() {
+        return contractDate;
+    }
+
+    public void setContractDate(String contractDate) {
+        this.contractDate = contractDate;
+    }
+
+    /**
+     * Trainer contract date
+     */
+    private String contractDate;
+
     /**
      * Download date
      */
@@ -404,7 +417,12 @@ public class Player extends AbstractTable.Storable {
         this.lineupDisabled = getBooleanIfNotNull(properties, "lineupdisabled");
         this.m_iBewertung = getIntegerIfNotNull(properties, "rating", 0);
         this.m_iTrainerTyp = TrainerType.fromInt(getIntegerIfNotNull(properties, "trainertype", -1));
-        this.m_iTrainer = getIntegerIfNotNull(properties, "trainerskill", 0);
+        this.m_iTrainer = getIntegerIfNotNull(properties, "trainerskilllevel", 0);
+        if (this.m_iTrainer > 0) {
+            this.m_iTrainer+=3;    // trainer level 5 is an excellent (8) trainer
+            m_iGehalt = Integer.parseInt(properties.getProperty("cost", "0"));
+            contractDate = properties.getProperty("contractdate");
+        }
 
         var temp = properties.getProperty("playernumber", "");
         if ((temp != null) && !temp.isEmpty() && !temp.equals("null")) {

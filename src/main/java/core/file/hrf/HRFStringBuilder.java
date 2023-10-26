@@ -21,7 +21,6 @@ import module.lineup.substitution.model.Substitution;
 import module.training.Skills;
 import module.youth.YouthPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -274,7 +273,7 @@ public class HRFStringBuilder {
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"playerIn", sub.getObjectPlayerID());
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"playerOut", sub.getSubjectPlayerID());
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"orderType", (int) sub.getOrderType().getId());
-                        appendKeyValue(lastLineupStringBuilder, "subst"+i+"matchMinuteCriteria", (int) sub.getMatchMinuteCriteria());
+                        appendKeyValue(lastLineupStringBuilder, "subst"+i+"matchMinuteCriteria", sub.getMatchMinuteCriteria());
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"pos", (int) sub.getRoleId());
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"behaviour", (int) sub.getBehaviour());
                         appendKeyValue(lastLineupStringBuilder, "subst"+i+"card", (int) sub.getRedCardCriteria().getId());
@@ -416,7 +415,7 @@ public class HRFStringBuilder {
             var firstName = ht.get("FirstName");
             var lastName = ht.get("LastName");
             var nickName = ht.get("NickName");
-            if (nickName.length() > 0) {
+            if (!nickName.isEmpty()) {
                 appendKeyValue(playersStringBuilder, "name", firstName + " '" + nickName + "' " + lastName);
             } else {
                 appendKeyValue(playersStringBuilder, "name", firstName + " " + lastName);
@@ -462,7 +461,10 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "AggressivenessLabel", PlayerAggressiveness.toString(Integer.parseInt(ht.get("Aggressiveness"))));
 
             appendKeyValue(playersStringBuilder, "TrainerType", ht.get("TrainerType"));
-            appendKeyValue(playersStringBuilder, "TrainerSkill", ht.get("TrainerSkill"));
+            appendKeyValue(playersStringBuilder, "ContractDate", ht.get("ContractDate"));
+            appendKeyValue(playersStringBuilder, "Cost", ht.get("Cost"));
+            appendKeyValue(playersStringBuilder, "TrainerSkillLevel", ht.get("TrainerSkillLevel"));
+            appendKeyValue(playersStringBuilder, "TrainerStatus", ht.get("TrainerStatus"));
 
             appendKeyValue(playersStringBuilder, "LastMatch_Date", ht.get("LastMatch_Date"));
             appendKeyValue(playersStringBuilder, "LastMatch_Rating", ht.get("LastMatch_Rating"));
@@ -671,7 +673,7 @@ public class HRFStringBuilder {
 
             if (ret != null) {
                 ret = ret.trim();
-                if (!"null".equals(ret) && !"".equals(ret)) {
+                if (!"null".equals(ret) && !ret.isEmpty()) {
                     return ret.trim();
                 }
             }

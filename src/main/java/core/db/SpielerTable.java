@@ -93,7 +93,8 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubId").setGetter((p)->((Player)p).getOrDownloadMotherclubId()).setSetter((p, v)->((Player)p).setMotherClubId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubName").setGetter((p)->((Player)p).getOrDownloadMotherclubName()).setSetter((p, v)->((Player)p).setMotherClubName((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p)->((Player)p).getMatchesCurrentTeam()).setSetter((p,v)->((Player)p).setMatchesCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LineupDisabled").setGetter((p)->((Player)p).isLineupDisabled()).setSetter((p,v)->((Player)p).setLineupDisabled((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("LineupDisabled").setGetter((p)->((Player)p).isLineupDisabled()).setSetter((p,v)->((Player)p).setLineupDisabled((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ContractDate").setGetter((p)->((Player)p).getContractDate()).setSetter((p,v)->((Player)p).setContractDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build()
 		};
 	}
 
