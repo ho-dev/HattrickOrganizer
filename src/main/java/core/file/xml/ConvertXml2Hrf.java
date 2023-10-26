@@ -13,6 +13,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.player.PlayerAvatar;
+import core.model.player.TrainerStatus;
 import core.net.OnlineWorker;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
@@ -62,9 +63,9 @@ public class ConvertXml2Hrf {
 				// user has only one single team
 				teamId = teamInfoList.get(0).getTeamId();
 				youthTeamId = teamInfoList.get(0).getYouthTeamId();
-			} else if (teamInfoList.size() >= 2){
+			} else if (teamInfoList.size() >= 2) {
 				// user has more than one team
-				if ( teamId <=0) {
+				if (teamId <= 0) {
 					// Select one of user's teams, if not done before
 					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
 					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
@@ -74,15 +75,14 @@ public class ConvertXml2Hrf {
 					}
 					teamId = selection.getSelectedTeam().getTeamId();
 					youthTeamId = selection.getSelectedTeam().getYouthTeamId();
-				}
-				else {
+				} else {
 					// team id is in DB and this is the first time we download youth team information
 					int finalTeamId = teamId;
 					var teaminfo = teamInfoList.stream()
 							.filter(x -> x.getTeamId() == finalTeamId)
 							.findAny()
 							.orElse(null);
-					if ( teaminfo != null){
+					if (teaminfo != null) {
 						youthTeamId = teaminfo.getYouthTeamId();
 					}
 				}
@@ -110,8 +110,8 @@ public class ConvertXml2Hrf {
 
 		// Currency fix
 		var lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId");
-		if ( lastPremierId != null && lastPremierId == usersPremierTeamId ){
-		//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
+		if (lastPremierId != null && lastPremierId == usersPremierTeamId) {
+			//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
 			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
 			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
 		} else {
@@ -126,29 +126,14 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
 		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
-		var trainerId = String.valueOf(teamdetailsDataMap.get("TrainerID"));
-		// If trainer is not in players data, download trainer info from player details
-		var found = false;
-		for ( var p : playersData){
-			if ( p.get("PlayerID").equals(trainerId)){
-				found=true;
-				break;
-			}
-		}
-		if ( !found){
-			var xml = MyConnector.instance().downloadPlayerDetails(trainerId);
-			var properties = new XMLPlayersParser().parsePlayerDetails(xml);
-			properties.put("LineupDisabled", "true");
-			playersData.add(properties);
-		}
 
 		// Download players' avatar
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1);
 
-		List<MyHashtable> youthplayers=null;
-		if ( youthTeamId != null && youthTeamId > 0 ){
+		List<MyHashtable> youthplayers = null;
+		if (youthTeamId != null && youthTeamId > 0) {
 			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
@@ -159,6 +144,23 @@ public class ConvertXml2Hrf {
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement);
 		List<MyHashtable> staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId));
+		var trainer = staffData.get(0);
+		var trainerId = String.valueOf(trainer.get("TrainerId"));
+		if (trainer.containsKey("TrainerId")) {
+			var trainerStatus = TrainerStatus.fromInt(Integer.parseInt(trainer.get("TrainerStatus")));
+			if (trainerStatus == TrainerStatus.PlayingTrainer){
+				for (var p : playersData) {
+					if (p.get("PlayerID").equals(trainerId)) {
+						p.putAll(trainer);
+						break;
+					}
+				}
+			}
+			else {
+				trainer.put("LineupDisabled", "true");
+				playersData.add(trainer);
+			}
+		}
 
 		int arenaId = 0;
 		try {
@@ -172,7 +174,7 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
-						.parseInt(teamdetailsDataMap.get("TeamID")),
+								.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
@@ -217,7 +219,7 @@ public class ConvertXml2Hrf {
 		hrfSgtringBuilder.createPlayers(matchLineupTeam, playersData);
 
 		// youth players
-		if ( youthplayers != null){
+		if (youthplayers != null) {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement);
 			hrfSgtringBuilder.appendYouthPlayers(youthplayers);
 		}
@@ -236,10 +238,4 @@ public class ConvertXml2Hrf {
 
 		return hrfSgtringBuilder.createHRF().toString();
 	}
-
-
-	// //////////////////////////////////////////////////////////////////////////////
-	// Helper
-	// //////////////////////////////////////////////////////////////////////////////
-
 }
