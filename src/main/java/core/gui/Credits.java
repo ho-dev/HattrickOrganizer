@@ -60,7 +60,7 @@ public class Credits {
 		gbc.gridx = 0;
 		hoPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.about.database.folder") + ": "), gbc);
 		gbc.gridx = 1;
-		hoPanel.add(new HyperLinkLabel(new File(UserManager.instance().getDbParentFolder() + "\\" + UserManager.instance().getCurrentUser().getDbName()).toURI().toString()), gbc);
+		hoPanel.add(new HyperLinkLabel(new File(UserManager.INSTANCE.getDbParentFolder() + "\\" + UserManager.INSTANCE.getCurrentUser().getDbName()).toURI().toString()), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;

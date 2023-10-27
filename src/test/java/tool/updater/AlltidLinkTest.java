@@ -24,7 +24,7 @@ public class AlltidLinkTest {
         setEnvVariable("AppData",
                 new File("").getAbsoluteFile().getParentFile().getAbsolutePath());
 
-        UserManager.instance().getCurrentUser();
+        UserManager.INSTANCE.getCurrentUser();
 
         var res = DataDownloader.instance().fetchLeagueTeamPowerRatings(3193, 10, 76);
         System.out.print(res);

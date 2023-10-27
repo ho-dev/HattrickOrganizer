@@ -289,7 +289,7 @@ public final class Basics extends AbstractTable.Storable {
      * @return true if it's a national team.
      */
     public boolean isNationalTeam() {
-        return UserManager.instance().getCurrentUser().isNtTeam();
+        return UserManager.INSTANCE.getCurrentUser().isNtTeam();
     }
 
 	/**

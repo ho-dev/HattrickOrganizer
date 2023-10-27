@@ -25,7 +25,7 @@ public class BackupHelper {
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-			zOut = new HOZip(dbDirectory + File.separator + "db_" + UserManager.instance().getCurrentUser().getTeamName()
+			zOut = new HOZip(dbDirectory + File.separator + "db_" + UserManager.INSTANCE.getCurrentUser().getTeamName()
 					+ "-" + sdf.format(new Date()) + ".zip");
 
 			for (File file : filesToBackup) {
@@ -48,7 +48,7 @@ public class BackupHelper {
 		ExampleFileFilter filter = new ExampleFileFilter("zip");
 		filter.setIgnoreDirectories(true);
 		File[] files = dbDirectory.listFiles(filter);
-		if (files != null && files.length > UserManager.instance().getCurrentUser().getNumberOfBackups()) {
+		if (files != null && files.length > UserManager.INSTANCE.getCurrentUser().getNumberOfBackups()) {
 			for (int i = 0; i < files.length; i++) {
 				if (i == 0
 						|| (toDelete != null && toDelete.lastModified() > files[i].lastModified())) {

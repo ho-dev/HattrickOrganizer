@@ -56,7 +56,7 @@ class BackupDialog : JDialog() {
         (buttonPanel.layout as FlowLayout).setAlignment(FlowLayout.RIGHT)
         okButton.addActionListener {
             try {
-                ZipHelper.unzip(list?.getSelectedValue() as File, File(UserManager.instance().currentUser.dbFolder))
+                ZipHelper.unzip(list?.getSelectedValue() as File, File(UserManager.getCurrentUser().dbFolder))
             } catch (e1: Exception) {
                 HOLogger.instance().log(javaClass, e1)
             }
@@ -69,7 +69,7 @@ class BackupDialog : JDialog() {
     }
 
     private fun getList(): JScrollPane {
-        val dbDirectory = File(UserManager.instance().currentUser.dbFolder)
+        val dbDirectory = File(UserManager.getCurrentUser().dbFolder)
         val filter = ExampleFileFilter("zip")
         filter.isIgnoreDirectories = true
         val files = dbDirectory.listFiles(filter)

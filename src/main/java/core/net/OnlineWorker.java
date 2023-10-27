@@ -1204,9 +1204,9 @@ public class OnlineWorker {
 		var logoFilename = ThemeManager.instance().getTeamLogoFilename(teamId);
 		if (logoFilename != null &&
 				teamId == HOVerwaltung.instance().getModel().getBasics().getTeamId() &&
-				!logoFilename.equals(UserManager.instance().getCurrentUser().getClubLogo())) {
-			UserManager.instance().getCurrentUser().setClubLogo(logoFilename);
-			UserManager.instance().save();
+				!logoFilename.equals(UserManager.INSTANCE.getCurrentUser().getClubLogo())) {
+			UserManager.INSTANCE.getCurrentUser().setClubLogo(logoFilename);
+			UserManager.INSTANCE.save();
 		}
 	}
 

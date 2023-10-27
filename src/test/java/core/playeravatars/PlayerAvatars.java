@@ -58,7 +58,7 @@ public class PlayerAvatars {
     g.drawImage(face, 9, 10, null);
 
     // Save as new image
-//    Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+//    Path tempImgPath = Paths.get(UserManager.INSTANCE.getDbParentFolder() , "img");
     Path tempImgPath = Paths.get("/home/sabry/Code/HO/", "img");
     Path teamLogoPath = tempImgPath.resolve("players_avatar");
 //    String combinedFileName = teamLogoPath.resolve("combined.png").toString();

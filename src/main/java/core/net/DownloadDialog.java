@@ -70,7 +70,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 */
 	private DownloadDialog() {
 		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), ModalityType.MODELESS);
-		this.isNtTeam = UserManager.instance().getCurrentUser().isNtTeam();
+		this.isNtTeam = UserManager.INSTANCE.getCurrentUser().isNtTeam();
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 	}

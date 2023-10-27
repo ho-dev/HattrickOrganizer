@@ -390,7 +390,7 @@ public class XMLPlayersParser {
 
         var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
         var teamID = xmlIntValue(owningTeam, "TeamID");
-        if (!UserManager.instance().getCurrentUser().isNtTeam() &&
+        if (!UserManager.INSTANCE.getCurrentUser().isNtTeam() &&
              teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
 
         var player = new Player();

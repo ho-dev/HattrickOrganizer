@@ -487,7 +487,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         int min=-10, max=10;
 
         // NT Team can select whatever Style of Play they like
-        if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+        if (!UserManager.INSTANCE.getCurrentUser().isNtTeam()) {
             switch (trainer) {
                 case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
                 case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive

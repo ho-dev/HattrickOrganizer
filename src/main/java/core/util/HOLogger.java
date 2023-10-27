@@ -32,7 +32,7 @@ public class HOLogger {
 		String errorMsg;
 		boolean logFolderExist = true;
 
-		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
+		logsFolderName = Paths.get(UserManager.INSTANCE.getDbParentFolder() , "logs").toString();
 		File logsFolder = new File(logsFolderName);
 		
 		if (!logsFolder.exists()) {
