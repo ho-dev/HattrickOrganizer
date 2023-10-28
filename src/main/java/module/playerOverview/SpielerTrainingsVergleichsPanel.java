@@ -50,7 +50,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
      */
     public SpielerTrainingsVergleichsPanel() {
         initComponents();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
         loadHRFListe(true);
     }
 

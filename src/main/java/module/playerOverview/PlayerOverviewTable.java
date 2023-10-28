@@ -51,7 +51,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		initModel();
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 
 		// Add a mouse listener that, when clicking on the “Last match” column
 		// - opens the Hattrick page for the player if you shift-click,

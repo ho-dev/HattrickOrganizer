@@ -56,7 +56,7 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
     public LineupRatingAssistantPanel(LineupPanel parent) {
         m_clLineupPanel = parent;
         initComponents();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     private void initComponents() {

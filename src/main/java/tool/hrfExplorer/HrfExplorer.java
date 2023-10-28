@@ -1184,7 +1184,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
    					DBManager.instance().deleteHRF(deleteHRF_ID);
         		}
         	}
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 		}
 		/*
 		 * Button Select_All

@@ -177,7 +177,7 @@ public class HOVerwaltung {
 			HOMainFrame.INSTANCE.setWaitInformation();
 		}
 
-		RefreshManager.instance().doReInit();
+		RefreshManager.INSTANCE.doReInit();
 		HOLogger.instance().log(
 				getClass(),
 				"Subskill calculation done. " + new Date() + " - took "

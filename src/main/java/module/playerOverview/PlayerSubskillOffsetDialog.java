@@ -79,7 +79,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 			DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
 
 			//GUI aktualisieren
-			core.gui.RefreshManager.instance().doReInit();
+			core.gui.RefreshManager.INSTANCE.doReInit();
 
 			setVisible(false);
 			dispose();

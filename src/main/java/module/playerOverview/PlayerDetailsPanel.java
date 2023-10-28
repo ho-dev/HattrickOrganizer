@@ -103,7 +103,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
         m_playerOverviewTable = playerOverviewTable;
         initComponents();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     /**

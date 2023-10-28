@@ -30,7 +30,7 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
     public TeamSummaryPanel(TeamSummaryModel model) {
         initComponents();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
         setModel(model);
     }
 

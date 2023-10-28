@@ -77,7 +77,7 @@ public class OnlineWorker {
 				// Info
 				String msg = getLangString("Downloadfehler")
 						+ " : Error converting xml 2 HRF. Corrupt/Missing Data : ";
-				setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+				setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 				Helper.showMessage(parent, msg + "\n" + e + "\n", getLangString("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 				ok = false;
@@ -97,7 +97,7 @@ public class OnlineWorker {
 					HOModel homodel = HRFStringParser.parse(hrf);
 					if (homodel == null) {
 						// Info
-						setInfoMsg(getLangString("Importfehler"), InfoPanel.FEHLERFARBE);
+						setInfoMsg(getLangString("Importfehler"), InfoPanel.Companion.getFEHLERFARBE());
 						// Error
 						Helper.showMessage(parent, getLangString("Importfehler"),
 								getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
@@ -166,7 +166,7 @@ public class OnlineWorker {
 					// Info
 					String msg = getLangString("Downloadfehler")
 							+ " : Error fetching MatchArchiv : ";
-					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+					setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 					Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 							JOptionPane.ERROR_MESSAGE);
 					return null;
@@ -328,7 +328,7 @@ public class OnlineWorker {
 							String msg = getLangString("Downloadfehler")
 									+ " : Error fetching Matchlineup :";
 							// Info
-							setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+							setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 							Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 									JOptionPane.ERROR_MESSAGE);
 						}
@@ -383,7 +383,7 @@ public class OnlineWorker {
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Team ratings :";
 			// Info
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 		}
@@ -514,7 +514,7 @@ public class OnlineWorker {
 			String msg = getLangString("Downloadfehler") + " : Error fetching matches: "
 					+ e.getMessage();
 			// Info
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().log(OnlineWorker.class, e);
@@ -670,7 +670,7 @@ public class OnlineWorker {
 			HOLogger.instance().log(OnlineWorker.class, e);
 			String msg = getLangString("Downloadfehler") + " : Error fetching leagueFixture: "
 					+ e.getMessage();
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 		}
@@ -804,7 +804,7 @@ public class OnlineWorker {
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 			return null;
 		}
@@ -821,7 +821,7 @@ public class OnlineWorker {
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
 			// Info
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			return null;
@@ -891,7 +891,7 @@ public class OnlineWorker {
 			}
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchorder :";
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
@@ -910,7 +910,7 @@ public class OnlineWorker {
 		}
 		catch(Exception e){
 			String msg = getLangString("Downloadfehler") + " : Error fetching region details :";
-			setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+			setInfoMsg(msg, InfoPanel.Companion.getFEHLERFARBE());
 			Helper.showMessage(HOMainFrame.INSTANCE, msg, getLangString("Fehler"),
 					JOptionPane.ERROR_MESSAGE);
 			HOLogger.instance().error(OnlineWorker.class, e.getMessage());
@@ -982,7 +982,7 @@ public class OnlineWorker {
 				}
 			} else {
 				// Canceled
-				setInfoMsg(getLangString("HRFAbbruch"), InfoPanel.FEHLERFARBE);
+				setInfoMsg(getLangString("HRFAbbruch"), InfoPanel.Companion.getFEHLERFARBE());
 			}
 		}
 

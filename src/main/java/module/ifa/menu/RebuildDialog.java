@@ -93,7 +93,7 @@ public class RebuildDialog extends JDialog implements ActionListener {
 		} else if (event.getSource() == okButton) {
 			DBManager.instance().deleteIFAMatches();
 			PluginIfaUtils.updateMatchesTable();
-			RefreshManager.instance().doRefresh();
+			RefreshManager.INSTANCE.doRefresh();
 			dispose();
 		}
 	}

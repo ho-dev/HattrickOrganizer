@@ -176,7 +176,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			OnlineWorker.downloadMatchData( matchKurzInfo.getMatchID(), matchKurzInfo.getMatchType(), true);
 			HOMainFrame.INSTANCE.updateProgress((int)(++i * 100.0 / n));
 		}
-		RefreshManager.instance().doReInit();
+		RefreshManager.INSTANCE.doReInit();
 		showMatch(matchid);
 		HOMainFrame.INSTANCE.setInformationCompleted();
 	}
@@ -217,7 +217,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			for (MatchKurzInfo info : infos) {
 				DBManager.instance().deleteMatch(info);
 			}
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 		}
 	}
 

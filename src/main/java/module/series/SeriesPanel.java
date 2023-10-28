@@ -59,7 +59,7 @@ public class SeriesPanel extends LazyImagePanel {
 				DBManager.instance().deleteSpielplanTabelle(spielplan.getSaison(), spielplan.getLigaId());
 				DBManager.instance().deletePaarungTabelle(spielplan.getSaison(), spielplan.getLigaId());
 				this.model.setCurrentSeries(null);
-				RefreshManager.instance().doReInit();
+				RefreshManager.INSTANCE.doReInit();
 			}
 		}
 	}

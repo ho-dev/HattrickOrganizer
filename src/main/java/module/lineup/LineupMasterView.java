@@ -70,7 +70,7 @@ public class LineupMasterView extends JPanel {
             oldTabIndex = tabbedPane.getSelectedIndex();
         });
 		
-		RefreshManager.instance().registerRefreshable(new Refreshable() {
+		RefreshManager.INSTANCE.registerRefreshable(new Refreshable() {
 			
 			@Override
 			public void refresh() {

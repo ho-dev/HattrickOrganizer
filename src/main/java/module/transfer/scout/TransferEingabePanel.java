@@ -204,7 +204,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setHrfDate(HODateTime.now());
             tempPlayer.setGehalt(parseCurrencyValue(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
-            RefreshManager.instance().doReInit();
+            RefreshManager.INSTANCE.doReInit();
             HOMainFrame.INSTANCE.showTab(IModule.PLAYEROVERVIEW);
         }
 		else if (actionEvent.getSource().equals(jbRemoveAll)) {

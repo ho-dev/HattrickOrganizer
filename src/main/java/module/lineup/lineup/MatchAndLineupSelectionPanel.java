@@ -56,7 +56,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     public MatchAndLineupSelectionPanel(LineupPanel parent) {
         lineupPanel = parent;
         initComponents();
-        core.gui.RefreshManager.instance().registerRefreshable(this);
+        core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     private void initComponents() {

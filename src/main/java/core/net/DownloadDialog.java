@@ -86,7 +86,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			else {
 				startDownload();
 			}
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 			close();
 			if (UserParameter.instance().updateCheck) {
 				UpdateController.check4update(false);

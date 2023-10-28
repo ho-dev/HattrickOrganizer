@@ -24,7 +24,7 @@ public class TransferTable extends JTable implements Refreshable {
         m_clTableModel = new TransferTableModel(DBManager.instance().getScoutList());
         initModel();
         setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     //~ Methods ------------------------------------------------------------------------------------

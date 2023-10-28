@@ -39,7 +39,7 @@ public class TrainingPreviewPlayers implements Refreshable {
      * Add to refresh
      */
     public TrainingPreviewPlayers() {
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     //~ Methods ------------------------------------------------------------------------------------

@@ -74,7 +74,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
                         // tournament
                         false);
                 fillLabels();
-                RefreshManager.instance().doReInit();
+                RefreshManager.INSTANCE.doReInit();
                 HOMainFrame.INSTANCE.setInformationCompleted();
             } else {
                 // Match zeigen

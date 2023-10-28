@@ -54,7 +54,6 @@ object HOMainFrame : JFrame(), Refreshable {
     var isHOMainFrame_initialized = false
         private set
 
-    @JvmField
     var launching = AtomicBoolean(false)
 
     var weather: Weather = Weather.PARTIALLY_CLOUDY
@@ -90,9 +89,6 @@ object HOMainFrame : JFrame(), Refreshable {
     val playerOverviewPanel: PlayerOverviewPanel
         get() = tabbedPane.getModulePanel(IModule.PLAYEROVERVIEW) as PlayerOverviewPanel
     val transferScoutPanel: TransfersPanel
-        /**
-         * Get the transfer scout panel.
-         */
         get() = tabbedPane.getModulePanel(IModule.TRANSFERS) as TransfersPanel
 
     val lineupPanel: LineupPanel?
@@ -130,7 +126,7 @@ object HOMainFrame : JFrame(), Refreshable {
                 javaClass,
                 "Using java: " + System.getProperty("java.version") + " ("
                         + System.getProperty("java.vendor") + ")")
-        RefreshManager.instance().registerRefreshable(this)
+        RefreshManager.registerRefreshable(this)
         setDefaultCloseOperation(EXIT_ON_CLOSE)
         SwingUtilities.updateComponentTreeUI(this)
         setFrameTitle()
@@ -140,7 +136,7 @@ object HOMainFrame : JFrame(), Refreshable {
         initProxy()
         initComponents()
         initMenu()
-        RefreshManager.instance().doRefresh()
+        RefreshManager.doRefresh()
 
         val lineup = lineupPanel
         weather = if (lineup != null) lineup.weather else Weather.NULL
@@ -397,7 +393,7 @@ object HOMainFrame : JFrame(), Refreshable {
                     val item = e.source as JMenuItem
                     val module = item.getClientProperty("MODULE") as IModule
                     tabbedPane.showTab(module.getModuleId())
-                    RefreshManager.instance().doRefresh()
+                    RefreshManager.doRefresh()
                 }
                 jmFunctions.add(showTabMenuItem)
             }

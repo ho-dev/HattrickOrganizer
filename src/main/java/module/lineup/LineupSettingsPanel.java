@@ -135,7 +135,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		lineupPanel = parent;
 		backupRealGameSettings();
 		initComponents();
-		core.gui.RefreshManager.instance().registerRefreshable(this);
+		core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
 	}
 
 	private boolean isLineupSimulator(){

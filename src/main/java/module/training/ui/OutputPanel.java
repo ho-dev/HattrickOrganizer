@@ -98,7 +98,7 @@ public class OutputPanel extends LazyImagePanel {
                     Helper.showMessage(null,
                             HOVerwaltung.instance().getLanguageString("MatchImported"),
                             HOVerwaltung.instance().getLanguageString("ImportOK"), 1);
-                    RefreshManager.instance().doRefresh();
+                    RefreshManager.INSTANCE.doRefresh();
                 }
             } else {
                 Helper.showMessage(null, HOVerwaltung.instance().getLanguageString("NotUserMatch"),

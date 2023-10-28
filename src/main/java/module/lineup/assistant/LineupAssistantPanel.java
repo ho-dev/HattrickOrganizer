@@ -540,7 +540,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		layout.setConstraints(jpButtons, constraints);
 		add(jpButtons);
 
-		core.gui.RefreshManager.instance().registerRefreshable(this);
+		core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
 	}
 
 

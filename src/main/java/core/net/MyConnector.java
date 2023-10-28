@@ -640,7 +640,7 @@ public class MyConnector {
 								// If the main frame is not in the process of loading, use it,
 								// otherwise use null frame.
 
-								if (!HOMainFrame.launching.get()) {
+								if (!HOMainFrame.INSTANCE.getLaunching().get()) {
 									mainFrame = HOMainFrame.INSTANCE;
 								}
 

@@ -52,7 +52,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		setLayout(new BorderLayout());
 		add(tabPane, BorderLayout.CENTER);
 
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 
 	}
 

@@ -82,7 +82,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_weather = weather;
 		m_useWeatherImpact = useWeatherImpact;
 		initComponents();
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 	}
 
 	public javax.swing.JLayeredPane getCenterPanel() {

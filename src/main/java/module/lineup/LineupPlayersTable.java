@@ -42,7 +42,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 		initListeners();
 	}
 
