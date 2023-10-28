@@ -53,7 +53,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		pack();
 
 		final Dimension size =
-			core.gui.HOMainFrame.instance().getToolkit().getScreenSize();
+			core.gui.HOMainFrame.INSTANCE.getToolkit().getScreenSize();
 
 		if (size.width > this.getSize().width) {
 			//Mittig positionieren

@@ -55,9 +55,9 @@ public class ToolManager implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JMenuItem source = (JMenuItem) e.getSource();
         if (source == m_jmiKeeperTool) {
-            new KeeperToolDialog(HOMainFrame.instance()).setVisible(true);
+            new KeeperToolDialog(HOMainFrame.INSTANCE).setVisible(true);
         } else if (source.equals(m_jmiNotepad)) {
-            NotepadDialog notepad = new NotepadDialog(HOMainFrame.instance(), m_hov.getLanguageString("Notizen"));
+            NotepadDialog notepad = new NotepadDialog(HOMainFrame.INSTANCE, m_hov.getLanguageString("Notizen"));
             notepad.setVisible(true);
         } else if (source.equals(m_jmiExporter)) {
             XMLExporter exporter = new XMLExporter();
@@ -66,11 +66,11 @@ public class ToolManager implements ActionListener {
             CsvPlayerExport csvExporter = new CsvPlayerExport();
             csvExporter.showSaveDialog();
         } else if (source.equals(m_jmiInjuryCalculator)) {
-            new InjuryDialog(HOMainFrame.instance()).setVisible(true);
+            new InjuryDialog(HOMainFrame.INSTANCE).setVisible(true);
         } else if (source.equals(m_jmiArenaSizer)) {
-            new ArenaSizerDialog(HOMainFrame.instance()).setVisible(true);
+            new ArenaSizerDialog(HOMainFrame.INSTANCE).setVisible(true);
         } else if (source.equals(m_jmiHrfExplorer)) {
-            new HrfExplorerDialog(HOMainFrame.instance()).setVisible(true);
+            new HrfExplorerDialog(HOMainFrame.INSTANCE).setVisible(true);
         }
     }
 }

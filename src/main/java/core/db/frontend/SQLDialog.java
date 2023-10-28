@@ -52,7 +52,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     private final JButton buttables;
     
     public SQLDialog() {
-        super(HOMainFrame.instance(), "Simple SQL Editor");
+        super(HOMainFrame.INSTANCE, "Simple SQL Editor");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         statements = new ArrayList<String>();
         CRState = false;

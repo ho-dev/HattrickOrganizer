@@ -105,7 +105,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), jtfNumberOfHRF, false);
+				Helper.parseInt(HOMainFrame.INSTANCE, jtfNumberOfHRF, false);
 			}
 		});
 

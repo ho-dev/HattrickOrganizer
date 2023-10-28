@@ -84,7 +84,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 					core.gui.comp.entry.ColorLabelEntry colorLabelEntry = (ColorLabelEntry) m_jtSpielerMatchesTable.getValueAt(m_jtSpielerMatchesTable.getSelectedRow(),columnMATCHID);
 					int matchId = Integer.parseInt(colorLabelEntry.getText());
 					if(e.getClickCount()==2  && m_jtSpielerMatchesTable.getSelectedRow()>=0){
-						HOMainFrame.instance().showMatch(Integer.parseInt(colorLabelEntry.getText()));
+						HOMainFrame.INSTANCE.showMatch(Integer.parseInt(colorLabelEntry.getText()));
 					}else if(e.getClickCount()==1 && e.isShiftDown()){
 						// TODO: get match type
 						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);

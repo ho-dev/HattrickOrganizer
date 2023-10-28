@@ -13,7 +13,7 @@ public class MatchPredictionDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 
 	public MatchPredictionDialog(MatchEnginePanel panel, String match){
-		super(HOMainFrame.instance(),"",true);
+		super(HOMainFrame.INSTANCE,"",true);
 		initialize(panel);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(match);

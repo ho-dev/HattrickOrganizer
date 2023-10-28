@@ -315,7 +315,7 @@ public class SubstitutionOverview extends JPanel {
 			updateOrderIDs();
 			refresh();
 			selectSubstitution(newSub);
-			var lineupPanel = HOMainFrame.instance().getLineupPanel();
+			var lineupPanel = HOMainFrame.INSTANCE.getLineupPanel();
 			if ( lineupPanel != null) {
 				lineupPanel.setLineupSettingsLabels();
 			}

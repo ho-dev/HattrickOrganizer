@@ -58,7 +58,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 	public void refresh() {
 		// final JWindow waitWindow = new
-		// LoginWaitDialog(HOMainFrame.instance());
+		// LoginWaitDialog(HOMainFrame.INSTANCE);
 		// waitWindow.setVisible(true);
 
 		// Check for outdated players.

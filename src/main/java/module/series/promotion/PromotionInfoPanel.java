@@ -80,7 +80,7 @@ public class PromotionInfoPanel extends ImagePanel {
 
         downloadLeagueButton.setToolTipText(verwaltung.getLanguageString("pd_status.download.data"));
         downloadLeagueButton.addActionListener(e -> {
-            int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+            int choice = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE,
                     verwaltung.getLanguageString("pd_status.download.warning.message"),
                     verwaltung.getLanguageString("pd_status.download.warning.title"),
                     JOptionPane.OK_CANCEL_OPTION,

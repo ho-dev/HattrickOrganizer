@@ -50,7 +50,7 @@ class ScoutPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        final TransferTableModel model = HOMainFrame.instance().getTransferScoutPanel().getScoutPanel()
+        final TransferTableModel model = HOMainFrame.INSTANCE.getTransferScoutPanel().getScoutPanel()
                                                                          .getTransferTable()
                                                                          .getTransferTableModel();
 

@@ -96,14 +96,14 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      */
     MiniScoutDialog(TransferEingabePanel owner) {
         super(HOVerwaltung.instance().getLanguageString("ScoutMini"));
-        this.setIconImage(HOMainFrame.instance().getIconImage());
+        this.setIconImage(HOMainFrame.INSTANCE.getIconImage());
         clOwner = owner;
         initComponents();
 
         addWindowListener(new WindowAdapter() {
         	@Override
         	public void windowClosing(WindowEvent e) {
-        		core.gui.HOMainFrame.instance().setVisible(true);
+        		core.gui.HOMainFrame.INSTANCE.setVisible(true);
         	}
 		});
     }
@@ -159,9 +159,9 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      */
     @Override
 	public final void focusLost(FocusEvent e) {
-        if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPrice, false)) {
+        if (!Helper.parseInt(HOMainFrame.INSTANCE, jtfTSI, false)
+            || !Helper.parseInt(HOMainFrame.INSTANCE, jtfPlayerID, false)
+            || !Helper.parseInt(HOMainFrame.INSTANCE, jtfPrice, false)) {
             return;
         }
 		if (e.getSource().equals(jtfAge)) {
@@ -305,7 +305,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private void close() {
         setVisible(false);
         dispose();
-        core.gui.HOMainFrame.instance().setVisible(true);
+        core.gui.HOMainFrame.INSTANCE.setVisible(true);
     }
 
     /**
@@ -316,8 +316,8 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private ScoutEintrag createScoutEintrag() {
         final ScoutEintrag entry = new ScoutEintrag();
 
-        if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
+        if (!Helper.parseInt(HOMainFrame.INSTANCE, jtfTSI, false)
+            || !Helper.parseInt(HOMainFrame.INSTANCE, jtfPlayerID, false)
             || Helper.parseCurrency(jtfPrice.getText())==null) {
             return entry;
         }
@@ -578,7 +578,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         setLocation(core.model.UserParameter.instance().miniscout_PositionX,
                     core.model.UserParameter.instance().miniscout_PositionY);
-        HOMainFrame.instance().setVisible(false);
+        HOMainFrame.INSTANCE.setVisible(false);
         setVisible(true);
     }
 

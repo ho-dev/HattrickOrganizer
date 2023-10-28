@@ -137,7 +137,7 @@ class DBCleanupDialog extends JDialog implements ActionListener {
 
 		pack();
 
-        final Dimension size = HOMainFrame.instance().getToolkit().getScreenSize();
+        final Dimension size = HOMainFrame.INSTANCE.getToolkit().getScreenSize();
 
         if (size.width > this.getSize().width) {
             //Mittig positionieren

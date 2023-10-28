@@ -77,7 +77,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 								HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
 							} else if (e.getClickCount() == 2) {
-								HOMainFrame.instance().showMatch(player.getLastMatchId());
+								HOMainFrame.INSTANCE.showMatch(player.getLastMatchId());
 							}
 						}
 					}

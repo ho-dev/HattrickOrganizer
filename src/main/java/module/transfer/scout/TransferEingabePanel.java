@@ -205,7 +205,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setGehalt(parseCurrencyValue(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
-            HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
+            HOMainFrame.INSTANCE.showTab(IModule.PLAYEROVERVIEW);
         }
 		else if (actionEvent.getSource().equals(jbRemoveAll)) {
 			clOwner.removeScoutEntries();
@@ -259,8 +259,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      * @param focusEvent Event fired when panel losts focus
      */
     public final void focusLost(FocusEvent focusEvent) {
-        if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
-            || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
+        if (!Helper.parseInt(HOMainFrame.INSTANCE, jtfTSI, false)
+            || !Helper.parseInt(HOMainFrame.INSTANCE, jtfPlayerID, false)
             || Helper.parseCurrency( jtfPrice.getText()) == null) {
             return;
         }

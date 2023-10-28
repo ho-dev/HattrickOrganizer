@@ -93,7 +93,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbFlipSide)) {
 			HOVerwaltung.instance().getModel().getCurrentLineup().flipSide();
-			var panel = HOMainFrame.instance().getLineupPanel();
+			var panel = HOMainFrame.INSTANCE.getLineupPanel();
 			if (panel != null) {
 				panel.update();
 			}

@@ -222,7 +222,7 @@ public class HO {
 
 		interuptionsWindow.setInfoText(9, "Prepare to show");
 		SwingUtilities.invokeLater(() -> {
-			HOMainFrame.instance().setVisible(true);
+			HOMainFrame.INSTANCE.setVisible(true);
 
 			// stop display splash image
 			interuptionsWindow.setVisible(false);

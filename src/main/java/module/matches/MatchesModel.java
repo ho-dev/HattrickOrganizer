@@ -47,7 +47,7 @@ public class MatchesModel {
 			// Lineup team was not stored (Verlegenheitstruppe)
 			var ok = OnlineWorker.downloadMatchData(match, true);
 			ret = DBManager.instance().loadMatchLineupTeam(type, matchId, teamId);
-			HOMainFrame.instance().setInformationCompleted();
+			HOMainFrame.INSTANCE.setInformationCompleted();
 		}
 		return ret;
 	}

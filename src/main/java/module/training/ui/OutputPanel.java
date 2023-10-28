@@ -85,7 +85,7 @@ public class OutputPanel extends LazyImagePanel {
         tf.setDocument(new NumericDocument(10));
         Object[] objs = {HOVerwaltung.instance().getLanguageString("ls.match.id"), tf};
 
-        int value = JOptionPane.showConfirmDialog(HOMainFrame.instance(), objs, HOVerwaltung
+        int value = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE, objs, HOVerwaltung
                 .instance().getLanguageString("ImportMatch"), JOptionPane.OK_CANCEL_OPTION);
 
         String input = tf.getText();

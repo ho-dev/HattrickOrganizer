@@ -64,7 +64,7 @@ class RatingChartFrame extends JFrame {
 
 	RatingChartFrame() {
 		super(HOVerwaltung.instance().getLanguageString("RatingChartFrame"));
-		this.setIconImage(HOMainFrame.instance().getIconImage());
+		this.setIconImage(HOMainFrame.INSTANCE.getIconImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
 		initComponents();

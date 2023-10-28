@@ -137,8 +137,8 @@ public class CopyListener implements ActionListener {
 	
 	private String getLineupRatingPanel() {
 		if (lineupRatingPanel == null) return EMPTY;
-	  	//LineupPositionsPanel lPanel = HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel();
-		ArrayList<PlayerPositionPanel> pos = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAllPositions();
+	  	//LineupPositionsPanel lPanel = HOMainFrame.INSTANCE.getLineupPanel().getLineupPositionsPanel();
+		ArrayList<PlayerPositionPanel> pos = Objects.requireNonNull(HOMainFrame.INSTANCE.getLineupPanel()).getAllPositions();
 		String goalie, rightWB, rightCD, middleCD, leftCD, leftWB, rightW, rightIM, middleIM, leftIM, leftW, rightFW, middleFW, leftFW;
 		goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
 		for (PlayerPositionPanel p : pos) {
@@ -186,8 +186,8 @@ public class CopyListener implements ActionListener {
 	
 	private String getLineupAndRatings() {
 		if (lineupRatingPanel == null) return EMPTY;
-		//LineupPositionsPanel lPanel = HOMainFrame.instance().getLineupPanel().getLineupPositionsPanel();
-		ArrayList<PlayerPositionPanel> pos = HOMainFrame.instance().getLineupPanel().getAllPositions();
+		//LineupPositionsPanel lPanel = HOMainFrame.INSTANCE.getLineupPanel().getLineupPositionsPanel();
+		ArrayList<PlayerPositionPanel> pos = HOMainFrame.INSTANCE.getLineupPanel().getAllPositions();
 		String goalie, rightWB, rightCD, middleCD, leftCD, leftWB, rightW, rightIM, middleIM, leftIM, leftW, rightFW, middleFW, leftFW;
 		goalie = rightWB = rightCD = middleCD = leftCD = leftWB = rightW = rightIM = middleIM = leftIM = leftW = rightFW = middleFW = leftFW = EMPTY;
 		for (PlayerPositionPanel p : pos) {

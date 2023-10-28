@@ -144,7 +144,7 @@ public class ClubStatisticsPanel extends LazyImagePanel {
         jtfNbHRFs.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(java.awt.event.FocusEvent focusEvent) {
-                Helper.parseInt(HOMainFrame.instance(), jtfNbHRFs, false);
+                Helper.parseInt(HOMainFrame.INSTANCE, jtfNbHRFs, false);
             }
         });
     }

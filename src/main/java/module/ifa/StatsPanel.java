@@ -189,9 +189,9 @@ public class StatsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.instance());
+				IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.INSTANCE);
 				GUIUtils.decorateWithDisposeOnESC(dlg);
-				GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.instance());
+				GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.INSTANCE);
 				dlg.setVisible(true);
 			}
 		});

@@ -96,7 +96,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	 */
 	public final void calculateNMatches(int numberOfMatches) {
 		int match = (1 + numberOfMatches) * 1000;
-		var mainframe = HOMainFrame.instance();
+		var mainframe = HOMainFrame.INSTANCE;
 		mainframe.resetInformation();
 		MatchResult result = new MatchResult();
 		final TeamData team1 = homeTeamPanel.getTeamData();

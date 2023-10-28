@@ -593,7 +593,7 @@ public class MyConnector {
 	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) {
 		if (displaysettingsScreen) {
 			// Show Screen
-			new ProxyDialog(HOMainFrame.instance());
+			new ProxyDialog(HOMainFrame.INSTANCE);
 		}
 		return getNonCHPPWebFile(url, false);
 	}
@@ -641,7 +641,7 @@ public class MyConnector {
 								// otherwise use null frame.
 
 								if (!HOMainFrame.launching.get()) {
-									mainFrame = HOMainFrame.instance();
+									mainFrame = HOMainFrame.INSTANCE;
 								}
 
 								// disable WaitCursor to unblock GUI
@@ -765,9 +765,9 @@ public class MyConnector {
 					}
 					case 401 -> {
 						// disable WaitCursor to unblock GUI
-						CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
+						CursorToolkit.stopWaitCursor(HOMainFrame.INSTANCE.getRootPane());
 						if (authDialog == null) {
-							authDialog = new OAuthDialog(HOMainFrame.instance(), m_OAService, scope);
+							authDialog = new OAuthDialog(HOMainFrame.INSTANCE, m_OAService, scope);
 						}
 						authDialog.setVisible(true);
 						// A way out for a user unable to authorize for some reason

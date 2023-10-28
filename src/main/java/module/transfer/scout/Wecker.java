@@ -30,7 +30,7 @@ class Wecker extends javax.swing.JFrame implements java.awt.event.ActionListener
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle(HOVerwaltung.instance().getLanguageString("TransferScout"));
-        this.setIconImage(HOMainFrame.instance().getIconImage());
+        this.setIconImage(HOMainFrame.INSTANCE.getIconImage());
 
         //this.setContentPane(temp);
         this.getContentPane().setLayout(new java.awt.BorderLayout());

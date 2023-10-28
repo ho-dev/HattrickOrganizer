@@ -101,7 +101,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
             vergleichsPlayer.clear(); // .removeAllElements();
 
             //Nur manuelles Update der Tabelle, kein reInit, damit die Sortierung bleibt.
-            HOMainFrame.instance().getPlayerOverviewPanel().refreshHRFVergleich();
+            HOMainFrame.INSTANCE.getPlayerOverviewPanel().refreshHRFVergleich();
         }
     }
 
@@ -141,7 +141,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         fireChangeEvent(changeEvent);
 
 		// Manual update of the table, so no reInit to keep the current sorting.
-		HOMainFrame.instance().getPlayerOverviewPanel().refreshHRFVergleich();
+		HOMainFrame.INSTANCE.getPlayerOverviewPanel().refreshHRFVergleich();
 	}
 
     /**

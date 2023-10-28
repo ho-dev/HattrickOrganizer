@@ -69,16 +69,16 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         if (matchDatas[0] > 0) {
             // Spiel nicht vorhanden, dann erst runterladen!
             if (!DBManager.instance().isMatchInDB(matchDatas[0], MatchType.LEAGUE)) {
-                HOMainFrame.instance().resetInformation();
+                HOMainFrame.INSTANCE.resetInformation();
                 OnlineWorker.downloadMatchData(matchDatas[0], MatchType.LEAGUE, // not
                         // tournament
                         false);
                 fillLabels();
                 RefreshManager.instance().doReInit();
-                HOMainFrame.instance().setInformationCompleted();
+                HOMainFrame.INSTANCE.setInformationCompleted();
             } else {
                 // Match zeigen
-                HOMainFrame.instance().showMatch(matchDatas[0]);
+                HOMainFrame.INSTANCE.showMatch(matchDatas[0]);
             }
         }
     }

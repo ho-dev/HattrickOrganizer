@@ -150,7 +150,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 					HattrickManager.downloadPlayers(team.getTeamId());
 				}
 				HattrickManager.downloadMatches(SystemManager.getActiveTeamId(), TeamAnalyzerPanel.filter);
-				HOMainFrame.instance().setInformationCompleted();
+				HOMainFrame.INSTANCE.setInformationCompleted();
 				SystemManager.refresh();
 			}
 		});

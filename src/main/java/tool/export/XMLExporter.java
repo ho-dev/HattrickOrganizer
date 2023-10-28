@@ -70,7 +70,7 @@ public class XMLExporter  {
 			var instant = HODateTime.fromHT("2009-05-18 00:00:00").instant;
             m_clSpinnerModel.setValue(Date.from(instant));
 	
-            JFrame owner = HOMainFrame.instance();
+            JFrame owner = HOMainFrame.INSTANCE;
             final JDialog dialog = new JDialog(owner, HOVerwaltung.instance().getLanguageString("xmlexport.startdate"));
             dialog.getContentPane().setLayout(new BorderLayout());
             dialog.getContentPane().add(m_jsSpinner, BorderLayout.CENTER);
@@ -102,11 +102,11 @@ public class XMLExporter  {
             fileChooser.setFileFilter(filter);
             fileChooser.setSelectedFile(file);
 
-            int returnVal = fileChooser.showSaveDialog(HOMainFrame.instance());
+            int returnVal = fileChooser.showSaveDialog(HOMainFrame.INSTANCE);
 
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 file = fileChooser.getSelectedFile();
-				HOMainFrame.instance().resetInformation();
+				HOMainFrame.INSTANCE.resetInformation();
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				saveXML(file.getAbsolutePath(),date);
             }
@@ -114,7 +114,7 @@ public class XMLExporter  {
             HOLogger.instance().log(getClass(),ex);
         }
 
-        HOMainFrame.instance().setInformationCompleted();
+        HOMainFrame.INSTANCE.setInformationCompleted();
     }
 
 
@@ -480,7 +480,7 @@ public class XMLExporter  {
 
 		//        HOMiniModel.instance().getGUI ().getInfoPanel ().clearAll ();   
 		JOptionPane.showMessageDialog(
-			HOMainFrame.instance(), HOVerwaltung.instance().getLanguageString("xmlexport.information", matches.size()),
+			HOMainFrame.INSTANCE, HOVerwaltung.instance().getLanguageString("xmlexport.information", matches.size()),
 					HOVerwaltung.instance().getLanguageString("windowtitle.exportsuccessful"),
 			javax.swing.JOptionPane.INFORMATION_MESSAGE);
 	}

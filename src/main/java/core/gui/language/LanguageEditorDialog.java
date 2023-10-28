@@ -30,7 +30,7 @@ public class LanguageEditorDialog extends JDialog {
 	private LanguageTableModel destinationTableModel;
 
 	public LanguageEditorDialog() {
-        super(HOMainFrame.instance(), "Language File Editor");
+        super(HOMainFrame.INSTANCE, "Language File Editor");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 		pack();

@@ -46,7 +46,7 @@ public class LineupCheck {
 		}
 
 		String title = HOVerwaltung.instance().getLanguageString("lineup.upload.check.title");
-		int result = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+		int result = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE,
 				problems.toArray(), title, JOptionPane.YES_NO_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
 		return result == JOptionPane.YES_OPTION;

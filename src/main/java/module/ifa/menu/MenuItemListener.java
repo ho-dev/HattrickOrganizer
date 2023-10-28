@@ -9,7 +9,7 @@ public class MenuItemListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		RebuildDialog rebuild = new RebuildDialog(HOMainFrame.instance());
+		RebuildDialog rebuild = new RebuildDialog(HOMainFrame.INSTANCE);
 		rebuild.setVisible(true);
 	}	
 }

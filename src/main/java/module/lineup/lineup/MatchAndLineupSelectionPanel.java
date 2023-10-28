@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.gui.CursorToolkit;
+import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static core.gui.HOMainFrame.instance;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 
@@ -421,7 +421,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             }
         }
 
-        JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
+        JOptionPane.showMessageDialog(HOMainFrame.INSTANCE, message, Helper.getTranslation("lineup.upload.title"), messageType);
     }
 
 
