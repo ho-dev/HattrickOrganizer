@@ -61,9 +61,7 @@ object HOMainFrame : JFrame(), Refreshable {
 
     private val infoPanel: InfoPanel = InfoPanel()
 
-    // Components
-    var tabbedPane: HOTabbedPane? = null
-        private set
+    val tabbedPane: HOTabbedPane = HOTabbedPane()
 
     /**
      * Get all option panel names.
@@ -88,18 +86,18 @@ object HOMainFrame : JFrame(), Refreshable {
 
 
     val playerAnalysisMainPanel: PlayerAnalysisModulePanel
-        get() = tabbedPane!!.getModulePanel(IModule.PLAYERANALYSIS) as PlayerAnalysisModulePanel
+        get() = tabbedPane.getModulePanel(IModule.PLAYERANALYSIS) as PlayerAnalysisModulePanel
     val playerOverviewPanel: PlayerOverviewPanel
-        get() = tabbedPane!!.getModulePanel(IModule.PLAYEROVERVIEW) as PlayerOverviewPanel
+        get() = tabbedPane.getModulePanel(IModule.PLAYEROVERVIEW) as PlayerOverviewPanel
     val transferScoutPanel: TransfersPanel
         /**
          * Get the transfer scout panel.
          */
-        get() = tabbedPane!!.getModulePanel(IModule.TRANSFERS) as TransfersPanel
+        get() = tabbedPane.getModulePanel(IModule.TRANSFERS) as TransfersPanel
 
     val lineupPanel: LineupPanel?
         get() {
-            val c: Container? = tabbedPane!!.getModulePanel(IModule.LINEUP)
+            val c: Container? = tabbedPane.getModulePanel(IModule.LINEUP)
             return if (c is LineupPanel) {
                 c
             } else if (c != null) {
@@ -164,7 +162,7 @@ object HOMainFrame : JFrame(), Refreshable {
         if (!HO.isRelease()) {
             iconName = "${HOIconName.LOGO16}_${HO.getVersionType().lowercase(Locale.getDefault())}"
         }
-        var iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName))
+        val iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName))
         if (OSUtils.isMac()) {
             try {
                 val taskbar = Taskbar.getTaskbar()
@@ -286,16 +284,16 @@ object HOMainFrame : JFrame(), Refreshable {
             contentPane = ImagePanel()
         }
         contentPane.setLayout(BorderLayout())
-        tabbedPane = HOTabbedPane()
+
         val activeModules = ModuleManager.instance().getModules(true)
         for (module in activeModules) {
             if (module.hasMainTab() && module.isStartup()) {
-                tabbedPane!!.showTab(module.getModuleId())
+                tabbedPane.showTab(module.getModuleId())
             }
         }
         contentPane.add(tabbedPane, BorderLayout.CENTER)
-        if (tabbedPane!!.tabCount > 0) {
-            tabbedPane!!.setSelectedIndex(0)
+        if (tabbedPane.tabCount > 0) {
+            tabbedPane.setSelectedIndex(0)
         }
         contentPane.add(infoPanel, BorderLayout.SOUTH)
         setLocation(UserParameter.instance().hoMainFrame_PositionX,
@@ -398,7 +396,7 @@ object HOMainFrame : JFrame(), Refreshable {
                 showTabMenuItem.addActionListener { e:ActionEvent ->
                     val item = e.source as JMenuItem
                     val module = item.getClientProperty("MODULE") as IModule
-                    tabbedPane!!.showTab(module.getModuleId())
+                    tabbedPane.showTab(module.getModuleId())
                     RefreshManager.instance().doRefresh()
                 }
                 jmFunctions.add(showTabMenuItem)
@@ -506,8 +504,8 @@ object HOMainFrame : JFrame(), Refreshable {
 
     // --------------------------------------------------------------
     fun showMatch(matchId: Int) {
-        tabbedPane!!.showTab(IModule.MATCHES)
-        val matchesPanel = tabbedPane!!.getModulePanel(IModule.MATCHES) as MatchesPanel
+        tabbedPane.showTab(IModule.MATCHES)
+        val matchesPanel = tabbedPane.getModulePanel(IModule.MATCHES) as MatchesPanel
         SwingUtilities.invokeLater {
             matchesPanel.showMatch(matchId)
         }
@@ -520,7 +518,7 @@ object HOMainFrame : JFrame(), Refreshable {
      * ID of the module whose tab should be shown.
      */
     fun showTab(moduleId: Int) {
-        tabbedPane!!.showTab(moduleId)
+        tabbedPane.showTab(moduleId)
     }
 
     /**
@@ -547,7 +545,7 @@ object HOMainFrame : JFrame(), Refreshable {
         parameter.aufstellungsAssistentPanel_notLast = lineupPanel.isAssistantExcludeLastMatch
 
         // PlayerOverviewPanel
-        if (tabbedPane!!.isModuleTabVisible(IModule.PLAYEROVERVIEW)) {
+        if (tabbedPane.isModuleTabVisible(IModule.PLAYEROVERVIEW)) {
             val sup = playerOverviewPanel.getDividerLocations()
             parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0]
             parameter.spielerUebersichtsPanel_horizontalRightSplitPane = sup[1]
@@ -556,15 +554,15 @@ object HOMainFrame : JFrame(), Refreshable {
         }
 
         // Lineup Panel
-        if (tabbedPane!!.isModuleTabVisible(IModule.LINEUP)) {
+        if (tabbedPane.isModuleTabVisible(IModule.LINEUP)) {
             val ap = this.lineupPanel!!.getDividerLocations()
             parameter.lineupPanel_verticalSplitLocation = ap[0]
             parameter.lineupPanel_horizontalSplitLocation = ap[1]
-            this.lineupPanel!!.saveColumnOrder()
+            lineupPanel.saveColumnOrder()
         }
 
         // TransferScoutPanel
-        if (tabbedPane!!.isModuleTabVisible(IModule.TRANSFERS)) {
+        if (tabbedPane.isModuleTabVisible(IModule.TRANSFERS)) {
             parameter.transferScoutPanel_horizontalSplitPane = transferScoutPanel.scoutPanel.dividerLocation
         }
         for (module in ModuleManager.instance().getModules(true)) {
