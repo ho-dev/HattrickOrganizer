@@ -25,7 +25,7 @@ class HOZip(filename: String) : File(filename) {
         val tFINS = FileInputStream(file)
         val bufLength = 1024
         val buffer = ByteArray(bufLength)
-        var readReturn = 0
+        var readReturn: Int
 
         // Set next Entry
         zOut!!.putNextEntry(ZipEntry(file.getName()))

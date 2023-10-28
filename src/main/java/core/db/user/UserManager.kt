@@ -12,29 +12,28 @@ object UserManager {
         load()
     }
 
-    var index:Int = 0
-    lateinit var users:MutableList<User>
-    lateinit var dbParentFolder:String
+    var index: Int = 0
+    lateinit var users: MutableList<User>
+    lateinit var dbParentFolder: String
 
-    fun getDriver():String = "org.hsqldb.jdbcDriver"
-    fun addUser(newUser:User) = users.add(newUser)
+    fun getDriver(): String = "org.hsqldb.jdbcDriver"
+    fun addUser(newUser: User) = users.add(newUser)
 
-    fun isSingleUser():Boolean = users.size == 1
+    fun isSingleUser(): Boolean = users.size == 1
 
-    fun getCurrentUser():User = users[index]
+    fun getCurrentUser(): User = users[index]
 
     fun load() {
         users = mutableListOf()
         // Load BaseUsers from json file
-        val baseUsers:Array<BaseUser> = BaseUser.loadBaseUsers(dbParentFolder)
+        val baseUsers: Array<BaseUser> = BaseUser.loadBaseUsers(dbParentFolder)
 
         if (baseUsers.isEmpty()) {
-            // in case xml file does not exist or it is corrupted and no users have been loaded
-            val newUser:User = User.createDefaultUser()
-		    users.add(newUser)
+            // in case xml file does not exist, or it is corrupted and no users have been loaded
+            val newUser: User = User.createDefaultUser()
+            users.add(newUser)
             save()
-        }
-        else {
+        } else {
             for (baseUser in baseUsers) {
                 val newUser = User(baseUser)
                 users.add(newUser)
@@ -43,7 +42,7 @@ object UserManager {
     }
 
     fun save() {
-        val baseUsers:List<BaseUser> = users.map { user -> user.baseUser }
+        val baseUsers: List<BaseUser> = users.map { user -> user.baseUser }
         BaseUser.serialize(baseUsers, dbParentFolder)
     }
 
@@ -61,13 +60,12 @@ object UserManager {
         }
     }
 
-    fun swapUsers(i1:Int, i2:Int) {
-        Collections.swap(users, i1, i2);
+    fun swapUsers(i1: Int, i2: Int) {
+        Collections.swap(users, i1, i2)
         if (index == i1) {
-            index = i2;
-        }
-        else if (index == i2){
-            index = i1;
+            index = i2
+        } else if (index == i2) {
+            index = i1
         }
     }
 }

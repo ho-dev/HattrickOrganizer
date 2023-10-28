@@ -5,7 +5,6 @@ import core.file.ExampleFileFilter;
 import core.util.HOLogger;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
