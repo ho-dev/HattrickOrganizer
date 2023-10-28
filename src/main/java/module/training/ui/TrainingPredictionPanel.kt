@@ -39,7 +39,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     }
 
     private void addListeners() {
-        RefreshManager.instance().registerRefreshable(() -> {
+        RefreshManager.INSTANCE.registerRefreshable(() -> {
             if (isShowing()) {
                 update();
             }

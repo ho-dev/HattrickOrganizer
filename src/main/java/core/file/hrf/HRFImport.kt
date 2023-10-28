@@ -39,13 +39,14 @@ public class HRFImport {
 				}
 
 				if (!files[i].exists()) {
-					frame.setInformation(getLangStr("DateiNichtGefunden"), InfoPanel.FEHLERFARBE);
+					frame.setInformation(getLangStr("DateiNichtGefunden"), InfoPanel.Companion.getFEHLERFARBE());
 					Helper.showMessage(frame, getLangStr("DateiNichtGefunden"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
 				// remember path
 				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
+				// FIXME: These setInformation should be triggered through events.
 				frame.setInformation(getLangStr("StartParse"));
 				homodel = HRFFileParser.parse(files[i]);
 				if ( homodel != null && homodel.getBasics().getTeamId() != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
@@ -54,7 +55,7 @@ public class HRFImport {
 				}
 
 				if (homodel == null) {
-					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.FEHLERFARBE);
+					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.Companion.getFEHLERFARBE());
 					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
 				} else {
 					frame.setInformation(getLangStr("HRFSave"));
@@ -82,7 +83,7 @@ public class HRFImport {
 						frame.setInformation(getLangStr("HRFErfolg"));
 					} else {
 						// Cancel
-						frame.setInformation(getLangStr("HRFAbbruch"), InfoPanel.FEHLERFARBE);
+						frame.setInformation(getLangStr("HRFAbbruch"), InfoPanel.Companion.getFEHLERFARBE());
 					}
 				}
 			}
@@ -91,7 +92,7 @@ public class HRFImport {
 			HOVerwaltung.instance().loadLatestHoModel();
 			HOModel hom = HOVerwaltung.instance().getModel();
 
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 		}
 	}
 

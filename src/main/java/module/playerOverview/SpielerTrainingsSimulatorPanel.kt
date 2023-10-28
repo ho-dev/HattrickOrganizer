@@ -211,12 +211,12 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
-            RefreshManager.instance().doReInit();
-            HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
+            RefreshManager.INSTANCE.doReInit();
+            HOMainFrame.INSTANCE.showTab(IModule.PLAYEROVERVIEW);
         } else if (e.getSource().equals(m_jbRemoveTempSpieler)) {
             HOVerwaltung.instance().getModel().removePlayer(m_clPlayer);
-            RefreshManager.instance().doReInit();
-            HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
+            RefreshManager.INSTANCE.doReInit();
+            HOMainFrame.INSTANCE.showTab(IModule.PLAYEROVERVIEW);
         }
     }
 

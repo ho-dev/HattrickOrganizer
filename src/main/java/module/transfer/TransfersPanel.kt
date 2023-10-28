@@ -52,13 +52,13 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		setLayout(new BorderLayout());
 		add(tabPane, BorderLayout.CENTER);
 
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 
 	}
 
 	public void refresh() {
 		// final JWindow waitWindow = new
-		// LoginWaitDialog(HOMainFrame.instance());
+		// LoginWaitDialog(HOMainFrame.INSTANCE);
 		// waitWindow.setVisible(true);
 
 		// Check for outdated players.

@@ -9,7 +9,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
@@ -74,7 +73,7 @@ public class XMLAvatarsParser {
                             }
                             j++;
                         }
-                        playerAvatars.add(new PlayerAvatar(playerID, bgImage, layers));
+                        playerAvatars.add(new PlayerAvatar(playerID, layers));
                         i++;
                     }
                 }

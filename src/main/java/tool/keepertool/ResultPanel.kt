@@ -115,7 +115,7 @@ class ResultPanel extends JPanel {
                 sp.setSubskill4PlayerSkill(PlayerSkill.KEEPER, (float) decimals);
                 DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
             }
-            core.gui.RefreshManager.instance().doReInit();
+            core.gui.RefreshManager.INSTANCE.doReInit();
             parent.setVisible(false);
             parent.dispose();
         });

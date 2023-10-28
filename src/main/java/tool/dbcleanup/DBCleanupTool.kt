@@ -198,6 +198,6 @@ public class DBCleanupTool {
 	}
 	
 	private void reInitHO() {
-        RefreshManager.instance().doReInit();
+        RefreshManager.INSTANCE.doReInit();
 	}
 }

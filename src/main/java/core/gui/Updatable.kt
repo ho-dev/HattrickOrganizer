@@ -1,5 +1,5 @@
-package core.gui;
+package core.gui
 
-public interface Updatable {
-    void update();
+interface Updatable {
+    fun update()
 }

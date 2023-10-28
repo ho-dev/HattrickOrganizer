@@ -31,7 +31,7 @@ public class MatchBanner extends JPanel implements Refreshable {
 
         initComponents();
         refresh();
-        core.gui.RefreshManager.instance().registerRefreshable(this);
+        core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     private void initComponents() {

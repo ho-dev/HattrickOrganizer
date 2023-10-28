@@ -1,40 +1,37 @@
-package core.constants;
+package core.constants
 
-import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.datatype.CBItem
+import core.model.HOVerwaltung
 
-public class TeamConfidence {
+object TeamConfidence {
+    const val NON_EXISTENT = 0
+    const val DISASTROUS = 1
+    const val WRETCHED = 2
+    const val POOR = 3
+    const val DECENT = 4
+    const val STRONG = 5
+    const val WONDERFUL = 6
+    const val SLIGHTLY_EXAGGERATED = 7
+    const val EXAGGERATED = 8
+    const val COMPLETELY_EXAGGERATED = 9
 
-	public static final int NON_EXISTENT 			= 0;
-	public static final int DISASTROUS 				= 1;
-	public static final int WRETCHED 				= 2;
-	public static final int POOR 					= 3;
-	public static final int DECENT 					= 4;
-	public static final int STRONG 					= 5;
-	public static final int WONDERFUL 				= 6;
-	public static final int SLIGHTLY_EXAGGERATED 	= 7;
-	public static final int EXAGGERATED 			= 8;
-	public static final int COMPLETELY_EXAGGERATED 	= 9;
+    @JvmField
+    var ITEMS = arrayOf(
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.non-existent"), NON_EXISTENT),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.disastrous"), DISASTROUS),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.wretched"), WRETCHED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.poor"), POOR),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.decent"), DECENT),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.strong"), STRONG),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.wonderful"), WONDERFUL),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.slightlyexaggerated"), SLIGHTLY_EXAGGERATED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.exaggerated"), EXAGGERATED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.completelyexaggerated"), COMPLETELY_EXAGGERATED)
+    )
 
-	public static CBItem[] ITEMS = {
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.non-existent"), NON_EXISTENT),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.disastrous"), DISASTROUS),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.wretched"), WRETCHED),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.poor"), POOR),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.decent"), DECENT),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.strong"), STRONG),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.wonderful"), WONDERFUL),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.slightlyexaggerated"), SLIGHTLY_EXAGGERATED),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.exaggerated"), EXAGGERATED),
-		new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.confidence.completelyexaggerated"), COMPLETELY_EXAGGERATED)
-	};
-
-
-	public static String toString(int teamConfidence){
-		if(teamConfidence >= NON_EXISTENT && teamConfidence <= COMPLETELY_EXAGGERATED)
-			return ITEMS[teamConfidence].getText();
-		else
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-	}
-
+    @JvmStatic
+    fun toString(teamConfidence: Int): String {
+        return if (teamConfidence in NON_EXISTENT..COMPLETELY_EXAGGERATED) ITEMS[teamConfidence].text
+        else HOVerwaltung.instance().getLanguageString("Unbestimmt")
+    }
 }

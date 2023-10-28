@@ -87,7 +87,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 */
 	public final void update() {
 		refresh();
-		Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).refresh();
+		Objects.requireNonNull(HOMainFrame.INSTANCE.getLineupPanel()).refresh();
 	}
 
 	// ----------init-----------------------------------------------
@@ -230,7 +230,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 				e -> {
 					int row = playerOverviewTableName.getSelectedRow();
 					if (row == -1) {
-						var player = HOMainFrame.instance().getSelectedPlayer();
+						var player = HOMainFrame.INSTANCE.getSelectedPlayer();
 						if ( player != null){
 							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerID());
 							selectRow(playerOverviewTableName,row);
@@ -243,7 +243,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 
 						// Set player on HOMainFrame to notify other tabs.
 						Player player = playerOverviewTable.getSorter().getSpieler(row);
-						if (player != null) HOMainFrame.instance().selectPlayer(player);
+						if (player != null) HOMainFrame.INSTANCE.selectPlayer(player);
 					}
 				}
 		);

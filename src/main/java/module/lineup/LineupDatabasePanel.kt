@@ -35,7 +35,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     public LineupDatabasePanel(LineupPanel parent) {
         lineupPanel = parent;
         initComponents();
-        core.gui.RefreshManager.instance().registerRefreshable(this);
+        core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     private void initComponents() {

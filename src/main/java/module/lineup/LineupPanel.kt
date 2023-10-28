@@ -98,7 +98,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		lineupPlayersTableNameColumn.refresh();
 
 		// Refresh the table and details of the player overview
-		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
+		core.gui.HOMainFrame.INSTANCE.getPlayerOverviewPanel().refresh();
 
 		fireUpdate();
 	}
@@ -212,7 +212,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 					}
 					Player player = ((PlayerTable) sourceTable).getPlayer(row);
 					if (player != null) {
-						HOMainFrame.instance().selectPlayer(player);
+						HOMainFrame.INSTANCE.selectPlayer(player);
 					}
 				}
 			}

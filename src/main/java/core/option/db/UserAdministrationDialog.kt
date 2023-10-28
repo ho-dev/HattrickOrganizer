@@ -61,7 +61,7 @@ public class UserAdministrationDialog extends JDialog {
 			UserEditDialog dlg = new UserEditDialog(UserAdministrationDialog.this, newUser, true);
 			dlg.setVisible(true);
 			if (!dlg.isCanceled()) {
-				UserManager.instance().addUser(dlg.getUser());
+				UserManager.INSTANCE.addUser(dlg.getUser());
 				saveAndReload();
 			}
 		});
@@ -71,7 +71,7 @@ public class UserAdministrationDialog extends JDialog {
 			if ( editUser == null) return;
 
 			var oldDbName = editUser.getDbName();
-			var userManager = UserManager.instance();
+			var userManager = UserManager.INSTANCE;
 			var isLoggedIn = editUser == userManager.getCurrentUser();
 			UserEditDialog dlg = new UserEditDialog(UserAdministrationDialog.this, editUser);
 			dlg.setVisible(true);
@@ -114,14 +114,14 @@ public class UserAdministrationDialog extends JDialog {
 
 		this.moveDownButton.addActionListener(e -> {
 			var selectedIndex = this.table.getSelectedRow();
-			UserManager.instance().swapUsers(selectedIndex, selectedIndex+1);
+			UserManager.INSTANCE.swapUsers(selectedIndex, selectedIndex+1);
 			saveAndReload();
 			this.table.setRowSelectionInterval(selectedIndex+1, selectedIndex+1);
 		});
 
 		this.moveUpButton.addActionListener(e -> {
 			var selectedIndex = this.table.getSelectedRow();
-			UserManager.instance().swapUsers(selectedIndex, selectedIndex-1);
+			UserManager.INSTANCE.swapUsers(selectedIndex, selectedIndex-1);
 			saveAndReload();
 			this.table.setRowSelectionInterval(selectedIndex-1, selectedIndex-1);
 		});
@@ -132,7 +132,7 @@ public class UserAdministrationDialog extends JDialog {
 	}
 
 	private void saveAndReload() {
-		UserManager.instance().save();
+		UserManager.INSTANCE.save();
 		((MyTableModel) this.table.getModel()).fireTableDataChanged();
 	}
 
@@ -226,7 +226,7 @@ public class UserAdministrationDialog extends JDialog {
 					HOVerwaltung.instance().getLanguageString("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 			if (res == JOptionPane.YES_OPTION) {
-				UserManager.instance().getAllUser().remove(user);
+				UserManager.INSTANCE.getUsers().remove(user);
 				saveAndReload();
 			}
 		}
@@ -260,7 +260,7 @@ public class UserAdministrationDialog extends JDialog {
 
 		@Override
 		public Object getValueAt(int row, int column) {
-			User user = UserManager.instance().getAllUser().get(row);
+			User user = UserManager.INSTANCE.getUsers().get(row);
 			switch (column) {
 			case 0:
 				return user.getTeamName();
@@ -284,7 +284,7 @@ public class UserAdministrationDialog extends JDialog {
 
 		@Override
 		public int getRowCount() {
-			return UserManager.instance().getAllUser().size();
+			return UserManager.INSTANCE.getUsers().size();
 		}
 
 		@Override
@@ -293,7 +293,7 @@ public class UserAdministrationDialog extends JDialog {
 		}
 
 		public User getSelectedUser(int row) {
-			return UserManager.instance().getAllUser().get(row);
+			return UserManager.INSTANCE.getUsers().get(row);
 		}
 	}
 }

@@ -25,8 +25,18 @@ public final class HRFTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((HRF) o).getHrfId()).setSetter((o, v) -> ((HRF) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((HRF) o).getDatum().toDbTimestamp()).setSetter((o, v) -> ((HRF) o).setDatum((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID")
+						.setGetter((o) -> ((HRF) o).getHrfId())
+						.setSetter((o, v) -> ((HRF) o).setHrfId((int)v))
+						.setType(Types.INTEGER).isNullable(false)
+						.isPrimaryKey(true)
+						.build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Datum")
+						.setGetter((o) -> ((HRF) o).getDatum().toDbTimestamp())
+						.setSetter((o, v) -> ((HRF) o).setDatum((HODateTime) v))
+						.setType(Types.TIMESTAMP)
+						.isNullable(false)
+						.build()
 		};
 	}
 

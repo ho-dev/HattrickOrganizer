@@ -1,42 +1,39 @@
-package core.constants;
+package core.constants
 
-import core.datatype.CBItem;
-import core.model.HOVerwaltung;
-import core.util.Helper;
+import core.datatype.CBItem
+import core.util.Helper
 
-public final class TrainingType {
-	public static final int SET_PIECES 			= 2;
-	public static final int DEFENDING 			= 3;
-	public static final int SCORING 			= 4;
-	public static final int CROSSING_WINGER 	= 5;
-	public static final int SHOOTING 			= 6;
-	public static final int SHORT_PASSES 		= 7;
-	public static final int PLAYMAKING 			= 8;
-	public static final int GOALKEEPING 		= 9;
-	public static final int THROUGH_PASSES 		= 10;
-	public static final int DEF_POSITIONS 		= 11;
-    public static final int WING_ATTACKS 		= 12;
+object TrainingType {
+    const val SET_PIECES = 2
+    const val DEFENDING = 3
+    const val SCORING = 4
+    const val CROSSING_WINGER = 5
+    const val SHOOTING = 6
+    const val SHORT_PASSES = 7
+    const val PLAYMAKING = 8
+    const val GOALKEEPING = 9
+    const val THROUGH_PASSES = 10
+    const val DEF_POSITIONS = 11
+    const val WING_ATTACKS = 12
 
-    public static CBItem[] ITEMS = {
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.setpieces"), SET_PIECES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.defending"), DEFENDING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.scoring"), SCORING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.crossing"), CROSSING_WINGER),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.shooting"), SHOOTING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.shortpasses"), SHORT_PASSES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.playmaking"), PLAYMAKING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.goalkeeping"), GOALKEEPING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.throughpasses"), THROUGH_PASSES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.defensivepositions"), DEF_POSITIONS),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.wingattacks"), WING_ATTACKS)
-	};
+    @JvmField
+	var ITEMS = arrayOf(
+            CBItem(Helper.getTranslation("ls.team.trainingtype.setpieces"), SET_PIECES),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.defending"), DEFENDING),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.scoring"), SCORING),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.crossing"), CROSSING_WINGER),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.shooting"), SHOOTING),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.shortpasses"), SHORT_PASSES),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.playmaking"), PLAYMAKING),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.goalkeeping"), GOALKEEPING),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.throughpasses"), THROUGH_PASSES),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.defensivepositions"), DEF_POSITIONS),
+            CBItem(Helper.getTranslation("ls.team.trainingtype.wingattacks"), WING_ATTACKS)
+    )
 
-    private TrainingType(){};
-
-    public static String toString(int trainingType){
-    	if(trainingType >= SET_PIECES && trainingType <= WING_ATTACKS)
-    		return ITEMS[trainingType-SET_PIECES].getText();
-    	else
-    		return Helper.getTranslation("Unbestimmt");
+    @JvmStatic
+	fun toString(trainingType: Int): String {
+        return if (trainingType in SET_PIECES..WING_ATTACKS) ITEMS[trainingType - SET_PIECES].text
+        else Helper.getTranslation("Unbestimmt")
     }
 }

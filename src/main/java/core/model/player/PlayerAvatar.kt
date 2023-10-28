@@ -1,81 +1,61 @@
-package core.model.player;
+package core.model.player
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.awt.image.BufferedImage
+import java.io.File
+import java.io.IOException
+import java.net.URL
+import java.nio.file.Path
+import javax.imageio.ImageIO
 
 /**
- *     Class to hold player avatar information
- *     Avatar is represented by overlay of graphic elements available
- *     on HT website
+ * Class to hold player avatar information
+ * Avatar is represented by overlay of graphic elements available
+ * on HT website
  */
-public class PlayerAvatar {
+class PlayerAvatar(val playerID: Int, imageLayers: List<Layer>) {
+    private val layers: List<Layer>
 
-    // Fields - Instance Variables  ====================
-    private final Integer m_playerID;
-    private final List<Layer> m_layers;
-
-    // Setters and Getters ==================
-    public Integer getPlayerID() {
-        return m_playerID;
+    init {
+        layers = imageLayers.map { inputLayer: Layer -> this.fixURL(inputLayer) }
     }
 
-    // Constructor and methods ;
-    public PlayerAvatar(Integer playerID, String bgImage, List<Layer> layers) {
-        this.m_playerID = playerID;
-        this.m_layers = layers.stream().map(this::fixURL).collect(Collectors.toList());
+    private fun fixURL(inputLayer: Layer): Layer {
+        val x = inputLayer.x
+        val y = inputLayer.y
+        val url = fixURL(inputLayer.urlElement)
+        return Layer(x, y, url)
     }
 
-
-    private Layer fixURL(Layer input_layer) {
-        int x = input_layer.x();
-        int y = input_layer.y();
-        String url = fixURL(input_layer.urlElement());
-
-        return new Layer(x, y, url);
+    private fun fixURL(inputUrl: String): String {
+        val prefixURL = "https://www84.hattrick.org"
+        return if (inputUrl.startsWith("http")) {
+            inputUrl
+        } else prefixURL + inputUrl
     }
 
-    private String fixURL(String input_url) {
-
-        String prefixURL = "https://www84.hattrick.org";
-        if (input_url.startsWith("http")) {
-            return input_url;
-        }
-        return prefixURL + input_url;
-    }
-
-    public void generateAvatar(Path pathAvatar) throws IOException {
-
-        var FirstLayer = m_layers.get(0);
-        int x0, y0;
-
-        URL url = new URL(FirstLayer.urlElement());
-        BufferedImage img = ImageIO.read(url.openStream());
-
+    @Throws(IOException::class)
+    fun generateAvatar(pathAvatar: Path) {
+        val firstLayer = layers[0]
+        val x0: Int
+        val y0: Int
+        var url = URL(firstLayer.urlElement)
+        var img = ImageIO.read(url.openStream())
         if (img != null) {
-            BufferedImage avatar = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics g = avatar.getGraphics();
+            val avatar = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_ARGB)
+            val g = avatar.graphics
+            g.drawImage(img, 0, 0, null)
+            x0 = firstLayer.x
+            y0 = firstLayer.y
 
-            g.drawImage(img, 0, 0, null);
-
-            x0 = FirstLayer.x();
-            y0 = FirstLayer.y();
-
-            for (Layer layer : m_layers.stream().skip(1).toList()) {
-                url = new URL(layer.urlElement());
-                img = ImageIO.read(url.openStream());
-                g.drawImage(img, layer.x() - x0, layer.y() - y0, null);
+            for (layer in layers.stream().skip(1).toList()) {
+                url = URL(layer.urlElement)
+                img = ImageIO.read(url.openStream())
+                g.drawImage(img, layer.x - x0, layer.y - y0, null)
             }
 
             // Save as new image
-            String pathName = pathAvatar.resolve(this.m_playerID + ".png").toString();
-            ImageIO.write(avatar, "PNG", new File(pathName));
+            val pathName = pathAvatar.resolve("$playerID.png").toString()
+            ImageIO.write(avatar, "PNG", File(pathName))
         }
     }
 }

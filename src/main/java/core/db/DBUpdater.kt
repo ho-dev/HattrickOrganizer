@@ -133,7 +133,7 @@ final class DBUpdater {
 
 	private void updateDBv700(int dbVersion) throws SQLException {
 		boolean isFixed = false;
-		var users = UserManager.instance().getAllUser();
+		var users = UserManager.INSTANCE.getUsers();
 		for ( var user : users){
 			if (user.getNumberOfBackups() == 0){	// repair backupLevel
 				user.setNumberOfBackups(3);
@@ -141,7 +141,7 @@ final class DBUpdater {
 			}
 		}
 		if ( isFixed){
-			UserManager.instance().save();
+			UserManager.INSTANCE.save();
 		}
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		if (playerTable.tryAddColumn("LastMatch_PlayedMinutes", "INTEGER")) {

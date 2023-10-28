@@ -57,21 +57,21 @@ public class CsvPlayerExport {
 		fileChooser.setFileFilter(filter);
 		fileChooser.setSelectedFile(file);
 
-		int returnVal = fileChooser.showSaveDialog(HOMainFrame.instance());
+		int returnVal = fileChooser.showSaveDialog(HOMainFrame.INSTANCE);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
 			if (file.exists() && JOptionPane.showConfirmDialog(
-					HOMainFrame.instance(),
+					HOMainFrame.INSTANCE,
 					HOVerwaltung.instance().getLanguageString("overwrite"), HOVerwaltung.instance().getLanguageString("CSVExporter"),
                     JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 				// Cancel
 				return;
             }
 
-			HOMainFrame.instance().resetInformation();
+			HOMainFrame.INSTANCE.resetInformation();
 			doExport (file);
-			HOMainFrame.instance().setInformationCompleted();
+			HOMainFrame.INSTANCE.setInformationCompleted();
 		}
 	}
 

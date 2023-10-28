@@ -124,7 +124,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         split2.setRightComponent(new JScrollPane(scoutAndEditorPanel));
 
         initModel();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 

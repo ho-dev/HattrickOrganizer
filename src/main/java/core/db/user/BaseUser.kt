@@ -1,54 +1,40 @@
-package core.db.user;
+package core.db.user
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import core.HO;
-import core.util.HOLogger;
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import core.HO
+import core.util.HOLogger
+import java.io.Reader
+import java.io.Writer
+import java.nio.file.Files
+import java.nio.file.Paths
 
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+class BaseUser(var teamName: String, var dbName: String, var clubLogo: String,
+               var backupLevel: Int, var isNtTeam: Boolean) {
+    companion object {
+        fun serialize(baseUsers: List<BaseUser>, jsonFolder: String) {
+            try {
+                val gson = GsonBuilder().setPrettyPrinting().create()
+                val writer: Writer = Files.newBufferedWriter(Paths.get(jsonFolder, "users.json"))
+                gson.toJson(baseUsers, writer)
+                writer.close()
+            } catch (ex: Exception) {
+                HOLogger.instance().error(HO::class.java, "users.json file file could not be saved: \n$ex")
+            }
+        }
 
-class BaseUser {
-    protected String teamName;
-    protected String dbName;
-    protected String clubLogo;
-    protected int backupLevel; // number of backups
-    protected boolean isNtTeam;
-
-    public BaseUser(String _teamName, String _dbName, String _clubLogo, int _backupLevel, boolean _isNtTeam) {
-        this.teamName = _teamName;
-        this.dbName = _dbName;
-        this.backupLevel = _backupLevel;
-        this.isNtTeam = _isNtTeam;
-        this.clubLogo = _clubLogo;
-    }
-
-    public static void serialize(List<BaseUser> baseUsers, String jsonFolder) {
-        try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Writer writer = Files.newBufferedWriter(Paths.get(jsonFolder, "users.json"));
-            gson.toJson(baseUsers, writer);
-            writer.close();
-        } catch (Exception ex) {
-            HOLogger.instance().error(HO.class, "users.json file file could not be saved: \n" + ex);
+        fun loadBaseUsers(jsonFolder: String): Array<BaseUser> {
+            var baseUsers: Array<BaseUser>
+            try {
+                val gson = Gson()
+                val reader: Reader = Files.newBufferedReader(Paths.get(jsonFolder, "users.json"))
+                baseUsers = gson.fromJson(reader, Array<BaseUser>::class.java)
+                reader.close()
+            } catch (ex: Exception) {
+                HOLogger.instance().info(HO::class.java, "users.json file not found => a new one will be created")
+                baseUsers = arrayOf()
+            }
+            return baseUsers
         }
     }
-
-    public static BaseUser[] loadBaseUsers(String jsonFolder) {
-        BaseUser[] baseUsers;
-        try {
-            Gson gson = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get(jsonFolder, "users.json"));
-            baseUsers = gson.fromJson(reader, BaseUser[].class);
-            reader.close();
-        } catch (Exception ex) {
-            HOLogger.instance().info(HO.class, "users.json file not found => a new one will be created");
-            baseUsers = new BaseUser[]{};
-        }
-        return baseUsers;
-    }
-
 }

@@ -43,7 +43,7 @@ public class ConvertXml2Hrf {
 	 */
 	public static @Nullable String createHrf() throws IOException {
 		int progressIncrement = 3;
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
 		final MyConnector mc = MyConnector.instance();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
@@ -67,8 +67,8 @@ public class ConvertXml2Hrf {
 				// user has more than one team
 				if (teamId <= 0) {
 					// Select one of user's teams, if not done before
-					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
+					CursorToolkit.stopWaitCursor(HOMainFrame.INSTANCE.getRootPane());
+					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.INSTANCE, teamInfoList);
 					selection.setVisible(true);
 					if (selection.getCancel()) {
 						return null;
@@ -94,17 +94,17 @@ public class ConvertXml2Hrf {
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
 		if (teamdetailsDataMap.isEmpty()) return null;
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
 		OnlineWorker.downloadTeamLogo(teamdetailsDataMap);
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement);
 		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.league_details"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.league_details"), progressIncrement);
 		Map<String, String> ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(mc.getLeagueDetails(teamdetailsDataMap.get("LeagueLevelUnitID")),
 				String.valueOf(teamId));
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
 		Map<String, String> worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
 				mc.getWorldDetails(Integer.parseInt(teamdetailsDataMap.get("LeagueID"))), teamdetailsDataMap.get("LeagueID"));
 
@@ -124,11 +124,11 @@ public class ConvertXml2Hrf {
 			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
 		}
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
 		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
 
 		// Download players' avatar
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1);
 
@@ -136,13 +136,13 @@ public class ConvertXml2Hrf {
 		if (youthTeamId != null && youthTeamId > 0) {
 			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
 		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement);
 		List<MyHashtable> staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId));
 		var trainer = staffData.get(0);
 		var trainerId = String.valueOf(trainer.get("TrainerId"));
@@ -171,69 +171,69 @@ public class ConvertXml2Hrf {
 		Map<String, String> arenaDataMap = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId));
 
 		// MatchOrder
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer
 								.parseInt(teamdetailsDataMap.get("TeamID")),
 						false, true));
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 
 		Map<String, String> nextLineupDataMap = downloadNextMatchOrder(matches, teamId);
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
 		MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, teamId);
 
 
 		var hrfSgtringBuilder = new HRFStringBuilder();
 		// Abschnitte erstellen
 		// basics
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_basics"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_basics"), progressIncrement);
 		hrfSgtringBuilder.createBasics(teamdetailsDataMap, worldDataMap);
 
 		// Liga
 		hrfSgtringBuilder.createLeague(ligaDataMap);
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_league"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_league"), progressIncrement);
 
 		// Club
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_club"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_club"), progressIncrement);
 		hrfSgtringBuilder.createClub(clubDataMap, economyDataMap, teamdetailsDataMap);
 
 		// team
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_team"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_team"), progressIncrement);
 		hrfSgtringBuilder.createTeam(trainingDataMap);
 
 		// lineup
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement);
 		hrfSgtringBuilder.createLineUp(trainerId, teamId, nextLineupDataMap);
 
 		// economy
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement);
 		hrfSgtringBuilder.createEconomy(economyDataMap);
 
 		// Arena
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement);
 		hrfSgtringBuilder.createArena(arenaDataMap);
 
 		// players
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement);
 		hrfSgtringBuilder.createPlayers(matchLineupTeam, playersData);
 
 		// youth players
 		if (youthplayers != null) {
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement);
 			hrfSgtringBuilder.appendYouthPlayers(youthplayers);
 		}
 
 		// xtra Data
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_world"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_world"), progressIncrement);
 		hrfSgtringBuilder.createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap, worldDataMap);
 
 		// lineup of the last match
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
 		hrfSgtringBuilder.createLastLineUp(matchLineupTeam, teamdetailsDataMap);
 
 		// staff
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);
 		hrfSgtringBuilder.createStaff(staffData);
 
 		return hrfSgtringBuilder.createHRF().toString();

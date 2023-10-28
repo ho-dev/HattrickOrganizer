@@ -1,75 +1,53 @@
-// %119160480:de.hattrickorganizer.gui%
-package core.gui;
+package core.gui
 
-import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
+import core.gui.comp.panel.ImagePanel
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import java.awt.Color
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
 
-import javax.swing.*;
+import javax.swing.*
+import javax.swing.border.BevelBorder
 
 
 /**
  * Information panel at the bottom of the MainFrame
  */
-public class InfoPanel extends ImagePanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
+class InfoPanel : ImagePanel() {
 
-	private static final long serialVersionUID = 4902186890362152556L;
-
-	// color for error messages
-    public static final Color FEHLERFARBE = ThemeManager.getColor(HOColorName.LABEL_ERROR_FG); // Color.red
-    // color for info messages
-    public static final Color INFOFARBE = ThemeManager.getColor(HOColorName.LABEL_FG);//Color.black;
-    // color for success messages
-    public static final Color ERFOLGSFARBE = ThemeManager.getColor(HOColorName.LABEL_SUCCESS_FG);//Color.green;
-
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    private JProgressBar m_jpbProgressBar = new JProgressBar(0, 100);
-    private JTextField m_jlInfoLabel = new JTextField();
-
-
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new InfoPanel object.
-     */
-    public InfoPanel() {
-        initComponents();
+    init {
+        initComponents()
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
+    private lateinit var progressBar:JProgressBar
+    private lateinit var infoLabel:JTextField
 
     /**
      * set the information text and increments progress bar value
      */
-    public void setInformation(String information, int progressIncrement) {
-        var newProgress = getProgress() + progressIncrement;
-        if (newProgress > 100) newProgress = 100;
-        setProgressbarValue(newProgress);
-        setInformation(information);
+    fun setInformation(information: String, progressIncrement: Int) {
+        var newProgress = getProgress() + progressIncrement
+        if (newProgress > 100) newProgress = 100
+        setProgressbarValue(newProgress)
+        setInformation(information)
     }
 
     /**
      * set the information text and Color
      */
-    public void setInformation(String text, Color color){
-        m_jlInfoLabel.setText(text);
-        m_jlInfoLabel.setForeground(color);
-        paintComponentImmediately(m_jlInfoLabel);
+    fun setInformation(text: String, color: Color) {
+        infoLabel.text = text
+        infoLabel.foreground = color
+        paintComponentImmediately(infoLabel)
     }
 
     /**
      * set the information text
      */
-    public final void setInformation(String text) {
-        setInformation(text, INFOFARBE);
-    }
+    private fun setInformation(text: String) = setInformation(text, INFOFARBE)
 
     /**
      * set progress bar value
@@ -77,55 +55,68 @@ public class InfoPanel extends ImagePanel {
      * @param value min=0, max=100
      *              values outside this range will reset the progress bar (value = 0)
      */
-    public final void setProgressbarValue(int value) {
+    fun setProgressbarValue(value: Int) {
+        var localValue = value
         if (value < 0 || value > 100) {
-            value = 0; // reset progress bar
+            localValue = 0 // reset progress bar
         }
-        m_jpbProgressBar.setValue(value);
-        paintComponentImmediately(m_jpbProgressBar);
+        progressBar.setValue(localValue)
+        paintComponentImmediately(progressBar)
     }
 
-    public int getProgress(){
-        return m_jpbProgressBar.getValue();
-    }
+    private fun getProgress(): Int = progressBar.value
 
-    private void paintComponentImmediately(JComponent component){
-        var rect = component.getBounds();
-        rect.x=0;
-        rect.y=0;
-        component.paintImmediately(rect);
+    private fun paintComponentImmediately(component: JComponent) {
+        val rect = component.bounds
+        rect.x = 0
+        rect.y = 0
+        component.paintImmediately(rect)
     }
 
     /**
      * create the components
      */
-    public final void initComponents() {
-        this.setBorder(new javax.swing.border.BevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    fun initComponents() {
+        progressBar = JProgressBar(0, 100)
+        infoLabel = JTextField()
+
+        this.setBorder(BevelBorder(BevelBorder.LOWERED))
 
         //Constraints
-        final GridBagConstraints constraint = new GridBagConstraints();
-        constraint.insets = new Insets(4, 9, 4, 4);
+        val constraint = GridBagConstraints()
+        constraint.insets = Insets(4, 9, 4, 4)
 
         //Layout
-        final GridBagLayout layout = new GridBagLayout();
-        setLayout(layout);
+        val layout = GridBagLayout()
+        setLayout(layout)
 
-        m_jlInfoLabel.setEditable(false);
-        m_jlInfoLabel.setOpaque(false);
-        constraint.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        constraint.weightx = 6.0;
-        constraint.weighty = 1.0;
-        constraint.gridx = 0;
-        constraint.gridy = 0;
-        layout.setConstraints(m_jlInfoLabel, constraint);
-        add(m_jlInfoLabel);
+        infoLabel.isEditable = false
+        infoLabel.setOpaque(false)
+        constraint.fill = GridBagConstraints.HORIZONTAL
+        constraint.weightx = 6.0
+        constraint.weighty = 1.0
+        constraint.gridx = 0
+        constraint.gridy = 0
+        layout.setConstraints(infoLabel, constraint)
+        add(infoLabel)
 
-        constraint.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        constraint.weightx = 2.0;
-        constraint.weighty = 1.0;
-        constraint.gridx = 2;
-        constraint.gridy = 0;
-        layout.setConstraints(m_jpbProgressBar, constraint);
-        add(m_jpbProgressBar);
+        constraint.fill = GridBagConstraints.HORIZONTAL
+        constraint.weightx = 2.0
+        constraint.weighty = 1.0
+        constraint.gridx = 2
+        constraint.gridy = 0
+        layout.setConstraints(progressBar, constraint)
+        add(progressBar)
+    }
+
+    companion object {
+        // color for error messages
+        val FEHLERFARBE = ThemeManager.getColor(HOColorName.LABEL_ERROR_FG)
+
+        // color for info messages
+        val INFOFARBE = ThemeManager.getColor(HOColorName.LABEL_FG)
+
+        // color for success messages
+        val ERFOLGSFARBE = ThemeManager.getColor(HOColorName.LABEL_SUCCESS_FG)
     }
 }

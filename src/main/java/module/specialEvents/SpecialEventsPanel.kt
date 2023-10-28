@@ -54,7 +54,7 @@ public class SpecialEventsPanel extends LazyImagePanel {
 
 		this.filter.addFilterChangeListener(evt -> update());
 
-		HOMainFrame.instance().addApplicationClosingListener(() -> FilterHelper.saveSettings(filter));
+		HOMainFrame.INSTANCE.addApplicationClosingListener(() -> FilterHelper.saveSettings(filter));
 
 		JPanel filterPanel = new FilterPanel(filter);
 		specialEventsTable = new SpecialEventsTable();
@@ -111,7 +111,7 @@ public class SpecialEventsPanel extends LazyImagePanel {
 										  		SpecialEventsTableModel model = (SpecialEventsTableModel) table.getModel();
 										  		Match oMatch = model.getMatchRow(table.rowAtPoint(p)).getMatch();
 										  		if (me.isShiftDown()) { Desktop.getDesktop().browse(oMatch.getHTURL());}
-										  		else {HOMainFrame.instance().showMatch(oMatch.getMatchId());}
+										  		else {HOMainFrame.INSTANCE.showMatch(oMatch.getMatchId());}
 										  }
 									   catch (IOException e) {
 										  e.printStackTrace();

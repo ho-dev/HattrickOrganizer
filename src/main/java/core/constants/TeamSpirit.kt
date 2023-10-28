@@ -1,43 +1,38 @@
-package core.constants;
+package core.constants
 
-import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.datatype.CBItem
+import core.model.HOVerwaltung
 
-public final class TeamSpirit {
+object TeamSpirit {
+    const val LIKE_THE_COLD_WAR = 0
+    const val MURDEROUS = 1
+    const val FURIOUS = 2
+    const val IRRITATED = 3
+    const val COMPOSED = 4
+    const val CALM = 5
+    const val CONTENT = 6
+    const val SATISFIED = 7
+    const val DELIRIOUS = 8
+    const val WALKING_ON_CLOUDS = 9
+    const val PARADISE_ON_EARTH = 10
 
-	public static final int LIKE_THE_COLD_WAR 	= 0;
-	public static final int MURDEROUS 			= 1;
-	public static final int FURIOUS 			= 2;
-	public static final int IRRITATED 			= 3;
-	public static final int COMPOSED 			= 4;
-	public static final int CALM 				= 5;
-	public static final int CONTENT 			= 6;
-	public static final int SATISFIED 			= 7;
-	public static final int DELIRIOUS 			= 8;
-	public static final int WALKING_ON_CLOUDS 	= 9;
-	public static final int PARADISE_ON_EARTH 	= 10;
+    @JvmField
+	var ITEMS = arrayOf(
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.likethecoldwar"), LIKE_THE_COLD_WAR),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.murderous"), MURDEROUS),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.furious"), FURIOUS),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.irritated"), IRRITATED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.composed"), COMPOSED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.calm"), CALM),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.content"), CONTENT),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.satisfied"), SATISFIED),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.delirious"), DELIRIOUS),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.walkingonclouds"), WALKING_ON_CLOUDS),
+            CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.paradiseonearth"), PARADISE_ON_EARTH))
 
-	public static CBItem[] ITEMS = {
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.likethecoldwar"),	LIKE_THE_COLD_WAR),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.murderous"),	MURDEROUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.furious"),	FURIOUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.irritated"),	IRRITATED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.composed"), COMPOSED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.calm"), CALM),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.content"), CONTENT),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.satisfied"),	SATISFIED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.delirious"),	DELIRIOUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.walkingonclouds"),	WALKING_ON_CLOUDS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.paradiseonearth"),	PARADISE_ON_EARTH) };
-
-	private TeamSpirit() {
-	};
-
-
-	public static String toString(int teamSpirit){
-		if(teamSpirit >= LIKE_THE_COLD_WAR && teamSpirit <= PARADISE_ON_EARTH)
-			return ITEMS[teamSpirit].getText();
-		else
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-	}
+    @JvmStatic
+	fun toString(teamSpirit: Int): String {
+        return if (teamSpirit in LIKE_THE_COLD_WAR..PARADISE_ON_EARTH) ITEMS[teamSpirit].text
+        else HOVerwaltung.instance().getLanguageString("Unbestimmt")
+    }
 }

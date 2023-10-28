@@ -123,7 +123,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		final HOModel hoModel = HOVerwaltung.instance().getModel();
-		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
+		final HOMainFrame mainFrame = core.gui.HOMainFrame.INSTANCE;
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
 			// Empty all positions
@@ -133,7 +133,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
             lineup.resetSubstituteBench();
             lineup.setKicker(0);
             lineup.setCaptain(0);
-            HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
+            HOMainFrame.INSTANCE.setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
             mainFrame.getLineupPanel().update();
         }
 		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
@@ -162,7 +162,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			if (reds < 3) {
 				// We have more positions left than is allowed in the lineup.
 				// Return.
-				javax.swing.JOptionPane.showMessageDialog(HOMainFrame.instance()
+				javax.swing.JOptionPane.showMessageDialog(HOMainFrame.INSTANCE
 						.getLineupPanel(),
 						HOVerwaltung.instance().getLanguageString("lineupassist.Error"),
 						HOVerwaltung.instance().getLanguageString("lineupassist.ErrorHeader"),
@@ -185,7 +185,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	public final void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			// Wetter -> Refresh
-			core.gui.HOMainFrame.instance().getLineupPanel().update();
+			core.gui.HOMainFrame.INSTANCE.getLineupPanel().update();
 
 			// gui.RefreshManager.instance ().doRefresh ();
 		}
@@ -277,7 +277,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		// Add two buttons and a label
 
-		var posPanel = HOMainFrame.instance().getLineupPanel();
+		var posPanel = HOMainFrame.INSTANCE.getLineupPanel();
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
@@ -333,13 +333,13 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		}
 
 		// Remove buttons and labels
-		var pane = HOMainFrame.instance().getLineupPanel();
+		var pane = HOMainFrame.INSTANCE.getLineupPanel();
 
 		pane.removePositionComponent(infoLabel);
 		pane.removePositionComponent(overlayCancel);
 		pane.removePositionComponent(overlayOk);
 
-		HOMainFrame.instance().getLineupPanel().repaint();
+		HOMainFrame.INSTANCE.getLineupPanel().repaint();
 
 	}
 
@@ -540,7 +540,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		layout.setConstraints(jpButtons, constraints);
 		add(jpButtons);
 
-		core.gui.RefreshManager.instance().registerRefreshable(this);
+		core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
 	}
 
 

@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.gui.CursorToolkit;
+import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.model.MatchOrdersCBItem;
 import core.gui.model.MatchOrdersRenderer;
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static core.gui.HOMainFrame.instance;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 
@@ -56,7 +56,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     public MatchAndLineupSelectionPanel(LineupPanel parent) {
         lineupPanel = parent;
         initComponents();
-        core.gui.RefreshManager.instance().registerRefreshable(this);
+        core.gui.RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     private void initComponents() {
@@ -421,7 +421,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             }
         }
 
-        JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
+        JOptionPane.showMessageDialog(HOMainFrame.INSTANCE, message, Helper.getTranslation("lineup.upload.title"), messageType);
     }
 
 
@@ -487,7 +487,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         int min=-10, max=10;
 
         // NT Team can select whatever Style of Play they like
-        if (!UserManager.instance().getCurrentUser().isNtTeam()) {
+        if (!UserManager.INSTANCE.getCurrentUser().isNtTeam()) {
             switch (trainer) {
                 case Defensive -> max = -10 + 2 * tacticalAssistants;  // Defensive
                 case Offensive -> min = 10 - 2 * tacticalAssistants;   // Offensive

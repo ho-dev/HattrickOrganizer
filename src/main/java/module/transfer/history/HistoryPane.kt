@@ -135,16 +135,16 @@ public class HistoryPane extends JSplitPane {
                         "\n" + hoV1.getLanguageString("UpdConfirmMsg.2") +
                         "\n\n" + hoV1.getLanguageString("UpdConfirmMsg.3");
 
-                final int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+                final int choice = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE,
                         sBuffer,
                         HOVerwaltung.instance().getLanguageString("confirmation.title"),
                         JOptionPane.YES_NO_OPTION);
 
                 if (choice == JOptionPane.YES_OPTION) {
                     try {
-                        HOMainFrame.instance().resetInformation();
+                        HOMainFrame.INSTANCE.resetInformation();
                         XMLParser.updateTeamTransfers(teamId);
-                        HOMainFrame.instance().setInformationCompleted();
+                        HOMainFrame.INSTANCE.setInformationCompleted();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -152,7 +152,7 @@ public class HistoryPane extends JSplitPane {
                     refresh();
                 }
             } else {
-                Helper.showMessage(HOMainFrame.instance(), hoV1.getLanguageString("UpdMsg"), "", 1);
+                Helper.showMessage(HOMainFrame.INSTANCE, hoV1.getLanguageString("UpdMsg"), "", 1);
             }
 
         });

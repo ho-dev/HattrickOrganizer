@@ -1,74 +1,70 @@
-package core.db.backup;
+package core.db.backup
 
-import core.db.user.UserManager;
-import core.file.ExampleFileFilter;
-import core.util.HOLogger;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import core.db.user.UserManager.getCurrentUser
+import core.file.ExampleFileFilter
+import core.util.HOLogger
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * HSQL DB zipper
  * @author Thorsten Dietz
  */
-public class BackupHelper {
+object BackupHelper {
+    // zip and delete db
+	@JvmStatic
+	fun backup(dbDirectory: File) {
+        if (!dbDirectory.exists()) {
+            return
+        }
+        val filesToBackup = getFilesToBackup(dbDirectory)
+        if (filesToBackup != null) {
+            if (filesToBackup.isEmpty()) {
+                return
+            }
+        }
+        val zOut: HOZip
+        try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            zOut = HOZip("$dbDirectory${File.separator}db_${getCurrentUser().teamName}-${sdf.format(Date())}.zip")
+            if (filesToBackup != null) {
+                for (file in filesToBackup) {
+                    zOut.addFile(file)
+                }
+            }
+            zOut.closeArchive()
+        } catch (e: Exception) {
+            HOLogger.instance().log(BackupHelper::class.java, e)
+        }
+        deleteOldFiles(dbDirectory)
+    }
 
-	// zip and delete db
-	public static void backup(File dbDirectory) {
-		if (!dbDirectory.exists()) {return;}
+    /**
+     * delete old zip files, which are out of backuplevel
+     */
+    private fun deleteOldFiles(dbDirectory: File) {
+        var toDelete: File? = null
+        val filter = ExampleFileFilter("zip")
+        filter.isIgnoreDirectories = true
+        val files = dbDirectory.listFiles(filter)
+        if (files != null && files.size > getCurrentUser().numberOfBackups) {
+            for (i in files.indices) {
+                if (i == 0 || toDelete != null && toDelete.lastModified() > files[i].lastModified()) {
+                    toDelete = files[i]
+                }
+            }
+            toDelete?.delete()
+        }
+    }
 
-		File[] filesToBackup = getFilesToBackup(dbDirectory);
-		if (filesToBackup.length == 0) {return;}
-
-		HOZip zOut;
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-			zOut = new HOZip(dbDirectory + File.separator + "db_" + UserManager.instance().getCurrentUser().getTeamName()
-					+ "-" + sdf.format(new Date()) + ".zip");
-
-			for (File file : filesToBackup) {
-				zOut.addFile(file);
-			}
-
-			zOut.closeArchive();
-		} catch (Exception e) {
-			HOLogger.instance().log(BackupHelper.class, e);
-		}
-
-		deleteOldFiles(dbDirectory);
-	}
-
-	/**
-	 * delete old zip files, which are out of backuplevel
-	 */
-	private static void deleteOldFiles(File dbDirectory) {
-		File toDelete = null;
-		ExampleFileFilter filter = new ExampleFileFilter("zip");
-		filter.setIgnoreDirectories(true);
-		File[] files = dbDirectory.listFiles(filter);
-		if (files != null && files.length > UserManager.instance().getCurrentUser().getNumberOfBackups()) {
-			for (int i = 0; i < files.length; i++) {
-				if (i == 0
-						|| (toDelete != null && toDelete.lastModified() > files[i].lastModified())) {
-					toDelete = files[i];
-				}
-			}
-			if (toDelete != null)
-				toDelete.delete();
-		}
-	}
-
-	private static File[] getFilesToBackup(File dbDirectory) {
-		return dbDirectory.listFiles(file -> {
-			String name = file.getName();
-			return (name.endsWith(".script") ||
-					name.endsWith(".data") ||
-					name.endsWith(".backup") ||
-					name.endsWith(".log") ||
-					name.endsWith(".properties"));
-		});
-	}
-
+    private fun getFilesToBackup(dbDirectory: File): Array<out File>? {
+        return dbDirectory.listFiles { file: File ->
+            file.getName().endsWith(".script") ||
+                    file.getName().endsWith(".data") ||
+                    file.getName().endsWith(".backup") ||
+                    file.getName().endsWith(".log") ||
+                    file.getName().endsWith(".properties")
+        }
+    }
 }

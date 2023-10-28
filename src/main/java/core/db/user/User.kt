@@ -1,72 +1,71 @@
-package core.db.user;
+package core.db.user
 
-import core.HO;
-import org.jetbrains.annotations.NotNull;
-import java.nio.file.Paths;
+import core.HO
+import java.nio.file.Paths
 
+class User {
+    private lateinit var dbURL: String
+    lateinit var dbFolder: String
+        private set
 
-public class User{
+    val baseUser: BaseUser
+    var dbName: String
+        get() = baseUser.dbName
+        set(value) {
+            baseUser.dbName = value
+            fillUserInfos()
+        }
+    var teamName: String
+        get() = baseUser.teamName
+        set(value) {
+            baseUser.teamName = value
+        }
+    var numberOfBackups: Int
+        get() = baseUser.backupLevel
+        set(n) {
+            baseUser.backupLevel = n
+        }
+    var isNtTeam: Boolean
+        get() = baseUser.isNtTeam
+        set(b) {
+            baseUser.isNtTeam = b
+        }
+    var clubLogo: String
+        get() = baseUser.clubLogo
+        set(logo) {
+            baseUser.clubLogo = logo
+        }
+    val dbPwd: String
+        get() = ""
+    val dbUsername: String
+        get() = "sa"
 
-	private String dbURL;
-	private String dbFolder;
-	public BaseUser getBaseUser() {
-		return baseUser;
-	}
-	private final BaseUser baseUser;
+    fun getDbURL(): String {
+        return dbURL
+    }
 
-//    // getters and setters
-	public String getDbName() {return baseUser.dbName;}
-	public void setDbName(String _dbName) {
-		this.baseUser.dbName = _dbName;
-		fillUserInfos();
-	}
-	public String getDbFolder() {return dbFolder;}
-	public final String getTeamName() {return baseUser.teamName;}
-	public final void setTeamName(String _teamName) {this.baseUser.teamName = _teamName;}
-	public int getNumberOfBackups() {return baseUser.backupLevel;}
-	public void setNumberOfBackups(int n) { baseUser.backupLevel = n;}
-	public boolean isNtTeam() {return baseUser.isNtTeam;}
-	public void setIsNtTeam(boolean b){baseUser.isNtTeam=b;}
-	public void setClubLogo(String logo){baseUser.clubLogo=logo;}
-	public String getClubLogo(){return baseUser.clubLogo;}
+    constructor(bu: BaseUser) {
+        baseUser = bu
+        fillUserInfos()
+    }
 
-	public String getDbPwd() {
-		return "";
-	}
-	public String getDbUsername() {
-		return "sa";
-	}
+    private constructor(teamName: String, dbName: String) : this(teamName, dbName, 3, false)
+    constructor(teamName: String, dbName: String, backupLevel: Int, isNtTeam: Boolean) {
+        baseUser = BaseUser(teamName, dbName, "", backupLevel, isNtTeam)
+        fillUserInfos()
+    }
 
-	public final @NotNull String getDbURL() {return dbURL;}
+    private fun fillUserInfos() {
+        dbFolder = Paths.get(UserManager.dbParentFolder, baseUser.dbName).toString()
+        dbURL = if (HO.isPortableVersion()) "jdbc:hsqldb:file:" + baseUser.dbName + "/database" else "jdbc:hsqldb:file:$dbFolder/database"
+    }
 
-	public User(BaseUser bu){
-		baseUser = bu;
-		this.fillUserInfos();
-	}
-
-	private User(String _teamName, String _dbName) {
-		this(_teamName, _dbName, 3, false);
-	}
-
-	public User(String _teamName, String _dbName, int _backupLevel, boolean _isNtTeam) {
-		baseUser = new BaseUser(_teamName, _dbName, "", _backupLevel, _isNtTeam);
-		this.fillUserInfos();
-	}
-
-	private void fillUserInfos(){
-		this.dbFolder = Paths.get(UserManager.instance().getDbParentFolder() , this.baseUser.dbName).toString();
-
-		if (HO.isPortableVersion()) this.dbURL = "jdbc:hsqldb:file:" + this.baseUser.dbName + "/database";
-		else this.dbURL = "jdbc:hsqldb:file:" + dbFolder + "/database";
-	}
-
-	public static User createDefaultUser() {
-		int _id = UserManager.instance().getAllUser().size() + 1;
-		final String sID = _id > 1 ? String.valueOf(_id) : "";
-		return new User( "user" + sID, "db" + sID);
-	}
-
-
-
-
+    companion object {
+        @JvmStatic
+        fun createDefaultUser(): User {
+            val id = UserManager.users.size + 1
+            val sID = if (id > 1) id.toString() else ""
+            return User("user$sID", "db$sID")
+        }
+    }
 }

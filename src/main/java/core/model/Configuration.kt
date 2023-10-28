@@ -1,57 +1,45 @@
-package core.model;
+package core.model
 
-import java.util.Map;
+abstract class Configuration {
+    fun getStringValue(values: Map<String?, String>, key: String?): String {
+        return values[key].toString()
+    }
 
+    fun getBooleanValue(values: Map<String?, String>, key: String?): Boolean {
+        val value = values[key].toString()
+        return "true".equals(value, ignoreCase = true)
+    }
 
-public abstract class Configuration {
+    fun getIntValue(values: Map<String?, String>, key: String?): Int {
+        val value = values[key].toString()
+        try {
+            return value.toInt()
+        } catch (_: NumberFormatException) {
+        }
+        return 0
+    }
 
-	public String getStringValue(Map<String, String> values, String key) {
-		return String.valueOf(values.get(key)); 
-	}
-	
-	public boolean getBooleanValue(Map<String, String> values,String key) {
-		String value = String.valueOf(values.get(key));
-		return "true".equalsIgnoreCase(value);
-	}
+    fun getFloatValue(values: Map<String?, String>, key: String?): Float {
+        val value = values[key].toString()
+        try {
+            return value.toFloat()
+        } catch (_: NumberFormatException) {
+        }
+        return 0f
+    }
 
-	public int getIntValue(Map<String, String> values, String key) {
-		String value = String.valueOf(values.get(key));
-		try {
-			return Integer.parseInt(value);
-		} catch (NumberFormatException e) {
-		}
-		return 0;
-	}
-
-	public float getFloatValue(Map<String, String> values,String key) {
-		String value = String.valueOf(values.get(key));
-		try {
-			return Float.parseFloat(value);
-		} catch (NumberFormatException e) {
-		}
-		return 0f;
-	}
-
-	public double getDoubleValue(Map<String, String> values,String key, double defaultValue) {
-		String value = String.valueOf(values.get(key));
-		try {
-			return Double.parseDouble(value);
-		} catch (NumberFormatException e) {
-		}
-		return defaultValue;
-	}
-
-	/**
-	 * Values for saving in db.
-	 * 
-	 * @return Map – map containing key-value pairs representing configuration values.
-	 */
-	public abstract Map<String, String> getValues();
-	
-	/**
-	 * load values to set properties in object
-	 * @param values
-	 */
-	public abstract void setValues(Map<String, String> values);
-
+    fun getDoubleValue(values: Map<String?, String>, key: String?, defaultValue: Double): Double {
+        val value = values[key].toString()
+        try {
+            return value.toDouble()
+        } catch (_: NumberFormatException) {
+        }
+        return defaultValue
+    }
+    /**
+     * Values for saving in db.
+     *
+     * @return Map – map containing key-value pairs representing configuration values.
+     */
+	abstract var values: Map<String?, String?>?
 }

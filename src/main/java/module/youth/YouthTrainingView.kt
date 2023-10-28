@@ -23,7 +23,7 @@ public class YouthTrainingView extends JScrollPane implements Refreshable {
         table = new JTable();
         this.setViewportView(table);
         initModel();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
         table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
     }
 

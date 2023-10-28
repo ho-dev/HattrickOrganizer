@@ -119,7 +119,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		c_jtfNumberOfHRF.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(java.awt.event.FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberOfHRF, false);
+				Helper.parseInt(HOMainFrame.INSTANCE, c_jtfNumberOfHRF, false);
 			}
 		});
 	}

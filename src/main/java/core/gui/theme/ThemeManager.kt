@@ -43,7 +43,7 @@ public final class ThemeManager {
 	/** Name of the default theme. */
 	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private final static Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+	private final static Path tempImgPath = Paths.get(UserManager.INSTANCE.getDbParentFolder() , "img");
 	private final static Path teamLogoPath = tempImgPath.resolve("clubLogos");
 	private final static File teamLogoDir = new File(String.valueOf(teamLogoPath));
 	private final static Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
@@ -300,8 +300,8 @@ public final class ThemeManager {
 		int iMax = missingAvatars.size();
 
 		for (var avatar:missingAvatars) {
-			HOLogger.instance().info(this.getClass(), "Donwloading player's avatar: %s/%s".formatted(i, iMax));
-			HOMainFrame.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
+			HOLogger.instance().info(this.getClass(), "Downloading player's avatar: %s/%s".formatted(i, iMax));
+			HOMainFrame.INSTANCE.setInformation("Downloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try {
 				avatar.generateAvatar(playerAvatarPath);
 			} catch (IOException e) {

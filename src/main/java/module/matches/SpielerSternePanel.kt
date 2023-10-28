@@ -86,7 +86,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 	@Override
 	public final void actionPerformed(ActionEvent e) {
-		new SpielerDetailDialog(core.gui.HOMainFrame.instance(), m_clMatchPlayer,
+		new SpielerDetailDialog(core.gui.HOMainFrame.INSTANCE, m_clMatchPlayer,
 				m_clMatchLineup);
 	}
 

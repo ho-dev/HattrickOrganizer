@@ -182,7 +182,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), c_jtfNumberHRF, false);
+				Helper.parseInt(HOMainFrame.INSTANCE, c_jtfNumberHRF, false);
 			}
 		});
 

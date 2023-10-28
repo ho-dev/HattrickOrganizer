@@ -103,7 +103,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     PlayerDetailsPanel(PlayerOverviewTable playerOverviewTable) {
         m_playerOverviewTable = playerOverviewTable;
         initComponents();
-        RefreshManager.instance().registerRefreshable(this);
+        RefreshManager.INSTANCE.registerRefreshable(this);
     }
 
     /**
@@ -111,8 +111,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
      */
     public void setPlayer(Player player) {
         if (player == null) {
-            if (HOMainFrame.isHOMainFrame_initialized()) {
-                player = HOMainFrame.instance().getSelectedPlayer();
+            if (HOMainFrame.INSTANCE.isHOMainFrame_initialized()) {
+                player = HOMainFrame.INSTANCE.getSelectedPlayer();
             }
         }
         if  ( player == null) {
@@ -135,16 +135,16 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     @Override
     public void actionPerformed(java.awt.event.ActionEvent actionevent) {
         if (actionevent.getSource().equals(m_jbStatistics)) {
-            HOMainFrame.instance().showTab(IModule.STATISTICS);
-            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
+            HOMainFrame.INSTANCE.showTab(IModule.STATISTICS);
+            ((StatistikMainPanel) HOMainFrame.INSTANCE.getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
-            HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
+            HOMainFrame.INSTANCE.showTab(IModule.PLAYERANALYSIS);
+            HOMainFrame.INSTANCE.getPlayerAnalysisMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisBottom)) {
-            HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
+            HOMainFrame.INSTANCE.showTab(IModule.PLAYERANALYSIS);
+            HOMainFrame.INSTANCE.getPlayerAnalysisMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
-            new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
+            new PlayerSubskillOffsetDialog(HOMainFrame.INSTANCE, m_clPlayer).setVisible(true);
         }
     }
 
@@ -161,7 +161,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     m_clPlayer.setUserPosFlag((byte) ((core.datatype.CBItem) m_jcbUserBestPosition
                             .getSelectedItem()).getId());
                 }
-                HOMainFrame.instance().getSpielerUebersichtPanel().update();
+                HOMainFrame.INSTANCE.getPlayerOverviewPanel().update();
             }
         }
     }
@@ -1059,7 +1059,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
                                     HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
                                 } else {
-                                    HOMainFrame.instance().showMatch(matchId);
+                                    HOMainFrame.INSTANCE.showMatch(matchId);
                                 }
                             }
 

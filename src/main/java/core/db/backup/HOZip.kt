@@ -1,58 +1,42 @@
-package core.db.backup;
+package core.db.backup
 
-import core.util.HOLogger;
+import core.util.HOLogger
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+class HOZip(filename: String) : File(filename) {
+    private val zOut: ZipOutputStream?
+    private var fileCount = 0
 
-public class HOZip extends File {
-    //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = 2172587062884736633L;
-	private ZipOutputStream zOut;
-    private int fileCount = 0;
-
-    //~ Constructors -------------------------------------------------------------------------------
-    /**
-     * Creates a new HOZip object.
-     */
-    public HOZip(String filename) throws Exception {
-        super(filename);
-
-        HOLogger.instance().info(getClass(), "Create Backup: " + filename);
+    init {
+        HOLogger.instance().info(javaClass, "Create Backup: $filename")
 
         // Open the ZipOutputStream
-        zOut = new ZipOutputStream(new FileOutputStream(this));
-        zOut.setMethod(ZipOutputStream.DEFLATED);
-        zOut.setLevel(5);
+        zOut = ZipOutputStream(FileOutputStream(this))
+        zOut.setMethod(ZipOutputStream.DEFLATED)
+        zOut.setLevel(5)
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-    public int getFileCount() {
-        return fileCount;
-    }
-
-    public void addFile(File file) throws Exception {
-        FileInputStream tFINS = new FileInputStream(file);
-        final int bufLength = 1024;
-        byte[] buffer = new byte[bufLength];
-        int readReturn = 0;
+    @Throws(Exception::class)
+    fun addFile(file: File) {
+        val tFINS = FileInputStream(file)
+        val bufLength = 1024
+        val buffer = ByteArray(bufLength)
+        var readReturn: Int
 
         // Set next Entry
-        zOut.putNextEntry(new ZipEntry(file.getName()));
-
+        zOut!!.putNextEntry(ZipEntry(file.getName()))
         do {
-            readReturn = tFINS.read(buffer);
-
+            readReturn = tFINS.read(buffer)
             if (readReturn != -1) {
-                zOut.write(buffer, 0, readReturn);
+                zOut.write(buffer, 0, readReturn)
             }
-        } while (readReturn != -1);
-
-        zOut.closeEntry();
-        fileCount++;
+        } while (readReturn != -1)
+        zOut.closeEntry()
+        fileCount++
     }
 
     /**
@@ -60,10 +44,11 @@ public class HOZip extends File {
      *
      * @throws Exception
      */
-    public void closeArchive() throws Exception {
+    @Throws(Exception::class)
+    fun closeArchive() {
         if (zOut != null) {
-            zOut.finish();
-            zOut.close();
+            zOut.finish()
+            zOut.close()
         }
     }
 
@@ -72,21 +57,21 @@ public class HOZip extends File {
      *
      * @throws Exception
      */
-    @Override
-    protected void finalize() throws Exception {
+    @Throws(Exception::class)
+    protected fun finalize() {
         if (zOut != null) {
-            zOut.finish();
-            zOut.close();
+            zOut.finish()
+            zOut.close()
         }
     }
 
-	public void addStringEntry(String filename, String data) throws Exception {
+    @Throws(Exception::class)
+    fun addStringEntry(filename: String?, data: String) {
 
-		// Set next Entry
-		zOut.putNextEntry(new ZipEntry(filename));
-		zOut.write(data.getBytes());
-		zOut.closeEntry();
-		
-		fileCount++;
-	}
+        // Set next Entry
+        zOut!!.putNextEntry(ZipEntry(filename))
+        zOut.write(data.toByteArray())
+        zOut.closeEntry()
+        fileCount++
+    }
 }

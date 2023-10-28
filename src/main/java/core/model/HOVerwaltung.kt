@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.stream.Collectors;
-
 
 public class HOVerwaltung {
 
@@ -136,7 +134,7 @@ public class HOVerwaltung {
 
 		// Make sure the training week list is up to date.
 		//TrainingManager.instance().refreshTrainingWeeks();
-		HOMainFrame.instance().resetInformation();
+		HOMainFrame.INSTANCE.resetInformation();
 
 		var hrfListe = DBManager.instance().getHRFsSince(hrfDate);
 		long s1, s2, lSum = 0, mSum = 0;
@@ -144,7 +142,7 @@ public class HOVerwaltung {
 		for (var hrf : hrfListe) {
 			try {
 				if (showWait) {
-					HOMainFrame.instance().setWaitInformation();
+					HOMainFrame.INSTANCE.setWaitInformation();
 				}
 				s1 = System.currentTimeMillis();
 				HOModel model = new HOModel(hrf, previousHRF);
@@ -169,17 +167,17 @@ public class HOVerwaltung {
 		}
 
 		if (showWait) {
-			HOMainFrame.instance().setWaitInformation();
+			HOMainFrame.INSTANCE.setWaitInformation();
 		}
 
 		// Reload, because the subskills have changed
 		loadLatestHoModel();
 
 		if (showWait) {
-			HOMainFrame.instance().setWaitInformation();
+			HOMainFrame.INSTANCE.setWaitInformation();
 		}
 
-		RefreshManager.instance().doReInit();
+		RefreshManager.INSTANCE.doReInit();
 		HOLogger.instance().log(
 				getClass(),
 				"Subskill calculation done. " + new Date() + " - took "
@@ -188,7 +186,7 @@ public class HOVerwaltung {
 						+ ", mSum=" + mSum);
 
 		if (showWait) {
-			HOMainFrame.instance().setInformationCompleted();
+			HOMainFrame.INSTANCE.setInformationCompleted();
 		}
 	}
 

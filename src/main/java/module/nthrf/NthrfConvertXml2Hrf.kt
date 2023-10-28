@@ -30,7 +30,7 @@ class NthrfConvertXml2Hrf {
 	final String createHrf(long teamId, MyConnector dh) throws Exception {
 		try {
 			int progressIncrement = 5;
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
 
 			// leagueId / countryId
 
@@ -40,13 +40,13 @@ class NthrfConvertXml2Hrf {
 			var detailsMap = details.parseDetails(xml);
 
 			// world details
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=worlddetails");
 			Map<String, String> world = XMLWorldDetailsParser.parseWorldDetailsFromString(xml, String.valueOf(details.getLeagueId()));
 			var hrfStringBuilder = new HRFStringBuilder();
 			hrfStringBuilder.createBasics(detailsMap, world);
 
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
 			OnlineWorker.downloadTeamLogo(detailsMap);
 
 			// nt matches
@@ -55,13 +55,13 @@ class NthrfConvertXml2Hrf {
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=matches&version=2.9&teamID=" + teamId + "&LastMatchDate=" + new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
 			var matches = XMLMatchesParser.parseMatchesFromString(xml);
 //			// last lineup
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
 			MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, (int) teamId);
 
 			// TODO nt orders download gives no match data available
 			var nextLineupDataMap = downloadNextMatchOrder(matches, (int)teamId);
 
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
+			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
 			List<MyHashtable> playersData = NtPlayersParser.parsePlayersFromString(xml);
 

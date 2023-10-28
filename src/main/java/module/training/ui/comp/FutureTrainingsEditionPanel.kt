@@ -100,7 +100,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
 
         m_TrainingModel.updateFutureTrainings(futureTrainingsToSave);
         m_FutureTrainingsTableModel.populate(m_TrainingModel.getFutureTrainings());
-        RefreshManager.instance().doRefresh();
+        RefreshManager.INSTANCE.doRefresh();
     }
 
     /**

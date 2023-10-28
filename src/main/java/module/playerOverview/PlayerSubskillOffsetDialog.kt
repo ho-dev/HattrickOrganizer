@@ -53,7 +53,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		pack();
 
 		final Dimension size =
-			core.gui.HOMainFrame.instance().getToolkit().getScreenSize();
+			core.gui.HOMainFrame.INSTANCE.getToolkit().getScreenSize();
 
 		if (size.width > this.getSize().width) {
 			//Mittig positionieren
@@ -79,7 +79,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 			DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
 
 			//GUI aktualisieren
-			core.gui.RefreshManager.instance().doReInit();
+			core.gui.RefreshManager.INSTANCE.doReInit();
 
 			setVisible(false);
 			dispose();

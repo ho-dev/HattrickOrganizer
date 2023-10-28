@@ -166,7 +166,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         }
 
         if (update) {
-            HOMainFrame.instance().getLineupPanel().update();
+            HOMainFrame.INSTANCE.getLineupPanel().update();
         }
 
     }
@@ -185,7 +185,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
                 }
             }
 
-            core.gui.HOMainFrame.instance().getLineupPanel().update();
+            core.gui.HOMainFrame.INSTANCE.getLineupPanel().update();
         }
     }
 

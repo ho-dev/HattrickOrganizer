@@ -67,10 +67,10 @@ public abstract class LazyPanel extends JPanel {
 						}
 					}
 				};
-				RefreshManager.instance().registerRefreshable(this.refreshable);
+				RefreshManager.INSTANCE.registerRefreshable(this.refreshable);
 			} else {
 				if (this.refreshable != null) {
-					RefreshManager.instance().unregisterRefreshable(this.refreshable);
+					RefreshManager.INSTANCE.unregisterRefreshable(this.refreshable);
 				}
 			}
 		}

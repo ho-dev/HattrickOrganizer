@@ -48,7 +48,7 @@ public class PlayerAnalyseMainPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		HOMainFrame.instance().addApplicationClosingListener(new ApplicationClosingListener() {
+		HOMainFrame.INSTANCE.addApplicationClosingListener(new ApplicationClosingListener() {
 
 			@Override
 			public void applicationClosing() {

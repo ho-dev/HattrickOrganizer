@@ -84,7 +84,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
             }
         }
 
-        Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
+        Objects.requireNonNull(HOMainFrame.INSTANCE.getLineupPanel()).update();
     }
 
     private void initComponents() {

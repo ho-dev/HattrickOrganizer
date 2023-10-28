@@ -42,7 +42,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 		initListeners();
 	}
 
@@ -177,7 +177,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
 							}else if(e.getClickCount()==2) {
-								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
+								HOMainFrame.INSTANCE.showMatch(selectedPlayer.getLastMatchId());
 							}
 						}
 						else if (column == colAUTO_LINEUP_ID){
@@ -191,7 +191,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 								} else {
 									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
 								}
-								HOMainFrame.instance().getSpielerUebersichtPanel().update();
+								HOMainFrame.INSTANCE.getPlayerOverviewPanel().update();
 							}
 						}
 					}

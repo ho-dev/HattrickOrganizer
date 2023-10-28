@@ -122,7 +122,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
             t.recalcSkills();
             t.store();
 
-            var youthPanel = (YouthPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.YOUTH);
+            var youthPanel = (YouthPanel) HOMainFrame.INSTANCE.getTabbedPane().getModulePanel(IModule.YOUTH);
             if ( youthPanel != null) {
                 youthPanel.refreshYouthPlayerView();
             }

@@ -85,7 +85,7 @@ public final class UpdateController {
             }
         }
 
-        int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+        int update = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE,
                 new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
                         + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
                         + updVersion.getVersionString() + "<br/>"
@@ -100,7 +100,7 @@ public final class UpdateController {
         if (update == JOptionPane.YES_OPTION &&
                 System.getProperty("install.mode","").equalsIgnoreCase("pkg") &&
                 versionType.equals("RELEASE")) {
-            update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
+            update = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE,
                     HOVerwaltung.instance().getLanguageString("ls.button.update.linux.pkg.warning") + "?",
                     HOVerwaltung.instance().getLanguageString("confirmation.title"),
                     JOptionPane.YES_NO_OPTION,
@@ -114,7 +114,7 @@ public final class UpdateController {
 
     private static void showNoUpdateAvailableDialog() {
         final int currRev = HO.getRevisionNumber();
-        JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
+        JOptionPane.showMessageDialog(HOMainFrame.INSTANCE, HOVerwaltung.instance()
                 .getLanguageString("updatenotavailable")
                 + "\n\n"
                 + HOVerwaltung.instance().getLanguageString("ls.version")
@@ -141,13 +141,13 @@ public final class UpdateController {
 //        if (HO.isPortableVersion()) {
 //            // HO! manage the (partial) update
 //            File tmp = new File("update.piz");
-//            HOMainFrame.instance().resetInformation();
+//            HOMainFrame.INSTANCE.resetInformation();
 //            if (!UpdateHelper.download(urlString, tmp)) {
-//                HOMainFrame.instance().resetInformation();
+//                HOMainFrame.INSTANCE.resetInformation();
 //                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
 //                return;
 //            }
-//            HOMainFrame.instance().setInformationCompleted();
+//            HOMainFrame.INSTANCE.setInformationCompleted();
 //
 //            JOptionPane.showMessageDialog(null,
 //                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
@@ -155,7 +155,7 @@ public final class UpdateController {
 //                            .getLanguageString("ls.menu.file.update.ho"),
 //                    JOptionPane.INFORMATION_MESSAGE);
 //
-//            HOMainFrame.instance().shutdown();
+//            HOMainFrame.INSTANCE.shutdown();
 //        }
 //        else {
             // making update via install4J

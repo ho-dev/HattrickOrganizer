@@ -82,7 +82,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		m_weather = weather;
 		m_useWeatherImpact = useWeatherImpact;
 		initComponents();
-		RefreshManager.instance().registerRefreshable(this);
+		RefreshManager.INSTANCE.registerRefreshable(this);
 	}
 
 	public javax.swing.JLayeredPane getCenterPanel() {
@@ -93,7 +93,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
 		if (actionEvent.getSource().equals(m_jbFlipSide)) {
 			HOVerwaltung.instance().getModel().getCurrentLineup().flipSide();
-			var panel = HOMainFrame.instance().getLineupPanel();
+			var panel = HOMainFrame.INSTANCE.getLineupPanel();
 			if (panel != null) {
 				panel.update();
 			}

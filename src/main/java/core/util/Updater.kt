@@ -114,7 +114,7 @@ public class Updater {
 
                     public void prepareShutdown() {
                         HOLogger.instance().info(Updater.class, "prepare to shutdown !");
-                        HOMainFrame.instance().shutdown();
+                        HOMainFrame.INSTANCE.shutdown();
                     }
                 }, ApplicationLauncher.WindowMode.FRAME, null
         );

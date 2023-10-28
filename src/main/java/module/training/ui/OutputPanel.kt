@@ -85,7 +85,7 @@ public class OutputPanel extends LazyImagePanel {
         tf.setDocument(new NumericDocument(10));
         Object[] objs = {HOVerwaltung.instance().getLanguageString("ls.match.id"), tf};
 
-        int value = JOptionPane.showConfirmDialog(HOMainFrame.instance(), objs, HOVerwaltung
+        int value = JOptionPane.showConfirmDialog(HOMainFrame.INSTANCE, objs, HOVerwaltung
                 .instance().getLanguageString("ImportMatch"), JOptionPane.OK_CANCEL_OPTION);
 
         String input = tf.getText();
@@ -98,7 +98,7 @@ public class OutputPanel extends LazyImagePanel {
                     Helper.showMessage(null,
                             HOVerwaltung.instance().getLanguageString("MatchImported"),
                             HOVerwaltung.instance().getLanguageString("ImportOK"), 1);
-                    RefreshManager.instance().doRefresh();
+                    RefreshManager.INSTANCE.doRefresh();
                 }
             } else {
                 Helper.showMessage(null, HOVerwaltung.instance().getLanguageString("NotUserMatch"),

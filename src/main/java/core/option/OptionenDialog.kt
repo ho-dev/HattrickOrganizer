@@ -103,10 +103,10 @@ public class OptionenDialog extends JDialog {
 				m_jpUserColumns));
 
 		// Tabs der plugins
-		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
-				&& (i < HOMainFrame.instance().getOptionPanels().size()); ++i) {
-			tabbedPane.addTab(HOMainFrame.instance().getOptionPanelNames().get(i),
-					HOMainFrame.instance().getOptionPanels().get(i));
+		for (int i = 0; (i < HOMainFrame.INSTANCE.getOptionPanelNames().size())
+				&& (i < HOMainFrame.INSTANCE.getOptionPanels().size()); ++i) {
+			tabbedPane.addTab(HOMainFrame.INSTANCE.getOptionPanelNames().get(i),
+					HOMainFrame.INSTANCE.getOptionPanels().get(i));
 		}
 
 		getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -123,14 +123,14 @@ public class OptionenDialog extends JDialog {
 
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-		if (HOMainFrame.instance().getToolkit().getScreenSize().height >= 700) {
+		if (HOMainFrame.INSTANCE.getToolkit().getScreenSize().height >= 700) {
 			setSize(new Dimension(540, 700));
 		} else {
 			setSize(new Dimension(540,
-					HOMainFrame.instance().getToolkit().getScreenSize().height - 50));
+					HOMainFrame.INSTANCE.getToolkit().getScreenSize().height - 50));
 		}
 
-		Dimension size = HOMainFrame.instance().getToolkit().getScreenSize();
+		Dimension size = HOMainFrame.INSTANCE.getToolkit().getScreenSize();
 		if (size.width > this.getSize().width) {
 			// Mittig positionieren
 			setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2)
@@ -154,9 +154,9 @@ public class OptionenDialog extends JDialog {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (OptionManager.instance().isReInitNeeded()) {
-			HOMainFrame.instance().resetInformation();
-			RefreshManager.instance().doReInit();
-			HOMainFrame.instance().setInformationCompleted();
+			HOMainFrame.INSTANCE.resetInformation();
+			RefreshManager.INSTANCE.doReInit();
+			HOMainFrame.INSTANCE.setInformationCompleted();
 		}
 	}
 }

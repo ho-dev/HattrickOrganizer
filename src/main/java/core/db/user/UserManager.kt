@@ -1,110 +1,71 @@
-package core.db.user;
+package core.db.user
 
-import core.HO;
-import core.util.OSUtils;
-import org.jetbrains.annotations.NotNull;
+import core.HO
+import core.util.OSUtils
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections
 
-import static core.db.user.BaseUser.loadBaseUsers;
-import static core.db.user.BaseUser.serialize;
+object UserManager {
 
-public class UserManager {
-
-    private final ArrayList<User> users = new ArrayList<>();  // List of users
-    private int INDEX = 0;
-    private String dbParentFolder;
-
-    public String getDbParentFolder() {return dbParentFolder;}
-    public int getINDEX() {return INDEX; }
-    public void setINDEX(int _INDEX) { INDEX = _INDEX;}
-    public String getDriver() {
-        return "org.hsqldb.jdbcDriver";
+    init {
+        initDbParentFolder()
+        load()
     }
 
-    /** singleton */
-    protected static UserManager m_clInstance;
+    var index: Int = 0
+    lateinit var users: MutableList<User>
+    lateinit var dbParentFolder: String
 
-    /**
-     * Get the UserManager singleton instance
-     */
-    public static UserManager instance() {
-        if (m_clInstance == null) {
-            m_clInstance = new UserManager();
-            m_clInstance.setDBParentFolder();
-            m_clInstance.load();
-        }
-        return m_clInstance;
-    }
+    fun getDriver(): String = "org.hsqldb.jdbcDriver"
+    fun addUser(newUser: User) = users.add(newUser)
 
-    public @NotNull ArrayList<User> getAllUser() {
-        return users;
-    }
+    fun isSingleUser(): Boolean = users.size == 1
 
-    public void addUser(User newUser) {
-        users.add(newUser);
-    }
+    fun getCurrentUser(): User = users[index]
 
-
-    public boolean isSingleUser() { return users.size() == 1;}
-
-    private void load() {
-
+    fun load() {
+        users = mutableListOf()
         // Load BaseUsers from json file
-        BaseUser[] baseusers = loadBaseUsers(dbParentFolder);
+        val baseUsers: Array<BaseUser> = BaseUser.loadBaseUsers(dbParentFolder)
 
-        if (baseusers.length < 1) {
-            // in case xml file does not exist or it is corrupted and no users have been loaded
-            User newUser = User.createDefaultUser();
-		    users.add(newUser);
-            save();
-        }
-        else {
-            for (BaseUser _baseUser : baseusers) {
-                User newUser = new User(_baseUser);
-                users.add(newUser);
+        if (baseUsers.isEmpty()) {
+            // in case xml file does not exist, or it is corrupted and no users have been loaded
+            val newUser: User = User.createDefaultUser()
+            users.add(newUser)
+            save()
+        } else {
+            for (baseUser in baseUsers) {
+                val newUser = User(baseUser)
+                users.add(newUser)
             }
         }
-
     }
 
-
-    public void save() {
-        List<BaseUser> lBaseUsers = users.stream().map(User::getBaseUser).collect(Collectors.toList());
-        serialize(lBaseUsers, dbParentFolder);
+    fun save() {
+        val baseUsers: List<BaseUser> = users.map { user -> user.baseUser }
+        BaseUser.serialize(baseUsers, dbParentFolder)
     }
 
-
-    public User getCurrentUser() {return getAllUser().get(INDEX);}
-
-
-
-    private void setDBParentFolder(){
-        if (! HO.isPortableVersion()) {
+    private fun initDbParentFolder() {
+        dbParentFolder = if (!HO.isPortableVersion()) {
             if (HO.getPlatform() == OSUtils.OS.LINUX) {
-                dbParentFolder = System.getProperty("user.home") + "/.ho";}
-            else if (HO.getPlatform() == OSUtils.OS.MAC) {
-                dbParentFolder =  System.getProperty("user.home") + "/Library/Application Support/HO";
+                System.getProperty("user.home") + "/.ho"
+            } else if (HO.getPlatform() == OSUtils.OS.MAC) {
+                System.getProperty("user.home") + "/Library/Application Support/HO"
+            } else {
+                System.getenv("AppData") + "/HO"
             }
-            else {
-                dbParentFolder = System.getenv("AppData") + "/HO";
-            }
-        }
-        else {
-            dbParentFolder = System.getProperty("user.dir");
+        } else {
+            System.getProperty("user.dir")
         }
     }
 
-    public void swapUsers(int i1, int i2) {
-        Collections.swap(users, i1, i2);
-        if ( INDEX == i1){
-            INDEX = i2;
-        }
-        else if ( INDEX == i2){
-            INDEX = i1;
+    fun swapUsers(i1: Int, i2: Int) {
+        Collections.swap(users, i1, i2)
+        if (index == i1) {
+            index = i2
+        } else if (index == i2) {
+            index = i1
         }
     }
 }

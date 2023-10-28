@@ -119,13 +119,13 @@ public class DBManager {
 
 			String errorMsg = null;
 			try {
-				User current_user = UserManager.instance().getCurrentUser();
+				User current_user = UserManager.INSTANCE.getCurrentUser();
 				String dbFolder = current_user.getDbFolder();
 
 				File dbfolder = new File(dbFolder);
 
 				if (!dbfolder.exists()) {
-					File parentFolder = new File(UserManager.instance().getDbParentFolder());
+					File parentFolder = new File(UserManager.INSTANCE.getDbParentFolder());
 
 					boolean dbDirectoryCreated = false;
 					if (!parentFolder.exists() || parentFolder.canWrite()) {
@@ -141,7 +141,7 @@ public class DBManager {
 				}
 
 			} catch (Exception e) {
-				errorMsg = "Error encountered during database initialization: \n" + UserManager.instance().getCurrentUser().getDbURL();
+				errorMsg = "Error encountered during database initialization: \n" + UserManager.INSTANCE.getCurrentUser().getDbURL();
 				e.printStackTrace();
 			}
 
@@ -219,7 +219,7 @@ public class DBManager {
 			}
 
 			// tempInstance.updateConfig();
-			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
+			HOLogger.instance().info(DBManager.class, "instance " + UserManager.INSTANCE.getCurrentUser().getDbURL() + "; parent folder: " + UserManager.INSTANCE.getDbParentFolder());
 		}
 		return m_clInstance;
 	}
@@ -341,9 +341,9 @@ public class DBManager {
 	 * connect to the database
 	 */
 	private void connect() throws Exception {
-		User current_user = UserManager.instance().getCurrentUser();
+		User current_user = UserManager.INSTANCE.getCurrentUser();
 		if (m_clJDBCAdapter != null) {
-			m_clJDBCAdapter.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
+			m_clJDBCAdapter.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.INSTANCE.getDriver());
 		}
 	}
 

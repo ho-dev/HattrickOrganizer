@@ -69,8 +69,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * Singleton
 	 */
 	private DownloadDialog() {
-		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), ModalityType.MODELESS);
-		this.isNtTeam = UserManager.instance().getCurrentUser().isNtTeam();
+		super(HOMainFrame.INSTANCE, hov.getLanguageString("ls.menu.file.download"), ModalityType.MODELESS);
+		this.isNtTeam = UserManager.INSTANCE.getCurrentUser().isNtTeam();
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 	}
@@ -86,7 +86,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			else {
 				startDownload();
 			}
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 			close();
 			if (UserParameter.instance().updateCheck) {
 				UpdateController.check4update(false);
@@ -94,7 +94,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		} else if (e.getSource().equals(m_jbAbort)) {
 			close();
 		} else if (e.getSource().equals(m_jbProxy)) {
-			new ProxyDialog(HOMainFrame.instance());
+			new ProxyDialog(HOMainFrame.INSTANCE);
 		}
 	}
 
@@ -318,7 +318,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		if (teamId > 0) {
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
 				// Only get lineups for own fixtures
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
 					OnlineWorker.getAllLineups(10);
@@ -333,7 +333,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
@@ -347,7 +347,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			if (bOK && m_jchFixtures.isSelected()) {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
-					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+					HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
 					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, model.getXtraDaten().getLeagueLevelUnitID());
 					if (fixtures != null) {
 						final Spielplan modelFixtures = hov.getModel().getFixtures();
@@ -383,15 +383,15 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 
 			if (bOK && m_jchOldFixtures.isSelected()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+				HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
 				downloadOldFixtures(teamId);
 			}
 		}
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
+		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
 		model.calcSubskills();
 
-		HOMainFrame.instance().setInformationCompleted();
+		HOMainFrame.INSTANCE.setInformationCompleted();
 
 	}
 

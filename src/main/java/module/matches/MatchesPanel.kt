@@ -119,7 +119,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			}
 		});
 
-		HOMainFrame.instance().addApplicationClosingListener(this::saveSettings);
+		HOMainFrame.INSTANCE.addApplicationClosingListener(this::saveSettings);
 
 		m_jcbSpieleFilter.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -161,24 +161,24 @@ public final class MatchesPanel extends LazyImagePanel {
 				}
 			}
 
-			HOMainFrame.instance().getLineupPanel().update();
-			HOMainFrame.instance().showTab(IModule.LINEUP);
+			HOMainFrame.INSTANCE.getLineupPanel().update();
+			HOMainFrame.INSTANCE.showTab(IModule.LINEUP);
 		}
 	}
 
 	private void reloadSelectedMatches() {
-		HOMainFrame.instance().resetInformation();
+		HOMainFrame.INSTANCE.resetInformation();
 		int matchid = matchesModel.getMatch().getMatchID();
 		int i=0;
 		int n = matchesTable.getSelectedRows().length;
 		for ( var selectedRowNumber : matchesTable.getSelectedRows()){
 			var matchKurzInfo = getMatchKurzInfoOfRow(selectedRowNumber);
 			OnlineWorker.downloadMatchData( matchKurzInfo.getMatchID(), matchKurzInfo.getMatchType(), true);
-			HOMainFrame.instance().updateProgress((int)(++i * 100.0 / n));
+			HOMainFrame.INSTANCE.updateProgress((int)(++i * 100.0 / n));
 		}
-		RefreshManager.instance().doReInit();
+		RefreshManager.INSTANCE.doReInit();
 		showMatch(matchid);
-		HOMainFrame.instance().setInformationCompleted();
+		HOMainFrame.INSTANCE.setInformationCompleted();
 	}
 
 	private MatchKurzInfo getMatchKurzInfoOfRow(int selectedRowNumber) {
@@ -217,7 +217,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			for (MatchKurzInfo info : infos) {
 				DBManager.instance().deleteMatch(info);
 			}
-			RefreshManager.instance().doReInit();
+			RefreshManager.INSTANCE.doReInit();
 		}
 	}
 

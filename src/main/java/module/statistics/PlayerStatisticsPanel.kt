@@ -96,7 +96,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		this.jtfNbWeeks.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent focusEvent) {
-				Helper.parseInt(HOMainFrame.instance(), jtfNbWeeks, false);
+				Helper.parseInt(HOMainFrame.INSTANCE, jtfNbWeeks, false);
 			}
 		});
 

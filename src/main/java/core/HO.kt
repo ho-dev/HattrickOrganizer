@@ -124,7 +124,7 @@ public class HO {
 
 		// Login selection in case of multi-users DB
 		try {
-			if (!UserManager.instance().isSingleUser()) {
+			if (!UserManager.INSTANCE.isSingleUser()) {
 
 				var options = createOptionsArray();
 				var choice = JOptionPane.showOptionDialog(
@@ -138,7 +138,7 @@ public class HO {
 						null );
 
 				if (choice != JOptionPane.CLOSED_OPTION) {
-					UserManager.instance().setINDEX(choice);
+					UserManager.INSTANCE.setIndex(choice);
 				} else {
 					System.exit(0);
 				}
@@ -152,7 +152,7 @@ public class HO {
 
 		// Backup
 		interuptionsWindow.setInfoText(1, "Backup Database");
-		BackupHelper.backup(new File(UserManager.instance().getCurrentUser().getDbFolder()));
+		BackupHelper.backup(new File(UserManager.INSTANCE.getCurrentUser().getDbFolder()));
 
 
 		// Load user parameters from the DB
@@ -222,7 +222,7 @@ public class HO {
 
 		interuptionsWindow.setInfoText(9, "Prepare to show");
 		SwingUtilities.invokeLater(() -> {
-			HOMainFrame.instance().setVisible(true);
+			HOMainFrame.INSTANCE.setVisible(true);
 
 			// stop display splash image
 			interuptionsWindow.setVisible(false);
@@ -233,7 +233,7 @@ public class HO {
 	private static Object[] createOptionsArray() {
 		var buttons = new ArrayList<JButton>();
 		int keyEvent = VK_1;
-		for ( var user : UserManager.instance().getAllUser() ) {
+		for ( var user : UserManager.INSTANCE.getUsers() ) {
 			buttons.add(createIconButton(user.getTeamName(), user.getClubLogo(), keyEvent++));
 		}
 		return buttons.toArray();
