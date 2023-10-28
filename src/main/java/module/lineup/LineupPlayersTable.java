@@ -191,7 +191,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 								} else {
 									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
 								}
-								HOMainFrame.instance().getSpielerUebersichtPanel().update();
+								HOMainFrame.instance().getPlayerOverviewPanel().update();
 							}
 						}
 					}

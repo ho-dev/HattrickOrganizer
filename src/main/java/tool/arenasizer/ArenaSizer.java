@@ -1,4 +1,3 @@
-// %2354158977:de.hattrickorganizer.logik%
 /*
  * ArenaSizer.java
  *
@@ -9,6 +8,7 @@ package tool.arenasizer;
 import core.util.Helper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class ArenaSizer {
@@ -24,17 +24,17 @@ public class ArenaSizer {
     private static final float MAINTENANCE_VIP = 25f;
 
     //CREATE
-    private static float STEH_AUSBAU = 450f;
-    private static float SITZ_AUSBAU = 750f;
-    private static float DACH_AUSBAU = 900f;
-    private static float LOGEN_AUSBAU = 3000f;
-    private static float ABRISS = 60f;
-    private static float FIXKOSTEN = 100000f;
+    private static final float STEH_AUSBAU = 450f;
+    private static final float SITZ_AUSBAU = 750f;
+    private static final float DACH_AUSBAU = 900f;
+    private static final float LOGEN_AUSBAU = 3000f;
+    private static final float ABRISS = 60f;
+    private static final float FIXKOSTEN = 100000f;
 
-    static final BigDecimal TERRACES_PERCENT 	= new BigDecimal(0.60).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal BASICS_PERCENT 		= new BigDecimal(0.235).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal ROOF_PERCENT 		= new BigDecimal(0.14).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal VIP_PERCENT 		= new BigDecimal(0.025).setScale(3, BigDecimal.ROUND_HALF_DOWN);
+    static final BigDecimal TERRACES_PERCENT 	= new BigDecimal("0.60").setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal BASICS_PERCENT 		= new BigDecimal("0.235").setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal ROOF_PERCENT 		= new BigDecimal("0.14").setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal VIP_PERCENT 		= new BigDecimal("0.025").setScale(3, RoundingMode.HALF_DOWN);
 
     //SUPPORTER-DISTRIBUTION
     static final Integer SUPPORTER_NORMAL = 20;
@@ -120,10 +120,6 @@ public class ArenaSizer {
         }
 
         return (int)kosten;
-    }
-
-    final int calcDistribution(float arenaSize,float percent) {
-        return (int) ((arenaSize / 100.0f) * percent);
     }
 
     final float calcMaintenance(Stadium arena) {

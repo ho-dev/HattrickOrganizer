@@ -139,10 +139,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
+            HOMainFrame.instance().getPlayerAnalysisMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbAnalysisBottom)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
+            HOMainFrame.instance().getPlayerAnalysisMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
@@ -161,7 +161,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     m_clPlayer.setUserPosFlag((byte) ((core.datatype.CBItem) m_jcbUserBestPosition
                             .getSelectedItem()).getId());
                 }
-                HOMainFrame.instance().getSpielerUebersichtPanel().update();
+                HOMainFrame.instance().getPlayerOverviewPanel().update();
             }
         }
     }

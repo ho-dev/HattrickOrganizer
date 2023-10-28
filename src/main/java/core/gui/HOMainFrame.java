@@ -48,44 +48,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * The Main HO window
  */
-public final class HOMainFrame extends JFrame implements Refreshable, ActionListener {
+public final class HOMainFrame extends JFrame implements Refreshable {
 
 	private static HOMainFrame m_clHOMainFrame;
 	private static boolean m_HOMainFrame_initialized=false;
 	private InfoPanel m_jpInfoPanel;
-	private final JMenuBar m_jmMenuBar = new JMenuBar();
-	// Top level Menu
-	private final JMenu m_jmFile = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file"));       //File
-	private final JMenu m_jmFunctions = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.functions")); //Functions
-	private final JMenu m_jmModules = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));   //Modules
-	private final JMenu m_jmHelp = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.help"));      //Help
-
-	// Sub Level Menus
-
-	// -----------  File
-	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
-	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
-	private final JMenuItem m_jmSubksillFull = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
-	private final JMenuItem m_jmSubksillRecalc7 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
-	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
-	//private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
-	private final JMenuItem userAdministrationOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
-	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
-	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
-	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
-
-
-	// -----------  Functions
-
-	// -----------  Modules
-
-	// -----------  Help
-	private final JMenuItem m_jmHomepageItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.projecthomepage"));
-	private final JMenuItem m_jmWikiItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.help"));
-	private final JMenuItem m_jmReportAbug = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
-	private final JMenuItem m_jmAboutAbout = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
-	private final JMenuItem m_jmCheckUpdate = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
-	private final JMenuItem m_jmChangelog = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.changelog"));
 
 	public static AtomicBoolean launching = new AtomicBoolean(false);
 
@@ -103,6 +70,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private final Color c_beta = new Color(162, 201, 255);
 	private final Color c_dev = new Color(235, 170, 170);
 
+	// TODO: Fix this dependency on internal modules
 	public Player getSelectedPlayer() {
 		return m_selectedPlayer;
 	}
@@ -152,7 +120,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		initProxy();
 		initComponents();
-		initMenue();
+		initMenu();
 
 		RefreshManager.instance().doRefresh();
 		launching.set(false);
@@ -160,8 +128,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 	private void setFrameTitle() {
 		var teamName = HOVerwaltung.instance().getModel().getBasics().getTeamName();
-//		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHRF().getHrfId()).getTeamName();
-
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 		
 		if (!HO.isRelease()) {
@@ -198,11 +164,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	}
 
 	private void fireApplicationClosing() {
-		for (int i = this.applicationClosingListener.size() - 1; i >= 0; i--) {
+		for (ApplicationClosingListener listener: applicationClosingListener) {
 			try {
-				this.applicationClosingListener.get(i).applicationClosing();
+				listener.applicationClosing();
 			} catch (Exception ex) {
-				ExceptionDialog dlg = new ExceptionDialog("Error", ex);
+				new ExceptionDialog("Error", ex);
 			}
 		}
 	}
@@ -224,12 +190,13 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		return m_HOMainFrame_initialized;
 	}
 
+	// TODO: Fix dependency on internal modules.
 	public void selectPlayer(Player player) {
 		if ( m_selectedPlayer != player) {
 			m_selectedPlayer = player;
 			var lineupPanel = getLineupPanel();
 			if ( lineupPanel != null ) lineupPanel.setPlayer(player.getPlayerID());
-			getSpielerUebersichtPanel().setPlayer(player);
+			getPlayerOverviewPanel().setPlayer(player);
 		}
 	}
 
@@ -268,11 +235,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		getInfoPanel().setProgressbarValue(progress);
 	}
 
-	public PlayerAnalysisModulePanel getSpielerAnalyseMainPanel() {
+	public PlayerAnalysisModulePanel getPlayerAnalysisMainPanel() {
 		return ((PlayerAnalysisModulePanel) getTabbedPane().getModulePanel(IModule.PLAYERANALYSIS));
 	}
 
-	public PlayerOverviewPanel getSpielerUebersichtPanel() {
+	public PlayerOverviewPanel getPlayerOverviewPanel() {
 		return ((PlayerOverviewPanel) getTabbedPane().getModulePanel(IModule.PLAYEROVERVIEW));
 	}
 
@@ -297,79 +264,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	 */
 	public TransfersPanel getTransferScoutPanel() {
 		return ((TransfersPanel) getTabbedPane().getModulePanel(IModule.TRANSFERS));
-	}
-
-	/**
-	 * Handle action events.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent actionEvent) {
-		final Object source = actionEvent.getSource();
-
-		if (source.equals(m_jmImportItem)) { // HRF Import
-			new HRFImport(this);
-		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-				DownloadDialog.instance();
-		} else if (source.equals(m_jmOptionen)) { // Options
-			new OptionenDialog(this).setVisible(true);
-		} else if (source.equals(userAdministrationOptionsMenu)) {
-			new UserAdministrationDialog(this).setVisible(true);
-		} else if (source.equals(m_jmiDbCleanupTool)) {
-			DBCleanupTool dbCleanupTool = new DBCleanupTool();
-			dbCleanupTool.showDialog(HOMainFrame.instance());
-		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
-			var from = HODateTime.now().minus(64*7, ChronoUnit.DAYS);
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
-					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
-			}
-		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
-			var from = HODateTime.now().minus(7*7, ChronoUnit.DAYS);
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from.instant)),
-					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
-			}
-		} else if (source.equals(m_jmFullScreenItem)) { // Toggle full screen mode
-			FullScreen.instance().toggle(this);
-		} else if (source.equals(m_jmBeendenItem)) { // Quit
-			// Restore normal window mode (i.e. leave full screen)
-			FullScreen.instance().restoreNormalMode(this);
-			// Fire CloseEvent, so all Modules get informed
-			this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-		} else if (source.equals(m_jmAboutAbout)) {
-			Credits.showCredits(HOMainFrame.instance());
-		} else if (source.equals(m_jmHomepageItem)) { // Homepage
-			openURL("https://ho-dev.github.io/HattrickOrganizer/");
-		} else if (source.equals(m_jmWikiItem)) { // User Guide
-			openURL("https://ho.readthedocs.io/");
-		} else if (source.equals(m_jmReportAbug)) { // Report a bug
-			openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose");
-		}
-
-		else if (source.equals(m_jmCheckUpdate)) {
-			UpdateController.check4update(true);
-		}
-		else if (source.equals(m_jmChangelog)) {
-			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-				try {
-					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-					URI logFile;
-					if (!OSUtils.isMac()) {
-						logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
-					} else {
-						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();
-					}
-					Desktop.getDesktop().browse(logFile);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(this,
-							HOVerwaltung.instance().getLanguageString("Changelog.error"),
-							HOVerwaltung.instance().getLanguageString("Fehler"),
-							JOptionPane.ERROR_MESSAGE
-					);
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	private void openURL(String url) {
@@ -466,63 +360,91 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	/**
 	 * Initialize the menu.
 	 */
-	public void initMenue() {
+	public void initMenu() {
 		// No F10!
 		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
-		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
-		m_jmDownloadItem.addActionListener(this);
-		m_jmFile.add(m_jmDownloadItem);
+		final JMenu jmFile = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file"));       //File
+		final JMenu jmFunctions = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.functions")); //Functions
+		final JMenu jmModules = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));   //Modules
+		final JMenu jmHelp = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.help"));      //Help
+
+		// Download CHPP data
+		final JMenuItem jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
+		jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
+		jmDownloadItem.addActionListener(e -> DownloadDialog.instance());
+		jmFile.add(jmDownloadItem);
 
 		// Import HRF
-		m_jmImportItem.addActionListener(this);
-		m_jmFile.add(m_jmImportItem);
-		m_jmFile.addSeparator();
+		final JMenuItem jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
+		jmImportItem.addActionListener(e -> new HRFImport(this));
+		jmFile.add(jmImportItem);
+		jmFile.addSeparator();
 
 		JMenuItem dbBackupMenu = new JMenuItem("DB Backup");
 		dbBackupMenu.addActionListener(e -> {
 			BackupDialog dialog = new BackupDialog();
 			dialog.setVisible(true);
 		});
+		jmFile.add(dbBackupMenu);
+		jmFile.addSeparator();
 
-		m_jmFile.add(dbBackupMenu);
-		m_jmFile.addSeparator();
+		// Subskill recalculation
+		final JMenuItem subSkillRecalcFullItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
+		subSkillRecalcFullItem.addActionListener(e -> {
+			var from = HODateTime.now().minus(64*7, ChronoUnit.DAYS);
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
+			}
+		});
+		jmFile.add(subSkillRecalcFullItem);
 
-		// Subksill recalculation
-		m_jmSubksillFull.addActionListener(this);
-		m_jmFile.add(m_jmSubksillFull);
-		m_jmSubksillRecalc7.addActionListener(this);
-		m_jmFile.add(m_jmSubksillRecalc7);
-
-		m_jmFile.addSeparator();
+		final JMenuItem subSkillRecalc7WeeksItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
+		subSkillRecalc7WeeksItem.addActionListener(e -> {
+			var from = HODateTime.now().minus(7*7, ChronoUnit.DAYS);
+			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from.instant)),
+					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
+			}
+		});
+		jmFile.add(subSkillRecalc7WeeksItem);
+		jmFile.addSeparator();
 
 		// Options
-		m_jmOptionen.addActionListener(this);
-		m_jmFile.add(m_jmOptionen);
-		userAdministrationOptionsMenu.addActionListener(this);
-		m_jmiDbCleanupTool.addActionListener(this);
-		m_jmFile.add(userAdministrationOptionsMenu);
-		m_jmFile.add(m_jmiDbCleanupTool);
+		final JMenuItem jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
+		jmOptionen.addActionListener(e -> new OptionenDialog(this).setVisible(true));
+		jmFile.add(jmOptionen);
 
-		m_jmFile.addSeparator();
+		final JMenuItem userAdministrationOptionsItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
+		userAdministrationOptionsItem.addActionListener(e -> new UserAdministrationDialog(this).setVisible(true));
+		final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
+		m_jmiDbCleanupTool.addActionListener(e -> new DBCleanupTool().showDialog(HOMainFrame.instance()));
+		jmFile.add(userAdministrationOptionsItem);
+		jmFile.add(m_jmiDbCleanupTool);
+		jmFile.addSeparator();
 
 		// Toggle full screen mode
+		final JMenuItem jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
 		if (FullScreen.instance().isFullScreenSupported(this)) {
-			m_jmFullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,
+			jmFullScreenItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11,
                                                                      KeyEvent.SHIFT_DOWN_MASK));
 		} else {
-			m_jmFullScreenItem.setEnabled(false);
+			jmFullScreenItem.setEnabled(false);
 		}
-		m_jmFullScreenItem.addActionListener(this);
-		m_jmFile.add(m_jmFullScreenItem);
-
-		m_jmFile.addSeparator();
+		jmFullScreenItem.addActionListener(e -> FullScreen.instance().toggle(this));
+		jmFile.add(jmFullScreenItem);
+		jmFile.addSeparator();
 
 		// Quit
-		m_jmBeendenItem.addActionListener(this);
-		m_jmFile.add(m_jmBeendenItem);
-
-		m_jmMenuBar.add(m_jmFile);
+		final JMenuItem jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
+		jmBeendenItem.addActionListener(e -> {
+			// Restore normal window mode (i.e. leave full screen)
+			FullScreen.instance().restoreNormalMode(this);
+			// Fire CloseEvent, so all Modules get informed
+			this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		});
+		jmFile.add(jmBeendenItem);
 
 		// Modules
 		IModule[] activeModules = ModuleManager.instance().getModules(true);
@@ -538,46 +460,73 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					RefreshManager.instance().doRefresh();
 				});
 
-				m_jmFunctions.add(showTabMenuItem);
+				jmFunctions.add(showTabMenuItem);
 			}
 			if (activeModule.hasMenu()) {
-				m_jmModules.add(activeModule.getMenu());
+				jmModules.add(activeModule.getMenu());
 			}
 		}
 
 		// Help =========================================================================
-		m_jmHomepageItem.addActionListener(this);  //   Help | HomePage
-		m_jmHelp.add(m_jmHomepageItem);
+		final JMenuItem jmHomepageItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.projecthomepage"));
+		jmHomepageItem.addActionListener(e -> openURL("https://ho-dev.github.io/HattrickOrganizer/"));  //   Help | HomePage
+		jmHelp.add(jmHomepageItem);
 
-		m_jmWikiItem.addActionListener(this);     //   Help | Wiki
-		m_jmHelp.add(m_jmWikiItem);
+		final JMenuItem jmWikiItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.help"));
+		jmWikiItem.addActionListener(e -> openURL("https://ho.readthedocs.io/"));     //   Help | Wiki
+		jmHelp.add(jmWikiItem);
 
-		m_jmReportAbug.addActionListener(this);    //   Help | Report a bug
-		m_jmHelp.add(m_jmReportAbug);
-		m_jmHelp.addSeparator();
+		final JMenuItem jmReportABugItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
+		jmReportABugItem.addActionListener(e -> openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose"));    //   Help | Report a bug
+		jmHelp.add(jmReportABugItem);
+		jmHelp.addSeparator();
 
-		m_jmCheckUpdate.addActionListener(this);
-		m_jmHelp.add(m_jmCheckUpdate);				// Help | check update
-		m_jmChangelog.addActionListener(this);
-		m_jmHelp.add(m_jmChangelog);				// Help | changelog
-		m_jmHelp.addSeparator();
+		final JMenuItem jmCheckUpdateItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
+		jmCheckUpdateItem.addActionListener(e -> UpdateController.check4update(true));
+		jmHelp.add(jmCheckUpdateItem);				// Help | check update
+		final JMenuItem jmChangelogItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.changelog"));
+		jmChangelogItem.addActionListener(e -> {
+			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+				try {
+					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+					URI logFile;
+					if (!OSUtils.isMac()) {
+						logFile = jarFile.getParentFile().toPath().resolve("changelog.html").toUri();
+					} else {
+						logFile = jarFile.getParentFile().getParentFile().getParentFile().toPath().resolve("changelog.html").toUri();
+					}
+					Desktop.getDesktop().browse(logFile);
+				} catch (Exception ee) {
+					JOptionPane.showMessageDialog(this,
+							HOVerwaltung.instance().getLanguageString("Changelog.error"),
+							HOVerwaltung.instance().getLanguageString("Fehler"),
+							JOptionPane.ERROR_MESSAGE
+					);
+					HOLogger.instance().error(HOMainFrame.class, "Error opening changelog: " + ee.getMessage());
+				}
+			}
+		});
+		jmHelp.add(jmChangelogItem);				// Help | changelog
+		jmHelp.addSeparator();
 
-		m_jmAboutAbout.addActionListener(this);   // Help | About
-		m_jmHelp.add(m_jmAboutAbout);
+		final JMenuItem jmAboutItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
+		jmAboutItem.addActionListener(e -> Credits.showCredits(HOMainFrame.instance()));   // Help | About
+		jmHelp.add(jmAboutItem);
 
 		// add Top Level Menus
-		m_jmMenuBar.add(m_jmFunctions);
-		m_jmMenuBar.add(new ToolManager().getToolMenu());
-		m_jmMenuBar.add(m_jmModules);
-
-		m_jmMenuBar.add(m_jmHelp);
+		final JMenuBar jmMenuBar = new JMenuBar();
+		jmMenuBar.add(jmFile);
+		jmMenuBar.add(jmFunctions);
+		jmMenuBar.add(new ToolManager().getToolMenu());
+		jmMenuBar.add(jmModules);
+		jmMenuBar.add(jmHelp);
 
 		if (!HO.isRelease()) {
-			m_jmMenuBar.add(DebugMode.getDeveloperMenu());
+			jmMenuBar.add(DebugMode.getDeveloperMenu());
 		}
 
-		SwingUtilities.updateComponentTreeUI(m_jmMenuBar);
-		this.setJMenuBar(m_jmMenuBar);
+		SwingUtilities.updateComponentTreeUI(jmMenuBar);
+		this.setJMenuBar(jmMenuBar);
 	}
 
 	/**
@@ -692,11 +641,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		// PlayerOverviewPanel
 		if (getTabbedPane().isModuleTabVisible(IModule.PLAYEROVERVIEW)) {
-			final int[] sup = getSpielerUebersichtPanel().getDividerLocations();
+			final int[] sup = getPlayerOverviewPanel().getDividerLocations();
 			parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0];
 			parameter.spielerUebersichtsPanel_horizontalRightSplitPane = sup[1];
 			parameter.spielerUebersichtsPanel_verticalSplitPane = sup[2];
-			getSpielerUebersichtPanel().saveColumnOrder();
+			getPlayerOverviewPanel().saveColumnOrder();
 		}
 
 		// Lineup Panel
