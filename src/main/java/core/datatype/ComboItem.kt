@@ -1,8 +1,6 @@
-package core.datatype;
+package core.datatype
 
-public interface ComboItem {
-
-	int getId();
-	String getText();
-	
+interface ComboItem {
+    val id: Int
+    val text: String
 }

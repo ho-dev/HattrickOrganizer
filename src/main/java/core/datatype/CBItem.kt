@@ -1,40 +1,25 @@
-package core.datatype;
+package core.datatype
 
 /**
  * Combo item that associates an ID to a String.
  *
  * @author thomas.werth
  */
-public class CBItem implements ComboItem {
+open class CBItem(override val text: String, override val id: Int) : ComboItem {
 
-	private final String m_sText;
-	private final int m_iId;
+    override fun equals(obj: Any?): Boolean {
+        return if (obj is CBItem) {
+            id == obj.id
+        } else false
+    }
 
-	public CBItem(String text, int id) {
-		m_sText = text;
-		m_iId = id;
-	}
+    override fun toString(): String {
+        return text
+    }
 
-	@Override
-	public final int getId() {
-		return m_iId;
-	}
-
-	@Override
-	public final String getText() {
-		return m_sText;
-	}
-
-	@Override
-	public final boolean equals(Object obj) {
-		if (obj instanceof CBItem temp) {
-			return this.getId() == temp.getId();
-		}
-		return false;
-	}
-
-	@Override
-	public final String toString() {
-		return m_sText;
-	}
+    override fun hashCode(): Int {
+        var result = text.hashCode()
+        result = 31 * result + id
+        return result
+    }
 }
