@@ -1,135 +1,97 @@
-package core.db.frontend;
+package core.db.frontend
 
-import core.db.DBManager;
+import core.db.DBManager
+import java.awt.BorderLayout
+import java.awt.Dimension
+import java.awt.GraphicsEnvironment
+import java.awt.event.*
+import javax.swing.JDialog
+import javax.swing.JList
+import javax.swing.JScrollPane
+import javax.swing.JTable
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.ResultSet;
-
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
-
-
-
-final class TablesDialog extends JDialog implements MouseListener {
-	private static final long serialVersionUID = -1584823279333655850L;
-	private JList tablelist;
-    private JTable tableColumns;
-    
-    protected TablesDialog(SQLDialog owner) {
-        super(owner, "Tables");
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        initialize();
+internal class TablesDialog(owner: SQLDialog?) : JDialog(owner, "Tables"), MouseListener {
+    private var tablelist: JList<*>? = null
+    private var tableColumns: JTable? = null
+    private fun initialize() {
+        val width = GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds.getWidth().toInt()
+        val height = GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds.getHeight().toInt()
+        setLocation((width - 450) / 2, (height - 410) / 2)
+        setSize(450, 410)
+        contentPane.setLayout(BorderLayout())
+        contentPane.add(middlePanel, BorderLayout.WEST)
+        contentPane.add(tablePanel, BorderLayout.CENTER)
     }
 
-    private void initialize() {
-        int width = (int)GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getWidth();
-        int heigth = (int)GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight();
-        setLocation((width - 450) / 2, (heigth - 410) / 2);
-        setSize(450, 410);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(getMiddlePanel(), BorderLayout.WEST);
-        getContentPane().add(getTablePanel(), BorderLayout.CENTER);
-    }
-
-    private JScrollPane getMiddlePanel() {
-        JScrollPane scrollPane = new JScrollPane(getList());
-        return scrollPane;
-    }
-
-    private JScrollPane getTablePanel() {
-        JScrollPane scrollPane = new JScrollPane(getTable());
-        return scrollPane;
-    }
-
-    private JList getList()
-    {
-        if(tablelist == null)
-        {
-            tablelist = new JList(DBManager.instance().getAdapter().getAllTableNames());
-            tablelist.addMouseListener(this);
+    private val middlePanel: JScrollPane
+        get() = JScrollPane(list)
+    private val tablePanel: JScrollPane
+        get() = JScrollPane(table)
+    private val list: JList<*>
+        get() {
+            if (tablelist == null) {
+                tablelist = JList(DBManager.instance().adapter.allTableNames)
+                tablelist!!.addMouseListener(this)
+            }
+            return tablelist!!
         }
-        return tablelist;
-    }
-
-    private JScrollPane getTable()
-    {
-        tableColumns = new JTable(new DummyTableModel(null, null));
-        tableColumns.addMouseListener(this);
-        tableColumns.setAutoResizeMode(0);
-        JScrollPane scroll = new JScrollPane(tableColumns);
-        scroll.setPreferredSize(new Dimension(0, 150));
-        return scroll;
-    }
-
-    private Object[][] setTable(String tablename)
-        throws Exception
-    {
-        ResultSet rs = DBManager.instance().getAdapter().executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
-        int columns = rs.getMetaData().getColumnCount();
-        Object columnData[][] = new Object[columns][4];
-        for(int i = 0; i < columns; i++)
-        {
-            columnData[i][0] = rs.getMetaData().getColumnName(i + 1);
-            columnData[i][1] = rs.getMetaData().getColumnTypeName(i + 1);
-            columnData[i][2] = rs.getMetaData().getColumnDisplaySize(i + 1);
+    private val table: JScrollPane
+        get() {
+            tableColumns = JTable(DummyTableModel(null, null))
+            tableColumns!!.addMouseListener(this)
+            tableColumns!!.autoResizeMode = 0
+            val scroll = JScrollPane(tableColumns)
+            scroll.preferredSize = Dimension(0, 150)
+            return scroll
         }
 
-        rs.close();
-        return columnData;
-    }
-
-    public void mouseClicked(MouseEvent e)
-    {
-        JTextPane area = ((SQLDialog)getOwner()).getTextArea();
-        if(e.getSource() instanceof JList)
-            if(e.getClickCount() == 2)
-                area.setText(area.getText() + " " + getList().getSelectedValue());
-            else
-                refresh();
-        if((e.getSource() instanceof JTable) && e.getClickCount() == 2)
-            area.setText(area.getText() + " " + tableColumns.getValueAt(tableColumns.getSelectedRow(), 0));
-    }
-
-    public void mousePressed(MouseEvent mouseevent)
-    {
-    }
-
-    public void mouseReleased(MouseEvent mouseevent)
-    {
-    }
-
-    public void mouseEntered(MouseEvent mouseevent)
-    {
-    }
-
-    public void mouseExited(MouseEvent mouseevent)
-    {
-    }
-
-    protected void refresh()
-    {
-        String tableName = getList().getSelectedValue().toString();
-        try
-        {
-            DummyTableModel model1 = new DummyTableModel(setTable(tableName), COLUMNNAMES);
-            tableColumns.setModel(model1);
+    @Throws(Exception::class)
+    private fun setTable(tableName: String): Array<Array<Any?>> {
+        val rs = DBManager.instance().adapter.executeQuery("SELECT * FROM $tableName where 1 = 2")
+        val columns = rs.metaData.columnCount
+        val columnData = Array(columns) { arrayOfNulls<Any>(4) }
+        for (i in 0 until columns) {
+            columnData[i][0] = rs.metaData.getColumnName(i + 1)
+            columnData[i][1] = rs.metaData.getColumnTypeName(i + 1)
+            columnData[i][2] = rs.metaData.getColumnDisplaySize(i + 1)
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
+        rs.close()
+        return columnData
+    }
+
+    override fun mouseClicked(e: MouseEvent) {
+        val area = (owner as SQLDialog).textArea
+        if (e.source is JList<*>) if (e.clickCount == 2)
+            area.text = area!!.getText() + " " + list.getSelectedValue()
+        else
+            refresh()
+        if (e.source is JTable && e.clickCount == 2)
+            area!!.text = area!!.getText() + " " + tableColumns!!.getValueAt(tableColumns!!.selectedRow, 0)
+    }
+
+    override fun mousePressed(mouseevent: MouseEvent) {}
+    override fun mouseReleased(mouseevent: MouseEvent) {}
+    override fun mouseEntered(mouseevent: MouseEvent) {}
+    override fun mouseExited(mouseevent: MouseEvent) {}
+    protected fun refresh() {
+        val tableName = list.getSelectedValue().toString()
+        try {
+            val model1 = DummyTableModel(setTable(tableName), COLUMNNAMES)
+            tableColumns!!.setModel(model1)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private static final String COLUMNNAMES[] = {
-        "NAME", "TYP", "SIZE"
-    };
+    init {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE)
+        initialize()
+    }
 
-
+    companion object {
+        private const val serialVersionUID = -1584823279333655850L
+        private val COLUMNNAMES = arrayOf<String?>(
+            "NAME", "TYP", "SIZE"
+        )
+    }
 }

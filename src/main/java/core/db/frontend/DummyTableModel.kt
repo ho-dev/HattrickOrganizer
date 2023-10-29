@@ -2,32 +2,18 @@
 // Home Page : http://members.fortunecity.com/neshkov/dj.html  - Check often for new version!
 // Decompiler options: packimports(3) 
 // Source File Name:   DummyTableModel.java
+package core.db.frontend
 
-package core.db.frontend;
+import java.util.*
+import javax.swing.table.DefaultTableModel
 
-import java.util.Vector;
-import javax.swing.table.DefaultTableModel;
+internal class DummyTableModel(daten: Array<Array<Any?>>?, headers: Array<String?>?) : DefaultTableModel(daten, headers) {
+    override fun getColumnClass(col: Int): Class<*> {
+        val vector = dataVector.elementAt(0) as Vector<*>
+        return vector.elementAt(col).javaClass
+    }
 
-final class DummyTableModel extends DefaultTableModel {
-
-	private static final long serialVersionUID = -1521045917540294324L;
-
-	protected DummyTableModel(Object daten[][], Object headers[]) {
-		super(daten, headers);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<?> getColumnClass(int col) {
-		Vector vector = (Vector) dataVector.elementAt(0);
-		if (vector != null) {
-			return vector.elementAt(col).getClass();
-		}
-		return null;
-	}
-
-	@Override
-	public boolean isCellEditable(int row, int col) {
-		return false;
-	}
+    override fun isCellEditable(row: Int, col: Int): Boolean {
+        return false
+    }
 }

@@ -1,177 +1,190 @@
-package core.db.frontend;
+package core.db.frontend
 
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.JTextPane;
-import javax.swing.text.*;
+import java.awt.Color
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
+import javax.swing.JTextPane
+import javax.swing.text.BadLocationException
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
+import javax.swing.text.StyledDocument
 
-final class HighlightingKeyListener extends KeyAdapter{
-	
-    private StyledDocument doc;
-    private JTextPane textPane;
-    private int caretPastePosition;
-    private static final String KEYWORDS[] = {
-        "SELECT", "FROM", "WHERE", "JOIN", "INNER", "OUTER", "CROSS", "GROUP", "ORDER", "BY", 
-        "HAVING", "INSERT", "UPDATE", "INTO", "VALUES"
-    };
-    protected HighlightingKeyListener(JTextPane textPane) {
-        this.textPane = textPane;
-        doc = textPane.getStyledDocument();
-        addStylesToDocument(doc);
+internal open class HighlightingKeyListener(private val textPane: JTextPane) : KeyAdapter() {
+    private val doc: StyledDocument = textPane.styledDocument
+    private var caretPastePosition = 0
+
+    init {
+        addStylesToDocument(doc)
     }
 
-    @Override
-	public void keyPressed(KeyEvent keyEvent) {
-        if(keyEvent.getKeyCode() == 17)
-            caretPastePosition = textPane.getCaretPosition();
+    override fun keyPressed(keyEvent: KeyEvent) {
+        if (keyEvent.keyCode == 17) caretPastePosition = textPane.caretPosition
     }
 
-    @Override
-	public void keyReleased(KeyEvent keyEvent) {
-        try
-        {
-            if(keyEvent.getKeyCode() == 86 && keyEvent.isControlDown() || keyEvent.getKeyCode() == 17)
-                coloringWords(caretPastePosition, textPane.getCaretPosition() - caretPastePosition);
-            if(keyEvent.getKeyCode() != 10) {
-                coloringWords(textPane.getCaretPosition(), null);
-                if(keyEvent.getKeyCode() == 32)
-                    coloringWords(textPane.getCaretPosition() - 1, null);
+    override fun keyReleased(keyEvent: KeyEvent) {
+        try {
+            if (keyEvent.keyCode == 86 && keyEvent.isControlDown || keyEvent.keyCode == 17) coloringWords(
+                caretPastePosition,
+                textPane.caretPosition - caretPastePosition
+            )
+            if (keyEvent.keyCode != 10) {
+                coloringWords(textPane.caretPosition, null)
+                if (keyEvent.keyCode == 32) coloringWords(textPane.caretPosition - 1, null)
             }
-        }
-        catch(BadLocationException e) {
-            e.printStackTrace();
+        } catch (e: BadLocationException) {
+            e.printStackTrace()
         }
     }
 
-    protected synchronized void coloringWords(int initPos, Integer length) throws BadLocationException {
-        int word[] = new int[2];
-        if(length == null){
-            if(textPane.getText(initPos, 1).equals(" ") || textPane.getText(initPos, 1).equals("\n")) {
-                word = getLastWord(initPos);
-                if(checkWord(textPane.getText(word[0], word[1])))
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("blue"), true);
-                else
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("regular"), true);
+    @Synchronized
+    @Throws(BadLocationException::class)
+    protected fun coloringWords(initPos: Int, length: Int?) {
+        var word: IntArray
+        if (length == null) {
+            if (textPane.getText(initPos, 1) == " " || textPane.getText(initPos, 1) == "\n") {
+                word = getLastWord(initPos)
+                if (checkWord(textPane.getText(word[0], word[1]))) doc.setCharacterAttributes(
+                    word[0],
+                    word[1],
+                    doc.getStyle("blue"),
+                    true
+                ) else doc.setCharacterAttributes(
+                    word[0], word[1], doc.getStyle("regular"), true
+                )
             }
-            if(textPane.getText(initPos <= 0 ? 0 : initPos - 1, 1).equals(" ") || textPane.getText(initPos <= 0 ? 0 : initPos - 1, 1).equals("\n") || initPos == 0) {
-                word = getNextWord(initPos);
-                if(checkWord(textPane.getText(word[0], word[1])))
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("blue"), true);
-                else
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("regular"), true);
+            if (textPane.getText(
+                    if (initPos <= 0) 0 else initPos - 1,
+                    1
+                ) == " " || textPane.getText(if (initPos <= 0) 0 else initPos - 1, 1) == "\n" || initPos == 0
+            ) {
+                word = getNextWord(initPos)
+                if (checkWord(textPane.getText(word[0], word[1]))) doc.setCharacterAttributes(
+                    word[0],
+                    word[1],
+                    doc.getStyle("blue"),
+                    true
+                ) else doc.setCharacterAttributes(
+                    word[0], word[1], doc.getStyle("regular"), true
+                )
             }
-            if(!textPane.getText(initPos <= 0 ? 0 : initPos - 1, 1).equals(" ") && (!textPane.getText(initPos, 1).equals("\n") && !textPane.getText(initPos, 1).equals(" ") && initPos != 0))
-            {
-                word = getCurrentWord(initPos);
-                if(checkWord(textPane.getText(word[0], word[1])))
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("blue"), true);
-                else
-                    doc.setCharacterAttributes(word[0], word[1], doc.getStyle("regular"), true);
+            if (textPane.getText(if (initPos <= 0) 0 else initPos - 1, 1) != " " && textPane.getText(
+                    initPos,
+                    1
+                ) != "\n" && textPane.getText(initPos, 1) != " " && initPos != 0
+            ) {
+                word = getCurrentWord(initPos)
+                if (checkWord(textPane.getText(word[0], word[1]))) doc.setCharacterAttributes(
+                    word[0],
+                    word[1],
+                    doc.getStyle("blue"),
+                    true
+                ) else doc.setCharacterAttributes(
+                    word[0], word[1], doc.getStyle("regular"), true
+                )
             }
         } else {
-            for(int pos = initPos; pos < initPos + length; pos = pos + word[1] + 1) {
-                word = getNextWord(pos);
-                coloringWords(pos, null);
-            }
-
-        }
-    }
-
-    private int[] getCurrentWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
-        int min = initPos <= 0 ? initPos : initPos - 1;
-        int max = initPos;
-        if(textPane.getText(min, 1).equals(" ") || textPane.getText(min, 1).equals("\n") || textPane.getText(max, 1).equals(" ") || textPane.getText(max, 1).equals("\n"))
-            return word;
-        while(min > 0) 
-        {
-            min--;
-            if(textPane.getText(min, 1).equals(" ") || min == 0 || textPane.getText(min, 1).equals("\n"))
-                break;
-        }
-        for(; max < textPane.getStyledDocument().getLength(); max++)
-            if(textPane.getText(max, 1).equals(" ") || textPane.getText(max, 1).equals("\n"))
-                break;
-
-        word[0] = min != 0 ? min + 1 : min;
-        word[1] = min != 0 ? max - min - 1 : max - min;
-        return word;
-    }
-
-    private int[] getLastWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
-        int min = initPos;
-        int length = 0;
-        boolean foundChar = false;
-        while(min > 0) 
-        {
-            min--;
-            if(textPane.getText(min, 1).equals(" ") || min == 0 || textPane.getText(min, 1).equals("\n"))
-            {
-                if(foundChar)
-                    break;
-            } else
-            {
-                length++;
-                foundChar = true;
+            var pos = initPos
+            while (pos < initPos + length) {
+                word = getNextWord(pos)
+                coloringWords(pos, null)
+                pos = pos + word[1] + 1
             }
         }
-        word[0] = min != 0 ? min + 1 : 0;
-        word[1] = min != 0 ? length : length + 1;
-        return word;
     }
 
-    private synchronized int[] getNextWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
-        int max = initPos >= 1 ? initPos : 0;
-        int length = 0;
-        boolean foundChar = false;
-        for(; max < textPane.getStyledDocument().getLength(); max++)
-            if(textPane.getText(max, 1).equals(" ") || textPane.getText(max, 1).equals("\n"))
-            {
-                if(foundChar)
-                    break;
-            } else
-            {
-                if(!foundChar)
-                    initPos = max;
-                length++;
-                foundChar = true;
+    @Throws(BadLocationException::class)
+    private fun getCurrentWord(initPos: Int): IntArray {
+        val word = IntArray(2)
+        var min = if (initPos <= 0) initPos else initPos - 1
+        var max = initPos
+        if (textPane.getText(min, 1) == " " || textPane.getText(min, 1) == "\n" || textPane.getText(
+                max,
+                1
+            ) == " " || textPane.getText(max, 1) == "\n"
+        ) return word
+        while (min > 0) {
+            min--
+            if (textPane.getText(min, 1) == " " || min == 0 || textPane.getText(min, 1) == "\n") break
+        }
+        while (max < textPane.styledDocument.length) {
+            if (textPane.getText(max, 1) == " " || textPane.getText(max, 1) == "\n") break
+            max++
+        }
+        word[0] = if (min != 0) min + 1 else min
+        word[1] = if (min != 0) max - min - 1 else max - min
+        return word
+    }
+
+    @Throws(BadLocationException::class)
+    private fun getLastWord(initPos: Int): IntArray {
+        val word = IntArray(2)
+        var min = initPos
+        var length = 0
+        var foundChar = false
+        while (min > 0) {
+            min--
+            if (textPane.getText(min, 1) == " " || min == 0 || textPane.getText(min, 1) == "\n") {
+                if (foundChar) break
+            } else {
+                length++
+                foundChar = true
             }
-
-        word[0] = initPos;
-        word[1] = length != 0 ? length : length + 1;
-        return word;
+        }
+        word[0] = if (min != 0) min + 1 else 0
+        word[1] = if (min != 0) length else length + 1
+        return word
     }
 
-    private boolean checkWord(String word)
-    {
-        for(int i = 0; i < KEYWORDS.length; i++)
-            if(word.equalsIgnoreCase(KEYWORDS[i]))
-                return true;
-
-        return false;
+    @Synchronized
+    @Throws(BadLocationException::class)
+    private fun getNextWord(initPos: Int): IntArray {
+        var initPos = initPos
+        val word = IntArray(2)
+        var max = if (initPos >= 1) initPos else 0
+        var length = 0
+        var foundChar = false
+        while (max < textPane.styledDocument.length) {
+            if (textPane.getText(max, 1) == " " || textPane.getText(max, 1) == "\n") {
+                if (foundChar) break
+            } else {
+                if (!foundChar) initPos = max
+                length++
+                foundChar = true
+            }
+            max++
+        }
+        word[0] = initPos
+        word[1] = if (length != 0) length else length + 1
+        return word
     }
 
-    protected void addStylesToDocument(StyledDocument sdoc) {
-        javax.swing.text.Style def = StyleContext.getDefaultStyleContext().getStyle("default");
-        javax.swing.text.Style regular = sdoc.addStyle("regular", def);
-        StyleConstants.setFontFamily(def, "SansSerif");
-        javax.swing.text.Style s = sdoc.addStyle("italic", regular);
-        StyleConstants.setItalic(s, true);
-        s = sdoc.addStyle("bold", regular);
-        StyleConstants.setBold(s, true);
-        s = sdoc.addStyle("small", regular);
-        StyleConstants.setFontSize(s, 10);
-        s = sdoc.addStyle("large", regular);
-        StyleConstants.setFontSize(s, 16);
-        s = sdoc.addStyle("blue", regular);
-        StyleConstants.setForeground(s, Color.blue);
-        s = sdoc.addStyle("red", regular);
-        StyleConstants.setForeground(s, Color.red);
+    private fun checkWord(word: String): Boolean {
+        for (i in KEYWORDS.indices) if (word.equals(KEYWORDS[i], ignoreCase = true)) return true
+        return false
     }
 
+    private fun addStylesToDocument(sdoc: StyledDocument) {
+        val def = StyleContext.getDefaultStyleContext().getStyle("default")
+        val regular = sdoc.addStyle("regular", def)
+        StyleConstants.setFontFamily(def, "SansSerif")
+        var s = sdoc.addStyle("italic", regular)
+        StyleConstants.setItalic(s, true)
+        s = sdoc.addStyle("bold", regular)
+        StyleConstants.setBold(s, true)
+        s = sdoc.addStyle("small", regular)
+        StyleConstants.setFontSize(s, 10)
+        s = sdoc.addStyle("large", regular)
+        StyleConstants.setFontSize(s, 16)
+        s = sdoc.addStyle("blue", regular)
+        StyleConstants.setForeground(s, Color.blue)
+        s = sdoc.addStyle("red", regular)
+        StyleConstants.setForeground(s, Color.red)
+    }
 
-
+    companion object {
+        private val KEYWORDS = arrayOf(
+            "SELECT", "FROM", "WHERE", "JOIN", "INNER", "OUTER", "CROSS", "GROUP", "ORDER", "BY",
+            "HAVING", "INSERT", "UPDATE", "INTO", "VALUES"
+        )
+    }
 }
