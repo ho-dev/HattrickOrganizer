@@ -3,134 +3,122 @@
  *
  * Created on 21. März 2003, 08:19
  */
-package tool.arenasizer;
+package tool.arenasizer
 
-import core.util.Helper;
+import core.model.UserParameter
+import core.util.Helper
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
-
-public class ArenaSizer {
-
-    public static final float ADMISSION_PRICE_TERRACES = 70f;
-    public static final float ADMISSION_PRICE_BASICS = 100f;
-    public static final float ADMISSION_PRICE_ROOF = 190f;
-    public static final float ADMISSION_PRICE_VIP = 350f;
-
-    private static final float MAINTENANCE_TERRACES = 5f;
-    private static final float MAINTENANCE_BASICS = 7f;
-    private static final float MAINTENANCE_ROOF = 10f;
-    private static final float MAINTENANCE_VIP = 25f;
-
-    //CREATE
-    private static final float STEH_AUSBAU = 450f;
-    private static final float SITZ_AUSBAU = 750f;
-    private static final float DACH_AUSBAU = 900f;
-    private static final float LOGEN_AUSBAU = 3000f;
-    private static final float ABRISS = 60f;
-    private static final float FIXKOSTEN = 100000f;
-
-    static final BigDecimal TERRACES_PERCENT 	= new BigDecimal("0.60").setScale(3, RoundingMode.HALF_DOWN);
-    static final BigDecimal BASICS_PERCENT 		= new BigDecimal("0.235").setScale(3, RoundingMode.HALF_DOWN);
-    static final BigDecimal ROOF_PERCENT 		= new BigDecimal("0.14").setScale(3, RoundingMode.HALF_DOWN);
-    static final BigDecimal VIP_PERCENT 		= new BigDecimal("0.025").setScale(3, RoundingMode.HALF_DOWN);
-
-    //SUPPORTER-DISTRIBUTION
-    static final Integer SUPPORTER_NORMAL = 20;
-
-    float currencyFactor = core.model.UserParameter.instance().FXrate;
-
-    ArenaSizer() {
-
-    }
+class ArenaSizer internal constructor() {
+    var currencyFactor = UserParameter.instance().FXrate
 
     //~ Methods ------------------------------------------------------------------------------------
-
-    final int calcMaxIncome(Stadium arena) {
-        int income = 0;
-
-        income += ((arena.getStehplaetze() * ADMISSION_PRICE_TERRACES) / currencyFactor);
-        income += ((arena.getSitzplaetze() * ADMISSION_PRICE_BASICS) /currencyFactor);
-        income += ((arena.getUeberdachteSitzplaetze() * ADMISSION_PRICE_ROOF) /currencyFactor);
-        income += ((arena.getLogen() * ADMISSION_PRICE_VIP) / currencyFactor);
-
-        return income;
+    fun calcMaxIncome(arena: Stadium): Int {
+        var income = 0
+        income = (income + arena.standing * ADMISSION_PRICE_TERRACES / currencyFactor).toInt()
+        income = (income + arena.basicSeating * ADMISSION_PRICE_BASICS / currencyFactor).toInt()
+        income = (income + arena.seatingUnderRoof * ADMISSION_PRICE_ROOF / currencyFactor).toInt()
+        income = (income + arena.vip * ADMISSION_PRICE_VIP / currencyFactor).toInt()
+        return income
     }
 
-    final Stadium[] calcConstructionArenas(Stadium currentArena, int supporter){
-    	Stadium arenaMax = createArena(supporter * (SUPPORTER_NORMAL +5) ,currentArena);
-        Stadium arenaNormal = createArena(supporter * SUPPORTER_NORMAL,currentArena);
-        Stadium arenaMin = createArena(supporter * (SUPPORTER_NORMAL -5),currentArena);
-        return new Stadium[]{arenaMax, arenaNormal, arenaMin};
+    fun calcConstructionArenas(currentArena: Stadium, supporter: Int): Array<Stadium> {
+        val arenaMax = createArena(supporter * (SUPPORTER_NORMAL + 5), currentArena)
+        val arenaNormal = createArena(supporter * SUPPORTER_NORMAL, currentArena)
+        val arenaMin = createArena(supporter * (SUPPORTER_NORMAL - 5), currentArena)
+        return arrayOf(arenaMax, arenaNormal, arenaMin)
     }
 
-
-    final Stadium[] calcConstructionArenas(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter){
-        Stadium arenaMax = createArena(maxSupporter,currentArena);
-        Stadium arenaNormal = createArena(normalSupporter,currentArena);
-        Stadium arenaMin = createArena(minSupporter,currentArena);
-        return new Stadium[]{arenaMax, arenaNormal, arenaMin};
+    fun calcConstructionArenas(
+        currentArena: Stadium,
+        maxSupporter: Int,
+        normalSupporter: Int,
+        minSupporter: Int
+    ): Array<Stadium> {
+        val arenaMax = createArena(maxSupporter, currentArena)
+        val arenaNormal = createArena(normalSupporter, currentArena)
+        val arenaMin = createArena(minSupporter, currentArena)
+        return arrayOf(arenaMax, arenaNormal, arenaMin)
     }
 
-    private Stadium createArena(int size, Stadium current){
-    	Stadium tmp = new Stadium();
-    	BigDecimal sizeNumber = new BigDecimal(size);
-    	tmp.setStehplaetze(TERRACES_PERCENT.multiply(sizeNumber).intValue());
-    	tmp.setAusbauStehplaetze(tmp.getStehplaetze() - current.getStehplaetze());
-    	tmp.setSitzplaetze(BASICS_PERCENT.multiply(sizeNumber).intValue());
-    	tmp.setAusbauSitzplaetze(tmp.getSitzplaetze() - current.getSitzplaetze());
-    	tmp.setUeberdachteSitzplaetze(ROOF_PERCENT.multiply(sizeNumber).intValue());
-    	tmp.setAusbauUeberdachteSitzplaetze(tmp.getUeberdachteSitzplaetze()- current.getUeberdachteSitzplaetze());
-    	tmp.setLogen(VIP_PERCENT.multiply(sizeNumber).intValue());
-    	tmp.setAusbauLogen(tmp.getLogen() - current.getLogen());
-
-    	tmp.setAusbauKosten(calcConstructionCosts(tmp.getAusbauStehplaetze(),
-    			tmp.getAusbauSitzplaetze(),
-    			tmp.getAusbauUeberdachteSitzplaetze(),
-    			tmp.getAusbauLogen()));
-        return tmp;
+    private fun createArena(size: Int, current: Stadium): Stadium {
+        val tmp = Stadium()
+        val sizeNumber = BigDecimal(size)
+        tmp.standing = TERRACES_PERCENT.multiply(sizeNumber).toInt()
+        tmp.expansionStanding = tmp.standing - current.standing
+        tmp.basicSeating = BASICS_PERCENT.multiply(sizeNumber).toInt()
+        tmp.expansionBasicSeating = tmp.basicSeating - current.basicSeating
+        tmp.seatingUnderRoof = ROOF_PERCENT.multiply(sizeNumber).toInt()
+        tmp.expansionSeatingUnderRoof = tmp.seatingUnderRoof - current.seatingUnderRoof
+        tmp.vip = VIP_PERCENT.multiply(sizeNumber).toInt()
+        tmp.expansionVip = tmp.vip - current.vip
+        tmp.expansionCosts = calcConstructionCosts(
+            tmp.expansionStanding.toFloat(),
+            tmp.expansionBasicSeating.toFloat(),
+            tmp.expansionSeatingUnderRoof.toFloat(),
+            tmp.expansionVip.toFloat()
+        )
+        return tmp
     }
 
-    final int calcConstructionCosts(float steh, float sitz, float dach, float logen) {
-        float kosten = FIXKOSTEN / currencyFactor;
-
+    fun calcConstructionCosts(steh: Float, sitz: Float, dach: Float, logen: Float): Int {
+        var kosten = FIXKOSTEN / currencyFactor
         if (steh > 0) {
-            kosten += ((steh * STEH_AUSBAU) / currencyFactor);
+            kosten += steh * STEH_AUSBAU / currencyFactor
         } else {
-            kosten -= ((steh * ABRISS) / currencyFactor);
+            kosten -= steh * ABRISS / currencyFactor
         }
-
         if (sitz > 0) {
-            kosten += ((sitz * SITZ_AUSBAU) / currencyFactor);
+            kosten += sitz * SITZ_AUSBAU / currencyFactor
         } else {
-            kosten -= ((sitz * ABRISS) / currencyFactor);
+            kosten -= sitz * ABRISS / currencyFactor
         }
-
         if (dach > 0) {
-            kosten += ((dach * DACH_AUSBAU) / currencyFactor);
+            kosten += dach * DACH_AUSBAU / currencyFactor
         } else {
-            kosten -= ((dach * ABRISS) / currencyFactor);
+            kosten -= dach * ABRISS / currencyFactor
         }
-
         if (logen > 0) {
-            kosten += ((logen * LOGEN_AUSBAU) / currencyFactor);
+            kosten += logen * LOGEN_AUSBAU / currencyFactor
         } else {
-            kosten -= ((logen * ABRISS) / currencyFactor);
+            kosten -= logen * ABRISS / currencyFactor
         }
-
-        return (int)kosten;
+        return kosten.toInt()
     }
 
-    final float calcMaintenance(Stadium arena) {
-        float costs = 0.0f;
-
-        costs += ((arena.getStehplaetze() * MAINTENANCE_TERRACES) / currencyFactor);
-        costs += ((arena.getSitzplaetze() * MAINTENANCE_BASICS) / currencyFactor);
-        costs += ((arena.getUeberdachteSitzplaetze() * MAINTENANCE_ROOF) / currencyFactor);
-        costs += ((arena.getLogen() * MAINTENANCE_VIP) / currencyFactor);
-
-        return Helper.round(costs, 1);
+    fun calcMaintenance(arena: Stadium): Float {
+        var costs = 0.0f
+        costs += arena.standing * MAINTENANCE_TERRACES / currencyFactor
+        costs += arena.basicSeating * MAINTENANCE_BASICS / currencyFactor
+        costs += arena.seatingUnderRoof * MAINTENANCE_ROOF / currencyFactor
+        costs += arena.vip * MAINTENANCE_VIP / currencyFactor
+        return Helper.round(costs, 1)
     }
 
+    companion object {
+        const val ADMISSION_PRICE_TERRACES = 70f
+        const val ADMISSION_PRICE_BASICS = 100f
+        const val ADMISSION_PRICE_ROOF = 190f
+        const val ADMISSION_PRICE_VIP = 350f
+        private const val MAINTENANCE_TERRACES = 5f
+        private const val MAINTENANCE_BASICS = 7f
+        private const val MAINTENANCE_ROOF = 10f
+        private const val MAINTENANCE_VIP = 25f
+
+        //CREATE
+        private const val STEH_AUSBAU = 450f
+        private const val SITZ_AUSBAU = 750f
+        private const val DACH_AUSBAU = 900f
+        private const val LOGEN_AUSBAU = 3000f
+        private const val ABRISS = 60f
+        private const val FIXKOSTEN = 100000f
+        val TERRACES_PERCENT = BigDecimal("0.60").setScale(3, RoundingMode.HALF_DOWN)
+        val BASICS_PERCENT = BigDecimal("0.235").setScale(3, RoundingMode.HALF_DOWN)
+        val ROOF_PERCENT = BigDecimal("0.14").setScale(3, RoundingMode.HALF_DOWN)
+        val VIP_PERCENT = BigDecimal("0.025").setScale(3, RoundingMode.HALF_DOWN)
+
+        //SUPPORTER-DISTRIBUTION
+        const val SUPPORTER_NORMAL = 20
+    }
 }

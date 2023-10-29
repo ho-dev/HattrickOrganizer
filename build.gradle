@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
     id 'application'
     id 'de.jansauer.poeditor' version '1.1.0'
     id 'org.kordamp.gradle.markdown' version '2.2.0'
-    id "com.github.breadmoirai.github-release" version "2.2.10"
+    id 'com.github.breadmoirai.github-release' version '2.2.10'
     id 'com.install4j.gradle' version '9.0.5'
 }
 
@@ -29,6 +30,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'org.jetbrains:annotations:24.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 test {
@@ -474,6 +476,16 @@ markdownToHtml {
     sourceDir = new File("${projectDir}/docs/md")
     outputDir = new File("${projectDir}/docs/html")
     markdownToHtml.hardwraps = true
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 markdownToHtml.dependsOn pushmd

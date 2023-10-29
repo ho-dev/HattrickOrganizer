@@ -56,10 +56,11 @@ public class NtTeamTest {
                   </Team>
                 </HattrickData>""";
 
-        var ntteam = new NtTeamDetails(xml);
+        var ntTeamDetails = new NtTeamDetails();
+        ntTeamDetails.parseDetails(xml);
 
-        Assertions.assertEquals(9, ntteam.getMorale());
-        Assertions.assertEquals(6, ntteam.getSelfConfidence());
+        Assertions.assertEquals(9, ntTeamDetails.getMorale());
+        Assertions.assertEquals(6, ntTeamDetails.getSelfConfidence());
     }
 
 

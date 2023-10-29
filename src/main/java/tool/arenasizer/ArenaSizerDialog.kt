@@ -1,122 +1,90 @@
-package tool.arenasizer;
+package tool.arenasizer
 
-import core.model.HOVerwaltung;
+import core.model.HOVerwaltung
+import java.awt.BorderLayout
+import java.awt.FlowLayout
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import javax.swing.*
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+class ArenaSizerDialog(owner: JFrame?) : JDialog(owner, true), ActionListener {
+    private var tabbedPane: JTabbedPane? = null
+    private var panel: ArenaPanel? = null
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+    private var historyPanel: DistributionStatisticsPanel = DistributionStatisticsPanel()
+    private var infoPanel: ArenaPanel = ArenaPanel()
+    private var controlPanel: ControlPanel = ControlPanel()
 
+    private var toolbar: JPanel? = null
+    private val refreshButton = JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"))
 
-public class ArenaSizerDialog extends JDialog implements ActionListener {
+    init {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE)
+        initialize()
+    }
 
-	private static final long serialVersionUID = 1L;
-	private JTabbedPane tabbedPane;
-	private ArenaPanel panel;
-	private DistributionStatisticsPanel historyPanel;
-	private ArenaPanel infoPanel;
-	private ControlPanel controlPanel;
-	private JPanel toolbar;
-	private JButton refreshButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+    private fun initialize() {
+        setSize(900, 430)
+        layout = BorderLayout()
+        setTitle(HOVerwaltung.instance().getLanguageString("ArenaSizer"))
+        add(getToolbar(), BorderLayout.NORTH)
+        val centerPanel = JPanel(BorderLayout())
+        val panelC = JPanel(FlowLayout(FlowLayout.LEADING))
+        panelC.add(controlPanel)
+        centerPanel.add(panelC, BorderLayout.NORTH)
+        centerPanel.add(getTabbedPane(), BorderLayout.CENTER)
+        add(centerPanel, BorderLayout.CENTER)
+    }
 
-	public ArenaSizerDialog(JFrame owner){
-		super(owner,true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		initialize();
-	}
+    private fun getToolbar(): JPanel {
+        if (toolbar == null) {
+            toolbar = JPanel(FlowLayout(FlowLayout.LEADING))
+            toolbar!!.add(refreshButton)
+            refreshButton.addActionListener(this)
+            // reset
+            // save
+        }
+        return toolbar!!
+    }
 
-	private void initialize() {
-		setSize(900,430);
-		setLayout(new BorderLayout());
-		setTitle(HOVerwaltung.instance().getLanguageString("ArenaSizer"));
-		add(getToolbar(), BorderLayout.NORTH);
+    private val arenaPanel: ArenaPanel
+        get() {
+            if (panel == null) {
+                panel = ArenaPanel()
+            }
+            return panel!!
+        }
 
-		JPanel centerPanel = new JPanel(new BorderLayout());
+    private fun getTabbedPane(): JTabbedPane {
+        if (tabbedPane == null) {
+            tabbedPane = JTabbedPane()
+            val hoV = HOVerwaltung.instance()
+            tabbedPane!!.addTab(hoV.getLanguageString("Stadion"), arenaPanel)
+            tabbedPane!!.addTab(hoV.model.getStadium().name, infoPanel)
+            tabbedPane!!.addTab(hoV.getLanguageString("Statistik"), historyPanel)
+        }
+        return tabbedPane!!
+    }
 
-		JPanel panelC = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		panelC.add(getControlPanel());
-		centerPanel.add(panelC,BorderLayout.NORTH);
-		centerPanel.add(getTabbedPane(), BorderLayout.CENTER);
+    override fun setSize(width: Int, height: Int) {
+        super.setSize(width, height)
+        val screenSize = parent.size
+        val x = (screenSize.width - getWidth()) / 2
+        val y = (screenSize.height - getHeight()) / 2
+        setLocation(parent.x + x, parent.y + y)
+    }
 
-		add(centerPanel,BorderLayout.CENTER);
-
-	}
-
-	private JPanel getToolbar(){
-		if(toolbar == null){
-			toolbar = new JPanel(new FlowLayout(FlowLayout.LEADING));
-			toolbar.add(refreshButton);
-			refreshButton.addActionListener(this);
-			// reset
-			// save
-		}
-		return toolbar;
-	}
-
-	private ControlPanel getControlPanel(){
-		if(controlPanel == null){
-			controlPanel = new ControlPanel();
-		}
-		return controlPanel;
-	}
-
-	private JPanel getHistoryPanel(){
-		if(historyPanel == null){
-			historyPanel = new DistributionStatisticsPanel();
-		}
-		return historyPanel;
-	}
-
-	ArenaPanel getArenaPanel(){
-		if(panel == null){
-			panel = new ArenaPanel();
-		}
-		return panel;
-	}
-
-	ArenaPanel getInfoPanel(){
-		if(infoPanel == null){
-			infoPanel = new ArenaPanel();
-		}
-		return infoPanel;
-	}
-
-	private JTabbedPane getTabbedPane(){
-		if(tabbedPane == null){
-			tabbedPane = new JTabbedPane();
-			HOVerwaltung hoV = HOVerwaltung.instance();
-			tabbedPane.addTab(hoV.getLanguageString("Stadion"), getArenaPanel());
-			tabbedPane.addTab(hoV.getModel().getStadium().getStadienname(), getInfoPanel());
-			tabbedPane.addTab(hoV.getLanguageString("Statistik"), getHistoryPanel());
-		}
-		return tabbedPane;
-	}
-
-	@Override
-	public void setSize(int width, int height) {
-	   super.setSize(width, height);
-
-	   Dimension screenSize = getParent().getSize();
-	   int x = (screenSize.width - getWidth()) / 2;
-	   int y = (screenSize.height - getHeight()) / 2;
-
-	   setLocation(getParent().getX()+x, getParent().getY()+y);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		 if(e.getSource() == refreshButton){
-			Stadium stadium = getControlPanel().getStadium();
-			int[] supporter = getControlPanel().getModifiedSupporter();
-            getArenaPanel().reinitArena(stadium, supporter[0],supporter[1],supporter[2]);
-            getInfoPanel().reinitArena(HOVerwaltung.instance().getModel().getStadium(), supporter[0],supporter[1],supporter[2]);
-		}
-	}
+    override fun actionPerformed(e: ActionEvent) {
+        if (e.source === refreshButton) {
+            val stadium = controlPanel.stadium
+            val supporter = controlPanel.modifiedSupporter
+            arenaPanel.reinitArena(stadium, supporter[0], supporter[1], supporter[2])
+            infoPanel.reinitArena(
+                HOVerwaltung.instance().model.getStadium(),
+                supporter[0],
+                supporter[1],
+                supporter[2]
+            )
+        }
+    }
 }

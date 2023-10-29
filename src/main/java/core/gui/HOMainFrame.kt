@@ -447,7 +447,7 @@ object HOMainFrame : JFrame(), Refreshable {
         val jmMenuBar = JMenuBar()
         jmMenuBar.add(jmFile)
         jmMenuBar.add(jmFunctions)
-        jmMenuBar.add(ToolManager().getToolMenu())
+        jmMenuBar.add(ToolManager().toolMenu)
         jmMenuBar.add(jmModules)
         jmMenuBar.add(jmHelp)
         if (!HO.isRelease()) {

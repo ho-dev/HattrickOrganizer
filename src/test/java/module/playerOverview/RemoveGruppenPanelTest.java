@@ -20,7 +20,7 @@ public class RemoveGruppenPanelTest {
             setEnvVariable("AppData",
                     new File("").getAbsoluteFile().getParentFile().getAbsolutePath());
 
-            UserManager.instance().getCurrentUser();
+            UserManager.INSTANCE.getCurrentUser();
             DBManager.instance().loadUserParameter();
             ThemeManager.instance().setCurrentTheme();
             JFrame frame = new JFrame();
