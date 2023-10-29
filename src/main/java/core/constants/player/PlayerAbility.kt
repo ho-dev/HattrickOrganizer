@@ -1,172 +1,173 @@
-package core.constants.player;
+package core.constants.player
 
-import core.datatype.CBItem;
-import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.util.Helper;
+import core.datatype.CBItem
+import core.model.HOVerwaltung
+import core.model.UserParameter
+import core.util.Helper
 
-public final class PlayerAbility {
-	private static final String[] languageKeys = {
-		"ls.player.skill.value.non-existent",
-		"ls.player.skill.value.disastrous",
-		"ls.player.skill.value.wretched",
-		"ls.player.skill.value.poor",
-		"ls.player.skill.value.weak",
-		"ls.player.skill.value.inadequate",
-		"ls.player.skill.value.passable",
-		"ls.player.skill.value.solid",
-		"ls.player.skill.value.excellent",
-		"ls.player.skill.value.formidable",
-		"ls.player.skill.value.outstanding",
-		"ls.player.skill.value.brilliant",
-		"ls.player.skill.value.magnificent",
-		"ls.player.skill.value.worldclass",
-		"ls.player.skill.value.supernatural",
-		"ls.player.skill.value.titanic",
-		"ls.player.skill.value.extra-terrestrial",
-		"ls.player.skill.value.mythical",
-		"ls.player.skill.value.magical",
-		"ls.player.skill.value.utopian",
-		"ls.player.skill.value.divine"};
+object PlayerAbility {
+    private val languageKeys = arrayOf(
+        "ls.player.skill.value.non-existent",
+        "ls.player.skill.value.disastrous",
+        "ls.player.skill.value.wretched",
+        "ls.player.skill.value.poor",
+        "ls.player.skill.value.weak",
+        "ls.player.skill.value.inadequate",
+        "ls.player.skill.value.passable",
+        "ls.player.skill.value.solid",
+        "ls.player.skill.value.excellent",
+        "ls.player.skill.value.formidable",
+        "ls.player.skill.value.outstanding",
+        "ls.player.skill.value.brilliant",
+        "ls.player.skill.value.magnificent",
+        "ls.player.skill.value.worldclass",
+        "ls.player.skill.value.supernatural",
+        "ls.player.skill.value.titanic",
+        "ls.player.skill.value.extra-terrestrial",
+        "ls.player.skill.value.mythical",
+        "ls.player.skill.value.magical",
+        "ls.player.skill.value.utopian",
+        "ls.player.skill.value.divine"
+    )
+    const val NON_EXISTENT = 0
+    const val DISASTROUS = 1
+    const val WRETCHED = 2
+    const val POOR = 3
+    const val WEAK = 4
+    const val INADEQUATE = 5
+    const val PASSABLE = 6
+    const val SOLID = 7
+    const val EXCELLENT = 8
+    const val FORMIDABLE = 9
+    const val OUTSTANDING = 10
+    const val BRILLIANT = 11
+    const val MAGNIFICENT = 12
+    const val WORLD_CLASS = 13
+    const val SUPERNATURAL = 14
+    const val TITANIC = 15
+    const val EXTRA_TERRESTRIAL = 16
+    const val MYTHICAL = 17
+    const val MAGICAL = 18
+    const val UTOPIAN = 19
+    const val DIVINE = 20
+    @JvmField
+	val ITEMS = arrayOf(
+        CBItem(getNameForSkill(NON_EXISTENT.toDouble()), NON_EXISTENT),
+        CBItem(getNameForSkill(DISASTROUS.toDouble()), DISASTROUS),
+        CBItem(getNameForSkill(WRETCHED.toDouble()), WRETCHED),
+        CBItem(getNameForSkill(POOR.toDouble()), POOR),
+        CBItem(getNameForSkill(WEAK.toDouble()), WEAK),
+        CBItem(getNameForSkill(INADEQUATE.toDouble()), INADEQUATE),
+        CBItem(getNameForSkill(PASSABLE.toDouble()), PASSABLE),
+        CBItem(getNameForSkill(SOLID.toDouble()), SOLID),
+        CBItem(getNameForSkill(EXCELLENT.toDouble()), EXCELLENT),
+        CBItem(getNameForSkill(FORMIDABLE.toDouble()), FORMIDABLE),
+        CBItem(getNameForSkill(OUTSTANDING.toDouble()), OUTSTANDING),
+        CBItem(getNameForSkill(BRILLIANT.toDouble()), BRILLIANT),
+        CBItem(getNameForSkill(MAGNIFICENT.toDouble()), MAGNIFICENT),
+        CBItem(getNameForSkill(WORLD_CLASS.toDouble()), WORLD_CLASS),
+        CBItem(getNameForSkill(SUPERNATURAL.toDouble()), SUPERNATURAL),
+        CBItem(getNameForSkill(TITANIC.toDouble()), TITANIC),
+        CBItem(getNameForSkill(EXTRA_TERRESTRIAL.toDouble()), EXTRA_TERRESTRIAL),
+        CBItem(getNameForSkill(MYTHICAL.toDouble()), MYTHICAL),
+        CBItem(getNameForSkill(MAGICAL.toDouble()), MAGICAL),
+        CBItem(getNameForSkill(UTOPIAN.toDouble()), UTOPIAN),
+        CBItem(getNameForSkill(DIVINE.toDouble()), DIVINE)
+    )
 
-	public static final int NON_EXISTENT 	= 0;
-	public static final int DISASTROUS 		= 1;
-	public static final int WRETCHED 		= 2;
-	public static final int POOR 			= 3;
-	public static final int WEAK			= 4;
-	public static final int INADEQUATE 		= 5;
-	public static final int PASSABLE 		= 6;
-	public static final int SOLID 			= 7;
-	public static final int EXCELLENT 		= 8;
-	public static final int FORMIDABLE 		= 9;
-	public static final int OUTSTANDING 	= 10;
-	public static final int BRILLIANT 		= 11;
-	public static final int MAGNIFICENT 	= 12;
-	public static final int WORLD_CLASS 	= 13;
-	public static final int SUPERNATURAL 	= 14;
-	public static final int TITANIC 		= 15;
-	public static final int EXTRA_TERRESTRIAL = 16;
-	public static final int MYTHICAL 		= 17;
-	public static final int MAGICAL 		= 18;
-	public static final int UTOPIAN 		= 19;
-	public static final int DIVINE 			= 20;
+    @JvmStatic
+	fun toString(ability: Int): String {
+        return if (ability in NON_EXISTENT..DIVINE) {
+            HOVerwaltung.instance().getLanguageString(languageKeys[ability])
+        } else {
+            var value = HOVerwaltung.instance()
+                .getLanguageString(if (ability > DIVINE) languageKeys[DIVINE] else "Unbestimmt")
+            if (ability > 20) value += "(+${ability - 20})"
+            value
+        }
+    }
 
-	public static final CBItem[] ITEMS = {
-			new CBItem(getNameForSkill(NON_EXISTENT), NON_EXISTENT),
-			new CBItem(getNameForSkill(DISASTROUS), DISASTROUS),
-			new CBItem(getNameForSkill(WRETCHED), WRETCHED),
-			new CBItem(getNameForSkill(POOR), POOR),
-			new CBItem(getNameForSkill(WEAK), WEAK),
-			new CBItem(getNameForSkill(INADEQUATE), INADEQUATE),
-			new CBItem(getNameForSkill(PASSABLE), PASSABLE),
-			new CBItem(getNameForSkill(SOLID), SOLID),
-			new CBItem(getNameForSkill(EXCELLENT), EXCELLENT),
-			new CBItem(getNameForSkill(FORMIDABLE), FORMIDABLE),
-			new CBItem(getNameForSkill(OUTSTANDING), OUTSTANDING),
-			new CBItem(getNameForSkill(BRILLIANT), BRILLIANT),
-			new CBItem(getNameForSkill(MAGNIFICENT), MAGNIFICENT),
-			new CBItem(getNameForSkill(WORLD_CLASS), WORLD_CLASS),
-			new CBItem(getNameForSkill(SUPERNATURAL), SUPERNATURAL),
-			new CBItem(getNameForSkill(TITANIC), TITANIC),
-			new CBItem(getNameForSkill(EXTRA_TERRESTRIAL), EXTRA_TERRESTRIAL),
-			new CBItem(getNameForSkill(MYTHICAL), MYTHICAL),
-			new CBItem(getNameForSkill(MAGICAL), MAGICAL),
-			new CBItem(getNameForSkill(UTOPIAN), UTOPIAN),
-			new CBItem(getNameForSkill(DIVINE), DIVINE) };
+    /**
+     * get string representation of rating values
+     *
+     * @param ratingValue double [0..20]
+     * @param showNumbers true for numerical representation
+     * @param isMatch true shows' sub-level representations
+     * @param nbDecimal nbDecimalDisplayed
+     * @return String
+     */
+	@JvmStatic
+	fun getNameForSkill(ratingValue: Double, showNumbers: Boolean, isMatch: Boolean, nbDecimal: Int): String {
+        val rating = ratingValue.toInt()
+        var sublevel = 0
+        if (isMatch) {
+            sublevel = (ratingValue * 4).toInt() % 4
+        }
+        var bewertung = toString(rating)
+        if (isMatch) {
+            bewertung += getName4Sublevel(sublevel)
+        }
+        if (showNumbers) {
+            bewertung += if (isMatch) {
+                (" ("
+                        + Helper.getNumberFormat(false, nbDecimal)
+                    .format(Helper.round(rating + getValue4Sublevel(sublevel), 2))
+                        + ")")
+            } else {
+                (" ("
+                        + Helper.getNumberFormat(false, nbDecimal)
+                    .format(Helper.round(ratingValue, nbDecimal)) + ")")
+            }
+        }
+        return bewertung
+    }
 
-	private PlayerAbility(){}
+    /**
+     * get string representation of rating values
+     *
+     * @param ratingValue double [0..20]
+     * @param showNumbers true for numerical representation
+     * @param isMatch true shows' sub-level representations
+     * @return String
+     */
+	@JvmStatic
+	fun getNameForSkill(ratingValue: Double, showNumbers: Boolean, isMatch: Boolean): String {
+        return getNameForSkill(ratingValue, showNumbers, isMatch, UserParameter.instance().nbDecimals)
+    }
 
-	public static String toString(int ability){
-		if( ability >= NON_EXISTENT && ability <= DIVINE) {
-			return HOVerwaltung.instance().getLanguageString(languageKeys[ability]);
-		}
-		else {
-			String value = HOVerwaltung.instance().getLanguageString(ability>DIVINE ? languageKeys[DIVINE]: "Unbestimmt");
-			if (ability > 20)
-				value +=  "(+" + (ability - 20) + ")";
-			
-			return value;
-		}
-	}
+    @JvmStatic
+	fun getNameForSkill(isMatch: Boolean, bewertungwert: Double): String {
+        return getNameForSkill(bewertungwert, UserParameter.instance().zahlenFuerSkill, isMatch)
+    }
 
+    @JvmStatic
+	fun getNameForSkill(bewertungwert: Double, zahlen: Boolean): String {
+        return getNameForSkill(bewertungwert, zahlen, false)
+    }
 
-	/**
-	 * get string representation of rating values
-	 *
-	 * @param ratingValue double [0..20]
-	 * @param showNumbers true for numerical representation
-	 * @param isMatch true shows' sub-level representations
-	 * @param nbDecimal nbDecimalDisplayed
-	 * @return String
-	 */
-	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch, int nbDecimal) {
-		int bewertungwert = (int) ratingValue;
-		int sublevel = 0;
-		if (isMatch) {
-			sublevel = (int)(ratingValue*4) % 4;
-		}
+    @JvmStatic
+	fun getNameForSkill(bewertung: Double): String {
+        return getNameForSkill(bewertung, UserParameter.instance().zahlenFuerSkill)
+    }
 
-		var bewertung = toString(bewertungwert);
-		if (isMatch) {
-			bewertung += PlayerAbility.getName4Sublevel(sublevel);
-		}
+    @JvmStatic
+	fun getValue4Sublevel(sub: Int): Float {
+        return when (sub) {
+            0 -> 0.0f
+            1 -> 0.25f
+            2 -> 0.5f
+            3 -> 0.75f
+            else -> 0.0f
+        }
+    }
 
-		if (showNumbers) {
-			if (isMatch) {
-				bewertung += (" ("
-						+  Helper.getNumberFormat(false, nbDecimal)
-						.format(Helper.round(bewertungwert + PlayerAbility.getValue4Sublevel(sublevel), 2))
-						+ ")");
-			} else {
-				bewertung += (" ("
-						+ Helper.getNumberFormat(false, nbDecimal)
-						.format(Helper.round(ratingValue, nbDecimal)) + ")");
-			}
-		}
-		return bewertung;
-	}
-
-	/**
-	 * get string representation of rating values
-	 *
-	 * @param ratingValue double [0..20]
-	 * @param showNumbers true for numerical representation
-	 * @param isMatch true shows' sub-level representations
-	 * @return String
-	 */
-	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch) {
-	   return getNameForSkill(ratingValue, showNumbers, isMatch, UserParameter.instance().nbDecimals);
-	}
-
-	public static String getNameForSkill(boolean isMatch, double bewertungwert) {
-	    return getNameForSkill(bewertungwert, UserParameter.instance().zahlenFuerSkill, isMatch);
-	}
-
-	public static String getNameForSkill(double bewertungwert, boolean zahlen) {
-	    return getNameForSkill(bewertungwert, zahlen, false);
-	}
-
-	public static String getNameForSkill(double bewertung) {
-	    return getNameForSkill(bewertung, UserParameter.instance().zahlenFuerSkill);
-	}
-
-	public static double getValue4Sublevel(int sub) {
-		return switch (sub) {
-			case 0 -> 0;
-			case 1 -> 0.25;
-			case 2 -> 0.5;
-			case 3 -> 0.75;
-			default -> 0;
-		};
-	}
-
-	private static String getName4Sublevel(int sub) {
-		return switch (sub) {
-			case 0 -> " ("	+ HOVerwaltung.instance().getLanguageString("verylow")	+ ")";
-			case 1 -> " (" 	+ HOVerwaltung.instance().getLanguageString("low")	+ ")";
-			case 2 -> " ("	+ HOVerwaltung.instance().getLanguageString("high")	+ ")";
-			case 3 -> " ("	+ HOVerwaltung.instance().getLanguageString("veryhigh")	+ ")";
-			default -> "";
-		};
-	}
+    private fun getName4Sublevel(sub: Int): String {
+        return when (sub) {
+            0 -> " (" + HOVerwaltung.instance().getLanguageString("verylow") + ")"
+            1 -> " (" + HOVerwaltung.instance().getLanguageString("low") + ")"
+            2 -> " (" + HOVerwaltung.instance().getLanguageString("high") + ")"
+            3 -> " (" + HOVerwaltung.instance().getLanguageString("veryhigh") + ")"
+            else -> ""
+        }
+    }
 }
