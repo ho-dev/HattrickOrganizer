@@ -1,45 +1,85 @@
-package core.db;
+package core.db
 
-import core.model.XtraData;
-import core.util.HODateTime;
-import java.sql.Types;
+import core.model.XtraData
+import core.util.HODateTime
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-final class XtraDataTable extends AbstractTable {
-	final static String TABLENAME = "XTRADATA";
+internal class XtraDataTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getHrfId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as XtraData?)!!.setHrfId(v as Int) })
+            ).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CurrencyRate")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getCurrencyRate() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as XtraData?)!!.setCurrencyRate((v as Float).toDouble()) })
+            ).setType(
+                Types.REAL
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HasPromoted")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.isHasPromoted() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as XtraData?)!!.setHasPromoted(v as Boolean) })
+            ).setType(Types.BOOLEAN).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LogoURL")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getLogoURL() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as XtraData?)!!.setLogoURL(v as String?) })
+            ).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SeriesMatchDate")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getSeriesMatchDate().toDbTimestamp() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as XtraData?)!!.setSeriesMatchDate(v as HODateTime?) })
+                ).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TrainingDate")
+                .setGetter(Function<Any?, Any?>({ p: Any? ->
+                    (p as XtraData?)!!.getNextTrainingDate().toDbTimestamp()
+                })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as XtraData?)!!.setTrainingDate(v as HODateTime?) })
+            ).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("EconomyDate")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getEconomyDate().toDbTimestamp() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as XtraData?)!!.setEconomyDate(v as HODateTime?) })
+                ).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LeagueLevelUnitID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getLeagueLevelUnitID() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as XtraData?)!!.setLeagueLevelUnitID(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CountryId")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as XtraData?)!!.getCountryId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as XtraData?)!!.setCountryId(v as Int?) })
+            ).setType(Types.INTEGER).isNullable(true).build()
+        )
+    }
 
-	XtraDataTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    /**
+     * load Xtra data
+     */
+    fun loadXtraData(hrfID: Int): XtraData? {
+        return loadOne(XtraData::class.java, hrfID)
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((XtraData) p).getHrfId()).setSetter((p, v) -> ((XtraData) p).setHrfId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CurrencyRate").setGetter((p) -> ((XtraData) p).getCurrencyRate()).setSetter((p, v) -> ((XtraData) p).setCurrencyRate( (float)v)).setType(Types.REAL).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HasPromoted").setGetter((p) -> ((XtraData) p).isHasPromoted()).setSetter((p, v) -> ((XtraData) p).setHasPromoted((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LogoURL").setGetter((p) -> ((XtraData) p).getLogoURL()).setSetter((p, v) -> ((XtraData) p).setLogoURL((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SeriesMatchDate").setGetter((p) -> ((XtraData) p).getSeriesMatchDate().toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setSeriesMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingDate").setGetter((p) -> ((XtraData) p).getNextTrainingDate().toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setTrainingDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("EconomyDate").setGetter((p) -> ((XtraData) p).getEconomyDate().toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setEconomyDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LeagueLevelUnitID").setGetter((p) -> ((XtraData) p).getLeagueLevelUnitID()).setSetter((p, v) -> ((XtraData) p).setLeagueLevelUnitID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CountryId").setGetter((p) -> ((XtraData) p).getCountryId()).setSetter((p, v) -> ((XtraData) p).setCountryId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-		};
-	}
+    /**
+     * speichert das Team
+     */
+    fun saveXtraDaten(hrfId: Int, xtra: XtraData?) {
+        if (xtra != null) {
+            xtra.setHrfId(hrfId)
+            store(xtra)
+        }
+    }
 
-	/**
-	 * load Xtra data
-	 */
-	XtraData loadXtraData(int hrfID) {
-		return loadOne(XtraData.class, hrfID);
-	}
-
-	/**
-	 * speichert das Team
-	 */
-	void saveXtraDaten(int hrfId, XtraData xtra) {
-		if (xtra != null) {
-			xtra.setHrfId(hrfId);
-			store(xtra);
-		}
-	}
+    companion object {
+        val TABLENAME: String = "XTRADATA"
+    }
 }

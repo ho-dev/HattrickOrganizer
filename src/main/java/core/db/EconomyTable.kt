@@ -1,89 +1,224 @@
-package core.db;
+package core.db
 
-import core.model.misc.Economy;
-import core.util.HODateTime;
-import java.sql.Types;
+import core.model.misc.Economy
+import core.util.HODateTime
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
+class EconomyTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.hrfId }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.hrfId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).isPrimaryKey(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FetchedDate")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.fetchedDate.toDbTimestamp() }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any? -> (e as Economy?)!!.fetchedDate = v as HODateTime? }).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SupportersPopularity")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.supportersPopularity }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.setSupPopularity(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SponsorsPopularity")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.sponsorsPopularity }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.sponsorsPopularity = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Cash")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.cash }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.cash = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSponsors")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSponsors }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSponsors = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSpectators")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSpectators }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSpectators = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeFinancial")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeFinancial }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeFinancial = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeTemporary")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeTemporary }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeTemporary = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSum")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSum }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsPlayers = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsStaff")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsStaff }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsStaff = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsArena")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsArena }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsArena = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsYouth")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsYouth }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsYouth = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsFinancial")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsFinancial }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsFinancial = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsTemporary")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsTemporary }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsTemporary = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsSum")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsSum }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsSum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ExpectedWeeksTotal")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.expectedWeeksTotal }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.expectedWeeksTotal = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSponsors")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSponsors }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeSponsors = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSpectators")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSpectators }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeSpectators = v as Int }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeFinancial")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeFinancial }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeFinancial = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeTemporary")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeTemporary }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeTemporary = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSum")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSum }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeSum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsPlayers = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsStaff")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsStaff }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsStaff = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsArena")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsArena }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsArena = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsYouth")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsYouth }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsYouth = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsFinancial")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsFinancial }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsFinancial = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsTemporary")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsTemporary }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsTemporary = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsSum")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsSum }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsSum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastWeeksTotal")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastWeeksTotal }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastWeeksTotal = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ExpectedCash")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.expectedCash }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.expectedCash = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSoldPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSoldPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSoldPlayers = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSoldPlayersCommission").setGetter(
+                Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSoldPlayersCommission }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSoldPlayersCommission = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsBoughtPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsBoughtPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsBoughtPlayers = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CostsArenaBuilding")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.costsArenaBuilding }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.costsArenaBuilding = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSoldPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSoldPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeSoldPlayers = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSoldPlayersCommission").setGetter(
+                Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSoldPlayersCommission }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any ->
+                    (e as Economy?)!!.lastIncomeSoldPlayersCommission = v as Int
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsBoughtPlayers")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsBoughtPlayers }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsBoughtPlayers = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastCostsArenaBuilding")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastCostsArenaBuilding }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastCostsArenaBuilding = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("IncomeSponsorsBonus")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.incomeSponsorsBonus }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.incomeSponsorsBonus = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastIncomeSponsorsBonus")
+                .setGetter(Function<Any?, Any?> { e: Any? -> (e as Economy?)!!.lastIncomeSponsorsBonus }).setSetter(
+                BiConsumer<Any?, Any> { e: Any?, v: Any -> (e as Economy?)!!.lastIncomeSponsorsBonus = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build()
+        )
+    }
 
-public final class EconomyTable extends AbstractTable {
+     override val createIndexStatement: Array<String?>
+         get() = arrayOf(
+            "CREATE INDEX ECONOMY_1 ON " + tableName + "(" + columns[0].columnName + "," + columns[1].columnName + ")"
+        )
 
-	public final static String TABLENAME = "ECONOMY";
-	
-	EconomyTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
-	}
+    /**
+     * store the economy info in the database
+     */
+    fun storeEconomyInfoIntoDB(hrfId: Int, economy: Economy?, date: HODateTime?) {
+        if (economy != null) {
+            economy.hrfId = hrfId
+            economy.fetchedDate = date
+            store(economy)
+        }
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((e) -> ((Economy) e).getHrfId()).setSetter((e, v) -> ((Economy) e).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FetchedDate").setGetter((e) -> ((Economy) e).getFetchedDate().toDbTimestamp()).setSetter((e, v) -> ((Economy) e).setFetchedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SupportersPopularity").setGetter((e) -> ((Economy) e).getSupportersPopularity()).setSetter((e, v) -> ((Economy) e).setSupPopularity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SponsorsPopularity").setGetter((e) -> ((Economy) e).getSponsorsPopularity()).setSetter((e, v) -> ((Economy) e).setSponsorsPopularity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Cash").setGetter((e) -> ((Economy) e).getCash()).setSetter((e, v) -> ((Economy) e).setCash((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSponsors").setGetter((e) -> ((Economy) e).getIncomeSponsors()).setSetter((e, v) -> ((Economy) e).setIncomeSponsors((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSpectators").setGetter((e) -> ((Economy) e).getIncomeSpectators()).setSetter((e, v) -> ((Economy) e).setIncomeSpectators((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeFinancial").setGetter((e) -> ((Economy) e).getIncomeFinancial()).setSetter((e, v) -> ((Economy) e).setIncomeFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeTemporary").setGetter((e) -> ((Economy) e).getIncomeTemporary()).setSetter((e, v) -> ((Economy) e).setIncomeTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSum").setGetter((e) -> ((Economy) e).getIncomeSum()).setSetter((e, v) -> ((Economy) e).setIncomeSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsPlayers").setGetter((e) -> ((Economy) e).getCostsPlayers()).setSetter((e, v) -> ((Economy) e).setCostsPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsStaff").setGetter((e) -> ((Economy) e).getCostsStaff()).setSetter((e, v) -> ((Economy) e).setCostsStaff((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsArena").setGetter((e) -> ((Economy) e).getCostsArena()).setSetter((e, v) -> ((Economy) e).setCostsArena((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsYouth").setGetter((e) -> ((Economy) e).getCostsYouth()).setSetter((e, v) -> ((Economy) e).setCostsYouth((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsFinancial").setGetter((e) -> ((Economy) e).getCostsFinancial()).setSetter((e, v) -> ((Economy) e).setCostsFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsTemporary").setGetter((e) -> ((Economy) e).getCostsTemporary()).setSetter((e, v) -> ((Economy) e).setCostsTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsSum").setGetter((e) -> ((Economy) e).getCostsSum()).setSetter((e, v) -> ((Economy) e).setCostsSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ExpectedWeeksTotal").setGetter((e) -> ((Economy) e).getExpectedWeeksTotal()).setSetter((e, v) -> ((Economy) e).setExpectedWeeksTotal((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSponsors").setGetter((e) -> ((Economy) e).getLastIncomeSponsors()).setSetter((e, v) -> ((Economy) e).setLastIncomeSponsors((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSpectators").setGetter((e) -> ((Economy) e).getLastIncomeSpectators()).setSetter((e, v) -> ((Economy) e).setLastIncomeSpectators((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeFinancial").setGetter((e) -> ((Economy) e).getLastIncomeFinancial()).setSetter((e, v) -> ((Economy) e).setLastIncomeFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeTemporary").setGetter((e) -> ((Economy) e).getLastIncomeTemporary()).setSetter((e, v) -> ((Economy) e).setLastIncomeTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSum").setGetter((e) -> ((Economy) e).getLastIncomeSum()).setSetter((e, v) -> ((Economy) e).setLastIncomeSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsPlayers").setGetter((e) -> ((Economy) e).getLastCostsPlayers()).setSetter((e, v) -> ((Economy) e).setLastCostsPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsStaff").setGetter((e) -> ((Economy) e).getLastCostsStaff()).setSetter((e, v) -> ((Economy) e).setLastCostsStaff((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsArena").setGetter((e) -> ((Economy) e).getLastCostsArena()).setSetter((e, v) -> ((Economy) e).setLastCostsArena((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsYouth").setGetter((e) -> ((Economy) e).getLastCostsYouth()).setSetter((e, v) -> ((Economy) e).setLastCostsYouth((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsFinancial").setGetter((e) -> ((Economy) e).getLastCostsFinancial()).setSetter((e, v) -> ((Economy) e).setLastCostsFinancial((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsTemporary").setGetter((e) -> ((Economy) e).getLastCostsTemporary()).setSetter((e, v) -> ((Economy) e).setLastCostsTemporary((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsSum").setGetter((e) -> ((Economy) e).getLastCostsSum()).setSetter((e, v) -> ((Economy) e).setLastCostsSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastWeeksTotal").setGetter((e) -> ((Economy) e).getLastWeeksTotal()).setSetter((e, v) -> ((Economy) e).setLastWeeksTotal((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ExpectedCash").setGetter((e) -> ((Economy) e).getExpectedCash()).setSetter((e, v) -> ((Economy) e).setExpectedCash((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSoldPlayers").setGetter((e) -> ((Economy) e).getIncomeSoldPlayers()).setSetter((e, v) -> ((Economy) e).setIncomeSoldPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSoldPlayersCommission").setGetter((e) -> ((Economy) e).getIncomeSoldPlayersCommission()).setSetter((e, v) -> ((Economy) e).setIncomeSoldPlayersCommission((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsBoughtPlayers").setGetter((e) -> ((Economy) e).getCostsBoughtPlayers()).setSetter((e, v) -> ((Economy) e).setCostsBoughtPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CostsArenaBuilding").setGetter((e) -> ((Economy) e).getCostsArenaBuilding()).setSetter((e, v) -> ((Economy) e).setCostsArenaBuilding((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSoldPlayers").setGetter((e) -> ((Economy) e).getLastIncomeSoldPlayers()).setSetter((e, v) -> ((Economy) e).setLastIncomeSoldPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSoldPlayersCommission").setGetter((e) -> ((Economy) e).getLastIncomeSoldPlayersCommission()).setSetter((e, v) -> ((Economy) e).setLastIncomeSoldPlayersCommission((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsBoughtPlayers").setGetter((e) -> ((Economy) e).getLastCostsBoughtPlayers()).setSetter((e, v) -> ((Economy) e).setLastCostsBoughtPlayers((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastCostsArenaBuilding").setGetter((e) -> ((Economy) e).getLastCostsArenaBuilding()).setSetter((e, v) -> ((Economy) e).setLastCostsArenaBuilding((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("IncomeSponsorsBonus").setGetter((e) -> ((Economy) e).getIncomeSponsorsBonus()).setSetter((e, v) -> ((Economy) e).setIncomeSponsorsBonus((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LastIncomeSponsorsBonus").setGetter((e) -> ((Economy) e).getLastIncomeSponsorsBonus()).setSetter((e, v) -> ((Economy) e).setLastIncomeSponsorsBonus((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    // load economy model from specified hrfID
+    fun getEconomy(hrfID: Int): Economy? {
+        return if (hrfID > -1) {
+            loadOne(Economy::class.java, hrfID)
+        } else null
+    }
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX ECONOMY_1 ON " + getTableName() + "(" + columns[0].getColumnName() + "," + columns[1].getColumnName() + ")"
-		};
-	}
-
-	/**
-	 * store the economy info in the database
-	 */
-	void storeEconomyInfoIntoDB(int hrfId, Economy economy, HODateTime date) {
-		if (economy != null) {
-			economy.setHrfId(hrfId);
-			economy.setFetchedDate(date);
-			store(economy);
-		}
-	}
-
-	// load economy model from specified hrfID
-	public Economy getEconomy(int hrfID) {
-		if ( hrfID > -1) {
-			return loadOne(Economy.class, hrfID);
-		}
-		return null;
-	}
+    companion object {
+        const val TABLENAME = "ECONOMY"
+    }
 }

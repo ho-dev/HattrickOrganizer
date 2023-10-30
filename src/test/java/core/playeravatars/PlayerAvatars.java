@@ -24,7 +24,7 @@ public class PlayerAvatars {
     public static void main(String[] args) throws IOException {
 
     HO.setPortable_version(true);
-    DBManager.instance().loadUserParameter();
+    DBManager.INSTANCE.loadUserParameter();
     HOVerwaltung.instance().loadLatestHoModel();
     HOVerwaltung.instance().setResource("English");
 //    HOVerwaltung.instance().set

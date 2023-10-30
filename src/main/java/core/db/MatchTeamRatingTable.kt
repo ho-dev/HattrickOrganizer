@@ -1,50 +1,98 @@
-package core.db;
+package core.db
 
-import core.model.enums.MatchType;
-import core.model.match.MatchTeamRating;
-import java.sql.Types;
-import java.util.List;
+import core.model.enums.MatchType
+import core.model.match.MatchTeamRating
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public class MatchTeamRatingTable extends AbstractTable {
-    public final static String TABLENAME = "MATCHTEAMRATING";
-
-    protected MatchTeamRatingTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
-        idColumns = 3;
+class MatchTeamRatingTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.matchId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchTeamRating?)!!.matchId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchTyp")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.matchTyp.id }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any ->
+                    (o as MatchTeamRating?)!!.matchTyp = MatchType.getById(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TeamID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.teamId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchTeamRating?)!!.teamId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FanclubSize")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.fanclubSize }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchTeamRating?)!!.fanclubSize = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PowerRating")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.powerRating }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setPowerRating(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GlobalRanking")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.globalRanking }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setGlobalRanking(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("RegionRanking")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.regionRanking }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setRegionRanking(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LeagueRanking")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.leagueRanking }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setLeagueRanking(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NumberOfVictories")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.numberOfVictories }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setNumberOfVictories(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NumberOfUndefeated")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchTeamRating?)!!.numberOfUndefeated }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchTeamRating?)!!.setNumberOfUndefeated(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build()
+        )
     }
 
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchTeamRating) o).getMatchId()).setSetter((o, v) -> ((MatchTeamRating) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchTeamRating) o).getMatchTyp().getId()).setSetter((o, v) -> ((MatchTeamRating) o).setMatchTyp(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchTeamRating) o).getTeamId()).setSetter((o, v) -> ((MatchTeamRating) o).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("FanclubSize").setGetter((o) -> ((MatchTeamRating) o).getFanclubSize()).setSetter((o, v) -> ((MatchTeamRating) o).setFanclubSize((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PowerRating").setGetter((o) -> ((MatchTeamRating) o).getPowerRating()).setSetter((o, v) -> ((MatchTeamRating) o).setPowerRating((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("GlobalRanking").setGetter((o) -> ((MatchTeamRating) o).getGlobalRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setGlobalRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("RegionRanking").setGetter((o) -> ((MatchTeamRating) o).getRegionRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setRegionRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LeagueRanking").setGetter((o) -> ((MatchTeamRating) o).getLeagueRanking()).setSetter((o, v) -> ((MatchTeamRating) o).setLeagueRanking((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("NumberOfVictories").setGetter((o) -> ((MatchTeamRating) o).getNumberOfVictories()).setSetter((o, v) -> ((MatchTeamRating) o).setNumberOfVictories((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("NumberOfUndefeated").setGetter((o) -> ((MatchTeamRating) o).getNumberOfUndefeated()).setSetter((o, v) -> ((MatchTeamRating) o).setNumberOfUndefeated((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-        };
+    protected override val constraintStatements: Array<String?>
+        protected get() = arrayOf(" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)")
+    private val loadBothTeamRatingStatementBuilder = PreparedSelectStatementBuilder(
+        this,
+        "WHERE MatchID = ? AND MatchTyp = ?"
+    )
+
+    init {
+        idColumns = 3
     }
 
-    @Override
-    protected String[] getConstraintStatements() {
-        return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
+    fun load(matchID: Int, matchType: Int): List<MatchTeamRating?>? {
+        return load(
+            MatchTeamRating::class.java,
+            adapter!!.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType)
+        )
     }
 
-    private final PreparedSelectStatementBuilder loadBothTeamRatingStatementBuilder = new PreparedSelectStatementBuilder(this,
-                   "WHERE MatchID = ? AND MatchTyp = ?");
-
-    List<MatchTeamRating> load(int matchID, int matchType) {
-        return load(MatchTeamRating.class, this.adapter.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType));
-    }
-
-    void storeTeamRating(MatchTeamRating teamRating) {
+    fun storeTeamRating(teamRating: MatchTeamRating?) {
         if (teamRating != null) {
-            teamRating.setIsStored(isStored(teamRating.getMatchId(), teamRating.getMatchTyp().getId(), teamRating.getTeamId()));
-            store(teamRating);
+            teamRating.stored = isStored(teamRating.matchId, teamRating.matchTyp.id, teamRating.teamId)
+            store(teamRating)
         }
+    }
+
+    companion object {
+        const val TABLENAME = "MATCHTEAMRATING"
     }
 }

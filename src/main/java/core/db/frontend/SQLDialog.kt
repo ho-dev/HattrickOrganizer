@@ -152,7 +152,7 @@ class SQLDialog : JDialog(HOMainFrame, "Simple SQL Editor"), ActionListener {
             table!!.setModel(model)
         } else {
             try {
-                val rows = DBManager.instance().adapter.executeUpdate(textArea.getText())
+                val rows = DBManager.jdbcAdapter.executeUpdate(textArea.getText())
                 infoLabel.setText("$rows rows updated")
             } catch (ex: Exception) {
                 handleException(ex)
@@ -176,7 +176,7 @@ class SQLDialog : JDialog(HOMainFrame, "Simple SQL Editor"), ActionListener {
             val sql = txt.substring(index1, textArea.getText().length)
             try {
                 val start = System.currentTimeMillis()
-                val rs = DBManager.instance().adapter.executeQuery("$select $sql")
+                val rs = DBManager.jdbcAdapter.executeQuery("$select $sql")
                 rs!!.last()
                 rowCount = rs.row
                 rs.beforeFirst()
@@ -188,7 +188,7 @@ class SQLDialog : JDialog(HOMainFrame, "Simple SQL Editor"), ActionListener {
                 while (rs.next()) {
                     for (j in columnNames.indices) {
                         val content = rs.getString(j + 1)
-                        values[i][j] = if (content != null) content else "(null)"
+                        values[i][j] = content ?: "(null)"
                     }
                     i++
                 }

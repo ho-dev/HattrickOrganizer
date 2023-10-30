@@ -1,73 +1,169 @@
-package core.db;
+package core.db
 
-import core.util.HODateTime;
-import module.nthrf.NtTeamDetails;
-import java.sql.*;
-import java.util.List;
+import core.util.HODateTime
+import module.nthrf.NtTeamDetails
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-final class NtTeamTable extends AbstractTable {
-	public final static String TABLENAME = "NTTEAM";
+internal class NtTeamTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.hrfId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setHrfId(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TEAM_ID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.teamId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setTeamId(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MORALE")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.morale }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.morale = v as Int? })
+                .setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SELFCONFIDENCE")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.selfConfidence }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.selfConfidence = v as Int? })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp253")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp253 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp253(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp343")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp343 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp343(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp352")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp352 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp352(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp433")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp433 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp433(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp442")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp442 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp442(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp451")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp451 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp451(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp523")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp523 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp523(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp532")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp532 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp532(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp541")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp541 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp541(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("xp550")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.xp550 }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as NtTeamDetails?)!!.setXp550(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NAME")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.teamName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.teamName = v as String? })
+                .setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SHORTNAME")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.teamNameShort }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.teamNameShort = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(127).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COACHID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.coachId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setCoachId(v as Int?) })
+                .setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COACHNAME")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.coachName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.coachName = v as String? }).setType(
+                Types.VARCHAR
+            ).setLength(127).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LEAGUEID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.leagueId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setLeagueId(v as Int?) })
+                .setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LEAGUENAME")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.leagueName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.leagueName = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(127).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SUPPORTERPOPULARITY")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.supportersPopularity }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setSupportersPopularity(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("RATING")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.ratingScore }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setRatingScore(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FANCLUBSIZE")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.fanclubSize }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setFanclubSize(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("RANK")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.rank }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as NtTeamDetails?)!!.setRank(v as Int?) })
+                .setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FETCHEDDATE")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as NtTeamDetails?)!!.fetchedDate.toDbTimestamp() })
+                .setSetter(
+                    BiConsumer<Any?, Any> { o: Any?, v: Any? ->
+                        (o as NtTeamDetails?)!!.fetchedDate = v as HODateTime?
+                    }).setType(
+                Types.TIMESTAMP
+            ).isNullable(true).build()
+        )
+    }
 
-	NtTeamTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    protected override val constraintStatements: Array<String?>
+        protected get() = arrayOf(
+            "  PRIMARY KEY (HRF_ID, TEAM_ID)"
+        )
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((NtTeamDetails) o).getHrfId()).setSetter((o, v) -> ((NtTeamDetails) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TEAM_ID").setGetter((o) -> ((NtTeamDetails) o).getTeamId()).setSetter((o, v) -> ((NtTeamDetails) o).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MORALE").setGetter((o) -> ((NtTeamDetails) o).getMorale()).setSetter((o, v) -> ((NtTeamDetails) o).setMorale((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SELFCONFIDENCE").setGetter((o) -> ((NtTeamDetails) o).getSelfConfidence()).setSetter((o, v) -> ((NtTeamDetails) o).setSelfConfidence((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp253").setGetter((o) -> ((NtTeamDetails) o).getXp253()).setSetter((o, v) -> ((NtTeamDetails) o).setXp253((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp343").setGetter((o) -> ((NtTeamDetails) o).getXp343()).setSetter((o, v) -> ((NtTeamDetails) o).setXp343((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp352").setGetter((o) -> ((NtTeamDetails) o).getXp352()).setSetter((o, v) -> ((NtTeamDetails) o).setXp352((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp433").setGetter((o) -> ((NtTeamDetails) o).getXp433()).setSetter((o, v) -> ((NtTeamDetails) o).setXp433((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp442").setGetter((o) -> ((NtTeamDetails) o).getXp442()).setSetter((o, v) -> ((NtTeamDetails) o).setXp442((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp451").setGetter((o) -> ((NtTeamDetails) o).getXp451()).setSetter((o, v) -> ((NtTeamDetails) o).setXp451((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp523").setGetter((o) -> ((NtTeamDetails) o).getXp523()).setSetter((o, v) -> ((NtTeamDetails) o).setXp523((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp532").setGetter((o) -> ((NtTeamDetails) o).getXp532()).setSetter((o, v) -> ((NtTeamDetails) o).setXp532((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp541").setGetter((o) -> ((NtTeamDetails) o).getXp541()).setSetter((o, v) -> ((NtTeamDetails) o).setXp541((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("xp550").setGetter((o) -> ((NtTeamDetails) o).getXp550()).setSetter((o, v) -> ((NtTeamDetails) o).setXp550((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("NAME").setGetter((o) -> ((NtTeamDetails) o).getTeamName()).setSetter((o, v) -> ((NtTeamDetails) o).setTeamName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SHORTNAME").setGetter((o) -> ((NtTeamDetails) o).getTeamNameShort()).setSetter((o, v) -> ((NtTeamDetails) o).setTeamNameShort((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COACHID").setGetter((o) -> ((NtTeamDetails) o).getCoachId()).setSetter((o, v) -> ((NtTeamDetails) o).setCoachId((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COACHNAME").setGetter((o) -> ((NtTeamDetails) o).getCoachName()).setSetter((o, v) -> ((NtTeamDetails) o).setCoachName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUEID").setGetter((o) -> ((NtTeamDetails) o).getLeagueId()).setSetter((o, v) -> ((NtTeamDetails) o).setLeagueId((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUENAME").setGetter((o) -> ((NtTeamDetails) o).getLeagueName()).setSetter((o, v) -> ((NtTeamDetails) o).setLeagueName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SUPPORTERPOPULARITY").setGetter((o) -> ((NtTeamDetails) o).getSupportersPopularity()).setSetter((o, v) -> ((NtTeamDetails) o).setSupportersPopularity((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RATING").setGetter((o) -> ((NtTeamDetails) o).getRatingScore()).setSetter((o, v) -> ((NtTeamDetails) o).setRatingScore((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FANCLUBSIZE").setGetter((o) -> ((NtTeamDetails) o).getFanclubSize()).setSetter((o, v) -> ((NtTeamDetails) o).setFanclubSize((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RANK").setGetter((o) -> ((NtTeamDetails) o).getRank()).setSetter((o, v) -> ((NtTeamDetails) o).setRank((Integer)v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FETCHEDDATE").setGetter((o) -> ((NtTeamDetails) o).getFetchedDate().toDbTimestamp()).setSetter((o, v) -> ((NtTeamDetails) o).setFetchedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
-		};
-	}
+    fun storeNTTeam(ntTeamDetails: NtTeamDetails?) {
+        ntTeamDetails?.let { store(it) }
+    }
 
-	@Override
-	protected String[] getConstraintStatements() {
-		return new String[]{
-				"  PRIMARY KEY (HRF_ID, TEAM_ID)"
-		};
-	}
+    private val selectBeforeStatementBuilder = PreparedSelectStatementBuilder(
+        this,
+        "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1"
+    )
+    private val selectTeamStatementBuilder =
+        PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL ORDER BY HRF_ID DESC LIMIT 1")
 
-	void storeNTTeam(NtTeamDetails ntTeamDetails) {
-		if (ntTeamDetails != null) {
-			store(ntTeamDetails);
-		}
-	}
+    fun loadNTTeam(teamId: Int, matchDate: Timestamp?): NtTeamDetails? {
+        return if (matchDate != null) {
+            loadOne(
+                NtTeamDetails::class.java,
+                adapter!!.executePreparedQuery(selectBeforeStatementBuilder.getStatement(), teamId, matchDate)
+            )
+        } else {
+            loadOne(
+                NtTeamDetails::class.java,
+                adapter!!.executePreparedQuery(selectTeamStatementBuilder.getStatement(), teamId)
+            )
+        }
+    }
 
-	private final PreparedSelectStatementBuilder selectBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
-	private final PreparedSelectStatementBuilder selectTeamStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL ORDER BY HRF_ID DESC LIMIT 1");
-	public NtTeamDetails loadNTTeam(int teamId, Timestamp matchDate) {
-		if ( matchDate!=null){
-			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectBeforeStatementBuilder.getStatement(), teamId, matchDate));
-		}
-		else {
-			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectTeamStatementBuilder.getStatement(), teamId));
-		}
-	}
+    fun loadNTTeams(hrfId: Int): List<NtTeamDetails?>? {
+        return load(NtTeamDetails::class.java, hrfId)
+    }
 
-	public List<NtTeamDetails> loadNTTeams(int hrfId) {
-		return load(NtTeamDetails.class, hrfId);
-	}
+    companion object {
+        const val TABLENAME = "NTTEAM"
+    }
 }

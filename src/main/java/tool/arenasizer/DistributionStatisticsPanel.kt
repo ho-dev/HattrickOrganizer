@@ -52,8 +52,7 @@ internal open class DistributionStatisticsPanel : JPanel() {
                 hoV.getLanguageString("ls.club.arena.seatsinvipboxes") + " ( %)",
                 hoV.getLanguageString("Fans")
             )
-            val matches =
-                DBManager.instance().getArenaStatistikModel(MatchesPanel.OWN_LEAGUE_GAMES).matches
+            val matches = DBManager.getArenaStatistikModel(MatchesPanel.OWN_LEAGUE_GAMES).matches
             val value =
                 Array(matches.size) {
                     arrayOfNulls<IHOTableEntry>(columnNames.size)

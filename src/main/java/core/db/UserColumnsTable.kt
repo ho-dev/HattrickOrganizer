@@ -1,154 +1,126 @@
-package core.db;
+package core.db
 
-import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.UserColumn;
-import core.gui.model.UserColumnFactory;
+import core.gui.comp.table.HOTableModel
+import core.gui.model.UserColumnFactory
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.Types;
+internal class UserColumnsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COLUMN_ID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _UserColumn?)!!.id }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as _UserColumn?)!!.id = (v as Int) }).setType(Types.INTEGER)
+                .isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MODELL_INDEX")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _UserColumn?)!!.modelIndex }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as _UserColumn?)!!.modelIndex = (v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TABLE_INDEX")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _UserColumn?)!!.index }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as _UserColumn?)!!.index = (v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COLUMN_WIDTH")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _UserColumn?)!!.preferredWidth }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as _UserColumn?)!!.preferredWidth = (v as Int?) })
+                .setType(Types.INTEGER).isNullable(true).build()
+        )
+    }
 
-class UserColumnsTable extends AbstractTable {
-	final static String TABLENAME = "USERCOLUMNS";
+    override fun createPreparedDeleteStatementBuilder(): PreparedDeleteStatementBuilder {
+        return PreparedDeleteStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?")
+    }
 
-	protected UserColumnsTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
+        return PreparedSelectStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?")
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_ID").setGetter((p) -> ((_UserColumn) p).getId()).setSetter((p, v) -> ((_UserColumn) p).setId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MODELL_INDEX").setGetter((p) -> ((_UserColumn) p).getModelIndex()).setSetter((p, v) -> ((_UserColumn) p).setModelIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TABLE_INDEX").setGetter((p) -> ((_UserColumn) p).getIndex()).setSetter((p, v) -> ((_UserColumn) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_WIDTH").setGetter((p) -> ((_UserColumn) p).getPreferredWidth()).setSetter((p, v) -> ((_UserColumn) p).setPreferredWidth((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-		};
-	}
+    fun deleteModel(modelId: Int) {
+        executePreparedDelete(modelId * 1000, modelId * 1000 + 999)
+    }
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
-		return new PreparedDeleteStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
-	}
+    fun saveModel(model: HOTableModel) {
+        deleteModel(model.id)
+        val dbcolumns = model.columns
+        for (i in dbcolumns.indices) {
+            if (model.id == 2 && dbcolumns[i].id == UserColumnFactory.ID) {
+                dbcolumns[i].setDisplay(true) // force ID column
+            }
+            if (dbcolumns[i].isDisplay) {
+                val _userColumn = _UserColumn()
+                _userColumn.modelIndex = i
+                _userColumn.id = (model.id * 1000 + dbcolumns[i].id)
+                _userColumn.preferredWidth = (dbcolumns[i].preferredWidth)
+                _userColumn.index = (dbcolumns[i].index)
+                store(_userColumn)
+            }
+        }
+    }
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-		return new PreparedSelectStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
-	}
+    fun insertDefault(model: HOTableModel) {
+        val dbColumns = model.columns
+        for (i in dbColumns.indices) {
+            dbColumns[i].index = i
 
-	void deleteModel(int modelId) {
-		executePreparedDelete(modelId * 1000, modelId * 1000 + 999);
-	}
+            // By default make all columns visible, except ID.
+            if (dbColumns[i].id != UserColumnFactory.ID) {
+                dbColumns[i].setDisplay(true)
+            }
+        }
+    }
 
-	void saveModel(HOTableModel model) {
-		deleteModel(model.getId());
-		UserColumn[] dbcolumns = model.getColumns();
-		for (int i = 0; i < dbcolumns.length; i++) {
+    fun loadModel(model: HOTableModel) {
+        var count = 0
+        val userColumns = load(_UserColumn::class.java, model.id * 1000, model.id * 1000 + 999)
+        if (!userColumns!!.isEmpty()) { // user may not delete all columns
+            val modelColumns = model.columns
+            if (model.userCanDisableColumns() && !DBManager.firstStart) {
+                for (modelColumn in modelColumns) {
+                    modelColumn.setDisplay(!modelColumn.isEditable)
+                }
+            }
+            for (userColumn in userColumns) {
+                val modelIndex: Int = userColumn.modelIndex
+                if (modelIndex < modelColumns.size) {
+                    val modelColumn = modelColumns[modelIndex]
+                    modelColumn.preferredWidth = userColumn.preferredWidth!!
+                    modelColumn.setDisplay(true)
+                    modelColumn.index = userColumn.index
+                    count++
+                }
+            }
+        }
+        if (count == 0) {
+            insertDefault(model)
+        }
+    }
 
-			if (model.getId() == 2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
-				dbcolumns[i].setDisplay(true); // force ID column
-			}
+    /**
+     * kind of a clone of abstract class UserColumn used to load and store user column information
+     */
+    private class _UserColumn : Storable() {
+        var id = 0
+        /**
+         * return index of the user column in the model's array definition
+         * @return int
+         */
+        /**
+         * set the index of the user column in the model's array definition
+         * @param modelIndex int
+         */
+        var modelIndex = 0
 
-			if (dbcolumns[i].isDisplay()) {
-				var _userColumn = new _UserColumn();
-				_userColumn.setModelIndex(i);
-				_userColumn.setId(model.getId() * 1000 + dbcolumns[i].getId());
-				_userColumn.setPreferredWidth(dbcolumns[i].getPreferredWidth());
-				_userColumn.setIndex(dbcolumns[i].getIndex());
-				store(_userColumn);
-			}
-		}
-	}
+        /**
+         * set index
+         * if columnModel should be saved index will set, or column is loaded
+         * @param index int
+         */
+        var index = 0
+        var preferredWidth: Int? = null
+    }
 
-	void insertDefault(HOTableModel model) {
-		UserColumn[] dbColumns = model.getColumns();
-		for (int i = 0; i < dbColumns.length; i++) {
-			dbColumns[i].setIndex(i);
-
-			// By default make all columns visible, except ID.
-			if (dbColumns[i].getId() != UserColumnFactory.ID) {
-				dbColumns[i].setDisplay(true);
-			}
-		}
-	}
-
-	void loadModel(HOTableModel model) {
-		int count = 0;
-		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
-		if (!userColumns.isEmpty()) { // user may not delete all columns
-			var modelColumns = model.getColumns();
-			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
-				for (var modelColumn : modelColumns) {
-					modelColumn.setDisplay(!modelColumn.isEditable());
-				}
-			}
-			for (var userColumn : userColumns) {
-				var modelIndex = userColumn.getModelIndex();
-				if (modelIndex < modelColumns.length) {
-					var modelColumn = modelColumns[modelIndex];
-					modelColumn.setPreferredWidth(userColumn.getPreferredWidth());
-					modelColumn.setDisplay(true);
-					modelColumn.setIndex(userColumn.getIndex());
-					count++;
-				}
-			}
-		}
-		if (count == 0) {
-			insertDefault(model);
-		}
-	}
-
-	/**
-	 * kind of a clone of abstract class UserColumn used to load and store user column information
-	 */
-	private static class _UserColumn extends AbstractTable.Storable{
-
-		private int id;
-		private int modelIndex;
-		private int index;
-		private Integer preferredWidth;
-
-		public _UserColumn(){}
-		/**
-		 * set index
-		 * if columnModel should be saved index will set, or column is loaded
-		 * @param index int
-		 */
-		public final void setIndex(int index) {
-			this.index = index;
-		}
-
-		/**
-		 * return index of the user column in the model's array definition
-		 * @return int
-		 */
-		public int getModelIndex() {
-			return modelIndex;
-		}
-
-		/**
-		 * set the index of the user column in the model's array definition
-		 * @param modelIndex int
-		 */
-		public void setModelIndex(int modelIndex) {
-			this.modelIndex = modelIndex;
-		}
-
-		public int getIndex() {
-			return index;
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(int id) {
-			this.id = id;
-		}
-
-		public Integer getPreferredWidth() {
-			return preferredWidth;
-		}
-
-		public void setPreferredWidth(Integer preferredWidth) {
-			this.preferredWidth = preferredWidth;
-		}
-	}
+    companion object {
+        const val TABLENAME = "USERCOLUMNS"
+    }
 }

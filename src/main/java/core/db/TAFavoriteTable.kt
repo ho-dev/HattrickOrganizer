@@ -1,52 +1,51 @@
-package core.db;
+package core.db
 
-import module.teamAnalyzer.vo.Team;
-import java.sql.Types;
-import java.util.List;
+import module.teamAnalyzer.vo.Team
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
 /**
  * The Table UserConfiguration contain all User properties.
  * CONFIG_KEY = Primary Key, fieldname of the class
  * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype if loaded
- * 
- * @since 1.36
  *
+ * @since 1.36
  */
-final class TAFavoriteTable extends AbstractTable {
-	final static String TABLENAME = "TA_FAVORITE";
-
-	TAFavoriteTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
-
-	@Override
-	protected void initColumns() {
-
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("TEAMID").setGetter((p) -> ((Team) p).getTeamId()).setSetter((p, v) -> ((Team) p).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("NAME").setGetter((p) -> ((Team) p).getName()).setSetter((p, v) -> ((Team) p).setName((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(20).build()
-        };
-	}
-
-    void removeTeam(int teamId) {
-        executePreparedDelete(teamId);
-    }
-    
-    void addTeam(Team team) {
-        store(team);
+internal class TAFavoriteTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TEAMID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.teamId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.teamId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).isPrimaryKey(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NAME")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.name }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Team?)!!.name = v as String? }).setType(Types.VARCHAR)
+                .isNullable(true).setLength(20).build()
+        )
     }
 
-    boolean isTAFavourite(int teamId) {
-        return isStored(teamId);
+    fun removeTeam(teamId: Int) {
+        executePreparedDelete(teamId)
     }
 
-    private final PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
-    /**
-     * Returns all favourite teams
-     *
-     * @return List of Teams Object
-     */
-    List<Team> getTAFavoriteTeams() {
-        return load(Team.class, adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement()));
+    fun addTeam(team: Team?) {
+        store(team)
+    }
+
+    fun isTAFavourite(teamId: Int): Boolean {
+        return isStored(teamId)
+    }
+
+    private val getTAFavoriteTeamsBuilder = PreparedSelectStatementBuilder(this, "")
+
+    fun getTAFavoriteTeams(): List<Team?> {
+        return load(Team::class.java, adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement()))
+    }
+
+
+    companion object {
+        const val TABLENAME = "TA_FAVORITE"
     }
 }

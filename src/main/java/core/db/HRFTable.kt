@@ -1,193 +1,191 @@
-package core.db;
+package core.db
 
-import core.file.hrf.HRF;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
+import core.file.hrf.HRF
+import core.util.HODateTime
+import core.util.HOLogger
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public final class HRFTable extends AbstractTable {
+class HRFTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    private var maxHrf = HRF()
+    private var latestHrf = HRF()
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as HRF?)!!.hrfId })
+                .setSetter(BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as HRF?)!!.hrfId = v as Int })
+                .setType(Types.INTEGER).isNullable(false)
+                .isPrimaryKey(true)
+                .build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Datum")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as HRF?)!!.datum.toDbTimestamp() })
+                .setSetter(BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as HRF?)!!.datum = (v as HODateTime?)!! })
+                .setType(Types.TIMESTAMP)
+                .isNullable(false)
+                .build()
+        )
+    }
 
-	/** tablename **/
-	public final static String TABLENAME = "HRF";
+     override val createIndexStatement: Array<String?>
+         get() = arrayOf(
+            "CREATE INDEX iHRF_1 ON " + tableName + "("
+                    + columns[1].columnName + ")"
+        )
 
-	private HRF maxHrf = new HRF();
-	private HRF latestHrf = new HRF();
+    fun getLatestHrf(): HRF {
+        if (latestHrf.hrfId == -1) {
+            val hrf = loadLatestDownloadedHRF()
+            if (hrf != null) {
+                latestHrf = hrf
+            }
+        }
+        return latestHrf
+    }
 
-	HRFTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    fun getMaxHrf(): HRF {
+        if (maxHrf.hrfId == -1) {
+            val hrf = loadMaxHrf()
+            if (hrf != null) {
+                maxHrf = hrf
+            }
+        }
+        return maxHrf
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID")
-						.setGetter((o) -> ((HRF) o).getHrfId())
-						.setSetter((o, v) -> ((HRF) o).setHrfId((int)v))
-						.setType(Types.INTEGER).isNullable(false)
-						.isPrimaryKey(true)
-						.build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Datum")
-						.setGetter((o) -> ((HRF) o).getDatum().toDbTimestamp())
-						.setSetter((o, v) -> ((HRF) o).setDatum((HODateTime) v))
-						.setType(Types.TIMESTAMP)
-						.isNullable(false)
-						.build()
-		};
-	}
+    /**
+     * Save hattrick resource file information
+     */
+    fun saveHRF(hrf: HRF) {
+        store(hrf)
+        if (hrf.hrfId > getMaxHrf().hrfId) {
+            maxHrf = hrf
+        }
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] { "CREATE INDEX iHRF_1 ON " + getTableName() + "("
-				+ columns[1].getColumnName() + ")" };
-	}
+        // reimport of latest hrf file has to set latestHrf to a new value
+        if (!hrf.datum.isBefore(getLatestHrf().datum) && hrf.hrfId != latestHrf.hrfId) {
+            latestHrf = hrf
+        }
+    }
 
-	HRF getLatestHrf() {
-		if (latestHrf.getHrfId() == -1) {
-			var hrf =  loadLatestDownloadedHRF();
-			if ( hrf != null){
-				latestHrf = hrf;
-			}
-		}
-		return latestHrf;
-	}
+    private val getGetHrfID4DateStatementBeforeBuilder =
+        PreparedSelectStatementBuilder(this, " WHERE Datum<=? ORDER BY Datum DESC LIMIT 1")
+    private val getGetHrfID4DateStatementAfterBuilder =
+        PreparedSelectStatementBuilder(this, " WHERE Datum>? ORDER BY Datum LIMIT 1")
 
-	HRF getMaxHrf() {
-		if (maxHrf.getHrfId() == -1) {
-			var hrf = loadMaxHrf();
-			if ( hrf != null){
-				maxHrf = hrf;
-			}
-		}
-		return maxHrf;
-	}
+    /**
+     * Load id of latest hrf downloaded before time if available, otherwise the first after time
+     */
+    fun getHrfIdNearDate(time: Timestamp?): Int {
+        var hrfID = 0
+        var rs = adapter.executePreparedQuery(getGetHrfID4DateStatementBeforeBuilder.getStatement(), time)
+        try {
+            if (rs != null) {
+                if (rs.next()) {
+                    // HRF available?
+                    hrfID = rs.getInt("HRF_ID")
+                } else {
+                    rs = adapter.executePreparedQuery(getGetHrfID4DateStatementAfterBuilder.getStatement(), time)
+                    assert(rs != null)
+                    if (rs!!.next()) {
+                        hrfID = rs.getInt("HRF_ID")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, "DatenbankZugriff.getHRFID4Time: $e")
+        }
+        return hrfID
+    }
 
-	/**
-	 * Save hattrick resource file information
-	 */
-	void saveHRF(HRF hrf) {
-		store(hrf);
-		if (hrf.getHrfId() > getMaxHrf().getHrfId()) {
-			maxHrf = hrf;
-		}
+    private val loadAllHrfAscendingStatementBuilder = PreparedSelectStatementBuilder(this, "ORDER BY DATUM ASC")
+    private val loadAllHrfDescendingStatementBuilder = PreparedSelectStatementBuilder(this, "ORDER BY DATUM DESC")
 
-		// reimport of latest hrf file has to set latestHrf to a new value
-		if (!hrf.getDatum().isBefore(getLatestHrf().getDatum()) && hrf.getHrfId() != latestHrf.getHrfId()) {
-			latestHrf = hrf;
-		}
-	}
+    /**
+     * Get a list of all HRFs
+     *
+     * @param asc
+     * order ascending (descending otherwise)
+     *
+     * @return all matching HRFs
+     */
+    fun loadAllHRFs(asc: Boolean): Array<HRF?> {
+        val list: List<HRF?>?
+        list = if (asc) {
+            load(HRF::class.java, adapter.executePreparedQuery(loadAllHrfAscendingStatementBuilder.getStatement()))
+        } else {
+            load(HRF::class.java, adapter.executePreparedQuery(loadAllHrfDescendingStatementBuilder.getStatement()))
+        }
+        // Convert to array
+        return list.toTypedArray<HRF?>()
+    }
 
-	private final PreparedSelectStatementBuilder getGetHrfID4DateStatementBeforeBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum<=? ORDER BY Datum DESC LIMIT 1");
-	private final PreparedSelectStatementBuilder getGetHrfID4DateStatementAfterBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum>? ORDER BY Datum LIMIT 1");
+    private val loadHRFOrderedStatementBuilder =
+        PreparedSelectStatementBuilder(this, " WHERE Datum>=? ORDER BY Datum ASC")
 
-	/**
-	 * Load id of latest hrf downloaded before time if available, otherwise the first after time
-	 */
-	int getHrfIdNearDate(Timestamp time) {
-		int hrfID = 0;
-		var rs = adapter.executePreparedQuery(getGetHrfID4DateStatementBeforeBuilder.getStatement(), time);
-		try {
-			if (rs != null) {
-				if (rs.next()) {
-					// HRF available?
-					hrfID = rs.getInt("HRF_ID");
-				}
-				else {
-					rs = adapter.executePreparedQuery(getGetHrfID4DateStatementAfterBuilder.getStatement(), time);
-					assert rs != null;
-					if (rs.next()) {
-						hrfID = rs.getInt("HRF_ID");
-					}
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getHRFID4Time: " + e);
-		}
+    fun getHRFsSince(from: Timestamp?): List<HRF?> {
+        return load(
+            HRF::class.java,
+            adapter.executePreparedQuery(loadHRFOrderedStatementBuilder.getStatement(), from)
+        )
+    }
 
-		return hrfID;
-	}
+    private val loadLatestHRFDownloadedBeforeStatementBuilder =
+        PreparedSelectStatementBuilder(this, "where DATUM < ? order by DATUM desc LIMIT 1")
 
-	private final PreparedSelectStatementBuilder loadAllHrfAscendingStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY DATUM ASC");
-	private final PreparedSelectStatementBuilder loadAllHrfDescendingStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY DATUM DESC");
-	/**
-	 * Get a list of all HRFs
-	 * 
-	 * @param asc
-	 *            order ascending (descending otherwise)
-	 * 
-	 * @return all matching HRFs
-	 */
-	HRF[] loadAllHRFs( boolean asc) {
-		List<HRF> list;
-		if (asc){
-			list = load(HRF.class, adapter.executePreparedQuery(loadAllHrfAscendingStatementBuilder.getStatement()));
-		}
-		else{
-			list = load(HRF.class, adapter.executePreparedQuery(loadAllHrfDescendingStatementBuilder.getStatement()));
-		}
-		// Convert to array
-		return list.toArray(new HRF[0]);
-	}
+    fun loadLatestHRFDownloadedBefore(fetchDate: Timestamp?): HRF? {
+        return loadHRF(loadLatestHRFDownloadedBeforeStatementBuilder.getStatement(), fetchDate!!)
+    }
 
-	private final PreparedSelectStatementBuilder loadHRFOrderedStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE Datum>=? ORDER BY Datum ASC");
+    /**
+     * liefert die Maximal Vergebene Id eines HRF-Files
+     */
+    private val loadMaxHrfStatementBuilder = PreparedSelectStatementBuilder(this, "order by HRF_ID desc LIMIT 1")
+    private fun loadMaxHrf(): HRF? {
+        return loadHRF(loadMaxHrfStatementBuilder.getStatement())
+    }
 
-	public List<HRF> getHRFsSince(Timestamp from) {
-		return load(HRF.class, adapter.executePreparedQuery(loadHRFOrderedStatementBuilder.getStatement(), from));
-	}
+    fun loadHRF(id: Int): HRF? {
+        return loadHRF(preparedSelectStatement, id)
+    }
 
-	private final PreparedSelectStatementBuilder loadLatestHRFDownloadedBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "where DATUM < ? order by DATUM desc LIMIT 1");
-	public HRF loadLatestHRFDownloadedBefore(Timestamp fetchDate) {
-		return loadHRF(loadLatestHRFDownloadedBeforeStatementBuilder.getStatement(), fetchDate);
-	}
+    private val loadLatestDownloadedHRFStatementBuilder =
+        PreparedSelectStatementBuilder(this, "order by DATUM desc LIMIT 1")
 
-	/**
-	 * liefert die Maximal Vergebene Id eines HRF-Files
-	 */
-	private final PreparedSelectStatementBuilder loadMaxHrfStatementBuilder = new PreparedSelectStatementBuilder(this, "order by HRF_ID desc LIMIT 1");
+    fun loadLatestDownloadedHRF(): HRF? {
+        return loadHRF(loadLatestDownloadedHRFStatementBuilder.getStatement())
+    }
 
-	private HRF loadMaxHrf() {
-		return loadHRF(loadMaxHrfStatementBuilder.getStatement());
-	}
+    private val loadHRFDownloadedAtStatementBuilder = PreparedSelectStatementBuilder(this, "where DATUM =?")
+    fun loadHRFDownloadedAt(fetchDate: Timestamp?): HRF? {
+        return loadHRF(loadHRFDownloadedAtStatementBuilder.getStatement(), fetchDate!!)
+    }
 
-	public HRF loadHRF(int id){
-		return loadHRF(getPreparedSelectStatement(), id );
-	}
+    private fun loadHRF(preparedStatement: PreparedStatement?, vararg params: Any): HRF? {
+        return loadOne(HRF::class.java, adapter.executePreparedQuery(preparedStatement, *params))
+    }
 
-	private final PreparedSelectStatementBuilder loadLatestDownloadedHRFStatementBuilder = new PreparedSelectStatementBuilder(this, "order by DATUM desc LIMIT 1");
-	public HRF loadLatestDownloadedHRF() {
-		return loadHRF(loadLatestDownloadedHRFStatementBuilder.getStatement());
-	}
+    fun getHrfIdPerWeekList(nWeeks: Int): List<Int> {
+        val sql = "select min(hrf_id) as id from " +
+                tableName +
+                " group by unix_timestamp(datum)/7/86400 order by id desc limit " +
+                nWeeks
+        val ret = ArrayList<Int>()
+        val rs = adapter.executeQuery(sql)
+        try {
+            if (rs != null) {
+                while (rs.next()) {
+                    ret.add(rs.getInt("ID"))
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, "DatenbankZugriff.getAllHRFs: $e")
+        }
+        return ret
+    }
 
-	private final PreparedSelectStatementBuilder loadHRFDownloadedAtStatementBuilder = new PreparedSelectStatementBuilder(this, "where DATUM =?");
-	public HRF loadHRFDownloadedAt(Timestamp fetchDate){
-		return loadHRF(loadHRFDownloadedAtStatementBuilder.getStatement(), fetchDate);
-	}
-
-	private HRF loadHRF(PreparedStatement preparedStatement, Object ... params) {
-		return loadOne(HRF.class, adapter.executePreparedQuery(preparedStatement,params));
-	}
-
-	public List<Integer> getHrfIdPerWeekList(int nWeeks) {
-		var sql = "select min(hrf_id) as id from " +
-				getTableName() +
-				" group by unix_timestamp(datum)/7/86400 order by id desc limit " +
-				nWeeks;
-
-		var ret = new ArrayList<Integer>();
-		final ResultSet rs = adapter.executeQuery(sql);
-		try {
-			if (rs != null) {
-				while (rs.next()) {
-					ret.add(rs.getInt("ID"));
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DatenbankZugriff.getAllHRFs: " + e);
-		}
-		return ret;
-	}
+    companion object {
+        /** tablename  */
+        const val TABLENAME = "HRF"
+    }
 }

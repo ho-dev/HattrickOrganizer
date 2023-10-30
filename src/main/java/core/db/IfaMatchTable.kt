@@ -1,80 +1,110 @@
-package core.db;
+package core.db
 
-import core.model.HOVerwaltung;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import module.ifa.IfaMatch;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.Types;
+import core.model.HOVerwaltung
+import core.util.HODateTime
+import core.util.HOLogger
+import module.ifa.IfaMatch
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public class IfaMatchTable extends AbstractTable {
+class IfaMatchTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MATCHID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.matchId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.matchId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchTyp")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.matchTyp }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.matchTyp = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PLAYEDDATE")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.playedDate.toDbTimestamp() }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as IfaMatch?)!!.playedDate = v as HODateTime? }).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HOMETEAMID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.homeTeamId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.homeTeamId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("AWAYTEAMID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.awayTeamId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.awayTeamId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HOMETEAMGOALS")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.homeTeamGoals }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.homeTeamGoals = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("AWAYTEAMGOALS")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.awayTeamGoals }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.awayTeamGoals = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HOME_LEAGUEID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.homeLeagueId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.homeLeagueId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("AWAY_LEAGUEID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as IfaMatch?)!!.awayLeagueId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as IfaMatch?)!!.awayLeagueId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build()
+        )
+    }
 
-	public final static String TABLENAME = "IFA_MATCHES";
+    protected override val constraintStatements: Array<String?>
+        get() = arrayOf(" PRIMARY KEY (MATCHID, MATCHTYP)")
 
-	IfaMatchTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-		idColumns = 2;
-	}
+    fun isMatchInDB(matchId: Int, matchTyp: Int): Boolean {
+        val match = loadOne(IfaMatch::class.java, matchId, matchTyp)
+        return match != null
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("MATCHID").setGetter((o) -> ((IfaMatch) o).getMatchId()).setSetter((o, v) -> ((IfaMatch) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((IfaMatch) o).getMatchTyp()).setSetter((o, v) -> ((IfaMatch) o).setMatchTyp((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("PLAYEDDATE").setGetter((o) -> ((IfaMatch) o).getPlayedDate().toDbTimestamp()).setSetter((o, v) -> ((IfaMatch) o).setPlayedDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMID").setGetter((o) -> ((IfaMatch) o).getHomeTeamId()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMID").setGetter((o) -> ((IfaMatch) o).getAwayTeamId()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMGOALS").setGetter((o) -> ((IfaMatch) o).getHomeTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMGOALS").setGetter((o) -> ((IfaMatch) o).getAwayTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOME_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getHomeLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setHomeLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getAwayLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setAwayLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    fun getLastMatchDate(): Timestamp? {
+        val select = "SELECT MAX(PLAYEDDATE) FROM $tableName"
+        val rs = adapter.executeQuery(select)
+        try {
+            if (rs != null && rs.next()) {
+                return rs.getTimestamp(1)
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().error(this.javaClass, e)
+        }
+        return null
+    }
 
-	@Override
-	protected String[] getConstraintStatements() {
-		return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP)"};
-	}
+    private val getHomeMatchesStatementBuilder =
+        PreparedSelectStatementBuilder(this, "WHERE HOMETEAMID=? ORDER BY AWAY_LEAGUEID ASC")
+    private val getAwayMatchesStatementBuilder =
+        PreparedSelectStatementBuilder(this, "WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC")
 
-	boolean isMatchInDB(int matchId, int matchTyp) {
-		var match = loadOne(IfaMatch.class, matchId, matchTyp);
-		return match != null;
-	}
+    init {
+        idColumns = 2
+    }
 
-	Timestamp getLastMatchDate() {
-		String select = "SELECT MAX(" + "PLAYEDDATE" + ") FROM " + getTableName();
-		ResultSet rs = adapter.executeQuery(select);
-		try {
-			if ((rs != null) && (rs.next())) {
-				return rs.getTimestamp(1);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().error(this.getClass(), e);
-		}
-		return null;
-	}
+    fun getMatches(home: Boolean): Array<IfaMatch?> {
+        val list = load(
+            IfaMatch::class.java,
+            adapter.executePreparedQuery(
+                if (home) getHomeMatchesStatementBuilder.getStatement() else getAwayMatchesStatementBuilder.getStatement(),
+                HOVerwaltung.instance().model.getBasics().teamId
+            )
+        )
+        return list.toTypedArray<IfaMatch?>()
+    }
 
-	private final PreparedSelectStatementBuilder getHomeMatchesStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE HOMETEAMID=? ORDER BY AWAY_LEAGUEID ASC");
-	private final PreparedSelectStatementBuilder getAwayMatchesStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC");
+    fun insertMatch(match: IfaMatch?) {
+        store(match)
+    }
 
-	IfaMatch[] getMatches(boolean home) {
-		var list = load(IfaMatch.class,
-				adapter.executePreparedQuery(home?getHomeMatchesStatementBuilder.getStatement():getAwayMatchesStatementBuilder.getStatement(),
-						HOVerwaltung.instance().getModel().getBasics().getTeamId()));
-		return list.toArray(new IfaMatch[0]);
-	}
+    override fun createPreparedDeleteStatementBuilder(): PreparedDeleteStatementBuilder {
+        return PreparedDeleteStatementBuilder(this, "")
+    }
 
-	void insertMatch(IfaMatch match) {
-		store(match);
-	}
+    fun deleteAllMatches() {
+        executePreparedDelete()
+    }
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "");
-	}
-	void deleteAllMatches() {
-		executePreparedDelete();
-	}
-
+    companion object {
+        const val TABLENAME = "IFA_MATCHES"
+    }
 }

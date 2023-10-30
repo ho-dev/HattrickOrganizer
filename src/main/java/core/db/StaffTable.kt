@@ -1,53 +1,72 @@
-package core.db;
+package core.db
 
-import core.model.StaffMember;
-import core.model.StaffType;
-import java.sql.Types;
-import java.util.List;
+import core.model.StaffMember
+import core.model.StaffType
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public class StaffTable extends AbstractTable{
-	/** tablename **/
-	public final static String TABLENAME = "STAFF";
+class StaffTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HrfID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.hrfId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as StaffMember?)!!.hrfId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("id")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.id }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as StaffMember?)!!.id = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("index")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.index }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as StaffMember?)!!.index = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("stafftype")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.staffType.id }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any ->
+                    (p as StaffMember?)!!.staffType = StaffType.getById(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("level")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.level }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as StaffMember?)!!.level = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("cost")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.cost }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as StaffMember?)!!.cost = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("name")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as StaffMember?)!!.name }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as StaffMember?)!!.name = v as String? })
+                .setType(Types.VARCHAR).setLength(127).isNullable(false).build()
+        )
+    }
 
-	protected StaffTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder? {
+        return PreparedSelectStatementBuilder(this, "WHERE HrfID = ? ORDER BY index")
+    }
 
-	@Override
-	protected void initColumns() {
+    fun getStaffByHrfId(hrfId: Int): List<StaffMember?>? {
+        return load(StaffMember::class.java, hrfId)
+    }
 
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HrfID").setGetter((p) -> ((StaffMember) p).getHrfId()).setSetter((p, v) -> ((StaffMember) p).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("id").setGetter((p) -> ((StaffMember) p).getId()).setSetter((p, v) -> ((StaffMember) p).setId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("index").setGetter((p) -> ((StaffMember) p).getIndex()).setSetter((p, v) -> ((StaffMember) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("stafftype").setGetter((p) -> ((StaffMember) p).getStaffType().getId()).setSetter((p, v) -> ((StaffMember) p).setStaffType(StaffType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("level").setGetter((p) -> ((StaffMember) p).getLevel()).setSetter((p, v) -> ((StaffMember) p).setLevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("cost").setGetter((p) -> ((StaffMember) p).getCost()).setSetter((p, v) -> ((StaffMember) p).setCost((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("name").setGetter((p) -> ((StaffMember) p).getName()).setSetter((p, v) -> ((StaffMember) p).setName((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build()
-		};
-	}
+    fun storeStaff(hrfId: Int, list: List<StaffMember>?) {
+        if (list == null || hrfId < 0) {
+            return
+        }
+        executePreparedDelete(hrfId)
+        var index = 0
+        for (staff in list) {
+            staff.index = index++
+            staff.hrfId = hrfId
+            staff.stored = false
+            store(staff)
+        }
+    }
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "WHERE HrfID = ? ORDER BY index");
-	}
-	protected List<StaffMember> getStaffByHrfId(int hrfId) {
-		return load(StaffMember.class, hrfId);
-	}
-	
-	protected void storeStaff(int hrfId, List<StaffMember> list) {
-		
-		if ( list==null || hrfId < 0) {
-			return;
-		}
-
-		executePreparedDelete(hrfId);
-		int index = 0;
-		for (StaffMember staff : list) {
-			staff.setIndex(index++);
-			staff.setHrfId(hrfId);
-			staff.setIsStored(false);
-			store(staff);
-		}
-	}
+    companion object {
+        /** tablename  */
+        const val TABLENAME = "STAFF"
+    }
 }

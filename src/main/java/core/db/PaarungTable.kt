@@ -1,56 +1,89 @@
-package core.db;
+package core.db
 
-import core.model.series.Paarung;
-import core.util.HODateTime;
-import module.series.Spielplan;
-import java.sql.Types;
-import java.util.List;
+import core.model.series.Paarung
+import core.util.HODateTime
+import module.series.Spielplan
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public final class PaarungTable extends AbstractTable {
+class PaarungTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    init {
+        idColumns = 2
+    }
 
-	/** tablename **/
-	public final static String TABLENAME = "PAARUNG";
-	
-	PaarungTable(JDBCAdapter adapter){
-		super(TABLENAME,adapter);
-		idColumns = 2;
-	}
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LigaID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.ligaId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.ligaId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Saison")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.saison }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.saison = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HeimName")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.heimName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Paarung?)!!.heimName = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GastName")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.gastName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Paarung?)!!.gastName = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Datum")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.datum.toDbTimestamp() }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Paarung?)!!.datum = v as HODateTime? })
+                .setType(Types.TIMESTAMP).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Spieltag")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.spieltag }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.spieltag = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HeimID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.heimId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.heimId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GastID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.gastId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.gastId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HeimTore")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.toreHeim }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.toreHeim = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GastTore")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.toreGast }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.toreGast = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Paarung?)!!.matchId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Paarung?)!!.matchId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build()
+        )
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((o) -> ((Paarung) o).getLigaId()).setSetter((o, v) -> ((Paarung) o).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((o) -> ((Paarung) o).getSaison()).setSetter((o, v) -> ((Paarung) o).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimName").setGetter((o) -> ((Paarung) o).getHeimName()).setSetter((o, v) -> ((Paarung) o).setHeimName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastName").setGetter((o) -> ((Paarung) o).getGastName()).setSetter((o, v) -> ((Paarung) o).setGastName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((Paarung) o).getDatum().toDbTimestamp()).setSetter((o, v) -> ((Paarung) o).setDatum((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Spieltag").setGetter((o) -> ((Paarung) o).getSpieltag()).setSetter((o, v) -> ((Paarung) o).setSpieltag((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimID").setGetter((o) -> ((Paarung) o).getHeimId()).setSetter((o, v) -> ((Paarung) o).setHeimId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastID").setGetter((o) -> ((Paarung) o).getGastId()).setSetter((o, v) -> ((Paarung) o).setGastId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HeimTore").setGetter((o) -> ((Paarung) o).getToreHeim()).setSetter((o, v) -> ((Paarung) o).setToreHeim((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GastTore").setGetter((o) -> ((Paarung) o).getToreGast()).setSetter((o, v) -> ((Paarung) o).setToreGast((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((Paarung) o).getMatchId()).setSetter((o, v) -> ((Paarung) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    /**
+     * Saves a list of games to a given game schedule, i.e. [Spielplan].
+     */
+    fun storePaarung(fixtures: List<Paarung>?, ligaId: Int, saison: Int) {
+        if (fixtures == null) {
+            return
+        }
+        // Remove existing fixtures for the Spielplan if any exists.
+        executePreparedDelete(ligaId, saison)
+        for (fixture in fixtures) {
+            fixture.ligaId = ligaId
+            fixture.saison = saison
+            fixture.stored = false
+            store(fixture)
+        }
+    }
 
-	/**
-	 * Saves a list of games to a given game schedule, i.e. {@link Spielplan}.
-	 */
-	void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
-		if (fixtures == null) {
-			return;
-		}
-		// Remove existing fixtures for the Spielplan if any exists.
-		executePreparedDelete(ligaId, saison);
-		for ( var fixture : fixtures){
-			fixture.setLigaId(ligaId);
-			fixture.setSaison(saison);
-			fixture.setIsStored(false);
-			store(fixture);
-		}
-	}
+    fun loadFixtures(ligaId: Int, season: Int): List<Paarung?>? {
+        return load(Paarung::class.java, ligaId, season)
+    }
 
-	public List<Paarung> loadFixtures(int ligaId, int season){
-		return load(Paarung.class, ligaId, season);
-	}
+    companion object {
+        /** tablename  */
+        const val TABLENAME = "PAARUNG"
+    }
 }

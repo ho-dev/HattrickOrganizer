@@ -1,40 +1,64 @@
-package core.db;
+package core.db
 
+import core.training.FuturePlayerTraining
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import core.training.FuturePlayerTraining;
-import java.sql.Types;
-import java.util.List;
-
-public class FuturePlayerTrainingTable extends AbstractTable {
-
-    public final static String TABLENAME = "FUTUREPLAYERTRAINING";
-
-    /**
-     * constructor
-     */
-    public FuturePlayerTrainingTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
+class FuturePlayerTrainingTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("playerId")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.playerId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as FuturePlayerTraining?)!!.playerId = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("fromWeek")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.fromWeek }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as FuturePlayerTraining?)!!.fromWeek = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("fromSeason")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.fromSeason }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as FuturePlayerTraining?)!!.fromSeason = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("toWeek")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.toWeek }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as FuturePlayerTraining?)!!.toWeek = v as Int? })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("toSeason")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.toSeason }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as FuturePlayerTraining?)!!.toSeason = v as Int? })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("prio")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as FuturePlayerTraining?)!!.priority.value }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any ->
+                    (o as FuturePlayerTraining?)!!.priority = FuturePlayerTraining.Priority.valueOf(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build()
+        )
     }
 
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("playerId").setGetter((o) -> ((FuturePlayerTraining) o).getPlayerId()).setSetter((o, v) -> ((FuturePlayerTraining) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("fromWeek").setGetter((o) -> ((FuturePlayerTraining) o).getFromWeek()).setSetter((o, v) -> ((FuturePlayerTraining) o).setFromWeek((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("fromSeason").setGetter((o) -> ((FuturePlayerTraining) o).getFromSeason()).setSetter((o, v) -> ((FuturePlayerTraining) o).setFromSeason((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("toWeek").setGetter((o) -> ((FuturePlayerTraining) o).getToWeek()).setSetter((o, v) -> ((FuturePlayerTraining) o).setToWeek((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("toSeason").setGetter((o) -> ((FuturePlayerTraining) o).getToSeason()).setSetter((o, v) -> ((FuturePlayerTraining) o).setToSeason((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("prio").setGetter((o) -> ((FuturePlayerTraining) o).getPriority().getValue()).setSetter((o, v) -> ((FuturePlayerTraining) o).setPriority(FuturePlayerTraining.Priority.valueOf((int) v))).setType(Types.INTEGER).isNullable(false).build()
-        };
+    fun getFuturePlayerTrainingPlan(playerId: Int): List<FuturePlayerTraining?>? {
+        return load(FuturePlayerTraining::class.java, playerId)
     }
 
-    List<FuturePlayerTraining> getFuturePlayerTrainingPlan(int playerId) {
-        return load(FuturePlayerTraining.class, playerId);
-    }
-
-    public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
-        for (var t : futurePlayerTrainings) {
-            store(t);
+    fun storeFuturePlayerTrainings(futurePlayerTrainings: List<FuturePlayerTraining?>) {
+        for (t in futurePlayerTrainings) {
+            store(t)
         }
+    }
+
+    companion object {
+        const val TABLENAME = "FUTUREPLAYERTRAINING"
     }
 }

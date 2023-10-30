@@ -1,195 +1,214 @@
 // %4089797104:de.hattrickorganizer.database%
-package core.db;
+package core.db
 
-import core.util.ExceptionUtils;
-import core.util.HOLogger;
-
-import java.sql.*;
+import core.util.ExceptionUtils
+import core.util.HOLogger
+import java.sql.*
 
 /**
  * Provides the connection functions to the database
  */
-public class JDBCAdapter {
-	private Connection m_clConnection;
-	private Statement m_clStatement;
-	private DBInfo m_clDBInfo;
+class JDBCAdapter
+/**
+ * Creates new JDBCApapter
+ */
+{
+    private var m_clConnection: Connection? = null
+    private var m_clStatement: Statement? = null
+    private var m_clDBInfo: DBInfo? = null
 
-	/**
-	 * Creates new JDBCApapter
-	 */
-	public JDBCAdapter() {
-	}
+    /**
+     * Closes the connection
+     */
+    fun disconnect() {
+        m_clConnection = try {
+            val statement =
+                m_clConnection!!.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+            statement.execute("SHUTDOWN")
+            m_clConnection!!.close()
+            null
+        } catch (e: Exception) {
+            HOLogger.instance().error(javaClass, "JDBCAdapter.disconnect : $e")
+            null
+        }
+    }
 
-	/**
-	 * Closes the connection
-	 */
-	public final void disconnect() {
-		try {
-			var statement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			statement.execute("SHUTDOWN");
-			m_clConnection.close();
-			m_clConnection = null;
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "JDBCAdapter.disconnect : " + e);
-			m_clConnection = null;
-		}
-	}
+    /**
+     * Execute a SQL Select statement
+     *
+     * @param sqlStatement
+     * Sql query with placeholders
+     *
+     * @return ResultSet of the query
+     */
+    fun executeQuery(sqlStatement: String): ResultSet? {
+        try {
+            return if (m_clConnection!!.isClosed) {
+                null
+            } else m_clStatement!!.executeQuery(sqlStatement)
+        } catch (e: Exception) {
+            HOLogger.instance().error(
+                javaClass,
+                """
+                    executeQuery : $e
+                    Statement: $sqlStatement
+                    ${ExceptionUtils.getStackTrace(e)}
+                    """.trimIndent()
+            )
+        }
+        return null
+    }
 
-	/**
-	 * Execute a SQL Select statement
-	 * 
-	 * @param sqlStatement
-	 *            Sql query with placeholders
-	 * 
-	 * @return ResultSet of the query
-	 */
-	public final ResultSet executeQuery(String sqlStatement) {
-		try {
-			if (m_clConnection.isClosed()) {
-				return null;
-			}
-			return m_clStatement.executeQuery(sqlStatement);
-		} catch (Exception e) {
-			HOLogger.instance().error(
-					getClass(),
-					"executeQuery : " + e + "\nStatement: " + sqlStatement + "\n"
-							+ ExceptionUtils.getStackTrace(e));
-		}
-		return null;
-	}
+    fun createPreparedStatement(sql: String): PreparedStatement? {
+        try {
+            return m_clConnection!!.prepareStatement(sql)
+        } catch (e: Exception) {
+            HOLogger.instance().error(
+                javaClass, """
+     createPreparedStatement : $e
+     Statement: $sql
+     ${ExceptionUtils.getStackTrace(e)}
+     """.trimIndent()
+            )
+        }
+        return null
+    }
 
-	public final PreparedStatement createPreparedStatement(String sql) {
-		try {
-			return m_clConnection.prepareStatement(sql);
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "createPreparedStatement : " + e + "\nStatement: " + sql + "\n" + ExceptionUtils.getStackTrace(e));
-		}
-		return null;
-	}
+    fun executePreparedQuery(preparedStatement: PreparedStatement?, vararg params: Any?): ResultSet? {
+        return if (preparedStatement == null) null else try {
+            if (m_clConnection!!.isClosed) {
+                return null
+            }
+            var i = 0
+            for (p in params) {
+                preparedStatement.setObject(++i, p)
+            }
+            preparedStatement.executeQuery()
+        } catch (e: Exception) {
+            HOLogger.instance().error(
+                javaClass, """
+     executePreparedQuery : $e
+     Statement: $preparedStatement
+     ${ExceptionUtils.getStackTrace(e)}
+     """.trimIndent()
+            )
+            null
+        }
+    }
 
-	public final ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object ... params) {
-		if ( preparedStatement==null) return null;
-		try {
-			if (m_clConnection.isClosed()) {
-				return null;
-			}
-			int i = 0;
-			for ( var p: params) {
-				preparedStatement.setObject(++i, p);
-			}
-			return  preparedStatement.executeQuery();
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + preparedStatement.toString() + "\n" 	+ ExceptionUtils.getStackTrace(e));
-			return null;
-		}
-	}
+    /**
+     * Executes an SQL INSERT, UPDATE or DELETE statement. In addition, SQL
+     * statements that return nothing, such as SQL DDL statements, can be
+     * executed.
+     *
+     * @param sqlStatement
+     * INSERT, UPDATE or DELETE statement
+     *
+     * @return either the row count for SQL Data Manipulation Language (DML)
+     * statements or 0 for SQL statements that return nothing
+     */
+    fun executeUpdate(sqlStatement: String?): Int {
+        var ret = 0
+        return try {
+            if (m_clConnection!!.isClosed) {
+                return 0
+            }
+            // HOLogger.instance().log(getClass(), Sql );
+            ret = m_clStatement!!.executeUpdate(sqlStatement)
+            ret
+        } catch (e: Exception) {
+            HOLogger.instance().error(
+                javaClass,
+                """
+                JDBCAdapter.executeUpdate : $e
+                Statement: $sqlStatement
+                ${ExceptionUtils.getStackTrace(e)}
+                """.trimIndent()
+            )
+            0
+        }
+    }
 
-	/**
-	 * Executes an SQL INSERT, UPDATE or DELETE statement. In addition, SQL
-	 * statements that return nothing, such as SQL DDL statements, can be
-	 * executed.
-	 * 
-	 * @param sqlStatement
-	 *            INSERT, UPDATE or DELETE statement
-	 * 
-	 * @return either the row count for SQL Data Manipulation Language (DML)
-	 *         statements or 0 for SQL statements that return nothing
-	 * 
-	 */
-	public final int executeUpdate(String sqlStatement) {
-		int ret = 0;
+    fun executePreparedUpdate(preparedStatement: PreparedStatement?, vararg params: Any?): Int {
+        var ret = 0
+        return try {
+            if (m_clConnection!!.isClosed) {
+                return 0
+            }
+            var i = 0
+            for (p in params) {
+                preparedStatement!!.setObject(++i, p)
+            }
+            ret = preparedStatement!!.executeUpdate()
+            ret
+        } catch (e: Exception) {
+            HOLogger.instance().error(
+                javaClass,
+                """
+                JDBCAdapter.executeUpdate : $e
+                Statement: ${preparedStatement.toString()}
+                ${ExceptionUtils.getStackTrace(e)}
+                """.trimIndent()
+            )
+            0
+        }
+    }
 
-		try {
-			if (m_clConnection.isClosed()) {
-				return 0;
-			}
-			// HOLogger.instance().log(getClass(), Sql );
-			ret = m_clStatement.executeUpdate(sqlStatement);
-			return ret;
-		} catch (Exception e) {
-			HOLogger.instance().error(
-					getClass(),
-					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + sqlStatement + "\n"
-							+ ExceptionUtils.getStackTrace(e));
-			return 0;
-		}
-	}
+    /**
+     * Connects to the requested database
+     *
+     * @param URL
+     * The path to the Server
+     * @param User
+     * User
+     * @param PWD
+     * Password
+     * @param Driver
+     * The driver to user
+     */
+    @Throws(Exception::class)
+    fun connect(URL: String?, User: String?, PWD: String?, Driver: String?) {
+        try {
+            // Initialise the Database Driver Object
+            Class.forName(Driver)
+            m_clConnection = DriverManager.getConnection(URL, User, PWD)
+            m_clStatement = m_clConnection!!.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            )
+        } catch (e: Exception) {
+            if (m_clConnection != null) {
+                try {
+                    m_clConnection!!.close()
+                } catch (ex: Exception) {
+                    HOLogger.instance().error(
+                        javaClass,
+                        "JDBCAdapter.connect : " + ex.message
+                    )
+                }
+            }
+            HOLogger.instance().error(javaClass, "JDBCAdapter.connect : " + e.message)
+            throw e
+        }
+    }
 
-	public final int executePreparedUpdate(PreparedStatement preparedStatement, Object ... params) {
-		int ret = 0;
-
-		try {
-			if (m_clConnection.isClosed()) {
-				return 0;
-			}
-			int i = 0;
-			for ( var p: params) {
-				preparedStatement.setObject(++i, p);
-			}
-			ret = preparedStatement.executeUpdate();
-			return ret;
-		} catch (Exception e) {
-			HOLogger.instance().error(
-					getClass(),
-					"JDBCAdapter.executeUpdate : " + e + "\nStatement: " + preparedStatement.toString() + "\n"
-							+ ExceptionUtils.getStackTrace(e));
-			return 0;
-		}
-	}
-
-	/**
-	 * Connects to the requested database
-	 * 
-	 * @param URL
-	 *            The path to the Server
-	 * @param User
-	 *            User
-	 * @param PWD
-	 *            Password
-	 * @param Driver
-	 *            The driver to user
-	 * 
-	 */
-	public final void connect(String URL, String User, String PWD, String Driver) throws Exception {
-		try {
-			// Initialise the Database Driver Object
-			Class.forName(Driver);
-			m_clConnection = DriverManager.getConnection(URL, User, PWD);
-			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
-
-		} catch (Exception e) {
-			if (m_clConnection != null) {
-				try {
-					m_clConnection.close();
-				} catch (Exception ex) {
-					HOLogger.instance().error(getClass(),
-							"JDBCAdapter.connect : " + ex.getMessage());
-				}
-			}
-			HOLogger.instance().error(getClass(), "JDBCAdapter.connect : " + e.getMessage());
-			throw e;
-		}
-
-	}
-
-	/**
-	 * 
-	 * @return DBInfo
-	 * @throws Exception
-	 */
-	public DBInfo getDBInfo() throws Exception {
-		if (m_clDBInfo == null)
-			m_clDBInfo = new DBInfo(m_clConnection.getMetaData());
-		return m_clDBInfo;
-	}
-
-	public Object[] getAllTableNames() {
-		try {
-			return getDBInfo().getAllTablesNames();
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "JDBCAdapter.getAllTableNames : " + e);
-			return new String[] { e.getMessage() };
-		}
-	}
+    @get:Throws(Exception::class)
+    val dBInfo: DBInfo
+        /**
+         *
+         * @return DBInfo
+         * @throws Exception
+         */
+        get() {
+            if (m_clDBInfo == null) m_clDBInfo = DBInfo(m_clConnection!!.metaData)
+            return m_clDBInfo!!
+        }
+    fun getAllTableNames(): Array<Any> {
+        return try {
+            dBInfo.getAllTablesNames()
+        } catch (e: Exception) {
+            HOLogger.instance().error(javaClass, "JDBCAdapter.getAllTableNames : $e")
+            arrayOf<Any>(e.message as Any)
+        }
+    }
 }

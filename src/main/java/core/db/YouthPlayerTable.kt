@@ -1,94 +1,337 @@
-package core.db;
+package core.db
 
-import core.model.player.Specialty;
-import core.util.HODateTime;
-import module.youth.YouthPlayer;
-import core.util.HOLogger;
-import module.training.Skills;
+import core.db.DBManager.PreparedStatementBuilder
+import core.model.player.*
+import core.util.HODateTime
+import core.util.HOLogger
+import module.training.Skills.HTSkillID
+import module.youth.YouthPlayer
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.*;
-import java.util.*;
-
-public class YouthPlayerTable  extends AbstractTable {
-
-    /**
-     * tablename
-     **/
-    final static String TABLENAME = "YOUTHPLAYER";
-
-    YouthPlayerTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
-        idColumns = 2;
+class YouthPlayerTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        val tmp: ArrayList<ColumnDescriptor> = ArrayList<ColumnDescriptor>(
+            java.util.List.of<ColumnDescriptor>(
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getHrfid() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setHrfid(v as Int) })
+                ).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ID")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getId() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setId(v as Int) })
+                ).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FirstName")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getFirstName() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setFirstName(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NickName")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getNickName() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setNickName(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LastName")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getLastName() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setLastName(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(100).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Age")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getAgeYears() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setAgeYears(v as Int) })
+                ).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("AgeDays")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getAgeDays() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setAgeDays(v as Int) })
+                ).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ArrivalDate")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        HODateTime.toDbTimestamp(
+                            (p as YouthPlayer?)!!.getArrivalDate()
+                        )
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setArrivalDate(v as HODateTime?) })
+                ).setType(
+                    Types.TIMESTAMP
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PromotionDate")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        HODateTime.toDbTimestamp(
+                            (p as YouthPlayer?)!!.getPromotionDate()
+                        )
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setPromotionDate(v as HODateTime?) })
+                ).setType(
+                    Types.TIMESTAMP
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CanBePromotedIn")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getCanBePromotedIn() }))
+                    .setSetter(
+                        BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setCanBePromotedIn(v as Int) })
+                    ).setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PlayerNumber")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getPlayerNumber() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setPlayerNumber(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(10).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Statement")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getStatement() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setStatement(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("OwnerNotes")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getOwnerNotes() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setOwnerNotes(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PlayerCategoryID")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getPlayerCategoryID() }))
+                    .setSetter(
+                        BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setPlayerCategoryID(v as Int) })
+                    ).setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Cards")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getCards() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthPlayer?)!!.setCards(v as Int) })
+                ).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("InjuryLevel")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getInjuryLevel() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setInjuryLevel(
+                            (v as Int?)!!
+                        )
+                    })
+                ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Specialty")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        Specialty.getValue(
+                            (p as YouthPlayer?)!!.getSpecialty()
+                        )
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setSpecialty(
+                            Specialty.getSpecialty(
+                                v as Int?
+                            )
+                        )
+                    })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CareerGoals")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getCareerGoals() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setCareerGoals(
+                            (v as Int?)!!
+                        )
+                    })
+                ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CareerHattricks")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getCareerHattricks() }))
+                    .setSetter(
+                        BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                            (p as YouthPlayer?)!!.setCareerHattricks(
+                                (v as Int?)!!
+                            )
+                        })
+                    ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LeagueGoals")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getLeagueGoals() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setLeagueGoals(
+                            (v as Int?)!!
+                        )
+                    })
+                ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FriendlyGoals")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getFriendlyGoals() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setFriendlyGoals(
+                            (v as Int?)!!
+                        )
+                    })
+                ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ScoutId")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getScoutId() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setScoutId((v as Int?)!!) })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ScoutingRegionID")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getScoutingRegionID() }))
+                    .setSetter(
+                        BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                            (p as YouthPlayer?)!!.setScoutingRegionID(
+                                (v as Int?)!!
+                            )
+                        })
+                    ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ScoutName")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getScoutName() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setScoutName(v as String?) })
+                ).setType(
+                    Types.VARCHAR
+                ).setLength(255).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("YouthMatchID")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getYouthMatchID() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setYouthMatchID(v as Int?) })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("positionCode")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getPositionCode() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setPositionCode(v as Int?) })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("playedMinutes")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getPlayedMinutes() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setPlayedMinutes(
+                            (v as Int?)!!
+                        )
+                    })
+                ).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("rating")
+                    .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthPlayer?)!!.getRating() })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setRating(v as Double?) })
+                ).setType(Types.DOUBLE).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName("YouthMatchDate")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        HODateTime.toDbTimestamp(
+                            (p as YouthPlayer?)!!.getYouthMatchDate()
+                        )
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setYouthMatchDate(v as HODateTime?) })
+                ).setType(
+                    Types.TIMESTAMP
+                ).isNullable(true).build()
+            )
+        )
+        for (skillId: HTSkillID in YouthPlayer.skillIds) {
+            tmp.addAll(createColumnDescriptors(skillId))
+        }
+        columns = tmp.toTypedArray<ColumnDescriptor>()
     }
 
-    @Override
-    protected void initColumns() {
-        var tmp = new ArrayList<>(List.of(
-                ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((YouthPlayer) p).getHrfid()).setSetter((p, v) -> ((YouthPlayer) p).setHrfid((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("ID").setGetter((p) -> ((YouthPlayer) p).getId()).setSetter((p, v) -> ((YouthPlayer) p).setId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("FirstName").setGetter((p) -> ((YouthPlayer) p).getFirstName()).setSetter((p, v) -> ((YouthPlayer) p).setFirstName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("NickName").setGetter((p) -> ((YouthPlayer) p).getNickName()).setSetter((p, v) -> ((YouthPlayer) p).setNickName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LastName").setGetter((p) -> ((YouthPlayer) p).getLastName()).setSetter((p, v) -> ((YouthPlayer) p).setLastName((String) v)).setType(Types.VARCHAR).setLength(100).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Age").setGetter((p) -> ((YouthPlayer) p).getAgeYears()).setSetter((p, v) -> ((YouthPlayer) p).setAgeYears((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((p) -> ((YouthPlayer) p).getAgeDays()).setSetter((p, v) -> ((YouthPlayer) p).setAgeDays((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getArrivalDate())).setSetter((p, v) -> ((YouthPlayer) p).setArrivalDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PromotionDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getPromotionDate())).setSetter((p, v) -> ((YouthPlayer) p).setPromotionDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("CanBePromotedIn").setGetter((p) -> ((YouthPlayer) p).getCanBePromotedIn()).setSetter((p, v) -> ((YouthPlayer) p).setCanBePromotedIn((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerNumber").setGetter((p) -> ((YouthPlayer) p).getPlayerNumber()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerNumber((String) v)).setType(Types.VARCHAR).setLength(10).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p) -> ((YouthPlayer) p).getStatement()).setSetter((p, v) -> ((YouthPlayer) p).setStatement((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p) -> ((YouthPlayer) p).getOwnerNotes()).setSetter((p, v) -> ((YouthPlayer) p).setOwnerNotes((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategoryID").setGetter((p) -> ((YouthPlayer) p).getPlayerCategoryID()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerCategoryID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Cards").setGetter((p) -> ((YouthPlayer) p).getCards()).setSetter((p, v) -> ((YouthPlayer) p).setCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("InjuryLevel").setGetter((p) -> ((YouthPlayer) p).getInjuryLevel()).setSetter((p, v) -> ((YouthPlayer) p).setInjuryLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Specialty").setGetter((p) -> Specialty.getValue(((YouthPlayer) p).getSpecialty())).setSetter((p, v) -> ((YouthPlayer) p).setSpecialty(Specialty.getSpecialty((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("CareerGoals").setGetter((p) -> ((YouthPlayer) p).getCareerGoals()).setSetter((p, v) -> ((YouthPlayer) p).setCareerGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("CareerHattricks").setGetter((p) -> ((YouthPlayer) p).getCareerHattricks()).setSetter((p, v) -> ((YouthPlayer) p).setCareerHattricks((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LeagueGoals").setGetter((p) -> ((YouthPlayer) p).getLeagueGoals()).setSetter((p, v) -> ((YouthPlayer) p).setLeagueGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("FriendlyGoals").setGetter((p) -> ((YouthPlayer) p).getFriendlyGoals()).setSetter((p, v) -> ((YouthPlayer) p).setFriendlyGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutId").setGetter((p) -> ((YouthPlayer) p).getScoutId()).setSetter((p, v) -> ((YouthPlayer) p).setScoutId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutingRegionID").setGetter((p) -> ((YouthPlayer) p).getScoutingRegionID()).setSetter((p, v) -> ((YouthPlayer) p).setScoutingRegionID((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("ScoutName").setGetter((p) -> ((YouthPlayer) p).getScoutName()).setSetter((p, v) -> ((YouthPlayer) p).setScoutName((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchID").setGetter((p) -> ((YouthPlayer) p).getYouthMatchID()).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchID((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("positionCode").setGetter((p) -> ((YouthPlayer) p).getPositionCode()).setSetter((p, v) -> ((YouthPlayer) p).setPositionCode((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("playedMinutes").setGetter((p) -> ((YouthPlayer) p).getPlayedMinutes()).setSetter((p, v) -> ((YouthPlayer) p).setPlayedMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("rating").setGetter((p) -> ((YouthPlayer) p).getRating()).setSetter((p, v) -> ((YouthPlayer) p).setRating((Double) v)).setType(Types.DOUBLE).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getYouthMatchDate())).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
-        ));
+    private fun createColumnDescriptors(skillId: HTSkillID): Collection<ColumnDescriptor> {
+        val prefix: String = skillId.toString()
+        return ArrayList<ColumnDescriptor>(
+            java.util.List.of<ColumnDescriptor>(
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix)
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).getCurrentLevel()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setCurrentLevel(
+                            skillId,
+                            v as Int?
+                        )
+                    })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "Max")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).getMax()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthPlayer?)!!.setMax(skillId, v as Int?) })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "Start")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).getStartLevel()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setStartLevel(
+                            skillId,
+                            v as Int?
+                        )
+                    })
+                ).setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "IsMaxReached")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).isMaxReached()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any ->
+                        (p as YouthPlayer?)!!.setIsMaxReached(
+                            skillId,
+                            v as Boolean
+                        )
+                    })
+                ).setType(
+                    Types.BOOLEAN
+                ).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "Value")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).getCurrentValue()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any ->
+                        (p as YouthPlayer?)!!.setCurrentValue(
+                            skillId,
+                            v as Double
+                        )
+                    })
+                ).setType(
+                    Types.DOUBLE
+                ).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "StartValue")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).getStartValue()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any ->
+                        (p as YouthPlayer?)!!.setStartValue(
+                            skillId,
+                            v as Double
+                        )
+                    })
+                ).setType(
+                    Types.DOUBLE
+                ).isNullable(false).build(),
+                ColumnDescriptor.Builder.Companion.newInstance().setColumnName(prefix + "Top3")
+                    .setGetter(Function<Any?, Any?>({ p: Any? ->
+                        (p as YouthPlayer?)!!.getSkillInfo(skillId).isTop3()
+                    })).setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthPlayer?)!!.setIsTop3(
+                            skillId,
+                            v as Boolean?
+                        )
+                    })
+                ).setType(
+                    Types.BOOLEAN
+                ).isNullable(true).build()
+            )
+        )
+    }
 
-        for ( var skillId : YouthPlayer.skillIds) {
-            tmp.addAll(createColumnDescriptors(skillId));
+    override val constraintStatements: Array<String?>
+        get() {
+            return arrayOf(" PRIMARY KEY (HRF_ID, ID)")
         }
 
-        columns = tmp.toArray(new ColumnDescriptor[0]);
+    override fun createPreparedDeleteStatementBuilder(): PreparedDeleteStatementBuilder {
+        return PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?")
     }
 
-    private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
-        var prefix = skillId.toString();
-        return new ArrayList<>(List.of(
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix).setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getCurrentLevel()).setSetter((p, v) -> ((YouthPlayer) p).setCurrentLevel(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Max").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getMax()).setSetter((p, v) -> ((YouthPlayer) p).setMax(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Start").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getStartLevel()).setSetter((p, v) -> ((YouthPlayer) p).setStartLevel(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "IsMaxReached").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).isMaxReached()).setSetter((p, v) -> ((YouthPlayer) p).setIsMaxReached(skillId, (boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Value").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getCurrentValue()).setSetter((p, v) -> ((YouthPlayer) p).setCurrentValue(skillId, (double) v)).setType(Types.DOUBLE).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "StartValue").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getStartValue()).setSetter((p, v) -> ((YouthPlayer) p).setStartValue(skillId, (double) v)).setType(Types.DOUBLE).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Top3").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).isTop3()).setSetter((p, v) -> ((YouthPlayer) p).setIsTop3(skillId, (Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build()
-        ));
-    }
-
-    @Override
-    protected String[] getConstraintStatements() {
-        return new String[]{" PRIMARY KEY (HRF_ID, ID)"};
-    }
-
-    @Override
-    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
-    }
     /**
      * delete youth players
      */
-    public void deleteYouthPlayers(int hrfId) {
-        executePreparedDelete(hrfId);
+    fun deleteYouthPlayers(hrfId: Int) {
+        executePreparedDelete(hrfId)
     }
 
     /**
@@ -96,43 +339,56 @@ public class YouthPlayerTable  extends AbstractTable {
      * @param hrfId int
      * @param player YouthPlayer
      */
-    void storeYouthPlayer(int hrfId, YouthPlayer player) {
-        player.setHrfid(hrfId);
-        store(player);
+    fun storeYouthPlayer(hrfId: Int, player: YouthPlayer) {
+        player.setHrfid(hrfId)
+        store(player)
     }
 
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
+        return PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?")
     }
 
     /**
      * load youth player of HRF file id
      */
-    List<YouthPlayer> loadYouthPlayers(int hrfID) {
-        return load(YouthPlayer.class, hrfID);
+    fun loadYouthPlayers(hrfID: Int): List<YouthPlayer?> = load(YouthPlayer::class.java, hrfID)
+
+    private val loadYouthPlayerOfMatchDateStatementBuilder: PreparedSelectStatementBuilder =
+        PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?")
+
+    fun loadYouthPlayerOfMatchDate(id: Int, date: Timestamp?): YouthPlayer? {
+        return loadOne(
+            YouthPlayer::class.java,
+            adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date)
+        )
     }
 
-    private final PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
-    public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
-        return loadOne(YouthPlayer.class, adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date));
+    private val loadMinScoutingDateStatementBuilder: PreparedStatementBuilder = PreparedStatementBuilder(
+        "select min(ArrivalDate) from $tableName where PromotionDate is NULL"
+    )
+
+    init {
+        idColumns = 2
     }
 
-    private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
-    public Timestamp loadMinScoutingDate() {
+    fun loadMinScoutingDate(): Timestamp? {
         try {
-            var rs = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement());
+            val rs: ResultSet? = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement())
             if (rs != null) {
                 if (rs.next()) {
-                    return rs.getTimestamp(1);
+                    return rs.getTimestamp(1)
                 }
             }
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, e)
         }
-        catch (Exception e){
-            HOLogger.instance().log(getClass(),e);
-        }
-        return null;
+        return null
     }
 
+    companion object {
+        /**
+         * tablename
+         */
+        val TABLENAME: String = "YOUTHPLAYER"
+    }
 }

@@ -1,55 +1,107 @@
-package core.db;
+package core.db
 
-import core.model.misc.Verein;
+import core.model.misc.Verein
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.Types;
+internal class VereinTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getHrfId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setHrfId(v as Int) })
+            ).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COTrainer")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getCoTrainer() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setCoTrainer(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Pschyologen")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getPsychologen() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setPsychologen(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Finanzberater")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getFinancialDirectorLevels() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setFinancialDirectorLevels(v as Int) })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PRManager")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getPRManager() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setPRManager(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Aerzte")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getAerzte() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setAerzte(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Jugend")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getJugend() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setJugend(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Siege")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getSiege() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setSiege(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Ungeschlagen")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getUngeschlagen() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setUngeschlagen(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Fans")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getFans() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setFans(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TacticAssist")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getTacticalAssistantLevels() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setTacticalAssistantLevels(v as Int) })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FormAssist")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getFormCoachLevels() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setFormCoachLevels(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GlobalRanking")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getGlobalRanking() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setGlobalRanking(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LeagueRanking")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getLeagueRanking() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setLeagueRanking(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("RegionRanking")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getRegionRanking() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setRegionRanking(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PowerRating")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as Verein?)!!.getPowerRating() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as Verein?)!!.setPowerRating(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build()
+        )
+    }
 
-final class VereinTable extends AbstractTable {
-	final static String TABLENAME = "VEREIN";
+    /**
+     * store team info
+     */
+    fun saveVerein(hrfId: Int, verein: Verein?) {
+        if (verein != null) {
+            verein.setHrfId(hrfId)
+            verein.stored = isStored(hrfId)
+            store(verein)
+        }
+    }
 
-	VereinTable(JDBCAdapter adapter){
-		super( TABLENAME, adapter );
-	}
+    /**
+     * load team basic information
+     */
+    fun loadVerein(hrfID: Int): Verein {
+        var ret: Verein? = loadOne(Verein::class.java, hrfID)
+        if (ret == null) ret = Verein()
+        return ret
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((Verein) p).getHrfId()).setSetter((p, v) -> ((Verein) p).setHrfId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COTrainer").setGetter((p) -> ((Verein) p).getCoTrainer()).setSetter((p, v) -> ((Verein) p).setCoTrainer((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Pschyologen").setGetter((p) -> ((Verein) p).getPsychologen()).setSetter((p, v) -> ((Verein) p).setPsychologen((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Finanzberater").setGetter((p) -> ((Verein) p).getFinancialDirectorLevels()).setSetter((p, v) -> ((Verein) p).setFinancialDirectorLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("PRManager").setGetter((p) -> ((Verein) p).getPRManager()).setSetter((p, v) -> ((Verein) p).setPRManager((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Aerzte").setGetter((p) -> ((Verein) p).getAerzte()).setSetter((p, v) -> ((Verein) p).setAerzte((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Jugend").setGetter((p) -> ((Verein) p).getJugend()).setSetter((p, v) -> ((Verein) p).setJugend((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Siege").setGetter((p) -> ((Verein) p).getSiege()).setSetter((p, v) -> ((Verein) p).setSiege((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Ungeschlagen").setGetter((p) -> ((Verein) p).getUngeschlagen()).setSetter((p, v) -> ((Verein) p).setUngeschlagen((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Fans").setGetter((p) -> ((Verein) p).getFans()).setSetter((p, v) -> ((Verein) p).setFans((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TacticAssist").setGetter((p) -> ((Verein) p).getTacticalAssistantLevels()).setSetter((p, v) -> ((Verein) p).setTacticalAssistantLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FormAssist").setGetter((p) -> ((Verein) p).getFormCoachLevels()).setSetter((p, v) -> ((Verein) p).setFormCoachLevels((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GlobalRanking").setGetter((p) -> ((Verein) p).getGlobalRanking()).setSetter((p, v) -> ((Verein) p).setGlobalRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LeagueRanking").setGetter((p) -> ((Verein) p).getLeagueRanking()).setSetter((p, v) -> ((Verein) p).setLeagueRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RegionRanking").setGetter((p) -> ((Verein) p).getRegionRanking()).setSetter((p, v) -> ((Verein) p).setRegionRanking((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("PowerRating").setGetter((p) -> ((Verein) p).getPowerRating()).setSetter((p, v) -> ((Verein) p).setPowerRating((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
-
-	/**
-	 * store team info
-	 */
-	void saveVerein(int hrfId, Verein verein) {
-		if (verein != null) {
-			verein.setHrfId(hrfId);
-			verein.setIsStored(isStored(hrfId));
-			store(verein);
-		}
-	}
-
-	/**
-	 * load team basic information
-	 */
-	Verein loadVerein(int hrfID) {
-		var ret = loadOne(Verein.class, hrfID);
-		if ( ret == null ) ret =  new Verein();
-		return ret;
-	}
+    companion object {
+        val TABLENAME: String = "VEREIN"
+    }
 }

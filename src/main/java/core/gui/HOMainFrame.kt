@@ -250,7 +250,7 @@ object HOMainFrame : JFrame(), Refreshable {
             ModuleConfig.instance().save()
             HOLogger.instance().debug(javaClass, "Module configurations saved")
             // Disconnect
-            DBManager.instance().disconnect()
+            DBManager.disconnect()
             HOLogger.instance().debug(javaClass, "Disconnected")
             isAppTerminated.set(true) // enable System.exit in windowClosed()
             HOLogger.instance().info(javaClass, "Shutdown complete! isAppTerminated: " + isAppTerminated.get())
@@ -564,7 +564,7 @@ object HOMainFrame : JFrame(), Refreshable {
         for (module in ModuleManager.instance().getModules(true)) {
             module.storeUserSettings()
         }
-        DBManager.instance().saveUserParameter()
+        DBManager.saveUserParameter()
     }
 
     private fun addListeners() {

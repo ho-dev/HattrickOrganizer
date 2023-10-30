@@ -1,79 +1,135 @@
-package core.db;
+package core.db
 
-import core.model.match.*;
-import core.model.enums.MatchType;
-import core.util.HOLogger;
-import java.sql.Types;
-import java.util.List;
+import core.model.enums.MatchType
+import core.model.match.MatchLineupTeam
+import core.model.match.MatchTacticType
+import core.model.match.MatchTeamAttitude
+import core.model.match.StyleOfPlay
+import core.util.HOLogger
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
+import kotlin.math.min
 
-public final class MatchLineupTeamTable extends AbstractTable {
+class MatchLineupTeamTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineupTeam?)!!.matchId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchLineupTeam?)!!.matchId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchTyp")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineupTeam?)!!.getMatchType().id }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any ->
+                    (o as MatchLineupTeam?)!!.matchType = MatchType.getById(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TeamID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineupTeam?)!!.teamID }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchLineupTeam?)!!.teamID = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Erfahrung")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineupTeam?)!!.experience }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchLineupTeam?)!!.experience = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TeamName")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineupTeam?)!!.teamName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchLineupTeam?)!!.teamName = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(265).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("StyleOfPlay")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    StyleOfPlay.toInt(
+                        (o as MatchLineupTeam?)!!.styleOfPlay
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? ->
+                    (o as MatchLineupTeam?)!!.styleOfPlay = StyleOfPlay.fromInt(v as Int?)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Attitude")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    MatchTeamAttitude.toInt(
+                        (o as MatchLineupTeam?)!!.matchTeamAttitude
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? ->
+                    (o as MatchLineupTeam?)!!.matchTeamAttitude = MatchTeamAttitude.fromInt(v as Int?)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Tactic")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    MatchTacticType.toInt(
+                        (o as MatchLineupTeam?)!!.matchTacticType
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? ->
+                    (o as MatchLineupTeam?)!!.matchTacticType = MatchTacticType.fromInt(v as Int?)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(true).build()
+        )
+    }
 
-	/**
-	 * tablename
-	 **/
-	public final static String TABLENAME = "MATCHLINEUPTEAM";
+    protected override val constraintStatements: Array<String?>
+        protected get() = arrayOf(
+            "  PRIMARY KEY (" + columns[0].columnName + "," + columns[1].columnName + "," + columns[2].columnName + ")"
+        )
 
-	MatchLineupTeamTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-		idColumns = 3;
-	}
+    fun loadMatchLineupTeam(iMatchType: Int, matchID: Int, teamID: Int): MatchLineupTeam? {
+        return loadOne(MatchLineupTeam::class.java, matchID, iMatchType, teamID)
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchLineupTeam) o).getMatchId()).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchLineupTeam) o).getMatchType().getId()).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((o) -> ((MatchLineupTeam) o).getTeamID()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((o) -> ((MatchLineupTeam) o).getExperience()).setSetter((o, v) -> ((MatchLineupTeam) o).setExperience((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TeamName").setGetter((o) -> ((MatchLineupTeam) o).getTeamName()).setSetter((o, v) -> ((MatchLineupTeam) o).setTeamName((String) v)).setType(Types.VARCHAR).setLength(265).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("StyleOfPlay").setGetter((o) -> (StyleOfPlay.toInt(((MatchLineupTeam) o).getStyleOfPlay()))).setSetter((o, v) -> ((MatchLineupTeam) o).setStyleOfPlay(StyleOfPlay.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Attitude").setGetter((o) -> (MatchTeamAttitude.toInt(((MatchLineupTeam) o).getMatchTeamAttitude()))).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchTeamAttitude(MatchTeamAttitude.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Tactic").setGetter((o) -> (MatchTacticType.toInt(((MatchLineupTeam) o).getMatchTacticType()))).setSetter((o, v) -> ((MatchLineupTeam) o).setMatchTacticType(MatchTacticType.fromInt((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
-		};
-	}
+    fun deleteMatchLineupTeam(team: MatchLineupTeam) {
+        executePreparedDelete(team.matchId, team.getMatchType().id, team.teamID)
+    }
 
-	@Override
-	protected String[] getConstraintStatements() {
-		return new String[]{
-				"  PRIMARY KEY (" + columns[0].getColumnName() + "," + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")"
-		};
-	}
+    fun storeMatchLineupTeam(team: MatchLineupTeam?) {
+        if (team != null) {
+            team.stored = isStored(team.matchId, team.getMatchType().id, team.teamID)
+            store(team)
+        }
+    }
 
-	MatchLineupTeam loadMatchLineupTeam(int iMatchType, int matchID, int teamID) {
-		return loadOne(MatchLineupTeam.class, matchID, iMatchType, teamID);
-	}
+    private val loadTemplateStatementBuilder = PreparedSelectStatementBuilder(
+        this,
+        " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1"
+    )
 
-	void deleteMatchLineupTeam(MatchLineupTeam team) {
-		executePreparedDelete(team.getMatchId(), team.getMatchType().getId(), team.getTeamID());
-	}
+    init {
+        idColumns = 3
+    }
 
-	void storeMatchLineupTeam(MatchLineupTeam team) {
-		if (team != null) {
-			team.setIsStored(isStored(team.getMatchId(), team.getMatchType().getId(), team.getTeamID()));
-			store(team);
-		}
-	}
+    fun getTemplateMatchLineupTeam(): List<MatchLineupTeam?> {
+        return load(
+            MatchLineupTeam::class.java,
+            adapter!!.executePreparedQuery(loadTemplateStatementBuilder.getStatement())
+        )
+    }
 
-	private final PreparedSelectStatementBuilder loadTemplateStatementBuilder = new PreparedSelectStatementBuilder(this,
-			" WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1");
+    fun getTemplateMatchLineupTeamNextNumber(): Int {
+        try {
+            val sql = "SELECT MIN(TEAMID) FROM $tableName WHERE MatchTyp=0 AND MATCHID=-1"
+            val rs = adapter!!.executeQuery(sql)
+            if (rs != null) {
+                if (rs.next()) {
+                    return min(-1.0, (rs.getInt(1) - 1).toDouble()).toInt()
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, e)
+        }
+        return -1
+    }
 
-	public List<MatchLineupTeam> getTemplateMatchLineupTeams() {
-		return load(MatchLineupTeam.class, adapter.executePreparedQuery(loadTemplateStatementBuilder.getStatement()));
-	}
-
-	public int getTemplateMatchLineupTeamNextNumber() {
-		try {
-			var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
-			var rs = adapter.executeQuery(sql);
-			if (rs != null) {
-				if (rs.next()) {
-					return Math.min(-1,rs.getInt(1)-1);
-				}
-			}
-		}
-		catch (Exception e){
-			HOLogger.instance().log(getClass(),e);
-		}
-		return -1;
-	}
+    companion object {
+        /**
+         * tablename
+         */
+        const val TABLENAME = "MATCHLINEUPTEAM"
+    }
 }

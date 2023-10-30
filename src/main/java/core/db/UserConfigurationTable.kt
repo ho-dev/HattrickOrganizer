@@ -1,138 +1,112 @@
-package core.db;
+package core.db
 
-import core.model.Configuration;
-import core.util.HOLogger;
-import java.sql.ResultSet;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
+import core.model.*
+import core.util.HOLogger
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
 /**
  * The Table UserConfiguration contain all User properties.
  * CONFIG_KEY = Primary Key, fieldname of the class
  * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype if loaded
- * 
- * @since 1.36
  *
+ * @since 1.36
  */
-final class UserConfigurationTable extends AbstractTable {
-	final static String TABLENAME = "USERCONFIGURATION";
+internal class UserConfigurationTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CONFIG_KEY")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _Configuration?)!!.key }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as _Configuration?)!!.key = v as String? })
+                .setType(Types.VARCHAR).setLength(50).isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CONFIG_VALUE")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as _Configuration?)!!.value }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as _Configuration?)!!.value = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(true).build()
+        )
+    }
 
-	UserConfigurationTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    fun storeConfiguration(key: String?, value: String?) {
+        val _config = _Configuration()
+        _config.key = key
+        _config.value = value
+        _config.stored = isStored(key)
+        store(_config)
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_KEY").setGetter((p) -> ((_Configuration) p).getKey()).setSetter((p, v) -> ((_Configuration) p).setKey((String) v)).setType(Types.VARCHAR).setLength(50).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CONFIG_VALUE").setGetter((p) -> ((_Configuration) p).getValue()).setSetter((p, v) -> ((_Configuration) p).setValue((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build()
-		};
-	}
+    private val getAllStringValuesStatementBuilder = PreparedSelectStatementBuilder(this, "")
 
-	public void storeConfiguration(String key, String value) {
-		var _config = new _Configuration();
-		_config.setKey(key);
-		_config.setValue(value);
-		_config.setIsStored(isStored(key));
-		store(_config);
-	}
+    private fun getAllStringValues(): HashMap<String?, String?> {
+            val map = HashMap<String?, String?>()
+            val configs = load(
+                _Configuration::class.java,
+                adapter.executePreparedQuery(getAllStringValuesStatementBuilder.getStatement())
+            )
+            for (config: _Configuration? in configs) {
+                map[config!!.key] = config.value
+            }
+            return map
+        }
 
-	private final PreparedSelectStatementBuilder getAllStringValuesStatementBuilder = new PreparedSelectStatementBuilder(this, "");
+    fun getDBVersion(): Int {
+            val config = loadOne(_Configuration::class.java, "DBVersion")
+            if (config != null) return config.value!!.toInt()
+            try {
+                HOLogger.instance().log(javaClass, "Old DB version.")
+                val rs = adapter.executeQuery("SELECT DBVersion FROM UserParameter")
+                if (rs != null && rs.next()) {
+                    val ret = rs.getInt(1)
+                    rs.close()
+                    return ret
+                }
+            } catch (e1: Exception) {
+                HOLogger.instance().log(javaClass, e1)
+            }
+            return 0
+        }
 
-	private HashMap<String, String> getAllStringValues() {
-		HashMap<String, String> map = new HashMap<>();
-		var _configs = load(_Configuration.class, adapter.executePreparedQuery(getAllStringValuesStatementBuilder.getStatement()));
-		for (var _config : _configs) {
-			map.put(_config.getKey(), _config.getValue());
-		}
-		return map;
-	}
+    /**
+     * Get the last HO release where we have completed successfully a config update
+     *
+     * @return the ho version of the last conf update
+     */
+    fun getLastConfUpdate(): Double  {
+            val config = loadOne(_Configuration::class.java, "LastConfUpdate")
+            return if (config != null) config.value!!.toDouble() else 0.0
+        }
 
-	int getDBVersion() {
-		var config = loadOne(_Configuration.class, "DBVersion");
-		if (config != null) return Integer.parseInt(config.getValue());
-		try {
-			HOLogger.instance().log(getClass(), "Old DB version.");
-			final ResultSet rs = adapter.executeQuery("SELECT DBVersion FROM UserParameter");
-			if ((rs != null) && rs.next()) {
-				var ret = rs.getInt(1);
-				rs.close();
-				return ret;
-			}
-		} catch (Exception e1) {
-			HOLogger.instance().log(getClass(), e1);
-		}
-		return 0;
-	}
+    /**
+     * update/ insert method
+     *
+     * @param obj Configuration
+     */
+    fun storeConfigurations(obj: Configuration) {
+        val values = obj.values
+        for (conf in values!!.entries) {
+            storeConfiguration(conf.key, conf.value ?: "")
+        }
+    }
 
-	/**
-	 * Get the last HO release where we have completed successfully a config update
-	 *
-	 * @return the ho version of the last conf update
-	 */
-	double getLastConfUpdate() {
-		var config = loadOne(_Configuration.class, "LastConfUpdate");
-		if (config != null) return Double.parseDouble(config.getValue());
-		return 0.;
-	}
+    /**
+     * @param obj Configuration
+     */
+    fun loadConfigurations(obj: Configuration) {
+        // initialize with default value
+        val m:Map<String?, String?>? = obj.values
+        val storedValues: Map<String?, String?> = getAllStringValues().filterNot { entry ->  entry.value == null }
 
-	/**
-	 * update/ insert method
-	 *
-	 * @param obj Configuration
-	 */
-	void storeConfigurations(Configuration obj) {
-		final Map<String, String> values = obj.getValues();
-		for ( var configuration : values.entrySet()){
-			var key = configuration.getKey();
-			var val = configuration.getValue();
-			storeConfiguration(key, (val != null) ? val : "");
-		}
-	}
+        if (m != null) {
+            obj.values = m + storedValues
+        }
+    }
 
-	/**
-	 * @param obj Configuration
-	 */
-	void loadConfigurations(Configuration obj) {
-		// initialize with default value
-		final Map<String, String> map = obj.getValues();
-		final Map<String, String> storedValues = getAllStringValues();
+    class _Configuration() : Storable() {
+        var key: String? = null
+        var value: String? = null
+    }
 
-		map.forEach((key, value) -> {
-			final String storedValue = storedValues.get(key);
-
-			// this will allow to detect further problems
-			if (storedValue == null) {
-				HOLogger.instance().info(UserConfigurationTable.class, "parameter " + key + " is not stored in UserConfigurationTable. Default is used: " + value);
-			} else {
-				map.put(key, storedValue); // update map with value store in DB (in UserConfiguration table)
-			}
-		});
-		obj.setValues(map);
-	}
-
-
-	public static class _Configuration extends AbstractTable.Storable {
-		public _Configuration(){}
-
-		private String key;
-		private String value;
-
-		public String getKey() {
-			return key;
-		}
-
-		public void setKey(String key) {
-			this.key = key;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-	}
+    companion object {
+        val TABLENAME = "USERCONFIGURATION"
+    }
 }

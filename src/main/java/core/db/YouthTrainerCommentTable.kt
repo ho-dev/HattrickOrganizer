@@ -1,36 +1,91 @@
-package core.db;
+package core.db
 
-import core.model.player.CommentType;
-import module.youth.YouthTrainerComment;
-import module.training.Skills;
-import java.sql.Types;
-import java.util.List;
+import core.model.player.CommentType
+import module.training.Skills
+import module.youth.YouthTrainerComment
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public class YouthTrainerCommentTable extends AbstractTable {
-    /**
-     * tablename
-     **/
-    final static String TABLENAME = "YOUTHTRAINERCOMMENT";
-
-    YouthTrainerCommentTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
+class YouthTrainerCommentTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("YOUTHPLAYER_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getYouthPlayerId() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthTrainerComment?)!!.setYouthPlayerId(v as Int) })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MATCH_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getYouthMatchId() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthTrainerComment?)!!.setMatchId(v as Int) })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("INDEX")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getIndex() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as YouthTrainerComment?)!!.setIndex(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Text")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getText() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthTrainerComment?)!!.setText(v as String?) })
+            ).setType(
+                Types.VARCHAR
+            ).setLength(255).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Type")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getType().getValue() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthTrainerComment?)!!.setType(
+                            CommentType.valueOf(
+                                v as Int?
+                            )
+                        )
+                    })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Variation")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getVariation() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthTrainerComment?)!!.setVariation(v as Int?) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SkillType")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getSkillType().getValue() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                        (p as YouthTrainerComment?)!!.setSkillType(
+                            Skills.ScoutCommentSkillTypeID.valueOf(
+                                v as Int?
+                            )
+                        )
+                    })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SkillLevel")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getSkillLevel() }))
+                .setSetter(
+                    BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as YouthTrainerComment?)!!.setSkillLevel(v as Int?) })
+                ).setType(
+                Types.INTEGER
+            ).isNullable(true).build()
+        )
     }
 
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("YOUTHPLAYER_ID").setGetter((p) -> ((YouthTrainerComment) p).getYouthPlayerId()).setSetter((p, v) -> ((YouthTrainerComment) p).setYouthPlayerId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("MATCH_ID").setGetter((p) -> ((YouthTrainerComment) p).getYouthMatchId()).setSetter((p, v) -> ((YouthTrainerComment) p).setMatchId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("INDEX").setGetter((p) -> ((YouthTrainerComment) p).getIndex()).setSetter((p, v) -> ((YouthTrainerComment) p).setIndex( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Text").setGetter((p) -> ((YouthTrainerComment) p).getText()).setSetter((p, v) -> ((YouthTrainerComment) p).setText( (String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Type").setGetter((p) -> ((YouthTrainerComment) p).getType().getValue()).setSetter((p, v) -> ((YouthTrainerComment) p).setType(CommentType.valueOf( (Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Variation").setGetter((p) -> ((YouthTrainerComment) p).getVariation()).setSetter((p, v) -> ((YouthTrainerComment) p).setVariation((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SkillType").setGetter((p) -> ((YouthTrainerComment) p).getSkillType().getValue()).setSetter((p, v) -> ((YouthTrainerComment) p).setSkillType(Skills.ScoutCommentSkillTypeID.valueOf( (Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SkillLevel").setGetter((p) -> ((YouthTrainerComment) p).getSkillLevel()).setSetter((p, v) -> ((YouthTrainerComment) p).setSkillLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-        };
+    fun loadYouthTrainerComments(id: Int): List<YouthTrainerComment?> {
+        return load(YouthTrainerComment::class.java, id)
     }
 
-    public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
-        return load(YouthTrainerComment.class, id);
+    companion object {
+        /**
+         * tablename
+         */
+        val TABLENAME: String = "YOUTHTRAINERCOMMENT"
     }
 }

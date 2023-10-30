@@ -1,127 +1,120 @@
-package core.db;
+package core.db
 
-import core.util.HOLogger;
-import java.math.BigDecimal;
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import core.util.HOLogger
+import java.math.BigDecimal
+import java.sql.Date
+import java.sql.SQLException
+import java.sql.Timestamp
+import java.sql.Types
 
-final class ModuleConfigTable extends AbstractTable {
-	final static String TABLENAME = "MODULE_CONFIGURATION";
+internal class ModuleConfigTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf(ColumnDescriptor("CONFIG_KEY", Types.VARCHAR,
+            nullable = false,
+            primaryKey = true,
+            length = 50
+        ),
+            ColumnDescriptor("CONFIG_VALUE", Types.VARCHAR, true, 256),
+            ColumnDescriptor("CONFIG_DATATYPE", Types.INTEGER, false))
+    }
 
-	ModuleConfigTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-	}
+    /**
+     * update & insert method
+     */
+    fun saveConfig(values: Map<String?, Any?>) {
+        for ((key, value) in values) {
+            val updated = updateConfig(key, value)
+            if (updated == 0) {
+                insertConfig(key, value)
+            }
+        }
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[3];
-		columns[0] = new ColumnDescriptor("CONFIG_KEY", Types.VARCHAR, false, true, 50);
-		columns[1] = new ColumnDescriptor("CONFIG_VALUE", Types.VARCHAR, true, 256);
-		columns[2] = new ColumnDescriptor("CONFIG_DATATYPE", Types.INTEGER, false );
-	}
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
+        return PreparedSelectStatementBuilder(this, "")
+    }
 
-	/**
-	 * update & insert method
-	 */
-	void saveConfig(Map<String, Object> values) {
-		for (var entry : values.entrySet()) {
-			var updated = updateConfig(entry.getKey(), entry.getValue());
-			if (updated == 0) {
-				insertConfig(entry.getKey(), entry.getValue());
-			}
-		}
-	}
+    fun findAll(): Map<String, Any?> {
+        val values = HashMap<String, Any?>()
+        try {
+            val rs = executePreparedSelect()
+            if (rs != null) {
+                while (rs.next()) {
+                    values[rs.getString(columns[0].columnName)] = createObject(
+                        rs.getString(columns[1].columnName), rs.getInt(
+                            columns[2].columnName
+                        )
+                    )
+                }
+                rs.close()
+            }
+        } catch (e: SQLException) {
+            HOLogger.instance().error(this.javaClass, e)
+        }
+        return values
+    }
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
-	}
-	 Map<String,Object> findAll() {
-		 final HashMap<String, Object> values = new HashMap<>();
-		 try {
-			 final ResultSet rs = executePreparedSelect();
-			 if (rs != null) {
-				 while (rs.next()) {
-					 values.put(rs.getString(this.columns[0].getColumnName()), createObject(rs.getString(this.columns[1].getColumnName()), rs.getInt(this.columns[2].getColumnName())));
-				 }
-				 rs.close();
-			 }
-		 } catch (SQLException e) {
-			 HOLogger.instance().error(this.getClass(), e);
-		 }
-		 return values;
-	 }
+    private fun updateConfig(key: String?, value: Any?): Int {
+        return executePreparedUpdate(
+            value,
+            getType(value),
+            key
+        )
+    }
 
-	private int updateConfig(String key, Object value)  {
-		return executePreparedUpdate(
-				value,
-				getType(value),
-				key
-		);
-	}
-	
-	private void insertConfig(String key, Object value) {
-		if(key == null)
-			return;
-		executePreparedInsert(
-				key,
-				value,
-				getType(value)
-		);
-	}
+    private fun insertConfig(key: String?, value: Any?) {
+        if (key == null) return
+        executePreparedInsert(
+            key,
+            value,
+            getType(value)
+        )
+    }
 
-	void deleteConfig(String key) {
-		executePreparedDelete(key);
-	}
-	
-	private int getType(Object obj){
-		if(obj == null)
-			return Types.NULL;
-		if(obj instanceof Integer)
-			return Types.INTEGER;
-		if(obj instanceof BigDecimal)
-			return Types.DECIMAL;
-		if(obj instanceof Timestamp)
-			return Types.TIMESTAMP;
-		if(obj instanceof Boolean)
-			return Types.BOOLEAN;
-		if(obj instanceof Date)
-			return Types.DATE;
-		return Types.VARCHAR;
-	}
-	
-	private Object createObject(String value, int type){
-		if(value == null)
-			return value;
-		return switch (type) {
-			case Types.INTEGER -> Integer.valueOf(value);
-			case Types.DECIMAL -> new BigDecimal(value);
-			case Types.TIMESTAMP -> Timestamp.valueOf(value);
-			case Types.BOOLEAN -> Boolean.valueOf(value);
-			case Types.DATE -> Date.valueOf(value);
-			default -> value;
-		};
-	}
-	
-	@Override
-	protected void insertDefaultValues(){
-		if(findAll().isEmpty()){
-			HashMap<String, Object> defaults = new HashMap<>();
-			defaults.put("TA_numericRating", Boolean.FALSE);
-			defaults.put("TA_descriptionRating", Boolean.TRUE);
-			defaults.put("TA_lineupCompare", Boolean.TRUE);
-			defaults.put("TA_mixedLineup", Boolean.FALSE);
-			defaults.put("TA_tacticDetail", Boolean.FALSE);
-			defaults.put("TA_isStars", Boolean.TRUE);
-			defaults.put("TA_isTotalStrength", Boolean.TRUE);
-			defaults.put("TA_isSquad", Boolean.TRUE);
-			defaults.put("TA_isSmartSquad", Boolean.TRUE);
-			defaults.put("TA_isLoddarStats", Boolean.TRUE);
-			defaults.put("TA_isShowPlayerInfo", Boolean.FALSE);
-			defaults.put("TA_isCheckTeamName", Boolean.TRUE);
-			saveConfig(defaults);
-		}
-	}
+    fun deleteConfig(key: String?) {
+        executePreparedDelete(key)
+    }
 
+    private fun getType(obj: Any?): Int {
+        if (obj == null) return Types.NULL
+        if (obj is Int) return Types.INTEGER
+        if (obj is BigDecimal) return Types.DECIMAL
+        if (obj is Timestamp) return Types.TIMESTAMP
+        if (obj is Boolean) return Types.BOOLEAN
+        return if (obj is Date) Types.DATE else Types.VARCHAR
+    }
+
+    private fun createObject(value: String?, type: Int): Any? {
+        return if (value == null) null else when (type) {
+            Types.INTEGER -> value.toInt()
+            Types.DECIMAL -> BigDecimal(value)
+            Types.TIMESTAMP -> Timestamp.valueOf(value)
+            Types.BOOLEAN -> value.toBoolean()
+            Types.DATE -> Date.valueOf(value)
+            else -> value
+        }
+    }
+
+    override fun insertDefaultValues() {
+        if (findAll().isEmpty()) {
+            val defaults = HashMap<String?, Any?>()
+            defaults["TA_numericRating"] = java.lang.Boolean.FALSE
+            defaults["TA_descriptionRating"] = java.lang.Boolean.TRUE
+            defaults["TA_lineupCompare"] = java.lang.Boolean.TRUE
+            defaults["TA_mixedLineup"] = java.lang.Boolean.FALSE
+            defaults["TA_tacticDetail"] = java.lang.Boolean.FALSE
+            defaults["TA_isStars"] = java.lang.Boolean.TRUE
+            defaults["TA_isTotalStrength"] = java.lang.Boolean.TRUE
+            defaults["TA_isSquad"] = java.lang.Boolean.TRUE
+            defaults["TA_isSmartSquad"] = java.lang.Boolean.TRUE
+            defaults["TA_isLoddarStats"] = java.lang.Boolean.TRUE
+            defaults["TA_isShowPlayerInfo"] = java.lang.Boolean.FALSE
+            defaults["TA_isCheckTeamName"] = java.lang.Boolean.TRUE
+            saveConfig(defaults)
+        }
+    }
+
+    companion object {
+        const val TABLENAME = "MODULE_CONFIGURATION"
+    }
 }

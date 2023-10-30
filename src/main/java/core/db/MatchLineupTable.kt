@@ -1,79 +1,91 @@
-package core.db;
+package core.db
 
-import core.model.match.MatchLineup;
-import core.model.enums.MatchType;
-import core.model.match.SourceSystem;
-import core.util.HOLogger;
-import java.sql.*;
-import java.util.List;
-import java.util.stream.Collectors;
+import core.model.enums.MatchType
+import core.model.match.MatchLineup
+import core.model.match.SourceSystem
+import core.util.HOLogger
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
+import java.util.stream.Collectors
 
-public final class MatchLineupTable extends AbstractTable {
+class MatchLineupTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineup?)!!.matchID }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchLineup?)!!.matchID = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchTyp")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchLineup?)!!.matchType.id }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any ->
+                    (o as MatchLineup?)!!.matchTyp = MatchType.getById(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build()
+        )
+    }
 
-	/** tablename **/
-	public final static String TABLENAME = "MATCHLINEUP";
-	
-	MatchLineupTable(JDBCAdapter adapter){
-		super(TABLENAME,adapter);
-		idColumns = 2;
-	}
+    override val constraintStatements: Array<String?>
+        get() = arrayOf(" PRIMARY KEY (MATCHID, MATCHTYP)")
+    override val createIndexStatement: Array<String?>
+        get() = arrayOf(
+            "CREATE INDEX IMATCHLINEUP_1 ON $tableName(MatchID)"
+        )
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchLineup) o).getMatchID()).setSetter((o, v) -> ((MatchLineup) o).setMatchID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchLineup) o).getMatchType().getId()).setSetter((o, v) -> ((MatchLineup) o).setMatchTyp(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    fun loadMatchLineup(iMatchType: Int, matchID: Int): MatchLineup? {
+        return loadOne(MatchLineup::class.java, matchID, iMatchType)
+    }
 
-	@Override
-	protected String[] getConstraintStatements() {
-		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
-	}
+    fun storeMatchLineup(lineup: MatchLineup?) {
+        if (lineup != null) {
+            lineup.stored = isStored(lineup.matchID, lineup.matchType.id)
+            if (!lineup.stored) {    // do not update, because there is nothing to update (only ids in class)
+                store(lineup)
+            }
+        }
+    }
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(MatchID)"};
-	}
+    private val loadYouthMatchLineupsStatementBuilder =
+        PreparedSelectStatementBuilder(this, " WHERE MATCHTYP IN (${getMatchTypeInValues()})")
 
-	MatchLineup loadMatchLineup(int iMatchType, int matchID) {
-		return loadOne(MatchLineup.class, matchID, iMatchType);
-	}
+    fun loadYouthMatchLineups(): List<MatchLineup?> {
+        return load(
+            MatchLineup::class.java,
+            adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement())
+        )
+    }
 
-	void storeMatchLineup(MatchLineup lineup) {
-		if ( lineup != null) {
-			lineup.setIsStored(isStored(lineup.getMatchID(), lineup.getMatchType().getId()));
-			if (!lineup.isStored()) {    // do not update, because there is nothing to update (only ids in class)
-				store(lineup);
-			}
-		}
-	}
+    private val deleteYouthMatchLineupsBeforeStatementBuilder =
+        PreparedDeleteStatementBuilder(this, getDeleteYouthMatchLineupsBeforeStatementSQL())
 
-	private final PreparedSelectStatementBuilder loadYouthMatchLineupsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
-	public List<MatchLineup> loadYouthMatchLineups() {
-		return load(MatchLineup.class,  adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement()));
-	}
+    init {
+        idColumns = 2
+    }
 
-	private final PreparedDeleteStatementBuilder deleteYouthMatchLineupsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchLineupsBeforeStatementSQL());
+    private fun getDeleteYouthMatchLineupsBeforeStatementSQL(): String {
+            val matchTypes = getMatchTypeInValues()
+            return " WHERE MATCHTYP IN (" +
+                    matchTypes +
+                    ") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN (" +
+                    matchTypes + "))"
+        }
 
-	private String getDeleteYouthMatchLineupsBeforeStatementSQL() {
-		var matchTypes = getMatchTypeInValues();
-		return " WHERE MATCHTYP IN (" +
-				matchTypes +
-				") AND MATCHID IN (SELECT MATCHID FROM  MATCHDETAILS WHERE SpielDatum<? AND MATCHTYP IN (" +
-				matchTypes + "))";
-	}
+    fun deleteYouthMatchLineupsBefore(before: Timestamp?) {
+        try {
+            adapter.executePreparedUpdate(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before)
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, "DB.deleteMatchLineupsBefore Error$e")
+        }
+    }
 
-	public void deleteYouthMatchLineupsBefore(Timestamp before) {
-		try {
-			this.adapter.executePreparedUpdate(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
-		}
-	}
+    private fun getMatchTypeInValues(): String {
+        return MatchType.fromSourceSystem(SourceSystem.YOUTH).stream().map { i: MatchType -> i.id.toString() }
+            .collect(Collectors.joining(","))
+    }
 
-	private String getMatchTypeInValues() {
-		return MatchType.fromSourceSystem(SourceSystem.YOUTH).stream().map(i->String.valueOf(i.getId())).collect(Collectors.joining(","));
-	}
+    companion object {
+        /** tablename  */
+        const val TABLENAME = "MATCHLINEUP"
+    }
 }

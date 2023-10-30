@@ -1,49 +1,65 @@
-package core.db;
+package core.db
 
-import core.model.WorldDetailLeague;
-import java.sql.Types;
-import java.util.List;
+import core.model.WorldDetailLeague
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-class WorldDetailsTable extends AbstractTable {
+internal class WorldDetailsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LEAGUE_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as WorldDetailLeague?)!!.getLeagueId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as WorldDetailLeague?)!!.setLeagueId(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COUNTRY_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as WorldDetailLeague?)!!.getCountryId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as WorldDetailLeague?)!!.setCountryId(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("COUNTRYNAME")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as WorldDetailLeague?)!!.getCountryName() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as WorldDetailLeague?)!!.setCountryName(v as String?) })
+            ).setType(
+                Types.VARCHAR
+            ).setLength(128).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ACTIVE_USER")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as WorldDetailLeague?)!!.getActiveUsers() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as WorldDetailLeague?)!!.setActiveUsers(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(false).build()
+        )
+    }
 
-	final static String TABLENAME = "HT_WORLDDETAILS";
-	
-	WorldDetailsTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
-	}
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUE_ID").setGetter((p) -> ((WorldDetailLeague) p).getLeagueId()).setSetter((p, v) -> ((WorldDetailLeague) p).setLeagueId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COUNTRY_ID").setGetter((p) -> ((WorldDetailLeague) p).getCountryId()).setSetter((p, v) -> ((WorldDetailLeague) p).setCountryId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COUNTRYNAME").setGetter((p) -> ((WorldDetailLeague) p).getCountryName()).setSetter((p, v) -> ((WorldDetailLeague) p).setCountryName((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ACTIVE_USER").setGetter((p) -> ((WorldDetailLeague) p).getActiveUsers()).setSetter((p, v) -> ((WorldDetailLeague) p).setActiveUsers((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
+        return PreparedSelectStatementBuilder(this, "")
+    }
 
-	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
-	}
-	void insertWorldDetailsLeague(WorldDetailLeague league){
-		if(league == null)
-			return;
-		store(league);
-	}
+    fun insertWorldDetailsLeague(league: WorldDetailLeague?) {
+        if (league == null) return
+        store(league)
+    }
 
-	List<WorldDetailLeague> getAllWorldDetailLeagues(){
-		var ret = load(WorldDetailLeague.class);
-		if ( ret.size() == 0){
-			insertDefaultValues();
-			ret = load(WorldDetailLeague.class);
-		}
-		return ret;
-	}
-	
-	@Override
-	protected void insertDefaultValues(){
-		for ( var league : WorldDetailLeague.allLeagues){
-			insertWorldDetailsLeague(league);
-		}
-	}
+    fun getAllWorldDetailLeagues(): List<WorldDetailLeague?> {
+            var ret: List<WorldDetailLeague?>? = load(WorldDetailLeague::class.java)
+            if (ret!!.isEmpty()) {
+                insertDefaultValues()
+                ret = load(WorldDetailLeague::class.java)
+            }
+            return ret
+        }
+
+    override fun insertDefaultValues() {
+        for (league: WorldDetailLeague? in WorldDetailLeague.allLeagues) {
+            insertWorldDetailsLeague(league)
+        }
+    }
+
+    companion object {
+        val TABLENAME: String = "HT_WORLDDETAILS"
+    }
 }

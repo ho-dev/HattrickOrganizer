@@ -1,32 +1,40 @@
-package core.db;
+package core.db
 
-import core.gui.theme.TeamLogoInfo;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import okhttp3.HttpUrl;
+import core.gui.theme.TeamLogoInfo
+import core.util.HODateTime
+import core.util.HOLogger
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.Types;
-
-import static core.util.HODateTime.toDbTimestamp;
-
-public class TeamsLogoTable extends AbstractTable {
-    /**
-     * tablename
-     **/
-    final static String TABLENAME = "CLUBS_LOGO";
-
-    TeamsLogoTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
-    }
-
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("TEAM_ID").setGetter((p) -> ((TeamLogoInfo) p).getTeamId()).setSetter((p, v) -> ((TeamLogoInfo) p).setTeamId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("URL").setGetter((p) -> ((TeamLogoInfo) p).getUrl()).setSetter((p, v) -> ((TeamLogoInfo) p).setUrl((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("FILENAME").setGetter((p) -> ((TeamLogoInfo) p).getFilename()).setSetter((p, v) -> ((TeamLogoInfo) p).setFilename((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LAST_ACCESS").setGetter((p) -> toDbTimestamp(((TeamLogoInfo) p).getLastAccess())).setSetter((p, v) -> ((TeamLogoInfo) p).setLastAccess((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
-        };
+class TeamsLogoTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TEAM_ID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as TeamLogoInfo?)!!.teamId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as TeamLogoInfo?)!!.teamId = v as Int })
+                .setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("URL")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as TeamLogoInfo?)!!.url }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as TeamLogoInfo?)!!.url = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FILENAME")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as TeamLogoInfo?)!!.filename }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as TeamLogoInfo?)!!.filename = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LAST_ACCESS")
+                .setGetter(Function<Any?, Any?> { p: Any? ->
+                    HODateTime.toDbTimestamp(
+                        (p as TeamLogoInfo?)!!.lastAccess
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as TeamLogoInfo?)!!.lastAccess = v as HODateTime? })
+                .setType(
+                    Types.TIMESTAMP
+                ).isNullable(true).build()
+        )
     }
 
     /**
@@ -36,40 +44,47 @@ public class TeamsLogoTable extends AbstractTable {
      * @param teamID             the team id
      * @return the team logo file name
      */
-    public TeamLogoInfo loadTeamLogoInfo(int teamID) {
-        return loadOne(TeamLogoInfo.class, teamID);
+    fun loadTeamLogoInfo(teamID: Int): TeamLogoInfo? {
+        return loadOne(TeamLogoInfo::class.java, teamID)
     }
 
-    public void storeTeamLogoInfo(TeamLogoInfo info) {
-        if ( info == null ) return;
-        String logoURL = null, fileName = null;
-
-        if (info.getUrl() == null) {
+    fun storeTeamLogoInfo(info: TeamLogoInfo?) {
+        if (info == null) return
+        var logoURL: String? = null
+        var fileName: String? = null
+        if (info.url == null) {
             // case of bot team ?
-            HOLogger.instance().debug(this.getClass(), "storeTeamLogoInfo: logo URI was null for team " + info.getTeamId());
+            HOLogger.instance().debug(this.javaClass, "storeTeamLogoInfo: logo URI was null for team " + info.teamId)
         } else {
-            var logoURI = info.getUrl();
+            val logoURI = info.url
             if (logoURI.contains(".")) {
-                if (!logoURI.startsWith("http")) {
-                    logoURL = "http:" + logoURI;
+                logoURL = if (!logoURI.startsWith("http")) {
+                    "http:$logoURI"
                 } else {
-                    logoURL = logoURI;
+                    logoURI
                 }
-                HttpUrl url = HttpUrl.parse(logoURL);
-                if (url != null) {
-                    fileName = url.pathSegments().get(url.pathSize() - 1);
+                if (logoURL != null) {
+                    val url = logoURL.toHttpUrlOrNull()
+                    if (url != null) {
+                        fileName = url.pathSegments[url.pathSize - 1]
+                    }
                 }
             }
-
             if (fileName == null) {
-                HOLogger.instance().error(this.getClass(), "storeTeamLogoInfo: logo URI not recognized " + logoURI);
-                return;
+                HOLogger.instance().error(this.javaClass, "storeTeamLogoInfo: logo URI not recognized $logoURI")
+                return
             }
-            info.setFilename(fileName);
+            info.filename = fileName
         }
+        info.url = logoURL
+        info.stored = isStored(info.teamId)
+        store(info)
+    }
 
-        info.setUrl(logoURL);
-        info.setIsStored(isStored(info.getTeamId()));
-        store(info);
+    companion object {
+        /**
+         * tablename
+         */
+        const val TABLENAME = "CLUBS_LOGO"
     }
 }

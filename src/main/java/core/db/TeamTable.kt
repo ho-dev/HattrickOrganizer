@@ -1,104 +1,101 @@
-package core.db;
+package core.db
 
-import core.model.Team;
-import java.sql.Types;
+import core.model.*
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-final class TeamTable extends AbstractTable {
-	public final static String TABLENAME = "TEAM";
-	
-	TeamTable(JDBCAdapter adapter){
-		super(TABLENAME,adapter);
-	}
+internal class TeamTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.hrfId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.hrfId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).isPrimaryKey(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TrainingsIntensitaet")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.trainingslevel }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.trainingslevel = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TrainingsArt")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.trainingsArtAsInt }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.trainingsArtAsInt = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iStimmung")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.teamSpiritLevel }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.setTeamSpiritLevel(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iSelbstvertrauen")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.confidence }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.setConfidence(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung541")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience541 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience541 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung433")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience433 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience433 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung352")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience352 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience352 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung451")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience451 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience451 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung532")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience532 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience532 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung343")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience343 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience343 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung442")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience442 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience442 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung523")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience523 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience523 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung550")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience550 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience550 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iErfahrung253")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.formationExperience253 }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.formationExperience253 = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("StaminaTrainingPart")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Team?)!!.staminaTrainingPart }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Team?)!!.staminaTrainingPart = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build()
+        )
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((p) -> ((Team) p).getHrfId()).setSetter((p, v) -> ((Team) p).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingsIntensitaet").setGetter((p) -> ((Team) p).getTrainingslevel()).setSetter((p, v) -> ((Team) p).setTrainingslevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingsArt").setGetter((p) -> ((Team) p).getTrainingsArtAsInt()).setSetter((p, v) -> ((Team) p).setTrainingsArtAsInt((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iStimmung").setGetter((p) -> ((Team) p).getTeamSpiritLevel()).setSetter((p, v) -> ((Team) p).setTeamSpiritLevel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iSelbstvertrauen").setGetter((p) -> ((Team) p).getConfidence()).setSetter((p, v) -> ((Team) p).setConfidence((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung541").setGetter((p) -> ((Team) p).getFormationExperience541()).setSetter((p, v) -> ((Team) p).setFormationExperience541((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung433").setGetter((p) -> ((Team) p).getFormationExperience433()).setSetter((p, v) -> ((Team) p).setFormationExperience433((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung352").setGetter((p) -> ((Team) p).getFormationExperience352()).setSetter((p, v) -> ((Team) p).setFormationExperience352((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung451").setGetter((p) -> ((Team) p).getFormationExperience451()).setSetter((p, v) -> ((Team) p).setFormationExperience451((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung532").setGetter((p) -> ((Team) p).getFormationExperience532()).setSetter((p, v) -> ((Team) p).setFormationExperience532((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung343").setGetter((p) -> ((Team) p).getFormationExperience343()).setSetter((p, v) -> ((Team) p).setFormationExperience343((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung442").setGetter((p) -> ((Team) p).getFormationExperience442()).setSetter((p, v) -> ((Team) p).setFormationExperience442((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung523").setGetter((p) -> ((Team) p).getFormationExperience523()).setSetter((p, v) -> ((Team) p).setFormationExperience523((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung550").setGetter((p) -> ((Team) p).getFormationExperience550()).setSetter((p, v) -> ((Team) p).setFormationExperience550((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("iErfahrung253").setGetter((p) -> ((Team) p).getFormationExperience253()).setSetter((p, v) -> ((Team) p).setFormationExperience253((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("StaminaTrainingPart").setGetter((p) -> ((Team) p).getStaminaTrainingPart()).setSetter((p, v) -> ((Team) p).setStaminaTrainingPart((int) v)).setType(Types.INTEGER).isNullable(false).build()
+    /**
+     * Save the team data for the given HRF id.
+     */
+    fun saveTeam(hrfId: Int, team: Team?) {
+        if (team != null) {
+            team.hrfId = hrfId
+            team.stored = isStored(hrfId)
+            store(team)
+        }
+    }
 
-		};
-	}
+    /**
+     * load the team data for the given HRF id
+     */
+    fun getTeam(hrfID: Int): Team {
+        var ret = loadOne(Team::class.java, hrfID)
+        if (ret == null) ret = Team()
+        return ret
+    }
 
-	/**
-	 * Save the team data for the given HRF id.
-	 */
-	void saveTeam(int hrfId, Team team) {
-		if (team != null) {
-			team.setHrfId(hrfId);
-			team.setIsStored(isStored(hrfId));
-			store(team);
-		}
-	}
-
-//	/**
-//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
-//	 * Selbstvertrauen
-//	 */
-//	String[] getStimmmungSelbstvertrauen(int hrfid) {
-//		final int[] intvalue = new int[2];
-//		final String[] returnvalue = new String[2];
-//		try {
-//			final ResultSet rs = executePreparedSelect(hrfid);
-//
-//			if (rs.next()) {
-//				intvalue[0] = rs.getInt("iStimmung");
-//				intvalue[1] = rs.getInt("iSelbstvertrauen");
-//
-//				//Keine Sinnvollen Werte in der DB -> Strings holen
-//				if ((intvalue[0] <= 0) && (intvalue[1] <= 0)) {
-//					returnvalue[0] = rs.getString("sStimmung");
-//					returnvalue[1] = rs.getString("sSelbstvertrauen");
-//				} else {
-//					returnvalue[0] = TeamSpirit.toString(intvalue[0]);
-//					returnvalue[1] = TeamConfidence.toString(intvalue[1]);
-//				}
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauen : " + e);
-//		}
-//
-//		return returnvalue;
-//	}
-//
-//	/**
-//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] = Stimmung [1] =
-//	 * Selbstvertrauen
-//	 */
-//	int[] getStimmmungSelbstvertrauenValues(int hrfid) {
-//		final int[] intvalue = new int[2];
-//		try {
-//			final ResultSet rs = executePreparedSelect(hrfid);
-//
-//			if (rs.next()) {
-//				intvalue[0] = rs.getInt("iStimmung");
-//				intvalue[1] = rs.getInt("iSelbstvertrauen");
-//			}
-//		} catch (Exception e) {
-//			HOLogger.instance().log(getClass(),"DatenbankZugriff.getStimmmungSelbstvertrauenValues : " + e);
-//		}
-//		return intvalue;
-//	}
-	
-	/**
-	 * load the team data for the given HRF id
-	 */
-	Team getTeam(int hrfID) {
-		var ret = loadOne(Team.class, hrfID);
-		if ( ret == null) ret = new Team();
-		return ret;
-	}
+    companion object {
+        const val TABLENAME = "TEAM"
+    }
 }

@@ -1,47 +1,83 @@
-package core.db;
+package core.db
 
-import core.model.player.CommentType;
-import module.youth.YouthPlayer.ScoutComment;
-import module.training.Skills;
-import java.sql.Types;
-import java.util.List;
+import core.model.player.CommentType
+import module.training.Skills
+import module.youth.YouthPlayer.ScoutComment
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-public class YouthScoutCommentTable extends AbstractTable {
-
-    /** tablename **/
-    final static String TABLENAME = "YOUTHSCOUTCOMMENT";
-
-    YouthScoutCommentTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
+class YouthScoutCommentTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("YOUTHPLAYER_ID")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getYouthPlayerId() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as ScoutComment?)!!.setYouthPlayerId(v as Int) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("INDEX")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getIndex() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any -> (p as ScoutComment?)!!.setIndex(v as Int) })
+            ).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Text")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getText() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as ScoutComment?)!!.setText(v as String?) })
+            ).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Type")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getType().getValue() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as ScoutComment?)!!.setType(CommentType.valueOf(v as Int?)) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Variation")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getVariation() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as ScoutComment?)!!.setVariation(v as Int?) })
+            ).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SkillType")
+                .setGetter(Function<Any?, Any?>({ p: Any? ->
+                    Skills.ScoutCommentSkillTypeID.value(
+                        (p as ScoutComment?)!!.getSkillType()
+                    )
+                })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
+                    (p as ScoutComment?)!!.setSkillType(
+                        Skills.ScoutCommentSkillTypeID.valueOf(
+                            v as Int?
+                        )
+                    )
+                })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SkillLevel")
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as ScoutComment?)!!.getSkillLevel() })).setSetter(
+                BiConsumer<Any?, Any>({ p: Any?, v: Any? -> (p as ScoutComment?)!!.setSkillLevel(v as Int?) })
+            ).setType(
+                Types.INTEGER
+            ).isNullable(true).build()
+        )
     }
 
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("YOUTHPLAYER_ID").setGetter((p) -> ((ScoutComment) p).getYouthPlayerId()).setSetter((p, v) -> ((ScoutComment) p).setYouthPlayerId( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("INDEX").setGetter((p) -> ((ScoutComment) p).getIndex()).setSetter((p, v) -> ((ScoutComment) p).setIndex( (int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Text").setGetter((p) -> ((ScoutComment) p).getText()).setSetter((p, v) -> ((ScoutComment) p).setText( (String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Type").setGetter((p) -> ((ScoutComment) p).getType().getValue()).setSetter((p, v) -> ((ScoutComment) p).setType(CommentType.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("Variation").setGetter((p) -> ((ScoutComment) p).getVariation()).setSetter((p, v) -> ((ScoutComment) p).setVariation((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SkillType").setGetter((p) -> Skills.ScoutCommentSkillTypeID.value(((ScoutComment) p).getSkillType())).setSetter((p, v) -> ((ScoutComment) p).setSkillType(Skills.ScoutCommentSkillTypeID.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SkillLevel").setGetter((p) -> ((ScoutComment) p).getSkillLevel()).setSetter((p, v) -> ((ScoutComment) p).setSkillLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-        };
-    }
-
-    public void storeYouthScoutComments(int youthplayerId,  List<ScoutComment> comments) {
-        executePreparedDelete(youthplayerId);
-        for ( var comment : comments){
-            comment.setIsStored(false);
-            comment.setYouthPlayerId(youthplayerId);
-            store(comment);
+    fun storeYouthScoutComments(youthplayerId: Int, comments: List<ScoutComment>) {
+        executePreparedDelete(youthplayerId)
+        for (comment: ScoutComment in comments) {
+            comment.stored = false
+            comment.setYouthPlayerId(youthplayerId)
+            store(comment)
         }
     }
-    @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "WHERE YOUTHPLAYER_ID=? order by INDEX");
-    }
-    public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
-        return load(ScoutComment.class, youthplayer_id);
+
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
+        return PreparedSelectStatementBuilder(this, "WHERE YOUTHPLAYER_ID=? order by INDEX")
     }
 
+    fun loadYouthScoutComments(youthplayer_id: Int): List<ScoutComment?> {
+        return load(ScoutComment::class.java, youthplayer_id)
+    }
+
+    companion object {
+        /** tablename  */
+        val TABLENAME: String = "YOUTHSCOUTCOMMENT"
+    }
 }

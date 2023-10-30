@@ -1,53 +1,104 @@
-package core.db;
+package core.db
 
-import core.util.HODateTime;
-import module.teamAnalyzer.vo.SquadInfo;
+import core.util.HODateTime
+import module.teamAnalyzer.vo.SquadInfo
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.List;
-
-public class SquadInfoTable extends AbstractTable {
-    final static String TABLENAME = "SQUAD";
-
-    SquadInfoTable(JDBCAdapter adapter) {
-        super(TABLENAME, adapter);
-        idColumns = 2;
+class SquadInfoTable internal constructor(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TEAMID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.teamId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.teamId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LASTMATCH")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.lastMatchDate.toDbTimestamp() })
+                .setSetter(
+                    BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as SquadInfo?)!!.lastMatchDate = v as HODateTime? })
+                .setType(
+                    Types.TIMESTAMP
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FETCHDATE")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.fetchDate.toDbTimestamp() }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as SquadInfo?)!!.fetchDate = v as HODateTime? }).setType(
+                Types.TIMESTAMP
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("BRUISED")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.bruisedCount }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.bruisedCount = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("INJURED")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.injuredCount }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.injuredCount = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("INJUREDWEEKS")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.injuredWeeksSum }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.injuredWeeksSum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("YELLOWCARDS")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.singleYellowCards }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.singleYellowCards = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TWOYELLOWCARDS")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.twoYellowCards }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.twoYellowCards = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SUSPENDED")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.redCards }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.redCards = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TRANSFERLISTED")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.transferListedCount }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.transferListedCount = v as Int })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TSISUM")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.gettSISum() }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.settSISum(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SALARY")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.salarySum }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.salarySum = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PLAYER")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.playerCount }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.playerCount = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MOTHERCLUB")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as SquadInfo?)!!.homegrownCount }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as SquadInfo?)!!.homegrownCount = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build()
+        )
     }
 
-    @Override
-    protected void initColumns() {
-        columns = new ColumnDescriptor[]{
-                ColumnDescriptor.Builder.newInstance().setColumnName("TEAMID").setGetter((p) -> ((SquadInfo) p).getTeamId()).setSetter((p, v) -> ((SquadInfo) p).setTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("LASTMATCH").setGetter((p) -> ((SquadInfo) p).getLastMatchDate().toDbTimestamp()).setSetter((p, v) -> ((SquadInfo) p).setLastMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("FETCHDATE").setGetter((p) -> ((SquadInfo) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((SquadInfo) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("BRUISED").setGetter((p) -> ((SquadInfo) p).getBruisedCount()).setSetter((p, v) -> ((SquadInfo) p).setBruisedCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("INJURED").setGetter((p) -> ((SquadInfo) p).getInjuredCount()).setSetter((p, v) -> ((SquadInfo) p).setInjuredCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("INJUREDWEEKS").setGetter((p) -> ((SquadInfo) p).getInjuredWeeksSum()).setSetter((p, v) -> ((SquadInfo) p).setInjuredWeeksSum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("YELLOWCARDS").setGetter((p) -> ((SquadInfo) p).getSingleYellowCards()).setSetter((p, v) -> ((SquadInfo) p).setSingleYellowCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("TWOYELLOWCARDS").setGetter((p) -> ((SquadInfo) p).getTwoYellowCards()).setSetter((p, v) -> ((SquadInfo) p).setTwoYellowCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SUSPENDED").setGetter((p) -> ((SquadInfo) p).getRedCards()).setSetter((p, v) -> ((SquadInfo) p).setRedCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("TRANSFERLISTED").setGetter((p) -> ((SquadInfo) p).getTransferListedCount()).setSetter((p, v) -> ((SquadInfo) p).setTransferListedCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("TSISUM").setGetter((p) -> ((SquadInfo) p).gettSISum()).setSetter((p, v) -> ((SquadInfo) p).settSISum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((SquadInfo) p).getSalarySum()).setSetter((p, v) -> ((SquadInfo) p).setSalarySum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PLAYER").setGetter((p) -> ((SquadInfo) p).getPlayerCount()).setSetter((p, v) -> ((SquadInfo) p).setPlayerCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUB").setGetter((p) -> ((SquadInfo) p).getHomegrownCount()).setSetter((p, v) -> ((SquadInfo) p).setHomegrownCount((int) v)).setType(Types.INTEGER).isNullable(false).build()
-        };
+    override val createIndexStatement: Array<String?>
+        get() = arrayOf(
+            "CREATE INDEX ITA_SQUAD_TEAMID_MATCH ON " + TABLENAME
+                    + " (TEAMID, LASTMATCH)"
+        )
+
+    fun storeSquadInfo(squadInfo: SquadInfo) {
+        squadInfo.stored = isStored(squadInfo.teamId, squadInfo.lastMatchDate.toDbTimestamp())
+        store(squadInfo)
     }
 
-    @Override
-    protected String[] getCreateIndexStatement() {
-        return new String[] { "CREATE INDEX ITA_SQUAD_TEAMID_MATCH ON " + TABLENAME
-                + " (TEAMID, LASTMATCH)" };
+    private val loadAllSquadInfoStatementBuilder = PreparedSelectStatementBuilder(this, "WHERE TEAMID=?")
+
+    init {
+        idColumns = 2
     }
 
-    public void storeSquadInfo(SquadInfo squadInfo) {
-        squadInfo.setIsStored(isStored(squadInfo.getTeamId(), squadInfo.getLastMatchDate().toDbTimestamp()));
-        store(squadInfo);
+    fun loadSquadInfo(teamId: Int): List<SquadInfo?> {
+        return load(
+            SquadInfo::class.java,
+            adapter.executePreparedQuery(loadAllSquadInfoStatementBuilder.getStatement(), teamId)
+        )
     }
 
-    private final PreparedSelectStatementBuilder loadAllSquadInfoStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAMID=?");
-    public List<SquadInfo> loadSquadInfo(int teamId){
-        return load(SquadInfo.class, adapter.executePreparedQuery(loadAllSquadInfoStatementBuilder.getStatement(), teamId));
+    companion object {
+        const val TABLENAME = "SQUAD"
     }
 }

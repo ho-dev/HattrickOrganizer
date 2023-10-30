@@ -1,100 +1,177 @@
-package core.db;
+package core.db
 
-import core.model.enums.MatchType;
-import core.model.match.MatchEvent;
-import core.model.match.Matchdetails;
-import core.model.match.SourceSystem;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import java.sql.*;
-import java.util.List;
-import java.util.stream.Collectors;
+import core.model.enums.MatchType
+import core.model.match.MatchEvent
+import core.model.match.Matchdetails
+import core.model.match.SourceSystem
+import core.util.HODateTime
+import core.util.HOLogger
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
+import java.util.stream.Collectors
 
-final class MatchHighlightsTable extends AbstractTable {
-	final static String TABLENAME = "MATCHHIGHLIGHTS";
+internal class MatchHighlightsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.matchId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.matchId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchTyp")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.matchType.id }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any ->
+                    (o as MatchEvent?)!!.matchType = MatchType.getById(v as Int)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("EVENT_INDEX")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.matchEventIndex }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.setMatchEventIndex(v as Int?) })
+                .setType(
+                    Types.INTEGER
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TeamId")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.teamID }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.teamID = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MATCH_EVENT_ID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.matchEventID.value }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.setMatchEventID(v as Int) })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchDate")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    HODateTime.toDbTimestamp(
+                        (o as MatchEvent?)!!.matchDate
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.matchDate = v as HODateTime? })
+                .setType(
+                    Types.TIMESTAMP
+                ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Minute")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.minute }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.minute = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerId")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.playerId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.playerId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerName")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.playerName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.playerName = v as String? })
+                .setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerHeim")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.spielerHeim }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.spielerHeim = v as Boolean })
+                .setType(Types.BOOLEAN).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GehilfeID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.assistingPlayerId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.assistingPlayerId = v as Int }).setType(
+                Types.INTEGER
+            ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GehilfeName")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.assistingPlayerName }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.assistingPlayerName = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(256).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GehilfeHeim")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.gehilfeHeim }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as MatchEvent?)!!.gehilfeHeim = v as Boolean })
+                .setType(Types.BOOLEAN).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("EventText")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.eventText }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.eventText = v as String? })
+                .setType(Types.VARCHAR).setLength(5000).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("INJURY_TYPE")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    Matchdetails.eInjuryType.toInteger(
+                        (o as MatchEvent?)!!.getM_eInjuryType()
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.setM_eInjuryType(v as Int?) })
+                .setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchPart")
+                .setGetter(Function<Any?, Any?> { o: Any? ->
+                    MatchEvent.MatchPartId.toInteger(
+                        (o as MatchEvent?)!!.matchPartId
+                    )
+                }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? ->
+                    (o as MatchEvent?)!!.matchPartId = MatchEvent.MatchPartId.fromMatchPartId(v as Int?)
+                }).setType(
+                Types.INTEGER
+            ).isNullable(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("EventVariation")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as MatchEvent?)!!.eventVariation }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as MatchEvent?)!!.eventVariation = v as Int? })
+                .setType(Types.INTEGER).isNullable(true).build()
+        )
+    }
 
-	MatchHighlightsTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-		idColumns = 2;
-	}
+    override val createIndexStatement: Array<String?>
+        get() = arrayOf(
+            "CREATE INDEX iMATCHHIGHLIGHTS_1 ON $tableName (MatchID)",
+            "CREATE INDEX matchhighlights_teamid_idx ON $tableName (TeamId)",
+            "CREATE INDEX matchhighlights_eventid_idx ON $tableName (MATCH_EVENT_ID)",
+            "SET TABLE $tableName NEW SPACE"
+        )
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[] {
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchID").setGetter((o) -> ((MatchEvent) o).getMatchId()).setSetter((o, v) -> ((MatchEvent) o).setMatchId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchTyp").setGetter((o) -> ((MatchEvent) o).getMatchType().getId()).setSetter((o, v) -> ((MatchEvent) o).setMatchType(MatchType.getById((int) v))).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("EVENT_INDEX").setGetter((o) -> ((MatchEvent) o).getMatchEventIndex()).setSetter((o, v) -> ((MatchEvent) o).setMatchEventIndex((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TeamId").setGetter((o) -> ((MatchEvent) o).getTeamID()).setSetter((o, v) -> ((MatchEvent) o).setTeamID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MATCH_EVENT_ID").setGetter((o) -> ((MatchEvent) o).getMatchEventID().getValue()).setSetter((o, v) -> ((MatchEvent) o).setMatchEventID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchDate").setGetter((o) -> HODateTime.toDbTimestamp(((MatchEvent) o).getMatchDate())).setSetter((o, v) -> ((MatchEvent) o).setMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Minute").setGetter((o) -> ((MatchEvent) o).getMinute()).setSetter((o, v) -> ((MatchEvent) o).setMinute((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerId").setGetter((o) -> ((MatchEvent) o).getPlayerId()).setSetter((o, v) -> ((MatchEvent) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerName").setGetter((o) -> ((MatchEvent) o).getPlayerName()).setSetter((o, v) -> ((MatchEvent) o).setPlayerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerHeim").setGetter((o) -> ((MatchEvent) o).getSpielerHeim()).setSetter((o, v) -> ((MatchEvent) o).setSpielerHeim((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeID").setGetter((o) -> ((MatchEvent) o).getAssistingPlayerId()).setSetter((o, v) -> ((MatchEvent) o).setAssistingPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeName").setGetter((o) -> ((MatchEvent) o).getAssistingPlayerName()).setSetter((o, v) -> ((MatchEvent) o).setAssistingPlayerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("GehilfeHeim").setGetter((o) -> ((MatchEvent) o).getGehilfeHeim()).setSetter((o, v) -> ((MatchEvent) o).setGehilfeHeim((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("EventText").setGetter((o) -> ((MatchEvent) o).getEventText()).setSetter((o, v) -> ((MatchEvent) o).setEventText((String) v)).setType(Types.VARCHAR).setLength(5000).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("INJURY_TYPE").setGetter((o) -> Matchdetails.eInjuryType.toInteger(((MatchEvent) o).getM_eInjuryType())).setSetter((o, v) -> ((MatchEvent) o).setM_eInjuryType((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("MatchPart").setGetter((o) -> MatchEvent.MatchPartId.toInteger(((MatchEvent) o).getMatchPartId())).setSetter((o, v) -> ((MatchEvent) o).setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("EventVariation").setGetter((o) -> ((MatchEvent) o).getEventVariation()).setSetter((o, v) -> ((MatchEvent) o).setEventVariation((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
-		};
-	}
+    fun storeMatchHighlights(details: Matchdetails?) {
+        if (details != null) {
+            // Remove existing entries
+            executePreparedDelete(details.matchID, details.matchType.id)
+            val vHighlights = details.downloadHighlightsIfMissing()
+            for (highlight in vHighlights) {
+                highlight.stored = false
+                highlight.matchDate = details.matchDate
+                highlight.matchType = details.matchType
+                highlight.matchId = details.matchID
+                store(highlight)
+            }
+        }
+    }
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[] {
-				"CREATE INDEX iMATCHHIGHLIGHTS_1 ON " + getTableName() + " (MatchID)",
-				"CREATE INDEX matchhighlights_teamid_idx ON " + getTableName() + " (TeamId)",
-				"CREATE INDEX matchhighlights_eventid_idx ON " + getTableName() + " (MATCH_EVENT_ID)",
-				"SET TABLE " + getTableName() + " NEW SPACE"
-		};
-	}
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder? {
+        return PreparedSelectStatementBuilder(this, "WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute")
+    }
 
-	void storeMatchHighlights(Matchdetails details) {
-		if (details != null) {
-			// Remove existing entries
-			executePreparedDelete( details.getMatchID(), details.getMatchType().getId());
-			final List<MatchEvent> vHighlights = details.downloadHighlightsIfMissing();
-			for (final MatchEvent highlight : vHighlights) {
-				highlight.setIsStored(false);
-				highlight.setMatchDate(details.getMatchDate());
-				highlight.setMatchType(details.getMatchType());
-				highlight.setMatchId(details.getMatchID());
-				store(highlight);
-			}
-		}
-	}
+    /**
+     * @param matchId the match id
+     * @return the match highlights
+     */
+    fun getMatchHighlights(iMatchType: Int, matchId: Int): List<MatchEvent?>? {
+        return load(MatchEvent::class.java, matchId, iMatchType)
+    }
 
-	@Override
-	protected PreparedSelectStatementBuilder  createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this,"WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute");
-	}
+    private val deleteYouthMatchHighlightsBeforeStatementBuilder = PreparedDeleteStatementBuilder(
+        this,
+        deleteYouthMatchHighlightsBeforeStatementSQL
+    )
 
-	/**
-	 * @param matchId the match id
-	 * @return the match highlights
-	 */
-	List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
-		return load(MatchEvent.class, matchId, iMatchType);
-	}
+    init {
+        idColumns = 2
+    }
 
-	private final PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
-			getDeleteYouthMatchHighlightsBeforeStatementSQL());
+    private val deleteYouthMatchHighlightsBeforeStatementSQL: String
+        private get() {
+            val lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.value))
+            val inValues = lMatchTypes.stream().map { p: MatchType -> p.id.toString() }.collect(Collectors.joining(","))
+            return " WHERE MatchTyp IN (" +
+                    inValues +
+                    ") AND MatchDate IS NOT NULL AND MatchDate<?"
+        }
 
-	private String getDeleteYouthMatchHighlightsBeforeStatementSQL() {
-		var lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
-		var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
-		return " WHERE MatchTyp IN (" +
-				inValues +
-				") AND MatchDate IS NOT NULL AND MatchDate<?";
-	}
+    fun deleteYouthMatchHighlightsBefore(before: Timestamp?) {
+        try {
+            adapter!!.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before)
+        } catch (e: Exception) {
+            HOLogger.instance().log(javaClass, "DB.deleteMatchLineupsBefore Error$e")
+        }
+    }
 
-	public void deleteYouthMatchHighlightsBefore(Timestamp before) {
-		try {
-			adapter.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
-		}
-	}
+    companion object {
+        const val TABLENAME = "MATCHHIGHLIGHTS"
+    }
 }

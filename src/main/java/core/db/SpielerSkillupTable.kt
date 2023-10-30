@@ -1,94 +1,110 @@
-package core.db;
+package core.db
 
-import core.constants.player.PlayerSkill;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
-import core.model.player.Player;
-import core.model.player.Skillup;
-import core.util.HODateTime;
+import core.constants.player.PlayerSkill
+import core.model.HOModel
+import core.model.HOVerwaltung
+import core.model.player.*
+import core.util.HODateTime
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-import java.sql.*;
-import java.util.*;
+internal class SpielerSkillupTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.playerId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Skillup?)!!.playerId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Skill")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.skill }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Skillup?)!!.skill = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.hrfId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Skillup?)!!.hrfId = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Datum")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.date.toDbTimestamp() }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Skillup?)!!.date = v as HODateTime? })
+                .setType(Types.TIMESTAMP).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Value")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.value }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Skillup?)!!.value = v as Int }).setType(Types.INTEGER)
+                .isNullable(false).build()
+        )
+    }
 
-final class SpielerSkillupTable extends AbstractTable {
+    override val createIndexStatement: Array<String?>
+        get() = arrayOf(
+            "CREATE INDEX iSkillup_1 ON " + tableName + "(" + columns[2].columnName + ")",
+            "CREATE INDEX iSkillup_2 ON " + tableName + "(" + columns[2].columnName + "," + columns[3].columnName + ")"
+        )
 
-	/**
-	 * tablename
-	 **/
-	final static String TABLENAME = "SPIELERSKILLUP";
-//	private static Map<String, Vector<Object[]>> playerSkillup = null;
+    override fun createPreparedDeleteStatementBuilder(): PreparedDeleteStatementBuilder? {
+        return PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?")
+    }
 
-	SpielerSkillupTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
-		idColumns = 2;
-	}
+    private fun storeSkillup(skillup: Skillup) {
+        store(skillup)
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Skillup) o).getPlayerId()).setSetter((o, v) -> ((Skillup) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Skill").setGetter((o) -> ((Skillup) o).getSkill()).setSetter((o, v) -> ((Skillup) o).setSkill((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((Skillup) o).getHrfId()).setSetter((o, v) -> ((Skillup) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((Skillup) o).getDate().toDbTimestamp()).setSetter((o, v) -> ((Skillup) o).setDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Value").setGetter((o) -> ((Skillup) o).getValue()).setSetter((o, v) -> ((Skillup) o).setValue((int) v)).setType(Types.INTEGER).isNullable(false).build()
-		};
-	}
+    private val loadLastLevelUpStatementBuilder = PreparedSelectStatementBuilder(
+        this,
+        "WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1"
+    )
 
-	@Override
-	protected String[] getCreateIndexStatement() {
-		return new String[]{
-				"CREATE INDEX iSkillup_1 ON " + getTableName() + "(" + columns[2].getColumnName() + ")",
-				"CREATE INDEX iSkillup_2 ON " + getTableName() + "(" + columns[2].getColumnName() + "," + columns[3].getColumnName() + ")"};
-	}
+    //	private static Map<String, Vector<Object[]>> playerSkillup = null;
+    init {
+        idColumns = 2
+    }
 
-	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
-	}
+    fun getLastLevelUp(skillCode: Int, spielerId: Int): Skillup? {
+        return loadOne(
+            Skillup::class.java,
+            adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, skillCode)
+        )
+    }
 
-	private void storeSkillup(Skillup skillup) {
-		store(skillup);
-	}
+    fun getAllLevelUp(skillCode: Int, spielerId: Int): List<Skillup?> {
+        return load(Skillup::class.java, spielerId, skillCode)
+    }
 
-	private final PreparedSelectStatementBuilder loadLastLevelUpStatementBuilder = new PreparedSelectStatementBuilder(this,
-			"WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
-	Skillup getLastLevelUp(int skillCode, int spielerId) {
-		return loadOne(Skillup.class, this.adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, skillCode));
-	}
+    fun importNewSkillup(homodel: HOModel) {
+        val players = homodel.getCurrentPlayers()
+        for (nPlayer in players) {
+            val oPlayer = HOVerwaltung.instance().model.getCurrentPlayer(nPlayer.playerID)
+            if (oPlayer != null) {
+                checkNewSkillup(nPlayer, nPlayer.gKskill, oPlayer.gKskill, PlayerSkill.KEEPER, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.pMskill, oPlayer.pMskill, PlayerSkill.PLAYMAKING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.pSskill, oPlayer.pSskill, PlayerSkill.PASSING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.wIskill, oPlayer.wIskill, PlayerSkill.WINGER, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.deFskill, oPlayer.deFskill, PlayerSkill.DEFENDING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.sCskill, oPlayer.sCskill, PlayerSkill.SCORING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.sPskill, oPlayer.sPskill, PlayerSkill.SET_PIECES, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.stamina, oPlayer.stamina, PlayerSkill.STAMINA, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.experience, oPlayer.experience, PlayerSkill.EXPERIENCE, homodel.id)
+            }
+        }
+    }
 
-	List<Skillup> getAllLevelUp(int skillCode, int spielerId) {
-		return load(Skillup.class, spielerId, skillCode);
-	}
+    private fun checkNewSkillup(nPlayer: Player, newValue: Int, oldValue: Int, skill: Int, hrf: Int) {
+        if (newValue > oldValue) {
+            val skillup = Skillup()
+            skillup.hrfId = hrf
+            skillup.date = nPlayer.getHrfDate()
+            skillup.skill = skill
+            skillup.playerId = nPlayer.playerID
+            skillup.value = newValue
+            storeSkillup(skillup)
+            nPlayer.resetSkillUpInformation()
+        }
+    }
 
-
-	void importNewSkillup(HOModel homodel) {
-		List<Player> players = homodel.getCurrentPlayers();
-		for (Player nPlayer : players) {
-			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getPlayerID());
-			if (oPlayer != null) {
-				checkNewSkillup(nPlayer, nPlayer.getGKskill(), oPlayer.getGKskill(), PlayerSkill.KEEPER, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getPMskill(), oPlayer.getPMskill(), PlayerSkill.PLAYMAKING, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getPSskill(), oPlayer.getPSskill(), PlayerSkill.PASSING, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getWIskill(), oPlayer.getWIskill(), PlayerSkill.WINGER, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getDEFskill(), oPlayer.getDEFskill(), PlayerSkill.DEFENDING, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getSCskill(), oPlayer.getSCskill(), PlayerSkill.SCORING, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getSPskill(), oPlayer.getSPskill(), PlayerSkill.SET_PIECES, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getStamina(), oPlayer.getStamina(), PlayerSkill.STAMINA, homodel.getID());
-				checkNewSkillup(nPlayer, nPlayer.getExperience(), oPlayer.getExperience(), PlayerSkill.EXPERIENCE, homodel.getID());
-			}
-		}
-	}
-
-	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
-		if (newValue > oldValue) {
-			var skillup = new Skillup();
-			skillup.setHrfId(hrf);
-			skillup.setDate(nPlayer.getHrfDate());
-			skillup.setSkill(skill);
-			skillup.setPlayerId(nPlayer.getPlayerID());
-			skillup.setValue(newValue);
-			storeSkillup(skillup);
-			nPlayer.resetSkillUpInformation();
-		}
-	}
+    companion object {
+        /**
+         * tablename
+         */
+        const val TABLENAME = "SPIELERSKILLUP"
+    }
 }

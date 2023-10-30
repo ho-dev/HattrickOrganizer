@@ -1,37 +1,63 @@
-package core.db;
+package core.db
 
-import core.model.player.Player;
-import java.sql.Types;
+import core.model.player.*
+import java.sql.*
+import java.util.function.BiConsumer
+import java.util.function.Function
 
-final class SpielerNotizenTable extends AbstractTable {
+internal class SpielerNotizenTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
+    override fun initColumns() {
+        columns = arrayOf<ColumnDescriptor>(
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerID")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.playerId }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.playerId = v as Int })
+                .setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Notiz")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.note }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Player.Notes?)!!.note = v as String? })
+                .setType(Types.VARCHAR).setLength(2048).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Spielberechtigt")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.isEligibleToPlay }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.isEligibleToPlay = v as Boolean })
+                .setType(
+                    Types.BOOLEAN
+                ).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TeamInfoSmilie")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.teamInfoSmilie }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Player.Notes?)!!.teamInfoSmilie = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(127).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ManuellerSmilie")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.manuelSmilie }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Player.Notes?)!!.manuelSmilie = v as String? })
+                .setType(
+                    Types.VARCHAR
+                ).setLength(127).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("userPos")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.userPos }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.userPos = v as Int })
+                .setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("isFired")
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.isFired }).setSetter(
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.setIsFired(v as Boolean) })
+                .setType(Types.BOOLEAN).isNullable(false).build()
+        )
+    }
 
-	/** tablename **/
-	public final static String TABLENAME = "SPIELERNOTIZ";
-	
-	SpielerNotizenTable(JDBCAdapter  adapter){
-		super(TABLENAME,adapter);
-	}
+    fun storeNotes(notes: Player.Notes) {
+        notes.stored = isStored(notes.playerId)
+        store(notes)
+    }
 
-	@Override
-	protected void initColumns() {
-		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Player.Notes) o).getPlayerId()).setSetter((o, v) -> ((Player.Notes) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).isPrimaryKey(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Notiz").setGetter((o) -> ((Player.Notes) o).getNote()).setSetter((o, v) -> ((Player.Notes) o).setNote((String) v)).setType(Types.VARCHAR).setLength(2048).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Spielberechtigt").setGetter((o) -> ((Player.Notes) o).isEligibleToPlay()).setSetter((o, v) -> ((Player.Notes) o).setEligibleToPlay((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("TeamInfoSmilie").setGetter((o) -> ((Player.Notes) o).getTeamInfoSmilie()).setSetter((o, v) -> ((Player.Notes) o).setTeamInfoSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ManuellerSmilie").setGetter((o) -> ((Player.Notes) o).getManuelSmilie()).setSetter((o, v) -> ((Player.Notes) o).setManuelSmilie((String) v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("userPos").setGetter((o) -> ((Player.Notes) o).getUserPos()).setSetter((o, v) -> ((Player.Notes) o).setUserPos((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("isFired").setGetter((o) -> ((Player.Notes) o).isFired()).setSetter((o, v) -> ((Player.Notes) o).setIsFired((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build()
-		};
-	}
+    fun load(playerId: Int): Player.Notes {
+        var ret = loadOne(Player.Notes::class.java, playerId)
+        if (ret == null) ret = Player.Notes(playerId)
+        return ret
+    }
 
-	void storeNotes(Player.Notes notes) {
-		notes.setIsStored(isStored(notes.getPlayerId()));
-		store(notes);
-	}
-	public Player.Notes load(int playerId) {
-		var ret =  loadOne(Player.Notes.class, playerId);
-		if ( ret == null) ret = new Player.Notes(playerId);
-		return ret;
-	}
+    companion object {
+        /** tablename  */
+        const val TABLENAME = "SPIELERNOTIZ"
+    }
 }

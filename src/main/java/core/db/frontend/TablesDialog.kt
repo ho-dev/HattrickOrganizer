@@ -30,7 +30,7 @@ internal class TablesDialog(owner: SQLDialog?) : JDialog(owner, "Tables"), Mouse
     private val list: JList<*>
         get() {
             if (tablelist == null) {
-                tablelist = JList(DBManager.instance().adapter.allTableNames)
+                tablelist = JList(DBManager.jdbcAdapter.getAllTableNames())
                 tablelist!!.addMouseListener(this)
             }
             return tablelist!!
@@ -47,8 +47,8 @@ internal class TablesDialog(owner: SQLDialog?) : JDialog(owner, "Tables"), Mouse
 
     @Throws(Exception::class)
     private fun setTable(tableName: String): Array<Array<Any?>> {
-        val rs = DBManager.instance().adapter.executeQuery("SELECT * FROM $tableName where 1 = 2")
-        val columns = rs.metaData.columnCount
+        val rs = DBManager.jdbcAdapter.executeQuery("SELECT * FROM $tableName where 1 = 2")
+        val columns = rs!!.metaData.columnCount
         val columnData = Array(columns) { arrayOfNulls<Any>(4) }
         for (i in 0 until columns) {
             columnData[i][0] = rs.metaData.getColumnName(i + 1)
@@ -62,11 +62,11 @@ internal class TablesDialog(owner: SQLDialog?) : JDialog(owner, "Tables"), Mouse
     override fun mouseClicked(e: MouseEvent) {
         val area = (owner as SQLDialog).textArea
         if (e.source is JList<*>) if (e.clickCount == 2)
-            area.text = area!!.getText() + " " + list.getSelectedValue()
+            area.text = area.getText() + " " + list.getSelectedValue()
         else
             refresh()
         if (e.source is JTable && e.clickCount == 2)
-            area!!.text = area!!.getText() + " " + tableColumns!!.getValueAt(tableColumns!!.selectedRow, 0)
+            area.text = area.getText() + " " + tableColumns!!.getValueAt(tableColumns!!.selectedRow, 0)
     }
 
     override fun mousePressed(mouseevent: MouseEvent) {}

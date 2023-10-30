@@ -21,7 +21,7 @@ public class RemoveGruppenPanelTest {
                     new File("").getAbsoluteFile().getParentFile().getAbsolutePath());
 
             UserManager.INSTANCE.getCurrentUser();
-            DBManager.instance().loadUserParameter();
+            DBManager.INSTANCE.loadUserParameter();
             ThemeManager.instance().setCurrentTheme();
             JFrame frame = new JFrame();
 
