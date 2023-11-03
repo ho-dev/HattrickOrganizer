@@ -1,159 +1,184 @@
-package core.file.hrf;
+package core.file.hrf
 
-import core.db.DBManager;
-import core.file.ExampleFileFilter;
-import core.gui.HOMainFrame;
-import core.gui.InfoPanel;
-import core.gui.RefreshManager;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import core.util.Helper;
-import java.awt.Component;
-import java.awt.Frame;
-import java.io.File;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import core.db.DBManager
+import core.file.ExtensionFileFilter
+import core.gui.HOMainFrame
+import core.gui.InfoPanel
+import core.gui.RefreshManager
+import core.model.HOVerwaltung
+import core.model.UserParameter
+import core.util.HODateTime
+import core.util.HOLogger
+import core.util.Helper
+import java.awt.Component
+import java.io.File
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Optional
+import java.util.function.Consumer
+import javax.swing.JCheckBox
+import javax.swing.JFileChooser
+import javax.swing.JOptionPane
 
 /**
  * Imports selected HRF files.
  */
-public class HRFImport {
+class HRFImport(val frame: HOMainFrame) {
 
-	public HRFImport(HOMainFrame frame) {
+    fun hrfImport() {
 
-		File[] files = getHRFFiles(frame);
-		if (files != null) {
-			HOModel homodel;
+        val files = getHRFFiles()
+        files.ifPresent(Consumer {
+            val hrfFiles = it.map { file: File ->
+                if (!file.path.endsWith(".hrf"))
+                    File(file.absolutePath + ".hrf")
+                else file
+            }.toList()
 
-			UserChoice choice = null;
-			for (int i = 0; i < files.length; i++) {
-				files[i].getPath();
-				if (!files[i].getPath().endsWith(".hrf")) {
-					files[i] = new File(files[i].getAbsolutePath() + ".hrf");
-				}
+            var choice: UserChoice? = null
+            for (f in hrfFiles) {
+                if (!f.exists()) {
+                    frame.setInformation(
+                        HOVerwaltung.instance().getLanguageString("DateiNichtGefunden"),
+                        InfoPanel.FEHLERFARBE
+                    )
+                    Helper.showMessage(
+                        frame,
+                        HOVerwaltung.instance().getLanguageString("DateiNichtGefunden"),
+                        HOVerwaltung.instance().getLanguageString("Fehler"),
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                    return@Consumer
+                }
 
-				if (!files[i].exists()) {
-					frame.setInformation(getLangStr("DateiNichtGefunden"), InfoPanel.Companion.getFEHLERFARBE());
-					Helper.showMessage(frame, getLangStr("DateiNichtGefunden"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+                // Remember path
+                UserParameter.instance().hrfImport_HRFPath = f.parentFile.absolutePath
 
-				// remember path
-				UserParameter.instance().hrfImport_HRFPath = files[i].getParentFile().getAbsolutePath();
-				// FIXME: These setInformation should be triggered through events.
-				frame.setInformation(getLangStr("StartParse"));
-				homodel = HRFFileParser.parse(files[i]);
-				if ( homodel != null && homodel.getBasics().getTeamId() != HOVerwaltung.instance().getModel().getBasics().getTeamId()){
-					HOLogger.instance().error(getClass(), "hrf file from other team can not be imported: " + homodel.getBasics().getTeamName());
-					homodel = null;
-				}
+                // FIXME: These setInformation should be triggered through events.
+                frame.setInformation(HOVerwaltung.instance().getLanguageString("StartParse"))
+                var homodel = HRFFileParser.parse(f)
+                if (homodel != null && homodel.getBasics().teamId != HOVerwaltung.instance().model.getBasics().teamId) {
+                    HOLogger.instance().error(
+                        javaClass,
+                        "hrf file from other team can not be imported: ${homodel.getBasics().teamName}"
+                    )
+                    homodel = null
+                }
 
-				if (homodel == null) {
-					frame.setInformation(getLangStr("Importfehler") + " : " + files[i].getName(), InfoPanel.Companion.getFEHLERFARBE());
-					Helper.showMessage(frame, getLangStr("Importfehler"), getLangStr("Fehler"), JOptionPane.ERROR_MESSAGE);
-				} else {
-					frame.setInformation(getLangStr("HRFSave"));
+                if (homodel == null) {
+                    frame.setInformation(
+                        "${
+                            HOVerwaltung.instance().getLanguageString("Importfehler")
+                        } : ${f.getName()}", InfoPanel.FEHLERFARBE
+                    )
+                    Helper.showMessage(
+                        frame,
+                        HOVerwaltung.instance().getLanguageString("Importfehler"),
+                        HOVerwaltung.instance().getLanguageString("Fehler"),
+                        JOptionPane.ERROR_MESSAGE
+                    )
+                } else {
+                    frame.setInformation(HOVerwaltung.instance().getLanguageString("HRFSave"))
 
-					// file already imported?
-					java.sql.Timestamp HRFts = homodel.getBasics().getDatum().toDbTimestamp();
-					var storedHrf = DBManager.instance().loadHRFDownloadedAt(HRFts);
+                    // file already imported?
+                    val hrfs = homodel.getBasics().datum.toDbTimestamp()
+                    val storedHrf = DBManager.loadHRFDownloadedAt(hrfs)
 
-					if (choice == null || !choice.applyToAll) {
-						choice = bStoreHRF(frame, HRFts, storedHrf);
-						if (choice.cancel) {
-							break;
-						}
-					}
+                    if (choice == null || !choice.applyToAll) {
+                        choice = confirmUserChoices(frame, hrfs, storedHrf)
+                        if (choice.cancel) {
+                            break
+                        }
+                    }
 
-					if (choice.importHRF) {
-						if (storedHrf != null) {
-							DBManager.instance().deleteHRF(storedHrf.getHrfId());
-						}
-						homodel.saveHRF();
-						var training = homodel.getTraining();
-						if ( training != null) {
-							DBManager.instance().saveTraining(training, HODateTime.now());
-						}
-						frame.setInformation(getLangStr("HRFErfolg"));
-					} else {
-						// Cancel
-						frame.setInformation(getLangStr("HRFAbbruch"), InfoPanel.Companion.getFEHLERFARBE());
-					}
-				}
-			}
+                    if (choice.importHRF) {
+                        if (storedHrf != null) {
+                            DBManager.deleteHRF(storedHrf.hrfId)
+                        }
+                        homodel.saveHRF()
+                        val training = homodel.getTraining()
+                        if (training != null) {
+                            DBManager.saveTraining(training, HODateTime.now())
+                        }
+                        frame.setInformation(HOVerwaltung.instance().getLanguageString("HRFErfolg"))
+                    } else {
+                        // Cancel
+                        frame.setInformation(
+                            HOVerwaltung.instance().getLanguageString("HRFAbbruch"),
+                            InfoPanel.FEHLERFARBE
+                        )
+                    }
+                }
+            }
 
-//			DBManager.instance().reimportSkillup();
-			HOVerwaltung.instance().loadLatestHoModel();
-			HOModel hom = HOVerwaltung.instance().getModel();
+            HOVerwaltung.instance().loadLatestHoModel()
+            val hom = HOVerwaltung.instance().model
+            HOLogger.instance().info(javaClass, "HOModel loaded: ${hom.id}")
 
-			RefreshManager.INSTANCE.doReInit();
-		}
-	}
+            RefreshManager.doReInit()
+        })
+    }
 
-	private File[] getHRFFiles(Frame parent) {
-		// Filechooser
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setMultiSelectionEnabled(true);
-		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-		fileChooser.setDialogTitle(getLangStr("ls.menu.file.importfromhrf"));
+    private fun getHRFFiles(): Optional<Array<out File>> {
+        val hoAdmin = HOVerwaltung.instance()
 
-		File pfad = new File(UserParameter.instance().hrfImport_HRFPath);
+        val fileChooser = JFileChooser()
+        fileChooser.setMultiSelectionEnabled(true)
+        fileChooser.setDialogType(JFileChooser.SAVE_DIALOG)
+        fileChooser.setDialogTitle(hoAdmin.getLanguageString("ls.menu.file.importfromhrf"))
 
-		if (pfad.exists() && pfad.isDirectory()) {
-			fileChooser.setCurrentDirectory(new File(UserParameter.instance().hrfImport_HRFPath));
-		}
+        val pfad = File(UserParameter.instance().hrfImport_HRFPath)
 
-		ExampleFileFilter filter = new ExampleFileFilter();
-		filter.addExtension("hrf");
-		filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.hrf"));
-		fileChooser.setFileFilter(filter);
+        if (pfad.exists() && pfad.isDirectory()) {
+            fileChooser.setCurrentDirectory(File(UserParameter.instance().hrfImport_HRFPath))
+        }
 
-		if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
-			return fileChooser.getSelectedFiles();
-		}
-		return null;
-	}
+        val filter = ExtensionFileFilter()
+        filter.addExtension("hrf")
+        filter.setDescription(hoAdmin.getLanguageString("filetypedescription.hrf"))
+        fileChooser.setFileFilter(filter)
 
-	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
-	}
+        if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+            return Optional.of(fileChooser.selectedFiles)
+        }
+        return Optional.empty()
+    }
 
-	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, HRF oldHRF) {
-		UserChoice choice = new UserChoice();
+    private fun confirmUserChoices(parent: Component, hrfDate: Timestamp, oldHRF: HRF?): UserChoice {
+        val choice = UserChoice()
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-		String text = getLangStr("HRFfrom") + " " + dateFormat.format(HRF_date);
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+        var text = HOVerwaltung.instance().getLanguageString("HRFfrom") + " " + dateFormat.format(hrfDate)
 
-		if (oldHRF != null) {
-			text += "\n(" + getLangStr("HRFinDB") + " " + oldHRF.getName() + ")";
-		}
+        if (oldHRF != null) {
+            text += "\n(" + HOVerwaltung.instance().getLanguageString("HRFinDB") + " " + oldHRF.name + ")"
+        }
 
-		text += "\n" + getLangStr("ErneutImportieren");
+        text += "\n" + HOVerwaltung.instance().getLanguageString("ErneutImportieren")
 
-		JCheckBox applyToAllCheckBox = new JCheckBox(getLangStr("hrfImport.applyToAll"));
-		Object[] o = {text, applyToAllCheckBox};
-		int value = JOptionPane.showConfirmDialog(parent, o, getLangStr("confirmation.title"), JOptionPane.YES_NO_CANCEL_OPTION);
+        val applyToAllCheckBox = JCheckBox(HOVerwaltung.instance().getLanguageString("hrfImport.applyToAll"))
+        val o: Array<Any> = arrayOf(text, applyToAllCheckBox)
+        val value: Int = JOptionPane.showConfirmDialog(
+            parent,
+            o,
+            HOVerwaltung.instance().getLanguageString("confirmation.title"),
+            JOptionPane.YES_NO_CANCEL_OPTION
+        )
 
-		if (value == JOptionPane.CANCEL_OPTION) {
-			choice.cancel = true;
-		} else {
-			choice.applyToAll = applyToAllCheckBox.isSelected();
-			if (value == JOptionPane.YES_OPTION) {
-				choice.importHRF = true;
-			}
-		}
-		return choice;
-	}
+        if (value == JOptionPane.CANCEL_OPTION) {
+            choice.cancel = true
+        } else {
+            choice.applyToAll = applyToAllCheckBox.isSelected
+            if (value == JOptionPane.YES_OPTION) {
+                choice.importHRF = true
+            }
+        }
+        return choice
+    }
 
-	private static class UserChoice {
-		boolean importHRF;
-		boolean applyToAll;
-		boolean cancel;
-	}
+    private class UserChoice {
+        var importHRF: Boolean = false
+        var applyToAll: Boolean = false
+        var cancel: Boolean = false
+    }
 }

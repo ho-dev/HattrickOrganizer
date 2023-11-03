@@ -47,7 +47,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
      * @param tableName String table name
      */
     init {
-        initColumns()
+        this.initColumns()
     }
 
     /**
@@ -546,7 +546,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
                 sql.append(constraint)
             }
             sql.append(" ) ")
-            adapter!!.executeUpdate(sql.toString())
+            adapter.executeUpdate(sql.toString())
             insertDefaultValues()
         }
     }
@@ -559,14 +559,14 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
      * Drop the current table
      */
     fun tryDropTable() {
-        adapter!!.executeUpdate("DROP TABLE IF EXISTS " + tableName)
+        adapter.executeUpdate("DROP TABLE IF EXISTS " + tableName)
     }
 
     /**
      * Truncate the current table (i.e. remove all rows)
      */
     fun truncateTable() {
-        adapter!!.executeUpdate("DELETE FROM " + tableName)
+        adapter.executeUpdate("DELETE FROM " + tableName)
     }
 
     @Throws(SQLException::class)
@@ -579,8 +579,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
     @Throws(SQLException::class)
     fun tryAddColumn(columnName: String, columnType: String): Boolean {
         if (!columnExistsInTable(columnName)) {
-            val sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType
-            adapter.executeUpdate(sql)
+            adapter.executeUpdate("ALTER TABLE $tableName ADD COLUMN $columnName $columnType")
             return true
         }
         return false
@@ -593,7 +592,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
                 + "' AND COLUMN_NAME = '"
                 + columnName.uppercase(Locale.getDefault())
                 + "'")
-        val rs = adapter!!.executeQuery(sql)
+        val rs = adapter.executeQuery(sql)
         return rs?.next() ?: false
     }
 
@@ -601,7 +600,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
     fun tryChangeColumn(columnName: String, type_not_null: String) {
         if (columnExistsInTable(columnName)) {
             val sql = "ALTER TABLE " + tableName + " ALTER COLUMN " + columnName + " SET " + type_not_null
-            adapter!!.executeUpdate(sql)
+            adapter.executeUpdate(sql)
         }
     }
 
@@ -609,7 +608,7 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
     fun tryRenameColumn(from: String, to: String) {
         if (columnExistsInTable(from)) {
             val sql = "ALTER TABLE " + tableName + " ALTER COLUMN " + from + " RENAME TO " + to
-            adapter!!.executeUpdate(sql)
+            adapter.executeUpdate(sql)
         }
     }
 
@@ -617,29 +616,29 @@ abstract class AbstractTable(val tableName: String, protected var adapter: JDBCA
     fun tryDeleteColumn(columnName: String): Boolean {
         if (columnExistsInTable(columnName)) {
             val sql = "ALTER TABLE " + tableName + " DROP COLUMN " + columnName
-            adapter!!.executeUpdate(sql)
+            adapter.executeUpdate(sql)
             return true
         }
         return false
     }
 
     fun addPrimaryKey(columns: String) {
-        adapter!!.executeUpdate("ALTER TABLE $tableName ADD PRIMARY KEY ($columns)")
+        adapter.executeUpdate("ALTER TABLE $tableName ADD PRIMARY KEY ($columns)")
     }
 
     @Throws(SQLException::class)
     fun tryDropPrimaryKey() {
         if (primaryKeyExists()) {
-            adapter!!.executeUpdate("ALTER TABLE " + tableName + " DROP PRIMARY KEY")
+            adapter.executeUpdate("ALTER TABLE " + tableName + " DROP PRIMARY KEY")
         }
     }
 
     fun tryDropIndex(index: String) {
-        adapter!!.executeUpdate("DROP INDEX $index IF EXISTS")
+        adapter.executeUpdate("DROP INDEX $index IF EXISTS")
     }
 
     fun tryAddIndex(indexName: String, columns: String) {
-        adapter!!.executeUpdate("CREATE INDEX IF NOT EXISTS $indexName ON $tableName ($columns)")
+        adapter.executeUpdate("CREATE INDEX IF NOT EXISTS $indexName ON $tableName ($columns)")
     }
 
     @Throws(SQLException::class)

@@ -317,7 +317,7 @@ object HOMainFrame : JFrame(), Refreshable {
 
         // Import HRF
         val jmImportItem = JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"))
-        jmImportItem.addActionListener { _ -> HRFImport(this) }
+        jmImportItem.addActionListener { _ -> HRFImport(this).hrfImport() }
         jmFile.add(jmImportItem)
         jmFile.addSeparator()
         val dbBackupMenu = JMenuItem("DB Backup")

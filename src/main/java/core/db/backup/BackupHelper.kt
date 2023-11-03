@@ -1,7 +1,7 @@
 package core.db.backup
 
 import core.db.user.UserManager.getCurrentUser
-import core.file.ExampleFileFilter
+import core.file.ExtensionFileFilter
 import core.util.HOLogger
 import java.io.File
 import java.text.SimpleDateFormat
@@ -45,7 +45,7 @@ object BackupHelper {
      */
     private fun deleteOldFiles(dbDirectory: File) {
         var toDelete: File? = null
-        val filter = ExampleFileFilter("zip")
+        val filter = ExtensionFileFilter("zip")
         filter.isIgnoreDirectories = true
         val files = dbDirectory.listFiles(filter)
         if (files != null && files.size > getCurrentUser().numberOfBackups) {

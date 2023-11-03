@@ -1,7 +1,7 @@
 package core.db.backup
 
 import core.db.user.UserManager
-import core.file.ExampleFileFilter
+import core.file.ExtensionFileFilter
 import core.file.ZipHelper
 import core.gui.comp.panel.ImagePanel
 import core.util.HOLogger
@@ -70,7 +70,7 @@ class BackupDialog : JDialog() {
 
     private fun getList(): JScrollPane {
         val dbDirectory = File(UserManager.getCurrentUser().dbFolder)
-        val filter = ExampleFileFilter("zip")
+        val filter = ExtensionFileFilter("zip")
         filter.isIgnoreDirectories = true
         val files = dbDirectory.listFiles(filter)
         list = JList<File>(files)
