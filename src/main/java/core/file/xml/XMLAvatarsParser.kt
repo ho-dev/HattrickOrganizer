@@ -1,88 +1,80 @@
-package core.file.xml;
+package core.file.xml
 
-import core.model.player.Layer;
-import core.model.player.PlayerAvatar;
-import core.util.HOLogger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import core.model.player.Layer
+import core.model.player.PlayerAvatar
+import core.util.HOLogger
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
+import java.util.ArrayList
+import java.util.regex.Pattern
 
 
-public class XMLAvatarsParser {
+object XMLAvatarsParser {
 
-    /**
-     * Utility class - private constructor enforces noninstantiability.
-     */
-    public XMLAvatarsParser() {
+    fun parseAvatarsFromString(str: String): List<PlayerAvatar> {
+        return parseDetails(XMLManager.parseString(str))
     }
 
-    public static List<PlayerAvatar>  parseAvatarsFromString(String str) {
-        return parseDetails(XMLManager.parseString(str));
-    }
+    private fun parseDetails(doc: Document?): List<PlayerAvatar> {
 
-    private static List<PlayerAvatar> parseDetails(Document doc) {
-
-        List<PlayerAvatar> playerAvatars = new ArrayList<>();;
+        val playerAvatars = mutableListOf<PlayerAvatar>()
 
         if (doc == null) {
-            return playerAvatars;
+            return playerAvatars
         }
 
         try {
-            doc.getDocumentElement().normalize();
-            Element root = doc.getDocumentElement();
-            NodeList players = root.getElementsByTagName("Player");
+            doc.documentElement.normalize()
+            val root = doc.documentElement
+            val players = root.getElementsByTagName("Player")
 
-            if (players != null) {
-                int i = 0;
-                String bgImage = "";
-                List<Layer> layers;
-                Element player, layer;
-                Node node, node2;
-                NodeList nlLayers;
-                int x, y, playerID;
-                String urlImage;
-                Pattern pattern = Pattern.compile("t[1-6]\\.png|injury\\.png|injuredbutplaying\\.png");
+            var i = 0
+            var layers: List<Layer>
+            var player: Element
+            var layer: Element
+            var node: Node
+            var node2: Node
+            var nlLayers: NodeList
+            var x: Int
+            var y: Int
+            var playerID: Int
+            var urlImage: String
+            val pattern = Pattern.compile("t[1-6]\\.png|injury\\.png|injuredbutplaying\\.png")
 
-                while (i < players.getLength()) {
-                    node = players.item(i);
-                    if (node.getNodeType() == Node.ELEMENT_NODE) {
-                        player = (Element) node;
-                        playerID = Integer.parseInt(player.getElementsByTagName("PlayerID").item(0).getTextContent());
-                        bgImage = player.getElementsByTagName("BackgroundImage").item(0).getTextContent();
+            while (i < players.length) {
+                node = players.item(i)
+                if (node.nodeType == Node.ELEMENT_NODE) {
+                    player = node as Element
+                    playerID = Integer.parseInt(player.getElementsByTagName("PlayerID").item(0).textContent)
 
-                        // Get all layers ====================
-                        nlLayers = player.getElementsByTagName("Layer");
-                        layers = new ArrayList<>();
-                        int j = 0;
-                        while (j < nlLayers.getLength()) {
-                            node2 = nlLayers.item(j);
-                            if (node2.getNodeType() == Node.ELEMENT_NODE) {
-                                layer = (Element) node2;
-                                x = Integer.parseInt(layer.getAttribute("x"));
-                                y = Integer.parseInt(layer.getAttribute("y"));
-                                urlImage = layer.getElementsByTagName("Image").item(0).getTextContent();
+                    // Get all layers ====================
+                    nlLayers = player.getElementsByTagName("Layer")
+                    layers = ArrayList()
+                    var j: Int = 0
+                    while (j < nlLayers.length) {
+                        node2 = nlLayers.item(j)
+                        if (node2.nodeType == Node.ELEMENT_NODE) {
+                            layer = node2 as Element
+                            x = Integer.parseInt(layer.getAttribute("x"))
+                            y = Integer.parseInt(layer.getAttribute("y"))
+                            urlImage = layer.getElementsByTagName("Image").item(0).textContent
 
-                                if(! pattern.matcher(urlImage).find()) {
-                                    layers.add(new Layer(x, y, urlImage));
-                                }
+                            if (!pattern.matcher(urlImage).find()) {
+                                layers.add(Layer(x, y, urlImage))
                             }
-                            j++;
                         }
-                        playerAvatars.add(new PlayerAvatar(playerID, layers));
-                        i++;
+                        j++
                     }
+                    playerAvatars.add(PlayerAvatar(playerID, layers))
+                    i++
                 }
             }
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLAvatarsParser.class, e);
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLAvatarsParser.javaClass, e)
         }
 
-        return playerAvatars;
+        return playerAvatars
     }
-
 }

@@ -1,48 +1,41 @@
-// %2675225597:de.hattrickorganizer.logik.xml%
 /*
  * XMLArenaParser.java
  *
  * Created on 5. Juni 2004, 15:40
  */
-package core.file.xml;
+package core.file.xml
 
-import core.util.HOLogger;
+import core.util.HOLogger
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
 /**
  * 
  * @author thetom
  */
-public class XMLExtensionParser {
+object XMLExtensionParser {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLExtensionParser() {
+	fun parseExtension(dateiname: String):Extension {
+		return parseDetails(XMLManager.parseString(dateiname))
 	}
 
-	public static Extension parseExtension(String dateiname) {
-		return parseDetails(XMLManager.parseString(dateiname));
-	}
-
-	private static Extension parseDetails(Document doc) {
-		Extension ext = new Extension();
+	private fun parseDetails(doc: Document?): Extension {
+		val ext = Extension()
 		if (doc != null) {
 			try {
-				Element root = doc.getDocumentElement();
-				ext.setRelease(Float.parseFloat(getTagValue(root, "release")));
-				ext.setMinimumHOVersion(Float.parseFloat(getTagValue(root, "hoNeeded")));
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLExtensionParser.class, e);
+				val root = doc.documentElement
+				ext.release = getTagValue(root, "release").toFloat()
+				ext.minimumHOVersion = getTagValue(root, "hoNeeded").toFloat()
+			} catch (e: Exception) {
+				HOLogger.instance().log(XMLExtensionParser.javaClass, e)
 			}
 		}
-		return ext;
+		return ext
 	}
 
-	private static String getTagValue(Element root, String tag) {
-		Element ele = (Element) root.getElementsByTagName(tag).item(0);
-		return (XMLManager.getFirstChildNodeValue(ele));
+	private fun getTagValue(root: Element, tag: String): String {
+		val ele = root.getElementsByTagName(tag).item(0) as Element
+		return (XMLManager.getFirstChildNodeValue(ele))
 	}
 }

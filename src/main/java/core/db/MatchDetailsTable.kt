@@ -429,7 +429,7 @@ internal class MatchDetailsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME
                 if (field == null) {
                     val youthMatchTypes = MatchType.getYouthMatchType()
                     val placeholders =
-                        youthMatchTypes.stream().map { i: MatchType? -> "?" }.collect(Collectors.joining(","))
+                        youthMatchTypes.stream().map { _ -> "?" }.collect(Collectors.joining(","))
                     field = "($placeholders)"
                 }
                 return field

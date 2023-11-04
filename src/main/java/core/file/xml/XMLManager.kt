@@ -3,14 +3,9 @@ package core.file.xml;
 import core.util.HOLogger;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -18,217 +13,195 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 
-public class XMLManager {
-
+object XMLManager {
     /**
-     * Creates a new instance of XMLManager
+     * Returns the value of the attribute, "" otherwise.
      */
-    private XMLManager() {
-    }
-
-    /**
-     * liefert den Value des attributes sonst ""
-     */
-    public static String getAttributeValue(Element ele, String attributeName) {
+    fun getAttributeValue(ele: Element?, attributeName: String?): String {
         try {
             if ((ele != null) && (attributeName != null)) {
-                return ele.getAttribute(attributeName);
+                return ele.getAttribute(attributeName)
             }
-        } catch (Exception e) {
-            return "";
+        } catch (e: Exception) {
+            return ""
         }
 
-        return "";
+        return ""
     }
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //Helper
-    ///////////////////////////////////////////////////////////////////////////////
 
     /**
-     * liefert den Value des ersten childes falls kein child vorhanden liefert ""
+     * Returns the value of the first child, "" if no child exists.
      */
-    public static String getFirstChildNodeValue(Element ele) {
+    fun getFirstChildNodeValue(ele: Element?): String {
         try {
-            if (ele != null && ele.getFirstChild() != null) {
-                return ele.getFirstChild().getNodeValue();
+            if (ele?.firstChild != null) {
+                return ele.firstChild.nodeValue
             }
-        } catch (Exception ignored) {
+        } catch (ignored: Exception) {
         }
 
-        return "";
+        return ""
     }
 
-    public static String xmlValue(Element element, String xmlKey) {
+    fun xmlValue(element: Element?, xmlKey: String): String {
         if (element != null) {
-            var ele = (Element) element.getElementsByTagName(xmlKey).item(0);
-            return XMLManager.getFirstChildNodeValue(ele);
+            val ele = element.getElementsByTagName(xmlKey).item(0) as Element
+            return XMLManager.getFirstChildNodeValue(ele)
         }
-        return "";
+        return ""
     }
 
-    public static Integer xmlIntegerValue(Element ele, String xmlKey) {
-        var value = xmlValue(ele, xmlKey);
-        if (!value.isEmpty()) {
-            return Integer.parseInt(value);
+    fun xmlIntegerValue(ele: Element, xmlKey: String):Int? {
+        val value = xmlValue(ele, xmlKey)
+        if (value.isNotEmpty()) {
+            return value.toInt()
         }
-        return null;
+        return null
     }
 
-    public static int xmlIntValue(Element ele, String xmlKey) {
-        return xmlIntValue(ele,xmlKey,0);
+    fun xmlIntValue(ele: Element, xmlKey: String):Int {
+        return xmlIntValue(ele,xmlKey, 0)
     }
 
-    public static int xmlIntValue(Element ele, String xmlKey, int def) {
-        var value = xmlValue(ele, xmlKey);
-        try {
-            return Integer.parseInt(value);
-        }
-        catch (Exception exception){
-            return def;
-        }
-    }
-
-    public static boolean xmlBoolValue(Element ele, String xmlKey) {
-        return xmlBoolValue(ele,xmlKey,false);
-    }
-
-    public static boolean xmlBoolValue(Element ele, String xmlKey, boolean def) {
-        var value = xmlValue(ele, xmlKey);
-        try {
-            return Boolean.parseBoolean(value);
-        }
-        catch (Exception exception){
-            return def;
+    private fun xmlIntValue(ele: Element, xmlKey: String, def: Int):Int {
+        val value = xmlValue(ele, xmlKey)
+        return try {
+            value.toInt()
+        } catch (exception: Exception) {
+            def
         }
     }
 
-    public static Boolean xmlBooleanValue(Element ele, String xmlKey) {
-        var value = xmlValue(ele, xmlKey);
-        if (!value.isEmpty()) {
-            return Boolean.parseBoolean(value);
+    fun xmlBoolValue(ele: Element, xmlKey: String): Boolean {
+        return xmlBoolValue(ele,xmlKey,false)
+    }
+
+    fun xmlBoolValue(ele: Element, xmlKey: String, def: Boolean): Boolean {
+        val value = xmlValue(ele, xmlKey)
+        return try {
+            value.toBoolean()
+        } catch (exception: Exception) {
+            def
         }
-        return null;
     }
 
-    public static String xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
-        var value =  xmlValue(element, xmlKey);
-        hash.put(hashKey, value);
-        return value;
+    fun xmlBooleanValue(ele: Element, xmlKey: String):Boolean? {
+        val value = xmlValue(ele, xmlKey)
+        if (value.isNotEmpty()) {
+            return value.toBoolean()
+        }
+        return null
     }
 
-    public static String xmlValue2Hash(Map<String, String> hash, Element element, String key) {
-        return xmlValue2Hash(hash, element, key, key);
+    fun xmlValue2Hash(hash: MutableMap<String, String>, element: Element, xmlKey: String, hashKey: String): String {
+        val value = xmlValue(element, xmlKey)
+        hash[hashKey] = value
+        return value
     }
 
-    public static int xmlIntValue2Hash(Map<String, String> hash, Element element, String key, int def) {
-        var val = xmlValue2Hash(hash, element, key, key);
-        return NumberUtils.toInt(val, def);
+    fun xmlValue2Hash(hash: MutableMap<String, String>, element: Element, key: String): String {
+        return xmlValue2Hash(hash, element, key, key)
     }
 
-    public static void xmlAttribute2Hash(Map<String, String> hash, Element root, String xmlElementname, String xmlAttributename) {
-        var ele = (Element) root.getElementsByTagName(xmlElementname).item(0);
-        hash.put(xmlElementname+xmlAttributename, ele.getAttribute(xmlAttributename));
+    fun xmlIntValue2Hash(hash: MutableMap<String, String>, element:Element, key: String, def:Int): Int {
+        val value = xmlValue2Hash(hash, element, key, key)
+        return NumberUtils.toInt(value, def)
+    }
+
+    fun xmlAttribute2Hash(hash: MutableMap<String, String>, root: Element, xmlElementname: String, xmlAttributeName: String) {
+        val ele = root.getElementsByTagName(xmlElementname).item(0) as Element
+        hash[xmlElementname+xmlAttributeName] = ele.getAttribute(xmlAttributeName)
     }
 
     /**
-     * Parse XM from file name.
+     * Parse XML from file name.
      */
-    public static Document parseFile(String fileName) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
-        Document doc = null;
+    fun parseFile(fileName: String):Document? {
+        val factory:DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+        var doc: Document? = null;
 
         try {
-            builder = factory.newDocumentBuilder();
+            val builder = factory.newDocumentBuilder();
 
-            doc = builder.parse(new File(fileName));
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLManager.class,"Parser error: " + e);
-            HOLogger.instance().log(XMLManager.class,e);
+            doc = builder.parse(File(fileName));
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLManager.javaClass, "Parser error: $e")
+            HOLogger.instance().log(XMLManager.javaClass, e)
         }
 
-        return doc;
+        return doc
     }
     
     /**
      * Parse XML from input stream.
      */
-	public static Document parseFile(InputStream xmlStream) {
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		Document doc = null;
+	fun parseFile(xmlStream: InputStream): Document? {
+		val factory:DocumentBuilderFactory = DocumentBuilderFactory.newInstance()
+		var doc:Document? = null
 
 		try {
-			builder = factory.newDocumentBuilder();
+			val builder = factory.newDocumentBuilder();
 			doc = builder.parse(xmlStream);
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLManager.class, "Parser error: " + e);
-			HOLogger.instance().log(XMLManager.class, e);
+		} catch (e: Exception) {
+			HOLogger.instance().log(XMLManager.javaClass, "Parser error: $e")
+			HOLogger.instance().log(XMLManager.javaClass, e)
 		}
 
-		return doc;
+		return doc
 	}
 
     /**
-     * Parse XML fro file.
+     * Parse XML from file.
      */
-    public static Document parseFile(File datei) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
-        Document doc = null;
+    fun parseFile(file: File):Document? {
+        val factory = DocumentBuilderFactory.newInstance()
+        var doc: Document? = null
 
         try {
-            //Validierung, Namensräume einschalten
-            //factory.setValidating ( false );
-            //factory.setNamespaceAware ( true );
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(datei);
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
-            HOLogger.instance().log(XMLManager.class,e);
+            val builder = factory.newDocumentBuilder()
+            doc = builder.parse(file)
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLManager.javaClass,"Parser fehler: $e")
+            HOLogger.instance().log(XMLManager.javaClass, e)
         }
 
-        return doc;
+        return doc
     }
 
     /**
-     * parsed eine übergebene Datei
+     * Parses an XML string.
      */
-    public static Document parseString(String inputString) {
+    fun parseString(inputString: String): Document? {
+        var tmpInputString = inputString
         //Fix to remove commented tag
-        if ( inputString == null || inputString.isEmpty()) return null;
-        int indexComm = inputString.indexOf("<!--");
+        if (tmpInputString.isEmpty()) return null
+        var indexComm = tmpInputString.indexOf("<!--")
 
         while (indexComm > -1) {
-            final int endComm = inputString.indexOf("-->");
-            final String comment = inputString.substring(indexComm, endComm + 3);
-            inputString = inputString.replaceAll(comment, "");
-            indexComm = inputString.indexOf("<!--");
+            val endComm = tmpInputString.indexOf("-->")
+            val comment = tmpInputString.substring(indexComm, endComm + 3)
+            tmpInputString = tmpInputString.replace(comment, "")
+            indexComm = tmpInputString.indexOf("<!--")
         }
 
-        Document doc = null;
+        var doc: Document? = null
 
         try {
-            final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
+            val input = ByteArrayInputStream(tmpInputString.toByteArray(Charsets.UTF_8))
+            val factory = DocumentBuilderFactory.newInstance()
+            val builder = factory.newDocumentBuilder()
 
-            //Validierung, Namensräume einschalten
-            //factory.setValidating ( false );
-            //factory.setNamespaceAware ( true );
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(input);
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
-            HOLogger.instance().log(XMLManager.class,e);
+            doc = builder.parse(input)
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLManager.javaClass,"Parser fehler: $e")
+            HOLogger.instance().log(XMLManager.javaClass, e)
         }
 
-        if (doc == null || doc.getElementsByTagName("HattrickData").getLength() <= 0) {
-            HOLogger.instance().error(XMLManager.class, "Cannot parse data:" + inputString);
+        if (doc == null || doc.getElementsByTagName("HattrickData").length <= 0) {
+            HOLogger.instance().error(XMLManager.javaClass, "Cannot parse data:$tmpInputString");
             return null;
         }
 
@@ -236,52 +209,39 @@ public class XMLManager {
     }
 
     /**
-     * speichert das übergebene Dokument in der angegebenen Datei Datei wird überschrieben falls
-     * vorhanden
+     * Saves the document into the <code>fileName</code> file.  This overwrites the file if it already exists.
      */
-    public static void writeXML(Document doc, String dateiname) {
-        //Transformer creation for DOM rewriting into XML file
-        Transformer serializer;
-        DOMSource source;
-        File datei;
-        StreamResult result;
-
+    fun writeXML(doc: Document, fileName: String) {
         try {
-            //You can do any modification to the document here
-            serializer = TransformerFactory.newInstance().newTransformer();
-            source = new DOMSource(doc);
-            datei = new File(dateiname);
-            result = new StreamResult(datei);
+            val serializer = TransformerFactory.newInstance().newTransformer()
+            val source = DOMSource(doc)
+            val file = File(fileName)
+            val result = StreamResult(file)
 
-            serializer.transform(source, result);
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLManager.class,"XMLManager.writeXML: " + e);
-            HOLogger.instance().log(XMLManager.class,e);
+            serializer.transform(source, result)
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLManager.javaClass, "XMLManager.writeXML: $e")
+            HOLogger.instance().log(XMLManager.javaClass, e)
         }
     }
 
 	/**
-	 * speichert das übergebene Dokument in der angegebenen Datei Datei wird überschrieben falls
-	 * vorhanden
+	 * Returns the content of an XML [Document] into a String.
 	 */
-	public static String getXML(Document doc) {
-		//Transformer creation for DOM rewriting into XML String
-		Transformer serializer;
-		DOMSource source;
-		StreamResult result;
-		String xml = "";
+	fun getXML(doc: Document): String {
+		var xml = ""
+        
 		try {
-			//You can do any modification to the document here
-			serializer = TransformerFactory.newInstance().newTransformer();
-			source = new DOMSource(doc);
-			StringWriter sw = new StringWriter();
-			result = new StreamResult(sw);
-			serializer.transform(source, result);
-			xml = sw.toString();
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLManager.class,"XMLManager.writeXML: " + e);
-			HOLogger.instance().log(XMLManager.class,e);
+			val serializer = TransformerFactory.newInstance().newTransformer()
+			val source = DOMSource(doc)
+			val sw = StringWriter()
+			val result = StreamResult(sw)
+			serializer.transform(source, result)
+			xml = sw.toString()
+		} catch (e: Exception) {
+			HOLogger.instance().log(XMLManager.javaClass,"XMLManager.getXML: $e")
+			HOLogger.instance().log(XMLManager.javaClass, e)
 		}
-		return xml;
+		return xml
 	}
 }

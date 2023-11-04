@@ -1,52 +1,42 @@
-package core.file.xml;
+package core.file.xml
 
 
-import core.model.HOVerwaltung;
-import core.util.HOLogger;
+import core.model.HOVerwaltung
+import core.util.HOLogger
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.Element
 
 
-public final class XMLCHPPPreParser {
-
-	private XMLCHPPPreParser() {
-    }
+object XMLCHPPPreParser {
 	
-	public static String getError(String xmlIn) {
-		String sReturnError = "";
-		final HOVerwaltung hov = HOVerwaltung.instance();
-		if(xmlIn.length() > 0 ) {
-	        Document doc = XMLManager.parseString(xmlIn);;
+	fun getError(xmlIn: String): String {
+		var sReturnError = ""
+		val hov: HOVerwaltung = HOVerwaltung.instance()
+		if (xmlIn.isNotEmpty()) {
+	        val doc = XMLManager.parseString(xmlIn)
 	        if (doc != null) {
-	        	Element ele = null;
-	            Element root = doc.getDocumentElement();
+	        	var ele:Element?
+	            val root:Element = doc.documentElement
 	            try {
 	            	// See if an error is found
-	            	if (root.getElementsByTagName("ErrorCode").getLength() > 0) {
-	            		sReturnError = "CHPP " + hov.getLanguageString("Fehler");
-	            		ele = (Element) root.getElementsByTagName("ErrorCode").item(0);
-	            		if (ele != null) {
-	            			sReturnError += " - " + XMLManager.getFirstChildNodeValue(ele);
-	            		}
-	            		ele = (Element) root.getElementsByTagName("Error").item(0);
-	            		if (ele != null) {
-	            			sReturnError += " - " + XMLManager.getFirstChildNodeValue(ele);
-	            		}
+	            	if (root.getElementsByTagName("ErrorCode").length > 0) {
+	            		sReturnError = "CHPP " + hov.getLanguageString("Fehler")
+	            		ele = root.getElementsByTagName("ErrorCode").item(0) as Element
+						sReturnError += " - " + XMLManager.getFirstChildNodeValue(ele)
+	            		ele = root.getElementsByTagName("Error").item(0) as Element
+						sReturnError += " - " + XMLManager.getFirstChildNodeValue(ele)
 	            	}
-	            }
-	        	catch (Exception ex)
-	        	{
-	        		 HOLogger.instance().error(XMLCHPPPreParser.class, "XMLCHPPPreParser Exception: " + ex);
-	        		 sReturnError = "XMLCHPPPreParser Exception - " + ex.getMessage();
+	            } catch (ex: Exception) {
+	        		 HOLogger.instance().error(XMLCHPPPreParser.javaClass, "XMLCHPPPreParser Exception: $ex")
+	        		 sReturnError = "XMLCHPPPreParser Exception - ${ex.message}"
 	        	}
 	                
 	        } else {
-	        	sReturnError = hov.getLanguageString("XML_PARSE_ERRROR");
+	        	sReturnError = hov.getLanguageString("XML_PARSE_ERRROR")
 	        }
 		} else {
-			sReturnError = hov.getLanguageString("NO_HRF_ERROR");
+			sReturnError = hov.getLanguageString("NO_HRF_ERROR")
         }
-        return sReturnError;
+        return sReturnError
     }
 }

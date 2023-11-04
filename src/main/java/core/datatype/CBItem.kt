@@ -7,9 +7,9 @@ package core.datatype
  */
 open class CBItem(override val text: String, override val id: Int) : ComboItem {
 
-    override fun equals(obj: Any?): Boolean {
-        return if (obj is CBItem) {
-            id == obj.id
+    override fun equals(other: Any?): Boolean {
+        return if (other is CBItem) {
+            id == other.id
         } else false
     }
 

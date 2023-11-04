@@ -115,7 +115,7 @@ internal class BasicsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adap
     fun getHrfIDSameTraining(time: Timestamp?): Int {
         var hrfID = -1
         var hrfDate: Timestamp? = null
-        val rs = adapter!!.executePreparedQuery(getHrfIDSameTrainingStatementBuilder.getStatement(), time)
+        val rs = adapter.executePreparedQuery(getHrfIDSameTrainingStatementBuilder.getStatement(), time)
         try {
             if (rs != null) {
                 //HRF vorher vorhanden?

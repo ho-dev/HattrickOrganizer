@@ -108,14 +108,11 @@ class JDBCAdapter
      * statements or 0 for SQL statements that return nothing
      */
     fun executeUpdate(sqlStatement: String?): Int {
-        var ret = 0
         return try {
             if (m_clConnection!!.isClosed) {
                 return 0
             }
-            // HOLogger.instance().log(getClass(), Sql );
-            ret = m_clStatement!!.executeUpdate(sqlStatement)
-            ret
+            return m_clStatement!!.executeUpdate(sqlStatement)
         } catch (e: Exception) {
             HOLogger.instance().error(
                 javaClass,
@@ -125,7 +122,7 @@ class JDBCAdapter
                 ${ExceptionUtils.getStackTrace(e)}
                 """.trimIndent()
             )
-            0
+            return 0
         }
     }
 

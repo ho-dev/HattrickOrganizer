@@ -133,7 +133,7 @@ internal class MatchHighlightsTable(adapter: JDBCAdapter) : AbstractTable(TABLEN
         }
     }
 
-    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder? {
+    override fun createPreparedSelectStatementBuilder(): PreparedSelectStatementBuilder {
         return PreparedSelectStatementBuilder(this, "WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute")
     }
 
@@ -141,7 +141,7 @@ internal class MatchHighlightsTable(adapter: JDBCAdapter) : AbstractTable(TABLEN
      * @param matchId the match id
      * @return the match highlights
      */
-    fun getMatchHighlights(iMatchType: Int, matchId: Int): List<MatchEvent?>? {
+    fun getMatchHighlights(iMatchType: Int, matchId: Int): List<MatchEvent?> {
         return load(MatchEvent::class.java, matchId, iMatchType)
     }
 
@@ -155,7 +155,7 @@ internal class MatchHighlightsTable(adapter: JDBCAdapter) : AbstractTable(TABLEN
     }
 
     private val deleteYouthMatchHighlightsBeforeStatementSQL: String
-        private get() {
+        get() {
             val lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.value))
             val inValues = lMatchTypes.stream().map { p: MatchType -> p.id.toString() }.collect(Collectors.joining(","))
             return " WHERE MatchTyp IN (" +
@@ -165,7 +165,7 @@ internal class MatchHighlightsTable(adapter: JDBCAdapter) : AbstractTable(TABLEN
 
     fun deleteYouthMatchHighlightsBefore(before: Timestamp?) {
         try {
-            adapter!!.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before)
+            adapter.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before)
         } catch (e: Exception) {
             HOLogger.instance().log(javaClass, "DB.deleteMatchLineupsBefore Error$e")
         }

@@ -1,241 +1,214 @@
-// %929884203:de.hattrickorganizer.net%
 /*
  * ConvertXml2Hrf.java
  *
  * Created on 12. Januar 2004, 09:44
  */
-package core.file.xml;
+package core.file.xml
 
-import core.file.hrf.HRFStringBuilder;
-import core.gui.CursorToolkit;
-import core.gui.HOMainFrame;
-import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.model.match.*;
-import core.model.player.PlayerAvatar;
-import core.model.player.TrainerStatus;
-import core.net.OnlineWorker;
-import core.util.Helper;
-import core.module.config.ModuleConfig;
-import core.net.MyConnector;
-import org.jetbrains.annotations.Nullable;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import static core.net.OnlineWorker.*;
+import core.file.hrf.HRFStringBuilder
+import core.gui.CursorToolkit
+import core.gui.HOMainFrame
+import core.gui.HOMainFrame.setInformation
+import core.gui.theme.ThemeManager
+import core.model.HOVerwaltung
+import core.model.player.TrainerStatus
+import core.module.config.ModuleConfig
+import core.net.MyConnector
+import core.net.OnlineWorker
+import core.util.Helper
+import java.io.IOException
 
 /**
  * Convert the necessary xml data into a HRF file.
- * 
+ *
  * @author thomas.werth
  */
-public class ConvertXml2Hrf {
+object ConvertXml2Hrf {
+    /**
+     * Create the HRF data and return it in one string.
+     */
+    @JvmStatic
+	@Throws(IOException::class)
+    fun createHrf(): String? {
+        val progressIncrement = 3
+        setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement)
+        val mc = MyConnector.instance()
+        var teamId = HOVerwaltung.instance().model.getBasics().teamId
+        var youthTeamId = HOVerwaltung.instance().model.getBasics().youthTeamId
+        val teamDetails = mc.getTeamdetails(-1) ?: return null
+        val teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails)
+        var usersPremierTeamInfo =
+            teamInfoList.stream().filter { obj: TeamInfo? -> obj!!.primaryTeam }.findFirst().get()
+        val usersPremierTeamId = usersPremierTeamInfo.teamId
+        if (teamId <= 0 || youthTeamId == null) {
+            // We have no team selected or the youth team information is never downloaded before
+            if (teamInfoList.size == 1) {
+                // user has only one single team
+                teamId = teamInfoList[0]!!.teamId
+                youthTeamId = teamInfoList[0]!!.youthTeamId
+            } else if (teamInfoList.size >= 2) {
+                // user has more than one team
+                if (teamId <= 0) {
+                    // Select one of user's teams, if not done before
+                    CursorToolkit.stopWaitCursor(HOMainFrame.rootPane)
+                    val selection = TeamSelectionDialog(HOMainFrame, teamInfoList)
+                    selection.isVisible = true
+                    if (selection.cancel) {
+                        return null
+                    }
+                    teamId = selection.getSelectedTeam().teamId
+                    youthTeamId = selection.getSelectedTeam().youthTeamId
+                } else {
+                    // team id is in DB and this is the first time we download youth team information
+                    val finalTeamId = teamId
+                    val teamInfo = teamInfoList.stream()
+                        .filter { x: TeamInfo? -> x!!.teamId == finalTeamId }
+                        .findAny()
+                        .orElse(null)
+                    if (teamInfo != null) {
+                        youthTeamId = teamInfo.youthTeamId
+                    }
+                }
+            } else {
+                return null
+            }
+        }
+        val teamDetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId)
+        if (teamDetailsDataMap.isEmpty()) return null
+        setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement)
+        OnlineWorker.downloadTeamLogo(teamDetailsDataMap)
+        setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement)
+        val clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId))
+        setInformation(Helper.getTranslation("ls.update_status.league_details"), progressIncrement)
+        val ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(
+            mc.getLeagueDetails(teamDetailsDataMap["LeagueLevelUnitID"]),
+            teamId.toString()
+        )
+        setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement)
+        val worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
+            mc.getWorldDetails(teamDetailsDataMap["LeagueID"]!!.toInt()), teamDetailsDataMap["LeagueID"]
+        )
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private ConvertXml2Hrf() {
-	}
+        // Currency fix
+        val lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId")
+        if (lastPremierId != null && lastPremierId == usersPremierTeamId) {
+            worldDataMap["CurrencyRate"] = ModuleConfig.instance().getString("CurrencyRate")
+            worldDataMap["CountryID"] = ModuleConfig.instance().getString("CountryId")
+        } else {
+            // We need to get hold of the currency info for the primary team, no matter which team we download.
+            usersPremierTeamInfo = XMLWorldDetailsParser.updateTeamInfoWithCurrency(
+                usersPremierTeamInfo,
+                mc.getWorldDetails(usersPremierTeamInfo.leagueId)
+            )
+            ModuleConfig.instance().setString("CurrencyRate", usersPremierTeamInfo.currencyRate!!.trim { it <= ' ' })
+            ModuleConfig.instance().setString("CountryId", usersPremierTeamInfo.countryId)
+            ModuleConfig.instance().setInteger("UsersPremierTeamId", usersPremierTeamInfo.teamId)
+            worldDataMap["CurrencyRate"] = ModuleConfig.instance().getString("CurrencyRate")
+            worldDataMap["CountryID"] = ModuleConfig.instance().getString("CountryId")
+        }
+        setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement)
+        val playersData: MutableList<SafeInsertMap> =
+            XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId))
 
-	/**
-	 * Create the HRF data and return it in one string.
-	 */
-	public static @Nullable String createHrf() throws IOException {
-		int progressIncrement = 3;
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
-		final MyConnector mc = MyConnector.instance();
-		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
+        // Download players' avatar
+        setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement)
+        val playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId))
+        ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1)
+        var youthPlayers = emptyList<SafeInsertMap>()
+        if (youthTeamId != null && youthTeamId > 0) {
+            youthPlayers = XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId))
+        }
+        setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement)
+        val economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId))
+        setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement)
+        val trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId))
+        setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement)
+        val staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId))
+        val trainer = staffData[0]
+        val trainerId = trainer["TrainerId"].toString()
+        if (trainer.containsKey("TrainerId")) {
+            val trainerStatus = TrainerStatus.fromInt(trainer["TrainerStatus"]!!.toInt())
+            if (trainerStatus == TrainerStatus.PlayingTrainer) {
+                for (p in playersData) {
+                    if (p["PlayerID"] == trainerId) {
+                        p.putAll(trainer)
+                        break
+                    }
+                }
+            } else {
+                trainer["LineupDisabled"] = "true"
+                playersData.add(trainer)
+            }
+        }
+        var arenaId = 0
+        try {
+            arenaId = teamDetailsDataMap["ArenaID"]!!.toInt()
+        } catch (ignored: Exception) {
+        }
+        val arenaDataMap = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId))
 
-		String teamDetails = mc.getTeamdetails(-1);
+        // MatchOrder
+        setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement)
+        val matches = XMLMatchesParser
+            .parseMatchesFromString(
+                mc.getMatches(
+                    teamDetailsDataMap["TeamID"]!!.toInt(),
+                    false, true
+                )
+            )
+        setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement)
+        val nextLineupDataMap = OnlineWorker.downloadNextMatchOrder(matches, teamId)
+        setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement)
+        val matchLineupTeam = OnlineWorker.downloadLastLineup(matches, teamId)
+        val hrfStringBuilder = HRFStringBuilder()
+        // Abschnitte erstellen
+        // basics
+        setInformation(Helper.getTranslation("ls.update_status.create_basics"), progressIncrement)
+        hrfStringBuilder.createBasics(teamDetailsDataMap, worldDataMap)
 
-		if (teamDetails == null) {
-			return null;
-		}
+        // Liga
+        hrfStringBuilder.createLeague(ligaDataMap)
+        setInformation(Helper.getTranslation("ls.update_status.create_league"), progressIncrement)
 
-		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
-		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
-		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
-		if (teamId <= 0 || youthTeamId == null) {
-			// We have no team selected or the youth team information is never downloaded before
-			if (teamInfoList.size() == 1) {
-				// user has only one single team
-				teamId = teamInfoList.get(0).getTeamId();
-				youthTeamId = teamInfoList.get(0).getYouthTeamId();
-			} else if (teamInfoList.size() >= 2) {
-				// user has more than one team
-				if (teamId <= 0) {
-					// Select one of user's teams, if not done before
-					CursorToolkit.stopWaitCursor(HOMainFrame.INSTANCE.getRootPane());
-					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.INSTANCE, teamInfoList);
-					selection.setVisible(true);
-					if (selection.getCancel()) {
-						return null;
-					}
-					teamId = selection.getSelectedTeam().getTeamId();
-					youthTeamId = selection.getSelectedTeam().getYouthTeamId();
-				} else {
-					// team id is in DB and this is the first time we download youth team information
-					int finalTeamId = teamId;
-					var teaminfo = teamInfoList.stream()
-							.filter(x -> x.getTeamId() == finalTeamId)
-							.findAny()
-							.orElse(null);
-					if (teaminfo != null) {
-						youthTeamId = teaminfo.getYouthTeamId();
-					}
-				}
-			} else {
-				return null;
-			}
-		}
+        // Club
+        setInformation(Helper.getTranslation("ls.update_status.create_club"), progressIncrement)
+        hrfStringBuilder.createClub(clubDataMap, economyDataMap, teamDetailsDataMap)
 
-		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
-		if (teamdetailsDataMap.isEmpty()) return null;
+        // team
+        setInformation(Helper.getTranslation("ls.update_status.create_team"), progressIncrement)
+        hrfStringBuilder.createTeam(trainingDataMap)
 
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
-		OnlineWorker.downloadTeamLogo(teamdetailsDataMap);
+        // lineup
+        setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement)
+        hrfStringBuilder.createLineUp(trainerId, teamId, nextLineupDataMap)
 
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.club_info"), progressIncrement);
-		Map<String, String> clubDataMap = XMLClubParser.parseClubFromString(mc.getVerein(teamId));
+        // economy
+        setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement)
+        hrfStringBuilder.createEconomy(economyDataMap)
 
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.league_details"), progressIncrement);
-		Map<String, String> ligaDataMap = XMLLeagueDetailsParser.parseLeagueDetailsFromString(mc.getLeagueDetails(teamdetailsDataMap.get("LeagueLevelUnitID")),
-				String.valueOf(teamId));
+        // Arena
+        setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement)
+        hrfStringBuilder.createArena(arenaDataMap)
 
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
-		Map<String, String> worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
-				mc.getWorldDetails(Integer.parseInt(teamdetailsDataMap.get("LeagueID"))), teamdetailsDataMap.get("LeagueID"));
+        // players
+        setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement)
+        hrfStringBuilder.createPlayers(matchLineupTeam, playersData)
 
-		// Currency fix
-		var lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId");
-		if (lastPremierId != null && lastPremierId == usersPremierTeamId) {
-			//if (ModuleConfig.instance().containsKey("CurrencyRate")) {
-			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
-			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
-		} else {
-			// We need to get hold of the currency info for the primary team, no matter which team we download.
-			usersPremierTeamInfo = XMLWorldDetailsParser.updateTeamInfoWithCurrency(usersPremierTeamInfo, mc.getWorldDetails(usersPremierTeamInfo.getLeagueId()));
-			ModuleConfig.instance().setString("CurrencyRate", usersPremierTeamInfo.getCurrencyRate().trim());
-			ModuleConfig.instance().setString("CountryId", usersPremierTeamInfo.getCountryId());
-			ModuleConfig.instance().setInteger("UsersPremierTeamId", usersPremierTeamInfo.getTeamId());
-			worldDataMap.put("CurrencyRate", ModuleConfig.instance().getString("CurrencyRate"));
-			worldDataMap.put("CountryID", ModuleConfig.instance().getString("CountryId"));
-		}
+        // youth players
+        setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement)
+        hrfStringBuilder.appendYouthPlayers(youthPlayers)
 
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
-		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
+        // xtra Data
+        setInformation(Helper.getTranslation("ls.update_status.create_world"), progressIncrement)
+        hrfStringBuilder.createWorld(clubDataMap, teamDetailsDataMap, trainingDataMap, worldDataMap)
 
-		// Download players' avatar
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
-		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
-		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1);
+        // lineup of the last match
+        setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement)
+        hrfStringBuilder.createLastLineUp(matchLineupTeam, teamDetailsDataMap)
 
-		List<MyHashtable> youthplayers = null;
-		if (youthTeamId != null && youthTeamId > 0) {
-			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
-		}
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
-		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
-
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
-		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
-
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement);
-		List<MyHashtable> staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId));
-		var trainer = staffData.get(0);
-		var trainerId = String.valueOf(trainer.get("TrainerId"));
-		if (trainer.containsKey("TrainerId")) {
-			var trainerStatus = TrainerStatus.fromInt(Integer.parseInt(trainer.get("TrainerStatus")));
-			if (trainerStatus == TrainerStatus.PlayingTrainer){
-				for (var p : playersData) {
-					if (p.get("PlayerID").equals(trainerId)) {
-						p.putAll(trainer);
-						break;
-					}
-				}
-			}
-			else {
-				trainer.put("LineupDisabled", "true");
-				playersData.add(trainer);
-			}
-		}
-
-		int arenaId = 0;
-		try {
-			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
-		} catch (Exception ignored) {
-
-		}
-		Map<String, String> arenaDataMap = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId));
-
-		// MatchOrder
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
-		List<MatchKurzInfo> matches = XMLMatchesParser
-				.parseMatchesFromString(mc.getMatches(Integer
-								.parseInt(teamdetailsDataMap.get("TeamID")),
-						false, true));
-
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
-
-		Map<String, String> nextLineupDataMap = downloadNextMatchOrder(matches, teamId);
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
-		MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, teamId);
-
-
-		var hrfSgtringBuilder = new HRFStringBuilder();
-		// Abschnitte erstellen
-		// basics
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_basics"), progressIncrement);
-		hrfSgtringBuilder.createBasics(teamdetailsDataMap, worldDataMap);
-
-		// Liga
-		hrfSgtringBuilder.createLeague(ligaDataMap);
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_league"), progressIncrement);
-
-		// Club
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_club"), progressIncrement);
-		hrfSgtringBuilder.createClub(clubDataMap, economyDataMap, teamdetailsDataMap);
-
-		// team
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_team"), progressIncrement);
-		hrfSgtringBuilder.createTeam(trainingDataMap);
-
-		// lineup
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_lineups"), progressIncrement);
-		hrfSgtringBuilder.createLineUp(trainerId, teamId, nextLineupDataMap);
-
-		// economy
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_economy"), progressIncrement);
-		hrfSgtringBuilder.createEconomy(economyDataMap);
-
-		// Arena
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement);
-		hrfSgtringBuilder.createArena(arenaDataMap);
-
-		// players
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement);
-		hrfSgtringBuilder.createPlayers(matchLineupTeam, playersData);
-
-		// youth players
-		if (youthplayers != null) {
-			HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_youth_players"), progressIncrement);
-			hrfSgtringBuilder.appendYouthPlayers(youthplayers);
-		}
-
-		// xtra Data
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_world"), progressIncrement);
-		hrfSgtringBuilder.createWorld(clubDataMap, teamdetailsDataMap, trainingDataMap, worldDataMap);
-
-		// lineup of the last match
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_last_lineup"), progressIncrement);
-		hrfSgtringBuilder.createLastLineUp(matchLineupTeam, teamdetailsDataMap);
-
-		// staff
-		HOMainFrame.INSTANCE.setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement);
-		hrfSgtringBuilder.createStaff(staffData);
-
-		return hrfSgtringBuilder.createHRF().toString();
-	}
+        // staff
+        setInformation(Helper.getTranslation("ls.update_status.create_staff"), progressIncrement)
+        hrfStringBuilder.createStaff(staffData)
+        return hrfStringBuilder.createHRF().toString()
+    }
 }

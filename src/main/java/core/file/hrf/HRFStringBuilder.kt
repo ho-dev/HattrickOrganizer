@@ -8,7 +8,7 @@ import core.constants.player.PlayerAggressiveness
 import core.constants.player.PlayerAgreeability
 import core.constants.player.PlayerHonesty
 import core.constants.player.PlayerSpeciality
-import core.file.xml.MyHashtable
+import core.file.xml.SafeInsertMap
 import core.model.enums.MatchType
 import core.model.match.MatchLineupTeam
 import core.model.match.MatchTacticType
@@ -67,7 +67,7 @@ class HRFStringBuilder {
     /**
      * Create the arena data.
      */
-    fun createArena(arenaDataMap: Map<String?, String?>) {
+    fun createArena(arenaDataMap: Map<String, String>) {
         arenaStringBuilder = StringBuilder("[arena]\n")
         appendKeyValue(arenaStringBuilder!!, "arenaname", arenaDataMap["ArenaName"])
         appendKeyValue(arenaStringBuilder!!, "arenaid", arenaDataMap["ArenaID"])
@@ -115,11 +115,7 @@ class HRFStringBuilder {
     /**
      * Create the club data.
      */
-    fun createClub(
-        clubDataMap: Map<String?, String?>,
-        economyDataMap: Map<String?, String?>,
-        teamDetailsDataMap: Map<String?, String?>
-    ) {
+    fun createClub(clubDataMap: Map<String, String>, economyDataMap: Map<String, String>, teamDetailsDataMap: Map<String, String>) {
         clubStringBuilder = StringBuilder("[club]\n")
         appendKeyValue(clubStringBuilder!!, "hjTranare", clubDataMap["AssistantTrainers"])
         appendKeyValue(clubStringBuilder!!, "psykolog", clubDataMap["Psychologists"])
@@ -141,7 +137,7 @@ class HRFStringBuilder {
     /**
      * Add the economy data to the HRF buffer
      */
-    fun createEconomy(economyDataMap: Map<String?, String?>) {
+    fun createEconomy(economyDataMap: Map<String, String>) {
         economyStringBuilder = StringBuilder("[economy]\n")
         appendKeyValue(economyStringBuilder!!, "Cash", economyDataMap["Cash"])
         appendKeyValue(economyStringBuilder!!, "ExpectedCash", economyDataMap["ExpectedCash"])
@@ -440,7 +436,7 @@ class HRFStringBuilder {
     /**
      * Create the league data.
      */
-    fun createLeague(ligaDataMap: Map<String?, String?>) {
+    fun createLeague(ligaDataMap: Map<String, String>) {
         leagueStringBuilder = StringBuilder("[league]\n")
         appendKeyValue(leagueStringBuilder!!, "serie", ligaDataMap["LeagueLevelUnitName"])
         appendKeyValue(leagueStringBuilder!!, "spelade", ligaDataMap["Matches"])
@@ -638,7 +634,7 @@ class HRFStringBuilder {
     /**
      * Create the player data.
      */
-    fun createPlayers(matchLineupTeam: MatchLineupTeam?, playersData: List<MyHashtable>?) {
+    fun createPlayers(matchLineupTeam: MatchLineupTeam?, playersData: List<SafeInsertMap>?) {
         playersStringBuilder = StringBuilder()
         var i = 0
         while (playersData != null && i < playersData.size) {
@@ -743,7 +739,7 @@ class HRFStringBuilder {
         }
     }
 
-    private fun appendKeyValueIfNotNull(ht: MyHashtable, s: StringBuilder, key: String, defaultValue: String) {
+    private fun appendKeyValueIfNotNull(ht: SafeInsertMap, s: StringBuilder, key: String, defaultValue: String) {
         var property = ht[key]
         if (property.isNullOrEmpty()) {
             property = defaultValue
@@ -758,7 +754,7 @@ class HRFStringBuilder {
     /**
      * Append youth player data to buffer
      */
-    fun appendYouthPlayers(playersData: List<MyHashtable>) {
+    fun appendYouthPlayers(playersData: List<SafeInsertMap>) {
         youthPlayersStringBuilder = StringBuilder()
         for (player in playersData) {
             youthPlayersStringBuilder!!.append("[youthplayer").append(player["YouthPlayerID"]).append(']').append('\n')
@@ -798,7 +794,7 @@ class HRFStringBuilder {
         }
     }
 
-    private fun appendScoutComment(buffer: StringBuilder, player: MyHashtable, i: Int): Boolean {
+    private fun appendScoutComment(buffer: StringBuilder, player: SafeInsertMap, i: Int): Boolean {
         val prefix = "ScoutComment$i"
         val text = player[prefix + "Text"]
         if (text != null) {
@@ -812,7 +808,7 @@ class HRFStringBuilder {
         return false
     }
 
-    private fun appendHRFSkillLines(buffer: StringBuilder, player: MyHashtable, skillId: HTSkillID) {
+    private fun appendHRFSkillLines(buffer: StringBuilder, player: SafeInsertMap, skillId: HTSkillID) {
         var skill = skillId.toString() + "Skill"
         appendHRFLine(buffer, player, skill)
         appendHRFLine(buffer, player, skill + "IsAvailable")
@@ -824,7 +820,7 @@ class HRFStringBuilder {
         appendHRFLine(buffer, player, skill + "MayUnlock")
     }
 
-    private fun appendHRFLine(buffer: StringBuilder, player: MyHashtable, key: String) {
+    private fun appendHRFLine(buffer: StringBuilder, player: SafeInsertMap, key: String) {
         appendKeyValue(buffer, key, player[key])
     }
 
@@ -867,10 +863,10 @@ class HRFStringBuilder {
      * Create the world data.
      */
     fun createWorld(
-        clubDataMap: Map<String?, String?>,
-        teamDetailsDataMap: Map<String?, String?>,
-        trainingDataMap: Map<String?, String?>,
-        worldDataMap: Map<String?, String?>
+        clubDataMap: Map<String, String>,
+        teamDetailsDataMap: Map<String, String>,
+        trainingDataMap: Map<String, String>,
+        worldDataMap: Map<String, String>
     ) {
         xtraStringBuilder = StringBuilder("[xtra]\n")
         appendKeyValue(xtraStringBuilder!!, "TrainingDate", worldDataMap["TrainingDate"])
@@ -890,7 +886,7 @@ class HRFStringBuilder {
         appendKeyValue(xtraStringBuilder!!, "LeagueLevelUnitID", teamDetailsDataMap["LeagueLevelUnitID"])
     }
 
-    fun createStaff(staffList: List<MyHashtable>?) {
+    fun createStaff(staffList: List<SafeInsertMap>?) {
         staffStringBuilder = StringBuilder("[staff]\n")
         var i = 0
         while (staffList != null && i < staffList.size) {

@@ -1,82 +1,71 @@
-// %127961774:de.hattrickorganizer.logik.xml%
 /*
  * xmlLeagueDetailsParser.java
  *
  * Created on 12. Januar 2004, 14:04
  */
-package core.file.xml;
+package core.file.xml
 
-import core.util.HOLogger;
+import core.util.HOLogger
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
 
 /**
  * 
  * @author thomas.werth
  */
-public class XMLLeagueDetailsParser {
+object XMLLeagueDetailsParser {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLLeagueDetailsParser() {
+	fun parseLeagueDetailsFromString(str: String, teamID: String): Map<String, String> {
+		return parseDetails(XMLManager.parseString(str), teamID)
 	}
 
-	public static Map<String, String> parseLeagueDetailsFromString(String str, String teamID) {
-		return parseDetails(XMLManager.parseString(str), teamID);
-	}
-
-	private static Map<String, String> parseDetails(Document doc, String teamID) {
-		Map<String, String> map = new MyHashtable();
+	private fun parseDetails(doc: Document?, teamID: String): Map<String, String> {
+		val map = SafeInsertMap()
 
 		if (doc == null) {
-			return map;
+			return map
 		}
 
-		Element root = doc.getDocumentElement();
+		var root = doc.documentElement
 
 		try {
 
-			Element ele = (Element) root.getElementsByTagName("LeagueLevelUnitName").item(0);
-			map.put("LeagueLevelUnitName", XMLManager.getFirstChildNodeValue(ele));
+			var ele: Element = root.getElementsByTagName("LeagueLevelUnitName").item(0) as Element
+			map.insert("LeagueLevelUnitName", XMLManager.getFirstChildNodeValue(ele))
 
-			NodeList list = root.getElementsByTagName("Team");
+			val list:NodeList = root.getElementsByTagName("Team")
 
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-				root = (Element) list.item(i);
-				// Team suchen
-				if (XMLManager.getFirstChildNodeValue(
-						(Element) root.getElementsByTagName("TeamID").item(0)).equals(teamID)) {
+			for (i in 0..<list.length) {
+				root = list.item(i) as Element
+				ele = root.getElementsByTagName("TeamID").item(0) as Element
 
-					ele = (Element) root.getElementsByTagName("TeamID").item(0);
-					map.put("TeamID", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("Position").item(0);
-					map.put("Position", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("TeamName").item(0);
-					map.put("TeamName", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("Matches").item(0);
-					map.put("Matches", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("GoalsFor").item(0);
-					map.put("GoalsFor", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("GoalsAgainst").item(0);
-					map.put("GoalsAgainst", XMLManager.getFirstChildNodeValue(ele));
-					ele = (Element) root.getElementsByTagName("Points").item(0);
-					map.put("Points", XMLManager.getFirstChildNodeValue(ele));
+				if (XMLManager.getFirstChildNodeValue(ele) == teamID) {
+					ele = root.getElementsByTagName("TeamID").item(0) as Element
+					map.insert("TeamID", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("Position").item(0) as Element
+					map.insert("Position", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("TeamName").item(0) as Element
+					map.insert("TeamName", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("Matches").item(0) as Element
+					map.insert("Matches", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("GoalsFor").item(0) as Element
+					map.insert("GoalsFor", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("GoalsAgainst").item(0) as Element
+					map.insert("GoalsAgainst", XMLManager.getFirstChildNodeValue(ele))
+					ele = root.getElementsByTagName("Points").item(0) as Element
+					map.insert("Points", XMLManager.getFirstChildNodeValue(ele))
 
-					// fertig
-					break;
+					// Done!
+					break
 				}
 			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLLeagueDetailsParser.class, e);
+		} catch (e: Exception) {
+			HOLogger.instance().log(XMLLeagueDetailsParser.javaClass, e)
 		}
 
-		return map;
+		return map
 	}
 
 
@@ -87,44 +76,40 @@ public class XMLLeagueDetailsParser {
 	 * @param details — League details XML as a String.
 	 * @return Map<String, TeamStats> — Team details held as {@link TeamStats}, indexed by team ID as a String.
 	 */
-	public static Map<String, TeamStats> parseLeagueDetails(String details) {
-		Document document = XMLManager.parseString(details);
-
-		Map<String, TeamStats> teamInfoMap = new HashMap<>();
+	fun parseLeagueDetails(details: String): Map<String, TeamStats> {
+		val document = XMLManager.parseString(details)
+		val teamInfoMap = mutableMapOf<String, TeamStats>()
 
 		if (document == null) {
-			return teamInfoMap;
+			return teamInfoMap
 		}
 
-		document.getDocumentElement().normalize();
+		val root = document.documentElement
+		root.normalize()
 
-		Element root = document.getDocumentElement();
-		String leagueName = root.getElementsByTagName("LeagueLevelUnitName").item(0).getTextContent();
-		int leagueLevel = Integer.parseInt(root.getElementsByTagName("LeagueLevel").item(0).getTextContent());
-		NodeList list = document.getElementsByTagName("Team");
+		val leagueName = root.getElementsByTagName("LeagueLevelUnitName").item(0).textContent
+		val leagueLevel = root.getElementsByTagName("LeagueLevel").item(0).textContent.toInt()
+		val list:NodeList = document.getElementsByTagName("Team")
 
-		if (list != null) {
-			for (int i = 0; i < list.getLength(); i++) {
-				TeamStats teamStats = new TeamStats();
-				Element elt = (Element) list.item(i);
-				String teamId = elt.getElementsByTagName("TeamID").item(0).getTextContent();
-				teamStats.setTeamId(Integer.parseInt(teamId));
-				teamStats.setTeamName(elt.getElementsByTagName("TeamName").item(0).getTextContent());
+		for (i in 0..< list.length) {
+			val teamStats = TeamStats()
+			val elt = list.item(i) as Element
+			val teamId = elt.getElementsByTagName("TeamID").item(0).textContent
+			teamStats.teamId = Integer.parseInt(teamId)
+			teamStats.teamName = elt.getElementsByTagName("TeamName").item(0).textContent
 
-				teamStats.setLeagueRank(leagueLevel);
-				teamStats.setLeagueName(leagueName);
+			teamStats.leagueRank = leagueLevel
+			teamStats.leagueName = leagueName
 
-				teamStats.setPosition(Integer.parseInt(elt.getElementsByTagName("Position").item(0).getTextContent()));
-				teamStats.setPoints(Integer.parseInt(elt.getElementsByTagName("Points").item(0).getTextContent()));
+			teamStats.position = Integer.parseInt(elt.getElementsByTagName("Position").item(0).textContent)
+			teamStats.points = Integer.parseInt(elt.getElementsByTagName("Points").item(0).textContent)
 
-				teamStats.setGoalsFor(Integer.parseInt(elt.getElementsByTagName("GoalsFor").item(0).getTextContent()));
-				teamStats.setGoalsAgainst(Integer.parseInt(elt.getElementsByTagName("GoalsAgainst").item(0).getTextContent()));
+			teamStats.goalsFor = Integer.parseInt(elt.getElementsByTagName("GoalsFor").item(0).textContent)
+			teamStats.goalsAgainst = Integer.parseInt(elt.getElementsByTagName("GoalsAgainst").item(0).textContent)
 
-
-				teamInfoMap.put(teamId, teamStats);
-			}
+			teamInfoMap[teamId] = teamStats
 		}
 
-		return teamInfoMap;
+		return teamInfoMap
 	}
 }
