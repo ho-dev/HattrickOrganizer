@@ -89,7 +89,7 @@ class HRFStringBuilder {
     /**
      * Create the basic data.
      */
-    fun createBasics(teamDetailsDataMap: Map<String?, String?>, worldDataMap: Map<String?, String?>) {
+    fun createBasics(teamDetailsDataMap: Map<String, String>, worldDataMap: Map<String, String>) {
         basicsStringBuilder = StringBuilder("[basics]\n")
         appendKeyValue(basicsStringBuilder!!, "application", "HO")
         appendKeyValue(basicsStringBuilder!!, "appversion", HO.VERSION)
@@ -225,9 +225,9 @@ class HRFStringBuilder {
     /**
      * Create last lineup section.
      */
-    fun createLastLineUp(matchLineupTeam: MatchLineupTeam?, teamdetailsDataMap: Map<String?, String?>) {
+    fun createLastLineUp(matchLineupTeam: MatchLineupTeam?, teamDetailsDataMap: Map<String, String>) {
         lastLineupStringBuilder = StringBuilder("[lastlineup]\n")
-        appendKeyValue(lastLineupStringBuilder!!, "trainer", teamdetailsDataMap["TrainerID"])
+        appendKeyValue(lastLineupStringBuilder!!, "trainer", teamDetailsDataMap["TrainerID"])
         try {
             if (matchLineupTeam != null) {
                 appendKeyValue(
@@ -828,7 +828,7 @@ class HRFStringBuilder {
      * Create team related data (training, confidence, formation experience,
      * etc.).
      */
-    fun createTeam(trainingDataMap: Map<String?, String?>) {
+    fun createTeam(trainingDataMap: Map<String, String>) {
         teamStringBuilder = StringBuilder("[team]\n")
         appendKeyValue(teamStringBuilder!!, "trLevel", trainingDataMap["TrainingLevel"])
         appendKeyValue(teamStringBuilder!!, "staminaTrainingPart", trainingDataMap["StaminaTrainingPart"])

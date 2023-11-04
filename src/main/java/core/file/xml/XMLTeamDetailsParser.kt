@@ -1,219 +1,202 @@
-package core.file.xml;
+package core.file.xml
 
-import core.util.HOLogger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import static core.file.xml.XMLManager.xmlValue2Hash;
+import core.util.HOLogger
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
 
 
-public class XMLTeamDetailsParser {
+object XMLTeamDetailsParser {
 
-	private XMLTeamDetailsParser() {}
+    fun fetchRegionID(xmlFile: String): String {
+        return fetchTeamDetail(xmlFile, "Region", "RegionID")
+    }
 
-	public static String fetchRegionID(String xmlFile) {
-		return fetchTeamDetail(xmlFile, "Region", "RegionID");
-	}
+    fun fetchLogoURI(xmlFile: String): String {
+        return fetchTeamDetail(xmlFile, "LogoURL", null)
+    }
 
-	public static String fetchLogoURI(String xmlFile) {
-		return fetchTeamDetail(xmlFile, "LogoURL", null);
-	}
+    private fun fetchTeamDetail(xmlFile: String, section: String, attribute: String?): String {
+        try {
+            val doc: Document = XMLManager.parseString(xmlFile) ?: return "-1"
+            var root:Element? = doc.documentElement
 
-	private static String fetchTeamDetail(String xmlFile, String section, String attribute){
-		try {
-			Document doc = XMLManager.parseString(xmlFile);
+            root = root?.getElementsByTagName("Team")?.item(0) as Element?
+            root = root?.getElementsByTagName(section)?.item(0) as Element?
 
-			if (doc == null) {
-				return "-1";
-			}
+            if (attribute != null) {
+                root = root?.getElementsByTagName(attribute)?.item(0) as Element?
+            }
 
-			// Tabelle erstellen
-			Element root = doc.getDocumentElement();
+            return XMLManager.getFirstChildNodeValue(root)
 
-			// Root wechseln
-			root = (Element) root.getElementsByTagName("Team").item(0);
-			root = (Element) root.getElementsByTagName(section).item(0);
+        } catch (ex: Exception) {
+            HOLogger.instance().log(XMLTeamDetailsParser.javaClass, ex)
+        }
 
-			if(attribute != null) {
-				root = (Element) root.getElementsByTagName(attribute).item(0);
-			}
+        return "-1"
+    }
 
-			return XMLManager.getFirstChildNodeValue(root);
+    fun parseTeamDetailsFromString(inputStream: String, teamId: Int): Map<String, String> {
+        return parseDetails(XMLManager.parseString(inputStream), teamId)
+    }
 
-		} catch (Exception ex) {
-			HOLogger.instance().log(XMLTeamDetailsParser.class, ex);
-		}
+    private fun parseDetails(doc: Document?, teamId: Int): Map<String, String> {
+        val hash = SafeInsertMap()
 
-		return "-1";
-	}
+        if (doc == null) {
+            return hash
+        }
 
-	public static Map<String, String> parseTeamdetailsFromString(String inputStream, int teamId) {
-		return parseDetails(XMLManager.parseString(inputStream), teamId);
-	}
+        var root = doc.documentElement
 
-	private static Map<String, String> parseDetails(@Nullable Document doc, int teamId) {
-		Element ele, root;
-		Map<String, String> hash = new core.file.xml.MyHashtable();
+        try {
+            XMLManager.xmlValue2Hash(hash, root, "FetchedDate")
 
-//		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
+            // User
+            root = root.getElementsByTagName("User").item(0) as Element
+            XMLManager.xmlValue2Hash(hash, root, "Loginname")
+            XMLManager.xmlValue2Hash(hash, root, "LastLoginDate")
 
-		if (doc == null) {
-			return hash;
-		}
+            var supportStatus = "False"
+            val supporterTier: NodeList = root.getElementsByTagName("SupporterTier")
+            if (supporterTier.length > 0) {
+                val ele = supporterTier.item(0) as Element
+                val supportValue = XMLManager.getFirstChildNodeValue(ele)
+                if (supportValue.trim().isNotEmpty()) {
+                    supportStatus = "True"
+                }
+            }
+            hash.insert("HasSupporter", supportStatus)
 
-		root = doc.getDocumentElement();
+            // We need to find the correct team
 
-		try {
+            var team: Element? = null
+            var ele:Element? = doc.documentElement?.getElementsByTagName("Teams")?.item(0) as Element?
+            if (ele != null) {
+                root = ele
+                val list: NodeList? = root.getElementsByTagName("Team")
+                if (list != null) {
+                    for (i in 0..<list.length) {
+                        team = list.item(i) as Element
+                        ele = team.getElementsByTagName("TeamID").item(0) as Element
 
-			// FetchedDate
-			xmlValue2Hash(hash, root, "FetchedDate");
+                        if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
+                            break
+                        }
+                    }
+                }
+            } else {
+                team = doc.documentElement?.getElementsByTagName("Team")?.item(0) as Element?
+            }
 
-			// User
-			root = (Element) root.getElementsByTagName("User").item(0);
-			xmlValue2Hash(hash, root, "Loginname");
-			xmlValue2Hash(hash, root, "LastLoginDate");
+            if (team == null) {
+                return hash
+            }
 
-			String supportStatus = "False";
-			NodeList supporterTier = root.getElementsByTagName("SupporterTier");
-			if (supporterTier.getLength() > 0) {
-				ele = (Element) supporterTier.item(0);
-				String supportValue = XMLManager.getFirstChildNodeValue(ele);
-				if (supportValue.trim().length() > 0) {
-					supportStatus = "True";
-				}
-			}
-			hash.put("HasSupporter", supportStatus);
+            XMLManager.xmlValue2Hash(hash, team, "TeamID")
+            XMLManager.xmlValue2Hash(hash, team, "TeamName")
+            XMLManager.xmlValue2Hash(hash, team, "FoundedDate", "ActivationDate")
+            XMLManager.xmlValue2Hash(hash, team, "HomePage")
+            XMLManager.xmlValue2Hash(hash, team, "LogoURL")
+            // youth team info
+            XMLManager.xmlValue2Hash(hash, team, "YouthTeamID")
+            XMLManager.xmlValue2Hash(hash, team, "YouthTeamName")
 
-			// We need to find the correct team
+            root = team.getElementsByTagName("League").item(0) as Element?
+            XMLManager.xmlValue2Hash(hash, root, "LeagueID")
 
-			Element team = null;
-			ele = (Element) doc.getDocumentElement().getElementsByTagName("Teams").item(0);
-			if ( ele != null) {
-				root = ele;
-				NodeList list = root.getElementsByTagName("Team");
-				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-					team = (Element) list.item(i);
+            try {
+                XMLManager.xmlValue2Hash(hash, team, "LeagueLevel")
+                XMLManager.xmlValue2Hash(hash, team, "LeagueLevelUnitName")
+                XMLManager.xmlValue2Hash(hash, team, "LeagueLevelUnitID")
+            } catch (ex: Exception) {
+                HOLogger.instance().log(XMLTeamDetailsParser.javaClass, ex)
+            }
 
-					ele = (Element) team.getElementsByTagName("TeamID").item(0);
-					if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
-						break;
-					}
-				}
-			}
-			else {
-				team = (Element)doc.getDocumentElement().getElementsByTagName("Team").item(0);
-			}
+            try {
+                XMLManager.xmlValue2Hash(hash, team, "NumberOfVictories")
+                XMLManager.xmlValue2Hash(hash, team, "NumberOfUndefeated")
+            } catch (exp: Exception) {
+                HOLogger.instance().log(XMLTeamDetailsParser.javaClass, exp)
+            }
 
-			if (team == null) { 
-				return hash;
-			}
+            val fanclub = team.getElementsByTagName("Fanclub").item(0) as Element?
+            if (fanclub != null) {
+                XMLManager.xmlValue2Hash(hash, fanclub, "FanclubSize")
+            }
 
-			xmlValue2Hash(hash, team, "TeamID");
-			xmlValue2Hash(hash, team, "TeamName");
-			xmlValue2Hash(hash, team, "FoundedDate", "ActivationDate");
-			xmlValue2Hash(hash, team, "HomePage");
-			xmlValue2Hash(hash, team, "LogoURL");
-			// youth team info
-			xmlValue2Hash(hash, team, "YouthTeamID");
-			xmlValue2Hash(hash, team, "YouthTeamName");
+            root = team.getElementsByTagName("Trainer").item(0) as Element?
+            XMLManager.xmlValue2Hash(hash, root, "PlayerID", "TrainerID")
 
-			root = (Element) team.getElementsByTagName("League").item(0);
-			xmlValue2Hash(hash, root, "LeagueID");
+            root = team.getElementsByTagName("Arena").item(0) as Element?
+            XMLManager.xmlValue2Hash(hash, root, "ArenaName")
+            XMLManager.xmlValue2Hash(hash, root, "ArenaID")
+            root = team.getElementsByTagName("Region").item(0) as Element?
+            XMLManager.xmlValue2Hash(hash, root, "RegionID")
 
-			try {
-				xmlValue2Hash(hash, team, "LeagueLevel");
-				xmlValue2Hash(hash, team, "LeagueLevelUnitName");
-				xmlValue2Hash(hash, team, "LeagueLevelUnitID");
-			} catch (Exception ex) {
-				HOLogger.instance().log(XMLTeamDetailsParser.class, ex);
-			}
+            // Power Rating
+            val powerRating = doc.documentElement.getElementsByTagName("PowerRating").item(0) as Element?
+            if (powerRating != null) {
+                XMLManager.xmlValue2Hash(hash, powerRating, "GlobalRanking")
+                XMLManager.xmlValue2Hash(hash, powerRating, "LeagueRanking")
+                XMLManager.xmlValue2Hash(hash, powerRating, "RegionRanking")
+                XMLManager.xmlValue2Hash(hash, powerRating, "PowerRating")
+            }
 
-			try {
-				xmlValue2Hash(hash, team, "NumberOfVictories");
-				xmlValue2Hash(hash, team, "NumberOfUndefeated");
-			} catch (Exception exp) {
-				HOLogger.instance().log(XMLTeamDetailsParser.class, exp);
-			}
+            if (team.getElementsByTagName("TeamRank").length > 0) {
+                hash.insert("TeamRank", team.getElementsByTagName("TeamRank").item(0).textContent)
+            }
 
-			var fanclub = (Element) team.getElementsByTagName("Fanclub").item(0);
-			xmlValue2Hash(hash, fanclub, "FanclubSize");
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLTeamDetailsParser.javaClass, e)
+        }
 
-			root = (Element) team.getElementsByTagName("Trainer").item(0);
-			xmlValue2Hash(hash, root, "PlayerID", "TrainerID");
+        return hash
+    }
 
-			root = (Element) team.getElementsByTagName("Arena").item(0);
-			xmlValue2Hash(hash, root, "ArenaName");
-			xmlValue2Hash(hash, root, "ArenaID");
-			root = (Element) team.getElementsByTagName("Region").item(0);
-			xmlValue2Hash(hash, root, "RegionID");
+    fun getTeamInfoFromString(input: String): List<TeamInfo> {
+        val ret = mutableListOf<TeamInfo>()
+        if (input.isEmpty()) return ret
 
-			// Power Rating
-			Element PowerRating = (Element)doc.getDocumentElement().getElementsByTagName("PowerRating").item(0);
-			xmlValue2Hash(hash, PowerRating, "GlobalRanking");
-			xmlValue2Hash(hash, PowerRating, "LeagueRanking");
-			xmlValue2Hash(hash, PowerRating, "RegionRanking");
-			xmlValue2Hash(hash, PowerRating, "PowerRating");
+        val doc = XMLManager.parseString(input) ?: return ret
 
-			if (team.getElementsByTagName("TeamRank").getLength() > 0) {
-				hash.put("TeamRank", team.getElementsByTagName("TeamRank").item(0).getTextContent());
-			}
+        var root = doc.documentElement
+        root = root.getElementsByTagName("Teams").item(0) as Element
 
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLTeamDetailsParser.class, e);
-		}
+        val list: NodeList = root.getElementsByTagName("Team")
 
-		return hash;
-	}
+        for (i in 0..<list.length) {
+            val team = list.item(i) as Element
+            val info = TeamInfo()
 
-	public static List<TeamInfo> getTeamInfoFromString(String input) {
-		List<TeamInfo> ret = new ArrayList<>();
-		if ( input.isEmpty() ) return ret;
+            var ele = team.getElementsByTagName("TeamID").item(0) as Element
+            info.teamId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
 
-		Document doc = XMLManager.parseString(input);
-		Element root = doc.getDocumentElement();
-		root = (Element) root.getElementsByTagName("Teams").item(0);
+            ele = team.getElementsByTagName("YouthTeamID").item(0) as Element
+            info.youthTeamId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
 
-		NodeList list = root.getElementsByTagName("Team");
-		
-		for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-			Element team = (Element) list.item(i);
-			Element ele;
-			
-			TeamInfo info = new TeamInfo();
+            ele = team.getElementsByTagName("TeamName").item(0) as Element
+            info.name = XMLManager.getFirstChildNodeValue(ele)
 
-			ele = (Element) team.getElementsByTagName("TeamID").item(0);
-			info.setTeamId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
+            ele = team.getElementsByTagName("IsPrimaryClub").item(0) as Element
+            info.primaryTeam = XMLManager.getFirstChildNodeValue(ele).toBoolean()
 
-			ele = (Element) team.getElementsByTagName("YouthTeamID").item(0);
-			info.setYouthTeamId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
+            val league = team.getElementsByTagName("League").item(0) as Element
+            ele = league.getElementsByTagName("LeagueName").item(0) as Element
+            info.country = XMLManager.getFirstChildNodeValue(ele)
 
-			ele = (Element) team.getElementsByTagName("TeamName").item(0);
-			info.setName(XMLManager.getFirstChildNodeValue(ele));
+            ele = league.getElementsByTagName("LeagueID").item(0) as Element
+            info.leagueId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
 
-			ele = (Element) team.getElementsByTagName("IsPrimaryClub").item(0);
-			info.setPrimaryTeam(Boolean.parseBoolean(XMLManager.getFirstChildNodeValue(ele)));
+            ele = team.getElementsByTagName("LeagueLevelUnit").item(0) as Element
+            ele = ele.getElementsByTagName("LeagueLevelUnitName").item(0) as Element
+            info.league = XMLManager.getFirstChildNodeValue(ele)
 
-			
-			Element league = (Element) team.getElementsByTagName("League").item(0);
-			ele = (Element) league.getElementsByTagName("LeagueName").item(0);
-			info.setCountry(XMLManager.getFirstChildNodeValue(ele));
-			
-			ele = (Element) league.getElementsByTagName("LeagueID").item(0);
-			info.setLeagueId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
-			
-			ele = (Element) team.getElementsByTagName("LeagueLevelUnit").item(0);
-			ele = (Element) ele.getElementsByTagName("LeagueLevelUnitName").item(0);
-			info.setLeague(XMLManager.getFirstChildNodeValue(ele));
-			
-			ret.add(info);
-		}
-		
-		return ret;
-	}
-		
+            ret.add(info)
+        }
+
+        return ret
+    }
+
 }

@@ -1,151 +1,123 @@
-package core.file.xml;
+package core.file.xml
 
-import core.db.DBManager;
-import core.model.Tournament.TournamentDetails;
-import core.model.cup.CupLevel;
-import core.model.cup.CupLevelIndex;
-import core.model.match.MatchKurzInfo;
-import core.model.enums.MatchType;
-import core.util.HODateTime;
-import core.util.HOLogger;
+import core.db.DBManager.getTournamentDetailsFromDB
+import core.db.DBManager.storeTournamentDetailsIntoDB
+import core.file.xml.XMLManager.parseString
+import core.model.cup.CupLevel
+import core.model.cup.CupLevelIndex
+import core.model.enums.MatchType
+import core.model.match.MatchKurzInfo
+import core.net.OnlineWorker
+import core.util.HODateTime
+import core.util.HOLogger
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
 
-import java.util.ArrayList;
-import java.util.List;
+object XMLMatchesParser {
+    fun parseMatchesFromString(input: String): List<MatchKurzInfo> {
+        return createMatches(parseString(input))
+    }
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+    /**
+     * Returns [Int] corresponding to status String.
+     */
+    private fun getStatus(status: String): Int {
+        if (status.equals("FINISHED", ignoreCase = true)) {
+            return MatchKurzInfo.FINISHED
+        } else if (status.equals("ONGOING", ignoreCase = true)) {
+            return MatchKurzInfo.ONGOING
+        } else if (status.equals("UPCOMING", ignoreCase = true)) {
+            return MatchKurzInfo.UPCOMING
+        }
+        return -1
+    }
 
-import static core.net.OnlineWorker.getTournamentDetails;
+    private fun createMatches(doc: Document?): List<MatchKurzInfo> {
+        var match: MatchKurzInfo
+        val matchesList: MutableList<MatchKurzInfo> = ArrayList()
 
-public class XMLMatchesParser {
+        if (doc != null) {
+            val root = doc.documentElement
+            try {
+                val list:NodeList? = root.getElementsByTagName("Match")
+                var ele: Element?
+                var tmp: Element?
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLMatchesParser() {
-	}
+                if (list != null) {
+                    for (i in 0..<list.length) {
+                        match = MatchKurzInfo()
+                        ele = list.item(i) as Element?
+                        tmp = ele?.getElementsByTagName("MatchDate")?.item(0) as Element?
+                        match.matchSchedule = HODateTime.fromHT(tmp?.firstChild?.nodeValue)
 
-	public static List<MatchKurzInfo> parseMatchesFromString(String input) {
-		return createMatches(XMLManager.parseString(input));
-	}
+                        tmp = ele?.getElementsByTagName("MatchID")?.item(0) as Element?
+                        match.matchID = tmp?.firstChild?.nodeValue?.toInt() ?: -1
 
-	/**
-	 * Wertet den StatusString aus und liefert einen INT
-	 */
-	private static int getStatus(String status) {
-		if (status.equalsIgnoreCase("FINISHED")) {
-			return MatchKurzInfo.FINISHED;
-		} else if (status.equalsIgnoreCase("ONGOING")) {
-			return MatchKurzInfo.ONGOING;
-		} else if (status.equalsIgnoreCase("UPCOMING")) {
-			return MatchKurzInfo.UPCOMING;
-		}
+                        tmp = ele?.getElementsByTagName("MatchType")?.item(0) as Element?
+                        val iMatchType = tmp?.firstChild?.nodeValue?.toInt()
+                        match.matchType = MatchType.getById(iMatchType)
 
-		return -1;
-	}
+                        if (iMatchType == 3) {
+                            tmp = ele?.getElementsByTagName("CupLevel")?.item(0) as Element?
+                            val iCupLevel = tmp?.firstChild?.nodeValue?.toInt()
+                            match.cupLevel = CupLevel.fromInt(iCupLevel)
 
-	/**
-	 * erstellt das MAtchlineup Objekt
-	 */
-	private static List<MatchKurzInfo> createMatches(Document doc) {
-		MatchKurzInfo match;
-		List<MatchKurzInfo> liste = new ArrayList<>();
-		int iMatchType;
-		int iCupLevel;
-		int iCupLevelIndex;
-
-		if (doc != null) {
-			Element root = doc.getDocumentElement();
-			try {
-				NodeList list = root.getElementsByTagName("Match");
-
-				Element ele;
-				Element tmp;
-				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-					match = new MatchKurzInfo();
-					ele = (Element) list.item(i);
-
-					tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-					match.setMatchSchedule(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
-					tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
-					match.setMatchID(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-					tmp = (Element) ele.getElementsByTagName("MatchType").item(0);
-					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-					match.setMatchType(MatchType.getById(iMatchType));
-
-					if (iMatchType == 3) {
-						tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
-						iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						match.setCupLevel(CupLevel.fromInt(iCupLevel));
-
-						tmp = (Element) ele.getElementsByTagName("CupLevelIndex").item(0);
-						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
-					}
-					else if (iMatchType == 50) {
-						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
-						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						match.setMatchContextId(tournamentId);
-
-						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-						if (oTournamentDetails == null)
-						{
-							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-						}
-						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
-					}
-
-
-					tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);
-					match.setHomeTeamID(Integer.parseInt(tmp
-							.getElementsByTagName("HomeTeamID").item(0)
-							.getFirstChild().getNodeValue()));
-					match.setHomeTeamName(tmp.getElementsByTagName(
-							"HomeTeamName").item(0).getFirstChild()
-							.getNodeValue());
-					tmp = (Element) ele.getElementsByTagName("AwayTeam")
-							.item(0);
-					match.setGuestTeamID(Integer.parseInt(tmp
-							.getElementsByTagName("AwayTeamID").item(0)
-							.getFirstChild().getNodeValue()));
-					match.setGuestTeamName(tmp.getElementsByTagName(
-							"AwayTeamName").item(0).getFirstChild()
-							.getNodeValue());
-					tmp = (Element) ele.getElementsByTagName("Status").item(0);
-					match.setMatchStatus(getStatus(tmp.getFirstChild()
-							.getNodeValue()));
-
-					if (match.getMatchStatus() == MatchKurzInfo.FINISHED) {
-						tmp = (Element) ele.getElementsByTagName("HomeGoals")
-								.item(0);
-						match.setHomeTeamGoals(Integer.parseInt(tmp.getFirstChild()
-								.getNodeValue()));
-						tmp = (Element) ele.getElementsByTagName("AwayGoals")
-								.item(0);
-						match.setGuestTeamGoals(Integer.parseInt(tmp.getFirstChild()
-								.getNodeValue()));
-					} else if (match.getMatchStatus() == MatchKurzInfo.UPCOMING) {
-						try {
-							tmp = (Element) ele.getElementsByTagName(
-									"OrdersGiven").item(0);
-							match.setOrdersGiven(tmp.getFirstChild()
-									.getNodeValue().equalsIgnoreCase("TRUE"));
-						} catch (Exception e) {
-							// We will end up here if the match is not the
-							// user's
-							match.setOrdersGiven(false);
-						}
-					}
-
-					liste.add(match);
-				}
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLMatchesParser.class, e);
-				liste.clear();
-			}
-		}
-		return liste;
-	}
+                            tmp = ele?.getElementsByTagName("CupLevelIndex")?.item(0) as Element?
+                            val iCupLevelIndex = tmp?.firstChild?.nodeValue?.toInt()
+                            match.cupLevelIndex = CupLevelIndex.fromInt(iCupLevelIndex)
+                        } else if (iMatchType == 50) {
+                            tmp = ele?.getElementsByTagName("MatchContextId")?.item(0) as Element?
+                            val tournamentId = tmp?.firstChild?.nodeValue?.toInt()
+                            if (tournamentId != null) {
+                                match.matchContextId = tournamentId
+                                var oTournamentDetails = getTournamentDetailsFromDB(tournamentId)
+                                if (oTournamentDetails == null) {
+                                    oTournamentDetails =
+                                        OnlineWorker.getTournamentDetails(tournamentId) // download info about tournament from HT
+                                    storeTournamentDetailsIntoDB(oTournamentDetails) // store tournament details into DB
+                                }
+                                match.tournamentTypeID = oTournamentDetails!!.tournamentType
+                            }
+                        }
+                        tmp = ele?.getElementsByTagName("HomeTeam")?.item(0) as Element?
+                        match.homeTeamID = tmp?.getElementsByTagName("HomeTeamID")?.item(0)
+                            ?.firstChild?.nodeValue?.toInt() ?: -1
+                        match.homeTeamName = tmp?.getElementsByTagName("HomeTeamName")?.item(0)
+                            ?.firstChild?.nodeValue
+                        tmp = ele?.getElementsByTagName("AwayTeam")?.item(0) as Element?
+                        match.guestTeamID = tmp?.getElementsByTagName("AwayTeamID")?.item(0)
+                            ?.firstChild?.nodeValue?.toInt() ?: -1
+                        match.guestTeamName = tmp?.getElementsByTagName("AwayTeamName")?.item(0)
+                            ?.firstChild?.nodeValue
+                        tmp = ele?.getElementsByTagName("Status")?.item(0) as Element?
+                        if (tmp?.firstChild?.nodeValue != null) {
+                            match.matchStatus = getStatus(tmp.firstChild.nodeValue)
+                        } else {
+                            match.matchStatus -1
+                        }
+                        if (match.matchStatus == MatchKurzInfo.FINISHED) {
+                            tmp = ele?.getElementsByTagName("HomeGoals")?.item(0) as Element?
+                            match.homeTeamGoals = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+                            tmp = ele?.getElementsByTagName("AwayGoals")?.item(0) as Element?
+                            match.guestTeamGoals = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+                        } else if (match.matchStatus == MatchKurzInfo.UPCOMING) {
+                            try {
+                                tmp = ele?.getElementsByTagName("OrdersGiven")?.item(0) as Element?
+                                match.isOrdersGiven = tmp?.firstChild?.nodeValue.equals("TRUE", ignoreCase = true)
+                            } catch (e: Exception) {
+                                // We will end up here if the match is not the user's
+                                match.isOrdersGiven = false
+                            }
+                        }
+                        matchesList.add(match)
+                    }
+                }
+            } catch (e: Exception) {
+                HOLogger.instance().log(XMLMatchesParser::class.java, e)
+                matchesList.clear()
+            }
+        }
+        return matchesList
+    }
 }

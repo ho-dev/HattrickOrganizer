@@ -1,331 +1,310 @@
-package core.file.xml;
+package core.file.xml
 
-import core.model.enums.MatchType;
-import core.model.match.*;
-import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
-import core.util.HOLogger;
-import module.lineup.substitution.model.GoalDiffCriteria;
-import module.lineup.substitution.model.MatchOrderType;
-import module.lineup.substitution.model.RedCardCriteria;
-import module.lineup.substitution.model.Substitution;
-import java.util.ArrayList;
-import java.util.List;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
+import core.file.xml.XMLManager.getFirstChildNodeValue
+import core.file.xml.XMLManager.parseString
+import core.model.enums.MatchType
+import core.model.match.MatchLineup
+import core.model.match.MatchLineupPosition
+import core.model.match.MatchLineupTeam
+import core.model.player.IMatchRoleID
+import core.model.player.MatchRoleID
+import core.util.HOLogger
+import module.lineup.substitution.model.GoalDiffCriteria
+import module.lineup.substitution.model.MatchOrderType
+import module.lineup.substitution.model.RedCardCriteria
+import module.lineup.substitution.model.Substitution
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
 /**
- * 
+ *
  * @author thomas.werth
  */
-public class XMLMatchLineupParser {
-	
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLMatchLineupParser() {
-	}
+object XMLMatchLineupParser {
+	fun parseMatchLineupFromString(inputStream: String): MatchLineup? {
+        return createLineup(parseString(inputStream))
+    }
 
-	public static MatchLineup parseMatchLineupFromString(String inputStream) {
-		return createLineup(XMLManager.parseString(inputStream));
-	}
+    private fun createLineup(doc: Document?): MatchLineup? {
+        var ml: MatchLineup? = MatchLineup()
+        if (doc == null) {
+            return ml
+        }
 
-	private static MatchLineup createLineup(Document doc) {
-		MatchLineup ml = new MatchLineup();
-		if (doc == null) {
-			return ml;
-		}
+        try {
+            if (ml != null) {
+                val root: Element? = doc.documentElement
+                var ele: Element? = root?.getElementsByTagName("MatchID")?.item(0) as Element?
+                ml.matchID = ele?.firstChild?.nodeValue?.toInt() ?: -1
 
-		try {
-			Element root = doc.getDocumentElement();
+                ele = root?.getElementsByTagName("MatchType")?.item(0) as Element?
+                ml.matchTyp = MatchType.getById(ele?.firstChild?.nodeValue?.toInt())
 
-			Element ele = (Element) root.getElementsByTagName("MatchID").item(0);
-			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+                ele = root?.getElementsByTagName("HomeTeam")?.item(0) as Element?
+                ml.homeTeamId = ele?.getElementsByTagName("HomeTeamID")?.item(0)?.firstChild?.nodeValue?.toInt() ?: -1
+                ml.homeTeamName = ele?.getElementsByTagName("HomeTeamName")?.item(0)?.firstChild?.nodeValue
 
-			ele = (Element) root.getElementsByTagName("MatchType").item(0);
-			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
+                ele = root?.getElementsByTagName("AwayTeam")?.item(0) as Element?
+                ml.guestTeamId = ele?.getElementsByTagName("AwayTeamID")?.item(0)?.firstChild?.nodeValue?.toInt() ?: -1
+                ml.guestTeamName = ele?.getElementsByTagName("AwayTeamName")?.item(0)?.firstChild?.nodeValue
 
-			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
-			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
-					.getNodeValue());
-			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
-			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
-					.getNodeValue());
+                val team = createTeam(ml.matchType, ml.matchID, root?.getElementsByTagName("Team")?.item(0) as Element?)
+                if (team.teamID == ml.getHomeTeamId()) {
+                    ml.homeTeam = team
+                } else {
+                    ml.guestTeam = team
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLMatchLineupParser::class.java, e)
+            ml = null
+        }
+        return ml
+    }
 
-			MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
+    private fun createPlayer(matchType: MatchType, ele: Element?): MatchLineupPosition {
+        var roleID = -1
+        var rating = -1.0
+        var ratingStarsEndOfMatch = -1.0
+        var name = ""
+        var tmp = ele?.getElementsByTagName("PlayerID")?.item(0) as Element?
+        val spielerID:Int = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        var behavior:Byte = -1
+        tmp = ele?.getElementsByTagName("RoleID")?.item(0) as Element?
+        if (tmp != null) {
+            roleID = tmp.firstChild.nodeValue.toInt() ?: -1
+        }
 
-			if (team.getTeamID() == ml.getHomeTeamId()) {
-				ml.setHomeTeam(team);
-			} else {
-				ml.setGuestTeam(team);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLMatchLineupParser.class, e);
-			ml = null;
-		}
+        // This is the right spot to wash the old role IDs if arrived by xml.
+        // Position code is not include in 1.6 xml. It is not needed from the
+        // older ones, what is necessary is to check for old reposition values in the
+        // Behaviour.
+        // We do move all repositions to central slot, and go happily belly up
+        // if we find more than one repositioning to the same position 
+        // (old setup where more than 3 forwards was possible)
 
-		return ml;
-	}
+        // if (roleID == 17 || roleID == 14) {
+        // System.out.println("Give me somewhere to put a breakpoint");
+        // }
 
-	private static MatchLineupPosition createPlayer(MatchType matchType, Element ele) {
-		int roleID = -1;
-		int behavior = 0;
-		double rating = -1.0d;
-		double ratingStarsEndOfMatch = -1.0d;
-		String name = "";
+        // HOLogger.instance().debug(getClass(),"RoleID in: " + roleID);
 
-		Element tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
-		int spielerID = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("RoleID").item(0);
-		if (tmp != null) {
-			roleID = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		}
+        // nur wenn Player existiert
+        if (spielerID > 0) {
+            // First- and LastName can be empty
+            name = getStringValue(ele?.getElementsByTagName("FirstName")?.item(0) as Element?)
+            val lastName = getStringValue(ele?.getElementsByTagName("LastName")?.item(0) as Element?)
+            if (name.isNotEmpty() && lastName.isNotEmpty()) name = "$name "
+            name += lastName
 
-		// This is the right spot to wash the old role IDs if arrived by xml.
-		// Position code is not include in 1.6 xml. It is not needed from the
-		// older ones, what is necessary is to check for old reposition values in the
-		// Behaviour.
-		// We do move all repositions to central slot, and go happily belly up
-		// if we find more than one repositioning to the same position 
-		// (old setup where more than 3 forwards was possible)
+            // shift lineup ids to match order ids
+            if (roleID >= IMatchRoleID.startReserves && roleID < IMatchRoleID.substGK1) {
+                roleID += IMatchRoleID.substGK1 - IMatchRoleID.startReserves
+            }
 
-		// if (roleID == 17 || roleID == 14) {
-		// System.out.println("Give me somewhere to put a breakpoint");
-		// }
+            // tactic is only set for those in the lineup (and not for the keeper).
+            if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
+                // Diese Werte sind von HT vorgegeben aber nicht garantiert
+                // mitgeliefert in xml, daher selbst setzen!
+                roleID = IMatchRoleID.keeper // takes care of the old
+                // keeper ID.
+            } else if (roleID >= 0 && roleID < IMatchRoleID.setPieces || roleID < IMatchRoleID.startReserves && roleID > IMatchRoleID.keeper) {
+                tmp = ele?.getElementsByTagName("Behaviour")?.item(0) as Element?
+                behavior = tmp?.firstChild?.nodeValue?.toByte() ?: -1
+                when (behavior) {
+                    IMatchRoleID.OLD_EXTRA_DEFENDER -> {
+                        roleID = IMatchRoleID.middleCentralDefender
+                        behavior = IMatchRoleID.NORMAL
+                    }
 
-		// HOLogger.instance().debug(getClass(),"RoleID in: " + roleID);
+                    IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
+                        roleID = IMatchRoleID.centralInnerMidfield
+                        behavior = IMatchRoleID.NORMAL
+                    }
 
-		// nur wenn Player existiert
-		if (spielerID > 0) {
-			// First- and LastName can be empty
-			name = getStringValue((Element)ele.getElementsByTagName("FirstName").item(0));
-			var lastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
-			if ( name.length()>0 && lastName.length()>0) name = name + " ";
-			name = name + lastName;
+                    IMatchRoleID.OLD_EXTRA_FORWARD -> {
+                        roleID = IMatchRoleID.centralForward
+                        behavior = IMatchRoleID.NORMAL
+                    }
 
-			// shift lineup ids to match order ids
-			if ( roleID >= IMatchRoleID.startReserves && roleID < IMatchRoleID.substGK1) {
-				roleID += IMatchRoleID.substGK1 - IMatchRoleID.startReserves;
-			}
+                    IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD -> {
+                        roleID = IMatchRoleID.centralForward
+                        behavior = IMatchRoleID.DEFENSIVE
+                    }
+                }
 
-			// tactic is only set for those in the lineup (and not for the keeper).
-			if (roleID == IMatchRoleID.keeper || IMatchRoleID.oldKeeper.contains(roleID)) {
-				// Diese Werte sind von HT vorgegeben aber nicht garantiert
-				// mitgeliefert in xml, daher selbst setzen!
-				roleID = IMatchRoleID.keeper; // takes care of the old
-													// keeper ID.
-			} else if ((roleID >= 0)
-					&& (roleID < IMatchRoleID.setPieces)
-					|| ((roleID < IMatchRoleID.startReserves) && (roleID > IMatchRoleID.keeper))) {
-				tmp = (Element) ele.getElementsByTagName("Behaviour").item(0);
-				behavior = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+                // Wash the remaining old positions
+                if (roleID < IMatchRoleID.setPieces) {
+                    roleID = MatchRoleID.convertOldRoleToNew(roleID)
+                }
+            }
 
-				// HOLogger.instance().debug(getClass(),"Behavior found: " +
-				// behavior);
+            // rating nur für leute die gespielt haben
+            if (roleID >= IMatchRoleID.startLineup && roleID < IMatchRoleID.startReserves || roleID >= IMatchRoleID.FirstPlayerReplaced && roleID <= IMatchRoleID.ThirdPlayerReplaced) {
+                tmp = ele?.getElementsByTagName("RatingStars")?.item(0) as Element?
+                if (tmp != null) {
+                    rating = tmp.firstChild.nodeValue.replace(",".toRegex(), ".").toDouble()
+                    tmp = ele?.getElementsByTagName("RatingStarsEndOfMatch")?.item(0) as Element?
+                    if (tmp != null) { // info is not available for youth players
+                        ratingStarsEndOfMatch = tmp.firstChild.nodeValue.replace(",".toRegex(), ".").toDouble()
+                    }
+                }
+            }
+        }
+        val player = MatchLineupPosition(roleID, spielerID, behavior.toInt(), rating, name, 0)
+        player.ratingStarsEndOfMatch = ratingStarsEndOfMatch
+        return player
+    }
 
-				switch (behavior) {
-					case IMatchRoleID.OLD_EXTRA_DEFENDER -> {
-						roleID = IMatchRoleID.middleCentralDefender;
-						behavior = IMatchRoleID.NORMAL;
-					}
-					case IMatchRoleID.OLD_EXTRA_MIDFIELD -> {
-						roleID = IMatchRoleID.centralInnerMidfield;
-						behavior = IMatchRoleID.NORMAL;
-					}
-					case IMatchRoleID.OLD_EXTRA_FORWARD -> {
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.NORMAL;
-					}
-					case IMatchRoleID.OLD_EXTRA_DEFENSIVE_FORWARD -> {
-						roleID = IMatchRoleID.centralForward;
-						behavior = IMatchRoleID.DEFENSIVE;
-					}
-				}
+    /**
+     * Get string content of ELement. If content is empty an empty string is returned.
+     */
+    private fun getStringValue(tmp: Element?): String {
+        return if (tmp?.firstChild != null) tmp.firstChild.nodeValue else ""
+    }
 
-				// Wash the remaining old positions
-				if (roleID < IMatchRoleID.setPieces) {
-					roleID = MatchRoleID.convertOldRoleToNew(roleID);
-				}
-			}
+    private fun createTeam(matchType: MatchType, matchID: Int, ele: Element?): MatchLineupTeam {
+        var tmp:Element? = ele?.getElementsByTagName("TeamID")?.item(0) as Element?
+        val teamId = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("ExperienceLevel")?.item(0) as Element?
+        val erfahrung = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("StyleOfPlay")?.item(0) as Element?
+        val styleOfPlay = tmp?.firstChild?.nodeValue?.toInt()
+        tmp = ele?.getElementsByTagName("TeamName")?.item(0) as Element?
+        val teamName = tmp?.firstChild?.nodeValue
+        val team = MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung)
+        val starting = ele?.getElementsByTagName("StartingLineup")?.item(0) as Element?
+        val subs = ele?.getElementsByTagName("Substitutions")?.item(0) as Element?
+        tmp = ele?.getElementsByTagName("Lineup")?.item(0) as Element?
 
-			// rating nur für leute die gespielt haben
-			if ((roleID >= IMatchRoleID.startLineup)
-					&& (roleID < IMatchRoleID.startReserves)
-					|| ((roleID >= IMatchRoleID.FirstPlayerReplaced) && (roleID <= IMatchRoleID.ThirdPlayerReplaced))) {
-				tmp = (Element) ele.getElementsByTagName("RatingStars").item(0);
-				if ( tmp != null) {
-					rating = Double
-							.parseDouble(tmp.getFirstChild().getNodeValue().replaceAll(",", "."));
-					tmp = (Element) ele.getElementsByTagName("RatingStarsEndOfMatch").item(0);
-					if ( tmp != null){ // info is not available for youth players
-						ratingStarsEndOfMatch = Double.parseDouble(tmp.getFirstChild().getNodeValue()
-								.replaceAll(",", "."));
-					}
-				}
-			}
-		}
+        // The normal end of match report
+        // Adding entries
+        var list = tmp?.getElementsByTagName("Player")
+        if (list != null) {
+            for (i in 0 until list.length) {
 
-		MatchLineupPosition player = new MatchLineupPosition(roleID, spielerID, behavior, rating, name, 0);
-		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
-		return player;
-	}
+                // We want to stop an api error that has repositioned players as
+                // substituted.
+                // They are both shown as substituted and in a position. (hopefully)
+                // substituted
+                // players are always last in the API, there are at least signs of a
+                // fixed order.
+                val player = createPlayer(matchType, list.item(i) as Element?)
+                if (team.getPlayerByID(player.playerId) != null) {
+                    if (player.roleId >= IMatchRoleID.FirstPlayerReplaced && player.roleId <= IMatchRoleID.ThirdPlayerReplaced) {
 
-	/**
-	 * Get string content of ELement. If content is empty an empty string is returned.
-	 */
-	private static String getStringValue(Element tmp) {
-		if ( tmp.getFirstChild()!=null) return tmp.getFirstChild().getNodeValue();
-		return "";
-	}
+                        // MatchLineup API bug, he is still on the pitch, so skip
+                        continue
+                    }
+                }
+                team.add2Lineup(player)
+            }
+        }
 
-	private static MatchLineupTeam createTeam(MatchType matchType, int matchID, Element ele) {
-		Element tmp = (Element) ele.getElementsByTagName("TeamID").item(0);
-		int teamId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("ExperienceLevel").item(0);
-		int erfahrung = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("StyleOfPlay").item(0);
-		int styleOfPlay = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
-		String teamName = tmp.getFirstChild().getNodeValue();
-		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung);
+        // The starting lineup
+        list = starting?.getElementsByTagName("Player")
+        if (list != null) {
+            for (i in 0 until list.length) {
+                val startPlayer = createPlayer(matchType, list.item(i) as Element)
+                startPlayer.startPosition = startPlayer.roleId // it is the role id
+                startPlayer.startBehavior = startPlayer.behaviour.toInt()
 
-		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
-		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
+                // Merge with the existing player, but ignore captain
+                if (startPlayer.startPosition >= IMatchRoleID.startLineup || startPlayer.startPosition == IMatchRoleID.setPieces) {
+                    val lineupPlayer = team.getPlayerByID(startPlayer.playerId)
+                    if (lineupPlayer != null) {
+                        if (startPlayer.startPosition == IMatchRoleID.setPieces) {
+                            lineupPlayer.isStartSetPiecesTaker = true
+                        } else {
+                            lineupPlayer.startPosition = startPlayer.startPosition
+                        }
+                        lineupPlayer.startBehavior = startPlayer.startBehavior
+                    } else {
+                        // He was not already in the lineup, so add him
+                        team.add2Lineup(startPlayer)
+                        startPlayer.roleId = IMatchRoleID.UNKNOWN.toInt() // Maybe an injured player
+                    }
+                }
+            }
+        }
 
-		tmp = (Element) ele.getElementsByTagName("Lineup").item(0);
+        // Substitutions
+        list = subs?.getElementsByTagName("Substitution")
+        val substitutions: MutableList<Substitution> = ArrayList()
 
-		// The normal end of match report
-		// Adding entries
-		NodeList list = tmp.getElementsByTagName("Player");
+        if (list != null) {
+            for (i in 0 until list.length) {
+                val s = createSubstitution(list.item(i) as Element, i)
+                substitutions.add(s)
+                // We need to make sure the players involved are in the team lineup
+                // If missing, we only know the ID
+                if (s.objectPlayerID > 0 && team.getPlayerByID(s.objectPlayerID) == null && s.orderType != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
+                    team.add2Lineup(
+                        MatchLineupPosition(
+                            -1, -1, s.objectPlayerID, -1.0, "",
+                            -1
+                        )
+                    )
+                }
+                if (s.subjectPlayerID > 0 && team.getPlayerByID(s.subjectPlayerID) == null) {
+                    team.add2Lineup(
+                        MatchLineupPosition(
+                            -1, -1, s.subjectPlayerID, -1.0, "",
+                            -1
+                        )
+                    )
+                }
+            }
+        }
+        team.setSubstitutions(substitutions)
+        return team
+    }
 
-		for (int i = 0; i < list.getLength(); i++) {
-
-			// We want to stop an api error that has repositioned players as
-			// substituted.
-			// They are both shown as substituted and in a position. (hopefully)
-			// substituted
-			// players are always last in the API, there are at least signs of a
-			// fixed order.
-			MatchLineupPosition player = createPlayer(matchType, (Element) list.item(i));
-			if (team.getPlayerByID(player.getPlayerId()) != null) {
-				if ((player.getRoleId() >= IMatchRoleID.FirstPlayerReplaced)
-						&& (player.getRoleId() <= IMatchRoleID.ThirdPlayerReplaced)) {
-
-					// MatchLineup API bug, he is still on the pitch, so skip
-					continue;
-				}
-			}
-
-			team.add2Lineup(player);
-		}
-
-		// The starting lineup
-		list = starting.getElementsByTagName("Player");
-
-		for (int i = 0; i < list.getLength(); i++) {
-			MatchLineupPosition startPlayer = createPlayer(matchType, (Element) list.item(i));
-			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
-			startPlayer.setStartBehavior(startPlayer.getBehaviour());
-
-			// Merge with the existing player, but ignore captain
-			if (startPlayer.getStartPosition() >= IMatchRoleID.startLineup || startPlayer.getStartPosition() == IMatchRoleID.setPieces) {
-				MatchLineupPosition lineupPlayer = team.getPlayerByID(startPlayer.getPlayerId());
-				if (lineupPlayer != null) {
-					if ( startPlayer.getStartPosition() == IMatchRoleID.setPieces){
-						lineupPlayer.setStartSetPiecesTaker(true);
-					}
-					else {
-						lineupPlayer.setStartPosition(startPlayer.getStartPosition());
-					}
-					lineupPlayer.setStartBehavior(startPlayer.getStartBehavior());
-				} else {
-					// He was not already in the lineup, so add him
-					team.add2Lineup(startPlayer);
-					startPlayer.setRoleId(IMatchRoleID.UNKNOWN); // Maybe an injured player
-				}
-			}
-		}
-
-		// Substitutions
-
-		list = subs.getElementsByTagName("Substitution");
-		List<Substitution> substitutions = new ArrayList<>();
-
-		for (int i = 0; i < list.getLength(); i++) {
-
-			Substitution s = createSubstitution((Element) list.item(i), i);
-			substitutions.add(s);
-			// We need to make sure the players involved are in the team lineup
-			// If missing, we only know the ID
-			if ((s.getObjectPlayerID() > 0) &&
-					(team.getPlayerByID(s.getObjectPlayerID()) == null) &&
-					s.getOrderType() != MatchOrderType.MAN_MARKING) { // in case of MAN_MARKING the Object Player is an opponent player
-				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getObjectPlayerID(), -1d, "",
-						-1));
-			}
-			if ((s.getSubjectPlayerID() > 0)
-					&& (team.getPlayerByID(s.getSubjectPlayerID()) == null)) {
-				team.add2Lineup(new MatchLineupPosition( -1, -1, s.getSubjectPlayerID(), -1d, "",
-						-1));
-			}
-		}
-		team.setSubstitutions(substitutions);
-
-		return team;
-	}
-
-	private static Substitution createSubstitution(Element ele, int playerOrderID) {
-
-		int playerIn = -1;
-		int playerOut = -1;
-		byte orderTypeId = -1;
-		byte matchMinuteCriteria = -1;
-		byte pos = -1;
-		byte behaviour = -1;
-		byte card = -1;
-		byte standing = -1;
-
-		Element tmp = (Element) ele.getElementsByTagName("MatchMinute").item(0);
-		if (tmp != null) {
-			matchMinuteCriteria = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-
-		tmp = (Element) ele.getElementsByTagName("GoalDiffCriteria").item(0);
-		if (tmp != null) {
-			standing = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("RedCardCriteria").item(0);
-		if (tmp != null) {
-			card = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("SubjectPlayerID").item(0);
-		if (tmp != null) {
-			playerOut = Integer.parseInt(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("ObjectPlayerID").item(0);
-		if (tmp != null) {
-			playerIn = Integer.parseInt(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("OrderType").item(0);
-		if (tmp != null) {
-			orderTypeId = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("NewPositionId").item(0);
-		if (tmp != null) {
-			pos = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		tmp = (Element) ele.getElementsByTagName("NewPositionBehaviour").item(0);
-		if (tmp != null) {
-			behaviour = Byte.parseByte(XMLManager.getFirstChildNodeValue(tmp));
-		}
-		return new Substitution(playerOrderID, playerIn, playerOut, orderTypeId,
-				matchMinuteCriteria, pos, behaviour, RedCardCriteria.getById(card),
-				GoalDiffCriteria.getById(standing));
-	}
+    private fun createSubstitution(ele: Element?, playerOrderID: Int): Substitution {
+        var playerIn = -1
+        var playerOut = -1
+        var orderTypeId: Byte = -1
+        var matchMinuteCriteria: Byte = -1
+        var pos: Byte = -1
+        var behaviour: Byte = -1
+        var card: Byte = -1
+        var standing: Byte = -1
+        var tmp = ele?.getElementsByTagName("MatchMinute")?.item(0) as Element?
+        if (tmp != null) {
+            matchMinuteCriteria = getFirstChildNodeValue(tmp).toByte()
+        }
+        tmp = ele?.getElementsByTagName("GoalDiffCriteria")?.item(0) as Element?
+        if (tmp != null) {
+            standing = getFirstChildNodeValue(tmp).toByte()
+        }
+        tmp = ele?.getElementsByTagName("RedCardCriteria")?.item(0) as Element?
+        if (tmp != null) {
+            card = getFirstChildNodeValue(tmp).toByte()
+        }
+        tmp = ele?.getElementsByTagName("SubjectPlayerID")?.item(0) as Element?
+        if (tmp != null) {
+            playerOut = getFirstChildNodeValue(tmp).toInt()
+        }
+        tmp = ele?.getElementsByTagName("ObjectPlayerID")?.item(0) as Element?
+        if (tmp != null) {
+            playerIn = getFirstChildNodeValue(tmp).toInt()
+        }
+        tmp = ele?.getElementsByTagName("OrderType")?.item(0) as Element?
+        if (tmp != null) {
+            orderTypeId = getFirstChildNodeValue(tmp).toByte()
+        }
+        tmp = ele?.getElementsByTagName("NewPositionId")?.item(0) as Element?
+        if (tmp != null) {
+            pos = getFirstChildNodeValue(tmp).toByte()
+        }
+        tmp = ele?.getElementsByTagName("NewPositionBehaviour")?.item(0) as Element?
+        if (tmp != null) {
+            behaviour = getFirstChildNodeValue(tmp).toByte()
+        }
+        return Substitution(
+            playerOrderID, playerIn, playerOut, orderTypeId,
+            matchMinuteCriteria.toInt(), pos, behaviour, RedCardCriteria.getById(card),
+            GoalDiffCriteria.getById(standing)
+        )
+    }
 }

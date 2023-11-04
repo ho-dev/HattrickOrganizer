@@ -1,133 +1,110 @@
-// %3623740893:de.hattrickorganizer.logik.xml%
 /*
  * XMLTrainingParser.java
  *
  * Created on 27. Mai 2004, 07:43
  */
-package core.file.xml;
+package core.file.xml
 
-import core.util.HOLogger;
-
-import java.util.Map;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import core.file.xml.XMLManager.getAttributeValue
+import core.file.xml.XMLManager.getFirstChildNodeValue
+import core.file.xml.XMLManager.parseString
+import core.util.HOLogger
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
 /**
- * Parser for trainig xml data.
- * 
+ * Parser for training xml data.
+ *
  * @author thomas.werth
  */
-public class XMLTrainingParser {
+object XMLTrainingParser {
+    /**
+     * Parse the training from the given xml string.
+     */
+    fun parseTrainingFromString(string: String): Map<String, String> {
+        return parseDetails(parseString(string))
+    }
+    
+    private fun parseDetails(doc: Document?): Map<String, String> {
+        val map = SafeInsertMap()
+        if (doc == null) {
+            return map
+        }
+        try {
+            var root = doc.documentElement
+            var ele = root.getElementsByTagName("FetchedDate").item(0) as Element
+            map.insert("FetchedDate", getFirstChildNodeValue(ele))
+            root = root.getElementsByTagName("Team").item(0) as Element
+            ele = root.getElementsByTagName("TeamID").item(0) as Element
+            map.insert("TeamID", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("TeamName").item(0) as Element
+            map.insert("TeamName", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("TrainingLevel").item(0) as Element
+            map.insert("TrainingLevel", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("StaminaTrainingPart").item(0) as Element
+            map.insert("StaminaTrainingPart", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("NewTrainingLevel").item(0) as Element
+            if (getAttributeValue(ele, "Available").trim { it <= ' ' }.equals("true", ignoreCase = true)) {
+                map.insert("NewTrainingLevel ", getFirstChildNodeValue(ele))
+            }
+            ele = root.getElementsByTagName("TrainingType").item(0) as Element
+            map.insert("TrainingType", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Morale").item(0) as Element
+            if (getAttributeValue(ele, "Available").trim { it <= ' ' }.equals("true", ignoreCase = true)) {
+                map.insert("Morale", getFirstChildNodeValue(ele))
+            }
+            ele = root.getElementsByTagName("SelfConfidence").item(0) as Element
+            if (getAttributeValue(ele, "Available").trim { it <= ' ' }.equals("true", ignoreCase = true)) {
+                map.insert("SelfConfidence", getFirstChildNodeValue(ele))
+            }
+            ele = root.getElementsByTagName("Experience433").item(0) as Element
+            map.insert("Experience433", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Experience451").item(0) as Element
+            map.insert("Experience451", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Experience352").item(0) as Element
+            map.insert("Experience352", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Experience532").item(0) as Element
+            map.insert("Experience532", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Experience343").item(0) as Element
+            map.insert("Experience343", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("Experience541").item(0) as Element
+            map.insert("Experience541", getFirstChildNodeValue(ele))
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLTrainingParser() {
-	}
-
-	/**
-	 * Parse the training from the given xml string.
-	 */
-	public static Map<String, String> parseTrainingFromString(String string) {
-		return parseDetails(XMLManager.parseString(string));
-	}
-
-	/**
-	 * erstellt das MAtchlineup Objekt
-	 */
-	private static Map<String, String> parseDetails(Document doc) {
-		Map<String, String> map = new MyHashtable();
-
-		if (doc == null) {
-			return map;
-		}
-
-		try {
-			Element root = doc.getDocumentElement();
-			Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			map.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
-
-			root = (Element) root.getElementsByTagName("Team").item(0);
-			ele = (Element) root.getElementsByTagName("TeamID").item(0);
-			map.put("TeamID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("TeamName").item(0);
-			map.put("TeamName", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("TrainingLevel").item(0);
-			map.put("TrainingLevel", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("StaminaTrainingPart").item(0);
-			map.put("StaminaTrainingPart", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("NewTrainingLevel ").item(0);
-
-			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				map.put("NewTrainingLevel ", (XMLManager.getFirstChildNodeValue(ele)));
-			}
-
-			ele = (Element) root.getElementsByTagName("TrainingType").item(0);
-			map.put("TrainingType", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Morale").item(0);
-
-			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				map.put("Morale", (XMLManager.getFirstChildNodeValue(ele)));
-			}
-
-			ele = (Element) root.getElementsByTagName("SelfConfidence").item(0);
-
-			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				map.put("SelfConfidence", (XMLManager.getFirstChildNodeValue(ele)));
-			}
-
-			ele = (Element) root.getElementsByTagName("Experience433").item(0);
-			map.put("Experience433", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Experience451").item(0);
-			map.put("Experience451", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Experience352").item(0);
-			map.put("Experience352", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Experience532").item(0);
-			map.put("Experience532", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Experience343").item(0);
-			map.put("Experience343", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("Experience541").item(0);
-			map.put("Experience541", (XMLManager.getFirstChildNodeValue(ele)));
-
-			// new formation experiences since training xml version 1.5
-			try {
-				ele = (Element) root.getElementsByTagName("Experience442").item(0);
-				map.put("Experience442", (XMLManager.getFirstChildNodeValue(ele)));
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLTrainingParser.class, "Err(Experience442): " + e);
-			}
-			try {
-				ele = (Element) root.getElementsByTagName("Experience523").item(0);
-				map.put("Experience523", (XMLManager.getFirstChildNodeValue(ele)));
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLTrainingParser.class, "Err(Experience523): " + e);
-			}
-			try {
-				ele = (Element) root.getElementsByTagName("Experience550").item(0);
-				map.put("Experience550", (XMLManager.getFirstChildNodeValue(ele)));
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLTrainingParser.class, "Err(Experience550): " + e);
-			}
-			try {
-				ele = (Element) root.getElementsByTagName("Experience253").item(0);
-				map.put("Experience253", (XMLManager.getFirstChildNodeValue(ele)));
-			} catch (Exception e) {
-				HOLogger.instance().log(XMLTrainingParser.class, "Err(Experience253): " + e);
-			}
-
-			root = (Element) root.getElementsByTagName("Trainer").item(0);
-			ele = (Element) root.getElementsByTagName("TrainerID").item(0);
-			map.put("TrainerID", (XMLManager.getFirstChildNodeValue(ele)));
-
-			ele = (Element) root.getElementsByTagName("TrainerName").item(0);
-			map.put("TrainerName", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("ArrivalDate").item(0);
-			map.put("ArrivalDate", (XMLManager.getFirstChildNodeValue(ele)));
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLTrainingParser.class, e);
-		}
-
-		return map;
-	}
+            // new formation experiences since training xml version 1.5
+            try {
+                ele = root.getElementsByTagName("Experience442").item(0) as Element
+                map.insert("Experience442", getFirstChildNodeValue(ele))
+            } catch (e: Exception) {
+                HOLogger.instance().log(XMLTrainingParser::class.java, "Err(Experience442): $e")
+            }
+            try {
+                ele = root.getElementsByTagName("Experience523").item(0) as Element
+                map.insert("Experience523", getFirstChildNodeValue(ele))
+            } catch (e: Exception) {
+                HOLogger.instance().log(XMLTrainingParser::class.java, "Err(Experience523): $e")
+            }
+            try {
+                ele = root.getElementsByTagName("Experience550").item(0) as Element
+                map.insert("Experience550", getFirstChildNodeValue(ele))
+            } catch (e: Exception) {
+                HOLogger.instance().log(XMLTrainingParser::class.java, "Err(Experience550): $e")
+            }
+            try {
+                ele = root.getElementsByTagName("Experience253").item(0) as Element
+                map.insert("Experience253", getFirstChildNodeValue(ele))
+            } catch (e: Exception) {
+                HOLogger.instance().log(XMLTrainingParser::class.java, "Err(Experience253): $e")
+            }
+            root = root.getElementsByTagName("Trainer").item(0) as Element
+            ele = root.getElementsByTagName("TrainerID").item(0) as Element
+            map.insert("TrainerID", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("TrainerName").item(0) as Element
+            map.insert("TrainerName", getFirstChildNodeValue(ele))
+            ele = root.getElementsByTagName("ArrivalDate").item(0) as Element
+            map.insert("ArrivalDate", getFirstChildNodeValue(ele))
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLTrainingParser.javaClass, e)
+        }
+        return map
+    }
 }

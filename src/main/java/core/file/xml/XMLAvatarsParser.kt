@@ -28,7 +28,7 @@ object XMLAvatarsParser {
         try {
             doc.documentElement.normalize()
             val root = doc.documentElement
-            val players = root.getElementsByTagName("Player")
+            val players:NodeList = root.getElementsByTagName("Player")
 
             var i = 0
             var layers: List<Layer>

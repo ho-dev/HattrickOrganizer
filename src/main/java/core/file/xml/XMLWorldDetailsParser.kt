@@ -1,191 +1,162 @@
-// %3205245740:de.hattrickorganizer.logik.xml%
 /*
  * xmlLeagureFixturesMiniParser.java
  *
  * Created on 12. Januar 2004, 13:38
  */
-package core.file.xml;
+package core.file.xml
 
-import core.model.HOVerwaltung;
-import core.model.WorldDetailLeague;
-import core.util.HODateTime;
-import core.util.HOLogger;
+import core.model.HOVerwaltung
+import core.model.WorldDetailLeague
+import core.util.HODateTime
+import core.util.HOLogger
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+object XMLWorldDetailsParser {
 
-public class XMLWorldDetailsParser {
+    fun parseWorldDetailsFromString(inputStream: String, leagueID: String): Map<String, String> {
+        return parseDetails(XMLManager.parseString(inputStream), leagueID)
+    }
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLWorldDetailsParser() {
-	}
+    fun parseDetails(doc: Document?): List<WorldDetailLeague> {
+        val detailsList = mutableListOf<WorldDetailLeague>()
 
-	public static Map<String, String> parseWorldDetailsFromString(String inputStream,
-			String leagueID) {
-		return parseDetails(XMLManager.parseString(inputStream), leagueID);
-	}
+        if (doc == null) {
+            return detailsList
+        }
 
-	public static List<WorldDetailLeague> parseDetails(Document doc) {
-		Element ele;
-		Element root;
-		List<WorldDetailLeague> detailsList = new ArrayList<>();
-		NodeList list;
-		if (doc == null) {
-			return detailsList;
-		}
+        var root = doc.documentElement
 
-		// Tabelle erstellen
-		root = doc.getDocumentElement();
+        try {
+            root = root.getElementsByTagName("LeagueList").item(0) as (Element)
+            val list = root.getElementsByTagName("League")
 
-		try {
-			root = (Element) root.getElementsByTagName("LeagueList").item(0);
-			list = root.getElementsByTagName("League");
+            for (i in 0..<list.length) {
+                root = list.item(i) as (Element)
+                val tmp = WorldDetailLeague()
+                var ele = root.getElementsByTagName("LeagueID").item(0) as Element
+                tmp.leagueId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
+                ele = root.getElementsByTagName("EnglishName").item(0) as Element
+                tmp.countryName = XMLManager.getFirstChildNodeValue(ele)
+                ele = root.getElementsByTagName("ActiveTeams").item(0) as Element
+                tmp.activeUsers = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
 
-			for (int i = 0; i < list.getLength(); i++) {
-				root = (Element) list.item(i);
-				WorldDetailLeague tmp = new WorldDetailLeague();
-				ele = (Element) root.getElementsByTagName("LeagueID").item(0);
-				tmp.setLeagueId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) root.getElementsByTagName("EnglishName").item(0);
-				tmp.setCountryName(XMLManager.getFirstChildNodeValue(ele));
-				ele = (Element) root.getElementsByTagName("ActiveTeams").item(0);
-				tmp.setActiveUsers(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
+                root = root.getElementsByTagName("Country").item(0) as Element
+                ele = root.getElementsByTagName("CountryID").item(0) as Element
+                tmp.countryId = Integer.parseInt(XMLManager.getFirstChildNodeValue(ele))
+                detailsList.add(tmp)
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLWorldDetailsParser.javaClass, e)
+        }
 
-				root = (Element) root.getElementsByTagName("Country").item(0);
-				ele = (Element) root.getElementsByTagName("CountryID").item(0);
-				if(ele != null) {
-					tmp.setCountryId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
-				} else {
-					tmp.setCountryId(tmp.getLeagueId());
-				}
-				detailsList.add(tmp);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLWorldDetailsParser.class, e);
-		}
+        return detailsList
+    }
 
-		return detailsList;
-	}
+    private fun initWorldDetailsMap(): MutableMap<String, String> {
+        val map = SafeInsertMap()
+        val model = HOVerwaltung.instance().model
 
-	private static Map<String, String> initWorldDetailsMap(){
-		var map = new MyHashtable();
-		var model = HOVerwaltung.instance().getModel();
-		if ( model != null ){
-			var basics = model.getBasics();
-			var xtra = model.getXtraDaten();
-			if ( basics != null && xtra != null){
-				var trainingDate = xtra.getNextTrainingDate();
-				var economyDate = xtra.getEconomyDate();
-				var seriesMatchDate = xtra.getSeriesMatchDate();
-				var now = HODateTime.now();
-				while (trainingDate.isBefore(now)) trainingDate = trainingDate.plusDaysAtSameLocalTime(7);
-				while (economyDate.isBefore(now)) economyDate = economyDate.plusDaysAtSameLocalTime(7);
-				while (seriesMatchDate.isBefore(now)) seriesMatchDate = seriesMatchDate.plusDaysAtSameLocalTime(7);
+        if (model != null) {
+            val basics = model.getBasics()
+            val extraData = model.getXtraDaten()
+            if (basics != null && extraData != null) {
+                var trainingDate = extraData.getNextTrainingDate()
+                var economyDate = extraData.getEconomyDate()
+                var seriesMatchDate = extraData.getSeriesMatchDate()
+                val now = HODateTime.now()
+                while (trainingDate.isBefore(now)) trainingDate = trainingDate.plusDaysAtSameLocalTime(7)
+                while (economyDate.isBefore(now)) economyDate = economyDate.plusDaysAtSameLocalTime(7)
+                while (seriesMatchDate.isBefore(now)) seriesMatchDate = seriesMatchDate.plusDaysAtSameLocalTime(7)
 
-				map.put("LeagueID", "" + basics.getLiga());
-				map.put("Season", "" + basics.getSeason());
-				map.put("SeasonOffset", "" + basics.getSeasonOffset());
-				map.put("MatchRound", "" + basics.getSpieltag());
-				map.put("TrainingDate", trainingDate.toHT());
-				map.put("EconomyDate", economyDate.toHT());
-				map.put("SeriesMatchDate", seriesMatchDate.toHT());
-				map.put("CountryID", "" + model.getXtraDaten().getCountryId());
-			}
-		}
-		return map;
-	}
+                map.insert("LeagueID", "" + basics.liga)
+                map.insert("Season", "" + basics.season)
+                map.insert("SeasonOffset", "" + basics.seasonOffset)
+                map.insert("MatchRound", "" + basics.spieltag)
+                map.insert("TrainingDate", trainingDate.toHT())
+                map.insert("EconomyDate", economyDate.toHT())
+                map.insert("SeriesMatchDate", seriesMatchDate.toHT())
+                map.insert("CountryID", "" + model.getXtraDaten().countryId)
+            }
+        }
+        return map
+    }
 
-	private static Map<String, String> parseDetails(Document doc, String leagueID) {
-		Element ele;
-		Element root;
-		Map<String, String> map = initWorldDetailsMap();
+    private fun parseDetails(doc: Document?, leagueID: String): Map<String, String> {
+        val map = initWorldDetailsMap()
+        if (doc == null) {
+            return map
+        }
 
-		NodeList list;
-		String tempLeagueID;
+        var root = doc.documentElement
 
-		if (doc == null) {
-			return map;
-		}
+        try {
+            // Daten füllen
+            root = root.getElementsByTagName("LeagueList").item(0) as Element
+            val list = root.getElementsByTagName("League")
 
-		// Tabelle erstellen
-		root = doc.getDocumentElement();
+            for (i in 0..<list.length) {
+                val leagueElement = (list.item(i) as Element).getElementsByTagName("LeagueID").item(0) as Element
+                val tempLeagueID = XMLManager.getFirstChildNodeValue(leagueElement)
 
-		try {
-			// Daten füllen
-			root = (Element) root.getElementsByTagName("LeagueList").item(0);
+                if (tempLeagueID == leagueID) {
+                    root = list.item(i) as Element
 
-			// Einträge adden
-			list = root.getElementsByTagName("League");
+                    // Land
+                    var ele = root.getElementsByTagName("LeagueID").item(0) as Element
+                    map.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)))
+                    ele = root.getElementsByTagName("Season").item(0) as Element
+                    map.put("Season", (XMLManager.getFirstChildNodeValue(ele)))
+                    ele = root.getElementsByTagName("SeasonOffset").item(0) as Element
+                    map.put("SeasonOffset", (XMLManager.getFirstChildNodeValue(ele)))
+                    ele = root.getElementsByTagName("MatchRound").item(0) as Element
+                    map.put("MatchRound", (XMLManager.getFirstChildNodeValue(ele)))
 
-			for (int i = 0; i < list.getLength(); i++) {
-				tempLeagueID = XMLManager.getFirstChildNodeValue((Element) ((Element) list.item(i))
-						.getElementsByTagName("LeagueID").item(0));
+                    // Dates
+                    ele = root.getElementsByTagName("TrainingDate").item(0) as Element
+                    map.put("TrainingDate", (XMLManager.getFirstChildNodeValue(ele)))
+                    ele = root.getElementsByTagName("EconomyDate").item(0) as Element
+                    map.put("EconomyDate", (XMLManager.getFirstChildNodeValue(ele)))
+                    ele = root.getElementsByTagName("SeriesMatchDate").item(0) as Element
+                    map.put("SeriesMatchDate", (XMLManager.getFirstChildNodeValue(ele)))
 
-				// Liga suchen
-				if (tempLeagueID.equals(leagueID)) {
-					root = (Element) list.item(i);
+                    // Country
+                    root = root.getElementsByTagName("Country").item(0) as Element
+                    ele = root.getElementsByTagName("CountryID").item(0) as Element
+                    map.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)))
 
-					// Land
-					ele = (Element) root.getElementsByTagName("LeagueID").item(0);
-					map.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)));
-					ele = (Element) root.getElementsByTagName("Season").item(0);
-					map.put("Season", (XMLManager.getFirstChildNodeValue(ele)));
-					ele = (Element) root.getElementsByTagName("SeasonOffset").item(0);
-					map.put("SeasonOffset", (XMLManager.getFirstChildNodeValue(ele)));
-					ele = (Element) root.getElementsByTagName("MatchRound").item(0);
-					map.put("MatchRound", (XMLManager.getFirstChildNodeValue(ele)));
+                    // Remove for ugly second team fix
 
-					// Dates
-					ele = (Element) root.getElementsByTagName("TrainingDate").item(0);
-					map.put("TrainingDate", (XMLManager.getFirstChildNodeValue(ele)));
-					ele = (Element) root.getElementsByTagName("EconomyDate").item(0);
-					map.put("EconomyDate", (XMLManager.getFirstChildNodeValue(ele)));
-					ele = (Element) root.getElementsByTagName("SeriesMatchDate").item(0);
-					map.put("SeriesMatchDate", (XMLManager.getFirstChildNodeValue(ele)));
+                    ele = root.getElementsByTagName("CurrencyRate").item(0) as Element
+                    map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)))
 
-					// Country
-					root = (Element) root.getElementsByTagName("Country").item(0);
-					ele = (Element) root.getElementsByTagName("CountryID").item(0);
-					map.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)));
-					
-					// Remove for ugly second team fix
-					
-					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
-					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
+                    // fertig
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLWorldDetailsParser.javaClass, e)
+        }
 
-					// fertig
-					break;
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLWorldDetailsParser.class, e);
-		}
+        return map
+    }
 
-		return map;
-	}
-	
-	public static TeamInfo updateTeamInfoWithCurrency(TeamInfo info, String input) {
-		
-		Document doc = XMLManager.parseString(input);
-		
-		Element root = doc.getDocumentElement();
-		root = (Element) root.getElementsByTagName("LeagueList").item(0);
-		root = (Element) root.getElementsByTagName("Country").item(0);
-		
-		Element ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
-		info.setCurrencyRate(XMLManager.getFirstChildNodeValue(ele));
+    fun updateTeamInfoWithCurrency(info: TeamInfo, input: String): TeamInfo {
 
-		ele = (Element) root.getElementsByTagName("CountryID").item(0);
-		info.setCountryId(XMLManager.getFirstChildNodeValue(ele));
+        val doc = XMLManager.parseString(input)
+        var root = doc!!.documentElement
 
-		return info;
-	}
-	
+        root = root.getElementsByTagName("LeagueList").item(0) as Element
+        root = root.getElementsByTagName("Country").item(0) as Element
+
+        var ele = root.getElementsByTagName("CurrencyRate").item(0) as Element
+        info.currencyRate = XMLManager.getFirstChildNodeValue(ele)
+
+        ele = root.getElementsByTagName("CountryID").item(0) as Element
+        info.countryId = XMLManager.getFirstChildNodeValue(ele)
+
+        return info
+    }
+
 }

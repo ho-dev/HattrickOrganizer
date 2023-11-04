@@ -36,20 +36,17 @@ object XMLManager {
      * Returns the value of the first child, "" if no child exists.
      */
     fun getFirstChildNodeValue(ele: Element?): String {
-        try {
-            if (ele?.firstChild != null) {
-                return ele.firstChild.nodeValue
-            }
-        } catch (ignored: Exception) {
+        return if (ele?.firstChild != null) {
+            ele.firstChild.nodeValue
+        } else {
+            ""
         }
-
-        return ""
     }
 
     fun xmlValue(element: Element?, xmlKey: String): String {
         if (element != null) {
             val ele = element.getElementsByTagName(xmlKey).item(0) as Element
-            return XMLManager.getFirstChildNodeValue(ele)
+            return getFirstChildNodeValue(ele)
         }
         return ""
     }
@@ -164,7 +161,7 @@ object XMLManager {
             val builder = factory.newDocumentBuilder()
             doc = builder.parse(file)
         } catch (e: Exception) {
-            HOLogger.instance().log(XMLManager.javaClass,"Parser fehler: $e")
+            HOLogger.instance().log(XMLManager.javaClass,"Parser error: $e")
             HOLogger.instance().log(XMLManager.javaClass, e)
         }
 
@@ -196,7 +193,7 @@ object XMLManager {
 
             doc = builder.parse(input)
         } catch (e: Exception) {
-            HOLogger.instance().log(XMLManager.javaClass,"Parser fehler: $e")
+            HOLogger.instance().log(XMLManager.javaClass,"Parser error: $e")
             HOLogger.instance().log(XMLManager.javaClass, e)
         }
 

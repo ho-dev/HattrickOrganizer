@@ -44,8 +44,8 @@ object ConvertXml2Hrf {
             // We have no team selected or the youth team information is never downloaded before
             if (teamInfoList.size == 1) {
                 // user has only one single team
-                teamId = teamInfoList[0]!!.teamId
-                youthTeamId = teamInfoList[0]!!.youthTeamId
+                teamId = teamInfoList[0].teamId
+                youthTeamId = teamInfoList[0].youthTeamId
             } else if (teamInfoList.size >= 2) {
                 // user has more than one team
                 if (teamId <= 0) {
@@ -73,7 +73,7 @@ object ConvertXml2Hrf {
                 return null
             }
         }
-        val teamDetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId)
+        val teamDetailsDataMap:Map<String, String> = XMLTeamDetailsParser.parseTeamDetailsFromString(teamDetails, teamId)
         if (teamDetailsDataMap.isEmpty()) return null
         setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement)
         OnlineWorker.downloadTeamLogo(teamDetailsDataMap)
@@ -85,15 +85,19 @@ object ConvertXml2Hrf {
             teamId.toString()
         )
         setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement)
-        val worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
-            mc.getWorldDetails(teamDetailsDataMap["LeagueID"]!!.toInt()), teamDetailsDataMap["LeagueID"]
+        val leagueId:String = teamDetailsDataMap["LeagueID"]!! // TODO: Figure out why !! is needed here and below??
+        var worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
+            mc.getWorldDetails(teamDetailsDataMap["LeagueID"]!!.toInt()),
+            leagueId
         )
 
         // Currency fix
         val lastPremierId = ModuleConfig.instance().getInteger("UsersPremierTeamId")
         if (lastPremierId != null && lastPremierId == usersPremierTeamId) {
-            worldDataMap["CurrencyRate"] = ModuleConfig.instance().getString("CurrencyRate")
-            worldDataMap["CountryID"] = ModuleConfig.instance().getString("CountryId")
+            worldDataMap = worldDataMap + mapOf(
+                "CurrencyRate" to ModuleConfig.instance().getString("CurrencyRate"),
+                "CountryID" to ModuleConfig.instance().getString("CountryId")
+                )
         } else {
             // We need to get hold of the currency info for the primary team, no matter which team we download.
             usersPremierTeamInfo = XMLWorldDetailsParser.updateTeamInfoWithCurrency(
@@ -103,8 +107,10 @@ object ConvertXml2Hrf {
             ModuleConfig.instance().setString("CurrencyRate", usersPremierTeamInfo.currencyRate!!.trim { it <= ' ' })
             ModuleConfig.instance().setString("CountryId", usersPremierTeamInfo.countryId)
             ModuleConfig.instance().setInteger("UsersPremierTeamId", usersPremierTeamInfo.teamId)
-            worldDataMap["CurrencyRate"] = ModuleConfig.instance().getString("CurrencyRate")
-            worldDataMap["CountryID"] = ModuleConfig.instance().getString("CountryId")
+            worldDataMap = worldDataMap + mapOf(
+                "CurrencyRate" to ModuleConfig.instance().getString("CurrencyRate"),
+                "CountryID" to ModuleConfig.instance().getString("CountryId")
+            )
         }
         setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement)
         val playersData: MutableList<SafeInsertMap> =
