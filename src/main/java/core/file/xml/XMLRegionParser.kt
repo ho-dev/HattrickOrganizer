@@ -1,53 +1,45 @@
-package core.file.xml;
+package core.file.xml
 
-import core.util.HOLogger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import core.file.xml.XMLManager.getFirstChildNodeValue
+import core.file.xml.XMLManager.parseString
+import core.util.HOLogger
+import org.w3c.dom.Document
+import org.w3c.dom.Element
 
-import java.util.Map;
-
-public class XMLRegionParser {
-    private XMLRegionParser() {
+object XMLRegionParser {
+    fun parseRegionDetailsFromString(str: String): Map<String, String> {
+        return parseDetails(parseString(str))
     }
 
-
-    public static Map<String, String> parseRegionDetailsFromString(String str) {
-        return parseDetails(XMLManager.parseString(str));
-    }
-
-    private static Map<String, String> parseDetails(Document doc) {
-        Map<String, String> map = new MyHashtable();
-
+    private fun parseDetails(doc: Document?): Map<String, String> {
+        val map = SafeInsertMap()
         if (doc == null) {
-            return map;
+            return map
         }
-
         try {
-            Element root = doc.getDocumentElement();
-            Element ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-            map.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
+            var root:Element? = doc.documentElement
+            val ele = root?.getElementsByTagName("FetchedDate")?.item(0) as Element?
+            map.insert("FetchedDate", getFirstChildNodeValue(ele))
 
             // Get Region Data info
-            root = (Element) root.getElementsByTagName("League").item(0);
-            extract(root, map, "LeagueID");
-            extract(root, map, "LeagueName");
-            root = (Element) root.getElementsByTagName("Region").item(0);
-            extract(root, map, "RegionID");
-            extract(root, map, "RegionName");
-            extract(root, map, "NumberOfUsers");
-            extract(root, map, "NumberOfOnline");
-            extract(root, map, "WeatherID");
-            extract(root, map, "TomorrowWeatherID");
+            root = root?.getElementsByTagName("League")?.item(0) as Element?
+            extract(root, map, "LeagueID")
+            extract(root, map, "LeagueName")
 
-        } catch (Exception e) {
-            HOLogger.instance().log(XMLRegionParser.class, e);
+            root = root?.getElementsByTagName("Region")?.item(0) as Element?
+            extract(root, map, "RegionID")
+            extract(root, map, "RegionName")
+            extract(root, map, "NumberOfUsers")
+            extract(root, map, "NumberOfOnline")
+            extract(root, map, "WeatherID")
+            extract(root, map, "TomorrowWeatherID")
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLRegionParser::class.java, e)
         }
-
-        return map;
+        return map
     }
 
-    private static void extract(Element root, Map<String, String> map, String key) {
-        map.put(key, (XMLManager.getFirstChildNodeValue((Element) root.getElementsByTagName(key).item(0))));
+    private fun extract(root: Element?, map: SafeInsertMap, key: String) {
+        map.insert(key, getFirstChildNodeValue(root?.getElementsByTagName(key)?.item(0) as Element?))
     }
-
 }

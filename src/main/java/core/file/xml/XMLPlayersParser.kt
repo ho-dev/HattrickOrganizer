@@ -1,48 +1,32 @@
-package core.file.xml;
+package core.file.xml
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Vector
 
-import core.db.user.UserManager;
-import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
-import core.model.player.Player;
-import core.model.player.PlayerCategory;
-import core.model.player.TrainerType;
-import module.youth.YouthPlayer;
-import module.training.Skills;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import core.db.DBManager;
+import core.db.user.UserManager
+import core.model.HOVerwaltung
+import core.model.player.Player
+import core.model.player.PlayerCategory
+import core.model.player.TrainerType
+import module.youth.YouthPlayer
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
+import core.db.DBManager
+import core.util.HOLogger
+import module.training.Skills
 
-import static core.file.xml.XMLManager.*;
+object XMLPlayersParser {
 
-
-public class XMLPlayersParser {
-    //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new instance of xmlPlayersParser
-     */
-    public XMLPlayersParser() {
+    fun parsePlayersFromString(inputStream: String): Vector<SafeInsertMap> {
+        val doc:Document? = XMLManager.parseString(inputStream)
+        return createListe(doc)
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //parse public
-    ////////////////////////////////////////////////////////////////////////////////
-    public final Vector<MyHashtable> parsePlayersFromString(String inputStream) {
-        Document doc = XMLManager.parseString(inputStream);
-        return createListe(doc);
-    }
-
-    public final MyHashtable parsePlayerDetails(String inputStream){
-        Document doc = XMLManager.parseString(inputStream);
-        Element root = doc.getDocumentElement();
-        Element ele = (Element) root.getElementsByTagName("Player").item(0);
-        return createPlayerDetails(ele);
+    fun parsePlayerDetails(inputStream: String): SafeInsertMap {
+        val doc:Document? = XMLManager.parseString(inputStream)
+        val root:Element? = doc?.documentElement
+        val ele:Element? = root?.getElementsByTagName("Player")?.item(0) as Element?
+        return createPlayerDetails(ele)
     }
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -52,366 +36,399 @@ public class XMLPlayersParser {
     /**
      * erzeugt das Team aus dem xml
      */
-    protected final Vector<MyHashtable> createListe(Document doc) {
-        final Vector<MyHashtable> liste = new Vector<>();
+    fun createListe(doc: Document?): Vector<SafeInsertMap> {
+        val liste: Vector<SafeInsertMap>  = Vector()
 
         try {
-            var root = doc.getDocumentElement();
-            root = (Element) root.getElementsByTagName("Team").item(0);
-            var ele = (Element) root.getElementsByTagName("TeamID").item(0);
-            var teamID = XMLManager.getFirstChildNodeValue(ele);
-            root = (Element) root.getElementsByTagName("PlayerList").item(0);
+            var root:Element? = doc?.documentElement
+            root = root?.getElementsByTagName("Team")?.item(0) as Element?
+            val ele:Element? = root?.getElementsByTagName("TeamID")?.item(0) as Element?
+            val teamID = XMLManager.getFirstChildNodeValue(ele)
+            root = root?.getElementsByTagName("PlayerList")?.item(0) as Element?
 
-            //Einträge adden
-            var list = root.getElementsByTagName("Player");
+            val list = root?.getElementsByTagName("Player")
 
-            for (int i = 0; i < list.getLength(); i++) {
-                //Root setzen
-                root = (Element) list.item(i);
-                var hash = createPlayer(root, teamID);
+            if (list != null) {
+                for (i in 0..<list.length) {
+                    root = list.item (i) as Element?
+                    val hash = createPlayer(root, teamID)
 
-                liste.add(hash);
+                    liste.add(hash)
+                }
             }
-        } catch (Exception ignored) {
+        } catch (ignored: Exception) {
         }
 
-        return liste;
+        return liste
     }
 
-    public static MyHashtable createPlayerDetails(Element root) {
+    fun createPlayerDetails(root: Element?): SafeInsertMap {
 
-        var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
-        var teamID = xmlValue(owningTeam, "TeamID");
-        var teamName = xmlValue(owningTeam, "TeamName");
+        val owningTeam = root?.getElementsByTagName("OwningTeam")?.item(0) as Element?
+        val teamID = XMLManager.xmlValue(owningTeam, "TeamID")
+        val teamName = XMLManager.xmlValue(owningTeam, "TeamName")
+        val hash = createPlayer(root, teamID)
+        hash.insert("TeamName", teamName)
 
-        var hash = createPlayer(root, teamID);
-        hash.put("TeamName", teamName);
-        xmlValue2Hash(hash, root, "OwnerNotes");
-        xmlValue2Hash(hash, root, "Statement");
-        xmlValue2Hash(hash, root, "NativeCountryID", "CountryID");
-        xmlValue2Hash(hash, root, "NativeLeagueID");
-        xmlValue2Hash(hash, root, "NativeLeagueName");
-        xmlValue2Hash(hash, root, "NationalTeamName");
+        if (root != null) {
+            XMLManager.xmlValue2Hash(hash, root, "OwnerNotes")
+            XMLManager.xmlValue2Hash(hash, root, "Statement")
+            XMLManager.xmlValue2Hash(hash, root, "NativeCountryID", "CountryID")
+            XMLManager.xmlValue2Hash(hash, root, "NativeLeagueID")
+            XMLManager.xmlValue2Hash(hash, root, "NativeLeagueName")
+            XMLManager.xmlValue2Hash(hash, root, "NationalTeamName")
+        }
 
-        var transferDetails = (Element)root.getElementsByTagName("TransferDetails").item(0);
-        xmlValue2Hash(hash, transferDetails, "AskingPrice");
-        xmlValue2Hash(hash, transferDetails, "Deadline");
-        xmlValue2Hash(hash, transferDetails, "HighestBid");
+        val transferDetails = root?.getElementsByTagName("TransferDetails")?.item(0) as Element?
+        if (transferDetails != null) {
+            XMLManager.xmlValue2Hash(hash, transferDetails, "AskingPrice")
+            XMLManager.xmlValue2Hash(hash, transferDetails, "Deadline")
+            XMLManager.xmlValue2Hash(hash, transferDetails, "HighestBid")
+        }
 
-        var motherclub = (Element)root.getElementsByTagName("MotherClub").item(0);
-        xmlValue2Hash(hash, motherclub, "TeamID", "MotherclubTeamID");
-        xmlValue2Hash(hash, motherclub, "TeamName", "MotherclubTeam");
+        val motherclub = root?.getElementsByTagName("MotherClub")?.item(0) as Element?
+        if (motherclub != null) {
+            XMLManager.xmlValue2Hash(hash, motherclub, "TeamID", "MotherclubTeamID")
+            XMLManager.xmlValue2Hash(hash, motherclub, "TeamName", "MotherclubTeam")
+        }
 
-        return hash;
+        return hash
     }
 
-    private static MyHashtable createPlayer(Element root, String teamID) {
+    private fun createPlayer(root: Element?, teamID: String): SafeInsertMap {
+        val hash = SafeInsertMap()
 
-        var hash = new MyHashtable();
+        hash.insert("TeamID", teamID)
 
-        //ht füllen
-        hash.put("TeamID", teamID);
+        var ele:Element? = root?.getElementsByTagName("PlayerID")?.item(0) as Element?
+        hash.insert("PlayerID", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("FirstName")?.item(0) as Element?
+        hash.insert("FirstName", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("NickName")?.item(0) as Element?
+        hash.insert("NickName", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("LastName")?.item(0) as Element?
+        hash.insert("LastName", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("PlayerNumber")?.item(0) as Element?
+        hash.insert("PlayerNumber", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Age")?.item(0) as Element?
+        hash.insert("Age", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("AgeDays")?.item(0) as Element?
+        hash.insert("AgeDays", (XMLManager.getFirstChildNodeValue(ele)))
 
-        var ele = (Element) root.getElementsByTagName("PlayerID").item(0);
-        hash.put("PlayerID", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("FirstName").item(0);
-        hash.put("FirstName", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("NickName").item(0);
-        hash.put("NickName", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("LastName").item(0);
-        hash.put("LastName", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("PlayerNumber").item(0);
-        hash.put("PlayerNumber", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Age").item(0);
-        hash.put("Age", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("AgeDays").item(0);
-        hash.put("AgeDays", (XMLManager.getFirstChildNodeValue(ele)));
-        xmlValue2Hash(hash, root, "ArrivalDate");
-        //TSI löste Marktwert ab!
-        ele = (Element) root.getElementsByTagName("TSI").item(0);
-        hash.put("MarketValue", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("PlayerForm").item(0);
-        hash.put("PlayerForm", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("PlayerCategoryId").item(0);
-        hash.put("PlayerCategoryId", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Experience").item(0);
-        hash.put("Experience", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Loyalty").item(0);
-        hash.put("Loyalty", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("MotherClubBonus").item(0);
-        hash.put("MotherClubBonus", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Leadership").item(0);
-        hash.put("Leadership", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Salary").item(0);
-        hash.put("Salary", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Agreeability").item(0);
-        hash.put("Agreeability", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Aggressiveness").item(0);
-        hash.put("Aggressiveness", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Honesty").item(0);
-        hash.put("Honesty", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("LeagueGoals").item(0);
-        hash.put("LeagueGoals", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("CupGoals").item(0);
-        hash.put("CupGoals", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("FriendliesGoals").item(0);
-        hash.put("FriendliesGoals", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("CareerGoals").item(0);
-        hash.put("CareerGoals", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("CareerHattricks").item(0);
-        hash.put("CareerHattricks", (XMLManager.getFirstChildNodeValue(ele)));
-        xmlValue2Hash(hash, root, "MatchesCurrentTeam");
-        xmlValue2Hash(hash, root, "GoalsCurrentTeam");
-        ele = (Element) root.getElementsByTagName("Specialty").item(0);
-        hash.put("Specialty", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("TransferListed").item(0);
-        hash.put("TransferListed", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("NationalTeamID").item(0);
-        hash.put("NationalTeamID", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("CountryID").item(0);
-        hash.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Caps").item(0);
-        hash.put("Caps", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("CapsU20").item(0);
-        hash.put("CapsU20", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("Cards").item(0);
-        hash.put("Cards", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("InjuryLevel").item(0);
-        hash.put("InjuryLevel", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("StaminaSkill").item(0);
-        hash.put("StaminaSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("KeeperSkill").item(0);
-        hash.put("KeeperSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("PlaymakerSkill").item(0);
-        hash.put("PlaymakerSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("ScorerSkill").item(0);
-        hash.put("ScorerSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("PassingSkill").item(0);
-        hash.put("PassingSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("WingerSkill").item(0);
-        hash.put("WingerSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("DefenderSkill").item(0);
-        hash.put("DefenderSkill", (XMLManager.getFirstChildNodeValue(ele)));
-        ele = (Element) root.getElementsByTagName("SetPiecesSkill").item(0);
-        hash.put("SetPiecesSkill", (XMLManager.getFirstChildNodeValue(ele)));
+        XMLManager.xmlValue2Hash(hash, root, "ArrivalDate")
+
+        ele = root?.getElementsByTagName("TSI")?.item(0) as Element?
+        hash.insert("MarketValue", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("PlayerForm")?.item(0) as Element?
+        hash.insert("PlayerForm", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("PlayerCategoryId")?.item(0) as Element?
+        hash.insert("PlayerCategoryId", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Experience")?.item(0) as Element?
+        hash.insert("Experience", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Loyalty")?.item(0) as Element?
+        hash.insert("Loyalty", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("MotherClubBonus")?.item(0) as Element?
+        hash.insert("MotherClubBonus", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Leadership")?.item(0) as Element?
+        hash.insert("Leadership", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Salary")?.item(0) as Element?
+        hash.insert("Salary", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Agreeability")?.item(0) as Element?
+        hash.insert("Agreeability", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Aggressiveness")?.item(0) as Element?
+        hash.insert("Aggressiveness", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Honesty")?.item(0) as Element?
+        hash.insert("Honesty", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("LeagueGoals")?.item(0) as Element?
+        hash.insert("LeagueGoals", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("CupGoals")?.item(0) as Element?
+        hash.insert("CupGoals", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("FriendliesGoals")?.item(0) as Element?
+        hash.insert("FriendliesGoals", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("CareerGoals")?.item(0) as Element?
+        hash.insert("CareerGoals", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("CareerHattricks")?.item(0) as Element?
+        hash.insert("CareerHattricks", (XMLManager.getFirstChildNodeValue(ele)))
+
+        XMLManager.xmlValue2Hash(hash, root, "MatchesCurrentTeam")
+        XMLManager.xmlValue2Hash(hash, root, "GoalsCurrentTeam")
+
+        ele = root?.getElementsByTagName("Specialty")?.item(0) as Element?
+        hash.insert("Specialty", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("TransferListed")?.item(0) as Element?
+        hash.insert("TransferListed", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("NationalTeamID")?.item(0) as Element?
+        hash.insert("NationalTeamID", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("CountryID")?.item(0) as Element?
+        hash.insert("CountryID", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Caps")?.item(0) as Element?
+        hash.insert("Caps", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("CapsU20")?.item(0) as Element?
+        hash.insert("CapsU20", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("Cards")?.item(0) as Element?
+        hash.insert("Cards", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("InjuryLevel")?.item(0) as Element?
+        hash.insert("InjuryLevel", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("StaminaSkill")?.item(0) as Element?
+        hash.insert("StaminaSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("KeeperSkill")?.item(0) as Element?
+        hash.insert("KeeperSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("PlaymakerSkill")?.item(0) as Element?
+        hash.insert("PlaymakerSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("ScorerSkill")?.item(0) as Element?
+        hash.insert("ScorerSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("PassingSkill")?.item(0) as Element?
+        hash.insert("PassingSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("WingerSkill")?.item(0) as Element?
+        hash.insert("WingerSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("DefenderSkill")?.item(0) as Element?
+        hash.insert("DefenderSkill", (XMLManager.getFirstChildNodeValue(ele)))
+        ele = root?.getElementsByTagName("SetPiecesSkill")?.item(0) as Element?
+        hash.insert("SetPiecesSkill", (XMLManager.getFirstChildNodeValue(ele)))
 
         // Coach
-        NodeList trainerData = root.getElementsByTagName("TrainerData");
-        if (trainerData.getLength() > 0) {
-            Element tmp_Trainer = (Element) trainerData.item(0);
-            ele = (Element) tmp_Trainer.getElementsByTagName("TrainerType").item(0);
-            hash.put("TrainerType", (XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) tmp_Trainer.getElementsByTagName("TrainerSkill").item(0);
-            hash.put("TrainerSkill", (XMLManager.getFirstChildNodeValue(ele)));
+        val trainerData:NodeList? = root?.getElementsByTagName("TrainerData")
+        if (trainerData != null && trainerData.length > 0) {
+            val tmpTrainer:Element? = trainerData.item(0) as Element?
+            ele = tmpTrainer?.getElementsByTagName("TrainerType")?.item(0) as Element?
+            hash.insert("TrainerType", (XMLManager.getFirstChildNodeValue(ele)))
+            ele = tmpTrainer?.getElementsByTagName("TrainerSkill")?.item(0) as Element?
+            hash.insert("TrainerSkill", (XMLManager.getFirstChildNodeValue(ele)))
         }
 
         //LastMatch #461
         try {
-            Element tmp_lm = (Element) root.getElementsByTagName("LastMatch").item(0);
-            ele = (Element) tmp_lm.getElementsByTagName("Date").item(0);
-            hash.put("LastMatch_Date", (XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) tmp_lm.getElementsByTagName("Rating").item(0);
-            hash.put("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) tmp_lm.getElementsByTagName("MatchId").item(0);
+            val tmpLastMatch = root?.getElementsByTagName("LastMatch")?.item(0) as Element?
+            ele = tmpLastMatch?.getElementsByTagName("Date")?.item(0) as Element?
+            hash.insert("LastMatch_Date", (XMLManager.getFirstChildNodeValue(ele)))
+            ele = tmpLastMatch?.getElementsByTagName("Rating")?.item(0) as Element?
+            hash.insert("LastMatch_Rating", (XMLManager.getFirstChildNodeValue(ele)))
 
-
-            String lastMatchId = XMLManager.getFirstChildNodeValue(ele);
-            hash.put("LastMatch_id", lastMatchId);
+            val lastMatchId = XMLManager.xmlIntValue(tmpLastMatch, "MatchId", -1)
+            hash.insert("LastMatch_id", lastMatchId.toString())
 
             // Retrieve MatchType of last match by its ID.
-            MatchKurzInfo matchInfo =  DBManager.instance().getLastMatchWithMatchId(Integer.parseInt(lastMatchId));
+            val matchInfo = DBManager.getLastMatchWithMatchId(lastMatchId)
             if (matchInfo != null) {
-                hash.put("LastMatch_Type", String.valueOf(matchInfo.getMatchType().getId()));
+                hash.insert("LastMatch_Type", matchInfo.getMatchType().id.toString())
             }
 
-            ele = (Element) tmp_lm.getElementsByTagName("PositionCode").item(0);
-            hash.put("LastMatch_PositionCode", (XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) tmp_lm.getElementsByTagName("PlayedMinutes").item(0);
-            hash.put("LastMatch_PlayedMinutes", (XMLManager.getFirstChildNodeValue(ele)));
-            ele = (Element) tmp_lm.getElementsByTagName("RatingEndOfGame").item(0);
-            hash.put("LastMatch_RatingEndOfGame", (XMLManager.getFirstChildNodeValue(ele)));
+            ele = tmpLastMatch?.getElementsByTagName("PositionCode")?.item(0) as Element?
+            hash.insert("LastMatch_PositionCode", (XMLManager.getFirstChildNodeValue(ele)))
+            ele = tmpLastMatch?.getElementsByTagName("PlayedMinutes")?.item(0) as Element?
+            hash.insert("LastMatch_PlayedMinutes", (XMLManager.getFirstChildNodeValue(ele)))
+            ele = tmpLastMatch?.getElementsByTagName("RatingEndOfGame")?.item(0) as Element?
+            hash.insert("LastMatch_RatingEndOfGame", (XMLManager.getFirstChildNodeValue(ele)))
 
-        } catch (Exception ignored) {
+        } catch (e: Exception) {
+            HOLogger.instance().error(XMLPlayersParser.javaClass, "Error parsing player entry: ${e.message}")
         }
 
-        return hash;
+        return hash
     }
 
-    public List<MyHashtable> parseYouthPlayersFromString(String inputStream) {
-        Document doc = XMLManager.parseString(inputStream);
-        return createYouthPlayerList(doc);
+    fun parseYouthPlayersFromString(inputStream: String): List<SafeInsertMap>  {
+        val doc:Document? = XMLManager.parseString(inputStream)
+        return createYouthPlayerList(doc)
     }
 
-    private List<MyHashtable> createYouthPlayerList(Document doc) {
-        final Vector<MyHashtable> ret = new Vector<>();
+    private fun createYouthPlayerList(doc: Document?): List<SafeInsertMap> {
+        val ret = Vector<SafeInsertMap>()
 
         try {
-            var root = doc.getDocumentElement();
-            root = (Element) root.getElementsByTagName("PlayerList").item(0);
+            var root: Element? = doc?.documentElement
+            root = root?.getElementsByTagName("PlayerList")?.item(0) as Element?
 
             // <YouthPlayer>
-            var list = root.getElementsByTagName("YouthPlayer");
-            for (int i = 0; i < list.getLength(); i++) {
-                var hash = new core.file.xml.MyHashtable();
+            val list: NodeList? = root?.getElementsByTagName("YouthPlayer")
 
-                root = (Element) list.item(i);
+            if (list != null) {
+                for (i in 0..<list.length) {
+                    val hash = SafeInsertMap()
+                    root = list.item(i) as Element?
 
-                //<YouthPlayerID>264643130</YouthPlayerID>
-                xmlValue2Hash(hash, root, "YouthPlayerID");
-                //<FirstName>Claudio</FirstName>
-                xmlValue2Hash(hash, root, "FirstName");
-                //      <NickName />
-                xmlValue2Hash(hash, root, "NickName");
-                //      <LastName>Dattenfeld</LastName>
-                xmlValue2Hash(hash, root, "LastName");
-                //      <Age>18</Age>
-                xmlValue2Hash(hash, root, "Age");
-                //      <AgeDays>50</AgeDays>
-                xmlValue2Hash(hash, root, "AgeDays");
-                //      <ArrivalDate>2020-04-18 09:11:00</ArrivalDate>
-                xmlValue2Hash(hash, root, "ArrivalDate");
-                //      <CanBePromotedIn>-85</CanBePromotedIn>
-                xmlValue2Hash(hash, root, "CanBePromotedIn");
-                //      <PlayerNumber>100</PlayerNumber>
-                xmlValue2Hash(hash, root, "PlayerNumber");
-                //      <Statement />
-                xmlValue2Hash(hash, root, "Statement");
-                //      <OwnerNotes />
-                xmlValue2Hash(hash, root, "OwnerNotes");
-                //      <PlayerCategoryID>0</PlayerCategoryID>
-                xmlValue2Hash(hash, root, "PlayerCategoryID");
-                //      <Cards>0</Cards>
-                xmlValue2Hash(hash, root, "Cards");
-                //      <InjuryLevel>-1</InjuryLevel>
-                xmlValue2Hash(hash, root, "InjuryLevel");
-                //      <Specialty>3</Specialty>
-                xmlValue2Hash(hash, root, "Specialty");
-                //      <CareerGoals>3</CareerGoals>
-                xmlValue2Hash(hash, root, "CareerGoals");
-                //      <CareerHattricks>0</CareerHattricks>
-                xmlValue2Hash(hash, root, "CareerHattricks");
-                //      <LeagueGoals>0</LeagueGoals>
-                xmlValue2Hash(hash, root, "LeagueGoals");
-                //      <FriendlyGoals>1</FriendlyGoals>
-                xmlValue2Hash(hash, root, "FriendlyGoals");
-                //      <OwningYouthTeam>
-                //        <YouthTeamID>2325763</YouthTeamID>
-                //        <YouthTeamName>Brenk Street Boys 2</YouthTeamName>
-                //        <YouthTeamLeagueID>685791</YouthTeamLeagueID>
-                //        <SeniorTeam>
-                //          <SeniorTeamID>1242154</SeniorTeamID>
-                //          <SeniorTeamName>Juventus Brenk 2</SeniorTeamName>
-                //        </SeniorTeam>
-                //      </OwningYouthTeam>
-                //      <PlayerSkills>
-                var playerSkills = (Element) root.getElementsByTagName("PlayerSkills").item(0);
-                //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-                //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
+                    //<YouthPlayerID>264643130</YouthPlayerID>
+                    XMLManager.xmlValue2Hash(hash, root, "YouthPlayerID")
+                    //<FirstName>Claudio</FirstName>
+                    XMLManager.xmlValue2Hash(hash, root, "FirstName")
+                    //      <NickName />
+                    XMLManager.xmlValue2Hash(hash, root, "NickName")
+                    //      <LastName>Dattenfeld</LastName>
+                    XMLManager.xmlValue2Hash(hash, root, "LastName")
+                    //      <Age>18</Age>
+                    XMLManager.xmlValue2Hash(hash, root, "Age")
+                    //      <AgeDays>50</AgeDays>
+                    XMLManager.xmlValue2Hash(hash, root, "AgeDays")
+                    //      <ArrivalDate>2020-04-18 09:11:00</ArrivalDate>
+                    XMLManager.xmlValue2Hash(hash, root, "ArrivalDate")
+                    //      <CanBePromotedIn>-85</CanBePromotedIn>
+                    XMLManager.xmlValue2Hash(hash, root, "CanBePromotedIn")
+                    //      <PlayerNumber>100</PlayerNumber>
+                    XMLManager.xmlValue2Hash(hash, root, "PlayerNumber")
+                    //      <Statement />
+                    XMLManager.xmlValue2Hash(hash, root, "Statement")
+                    //      <OwnerNotes />
+                    XMLManager.xmlValue2Hash(hash, root, "OwnerNotes")
+                    //      <PlayerCategoryID>0</PlayerCategoryID>
+                    XMLManager.xmlValue2Hash(hash, root, "PlayerCategoryID")
+                    //      <Cards>0</Cards>
+                    XMLManager.xmlValue2Hash(hash, root, "Cards")
+                    //      <InjuryLevel>-1</InjuryLevel>
+                    XMLManager.xmlValue2Hash(hash, root, "InjuryLevel")
+                    //      <Specialty>3</Specialty>
+                    XMLManager.xmlValue2Hash(hash, root, "Specialty")
+                    //      <CareerGoals>3</CareerGoals>
+                    XMLManager.xmlValue2Hash(hash, root, "CareerGoals")
+                    //      <CareerHattricks>0</CareerHattricks>
+                    XMLManager.xmlValue2Hash(hash, root, "CareerHattricks")
+                    //      <LeagueGoals>0</LeagueGoals>
+                    XMLManager.xmlValue2Hash(hash, root, "LeagueGoals")
+                    //      <FriendlyGoals>1</FriendlyGoals>
+                    XMLManager.xmlValue2Hash(hash, root, "FriendlyGoals")
+                    //      <OwningYouthTeam>
+                    //        <YouthTeamID>2325763</YouthTeamID>
+                    //        <YouthTeamName>Brenk Street Boys 2</YouthTeamName>
+                    //        <YouthTeamLeagueID>685791</YouthTeamLeagueID>
+                    //        <SeniorTeam>
+                    //          <SeniorTeamID>1242154</SeniorTeamID>
+                    //          <SeniorTeamName>Juventus Brenk 2</SeniorTeamName>
+                    //        </SeniorTeam>
+                    //      </OwningYouthTeam>
+                    //      <PlayerSkills>
+                    val playerSkills: Element? = root?.getElementsByTagName("PlayerSkills")?.item(0) as Element?
+                    //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+                    //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
 
-                for ( var skillId : YouthPlayer.skillIds){
-                    youthplayerSkills2Hash(hash,playerSkills,skillId);
+                    if (playerSkills != null) {
+                        for (skillId in YouthPlayer.skillIds) {
+                            youthplayerSkills2Hash(hash, playerSkills, skillId)
+                        }
+                    }
+
+                    //      </PlayerSkills>
+                    //      <ScoutCall>
+                    val scoutCall: Element? = root?.getElementsByTagName("ScoutCall")?.item(0) as Element?
+                    //        <Scout>
+                    val scout: Element? = scoutCall?.getElementsByTagName("Scout")?.item(0) as Element?
+                    //          <ScoutId>382876</ScoutId>
+                    XMLManager.xmlValue2Hash(hash, scout, "ScoutId")
+                        //          <ScoutName>Joerg Hopfen</ScoutName>
+                    XMLManager.xmlValue2Hash(hash, scout, "ScoutName")
+
+                    //        </Scout>
+                    //        <ScoutingRegionID>229</ScoutingRegionID>
+                    XMLManager.xmlValue2Hash(hash, scoutCall, "ScoutingRegionID")
+
+                    //        <ScoutComments>
+                    val scoutComments = scoutCall?.getElementsByTagName("ScoutComments")?.item(0) as Element?
+                    //          <ScoutComment>
+                    val scoutCommentsList = scoutComments?.getElementsByTagName("ScoutComment")
+                    if (scoutCommentsList != null) {
+                        for (c in 0..<scoutCommentsList.length) {
+                            val scoutComment = scoutCommentsList.item(c) as Element?
+                            val prefix = "ScoutComment$c"
+                            //            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen. Er trägt den Namen Claudio Dattenfeld und ist 16 Jahre alt.</CommentText>
+                            if (scoutComment != null) {
+                                XMLManager.xmlValue2Hash(hash, scoutComment, "CommentText", prefix + "Text")
+                                //            <CommentType>1</CommentType>
+                                XMLManager.xmlValue2Hash(hash, scoutComment, "CommentType", prefix + "Type")
+                                //            <CommentVariation>1</CommentVariation>
+                                XMLManager.xmlValue2Hash(
+                                    hash,
+                                    scoutComment,
+                                    "CommentVariation",
+                                    prefix + "Variation"
+                                )
+                                //            <CommentSkillType>264643130</CommentSkillType>
+                                XMLManager.xmlValue2Hash(
+                                    hash,
+                                    scoutComment,
+                                    "CommentSkillType",
+                                    prefix + "SkillType"
+                                )
+                                //            <CommentSkillLevel>16</CommentSkillLevel>
+                                XMLManager.xmlValue2Hash(
+                                    hash,
+                                    scoutComment,
+                                    "CommentSkillLevel",
+                                    prefix + "SkillLevel"
+                                )
+                            }
+                            //          </ScoutComment>
+                        }
+                    }
+                    //        </ScoutComments>
+                    //      </ScoutCall>
+                    val lastMatch = root?.getElementsByTagName("LastMatch")?.item(0) as Element?
+                    //      <LastMatch>
+                    //        <YouthMatchID>116841872</YouthMatchID>
+                    if (lastMatch != null) {
+                        XMLManager.xmlValue2Hash(hash, lastMatch, "YouthMatchID")
+                        //        <Date>2020-10-29 04:10:00</Date>
+                        XMLManager.xmlValue2Hash(hash, lastMatch, "Date", "YouthMatchDate")
+                        //        <PositionCode>105</PositionCode>
+                        XMLManager.xmlValue2Hash(hash, lastMatch, "PositionCode")
+                        //        <PlayedMinutes>90</PlayedMinutes>
+                        XMLManager.xmlValue2Hash(hash, lastMatch, "PlayedMinutes")
+                        //        <Rating>5</Rating>
+                        XMLManager.xmlValue2Hash(hash, lastMatch, "Rating")
+                    }
+                    //      </LastMatch>
+                    //    </YouthPlayer>
+                    ret.add(hash)
                 }
-
-                //      </PlayerSkills>
-                //      <ScoutCall>
-                var scoutCall = (Element) root.getElementsByTagName("ScoutCall").item(0);
-                //        <Scout>
-                var scout = (Element)scoutCall.getElementsByTagName("Scout").item(0);
-                //          <ScoutId>382876</ScoutId>
-                xmlValue2Hash(hash, scout, "ScoutId");
-                //          <ScoutName>Joerg Hopfen</ScoutName>
-                xmlValue2Hash(hash, scout, "ScoutName");
-                //        </Scout>
-                //        <ScoutingRegionID>229</ScoutingRegionID>
-                xmlValue2Hash(hash, scoutCall, "ScoutingRegionID");
-                //        <ScoutComments>
-                var ScoutComments = (Element)scoutCall.getElementsByTagName("ScoutComments").item(0);
-                //          <ScoutComment>
-                var ScoutCommentsList = ScoutComments.getElementsByTagName("ScoutComment");
-                for (int c = 0; c < ScoutCommentsList.getLength(); c++) {
-                    var ScoutComment = (Element) ScoutCommentsList.item(c);
-                    var prefix = "ScoutComment"+c;
-                    //            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen. Er trägt den Namen Claudio Dattenfeld und ist 16 Jahre alt.</CommentText>
-                    xmlValue2Hash(hash, ScoutComment, "CommentText", prefix+"Text");
-                    //            <CommentType>1</CommentType>
-                    xmlValue2Hash(hash, ScoutComment, "CommentType", prefix+"Type");
-                    //            <CommentVariation>1</CommentVariation>
-                    xmlValue2Hash(hash, ScoutComment, "CommentVariation", prefix+"Variation");
-                    //            <CommentSkillType>264643130</CommentSkillType>
-                    xmlValue2Hash(hash, ScoutComment, "CommentSkillType", prefix+"SkillType");
-                    //            <CommentSkillLevel>16</CommentSkillLevel>
-                    xmlValue2Hash(hash, ScoutComment, "CommentSkillLevel", prefix+"SkillLevel");
-                    //          </ScoutComment>
-                }
-                //        </ScoutComments>
-                //      </ScoutCall>
-                var LastMatch = (Element) root.getElementsByTagName("LastMatch").item(0);
-                //      <LastMatch>
-                //        <YouthMatchID>116841872</YouthMatchID>
-                xmlValue2Hash(hash, LastMatch, "YouthMatchID");
-                //        <Date>2020-10-29 04:10:00</Date>
-                xmlValue2Hash(hash, LastMatch, "Date", "YouthMatchDate");
-                //        <PositionCode>105</PositionCode>
-                xmlValue2Hash(hash, LastMatch, "PositionCode");
-                //        <PlayedMinutes>90</PlayedMinutes>
-                xmlValue2Hash(hash, LastMatch, "PlayedMinutes");
-                //        <Rating>5</Rating>
-                xmlValue2Hash(hash, LastMatch, "Rating");
-                //      </LastMatch>
-                //    </YouthPlayer>
-                ret.add(hash);
             }
-        } catch (Exception ignored) {
+        } catch (ignored: Exception) {
         }
 
-        return ret;
+        return ret
     }
 
-    private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, Skills.HTSkillID skillId) {
+    fun youthplayerSkills2Hash(hash: SafeInsertMap, playerSkills: Element, skillId: Skills.HTSkillID) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-        var attr = skillId.toString() + "Skill";
-        xmlValue2Hash(hash, playerSkills, attr);
-        xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
-        xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
-        xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
+        var attr = skillId.toString() + "Skill"
+        XMLManager.xmlValue2Hash(hash, playerSkills, attr)
+        XMLManager.xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable")
+        XMLManager.xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached")
+        XMLManager.xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock")
         //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
-        attr += "Max";
-        xmlValue2Hash(hash, playerSkills, attr);
-        xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
-        xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
+        attr += "Max"
+        XMLManager.xmlValue2Hash(hash, playerSkills, attr)
+        XMLManager.xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable")
+        XMLManager.xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock")
     }
 
     // TODO refactor, use createPlayerDetails
-    public Player parsePlayerDetailsFromString(String xml) {
-        Document doc = XMLManager.parseString(xml);
+    fun parsePlayerDetailsFromString(xml: String): Player? {
+        val doc: Document? = XMLManager.parseString(xml)
 
-        var root = doc.getDocumentElement();
-        root = (Element) root.getElementsByTagName("Player").item(0);
+        var root:Element? = doc?.documentElement
+        root = root?.getElementsByTagName("Player")?.item(0) as Element?
 
-        var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
-        var teamID = xmlIntValue(owningTeam, "TeamID");
-        if (!UserManager.INSTANCE.getCurrentUser().isNtTeam() &&
-             teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
+        val owningTeam = root?.getElementsByTagName("OwningTeam")?.item(0) as Element?
+        val teamID = XMLManager.xmlIntValue(owningTeam, "TeamID", -1)
+        if (!UserManager.getCurrentUser().isNtTeam && teamID != HOVerwaltung.instance().model.getBasics().teamId
+        ) return null // foreign player
 
-        var player = new Player();
-        player.setPlayerID(xmlIntValue(root, "PlayerID"));
-        player.setFirstName(xmlValue(root, "FirstName"));
-        player.setNickName(xmlValue(root, "NickName"));
-        player.setLastName(xmlValue(root, "LastName"));
-        player.setShirtNumber(xmlIntValue(root, "PlayerNumber"));
-        player.setPlayerCategory(PlayerCategory.valueOf(xmlIntegerValue(root, "PlayerCategoryID")));
-        player.setOwnerNotes(xmlValue(root, "OwnerNotes"));
-        player.setAge(xmlIntValue(root, "Age"));
-        player.setAgeDays(xmlIntValue(root, "AgeDays"));
+        val player = Player()
+        player.playerID = XMLManager.xmlIntValue(root, "PlayerID")
+        player.firstName = XMLManager.xmlValue(root, "FirstName")
+        player.nickName = XMLManager.xmlValue(root, "NickName")
+        player.lastName = XMLManager.xmlValue(root, "LastName")
+        player.setShirtNumber(XMLManager.xmlIntValue(root, "PlayerNumber"))
+        player.playerCategory = PlayerCategory.valueOf(XMLManager.xmlIntValue(root, "PlayerCategoryID", -1))
+        player.ownerNotes = XMLManager.xmlValue(root, "OwnerNotes")
+        player.setAge(XMLManager.xmlIntValue(root, "Age"))
+        player.setAgeDays(XMLManager.xmlIntValue(root, "AgeDays"))
 
 //        NextBirthDay : DateTime
 //        The aproximate Date/time of next birthday.
 
-        player.setArrivalDate(xmlValue(root, "ArrivalDate"));
-        player.setForm(xmlIntValue(root, "PlayerForm"));
-        player.setGelbeKarten(xmlIntValue(root, "Cards"));
-        player.setInjuryWeeks(xmlIntValue(root, "InjuryLevel"));
-        player.setPlayerStatement(xmlValue(root, "Statement"));
+        player.arrivalDate = XMLManager.xmlValue(root, "ArrivalDate")
+        player.form = XMLManager.xmlIntValue(root, "PlayerForm")
+        player.setGelbeKarten(XMLManager.xmlIntValue(root, "Cards"))
+        player.injuryWeeks = XMLManager.xmlIntValue(root, "InjuryLevel")
+        player.playerStatement = XMLManager.xmlValue(root, "Statement")
 
 //        PlayerLanguage : String
 //        This container and its elements is only shown if the user has supporter
@@ -420,22 +437,22 @@ public class XMLPlayersParser {
 //        This container and its elements is only shown if the user has supporter
 //        The languageID the player speaks in his Statement, if existing.
 
-        player.setAnsehen(xmlIntValue(root, "Agreeability"));
-        player.setAgressivitaet(xmlIntValue(root, "Aggressiveness"));
-        player.setCharakter(xmlIntValue(root, "Honesty"));
-        player.setExperience(xmlIntValue(root, "Experience"));
-        player.setLoyalty(xmlIntValue(root, "Loyalty"));
-        player.setHomeGrown(xmlBoolValue(root, "MotherClubBonus"));
-        player.setLeadership(xmlIntValue(root, "Leadership"));
-        player.setPlayerSpecialty(xmlIntValue(root, "Specialty"));
-        player.setNationalityAsInt(xmlIntValue(root, "NativeCountryID"));
+        player.ansehen = XMLManager.xmlIntValue(root, "Agreeability")
+        player.agressivitaet = XMLManager.xmlIntValue(root, "Aggressiveness")
+        player.charakter = XMLManager.xmlIntValue(root, "Honesty")
+        player.experience = XMLManager.xmlIntValue(root, "Experience")
+        player.loyalty = XMLManager.xmlIntValue(root, "Loyalty")
+        player.isHomeGrown = XMLManager.xmlBoolValue(root, "MotherClubBonus")
+        player.leadership = XMLManager.xmlIntValue(root, "Leadership")
+        player.playerSpecialty = XMLManager.xmlIntValue(root, "Specialty")
+        player.nationalityAsInt = XMLManager.xmlIntValue(root, "NativeCountryID")
 
 //                NativeLeagueID : unsigned Integer
 //        LeagueID of the league where the player was born.
 //                NativeLeagueName : String
 //        LeagueName of the league where the player was born.
 
-        player.setTSI(xmlIntValue(root, "TSI"));
+        player.tsi = XMLManager.xmlIntValue(root, "TSI")
 
 //        -OwningTeam
 //        Container for the team that owns the player.
@@ -446,52 +463,51 @@ public class XMLPlayersParser {
 //        LeagueID : unsigned Integer
 //        LeagueID for the league of the team owning the player.
 
-        player.setGehalt(xmlIntValue(root, "Salary"));
+        player.setGehalt(XMLManager.xmlIntValue(root, "Salary"))
 
 //        IsAbroad : Boolean*
 //                The abroad status of the player, given as an integer. true for beeing in home country, false for beeing in a team abroad. The container is empty If the player has no owner.
 
-        player.setLaenderspiele(xmlIntValue(root, "Caps"));
-        player.setU20Laenderspiele(xmlIntValue(root, "CapsU20"));
-        player.setAllOfficialGoals(xmlIntValue(root, "CareerGoals"));
-        player.setHattrick(xmlIntValue(root, "CareerHattricks"));
-        player.setMatchesCurrentTeam(xmlIntegerValue(root, "MatchesCurrentTeam"));
-        player.setGoalsCurrentTeam(xmlIntValue(root, "GoalsCurrentTeam"));
-        player.setNationalTeamId(xmlIntegerValue(root, "NationalTeamID"));
+        player.laenderspiele = XMLManager.xmlIntValue(root, "Caps")
+        player.u20Laenderspiele = XMLManager.xmlIntValue(root, "CapsU20")
+        player.allOfficialGoals = XMLManager.xmlIntValue(root, "CareerGoals")
+        player.hattrick = XMLManager.xmlIntValue(root, "CareerHattricks")
+        player.matchesCurrentTeam = XMLManager.xmlIntegerValue(root, "MatchesCurrentTeam")
+        player.goalsCurrentTeam = XMLManager.xmlIntValue(root, "GoalsCurrentTeam")
+        player.setNationalTeamId(XMLManager.xmlIntegerValue(root, "NationalTeamID"))
 
 //        NationalTeamName : String*
 //                If the player is enrolled on a national team, this is that national team's name.
-        player.setTransferlisted(xmlBoolValue(root, "TransferListed")?1:0);
+        val transferListed:Int = if (XMLManager.xmlBoolValue(root, "TransferListed")) 1 else 0
+        player.transferlisted = transferListed
 
-        var ele = (Element) root.getElementsByTagName("TrainerData").item(0);
-        if ( ele != null) {
-            player.setTrainerTyp(TrainerType.fromInt(xmlIntegerValue(ele, "TrainerType")));
-            var trainerSkill = xmlIntegerValue(root, "TrainerSkill");
-            if ( trainerSkill == null){
-                trainerSkill=0;
-            }
-            player.setTrainerSkill(trainerSkill);
+        var ele = root?.getElementsByTagName("TrainerData")?.item(0) as Element?
+        if (ele != null) {
+            val trainerType: TrainerType = TrainerType.valueOf(XMLManager.xmlValue(ele, "TrainerType"))
+            player.trainerTyp = trainerType
+            val trainerSkill = XMLManager.xmlIntValue(root, "TrainerSkill", 0)
+            player.trainerSkill = trainerSkill
         }
 
-        ele = (Element) root.getElementsByTagName("MotherClub").item(0);
-        if ( ele != null) {
-            player.setMotherClubId(xmlIntegerValue(ele, "TeamID"));
-            player.setMotherClubName(xmlValue(ele, "TeamName"));
+        ele = root?.getElementsByTagName("MotherClub")?.item(0) as Element?
+        if (ele != null) {
+            player.setMotherClubId(XMLManager.xmlIntegerValue(ele, "TeamID"))
+            player.setMotherClubName(XMLManager.xmlValue(ele, "TeamName"))
         }
 
-        ele = (Element) root.getElementsByTagName("PlayerSkills").item(0);
-        if ( ele != null) {
-            player.setStamina(xmlIntValue(ele, "StaminaSkill"));
-            player.setTorwart(xmlIntValue(ele, "KeeperSkill"));
-            player.setSpielaufbau(xmlIntValue(ele, "PlaymakerSkill"));
-            player.setTorschuss(xmlIntValue(ele, "ScorerSkill"));
-            player.setPasspiel(xmlIntValue(ele, "PassingSkill"));
-            player.setFluegelspiel(xmlIntValue(ele, "WingerSkill"));
-            player.setVerteidigung(xmlIntValue(ele, "DefenderSkill"));
-            player.setStandards(xmlIntValue(ele, "SetPiecesSkill"));
+        ele = root?.getElementsByTagName("PlayerSkills")?.item(0) as Element?
+        if (ele != null) {
+            player.setStamina(XMLManager.xmlIntValue(ele, "StaminaSkill"))
+            player.setTorwart(XMLManager.xmlIntValue(ele, "KeeperSkill"))
+            player.setSpielaufbau(XMLManager.xmlIntValue(ele, "PlaymakerSkill"))
+            player.setTorschuss(XMLManager.xmlIntValue(ele, "ScorerSkill"))
+            player.setPasspiel(XMLManager.xmlIntValue(ele, "PassingSkill"))
+            player.setFluegelspiel(XMLManager.xmlIntValue(ele, "WingerSkill"))
+            player.setVerteidigung(XMLManager.xmlIntValue(ele, "DefenderSkill"))
+            player.setStandards(XMLManager.xmlIntValue(ele, "SetPiecesSkill"))
         }
 
-        return player;
+        return player
 
     }
 }

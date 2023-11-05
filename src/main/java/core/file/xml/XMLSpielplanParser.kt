@@ -1,116 +1,102 @@
-// %3623758565:de.hattrickorganizer.logik.xml%
 /*
  * XMLSpielplanParser.java
  *
  * Created on 7. Oktober 2003, 13:42
  */
-package core.file.xml;
+package core.file.xml
 
-import core.model.series.Paarung;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import core.util.Helper;
-import module.series.Spielplan;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import core.file.xml.XMLManager.parseString
+import core.model.series.Paarung
+import core.util.HODateTime
+import core.util.HOLogger
+import module.series.Spielplan
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.NodeList
 
 /**
- * 
+ *
  * @author thomas.werth
  */
-public class XMLSpielplanParser {
+object XMLSpielplanParser {
+	fun parseSpielplanFromString(input: String): Spielplan? {
+        val plan: Spielplan? = try {
+            createSpielplan(parseString(input))
+        } catch (e: RuntimeException) {
+            HOLogger.instance().error(
+                XMLSpielplanParser::class.java,
+                "parseSpielplanFromString: $e\ninput xml was:\n $input"
+            )
+            throw e
+        }
+        return plan
+    }
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLSpielplanParser() {
-	}
+    private fun createPaarung(ele: Element?): Paarung {
+        var tmp: Element?
+        val spiel = Paarung()
+        tmp = ele?.getElementsByTagName("MatchID")?.item(0) as Element?
+        spiel.matchId = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("MatchRound")?.item(0) as Element?
+        spiel.spieltag = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("HomeTeamID")?.item(0) as Element?
+        spiel.heimId = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("AwayTeamID")?.item(0) as Element?
+        spiel.gastId = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        tmp = ele?.getElementsByTagName("HomeTeamName")?.item(0) as Element?
+        spiel.heimName = tmp?.firstChild?.nodeValue
+        tmp = ele?.getElementsByTagName("AwayTeamName")?.item(0) as Element?
+        spiel.gastName = tmp?.firstChild?.nodeValue
+        tmp = ele?.getElementsByTagName("MatchDate")?.item(0) as Element?
+        spiel.datum = HODateTime.fromHT(tmp?.firstChild?.nodeValue)
 
-	public static Spielplan parseSpielplanFromString(String input) {
-		Spielplan plan;
-		try {
-			plan = createSpielplan(XMLManager.parseString(input));
-		} catch (RuntimeException e) {
-			HOLogger.instance().error(XMLSpielplanParser.class,
-					"parseSpielplanFromString: " + e + "\ninput xml was:\n " + input);
-			throw e;
-		}
-		return plan;
-	}
+        if (ele != null && ele.getElementsByTagName("AwayGoals").length > 0) {
+            tmp = ele.getElementsByTagName("AwayGoals").item(0) as Element?
+            spiel.toreGast = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+            tmp = ele.getElementsByTagName("HomeGoals").item(0) as Element?
+            spiel.toreHeim = tmp?.firstChild?.nodeValue?.toInt() ?: -1
+        }
+        return spiel
+    }
 
-	private static Paarung createPaarung(Element ele) {
-		Element tmp;
-		Paarung spiel = new Paarung();
+    private fun createSpielplan(doc: Document?): Spielplan? {
+        var plan:Spielplan? = Spielplan()
+        var ele: Element?
+        val list: NodeList?
 
-		tmp = (Element) ele.getElementsByTagName("MatchID").item(0);
-		spiel.setMatchId(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("MatchRound").item(0);
-		spiel.setSpieltag(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("HomeTeamID").item(0);
-		spiel.setHeimId(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("AwayTeamID").item(0);
-		spiel.setGastId(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-		tmp = (Element) ele.getElementsByTagName("HomeTeamName").item(0);
-		spiel.setHeimName(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("AwayTeamName").item(0);
-		spiel.setGastName(tmp.getFirstChild().getNodeValue());
-		tmp = (Element) ele.getElementsByTagName("MatchDate").item(0);
-		spiel.setDatum(HODateTime.fromHT(tmp.getFirstChild().getNodeValue()));
+        if (doc == null) {
+            return plan
+        }
 
-		// Zum Schluss weil nicht immer vorhanden
-		if (ele.getElementsByTagName("AwayGoals").getLength() > 0) {
-			tmp = (Element) ele.getElementsByTagName("AwayGoals").item(0);
-			spiel.setToreGast(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-			tmp = (Element) ele.getElementsByTagName("HomeGoals").item(0);
-			spiel.setToreHeim(Integer.parseInt(tmp.getFirstChild().getNodeValue()));
-		}
+        // Tabelle erstellen
+        val root: Element? = doc.documentElement
+        try {
+            if (plan != null) {
+                // Daten füllen
+                ele = root?.getElementsByTagName("LeagueLevelUnitID")?.item(0) as Element?
+                plan.ligaId = ele?.firstChild?.nodeValue?.toInt() ?: -1
+                try {
+                    ele = root?.getElementsByTagName("LeagueLevelUnitName")?.item(0) as Element?
+                    plan.ligaName = ele?.firstChild?.nodeValue
+                } catch (e: Exception) {
+                    plan.ligaName = ""
+                }
+                ele = root?.getElementsByTagName("Season")?.item(0) as Element?
+                plan.saison = ele?.firstChild?.nodeValue?.toInt() ?: -1
+                ele = root?.getElementsByTagName("FetchedDate")?.item(0) as Element?
+                plan.fetchDate = HODateTime.fromHT(ele?.firstChild?.nodeValue)
 
-		return spiel;
-	}
-
-	private static Spielplan createSpielplan(Document doc) {
-		Spielplan plan = new Spielplan();
-		Element ele;
-		Element root;
-		NodeList list;
-
-		if (doc == null) {
-			return plan;
-		}
-
-		// Tabelle erstellen
-		root = doc.getDocumentElement();
-
-		try {
-			// Daten füllen
-			ele = (Element) root.getElementsByTagName("LeagueLevelUnitID").item(0);
-			plan.setLigaId(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-
-			try {
-				ele = (Element) root.getElementsByTagName("LeagueLevelUnitName").item(0);
-				plan.setLigaName(ele.getFirstChild().getNodeValue());
-			} catch (Exception e) {
-				plan.setLigaName("");
-			}
-
-			ele = (Element) root.getElementsByTagName("Season").item(0);
-			plan.setSaison(Integer.parseInt(ele.getFirstChild().getNodeValue()));
-			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			plan.setFetchDate(HODateTime.fromHT(ele.getFirstChild().getNodeValue()));
-
-			// Einträge adden
-			list = root.getElementsByTagName("Match");
-
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-				plan.addEintrag(createPaarung((Element) list.item(i)));
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLSpielplanParser.class, e);
-			plan = null;
-		}
-
-		return plan;
-	}
+                list = root?.getElementsByTagName("Match")
+                if (list != null) {
+                    for (i in 0..<list.length) {
+                        plan.addEintrag(createPaarung(list.item(i) as Element?))
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().log(XMLSpielplanParser::class.java, e)
+            plan = null
+        }
+        return plan
+    }
 }

@@ -114,7 +114,7 @@ object ConvertXml2Hrf {
         }
         setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement)
         val playersData: MutableList<SafeInsertMap> =
-            XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId))
+            XMLPlayersParser.parsePlayersFromString(mc.downloadPlayers(teamId))
 
         // Download players' avatar
         setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement)
@@ -122,7 +122,7 @@ object ConvertXml2Hrf {
         ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1)
         var youthPlayers = emptyList<SafeInsertMap>()
         if (youthTeamId != null && youthTeamId > 0) {
-            youthPlayers = XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId))
+            youthPlayers = XMLPlayersParser.parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId))
         }
         setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement)
         val economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId))

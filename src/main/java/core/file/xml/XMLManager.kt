@@ -45,39 +45,37 @@ object XMLManager {
 
     fun xmlValue(element: Element?, xmlKey: String): String {
         if (element != null) {
-            val ele = element.getElementsByTagName(xmlKey).item(0) as Element
+            val ele = element.getElementsByTagName(xmlKey).item(0) as Element?
             return getFirstChildNodeValue(ele)
         }
         return ""
     }
 
-    fun xmlIntegerValue(ele: Element, xmlKey: String):Int? {
-        val value = xmlValue(ele, xmlKey)
-        if (value.isNotEmpty()) {
-            return value.toInt()
-        }
-        return null
+    fun xmlIntegerValue(ele: Element?, xmlKey: String):Int {
+        return xmlIntValue(ele, xmlKey)
     }
 
-    fun xmlIntValue(ele: Element, xmlKey: String):Int {
-        return xmlIntValue(ele,xmlKey, 0)
+    fun xmlIntValue(ele: Element?, xmlKey: String):Int {
+        return xmlIntValue(ele, xmlKey, 0)
     }
 
-    private fun xmlIntValue(ele: Element, xmlKey: String, def: Int):Int {
+    fun xmlIntValue(ele: Element?, xmlKey: String, def: Int):Int {
         val value = xmlValue(ele, xmlKey)
+        if (value.isEmpty()) return def
         return try {
-            value.toInt()
+                value.toInt()
         } catch (exception: Exception) {
             def
         }
     }
 
-    fun xmlBoolValue(ele: Element, xmlKey: String): Boolean {
-        return xmlBoolValue(ele,xmlKey,false)
+    fun xmlBoolValue(ele: Element?, xmlKey: String): Boolean {
+        return xmlBoolValue(ele, xmlKey,false)
     }
 
-    fun xmlBoolValue(ele: Element, xmlKey: String, def: Boolean): Boolean {
+    fun xmlBoolValue(ele: Element?, xmlKey: String, def: Boolean): Boolean {
         val value = xmlValue(ele, xmlKey)
+        if (value.isEmpty()) return def
         return try {
             value.toBoolean()
         } catch (exception: Exception) {
@@ -93,24 +91,24 @@ object XMLManager {
         return null
     }
 
-    fun xmlValue2Hash(hash: MutableMap<String, String>, element: Element, xmlKey: String, hashKey: String): String {
+    fun xmlValue2Hash(hash: SafeInsertMap, element: Element?, xmlKey: String, hashKey: String): String {
         val value = xmlValue(element, xmlKey)
-        hash[hashKey] = value
+        hash.insert(hashKey, value)
         return value
     }
 
-    fun xmlValue2Hash(hash: MutableMap<String, String>, element: Element, key: String): String {
+    fun xmlValue2Hash(hash: SafeInsertMap, element: Element?, key: String): String {
         return xmlValue2Hash(hash, element, key, key)
     }
 
-    fun xmlIntValue2Hash(hash: MutableMap<String, String>, element:Element, key: String, def:Int): Int {
+    fun xmlIntValue2Hash(hash: SafeInsertMap, element:Element?, key: String, def:Int): Int {
         val value = xmlValue2Hash(hash, element, key, key)
         return NumberUtils.toInt(value, def)
     }
 
-    fun xmlAttribute2Hash(hash: MutableMap<String, String>, root: Element, xmlElementname: String, xmlAttributeName: String) {
+    fun xmlAttribute2Hash(hash: SafeInsertMap, root: Element, xmlElementname: String, xmlAttributeName: String) {
         val ele = root.getElementsByTagName(xmlElementname).item(0) as Element
-        hash[xmlElementname+xmlAttributeName] = ele.getAttribute(xmlAttributeName)
+        hash.insert(xmlElementname+xmlAttributeName, ele.getAttribute(xmlAttributeName))
     }
 
     /**
@@ -140,8 +138,8 @@ object XMLManager {
 		var doc:Document? = null
 
 		try {
-			val builder = factory.newDocumentBuilder();
-			doc = builder.parse(xmlStream);
+			val builder = factory.newDocumentBuilder()
+			doc = builder.parse(xmlStream)
 		} catch (e: Exception) {
 			HOLogger.instance().log(XMLManager.javaClass, "Parser error: $e")
 			HOLogger.instance().log(XMLManager.javaClass, e)
@@ -198,11 +196,11 @@ object XMLManager {
         }
 
         if (doc == null || doc.getElementsByTagName("HattrickData").length <= 0) {
-            HOLogger.instance().error(XMLManager.javaClass, "Cannot parse data:$tmpInputString");
-            return null;
+            HOLogger.instance().error(XMLManager.javaClass, "Cannot parse data:$tmpInputString")
+            return null
         }
 
-        return doc;
+        return doc
     }
 
     /**
