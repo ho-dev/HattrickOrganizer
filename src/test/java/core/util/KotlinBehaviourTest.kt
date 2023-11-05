@@ -1,6 +1,7 @@
 package core.util
 
 import core.file.xml.XMLManager
+import core.model.match.MatchKurzInfo
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -57,5 +58,25 @@ class KotlinBehaviourTest {
         val ele = root.getElementsByTagName("missing").item(0) as Element?
 
         assertNull(ele)
+    }
+
+    @Test
+    fun testFilterAndMin() {
+        val match1 = MatchKurzInfo()
+        match1.matchSchedule = HODateTime.now()
+        match1.matchStatus = MatchKurzInfo.UPCOMING
+        val match2 = MatchKurzInfo()
+        match2.matchSchedule = HODateTime.HT_START
+        match2.matchStatus = MatchKurzInfo.UPCOMING
+        val match3 = MatchKurzInfo()
+        match3.matchSchedule = HODateTime.HT_START
+        //match3.matchStatus = MatchKurzInfo.UPCOMING
+
+
+        val infos = listOf(match1, match2)
+        val result = infos.filter { matchKurzInfo -> matchKurzInfo.matchStatus == MatchKurzInfo.UPCOMING }
+            .minBy { matchKurzInfo -> matchKurzInfo.matchSchedule }
+
+        assertEquals(match1.matchSchedule, result.matchSchedule)
     }
 }

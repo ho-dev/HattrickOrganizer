@@ -73,9 +73,10 @@ object XMLMatchesParser {
                                 match.matchContextId = tournamentId
                                 var oTournamentDetails = getTournamentDetailsFromDB(tournamentId)
                                 if (oTournamentDetails == null) {
-                                    oTournamentDetails =
-                                        OnlineWorker.getTournamentDetails(tournamentId) // download info about tournament from HT
-                                    storeTournamentDetailsIntoDB(oTournamentDetails) // store tournament details into DB
+                                    oTournamentDetails = OnlineWorker.getTournamentDetails(tournamentId) // download info about tournament from HT
+                                    if (oTournamentDetails != null) {
+                                        storeTournamentDetailsIntoDB(oTournamentDetails) // store tournament details into DB
+                                    }
                                 }
                                 match.tournamentTypeID = oTournamentDetails!!.tournamentType
                             }

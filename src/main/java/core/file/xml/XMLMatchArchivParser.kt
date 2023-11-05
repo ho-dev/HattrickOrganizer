@@ -78,12 +78,12 @@ object XMLMatchArchivParser {
                         match.cupLevelIndex = CupLevelIndex.fromInt(iCupLevelIndex)
                     } else if (matchType == 50) {
                         if (tournamentId != null) {
-                            var oTournamentDetails: TournamentDetails? =
-                                DBManager.getTournamentDetailsFromDB(tournamentId)
+                            var oTournamentDetails: TournamentDetails? = DBManager.getTournamentDetailsFromDB(tournamentId)
                             if (oTournamentDetails == null) {
-                                oTournamentDetails =
-                                    OnlineWorker.getTournamentDetails(tournamentId) // download info about tournament from HT
-                                DBManager.storeTournamentDetailsIntoDB(oTournamentDetails) // store tournament details into DB
+                                oTournamentDetails = OnlineWorker.getTournamentDetails(tournamentId) // download info about tournament from HT
+                                if (oTournamentDetails != null) {
+                                    DBManager.storeTournamentDetailsIntoDB(oTournamentDetails) // store tournament details into DB
+                                }
                             }
                             if (oTournamentDetails != null) {
                                 match.tournamentTypeID = oTournamentDetails.tournamentType

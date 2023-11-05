@@ -455,7 +455,7 @@ class HRFStringBuilder {
      * @param nextLineup
      * map containing the lineup
      */
-    fun createLineUp(trainerId: String?, teamId: Int, nextLineup: Map<String?, String?>?) {
+    fun createLineUp(trainerId: String?, teamId: Int, nextLineup: Map<String, String>?) {
         lineupStringBuilder = StringBuilder("[lineup]\n")
         if (nextLineup != null) {
             val matchId = NumberUtils.toInt(nextLineup["MatchID"], 0)
@@ -911,7 +911,7 @@ class HRFStringBuilder {
             return matchLineupPosition?.behaviour?.toString() ?: "0"
         }
 
-        private fun getMatchOrderInfo(nextLineup: Map<String?, String?>, i: Int, key: String): String? {
+        private fun getMatchOrderInfo(nextLineup: Map<String, String>, i: Int, key: String): String? {
             val _key = "subst$i$key"
             val value = nextLineup[_key]
             return if (value != null) "$_key=$value\n" else null
