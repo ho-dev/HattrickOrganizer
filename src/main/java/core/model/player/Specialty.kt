@@ -1,8 +1,6 @@
-package core.model.player;
+package core.model.player
 
-import java.util.HashMap;
-
-public enum Specialty {
+enum class Specialty(val value: Int) {
     /*
     SpecialtyID
     Value	Description
@@ -15,46 +13,39 @@ public enum Specialty {
 6	resilient
 8	support
 */
-
     NoSpecialty(0),
     Technical(1),
     Quick(2),
     Powerful(3),
     Unpredictable(4),
-    Head(5),        // renamed to fit to ls.player.speciality.head string
-    Regainer(6),    // renamed to fit to ls.player.speciality.regainer string
+    Head(5),
+
+    // renamed to fit to ls.player.speciality.head string
+    Regainer(6),
+
+    // renamed to fit to ls.player.speciality.regainer string
     Not_used(7),
     Support(8);
 
-    private final int value;
-    private static final HashMap<Integer, Specialty> map = new HashMap<>();
+    companion object {
+        private val map = HashMap<Int, Specialty>()
 
-    Specialty(int value) {
-        this.value = value;
-    }
-
-    // Init mapping
-    static {
-        for (Specialty s : Specialty.values()) {
-            map.put(s.value, s);
+        // Init mapping
+        init {
+            for (s in entries) {
+                map[s.value] = s
+            }
         }
-    }
 
-    public static Specialty getSpecialty(Integer s) {
-        if ( s != null) {
-            return map.get(s);
+        @JvmStatic
+        fun getSpecialty(s: Int?): Specialty? {
+            return if (s != null) {
+                map[s]
+            } else null
         }
-        return null;
-    }
 
-    public static Integer getValue(Specialty specialty){
-        if ( specialty != null){
-            return specialty.getValue();
+        fun getValue(specialty: Specialty?): Int? {
+            return specialty?.value
         }
-        return null;
-    }
-
-    public int getValue() {
-        return value;
     }
 }

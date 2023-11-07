@@ -400,7 +400,7 @@ public class Player extends AbstractTable.Storable {
         //TSI, alles vorher durch 1000 teilen
         m_clhrfDate = hrfdate;
 
-        if (hrfdate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
+        if (hrfdate.isBefore(HODateTime.fromDbTimestamp(DBManager.INSTANCE.getTSIDATE()))) {
             m_iTSI /= 1000d;
         }
 
@@ -500,7 +500,7 @@ public class Player extends AbstractTable.Storable {
             try {
                 connection.setSilentDownload(true);
                 // try to download missing mother club info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
+                var playerDetails = OnlineWorker.INSTANCE.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
                 if (playerDetails != null) {
                     motherclubId = playerDetails.getMotherclubId();
                     motherclubName = playerDetails.getMotherclubName();
@@ -1137,7 +1137,7 @@ public class Player extends AbstractTable.Storable {
         if ( lastSkillups.containsKey(skill)){
             return lastSkillups.get(skill);
         }
-        var ret =  DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
+        var ret =  DBManager.INSTANCE.getLastLevelUp(skill, m_iSpielerID);
         lastSkillups.put(skill, ret);
         return ret;
     }
@@ -1150,7 +1150,7 @@ public class Player extends AbstractTable.Storable {
         if ( allSkillUps.containsKey(skill)) {
             return allSkillUps.get(skill);
         }
-        var ret = DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
+        var ret = DBManager.INSTANCE.getAllLevelUp(skill, m_iSpielerID);
         allSkillUps.put(skill, ret);
         return ret;
     }
@@ -1182,7 +1182,7 @@ public class Player extends AbstractTable.Storable {
      */
     public void setManuellerSmilie(String manuellerSmilie) {
         getNotes().setManuelSmilie(manuellerSmilie);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
     }
 
     /**
@@ -1342,7 +1342,7 @@ public class Player extends AbstractTable.Storable {
      * Zum speichern! Die Reduzierung des Marktwerts auf TSI wird rückgängig gemacht
      */
     public int getMarktwert() {
-        if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
+        if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.INSTANCE.getTSIDATE()))) {
             //Echter Marktwert
             return m_iTSI * 1000;
         }
@@ -1356,13 +1356,13 @@ public class Player extends AbstractTable.Storable {
     String latestTSINotInjured;
     public String getLatestTSINotInjured(){
         if (latestTSINotInjured == null){
-            latestTSINotInjured = DBManager.instance().loadLatestTSINotInjured(m_iSpielerID);
+            latestTSINotInjured = DBManager.INSTANCE.loadLatestTSINotInjured(m_iSpielerID);
         }
         return latestTSINotInjured;
     }
     public String getLatestTSIInjured(){
         if (latestTSIInjured == null){
-            latestTSIInjured = DBManager.instance().loadLatestTSIInjured(m_iSpielerID);
+            latestTSIInjured = DBManager.INSTANCE.loadLatestTSIInjured(m_iSpielerID);
         }
         return latestTSIInjured;
     }
@@ -1448,7 +1448,7 @@ public class Player extends AbstractTable.Storable {
     public void setCanBeSelectedByAssistant(boolean flag) {
         if (this.isLineupDisabled()) flag = false;
         getNotes().setEligibleToPlay(flag);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
     }
 
     /**
@@ -1549,7 +1549,7 @@ public class Player extends AbstractTable.Storable {
      */
     public void setTeamInfoSmilie(String teamInfoSmilie) {
         getNotes().setTeamInfoSmilie(teamInfoSmilie);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
     }
 
     /**
@@ -1940,19 +1940,19 @@ public class Player extends AbstractTable.Storable {
     private Notes notes;
     private Notes getNotes(){
         if ( notes==null){
-            notes = DBManager.instance().loadPlayerNotes(this.getPlayerID());
+            notes = DBManager.INSTANCE.loadPlayerNotes(this.getPlayerID());
         }
         return notes;
     }
     public void setUserPosFlag(byte flag) {
         schumRankBenchmark = null;
         getNotes().setUserPos(flag);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
     }
     public void setIsFired(boolean b) {
         getNotes().setIsFired(b);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
     }
 
     public boolean isFired() {
@@ -1969,7 +1969,7 @@ public class Player extends AbstractTable.Storable {
     public String getNote() {return getNotes().getNote();}
     public void setNote(String text) {
         getNotes().setNote(text);
-        DBManager.instance().storePlayerNotes(notes);
+        DBManager.INSTANCE.storePlayerNotes(notes);
     }
 
     /**
@@ -2118,7 +2118,7 @@ public class Player extends AbstractTable.Storable {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
                     for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
+                        MatchLineupTeam mlt = DBManager.INSTANCE.loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if ( minutes > 0 ) {
                             ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
@@ -2313,7 +2313,7 @@ public class Player extends AbstractTable.Storable {
 
     public List<FuturePlayerTraining> getFuturePlayerTrainings(){
         if ( futurePlayerTrainings == null){
-            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerID());
+            futurePlayerTrainings = DBManager.INSTANCE.getFuturePlayerTrainings(this.getPlayerID());
             if (!futurePlayerTrainings.isEmpty()) {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
@@ -2387,7 +2387,7 @@ public class Player extends AbstractTable.Storable {
         if (prio != null) {
             futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
         }
-        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
+        DBManager.INSTANCE.storeFuturePlayerTrainings(futurePlayerTrainings);
     }
 
     public String getBestPositionInfo() {
@@ -2432,7 +2432,7 @@ public class Player extends AbstractTable.Storable {
      */
     public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
 
-        var playerBefore = DBManager.instance().getSpieler(previousID).stream()
+        var playerBefore = DBManager.INSTANCE.getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst().orElse(null);
         if (playerBefore == null) {
             playerBefore = this.CloneWithoutSubskills();
@@ -2458,7 +2458,7 @@ public class Player extends AbstractTable.Storable {
                         skillUp.setDate(trainingWeeks.get(0).getTrainingDate());
                         skillUp.setValue(valueAfterTraining);
                         skillUp.setHrfId(this.getHrfId());
-                        DBManager.instance().storeSkillup(skillUp);
+                        DBManager.INSTANCE.storeSkillup(skillUp);
                         resetSkillUpInformation();
                     }
                 }

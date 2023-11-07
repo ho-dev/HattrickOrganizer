@@ -151,8 +151,8 @@ object OnlineWorker {
         var matchesString: String?
         try {
             var curTime = firstDate
-            while (firstDate.isBefore(endDate)) {
-                var lastDate = firstDate.plus(90, ChronoUnit.DAYS)
+            while (curTime.isBefore(endDate)) {
+                var lastDate = curTime.plus(90, ChronoUnit.DAYS)
                 if (!lastDate.isBefore(endDate)) {
                     lastDate = endDate
                 }
@@ -162,7 +162,7 @@ object OnlineWorker {
                         HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"),
                         20
                     )
-                    matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate, lastDate)
+                    matchesString = MyConnector.instance().getMatchesArchive(teamId, curTime, lastDate)
                     HOMainFrame.setInformation(
                         HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"),
                         20

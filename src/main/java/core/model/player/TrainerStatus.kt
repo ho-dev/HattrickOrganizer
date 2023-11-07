@@ -1,36 +1,29 @@
-package core.model.player;
+package core.model.player
 
-public enum TrainerStatus {
+enum class TrainerStatus(private val id: Int) {
     // 1 = PlayingTrainer, 2 = OnlyTrainer, 3 = HoFTrainer
     PlayingTrainer(1),
     OnlyTrainer(2),
     HoFTrainer(3);
 
-    private final int id;
-
-    TrainerStatus(int i) {
-        this.id = i;
+    fun toInt(): Int {
+        return id
     }
 
-    public static TrainerStatus fromInt(Integer i){
-        if ( i != null) {
-            return switch (i) {
-                case 1 -> PlayingTrainer;
-                case 2 -> OnlyTrainer;
-                case 3 -> HoFTrainer;
-                default -> null;
-            };
+    companion object {
+        fun fromInt(i: Int?): TrainerStatus? {
+            return if (i != null) {
+                when (i) {
+                    1 -> PlayingTrainer
+                    2 -> OnlyTrainer
+                    3 -> HoFTrainer
+                    else -> null
+                }
+            } else null
         }
-        return null;
-    }
 
-    public static Integer toInteger(TrainerStatus trainerStatus) {
-        if ( trainerStatus != null) return trainerStatus.toInt();
-        return null;
+        fun toInteger(trainerStatus: TrainerStatus?): Int? {
+            return trainerStatus?.toInt()
+        }
     }
-
-    public int toInt(){
-        return this.id;
-    }
-
 }

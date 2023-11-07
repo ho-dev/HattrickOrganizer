@@ -1,5 +1,3 @@
-package core.model.player;
+package core.model.player
 
-public record Layer(int x, int y, String urlElement) {
-
-}
+data class Layer(val x: Int, val y: Int, val urlElement: String)

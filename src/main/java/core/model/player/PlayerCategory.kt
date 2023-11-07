@@ -1,9 +1,8 @@
-package core.model.player;
+package core.model.player
 
-import core.model.HOVerwaltung;
+import core.model.HOVerwaltung
 
-public enum PlayerCategory {
-
+enum class PlayerCategory(@JvmField val id: Int) {
     //    PlayerCategoryID
     //    Value	Description
     //1	Keeper
@@ -17,7 +16,6 @@ public enum PlayerCategory {
     //9	Extra 1
     //            10	Extra 2
     //            0	No category set
-
     NoCategorySet(0),
     Keeper(1),
     WingBack(2),
@@ -30,45 +28,36 @@ public enum PlayerCategory {
     Extra1(9),
     Extra2(10);
 
-    private final int id;
-
-    PlayerCategory(int id) {
-        this.id = id;
+    private fun _toString(): String {
+        return super.toString()
     }
 
-    public static String StringValueOf(PlayerCategory value) {
-        var hov = HOVerwaltung.instance();
-        if (value == null || value == NoCategorySet) return hov.getLanguageString("ls.player.category.undefined");
-        return hov.getLanguageString("ls.player.category." + value._toString());
+    override fun toString(): String {
+        return StringValueOf(this)
     }
 
-    private String _toString() {
-        return super.toString();
-    }
+    companion object {
+        fun StringValueOf(value: PlayerCategory?): String {
+            val hov = HOVerwaltung.instance()
+            return if (value == null || value == NoCategorySet) hov.getLanguageString("ls.player.category.undefined") else hov.getLanguageString(
+                "ls.player.category." + value._toString()
+            )
+        }
 
-    @Override
-    public String toString() {
-        return StringValueOf(this);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public static PlayerCategory valueOf(Integer id) {
-        if ( id != null) {
-            for (var category : PlayerCategory.values()) {
-                if (category.getId() == id) {
-                    return category;
+        @JvmStatic
+        fun valueOf(id: Int?): PlayerCategory? {
+            if (id != null) {
+                for (category in entries) {
+                    if (category.id == id) {
+                        return category
+                    }
                 }
             }
+            return null
         }
-        return null;
-    }
 
-    public static int idOf(PlayerCategory category){
-        if (category!=null) return category.getId();
-        return NoCategorySet.id;
+        fun idOf(category: PlayerCategory?): Int {
+            return category?.id ?: NoCategorySet.id
+        }
     }
-
 }

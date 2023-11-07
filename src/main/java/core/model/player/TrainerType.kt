@@ -1,6 +1,6 @@
-package core.model.player;
+package core.model.player
 
-public enum TrainerType {
+enum class TrainerType(val id: Int) {
     /*
     0 = defensive, 1 = offensive, 2 = balanced
      */
@@ -8,30 +8,26 @@ public enum TrainerType {
     Defensive(0),
     Offensive(1),
     Balanced(2);
-    final int id;
 
-    TrainerType(int i) {
-        this.id = i;
+    fun toInt(): Int {
+        return id
     }
 
-    public static TrainerType fromInt(Integer i){
-        if ( i != null) {
-            return switch (i) {
-                case 0 -> Defensive;
-                case 1 -> Offensive;
-                case 2 -> Balanced;
-                default -> None;
-            };
+    companion object {
+        @JvmStatic
+        fun fromInt(i: Int?): TrainerType {
+            return if (i != null) {
+                when (i) {
+                    0 -> Defensive
+                    1 -> Offensive
+                    2 -> Balanced
+                    else -> None
+                }
+            } else None
         }
-        return None;
-    }
 
-    public static int toInt(TrainerType trainerTyp) {
-        if ( trainerTyp != null) return trainerTyp.toInt();
-        return None.id;
-    }
-
-    public int toInt(){
-        return this.id;
+        fun toInt(trainerTyp: TrainerType?): Int {
+            return trainerTyp?.toInt() ?: None.id
+        }
     }
 }
