@@ -7,6 +7,7 @@ import module.transfer.PlayerTransfer;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -200,5 +201,23 @@ public class TransferTable extends AbstractTable {
             getTransferStatements.put(sql, statement);
         }
         return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, teamId));
+    }
+
+    DBManager.PreparedStatementBuilder getSumTransferCommissionsStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(motherclubfee+previousclubcommission) FROM " + TABLENAME + " WHERE date=>? AND dete<?");
+
+    public int getSumTransferCommissions(HODateTime startOfWeek) {
+        var from = startOfWeek.toDbTimestamp();
+        var to = startOfWeek.plus(7, ChronoUnit.DAYS).toDbTimestamp();
+        var rs = this.adapter.executePreparedQuery(getSumTransferCommissionsStatementBuilder.getStatement(), from, to);
+        try {
+            if (rs != null) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+        catch (SQLException sqlException){
+            HOLogger.instance().error(getClass(), sqlException);
+        }
+        return 0;
     }
 }

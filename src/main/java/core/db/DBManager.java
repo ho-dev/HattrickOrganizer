@@ -1567,8 +1567,8 @@ public class DBManager {
 	}
 
 	public int getSumTransferCommissions(HODateTime startWeek) {
-		// TODO
-		return 0;
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
+				.getSumTransferCommissions(startWeek);
 	}
 
 	public List<PlayerTransfer> loadTeamTransfers(int teamId, boolean isSold) {

@@ -682,14 +682,4 @@ public class HOModel {
         }
         return null;
     }
-
-    public int getTransferIncomeCurrentWeek() {
-        // TODO
-        return 0;
-    }
-
-    public int getTransferIncomeLastWeek() {
-        // TODO
-        return 0;
-    }
 }
