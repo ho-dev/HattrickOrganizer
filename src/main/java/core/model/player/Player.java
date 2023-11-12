@@ -612,13 +612,14 @@ public class Player extends AbstractTable.Storable {
     /**
      * Calculates String for full age and days correcting for the difference between (now and last HRF file)
      *
-     * @return String of age & agedays format is "YY (DDD)"
+     * @return String of age & age days format is "YY (DDD)"
      */
     public String getAgeWithDaysAsString() {
         return getAgeWithDaysAsString(HODateTime.now());
     }
     public String getAgeWithDaysAsString(HODateTime t){
-        return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
+        if (this.m_clhrfDate != null) return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
+        return "";
     }
 
     /**
@@ -643,6 +644,11 @@ public class Player extends AbstractTable.Storable {
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time, HODateTime hrfTime) {
         var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
         return age.seasons + " (" + age.days + ")";
+    }
+
+    public HODateTime.HODuration getAgeAtDate(HODateTime date){
+        if ( this.m_clhrfDate != null) return new HODateTime.HODuration(this.getAlter(), this.getAgeDays()).plus(HODateTime.HODuration.between(this.m_clhrfDate, date));
+        return null;
     }
 
     /**

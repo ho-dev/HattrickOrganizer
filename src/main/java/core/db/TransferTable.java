@@ -2,8 +2,10 @@ package core.db;
 
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
+import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +32,10 @@ public class TransferTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("buyername").setGetter((p) -> ((PlayerTransfer) p).getBuyerName()).setSetter((p, v) -> ((PlayerTransfer) p).setBuyerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("sellerid").setGetter((p) -> ((PlayerTransfer) p).getSellerid()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerid((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("sellername").setGetter((p) -> ((PlayerTransfer) p).getSellerName()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice(convertCurrency ((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("marketvalue").setGetter((p) -> ((PlayerTransfer) p).getMarketvalue()).setSetter((p, v) -> ((PlayerTransfer) p).setMarketvalue(convertCurrency((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("tsi").setGetter((p) -> ((PlayerTransfer) p).getTsi()).setSetter((p, v) -> ((PlayerTransfer) p).setTsi((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("tsi").setGetter((p) -> ((PlayerTransfer) p).getTsi()).setSetter((p, v) -> ((PlayerTransfer) p).setTsi((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("motherclubfee").setGetter((p) -> ((PlayerTransfer) p).getMotherClubFee()).setSetter((p, v) -> ((PlayerTransfer) p).setMotherClubFee((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("previousclubcommission").setGetter((p) -> ((PlayerTransfer) p).getPreviousClubFee()).setSetter((p, v) -> ((PlayerTransfer) p).setPreviousClubFee((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
         };
 	}
 
@@ -43,29 +46,6 @@ public class TransferTable extends AbstractTable {
 			"CREATE INDEX buy_id ON " + getTableName() + "(" + columns[6].getColumnName() + ")",
 			"CREATE INDEX sell_id ON " + getTableName() + "(" + columns[8].getColumnName() + ")"};
 	}
-
-    private double currency_rate = 0.;
-
-    /**
-     * convert currency value in swedish krone to local currency
-     * @param v Integer value to convert
-     * @return Integer converted local currency
-     */
-    private Integer convertCurrency(Integer v) {
-        if ( v != null ){
-            if ( currency_rate == 0.){
-                var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
-                if ( xtra != null ){
-                    currency_rate = xtra.getCurrencyRate();
-                }
-                else {
-                    currency_rate = 1.;
-                }
-            }
-            return (int)(v/currency_rate);
-        }
-        return null;
-    }
 
     /**
      * Remove a transfer from the HO database
@@ -181,8 +161,44 @@ public class TransferTable extends AbstractTable {
      * @param transfer Transfer information
      */
     public void storeTransfer(PlayerTransfer transfer) {
-        transfer.setIsStored(isStored(transfer.getTransferId()));
+        if (!transfer.isStored()) {
+            var isStored = isStored(transfer.getTransferId());
+            transfer.setIsStored(isStored);
+        }
         store(transfer);
     }
 
+    DBManager.PreparedStatementBuilder transferIncomeSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE SELLERID=?");
+    DBManager.PreparedStatementBuilder transferCostSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE BUYERID=?");
+    public int getTransferIncomeSum(int teamId, boolean isSold) {
+        var statementBuilder = isSold?transferIncomeSumStatementBuilder:transferCostSumStatementBuilder;
+        var rs = this.adapter.executePreparedQuery(statementBuilder.getStatement(), teamId);
+        try {
+            if (rs != null) {
+                rs.next();
+                return rs.getInt(1);
+            }
+        }
+        catch (SQLException sqlException){
+            HOLogger.instance().error(getClass(), sqlException);
+        }
+        return 0;
+    }
+
+    public List<PlayerTransfer> getTeamTransfers(int teamId, boolean isSold) {
+        final StringBuilder sqlStmt = new StringBuilder("WHERE ");
+        if (isSold) {
+            sqlStmt.append("SELLERID");
+        } else {
+            sqlStmt.append("BUYERID");
+        }
+        sqlStmt.append("=? ORDER BY DATE DESC");
+        var sql = sqlStmt.toString();
+        var statement = getTransferStatements.get(sql);
+        if (statement == null) {
+            statement = new PreparedSelectStatementBuilder(this, sql).getStatement();
+            getTransferStatements.put(sql, statement);
+        }
+        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, teamId));
+    }
 }

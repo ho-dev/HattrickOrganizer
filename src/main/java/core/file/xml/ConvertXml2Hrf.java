@@ -15,11 +15,14 @@ import core.model.match.*;
 import core.model.player.PlayerAvatar;
 import core.model.player.TrainerStatus;
 import core.net.OnlineWorker;
+import core.util.HODateTime;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
+import module.transfer.PlayerTransfer;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -138,6 +141,26 @@ public class ConvertXml2Hrf {
 		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
+		if (!HOVerwaltung.instance().getModel().getCurrentPlayers().isEmpty()) { // do not download transfers on fresh database
+			if (Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) > 0 ||
+					Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) > 0 ||
+					Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) > 0 ||
+					Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")) > 0 ||
+					Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) > 0 ||
+					Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers")) > 0) {
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
+				PlayerTransfer.downloadMissingTransfers(teamId);
+			}
+		}
+
+		var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
+		if (commission > 0){
+			PlayerTransfer.downloadMissingTransferCommissions(teamId, commission, HODateTime.now().toHTWeek());
+		}
+		var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
+		if ( lastCommission > 0){
+			PlayerTransfer.downloadMissingTransferCommissions(teamId, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
+		}
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
 		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
@@ -148,15 +171,14 @@ public class ConvertXml2Hrf {
 		var trainerId = String.valueOf(trainer.get("TrainerId"));
 		if (trainer.containsKey("TrainerId")) {
 			var trainerStatus = TrainerStatus.fromInt(Integer.parseInt(trainer.get("TrainerStatus")));
-			if (trainerStatus == TrainerStatus.PlayingTrainer){
+			if (trainerStatus == TrainerStatus.PlayingTrainer) {
 				for (var p : playersData) {
 					if (p.get("PlayerID").equals(trainerId)) {
 						p.putAll(trainer);
 						break;
 					}
 				}
-			}
-			else {
+			} else {
 				trainer.put("LineupDisabled", "true");
 				playersData.add(trainer);
 			}

@@ -76,6 +76,14 @@ public class XMLManager {
         return null;
     }
 
+    public static Long xmlLongValue(Element ele, String xmlKey) {
+        var value = xmlValue(ele, xmlKey);
+        if (!value.isEmpty()) {
+            return Long.parseLong(value);
+        }
+        return null;
+    }
+
     public static int xmlIntValue(Element ele, String xmlKey) {
         return xmlIntValue(ele,xmlKey,0);
     }
@@ -284,4 +292,5 @@ public class XMLManager {
 		}
 		return xml;
 	}
+
 }

@@ -6,6 +6,8 @@ package module.transfer.history;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -16,16 +18,13 @@ import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.sorter.DefaultTableSorter;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -34,8 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableModel;
-
 
 /**
  * Panel for showing detailed information on a player.
@@ -96,9 +93,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public PlayerDetailPanel() {
         super(new BorderLayout());
 
-        final TableModel model = new PlayerTransferTableModel(new ArrayList<>());
-        final TeamTransferSorter sorter = new TeamTransferSorter(model);
+        var model = UserColumnController.instance().getPlayerTransferTableModel();
+        var sorter = new DefaultTableSorter(model);
         playerTable = new JTable(sorter);
+        playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         sorter.setTableHeader(playerTable.getTableHeader());
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
@@ -193,6 +191,16 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         updatePanel();
     }
 
+    public final void setPlayer(PlayerTransfer transfer) {
+        this.player = transfer.getPlayerInfo();
+
+        this.playerId = player.getPlayerID();
+        this.playerName = player.getFullName();
+
+        clearPanel();
+        updatePanel();
+    }
+
     /** {@inheritDoc} */
     public final void actionPerformed(ActionEvent e) {
         if (this.playerId > 0) {
@@ -241,13 +249,13 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      */
     private void refreshPlayerTable(List<PlayerTransfer> values) {
         final DefaultTableSorter sorter = (DefaultTableSorter) playerTable.getModel();
-        sorter.setTableModel(new PlayerTransferTableModel(values));
+        var model = UserColumnController.instance().getPlayerTransferTableModel();
+        model.setValues(values);
+        sorter.setTableModel(model);
         playerTable.getColumnModel().getColumn(3).setPreferredWidth(200);
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
         playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
-        playerTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonCellRenderer());
-        playerTable.getColumnModel().getColumn(9).setCellEditor(new ButtonCellEditor(this, values));
     }
 
     /**

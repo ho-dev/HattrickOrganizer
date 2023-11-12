@@ -87,6 +87,12 @@ final class DBUpdater {
 		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");
 		playerTable.tryAddColumn("ContractDate", "VARCHAR(100)");
 		playerTable.tryChangeColumn("OwnerNotes", "VARCHAR(512)");
+		playerTable.tryAddIndex("ISPIELER_3", "LASTNAME,FIRSTNAME,DATUM");
+		// playerTable.tryDropIndex("ISPIELER_3");
+
+		var transferTable = dbManager.getTable(TransferTable.TABLENAME);
+		transferTable.tryAddColumn("motherclubfee", "INTEGER");
+		transferTable.tryAddColumn("previousclubcommission", "INTEGER");
 		updateDBVersion(dbVersion, 800);
 	}
 

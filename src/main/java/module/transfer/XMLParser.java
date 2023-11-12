@@ -31,8 +31,6 @@ public final class XMLParser {
     private XMLParser() {
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
     /**
      * Gets all transfers for a player.
      *
@@ -42,7 +40,7 @@ public final class XMLParser {
      *
      */
     public static List<PlayerTransfer> getAllPlayerTransfers(int playerId) {
-        
+
     	final String xml = MyConnector.instance().getTransfersForPlayer(playerId);
         final List<PlayerTransfer> transferList = new Vector<>();
 
@@ -61,8 +59,8 @@ public final class XMLParser {
 
                 // Get the player info
                 final Element playerElement = (Element) container.getElementsByTagName("Player").item(0); //$NON-NLS-1$
-                final int playerid = Integer.parseInt(getChildNodeValue(playerElement, "PlayerID")); //$NON-NLS-1$
-                final String playerName = getChildNodeValue(playerElement, "PlayerName"); //$NON-NLS-1$
+                final int playerid = XMLManager.xmlIntValue(playerElement, "PlayerID"); //$NON-NLS-1$
+                final String playerName = XMLManager.xmlValue(playerElement, "PlayerName"); //$NON-NLS-1$
 
                 // Get the player transfers
                 final NodeList transfers = container.getElementsByTagName("Transfer"); //$NON-NLS-1$
@@ -71,11 +69,11 @@ public final class XMLParser {
                     final Element transfer = (Element) transfers.item(trans);
 
                     if (transfer != null) {
-                        final int transferid = Integer.parseInt(getChildNodeValue(transfer, "TransferID")); //$NON-NLS-1$
+                        final int transferid = XMLManager.xmlIntValue(transfer, "TransferID"); //$NON-NLS-1$
                         final PlayerTransfer playerTranfer = new PlayerTransfer(transferid, playerid);
                         playerTranfer.setPlayerName(playerName);
 
-                        final String deadline = getChildNodeValue(transfer, "Deadline");
+                        final String deadline = XMLManager.xmlValue(transfer, "Deadline");
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTranfer.setDate(transferDate);
@@ -89,18 +87,15 @@ public final class XMLParser {
 
                         if ((buyer != null) && (seller != null)) {
                             // Get the buyer info
-                            playerTranfer.setBuyerid(Integer.parseInt(getChildNodeValue(buyer, "BuyerTeamID"))); //$NON-NLS-1$
-                            playerTranfer.setBuyerName(getChildNodeValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
+                            playerTranfer.setBuyerid(XMLManager.xmlIntValue(buyer, "BuyerTeamID")); //$NON-NLS-1$
+                            playerTranfer.setBuyerName(XMLManager.xmlValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
                             // Get the seller info
-                            playerTranfer.setSellerid(Integer.parseInt(getChildNodeValue(seller, "SellerTeamID"))); //$NON-NLS-1$
-                            playerTranfer.setSellerName(getChildNodeValue(seller, "SellerTeamName")); //$NON-NLS-1$
+                            playerTranfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
+                            playerTranfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
 
-                            playerTranfer.setPrice(Integer.parseInt(getChildNodeValue(transfer, "Price"))); //$NON-NLS-1$
-                            //playerTranfer.setMarketvalue(Integer.parseInt(getChildNodeValue(transfer, "MarketValue"))); //$NON-NLS-1$
-                            playerTranfer.setMarketvalue(Integer.parseInt(getChildNodeValue(transfer, "TSI"))); //for safety
-                            playerTranfer.setTsi(Integer.parseInt(getChildNodeValue(transfer, "TSI"))); //$NON-NLS-1$
+                            playerTranfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
+                            playerTranfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
                         }
-
                         transferList.add(playerTranfer);
                     }
                 }
@@ -114,85 +109,68 @@ public final class XMLParser {
     /**
      * Get all player transfers of a team till a certain date.
      *
-     * @param teamid the team id
+     * @param teamId the team id
      * @param endDate end date for the transfers
      */
-    public static List<PlayerTransfer> getAllTeamTransfers(int teamid, HODateTime endDate) {
+    public static List<PlayerTransfer> getAllTeamTransfers(int teamId, HODateTime endDate) {
         final List<PlayerTransfer> transferList = new Vector<>();
-        final String url = "/common/chppxml.axd?file=transfersTeam&teamID="+teamid+"&pageIndex=";
-
-        // loop all pages 0 .. n until there are no more data avaliable
-        boolean stop = false;
-        int page = 0;
-        while (!stop) {
-	        final String xml = MyConnector.instance().getHattrickXMLFile(url+page); 
-	        final Document doc = XMLManager.parseString(xml);
-
-	        //get Root element ('HattrickData') :
-            assert doc != null;
-            final Element root = doc.getDocumentElement();
-
-	        final Element teamElement = (Element) root.getElementsByTagName("Team").item(0); //$NON-NLS-1$
-	        var activatedDate = HODateTime.fromHT(getChildNodeValue(teamElement, "ActivatedDate"));
-
-	        List<PlayerTransfer> transfers = parseTeamTransfers(doc, activatedDate, endDate);
-	        if (transfers.size()<1) {
-	        	stop = true;
+        // loop all pages 0 .. n until there are no more data available
+        int page = 1;
+        while (true) {
+            var transfers = downloadTeamTransfers(teamId, page++);
+	        if (transfers.isEmpty()) {
+                break;
 	        } else {
-	        	transferList.addAll(transfers);
+                for ( var transfer : transfers){
+                    if (!transfer.getDate().isBefore(PlayerTransfer.activatedDate) && !transfer.getDate().isAfter(endDate)){
+                        transferList.add(transfer);
+                    }
+                }
 	        }
-	        page++;
         }
-
         return transferList;
     }
 
     /**
-     * Get the value of a child node
-     *
-     * @param element Parent element
-     * @param childnode Tag name of the childnode
-     *
-     * @return Value of the child node
-     *
+     * Download one page of team's transfers
+     * Static player transfer information about activated date, price sum and count are updated
+     * @param teamId Team id
+     * @param page Page number [1..], 0 is last page
+     * @return List of transfers (max 25)
      */
-    private static String getChildNodeValue(Element element, String childnode) {
-        try {
-            String retval = ""; //$NON-NLS-1$
-
-            if (element != null) {
-                final NodeList list = element.getElementsByTagName(childnode);
-
-                if (list.getLength() > 0) {
-                    final Element child = (Element) list.item(0);
-                    core.file.xml.XMLManager.getFirstChildNodeValue(child);
-
-                    if ((child != null) && (element.getFirstChild() != null)) {
-                        retval = child.getFirstChild().getNodeValue();
-                    }
-                }
-            }
-
-            return retval;
-        } catch (NullPointerException e) {
-            return ""; //$NON-NLS-1$
+    public static List<PlayerTransfer> downloadTeamTransfers(int teamId, int page){
+        var url = "/common/chppxml.axd?file=transfersTeam&teamID="+teamId+"&pageIndex="+page;
+        var xml = MyConnector.instance().getHattrickXMLFile(url);
+        var doc = XMLManager.parseString(xml);
+        if (doc != null){
+            return parseTeamTransfers(doc);
         }
+        return new ArrayList<>();
     }
 
     /**
      * Parse xml data for team transfers
      *
      * @param doc Xml document
-     * @param activatedDate date when the team got activated, dont include transfers before that date
-     * @param endDate end date of transfers to parse
-     *
      * @return List of transfers.
      */
-    public static List<PlayerTransfer> parseTeamTransfers(Document doc, HODateTime activatedDate, HODateTime endDate) {
+    public static List<PlayerTransfer> parseTeamTransfers(Document doc) {
         final List<PlayerTransfer> transferList = new Vector<>();
 
         //get Root element ('HattrickData') :
         final Element root = doc.getDocumentElement();
+
+        // Team
+        var team = (Element) root.getElementsByTagName("Team").item(0);
+        PlayerTransfer.teamId = XMLManager.xmlIntegerValue(team, "TeamID");
+        PlayerTransfer.activatedDate = HODateTime.fromHT(XMLManager.xmlValue(team, "ActivatedDate"));
+
+        // Stats
+        var stats = (Element) root.getElementsByTagName("Stats").item(0);
+        PlayerTransfer.totalSumOfBuys = XMLManager.xmlLongValue(stats, "TotalSumOfBuys");
+        PlayerTransfer.totalSumOfSales = XMLManager.xmlLongValue(stats, "TotalSumOfSales");
+        PlayerTransfer.numberOfBuys = XMLManager.xmlLongValue(stats, "NumberOfBuys");
+        PlayerTransfer.numberOfSales = XMLManager.xmlLongValue(stats, "NumberOfSales");
 
         // Get tranfer info
         final NodeList containers = root.getElementsByTagName("Transfers"); //$NON-NLS-1$
@@ -210,19 +188,16 @@ public final class XMLParser {
                     if (transfer != null) {
                         // Get the player info
                         final Element playerElement = (Element) transfer.getElementsByTagName("Player").item(0); //$NON-NLS-1$
-                        final int playerid = Integer.parseInt(getChildNodeValue(playerElement, "PlayerID")); //$NON-NLS-1$
-                        final String playerName = getChildNodeValue(playerElement, "PlayerName"); //$NON-NLS-1$
+                        final int playerid = XMLManager.xmlIntValue(playerElement, "PlayerID"); //$NON-NLS-1$
+                        final String playerName = XMLManager.xmlValue(playerElement, "PlayerName"); //$NON-NLS-1$
 
-                        final int transferid = Integer.parseInt(getChildNodeValue(transfer, "TransferID")); //$NON-NLS-1$
+                        final int transferid = XMLManager.xmlIntValue(transfer, "TransferID"); //$NON-NLS-1$
                         final PlayerTransfer playerTranfer = new PlayerTransfer(transferid, playerid);
                         playerTranfer.setPlayerName(playerName);
 
-                        final String deadline = getChildNodeValue(transfer, "Deadline");
+                        final String deadline = XMLManager.xmlValue(transfer, "Deadline");
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
-                        if (transferDate.isBefore(activatedDate)) continue;
-                        if (transferDate.isAfter(endDate)) continue;
-
                         playerTranfer.setDate(transferDate);
                         var htweek = transferDate.toLocaleHTWeek();
                         playerTranfer.setSeason(htweek.season);
@@ -233,16 +208,21 @@ public final class XMLParser {
 
                         if ((buyer != null) && (seller != null)) {
                             // Get the buyer info
-                            playerTranfer.setBuyerid(Integer.parseInt(getChildNodeValue(buyer, "BuyerTeamID"))); //$NON-NLS-1$
-                            playerTranfer.setBuyerName(getChildNodeValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
+                            playerTranfer.setBuyerid(XMLManager.xmlIntValue(buyer, "BuyerTeamID")); //$NON-NLS-1$
+                            playerTranfer.setBuyerName(XMLManager.xmlValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
                             // Get the seller info
-                            playerTranfer.setSellerid(Integer.parseInt(getChildNodeValue(seller, "SellerTeamID"))); //$NON-NLS-1$
-                            playerTranfer.setSellerName(getChildNodeValue(seller, "SellerTeamName")); //$NON-NLS-1$
+                            playerTranfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
+                            playerTranfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
 
-                            playerTranfer.setPrice(Integer.parseInt(getChildNodeValue(transfer, "Price"))); //$NON-NLS-1$
-                            //playerTranfer.setMarketvalue(Integer.parseInt(getChildNodeValue(transfer, "MarketValue"))); //$NON-NLS-1$
-                            playerTranfer.setMarketvalue(Integer.parseInt(getChildNodeValue(transfer, "TSI"))); //for safety. not sure, if it's needed
-                            playerTranfer.setTsi(Integer.parseInt(getChildNodeValue(transfer, "TSI"))); //$NON-NLS-1$
+                            playerTranfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
+                            playerTranfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
+                            var transferType = XMLManager.xmlValue(transfer, "TransferType"); //$NON-NLS-1$
+                            if ( transferType.equals("S")){
+                                playerTranfer.setType(PlayerTransfer.SELL);
+                            }
+                            else {
+                                playerTranfer.setType(PlayerTransfer.BUY);
+                            }
                         }
 
                         transferList.add(playerTranfer);
@@ -267,11 +247,8 @@ public final class XMLParser {
         return false;
     }
 
-
     /**
      * Update transfer data for a team from the HT xml.
-     * Returns false if this fails
-     *
      * @param transfers player transfers
      */
     private static List<Player> updateTeamTransfers(List<PlayerTransfer> transfers) {
@@ -306,7 +283,7 @@ public final class XMLParser {
 
     public static void updatePlayerTransfers(int playerID) {
         var transfers = getAllPlayerTransfers(playerID);
-        if (transfers.size()>0) {
+        if (!transfers.isEmpty()) {
             for ( var transfer : transfers){
                 DBManager.instance().storePlayerTransfer(transfer);
             }

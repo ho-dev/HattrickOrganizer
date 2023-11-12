@@ -46,7 +46,7 @@ public class HRFStringParser {
 		HOModel modelReturn = null;
 		HODateTime hrfdate = null;
 
-		if (hrf == null || hrf.length() == 0) {
+		if (hrf == null || hrf.isEmpty()) {
 			HOLogger.instance().log(HRFStringParser.class, "HRF string is empty");
 			return null;
 		}
@@ -69,7 +69,7 @@ public class HRFStringParser {
 				lineString = hrfReader.readLine();
 
 				// Ignore empty lines
-				if ((lineString == null) || lineString.trim().equals("")) {
+				if ((lineString == null) || lineString.trim().isEmpty()) {
 					continue;
 				}
 
@@ -185,7 +185,7 @@ public class HRFStringParser {
 				}
 				// player
 				else if (entity.toString().equalsIgnoreCase(PLAYER)) {
-					hoModel.addPlayer(new Player(properties, hrfdate, hoModel.getID()));
+					hoModel.addPlayer(new Player(properties, hrfdate, hoModel.getHrfId()));
 				}
 				else if (entity.toString().equalsIgnoreCase(YOUTHPLAYER)) {
 					hoModel.addYouthPlayer(new YouthPlayer(properties));
@@ -258,7 +258,7 @@ public class HRFStringParser {
 			return list;
 
 		} catch (Exception e) {
-			HOLogger.instance().error(null, "HRFStringParser: Failed to parse staff members");
+			HOLogger.instance().error(null, "HRFStringParser: Failed to parse staff members: " + e);
 			return new ArrayList<>();
 		}
 	}

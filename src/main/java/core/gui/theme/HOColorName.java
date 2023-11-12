@@ -200,8 +200,6 @@ public interface HOColorName {
 	String INJURY = "injury_indicator";
 	String PLASTER = "plaster";
 
-	// Promotion
-	String BG_PROMOTION_INFO = "promotion.info.bg";
 	String FG_PROMOTION_INFO = "promotion.info.fg";
 
 	// colors palettes used for graphics
