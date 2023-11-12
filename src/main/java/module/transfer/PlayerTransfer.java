@@ -409,7 +409,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
 
                 if (playerInfo != null) {
                     this.playerId = playerInfo.getPlayerID();
-                    updatePlayerTransfer(this);
+                    // Don't update database here (causes recursive inserts on transfer updates)
+                    //updatePlayerTransfer(this);
                 }
             }
             if (playerInfo == null) {
@@ -419,7 +420,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
                 playerInfo.setPlayerID(-1); // non-existing player
                 if (playerId != -1) {
                     setPlayerId(-1);
-                    updatePlayerTransfer(this);
+                    // Don't update database here (causes recursive inserts on transfer updates)
+                    //updatePlayerTransfer(this);
                 }
             }
         }
