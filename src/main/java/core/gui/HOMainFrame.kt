@@ -190,7 +190,7 @@ object HOMainFrame : JFrame(), Refreshable {
         if (selectedPlayer !== player) {
             selectedPlayer = player
             val lineupPanel = lineupPanel
-            lineupPanel?.setPlayer(player.playerID)
+            lineupPanel?.setPlayer(player.playerId)
             playerOverviewPanel.setPlayer(player)
         }
     }

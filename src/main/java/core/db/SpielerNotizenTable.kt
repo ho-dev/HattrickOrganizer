@@ -40,7 +40,7 @@ internal class SpielerNotizenTable(adapter: JDBCAdapter) : AbstractTable(TABLENA
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("isFired")
                 .setGetter(Function<Any?, Any?> { o: Any? -> (o as Player.Notes?)!!.isFired }).setSetter(
-                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.setIsFired(v as Boolean) })
+                BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Player.Notes?)!!.isFired = v as Boolean })
                 .setType(Types.BOOLEAN).isNullable(false).build()
         )
     }

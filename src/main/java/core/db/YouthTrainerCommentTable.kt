@@ -37,7 +37,7 @@ class YouthTrainerCommentTable internal constructor(adapter: JDBCAdapter) : Abst
                 Types.VARCHAR
             ).setLength(255).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Type")
-                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getType().getValue() }))
+                .setGetter(Function<Any?, Any?>({ p: Any? -> (p as YouthTrainerComment?)!!.getType().value }))
                 .setSetter(
                     BiConsumer<Any?, Any>({ p: Any?, v: Any? ->
                         (p as YouthTrainerComment?)!!.setType(

@@ -13,21 +13,22 @@ import java.util.function.Function
 internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adapter) {
     override fun initColumns() {
         columns = arrayOf<ColumnDescriptor>(
-            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HRF_ID")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hrfId }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.hrfId = v as Int }).setType(Types.INTEGER)
+            ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hrfId })
+                .setSetter(BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.hrfId = v as Int })
+                .setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SpielerID")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.playerID }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.playerID = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.playerId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.playerId = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Datum")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getHrfDate().toDbTimestamp() }).setSetter(
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hrfDate?.toDbTimestamp() }).setSetter(
                 BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.hrfDate = v as HODateTime? })
                 .setType(Types.TIMESTAMP).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GelbeKarten")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.cards }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setGelbeKarten(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.totalCards }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.totalCards = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("FirstName")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.firstName }).setSetter(
@@ -42,8 +43,8 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.lastName = v as String? })
                 .setType(Types.VARCHAR).isNullable(false).setLength(100).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Age")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.alter }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setAge(v as Int) }).setType(Types.INTEGER)
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.age }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.age = (v as Int) }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Kondition")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.stamina }).setSetter(
@@ -54,32 +55,32 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.form = v as Int }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Torwart")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.gKskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setTorwart(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.goalkeeperSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.goalkeeperSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
-            ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Verteidigung")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.deFskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setVerteidigung(v as Int) })
+            ColumnDescriptor.Builder.newInstance().setColumnName("Verteidigung")
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.defendingSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.defendingSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Spielaufbau")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.pMskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setSpielaufbau(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.playmakingSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.playmakingSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Fluegel")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.wIskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setFluegelspiel(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.wingerSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.wingerSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Torschuss")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.sCskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setTorschuss(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.scoringSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.scoringSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Passpiel")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.pSskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setPasspiel(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.passingSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.passingSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Standards")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.sPskill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setStandards(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.setPiecesSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setPiecesSkill = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SubTorwart")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getSub4Skill(PlayerSkill.KEEPER) })
@@ -159,20 +160,20 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 Types.REAL
             ).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iSpezialitaet")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.playerSpecialty }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.playerSpecialty = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.specialty }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.specialty = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iCharakter")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.charakter }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.charakter = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.gentleness }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.gentleness = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iAnsehen")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.ansehen }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.ansehen = v as Int }).setType(Types.INTEGER)
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.honesty }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.honesty = v as Int }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("iAgressivitaet")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.agressivitaet }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.agressivitaet = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.agressivity }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.agressivity = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Fuehrung")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.leadership }).setSetter(
@@ -183,15 +184,15 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.experience = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Gehalt")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.salary }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setGehalt(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.wage }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.wage = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Land")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.nationalityAsInt }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.nationalityAsInt = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.nationalityId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.nationalityId = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Marktwert")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getMarktwert() }).setSetter(
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getMarketValue() }).setSetter(
                 BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.tsi = v as Int }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Verletzt")
@@ -199,63 +200,63 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.injuryWeeks = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ToreFreund")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.toreFreund }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.toreFreund = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.friendlyGoals }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.friendlyGoals = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ToreLiga")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.seasonSeriesGoal }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setToreLiga(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.leagueGoals }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.leagueGoals = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TorePokal")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.seasonCupGoal }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setTorePokal(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.cupGameGoals }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.cupGameGoals = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("ToreGesamt")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.allOfficialGoals }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.allOfficialGoals = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.totalGoals }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.totalGoals = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Hattrick")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hattrick }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.hattrick = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hatTricks }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.hatTricks = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Bewertung")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.rating }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setBewertung(v as Int) })
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.rating = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TrainerTyp")
                 .setGetter(Function<Any?, Any?> { p: Any? ->
                     TrainerType.toInt(
-                        (p as Player?)!!.trainerTyp
+                        (p as Player?)!!.trainerType
                     )
                 }).setSetter(
                 BiConsumer<Any?, Any> { p: Any?, v: Any ->
-                    (p as Player?)!!.trainerTyp = TrainerType.fromInt(v as Int)
+                    (p as Player?)!!.trainerType = TrainerType.fromInt(v as Int)
                 }).setType(
                 Types.INTEGER
             ).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Trainer")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.trainerSkill }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setTrainerSkill(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.coachSkill }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.coachSkill = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("PlayerNumber")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.trikotnummer }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setShirtNumber(v as Int) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.shirtNumber }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.shirtNumber = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TransferListed")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.transferlisted }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.transferlisted = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.transferListed }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.transferListed = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Caps")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.laenderspiele }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.laenderspiele = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.internationalMatches }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.internationalMatches = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("CapsU20")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.u20Laenderspiele }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.u20Laenderspiele = v as Int })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.u20InternationalMatches }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.u20InternationalMatches = v as Int })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("AgeDays")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.ageDays }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.setAgeDays(v as Int) })
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.ageDays = (v as Int) })
                 .setType(Types.INTEGER).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("TrainingBlock")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.hasTrainingBlock() }).setSetter(
@@ -266,12 +267,12 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.loyalty = v as Int }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("HomeGrown")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.isHomeGrown }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.isHomeGrown = v as Boolean })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.homeGrown }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any -> (p as Player?)!!.homeGrown = v as Boolean })
                 .setType(Types.BOOLEAN).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("NationalTeamID")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.nationalTeamID }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.setNationalTeamId(v as Int?) })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.nationalTeamId }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.nationalTeamId = v as Int? })
                 .setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("SubExperience")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.subExperience }).setSetter(
@@ -290,7 +291,7 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.lastMatchId = v as Int? })
                 .setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LAST_MATCH_TYPE")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.lastMatchType.id }).setSetter(
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.lastMatchType?.id }).setSetter(
                 BiConsumer<Any?, Any> { p: Any?, v: Any? ->
                     (p as Player?)!!.lastMatchType = MatchType.getById(v as Int?)
                 }).setType(
@@ -301,8 +302,8 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.arrivalDate = v as String? })
                 .setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("GoalsCurrentTeam")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.goalsCurrentTeam }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.goalsCurrentTeam = (v as Int?)!! })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.currentTeamGoals }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.currentTeamGoals = (v as Int?)!! })
                 .setType(
                     Types.INTEGER
                 ).isNullable(true).build(),
@@ -341,19 +342,19 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
                 ).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MotherclubId")
                 .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getOrDownloadMotherclubId() }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.setMotherClubId(v as Int?) })
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.motherClubId = (v as Int?) })
                 .setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MotherclubName")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getOrDownloadMotherclubName() })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.getOrDownloadMotherClubName() })
                 .setSetter(
-                    BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.setMotherClubName(v as String?) })
+                    BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.motherClubName = (v as String?) })
                 .setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("MatchesCurrentTeam")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.matchesCurrentTeam }).setSetter(
-                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.matchesCurrentTeam = v as Int? })
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.currentTeamMatches }).setSetter(
+                BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.currentTeamMatches = v as Int? })
                 .setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("LineupDisabled")
-                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.isLineupDisabled }).setSetter(
+                .setGetter(Function<Any?, Any?> { p: Any? -> (p as Player?)!!.isLineupDisabled() }).setSetter(
                 BiConsumer<Any?, Any> { p: Any?, v: Any? -> (p as Player?)!!.setLineupDisabled(v as Boolean?) })
                 .setType(
                     Types.BOOLEAN
@@ -505,7 +506,7 @@ internal class SpielerTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, ada
             adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid, after)
         )
         if (ret != null) {
-            ret.isOld = true
+            ret.isGoner = true
         }
         return ret
     }

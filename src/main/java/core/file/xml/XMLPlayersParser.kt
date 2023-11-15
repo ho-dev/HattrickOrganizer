@@ -411,22 +411,22 @@ object XMLPlayersParser {
         ) return null // foreign player
 
         val player = Player()
-        player.playerID = XMLManager.xmlIntValue(root, "PlayerID")
+        player.playerId = XMLManager.xmlIntValue(root, "PlayerID")
         player.firstName = XMLManager.xmlValue(root, "FirstName")
         player.nickName = XMLManager.xmlValue(root, "NickName")
         player.lastName = XMLManager.xmlValue(root, "LastName")
-        player.setShirtNumber(XMLManager.xmlIntValue(root, "PlayerNumber"))
+        player.shirtNumber = XMLManager.xmlIntValue(root, "PlayerNumber")
         player.playerCategory = PlayerCategory.valueOf(XMLManager.xmlIntValue(root, "PlayerCategoryID", -1))
         player.ownerNotes = XMLManager.xmlValue(root, "OwnerNotes")
-        player.setAge(XMLManager.xmlIntValue(root, "Age"))
-        player.setAgeDays(XMLManager.xmlIntValue(root, "AgeDays"))
+        player.age = XMLManager.xmlIntValue(root, "Age")
+        player.ageDays = XMLManager.xmlIntValue(root, "AgeDays")
 
 //        NextBirthDay : DateTime
 //        The aproximate Date/time of next birthday.
 
         player.arrivalDate = XMLManager.xmlValue(root, "ArrivalDate")
         player.form = XMLManager.xmlIntValue(root, "PlayerForm")
-        player.setGelbeKarten(XMLManager.xmlIntValue(root, "Cards"))
+        player.totalCards = XMLManager.xmlIntValue(root, "Cards")
         player.injuryWeeks = XMLManager.xmlIntValue(root, "InjuryLevel")
         player.playerStatement = XMLManager.xmlValue(root, "Statement")
 
@@ -437,15 +437,15 @@ object XMLPlayersParser {
 //        This container and its elements is only shown if the user has supporter
 //        The languageID the player speaks in his Statement, if existing.
 
-        player.ansehen = XMLManager.xmlIntValue(root, "Agreeability")
-        player.agressivitaet = XMLManager.xmlIntValue(root, "Aggressiveness")
-        player.charakter = XMLManager.xmlIntValue(root, "Honesty")
+        player.honesty = XMLManager.xmlIntValue(root, "Agreeability")
+        player.agressivity = XMLManager.xmlIntValue(root, "Aggressiveness")
+        player.gentleness = XMLManager.xmlIntValue(root, "Honesty")
         player.experience = XMLManager.xmlIntValue(root, "Experience")
         player.loyalty = XMLManager.xmlIntValue(root, "Loyalty")
-        player.isHomeGrown = XMLManager.xmlBoolValue(root, "MotherClubBonus")
+        player.homeGrown = XMLManager.xmlBoolValue(root, "MotherClubBonus")
         player.leadership = XMLManager.xmlIntValue(root, "Leadership")
-        player.playerSpecialty = XMLManager.xmlIntValue(root, "Specialty")
-        player.nationalityAsInt = XMLManager.xmlIntValue(root, "NativeCountryID")
+        player.specialty = XMLManager.xmlIntValue(root, "Specialty")
+        player.nationalityId = XMLManager.xmlIntValue(root, "NativeCountryID")
 
 //                NativeLeagueID : unsigned Integer
 //        LeagueID of the league where the player was born.
@@ -463,48 +463,48 @@ object XMLPlayersParser {
 //        LeagueID : unsigned Integer
 //        LeagueID for the league of the team owning the player.
 
-        player.setGehalt(XMLManager.xmlIntValue(root, "Salary"))
+        player.wage = XMLManager.xmlIntValue(root, "Salary")
 
 //        IsAbroad : Boolean*
 //                The abroad status of the player, given as an integer. true for beeing in home country, false for beeing in a team abroad. The container is empty If the player has no owner.
 
-        player.laenderspiele = XMLManager.xmlIntValue(root, "Caps")
-        player.u20Laenderspiele = XMLManager.xmlIntValue(root, "CapsU20")
-        player.allOfficialGoals = XMLManager.xmlIntValue(root, "CareerGoals")
-        player.hattrick = XMLManager.xmlIntValue(root, "CareerHattricks")
-        player.matchesCurrentTeam = XMLManager.xmlIntegerValue(root, "MatchesCurrentTeam")
-        player.goalsCurrentTeam = XMLManager.xmlIntValue(root, "GoalsCurrentTeam")
-        player.setNationalTeamId(XMLManager.xmlIntegerValue(root, "NationalTeamID"))
+        player.internationalMatches = XMLManager.xmlIntValue(root, "Caps")
+        player.u20InternationalMatches = XMLManager.xmlIntValue(root, "CapsU20")
+        player.totalGoals = XMLManager.xmlIntValue(root, "CareerGoals")
+        player.hatTricks = XMLManager.xmlIntValue(root, "CareerHattricks")
+        player.currentTeamMatches = XMLManager.xmlIntegerValue(root, "MatchesCurrentTeam")
+        player.currentTeamGoals = XMLManager.xmlIntValue(root, "GoalsCurrentTeam")
+        player.nationalTeamId = XMLManager.xmlIntegerValue(root, "NationalTeamID")
 
 //        NationalTeamName : String*
 //                If the player is enrolled on a national team, this is that national team's name.
         val transferListed:Int = if (XMLManager.xmlBoolValue(root, "TransferListed")) 1 else 0
-        player.transferlisted = transferListed
+        player.transferListed = transferListed
 
         var ele = root?.getElementsByTagName("TrainerData")?.item(0) as Element?
         if (ele != null) {
             val trainerType: TrainerType = TrainerType.valueOf(XMLManager.xmlValue(ele, "TrainerType"))
-            player.trainerTyp = trainerType
+            player.trainerType = trainerType
             val trainerSkill = XMLManager.xmlIntValue(root, "TrainerSkill", 0)
-            player.trainerSkill = trainerSkill
+            player.coachSkill = trainerSkill
         }
 
         ele = root?.getElementsByTagName("MotherClub")?.item(0) as Element?
         if (ele != null) {
-            player.setMotherClubId(XMLManager.xmlIntegerValue(ele, "TeamID"))
-            player.setMotherClubName(XMLManager.xmlValue(ele, "TeamName"))
+            player.motherClubId = XMLManager.xmlIntegerValue(ele, "TeamID")
+            player.motherClubName = XMLManager.xmlValue(ele, "TeamName")
         }
 
         ele = root?.getElementsByTagName("PlayerSkills")?.item(0) as Element?
         if (ele != null) {
-            player.setStamina(XMLManager.xmlIntValue(ele, "StaminaSkill"))
-            player.setTorwart(XMLManager.xmlIntValue(ele, "KeeperSkill"))
-            player.setSpielaufbau(XMLManager.xmlIntValue(ele, "PlaymakerSkill"))
-            player.setTorschuss(XMLManager.xmlIntValue(ele, "ScorerSkill"))
-            player.setPasspiel(XMLManager.xmlIntValue(ele, "PassingSkill"))
-            player.setFluegelspiel(XMLManager.xmlIntValue(ele, "WingerSkill"))
-            player.setVerteidigung(XMLManager.xmlIntValue(ele, "DefenderSkill"))
-            player.setStandards(XMLManager.xmlIntValue(ele, "SetPiecesSkill"))
+            player.stamina = XMLManager.xmlIntValue(ele, "StaminaSkill")
+            player.goalkeeperSkill = XMLManager.xmlIntValue(ele, "KeeperSkill")
+            player.playmakingSkill = XMLManager.xmlIntValue(ele, "PlaymakerSkill")
+            player.scoringSkill = XMLManager.xmlIntValue(ele, "ScorerSkill")
+            player.passingSkill = XMLManager.xmlIntValue(ele, "PassingSkill")
+            player.wingerSkill = XMLManager.xmlIntValue(ele, "WingerSkill")
+            player.defendingSkill = XMLManager.xmlIntValue(ele, "DefenderSkill")
+            player.setPiecesSkill = XMLManager.xmlIntValue(ele, "SetPiecesSkill")
         }
 
         return player

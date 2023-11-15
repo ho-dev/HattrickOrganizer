@@ -70,13 +70,19 @@ class KotlinBehaviourTest {
         match2.matchStatus = MatchKurzInfo.UPCOMING
         val match3 = MatchKurzInfo()
         match3.matchSchedule = HODateTime.HT_START
-        //match3.matchStatus = MatchKurzInfo.UPCOMING
-
+        match3.matchStatus = MatchKurzInfo.UPCOMING
 
         val infos = listOf(match1, match2)
         val result = infos.filter { matchKurzInfo -> matchKurzInfo.matchStatus == MatchKurzInfo.UPCOMING }
             .minBy { matchKurzInfo -> matchKurzInfo.matchSchedule }
 
-        assertEquals(match1.matchSchedule, result.matchSchedule)
+        assertEquals(match2.matchSchedule, result.matchSchedule)
+    }
+
+    @Test
+    fun testIsNullOrEmpty() {
+        fun returnNull(): String? = null
+        val test:String? = returnNull()
+        assertTrue(test.isNullOrEmpty())
     }
 }

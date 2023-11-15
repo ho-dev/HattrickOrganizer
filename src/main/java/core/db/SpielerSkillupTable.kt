@@ -25,7 +25,7 @@ internal class SpielerSkillupTable(adapter: JDBCAdapter) : AbstractTable(TABLENA
                 BiConsumer<Any?, Any> { o: Any?, v: Any -> (o as Skillup?)!!.hrfId = v as Int }).setType(Types.INTEGER)
                 .isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Datum")
-                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.date.toDbTimestamp() }).setSetter(
+                .setGetter(Function<Any?, Any?> { o: Any? -> (o as Skillup?)!!.date?.toDbTimestamp() }).setSetter(
                 BiConsumer<Any?, Any> { o: Any?, v: Any? -> (o as Skillup?)!!.date = v as HODateTime? })
                 .setType(Types.TIMESTAMP).isNullable(false).build(),
             ColumnDescriptor.Builder.Companion.newInstance().setColumnName("Value")
@@ -73,15 +73,15 @@ internal class SpielerSkillupTable(adapter: JDBCAdapter) : AbstractTable(TABLENA
     fun importNewSkillup(homodel: HOModel) {
         val players = homodel.getCurrentPlayers()
         for (nPlayer in players) {
-            val oPlayer = HOVerwaltung.instance().model.getCurrentPlayer(nPlayer.playerID)
+            val oPlayer = HOVerwaltung.instance().model.getCurrentPlayer(nPlayer.playerId)
             if (oPlayer != null) {
-                checkNewSkillup(nPlayer, nPlayer.gKskill, oPlayer.gKskill, PlayerSkill.KEEPER, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.pMskill, oPlayer.pMskill, PlayerSkill.PLAYMAKING, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.pSskill, oPlayer.pSskill, PlayerSkill.PASSING, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.wIskill, oPlayer.wIskill, PlayerSkill.WINGER, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.deFskill, oPlayer.deFskill, PlayerSkill.DEFENDING, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.sCskill, oPlayer.sCskill, PlayerSkill.SCORING, homodel.id)
-                checkNewSkillup(nPlayer, nPlayer.sPskill, oPlayer.sPskill, PlayerSkill.SET_PIECES, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.goalkeeperSkill, oPlayer.goalkeeperSkill, PlayerSkill.KEEPER, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.playmakingSkill, oPlayer.playmakingSkill, PlayerSkill.PLAYMAKING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.passingSkill, oPlayer.passingSkill, PlayerSkill.PASSING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.wingerSkill, oPlayer.wingerSkill, PlayerSkill.WINGER, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.defendingSkill, oPlayer.defendingSkill, PlayerSkill.DEFENDING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.scoringSkill, oPlayer.scoringSkill, PlayerSkill.SCORING, homodel.id)
+                checkNewSkillup(nPlayer, nPlayer.setPiecesSkill, oPlayer.setPiecesSkill, PlayerSkill.SET_PIECES, homodel.id)
                 checkNewSkillup(nPlayer, nPlayer.stamina, oPlayer.stamina, PlayerSkill.STAMINA, homodel.id)
                 checkNewSkillup(nPlayer, nPlayer.experience, oPlayer.experience, PlayerSkill.EXPERIENCE, homodel.id)
             }
@@ -92,9 +92,9 @@ internal class SpielerSkillupTable(adapter: JDBCAdapter) : AbstractTable(TABLENA
         if (newValue > oldValue) {
             val skillup = Skillup()
             skillup.hrfId = hrf
-            skillup.date = nPlayer.getHrfDate()
+            skillup.date = nPlayer.hrfDate
             skillup.skill = skill
-            skillup.playerId = nPlayer.playerID
+            skillup.playerId = nPlayer.playerId
             skillup.value = newValue
             storeSkillup(skillup)
             nPlayer.resetSkillUpInformation()

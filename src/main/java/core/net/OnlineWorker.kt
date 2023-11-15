@@ -905,7 +905,7 @@ object OnlineWorker {
                 val map = XMLMatchOrderParser.parseMatchOrderFromString(xml)
                 var trainerID = "-1"
                 try {
-                    trainerID = HOVerwaltung.instance().model.getTrainer().playerID.toString()
+                    trainerID = HOVerwaltung.instance().model.getTrainer().playerId.toString()
                 } catch (e: Exception) {
                     //It is possible that NTs struggle here.
                 }

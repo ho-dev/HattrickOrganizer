@@ -199,9 +199,9 @@ object HRFStringParser {
         if (trainerID > -1) {
             val players = hoModel.getCurrentPlayers()
             for (player in players) {
-                if (player.isTrainer && player.playerID != trainerID) {
-                    player.trainerSkill = -1
-                    player.trainerTyp = TrainerType.None
+                if (player.isCoach() && player.playerId != trainerID) {
+                    player.coachSkill = -1
+                    player.trainerType = TrainerType.None
                 }
             }
         }
