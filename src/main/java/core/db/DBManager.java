@@ -1536,7 +1536,7 @@ public class DBManager {
 		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
-	public int getSumTransferPrices(int teamID, boolean isSold) {
+	public long getSumTransferPrices(int teamID, boolean isSold) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransferIncomeSum(teamID, isSold);
 	}
@@ -1549,8 +1549,14 @@ public class DBManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+        return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
+	}
+
+	private void loadPlayerInfo(List<PlayerTransfer> playerTransfers) {
+		for ( var t : playerTransfers){
+			t.loadPLayerInfo(true);
+		}
 	}
 
 	/**
@@ -1562,8 +1568,10 @@ public class DBManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean isSold) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+		var ret = ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(season, bought, isSold);
+		loadPlayerInfo(ret);
+		return ret;
 	}
 
 	public int getSumTransferCommissions(HODateTime startWeek) {
@@ -1572,8 +1580,11 @@ public class DBManager {
 	}
 
 	public List<PlayerTransfer> loadTeamTransfers(int teamId, boolean isSold) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+		var ret = ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTeamTransfers(teamId, isSold);
+		loadPlayerInfo(ret);
+		return ret;
+
 	}
 
 	/**

@@ -6,6 +6,7 @@
  */
 package core.file.xml;
 
+import core.db.DBManager;
 import core.file.hrf.HRFStringBuilder;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
@@ -154,14 +155,16 @@ public class ConvertXml2Hrf {
 		}
 
 		var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
-		if (commission > 0){
-			PlayerTransfer.downloadMissingTransferCommissions(teamId, commission, HODateTime.now().toHTWeek());
-		}
 		var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
-		if ( lastCommission > 0){
-			PlayerTransfer.downloadMissingTransferCommissions(teamId, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
+		if (commission > 0 || lastCommission>0) {
+			var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
+			if (commission > 0) {
+				PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
+			}
+			if (lastCommission > 0) {
+				PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
+			}
 		}
-
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
 		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
 

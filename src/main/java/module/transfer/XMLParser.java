@@ -4,6 +4,7 @@ package module.transfer;
 
 import core.db.DBManager;
 import core.file.xml.XMLManager;
+import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.net.MyConnector;
 import core.util.HODateTime;
@@ -225,6 +226,11 @@ public final class XMLParser {
                             }
                         }
 
+                        if (playerTranfer.getPlayerId() == 0){ // fired player
+                            // try to get player info from HO database
+                            playerTranfer.loadPLayerInfo(false);
+                        }
+
                         transferList.add(playerTranfer);
                     }
                 }
@@ -284,7 +290,10 @@ public final class XMLParser {
     public static void updatePlayerTransfers(int playerID) {
         var transfers = getAllPlayerTransfers(playerID);
         if (!transfers.isEmpty()) {
+            var firstTransfer = transfers.get(transfers.size()-1);
+            var isHomegrown = firstTransfer.getSellerid() == HOVerwaltung.instance().getModel().getBasics().getTeamId();
             for ( var transfer : transfers){
+                transfer.getPlayerInfo().setHomeGrown(isHomegrown);
                 DBManager.instance().storePlayerTransfer(transfer);
             }
         }

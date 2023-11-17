@@ -35,7 +35,7 @@ public class TransferTableModel extends HOTableModel {
                 new TransferTableColumn("Datum") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDate(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TransferTableColumn("Season") {
@@ -119,7 +119,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getLaenderspiele(), String.valueOf(playerInfo.getLeadership()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getLeadership());
                     }
                 },
                 new TransferTableColumn("ls.player.short_experience") {
@@ -130,7 +130,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getExperience(), String.valueOf(playerInfo.getExperience()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getExperience());
                     }
                 },
                 new TransferTableColumn("ls.player.short_form") {
@@ -141,7 +141,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getForm(), String.valueOf(playerInfo.getForm()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getForm());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.stamina") {
@@ -152,7 +152,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getStamina(), String.valueOf(playerInfo.getStamina()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getStamina());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.keeper") {
@@ -163,7 +163,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getGKskill(), String.valueOf(playerInfo.getGKskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getGKskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.defending") {
@@ -174,7 +174,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getDEFskill(), String.valueOf(playerInfo.getDEFskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getDEFskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.playmaking") {
@@ -185,7 +185,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getPMskill(), String.valueOf(playerInfo.getPMskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getPMskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.passing") {
@@ -196,7 +196,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getPSskill(), String.valueOf(playerInfo.getPSskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getPSskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.winger") {
@@ -207,7 +207,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getWIskill(), String.valueOf(playerInfo.getWIskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getWIskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.scoring") {
@@ -218,7 +218,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getSCskill(), String.valueOf(playerInfo.getSCskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return createPlayerInfoLabelEntry(playerInfo.getSCskill());
                     }
                 },
                 new TransferTableColumn("ls.player.skill_short.setpieces") {
@@ -229,10 +229,17 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return new ColorLabelEntry(playerInfo.getSPskill(), String.valueOf(playerInfo.getSPskill()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return  createPlayerInfoLabelEntry(playerInfo.getSPskill());
                     }
                 }
         )).toArray(new TransferTableColumn[0]);
+    }
+
+    private ColorLabelEntry createPlayerInfoLabelEntry(int value) {
+        String text;
+        if ( value >= 0 ) text =  String.valueOf(value);
+        else text = "--";
+        return new ColorLabelEntry(value, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
     }
 
     public void setValues(List<PlayerTransfer> values){

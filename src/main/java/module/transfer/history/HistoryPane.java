@@ -210,7 +210,7 @@ public class HistoryPane extends JSplitPane {
         setLeftComponent(topPanel);
         setRightComponent(playerDetailPanel);
 
-        refresh();
+        //refresh();
     }
 
     //~ Methods ------------------------------------------------------------------------------------

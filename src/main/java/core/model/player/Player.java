@@ -333,7 +333,7 @@ public class Player extends AbstractTable.Storable {
     private Integer motherclubId;
     private String motherclubName;
     private Integer matchesCurrentTeam;
-    private int hrf_id;
+    private int hrf_id = -1;
     private Integer htms = null;
     private Integer htms28 = null;
 
@@ -1262,15 +1262,16 @@ public class Player extends AbstractTable.Storable {
 
     }
 
-
     public String getFullName() {
 
-        if (getNickName().isEmpty())
-        {
-            return getFirstName() + " " +getLastName();
+        if (getNickName().isEmpty()) {
+            if (!getFirstName().isEmpty()) {
+                return getFirstName() + " " + getLastName();
+            }
+            return getLastName();
         }
 
-        return getFirstName() + " '" + getNickName() + "' " +getLastName();
+        return getFirstName() + " '" + getNickName() + "' " + getLastName();
     }
 
     /**
@@ -1820,6 +1821,7 @@ public class Player extends AbstractTable.Storable {
     public int getHrfId() {
         return this.hrf_id;
     }
+    public boolean isTemporary(){return this.hrf_id == -1;}
 
     public void setLastMatchDate(String v) {
         this.m_lastMatchDate = v;

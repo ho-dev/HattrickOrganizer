@@ -171,13 +171,13 @@ public class TransferTable extends AbstractTable {
 
     DBManager.PreparedStatementBuilder transferIncomeSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE SELLERID=?");
     DBManager.PreparedStatementBuilder transferCostSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE BUYERID=?");
-    public int getTransferIncomeSum(int teamId, boolean isSold) {
+    public long getTransferIncomeSum(int teamId, boolean isSold) {
         var statementBuilder = isSold?transferIncomeSumStatementBuilder:transferCostSumStatementBuilder;
         var rs = this.adapter.executePreparedQuery(statementBuilder.getStatement(), teamId);
         try {
             if (rs != null) {
                 rs.next();
-                return rs.getInt(1);
+                return rs.getLong(1);
             }
         }
         catch (SQLException sqlException){

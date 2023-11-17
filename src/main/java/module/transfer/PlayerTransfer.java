@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
@@ -142,21 +141,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @param transfer Player transfer
      */
     private static void updatePlayerTransfer(PlayerTransfer transfer) {
-        var db = DBManager.instance();
-        if (transfer.getPlayerId() == 0){
-            // find player id
-            var transferInDB = db.loadPlayerTransfer(transfer.getTransferId());
-            if ( transferInDB != null && transferInDB.getPlayerId()!=0){
-                transfer.setPlayerId(transferInDB.getPlayerId());
-            }
-            else {
-                var player = transfer.getPlayerInfo();
-                if (player != null){
-                    transfer.setPlayerId(player.getPlayerID());
-                }
-            }
-        }
-        db.storePlayerTransfer(transfer);
+        DBManager.instance().storePlayerTransfer(transfer);
     }
 
     /**
@@ -186,7 +171,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @return int
      */
     private int calcMotherClubFee(int teamId){
-        var player = PlayerRetriever.getPlayer(this.playerId);
+        var player = getPlayerInfo();
         if (player != null && player.isHomeGrown() && this.sellerid != teamId) return (int)(this.price * .02);    // 2%
         return 0;
     }
@@ -257,15 +242,14 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * transfers are downloaded from hattrick. If a missing transfer is found,
      * it is stored and it's commission is added to the sum of db entries.
      * The loop is exited, when reaching the commission value.
-     * @param teamId Team id
+     * @param soldPlayers List of sold players by the team
      * @param commission  Commission income of the week from economy download
      * @param htweek HT week of that commission income
      */
-    public static void downloadMissingTransferCommissions(int teamId, int commission, HODateTime.HTWeek htweek) {
+    public static void downloadMissingTransferCommissions(List<PlayerTransfer> soldPlayers, int commission, HODateTime.HTWeek htweek) {
         var startWeek = HODateTime.fromHTWeek(htweek);
         var sum = DBManager.instance().getSumTransferCommissions(startWeek);
         if(sum != commission){
-            var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
             for (var player : soldPlayers){
                 var transfers = XMLParser.getAllPlayerTransfers(player.getPlayerId());
                 for (var transfer : transfers){
@@ -372,57 +356,80 @@ public class PlayerTransfer extends AbstractTable.Storable {
      */
     public final Player getPlayerInfo() {
         if (playerInfo == null) {
-            if (playerId == 0 && !this.isStored()) {
-                // Try to find correct player id in previously stored transfer
-                var transferInDb = DBManager.instance().loadPlayerTransfer(this.transferId);
-                if (transferInDb != null) {
-                    playerId = transferInDb.getPlayerId();
-                }
-            }
-            var isPurchase = this.buyerid == HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            if (playerId > 0) {
-                if (isPurchase) {
-                    playerInfo = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerId(), this.getDate().toDbTimestamp());
-                } else {
-                    // transfers of sold players (sellerid must not be equal to teamid)
-                    playerInfo = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerId(), this.getDate().toDbTimestamp());
-                }
-            } else if (playerId != -1) {
-                HODateTime start = HODateTime.now();
-                List<Player> playerInfos;
-                if (isPurchase) {
-                    playerInfos = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerName(), this.getDate().toDbTimestamp());
-                } else {
-                    playerInfos = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerName(), this.getDate().toDbTimestamp());
-                }
-                HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocaleDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
-                if (playerInfos.size() > 1) {
-                    // find most probable candidate
-                    if (isPurchase) {
-                        playerInfo = playerInfos.stream().min(Comparator.comparing(Player::getHrfDate)).get();
-                    } else {
-                        playerInfo = playerInfos.stream().max(Comparator.comparing(Player::getHrfDate)).get();
-                    }
-                } else if (playerInfos.size() == 1) {
-                    playerInfo = playerInfos.get(0);
-                }
+            playerInfo = loadPLayerInfo(false);
+        }
+        return playerInfo;
+    }
 
-                if (playerInfo != null) {
-                    this.playerId = playerInfo.getPlayerID();
-                    // Don't update database here (causes recursive inserts on transfer updates)
-                    //updatePlayerTransfer(this);
+    public Player loadPLayerInfo(boolean doUpdate) {
+        var oldPLayerId = playerId;
+        if (playerId == 0 && !this.isStored()) {
+            // Try to find correct player id in previously stored transfer
+            var transferInDb = DBManager.instance().loadPlayerTransfer(this.transferId);
+            if (transferInDb != null) {
+                playerId = transferInDb.getPlayerId();
+                oldPLayerId = playerId;
+            }
+        }
+        var isPurchase = this.buyerid == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        if (playerId > 0) {
+            if (isPurchase) {
+                playerInfo = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerId(), this.getDate().toDbTimestamp());
+            } else {
+                // transfers of sold players (sellerid must not be equal to teamid)
+                playerInfo = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerId(), this.getDate().toDbTimestamp());
+            }
+        } else if (playerId != -1) {
+            HODateTime start = HODateTime.now();
+            List<Player> playerInfos;
+            if (isPurchase) {
+                playerInfos = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerName(), this.getDate().toDbTimestamp());
+            } else {
+                playerInfos = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerName(), this.getDate().toDbTimestamp());
+            }
+            HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocaleDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
+            if (playerInfos.size() > 1) {
+                // find most probable candidate
+                if (isPurchase) {
+                    playerInfo = playerInfos.stream().min(Comparator.comparing(Player::getHrfDate)).get();
+                } else {
+                    playerInfo = playerInfos.stream().max(Comparator.comparing(Player::getHrfDate)).get();
+                }
+            } else if (playerInfos.size() == 1) {
+                playerInfo = playerInfos.get(0);
+            }
+
+            if (playerInfo != null) {
+                this.playerId = playerInfo.getPlayerID();
+                // Don't update database on inserts (causes recursive inserts on transfer updates)
+                if ( doUpdate ) {
+                    updatePlayerTransfer(this);
                 }
             }
-            if (playerInfo == null) {
-                playerInfo = new Player();
-                playerInfo.setLastName(this.getPlayerName());
-                playerInfo.setTSI(this.getTsi());
-                playerInfo.setPlayerID(-1); // non-existing player
-                if (playerId != -1) {
-                    setPlayerId(-1);
-                    // Don't update database here (causes recursive inserts on transfer updates)
-                    //updatePlayerTransfer(this);
-                }
+            else {
+                playerId = -1; // fired player
+            }
+        }
+        if (playerInfo == null) {
+            playerInfo = new Player();
+            playerInfo.setLastName(this.getPlayerName());
+            playerInfo.setTSI(this.getTsi());
+            playerInfo.setPlayerID(playerId);
+            playerInfo.setLeadership(-1);
+            playerInfo.setExperience(-1);
+            playerInfo.setForm(-1);
+            playerInfo.setStamina(-1);
+            playerInfo.setTorwart(-1);
+            playerInfo.setVerteidigung(-1);
+            playerInfo.setSpielaufbau(-1);
+            playerInfo.setPasspiel(-1);
+            playerInfo.setFluegelspiel(-1);
+            playerInfo.setTorschuss(-1);
+            playerInfo.setStandards(-1);
+
+            if (doUpdate && oldPLayerId != playerId) {
+                // Don't update database on inserts (causes recursive inserts on transfer updates)
+                updatePlayerTransfer(this);
             }
         }
         return playerInfo;

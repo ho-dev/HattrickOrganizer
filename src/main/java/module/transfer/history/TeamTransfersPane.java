@@ -85,34 +85,34 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
     public final void refresh(List<PlayerTransfer> transfers) {
         this.transfers = transfers;
 
-        transferTable.getColumnModel().getColumn(3).setPreferredWidth(150);
+//        transferTable.getColumnModel().getColumn(3).setPreferredWidth(150);
         transferTable.getColumnModel().getColumn(5).setCellRenderer(new IconCellRenderer());
         transferTable.getColumnModel().getColumn(5).setMaxWidth(36);
-        transferTable.getColumnModel().getColumn(6).setPreferredWidth(150);
+//        transferTable.getColumnModel().getColumn(6).setPreferredWidth(150);
 
         transferTable.getColumnModel().getColumn(9).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(9).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(9).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(10).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(10).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(10).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(11).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(11).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(11).setPreferredWidth(30);
 
         transferTable.getColumnModel().getColumn(12).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(12).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(12).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(13).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(13).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(13).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(14).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(14).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(14).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(15).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(15).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(15).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(16).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(16).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(16).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(17).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(17).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(17).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(18).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(18).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(18).setPreferredWidth(30);
         transferTable.getColumnModel().getColumn(19).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(19).setPreferredWidth(30);
+//        transferTable.getColumnModel().getColumn(19).setPreferredWidth(30);
 
         var model = getTransferTableModel();
         model.setValues(transfers);
