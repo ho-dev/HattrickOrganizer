@@ -56,8 +56,8 @@ object ConvertXml2Hrf {
                     if (selection.cancel) {
                         return null
                     }
-                    teamId = selection.getSelectedTeam().teamId
-                    youthTeamId = selection.getSelectedTeam().youthTeamId
+                    teamId = selection.getSelectedTeam()?.teamId ?: -1
+                    youthTeamId = selection.getSelectedTeam()?.youthTeamId ?: -1
                 } else {
                     // team id is in DB and this is the first time we download youth team information
                     val finalTeamId = teamId

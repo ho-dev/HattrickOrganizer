@@ -1,51 +1,49 @@
-package core.gui.comp.panel;
+package core.gui.comp.panel
 
-import core.gui.comp.entry.DoubleLabelEntries;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension
+import java.awt.FlowLayout
+import javax.swing.JLabel
+import javax.swing.JPanel
 
 /**
  * Panel displaying two labels that are semantically related, such as main value and comparison value.
- * This is similar to {@link DoubleLabelEntries}, except this may live outside
+ * This is similar to [DoubleLabelEntries], except this may live outside
  * a table.
  */
-public class DoubleLabelPanel extends JPanel {
+class DoubleLabelPanel : JPanel() {
+    private var leftLabel = JLabel()
+    private var rightLabel = JLabel()
 
-    private JLabel leftLabel = new JLabel();
-    private JLabel rightLabel = new JLabel();
-
-    public DoubleLabelPanel() {
-        setOpaque(false);
-        addLabels();
+    init {
+        setOpaque(false)
+        addLabels()
     }
 
-    private void addLabels() {
-        final FlowLayout layout = new FlowLayout();
-        layout.setVgap(0);
-        setLayout(layout);
+    private fun addLabels() {
+        val layout = FlowLayout()
+        layout.vgap = 0
+        setLayout(layout)
         // Fix right label width to avoid components moving when values change.
-        rightLabel.setMinimumSize(new Dimension(90, 10));
-        rightLabel.setMaximumSize(new Dimension(90, 10));
-        rightLabel.setPreferredSize(new Dimension(90, 10));
-
-        add(leftLabel);
-        add(rightLabel);
+        rightLabel.minimumSize = Dimension(90, 10)
+        rightLabel.maximumSize = Dimension(90, 10)
+        rightLabel.preferredSize = Dimension(90, 10)
+        add(leftLabel)
+        add(rightLabel)
     }
 
-    public void setLeftLabel(JLabel leftLabel) {
-        this.leftLabel = leftLabel;
-        updateComponent();
+    fun setLeftLabel(leftLabel: JLabel) {
+        this.leftLabel = leftLabel
+        updateComponent()
     }
 
-    public void setRightLabel(JLabel rightLabel) {
-        this.rightLabel = rightLabel;
+    fun setRightLabel(rightLabel: JLabel) {
+        this.rightLabel = rightLabel
     }
 
-    public void updateComponent() {
-        this.removeAll();
-        addLabels();
-        revalidate();
-        repaint();
+    fun updateComponent() {
+        this.removeAll()
+        addLabels()
+        revalidate()
+        repaint()
     }
 }

@@ -1,73 +1,60 @@
-package core.gui.comp.panel;
+package core.gui.comp.panel
 
-import core.datatype.CBItem;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
+import core.datatype.CBItem
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import java.awt.*
+import javax.swing.BorderFactory
+import javax.swing.JComboBox
+import javax.swing.JLabel
+import javax.swing.JPanel
 
-import javax.swing.*;
-import java.awt.*;
+class ComboBoxTitled @JvmOverloads constructor(
+    private val m_title: String,
+    private val m_jcbItems: JComboBox<CBItem>,
+    private val m_bInverseColor: Boolean = false
+) : JPanel() {
+    private val jlp = JPanel()
+    private var m_jlTitle: JLabel? = null
+    private val layout = GridBagLayout()
 
-public class ComboBoxTitled extends JPanel {
-
-    private final JPanel jlp = new JPanel();
-    private JComboBox<CBItem> m_jcbItems;
-    private JLabel m_jlTitle;
-    private Boolean m_bInverseColor;
-    private final String m_title;
-    private final GridBagLayout layout = new GridBagLayout();
-
-    public ComboBoxTitled(String title, JComboBox<CBItem> cb) {
-        this(title, cb, false);
-    }
-
-    public ComboBoxTitled(String title, JComboBox<CBItem> cb, Boolean bInverseColor) {
-        super();
-        m_jcbItems = cb;
-        m_title = title;
-        m_bInverseColor = bInverseColor;
-        initComponents();
+    init {
+        initComponents()
     }
 
     /**
      * Create the components, don't forget the CB for the players and the listener!
      */
-    private void initComponents() {
-
-        Color bgColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER) : ThemeManager.getColor(HOColorName.PANEL_BG);
-        Color bgCBColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER);
-        Color borderColor = m_bInverseColor ? ThemeManager.getColor(HOColorName.PANEL_BG) : ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER);
-
-        setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor));
-
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1.0;
-        constraints.weighty = 0.0;
-
-        jlp.setLayout(layout);
-
-        m_jlTitle = new JLabel(m_title);
-        m_jlTitle.setFont(getFont().deriveFont(Font.BOLD));
-
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets = new Insets(5, 12, 0, 0);
-        jlp.add(m_jlTitle, constraints);
-
-        constraints.gridy = 1;
-        constraints.insets = new Insets(5, 8, 5, 8);
-        m_jcbItems.setBackground(bgCBColor);
-        jlp.add(m_jcbItems, constraints);
-
-
-        jlp.setBackground(bgColor);
-
-        BorderLayout bl = new BorderLayout();
-        bl.setHgap(0);
-        bl.setVgap(0);
-        setLayout(bl);
-        add(jlp, BorderLayout.CENTER);
+    private fun initComponents() {
+        val bgColor =
+            if (m_bInverseColor) ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER) else ThemeManager.getColor(
+                HOColorName.PANEL_BG
+            )
+        val bgCBColor =
+            if (m_bInverseColor) ThemeManager.getColor(HOColorName.PANEL_BG) else ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER)
+        val borderColor =
+            if (m_bInverseColor) ThemeManager.getColor(HOColorName.PANEL_BG) else ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER)
+        setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, borderColor))
+        val constraints = GridBagConstraints()
+        constraints.fill = GridBagConstraints.HORIZONTAL
+        constraints.weightx = 1.0
+        constraints.weighty = 0.0
+        jlp.setLayout(layout)
+        m_jlTitle = JLabel(m_title)
+        m_jlTitle!!.setFont(font.deriveFont(Font.BOLD))
+        constraints.gridx = 0
+        constraints.gridy = 0
+        constraints.insets = Insets(5, 12, 0, 0)
+        jlp.add(m_jlTitle, constraints)
+        constraints.gridy = 1
+        constraints.insets = Insets(5, 8, 5, 8)
+        m_jcbItems.setBackground(bgCBColor)
+        jlp.add(m_jcbItems, constraints)
+        jlp.setBackground(bgColor)
+        val bl = BorderLayout()
+        bl.hgap = 0
+        bl.vgap = 0
+        setLayout(bl)
+        add(jlp, BorderLayout.CENTER)
     }
-
-
 }

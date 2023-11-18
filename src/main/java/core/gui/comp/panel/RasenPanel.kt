@@ -1,18 +1,13 @@
 // %2560498359:de.hattrickorganizer.gui.templates%
-package core.gui.comp.panel;
+package core.gui.comp.panel
 
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-
-import java.awt.Graphics;
-import java.awt.LayoutManager;
-import java.awt.TexturePaint;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
+import core.gui.theme.HOIconName
+import core.gui.theme.ImageUtilities
+import core.gui.theme.ThemeManager
+import java.awt.*
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+import javax.swing.JPanel
 
 /**
  * JPanel mit HintergrundGrafik für Fenster
@@ -20,80 +15,73 @@ import javax.swing.JPanel;
  * @author Volker Fischer
  * @version 0.2.1a 28.02.02
  */
-public class RasenPanel extends JPanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8146276344087586861L;
-
-    public static BufferedImage background;
-
+open class RasenPanel : JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-
-    private boolean m_bPrint;
-
+    private var m_bPrint = false
     //~ Constructors -------------------------------------------------------------------------------
-
     /**
      * Creates a new RasenPanel object.
      */
-    public RasenPanel() {
-        super();
-        init(false);
+    constructor() : super() {
+        init(false)
     }
 
     /**
      * Creates a new RasenPanel object.
      */
-    public RasenPanel(LayoutManager layout) {
-        super(layout);
-        init(false);
+    constructor(layout: LayoutManager?) : super(layout) {
+        init(false)
     }
 
     /**
      * Creates a new RasenPanel object.
      */
-    public RasenPanel(boolean forprint) {
-        super();
-        init(forprint);
+    constructor(forprint: Boolean) : super() {
+        init(forprint)
     }
 
     /**
      * Creates a new RasenPanel object.
      */
-    public RasenPanel(LayoutManager layout, boolean forprint) {
-        super(layout);
-        init(forprint);
+    constructor(layout: LayoutManager?, forprint: Boolean) : super(layout) {
+        init(forprint)
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-
-    @Override
-	public final void paint(Graphics g) {
-        final java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
-
-        paintComponent(g2d);
-
+    override fun paint(g: Graphics) {
+        val g2d = g as Graphics2D
+        paintComponent(g2d)
         if (!m_bPrint) {
-            Rectangle2D tr = new Rectangle2D.Double(0, 0, background.getWidth(), background.getHeight());
-            TexturePaint tp = new TexturePaint(background, tr);
-            g2d.setPaint(tp);
-            g2d.fill(g2d.getClip());
+            val tr: Rectangle2D = Rectangle2D.Double(
+                0.0,
+                0.0,
+                Companion.background!!.width.toDouble(),
+                Companion.background!!.height.toDouble()
+            )
+            val tp = TexturePaint(Companion.background, tr)
+            g2d.paint = tp
+            g2d.fill(g2d.clip)
         }
-
-        paintChildren(g2d);
-        paintBorder(g2d);
+        paintChildren(g2d)
+        paintBorder(g2d)
     }
 
-    private void init(boolean printing) {
-        m_bPrint = printing;
-
-        if (background == null) {
-            background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND));
+    private fun init(printing: Boolean) {
+        m_bPrint = printing
+        if (Companion.background == null) {
+            Companion.background =
+                ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.GRASSPANEL_BACKGROUND))
         }
+        setBackground(Color.white)
+    }
 
-        setBackground(java.awt.Color.white);
+    companion object {
+        //~ Static fields/initializers -----------------------------------------------------------------
+        /**
+         *
+         */
+        private const val serialVersionUID = -8146276344087586861L
+        @JvmField
+        var background: BufferedImage? = null
     }
 }

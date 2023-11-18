@@ -1,77 +1,72 @@
-package core.gui.comp.panel;
+package core.gui.comp.panel
 
-import core.gui.theme.HOBooleanName;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-import java.awt.TexturePaint;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import javax.swing.JPanel;
+import core.gui.theme.HOBooleanName
+import core.gui.theme.HOIconName
+import core.gui.theme.ImageUtilities
+import core.gui.theme.ThemeManager
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.LayoutManager
+import java.awt.TexturePaint
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+import javax.swing.JPanel
 
+open class ImagePanel : JPanel {
+    private var m_bPrint = false
 
-
-public class ImagePanel extends JPanel {
-
-
-    public static BufferedImage background;
-
-
-    private boolean m_bPrint;
-
-    public ImagePanel() {
-        super();
-        init(false);
+    constructor() : super() {
+        init(false)
     }
 
-
-    public ImagePanel(java.awt.LayoutManager layout) {
-        super(layout);
-        init(false);
+    constructor(layout: LayoutManager?) : super(layout) {
+        init(false)
     }
 
-
-    public ImagePanel(boolean bPrint) {
-        super();
-        init(bPrint);
+    constructor(bPrint: Boolean) : super() {
+        init(bPrint)
     }
 
     /**
      * Creates a new ImagePanel object.
      */
-    public ImagePanel(java.awt.LayoutManager layout, boolean bPrint) {
-        super(layout);
-        init(bPrint);
+    constructor(layout: LayoutManager?, bPrint: Boolean) : super(layout) {
+        init(bPrint)
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-
-    @Override
-	public final void paint(java.awt.Graphics g) {
-    	if(!ThemeManager.instance().isSet(HOBooleanName.IMAGEPANEL_BG_PAINTED)){
-    		super.paint(g);
-    	}else {
-    		final java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
-
-    		paintComponent(g2d);
-
-    		if (!m_bPrint) {
-                Rectangle2D tr = new Rectangle2D.Double(0, 0, background.getWidth(), background.getHeight());
-                TexturePaint tp = new TexturePaint(background, tr);
-                g2d.setPaint(tp);
-                g2d.fill(g2d.getClip());
-    		}
-
-    		paintChildren(g2d);
-    		paintBorder(g2d);
-    	}
+    override fun paint(g: Graphics) {
+        if (!ThemeManager.instance().isSet(HOBooleanName.IMAGEPANEL_BG_PAINTED)) {
+            super.paint(g)
+        } else {
+            val g2d = g as Graphics2D
+            paintComponent(g2d)
+            if (!m_bPrint) {
+                val tr: Rectangle2D = Rectangle2D.Double(
+                    0.0,
+                    0.0,
+                    Companion.background!!.width.toDouble(),
+                    Companion.background!!.height.toDouble()
+                )
+                val tp = TexturePaint(Companion.background, tr)
+                g2d.paint = tp
+                g2d.fill(g2d.clip)
+            }
+            paintChildren(g2d)
+            paintBorder(g2d)
+        }
     }
 
-    private void init(boolean printing) {
-        m_bPrint = printing;
-
-        if (background == null) {
-            background = ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND));
+    private fun init(printing: Boolean) {
+        m_bPrint = printing
+        if (Companion.background == null) {
+            Companion.background =
+                ImageUtilities.toBufferedImage(ThemeManager.getIcon(HOIconName.IMAGEPANEL_BACKGROUND))
         }
+    }
+
+    companion object {
+        @JvmField
+        var background: BufferedImage? = null
     }
 }

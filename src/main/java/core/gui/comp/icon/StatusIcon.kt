@@ -1,91 +1,80 @@
-package core.gui.comp.icon;
+package core.gui.comp.icon
 
+import core.gui.theme.HOColorName
+import core.gui.theme.HOIconName
+import core.gui.theme.ImageUtilities
+import core.gui.theme.ThemeManager
+import core.model.player.Player
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
 
-import core.gui.theme.HOColorName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-import core.model.player.Player;
+class StatusIcon @JvmOverloads constructor(player: Player, isLarge: Boolean = false) : Icon {
+    private var ICON_SIZE = 12
+    private var ICON_SPACE = 2
+    private var TRANSFERLISTED_ICON =
+        ImageUtilities.getSvgIcon(HOIconName.TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 14, 14)
+    private var SUSPENDED_ICON = ImageUtilities.getSvgIcon(HOIconName.SUSPENDED_TINY, ICON_SIZE, ICON_SIZE)
+    private var TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(HOIconName.TWOYELLOW_TINY, ICON_SIZE, ICON_SIZE)
+    private var ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(HOIconName.ONEYELLOW_TINY, ICON_SIZE, ICON_SIZE)
+    private val icons: MutableList<Icon> = ArrayList()
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static core.gui.theme.HOIconName.*;
-import static core.gui.theme.HOIconName.ONEYELLOW_TINY;
-
-public class StatusIcon implements Icon {
-    private final static Map<Object, Object> TRANSFERLISTED_ICON_COLOR_MAP = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
-
-    private int ICON_SIZE = 12;
-    private int ICON_SPACE = 2;
-    private Icon TRANSFERLISTED_ICON = ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 14, 14);
-    private Icon SUSPENDED_ICON = ImageUtilities.getSvgIcon(SUSPENDED_TINY, ICON_SIZE, ICON_SIZE);
-    private Icon TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, ICON_SIZE, ICON_SIZE);
-    private Icon ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(ONEYELLOW_TINY, ICON_SIZE, ICON_SIZE);
-
-    private final static int LARGE_ICON_SIZE = 16;
-    private final static int LARGE_ICON_SPACE = 3;
-    private final static Icon LARGE_TRANSFERLISTED_ICON = ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 19, 19);
-    private final static Icon LARGE_SUSPENDED_ICON = ImageUtilities.getSvgIcon(SUSPENDED_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
-    private final static Icon LARGE_TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
-    private final static Icon LARGE_ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(ONEYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
-
-    private final List<Icon> icons = new ArrayList<>();
-
-    public StatusIcon(Player player, boolean isLarge) {
-        if(isLarge){
-            ICON_SIZE = LARGE_ICON_SIZE;
-            ICON_SPACE = LARGE_ICON_SPACE;
-            TRANSFERLISTED_ICON = LARGE_TRANSFERLISTED_ICON;
-            SUSPENDED_ICON = LARGE_SUSPENDED_ICON;
-            TWO_YELLOW_ICON = LARGE_TWO_YELLOW_ICON;
-            ONE_YELLOW_ICON = LARGE_ONE_YELLOW_ICON;
+    init {
+        if (isLarge) {
+            ICON_SIZE = LARGE_ICON_SIZE
+            ICON_SPACE = LARGE_ICON_SPACE
+            TRANSFERLISTED_ICON = LARGE_TRANSFERLISTED_ICON
+            SUSPENDED_ICON = LARGE_SUSPENDED_ICON
+            TWO_YELLOW_ICON = LARGE_TWO_YELLOW_ICON
+            ONE_YELLOW_ICON = LARGE_ONE_YELLOW_ICON
         }
-
-        setPlayer(player);
+        setPlayer(player)
     }
 
-    public StatusIcon(Player player) {
-        this(player, false);
-    }
-
-    public void setPlayer(Player player) {
-        if (player.getTransferlisted() > 0) {
-                icons.add(TRANSFERLISTED_ICON);
+    fun setPlayer(player: Player) {
+        if (player.transferListed > 0) {
+            icons.add(TRANSFERLISTED_ICON)
         }
         if (player.isRedCarded()) {
-                icons.add(SUSPENDED_ICON);
-        }
-        else if (player.getCards() == 2) {
-                icons.add(TWO_YELLOW_ICON);
-        }
-        else if (player.getCards() == 1) {
-                icons.add(ONE_YELLOW_ICON);
+            icons.add(SUSPENDED_ICON)
+        } else if (player.totalCards == 2) {
+            icons.add(TWO_YELLOW_ICON)
+        } else if (player.totalCards == 1) {
+            icons.add(ONE_YELLOW_ICON)
         }
     }
 
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        for (int i = 0; i < icons.size(); i++) {
-            Icon cur = icons.get(i);
-            int offset = x+ICON_SIZE*i;
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        for (i in icons.indices) {
+            val cur = icons[i]
+            var offset = x + ICON_SIZE * i
             if (i > 0) {
-                offset += ICON_SPACE*i;
+                offset += ICON_SPACE * i
             }
-            cur.paintIcon(c, g, offset, y);
+            cur.paintIcon(c, g, offset, y)
         }
     }
 
-    @Override
-    public int getIconWidth() {
-        if ( icons.size() == 0 ) return 0;
-        return ICON_SIZE*icons.size() + ICON_SPACE*(icons.size()-1);
+    override fun getIconWidth(): Int {
+        return if (icons.size == 0) 0 else ICON_SIZE * icons.size + ICON_SPACE * (icons.size - 1)
     }
 
-    @Override
-    public int getIconHeight() {
-        return ICON_SIZE;
+    override fun getIconHeight(): Int {
+        return ICON_SIZE
+    }
+
+    companion object {
+        private val TRANSFERLISTED_ICON_COLOR_MAP =
+            mapOf<Any, Any>("foregroundColor" to ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR))
+        private const val LARGE_ICON_SIZE = 16
+        private const val LARGE_ICON_SPACE = 3
+        private val LARGE_TRANSFERLISTED_ICON =
+            ImageUtilities.getSvgIcon(HOIconName.TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 19, 19)
+        private val LARGE_SUSPENDED_ICON =
+            ImageUtilities.getSvgIcon(HOIconName.SUSPENDED_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE)
+        private val LARGE_TWO_YELLOW_ICON =
+            ImageUtilities.getSvgIcon(HOIconName.TWOYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE)
+        private val LARGE_ONE_YELLOW_ICON =
+            ImageUtilities.getSvgIcon(HOIconName.ONEYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE)
     }
 }

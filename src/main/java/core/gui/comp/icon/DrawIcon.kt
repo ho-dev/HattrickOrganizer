@@ -1,52 +1,46 @@
-package core.gui.comp.icon;
+package core.gui.comp.icon
 
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-
-import javax.swing.*;
-import java.awt.*;
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import java.awt.Component
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.RenderingHints
+import javax.swing.Icon
 
 /**
  * Icon that represents either a green upward triangle, or a red downward triangle
  * based on the direction chosen.
  *
- * <p>The triangle is currently used in the table league to show position evolution
- * in the league.  It cannot be resized as of yet.</p>
+ *
+ * The triangle is currently used in the table league to show position evolution
+ * in the league.  It cannot be resized as of yet.
  */
-public class DrawIcon implements Icon {
-    public final static int UPWARD_DIRECTION = 1;
-    public final static int DOWNWARD_DIRECTION = 0;
-
-    private static final Color WIN_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_WIN);
-    private static final Color DEFEAT_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_DEFEAT);
-
-    private final int direction;
-
-    public DrawIcon(int direction) {
-        this.direction = direction;
-    }
-
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        Graphics2D g2 = (Graphics2D)g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+class DrawIcon(private val direction: Int) : Icon {
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        val g2 = g as Graphics2D
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         if (direction == UPWARD_DIRECTION) {
-            g2.setColor(WIN_COLOR);
-            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{18, 18, 12}, 3);
+            g2.color = WIN_COLOR
+            g2.fillPolygon(intArrayOf(12, 20, 16), intArrayOf(18, 18, 12), 3)
         } else {
-            g2.setColor(DEFEAT_COLOR);
-            g2.fillPolygon(new int[]{12, 20, 16}, new int[]{12, 12, 18}, 3);
+            g2.color = DEFEAT_COLOR
+            g2.fillPolygon(intArrayOf(12, 20, 16), intArrayOf(12, 12, 18), 3)
         }
     }
 
-    @Override
-    public int getIconWidth() {
-        return 10;
+    override fun getIconWidth(): Int {
+        return 10
     }
 
-    @Override
-    public int getIconHeight() {
-        return 10;
+    override fun getIconHeight(): Int {
+        return 10
+    }
+
+    companion object {
+        const val UPWARD_DIRECTION = 1
+        const val DOWNWARD_DIRECTION = 0
+        private val WIN_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_WIN)
+        private val DEFEAT_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_DEFEAT)
     }
 }

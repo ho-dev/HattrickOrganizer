@@ -1,167 +1,152 @@
-package core.gui.comp.panel;
+package core.gui.comp.panel
 
-import core.gui.CursorToolkit;
-import core.gui.IRefreshable;
-import core.gui.RefreshManager;
-
-import java.awt.LayoutManager;
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
-
-import javax.swing.JPanel;
+import core.gui.CursorToolkit
+import core.gui.IRefreshable
+import core.gui.RefreshManager
+import core.gui.RefreshManager.registerRefreshable
+import core.gui.RefreshManager.unregisterRefreshable
+import java.awt.LayoutManager
+import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
+import javax.swing.JPanel
 
 /**
  * JPanel subclass which provides lazy initialization/refresh.
  */
-public abstract class LazyPanel extends JPanel {
+abstract class LazyPanel : JPanel {
+    /**
+     * Indicates if the panel was already initialized.
+     *
+     * @return `true` if the panel was already initialized,
+     * `false` otherwise.
+     */
+    var isInitialized = false
+        private set
+    private var needsRefresh = false
+    private var refreshable: IRefreshable? = null
 
-	private static final long serialVersionUID = 4092423438527063535L;
-	private boolean initialized = false;
-	private boolean needsRefresh = false;
-	private IRefreshable refreshable;
+    constructor() : super() {
+        addHierarchyListener()
+    }
 
-	public LazyPanel() {
-		super();
-		addHierarchyListener();
-	}
+    constructor(isDoubleBuffered: Boolean) : super(isDoubleBuffered) {
+        addHierarchyListener()
+    }
 
-	public LazyPanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-		addHierarchyListener();
-	}
+    constructor(layout: LayoutManager?) : super(layout) {
+        addHierarchyListener()
+    }
 
-	public LazyPanel(LayoutManager layout) {
-		super(layout);
-		addHierarchyListener();
-	}
+    constructor(layout: LayoutManager?, isDoubleBuffered: Boolean) : super(layout, isDoubleBuffered) {
+        addHierarchyListener()
+    }
 
-	public LazyPanel(LayoutManager layout, boolean isDoubleBuffered) {
-		super(layout, isDoubleBuffered);
-		addHierarchyListener();
-	}
+    /**
+     * Registers/unregisters this panel at the [RefreshManager] (default
+     * it not registered). If registered and the [RefreshManager] forces
+     * requests a refresh, the [.update] method is called immediately if
+     * the panel currently showing. If the panel is not currently showing it is
+     * marked as needed to be refreshed and the [.update] method is
+     * called as soon as the panel gets shown.
+     *
+     * @param register
+     * `true` to register this panel at the
+     * [RefreshManager]. If `false` the panel is
+     * unregistered if it was already registerd.
+     */
+    fun registerRefreshable(register: Boolean) {
+        if (register) {
+            if (refreshable == null) {
+                refreshable = object : IRefreshable {
+                    override fun refresh() {
+                        if (isShowing()) {
+                            callUpdate()
+                        } else {
+                            needsRefresh = true
+                        }
+                    }
+                }
+                registerRefreshable(refreshable as IRefreshable)
+            } else {
+                unregisterRefreshable(refreshable as IRefreshable)
+            }
+        }
+    }
 
-	/**
-	 * Registers/unregisters this panel at the {@link RefreshManager} (default
-	 * it not registered). If registered and the {@link RefreshManager} forces
-	 * requests a refresh, the {@link #update()} method is called immediately if
-	 * the panel currently showing. If the panel is not currently showing it is
-	 * marked as needed to be refreshed and the {@link #update()} method is
-	 * called as soon as the panel gets shown.
-	 * 
-	 * @param register
-	 *            <code>true</code> to register this panel at the
-	 *            {@link RefreshManager}. If <code>false</code> the panel is
-	 *            unregistered if it was already registerd.
-	 */
-	public void registerRefreshable(boolean register) {
-		if (register) {
-			if (this.refreshable == null) {
-				this.refreshable = new IRefreshable() {
+    /**
+     * Indicates if the panel needs to be refreshed.
+     *
+     * @return `true` if the panel needs to be refreshed,
+     * `false` otherwise.
+     */
+    fun needsRefresh(): Boolean {
+        return needsRefresh
+    }
 
-					@Override
-					public void refresh() {
-						if (isShowing()) {
-							callUpdate();
-						} else {
-							needsRefresh = true;
-						}
-					}
-				};
-				RefreshManager.INSTANCE.registerRefreshable(this.refreshable);
-			} else {
-				if (this.refreshable != null) {
-					RefreshManager.INSTANCE.unregisterRefreshable(this.refreshable);
-				}
-			}
-		}
-	}
+    /**
+     * Marks the panel as needs to be refreshed. If the panel is currently
+     * showing, the [.update] method is called immediately. If not, the
+     * [.update] is called as soon as the panel is shown.
+     *
+     * @param needsRefresh
+     */
+    fun setNeedsRefresh(needsRefresh: Boolean) {
+        this.needsRefresh = needsRefresh
+        if (needsRefresh && isShowing()) {
+            callUpdate()
+        }
+    }
 
-	/**
-	 * Indicates if the panel was already initialized.
-	 * 
-	 * @return <code>true</code> if the panel was already initialized,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isInitialized() {
-		return this.initialized;
-	}
+    /**
+     * This method has to be overwritten by subclasses to do the initialization
+     * (create components, etc). This method is only called ones when the panel
+     * gets shown the first time. During execution time of this method, an
+     * WaitCursor is shown and the UI is blocked for key and mouse events (if
+     * the method was called by this class).
+     */
+    protected abstract fun initialize()
 
-	/**
-	 * Indicates if the panel needs to be refreshed.
-	 * 
-	 * @return <code>true</code> if the panel needs to be refreshed,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean needsRefresh() {
-		return this.needsRefresh;
-	}
+    /**
+     * This method has to be overwritten by subclasses to update the view when
+     * the model changes. During execution time of this method, an
+     * WaitCursor is shown and the UI is blocked for key and mouse events (if
+     * the method was called by this class).
+     */
+    protected abstract fun update()
+    private fun addHierarchyListener() {
+        addHierarchyListener { e ->
+            if (HierarchyEvent.SHOWING_CHANGED.toLong() == e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() && isShowing()) {
+                if (!isInitialized) {
+                    callInitialize()
+                }
+                if (needsRefresh) {
+                    callUpdate()
+                }
+            }
+        }
+    }
 
-	/**
-	 * Marks the panel as needs to be refreshed. If the panel is currently
-	 * showing, the {@link #update()} method is called immediately. If not, the
-	 * {@link #update()} is called as soon as the panel is shown.
-	 * 
-	 * @param needsRefresh
-	 */
-	public void setNeedsRefresh(boolean needsRefresh) {
-		this.needsRefresh = needsRefresh;
-		if (needsRefresh && isShowing()) {
-			callUpdate();
-		}
-	}
+    private fun callInitialize() {
+        CursorToolkit.startWaitCursor(this)
+        try {
+            initialize()
+            this.isInitialized = true
+        } finally {
+            CursorToolkit.stopWaitCursor(this)
+        }
+    }
 
-	/**
-	 * This method has to be overwritten by subclasses to do the initialization
-	 * (create components, etc). This method is only called ones when the panel
-	 * gets shown the first time. During execution time of this method, an
-	 * WaitCursor is shown and the UI is blocked for key and mouse events (if
-	 * the method was called by this class).
-	 */
-	protected abstract void initialize();
+    private fun callUpdate() {
+        CursorToolkit.startWaitCursor(this)
+        try {
+            update()
+            needsRefresh = false
+        } finally {
+            CursorToolkit.stopWaitCursor(this)
+        }
+    }
 
-	/**
-	 * This method has to be overwritten by subclasses to update the view when
-	 * the model changes. During execution time of this method, an
-	 * WaitCursor is shown and the UI is blocked for key and mouse events (if
-	 * the method was called by this class).
-	 */
-	protected abstract void update();
-
-	private void addHierarchyListener() {
-		addHierarchyListener(new HierarchyListener() {
-
-			@Override
-			public void hierarchyChanged(HierarchyEvent e) {
-				if ((HierarchyEvent.SHOWING_CHANGED == (e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) && isShowing())) {
-					if (!initialized) {
-						callInitialize();
-					}
-					if (needsRefresh) {
-						callUpdate();
-					}
-				}
-			}
-		});
-	}
-
-	private void callInitialize() {
-		CursorToolkit.startWaitCursor(this);
-		try {
-			initialize();
-			this.initialized = true;
-		} finally {
-			CursorToolkit.stopWaitCursor(this);
-		}
-	}
-
-	private void callUpdate() {
-		CursorToolkit.startWaitCursor(this);
-		try {
-			update();
-			this.needsRefresh = false;
-		} finally {
-			CursorToolkit.stopWaitCursor(this);
-		}
-	}
-
+    companion object {
+        private const val serialVersionUID = 4092423438527063535L
+    }
 }

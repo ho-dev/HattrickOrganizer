@@ -1,36 +1,30 @@
-package core.gui.comp.icon;
+package core.gui.comp.icon
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
 
 /**
- * Icon to display overview of a colour defined by a {@link Color} instance.
+ * Icon to display overview of a colour defined by a [Color] instance.
  */
-public class ColorIcon implements Icon {
-
-    private final static int ICON_SIZE = 8;
-    private final Color colour;
-
-    public ColorIcon(Color colour) {
-        this.colour = colour;
+class ColorIcon(private val colour: Color) : Icon {
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        g.color = Color.BLACK
+        g.drawRect(x, y, ICON_SIZE, ICON_SIZE)
+        g.color = colour
+        g.fillRect(x + 1, y + 1, ICON_SIZE - 1, ICON_SIZE - 1)
     }
 
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        g.setColor(Color.BLACK);
-        g.drawRect(x, y, ICON_SIZE, ICON_SIZE);
-
-        g.setColor(colour);
-        g.fillRect( x+1, y+1, ICON_SIZE-1, ICON_SIZE-1);
+    override fun getIconWidth(): Int {
+        return ICON_SIZE
     }
 
-    @Override
-    public int getIconWidth() {
-        return ICON_SIZE;
+    override fun getIconHeight(): Int {
+        return ICON_SIZE
     }
 
-    @Override
-    public int getIconHeight() {
-        return ICON_SIZE;
+    companion object {
+        private const val ICON_SIZE = 8
     }
 }

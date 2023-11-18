@@ -34,7 +34,7 @@ open class DoubleLabelEntries : AbstractHOTableEntry {
      * Creates a new DoubleLabelEntries object.
      *
      */
-    constructor(color: Color?) : super() {
+    constructor(color: Color) : super() {
         tableEntryLeft = ColorLabelEntry(
             "", ColorLabelEntry.FG_STANDARD, color,
             SwingConstants.RIGHT
