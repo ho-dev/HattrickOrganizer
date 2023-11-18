@@ -2,7 +2,7 @@
 
 ## Highlights
 * refactoring rating prediction (implement Schum rating)
-
+* refactoring of the transfer module. Calculation of transfer fee income.
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -24,6 +24,7 @@
 ### Statistics
 
 ### Transfer
+* refactoring of the transfer module. Calculation of transfer fee income. (#245)
 
 ### Training
 
