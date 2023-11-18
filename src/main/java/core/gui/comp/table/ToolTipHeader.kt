@@ -1,44 +1,29 @@
-// %3174669501:de.hattrickorganizer.gui.utils%
-package core.gui.comp.table;
+package core.gui.comp.table
 
-import java.awt.event.MouseEvent;
+import java.awt.event.MouseEvent
+import javax.swing.table.JTableHeader
+import javax.swing.table.TableColumnModel
 
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-
-
-public class ToolTipHeader extends JTableHeader {
-
-	private static final long serialVersionUID = -3459959650680988134L;
-
-    String[] toolTips;
-
-    public ToolTipHeader(TableColumnModel model) {
-        super(model);
+class ToolTipHeader(model: TableColumnModel?) : JTableHeader(model) {
+    lateinit var toolTips: Array<String>
+    fun setToolTipStrings(toolTips: Array<String>) {
+        this.toolTips = toolTips
     }
 
-    public final void setToolTipStrings(String[] toolTips) {
-        this.toolTips = toolTips;
-    }
-
-    @Override
-	public final String getToolTipText(MouseEvent e) {
-        final int col = columnAtPoint(e.getPoint());
-        final int modelCol = getTable().convertColumnIndexToModel(col);
-        String retStr;
-
-        try {
-            retStr = toolTips[modelCol];
-        } catch (NullPointerException ex) {
-            retStr = "";
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            retStr = "";
+    override fun getToolTipText(e: MouseEvent): String {
+        val col = columnAtPoint(e.getPoint())
+        val modelCol = getTable().convertColumnIndexToModel(col)
+        var retStr: String
+        retStr = try {
+            toolTips[modelCol]
+        } catch (ex: NullPointerException) {
+            ""
+        } catch (ex: ArrayIndexOutOfBoundsException) {
+            ""
         }
-
-        if (retStr == null || retStr.length() < 1) {
-            retStr = super.getToolTipText(e);
+        if (retStr.isEmpty()) {
+            retStr = super.getToolTipText(e)
         }
-
-        return retStr;
+        return retStr
     }
 }

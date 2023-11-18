@@ -1,96 +1,74 @@
-package core.gui.language;
+package core.gui.language
 
-import java.net.URL;
-import java.util.ArrayList;
-
-import javax.swing.AbstractListModel;
-import javax.swing.ComboBoxModel;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import core.util.HOLogger;
+import core.util.HOLogger
+import org.xml.sax.Attributes
+import org.xml.sax.SAXException
+import org.xml.sax.helpers.DefaultHandler
+import javax.swing.AbstractListModel
+import javax.swing.ComboBoxModel
+import javax.xml.parsers.SAXParserFactory
 
 /**
  * This class represents the model for the language file drop down box
  * @author edswifa
- *
  */
-public class LanguageComboBoxModel extends AbstractListModel implements ComboBoxModel {
-	
-	private static final long serialVersionUID = -8499599592907864510L;
-	private ArrayList<String> comboBoxItemList;
-	private String selected = null;
+class LanguageComboBoxModel : AbstractListModel<Any?>(), ComboBoxModel<Any?> {
+    private val comboBoxItemList: ArrayList<String> = ArrayList()
+    private var selected: String? = null
 
-	public LanguageComboBoxModel() {
-		comboBoxItemList = new ArrayList<String>();
-		loadData();
-	}
+    init {
+        loadData()
+    }
 
-	@Override
-	public int getSize() {
-		return comboBoxItemList.size();
-	}
+    override fun getSize(): Int {
+        return comboBoxItemList.size
+    }
 
-	@Override
-	public String getElementAt(int index) {
-		return comboBoxItemList.get(index);
-	}
+    override fun getElementAt(index: Int): String? {
+        return comboBoxItemList[index]
+    }
 
-	@Override
-	public void setSelectedItem(Object anItem) {
-		this.selected = (String) anItem;
-	}
+    override fun setSelectedItem(anItem: Any) {
+        selected = anItem as String
+    }
 
-	@Override
-	public Object getSelectedItem() {
-		return selected;
-	}
+    override fun getSelectedItem(): Any {
+        return selected!!
+    }
 
-	/**
-	 * Load up the model data from the languages.xml file using a SAX parser
-	 */
-	private void loadData() {
-		
-		try {
+    /**
+     * Load up the model data from the languages.xml file using a SAX parser
+     */
+    private fun loadData() {
+        try {
+            val factory = SAXParserFactory.newInstance()
+            val saxParser = factory.newSAXParser()
+            val handler: DefaultHandler = object : DefaultHandler() {
+                var blname = false
+                @Throws(SAXException::class)
+                override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+                    if (qName.equals("datei", ignoreCase = true)) {
+                        blname = true
+                    }
+                }
 
-			SAXParserFactory factory = SAXParserFactory.newInstance();
-			SAXParser saxParser = factory.newSAXParser();
-
-			DefaultHandler handler = new DefaultHandler() {
-
-				boolean blname = false;
-	
-				@Override
-				public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
-
-					if (qName.equalsIgnoreCase("datei")) {
-						blname = true;
-					}
-				}
-	
-				@Override
-				public void characters(char ch[], int start, int length) throws SAXException {
-
-					if (blname) {
-						String s = new String(ch, start, length);
-						if(!s.equalsIgnoreCase("languages.properties")) {
-							comboBoxItemList.add(s.substring(0, s.indexOf(".properties")));
-						}
-						blname = false;
-					}
-				}
-
-		     };
-		     
-		     URL languages = this.getClass().getClassLoader().getResource("sprache/languages.xml");
-		     saxParser.parse(languages.getPath(), handler);
-		     
-		 } catch (Exception e) {
-			 HOLogger.instance().error(getClass(), e.getMessage());
-		 }
-	}
+                @Throws(SAXException::class)
+                override fun characters(ch: CharArray, start: Int, length: Int) {
+                    if (blname) {
+                        val s = String(ch, start, length)
+                        if (!s.equals("languages.properties", ignoreCase = true)) {
+                            comboBoxItemList.add(s.substring(0, s.indexOf(".properties")))
+                        }
+                        blname = false
+                    }
+                }
+            }
+            val languages = this.javaClass.getClassLoader().getResource("sprache/languages.xml")
+            if (languages != null) {
+                saxParser.parse(languages.path, handler)
+            }
+        } catch (e: Exception) {
+            HOLogger.instance().error(javaClass, e.message)
+        }
+    }
 }

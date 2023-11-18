@@ -1,27 +1,25 @@
-package core.gui.comp.renderer;
+package core.gui.comp.renderer
 
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import java.awt.Component
+import javax.swing.JCheckBox
+import javax.swing.JTable
+import javax.swing.table.TableCellRenderer
 
+class BooleanTableCellRenderer : JCheckBox(), TableCellRenderer {
+    init {
+        setOpaque(true)
+        setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG))
+        setHorizontalAlignment(CENTER)
+    }
 
-public class BooleanTableCellRenderer extends JCheckBox implements TableCellRenderer {
-
-	public BooleanTableCellRenderer() {
-		setOpaque(true);
-		setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
-		setHorizontalAlignment(SwingConstants.CENTER);
-	}
-
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column) {
-
-		boolean boolValue = (Boolean) value;
-		setSelected(boolValue);
-
-		return this;
-	}
-
+    override fun getTableCellRendererComponent(
+        table: JTable, value: Any,
+        isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int
+    ): Component {
+        val boolValue = value as Boolean
+        setSelected(boolValue)
+        return this
+    }
 }

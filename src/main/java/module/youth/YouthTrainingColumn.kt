@@ -1,36 +1,29 @@
-package module.youth;
+package module.youth
 
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
-import core.gui.comp.table.UserColumn;
+import core.gui.comp.entry.ColorLabelEntry
+import core.gui.comp.entry.IHOTableEntry
+import core.gui.comp.table.UserColumn
 
-public class YouthTrainingColumn extends UserColumn {
-    protected YouthTrainingColumn(int id, String name) {
-        super(id, name);
-        this.setDisplay(true);
-    }
-    public YouthTrainingColumn(int id,String name,int minWidth){
-        this(id,name,name,minWidth);
-    }
-    public YouthTrainingColumn(int id,String name, String tooltip, int minWidth){
-        super(id,name,tooltip);
-        this.minWidth = minWidth;
-        preferredWidth = minWidth;
-        this.setDisplay(true);
+open class YouthTrainingColumn : UserColumn {
+    protected constructor(id: Int, name: String?) : super(id, name) {
+        setDisplay(true)
     }
 
-    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
-        return new ColorLabelEntry(getValue(youthTraining), ColorLabelEntry.BG_STANDARD, false, 0);
+    constructor(id: Int, name: String?, minWidth: Int) : this(id, name, name, minWidth)
+    constructor(id: Int, name: String?, tooltip: String?, minWidth: Int) : super(id, name, tooltip) {
+        this.minWidth = minWidth
+        preferredWidth = minWidth
+        setDisplay(true)
     }
 
-    public int getValue(YouthTraining youthTraining){
-        return youthTraining.getYouthMatchId();
+    open fun getTableEntry(youthTraining: YouthTraining): IHOTableEntry? {
+        return ColorLabelEntry(getValue(youthTraining).toDouble(), ColorLabelEntry.BG_STANDARD, false, 0)
     }
 
-    @Override
-    public boolean isEditable() {
-        return false;
+    fun getValue(youthTraining: YouthTraining): Int {
+        return youthTraining.youthMatchId
     }
 
-
+    override val isEditable: Boolean
+        get() = false
 }

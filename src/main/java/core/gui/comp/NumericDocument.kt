@@ -1,131 +1,107 @@
-package core.gui.comp;
+package core.gui.comp
 
-import core.util.StringUtils;
-
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.PlainDocument;
+import core.util.StringUtils
+import javax.swing.text.AttributeSet
+import javax.swing.text.BadLocationException
+import javax.swing.text.PlainDocument
 
 /**
  * A document for text components which allows numeric chars only.
  */
-public class NumericDocument extends PlainDocument {
+class NumericDocument : PlainDocument {
+    private var maxLength = -1
 
-	private static final long serialVersionUID = -7376216000843726838L;
-	private int maxLength = -1;
-	private boolean allowNegatives;
+    /**
+     * Returns `true` if negative Numbers are allowed (a minus sign
+     * can be inserted at offset 0 in this case), `false` if not.
+     *
+     * @return `true` if negative Numbers are allowed,
+     * `false` otherwise.
+     */
+    var isAllowNegatives = false
+        private set
 
-	/**
-	 * Constructs a new NumericDocument. Will not allow negatives, length is not
-	 * limited.
-	 */
-	public NumericDocument() {
-		super();
-	}
+    /**
+     * Constructs a new NumericDocument. Will not allow negatives, length is not
+     * limited.
+     */
+    constructor() : super()
 
-	/**
-	 * Constructs a new NumericDocument.
-	 * 
-	 * @param allowNegatives
-	 *            <code>true</code> to allow negative values, <code>false</code>
-	 *            otherwise.
-	 */
-	public NumericDocument(boolean allowNegatives) {
-		this.allowNegatives = allowNegatives;
-	}
+    /**
+     * Constructs a new NumericDocument.
+     *
+     * @param allowNegatives
+     * `true` to allow negative values, `false`
+     * otherwise.
+     */
+    constructor(allowNegatives: Boolean) {
+        isAllowNegatives = allowNegatives
+    }
 
-	/**
-	 * Constructs a new NumericDocument with a maximum number of digits.
-	 * 
-	 * @param maxLength
-	 *            the maximum number of digits allowed.
-	 * @throws IllegalArgumentException
-	 *             if the given maxLength is less than (or equal) 0.
-	 */
-	public NumericDocument(int maxLength) {
-		this(maxLength, false);
-	}
+    /**
+     * Constructs a new NumericDocument with a maximum number of digits.
+     *
+     * @param maxLength
+     * the maximum number of digits allowed.
+     * @throws IllegalArgumentException
+     * if the given maxLength is less than (or equal) 0.
+     */
+    @JvmOverloads
+    constructor(maxLength: Int, allowNegatives: Boolean = false) : this() {
+        isAllowNegatives = allowNegatives
+        setMaxLength(maxLength)
+    }
 
-	/**
-	 * Constructs a new NumericDocument with a maximum number of digits.
-	 * 
-	 * @param maxLength
-	 *            the maximum number of digits allowed.
-	 * @param allowNegatives
-	 *            <code>true</code> to allow negative values, <code>false</code>
-	 *            otherwise.
-	 * @throws IllegalArgumentException
-	 *             if the given maxLength is less than (or equal) 0.
-	 */
-	public NumericDocument(int maxLength, boolean allowNegatives) {
-		this();
-		this.allowNegatives = allowNegatives;
-		setMaxLength(maxLength);
-	}
+    /**
+     * Gets the maximum length a text in this document can have.
+     *
+     * @return the maximum length or `-1` if the length is not
+     * limited.
+     */
+    fun getMaxLength(): Int {
+        return maxLength
+    }
 
-	/**
-	 * Returns <code>true</code> if negative Numbers are allowed (a minus sign
-	 * can be inserted at offset 0 in this case), <code>false</code> if not.
-	 * 
-	 * @return <code>true</code> if negative Numbers are allowed,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean isAllowNegatives() {
-		return this.allowNegatives;
-	}
+    @Throws(BadLocationException::class)
+    override fun insertString(offs: Int, toBInserted: String, a: AttributeSet) {
+        if (StringUtils.isEmpty(toBInserted)) {
+            return
+        }
 
-	/**
-	 * Gets the maximum length a text in this document can have.
-	 * 
-	 * @return the maximum length or <code>-1</code> if the length is not
-	 *         limited.
-	 */
-	public int getMaxLength() {
-		return this.maxLength;
-	}
+        // if maxlength > -1 ==> check length
+        if (maxLength > -1) {
+            // if too long ==> do not insert
+            if (length + toBInserted.length > maxLength) {
+                return
+            }
+        }
 
-	@Override
-	public void insertString(int offs, String toBInserted, AttributeSet a)
-			throws BadLocationException {
-		if (StringUtils.isEmpty(toBInserted)) {
-			return;
-		}
+        // if there is already a minus sign, nothing can be inserted with
+        // offset 0, because minus sign has to be the first char
+        if (isAllowNegatives) {
+            val currentText = getText(0, length)
+            if (!currentText.isEmpty() && offs == 0 && currentText[0] == '-') {
+                return
+            }
+        }
+        if (StringUtils.isNumeric(toBInserted)) {
+            super.insertString(offs, toBInserted, a)
+        } else {
+            if (isAllowNegatives) {
+                if (offs == 0 && toBInserted[0] == '-' && StringUtils.isNumeric(toBInserted.substring(1))) {
+                    super.insertString(offs, toBInserted, a)
+                }
+            }
+        }
+    }
 
-		// if maxlength > -1 ==> check length
-		if (this.maxLength > -1) {
-			// if too long ==> do not insert
-			if (getLength() + toBInserted.length() > this.maxLength) {
-				return;
-			}
-		}
+    @Throws(IllegalArgumentException::class)
+    private fun setMaxLength(maxLength: Int) {
+        require(maxLength > 0) { "the maximum length has to be greater than 0!" }
+        this.maxLength = maxLength
+    }
 
-		// if there is already a minus sign, nothing can be inserted with
-		// offset 0, because minus sign has to be the first char
-		if (this.isAllowNegatives()) {
-			String currentText = getText(0, getLength());
-			if (!currentText.isEmpty() && offs == 0
-					&& currentText.charAt(0) == '-') {
-				return;
-			}
-		}
-
-		if (StringUtils.isNumeric(toBInserted)) {
-			super.insertString(offs, toBInserted, a);
-		} else {
-			if (this.allowNegatives) {
-				if (offs == 0 && toBInserted.charAt(0) == '-'
-						&& StringUtils.isNumeric(toBInserted.substring(1))) {
-					super.insertString(offs, toBInserted, a);
-				}
-			}
-		}
-	}
-
-	private void setMaxLength(int maxLength) throws IllegalArgumentException {
-		if (maxLength <= 0) {
-			throw new IllegalArgumentException(
-					"the maximum length has to be greater than 0!");
-		}
-		this.maxLength = maxLength;
-	}
+    companion object {
+        private const val serialVersionUID = -7376216000843726838L
+    }
 }

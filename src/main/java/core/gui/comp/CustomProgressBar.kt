@@ -1,101 +1,80 @@
-package core.gui.comp;
+package core.gui.comp
 
-import core.gui.theme.ImageUtilities;
+import core.gui.theme.ImageUtilities
+import java.awt.*
+import javax.swing.JPanel
 
-import java.awt.*;
-import java.text.NumberFormat;
-import javax.swing.JPanel;
+class CustomProgressBar(
+    private val m_colorBG: Color,
+    private val m_colorFill: Color,
+    private val m_colorBorder: Color,
+    private val m_width: Int,
+    private val m_height: Int,
+    f: Font
+) : JPanel() {
+    private val m_minimum = 0.0
+    private val m_maximum = 100.0
+    var value = 100.0
+        private set
+    private var m_leftText = ""
+    private var m_rightText = ""
+    private val m_f: Font
 
-public class CustomProgressBar extends JPanel{
-    private Color m_colorFill, m_colorBorder, m_colorBG;
-    private double m_minimum = 0.0;
-    private double m_maximum = 100.0;
-    private double m_value = 100.0;
-    private int m_width;
-    private int m_height;
-    private String m_leftText = "";
-    private String m_rightText = "";
-    private Font m_f;
-
-    public CustomProgressBar(Color colorBG, Color colorFill, Color colorBorder, int iWidth, int iHeight, Font f) {
-        m_colorFill = colorFill;
-        m_colorBorder = colorBorder;
-        m_colorBG = colorBG;
-        m_width = iWidth;
-        m_height = iHeight;
-        m_f = f.deriveFont(Font.BOLD, 16f);
-        setPreferredSize(new Dimension(m_width, m_height));
-        setBackground(colorBG);
+    init {
+        m_f = f.deriveFont(Font.BOLD, 16f)
+        preferredSize = Dimension(m_width, m_height)
+        setBackground(m_colorBG)
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    override fun paintComponent(g: Graphics) {
+        super.paintComponent(g)
 
         //border
-        g.setColor(m_colorBorder);
-        g.drawRect(0, 0, m_width-1, m_height-1);
+        g.color = m_colorBorder
+        g.drawRect(0, 0, m_width - 1, m_height - 1)
 
         //fill progress
-        if (m_value != 0) {
-            final int drawAmount = (int) (((m_value - m_minimum) / (m_maximum - m_minimum)) * m_width);
-            final int leftBlockWidth = drawAmount - 2;
-            final int rightBlockWidth = m_width - 2 - leftBlockWidth;
-
-            g.setColor(m_colorFill);
-            g.fillRect(1, 1, leftBlockWidth, m_height - 2); //-2 to account for border
-            g.setFont(m_f);
-            Canvas c = new Canvas();
-            FontMetrics fm = c.getFontMetrics(m_f);
-            final int textHeight = fm.getHeight();
-            final int y = (m_height - textHeight) / 2 + 15;
-
-            if (m_leftText != "") {
-                final int leftTextWidth = fm.stringWidth(m_leftText);
-                g.setColor(ImageUtilities.getColorForContrast(m_colorFill));
-                g.drawString(m_leftText, ((leftBlockWidth-leftTextWidth) / 2), y);
+        if (value != 0.0) {
+            val drawAmount = ((value - m_minimum) / (m_maximum - m_minimum) * m_width).toInt()
+            val leftBlockWidth = drawAmount - 2
+            val rightBlockWidth = m_width - 2 - leftBlockWidth
+            g.color = m_colorFill
+            g.fillRect(1, 1, leftBlockWidth, m_height - 2) //-2 to account for border
+            g.font = m_f
+            val c = Canvas()
+            val fm = c.getFontMetrics(m_f)
+            val textHeight = fm.height
+            val y = (m_height - textHeight) / 2 + 15
+            if (m_leftText !== "") {
+                val leftTextWidth = fm.stringWidth(m_leftText)
+                g.color = ImageUtilities.getColorForContrast(m_colorFill)
+                g.drawString(m_leftText, (leftBlockWidth - leftTextWidth) / 2, y)
             }
-
-            if (m_rightText != "") {
-                final int rightTextWidth = fm.stringWidth(m_rightText);
-                g.setColor(ImageUtilities.getColorForContrast(m_colorBG));
-                g.drawString(m_rightText, (leftBlockWidth + (rightBlockWidth-rightTextWidth) / 2), y);
+            if (m_rightText !== "") {
+                val rightTextWidth = fm.stringWidth(m_rightText)
+                g.color = ImageUtilities.getColorForContrast(m_colorBG)
+                g.drawString(m_rightText, leftBlockWidth + (rightBlockWidth - rightTextWidth) / 2, y)
             }
         }
     }
 
-
-    public void setValue(int val1, int val2, double min_width){
-
-        m_value = (double)val1 / (double)(val1 + val2);
-
-        int leftValue = (int) Math.round(m_value*100);
-        int rightValue = 100 - leftValue;
-
-        m_leftText = leftValue + "%";
-        m_rightText = rightValue + "%";
-
-        if (m_value < min_width) {
-            m_value = min_width;
+    fun setValue(val1: Int, val2: Int, min_width: Double) {
+        value = val1.toDouble() / (val1 + val2).toDouble()
+        val leftValue = Math.round(value * 100).toInt()
+        val rightValue = 100 - leftValue
+        m_leftText = "$leftValue%"
+        m_rightText = "$rightValue%"
+        if (value < min_width) {
+            value = min_width
+        } else if (value > 1 - min_width) {
+            value = 1 - min_width
         }
-        else if (m_value > 1 - min_width) {
-            m_value = 1 - min_width;
-        }
-
-        m_value = m_value*100;
-
+        value = value * 100
     }
 
-    public void resetValue(){
-        m_value = 0d;
-        m_leftText = "";
-        m_rightText =  "";
+    fun resetValue() {
+        value = 0.0
+        m_leftText = ""
+        m_rightText = ""
     }
-
-
-    public double getValue(){
-        return m_value;
-    }
-
-
 }

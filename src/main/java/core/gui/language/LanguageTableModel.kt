@@ -1,199 +1,153 @@
-package core.gui.language;
+package core.gui.language
 
-import core.util.HOLogger;
-import core.util.UTF8Control;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
+import core.util.HOLogger
+import core.util.UTF8Control
+import java.io.*
+import java.nio.charset.StandardCharsets
+import java.util.*
+import javax.swing.JFrame
+import javax.swing.JOptionPane
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.TableModel
 
 /**
  * This class represents the table model for editing language resource files.
  * @author edswifa
- *
  */
-public class LanguageTableModel extends AbstractTableModel implements TableModel  {
+class LanguageTableModel() : AbstractTableModel(), TableModel {
+    private val columnNames = arrayOf("Key", "Value")
+    private var data: MutableMap<String, String?>
+    private val keys: MutableList<String> = ArrayList()
+    private var isDestinationFile = false
+    private var langauageName = ""
 
-	private static final long serialVersionUID = -1926494264955036043L;
-	private String[] columnNames = {"Key", "Value"};
-	private Map<String, String> data;
-	private List<String> keys = new ArrayList<String>();
-	private boolean isDestinationFile = false;
-	private String langauageName = "";
-	
-	/**
-	 * Default constructor to create an English table model
-	 */
-	public LanguageTableModel() {
-		this.langauageName = "English";
-		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		
-		URL englishPath = this.getClass().getClassLoader().getResource("sprache/English.properties");
-		
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(englishPath.getFile());
-		} catch (FileNotFoundException e) {
-			HOLogger.instance().error(getClass(), e.getMessage());
-		}
-		 
-		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-		String line = null;
-		try {
-			while ((line = br.readLine()) != null) {
-				if(line.contains("=")) {
-					String key = line.substring(0, line.indexOf("="));
-					String value = line.substring(line.indexOf("=") + 1);
-					map.put(key, value);
-					this.keys.add(key);
-				}
-			}
-		} catch (IOException e) {
-			HOLogger.instance().error(getClass(), e.getMessage());
-		}
-	 
-		try {
-			br.close();
-		} catch (IOException e) {
-			HOLogger.instance().error(getClass(), e.getMessage());
-		}
-		
-		this.data = map;
-	}
+    /**
+     * Default constructor to create an English table model
+     */
+    init {
+        langauageName = "English"
+        val map = LinkedHashMap<String, String?>()
+        val englishPath = this.javaClass.getClassLoader().getResource("sprache/English.properties")
+        var fis: FileInputStream? = null
+        try {
+            if (englishPath != null) {
+                fis = FileInputStream(englishPath.file)
+            }
+        } catch (e: FileNotFoundException) {
+            HOLogger.instance().error(javaClass, e.message)
+        }
+        val br = fis?.let { InputStreamReader(it) }?.let { BufferedReader(it) }
+        var line: String?
+        try {
+            if (br != null) {
+                while (br.readLine().also { line = it } != null) {
+                    if (line!!.contains("=")) {
+                        val key = line!!.substring(0, line!!.indexOf("="))
+                        val value = line!!.substring(line!!.indexOf("=") + 1)
+                        map[key] = value
+                        keys.add(key)
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            HOLogger.instance().error(javaClass, e.message)
+        }
+        try {
+            br?.close()
+        } catch (e: IOException) {
+            HOLogger.instance().error(javaClass, e.message)
+        }
+        data = map
+    }
 
-	/**
-	 * Constructor to create a table model for the given language name
-	 * @param languageName
-	 */
-	public LanguageTableModel(String languageName) {
-		this();
-		this.isDestinationFile = true;
-		this.langauageName = languageName;
-		
-		ResourceBundle englishBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
-		ResourceBundle destBundle = ResourceBundle.getBundle("sprache." + languageName, new UTF8Control());
-		Iterator<String> rbKeys = this.keys.iterator();
-		String value = null;
-		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+    /**
+     * Constructor to create a table model for the given language name
+     */
+    constructor(languageName: String) : this() {
+        isDestinationFile = true
+        langauageName = languageName
+        val englishBundle = ResourceBundle.getBundle("sprache.English", UTF8Control())
+        val destBundle = ResourceBundle.getBundle("sprache.$languageName", UTF8Control())
+        val rbKeys: Iterator<String> = keys.iterator()
 
-		while(rbKeys.hasNext()) {
-			String key = rbKeys.next();
-			try {
-				value = destBundle.getString(key);
-			} catch(Exception e) {
-				value = englishBundle.getString(key);
-			}
-			map.put(key, value);
-		}
-		
-		this.data = map;
-	}
+        val map = LinkedHashMap<String, String?>()
+        while (rbKeys.hasNext()) {
+            val key = rbKeys.next()
+            val value = try {
+                destBundle.getString(key)
+            } catch (e: Exception) {
+                englishBundle.getString(key)
+            }
+            map[key] = value
+        }
+        data = map
+    }
 
-	@Override
-	public int getRowCount() {
-		return this.keys.size();
-	}
+    override fun getRowCount(): Int {
+        return keys.size
+    }
 
-	@Override
-	public int getColumnCount() {
-		return columnNames.length;
-	}
+    override fun getColumnCount(): Int {
+        return columnNames.size
+    }
 
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		String key = this.keys.get(rowIndex);
-		
-		if (columnIndex == 0) {
-			return key;
-		}
-		
-		return this.data.get(key);
-	}
+    override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
+        val key = keys[rowIndex]
+        return if (columnIndex == 0) {
+            key
+        } else data[key]!!
+    }
 
-	@Override
-	public String getColumnName(int column) {
-		return this.columnNames[column];
-	}
+    override fun getColumnName(column: Int): String {
+        return columnNames[column]
+    }
 
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if((this.isDestinationFile) && (columnIndex == 1) && (rowIndex > 1)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/* (non-Javadoc)
+    override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
+        return isDestinationFile && columnIndex == 1 && rowIndex > 1
+    }
+
+    /* (non-Javadoc)
 	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 	 */
-	@Override
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if(isDestinationFile && (columnIndex == 1)) {
-			this.data.put(keys.get(rowIndex), (String) aValue);
-			fireTableDataChanged();
-		}
-	}
-	
-	/**
-	 * Save the table model back to a properties file
-	 */
-	public void save() {
-		StringBuilder fileName = new StringBuilder("sprache/");
-		fileName.append(this.langauageName);
-		fileName.append(".properties");
-		URL destinationPath = this.getClass().getClassLoader().getResource(fileName.toString());
+    override fun setValueAt(aValue: Any, rowIndex: Int, columnIndex: Int) {
+        if (isDestinationFile && columnIndex == 1) {
+            data[keys[rowIndex]] = aValue as String
+            fireTableDataChanged()
+        }
+    }
 
-		BufferedWriter bw = null;
+    /**
+     * Save the table model back to a properties file
+     */
+    fun save() {
+        val fileName = "sprache/$langauageName.properties"
+        val destinationPath = this.javaClass.getClassLoader().getResource(fileName)
+        var bw: BufferedWriter? = null
+        try {
+            if (destinationPath != null) {
+                bw = BufferedWriter(OutputStreamWriter(FileOutputStream(destinationPath.path), StandardCharsets.UTF_8))
+            }
 
-		try {
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationPath.getPath()), "UTF-8"));
-
-			// Loop over table and put into properties
-			Iterator<String> rbKeys = this.keys.iterator();
-			while(rbKeys.hasNext()) {
-				String key = rbKeys.next();
-				StringBuffer sb = new StringBuffer(key);
-				sb.append("=");
-				sb.append(this.data.get(key));
-				bw.write(sb.toString());
-				bw.newLine();
-			}
-			
-			String message = "Please pass the file " + destinationPath.getPath() + " to a developer who will commit it for you.";
-			JOptionPane.showMessageDialog(new JFrame(), message, "Saved", JOptionPane.INFORMATION_MESSAGE);
-			HOLogger.instance().info(getClass(), "Language file " + langauageName + ".properties saved.");
-			
-		} catch (IOException ioe) {
-			HOLogger.instance().error(getClass(), ioe.getMessage());
-		} finally {
-			if(bw != null) {
-				try {
-					bw.close();
-				} catch (IOException ioe) {
-					HOLogger.instance().error(getClass(), ioe.getMessage());
-				}
-			}
-		}
-	}
-
+            // Loop over table and put into properties
+            for (key in keys) {
+                val sb = key + "=" + data[key]
+                bw?.write(sb)
+                bw?.newLine()
+            }
+            val message =
+                "Please pass the file ${destinationPath?.path ?: ""} to a developer who will commit it for you."
+            JOptionPane.showMessageDialog(JFrame(), message, "Saved", JOptionPane.INFORMATION_MESSAGE)
+            HOLogger.instance().info(javaClass, "Language file $langauageName.properties saved.")
+        } catch (ioe: IOException) {
+            HOLogger.instance().error(javaClass, ioe.message)
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close()
+                } catch (ioe: IOException) {
+                    HOLogger.instance().error(javaClass, ioe.message)
+                }
+            }
+        }
+    }
 }

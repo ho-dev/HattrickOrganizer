@@ -1,24 +1,25 @@
-package core.gui.comp.renderer;
+package core.gui.comp.renderer
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.Component
+import javax.swing.JLabel
+import javax.swing.JTable
+import javax.swing.table.DefaultTableCellRenderer
+import javax.swing.table.TableCellRenderer
 
-public class TableHeaderRenderer1 implements TableCellRenderer {
-    DefaultTableCellRenderer renderer;
+class TableHeaderRenderer1(table: JTable) : TableCellRenderer {
+    var renderer: DefaultTableCellRenderer
 
-    public TableHeaderRenderer1(JTable table) {
-        renderer = (DefaultTableCellRenderer)
-                table.getTableHeader().getDefaultRenderer();
-        renderer.setHorizontalAlignment(JLabel.CENTER);
+    init {
+        renderer = table.tableHeader.defaultRenderer as DefaultTableCellRenderer
+        renderer.setHorizontalAlignment(JLabel.CENTER)
     }
 
-    @Override
-    public Component getTableCellRendererComponent(
-            JTable table, Object value, boolean isSelected,
-            boolean hasFocus, int row, int col) {
+    override fun getTableCellRendererComponent(
+        table: JTable, value: Any, isSelected: Boolean,
+        hasFocus: Boolean, row: Int, col: Int
+    ): Component {
         return renderer.getTableCellRendererComponent(
-                table, value, isSelected, hasFocus, row, col);
+            table, value, isSelected, hasFocus, row, col
+        )
     }
 }

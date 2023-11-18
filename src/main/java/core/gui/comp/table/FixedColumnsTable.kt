@@ -1,33 +1,49 @@
-package core.gui.comp.table;
+package core.gui.comp.table
 
-import module.transfer.ui.sorter.DefaultTableSorter;
+import module.transfer.ui.sorter.DefaultTableSorter
+import java.awt.Dimension
+import javax.swing.JScrollPane
+import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.event.ListSelectionListener
+import javax.swing.table.TableCellRenderer
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
-
-public class FixedColumnsTable extends JScrollPane {
-
+class FixedColumnsTable(
     /**
      * Number of fixed columns in table
      */
-    private final int fixedColumns;
-
+    val fixedColumnsCount: Int, tableModel: HOTableModel
+) : JScrollPane() {
+    /**
+     * Return the number of fixed columns
+     * @return int
+     */
+    /**
+     * Return the created table sorter
+     * @return DefaultTableSorter
+     */
     /**
      * Table sorter
      */
-    private final DefaultTableSorter scrollTableSorter;
-
+    val tableSorter: DefaultTableSorter
+    /**
+     * Returns the Locked LeftTable
+     *
+     * @return Jtable
+     */
     /**
      * Fixed table part (left hand side)
      */
-    private final JTable fixed;
-
+    val fixedTable: JTable
+    /**
+     * Returns the Scrollable RightTable
+     *
+     * @return Jtable
+     */
     /**
      * Scrollable table part (right hand side)
      */
-    private final JTable scroll;
+    val scrollTable: JTable
 
     /**
      * Create a fixed columns table
@@ -38,119 +54,75 @@ public class FixedColumnsTable extends JScrollPane {
      * @param fixedColumns number of fixed columnms
      * @param tableModel table model
      */
-    public FixedColumnsTable(int fixedColumns, HOTableModel tableModel) {
-        this.fixedColumns = fixedColumns;
-
-        scrollTableSorter = new DefaultTableSorter(tableModel);
-        var table = new JTable(scrollTableSorter);
-        setTooltipHeader(table, tableModel.getTooltips());
-
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        this.setViewportView(table);
-        scroll = table;
-
-        for (int i=0; i<scroll.getColumnCount(); i++){
-            var tm = tableModel.columns[i];
-            var cm = scroll.getColumnModel().getColumn(i);
-            cm.setMinWidth(tm.minWidth);
+    init {
+        tableSorter = DefaultTableSorter(tableModel)
+        val table = JTable(tableSorter)
+        setTooltipHeader(table, tableModel.getTooltips())
+        table.autoResizeMode = JTable.AUTO_RESIZE_OFF
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        setViewportView(table)
+        scrollTable = table
+        for (i in 0 until scrollTable.columnCount) {
+            val tm = tableModel.columns[i]
+            val cm = scrollTable.columnModel.getColumn(i)
+            cm.setMinWidth(tm.minWidth)
         }
-
-        fixed = new JTable(scroll.getModel());
-        fixed.setFocusable(false);
-        fixed.setSelectionModel(scroll.getSelectionModel());
-        fixed.getTableHeader().setReorderingAllowed(false);
+        fixedTable = JTable(scrollTable.model)
+        fixedTable.setFocusable(false)
+        fixedTable.setSelectionModel(scrollTable.selectionModel)
+        fixedTable.tableHeader.setReorderingAllowed(false)
 
 
         //  Remove the fixed columns from the main table
-        int width = 0;
-        int i=0;
-        for (; i < fixedColumns; i++) {
-            var _columnModel = scroll.getColumnModel();
-            var column = _columnModel.getColumn(0);
-            width += column.getMinWidth();
-            _columnModel.removeColumn(column);
+        var width = 0
+        var i = 0
+        while (i < fixedColumnsCount) {
+            val _columnModel = scrollTable.columnModel
+            val column = _columnModel.getColumn(0)
+            width += column.minWidth
+            _columnModel.removeColumn(column)
+            i++
         }
-
-        scroll.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fixed.setSelectionModel(scroll.getSelectionModel());
+        scrollTable.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
+        fixedTable.setSelectionModel(scrollTable.selectionModel)
 
         //  Remove the non-fixed columns from the fixed table
-        while (fixed.getColumnCount() > fixedColumns) {
-            var _columnModel = fixed.getColumnModel();
-            _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
+        while (fixedTable.columnCount > fixedColumnsCount) {
+            val _columnModel = fixedTable.columnModel
+            _columnModel.removeColumn(_columnModel.getColumn(fixedColumnsCount))
         }
 
         //  Add the fixed table to the scroll pane
-        fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
-        setRowHeaderView(fixed);
-        setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
-
-        tableModel.restoreUserSettings(this);
+        fixedTable.preferredScrollableViewportSize = Dimension(width, 0)
+        setRowHeaderView(fixedTable)
+        setCorner(UPPER_LEFT_CORNER, fixedTable.tableHeader)
+        tableModel.restoreUserSettings(this)
     }
 
-    private void setTooltipHeader(JTable table, String[] tooltips) {
-        ToolTipHeader header = new ToolTipHeader(table.getColumnModel());
-        header.setToolTipStrings(tooltips);
-        header.setToolTipText("");
-        table.setTableHeader(header);
-        scrollTableSorter.setTableHeader(table.getTableHeader());
+    private fun setTooltipHeader(table: JTable, tooltips: Array<String>) {
+        val header = ToolTipHeader(table.columnModel)
+        header.setToolTipStrings(tooltips)
+        header.setToolTipText("")
+        table.tableHeader = header
+        tableSorter.setTableHeader(table.tableHeader)
     }
-
-
     //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * Returns the Locked LeftTable
-     *
-     * @return Jtable
-     */
-    public JTable getFixedTable() {
-        return fixed;
-    }
-
-    /**
-     * Returns the Scrollable RightTable
-     *
-     * @return Jtable
-     */
-    public JTable getScrollTable() {
-        return scroll;
-    }
-
     /**
      * The provided renderer is set to both internal tables
      * @param columnClass  set the default cell renderer for this columnClass
      * @param renderer default cell renderer to be used for this columnClass
      */
-    public void setDefaultRenderer(Class<?> columnClass, TableCellRenderer renderer) {
-        this.fixed.setDefaultRenderer(columnClass, renderer);
-        this.scroll.setDefaultRenderer(columnClass, renderer);
+    fun setDefaultRenderer(columnClass: Class<*>?, renderer: TableCellRenderer?) {
+        fixedTable.setDefaultRenderer(columnClass, renderer)
+        scrollTable.setDefaultRenderer(columnClass, renderer)
     }
 
     /**
      * Add a list selection listener
      * @param listener ListSelectionListener
      */
-    public void addListSelectionListener(ListSelectionListener listener) {
-        ListSelectionModel rowSM = scroll.getSelectionModel();
-        rowSM.addListSelectionListener(listener);
-    }
-
-    /**
-     * Return the created table sorter
-     * @return DefaultTableSorter
-     */
-    public DefaultTableSorter getTableSorter() {
-        return scrollTableSorter;
-    }
-
-    /**
-     * Return the number of fixed columns
-     * @return int
-     */
-    public int getFixedColumnsCount() {
-        return fixedColumns;
+    fun addListSelectionListener(listener: ListSelectionListener?) {
+        val rowSM = scrollTable.selectionModel
+        rowSM.addListSelectionListener(listener)
     }
 }

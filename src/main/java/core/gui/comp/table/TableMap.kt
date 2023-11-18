@@ -1,69 +1,56 @@
-// %3252003863:de.hattrickorganizer.gui.utils%
-package core.gui.comp.table;
+package core.gui.comp.table
 
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.event.TableModelEvent
+import javax.swing.event.TableModelListener
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.TableModel
 
 /**
  * TODO The purpose of this class is unclear to me (kruescho, 06/10/2012)
- * 
+ *
  */
-class TableMap extends AbstractTableModel implements TableModelListener {
-	
-	private static final long serialVersionUID = 5022212679370349761L;
-    private TableModel model;
+open class TableMap : AbstractTableModel(), TableModelListener {
+    var model: TableModel? = null
+        private set
 
-    TableMap() {
+    override fun isCellEditable(i: Int, j: Int): Boolean {
+        return model!!.isCellEditable(i, j)
     }
 
-    @Override
-	public final boolean isCellEditable(int i, int j) {
-        return model.isCellEditable(i, j);
+    override fun getColumnClass(i: Int): Class<*> {
+        return model!!.getColumnClass(i)
     }
 
-    @Override
-	public final Class<?> getColumnClass(int i) {
-        return model.getColumnClass(i);
+    override fun getColumnCount(): Int {
+        return if (model != null) model!!.columnCount else 0
     }
 
-    @Override
-	public final int getColumnCount() {
-        return (model != null) ? model.getColumnCount() : 0;
+    override fun getColumnName(i: Int): String {
+        return model!!.getColumnName(i)
     }
 
-    @Override
-	public final String getColumnName(int i) {
-        return model.getColumnName(i);
+    open fun setModel(tablemodel: TableModel) {
+        model = tablemodel
+        tablemodel.addTableModelListener(this)
     }
 
-    public void setModel(TableModel tablemodel) {
-        model = tablemodel;
-        tablemodel.addTableModelListener(this);
+    override fun getRowCount(): Int {
+        return if (model != null) model!!.rowCount else 0
     }
 
-    public final TableModel getModel() {
-        return model;
+    override fun setValueAt(obj: Any, i: Int, j: Int) {
+        model!!.setValueAt(obj, i, j)
     }
 
-    @Override
-	public final int getRowCount() {
-        return (model != null) ? model.getRowCount() : 0;
+    override fun getValueAt(i: Int, j: Int): Any? {
+        return model?.getValueAt(i, j)
     }
 
-    @Override
-	public void setValueAt(Object obj, int i, int j) {
-        model.setValueAt(obj, i, j);
+    override fun tableChanged(tablemodelevent: TableModelEvent) {
+        fireTableChanged(tablemodelevent)
     }
 
-    @Override
-	public Object getValueAt(int i, int j) {
-        return model.getValueAt(i, j);
-    }
-
-    @Override
-	public void tableChanged(TableModelEvent tablemodelevent) {
-        fireTableChanged(tablemodelevent);
+    companion object {
+        private const val serialVersionUID = 5022212679370349761L
     }
 }

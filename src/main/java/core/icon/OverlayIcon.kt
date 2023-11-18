@@ -1,55 +1,54 @@
-package core.icon;
+package core.icon
 
-import com.github.weisj.darklaf.properties.icons.DerivableIcon;
-import core.gui.theme.ImageUtilities;
+import com.github.weisj.darklaf.properties.icons.DerivableIcon
+import core.gui.theme.ImageUtilities
+import java.awt.Component
+import java.awt.Graphics
+import javax.swing.Icon
+import kotlin.math.max
 
-import javax.swing.*;
-import java.awt.*;
+class OverlayIcon @JvmOverloads constructor(
+    private val icon: Icon,
+    private val overlay: Icon,
+    width: Int = -1,
+    height: Int = -1
+) : Icon, DerivableIcon<OverlayIcon> {
+    private val width: Int
+    private val height: Int
 
-public class OverlayIcon implements Icon, DerivableIcon<OverlayIcon> {
-
-    private final Icon icon;
-    private final Icon overlay;
-    private final int width;
-    private final int height;
-
-    public OverlayIcon(Icon icon, Icon overlay) {
-        this(icon, overlay, -1, -1);
+    init {
+        this.width = if (width > 0) width else max(icon.iconWidth.toDouble(), overlay.iconWidth.toDouble())
+            .toInt()
+        this.height = if (height > 0) width else max(icon.iconHeight.toDouble(), overlay.iconHeight.toDouble())
+            .toInt()
     }
 
-    public OverlayIcon(Icon icon, Icon overlay, int width, int height) {
-        this.icon = icon;
-        this.overlay = overlay;
-        this.width = width > 0 ? width : Math.max(icon.getIconWidth(), overlay.getIconWidth());
-        this.height = height > 0 ? width : Math.max(icon.getIconHeight(), overlay.getIconHeight());
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        val iconX = x + (iconWidth - icon.iconWidth) / 2
+        val iconY = y + (iconHeight - icon.iconHeight) / 2
+        val overlayX = x + (iconWidth - overlay.iconWidth) / 2
+        val overlayY = y + (iconHeight - overlay.iconHeight) / 2
+        icon.paintIcon(c, g, iconX, iconY)
+        overlay.paintIcon(c, g, overlayX, overlayY)
     }
 
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        int iconX = x + (getIconWidth() - icon.getIconWidth()) / 2;
-        int iconY = y + (getIconHeight() - icon.getIconHeight()) / 2;
-        int overlayX = x + (getIconWidth() - overlay.getIconWidth()) / 2;
-        int overlayY = y + (getIconHeight() - overlay.getIconHeight()) / 2;
-        icon.paintIcon(c, g, iconX, iconY);
-        overlay.paintIcon(c, g, overlayX, overlayY);
+    override fun getIconWidth(): Int {
+        return width
     }
 
-    @Override
-    public int getIconWidth() {
-        return width;
+    override fun getIconHeight(): Int {
+        return height
     }
 
-    @Override
-    public int getIconHeight() {
-        return height;
-    }
-
-    @Override
-    public OverlayIcon derive(int width, int height) {
-        Icon derivedIcon = ImageUtilities.getScaledIcon(icon, width * icon.getIconWidth() / this.width,
-                                                        height * icon.getIconHeight() / this.height);
-        Icon derivedOverlay = ImageUtilities.getScaledIcon(overlay, width * overlay.getIconWidth() / this.width,
-                                                           height * overlay.getIconHeight() / this.height);
-        return new OverlayIcon(derivedIcon, derivedOverlay, width, height);
+    override fun derive(width: Int, height: Int): OverlayIcon {
+        val derivedIcon = ImageUtilities.getScaledIcon(
+            icon, width * icon.iconWidth / this.width,
+            height * icon.iconHeight / this.height
+        )
+        val derivedOverlay = ImageUtilities.getScaledIcon(
+            overlay, width * overlay.iconWidth / this.width,
+            height * overlay.iconHeight / this.height
+        )
+        return OverlayIcon(derivedIcon, derivedOverlay, width, height)
     }
 }

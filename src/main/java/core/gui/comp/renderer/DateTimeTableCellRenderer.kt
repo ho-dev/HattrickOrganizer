@@ -1,26 +1,23 @@
-package core.gui.comp.renderer;
+package core.gui.comp.renderer
 
-import java.awt.Component;
-import java.util.Date;
-import java.text.DateFormat;
+import java.awt.Component
+import java.text.DateFormat
+import java.util.*
+import javax.swing.JTable
+import javax.swing.table.DefaultTableCellRenderer
 
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
+class DateTimeTableCellRenderer : DefaultTableCellRenderer() {
+    private val format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT)
+    override fun getTableCellRendererComponent(
+        table: JTable, value: Any, isSelected: Boolean,
+        hasFocus: Boolean, row: Int, column: Int
+    ): Component {
+        var dateString: String? = ""
+        dateString = format.format(value as Date)
+        return super.getTableCellRendererComponent(
+            table, dateString, isSelected, hasFocus, row,
+            column
+        )
+    }
 
-public class DateTimeTableCellRenderer extends DefaultTableCellRenderer {
-
-	private static final long serialVersionUID = -5869341433817862361L;
-	private DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column) {
-
-		String dateString = "";
-		if (value != null) {
-			dateString = this.format.format((Date) value);
-		}
-		return super.getTableCellRendererComponent(table, dateString, isSelected, hasFocus, row,
-				column);
-	}
 }

@@ -1,30 +1,27 @@
-package core.gui.comp.renderer;
+package core.gui.comp.renderer
 
-import java.awt.Component;
-import java.text.NumberFormat;
+import java.awt.Component
+import java.text.NumberFormat
+import javax.swing.JTable
+import javax.swing.table.DefaultTableCellRenderer
 
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
+class DoubleTableCellRenderer(precision: Int) : DefaultTableCellRenderer() {
+    private val format: NumberFormat = NumberFormat.getInstance()
 
-public class DoubleTableCellRenderer extends DefaultTableCellRenderer {
+    init {
+        format.setMaximumFractionDigits(precision)
+        format.setMinimumFractionDigits(precision)
+        setHorizontalAlignment(RIGHT)
+    }
 
-	private static final long serialVersionUID = -3966963303325802102L;
-	private final NumberFormat format;
-
-	public DoubleTableCellRenderer(int precision) {
-		this.format = NumberFormat.getInstance();
-		this.format.setMaximumFractionDigits(precision);
-		this.format.setMinimumFractionDigits(precision);
-		setHorizontalAlignment(SwingConstants.RIGHT);
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column) {
-
-		String numberString = this.format.format((Number) value);
-		return super.getTableCellRendererComponent(table, numberString, isSelected, hasFocus, row,
-				column);
-	}
+    override fun getTableCellRendererComponent(
+        table: JTable, value: Any, isSelected: Boolean,
+        hasFocus: Boolean, row: Int, column: Int
+    ): Component {
+        val numberString = format.format(value as Number)
+        return super.getTableCellRendererComponent(
+            table, numberString, isSelected, hasFocus, row,
+            column
+        )
+    }
 }

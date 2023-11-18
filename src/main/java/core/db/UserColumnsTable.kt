@@ -47,7 +47,7 @@ internal class UserColumnsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME,
             if (model.id == 2 && dbcolumns[i].id == UserColumnFactory.ID) {
                 dbcolumns[i].setDisplay(true) // force ID column
             }
-            if (dbcolumns[i].isDisplay) {
+            if (dbcolumns[i].isDisplay()) {
                 val _userColumn = _UserColumn()
                 _userColumn.modelIndex = i
                 _userColumn.id = (model.id * 1000 + dbcolumns[i].id)

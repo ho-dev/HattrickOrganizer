@@ -1,56 +1,57 @@
-package core.gui.comp.renderer;
+package core.gui.comp.renderer
 
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-
-import java.awt.Color;
-
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-
-
+import core.gui.comp.entry.ColorLabelEntry
+import core.gui.comp.entry.IHOTableEntry
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import java.awt.Component
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JTable
+import javax.swing.table.TableCellRenderer
 
 /**
  * Renderer for tables with JLabels as table objects
  */
-public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRenderer {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    public static Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
-    public static Color SELECTION_FG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_FG);
+open class HODefaultTableCellRenderer : TableCellRenderer {
     //~ Methods ------------------------------------------------------------------------------------
-
-    public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
-                                                            boolean isSelected,
-                                                            boolean hasFocus, int row,
-                                                            int column) {
-
-        if (value instanceof IHOTableEntry) {
-            final JComponent component = ((IHOTableEntry) value).getComponent(isSelected);
-
-            if (isSelected) {
-                component.setOpaque(true);
+    override fun getTableCellRendererComponent(
+        table: JTable, value: Any,
+        isSelected: Boolean,
+        hasFocus: Boolean, row: Int,
+        column: Int
+    ): Component {
+        return when (value) {
+            is IHOTableEntry -> {
+                val component = value.getComponent(isSelected)
+                if (isSelected) {
+                    component.setOpaque(true)
+                }
+                component
             }
 
-            return component;
-        }  else if (value instanceof JComponent) {
-            final JComponent component = (JComponent) value;
-            component.setOpaque(true);
-            component.setBackground(isSelected?SELECTION_BG:ColorLabelEntry.BG_STANDARD);
-            component.setForeground(isSelected?SELECTION_FG:ColorLabelEntry.FG_STANDARD);
-            return component;
-        }
-        else {
+            is JComponent -> {
+                value.setOpaque(true)
+                value.setBackground(if (isSelected) SELECTION_BG else ColorLabelEntry.BG_STANDARD)
+                value.setForeground(if (isSelected) SELECTION_FG else ColorLabelEntry.FG_STANDARD)
+                value
+            }
 
-            JComponent component = new JLabel(value!=null?value.toString():"");
-            component.setOpaque(true);
-            component.setBackground(isSelected?SELECTION_BG:ColorLabelEntry.BG_STANDARD);
-            component.setForeground(isSelected?SELECTION_FG:ColorLabelEntry.FG_STANDARD);
-            
-            return component;
+            else -> {
+                val component: JComponent = JLabel(value.toString())
+                component.setOpaque(true)
+                component.setBackground(if (isSelected) SELECTION_BG else ColorLabelEntry.BG_STANDARD)
+                component.setForeground(if (isSelected) SELECTION_FG else ColorLabelEntry.FG_STANDARD)
+                component
+            }
         }
+    }
+
+    companion object {
+        //~ Static fields/initializers -----------------------------------------------------------------
+        @JvmField
+        var SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG)
+        @JvmField
+        var SELECTION_FG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_FG)
     }
 }

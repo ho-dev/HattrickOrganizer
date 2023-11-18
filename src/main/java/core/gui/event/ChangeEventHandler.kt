@@ -1,30 +1,28 @@
-package core.gui.event;
+package core.gui.event
 
-import javax.swing.event.*;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArrayList
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
 
 /**
- * Support for handling {@link ChangeListener}s.
+ * Support for handling [ChangeListener]s.
  */
-public class ChangeEventHandler {
-
-    /** CopyOnWriteArrayList ensures thread-safety */
-    private List<ChangeListener> changeListeners = new CopyOnWriteArrayList<>();
-
-    public void addChangeListener(ChangeListener changeListener) {
-        changeListeners.add(changeListener);
+open class ChangeEventHandler {
+    /** CopyOnWriteArrayList ensures thread-safety  */
+    private val changeListeners: MutableList<ChangeListener> = CopyOnWriteArrayList()
+    fun addChangeListener(changeListener: ChangeListener) {
+        changeListeners.add(changeListener)
     }
 
-    public void removeChangeListener(ChangeListener changeListener) {
+    fun removeChangeListener(changeListener: ChangeListener) {
         if (changeListeners.contains(changeListener)) {
-            changeListeners.remove(changeListener);
+            changeListeners.remove(changeListener)
         }
     }
 
-    protected void fireChangeEvent(ChangeEvent event) {
-        for (ChangeListener listener : changeListeners) {
-            listener.stateChanged(event);
+    protected fun fireChangeEvent(event: ChangeEvent?) {
+        for (listener in changeListeners) {
+            listener.stateChanged(event)
         }
     }
 }

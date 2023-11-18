@@ -1,77 +1,59 @@
-package core.gui.comp;
+package core.gui.comp
 
-import core.gui.Credits;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
-import core.util.BrowserLauncher;
-import core.util.HOLogger;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
+import core.gui.Credits
+import core.gui.theme.HOColorName
+import core.gui.theme.ThemeManager
+import core.util.BrowserLauncher
+import core.util.HOLogger
+import java.awt.Cursor
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.font.TextAttribute
+import javax.swing.JLabel
 
-import javax.swing.JLabel;
+class HyperLinkLabel() : JLabel() {
+    var url: String? = null
 
-public class HyperLinkLabel extends JLabel {
+    init {
+        init()
+    }
 
-	private static final Color LINK_COLOR = ThemeManager.getColor(HOColorName.LINK_LABEL_FG);
-	private String url;
+    constructor(text: String?, url: String?) : this() {
+        this.url = url
+        setText(text)
+    }
 
-	public HyperLinkLabel() {
-		init();
-	}
+    constructor(url: String?) : this() {
+        this.url = url
+        setText(url)
+    }
 
-	public HyperLinkLabel(String text, String url) {
-		this();
-		this.url = url;
-		setText(text);
-	}
+    private fun init() {
+        val map: MutableMap<TextAttribute, Any?> = HashMap()
+        map[TextAttribute.UNDERLINE] = TextAttribute.UNDERLINE_ON
+        val font = font.deriveFont(map)
+        setFont(font)
+        setForeground(LINK_COLOR)
+        addMouseListener(object : MouseAdapter() {
+            override fun mouseEntered(e: MouseEvent) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
+            }
 
-	public HyperLinkLabel( String url) {
-		this();
-		this.url = url;
-		setText(url);
-	}
+            override fun mouseExited(e: MouseEvent) {
+                setCursor(Cursor.getDefaultCursor())
+            }
 
-	public String getUrl() {
-		return url;
-	}
+            override fun mouseClicked(e: MouseEvent) {
+                try {
+                    BrowserLauncher.openURL(url)
+                } catch (ex: Exception) {
+                    HOLogger.instance().log(Credits::class.java, ex)
+                }
+            }
+        })
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	private void init() {
-		Map<TextAttribute, Object> map = new HashMap<>();
-		map.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		Font font = getFont().deriveFont(map);
-		setFont(font);
-		setForeground(LINK_COLOR);
-
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				setCursor(Cursor.getDefaultCursor());
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-					BrowserLauncher.openURL(HyperLinkLabel.this.url);
-				} catch (Exception ex) {
-					HOLogger.instance().log(Credits.class, ex);
-				}
-			}
-		});
-	}
-
+    companion object {
+        private val LINK_COLOR = ThemeManager.getColor(HOColorName.LINK_LABEL_FG)
+    }
 }
