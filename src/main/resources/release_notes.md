@@ -27,6 +27,7 @@
 ### Transfer
 
 ### Training
+* fix scrolling of training table (#1936)
 
 ### League
 

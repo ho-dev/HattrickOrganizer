@@ -22,6 +22,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -110,8 +111,6 @@ public class OutputPanel extends LazyImagePanel {
     private void addListeners() {
         var playerIdColumnIndex = this.outputTable.getColumnCount()-1;
         this.outputTable.getSelectionModel().addListSelectionListener(new PlayerSelectionListener(this.model, this.outputTable, playerIdColumnIndex));
-
-
         this.outputTable.getSelectionModel().addListSelectionListener(e -> {
             var index = outputTable.getSelectedRow();
             fixedOutputTable.getSelectionModel().setSelectionInterval(index, index);
@@ -121,9 +120,7 @@ public class OutputPanel extends LazyImagePanel {
             outputTable.getSelectionModel().setSelectionInterval(index, index);
         });
 
-
         this.importButton.addActionListener(arg0 -> importMatches());
-
         this.calculateButton.addActionListener(arg0 -> {
             // recalcSubskills() causes UI update via RefreshManager, so no
             // need to update UI ourself
@@ -147,7 +144,6 @@ public class OutputPanel extends LazyImagePanel {
                 }
             }
         });
-
     }
 
     private void selectPlayerFromModel() {
@@ -214,6 +210,7 @@ public class OutputPanel extends LazyImagePanel {
 
         outputTable.setAutoResizeMode(0);
         outputTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        fixedOutputTable.setPreferredScrollableViewportSize(new Dimension(150, 70));
         outputTable.setAutoCreateRowSorter(true);
         fixedOutputTable.setAutoCreateRowSorter(true);
 
@@ -226,16 +223,26 @@ public class OutputPanel extends LazyImagePanel {
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
         sorter.setSortKeys(sortKeys);
         sorter.sort();
-
         var scrollPane = new JScrollPane(outputTable);
-        Dimension fixedSize = fixedOutputTable.getPreferredSize();
-        JViewport viewport = new JViewport();
-        viewport.setView(fixedOutputTable);
-        viewport.setPreferredSize(fixedSize);
-        viewport.setMaximumSize(fixedSize);
-        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, fixedOutputTable.getTableHeader());
-        scrollPane.setRowHeaderView(viewport);
-        add(scrollPane, BorderLayout.CENTER);
+        var fixedScrollPane = new JScrollPane(fixedOutputTable);
+        var bar = fixedScrollPane.getVerticalScrollBar();
+        var bar2 = scrollPane.getVerticalScrollBar();
+        bar.setPreferredSize(new Dimension(0, 0));
+        // Synchronize vertical scrolling
+        AdjustmentListener adjustmentListener = e -> {
+            if (e.getSource() == bar2) {
+                bar.setValue(e.getValue());
+            } else {
+                bar2.setValue(e.getValue());
+            }
+        };
+        bar.addAdjustmentListener(adjustmentListener);
+        bar2.addAdjustmentListener(adjustmentListener);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
+        splitPane.setLeftComponent(fixedScrollPane);
+        splitPane.setRightComponent(scrollPane);
+        add(splitPane, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
 
