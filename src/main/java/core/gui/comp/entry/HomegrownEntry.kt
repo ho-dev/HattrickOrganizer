@@ -1,93 +1,70 @@
-package core.gui.comp.entry;
+package core.gui.comp.entry
 
-import core.model.player.Player;
-import org.jetbrains.annotations.NotNull;
+import core.gui.theme.HOIconName
+import core.gui.theme.ThemeManager
+import core.model.player.Player
+import javax.swing.JComponent
+import javax.swing.SwingConstants
 
-import javax.swing.JComponent;
-import javax.swing.SwingConstants;
+class HomegrownEntry : AbstractHOTableEntry() {
+    private var icon = ColorLabelEntry(
+        "", ColorLabelEntry.FG_STANDARD,
+        ColorLabelEntry.BG_STANDARD,
+        SwingConstants.CENTER
+    )
+    private var player: Player? = null
 
+    fun setPlayer(player: Player?) {
+        this.player = player
+        updateComponent()
+    }
 
+    fun getPlayer(): Player? {
+        return player
+    }
 
-public class HomegrownEntry extends AbstractHOTableEntry{
+    override fun compareTo(other: IHOTableEntry): Int {
+        if (other is HomegrownEntry) {
+            val entry = other
+            if (entry.getPlayer() != null && getPlayer() != null) {
+                if (entry.getPlayer()!!.homeGrown != getPlayer()!!.homeGrown) {
+                    return if (getPlayer()!!.homeGrown) {
+                        1
+                    } else {
+                        -1
+                    }
+                }
+            }
+        }
+        return 0
+    }
 
-	private ColorLabelEntry icon = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-			ColorLabelEntry.BG_STANDARD,
-			SwingConstants.CENTER);
-	private Player player;
+    override fun updateComponent() {
+        if (player != null) {
+            if (player!!.homeGrown) {
+                icon.setIcon(ThemeManager.getIcon(HOIconName.HOMEGROWN))
+            } else {
+                icon.clear()
+            }
+        } else {
+            icon.clear()
+        }
+    }
 
-	//~ Constructors -------------------------------------------------------------------------------
+    override fun getComponent(isSelected: Boolean): JComponent {
+        return icon.getComponent(isSelected)
+    }
 
-	/**
-	 * Creates a new Homegrown Entry.
-	 */
-	public HomegrownEntry() {
-		super();
-	}
+    override fun clear() {
+        player = null
+        updateComponent()
+    }
 
-	public final void setPlayer(Player player) {
-		this.player = player;
-		updateComponent();
-	}
-
-	public final Player getPlayer() {
-		return player;
-	}
-
-
-	@Override
-	public int compareTo(@NotNull IHOTableEntry obj) {
-		if (obj instanceof HomegrownEntry) {
-			final HomegrownEntry entry = (HomegrownEntry) obj;
-
-			if ((entry.getPlayer() != null) && (getPlayer() != null)) {
-
-				if (entry.getPlayer().isHomeGrown() != getPlayer().isHomeGrown()) {
-					if (getPlayer().isHomeGrown() == true) {
-						return 1;
-					} else {
-						return -1;
-					}
-				}
-			}
-		}
-		return 0;
-	}
-
-	
-	@Override
-	public final void updateComponent() {
-		if (player != null) {
-			if (player.isHomeGrown()) {
-				icon.setIcon(core.gui.theme.ThemeManager.getIcon(core.gui.theme.HOIconName.HOMEGROWN));
-			} else {
-				icon.clear();
-			}
-
-		} else {
-			icon.clear();
-		}
-	}
-
-
-	@Override
-	public JComponent getComponent(boolean isSelected) {
-		return icon.getComponent(isSelected);
-	}
-
-
-	@Override
-	public void clear() {
-		player = null;
-		updateComponent();
-		
-	}
-
-
-	@Override
-	public void createComponent() {
-		icon = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-				ColorLabelEntry.BG_STANDARD,
-				SwingConstants.CENTER);
-	}
+    override fun createComponent() {
+        icon = ColorLabelEntry(
+            "", ColorLabelEntry.FG_STANDARD,
+            ColorLabelEntry.BG_STANDARD,
+            SwingConstants.CENTER
+        )
+    }
 }
-

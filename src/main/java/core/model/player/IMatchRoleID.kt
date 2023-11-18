@@ -1,166 +1,165 @@
-package core.model.player;
+package core.model.player
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.stream.Collectors
+import java.util.stream.IntStream
+import java.util.stream.Stream
 
 /**
  *
  * MatchRoleID according to CHPP documentation.
- * 
+ *
  * @author akaSolace
  */
-public interface IMatchRoleID {
+interface IMatchRoleID {
+    companion object {
+        //MatchRoleID and MatchBehaviourID according to CHPP documentation
+        // Used for sending Lineup
+        // ===========  MatchRoleID ================
+        // https://www93.hattrick.org/Community/CHPP/NewDocs/DataTypes.aspx#matchRoleID
+        const val keeper = 100 // Keeper
+        const val rightBack = 101 // Right WB
+        const val rightCentralDefender = 102 // Right central defender
+        const val middleCentralDefender = 103 //	Middle central defender
+        const val leftCentralDefender = 104 // Left central defender
+        const val leftBack = 105 // Left WB
+        const val rightWinger = 106 // Right winger
+        const val rightInnerMidfield = 107 // Right inner midfield
+        const val centralInnerMidfield = 108 // 	Middle inner midfield
+        const val leftInnerMidfield = 109 // Left inner midfield
+        const val leftWinger = 110 // Left winger
+        const val rightForward = 111 // Right forward
+        const val centralForward = 112 // Middle forward
+        const val leftForward = 113 //Left forward
 
-    //MatchRoleID and MatchBehaviourID according to CHPP documentation
-    // Used for sending Lineup
+        val aFieldMatchRoleID = IntStream.rangeClosed(100, 113).boxed().collect(Collectors.toList())
+        val aOutfieldMatchRoleID = IntStream.rangeClosed(101, 113).boxed().collect(Collectors.toList())
 
-    // ===========  MatchRoleID ================
-    // https://www93.hattrick.org/Community/CHPP/NewDocs/DataTypes.aspx#matchRoleID
+        // Subs
+        // used in match lineup file
+        const val substitutionKeeper = 114
+        const val substitutionDefender = 115
+        const val substitutionInnerMidfield = 116
+        const val substitutionWinger = 117
+        const val substitutionForward = 118
 
-    int keeper = 100; // Keeper
-    int rightBack = 101; // Right WB
-    int rightCentralDefender = 102; // Right central defender
-    int middleCentralDefender = 103; //	Middle central defender
-    int leftCentralDefender = 104; // Left central defender
-    int leftBack = 105; // Left WB
-    int rightWinger = 106; // Right winger
-    int rightInnerMidfield = 107; // Right inner midfield
-    int centralInnerMidfield = 108; // 	Middle inner midfield
-    int leftInnerMidfield = 109; // Left inner midfield
-    int leftWinger = 110; // Left winger
-    int rightForward = 111; // Right forward
-    int centralForward = 112; // Middle forward
-    int leftForward = 113; //Left forward
-    List<Integer> aFieldMatchRoleID = IntStream.rangeClosed(100, 113).boxed().collect(Collectors.toList());
-    List<Integer> aOutfieldMatchRoleID = IntStream.rangeClosed(101, 113).boxed().collect(Collectors.toList());
+        // used in match order
+        const val substGK1 = 200 // 	Substitution (Keeper)
+        const val substCD1 = 201 // Substitution (Central defender)
+        const val substWB1 = 202 // Substitution (WB)
+        const val substIM1 = 203 // Substitution (Inner midfielder)
+        const val substFW1 = 204 // 	Substitution (Forward)
+        const val substWI1 = 205 // 	Substitution (Winger)
+        const val substXT1 = 206 // 	Substitution (Extra)
 
-    // Subs
-    // used in match lineup file
-    int substitutionKeeper = 114;
-    int substitutionDefender = 115;
-    int substitutionInnerMidfield = 116;
-    int substitutionWinger = 117;
-    int substitutionForward = 118;
-    // used in match order
-    int substGK1 = 200; // 	Substitution (Keeper)
-    int substCD1 = 201; // Substitution (Central defender)
-    int substWB1 = 202; // Substitution (WB)
-    int substIM1 = 203; // Substitution (Inner midfielder)
-    int substFW1 = 204; // 	Substitution (Forward)
-    int substWI1 = 205; // 	Substitution (Winger)
-    int substXT1 = 206; // 	Substitution (Extra)
-    List<Integer> aSubstitutesMatchRoleID = IntStream.rangeClosed(200, 206).boxed().collect(Collectors.toList());
-    int substGK2 = 207; // 	Backup (Keeper)
-    int substCD2 = 208; // Backup (Central defender)
-    int substWB2 = 209; // Backup (WB)
-    int substIM2 = 210; // Backup (Inner midfielder)
-    int substFW2 = 211; // 	Backup (Forward)
-    int substWI2 = 212; // 	Backup (Winger)
-    int substXT2 = 213; // 	Backup (Extra)
-    List<Integer> aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList());
-    List<Integer> aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList());
-    List<Integer> aFieldMSubsAndBackupMatchRoleID = Stream.of(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID).flatMap(Collection::stream).collect(Collectors.toList());
-    List<Integer> aFieldAndSubsMatchRoleID = Stream.of(aFieldMatchRoleID, aSubstitutesMatchRoleID).flatMap(Collection::stream).collect(Collectors.toList());
+        val aSubstitutesMatchRoleID = IntStream.rangeClosed(200, 206).boxed().collect(Collectors.toList())
+        const val substGK2 = 207 // 	Backup (Keeper)
+        const val substCD2 = 208 // Backup (Central defender)
+        const val substWB2 = 209 // Backup (WB)
+        const val substIM2 = 210 // Backup (Inner midfielder)
+        const val substFW2 = 211 // 	Backup (Forward)
+        const val substWI2 = 212 // 	Backup (Winger)
+        const val substXT2 = 213 // 	Backup (Extra)
+        val aBackupssMatchRoleID = IntStream.rangeClosed(207, 213).boxed().collect(Collectors.toList())
 
-    // SetPieces Taker and Captain
-    int setPieces = 17;
-    int captain = 18;
+        val aSubsAndBackupssMatchRoleID = IntStream.rangeClosed(200, 213).boxed().collect(Collectors.toList())
+        val aFieldMSubsAndBackupMatchRoleID =
+            Stream.of(aFieldMatchRoleID, aSubsAndBackupssMatchRoleID).flatMap { obj: List<Int> -> obj.stream() }
+                .collect(Collectors.toList())
+        val aFieldAndSubsMatchRoleID =
+            Stream.of(aFieldMatchRoleID, aSubstitutesMatchRoleID).flatMap { obj: List<Int> -> obj.stream() }
+                .collect(Collectors.toList())
 
-    // replaced Players
-    int FirstPlayerReplaced = 19; // Replaced Player #1
-    int SecondPlayerReplaced = 20; // Replaced Player #2
-    int ThirdPlayerReplaced = 21; // Replaced Player #3
+        // SetPieces Taker and Captain
+        const val setPieces = 17
+        const val captain = 18
 
-    // penalty Takers
-    int penaltyTaker1 = 22;
-    int penaltyTaker2 = 23;
-    int penaltyTaker3 = 24;
-    int penaltyTaker4 = 25;
-    int penaltyTaker5 = 26;
-    int penaltyTaker6 = 27;
-    int penaltyTaker7 = 28;
-    int penaltyTaker8 = 29;
-    int penaltyTaker9 = 30;
-    int penaltyTaker10 = 31;
-    int penaltyTaker11 = 32;
+        // replaced Players
+        const val FirstPlayerReplaced = 19 // Replaced Player #1
+        const val SecondPlayerReplaced = 20 // Replaced Player #2
+        const val ThirdPlayerReplaced = 21 // Replaced Player #3
 
-//    /** ab welccher PositionsID gehört Pos zur Reserve Bank */
-//
-    //First id of the reserves
-    int startReserves = substitutionKeeper;
+        // penalty Takers
+        const val penaltyTaker1 = 22
+        const val penaltyTaker2 = 23
+        const val penaltyTaker3 = 24
+        const val penaltyTaker4 = 25
+        const val penaltyTaker5 = 26
+        const val penaltyTaker6 = 27
+        const val penaltyTaker7 = 28
+        const val penaltyTaker8 = 29
+        const val penaltyTaker9 = 30
+        const val penaltyTaker10 = 31
+        const val penaltyTaker11 = 32
 
-    // Start of player list is not a good idea to hard code at 0 either
-    int startLineup = keeper;
-//
+        //    /** ab welccher PositionsID gehört Pos zur Reserve Bank */
+        //
+        //First id of the reserves
+        const val startReserves = substitutionKeeper
 
+        // Start of player list is not a good idea to hard code at 0 either
+        const val startLineup = keeper
 
-    // ===========  MatchBehaviourID ================
-    // https://www93.hattrick.org/Community/CHPP/NewDocs/DataTypes.aspx#matchBehaviourID
+        //
+        // ===========  MatchBehaviourID ================
+        // https://www93.hattrick.org/Community/CHPP/NewDocs/DataTypes.aspx#matchBehaviourID
+        const val NORMAL: Byte = 0
+        const val OFFENSIVE: Byte = 1
+        const val DEFENSIVE: Byte = 2
+        const val TOWARDS_MIDDLE: Byte = 3
+        const val TOWARDS_WING: Byte = 4
+        const val OLD_EXTRA_FORWARD: Byte = 5
+        const val OLD_EXTRA_MIDFIELD: Byte = 6
+        const val OLD_EXTRA_DEFENDER: Byte = 7
+        const val OLD_EXTRA_DEFENSIVE_FORWARD: Byte = 8
 
-    byte NORMAL = 0;
-    byte OFFENSIVE = 1;
-    byte DEFENSIVE = 2;
-    byte TOWARDS_MIDDLE = 3;
-    byte TOWARDS_WING = 4;
-    byte OLD_EXTRA_FORWARD = 5;
-    byte OLD_EXTRA_MIDFIELD = 6;
-    byte OLD_EXTRA_DEFENDER = 7;
-    byte OLD_EXTRA_DEFENSIVE_FORWARD = 8;
-    
-  
-    //Constants to identify the 22 possible combination of position and Behaviour
+        //Constants to identify the 22 possible combination of position and Behaviour
+        const val NUM_POSITIONS: Byte = 22
+        const val KEEPER: Byte = 0
+        const val CENTRAL_DEFENDER: Byte = 1
+        const val CENTRAL_DEFENDER_OFF: Byte = 2
+        const val CENTRAL_DEFENDER_TOWING: Byte = 3
+        const val BACK: Byte = 4
+        const val BACK_OFF: Byte = 5
+        const val BACK_TOMID: Byte = 6
+        const val BACK_DEF: Byte = 7
+        const val MIDFIELDER: Byte = 8
+        const val MIDFIELDER_OFF: Byte = 9
+        const val MIDFIELDER_DEF: Byte = 10
+        const val MIDFIELDER_TOWING: Byte = 11
+        const val WINGER: Byte = 12
+        const val WINGER_OFF: Byte = 13
+        const val WINGER_DEF: Byte = 14
+        const val WINGER_TOMID: Byte = 15
+        const val FORWARD: Byte = 16
+        const val FORWARD_DEF: Byte = 17
+        const val SUBSTITUTED1: Byte = 18
+        const val SUBSTITUTED2: Byte = 19
+        const val SUBSTITUTED3: Byte = 20
+        const val FORWARD_TOWING: Byte = 21
+        const val UNKNOWN: Byte = -1
+        const val EXTRA: Byte = 30
+        const val FORWARD_DEF_TECH: Byte = 98
+        const val COACH: Byte = 99
+        const val UNSELECTABLE: Byte = 101
+        val aPositionBehaviours: List<Int> =
+            mutableListOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21)
 
-    byte NUM_POSITIONS = 22;
-    byte KEEPER = 0;
-    byte CENTRAL_DEFENDER = 1;
-    byte CENTRAL_DEFENDER_OFF = 2;
-    byte CENTRAL_DEFENDER_TOWING = 3;
-    byte BACK = 4;
-    byte BACK_OFF = 5;
-    byte BACK_TOMID = 6;
-    byte BACK_DEF = 7;
-    byte MIDFIELDER = 8;
-    byte MIDFIELDER_OFF = 9;
-    byte MIDFIELDER_DEF = 10;
-    byte MIDFIELDER_TOWING = 11;
-    byte WINGER = 12;
-    byte WINGER_OFF = 13;
-    byte WINGER_DEF = 14;
-    byte WINGER_TOMID = 15;
-    byte FORWARD = 16;
-    byte FORWARD_DEF = 17;
-    byte SUBSTITUTED1 = 18;
-    byte SUBSTITUTED2 = 19;
-    byte SUBSTITUTED3 = 20;
-    byte FORWARD_TOWING = 21;
-    byte UNKNOWN = -1;
-    byte EXTRA = 30;
-    byte FORWARD_DEF_TECH = 98;
-    byte COACH = 99;
-    byte UNSELECTABLE = 101;
-    List<Integer> aPositionBehaviours = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 21);
-
-    
-    // The old role IDs used for mapping old data to new format
-     List<Integer> oldKeeper = List.of(1);
-     List<Integer>oldRightBack = List.of(2);
-     List<Integer>oldRightCentralDefender = List.of(3);
-     List<Integer>oldLeftCentralDefender = List.of(4);
-     List<Integer>oldLeftBack = List.of(5);
-     List<Integer>oldRightWinger = List.of(6);
-     List<Integer>oldRightInnerMidfielder = List.of(7);
-     List<Integer>oldLeftInnerMidfielder = List.of(8);
-     List<Integer>oldLeftWinger = List.of(9);
-     List<Integer>oldRightForward = List.of(10);
-     List<Integer>oldLeftForward = List.of(11);
-     List<Integer>oldSubstKeeper = List.of(12, 114);
-     List<Integer>oldSubstDefender = List.of(13, 115);
-     List<Integer>oldSubstMidfielder = List.of(14, 116);
-     List<Integer>oldSubstWinger = List.of(15, 117);
-     List<Integer>oldSubstForward = List.of(16, 118);
-    
+        // The old role IDs used for mapping old data to new format
+        val oldKeeper = listOf(1)
+        val oldRightBack = listOf(2)
+        val oldRightCentralDefender = listOf(3)
+        val oldLeftCentralDefender = listOf(4)
+        val oldLeftBack = listOf(5)
+        val oldRightWinger = listOf(6)
+        val oldRightInnerMidfielder = listOf(7)
+        val oldLeftInnerMidfielder = listOf(8)
+        val oldLeftWinger = listOf(9)
+        val oldRightForward = listOf(10)
+        val oldLeftForward = listOf(11)
+        val oldSubstKeeper = listOf(12, 114)
+        val oldSubstDefender = listOf(13, 115)
+        val oldSubstMidfielder = listOf(14, 116)
+        val oldSubstWinger = listOf(15, 117)
+        val oldSubstForward = listOf(16, 118)
+    }
 }

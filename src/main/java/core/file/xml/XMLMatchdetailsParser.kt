@@ -106,7 +106,7 @@ object XMLMatchdetailsParser {
     private fun readHighlights(doc: Document, md: Matchdetails, lineup: MatchLineup) {
         val matchEvents = ArrayList<MatchEvent>()
 
-        var ele: Element?
+        val ele: Element?
         val eventList: NodeList?
         var eventtext: String
         try {
@@ -114,7 +114,7 @@ object XMLMatchdetailsParser {
             var root:Element? = doc.documentElement
             root = root?.getElementsByTagName("Match")?.item(0) as Element?
             //get both teams
-            ele = root?.getElementsByTagName("HomeTeam")?.item(0) as Element?
+            // ele = root?.getElementsByTagName("HomeTeam")?.item(0) as Element?
 //            val homeTeamID = getFirstChildNodeValue(ele?.getElementsByTagName("HomeTeamID")?.item(0) as Element?)
             ele = root?.getElementsByTagName("EventList")?.item(0) as Element?
             eventList = ele?.getElementsByTagName("Event")

@@ -14,6 +14,7 @@ import module.matches.MatchesPanel
 import tool.updater.TableModel
 import java.awt.BorderLayout
 import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
@@ -76,27 +77,27 @@ internal open class DistributionStatisticsPanel : JPanel() {
                 val tmp = BigDecimal(matches[i].zuschaueranzahl).setScale(1)
                 value[i][3] = createDoppelLabelEntry(
                     matches[i].soldTerraces,
-                    BigDecimal(matches[i].soldTerraces * 100).setScale(1).divide(tmp, BigDecimal.ROUND_HALF_DOWN)
+                    BigDecimal(matches[i].soldTerraces * 100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN)
                         .toString()
                 )
                 value[i][4] = createDoppelLabelEntry(
                     matches[i].soldBasics,
-                    BigDecimal(matches[i].soldBasics * 100).setScale(1).divide(tmp, BigDecimal.ROUND_HALF_DOWN)
+                    BigDecimal(matches[i].soldBasics * 100).setScale(1).divide(tmp,  RoundingMode.HALF_DOWN)
                         .toString()
                 )
                 value[i][5] = createDoppelLabelEntry(
                     matches[i].soldRoof,
-                    BigDecimal(matches[i].soldRoof * 100).setScale(1).divide(tmp, BigDecimal.ROUND_HALF_DOWN)
+                    BigDecimal(matches[i].soldRoof * 100).setScale(1).divide(tmp,  RoundingMode.HALF_DOWN)
                         .toString()
                 )
                 value[i][6] = createDoppelLabelEntry(
                     matches[i].soldVip,
-                    BigDecimal(matches[i].soldVip * 100).setScale(1).divide(tmp, BigDecimal.ROUND_HALF_DOWN)
+                    BigDecimal(matches[i].soldVip * 100).setScale(1).divide(tmp,  RoundingMode.HALF_DOWN)
                         .toString()
                 )
                 value[i][7] = createFansDoppelLabelEntry(
                     matches[i].fans,
-                    tmp.divide(BigDecimal(matches[i].fans), BigDecimal.ROUND_HALF_DOWN).setScale(1).toString()
+                    tmp.divide(BigDecimal(matches[i].fans),  RoundingMode.HALF_DOWN).setScale(1).toString()
                 )
             }
             return TableModel(value, columnNames)

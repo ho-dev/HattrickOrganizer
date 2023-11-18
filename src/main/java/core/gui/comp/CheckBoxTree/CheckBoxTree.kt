@@ -1,238 +1,200 @@
-package core.gui.comp.CheckBoxTree;
+package core.gui.comp.CheckBoxTree
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.EventListener;
-import java.util.EventObject;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.awt.BorderLayout
+import java.awt.Component
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
+import java.util.*
+import javax.swing.JCheckBox
+import javax.swing.JPanel
+import javax.swing.JTree
+import javax.swing.event.EventListenerList
+import javax.swing.tree.*
 
 // code is from https://stackoverflow.com/a/21851201/289466 by user SomethingSomething on Stack Overflow.
 // public methods checkNode and isChecked are added
-
-public class CheckBoxTree extends JTree {
-
+class CheckBoxTree : JTree() {
     // Defining data structure that will enable to fast check-indicate the state of each node
     // It totally replaces the "selection" mechanism of the JTree
-    private static class CheckedNode {
-        boolean isSelected;
-        boolean hasChildren;
-        boolean allChildrenSelected;
+    class CheckedNode(var isSelected: Boolean, var hasChildren: Boolean, var allChildrenSelected: Boolean)
 
-        public CheckedNode(boolean isSelected_, boolean hasChildren_, boolean allChildrenSelected_) {
-            isSelected = isSelected_;
-            hasChildren = hasChildren_;
-            allChildrenSelected = allChildrenSelected_;
-        }
-    }
-    Map<TreePath, CheckedNode> nodesCheckingState;
-    Set<TreePath> checkedPaths = new HashSet<>();
+    var nodesCheckingState: MutableMap<TreePath, CheckedNode>? = null
+    private var checkedPaths: MutableSet<TreePath> = HashSet()
 
     // Defining a new event type for the checking mechanism and preparing event-handling mechanism
-    protected EventListenerList listenerList = new EventListenerList();
+    private var listenerList = EventListenerList()
 
-    public static class CheckChangeEvent extends EventObject {
-        public CheckChangeEvent(Object source) {
-            super(source);
-        }
+    class CheckChangeEvent(source: Any?) : EventObject(source)
+    interface CheckChangeEventListener : EventListener {
+        fun checkStateChanged(event: CheckChangeEvent?)
     }
 
-    public interface CheckChangeEventListener extends EventListener {
-        void checkStateChanged(CheckChangeEvent event);
+    fun addCheckChangeEventListener(listener: CheckChangeEventListener) {
+        listenerList.add(CheckChangeEventListener::class.java, listener)
     }
 
-    public void addCheckChangeEventListener(CheckChangeEventListener listener) {
-        listenerList.add(CheckChangeEventListener.class, listener);
-    }
-
-    void fireCheckChangeEvent(CheckChangeEvent evt) {
-        Object[] listeners = listenerList.getListenerList();
-        for (int i = 0; i < listeners.length; i++) {
-            if (listeners[i] == CheckChangeEventListener.class) {
-                ((CheckChangeEventListener) listeners[i + 1]).checkStateChanged(evt);
+    fun fireCheckChangeEvent(evt: CheckChangeEvent?) {
+        val listeners = listenerList.listenerList
+        for (i in listeners.indices) {
+            if (listeners[i] === CheckChangeEventListener::class.java) {
+                (listeners[i + 1] as CheckChangeEventListener).checkStateChanged(evt)
             }
         }
     }
 
-    @Override
-    public void setModel(TreeModel newModel) {
-        super.setModel(newModel);
-        resetCheckingState();
+    override fun setModel(newModel: TreeModel) {
+        super.setModel(newModel)
+        resetCheckingState()
     }
 
     // New method that returns only the checked paths (totally ignores original "selection" mechanism)
-    public TreePath[] getCheckedPaths() {
-        return checkedPaths.toArray(new TreePath[checkedPaths.size()]);
+    fun getCheckedPaths(): Array<TreePath> {
+        return checkedPaths.toTypedArray<TreePath>()
     }
 
     // Returns true in case that the node is selected, has children but not all of them are selected
-    public boolean isSelectedPartially(TreePath path) {
-        CheckedNode cn = nodesCheckingState.get(path);
-        return cn.isSelected && cn.hasChildren && !cn.allChildrenSelected;
+    fun isSelectedPartially(path: TreePath): Boolean {
+        val cn = nodesCheckingState!![path]
+        return cn!!.isSelected && cn.hasChildren && !cn.allChildrenSelected
     }
 
-    private void resetCheckingState() {
-        nodesCheckingState = new HashMap<TreePath, CheckedNode>();
-        checkedPaths = new HashSet<TreePath>();
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)getModel().getRoot();
-        if (node == null) {
-            return;
-        }
-        addSubtreeToCheckingStateTracking(node);
+    private fun resetCheckingState() {
+        nodesCheckingState = HashMap()
+        checkedPaths = HashSet()
+        val node = model.root as DefaultMutableTreeNode
+        addSubtreeToCheckingStateTracking(node)
     }
 
     // Creating data structure of the current model for the checking mechanism
-    private void addSubtreeToCheckingStateTracking(DefaultMutableTreeNode node) {
-        TreeNode[] path = node.getPath();
-        TreePath tp = new TreePath(path);
-        CheckedNode cn = new CheckedNode(false, node.getChildCount() > 0, false);
-        nodesCheckingState.put(tp, cn);
-        for (int i = 0 ; i < node.getChildCount() ; i++) {
-            addSubtreeToCheckingStateTracking((DefaultMutableTreeNode) tp.pathByAddingChild(node.getChildAt(i)).getLastPathComponent());
+    private fun addSubtreeToCheckingStateTracking(node: DefaultMutableTreeNode) {
+        val path = node.path
+        val tp = TreePath(path)
+        val cn = CheckedNode(false, node.childCount > 0, false)
+        nodesCheckingState!![tp] = cn
+        for (i in 0 until node.childCount) {
+            addSubtreeToCheckingStateTracking(tp.pathByAddingChild(node.getChildAt(i)).lastPathComponent as DefaultMutableTreeNode)
         }
     }
 
     // Overriding cell renderer by a class that ignores the original "selection" mechanism
     // It decides how to show the nodes due to the checking-mechanism
-    private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
-        JCheckBox checkBox;
+    private inner class CheckBoxCellRenderer : JPanel(), TreeCellRenderer {
+        var checkBox: JCheckBox
 
-        public CheckBoxCellRenderer() {
-            this.setLayout(new BorderLayout());
-            checkBox = new JCheckBox();
-            add(checkBox, BorderLayout.CENTER);
-            setOpaque(false);
+        init {
+            this.setLayout(BorderLayout())
+            checkBox = JCheckBox()
+            add(checkBox, BorderLayout.CENTER)
+            setOpaque(false)
         }
 
-        @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value,
-                                                      boolean selected, boolean expanded, boolean leaf, int row,
-                                                      boolean hasFocus) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-            Object obj = node.getUserObject();
-            TreePath tp = new TreePath(node.getPath());
-            CheckedNode cn = nodesCheckingState.get(tp);
-            if (cn == null) {
-                return this;
-            }
-
-            checkBox.setSelected(cn.isSelected);
-            checkBox.setText(obj.toString());
-            checkBox.setOpaque(cn.isSelected && cn.hasChildren && !cn.allChildrenSelected);
-            return this;
+        override fun getTreeCellRendererComponent(
+            tree: JTree, value: Any,
+            selected: Boolean, expanded: Boolean, leaf: Boolean, row: Int,
+            hasFocus: Boolean
+        ): Component {
+            val node = value as DefaultMutableTreeNode
+            val obj = node.userObject
+            val tp = TreePath(node.path)
+            val cn = nodesCheckingState!![tp] ?: return this
+            checkBox.setSelected(cn.isSelected)
+            checkBox.setText(obj.toString())
+            checkBox.setOpaque(cn.isSelected && cn.hasChildren && !cn.allChildrenSelected)
+            return this
         }
     }
 
-    public CheckBoxTree() {
-        super();
+    init {
         // Disabling toggling by double-click
-        this.setToggleClickCount(0);
+        setToggleClickCount(0)
         // Overriding cell renderer by new one defined above
-        CheckBoxCellRenderer cellRenderer = new CheckBoxCellRenderer();
-        this.setCellRenderer(cellRenderer);
+        val cellRenderer = CheckBoxCellRenderer()
+        setCellRenderer(cellRenderer)
 
         // Overriding selection model by an empty one
-        DefaultTreeSelectionModel dtsm = new DefaultTreeSelectionModel() {
+        val dtsm: DefaultTreeSelectionModel = object : DefaultTreeSelectionModel() {
             // Totally disabling the selection mechanism
-            public void setSelectionPath(TreePath path) {
-            }
-            public void addSelectionPath(TreePath path) {
-            }
-            public void removeSelectionPath(TreePath path) {
-            }
-            public void setSelectionPaths(TreePath[] pPaths) {
-            }
-        };
+            override fun setSelectionPath(path: TreePath) {}
+            override fun addSelectionPath(path: TreePath) {}
+            override fun removeSelectionPath(path: TreePath) {}
+            override fun setSelectionPaths(pPaths: Array<TreePath>) {}
+        }
         // Calling checking mechanism on mouse click
-        this.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent arg0) {
-                TreePath tp = core.gui.comp.CheckBoxTree.CheckBoxTree.this.getPathForLocation(arg0.getX(), arg0.getY());
-                if (tp == null) {
-                    return;
-                }
-                boolean checkMode = !nodesCheckingState.get(tp).isSelected;
-                checkSubTree(tp, checkMode);
-                updatePredecessorsWithCheckMode(tp, checkMode);
+        addMouseListener(object : MouseListener {
+            override fun mouseClicked(arg0: MouseEvent) {
+                val tp = getPathForLocation(arg0.x, arg0.y) ?: return
+                val checkMode = !nodesCheckingState!![tp]!!.isSelected
+                checkSubTree(tp, checkMode)
+                updatePredecessorsWithCheckMode(tp, checkMode)
                 // Firing the check change event
-                fireCheckChangeEvent(new CheckChangeEvent(new Object()));
+                fireCheckChangeEvent(CheckChangeEvent(Any()))
                 // Repainting tree after the data structures were updated
-                core.gui.comp.CheckBoxTree.CheckBoxTree.this.repaint();
+                this@CheckBoxTree.repaint()
             }
-            public void mouseEntered(MouseEvent arg0) {
-            }
-            public void mouseExited(MouseEvent arg0) {
-            }
-            public void mousePressed(MouseEvent arg0) {
-            }
-            public void mouseReleased(MouseEvent arg0) {
-            }
-        });
-        this.setSelectionModel(dtsm);
+
+            override fun mouseEntered(arg0: MouseEvent) {}
+            override fun mouseExited(arg0: MouseEvent) {}
+            override fun mousePressed(arg0: MouseEvent) {}
+            override fun mouseReleased(arg0: MouseEvent) {}
+        })
+        setSelectionModel(dtsm)
     }
 
     // When a node is checked/unchecked, updating the states of the predecessors
-    protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) {
-        TreePath parentPath = tp.getParentPath();
+    private fun updatePredecessorsWithCheckMode(tp: TreePath, check: Boolean) {
+        val parentPath = tp.parentPath ?: return
         // If it is the root, stop the recursive calls and return
-        if (parentPath == null) {
-            return;
-        }
-        CheckedNode parentCheckedNode = nodesCheckingState.get(parentPath);
-        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) parentPath.getLastPathComponent();
-        parentCheckedNode.allChildrenSelected = true;
-        parentCheckedNode.isSelected = false;
-        for (int i = 0 ; i < parentNode.getChildCount() ; i++) {
-            TreePath childPath = parentPath.pathByAddingChild(parentNode.getChildAt(i));
-            CheckedNode childCheckedNode = nodesCheckingState.get(childPath);
+        val parentCheckedNode = nodesCheckingState!![parentPath]
+        val parentNode = parentPath.lastPathComponent as DefaultMutableTreeNode
+        parentCheckedNode!!.allChildrenSelected = true
+        parentCheckedNode.isSelected = false
+        for (i in 0 until parentNode.childCount) {
+            val childPath = parentPath.pathByAddingChild(parentNode.getChildAt(i))
+            val childCheckedNode = nodesCheckingState!![childPath]
             // It is enough that even one subtree is not fully selected
             // to determine that the parent is not fully selected
-            if (! childCheckedNode.allChildrenSelected) {
-                parentCheckedNode.allChildrenSelected = false;
+            if (!childCheckedNode!!.allChildrenSelected) {
+                parentCheckedNode.allChildrenSelected = false
             }
             // If at least one child is selected, selecting also the parent
             if (childCheckedNode.isSelected) {
-                parentCheckedNode.isSelected = true;
+                parentCheckedNode.isSelected = true
             }
         }
         if (parentCheckedNode.isSelected) {
-            checkedPaths.add(parentPath);
+            checkedPaths.add(parentPath)
         } else {
-            checkedPaths.remove(parentPath);
+            checkedPaths.remove(parentPath)
         }
         // Go to upper predecessor
-        updatePredecessorsWithCheckMode(parentPath, check);
+        updatePredecessorsWithCheckMode(parentPath, check)
     }
 
     // Recursively checks/unchecks a subtree
-    protected void checkSubTree(TreePath tp, boolean check) {
-        CheckedNode cn = nodesCheckingState.get(tp);
-        cn.isSelected = check;
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tp.getLastPathComponent();
-        for (int i = 0 ; i < node.getChildCount() ; i++) {
-            checkSubTree(tp.pathByAddingChild(node.getChildAt(i)), check);
+    private fun checkSubTree(tp: TreePath, check: Boolean) {
+        val cn = nodesCheckingState!![tp]
+        cn!!.isSelected = check
+        val node = tp.lastPathComponent as DefaultMutableTreeNode
+        for (i in 0 until node.childCount) {
+            checkSubTree(tp.pathByAddingChild(node.getChildAt(i)), check)
         }
-        cn.allChildrenSelected = check;
+        cn.allChildrenSelected = check
         if (check) {
-            checkedPaths.add(tp);
+            checkedPaths.add(tp)
         } else {
-            checkedPaths.remove(tp);
+            checkedPaths.remove(tp)
         }
     }
 
-    public void checkNode(DefaultMutableTreeNode node, boolean check){
-        TreePath tp = new TreePath(node.getPath());
-        checkSubTree(tp, check);
-        updatePredecessorsWithCheckMode(tp,check);
+    fun checkNode(node: DefaultMutableTreeNode, check: Boolean) {
+        val tp = TreePath(node.path)
+        checkSubTree(tp, check)
+        updatePredecessorsWithCheckMode(tp, check)
     }
 
-    public boolean isChecked(DefaultMutableTreeNode node){
-        TreePath tp = new TreePath(node.getPath());
-        CheckedNode cn = nodesCheckingState.get(tp);
-        return cn.isSelected;
+    fun isChecked(node: DefaultMutableTreeNode): Boolean {
+        val tp = TreePath(node.path)
+        val cn = nodesCheckingState!![tp]
+        return cn!!.isSelected
     }
 }

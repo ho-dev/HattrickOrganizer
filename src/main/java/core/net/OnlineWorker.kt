@@ -198,8 +198,7 @@ object OnlineWorker {
                 for (match in allMatches) {
                     // if match is available and match is finished
                     if ((DBManager.isMatchInDB(match.matchID, match.getMatchType()))
-                        && (match.matchStatus == MatchKurzInfo.FINISHED)
-                    ) {
+                        && (match.matchStatus == MatchKurzInfo.FINISHED)) {
                         downloadMatchData(match.matchID, match.getMatchType(), true)
                     }
                 }
@@ -245,7 +244,7 @@ object OnlineWorker {
             return true
         }
 
-        HOLogger.instance().debug(OnlineWorker.javaClass, "Get Lineup : " + info.matchID)
+        HOLogger.instance().debug(OnlineWorker.javaClass, "Get Lineup : ${info.matchID}")
 
         val matchID = info.matchID
         if (matchID < 0) {
@@ -285,7 +284,7 @@ object OnlineWorker {
                         } else if (info.getArenaId() > 0) {
                             info.setRegionId(details.getRegionId())
 
-                            if (!info.getWeatherForecast().isSure()) {
+                            if (!info.weatherForecast.isSure) {
                                 val regiondetails = getRegionDetails(info.getRegionId())
                                 if (regiondetails != null) {
                                     var matchDate = info.getMatchSchedule().toLocaleDate()

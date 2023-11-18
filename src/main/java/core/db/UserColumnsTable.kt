@@ -73,7 +73,7 @@ internal class UserColumnsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME,
     fun loadModel(model: HOTableModel) {
         var count = 0
         val userColumns = load(_UserColumn::class.java, model.id * 1000, model.id * 1000 + 999)
-        if (!userColumns!!.isEmpty()) { // user may not delete all columns
+        if (userColumns.isNotEmpty()) { // user may not delete all columns
             val modelColumns = model.columns
             if (model.userCanDisableColumns() && !DBManager.firstStart) {
                 for (modelColumn in modelColumns) {

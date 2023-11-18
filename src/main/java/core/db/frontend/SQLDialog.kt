@@ -169,7 +169,7 @@ class SQLDialog : JDialog(HOMainFrame, "Simple SQL Editor"), ActionListener {
     private val values: Array<Array<Any?>>?
         get() {
             var values = null as Array<Array<Any?>>?
-            var rowCount = 0
+            val rowCount:Int
             val txt = textArea.getText().uppercase(Locale.getDefault())
             val index1 = txt.indexOf("FROM")
             val select = txt.substring(0, index1 - 1)

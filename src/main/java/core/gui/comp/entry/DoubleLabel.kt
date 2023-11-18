@@ -1,32 +1,27 @@
-// %1614414392:de.hattrickorganizer.gui.templates%
-package core.gui.comp.entry;
+package core.gui.comp.entry
 
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
-
-import java.awt.*;
-import javax.swing.JPanel;
-
+import core.gui.comp.renderer.HODefaultTableCellRenderer
+import java.awt.GridLayout
+import java.awt.LayoutManager
+import javax.swing.JPanel
 
 /**
  * Panel with two horizontal elements, left and right.
  */
-class DoubleLabel extends JPanel {
-	
-	private static final long serialVersionUID = 4801107348466403035L;
-	private LayoutManager layout = new GridLayout(1, 2);
-	
-    public DoubleLabel() {
-        setLayout(layout);
-        setOpaque(true);
-        setBackground(HODefaultTableCellRenderer.SELECTION_BG);
+internal class DoubleLabel : JPanel() {
+    private var layout: LayoutManager = GridLayout(1, 2)
+
+    init {
+        setLayout(layout)
+        setOpaque(true)
+        setBackground(HODefaultTableCellRenderer.SELECTION_BG)
     }
 
-    public void setLayoutManager(LayoutManager manager) {
+    fun setLayoutManager(manager: LayoutManager?) {
         if (manager != null) {
-            this.layout = manager;
-            setLayout(this.layout);
-            repaint();
+            layout = manager
+            setLayout(layout)
+            repaint()
         }
     }
-
 }

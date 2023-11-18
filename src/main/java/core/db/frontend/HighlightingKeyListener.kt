@@ -138,22 +138,22 @@ internal open class HighlightingKeyListener(private val textPane: JTextPane) : K
     @Synchronized
     @Throws(BadLocationException::class)
     private fun getNextWord(initPos: Int): IntArray {
-        var initPos = initPos
+        var curInitPos = initPos
         val word = IntArray(2)
-        var max = if (initPos >= 1) initPos else 0
+        var max = if (curInitPos >= 1) curInitPos else 0
         var length = 0
         var foundChar = false
         while (max < textPane.styledDocument.length) {
             if (textPane.getText(max, 1) == " " || textPane.getText(max, 1) == "\n") {
                 if (foundChar) break
             } else {
-                if (!foundChar) initPos = max
+                if (!foundChar) curInitPos = max
                 length++
                 foundChar = true
             }
             max++
         }
-        word[0] = initPos
+        word[0] = curInitPos
         word[1] = if (length != 0) length else length + 1
         return word
     }

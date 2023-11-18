@@ -2,8 +2,6 @@ package core.model.player;
 
 import core.util.HODateTime;
 
-import java.util.Date;
-
 public interface ISkillChange {
 	
 	/** Real Skillup happened in the past */

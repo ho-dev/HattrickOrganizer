@@ -126,14 +126,14 @@ class ArenaPanel : JPanel() {
         val stadium = HOVerwaltung.instance().model.getStadium()
         val currentStadium = this.stadium!!
 
-        (values[0][1] as DoubleLabelEntries?)!!.left.setText("${currentStadium.standing}")
-        (values[0][1] as DoubleLabelEntries?)!!.right.setSpecialNumber(
+        (values[0][1] as DoubleLabelEntries).left.setText("${currentStadium.standing}")
+        (values[0][1] as DoubleLabelEntries).right.setSpecialNumber(
             currentStadium.standing - stadium.standing,
             false
         )
 
-        (values[1][1] as DoubleLabelEntries?)!!.left.setText("${currentStadium.basicSeating}")
-        (values[1][1] as DoubleLabelEntries?)!!.right.setSpecialNumber(
+        (values[1][1] as DoubleLabelEntries).left.setText("${currentStadium.basicSeating}")
+        (values[1][1] as DoubleLabelEntries).right.setSpecialNumber(
             currentStadium.basicSeating - stadium.basicSeating,
             false
         )

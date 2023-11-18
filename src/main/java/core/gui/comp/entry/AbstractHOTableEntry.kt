@@ -1,8 +1,7 @@
-package core.gui.comp.entry;
+package core.gui.comp.entry
 
-public abstract class AbstractHOTableEntry implements IHOTableEntry  {
-
-    public final int compareToThird(IHOTableEntry obj) {
-        return this.compareTo(obj);
+abstract class AbstractHOTableEntry : IHOTableEntry {
+    override fun compareToThird(obj: IHOTableEntry): Int {
+        return this.compareTo(obj)
     }
 }

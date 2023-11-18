@@ -1,724 +1,800 @@
-package core.model.player;
+package core.model.player
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import core.constants.TrainingType;
-import core.datatype.CBItem;
-import core.db.AbstractTable;
-import core.model.HOVerwaltung;
-import core.util.HOLogger;
-import module.lineup.Lineup;
-import org.jetbrains.annotations.NotNull;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+import core.constants.TrainingType
+import core.datatype.CBItem
+import core.db.AbstractTable.Storable
+import core.model.HOVerwaltung
+import core.util.HOLogger
+import module.lineup.Lineup
+import java.io.DataOutputStream
+import java.io.IOException
+import java.io.Serializable
+import java.util.*
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+open class MatchRoleID : Storable, Serializable, Comparable<IMatchRoleID>, IMatchRoleID {
+    enum class Sector {
+        None,
+        Goal,
+        Back,
+        CentralDefence,
+        Wing,
+        InnerMidfield,
+        Forward,
+        SetPiecesTaker
+    }
+    // ~ Instance fields
+    // ----------------------------------------------------------------------------
+    /**
+     * Getter for property m_bTaktik.
+     *
+     * @return Value of property m_bTaktik.
+     */
+    /** TaktikAnweisungen  */
+    @SerializedName("behaviour")
+    @Expose
+    var tactic: Byte = -1
+        private set
 
-
-public class MatchRoleID extends AbstractTable.Storable implements java.io.Serializable, Comparable<IMatchRoleID>,
-		IMatchRoleID {
-
-	public enum Sector {
-		None,
-		Goal,
-		Back,
-		CentralDefence,
-		Wing,
-		InnerMidfield,
-		Forward,
-		SetPiecesTaker
-	}
-
-
-	/**
-	 * Array with the constants (CBItems) for the positions, Without Exchanged
-	 */
-	public static final CBItem[] POSITIONEN = {
-			new CBItem(MatchRoleID.getNameForPosition(UNKNOWN), UNKNOWN),
-			new CBItem(MatchRoleID.getNameForPosition(UNSELECTABLE), UNSELECTABLE),
-			new CBItem(MatchRoleID.getNameForPosition(KEEPER), KEEPER),
-			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER), CENTRAL_DEFENDER),
-			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER_OFF), CENTRAL_DEFENDER_OFF),
-			new CBItem(MatchRoleID.getNameForPosition(CENTRAL_DEFENDER_TOWING), CENTRAL_DEFENDER_TOWING),
-			new CBItem(MatchRoleID.getNameForPosition(BACK), BACK),
-			new CBItem(MatchRoleID.getNameForPosition(BACK_OFF), BACK_OFF),
-			new CBItem(MatchRoleID.getNameForPosition(BACK_DEF), BACK_DEF),
-			new CBItem(MatchRoleID.getNameForPosition(BACK_TOMID), BACK_TOMID),
-			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER), MIDFIELDER),
-			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_OFF), MIDFIELDER_OFF),
-			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_DEF), MIDFIELDER_DEF),
-			new CBItem(MatchRoleID.getNameForPosition(MIDFIELDER_TOWING), MIDFIELDER_TOWING),
-			new CBItem(MatchRoleID.getNameForPosition(WINGER), WINGER),
-			new CBItem(MatchRoleID.getNameForPosition(WINGER_OFF), WINGER_OFF),
-			new CBItem(MatchRoleID.getNameForPosition(WINGER_DEF), WINGER_DEF),
-			new CBItem(MatchRoleID.getNameForPosition(WINGER_TOMID), WINGER_TOMID),
-			new CBItem(MatchRoleID.getNameForPosition(FORWARD), FORWARD),
-			new CBItem(MatchRoleID.getNameForPosition(FORWARD_DEF), FORWARD_DEF),
-			new CBItem(MatchRoleID.getNameForPosition(FORWARD_TOWING), FORWARD_TOWING) };
-
-
-	// ~ Instance fields
-	// ----------------------------------------------------------------------------
-
-	/** TaktikAnweisungen */
-	@SerializedName("behaviour")
-	@Expose
-	private byte behaviour = -1;
-
-	/** ID */
-	private int m_iId = -1;
-
-	public static boolean isFieldMatchRoleId(int pos){return pos>=keeper && pos <=leftForward;}
-	public boolean isFieldMatchRoleId(){ return isFieldMatchRoleId(this.m_iId); }
-	public boolean isSubstitutesMatchRoleId() { return m_iId>=substGK1 && m_iId<= substXT1;}
-	public boolean isBackupsMatchRoleId(){ return m_iId>=substGK2 && m_iId<= substXT2;}
-	public boolean isPenaltyTakerMatchRoleId(){ return m_iId>=penaltyTaker1 && m_iId<=penaltyTaker11;}
-	public boolean isReplacedMatchRoleId() { return m_iId>=FirstPlayerReplaced && m_iId<=ThirdPlayerReplaced; }
-
-	// It is much safer to have "empty" as 0, as it appears temp-players may
-	// get ID -1 - Blaghaid
-	/** welcher Player besetzt diese Position */
-	@SerializedName("id")
-	@Expose
-	private int m_iSpielerId = 0;
-
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
-
-	/**
-	 * Creates a new instance of MatchRoleID
-	 */
-
-	/* byte position, */
-	public MatchRoleID(int id, int playerId, byte behaviour) {
-		// m_bPosition = position;
-
-		if ((id < IMatchRoleID.setPieces) && (id != -1) && (id != 0)) {
-			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + id);
-		}
-
-		m_iId = id;
-		m_iSpielerId = playerId;
-		this.behaviour = behaviour;
-	}
-
-	/**
-	 * Creates a new instance of MatchRoleID
-	 */
-	public MatchRoleID(MatchRoleID sp) {
-		// m_bPosition = position;
-		m_iId = sp.getId();
-		m_iSpielerId = sp.getPlayerId();
-		behaviour = sp.getTactic();
-
-		if ((m_iId < IMatchRoleID.setPieces) && (m_iId != -1)) {
-			HOLogger.instance().debug(getClass(), "Old RoleID found in lineup: " + m_iId);
-		}
-	}
-
-	public MatchRoleID(){}
-
-//	// //////////////////Load/Save/////////////////
-//
-//	/**
-//	 * Konstruktor lädt die MatchRoleID aus einem InputStream
-//	 *
-//	 * @param dis
-//	 *            Der InputStream aus dem gelesen wird
-//	 */
-//	public MatchRoleID(DataInputStream dis) {
-//		// DataInputStream dis = null;
-//		// byte data[] = null;
-//		try {
-//			// Einzulesenden Strom konvertieren
-//			// bais = new ByteArrayInputStream(data);
-//			// dis = new DataInputStream (bais);
-//			// Daten auslesen
-//			m_iId = dis.readInt();
-//			m_iSpielerId = dis.readInt();
-//			m_bTaktik = dis.readByte();
-//
-//			// Und wieder schliessen
-//			// dis.close ();
-//		} catch (IOException ioe) {
-//			HOLogger.instance().log(getClass(), ioe);
-//		}
-//	}
-
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
-
-	/**
-	 * Returns a possible HT position ID for a HO position ID. Use only for
-	 * loading the position image
-	 */
-	public static int getHTPosidForHOPosition4Image(byte posId) {
-        switch (posId) {
-            case KEEPER -> {
-                return keeper;
-            }
-            case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> {
-                return rightCentralDefender;
-            }
-            case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
-                return rightBack;
-            }
-            case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> {
-                return rightInnerMidfield;
-            }
-            case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
-                return rightWinger;
-            }
-            case FORWARD, FORWARD_TOWING, FORWARD_DEF -> {
-                return rightForward;
-            }
-            case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> {
-                return FirstPlayerReplaced;
-            }
-            default -> {
-                HOLogger.instance().log(MatchRoleID.class, "Position not recognized: " + posId);
-                return FirstPlayerReplaced;
-            }
+    /** ID  */
+    var id = -1
+    val isFieldMatchRoleId: Boolean
+        get() = isFieldMatchRoleId(id)
+    val isSubstitutesMatchRoleId: Boolean
+        get() = id >= IMatchRoleID.substGK1 && id <= IMatchRoleID.substXT1
+    val isBackupsMatchRoleId: Boolean
+        get() = id >= IMatchRoleID.substGK2 && id <= IMatchRoleID.substXT2
+    val isPenaltyTakerMatchRoleId: Boolean
+        get() = id >= IMatchRoleID.penaltyTaker1 && id <= IMatchRoleID.penaltyTaker11
+    val isReplacedMatchRoleId: Boolean
+        get() = id >= IMatchRoleID.FirstPlayerReplaced && id <= IMatchRoleID.ThirdPlayerReplaced
+    // It is much safer to have "empty" as 0, as it appears temp-players may
+    // get ID -1 - Blaghaid
+    /**
+     * Getter for property m_iSpielerId.
+     *
+     * @return Value of property m_iSpielerId.
+     */
+    /** welcher Player besetzt diese Position  */
+    @SerializedName("id")
+    @Expose
+    var playerId = 0
+    // ~ Constructors
+    // -------------------------------------------------------------------------------
+    /**
+     * Creates a new instance of MatchRoleID
+     */
+    /* byte position, */
+    constructor(id: Int, playerId: Int, behaviour: Byte) {
+        // m_bPosition = position;
+        if (id < IMatchRoleID.setPieces && id != -1 && id != 0) {
+            HOLogger.instance().debug(javaClass, "Old RoleID found in lineup: $id")
         }
-	}
-
-	/**
-	 * Gibt das Kürzel für den Namen zurück
-	 */
-	public static String getShortNameForPosition(byte posId) {
-
-		// HOLogger.instance().log(getClass(), "Unbestimmte Position: " +
-		// posId );
-		return switch (posId) {
-			case KEEPER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper");
-			case CENTRAL_DEFENDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender");
-			case CENTRAL_DEFENDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing");
-			case CENTRAL_DEFENDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive");
-			case BACK -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback");
-			case BACK_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle");
-			case BACK_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive");
-			case BACK_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive");
-			case MIDFIELDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder");
-			case MIDFIELDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive");
-			case MIDFIELDER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive");
-			case MIDFIELDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
-			case WINGER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger");
-			case WINGER_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle");
-			case WINGER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive");
-			case WINGER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
-			case FORWARD -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
-			case FORWARD_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing");
-			case FORWARD_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> HOVerwaltung.instance().getLanguageString("Ausgewechselt");
-			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
-		};
-	}
-
-	/**
-	 * Returns the name of a positionsid
-	 */
-	public static String getNameForPosition(byte posId) {
-
-		return switch (posId) {
-			case KEEPER -> getLangStr("ls.player.position.keeper");
-			case CENTRAL_DEFENDER -> getLangStr("ls.player.position.centraldefender");
-			case CENTRAL_DEFENDER_TOWING -> getLangStr("ls.player.position.centraldefendertowardswing");
-			case CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefenderoffensive");
-			case BACK -> getLangStr("ls.player.position.wingback");
-			case BACK_TOMID -> getLangStr("ls.player.position.wingbacktowardsmiddle");
-			case BACK_OFF -> getLangStr("ls.player.position.wingbackoffensive");
-			case BACK_DEF -> getLangStr("ls.player.position.wingbackdefensive");
-			case MIDFIELDER -> getLangStr("ls.player.position.innermidfielder");
-			case MIDFIELDER_OFF -> getLangStr("ls.player.position.innermidfielderoffensive");
-			case MIDFIELDER_DEF -> getLangStr("ls.player.position.innermidfielderdefensive");
-			case MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfieldertowardswing");
-			case WINGER -> getLangStr("ls.player.position.winger");
-			case WINGER_TOMID -> getLangStr("ls.player.position.wingertowardsmiddle");
-			case WINGER_OFF -> getLangStr("ls.player.position.wingeroffensive");
-			case WINGER_DEF -> getLangStr("ls.player.position.wingerdefensive");
-			case FORWARD -> getLangStr("ls.player.position.forward");
-			case FORWARD_DEF -> getLangStr("ls.player.position.forwarddefensive");
-			case FORWARD_DEF_TECH -> getLangStr("ls.player.position.forwarddefensivetechnical");
-			case FORWARD_TOWING -> getLangStr("ls.player.position.forwardtowardswing");
-			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
-			case UNSELECTABLE -> getLangStr("Unselectable");
-			default -> getLangStr("ls.player.position.no_override");
-		};
-	}
-
-	public static String getNameForPositionWithoutTactic(byte posId) {
-
-		return switch (posId) {
-			case KEEPER -> getLangStr("ls.player.position.keeper");
-			case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefender");
-			case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> getLangStr("ls.player.position.wingback");
-			case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfielder");
-			case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> getLangStr("ls.player.position.winger");
-			case FORWARD, FORWARD_DEF, FORWARD_DEF_TECH, FORWARD_TOWING -> getLangStr("ls.player.position.forward");
-			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
-			case UNSELECTABLE -> getLangStr("Unselectable");
-			default -> getLangStr("Unbestimmt");
-		};
-	}
-
-
-	/**
-	 * Return if position is full train
-	 */
-	public static boolean isFullTrainPosition(byte posId, int train) {
-
-		if (train == TrainingType.SET_PIECES ||
-				train == TrainingType.SHOOTING)
-			return true;
-
-        switch (posId) {
-            case KEEPER -> {
-                if (train == TrainingType.GOALKEEPING ||
-                        train == TrainingType.DEF_POSITIONS)
-                    return true;
-            }
-            case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> {
-                if (train == TrainingType.DEFENDING ||
-                        train == TrainingType.DEF_POSITIONS ||
-                        train == TrainingType.THROUGH_PASSES)
-                    return true;
-            }
-            case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
-                if (train == TrainingType.DEF_POSITIONS ||
-                        train == TrainingType.THROUGH_PASSES ||
-                        train == TrainingType.DEFENDING)
-                    return true;
-            }
-            case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> {
-                if (train == TrainingType.DEF_POSITIONS ||
-                        train == TrainingType.PLAYMAKING ||
-                        train == TrainingType.THROUGH_PASSES ||
-                        train == TrainingType.SHORT_PASSES)
-                    return true;
-            }
-            case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
-                if (train == TrainingType.WING_ATTACKS ||
-                        train == TrainingType.DEF_POSITIONS ||
-                        train == TrainingType.CROSSING_WINGER ||
-                        train == TrainingType.THROUGH_PASSES ||
-                        train == TrainingType.SHORT_PASSES)
-                    return true;
-            }
-            case FORWARD, FORWARD_DEF, FORWARD_TOWING -> {
-                if (train == TrainingType.SCORING ||
-                        train == TrainingType.WING_ATTACKS ||
-                        train == TrainingType.SHORT_PASSES)
-                    return true;
-            }
-        }
-		return false;
-	}
-
-	/**
-	 * Return if position is partial train
-	 */
-	public static boolean isPartialTrainPosition(byte posId, int train) {
-
-		if (train == TrainingType.CROSSING_WINGER || train == TrainingType.PLAYMAKING) {
-            switch (posId) {
-                case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> {
-                    if (train == TrainingType.CROSSING_WINGER)
-                        return true;
-                }
-                case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> {
-                    if (train == TrainingType.PLAYMAKING)
-                        return true;
-                }
-            }
-		}
-		return false;
-	}
-
-	public byte getPosition() {
-		return MatchRoleID.getPosition(m_iId, behaviour);
-	}
-
-	/**
-	 * Getter for property m_bPosition.
-	 *
-	 * @return Value of property m_bPosition.
-	 */
-	public static byte getPosition(int id, byte taktik) {
-        switch (id) {
-            case keeper -> {
-                return KEEPER;
-            }
-            case rightBack, leftBack -> {
-                if (taktik == TOWARDS_MIDDLE) {
-                    return BACK_TOMID;
-                } else if (taktik == OFFENSIVE) {
-                    return BACK_OFF;
-                } else if (taktik == DEFENSIVE) {
-                    return BACK_DEF;
-                } else {
-                    return BACK;
-                }
-            }
-            case middleCentralDefender, rightCentralDefender, leftCentralDefender -> {
-                if (taktik == TOWARDS_WING) {
-                    return CENTRAL_DEFENDER_TOWING;
-                } else if (taktik == OFFENSIVE) {
-                    return CENTRAL_DEFENDER_OFF;
-                } else {
-                    return CENTRAL_DEFENDER;
-                }
-            }
-            case rightWinger, leftWinger -> {
-                if (taktik == TOWARDS_MIDDLE) {
-                    return WINGER_TOMID;
-                } else if (taktik == OFFENSIVE) {
-                    return WINGER_OFF;
-                } else if (taktik == DEFENSIVE) {
-                    return WINGER_DEF;
-                } else {
-                    return WINGER;
-                }
-            }
-            case centralInnerMidfield, rightInnerMidfield, leftInnerMidfield -> {
-                if (taktik == TOWARDS_WING) {
-                    return MIDFIELDER_TOWING;
-                } else if (taktik == OFFENSIVE) {
-                    return MIDFIELDER_OFF;
-                } else if (taktik == DEFENSIVE) {
-                    return MIDFIELDER_DEF;
-                } else {
-                    return MIDFIELDER;
-                }
-            }
-            case centralForward, rightForward, leftForward -> {
-                if (taktik == DEFENSIVE) {
-                    return FORWARD_DEF;
-                } else if (taktik == TOWARDS_WING) {
-                    return FORWARD_TOWING;
-                } else {
-                    return FORWARD;
-                }
-            }
-            case substCD1, substCD2 -> {
-                return CENTRAL_DEFENDER;
-            }
-            case substWB1, substWB2 -> {
-                return BACK;
-            }
-            case substIM1, substIM2 -> {
-                return MIDFIELDER;
-            }
-            case substWI1, substWI2 -> {
-                return WINGER;
-            }
-            case substGK1, substGK2 -> {
-                return KEEPER;
-            }
-            case substFW1, substFW2 -> {
-                return FORWARD;
-            }
-            case substXT1, substXT2 -> {
-                return EXTRA;
-            }
-        }
-
-		return UNKNOWN;
-	}
-
-	/**
-	 * Setter for property m_iId.
-	 *
-	 * @param m_iId
-	 *            New value of property m_iId.
-	 */
-	public final void setId(int m_iId) {
-		this.m_iId = m_iId;
-	}
-
-	/**
-	 * Getter for property m_iId.
-	 *
-	 * @return Value of property m_iId.
-	 */
-	public final int getId() {
-		return m_iId;
-	}
-
-	/**
-	 * returns an ID that can be sorted ( e.g. Player Overview Table )
-	 *
-	 */
-	public final int getSortId() {
-		int id = this.getPosition();
-
-		if (id == IMatchRoleID.FORWARD_TOWING) {
-			id = 18;
-		}
-
-		if (this.getId() >= IMatchRoleID.startReserves) {
-			id += 20;
-		}
-
-		return id;
-	}
-
-	/**
-	 * returns an ID that can be sorted (e.g.  * Player overview table
-	 */
-	public static int getSortId(byte position, boolean reserve) {
-		int id = position;
-
-		if (reserve) {
-			id += 20;
-		}
-
-		return id;
-	}
-
-	/**
-	 * Setter for property m_iSpielerId. This will fail if the current lineup of
-	 * the HO model would end up with 12 players or more.
-	 *
-	 * @param spielerId
-	 *            New value of property m_iSpielerId.
-	 */
-	public final void setPlayerIdIfValidForLineup(int spielerId) {
-		setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getCurrentLineup());
-	}
-
-	public final void setPlayerId(int id){
-		this.m_iSpielerId = id;
-	}
-
-	/**
-	 * Setter for property m_iSpielerId. This setter will fail if the provided
-	 * lineup would end up with 12 players or more.
-	 *
-	 * @param spielerId
-	 *            New value of property m_iSpielerId.
-	 * @param lineup
-	 *            The lineup that will be used to check for available space.
-	 */
-	public final void setPlayerIdIfValidForLineup(int spielerId, Lineup lineup) {
-
-		boolean containsPlayer = (m_iSpielerId > 0) || (m_iSpielerId < -10);
-		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10);
-
-		// We don't want another player in the starting lineup if there are
-		// already 11 on the field.
-
-		if (!incomingEmpty && !containsPlayer && m_iId >= IMatchRoleID.startLineup
-				&& m_iId < IMatchRoleID.startReserves && !lineup.hasFreePosition()) {
-			HOLogger.instance().debug(getClass(),
-					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
-		} else {
-			this.m_iSpielerId = spielerId;
-		}
-	}
-
-	/**
-	 * Getter for property m_iSpielerId.
-	 *
-	 * @return Value of property m_iSpielerId.
-	 */
-	public final int getPlayerId() {
-		return m_iSpielerId;
-	}
-
-	/**
-	 * Setter for property m_bTaktik.
-	 *
-	 * @param m_bTaktik
-	 *            New value of property m_bTaktik.
-	 */
-	public final void setBehaviour(byte m_bTaktik) {
-		this.behaviour = m_bTaktik;
-	}
-
-	/**
-	 * Getter for property m_bTaktik.
-	 *
-	 * @return Value of property m_bTaktik.
-	 */
-	public final byte getTactic() {
-		return behaviour;
-	}
-
-	static public List<Byte> getBehaviours(int roleId){
-		switch (roleId){
-			case keeper -> {
-				return List.of(NORMAL);
-			}
-			case leftBack, rightBack, leftWinger, rightWinger -> {
-				return List.of(NORMAL, OFFENSIVE, DEFENSIVE, TOWARDS_MIDDLE);
-			}
-			case leftCentralDefender, rightCentralDefender -> {
-				return List.of(NORMAL, OFFENSIVE, TOWARDS_WING);
-			}
-			case middleCentralDefender -> {
-				return List.of(NORMAL, OFFENSIVE);
-			}
-			case leftInnerMidfield, rightInnerMidfield -> {
-				return List.of(NORMAL, OFFENSIVE, DEFENSIVE, TOWARDS_WING);
-			}
-			case centralInnerMidfield -> {
-				return List.of(NORMAL, OFFENSIVE, DEFENSIVE);
-			}
-			case leftForward, rightForward -> {
-				return List.of(NORMAL, DEFENSIVE, TOWARDS_WING);
-			}
-			case centralForward -> {
-				return List.of(NORMAL, DEFENSIVE);
-			}
-		}
-        return List.of();
+        this.id = id
+        this.playerId = playerId
+        tactic = behaviour
     }
 
-	@Override
-	public final int compareTo(@NotNull IMatchRoleID obj) {
-		if (obj instanceof final MatchRoleID position) {
+    /**
+     * Creates a new instance of MatchRoleID
+     */
+    constructor(sp: MatchRoleID) {
+        // m_bPosition = position;
+        id = sp.id
+        playerId = sp.playerId
+        tactic = sp.tactic
+        if (id < IMatchRoleID.setPieces && id != -1) {
+            HOLogger.instance().debug(javaClass, "Old RoleID found in lineup: $id")
+        }
+    }
 
-			// Beide aufgestellt ?
-			if ((this.getId() < IMatchRoleID.startReserves)
-					&& (position.getId() < IMatchRoleID.startReserves)) {
-				return Byte.compare(this.getPosition(), position.getPosition());
-			}
-			// this aufgestellt ?
-			else if (this.getId() < IMatchRoleID.startReserves) {
-				return -1;
-			}
-			// position aufgestellt
-			else if (position.getId() < IMatchRoleID.startReserves) {
-				return 1;
-			}
-			// keiner aufgestellt
-			else {
-				return Byte.compare(this.getPosition(), position.getPosition());
-			}
-		}
+    constructor()
 
-		return 0;
-	}
+    val position: Byte
+        get() = getPosition(id, tactic)
+    val sortId: Int
+        /**
+         * returns an ID that can be sorted ( e.g. Player Overview Table )
+         *
+         */
+        get() {
+            var id = position.toInt()
+            if (id == IMatchRoleID.FORWARD_TOWING.toInt()) {
+                id = 18
+            }
+            if (this.id >= IMatchRoleID.startReserves) {
+                id += 20
+            }
+            return id
+        }
 
-	/*
+    /**
+     * Setter for property m_iSpielerId. This will fail if the current lineup of
+     * the HO model would end up with 12 players or more.
+     *
+     * @param spielerId
+     * New value of property m_iSpielerId.
+     */
+    fun setPlayerIdIfValidForLineup(spielerId: Int) {
+        setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().model.getCurrentLineup())
+    }
+
+    /**
+     * Setter for property m_iSpielerId. This setter will fail if the provided
+     * lineup would end up with 12 players or more.
+     *
+     * @param spielerId
+     * New value of property m_iSpielerId.
+     * @param lineup
+     * The lineup that will be used to check for available space.
+     */
+    fun setPlayerIdIfValidForLineup(spielerId: Int, lineup: Lineup) {
+        val containsPlayer = playerId > 0 || playerId < -10
+        val incomingEmpty = spielerId < 1 && spielerId > -10
+
+        // We don't want another player in the starting lineup if there are
+        // already 11 on the field.
+        if (!incomingEmpty && !containsPlayer && id >= IMatchRoleID.startLineup && id < IMatchRoleID.startReserves && !lineup.hasFreePosition()) {
+            HOLogger.instance().debug(
+                javaClass,
+                "Blocked from setting player at position: $playerId $id"
+            )
+        } else {
+            playerId = spielerId
+        }
+    }
+
+    /**
+     * Setter for property m_bTaktik.
+     *
+     * @param taktik
+     * New value of property m_bTaktik.
+     */
+    fun setBehaviour(taktik: Byte) {
+        tactic = taktik
+    }
+
+    override fun compareTo(other: IMatchRoleID): Int {
+        return if (other is MatchRoleID) {
+
+            // Beide aufgestellt ?
+            if (id < IMatchRoleID.startReserves && other.id < IMatchRoleID.startReserves) {
+                position.compareTo(other.position)
+            } else if (id < IMatchRoleID.startReserves) {
+                -1
+            } else if (other.id < IMatchRoleID.startReserves) {
+                1
+            } else {
+                position.compareTo(other.position)
+            }
+        } else 0
+    }
+
+    /*
 	 * saved den Serverspieler
 	 *
 	 * @param baos Der Outputstream in den gesaved werden soll
 	 *
 	 * @return Byte Array der Daten die in den Output geschireben wurden
 	 */
-	public final void save(DataOutputStream das) {
-		// ByteArrayOutputStream baos = null;
-		// DataOutputStream das = null;
-		// Byte Array
-		// byte[] data = null;
-		try {
-			// Instanzen erzeugen
-			// baos = new ByteArrayOutputStream();
-			// das = new DataOutputStream(baos);
-			// Daten schreiben in Strom
-			das.writeInt(m_iId);
-			das.writeInt(m_iSpielerId);
-			das.writeByte(behaviour);
+    fun save(das: DataOutputStream) {
+        // ByteArrayOutputStream baos = null;
+        // DataOutputStream das = null;
+        // Byte Array
+        // byte[] data = null;
+        try {
+            // Instanzen erzeugen
+            // baos = new ByteArrayOutputStream();
+            // das = new DataOutputStream(baos);
+            // Daten schreiben in Strom
+            das.writeInt(id)
+            das.writeInt(playerId)
+            das.writeByte(tactic.toInt())
 
-			/*
+            /*
 			 * //Strom konvertieren in Byte data = baos.toByteArray();
 			 * //Hilfsstrom schließen das.close ();
 			 *
 			 * return data;
 			 */
-		} catch (IOException ioe) {
-			HOLogger.instance().log(getClass(), ioe);
-		}
+        } catch (ioe: IOException) {
+            HOLogger.instance().log(javaClass, ioe)
+        }
 
-		// return data;
-	}
+        // return data;
+    }
 
-	public static int convertOldRoleToNew(int roleID) {
-		if(IMatchRoleID.oldKeeper.contains(roleID)) return IMatchRoleID.keeper;
-		else if (IMatchRoleID.oldRightBack.contains(roleID)) return IMatchRoleID.rightBack;
-		else if (IMatchRoleID.oldLeftCentralDefender.contains(roleID))return IMatchRoleID.leftCentralDefender;
-		else if (IMatchRoleID.oldRightCentralDefender.contains(roleID))	return IMatchRoleID.rightCentralDefender;
-		else if (IMatchRoleID.oldLeftBack.contains(roleID))	return IMatchRoleID.leftBack;
-		else if (IMatchRoleID.oldRightWinger.contains(roleID)) return IMatchRoleID.rightWinger;
-		else if (IMatchRoleID.oldRightInnerMidfielder.contains(roleID))	return IMatchRoleID.rightInnerMidfield;
-		else if (IMatchRoleID.oldLeftInnerMidfielder.contains(roleID))return IMatchRoleID.leftInnerMidfield;
-		else if (IMatchRoleID.oldLeftWinger.contains(roleID))return IMatchRoleID.leftWinger;
-		else if (IMatchRoleID.oldRightForward.contains(roleID))return IMatchRoleID.rightForward;
-		else if (IMatchRoleID.oldLeftForward.contains(roleID))return IMatchRoleID.leftForward;
-		else if (IMatchRoleID.oldSubstKeeper.contains(roleID))return IMatchRoleID.substGK1;
-		else if (IMatchRoleID.oldSubstDefender.contains(roleID))return IMatchRoleID.substCD1;
-		else if (IMatchRoleID.oldSubstMidfielder.contains(roleID))return IMatchRoleID.substIM1;
-		else if (IMatchRoleID.oldSubstWinger.contains(roleID))return IMatchRoleID.substWI1;
-		else if (IMatchRoleID.oldSubstForward.contains(roleID))	return IMatchRoleID.substFW1;
-		else return roleID;
-	}
+    val sector: Sector
+        get() = getSector(id)
 
-	public static Properties convertOldRoleToNew(Properties oldLineupProperties) {
-		Properties result = new Properties();
-		String sKey;
+    companion object {
+        /**
+         * Array with the constants (CBItems) for the positions, Without Exchanged
+         */
+        @JvmField
+        val POSITIONEN = arrayOf(
+            CBItem(getNameForPosition(IMatchRoleID.UNKNOWN), IMatchRoleID.UNKNOWN.toInt()),
+            CBItem(
+                getNameForPosition(IMatchRoleID.UNSELECTABLE),
+                IMatchRoleID.UNSELECTABLE.toInt()
+            ),
+            CBItem(getNameForPosition(IMatchRoleID.KEEPER), IMatchRoleID.KEEPER.toInt()),
+            CBItem(
+                getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER),
+                IMatchRoleID.CENTRAL_DEFENDER.toInt()
+            ),
+            CBItem(
+                getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER_OFF),
+                IMatchRoleID.CENTRAL_DEFENDER_OFF.toInt()
+            ),
+            CBItem(
+                getNameForPosition(IMatchRoleID.CENTRAL_DEFENDER_TOWING),
+                IMatchRoleID.CENTRAL_DEFENDER_TOWING.toInt()
+            ),
+            CBItem(getNameForPosition(IMatchRoleID.BACK), IMatchRoleID.BACK.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.BACK_OFF), IMatchRoleID.BACK_OFF.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.BACK_DEF), IMatchRoleID.BACK_DEF.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.BACK_TOMID), IMatchRoleID.BACK_TOMID.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.MIDFIELDER), IMatchRoleID.MIDFIELDER.toInt()),
+            CBItem(
+                getNameForPosition(IMatchRoleID.MIDFIELDER_OFF),
+                IMatchRoleID.MIDFIELDER_OFF.toInt()
+            ),
+            CBItem(
+                getNameForPosition(IMatchRoleID.MIDFIELDER_DEF),
+                IMatchRoleID.MIDFIELDER_DEF.toInt()
+            ),
+            CBItem(
+                getNameForPosition(IMatchRoleID.MIDFIELDER_TOWING),
+                IMatchRoleID.MIDFIELDER_TOWING.toInt()
+            ),
+            CBItem(getNameForPosition(IMatchRoleID.WINGER), IMatchRoleID.WINGER.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.WINGER_OFF), IMatchRoleID.WINGER_OFF.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.WINGER_DEF), IMatchRoleID.WINGER_DEF.toInt()),
+            CBItem(
+                getNameForPosition(IMatchRoleID.WINGER_TOMID),
+                IMatchRoleID.WINGER_TOMID.toInt()
+            ),
+            CBItem(getNameForPosition(IMatchRoleID.FORWARD), IMatchRoleID.FORWARD.toInt()),
+            CBItem(getNameForPosition(IMatchRoleID.FORWARD_DEF), IMatchRoleID.FORWARD_DEF.toInt()),
+            CBItem(
+                getNameForPosition(IMatchRoleID.FORWARD_TOWING),
+                IMatchRoleID.FORWARD_TOWING.toInt()
+            )
+        )
 
-		// mapping conversion OldRole -> New Rolw
-		HashMap<String, String> mappingTable = new HashMap<>();
-		mappingTable.put("behrightback","order_rightback");
-		mappingTable.put("behleftback","order_leftback");
-		mappingTable.put("insideback1","rightcentraldefender");
-		mappingTable.put("behinsideback1","order_rightcentraldefender");
-		mappingTable.put("insideback2","leftcentraldefender");
-		mappingTable.put("behinsideback2","order_leftcentraldefender");
-		mappingTable.put("insideback3","middlecentraldefender");
-		mappingTable.put("behinsideback3","order_middlecentraldefender");
-		mappingTable.put("behrightwinger","order_rightwinger");
-		mappingTable.put("behleftwinger","order_leftwinger");
-		mappingTable.put("insidemid1","rightinnermidfield");
-		mappingTable.put("behinsidemid1","order_rightinnermidfield");
-		mappingTable.put("insidemid2","leftinnermidfield");
-		mappingTable.put("behinsidemid2","order_leftinnermidfield");
-		mappingTable.put("insidemid3","middleinnermidfield");
-		mappingTable.put("behinsidemid3","order_centralinnermidfield");
-		mappingTable.put("forward1","rightforward");
-		mappingTable.put("behforward1","order_rightforward");
-		mappingTable.put("forward2","leftforward");
-		mappingTable.put("behforward2","order_leftforward");
-		mappingTable.put("forward3","centralforward");
-		mappingTable.put("behforward3","order_centralforward");
-		mappingTable.put("substback","substcd1");
-		mappingTable.put("substinsidemid","substim1");
-		mappingTable.put("substwinger","substwi1");
-		mappingTable.put("substkeeper","substgk1");
-		mappingTable.put("substforward","substfw1");
+        @JvmStatic
+        fun isFieldMatchRoleId(pos: Int): Boolean {
+            return pos >= IMatchRoleID.keeper && pos <= IMatchRoleID.leftForward
+        }
+        // ~ Methods
+        // ------------------------------------------------------------------------------------
+        /**
+         * Returns a possible HT position ID for a HO position ID. Use only for
+         * loading the position image
+         */
+        @JvmStatic
+        fun getHTPosidForHOPosition4Image(posId: Byte): Int {
+            return when (posId) {
+                IMatchRoleID.KEEPER -> {
+                    IMatchRoleID.keeper
+                }
 
+                IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_TOWING, IMatchRoleID.CENTRAL_DEFENDER_OFF -> {
+                    IMatchRoleID.rightCentralDefender
+                }
 
-		for (Map.Entry<Object, Object> entry : oldLineupProperties.entrySet()) {
-			sKey = entry.getKey().toString();
-			result.setProperty(mappingTable.getOrDefault(sKey, sKey), entry.getValue().toString());
-			}
+                IMatchRoleID.BACK, IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF -> {
+                    IMatchRoleID.rightBack
+                }
 
-		return result;
+                IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_TOWING -> {
+                    IMatchRoleID.rightInnerMidfield
+                }
 
-	}
+                IMatchRoleID.WINGER, IMatchRoleID.WINGER_TOMID, IMatchRoleID.WINGER_OFF, IMatchRoleID.WINGER_DEF -> {
+                    IMatchRoleID.rightWinger
+                }
 
-	private static String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+                IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_TOWING, IMatchRoleID.FORWARD_DEF -> {
+                    IMatchRoleID.rightForward
+                }
 
-	public Sector getSector(){
-		return getSector(this.m_iId);
-	}
-	public static Sector getSector(int roleId) {
-		return switch (roleId) {
-			case keeper -> Sector.Goal;
-			case leftBack, rightBack -> Sector.Back;
-			case leftCentralDefender, rightCentralDefender, middleCentralDefender -> Sector.CentralDefence;
-			case leftWinger, rightWinger -> Sector.Wing;
-			case leftInnerMidfield, rightInnerMidfield, centralInnerMidfield -> Sector.InnerMidfield;
-			case leftForward, rightForward, centralForward -> Sector.Forward;
-			case setPieces -> Sector.SetPiecesTaker;
-			default -> Sector.None;
-		};
-	}
-	
+                IMatchRoleID.SUBSTITUTED1, IMatchRoleID.SUBSTITUTED2, IMatchRoleID.SUBSTITUTED3 -> {
+                    IMatchRoleID.FirstPlayerReplaced
+                }
+
+                else -> {
+                    HOLogger.instance().log(MatchRoleID::class.java, "Position not recognized: $posId")
+                    IMatchRoleID.FirstPlayerReplaced
+                }
+            }
+        }
+
+        /**
+         * Gibt das Kürzel für den Namen zurück
+         */
+        @JvmStatic
+        fun getShortNameForPosition(posId: Byte): String {
+            return when (posId) {
+                IMatchRoleID.KEEPER -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.keeper")
+
+                IMatchRoleID.CENTRAL_DEFENDER -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.centraldefender")
+
+                IMatchRoleID.CENTRAL_DEFENDER_TOWING -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.centraldefendertowardswing")
+
+                IMatchRoleID.CENTRAL_DEFENDER_OFF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.centraldefenderoffensive")
+
+                IMatchRoleID.BACK -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingback")
+
+                IMatchRoleID.BACK_TOMID -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingbacktowardsmiddle")
+
+                IMatchRoleID.BACK_OFF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingbackoffensive")
+
+                IMatchRoleID.BACK_DEF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingbackdefensive")
+
+                IMatchRoleID.MIDFIELDER -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.innermidfielder")
+
+                IMatchRoleID.MIDFIELDER_OFF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.innermidfielderoffensive")
+
+                IMatchRoleID.MIDFIELDER_DEF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.innermidfielderdefensive")
+
+                IMatchRoleID.MIDFIELDER_TOWING -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.innermidfieldertowardswing")
+
+                IMatchRoleID.WINGER -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.winger")
+
+                IMatchRoleID.WINGER_TOMID -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingertowardsmiddle")
+
+                IMatchRoleID.WINGER_OFF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingeroffensive")
+
+                IMatchRoleID.WINGER_DEF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.wingerdefensive")
+
+                IMatchRoleID.FORWARD -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.forward")
+
+                IMatchRoleID.FORWARD_TOWING -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.forwardtowardswing")
+
+                IMatchRoleID.FORWARD_DEF -> HOVerwaltung.instance()
+                    .getLanguageString("ls.player.position_short.forwarddefensive")
+
+                IMatchRoleID.SUBSTITUTED1, IMatchRoleID.SUBSTITUTED2, IMatchRoleID.SUBSTITUTED3 -> HOVerwaltung.instance()
+                    .getLanguageString("Ausgewechselt")
+
+                else -> HOVerwaltung.instance().getLanguageString("Unbestimmt")
+            }
+        }
+
+        /**
+         * Returns the name of a positionsid
+         */
+        @JvmStatic
+        fun getNameForPosition(posId: Byte): String {
+            return when (posId) {
+                IMatchRoleID.KEEPER -> getLangStr("ls.player.position.keeper")
+                IMatchRoleID.CENTRAL_DEFENDER -> getLangStr("ls.player.position.centraldefender")
+                IMatchRoleID.CENTRAL_DEFENDER_TOWING -> getLangStr("ls.player.position.centraldefendertowardswing")
+                IMatchRoleID.CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefenderoffensive")
+                IMatchRoleID.BACK -> getLangStr("ls.player.position.wingback")
+                IMatchRoleID.BACK_TOMID -> getLangStr("ls.player.position.wingbacktowardsmiddle")
+                IMatchRoleID.BACK_OFF -> getLangStr("ls.player.position.wingbackoffensive")
+                IMatchRoleID.BACK_DEF -> getLangStr("ls.player.position.wingbackdefensive")
+                IMatchRoleID.MIDFIELDER -> getLangStr("ls.player.position.innermidfielder")
+                IMatchRoleID.MIDFIELDER_OFF -> getLangStr("ls.player.position.innermidfielderoffensive")
+                IMatchRoleID.MIDFIELDER_DEF -> getLangStr("ls.player.position.innermidfielderdefensive")
+                IMatchRoleID.MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfieldertowardswing")
+                IMatchRoleID.WINGER -> getLangStr("ls.player.position.winger")
+                IMatchRoleID.WINGER_TOMID -> getLangStr("ls.player.position.wingertowardsmiddle")
+                IMatchRoleID.WINGER_OFF -> getLangStr("ls.player.position.wingeroffensive")
+                IMatchRoleID.WINGER_DEF -> getLangStr("ls.player.position.wingerdefensive")
+                IMatchRoleID.FORWARD -> getLangStr("ls.player.position.forward")
+                IMatchRoleID.FORWARD_DEF -> getLangStr("ls.player.position.forwarddefensive")
+                IMatchRoleID.FORWARD_DEF_TECH -> getLangStr("ls.player.position.forwarddefensivetechnical")
+                IMatchRoleID.FORWARD_TOWING -> getLangStr("ls.player.position.forwardtowardswing")
+                IMatchRoleID.EXTRA -> getLangStr("ls.player.position.extra_substitute")
+                IMatchRoleID.SUBSTITUTED1, IMatchRoleID.SUBSTITUTED2, IMatchRoleID.SUBSTITUTED3 -> getLangStr(
+                    "Ausgewechselt"
+                )
+
+                IMatchRoleID.UNSELECTABLE -> getLangStr("Unselectable")
+                else -> getLangStr("ls.player.position.no_override")
+            }
+        }
+
+        @JvmStatic
+        fun getNameForPositionWithoutTactic(posId: Byte): String {
+            return when (posId) {
+                IMatchRoleID.KEEPER -> getLangStr("ls.player.position.keeper")
+                IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_TOWING, IMatchRoleID.CENTRAL_DEFENDER_OFF -> getLangStr(
+                    "ls.player.position.centraldefender"
+                )
+
+                IMatchRoleID.BACK, IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF -> getLangStr(
+                    "ls.player.position.wingback"
+                )
+
+                IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_TOWING -> getLangStr(
+                    "ls.player.position.innermidfielder"
+                )
+
+                IMatchRoleID.WINGER, IMatchRoleID.WINGER_TOMID, IMatchRoleID.WINGER_OFF, IMatchRoleID.WINGER_DEF -> getLangStr(
+                    "ls.player.position.winger"
+                )
+
+                IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_DEF_TECH, IMatchRoleID.FORWARD_TOWING -> getLangStr(
+                    "ls.player.position.forward"
+                )
+
+                IMatchRoleID.EXTRA -> getLangStr("ls.player.position.extra_substitute")
+                IMatchRoleID.SUBSTITUTED1, IMatchRoleID.SUBSTITUTED2, IMatchRoleID.SUBSTITUTED3 -> getLangStr(
+                    "Ausgewechselt"
+                )
+
+                IMatchRoleID.UNSELECTABLE -> getLangStr("Unselectable")
+                else -> getLangStr("Unbestimmt")
+            }
+        }
+
+        /**
+         * Return if position is full train
+         */
+        @JvmStatic
+        fun isFullTrainPosition(posId: Byte, train: Int): Boolean {
+            if (train == TrainingType.SET_PIECES ||
+                train == TrainingType.SHOOTING
+            ) return true
+            when (posId) {
+                IMatchRoleID.KEEPER -> {
+                    if (train == TrainingType.GOALKEEPING ||
+                        train == TrainingType.DEF_POSITIONS
+                    ) return true
+                }
+
+                IMatchRoleID.CENTRAL_DEFENDER, IMatchRoleID.CENTRAL_DEFENDER_TOWING, IMatchRoleID.CENTRAL_DEFENDER_OFF -> {
+                    if (train == TrainingType.DEFENDING || train == TrainingType.DEF_POSITIONS || train == TrainingType.THROUGH_PASSES) return true
+                }
+
+                IMatchRoleID.BACK, IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF -> {
+                    if (train == TrainingType.DEF_POSITIONS || train == TrainingType.THROUGH_PASSES || train == TrainingType.DEFENDING) return true
+                }
+
+                IMatchRoleID.MIDFIELDER, IMatchRoleID.MIDFIELDER_OFF, IMatchRoleID.MIDFIELDER_DEF, IMatchRoleID.MIDFIELDER_TOWING -> {
+                    if (train == TrainingType.DEF_POSITIONS || train == TrainingType.PLAYMAKING || train == TrainingType.THROUGH_PASSES || train == TrainingType.SHORT_PASSES) return true
+                }
+
+                IMatchRoleID.WINGER, IMatchRoleID.WINGER_TOMID, IMatchRoleID.WINGER_OFF, IMatchRoleID.WINGER_DEF -> {
+                    if (train == TrainingType.WING_ATTACKS || train == TrainingType.DEF_POSITIONS || train == TrainingType.CROSSING_WINGER || train == TrainingType.THROUGH_PASSES || train == TrainingType.SHORT_PASSES) return true
+                }
+
+                IMatchRoleID.FORWARD, IMatchRoleID.FORWARD_DEF, IMatchRoleID.FORWARD_TOWING -> {
+                    if (train == TrainingType.SCORING || train == TrainingType.WING_ATTACKS || train == TrainingType.SHORT_PASSES) return true
+                }
+            }
+            return false
+        }
+
+        /**
+         * Return if position is partial train
+         */
+        @JvmStatic
+        fun isPartialTrainPosition(posId: Byte, train: Int): Boolean {
+            if (train == TrainingType.CROSSING_WINGER || train == TrainingType.PLAYMAKING) {
+                when (posId) {
+                    IMatchRoleID.BACK, IMatchRoleID.BACK_TOMID, IMatchRoleID.BACK_OFF, IMatchRoleID.BACK_DEF -> {
+                        if (train == TrainingType.CROSSING_WINGER) return true
+                    }
+
+                    IMatchRoleID.WINGER, IMatchRoleID.WINGER_TOMID, IMatchRoleID.WINGER_OFF, IMatchRoleID.WINGER_DEF -> {
+                        if (train == TrainingType.PLAYMAKING) return true
+                    }
+                }
+            }
+            return false
+        }
+
+        /**
+         * Getter for property m_bPosition.
+         *
+         * @return Value of property m_bPosition.
+         */
+        @JvmStatic
+        fun getPosition(id: Int, taktik: Byte): Byte {
+            when (id) {
+                IMatchRoleID.keeper, IMatchRoleID.substGK1, IMatchRoleID.substGK2 -> {
+                    return IMatchRoleID.KEEPER
+                }
+
+                IMatchRoleID.rightBack, IMatchRoleID.leftBack -> {
+                    return when (taktik) {
+                        IMatchRoleID.TOWARDS_MIDDLE -> {
+                            IMatchRoleID.BACK_TOMID
+                        }
+
+                        IMatchRoleID.OFFENSIVE -> {
+                            IMatchRoleID.BACK_OFF
+                        }
+
+                        IMatchRoleID.DEFENSIVE -> {
+                            IMatchRoleID.BACK_DEF
+                        }
+
+                        else -> {
+                            IMatchRoleID.BACK
+                        }
+                    }
+                }
+
+                IMatchRoleID.middleCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.leftCentralDefender -> {
+                    return when (taktik) {
+                        IMatchRoleID.TOWARDS_WING -> {
+                            IMatchRoleID.CENTRAL_DEFENDER_TOWING
+                        }
+
+                        IMatchRoleID.OFFENSIVE -> {
+                            IMatchRoleID.CENTRAL_DEFENDER_OFF
+                        }
+
+                        else -> {
+                            IMatchRoleID.CENTRAL_DEFENDER
+                        }
+                    }
+                }
+
+                IMatchRoleID.rightWinger, IMatchRoleID.leftWinger -> {
+                    return when (taktik) {
+                        IMatchRoleID.TOWARDS_MIDDLE -> {
+                            IMatchRoleID.WINGER_TOMID
+                        }
+
+                        IMatchRoleID.OFFENSIVE -> {
+                            IMatchRoleID.WINGER_OFF
+                        }
+
+                        IMatchRoleID.DEFENSIVE -> {
+                            IMatchRoleID.WINGER_DEF
+                        }
+
+                        else -> {
+                            IMatchRoleID.WINGER
+                        }
+                    }
+                }
+
+                IMatchRoleID.centralInnerMidfield, IMatchRoleID.rightInnerMidfield, IMatchRoleID.leftInnerMidfield -> {
+                    return when (taktik) {
+                        IMatchRoleID.TOWARDS_WING -> {
+                            IMatchRoleID.MIDFIELDER_TOWING
+                        }
+
+                        IMatchRoleID.OFFENSIVE -> {
+                            IMatchRoleID.MIDFIELDER_OFF
+                        }
+
+                        IMatchRoleID.DEFENSIVE -> {
+                            IMatchRoleID.MIDFIELDER_DEF
+                        }
+
+                        else -> {
+                            IMatchRoleID.MIDFIELDER
+                        }
+                    }
+                }
+
+                IMatchRoleID.centralForward, IMatchRoleID.rightForward, IMatchRoleID.leftForward -> {
+                    return when (taktik) {
+                        IMatchRoleID.DEFENSIVE -> {
+                            IMatchRoleID.FORWARD_DEF
+                        }
+
+                        IMatchRoleID.TOWARDS_WING -> {
+                            IMatchRoleID.FORWARD_TOWING
+                        }
+
+                        else -> {
+                            IMatchRoleID.FORWARD
+                        }
+                    }
+                }
+
+                IMatchRoleID.substCD1, IMatchRoleID.substCD2 -> {
+                    return IMatchRoleID.CENTRAL_DEFENDER
+                }
+
+                IMatchRoleID.substWB1, IMatchRoleID.substWB2 -> {
+                    return IMatchRoleID.BACK
+                }
+
+                IMatchRoleID.substIM1, IMatchRoleID.substIM2 -> {
+                    return IMatchRoleID.MIDFIELDER
+                }
+
+                IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> {
+                    return IMatchRoleID.WINGER
+                }
+
+                IMatchRoleID.substFW1, IMatchRoleID.substFW2 -> {
+                    return IMatchRoleID.FORWARD
+                }
+
+                IMatchRoleID.substXT1, IMatchRoleID.substXT2 -> {
+                    return IMatchRoleID.EXTRA
+                }
+            }
+            return IMatchRoleID.UNKNOWN
+        }
+
+        /**
+         * returns an ID that can be sorted (e.g.  * Player overview table
+         */
+        @JvmStatic
+        fun getSortId(position: Byte, reserve: Boolean): Int {
+            var id = position.toInt()
+            if (reserve) {
+                id += 20
+            }
+            return id
+        }
+
+        fun getBehaviours(roleId: Int): List<Byte> {
+            when (roleId) {
+                IMatchRoleID.keeper -> {
+                    return listOf(IMatchRoleID.NORMAL)
+                }
+
+                IMatchRoleID.leftBack, IMatchRoleID.rightBack, IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> {
+                    return listOf(
+                        IMatchRoleID.NORMAL,
+                        IMatchRoleID.OFFENSIVE,
+                        IMatchRoleID.DEFENSIVE,
+                        IMatchRoleID.TOWARDS_MIDDLE
+                    )
+                }
+
+                IMatchRoleID.leftCentralDefender, IMatchRoleID.rightCentralDefender -> {
+                    return listOf(
+                        IMatchRoleID.NORMAL,
+                        IMatchRoleID.OFFENSIVE,
+                        IMatchRoleID.TOWARDS_WING
+                    )
+                }
+
+                IMatchRoleID.middleCentralDefender -> {
+                    return listOf(IMatchRoleID.NORMAL, IMatchRoleID.OFFENSIVE)
+                }
+
+                IMatchRoleID.leftInnerMidfield, IMatchRoleID.rightInnerMidfield -> {
+                    return listOf(
+                        IMatchRoleID.NORMAL,
+                        IMatchRoleID.OFFENSIVE,
+                        IMatchRoleID.DEFENSIVE,
+                        IMatchRoleID.TOWARDS_WING
+                    )
+                }
+
+                IMatchRoleID.centralInnerMidfield -> {
+                    return listOf(
+                        IMatchRoleID.NORMAL,
+                        IMatchRoleID.OFFENSIVE,
+                        IMatchRoleID.DEFENSIVE
+                    )
+                }
+
+                IMatchRoleID.leftForward, IMatchRoleID.rightForward -> {
+                    return listOf(
+                        IMatchRoleID.NORMAL,
+                        IMatchRoleID.DEFENSIVE,
+                        IMatchRoleID.TOWARDS_WING
+                    )
+                }
+
+                IMatchRoleID.centralForward -> {
+                    return listOf(IMatchRoleID.NORMAL, IMatchRoleID.DEFENSIVE)
+                }
+            }
+            return listOf()
+        }
+
+        fun convertOldRoleToNew(roleID: Int): Int {
+            return if (IMatchRoleID.oldKeeper.contains(roleID)) IMatchRoleID.keeper else if (IMatchRoleID.oldRightBack.contains(
+                    roleID
+                )
+            ) IMatchRoleID.rightBack else if (IMatchRoleID.oldLeftCentralDefender.contains(roleID)) IMatchRoleID.leftCentralDefender else if (IMatchRoleID.oldRightCentralDefender.contains(
+                    roleID
+                )
+            ) IMatchRoleID.rightCentralDefender else if (IMatchRoleID.oldLeftBack.contains(roleID)) IMatchRoleID.leftBack else if (IMatchRoleID.oldRightWinger.contains(
+                    roleID
+                )
+            ) IMatchRoleID.rightWinger else if (IMatchRoleID.oldRightInnerMidfielder.contains(roleID)) IMatchRoleID.rightInnerMidfield else if (IMatchRoleID.oldLeftInnerMidfielder.contains(
+                    roleID
+                )
+            ) IMatchRoleID.leftInnerMidfield else if (IMatchRoleID.oldLeftWinger.contains(roleID)) IMatchRoleID.leftWinger else if (IMatchRoleID.oldRightForward.contains(
+                    roleID
+                )
+            ) IMatchRoleID.rightForward else if (IMatchRoleID.oldLeftForward.contains(roleID)) IMatchRoleID.leftForward else if (IMatchRoleID.oldSubstKeeper.contains(
+                    roleID
+                )
+            ) IMatchRoleID.substGK1 else if (IMatchRoleID.oldSubstDefender.contains(roleID)) IMatchRoleID.substCD1 else if (IMatchRoleID.oldSubstMidfielder.contains(
+                    roleID
+                )
+            ) IMatchRoleID.substIM1 else if (IMatchRoleID.oldSubstWinger.contains(roleID)) IMatchRoleID.substWI1 else if (IMatchRoleID.oldSubstForward.contains(
+                    roleID
+                )
+            ) IMatchRoleID.substFW1 else roleID
+        }
+
+        fun convertOldRoleToNew(oldLineupProperties: Properties): Properties {
+            val result = Properties()
+            var sKey: String
+
+            // mapping conversion OldRole -> New Rolw
+            val mappingTable = HashMap<String, String>()
+            mappingTable["behrightback"] = "order_rightback"
+            mappingTable["behleftback"] = "order_leftback"
+            mappingTable["insideback1"] = "rightcentraldefender"
+            mappingTable["behinsideback1"] = "order_rightcentraldefender"
+            mappingTable["insideback2"] = "leftcentraldefender"
+            mappingTable["behinsideback2"] = "order_leftcentraldefender"
+            mappingTable["insideback3"] = "middlecentraldefender"
+            mappingTable["behinsideback3"] = "order_middlecentraldefender"
+            mappingTable["behrightwinger"] = "order_rightwinger"
+            mappingTable["behleftwinger"] = "order_leftwinger"
+            mappingTable["insidemid1"] = "rightinnermidfield"
+            mappingTable["behinsidemid1"] = "order_rightinnermidfield"
+            mappingTable["insidemid2"] = "leftinnermidfield"
+            mappingTable["behinsidemid2"] = "order_leftinnermidfield"
+            mappingTable["insidemid3"] = "middleinnermidfield"
+            mappingTable["behinsidemid3"] = "order_centralinnermidfield"
+            mappingTable["forward1"] = "rightforward"
+            mappingTable["behforward1"] = "order_rightforward"
+            mappingTable["forward2"] = "leftforward"
+            mappingTable["behforward2"] = "order_leftforward"
+            mappingTable["forward3"] = "centralforward"
+            mappingTable["behforward3"] = "order_centralforward"
+            mappingTable["substback"] = "substcd1"
+            mappingTable["substinsidemid"] = "substim1"
+            mappingTable["substwinger"] = "substwi1"
+            mappingTable["substkeeper"] = "substgk1"
+            mappingTable["substforward"] = "substfw1"
+            for ((key, value) in oldLineupProperties) {
+                sKey = key.toString()
+                result.setProperty(mappingTable.getOrDefault(sKey, sKey), value.toString())
+            }
+            return result
+        }
+
+        private fun getLangStr(key: String): String {
+            return HOVerwaltung.instance().getLanguageString(key)
+        }
+
+        @JvmStatic
+        fun getSector(roleId: Int): Sector {
+            return when (roleId) {
+                IMatchRoleID.keeper -> Sector.Goal
+                IMatchRoleID.leftBack, IMatchRoleID.rightBack -> Sector.Back
+                IMatchRoleID.leftCentralDefender, IMatchRoleID.rightCentralDefender, IMatchRoleID.middleCentralDefender -> Sector.CentralDefence
+                IMatchRoleID.leftWinger, IMatchRoleID.rightWinger -> Sector.Wing
+                IMatchRoleID.leftInnerMidfield, IMatchRoleID.rightInnerMidfield, IMatchRoleID.centralInnerMidfield -> Sector.InnerMidfield
+                IMatchRoleID.leftForward, IMatchRoleID.rightForward, IMatchRoleID.centralForward -> Sector.Forward
+                IMatchRoleID.setPieces -> Sector.SetPiecesTaker
+                else -> Sector.None
+            }
+        }
+    }
 }

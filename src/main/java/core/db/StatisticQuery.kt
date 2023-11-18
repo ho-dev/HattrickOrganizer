@@ -33,46 +33,46 @@ object StatisticQuery {
     )
 
     fun getSpielerDaten4Statistik(spielerId: Int, anzahlHRF: Int): Array<DoubleArray> {
-        var anzahlHRF = anzahlHRF
+        var curCountHrf = anzahlHRF
         val anzahlSpalten = 16
         val faktor = UserParameter.instance().FXrate
         var returnWerte = Array(0) { DoubleArray(0) }
         val vWerte = Vector<DoubleArray>()
-        val hrflist = loadHrfIdPerWeekList(anzahlHRF)
-        if (hrflist!!.size < anzahlHRF) anzahlHRF = hrflist.size
+        val hrflist = loadHrfIdPerWeekList(curCountHrf)
+        if (hrflist.size < curCountHrf) curCountHrf = hrflist.size
         val params = ArrayList<Any?>()
         params.add(spielerId)
         params.addAll(hrflist)
         var rs = Objects.requireNonNull<JDBCAdapter?>(DBManager.jdbcAdapter).executePreparedQuery(
-            getSpielerDaten4StatistikStatement(anzahlHRF), *params.toTypedArray()
+            getSpielerDaten4StatistikStatement(curCountHrf), *params.toTypedArray()
         )
         if (rs != null) {
             try {
                 while (rs.next()) {
-                    val tempwerte = DoubleArray(anzahlSpalten)
+                    val tempValue = DoubleArray(anzahlSpalten)
                     //faktor;
-                    tempwerte[0] = rs.getDouble("Marktwert")
-                    tempwerte[1] = rs.getDouble("Gehalt") / faktor
-                    tempwerte[2] = rs.getDouble("Fuehrung")
-                    tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience")
-                    tempwerte[4] = rs.getDouble("Form")
-                    tempwerte[5] = rs.getDouble("Kondition")
-                    tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart")
-                    tempwerte[7] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung")
-                    tempwerte[8] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau")
-                    tempwerte[9] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel")
-                    tempwerte[10] = rs.getDouble("Fluegel") + rs.getDouble("SubFluegel")
-                    tempwerte[11] = rs.getDouble("Torschuss") + rs.getDouble("SubTorschuss")
-                    tempwerte[12] = rs.getDouble("Standards") + rs.getDouble("SubStandards")
-                    tempwerte[13] = rs.getDouble("Bewertung") / 2.0
-                    tempwerte[14] = rs.getDouble("Loyalty")
-                    tempwerte[15] = rs.getTimestamp("Datum").getTime().toDouble()
+                    tempValue[0] = rs.getDouble("Marktwert")
+                    tempValue[1] = rs.getDouble("Gehalt") / faktor
+                    tempValue[2] = rs.getDouble("Fuehrung")
+                    tempValue[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience")
+                    tempValue[4] = rs.getDouble("Form")
+                    tempValue[5] = rs.getDouble("Kondition")
+                    tempValue[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart")
+                    tempValue[7] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung")
+                    tempValue[8] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau")
+                    tempValue[9] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel")
+                    tempValue[10] = rs.getDouble("Fluegel") + rs.getDouble("SubFluegel")
+                    tempValue[11] = rs.getDouble("Torschuss") + rs.getDouble("SubTorschuss")
+                    tempValue[12] = rs.getDouble("Standards") + rs.getDouble("SubStandards")
+                    tempValue[13] = rs.getDouble("Bewertung") / 2.0
+                    tempValue[14] = rs.getDouble("Loyalty")
+                    tempValue[15] = rs.getTimestamp("Datum").getTime().toDouble()
 
                     //TSI, alle Marktwerte / 1000 teilen
                     if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
-                        tempwerte[0] /= 1000.0
+                        tempValue[0] /= 1000.0
                     }
-                    vWerte.add(tempwerte)
+                    vWerte.add(tempValue)
                 }
                 returnWerte = Array(anzahlSpalten) { DoubleArray(vWerte.size) }
                 for (i in vWerte.indices) {

@@ -72,7 +72,7 @@ object XMLMatchLineupParser {
         var behavior:Byte = -1
         tmp = ele?.getElementsByTagName("RoleID")?.item(0) as Element?
         if (tmp != null) {
-            roleID = tmp.firstChild.nodeValue.toInt() ?: -1
+            roleID = tmp.firstChild.nodeValue.toInt()
         }
 
         // This is the right spot to wash the old role IDs if arrived by xml.
@@ -168,8 +168,8 @@ object XMLMatchLineupParser {
         val teamId = tmp?.firstChild?.nodeValue?.toInt() ?: -1
         tmp = ele?.getElementsByTagName("ExperienceLevel")?.item(0) as Element?
         val erfahrung = tmp?.firstChild?.nodeValue?.toInt() ?: -1
-        tmp = ele?.getElementsByTagName("StyleOfPlay")?.item(0) as Element?
-        val styleOfPlay = tmp?.firstChild?.nodeValue?.toInt()
+        // tmp = ele?.getElementsByTagName("StyleOfPlay")?.item(0) as Element?
+        // val styleOfPlay = tmp?.firstChild?.nodeValue?.toInt()
         tmp = ele?.getElementsByTagName("TeamName")?.item(0) as Element?
         val teamName = tmp?.firstChild?.nodeValue
         val team = MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung)

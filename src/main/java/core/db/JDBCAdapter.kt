@@ -112,7 +112,7 @@ class JDBCAdapter
             if (m_clConnection!!.isClosed) {
                 return 0
             }
-            return m_clStatement!!.executeUpdate(sqlStatement)
+            m_clStatement!!.executeUpdate(sqlStatement)
         } catch (e: Exception) {
             HOLogger.instance().error(
                 javaClass,
@@ -122,12 +122,12 @@ class JDBCAdapter
                 ${ExceptionUtils.getStackTrace(e)}
                 """.trimIndent()
             )
-            return 0
+            0
         }
     }
 
     fun executePreparedUpdate(preparedStatement: PreparedStatement?, vararg params: Any?): Int {
-        var ret = 0
+        val ret: Int
         return try {
             if (m_clConnection!!.isClosed) {
                 return 0
@@ -154,21 +154,21 @@ class JDBCAdapter
     /**
      * Connects to the requested database
      *
-     * @param URL
+     * @param url
      * The path to the Server
-     * @param User
+     * @param user
      * User
-     * @param PWD
+     * @param password
      * Password
-     * @param Driver
+     * @param driver
      * The driver to user
      */
     @Throws(Exception::class)
-    fun connect(URL: String?, User: String?, PWD: String?, Driver: String?) {
+    fun connect(url: String?, user: String?, password: String?, driver: String?) {
         try {
             // Initialise the Database Driver Object
-            Class.forName(Driver)
-            m_clConnection = DriverManager.getConnection(URL, User, PWD)
+            Class.forName(driver)
+            m_clConnection = DriverManager.getConnection(url, user, password)
             m_clStatement = m_clConnection!!.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY

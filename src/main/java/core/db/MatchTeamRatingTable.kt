@@ -68,7 +68,7 @@ class MatchTeamRatingTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adap
     }
 
     protected override val constraintStatements: Array<String?>
-        protected get() = arrayOf(" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)")
+        get() = arrayOf(" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)")
     private val loadBothTeamRatingStatementBuilder = PreparedSelectStatementBuilder(
         this,
         "WHERE MatchID = ? AND MatchTyp = ?"
@@ -81,7 +81,7 @@ class MatchTeamRatingTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adap
     fun load(matchID: Int, matchType: Int): List<MatchTeamRating?>? {
         return load(
             MatchTeamRating::class.java,
-            adapter!!.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType)
+            adapter.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType)
         )
     }
 

@@ -866,9 +866,9 @@ open class Player : Storable {
          * set whether that player can be selected by the assistant
          */
         set(flag) {
-            var flag = flag
-            if (isLineupDisabled()) flag = false
-            getNotes().isEligibleToPlay = flag
+            var cur = flag
+            if (isLineupDisabled()) cur = false
+            getNotes().isEligibleToPlay = cur
             storePlayerNotes(notes!!)
         }
 
@@ -1176,10 +1176,10 @@ open class Player : Storable {
     //////////////////////////////////////////////////////////////////////////////////
     //equals
     /////////////////////////////////////////////////////////////////////////////////
-    override fun equals(obj: Any?): Boolean {
+    override fun equals(other: Any?): Boolean {
         var equals = false
-        if (obj is Player) {
-            equals = obj.playerId == playerId
+        if (other is Player) {
+            equals = other.playerId == playerId
         }
         return equals
     }

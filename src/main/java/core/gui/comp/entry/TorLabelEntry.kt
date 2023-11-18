@@ -1,97 +1,75 @@
-package core.gui.comp.entry;
+package core.gui.comp.entry
 
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.theme.HOIconName;
-import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.NotNull;
+import core.gui.comp.renderer.HODefaultTableCellRenderer
+import core.gui.theme.HOIconName
+import core.gui.theme.ThemeManager
+import javax.swing.*
 
-import javax.swing.*;
+class TorLabelEntry @JvmOverloads constructor(goal: Int = 0) : AbstractHOTableEntry() {
+    private var m_clComponent: JComponent = JPanel()
+    private var m_iTore = 0
 
-
-public class TorLabelEntry extends AbstractHOTableEntry {
-
-    private static Icon BALLIMAGEICON;
-
-    private JComponent m_clComponent = new JPanel();
-    private int m_iTore;
-
-
-    public TorLabelEntry() {
-        this(0);
-    }
-
-    public TorLabelEntry(int tore) {
+    init {
         if (BALLIMAGEICON == null) {
-            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14);
+            BALLIMAGEICON = ThemeManager.getScaledIcon(HOIconName.BALL, 14, 14)
         }
-
-        setTore(tore);
-        createComponent();
+        this.m_iTore = goal
+        createComponent()
     }
 
-	public final javax.swing.JComponent getComponent(boolean isSelected) {
-    	m_clComponent.setBackground(isSelected?HODefaultTableCellRenderer.SELECTION_BG:ColorLabelEntry.BG_STANDARD);
-        return m_clComponent;
+    override fun getComponent(isSelected: Boolean): JComponent {
+        m_clComponent.setBackground(if (isSelected) HODefaultTableCellRenderer.SELECTION_BG else ColorLabelEntry.BG_STANDARD)
+        return m_clComponent
     }
 
-    public final void setTore(int tore) {
-        if (tore != m_iTore) {
-            m_iTore = tore;
-            updateComponent();
-        }
-    }
-
-    public final int getTore() {
-        return m_iTore;
-    }
-
-
-	public final void clear() {
-        m_clComponent.removeAll();
-    }
-
-
-	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof TorLabelEntry) {
-            final TorLabelEntry entry = (TorLabelEntry) obj;
-
-            if (getTore() < entry.getTore()) {
-                return -1;
-            } else if (getTore() > entry.getTore()) {
-                return 1;
-            } else {
-                return 0;
+    var tore: Int
+        get() = m_iTore
+        set(tore) {
+            if (tore != m_iTore) {
+                m_iTore = tore
+                updateComponent()
             }
         }
 
-        return 0;
+    override fun clear() {
+        m_clComponent.removeAll()
     }
 
-	public final void createComponent() {
-        JPanel renderer = new JPanel();
-        renderer.setLayout(new BoxLayout(renderer, 0));
-        renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        for (float f = m_iTore; f > 0; f--) {
-            final JLabel jlabel = new JLabel(BALLIMAGEICON);
-            jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-            renderer.add(jlabel);
+    override fun compareTo(other: IHOTableEntry): Int {
+        if (other is TorLabelEntry) {
+            return if (tore < other.tore) {
+                -1
+            } else if (tore > other.tore) {
+                1
+            } else {
+                0
+            }
         }
-
-        m_clComponent = renderer;
+        return 0
     }
 
-    public final void incTore() {
-        setTore(getTore() + 1);
-    }
-
-	public final void updateComponent() {
-        m_clComponent.removeAll();
-
-        for (float f = m_iTore; f > 0; f--) {
-            final JLabel jlabel = new JLabel(BALLIMAGEICON);
-            jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-            m_clComponent.add(jlabel);
+    override fun createComponent() {
+        val renderer = JPanel()
+        renderer.setLayout(BoxLayout(renderer, 0))
+        renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+        for (f in m_iTore downTo 1) {
+            val jlabel = JLabel(BALLIMAGEICON)
+            jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+            renderer.add(jlabel)
         }
+        m_clComponent = renderer
+    }
+
+    override fun updateComponent() {
+        m_clComponent.removeAll()
+        for (f in m_iTore downTo 1) {
+            val jlabel = JLabel(BALLIMAGEICON)
+            jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+            m_clComponent.add(jlabel)
+        }
+    }
+
+    companion object {
+        private var BALLIMAGEICON: Icon? = null
     }
 }

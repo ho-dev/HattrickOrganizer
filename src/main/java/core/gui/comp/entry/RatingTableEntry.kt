@@ -1,187 +1,157 @@
-package core.gui.comp.entry;
+package core.gui.comp.entry
 
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
-import javax.swing.*;
-
-import static core.util.Helper.DEFAULTDEZIMALFORMAT;
-import static core.util.Helper.INTEGERFORMAT;
+import core.gui.comp.renderer.HODefaultTableCellRenderer
+import core.gui.theme.HOColorName
+import core.gui.theme.ImageUtilities
+import core.gui.theme.ThemeManager
+import core.util.Helper
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import javax.swing.*
 
 /**
  * Displays the rating.
  */
-public class RatingTableEntry extends AbstractHOTableEntry {
+class RatingTableEntry : AbstractHOTableEntry {
+    private val bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG)
+    private var m_clComponent: JComponent = JPanel()
+    private var m_sTooltip = ""
+    private var m_fRating = 0f
+    private val starsAligned: Boolean
 
-    private final Color bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
-    private final static Icon iconStar = ImageUtilities.getStarIcon();
-
-    private JComponent m_clComponent = new JPanel();
-
-    private String m_sTooltip = "";
-    private float m_fRating;
-    private final boolean starsAligned;
-
-
-    public RatingTableEntry() {
-        this(false);
+    @JvmOverloads
+    constructor(_starsAligned: Boolean = false) {
+        starsAligned = _starsAligned
+        m_fRating = 0.0f
+        createComponent()
     }
 
-    public RatingTableEntry(Boolean _starsAligned) {
-        starsAligned = _starsAligned;
-        m_fRating = 0.0f;
-        createComponent();
-    }
-
-    public RatingTableEntry(Integer f) {
-        this(f, false);
-    }
-
-    public RatingTableEntry(Integer f, Boolean _starsAligned) {
-        starsAligned = _starsAligned;
-        if ( f == null){
-            m_fRating=0.f;
+    @JvmOverloads
+    constructor(f: Int?, _starsAligned: Boolean = false) {
+        starsAligned = _starsAligned
+        m_fRating = if (f == null) {
+            0f
+        } else {
+            f / 2.0f
         }
-        else {
-            m_fRating = f / 2.0f;
+        createComponent()
+    }
+
+    override fun getComponent(isSelected: Boolean): JComponent {
+        m_clComponent.setBackground(if (isSelected) HODefaultTableCellRenderer.SELECTION_BG else bgColor)
+        return m_clComponent
+    }
+
+    fun setRating(f: Float, forceUpdate: Boolean) {
+        var curRating = f
+        if (curRating < 0) {
+            curRating = 0f
         }
-        createComponent();
+        if (forceUpdate || curRating != m_fRating) {
+            m_fRating = curRating / 2.0f
+            updateComponent()
+        }
+        m_clComponent.repaint()
     }
 
-
-	public final javax.swing.JComponent getComponent(boolean isSelected) {
-        m_clComponent.setBackground((isSelected)?HODefaultTableCellRenderer.SELECTION_BG:bgColor);
-        return m_clComponent;
-    }
-
-    public final void setRating(float f) {
-        setRating(f, false);
-    }
-
-    public final void setRating(float f, boolean forceUpdate) {
-        if (f < 0) {
-            f = 0;
+    var rating: Float
+        get() = m_fRating * 2.0f
+        set(f) {
+            setRating(f, false)
         }
 
-        if (forceUpdate || (f != m_fRating)) {
-            m_fRating = f/2.0f;
-            updateComponent();
-        }
-
-        m_clComponent.repaint();
+    fun setToolTipText(text: String) {
+        m_sTooltip = text
+        updateComponent()
     }
 
-    public final float getRating() {
-        return m_fRating*2.0f;
+    override fun clear() {
+        val constraints = GridBagConstraints()
+        val layout = GridBagLayout()
+        constraints.fill = GridBagConstraints.HORIZONTAL
+        constraints.weightx = 1.0
+        constraints.weighty = 0.0
+        constraints.gridy = 0
+        m_clComponent.removeAll()
+        m_clComponent.setLayout(layout)
+        val jlabel = JLabel(ImageUtilities.NOIMAGEICON)
+        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+        constraints.gridx = 0
+        layout.setConstraints(jlabel, constraints)
+        m_clComponent.add(jlabel)
     }
 
-    public final void setToolTipText(String text) {
-        m_sTooltip = text;
-        updateComponent();
-    }
-
-
-	public final void clear() {
-
-        GridBagConstraints constraints = new GridBagConstraints();
-        GridBagLayout layout = new GridBagLayout();
-
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1.0;
-        constraints.weighty = 0.0;
-        constraints.gridy = 0;
-
-        m_clComponent.removeAll();
-        m_clComponent.setLayout(layout);
-
-        final JLabel jlabel = new JLabel(ImageUtilities.NOIMAGEICON);
-        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        constraints.gridx = 0;
-        layout.setConstraints(jlabel, constraints);
-        m_clComponent.add(jlabel);
-    }
-
-	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof RatingTableEntry) {
-            final RatingTableEntry entry = (RatingTableEntry) obj;
-
-            if (getRating() < entry.getRating()) {
-                return -1;
-            } else if (getRating() > entry.getRating()) {
-                return 1;
+    override fun compareTo(other: IHOTableEntry): Int {
+        if (other is RatingTableEntry) {
+            return if (rating < other.rating) {
+                -1
+            } else if (rating > other.rating) {
+                1
             } else {
-                return 0;
+                0
             }
         }
-
-        return 0;
+        return 0
     }
 
-	public final void createComponent() {
-
-        JPanel renderer = new JPanel();
-
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints constraints = new GridBagConstraints();
-        renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        renderer.setLayout(layout);
-
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1.0;
-        constraints.weighty = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        JLabel starLabel = getStarsLabel(m_fRating);
-        layout.setConstraints(starLabel, constraints);
-        renderer.add(starLabel);
-
-        renderer.setToolTipText(m_sTooltip);
-        m_clComponent = renderer;
+    override fun createComponent() {
+        val renderer = JPanel()
+        val layout = GridBagLayout()
+        val constraints = GridBagConstraints()
+        renderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+        renderer.setLayout(layout)
+        constraints.fill = GridBagConstraints.HORIZONTAL
+        constraints.weightx = 1.0
+        constraints.weighty = 0.0
+        constraints.gridx = 0
+        constraints.gridy = 0
+        val starLabel = getStarsLabel(m_fRating)
+        layout.setConstraints(starLabel, constraints)
+        renderer.add(starLabel)
+        renderer.setToolTipText(m_sTooltip)
+        m_clComponent = renderer
     }
 
-    
-	public final void updateComponent() {
-        m_clComponent.removeAll();
-        GridBagLayout layout = new GridBagLayout();
-        GridBagConstraints constraints = new GridBagConstraints();
-        m_clComponent.setLayout(layout);
-
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1.0;
-        constraints.weighty = 0.0;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        JLabel starLabel = getStarsLabel(m_fRating);
-        layout.setConstraints(starLabel, constraints);
-        m_clComponent.add(starLabel);
-        m_clComponent.setToolTipText(m_sTooltip);
-        m_clComponent.repaint();
+    override fun updateComponent() {
+        m_clComponent.removeAll()
+        val layout = GridBagLayout()
+        val constraints = GridBagConstraints()
+        m_clComponent.setLayout(layout)
+        constraints.fill = GridBagConstraints.HORIZONTAL
+        constraints.weightx = 1.0
+        constraints.weighty = 0.0
+        constraints.gridx = 0
+        constraints.gridy = 0
+        val starLabel = getStarsLabel(m_fRating)
+        layout.setConstraints(starLabel, constraints)
+        m_clComponent.add(starLabel)
+        m_clComponent.setToolTipText(m_sTooltip)
+        m_clComponent.repaint()
     }
 
-    private JLabel getStarsLabel(float _rating) {
-        final JLabel jlabel;
-        if (_rating == 0) {
-            jlabel = new JLabel(ImageUtilities.NOIMAGEICON);
+    private fun getStarsLabel(_rating: Float): JLabel {
+        val jlabel: JLabel
+        if (_rating == 0f) {
+            jlabel = JLabel(ImageUtilities.NOIMAGEICON)
         } else {
-            if (_rating == (int) _rating) {
+            jlabel = if (_rating == _rating.toInt().toFloat()) {
                 if (starsAligned) {
-                    jlabel = new JLabel("   " + INTEGERFORMAT.format(_rating));
+                    JLabel("   " + Helper.INTEGERFORMAT.format(_rating.toDouble()))
                 } else {
-                    jlabel = new JLabel(INTEGERFORMAT.format(_rating));
+                    JLabel(Helper.INTEGERFORMAT.format(_rating.toDouble()))
                 }
             } else {
-                jlabel = new JLabel(DEFAULTDEZIMALFORMAT.format(_rating));
+                JLabel(Helper.DEFAULTDEZIMALFORMAT.format(_rating.toDouble()))
             }
-            jlabel.setIcon(iconStar);
+            jlabel.setIcon(iconStar)
         }
-        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jlabel.setHorizontalTextPosition(SwingConstants.LEADING);
-        jlabel.setHorizontalAlignment(SwingConstants.LEFT);
-        return jlabel;
+        jlabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+        jlabel.setHorizontalTextPosition(SwingConstants.LEADING)
+        jlabel.setHorizontalAlignment(SwingConstants.LEFT)
+        return jlabel
+    }
+
+    companion object {
+        private val iconStar = ImageUtilities.getStarIcon()
     }
 }

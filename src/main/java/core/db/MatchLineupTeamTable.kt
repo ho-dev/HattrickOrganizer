@@ -76,7 +76,7 @@ class MatchLineupTeamTable internal constructor(adapter: JDBCAdapter) : Abstract
     }
 
     protected override val constraintStatements: Array<String?>
-        protected get() = arrayOf(
+        get() = arrayOf(
             "  PRIMARY KEY (" + columns[0].columnName + "," + columns[1].columnName + "," + columns[2].columnName + ")"
         )
 
@@ -107,14 +107,14 @@ class MatchLineupTeamTable internal constructor(adapter: JDBCAdapter) : Abstract
     fun getTemplateMatchLineupTeam(): List<MatchLineupTeam?> {
         return load(
             MatchLineupTeam::class.java,
-            adapter!!.executePreparedQuery(loadTemplateStatementBuilder.getStatement())
+            adapter.executePreparedQuery(loadTemplateStatementBuilder.getStatement())
         )
     }
 
     fun getTemplateMatchLineupTeamNextNumber(): Int {
         try {
             val sql = "SELECT MIN(TEAMID) FROM $tableName WHERE MatchTyp=0 AND MATCHID=-1"
-            val rs = adapter!!.executeQuery(sql)
+            val rs = adapter.executeQuery(sql)
             if (rs != null) {
                 if (rs.next()) {
                     return min(-1.0, (rs.getInt(1) - 1).toDouble()).toInt()
