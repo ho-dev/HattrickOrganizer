@@ -34,6 +34,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
+import static core.util.CurrencyUtils.convertCurrency;
+
 /**
  * Panel for showing detailed information on a player.
  *
@@ -93,11 +95,14 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public PlayerDetailPanel() {
         super(new BorderLayout());
 
-        var model = UserColumnController.instance().getPlayerTransferTableModel();
+        var model = getTableModel();
         var sorter = new DefaultTableSorter(model);
         playerTable = new JTable(sorter);
         playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        playerTable.setOpaque(true);
         sorter.setTableHeader(playerTable.getTableHeader());
+
+        model.restoreUserSettings(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
         playerPane.setOpaque(false);
@@ -166,6 +171,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         setOpaque(false);
 
         clearPanel();
+    }
+
+    private PlayerTransferTableModel getTableModel() {
+        return UserColumnController.instance().getPlayerTransferTableModel();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -248,14 +257,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      * @param values List of player transfers to display.
      */
     private void refreshPlayerTable(List<PlayerTransfer> values) {
-        final DefaultTableSorter sorter = (DefaultTableSorter) playerTable.getModel();
-        var model = UserColumnController.instance().getPlayerTransferTableModel();
+        var model = getTableModel();
         model.setValues(values);
-        sorter.setTableModel(model);
-        playerTable.getColumnModel().getColumn(3).setPreferredWidth(200);
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
-        playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
     }
 
     /**
@@ -325,7 +330,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 }
             }
 
-            income.setText(core.util.Helper.getNumberFormat(true, 0).format(valIncome));
+            income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
             if ( arrivalDate != null && soldDate != null) {
                 var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
                 if (activeDuration.seasons > 0) {
@@ -336,5 +341,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
             refreshPlayerTable(transfers);
         }
+    }
+
+    public void storeUserSettings() {
+        var model = getTableModel();
+        model.storeUserSettings(this.playerTable);
     }
 }

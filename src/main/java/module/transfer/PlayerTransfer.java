@@ -1,4 +1,3 @@
-// %2277986132:hoplugins.transfers.vo%
 package module.transfer;
 
 import core.db.AbstractTable;
@@ -361,6 +360,12 @@ public class PlayerTransfer extends AbstractTable.Storable {
         return playerInfo;
     }
 
+    /**
+     * Try to load information about the player at transfer date
+     * If no information is found, a temporary player object is created with limited information got from the transfer record.
+     * @param doUpdate True: Update database if values differ from database contents
+     * @return Player
+     */
     public Player loadPLayerInfo(boolean doUpdate) {
         var oldPLayerId = playerId;
         if (playerId == 0 && !this.isStored()) {
@@ -373,20 +378,10 @@ public class PlayerTransfer extends AbstractTable.Storable {
         }
         var isPurchase = this.buyerid == HOVerwaltung.instance().getModel().getBasics().getTeamId();
         if (playerId > 0) {
-            if (isPurchase) {
-                playerInfo = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerId(), this.getDate().toDbTimestamp());
-            } else {
-                // transfers of sold players (sellerid must not be equal to teamid)
-                playerInfo = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerId(), this.getDate().toDbTimestamp());
-            }
+            loadPLayerInfoAtTransferDate(isPurchase);
         } else if (playerId != -1) {
             HODateTime start = HODateTime.now();
-            List<Player> playerInfos;
-            if (isPurchase) {
-                playerInfos = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerName(), this.getDate().toDbTimestamp());
-            } else {
-                playerInfos = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerName(), this.getDate().toDbTimestamp());
-            }
+            List<Player> playerInfos = loadPLayerInfosAtTransferDate(isPurchase);
             HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocaleDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
             if (playerInfos.size() > 1) {
                 // find most probable candidate
@@ -436,8 +431,51 @@ public class PlayerTransfer extends AbstractTable.Storable {
     }
 
     /**
+     * Load player candidate records near transfer date by player name.
+     * If it is a purchase the player record downloaded after given date are loaded, otherwise the latest before.
+     * If no records are found, the other time direction is tried too.
+     * @param isPurchase Boolean
+     * @return Since player names are not unique a list of candidates is returned
+     */
+    private List<Player> loadPLayerInfosAtTransferDate(boolean isPurchase) {
+        List<Player>playerInfos;
+        if (isPurchase) {
+            playerInfos = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerName(), this.getDate().toDbTimestamp());
+            if ( playerInfos.isEmpty()){
+                playerInfos = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerName(), this.getDate().toDbTimestamp());
+            }
+        } else {
+            playerInfos = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerName(), this.getDate().toDbTimestamp());
+            if ( playerInfos.isEmpty()){
+                playerInfos = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerName(), this.getDate().toDbTimestamp());
+            }
+        }
+        return playerInfos;
+    }
+
+    /**
+     * Load player candidate records near transfer date by player id.
+     * If it is a purchase the first player record downloaded after given date is loaded, otherwise the latest before.
+     * If no records are found, the other time direction is tried too.
+     * @param isPurchase Boolean
+     */
+    private void loadPLayerInfoAtTransferDate(boolean isPurchase) {
+        if (isPurchase) {
+            playerInfo = DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerId(), this.getDate().toDbTimestamp());
+            if (playerInfo == null){
+                playerInfo= DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerId(), this.getDate().toDbTimestamp());
+            }
+        } else {
+            // transfers of sold players (sellerid must not be equal to teamid)
+            playerInfo = DBManager.instance().getLatestPlayerDownloadBefore(this.getPlayerId(), this.getDate().toDbTimestamp());
+            if (playerInfo == null){
+                playerInfo= DBManager.instance().getFirstPlayerDownloadAfter(this.getPlayerId(), this.getDate().toDbTimestamp());
+            }
+        }
+    }
+
+    /**
      * Sets the name of the transferred player.
-     *
      * @param name Name of the transferred player.
      */
     public final void setPlayerName(String name) {
@@ -445,9 +483,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
     }
 
     /**
-     * Gets the name of the transfered player.
-     *
-     * @return Name of the transfered player.
+     * Gets the name of the transferred player.
+     * @return Name of the transferred player.
      */
     public final String getPlayerName() {
         return playerName;

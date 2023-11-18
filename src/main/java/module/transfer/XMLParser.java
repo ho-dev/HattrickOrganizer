@@ -116,7 +116,7 @@ public final class XMLParser {
     public static List<PlayerTransfer> getAllTeamTransfers(int teamId, HODateTime endDate) {
         final List<PlayerTransfer> transferList = new Vector<>();
         // loop all pages 0 .. n until there are no more data available
-        int page = 1;
+        int page = 0;
         while (true) {
             var transfers = downloadTeamTransfers(teamId, page++);
 	        if (transfers.isEmpty()) {

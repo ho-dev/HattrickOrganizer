@@ -27,56 +27,57 @@ public class PlayerTransferTableModel extends HOTableModel {
      */
     public PlayerTransferTableModel() {
         super(UserColumnController.ColumnModelId.PLAYERTRANSFER, "PlayerTransfers");
+        int id = 0;
         columns = new ArrayList<>(List.of(
-                new TransferTableColumn("Datum") {
+                new TransferTableColumn(id++, "Datum") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDate(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Season") {
+                new TransferTableColumn(id++,"Season") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getSeason(), "" + transfer.getSeason(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Week") {
+                new TransferTableColumn(id++,"Week") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getWeek(), "" + transfer.getWeek(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Buyer") {
+                new TransferTableColumn(id++,"Buyer") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getBuyerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Type") {
+                new TransferTableColumn(id++,"Type") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(PlayerTransfer.BUY, String.valueOf(PlayerTransfer.BUY), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Seller") {
+                new TransferTableColumn(id++,"Seller") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getSellerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("Price") {
+                new TransferTableColumn(id++,"Price") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
                     }
                 },
-                new TransferTableColumn("ls.player.tsi") {
+                new TransferTableColumn(id++,"ls.player.tsi") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getTsi(), String.valueOf(transfer.getTsi()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("ls.player.age") {
+                new TransferTableColumn(id++,"ls.player.age") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         String text = "";
@@ -94,13 +95,13 @@ public class PlayerTransferTableModel extends HOTableModel {
                         return new ColorLabelEntry(sortValue, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TransferTableColumn("ls.transfer.motherclubfee") {
+                new TransferTableColumn(id++,"ls.transfer.motherclubfee") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getMotherClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);
                     }
                 },
-                new TransferTableColumn("ls.transfer.previousclubfee") {
+                new TransferTableColumn(id++,"ls.transfer.previousclubfee") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPreviousClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);

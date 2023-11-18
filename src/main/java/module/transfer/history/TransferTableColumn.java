@@ -6,14 +6,13 @@ import core.model.player.Player;
 import module.transfer.PlayerTransfer;
 
 public class TransferTableColumn extends UserColumn {
-    static int nextId = 0;
 
-    protected TransferTableColumn(String name) {
-        this(name, name, 50);
+    protected TransferTableColumn(int id, String name) {
+        this(id, name, name, 50);
     }
 
-    public TransferTableColumn(String name, String tooltip, int minWidth) {
-        super(nextId++, name, tooltip);
+    public TransferTableColumn(int id, String name, String tooltip, int minWidth) {
+        super(id, name, tooltip);
         this.index= this.getId();
         this.minWidth=minWidth;
         this.setPreferredWidth(minWidth);
