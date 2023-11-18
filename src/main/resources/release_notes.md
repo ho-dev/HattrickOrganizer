@@ -10,6 +10,7 @@
 
 ### Squad
 * fix length of owner notes in players' database table (#1816)
+* fix error player download nickname null pointer exception (#1938)
 
 ### Team Analyzer
 
