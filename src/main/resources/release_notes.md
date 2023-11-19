@@ -10,6 +10,7 @@
 
 ### Squad
 * fix length of owner notes in players' database table (#1816)
+* player avatar image can be reloaded (#1815)
 * fix error player download nickname null pointer exception (#1938)
 
 ### Team Analyzer
@@ -26,6 +27,7 @@
 
 ### Transfer
 * refactoring of the transfer module. Calculation of transfer fee income. (#245)
+* fix transfer scout's copy and paste of own players (#1897)
 
 ### Training
 

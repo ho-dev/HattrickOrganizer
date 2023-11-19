@@ -64,7 +64,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JPanel jpPlayerGoalsStats = new JPanel();
     private final JPanel jpPlayerOtherInfos = new JPanel();
     private MatchHistoryPanel jpMatchHistory;
-    private JLabel jlPlayerAvatar = new JLabel();
+    private JButton jlPlayerAvatar = new JButton();
     private final JLabel jlNationality = new JLabel();
     private final JLabel m_jlSpecialty = new JLabel();
     private final JLabel m_jlInTeamSince = new JLabel();
@@ -145,6 +145,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
+        }
+        else if ( actionevent.getSource().equals(jlPlayerAvatar)){
+            ThemeManager.instance().downloadPlayerAvatar(m_clPlayer.getPlayerID());
+            refresh();
         }
     }
 
@@ -327,6 +331,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jbAnalysisTop.setEnabled(true);
         m_jbAnalysisBottom.setEnabled(true);
         m_jbOffsets.setEnabled(true);
+        jlPlayerAvatar.setEnabled(true);
 
         formatBar(jpbForm, m_clPlayer.getForm(), true);
         //m_clPlayer.getValue4Skill(6)
@@ -424,11 +429,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerGeneralPanel.fill = GridBagConstraints.BOTH;
         jpPlayerGeneral.setLayout(layoutPlayerGeneralPanel);
 
-        jlPlayerAvatar = new JLabel("");
+        jlPlayerAvatar = new JButton();
         constraintsPlayerGeneralPanel.gridx = 0;
         constraintsPlayerGeneralPanel.gridy = 0;
         constraintsPlayerGeneralPanel.gridheight = 8;
         layoutPlayerGeneralPanel.setConstraints(jlPlayerAvatar, constraintsPlayerGeneralPanel);
+        jlPlayerAvatar.addActionListener(this);
+        jlPlayerAvatar.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.player.download.avatar"));
         jpPlayerGeneral.add(jlPlayerAvatar);
 
         constraintsPlayerGeneralPanel.gridx = 1;
