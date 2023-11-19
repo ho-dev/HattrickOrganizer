@@ -8,8 +8,6 @@ import java.util.Map;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import static core.net.MyConnector.VERSION_ECONOMY;
-
 
 public class XMLEconomyParser {
 
@@ -26,7 +24,7 @@ public class XMLEconomyParser {
 		var fetchedDate = HODateTime.fromHT(mapEconomy.get("FetchedDate"));
 		var htWeek = fetchedDate.toHTWeek();
 		var season = htWeek.season;
-		if ((Float.parseFloat(VERSION_ECONOMY) >= 1.3f ) && (season >= 80)){
+		if (season >= 80){
 			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"IncomeSpectators", "IncomeSponsors", "IncomeFinancial", "IncomeTemporary", "IncomeSoldPlayers",
 					"IncomeSoldPlayersCommission"}, "IncomeSum");
 			mapEconomy.put("IncomeSponsorsBonus", iSponsorBonusIncome.toString());

@@ -72,25 +72,24 @@ class UserColumnsTable extends AbstractTable {
 	void loadModel(HOTableModel model) {
 		int count = 0;
 		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
-		if (userColumns.size() > 0) { // user may not delete all columns
-			var dbcolumns = model.getColumns();
+		if (!userColumns.isEmpty()) { // user may not delete all columns
+			var modelColumns = model.getColumns();
 			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
-				for (var dbColumn : dbcolumns) {
-					dbColumn.setDisplay(false);
+				for (var modelColumn : modelColumns) {
+					modelColumn.setDisplay(!modelColumn.isEditable());
 				}
 			}
 			for (var userColumn : userColumns) {
 				var modelIndex = userColumn.getModelIndex();
-				if (modelIndex < dbcolumns.length) {
-					var dbColumn = dbcolumns[modelIndex];
-					dbColumn.setPreferredWidth(userColumn.getPreferredWidth());
-					dbColumn.setDisplay(true);
-					dbColumn.setIndex(userColumn.getIndex());
+				if (modelIndex < modelColumns.length) {
+					var modelColumn = modelColumns[modelIndex];
+					modelColumn.setPreferredWidth(userColumn.getPreferredWidth());
+					modelColumn.setDisplay(true);
+					modelColumn.setIndex(userColumn.getIndex());
 					count++;
 				}
 			}
 		}
-
 		if (count == 0) {
 			insertDefault(model);
 		}

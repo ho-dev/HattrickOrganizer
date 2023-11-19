@@ -5,6 +5,7 @@ import com.github.weisj.darklaf.properties.icons.IconLoader;
 import com.github.weisj.darklaf.util.LogUtil;
 import core.db.DBManager;
 import core.db.user.UserManager;
+import core.file.xml.XMLAvatarsParser;
 import core.gui.HOMainFrame;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
@@ -12,15 +13,16 @@ import core.gui.theme.gnome.GnomeTheme;
 import core.gui.theme.ho.HOClassicSchema;
 import core.gui.theme.light.SolarizedLightTheme;
 import core.gui.theme.nimbus.NimbusTheme;
+import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.PlayerAvatar;
+import core.net.MyConnector;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.OSUtils;
 import tool.updater.UpdateHelper;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -300,8 +302,8 @@ public final class ThemeManager {
 		int iMax = missingAvatars.size();
 
 		for (var avatar:missingAvatars) {
-			HOLogger.instance().info(this.getClass(), "Donwloading player's avatar: %s/%s".formatted(i, iMax));
-			HOMainFrame.instance().setInformation("Donwloading player's avatar: %s/%s".formatted(i, iMax), progress);
+			HOLogger.instance().info(this.getClass(), "Downloading player's avatar: %s/%s".formatted(i, iMax));
+			HOMainFrame.instance().setInformation("Downloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try {
 				avatar.generateAvatar(playerAvatarPath);
 			} catch (IOException e) {
@@ -381,5 +383,26 @@ public final class ThemeManager {
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.META_DOWN_MASK), DefaultEditorKit.cutAction);
 			im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.META_DOWN_MASK), DefaultEditorKit.selectAllAction);
 		}
+	}
+
+	/**
+	 * Download all player avatars and replace the cached image file of requested player id.
+	 * @param playerId int
+	 */
+	public void downloadPlayerAvatar(int playerId) {
+		var xml = MyConnector.instance().getAvatars(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(xml);
+		var playerAvatar = playersAvatar.stream().filter(a->a.getPlayerID()==playerId).toList();
+		for ( var p : playerAvatar ){
+			var avatarPath = playerAvatarPath.resolve(p.getPlayerID() + ".png");
+			var file = new File(avatarPath.toString());
+			if (file.exists()) {
+				if ( !file.delete() ) {
+					HOLogger.instance().error(getClass(), "Unable to delete existing avatar file " + file.getAbsolutePath());
+				}
+			}
+		}
+		ThemeManager.instance().generateAllPlayerAvatar(playerAvatar, 1);
+		HOMainFrame.instance().resetInformation();
 	}
 }

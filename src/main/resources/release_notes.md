@@ -10,6 +10,7 @@
 
 ### Squad
 * fix length of owner notes in players' database table (#1816)
+* player avatar image can be reloaded (#1815)
 
 ### Team Analyzer
 
@@ -19,6 +20,7 @@
 ### Matches
 
 ### Lineup
+* fix missing player id column in lineup assistant's player table (#1930)
 
 ### Statistics
 
@@ -36,7 +38,8 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - October 19, 2023
+
+Reports by Contributors - September 24, 2023 - October 21, 2023
 
 * Georgi 10
 * Lidegand 3

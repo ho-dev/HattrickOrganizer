@@ -40,19 +40,6 @@ public class MyConnector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
-	public final static String VERSION_AVATARS = "1.1";
-	public final static String VERSION_ECONOMY = "1.3";
-	private final static String VERSION_TRAINING = "2.1";
-	private final static String VERSION_MATCHORDERS = "3.0";
-//	private final static String VERSION_MATCHORDERS_NT = "2.1";
-	private final static String VERSION_MATCHLINEUP = "2.0";
-	private final static String VERSION_MATCHDETAILS = "3.0";
-	private final static String VERSION_TEAM_DETAILS = "3.5";
-	private final static String VERSION_PLAYERS = "2.5";
-	private final static String VERSION_YOUTHPLAYERLIST = "1.1";
-	private final static String VERSION_WORLDDETAILS = "1.9";
-	private final static String VERSION_TOURNAMENTDETAILS = "1.0";
-	private final static String VERSION_LEAGUE_DETAILS = "1.5";
 	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
@@ -134,7 +121,7 @@ public class MyConnector {
 	 * holt die Finanzen
 	 */
 	public String getEconomy(int teamId){
-		final String url = htUrl + "?file=economy&version=" + VERSION_ECONOMY + "&teamId=" + teamId;
+		final String url = htUrl + "?file=economy&version=1.3&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
 
@@ -172,7 +159,7 @@ public class MyConnector {
 	 * lädt die Tabelle
 	 */
 	public String getLeagueDetails(String leagueUnitId) {
-		String url = htUrl + "?file=leaguedetails&version=" + VERSION_LEAGUE_DETAILS + "&leagueLevelUnitID=" + leagueUnitId;
+		String url = htUrl + "?file=leaguedetails&version=1.5&leagueLevelUnitID=" + leagueUnitId;
 		return getCHPPWebFile(url);
 	}
 
@@ -247,7 +234,7 @@ public class MyConnector {
 	 * Get information about a tournament. This is only available for the current season.
 	 */
 	public String getTournamentDetails(int tournamentId) throws IOException{
-		String url = htUrl + "?file=tournamentdetails&version=" + VERSION_TOURNAMENTDETAILS + "&tournamentId=" + tournamentId;
+		String url = htUrl + "?file=tournamentdetails&version=1.0&tournamentId=" + tournamentId;
 		return getCHPPWebFile(url);
 	}
 
@@ -255,7 +242,7 @@ public class MyConnector {
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
 	public String downloadMatchLineup(int matchId, int teamId, MatchType matchType) {
-		String url = htUrl + "?file=matchlineup&version=" + VERSION_MATCHLINEUP;
+		String url = htUrl + "?file=matchlineup&version=2.0";
 
 		if (matchId > 0) {
 			url += ("&matchID=" + matchId);
@@ -269,12 +256,12 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
+
 	/**
 	 * lädt die Aufstellungsbewertung zu einem Spiel
 	 */
 	public String getRatingsPrediction(int matchId, int teamId, MatchType matchType) {
-		String url = htUrl + "?file=matchorders&version=" + VERSION_MATCHORDERS;
-		url += "&actionType=predictratings";
+		String url = getMatchOrdersURl() + "&actionType=predictratings";
 
 		if (matchId > 0) {
 			url += ("&matchID=" + matchId);
@@ -287,6 +274,10 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
+	private String getMatchOrdersURl() {
+		return htUrl + "?file=matchorders&version=3.0";
+	}
+
 	/**
 	 * Fetches the match order xml from Hattrick
 	 * 
@@ -297,7 +288,7 @@ public class MyConnector {
 	 * @return The api content (xml)
 	 */
 	public String downloadMatchOrder(int matchId, MatchType matchType, int teamId) {
-		String url = htUrl + "?file=matchorders&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString() + "&version=" + VERSION_MATCHORDERS;
+		String url = getMatchOrdersURl() + "&matchID=" + matchId + "&sourceSystem=" + matchType.getSourceString();
 		if (!HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
 			url += "&teamId=" + teamId;
 		}
@@ -318,8 +309,7 @@ public class MyConnector {
 	 */
 	public String uploadMatchOrder(int matchId, int teamId, MatchType matchType, String orderString)
 			throws IOException {
-		StringBuilder urlpara = new StringBuilder();
-		urlpara.append("?file=matchorders&version=").append(VERSION_MATCHORDERS);
+		StringBuilder urlpara = new StringBuilder(getMatchOrdersURl());
 		if (teamId > 0 && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
 			urlpara.append("&teamId=").append(teamId);
 		}
@@ -332,7 +322,7 @@ public class MyConnector {
 
 		Map<String, String> paras = new HashMap<>();
 		paras.put("lineup", orderString);
-		String result = readStream(postWebFileWithBodyParameters(htUrl + urlpara, paras, true,
+		String result = readStream(postWebFileWithBodyParameters(urlpara.toString(), paras, true,
 				"set_matchorder"));
 		String sError = XMLCHPPPreParser.getError(result);
 		if (!sError.isEmpty()) {
@@ -345,7 +335,7 @@ public class MyConnector {
 	 * Download match details, including match events
 	 */
 	public String downloadMatchdetails(int matchId, MatchType matchType) {
-		String url = htUrl + "?file=matchdetails&version=" + VERSION_MATCHDETAILS;
+		String url = htUrl + "?file=matchdetails&version=3.0";
 		if (matchId > 0) {
 			url += ("&matchID=" + matchId);
 		}
@@ -422,18 +412,18 @@ public class MyConnector {
 	}
 
 	/**
-	 * Get Players
+	 * Download Players
 	 */
 	public String downloadPlayers(int teamId) {
-		String url = htUrl + "?file=players&version=" + VERSION_PLAYERS + "&includeMatchInfo=true&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=2.6&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
-		return getCHPPWebFile(htUrl+"?file=playerdetails&version=2.9&includeMatchInfo=true&playerID=" + playerID);
+		return getCHPPWebFile(htUrl+"?file=playerdetails&version=3.0&includeMatchInfo=true&playerID=" + playerID);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {
-		String url = htUrl + "?file=youthplayerlist&version=" + VERSION_YOUTHPLAYERLIST + "&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
+		String url = htUrl + "?file=youthplayerlist&version=1.1&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
 		var silent = setSilentDownload(true);
 		// try unlock skills
 		var ret = getCHPPWebFile(url);
@@ -446,16 +436,15 @@ public class MyConnector {
 	}
 
 	/**
-	 * Get Staff
+	 * Download Staff
 	 */
-	
 	public String getStaff(int teamId) {
-		String url = htUrl + "?file=stafflist&version=1.1&teamId=" + teamId;
+		String url = htUrl + "?file=stafflist&version=1.2&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	
 	/**
-	 * holt die Teamdetails
+	 * Download team details
 	 */
 	public String getTeamdetails(int teamId) throws IOException {
 		String url = htUrl + "?file=teamdetails&version=3.5";
@@ -467,10 +456,10 @@ public class MyConnector {
 	}
 
 	/**
-	 * holt die Teamdetails
+	 * Download player avatars
 	 */
 	public String getAvatars(int teamId) {
-		String url = htUrl + "?file=avatars&version=" + VERSION_AVATARS +"&actionType=players";
+		String url = htUrl + "?file=avatars&version=1.1&actionType=players";
 		if (teamId > 0) {
 			url += ("&teamID=" + teamId);
 		}
@@ -478,12 +467,11 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
-
 	/**
 	 * Get the training XML data.
 	 */
 	public String getTraining(int teamId) {
-		final String url = htUrl + "?file=training&version=" + VERSION_TRAINING + "&teamId=" + teamId;
+		final String url = htUrl + "?file=training&version=2.1&teamId=" + teamId;
 
 		return getCHPPWebFile(url);
 	}
@@ -509,7 +497,7 @@ public class MyConnector {
 	 * holt die Weltdaten
 	 */
 	public String getWorldDetails(int leagueId) throws IOException {
-		String url = htUrl + "?file=worlddetails&version=" + VERSION_WORLDDETAILS;
+		String url = htUrl + "?file=worlddetails&version=1.9";
 		if (leagueId > 0)
 			url += "&leagueID=" + leagueId;
 		return getCHPPWebFile(url);
@@ -594,7 +582,7 @@ public class MyConnector {
 	public String fetchTeamDetails(int teamId)
 	{
 		try {
-			String xmlFile = htUrl + "?file=teamdetails&version=" + VERSION_TEAM_DETAILS + "&teamID=" + teamId;
+			String xmlFile = htUrl + "?file=teamdetails&version=3.5&teamID=" + teamId;
 			return getCHPPWebFile(xmlFile);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);

@@ -78,11 +78,11 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public final JComponent getComponent(boolean isSelected) {
+    public JComponent getComponent(boolean isSelected) {
         return getComponent(isSelected, false);
     }
 
-    public final JComponent getComponent(boolean isSelected, boolean forceDefaultBackground) {
+    public JComponent getComponent(boolean isSelected, boolean forceDefaultBackground) {
         m_clComponent.setOpaque(true);
         if (forceDefaultBackground) {
             m_clComponent.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
@@ -116,11 +116,11 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     }
 
 
-    public final @Nullable Player getSpieler() {
+    public @Nullable Player getSpieler() {
         return m_clPlayer;
     }
 
-    public final void clear() {
+    public void clear() {
         m_clPlayer = null;
         m_clPlayerMatchRoleID = null;
         m_rating = 0f;
@@ -128,20 +128,16 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         updateComponent();
     }
 
-
-    public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof PlayerLabelEntry) {
-            final PlayerLabelEntry entry = (PlayerLabelEntry) obj;
-
+    public int compareTo(@NotNull IHOTableEntry obj) {
+        if (obj instanceof PlayerLabelEntry entry) {
             return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
         }
 
         return 0;
     }
 
-    public final int compareToThird(IHOTableEntry obj) {
-        if (obj instanceof PlayerLabelEntry) {
-            final PlayerLabelEntry entry = (PlayerLabelEntry) obj;
+    public int compareToThird(IHOTableEntry obj) {
+        if (obj instanceof PlayerLabelEntry entry) {
             int num1 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getSortIndex();
             int num2 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.m_clPlayer).getSortIndex();
 
@@ -156,8 +152,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         return 0;
     }
 
-
-    public final void createComponent() {
+    public void createComponent() {
         m_clComponent = new JPanel();
 
         final GridBagLayout layout = new GridBagLayout();
@@ -308,7 +303,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         return playerStatusLabel;
     }
 
-    public final void updateComponent() {
+    public void updateComponent() {
         if (m_clPlayer != null) {
             showJersey();
             updateDisplay(m_clPlayer);
@@ -320,8 +315,8 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     /**
      * Update the entry.
      */
-    public final void updateComponent(Player player, MatchRoleID positionAktuell,
-                                      float rating, boolean alternativePosition, String nameText) {
+    public void updateComponent(Player player, MatchRoleID positionAktuell,
+                                float rating, boolean alternativePosition, String nameText) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = positionAktuell;
         m_rating = rating;
@@ -357,11 +352,10 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         }
     }
 
-
     private void showGroupIcon() {
         String teamInfoSmilie = Objects.requireNonNull(m_clPlayer).getTeamGroup();
 
-        if (teamInfoSmilie.trim().equals(""))
+        if (teamInfoSmilie.trim().isEmpty())
             m_jlTeam.setIcon(ImageUtilities.MINILEER);
         else
             m_jlTeam.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(teamInfoSmilie, 15));
@@ -392,7 +386,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
 
         // positionValue
         if (m_rating != 0f) {
-            m_jlSkill.setText("(" + m_rating + ")");
+            m_jlSkill.setText(String.format("(%.2f)",  m_rating ));
         } else {
             m_jlSkill.setText("");
         }
