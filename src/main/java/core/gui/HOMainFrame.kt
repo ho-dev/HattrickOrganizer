@@ -451,7 +451,7 @@ object HOMainFrame : JFrame(), Refreshable {
         jmMenuBar.add(jmModules)
         jmMenuBar.add(jmHelp)
         if (!HO.release) {
-            jmMenuBar.add(DebugMode.getDeveloperMenu())
+            jmMenuBar.add(DebugMode.developerMenu)
         }
         SwingUtilities.updateComponentTreeUI(jmMenuBar)
         this.jMenuBar = jmMenuBar
