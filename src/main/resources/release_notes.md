@@ -11,6 +11,7 @@
 ### Squad
 * fix length of owner notes in players' database table (#1816)
 * player avatar image can be reloaded (#1815)
+* fix initial sorting by player group (#1909)
 
 ### Team Analyzer
 

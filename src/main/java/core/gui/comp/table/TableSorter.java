@@ -79,7 +79,8 @@ public class TableSorter extends TableMap {
 
     private boolean isAscending(TableModel tablemodel, int initsortcolumnindex) {
         return tablemodel instanceof HOTableModel &&
-                ((HOTableModel)tablemodel).getPositionInArray(UserColumnFactory.BEST_POSITION) != initsortcolumnindex;
+                ((HOTableModel) tablemodel).getPositionInArray(UserColumnFactory.BEST_POSITION) != initsortcolumnindex &&
+                ((HOTableModel) tablemodel).getPositionInArray(UserColumnFactory.RATING) != initsortcolumnindex;
     }
 
     @Override
@@ -264,7 +265,7 @@ public class TableSorter extends TableMap {
             final int l = compareRowsByColumn(i, j, integer);
 
             if (l != 0) {
-                return ascending ? l : (-l);
+                return ascending ? l : -l;
             }
         }
 
