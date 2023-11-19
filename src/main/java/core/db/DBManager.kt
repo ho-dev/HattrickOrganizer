@@ -80,7 +80,7 @@ object DBManager {
     var firstStart: Boolean = false
 
 
-    fun getVersion(): Int = if (HO.isDevelopment()) previousDBVersion else DBVersion
+    fun getVersion(): Int = if (HO.development) previousDBVersion else DBVersion
 
 	/**
 	 * Instance db manager.

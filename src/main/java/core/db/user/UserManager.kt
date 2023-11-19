@@ -47,13 +47,17 @@ object UserManager {
     }
 
     private fun initDbParentFolder() {
-        dbParentFolder = if (!HO.isPortableVersion()) {
-            if (HO.getPlatform() == OSUtils.OS.LINUX) {
-                System.getProperty("user.home") + "/.ho"
-            } else if (HO.getPlatform() == OSUtils.OS.MAC) {
-                System.getProperty("user.home") + "/Library/Application Support/HO"
-            } else {
-                System.getenv("AppData") + "/HO"
+        dbParentFolder = if (!HO.isPortableVersion) {
+            when (HO.platform) {
+                OSUtils.OS.LINUX -> {
+                    System.getProperty("user.home") + "/.ho"
+                }
+                OSUtils.OS.MAC -> {
+                    System.getProperty("user.home") + "/Library/Application Support/HO"
+                }
+                else -> {
+                    System.getenv("AppData") + "/HO"
+                }
             }
         } else {
             System.getProperty("user.dir")

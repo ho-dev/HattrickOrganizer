@@ -16,7 +16,7 @@ import javax.swing.table.TableCellRenderer
 open class HODefaultTableCellRenderer : TableCellRenderer {
     //~ Methods ------------------------------------------------------------------------------------
     override fun getTableCellRendererComponent(
-        table: JTable, value: Any,
+        table: JTable, value: Any?,
         isSelected: Boolean,
         hasFocus: Boolean, row: Int,
         column: Int

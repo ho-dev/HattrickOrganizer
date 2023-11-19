@@ -147,7 +147,7 @@ object HOMainFrame : JFrame(), Refreshable {
     private fun setFrameTitle() {
         val teamName = HOVerwaltung.instance().model.getBasics().teamName
         var frameTitle = if (StringUtils.isEmpty(teamName)) "" else teamName
-        if (!HO.isRelease()) {
+        if (!HO.release) {
             frameTitle += " (${HOVerwaltung.instance().getLanguageString("ls.java.version")}: ${System.getProperty("java.version")})"
         }
         setTitle(frameTitle)
@@ -155,8 +155,8 @@ object HOMainFrame : JFrame(), Refreshable {
 
     private fun setFrameIconImage() {
         var iconName = HOIconName.LOGO16_STABLE
-        if (!HO.isRelease()) {
-            iconName = "${HOIconName.LOGO16}_${HO.getVersionType().lowercase(Locale.getDefault())}"
+        if (!HO.release) {
+            iconName = "${HOIconName.LOGO16}_${HO.versionType?.lowercase(Locale.getDefault())}"
         }
         val iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName))
         if (OSUtils.isMac()) {
@@ -272,9 +272,9 @@ object HOMainFrame : JFrame(), Refreshable {
      */
     fun initComponents() {
         ToolTipManager.sharedInstance().dismissDelay = 5000
-        if (HO.isDevelopment()) {
+        if (HO.development) {
             contentPane.setBackground(c_dev)
-        } else if (HO.isBeta()) {
+        } else if (HO.beta) {
             contentPane.setBackground(c_beta)
         } else {
             contentPane = ImagePanel()
@@ -450,7 +450,7 @@ object HOMainFrame : JFrame(), Refreshable {
         jmMenuBar.add(ToolManager().toolMenu)
         jmMenuBar.add(jmModules)
         jmMenuBar.add(jmHelp)
-        if (!HO.isRelease()) {
+        if (!HO.release) {
             jmMenuBar.add(DebugMode.getDeveloperMenu())
         }
         SwingUtilities.updateComponentTreeUI(jmMenuBar)

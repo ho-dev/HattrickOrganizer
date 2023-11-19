@@ -63,9 +63,9 @@ class FixedColumnsTable(
         setViewportView(table)
         scrollTable = table
         for (i in 0 until scrollTable.columnCount) {
-            val tm = tableModel.columns[i]
+            val tm = tableModel.columns?.get(i)
             val cm = scrollTable.columnModel.getColumn(i)
-            cm.setMinWidth(tm.minWidth)
+            cm.setMinWidth(tm?.minWidth ?: 20)
         }
         fixedTable = JTable(scrollTable.model)
         fixedTable.setFocusable(false)

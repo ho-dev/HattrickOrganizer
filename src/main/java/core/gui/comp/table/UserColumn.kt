@@ -14,7 +14,7 @@ abstract class UserColumn {
     var id = 0
 
     /** columnName properties representation, not display!!  */
-    protected var columnName: String? = null
+    var columnName: String? = null
         get () {
             return if (field == "TSI" || field == " ")
                 field
@@ -23,7 +23,7 @@ abstract class UserColumn {
         }
 
     /** tooltip properties representation, not display!!  */
-    protected var tooltip: String? = null
+    var tooltip: String? = null
         get() {
             return if (columnName == "TSI" || field == " ") field
             else HOVerwaltung.instance().getLanguageString(field)

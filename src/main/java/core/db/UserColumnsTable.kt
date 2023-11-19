@@ -2,6 +2,7 @@ package core.db
 
 import core.gui.comp.table.HOTableModel
 import core.gui.model.UserColumnFactory
+import core.util.HOLogger
 import java.sql.*
 import java.util.function.BiConsumer
 import java.util.function.Function
@@ -41,54 +42,62 @@ internal class UserColumnsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME,
     }
 
     fun saveModel(model: HOTableModel) {
-        deleteModel(model.id)
+        deleteModel(model.id.value)
         val dbcolumns = model.columns
-        for (i in dbcolumns.indices) {
-            if (model.id == 2 && dbcolumns[i].id == UserColumnFactory.ID) {
-                dbcolumns[i].setDisplay(true) // force ID column
-            }
-            if (dbcolumns[i].isDisplay()) {
-                val _userColumn = _UserColumn()
-                _userColumn.modelIndex = i
-                _userColumn.id = (model.id * 1000 + dbcolumns[i].id)
-                _userColumn.preferredWidth = (dbcolumns[i].preferredWidth)
-                _userColumn.index = (dbcolumns[i].index)
-                store(_userColumn)
+        if (dbcolumns != null) {
+            for (i in dbcolumns.indices) {
+                if (model.id.value == 2 && dbcolumns[i].id == UserColumnFactory.ID) {
+                    dbcolumns[i].setDisplay(true) // force ID column
+                }
+                if (dbcolumns[i].isDisplay()) {
+                    val _userColumn = _UserColumn()
+                    _userColumn.modelIndex = i
+                    _userColumn.id = (model.id.value * 1000 + dbcolumns[i].id)
+                    _userColumn.preferredWidth = (dbcolumns[i].preferredWidth)
+                    _userColumn.index = (dbcolumns[i].index)
+                    store(_userColumn)
+                }
             }
         }
     }
 
     fun insertDefault(model: HOTableModel) {
         val dbColumns = model.columns
-        for (i in dbColumns.indices) {
-            dbColumns[i].index = i
+        if (dbColumns != null) {
+            for (i in dbColumns.indices) {
+                dbColumns[i].index = i
 
-            // By default make all columns visible, except ID.
-            if (dbColumns[i].id != UserColumnFactory.ID) {
-                dbColumns[i].setDisplay(true)
+                // By default make all columns visible, except ID.
+                if (dbColumns[i].id != UserColumnFactory.ID) {
+                    dbColumns[i].setDisplay(true)
+                }
             }
         }
     }
 
     fun loadModel(model: HOTableModel) {
         var count = 0
-        val userColumns = load(_UserColumn::class.java, model.id * 1000, model.id * 1000 + 999)
+        val userColumns = load(_UserColumn::class.java, model.id.value * 1000, model.id.value * 1000 + 999)
         if (userColumns.isNotEmpty()) { // user may not delete all columns
             val modelColumns = model.columns
-            if (model.userCanDisableColumns() && !DBManager.firstStart) {
-                for (modelColumn in modelColumns) {
-                    modelColumn.setDisplay(!modelColumn.isEditable)
+            if (modelColumns != null) {
+                if (model.userCanDisableColumns() && !DBManager.firstStart) {
+                    for (modelColumn in modelColumns) {
+                        modelColumn.setDisplay(!modelColumn.isEditable)
+                    }
                 }
-            }
-            for (userColumn in userColumns) {
-                val modelIndex: Int = userColumn.modelIndex
-                if (modelIndex < modelColumns.size) {
-                    val modelColumn = modelColumns[modelIndex]
-                    modelColumn.preferredWidth = userColumn.preferredWidth!!
-                    modelColumn.setDisplay(true)
-                    modelColumn.index = userColumn.index
-                    count++
+                for (userColumn in userColumns) {
+                    val modelIndex: Int = userColumn.modelIndex
+                    if (modelIndex < modelColumns.size) {
+                        val modelColumn = modelColumns[modelIndex]
+                        modelColumn.preferredWidth = userColumn.preferredWidth!!
+                        modelColumn.setDisplay(true)
+                        modelColumn.index = userColumn.index
+                        count++
+                    }
                 }
+            } else {
+                HOLogger.instance().error(javaClass, "No column found when loading model.")
             }
         }
         if (count == 0) {

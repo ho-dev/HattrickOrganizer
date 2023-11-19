@@ -847,7 +847,7 @@ internal class DBUpdater {
 
     private fun updateDBVersion(dbVersion: Int, version: Int) {
         if (version < dbVersion) {
-            if (!HO.isDevelopment()) {
+            if (!HO.development) {
                 HOLogger.instance().info(DBUpdater::class.java, "Update to $version done. Updating DBVersion")
                 dbManager!!.saveUserParameter("DBVersion", version)
             } else {
@@ -857,7 +857,7 @@ internal class DBUpdater {
                 )
             }
         } else if (version == dbVersion) {
-            if (!HO.isDevelopment()) {
+            if (!HO.development) {
                 HOLogger.instance().info(DBUpdater::class.java, "Update complete, setting DBVersion to $version")
                 dbManager!!.saveUserParameter("DBVersion", version)
             } else {
@@ -869,7 +869,7 @@ internal class DBUpdater {
         } else {
             HOLogger.instance().error(
                 DBUpdater::class.java, "Error trying to set DB version to unidentified value:  " + version
-                        + " (isDevelopment=" + HO.isDevelopment() + ")"
+                        + " (isDevelopment=" + HO.development + ")"
             )
         }
     }

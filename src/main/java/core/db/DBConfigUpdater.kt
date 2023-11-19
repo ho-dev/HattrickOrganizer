@@ -34,9 +34,9 @@ internal object DBConfigUpdater {
             }
             System.exit(0)
         }
-        if (currentConfigVersion < 5 || HO.isDevelopment() && currentConfigVersion == 5.0) {
+        if (currentConfigVersion < 5 || HO.development && currentConfigVersion == 5.0) {
             HOLogger.instance().log(DBConfigUpdater::class.java, "Updating configuration to version 5.0  ...")
-            updateDBConfig5(configVersion, HO.isDevelopment() && currentConfigVersion == 5.0)
+            updateDBConfig5(configVersion, HO.development && currentConfigVersion == 5.0)
         }
     }
 
@@ -117,7 +117,7 @@ internal object DBConfigUpdater {
         } else {
             HOLogger.instance().error(
                 DBConfigUpdater::class.java,
-                "Error trying to set DBConfigVersion to unidentified value:  $version (isDevelopment=${HO.isDevelopment()})"
+                "Error trying to set DBConfigVersion to unidentified value:  $version (isDevelopment=${HO.development})"
             )
         }
     }

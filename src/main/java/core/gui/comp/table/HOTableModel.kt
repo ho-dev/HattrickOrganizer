@@ -1,12 +1,11 @@
 package core.gui.comp.table;
 
 import core.db.DBManager;
-import core.gui.model.UserColumnController;
+import core.gui.model.UserColumnController.ColumnModelId
 import core.model.HOVerwaltung;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
-import java.io.Serial;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -16,67 +15,69 @@ import java.util.Comparator;
  * @author Thorsten Dietz
  * @since 1.36
  */
-public abstract class HOTableModel extends AbstractTableModel {
-
-	@Serial
-	private static final long serialVersionUID = -207230110294902139L;
+abstract class HOTableModel protected constructor(
+		val id: ColumnModelId,
+		/** name of ColumnModell, shows in OptionsPanel  */
+		private val name: String
+) : AbstractTableModel() {
 
 	/** id from ColumnModell, important for saving columns in db */
-	private final int id;
+//	private val id: Int = 0
 
 	/** name of ColumnModell, shows in OptionsPanel **/
-	private final String name;
+//	private val name: String? = null
 
 	/** count of displayed column **/
-	private int displayedColumnsCount;
+	private var displayedColumnsCount: Int = 0
+		get () {
+			if (field == 0) {
+				if (columns != null) {
+					for (column in columns!!) {
+						if (column.isDisplay())
+							field++
+					}
+				}
+			}
+			return field
+		}
 
 	/** all columns from this model **/
-	protected UserColumn[] columns;
+	var columns: Array<UserColumn>? = null
 
 	/** only displayed columns **/
-	protected UserColumn[] displayedColumns;
+	var displayedColumns: Array<UserColumn>? = null
+		get() {
+			if (field == null) {
+
+				val tmpList = mutableListOf<UserColumn>()
+				if (columns != null) {
+					for (col in columns!!) {
+						if (col.isDisplay()) {
+							if (col.index >= columnCount) {
+								col.index = columnCount - 1
+							}
+							tmpList.add(col)
+						}
+					}
+				}
+
+				field = tmpList.toTypedArray()
+			}
+			return field
+		}
 
 	/** data of table **/
-	protected Object[][] m_clData;
+	protected var m_clData:Array<Array<Any>>? = null
 
 	/** instance of the same class **/
-	protected int instance;
-
-	/**
-	 * constructor
-	 * 
-	 * @param id model id
-	 * @param name model name
-	 */
-	protected HOTableModel(UserColumnController.ColumnModelId id, String name) {
-		this.id = id.getValue();
-		this.name = name;
-	}
-
-	/**
-	 * return all columns of the model
-	 * 
-	 * @return UserColumn[]
-	 */
-	public final UserColumn[] getColumns() {
-		return columns;
-	}
-
-	/**
-	 * 
-	 * @return id
-	 */
-	public final int getId() {
-		return id;
-	}
+	protected var instance: Int = 0
 
 	/**
 	 * return the language dependent name of this model
 	 */
-	@Override
-	public String toString() {
-		String tmp = HOVerwaltung.instance().getLanguageString(name);
-		return (instance == 0) ? tmp : (tmp + instance);
+	override fun toString(): String {
+		val tmp = HOVerwaltung.instance().getLanguageString(name)
+		return if (instance == 0) tmp else (tmp + instance)
 	}
 
 	/**
@@ -84,12 +85,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * 
 	 * @return String[]
 	 */
-	public String[] getColumnNames() {
-		final String[] columnNames = new String[getDisplayedColumnCount()];
-		for (int i = 0; i < getDisplayedColumns().length; i++)
-			columnNames[i] = getDisplayedColumns()[i].getColumnName();
-
-		return columnNames;
+	fun getColumnNames():Array<String> {
+		return displayedColumns?.map { userColumn -> userColumn.columnName ?: "" }?.toTypedArray() ?: arrayOf()
 	}
 
 	/**
@@ -97,127 +94,65 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * 
 	 * @return String[]
 	 */
-	public String[] getTooltips() {
-		final String[] tooltips = new String[getDisplayedColumnCount()];
-		for (int i = 0; i < getDisplayedColumns().length; i++)
-			tooltips[i] = getDisplayedColumns()[i].getTooltip();
-		return tooltips;
-	}
-
-	/**
-	 * return all displayed columns
-	 * 
-	 * @return UserColumn[]
-	 */
-	public UserColumn[] getDisplayedColumns() {
-
-		if (displayedColumns == null) {
-			final int columncount = getDisplayedColumnCount();
-			displayedColumns = new UserColumn[columncount];
-			int currentIndex = 0;
-			for (UserColumn column : columns) {
-
-				if (column.isDisplay()) {
-					displayedColumns[currentIndex] = column;
-
-					if (column.getIndex() >= columncount)
-						displayedColumns[currentIndex].setIndex(columncount - 1);
-					currentIndex++;
-				} // column is displayed
-			} // for
-		}
-
-		return displayedColumns;
-	}
-
-	/**
-	 * return count of displayed columns
-	 * 
-	 * @return int
-	 */
-	private int getDisplayedColumnCount() {
-		if (displayedColumnsCount == 0) {
-			for (UserColumn column : columns) {
-				if (column.isDisplay())
-					displayedColumnsCount++;
-			}
-		}
-		return displayedColumnsCount;
+	fun getTooltips(): Array<String> {
+		return displayedColumns?.map { userColumn -> userColumn.tooltip ?: "" }?.toTypedArray() ?: arrayOf()
 	}
 
 	/**
 	 * Returns count of displayed columns redundant method, but this is
 	 * overwritten method from AbstractTableModel
 	 */
-	@Override
-	public int getColumnCount() {
-		return getDisplayedColumnCount();
+	 override fun getColumnCount():Int {
+		return displayedColumnsCount
 	}
 
 	/**
 	 * return value
-	 * 
+	 *
 	 * @param row
 	 * @param column
-	 * 
+	 *
 	 * @return Object
 	 */
-	@Override
-	public final Object getValueAt(int row, int column) {
+	override fun getValueAt(row: Int, column: Int):Any? {
 		if (m_clData != null) {
-			return m_clData[row][column];
+			return m_clData!![row][column]
 		}
 
-		return null;
+		return null
 	}
 
-	@Override
-	public final int getRowCount() {
-		return (m_clData != null) ? m_clData.length : 0;
+	override fun getRowCount(): Int = m_clData?.size ?: 0
+
+	override fun isCellEditable(row: Int, col: Int): Boolean = false
+
+	override fun getColumnClass(columnIndex: Int): Class<*> {
+		val obj = getValueAt(0, columnIndex)
+		return obj?.javaClass ?: "".javaClass
 	}
 
-	@Override
-	public boolean isCellEditable(int row, int col) {
-		return false;
+	override fun getColumnName(columnIndex: Int): String? {
+		val columnNames = getColumnNames()
+		return if (displayedColumnsCount > columnIndex) {
+			columnNames[columnIndex]
+		} else null
 	}
 
-	@Override
-	public final Class<?> getColumnClass(int columnIndex) {
-		final Object obj = getValueAt(0, columnIndex);
-
-		if (obj != null) {
-			return obj.getClass();
-		}
-
-		return "".getClass();
-	}
-
-	@Override
-	public final String getColumnName(int columnIndex) {
-		if (getDisplayedColumnCount() > columnIndex) {
-			return getColumnNames()[columnIndex];
-		}
-
-		return null;
-	}
-
-	public final Object getValue(int row, String columnName) {
+	fun getValue(row: Int, columnName: String): Any? {
+		val columnNames = getColumnNames()
 		if (m_clData != null) {
-			int i = 0;
-
-			while ((i < getColumnNames().length) && !getColumnNames()[i].equals(columnName)) {
-				i++;
+			var i = 0
+			while (i < columnNames.size && columnNames[i] != columnName) {
+				i++
 			}
-
-			return m_clData[row][i];
+			return m_clData!![row][i]
 		}
-
-		return null;
+		return null
 	}
 
 	@Override
-	public void setValueAt(Object value, int row, int column) {
-		m_clData[row][column] = value;
+	override fun setValueAt(value:Any, row: Int, column:Int) {
+		m_clData!![row][column] = value;
 	}
 
 	/**
@@ -225,13 +160,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * @param searchId
 	 * @return
 	 */
-	protected int getColumnIndexOfDisplayedColumn(int searchId) {
-		UserColumn[] tmp = getDisplayedColumns();
-		for (int i = 0; i < tmp.length; i++) {
-			if (tmp[i].getId() == searchId)
-				return i;
+	protected open fun getColumnIndexOfDisplayedColumn(searchId: Int): Int {
+		val tmp = displayedColumns
+		if (tmp != null) {
+			for (i in tmp.indices) {
+				if (tmp[i].id == searchId) return i
+			}
 		}
-		return -1;
+		return -1
 	}
 
 	/**
@@ -239,14 +175,18 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * 
 	 * @return
 	 */
-	public int[][] getColumnOrder() {
-		UserColumn[] tmp = getDisplayedColumns();
-		int[][] order = new int[tmp.length][2];
-		for (int i = 0; i < order.length; i++) {
-			order[i][0] = i;
-			order[i][1] = tmp[i].getIndex();
+	fun getColumnOrder():Array<IntArray> {
+		val tmp = displayedColumns
+		return if (tmp != null) {
+			val order = Array(tmp.size) { IntArray(2) }
+			for (i in order.indices) {
+				order[i][0] = i
+				order[i][1] = tmp[i].index
+			}
+			order
+		} else {
+			emptyArray()
 		}
-		return order;
 	}
 
 	/**
@@ -254,65 +194,65 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * 
 	 * @param tableColumnModel
 	 */
-	public void setColumnsSize(TableColumnModel tableColumnModel) {
-		final UserColumn[] tmpColumns = getDisplayedColumns();
-		for (int i = 0; i < tmpColumns.length; i++) {
-			tmpColumns[i].setSize(tableColumnModel.getColumn(tableColumnModel
-					.getColumnIndex(i)));
+	fun setColumnsSize(tableColumnModel: TableColumnModel) {
+		val tmpColumns = displayedColumns
+		if (tmpColumns != null) {
+			for (i in tmpColumns.indices) {
+				tmpColumns[i].setSize(
+					tableColumnModel.getColumn(tableColumnModel.getColumnIndex(i))
+				)
+			}
 		}
 	}
 
-	protected abstract void initData();
+	protected abstract fun initData()
 
 	/**
 	 * return the array index from a Column id
 	 * 
-	 * @param searchid
+	 * @param searchId
 	 * @return
 	 */
-	public int getPositionInArray(int searchid) {
-		final UserColumn[] tmpColumns = getDisplayedColumns();
-		for (int i = 0; i < tmpColumns.length; i++) {
-			if (tmpColumns[i].getId() == searchid)
-				return i;
+	fun getPositionInArray(searchId: Int): Int {
+		val tmpColumns = displayedColumns
+		if (tmpColumns != null) {
+			for (i in tmpColumns.indices) {
+				if (tmpColumns[i].id == searchId) return i
+			}
 		}
-		return -1;
+		return -1
 	}
 
-	public void setCurrentValueToColumns(UserColumn[] tmpColumns) {
-		for (UserColumn tmpColumn : tmpColumns) {
-			for (UserColumn column : columns) {
-				if (column.getId() == tmpColumn.getId()) {
-					column.setIndex(tmpColumn.getIndex());
-					column.setPreferredWidth(tmpColumn.getPreferredWidth());
-					break;
+	fun setCurrentValueToColumns(tmpColumns: Array<UserColumn>) {
+		for (tmpColumn in tmpColumns) {
+			if (columns != null) {
+				for (column in columns!!) {
+					if (column.id == tmpColumn.id) {
+						column.index = tmpColumn.index
+						column.preferredWidth = tmpColumn.preferredWidth
+						break
+					}
 				}
 			}
 		}
 	}
 
-	/**
-	 * stored user settings of table columns order and columns width are set to the table
-	 *
-	 * @param table the table object
-	 */
-	public void restoreUserSettings(JTable table) {
-		restoreUserSettings(table, 0);
-	}
-	public void restoreUserSettings(JTable table, int offset) {
-		for (int i = 0; i < table.getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).setIdentifier(i+offset);
+	@JvmOverloads
+	fun restoreUserSettings(table: JTable, offset: Int = 0) {
+		for (i in 0 until table.columnCount) {
+			table.columnModel.getColumn(i).setIdentifier(i + offset)
 		}
-		Arrays.stream(this.columns)
-				.skip(offset)
-				.limit(table.getColumnCount())
-				.filter(UserColumn::isDisplay)
-				.sorted(Comparator.comparingInt(UserColumn::getIndex))
-				.forEach(i -> setColumnSettings(i, table, offset));
+		Arrays.stream(columns)
+			.skip(offset.toLong())
+			.limit(table.columnCount.toLong())
+			.filter { obj: UserColumn -> obj.isDisplay() }
+			.sorted(Comparator.comparingInt { obj: UserColumn -> obj.index })
+			.forEach { i: UserColumn -> setColumnSettings(i, table, offset) }
 	}
-	public void restoreUserSettings(FixedColumnsTable table) {
-		restoreUserSettings(table.getFixedTable(), 0);
-		restoreUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
+
+	fun restoreUserSettings(table: FixedColumnsTable) {
+		restoreUserSettings(table.fixedTable, 0)
+		restoreUserSettings(table.scrollTable, table.fixedColumnsCount)
 	}
 
 	/**
@@ -321,12 +261,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * @param userColumn user column holding user's settings
 	 * @param table      the table object
 	 */
-	private void setColumnSettings(UserColumn userColumn, JTable table, int offset) {
-		var column = table.getColumn(userColumn.getId());
-		column.setPreferredWidth(userColumn.getPreferredWidth());
-		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
-		if ( index != userColumn.getIndex()-offset) {
-			table.moveColumn(index, userColumn.getIndex()-offset);
+	private fun setColumnSettings(userColumn: UserColumn, table: JTable, offset: Int) {
+		val column = table.getColumn(userColumn.id)
+		column.setPreferredWidth(userColumn.preferredWidth)
+		val index = table.columnModel.getColumnIndex(userColumn.id)
+		if (index != userColumn.index -offset) {
+			table.moveColumn(index, userColumn.index -offset)
 		}
 	}
 
@@ -336,48 +276,46 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 *
 	 * @param table table object
 	 */
-	public void storeUserSettings(JTable table) {
-		var changed = storeUserSettings(table, 0);
-		if (changed){
-			DBManager.instance().saveHOColumnModel(this);
+	fun storeUserSettings(table: JTable) {
+		val changed = storeUserSettings(table, 0)
+		if (changed) {
+			DBManager.saveHOColumnModel(this)
 		}
 	}
 
-	private boolean storeUserSettings(JTable table, int offset) {
-		boolean changed = false;
+	private fun storeUserSettings(table: JTable, offset: Int): Boolean {
+		var changed = false
 		// column order and width
-		var tableColumnModel = table.getColumnModel();
-		var modelColumnCount = this.getColumnCount();
-		for (int i = 0; i < modelColumnCount; i++) {
-			if (i < offset) continue;                                // skip fixed columns in case of scroll table
-			if (offset == 0 && i >= table.getColumnCount()) break;   // fixed columns exceeded
-
-			var column = this.getColumns()[i];
-			var index = table.convertColumnIndexToView(i);
-			if (column.isDisplay()) {
-				if (column.getIndex() != index + offset) {
-					changed = true;
-					column.setIndex(index + offset);
-				}
-				if (column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
-					changed = true;
-					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
+		val tableColumnModel = table.columnModel
+		val modelColumnCount = this.columnCount
+		for (i in 0 until modelColumnCount) {
+			if (i < offset) continue  // skip fixed columns in case of scroll table
+			if (offset == 0 && i >= table.columnCount) break // fixed columns exceeded
+			val column = columns?.get(i)
+			val index = table.convertColumnIndexToView(i)
+			if (column != null) {
+				if (column.isDisplay()) {
+					if (column.index != index + offset) {
+						changed = true
+						column.index = (index + offset)
+					}
+					if (column.preferredWidth != tableColumnModel.getColumn(index).width) {
+						changed = true
+						column.preferredWidth = tableColumnModel.getColumn(index).width
+					}
 				}
 			}
 		}
-		return changed;
+		return changed
 	}
 
-	public void storeUserSettings(FixedColumnsTable table) {
-		var changed = storeUserSettings(table.getFixedTable(), 0);
-		changed = changed || storeUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
-		if (changed){
-			DBManager.instance().saveHOColumnModel(this);
+	fun storeUserSettings(table: FixedColumnsTable) {
+		var changed = storeUserSettings(table.fixedTable, 0)
+		changed = changed || storeUserSettings(table.scrollTable, table.fixedColumnsCount)
+		if (changed) {
+			DBManager.saveHOColumnModel(this)
 		}
 	}
 
-	public boolean userCanDisableColumns() {
-		return false;
-	}
-
+	open fun userCanDisableColumns(): Boolean = false
 }

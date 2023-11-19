@@ -43,9 +43,9 @@ class SplashFrame: JFrame() {
 		val tracker = MediaTracker(this)
 
 		try {
-			val resource:URL? = if (HO.isDevelopment()) {
+			val resource:URL? = if (HO.development) {
 				javaClass.getClassLoader().getResource("gui/bilder/splashscreen_dev.png")
-			} else if (HO.isBeta()) {
+			} else if (HO.beta) {
 				javaClass.getClassLoader().getResource("gui/bilder/splashscreen_beta.png")
 			} else {
 				javaClass.getClassLoader().getResource("gui/bilder/splashscreen_stable.png")

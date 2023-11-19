@@ -1,4 +1,3 @@
-// %649934645:de.hattrickorganizer.gui.utils%
 package core.gui.comp.table
 
 import core.gui.comp.entry.ColorLabelEntry
@@ -83,16 +82,16 @@ class TableSorter : TableMap {
     /**
      * Maps a match id to the row that contains it.
      *
-     * @param matchid ID of the match to find.
+     * @param matchId ID of the match to find.
      * @return int – Row in the table containing the match's details.
      * Returns -1 if the match `matchid` cannot be found.
      */
-    fun getRow4Match(matchid: Int): Int {
-        if (matchid > 0) {
+    fun getRow4Match(matchId: Int): Int {
+        if (matchId > 0) {
             for (i in 0 until rowCount) {
                 try {
                     val entry = getValueAt(i, idColumn) as ColorLabelEntry
-                    if (matchid == entry.number.toInt()) {
+                    if (matchId == entry.number.toInt()) {
                         return indexes[i]
                     }
                 } catch (e: Exception) {
@@ -106,21 +105,21 @@ class TableSorter : TableMap {
     /**
      * Maps a player id to the row that contains his entry.
      *
-     * @param spielerid ID of the player to find.
+     * @param playerId ID of the player to find.
      * @return int – Row in the table containing the player's details.
-     * Returns -1 if the player with id `spielerid` cannot be found.
+     * Returns -1 if the player with id `playerId` cannot be found.
      */
-    fun getRow4Spieler(spielerid: Int): Int {
+    fun getRow4Player(playerId: Int): Int {
         // Can be negative if the player is a temporary player (for ex. in transfer scout).
-        if (spielerid != 0) {
+        if (playerId != 0) {
             for (i in 0 until rowCount) {
                 try {
                     val entry = getValueAt(i, idColumn) as ColorLabelEntry
-                    if (spielerid == entry.text.toInt()) {
+                    if (playerId == entry.text.toInt()) {
                         return i
                     }
                 } catch (e: Exception) {
-                    HOLogger.instance().log(javaClass, "TableSorter.getRow4Spieler: $e")
+                    HOLogger.instance().log(javaClass, "TableSorter.getRow4Player: $e")
                 }
             }
         }
@@ -143,9 +142,9 @@ class TableSorter : TableMap {
     fun getSpieler(row: Int): Player? {
         if (row > -1) {
             try {
-                val entry = getValueAt(row, idColumn) as ColorLabelEntry
-                val text = entry.text
-                if (text != null && text.isNotEmpty()) {
+                val entry = getValueAt(row, idColumn) as ColorLabelEntry?
+                val text = entry?.text
+                if (!text.isNullOrEmpty()) {
                     val id = text.toInt()
                     return when (model) {
                         is PlayerOverviewModel -> {
@@ -182,7 +181,7 @@ class TableSorter : TableMap {
         }
         return if (j < 0) {
             null
-        } else model!!.getValueAt(indexes[i], j)
+        } else model?.getValueAt(indexes[i], j)
     }
 
     /**
@@ -327,10 +326,5 @@ class TableSorter : TableMap {
     override fun tableChanged(tablemodelevent: TableModelEvent) {
         reallocateIndexes()
         super.tableChanged(tablemodelevent)
-    }
-
-    companion object {
-        @Serial
-        private val serialVersionUID = 1132334126127788944L
     }
 }
