@@ -485,31 +485,31 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(formatCurrency(player.getPrice()/UserParameter.instance().FXrate));
-                jtfWage.setText(formatCurrency(player.getBaseWage()/UserParameter.instance().FXrate));
+                jtfPrice.setText(formatCurrency(player.getPrice() / UserParameter.instance().FXrate));
+                jtfWage.setText(formatCurrency(player.getBaseWage() / UserParameter.instance().FXrate));
                 jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
                 jcbSpeciality.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbSpeciality,player.getSpeciality());
+                Helper.setComboBoxFromID(jcbSpeciality, player.getSpeciality());
                 jcbSpeciality.addItemListener(this);
                 jcbExperience.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbExperience,player.getExperience());
+                Helper.setComboBoxFromID(jcbExperience, player.getExperience());
                 jcbExperience.addItemListener(this);
                 jcbForm.removeItemListener(this);
                 Helper.setComboBoxFromID(jcbForm, player.getForm());
                 jcbForm.addItemListener(this);
                 jcbStamina.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbStamina,player.getStamina());
+                Helper.setComboBoxFromID(jcbStamina, player.getStamina());
                 jcbStamina.addItemListener(this);
                 jcbDefending.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbDefending,player.getDefense());
+                Helper.setComboBoxFromID(jcbDefending, player.getDefense());
                 jcbDefending.addItemListener(this);
                 jcbScoring.removeItemListener(this);
                 Helper.setComboBoxFromID(jcbScoring, player.getAttack());
                 jcbScoring.addItemListener(this);
                 jcbKeeper.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbKeeper,player.getGoalKeeping());
+                Helper.setComboBoxFromID(jcbKeeper, player.getGoalKeeping());
                 jcbKeeper.addItemListener(this);
                 jcbWinger.removeItemListener(this);
                 Helper.setComboBoxFromID(jcbWinger, player.getWing());
@@ -518,29 +518,33 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 Helper.setComboBoxFromID(jcbPassing, player.getPassing());
                 jcbPassing.addItemListener(this);
                 jcbSetPieces.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbSetPieces,player.getSetPieces());
+                Helper.setComboBoxFromID(jcbSetPieces, player.getSetPieces());
                 jcbSetPieces.addItemListener(this);
                 jcbLoyalty.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbLoyalty,player.getLoyalty());
+                Helper.setComboBoxFromID(jcbLoyalty, player.getLoyalty());
                 jcbLoyalty.addItemListener(this);
                 jcbLeadership.removeItemListener(this);
-                Helper.setComboBoxFromID(jcbLeadership,player.getLeadership());
+                Helper.setComboBoxFromID(jcbLeadership, player.getLeadership());
                 jcbLeadership.addItemListener(this);
                 jchHomegrown.removeItemListener(this);
                 jchHomegrown.setSelected(player.isHomwGrown());
                 jchHomegrown.addItemListener(this);
 
                 // Listener stays here for recalculation of rating
-                Helper.setComboBoxFromID(jcbPlaymaking,player.getPlayMaking());
+                Helper.setComboBoxFromID(jcbPlaymaking, player.getPlayMaking());
 
                 // Normally not working. Thus last positioned
-                var deadline =player.getExpiryDate();
-                jsSpinner.setValue(Date.from(deadline.instant));
+                var deadline = player.getExpiryDate();
+                if (deadline != null) {
+                    jsSpinner.setValue(Date.from(deadline.instant));
+                } else {
+                    jsSpinner.setValue(null);
+                }
 
                 setLabels();
             }
         } catch (Exception e) {
-        	HOLogger.instance().debug(getClass(), e);
+            HOLogger.instance().debug(getClass(), e);
             message = HOVerwaltung.instance().getLanguageString("scout_error");
             message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
         }

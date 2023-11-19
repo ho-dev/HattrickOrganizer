@@ -25,6 +25,7 @@
 ### Statistics
 
 ### Transfer
+* fix transfer scout's copy and paste of own players (#1897)
 
 ### Training
 
@@ -36,6 +37,7 @@
 * Add a Linux-friendly default theme, called “Gnome.”
 
 ## Translations
+
 
 Reports by Contributors - September 24, 2023 - October 21, 2023
 

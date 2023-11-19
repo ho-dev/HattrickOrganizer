@@ -252,9 +252,17 @@ Deadline: 30.03.2023 14:01
 Mindestgebot: [money]0[/money]
         */
 
-        // text block contains 17 lines, when specialty is given, otherwise one less (16)
+        // if copied from transfer market, the text block contains 17 lines, when specialty is given, otherwise one less (16)
         // line index of all pending lines has to be reduced by one, when specialty line is missing
-        int offsSpeciality = rows.size() - 17;
+        // if copied from own players the last both lines (deadline on price) are not given
+        int offsSpeciality = switch (rows.size()){
+            case 17 -> 0;
+            case 16 -> -1;
+            case 15 -> 0;
+            case 14 -> -1;
+            default -> throw new IllegalStateException("Unexpected rows count: " + rows.size());
+        };
+
         // Set index rows
         int indexRowNamePlayerId = 0;
         int indexRowAge = 1;
@@ -275,7 +283,7 @@ Mindestgebot: [money]0[/money]
         // Player Name
         sc.useDelimiter("\\[playerid=");
         txtTmp = new StringBuilder(sc.next().trim());
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setPlayerName(txtTmp.toString());
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.id"));
@@ -283,7 +291,7 @@ Mindestgebot: [money]0[/money]
         // Player Id
         sc.useDelimiter("\\]");
         txtTmp = new StringBuilder(sc.next().trim().substring(10));
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setPlayerID(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.name"));
@@ -294,7 +302,7 @@ Mindestgebot: [money]0[/money]
         sc = new Scanner(row);
         sc.useDelimiter(" ");
         txtTmp = new StringBuilder(sc.next().trim());
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setAge(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
@@ -308,7 +316,7 @@ Mindestgebot: [money]0[/money]
                 sc.next();
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setAgeDays(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("s.player.age.days"));
@@ -391,7 +399,7 @@ Mindestgebot: [money]0[/money]
                 c = sc.next();
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setTSI(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
@@ -431,7 +439,7 @@ Mindestgebot: [money]0[/money]
                 }
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setBooked(row.trim());
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.warningstatus"));
@@ -451,7 +459,7 @@ Mindestgebot: [money]0[/money]
                 }
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setInjury(Integer.parseInt(txtTmp.toString()));
         }
         //Form and Stamina
@@ -471,7 +479,7 @@ Mindestgebot: [money]0[/money]
                 }
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setForm(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.form"));
@@ -489,7 +497,7 @@ Mindestgebot: [money]0[/money]
                 }
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             player.setStamina(Integer.parseInt(txtTmp.toString()));
         } else {
             addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
@@ -507,22 +515,24 @@ Mindestgebot: [money]0[/money]
         player.setAttack(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring")));
         player.setSetPieces(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces")));
 
-        // scan deadline
-        row = rows.get(indexRowDeadline);
-        String deadlineString = getDeadlineString(row);
-        try {
-            player.setExpiryDate(new HODateTime(
-                    new SimpleDateFormat("ddMMyyyyHHmm")
-                            .parse(deadlineString)
-                            .toInstant()
-            ));
-        } catch (ParseException e) {
-            HOLogger.instance().warning(PlayerConverter.class, "Error parsing deadline date: " + e.getMessage());
-        }
+        if ( rows.size() > indexRowDeadline) {
+            // scan deadline
+            row = rows.get(indexRowDeadline);
+            String deadlineString = getDeadlineString(row);
+            try {
+                player.setExpiryDate(new HODateTime(
+                        new SimpleDateFormat("ddMMyyyyHHmm")
+                                .parse(deadlineString)
+                                .toInstant()
+                ));
+            } catch (ParseException e) {
+                HOLogger.instance().warning(PlayerConverter.class, "Error parsing deadline date: " + e.getMessage());
+            }
 
-        row = rows.get(indexRoxPrice);
-        var price = scanMoney(row);
-        if ( price != null) player.setPrice(price);
+            row = rows.get(indexRoxPrice);
+            var price = scanMoney(row);
+            if (price != null) player.setPrice(price);
+        }
         return player;
     }
 
@@ -540,7 +550,7 @@ Mindestgebot: [money]0[/money]
                 }
             }
         }
-        if (!txtTmp.toString().equals("")) {
+        if (!txtTmp.toString().isEmpty()) {
             return Integer.parseInt(txtTmp.toString());
         } else {
             addErrorField(languageString);
@@ -640,7 +650,7 @@ Mindestgebot: [money]0[/money]
         }
 
         // If we detected some possible player
-        if (!feed.equals("")) {
+        if (!feed.isEmpty()) {
             //
             // We start reformating given input here and extracting
             // only needed lines for player detection
@@ -656,7 +666,7 @@ Mindestgebot: [money]0[/money]
                 	startFound = true;
                 }
 
-                if (!tmp.equals("") && startFound) {
+                if (!tmp.isEmpty() && startFound) {
                     lines.add(tmp);
                 }
 
@@ -717,7 +727,7 @@ Mindestgebot: [money]0[/money]
                 p++;
             }
 
-            if (!age.equals("")) {
+            if (!age.isEmpty()) {
                 player.setAge(Integer.parseInt(age));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
@@ -754,7 +764,7 @@ Mindestgebot: [money]0[/money]
                 p++;
             }
 
-            if (!ageDays.equals("")) {
+            if (!ageDays.isEmpty()) {
                 player.setAgeDays(Integer.parseInt(ageDays));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
@@ -810,7 +820,7 @@ Mindestgebot: [money]0[/money]
                 p++;
             }
 
-            if (!tsi.toString().equals("")) {
+            if (!tsi.toString().isEmpty()) {
                 player.setTSI(Integer.parseInt(tsi.toString()));
             } else {
                 addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
@@ -836,7 +846,7 @@ Mindestgebot: [money]0[/money]
 				} else break;
 				p++;
 			}
-            if (!wage.equals("") && Integer.parseInt(wage) >= 500) {
+            if (!wage.isEmpty() && Integer.parseInt(wage) >= 500) {
 				found_at_line++;
 			}
 			//player.setBaseWage(i);
@@ -860,7 +870,7 @@ Mindestgebot: [money]0[/money]
             		}
             	}
 
-            	if (!injury.equals("")) {
+            	if (!injury.isEmpty()) {
             		player.setInjury(Integer.parseInt(injury));
             	}
             } catch (Exception e) { /* ignore */ }
@@ -934,7 +944,7 @@ Mindestgebot: [money]0[/money]
             while (k < tmp.length()) {
                 if ((tmp.charAt(k) >= '0') && (tmp.charAt(k) <= '9')) {
                     curbid.append(tmp.charAt(k));
-                } else if ((tmp.charAt(k) != ' ') && curbid.length()>0) { // avoid to add numbers from bidding team names
+                } else if ((tmp.charAt(k) != ' ') && !curbid.isEmpty()) { // avoid to add numbers from bidding team names
                 	break;
                 }
 
@@ -1119,7 +1129,7 @@ Mindestgebot: [money]0[/money]
                 p--;
             }
 
-            if (foundspecialities.size() > 0) {
+            if (!foundspecialities.isEmpty()) {
                 player.setSpeciality(specialitiesvalues.get((Integer) (foundspecialities.get(0)).get(2)));
             } else {
                 player.setSpeciality(0);
@@ -1173,7 +1183,7 @@ Mindestgebot: [money]0[/money]
     	int price = 0;
     	try {
     		price = Integer.parseInt(bid);
-    		if (curbid.length()>0 && Integer.parseInt(curbid) >= Integer.parseInt(bid)) {
+    		if (!curbid.isEmpty() && Integer.parseInt(curbid) >= Integer.parseInt(bid)) {
     			price = Integer.parseInt(curbid);
     		}
     	} catch (Exception e) { /* nothing */ }
