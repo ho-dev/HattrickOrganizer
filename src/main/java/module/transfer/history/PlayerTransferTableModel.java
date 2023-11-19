@@ -115,21 +115,7 @@ public class PlayerTransferTableModel extends HOTableModel {
         initData();
     }
 
-//
-//    //~ Methods ------------------------------------------------------------------------------------
-//
-//    /** {@inheritDoc} */
-//    public final int getColumnCount() {
-//        return colNames.length;
-//    }
-//
-//    /** {@inheritDoc} */
-//    @Override
-//	public final String getColumnName(int column) {
-//        return colNames[column];
-//    }
-//
-//    @Override
+    @Override
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
         m_clData = new Object[values.size()][columns.length];
@@ -144,35 +130,4 @@ public class PlayerTransferTableModel extends HOTableModel {
         }
         fireTableDataChanged();
     }
-//
-//    /** {@inheritDoc} */
-//    public final int getRowCount() {
-//        return values.size();
-//    }
-//
-//    /** {@inheritDoc} */
-//	public boolean isCellEditable(int row, int col) {
-//        return col == 11;
-//    }
-//
-//    /** {@inheritDoc} */
-//    public final Object getValueAt(int rowIndex, int columnIndex) {
-//        final PlayerTransfer transfer = values.get(rowIndex);
-//        var player = PlayerRetriever.getPlayer(transfer.getPlayerId());
-//        return switch (columnIndex) {
-//            case 0 -> transfer.getDate().toLocaleDateTime();
-//            case 1 -> transfer.getSeason();
-//            case 2 -> transfer.getWeek();
-//            case 3 -> transfer.getBuyerName();
-//            case 4 -> PlayerTransfer.BUY;
-//            case 5 -> transfer.getSellerName();
-//            case 6 -> transfer.getPrice();
-//            case 7 -> transfer.getTsi();
-//            case 8 -> player!=null?player.getAgeWithDaysAsString(transfer.getDate()):"";
-//            case 9 -> transfer.getMotherClubFee();
-//            case 10 -> transfer.getPreviousClubFee();
-//            case 11 -> new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
-//            default -> ""; //$NON-NLS-1$
-//        };
-//    }
 }
