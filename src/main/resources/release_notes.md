@@ -13,6 +13,7 @@
 * player avatar image can be reloaded (#1815)
 
 ### Team Analyzer
+* restore size of match prediction dialog box (#1898)
 
 ### Rating
 * implement schum rating prediction (#1782)

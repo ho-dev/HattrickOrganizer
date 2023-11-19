@@ -358,6 +358,9 @@ public final class UserParameter extends Configuration {
     public boolean includeHTOLineups=false;
     public boolean includeLineupTemplates=false;
 
+    public int matchPredictionDialog_Width = 900;
+    public int matchPredictionDialog_Height = 600;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -639,6 +642,8 @@ public final class UserParameter extends Configuration {
         map.put("lineupIncludeTemplates", String.valueOf(this.includeLineupTemplates));
 
         map.put("series_tableSplitPaneDivider", String.valueOf(this.series_tableSplitPaneDivider.location));
+        map.put("matchPredictionDialog_Width", String.valueOf(this.matchPredictionDialog_Width));
+        map.put("matchPredictionDialog_Height", String.valueOf(this.matchPredictionDialog_Height));
 
         return map;
     }
@@ -888,6 +893,7 @@ public final class UserParameter extends Configuration {
         includeLineupTemplates = getBooleanValue(values,"lineupIncludeTemplates");
 
         series_tableSplitPaneDivider.location = getIntValue(values, "series_tableSplitPaneDivider");
+        matchPredictionDialog_Width = getIntValue(values, "matchPredictionDialog_Width");
+        matchPredictionDialog_Height = getIntValue(values, "matchPredictionDialog_Height");
     }
-
 }
