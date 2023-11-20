@@ -129,10 +129,9 @@ internal class BasicsTable(adapter: JDBCAdapter) : AbstractTable(TABLENAME, adap
         }
         if (hrfID != -1) {
             //todo sicherstellen das kein Trainingsdatum zwischen matchdate und hrfdate liegt
-            val training4Hrf: Timestamp =
-                DBManager.getXtraDaten(hrfID)!!.nextTrainingDate.toDbTimestamp()
-            if (training4Hrf.after(hrfDate) && training4Hrf.before(time)) //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
-            {
+            val training4Hrf: Timestamp? = DBManager.getXtraDaten(hrfID)!!.nextTrainingDate?.toDbTimestamp()
+            //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
+            if (training4Hrf == null || (training4Hrf.after(hrfDate) && training4Hrf.before(time))) {
                 hrfID = -1
             }
         }

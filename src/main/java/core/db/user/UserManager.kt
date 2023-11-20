@@ -47,7 +47,7 @@ object UserManager {
     }
 
     private fun initDbParentFolder() {
-        dbParentFolder = if (!HO.isPortableVersion) {
+        dbParentFolder = if (!HO.portableVersion) {
             when (HO.platform) {
                 OSUtils.OS.LINUX -> {
                     System.getProperty("user.home") + "/.ho"

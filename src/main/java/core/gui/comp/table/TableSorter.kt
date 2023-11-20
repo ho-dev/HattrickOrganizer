@@ -11,7 +11,6 @@ import module.transfer.scout.ScoutEintrag
 import module.transfer.scout.TransferTableModel
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.io.Serial
 import javax.swing.JTable
 import javax.swing.event.TableModelEvent
 import javax.swing.table.TableModel
@@ -69,9 +68,11 @@ class TableSorter : TableMap {
         setModel(tablemodel)
     }
 
-    private fun isAscending(tablemodel: TableModel, initsortcolumnindex: Int): Boolean {
-        return tablemodel is HOTableModel &&
-                tablemodel.getPositionInArray(UserColumnFactory.BEST_POSITION) != initsortcolumnindex
+    private fun isAscending(tableModel: TableModel, initSortColumnIndex: Int): Boolean {
+        return tableModel is HOTableModel &&
+            tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION) != initSortColumnIndex &&
+            tableModel.getPositionInArray(UserColumnFactory.RATING) != initSortColumnIndex
+
     }
 
     override fun setModel(tablemodel: TableModel) {
@@ -84,7 +85,7 @@ class TableSorter : TableMap {
      *
      * @param matchId ID of the match to find.
      * @return int – Row in the table containing the match's details.
-     * Returns -1 if the match `matchid` cannot be found.
+     * Returns -1 if the match `matchId` cannot be found.
      */
     fun getRow4Match(matchId: Int): Int {
         if (matchId > 0) {
@@ -193,7 +194,7 @@ class TableSorter : TableMap {
         val jtableheader = jtable.tableHeader
 
         // Listener already present.
-        if (jtableheader.componentListeners.size > 0) {
+        if (jtableheader.componentListeners.isNotEmpty()) {
             return
         }
         jtable.setColumnSelectionAllowed(false)

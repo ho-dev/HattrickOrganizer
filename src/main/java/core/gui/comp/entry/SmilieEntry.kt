@@ -43,18 +43,16 @@ class SmilieEntry : DoubleLabelEntries() {
     override fun compareTo(other: IHOTableEntry): Int {
         if (other is SmilieEntry) {
             if (other.getPlayer() != null && getPlayer() != null) {
-                var result:Int
+                var result = 0
 
-                //Beide null -> Der ManuelleSmilie entscheidet
-                result = if (other.getPlayer()?.getTeamGroup().isNullOrEmpty() &&
-                    getPlayer()?.getTeamGroup().isNullOrEmpty()) {
-                    0
-                } else if (other.getPlayer()!!.getTeamGroup() == null || other.getPlayer()!!.getTeamGroup() == "") {
-                    1
-                } else if (getPlayer()!!.getTeamGroup() == null || getPlayer()!!.getTeamGroup() == "") {
-                    -1
-                } else {
-                    other.getPlayer()!!.getTeamGroup()!!.compareTo(getPlayer()?.getTeamGroup()!!)
+                val thisGroup = this.getPlayer()?.getTeamGroup()
+                val otherGroup = other.getPlayer()?.getTeamGroup()
+                if (!thisGroup.isNullOrEmpty()) {
+                    result = if (!otherGroup.isNullOrEmpty()) {
+                        thisGroup.compareTo(otherGroup)
+                    } else {
+                        -1
+                    }
                 }
 
                 // if equal check lineup
@@ -62,11 +60,11 @@ class SmilieEntry : DoubleLabelEntries() {
                     val team = HOVerwaltung.instance().model.getCurrentLineupTeam()
                     val entrySort: MatchRoleID? = team.getLineup().getPositionByPlayerId(other.getPlayer()!!.playerId)
                     val sort: MatchRoleID? = team.getLineup().getPositionByPlayerId(getPlayer()!!.playerId)
-                    result = if (sort == null && entrySort == null) {
-                        0
-                    } else if (sort == null) {
-                        -1
-                    } else entrySort?.sortId?.compareTo(sort.sortId) ?: 1
+                    if (sort != null) {
+                        result = entrySort?.sortId?.compareTo(sort.sortId) ?: 1
+                    } else if (entrySort != null) {
+                        result = -1
+                    }
                 }
                 return result
             }

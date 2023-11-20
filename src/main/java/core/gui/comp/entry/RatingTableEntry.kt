@@ -83,13 +83,7 @@ class RatingTableEntry : AbstractHOTableEntry {
 
     override fun compareTo(other: IHOTableEntry): Int {
         if (other is RatingTableEntry) {
-            return if (rating < other.rating) {
-                -1
-            } else if (rating > other.rating) {
-                1
-            } else {
-                0
-            }
+            return rating.compareTo(other.rating)
         }
         return 0
     }

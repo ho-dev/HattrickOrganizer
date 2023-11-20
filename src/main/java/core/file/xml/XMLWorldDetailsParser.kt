@@ -62,10 +62,12 @@ object XMLWorldDetailsParser {
             val basics = model.getBasics()
             val extraData = model.getXtraDaten()
             if (basics != null && extraData != null) {
-                var trainingDate = extraData.getNextTrainingDate()
-                var economyDate = extraData.getEconomyDate()
-                var seriesMatchDate = extraData.getSeriesMatchDate()
                 val now = HODateTime.now()
+
+                var trainingDate = extraData.nextTrainingDate ?: now
+                var economyDate = extraData.economyDate ?: now
+                var seriesMatchDate = extraData.seriesMatchDate ?: now
+
                 while (trainingDate.isBefore(now)) trainingDate = trainingDate.plusDaysAtSameLocalTime(7)
                 while (economyDate.isBefore(now)) economyDate = economyDate.plusDaysAtSameLocalTime(7)
                 while (seriesMatchDate.isBefore(now)) seriesMatchDate = seriesMatchDate.plusDaysAtSameLocalTime(7)

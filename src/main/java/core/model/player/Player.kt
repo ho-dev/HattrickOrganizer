@@ -1305,14 +1305,17 @@ open class Player : Storable {
      */
     fun getTrainingPriorityInformation(nextWeek: HODateTime?): String {
         var ret: String? = null
-        for (t in getFuturePlayerTrainings()!!) {
-            //
-            if (!t!!.endsBefore(nextWeek)) {
-                if (ret != null) {
-                    ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios")
-                    break
+        val playerTrainings = getFuturePlayerTrainings()
+        if (playerTrainings != null) {
+            for (t in playerTrainings) {
+                //
+                if (!t!!.endsBefore(nextWeek)) {
+                    if (ret != null) {
+                        ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios")
+                        break
+                    }
+                    ret = t.priority.toString()
                 }
-                ret = t.priority.toString()
             }
         }
         return ret ?: bestPositionInfo

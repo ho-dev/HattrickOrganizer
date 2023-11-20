@@ -37,7 +37,7 @@ object HO {
         private set
     var platform: OSUtils.OS? = null
         private set
-    var isPortableVersion = false // Used to determine the location of the DB
+    var portableVersion = false // Used to determine the location of the DB
 
     @JvmStatic
 	val development: Boolean
@@ -67,7 +67,7 @@ object HO {
     @JvmStatic
     fun main(args: Array<String>) {
         var tmpArgs: Array<String>? = args
-        isPortableVersion = true
+        portableVersion = true
         platform = OSUtils.getOS()
         if (platform == OSUtils.OS.MAC) {
             System.setProperty("apple.laf.useScreenMenuBar", "true")
@@ -79,7 +79,7 @@ object HO {
         if (tmpArgs != null) {
             tmpArgs = tmpArgs.map { s -> s.uppercase(Locale.getDefault()) }.toTypedArray()
             if (Arrays.asList(*tmpArgs).contains("INSTALLED")) {
-                isPortableVersion = false
+                portableVersion = false
             }
             var arg: String
             for (_arg in tmpArgs) {

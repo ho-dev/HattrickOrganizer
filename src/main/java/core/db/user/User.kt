@@ -57,7 +57,7 @@ class User {
 
     private fun fillUserInfos() {
         dbFolder = Paths.get(UserManager.dbParentFolder, baseUser.dbName).toString()
-        dbURL = if (HO.isPortableVersion) "jdbc:hsqldb:file:" + baseUser.dbName + "/database" else "jdbc:hsqldb:file:$dbFolder/database"
+        dbURL = if (HO.portableVersion) "jdbc:hsqldb:file:" + baseUser.dbName + "/database" else "jdbc:hsqldb:file:$dbFolder/database"
     }
 
     companion object {
