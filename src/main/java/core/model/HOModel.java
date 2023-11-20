@@ -10,6 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.rating.RatingPredictionManager;
 import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
 import core.training.TrainingPerWeek;
@@ -53,7 +54,7 @@ public class HOModel {
     private List<YouthPlayer> youthPlayers;
     private List<MatchLineup> youthMatchLineups;
     private List<YouthTraining> youthTrainings;
-    private RatingPredictionModel ratingPredictionModel;
+    private RatingPredictionManager ratingPredictionManager;
 
     //~ Constructors -------------------------------------------------------------------------------
     public HOModel(HODateTime fetchDate) {
@@ -214,11 +215,11 @@ public class HOModel {
     }
 
     public final @NotNull RatingPredictionModel getRatingPredictionModel(){
-        if ( this.ratingPredictionModel == null){
-            var team = getTeam();
-            this.ratingPredictionModel = new RatingPredictionModel(team);
+        var ret = getRatingPredictionManager().getRatingPredictionModel();
+        if ( ret == null){
+            ret = getRatingPredictionManager().getRatingPredictionModel("default", getTeam());
         }
-        return this.ratingPredictionModel;
+        return ret;
     }
 
     /**
@@ -681,5 +682,12 @@ public class HOModel {
                     DBDataSource.HRF);
         }
         return null;
+    }
+
+    public RatingPredictionManager getRatingPredictionManager() {
+        if ( ratingPredictionManager == null){
+            ratingPredictionManager = new RatingPredictionManager();
+        }
+        return ratingPredictionManager;
     }
 }

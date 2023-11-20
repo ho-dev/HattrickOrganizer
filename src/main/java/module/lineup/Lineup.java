@@ -87,6 +87,7 @@ public class Lineup{
 	}
 
 	public void setManMarkingPosition(Player.ManMarkingPosition manMarkingPosition) {
+		this.ratingRevision++;
 		this.manMarkingPosition = manMarkingPosition;
 	}
 
@@ -750,7 +751,7 @@ public class Lineup{
 
 	/**
 	 * Umrechnung von double auf 1-80 int
-	 * 
+	 *
 	 * @deprecated use RatingUtil.getIntValue4Rating(double rating) instead
 	 */
 	@Deprecated
@@ -883,7 +884,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_vPositionen.
-	 * 
+	 *
 	 * @return Value of property m_vPositionen.
 	 */
 	public final Vector<MatchLineupPosition> getAllPositions() {
@@ -1005,7 +1006,7 @@ public class Lineup{
 
 	/**
 	 * Returns a list of match orders for this lineup.
-	 * 
+	 *
 	 * @return the substitutions for this lineup. If there are no substitutions,
 	 *         an empty list will be returned.
 	 */
