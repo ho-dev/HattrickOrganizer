@@ -267,7 +267,7 @@ public class HOModel {
      *
      * @return Value of property m_iID.
      */
-    public final int getID() {
+    public final int getHrfId() {
         return o_hrf.getHrfId();
     }
 
@@ -306,7 +306,7 @@ public class HOModel {
      */
     public final Liga getLeague() {
         if (m_clLiga == null) {
-            m_clLiga = DBManager.instance().getLiga(this.getID());
+            m_clLiga = DBManager.instance().getLiga(this.getHrfId());
         }
         return m_clLiga;
     }
@@ -390,7 +390,7 @@ public class HOModel {
      */
     public final Stadium getStadium() {
         if (m_clStadium == null) {
-            m_clStadium = DBManager.instance().getStadion(this.getID());
+            m_clStadium = DBManager.instance().getStadion(this.getHrfId());
         }
         return m_clStadium;
     }
@@ -409,7 +409,7 @@ public class HOModel {
      */
     public List<StaffMember> getStaff() {
         if (m_clStaff == null) {
-            m_clStaff = DBManager.instance().getStaffByHrfId(this.getID());
+            m_clStaff = DBManager.instance().getStaffByHrfId(this.getHrfId());
         }
         return m_clStaff;
     }
@@ -428,7 +428,7 @@ public class HOModel {
      */
     public final Team getTeam() {
         if (m_clTeam == null) {
-            m_clTeam = DBManager.instance().getTeam(this.getID());
+            m_clTeam = DBManager.instance().getTeam(this.getHrfId());
         }
         return m_clTeam;
     }
@@ -469,7 +469,7 @@ public class HOModel {
      */
     public final Verein getClub() {
         if (m_clVerein == null) {
-            m_clVerein = DBManager.instance().getVerein(this.getID());
+            m_clVerein = DBManager.instance().getVerein(this.getHrfId());
         }
         return m_clVerein;
     }
@@ -490,7 +490,7 @@ public class HOModel {
      */
     public final core.model.XtraData getXtraDaten() {
         if (m_clXtraDaten == null) {
-            m_clXtraDaten = DBManager.instance().getXtraDaten(this.getID());
+            m_clXtraDaten = DBManager.instance().getXtraDaten(this.getHrfId());
         }
         return m_clXtraDaten;
     }
@@ -570,16 +570,16 @@ public class HOModel {
     public final synchronized void saveHRF() {
         var time = getBasics().getDatum();
         DBManager.instance().saveHRF(this.o_hrf);
-        DBManager.instance().saveBasics(getID(), getBasics());
-        DBManager.instance().saveVerein(getID(), getClub());
-        DBManager.instance().saveTeam(getID(), getTeam());
-        DBManager.instance().saveEconomyInDB(getID(), getEconomy(), time);
-        DBManager.instance().saveStadion(getID(), getStadium());
-        DBManager.instance().saveLiga(getID(), getLeague());
-        DBManager.instance().saveXtraDaten(getID(), getXtraDaten());
+        DBManager.instance().saveBasics(getHrfId(), getBasics());
+        DBManager.instance().saveVerein(getHrfId(), getClub());
+        DBManager.instance().saveTeam(getHrfId(), getTeam());
+        DBManager.instance().saveEconomyInDB(getHrfId(), getEconomy(), time);
+        DBManager.instance().saveStadion(getHrfId(), getStadium());
+        DBManager.instance().saveLiga(getHrfId(), getLeague());
+        DBManager.instance().saveXtraDaten(getHrfId(), getXtraDaten());
         DBManager.instance().saveSpieler(getCurrentPlayers());
-        DBManager.instance().storeYouthPlayers(getID(), getCurrentYouthPlayers());
-        DBManager.instance().saveStaff(getID(), getStaff());
+        DBManager.instance().storeYouthPlayers(getHrfId(), getCurrentYouthPlayers());
+        DBManager.instance().saveStaff(getHrfId(), getStaff());
     }
 
     /**

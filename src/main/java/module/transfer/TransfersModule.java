@@ -10,6 +10,7 @@ import core.model.HOVerwaltung;
 import core.module.DefaultModule;
 
 public final class TransfersModule extends DefaultModule {
+	private TransfersPanel panel;
 
 	public TransfersModule(){
 		super(true);
@@ -26,12 +27,18 @@ public final class TransfersModule extends DefaultModule {
 	}
 
 	@Override
-	public JPanel createTabPanel() {		
-		return new TransfersPanel();
+	public JPanel createTabPanel() {
+		panel = new TransfersPanel();
+		return panel;
 	}
 
 	public KeyStroke getKeyStroke() {
 		return KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
+	}
+
+	public void storeUserSettings()
+	{
+		if ( panel != null) panel.storeUserSettings();
 	}
 
 }

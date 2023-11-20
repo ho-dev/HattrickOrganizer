@@ -15,8 +15,6 @@ import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -33,10 +31,6 @@ import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-
 
 /**
  * Pane to show transfer history information for your own team.
@@ -44,16 +38,14 @@ import javax.swing.event.ChangeListener;
  */
 public class HistoryPane extends JSplitPane {
 
-	private ButtonModel spinSeason;
-    private JLabel amountTransfers = new JLabel("", SwingConstants.RIGHT);
-    private JLabel amountTransfersIn = new JLabel("", SwingConstants.RIGHT);
-    private JLabel amountTransfersOut = new JLabel("", SwingConstants.RIGHT);
-    private JSpinner spinner = new JSpinner();
-    private List<PlayerTransfer> transfers;
-    private PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
-    private TeamTransfersPane transferPane;
-    private TotalsPanel pricePanel;
-    private TotalsPanel tsiPanel;
+	private final ButtonModel spinSeason;
+    private final JLabel amountTransfers = new JLabel("", SwingConstants.RIGHT);
+    private final JLabel amountTransfersIn = new JLabel("", SwingConstants.RIGHT);
+    private final JLabel amountTransfersOut = new JLabel("", SwingConstants.RIGHT);
+    private final JSpinner spinner = new JSpinner();
+    private final TeamTransfersPane transferPane;
+    private final TotalsPanel pricePanel;
+    private final TotalsPanel tsiPanel;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -205,6 +197,7 @@ public class HistoryPane extends JSplitPane {
         final JPanel topPanel = new ImagePanel();
         topPanel.setLayout(new BorderLayout());
 
+        PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
         transferPane = new TeamTransfersPane(playerDetailPanel);
 
         topPanel.add(transferPane, BorderLayout.CENTER);
@@ -217,7 +210,7 @@ public class HistoryPane extends JSplitPane {
         setLeftComponent(topPanel);
         setRightComponent(playerDetailPanel);
 
-        refresh();
+        //refresh();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -226,11 +219,12 @@ public class HistoryPane extends JSplitPane {
      * Refresh the displayed information.
      */
     public final void refresh() {
+        List<PlayerTransfer> transfers;
         if (spinSeason.isSelected()) {
             final SpinnerNumberModel model = (SpinnerNumberModel) this.spinner.getModel();
-            this.transfers = DBManager.instance().getTransfers(model.getNumber().intValue(), true, true);
+            transfers = DBManager.instance().getTransfers(model.getNumber().intValue(), true, true);
         } else {
-            this.transfers = DBManager.instance().getTransfers(0, true, true);
+            transfers = DBManager.instance().getTransfers(0, true, true);
         }
 
         final TransferTotals totals = TransferTotals.calculateTotals(transfers);
@@ -243,6 +237,10 @@ public class HistoryPane extends JSplitPane {
                            totals.getSellTsiTotal(), totals.getSellTsiAvg());
         pricePanel.revalidate();
 
-        transferPane.refresh(this.transfers);
+        transferPane.refresh(transfers);
     }
+    public void storeUserSettings(){
+        transferPane.storeUserSettings();
+    }
+
 }

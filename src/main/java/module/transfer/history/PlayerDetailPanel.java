@@ -6,6 +6,8 @@ package module.transfer.history;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -16,16 +18,13 @@ import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.sorter.DefaultTableSorter;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -34,8 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableModel;
 
+import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Panel for showing detailed information on a player.
@@ -96,10 +95,14 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public PlayerDetailPanel() {
         super(new BorderLayout());
 
-        final TableModel model = new PlayerTransferTableModel(new ArrayList<>());
-        final TeamTransferSorter sorter = new TeamTransferSorter(model);
+        var model = getTableModel();
+        var sorter = new DefaultTableSorter(model);
         playerTable = new JTable(sorter);
+        playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        playerTable.setOpaque(true);
         sorter.setTableHeader(playerTable.getTableHeader());
+
+        model.restoreUserSettings(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
         playerPane.setOpaque(false);
@@ -170,6 +173,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         clearPanel();
     }
 
+    private PlayerTransferTableModel getTableModel() {
+        return UserColumnController.instance().getPlayerTransferTableModel();
+    }
+
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
@@ -188,6 +195,16 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             this.playerId = playerid;
             this.playerName = playerName;
         }
+
+        clearPanel();
+        updatePanel();
+    }
+
+    public final void setPlayer(PlayerTransfer transfer) {
+        this.player = transfer.getPlayerInfo();
+
+        this.playerId = player.getPlayerID();
+        this.playerName = player.getFullName();
 
         clearPanel();
         updatePanel();
@@ -240,14 +257,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
      * @param values List of player transfers to display.
      */
     private void refreshPlayerTable(List<PlayerTransfer> values) {
-        final DefaultTableSorter sorter = (DefaultTableSorter) playerTable.getModel();
-        sorter.setTableModel(new PlayerTransferTableModel(values));
-        playerTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+        var model = getTableModel();
+        model.setValues(values);
         playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
         playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
-        playerTable.getColumnModel().getColumn(5).setPreferredWidth(200);
-        playerTable.getColumnModel().getColumn(9).setCellRenderer(new ButtonCellRenderer());
-        playerTable.getColumnModel().getColumn(9).setCellEditor(new ButtonCellEditor(this, values));
     }
 
     /**
@@ -317,7 +330,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 }
             }
 
-            income.setText(core.util.Helper.getNumberFormat(true, 0).format(valIncome));
+            income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
             if ( arrivalDate != null && soldDate != null) {
                 var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
                 if (activeDuration.seasons > 0) {
@@ -328,5 +341,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
             refreshPlayerTable(transfers);
         }
+    }
+
+    public void storeUserSettings() {
+        var model = getTableModel();
+        model.storeUserSettings(this.playerTable);
     }
 }

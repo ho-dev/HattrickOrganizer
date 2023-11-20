@@ -440,7 +440,27 @@ public class DBManager {
 	 */
 	public List<Player> getSpieler(int hrfID) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayers(hrfID);
+				.loadPlayersBefore(hrfID);
+	}
+
+	public Player getLatestPlayerDownloadBefore(int playerId, Timestamp before) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
+				.loadPlayerBefore(playerId, before);
+	}
+
+	public Player getFirstPlayerDownloadAfter(int playerId, Timestamp before) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
+				.loadPlayerAfter(playerId, before);
+	}
+
+	public List<Player> getLatestPlayerDownloadBefore(String playerName, Timestamp before) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
+				.loadPlayersBefore(playerName, before);
+	}
+
+	public List<Player> getFirstPlayerDownloadAfter(String playerName, Timestamp before) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
+				.loadPlayersAfter(playerName, before);
 	}
 
 	/**
@@ -1516,6 +1536,11 @@ public class DBManager {
 		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
+	public long getSumTransferPrices(int teamID, boolean isSold) {
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
+				.getTransferIncomeSum(teamID, isSold);
+	}
+
 	/**
 	 * Gets transfers.
 	 *
@@ -1524,35 +1549,42 @@ public class DBManager {
 	 * @return the transfers
 	 */
 	public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
-		return ((TransferTable) getTable(TransferTable.TABLENAME))
+        return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransfers(playerid, allTransfers);
 	}
-//
-//	/**
-//	 * set the attribute player of each transfer
-//	 * @param transfers list of transfers
-//	 */
-//	private void setPlayerInfo(List<PlayerTransfer> transfers) {
-//		for (PlayerTransfer transfer : transfers) {
-//			final Player player = getSpielerAtDate(transfer.getPlayerId(), transfer.getDate().toDbTimestamp());
-//
-//			if (player != null) {
-//				transfer.setPlayerInfo(player);
-//			}
-//		}
-//	}
+
+	private void loadPlayerInfo(List<PlayerTransfer> playerTransfers) {
+		for ( var t : playerTransfers){
+			t.loadPLayerInfo(true);
+		}
+	}
 
 	/**
 	 * Gets transfers.
 	 *
 	 * @param season the season
 	 * @param bought the bought
-	 * @param sold   the sold
+	 * @param isSold   the isSold
 	 * @return the transfers
 	 */
-	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean sold) {
+	public List<PlayerTransfer> getTransfers(int season, boolean bought, boolean isSold) {
+		var ret = ((TransferTable) getTable(TransferTable.TABLENAME))
+				.getTransfers(season, bought, isSold);
+		loadPlayerInfo(ret);
+		return ret;
+	}
+
+	public int getSumTransferCommissions(HODateTime startWeek) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
-				.getTransfers(season, bought, sold);
+				.getSumTransferCommissions(startWeek);
+	}
+
+	public List<PlayerTransfer> loadTeamTransfers(int teamId, boolean isSold) {
+		var ret = ((TransferTable) getTable(TransferTable.TABLENAME))
+				.getTeamTransfers(teamId, isSold);
+		loadPlayerInfo(ret);
+		return ret;
+
 	}
 
 	/**
@@ -1904,7 +1936,8 @@ public class DBManager {
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
-				m_clJDBCAdapter.executeUpdate(statement);
+                assert m_clJDBCAdapter != null;
+                m_clJDBCAdapter.executeUpdate(statement);
 			}
 		}
 	}
@@ -2469,6 +2502,7 @@ public class DBManager {
 	public List<SquadInfo> loadSquadInfo(int teamId) {
 		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
 	}
+
 
 	public static class PreparedStatementBuilder{
 		private final String sql;

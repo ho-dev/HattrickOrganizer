@@ -1,5 +1,7 @@
 package core.util;
 
+import core.model.HOVerwaltung;
+
 import java.util.Locale;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
@@ -11,6 +13,20 @@ public class CurrencyUtils {
 
 	private CurrencyUtils() {}
 
+	/**
+	 * convert currency value in swedish krone to local currency
+	 * @param v Integer value to convert
+	 * @return Integer converted local currency
+	 */
+	static public Integer convertCurrency(Integer v) {
+		if (v != null) {
+			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
+			if (xtra != null) {
+				return (int) (v / xtra.getCurrencyRate());
+			}
+		}
+		return v;
+	}
 
 	static NumberFormat getLeagueCurrencyFormater(int leagueId) {
 		Locale leagueLocale;

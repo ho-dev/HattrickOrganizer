@@ -2,7 +2,7 @@
 
 ## Highlights
 * refactoring rating prediction (implement Schum rating)
-
+* refactoring of the transfer module. Calculation of transfer fee income.
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -11,6 +11,7 @@
 ### Squad
 * fix length of owner notes in players' database table (#1816)
 * player avatar image can be reloaded (#1815)
+* fix error player download nickname null pointer exception (#1938)
 
 ### Team Analyzer
 
@@ -25,6 +26,7 @@
 ### Statistics
 
 ### Transfer
+* refactoring of the transfer module. Calculation of transfer fee income. (#245)
 * fix transfer scout's copy and paste of own players (#1897)
 
 ### Training
@@ -37,7 +39,6 @@
 * Add a Linux-friendly default theme, called “Gnome.”
 
 ## Translations
-
 
 Reports by Contributors - September 24, 2023 - October 21, 2023
 

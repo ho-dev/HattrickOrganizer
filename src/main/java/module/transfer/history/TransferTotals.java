@@ -1,11 +1,9 @@
-// %4154424325:hoplugins.transfers.vo%
 package module.transfer.history;
 
 import module.transfer.PlayerTransfer;
-
-import java.util.Iterator;
 import java.util.List;
 
+import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Value Object representing totals information for a selection of transfers.
@@ -33,28 +31,25 @@ class TransferTotals {
      */
     static TransferTotals calculateTotals(List<PlayerTransfer> transfers) {
         final TransferTotals totals = new TransferTotals();
-
-        for (Iterator<PlayerTransfer> iter = transfers.iterator(); iter.hasNext();) {
-            final PlayerTransfer transfer = iter.next();
-
+        for (final PlayerTransfer transfer : transfers) {
+            var price = convertCurrency(transfer.getPrice());
             if (transfer.getType() == PlayerTransfer.BUY) {
                 totals.number_buy++;
-                totals.total_buy_price += transfer.getPrice();
+                totals.total_buy_price += price;
                 totals.total_buy_tsi += transfer.getTsi();
             } else if (transfer.getType() == PlayerTransfer.SELL) {
                 totals.number_sell++;
-                totals.total_sell_price += transfer.getPrice();
+                totals.total_sell_price += price;
                 totals.total_sell_tsi += transfer.getTsi();
             } else {
                 totals.number_sell++;
-                totals.total_sell_price += transfer.getPrice();
+                totals.total_sell_price += price;
                 totals.total_sell_tsi += transfer.getTsi();
                 totals.number_buy++;
-                totals.total_buy_price += transfer.getPrice();
+                totals.total_buy_price += price;
                 totals.total_buy_tsi += transfer.getTsi();
             }
         }
-
         return totals;
     }
 
@@ -83,7 +78,7 @@ class TransferTotals {
      */
     final double getBuyPriceAvg() {
         if (number_buy > 0) {
-            return total_buy_price / number_buy;
+            return (double) total_buy_price / number_buy;
         } else {
             return 0;
         }
@@ -105,7 +100,7 @@ class TransferTotals {
      */
     final double getBuyTsiAvg() {
         if (number_buy > 0) {
-            return total_buy_tsi / number_buy;
+            return (double) total_buy_tsi / number_buy;
         } else {
             return 0;
         }
@@ -127,7 +122,7 @@ class TransferTotals {
      */
     final double getSellPriceAvg() {
         if (number_sell > 0) {
-            return total_sell_price / number_sell;
+            return (double) total_sell_price / number_sell;
         } else {
             return 0;
         }
@@ -149,7 +144,7 @@ class TransferTotals {
      */
     final double getSellTsiAvg() {
         if (number_sell > 0) {
-            return total_sell_tsi / number_sell;
+            return (double) total_sell_tsi / number_sell;
         } else {
             return 0;
         }

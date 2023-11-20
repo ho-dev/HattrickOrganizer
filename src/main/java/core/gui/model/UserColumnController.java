@@ -5,6 +5,8 @@ import core.gui.comp.table.HOTableModel;
 import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
+import module.transfer.history.PlayerTransferTableModel;
+import module.transfer.history.TransferTableModel;
 import module.youth.YouthPlayerDetailsTableModel;
 import module.youth.YouthPlayerOverviewTableModel;
 import module.youth.YouthTrainingViewTableModel;
@@ -32,7 +34,9 @@ public final class UserColumnController {
 		YOUTHPLAYEROVERVIEW(7),
 		YOUTHPLAYERDETAILS(8),
 		YOUTHTRAININGVIEW(9),
-		TEAMANALYZERRECAP(10);
+		TEAMANALYZERRECAP(10),
+		TEAMTRANSFER(11),
+		PLAYERTRANSFER(12);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -65,6 +69,9 @@ public final class UserColumnController {
 	private YouthTrainingViewTableModel youthTrainingViewColumnModel;
 	private YouthPlayerDetailsTableModel youthPlayerDetailsTableModel;
 	private RecapPanelTableModel teamAnalyzerRecapModel;
+
+	private TransferTableModel transferTableModel;
+	private PlayerTransferTableModel playerTransferTableModel;
 
 	/**
 	 * constructor
@@ -99,6 +106,8 @@ public final class UserColumnController {
 		dbZugriff.loadHOColumModel(getYouthPlayerOverviewColumnModel());
 		dbZugriff.loadHOColumModel(getYouthPlayerDetailsColumnModel());
 		dbZugriff.loadHOColumModel(getTeamAnalyzerRecapModell());
+		dbZugriff.loadHOColumModel(getTransferTableModel());
+		dbZugriff.loadHOColumModel(getPlayerTransferTableModel());
 	}
 	
 	/**
@@ -164,7 +173,7 @@ public final class UserColumnController {
 
 	/**
 	 * return all model as Vector
-	 * @return
+	 * @return HOTableModels
 	 */
 	public Vector<HOTableModel> getAllModels() {
 		Vector<HOTableModel> v = new Vector<>();
@@ -202,5 +211,18 @@ public final class UserColumnController {
 			teamAnalyzerRecapModel = new RecapPanelTableModel(ColumnModelId.TEAMANALYZERRECAP);
 		}
 		return teamAnalyzerRecapModel;
+	}
+
+	public TransferTableModel getTransferTableModel(){
+		if (transferTableModel==null){
+			transferTableModel = new TransferTableModel();
+		}
+		return transferTableModel;
+	}
+	public PlayerTransferTableModel getPlayerTransferTableModel(){
+		if (playerTransferTableModel==null){
+			playerTransferTableModel = new PlayerTransferTableModel();
+		}
+		return playerTransferTableModel;
 	}
 }

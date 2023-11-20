@@ -360,7 +360,7 @@ public class HODateTime implements Comparable<HODateTime> {
         return ret;
     }
 
-    public static class HODuration {
+    public static class HODuration implements Comparable<HODuration>{
         public int seasons;
         public int days;
 
@@ -387,6 +387,18 @@ public class HODateTime implements Comparable<HODateTime> {
 
         public HODuration minus(HODuration diff) {
             return new HODuration(this.seasons - diff.seasons, this.days - diff.days);
+        }
+
+        public String toString(){
+            return seasons + " (" + days + ")";
+        }
+        public double toDouble() { return seasons + days/112.; }
+
+        @Override
+        public int compareTo(@NotNull HODateTime.HODuration o) {
+            int ret = Integer.compare(this.seasons, o.seasons);
+            if (ret==0) ret = Integer.compare(this.days, o.days);
+            return ret;
         }
     }
 
