@@ -10,11 +10,11 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
 
-
 public class ColorLabelEntry extends JLabel implements IHOTableEntry {
 
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+
     public static final Color BG_PLAYERSPECIALVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
     public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
     public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);
@@ -228,7 +228,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     /**
-     * @param number
+     * @param number Double
      */
     private void setGraphicalChangeValue(double number) {
         setValueAsText(number, null, false, false,
@@ -283,8 +283,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     @Override
     public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof ColorLabelEntry) {
-            final ColorLabelEntry entry = (ColorLabelEntry) obj;
+        if (obj instanceof ColorLabelEntry entry) {
 
             if (number != Float.NEGATIVE_INFINITY) {
                 final double number1 = number;

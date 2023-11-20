@@ -34,6 +34,7 @@ public class XMLStaffParser {
 		var trainer = (Element) root.getElementsByTagName("Trainer").item(0);
 		hash = new MyHashtable();
 		xmlValue2Hash(hash, trainer, "TrainerId");
+		xmlValue2Hash(hash, trainer, "TrainerId", "StaffId");
 		xmlValue2Hash(hash, trainer, "Name");
 		xmlValue2Hash(hash, trainer, "Age");
 		xmlValue2Hash(hash, trainer, "AgeDays");
@@ -41,8 +42,10 @@ public class XMLStaffParser {
 		xmlValue2Hash(hash, trainer, "Cost");
 		xmlValue2Hash(hash, trainer, "CountryID");
 		xmlValue2Hash(hash, trainer, "TrainerType");
+		xmlValue2Hash(hash, trainer, "TrainerType", "StaffType");
 		xmlValue2Hash(hash, trainer, "Leadership");
 		xmlValue2Hash(hash, trainer, "TrainerSkillLevel");
+		xmlValue2Hash(hash, trainer, "TrainerSkillLevel", "StaffLevel");
 		xmlValue2Hash(hash, trainer, "TrainerStatus");
 		returnList.add(hash);
 

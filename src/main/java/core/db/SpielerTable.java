@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
+import java.util.stream.Collectors;
 
 final class SpielerTable extends AbstractTable {
 
@@ -58,7 +59,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((p)->((Player)p).getExperience()).setSetter((p,v)->((Player)p).setExperience((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Gehalt").setGetter((p)->((Player)p).getSalary()).setSetter((p,v)->((Player)p).setGehalt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((p)->((Player)p).getNationalityAsInt()).setSetter((p,v)->((Player)p).setNationalityAsInt((int)v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((p)->((Player)p).getMarktwert()).setSetter((p,v)->((Player)p).setTSI((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((p)->((Player)p).getTSI()).setSetter((p,v)->((Player)p).setTSI((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Verletzt").setGetter((p)->((Player)p).getInjuryWeeks()).setSetter((p,v)->((Player)p).setInjuryWeeks((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("ToreFreund").setGetter((p)->((Player)p).getToreFreund()).setSetter((p,v)->((Player)p).setToreFreund((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("ToreLiga").setGetter((p)->((Player)p).getSeasonSeriesGoal()).setSetter((p,v)->((Player)p).setToreLiga((int)v)).setType(Types.INTEGER).isNullable(false).build(),
@@ -100,9 +101,11 @@ final class SpielerTable extends AbstractTable {
 
 	@Override
 	protected String[] getCreateIndexStatement() {
-		return new String[] {
-			"CREATE INDEX iSpieler_1 ON " + getTableName() + "(" + columns[1].getColumnName() + "," + columns[2].getColumnName() + ")",
-			"CREATE INDEX iSpieler_2 ON " + getTableName() + "(" + columns[0].getColumnName() + ")" };
+		return new String[]{
+				"CREATE INDEX iSpieler_1 ON " + getTableName() + "(SpielerID,Datum)",
+				"CREATE INDEX iSpieler_2 ON " + getTableName() + "(HRF_ID)",
+				"CREATE INDEX iSpieler_3 ON " + getTableName() + "(LASTNAME,FIRSTNAME,DATUM)"
+		};
 	}
 
 	/**
@@ -132,7 +135,7 @@ final class SpielerTable extends AbstractTable {
 	 * @param hrfID id of hrf
 	 * @return list of pLayers
 	 */
-	List<Player> loadPlayers(int hrfID) {
+	List<Player> loadPlayersBefore(int hrfID) {
 		return load(Player.class, hrfID);
 	}
 
@@ -231,5 +234,32 @@ final class SpielerTable extends AbstractTable {
 		}
 
 		return -99;
+	}
+
+	private final PreparedSelectStatementBuilder loadPlayerBeforeStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");
+	public Player loadPlayerBefore(int playerId, Timestamp before) {
+		return loadOne(Player.class, adapter.executePreparedQuery(loadPlayerBeforeStatementBuilder.getStatement(), playerId, before));
+	}
+
+	private final PreparedSelectStatementBuilder loadPlayerAfterStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum>=? ORDER BY Datum ASC LIMIT 1");
+	public Player loadPlayerAfter(int playerId, Timestamp before) {
+		return loadOne(Player.class, adapter.executePreparedQuery(loadPlayerAfterStatementBuilder.getStatement(), playerId, before));
+	}
+
+	private final DBManager.PreparedStatementBuilder loadPlayersBeforeStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM");
+	public List<Player> loadPlayersBefore(String playerName, Timestamp before) {
+		return loadPlayers(loadPlayersBeforeStatementBuilder, playerName, before);
+	}
+
+	private final DBManager.PreparedStatementBuilder loadPlayersAfterStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM");
+	public List<Player> loadPlayersAfter(String playerName, Timestamp after) {
+		return loadPlayers(loadPlayersAfterStatementBuilder, playerName, after);
+	}
+
+	private List<Player> loadPlayers(DBManager.PreparedStatementBuilder builder, String playerName, Timestamp time){
+		var nameParts = playerName.split(" ");
+		var lastName = nameParts[nameParts.length-1];
+		var firstName =  Arrays.stream(nameParts).limit(nameParts.length-1).collect(Collectors.joining(" "));
+		return load(Player.class, adapter.executePreparedQuery(builder.getStatement(), time, playerName, firstName, lastName));
 	}
 }

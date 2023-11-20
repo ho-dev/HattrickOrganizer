@@ -1,15 +1,19 @@
 package core.prediction;
 
 import core.gui.HOMainFrame;
+import core.model.UserParameter;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.io.Serial;
 
 import javax.swing.JDialog;
 
 
 public class MatchPredictionDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public MatchPredictionDialog(MatchEnginePanel panel, String match){
@@ -17,6 +21,14 @@ public class MatchPredictionDialog extends JDialog {
 		initialize(panel);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle(match);
+		addComponentListener(new ComponentAdapter() {
+			public void componentResized(ComponentEvent e) {
+				var comp = (Component)e.getSource();
+				UserParameter.instance().matchPredictionDialog_Width = comp.getWidth();
+				UserParameter.instance().matchPredictionDialog_Height = comp.getHeight();
+			}
+		});
+
 		setVisible(true);
 	}
 
@@ -24,7 +36,7 @@ public class MatchPredictionDialog extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
         getContentPane().add(panel, BorderLayout.CENTER);
         setResizable(true);
-        setSize(900, 600);
+        setSize(UserParameter.instance().matchPredictionDialog_Width, UserParameter.instance().matchPredictionDialog_Height);
 	}
 	
 	@Override

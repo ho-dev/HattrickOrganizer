@@ -12,6 +12,7 @@ import tool.updater.TableModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -21,10 +22,11 @@ import javax.swing.table.TableColumn;
 
 
 class ModuleConfigPanelTable extends JTable implements ActionListener{
+	@Serial
 	private static final long serialVersionUID = 1L;
-	private static String[] stateDescriptions = {HOVerwaltung.instance().getLanguageString("Deactivated"),HOVerwaltung.instance().getLanguageString("Activated"),HOVerwaltung.instance().getLanguageString("Autostart")};
+	private static final String[] stateDescriptions = {HOVerwaltung.instance().getLanguageString("Deactivated"),HOVerwaltung.instance().getLanguageString("Activated"),HOVerwaltung.instance().getLanguageString("Autostart")};
 	protected String[] columnNames = {HOVerwaltung.instance().getLanguageString("Status"),HOVerwaltung.instance().getLanguageString("Name"),HOVerwaltung.instance().getLanguageString("Optionen")};
-	private TableEditor editor = new TableEditor();
+	private final TableEditor editor = new TableEditor();
 
 	
 	ModuleConfigPanelTable(){
@@ -36,9 +38,6 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 		setRowHeight(25);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		getTableHeader().setReorderingAllowed(false);
-		
-
-		
 	}
 	
 	protected TableModel getTableModel() {
@@ -53,8 +52,7 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 			value[i][2] = modules[i].hasConfigPanel()?getButton(modules[i]):"";
 		}
 
-		TableModel model = new TableModel(value, columnNames);
-		return model;
+        return new TableModel(value, columnNames);
 
 	}
 
@@ -78,15 +76,13 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()instanceof JComboBox){
-			JComboBox box = (JComboBox)e.getSource();
+		if(e.getSource() instanceof JComboBox box){
 			IModule module = (IModule)box.getClientProperty("MODULE");
 			int index = box.getSelectedIndex();
 			OptionManager.instance().setRestartNeeded();
 			module.setStatus(index);
 			refresh();
-		} else if(e.getSource() instanceof JButton){
-			JButton button = (JButton)e.getSource();
+		} else if(e.getSource() instanceof JButton button){
 			IModule module = (IModule)button.getClientProperty("MODULE");
 			ModuleConfigDialog dialog = new ModuleConfigDialog((JDialog)getTopLevelAncestor(), module);
 			dialog.setVisible(true);

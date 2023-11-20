@@ -415,7 +415,7 @@ public class HRFStringBuilder {
             var firstName = ht.get("FirstName");
             var lastName = ht.get("LastName");
             var nickName = ht.get("NickName");
-            if (!nickName.isEmpty()) {
+            if (nickName != null && !nickName.isEmpty()) {
                 appendKeyValue(playersStringBuilder, "name", firstName + " '" + nickName + "' " + lastName);
             } else {
                 appendKeyValue(playersStringBuilder, "name", firstName + " " + lastName);

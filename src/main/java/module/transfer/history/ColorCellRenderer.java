@@ -1,33 +1,26 @@
 // %1126721330135:hoplugins.transfers.ui%
 package module.transfer.history;
 
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-
 import java.awt.Color;
 import java.awt.Component;
-
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
-
 
 /**
  * Cell reneder to show an icon for the type of transfer (in or out).
  *
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
-class ColorCellRenderer extends DefaultTableCellRenderer {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-	private static final long serialVersionUID = 1321123377332061442L;
+class ColorCellRenderer extends HODefaultTableCellRenderer {
 
 	public static final Color WHITE = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     public static final Color GREEN = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);//new Color(220, 255, 220);
     public static final Color YELLOW = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);//new Color(255, 255, 200);
 
 
-    private Color color;
+    private final Color color;
 
 
     /**
@@ -46,18 +39,18 @@ class ColorCellRenderer extends DefaultTableCellRenderer {
     @Override
 	public final Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        var comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         if (!isSelected) {
-            this.setBackground(this.color);
+            comp.setBackground(this.color);
         }
 
-        final int intVal = ((Integer) value).intValue();
+//        final int intVal = ((Integer) value).intValue();
+//
+//        if (intVal == -1) {
+//            setText("---");
+//        }
 
-        if (intVal == -1) {
-            setText("---");
-        }
-
-        return this;
+        return comp;
     }
 }

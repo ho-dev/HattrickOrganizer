@@ -333,7 +333,7 @@ public class Player extends AbstractTable.Storable {
     private Integer motherclubId;
     private String motherclubName;
     private Integer matchesCurrentTeam;
-    private int hrf_id;
+    private int hrf_id = -1;
     private Integer htms = null;
     private Integer htms28 = null;
 
@@ -612,13 +612,14 @@ public class Player extends AbstractTable.Storable {
     /**
      * Calculates String for full age and days correcting for the difference between (now and last HRF file)
      *
-     * @return String of age & agedays format is "YY (DDD)"
+     * @return String of age & age days format is "YY (DDD)"
      */
     public String getAgeWithDaysAsString() {
         return getAgeWithDaysAsString(HODateTime.now());
     }
     public String getAgeWithDaysAsString(HODateTime t){
-        return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
+        if (this.m_clhrfDate != null) return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
+        return "";
     }
 
     /**
@@ -643,6 +644,11 @@ public class Player extends AbstractTable.Storable {
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time, HODateTime hrfTime) {
         var age = new HODateTime.HODuration(ageYears, ageDays).plus(HODateTime.HODuration.between(hrfTime, time));
         return age.seasons + " (" + age.days + ")";
+    }
+
+    public HODateTime.HODuration getAgeAtDate(HODateTime date){
+        if ( this.m_clhrfDate != null) return new HODateTime.HODuration(this.getAlter(), this.getAgeDays()).plus(HODateTime.HODuration.between(this.m_clhrfDate, date));
+        return null;
     }
 
     /**
@@ -1256,15 +1262,16 @@ public class Player extends AbstractTable.Storable {
 
     }
 
-
     public String getFullName() {
 
-        if (getNickName().isEmpty())
-        {
-            return getFirstName() + " " +getLastName();
+        if (getNickName().isEmpty()) {
+            if (!getFirstName().isEmpty()) {
+                return getFirstName() + " " + getLastName();
+            }
+            return getLastName();
         }
 
-        return getFirstName() + " '" + getNickName() + "' " +getLastName();
+        return getFirstName() + " '" + getNickName() + "' " + getLastName();
     }
 
     /**
@@ -1814,6 +1821,7 @@ public class Player extends AbstractTable.Storable {
     public int getHrfId() {
         return this.hrf_id;
     }
+    public boolean isTemporary(){return this.hrf_id == -1;}
 
     public void setLastMatchDate(String v) {
         this.m_lastMatchDate = v;
@@ -2692,9 +2700,12 @@ public class Player extends AbstractTable.Storable {
         return this.matchesCurrentTeam;
     }
 
+    private Player playerAsManMarker = null;
+    private ManMarkingPosition manMarkingPosition = null;
+
     /**
-     * Create a clone of the player with modified skill values if man marking is switched on.
-     * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced depending of the distance
+     * Create a clone of the player with modified skill values.
+     * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced depending on the distance
      * between man marker and opponent man marked player
      *
      * @param manMarkingPosition
@@ -2706,40 +2717,42 @@ public class Player extends AbstractTable.Storable {
      *          this player, if no man marking changes are selected
      *          New modified player, if man marking changes are selected
      */
-    public Player createManMarker(ManMarkingPosition manMarkingPosition) {
-        if ( manMarkingPosition == null) return this;
-        var ret = new Player();
-        var skillFactor = (float)(1 - manMarkingPosition.value / 100.);
-        ret.setPlayerSpecialty(this.getPlayerSpecialty());
-        ret.setAgeDays(this.getAgeDays());
-        ret.setAge(this.getAlter());
-        ret.setAgressivitaet(this.getAgressivitaet());
-        ret.setAnsehen(this.getAnsehen());
-        ret.setCharakter(this.getCharakter());
-        ret.setExperience(this.getExperience());
-        ret.setSubExperience(this.getSubExperience());
-        ret.setFirstName(this.getFirstName());
-        ret.setLastName(this.getLastName());
-        ret.setForm(this.getForm());
-        ret.setLeadership(this.getLeadership());
-        ret.setStamina(this.getStamina());
-        ret.setLoyalty(this.getLoyalty());
-        ret.setHomeGrown(this.isHomeGrown());
-        ret.setPlayerID(this.getPlayerID());
-        ret.setInjuryWeeks(this.getInjuryWeeks());
+    public Player getPlayerAsManMarker(ManMarkingPosition manMarkingPosition) {
+        if (manMarkingPosition == null) return this;
+        else if (manMarkingPosition == this.manMarkingPosition) return playerAsManMarker;
+        this.manMarkingPosition = manMarkingPosition;
+        var playerAsManMarker = new Player();
+        var skillFactor = (float) (1 - manMarkingPosition.value / 100.);
+        playerAsManMarker.setPlayerSpecialty(this.getPlayerSpecialty());
+        playerAsManMarker.setAgeDays(this.getAgeDays());
+        playerAsManMarker.setAge(this.getAlter());
+        playerAsManMarker.setAgressivitaet(this.getAgressivitaet());
+        playerAsManMarker.setAnsehen(this.getAnsehen());
+        playerAsManMarker.setCharakter(this.getCharakter());
+        playerAsManMarker.setExperience(this.getExperience());
+        playerAsManMarker.setSubExperience(this.getSubExperience());
+        playerAsManMarker.setFirstName(this.getFirstName());
+        playerAsManMarker.setLastName(this.getLastName());
+        playerAsManMarker.setForm(this.getForm());
+        playerAsManMarker.setLeadership(this.getLeadership());
+        playerAsManMarker.setStamina(this.getStamina());
+        playerAsManMarker.setLoyalty(this.getLoyalty());
+        playerAsManMarker.setHomeGrown(this.isHomeGrown());
+        playerAsManMarker.setPlayerID(this.getPlayerID());
+        playerAsManMarker.setInjuryWeeks(this.getInjuryWeeks());
 
-        ret.setSkillValue(KEEPER, this.getSkillValue(KEEPER));
-        ret.setSkillValue(DEFENDING, skillFactor * this.getSkillValue(DEFENDING));
-        ret.setSkillValue(WINGER, skillFactor * this.getSkillValue(WINGER));
-        ret.setSkillValue(PLAYMAKING, skillFactor * this.getSkillValue(PLAYMAKING));
-        ret.setSkillValue(SCORING, skillFactor * this.getSkillValue(SCORING));
-        ret.setSkillValue(PASSING, skillFactor * this.getSkillValue(PASSING));
-        ret.setSkillValue(STAMINA, this.getSkillValue(STAMINA));
-        ret.setSkillValue(FORM, this.getSkillValue(FORM));
-        ret.setSkillValue(SET_PIECES, this.getSkillValue(SET_PIECES));
-        ret.setSkillValue(LEADERSHIP, this.getSkillValue(LEADERSHIP));
-        ret.setSkillValue(LOYALTY, this.getSkillValue(LOYALTY));
-        return ret;
+        playerAsManMarker.setSkillValue(KEEPER, this.getSkillValue(KEEPER));
+        playerAsManMarker.setSkillValue(DEFENDING, skillFactor * this.getSkillValue(DEFENDING));
+        playerAsManMarker.setSkillValue(WINGER, skillFactor * this.getSkillValue(WINGER));
+        playerAsManMarker.setSkillValue(PLAYMAKING, skillFactor * this.getSkillValue(PLAYMAKING));
+        playerAsManMarker.setSkillValue(SCORING, skillFactor * this.getSkillValue(SCORING));
+        playerAsManMarker.setSkillValue(PASSING, skillFactor * this.getSkillValue(PASSING));
+        playerAsManMarker.setSkillValue(STAMINA, this.getSkillValue(STAMINA));
+        playerAsManMarker.setSkillValue(FORM, this.getSkillValue(FORM));
+        playerAsManMarker.setSkillValue(SET_PIECES, this.getSkillValue(SET_PIECES));
+        playerAsManMarker.setSkillValue(LEADERSHIP, this.getSkillValue(LEADERSHIP));
+        playerAsManMarker.setSkillValue(LOYALTY, this.getSkillValue(LOYALTY));
+        return playerAsManMarker;
     }
 
     public enum ManMarkingPosition {

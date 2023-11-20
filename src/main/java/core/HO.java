@@ -148,15 +148,15 @@ public class HO {
 		}
 
 		// start display splash image
-		final SplashFrame interuptionsWindow = new SplashFrame();
+		final SplashFrame interruptionWindow = new SplashFrame();
 
 		// Backup
-		interuptionsWindow.setInfoText(1, "Backup Database");
+		interruptionWindow.setInfoText(1, "Backup Database");
 		BackupHelper.backup(new File(UserManager.instance().getCurrentUser().getDbFolder()));
 
 
 		// Load user parameters from the DB
-		interuptionsWindow.setInfoText(2, "Initialize Database");
+		interruptionWindow.setInfoText(2, "Initialize Database");
 		DBManager.instance().loadUserParameter();
 
 		// init Theme
@@ -168,31 +168,31 @@ public class HO {
 					+ UserParameter.instance().theme, JOptionPane.WARNING_MESSAGE);
 		}
 		// Init!
-		interuptionsWindow.setInfoText(3, "Initialize Data-Administration");
+		interruptionWindow.setInfoText(3, "Initialize Data-Administration");
 
 		// Ask for language at first start
 		if (DBManager.instance().isFirstStart()) {
-			interuptionsWindow.setVisible(false);
+			interruptionWindow.setVisible(false);
 			new core.option.InitOptionsDialog();
-			interuptionsWindow.setVisible(true);
+			interruptionWindow.setVisible(true);
 		}
 
 		// Check if language file available
-		interuptionsWindow.setInfoText(4, "Check Languagefiles");
+		interruptionWindow.setInfoText(4, "Check Languagefiles");
 		HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
 		HOVerwaltung.instance().setResource(UserParameter.instance().sprachDatei);
 
 		if (DBManager.instance().isFirstStart()) {
-			interuptionsWindow.setVisible(false);
+			interruptionWindow.setVisible(false);
 			JOptionPane.showMessageDialog(null,
 					HOVerwaltung.instance().getLanguageString("firststartup.infowinmessage"),
 					HOVerwaltung.instance().getLanguageString("firststartup.infowinmessage.title"), JOptionPane.INFORMATION_MESSAGE);
-			interuptionsWindow.setVisible(true);
+			interruptionWindow.setVisible(true);
 		}
 
-		interuptionsWindow.setInfoText(5, "Load latest Data");
+		interruptionWindow.setInfoText(5, "Load latest Data");
 		HOVerwaltung.instance().loadLatestHoModel();
-		interuptionsWindow.setInfoText(6, "Load  XtraDaten");
+		interruptionWindow.setInfoText(6, "Load  XtraDaten");
 
 		// Load table columns information
 		UserColumnController.instance().load();
@@ -208,25 +208,25 @@ public class HO {
 		}
 		// Upgrade database configuration
 		if (!DBManager.instance().isFirstStart()) {
-			interuptionsWindow.setInfoText(7, "Upgrade DB configuration");
+			interruptionWindow.setInfoText(7, "Upgrade DB configuration");
 			DBManager.instance().updateConfig();
 		}
 
 
 		// Training
-		interuptionsWindow.setInfoText(8, "Initialize Training");
+		interruptionWindow.setInfoText(8, "Initialize Training");
 
 		// Training estimation calculated on DB manual entries
 
 		TrainingManager.instance();
 
-		interuptionsWindow.setInfoText(9, "Prepare to show");
+		interruptionWindow.setInfoText(9, "Prepare to show");
 		SwingUtilities.invokeLater(() -> {
 			HOMainFrame.instance().setVisible(true);
 
 			// stop display splash image
-			interuptionsWindow.setVisible(false);
-			interuptionsWindow.dispose();
+			interruptionWindow.setVisible(false);
+			interruptionWindow.dispose();
 		});
 	}
 

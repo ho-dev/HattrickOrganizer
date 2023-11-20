@@ -1,89 +1,133 @@
 // %1126721330416:hoplugins.transfers.ui.model%
 package module.transfer.history;
 
-import core.model.HOVerwaltung;
+import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.table.HOTableModel;
+import core.gui.comp.table.UserColumn;
+import core.gui.model.UserColumnController;
+import core.util.CurrencyUtils;
+import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
-import java.io.Serial;
+import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 
 /**
  * TableModel representing transfers for a player.
  *
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
-class PlayerTransferTableModel extends AbstractTableModel {
+public class PlayerTransferTableModel extends HOTableModel {
 
-	@Serial
-    private static final long serialVersionUID = -3205025253995412306L;
-
-    private final List<PlayerTransfer> values;
-    private final String[] colNames;
-
-    //~ Constructors -------------------------------------------------------------------------------
+    private List<PlayerTransfer> values;
 
     /**
      * Creates a PlayerTransferTableModel.
-     *
-     * @param values List of values to show in table.
      */
-    PlayerTransferTableModel(List<PlayerTransfer> values) {
-        super();
-        this.colNames = new String[]{
-                HOVerwaltung.instance().getLanguageString("Datum"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("Season"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("Week"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("Buyer"), //$NON-NLS-1$
-                "", //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("Seller"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("Price"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("ls.player.tsi"), //$NON-NLS-1$
-                HOVerwaltung.instance().getLanguageString("ls.player.age"),
-                "" //$NON-NLS-1$
-        };
+    public PlayerTransferTableModel() {
+        super(UserColumnController.ColumnModelId.PLAYERTRANSFER, "PlayerTransfers");
+        int id = 0;
+        columns = new ArrayList<>(List.of(
+                new TransferTableColumn(id++, "Datum") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Season") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(transfer.getSeason(), "" + transfer.getSeason(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Week") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(transfer.getWeek(), "" + transfer.getWeek(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Buyer") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(transfer.getBuyerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Type") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(PlayerTransfer.BUY, String.valueOf(PlayerTransfer.BUY), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Seller") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(transfer.getSellerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"Price") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
+                    }
+                },
+                new TransferTableColumn(id++,"ls.player.tsi") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(transfer.getTsi(), String.valueOf(transfer.getTsi()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"ls.player.age") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        String text = "";
+                        double sortValue = -1;
+                        if ((transfer.getPlayerName() != null) && (!transfer.getPlayerName().isEmpty())) {
+                            var player = transfer.getPlayerInfo();
+                            if (player != null) {
+                                var age = player.getAgeAtDate(transfer.getDate());
+                                if (age != null) {
+                                    text = age.toString();
+                                    sortValue = age.toDouble();
+                                }
+                            }
+                        }
+                        return new ColorLabelEntry(sortValue, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TransferTableColumn(id++,"ls.transfer.motherclubfee") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getMotherClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);
+                    }
+                },
+                new TransferTableColumn(id++,"ls.transfer.previousclubfee") {
+                    @Override
+                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPreviousClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);
+                    }
+                }
+        )).toArray(new TransferTableColumn[0]);
+    }
+
+    public void setValues(List<PlayerTransfer> values){
         this.values = values;
+        initData();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /** {@inheritDoc} */
-    public final int getColumnCount() {
-        return colNames.length;
-    }
-
-    /** {@inheritDoc} */
     @Override
-	public final String getColumnName(int column) {
-        return colNames[column];
-    }
-
-    /** {@inheritDoc} */
-    public final int getRowCount() {
-        return values.size();
-    }
-
-    /** {@inheritDoc} */
-	public boolean isCellEditable(int row, int col) {
-        return col == 8;
-    }
-
-    /** {@inheritDoc} */
-    public final Object getValueAt(int rowIndex, int columnIndex) {
-        final PlayerTransfer transfer = values.get(rowIndex);
-
-        return switch (columnIndex) {
-            case 0 -> transfer.getDate().toLocaleDateTime();
-            case 1 -> transfer.getSeason();
-            case 2 -> transfer.getWeek();
-            case 3 -> transfer.getBuyerName();
-            case 4 -> PlayerTransfer.BUY;
-            case 5 -> transfer.getSellerName();
-            case 6 -> transfer.getPrice();
-            case 7 -> transfer.getTsi();
-            case 8 -> transfer.getPlayerInfo()!=null?transfer.getPlayerInfo().getAgeWithDaysAsString(transfer.getDate()):"";
-            case 9 -> new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
-            default -> ""; //$NON-NLS-1$
-        };
+    protected void initData() {
+        UserColumn[] displayedColumns = getDisplayedColumns();
+        m_clData = new Object[values.size()][columns.length];
+        int playernum = 0;
+        for (var value : values) {
+            int columnnum = 0;
+            for (var col : displayedColumns) {
+                m_clData[playernum][columnnum] = ((TransferTableColumn) col).getTableEntry(value);
+                columnnum++;
+            }
+            playernum++;
+        }
+        fireTableDataChanged();
     }
 }

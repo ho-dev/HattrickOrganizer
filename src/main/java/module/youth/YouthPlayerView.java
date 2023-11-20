@@ -26,18 +26,17 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     public static final String VERTICALSPLIT1_POSITION = "YouthPlayerView.VerticalSplitPosition";
     public static final String VERTICALSPLIT2_POSITION = "YouthPlayerView.VerticalSplit2Position";
-    private HOLinesChart youthSkillChart;
+    private final HOLinesChart youthSkillChart;
 
-    private JTable playerOverviewTable;
+    private final JTable playerOverviewTable;
     private YouthPlayerOverviewTableModel playerOverviewTableModel;
     private YouthTableSorter playerOverviewTableSorter;
 
-    private JLabel playerNameLabel;
-    private YouthSkillInfoEditor[] playerSkillInfoEditors;
-    private JEditorPane playerScoutCommentField;
-    private JTable playerDetailsTable;
+    private final JLabel playerNameLabel;
+    private final YouthSkillInfoEditor[] playerSkillInfoEditors;
+    private final JEditorPane playerScoutCommentField;
+    private final JTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
-    private YouthTableSorter playerDetailsTableSorter;
 
     public YouthPlayerView() {
         super();
@@ -90,7 +89,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor(skillIDColorMap.get(YouthPlayer.skillIds[i]));
+            CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
             skillInfoEditor.addCurrentValueChangeListener(currentValueChangeListener);
+            StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
             skillInfoEditor.addStartValueChangeListener(startValueChangeListener);
 
             playerSkillInfoEditors[i] = skillInfoEditor;
@@ -183,7 +184,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             playerDetailsTable.setRowSelectionAllowed(true);
 
-            playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
+            YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
             playerDetailsTable.setModel(playerDetailsTableSorter);
             playerDetailsTableModel.restoreUserSettings(playerDetailsTable);
         }
@@ -242,8 +243,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
-    private CurrentValueChangeListener currentValueChangeListener = new CurrentValueChangeListener();
-    private StartValueChangeListener startValueChangeListener = new StartValueChangeListener();
     private boolean isRefreshingPlayerDetails =false;
 
     final private Map<Skills.HTSkillID, Color> skillIDColorMap = Map.of(

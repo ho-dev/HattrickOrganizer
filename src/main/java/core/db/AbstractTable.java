@@ -151,7 +151,7 @@ public abstract class AbstractTable {
 	 */
 	public <T extends Storable> T loadOne(Class<T> tClass, ResultSet rs) {
 		var list = load(tClass, rs, 1);
-		if ( list.size() > 0){
+		if (!list.isEmpty()){
 			return list.get(0);
 		}
 		return null;
@@ -450,7 +450,7 @@ public abstract class AbstractTable {
 		 * @param table table
 		 */
 		public PreparedDeleteStatementBuilder(AbstractTable table) {
-			super("DELETE FROM " + table.getTableName() +  table.createSQLWhere());
+			this(table, table.createSQLWhere());
 		}
 
 		/**
@@ -496,20 +496,30 @@ public abstract class AbstractTable {
 	 */
 	public static class PreparedSelectStatementBuilder extends DBManager.PreparedStatementBuilder {
 		/**
-		 * construct select statement with user defined where clause
-		 * @param table derived table
+		 * Construct select statement with user defined where clause
+		 * @param table Table name
 		 * @param where String sql where clause
+		 * @param select Selected column list
 		 */
-		public PreparedSelectStatementBuilder(AbstractTable table, String where) {
-			super("SELECT * FROM " + table.getTableName() + " " + where);
+		public PreparedSelectStatementBuilder(AbstractTable table, String where, String select) {
+			super("SELECT " + select + " FROM " + table.getTableName() + " " + where);
 		}
 
 		/**
-		 * construct standard select statement using the first idcolumns to build the where clause
+		 * Construct standard select * from table where ... statement
+		 * @param table Table name
+		 * @param where Where clause inclusive WHERE
+		 */
+		public PreparedSelectStatementBuilder(AbstractTable table, String where) {
+			this(table, where, "*");
+		}
+
+		/**
+		 * Construct standard select statement using the first idcolumns to build the where clause
 		 * @param table derived table
 		 */
 		public PreparedSelectStatementBuilder(AbstractTable table) {
-			super("SELECT * FROM " + table.getTableName() + table.createSQLWhere());
+			this(table, table.createSQLWhere());
 		}
 	}
 
@@ -546,6 +556,27 @@ public abstract class AbstractTable {
 		return preparedSelectStatementBuilder.getStatement();
 	}
 
+	public static class PreparedCheckIfExistStatementBuilder extends PreparedSelectStatementBuilder {
+		public PreparedCheckIfExistStatementBuilder(AbstractTable table, String where) {
+			super(table, where, "1");
+		}
+
+		public PreparedCheckIfExistStatementBuilder(AbstractTable table) {
+			this(table, table.createSQLWhere());
+		}
+	}
+
+	protected PreparedCheckIfExistStatementBuilder preparedCheckIfExistStatementBuilder;
+	protected PreparedStatement getPreparedCheckIfExistStatement(){
+		if ( preparedCheckIfExistStatementBuilder==null){
+			preparedCheckIfExistStatementBuilder=createPreparedCheckIfExistStatementBuilder();
+		}
+		return preparedCheckIfExistStatementBuilder.getStatement();
+	}
+	protected PreparedCheckIfExistStatementBuilder createPreparedCheckIfExistStatementBuilder() {
+		return new PreparedCheckIfExistStatementBuilder(this);
+	}
+
 	/**
 	 * execute the standard select statement
 	 * @param whereValues where values
@@ -563,11 +594,9 @@ public abstract class AbstractTable {
 	protected boolean isStored(Object ... whereValues) {
 		boolean ret = false;
 		try{
-			var rs = executePreparedSelect(whereValues);
+			var rs = executePreparedCheckIfExist(whereValues);
 			if (rs != null) {
-				if (rs.next() ) {
-					ret = true;
-				}
+				ret = rs.next();
 				rs.close();
 			}
 		}
@@ -575,6 +604,15 @@ public abstract class AbstractTable {
 			HOLogger.instance().error(getClass(), "load: " + exception);
 		}
 		return ret;
+	}
+
+	/**
+	 * Create a select statement checking the existence of a record
+	 * @param whereValues record keys values
+	 * @return Non-empty result set, if records exists
+	 */
+	private ResultSet executePreparedCheckIfExist(Object ... whereValues) {
+		return adapter.executePreparedQuery(getPreparedCheckIfExistStatement(), whereValues);
 	}
 
 	/**

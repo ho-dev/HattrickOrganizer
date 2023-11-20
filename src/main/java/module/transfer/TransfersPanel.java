@@ -8,17 +8,16 @@ import core.model.player.Player;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
 import module.transfer.transfertype.TransferTypePane;
-
 import java.awt.BorderLayout;
-import java.util.Iterator;
+import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
-
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 public class TransfersPanel extends JPanel implements IRefreshable {
 
+	@Serial
 	private static final long serialVersionUID = -5312017309355429020L;
 	private HistoryPane historyPane;
 	private List<Player> oldplayers;
@@ -57,13 +56,8 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	}
 
 	public void refresh() {
-		// final JWindow waitWindow = new
-		// LoginWaitDialog(HOMainFrame.instance());
-		// waitWindow.setVisible(true);
-
 		// Check for outdated players.
-		final List<Player> tmp = new Vector<>();
-		tmp.addAll(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        final List<Player> tmp = new Vector<>(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tmp.removeAll(this.players);
 		final List<Player> allOutdated = new Vector<>(tmp);
 
@@ -73,19 +67,14 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		tmp.removeAll(this.oldplayers);
 		allOutdated.addAll(tmp);
 
-		for (final Player player : allOutdated) {
-			if (player.getPlayerID() < 0) {
-				allOutdated.remove(player);
-			}
-		}
+        allOutdated.removeIf(player -> player.getPlayerID() < 0);
 		boolean success = false;
-		if ((allOutdated.size() > 0) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).size() == 0)) {
+		if ((!allOutdated.isEmpty()) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).isEmpty())) {
 			success = XMLParser.updateTeamTransfers(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		}
 		
 		// If download is cancelled, the below will give authorization requests for each player.
 		// Don't do this if first download access was cancelled. This is relevant on hrf import to empty db.
-		
 		// Also, Db is called to do downloads? Truly messed up. 
 		if (success) {
 			for (final Player player : allOutdated) {
@@ -94,15 +83,12 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		}
 
 		reloadData();
-
 	}
 
 	/**
 	 * Refresh the data in the plugin
-	 * 
-	 * @return List of transfers shown in the plugin
 	 */
-	private List<PlayerTransfer> reloadData() {
+	private void reloadData() {
 		this.players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		this.oldplayers = HOVerwaltung.instance().getModel().getFormerPlayers();
 
@@ -110,11 +96,13 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 		historyPane.refresh();
 		transferTypePane.refresh(transfers);
-		return transfers;
 	}
 
 	public TransferScoutPanel getScoutPanel() {
 		return scoutPanel;
 	}
 
+	public void storeUserSettings() {
+		historyPane.storeUserSettings();
+	}
 }

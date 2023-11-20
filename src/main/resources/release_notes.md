@@ -2,7 +2,7 @@
 
 ## Highlights
 * refactoring rating prediction (implement Schum rating)
-
+* refactoring of the transfer module. Calculation of transfer fee income.
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -11,9 +11,11 @@
 ### Squad
 * fix length of owner notes in players' database table (#1816)
 * player avatar image can be reloaded (#1815)
+* fix error player download nickname null pointer exception (#1938)
 * fix initial sorting by player group (#1909)
 
 ### Team Analyzer
+* restore size of match prediction dialog box (#1898)
 
 ### Rating
 * implement schum rating prediction (#1782)
@@ -26,8 +28,11 @@
 ### Statistics
 
 ### Transfer
+* refactoring of the transfer module. Calculation of transfer fee income. (#245)
+* fix transfer scout's copy and paste of own players (#1897)
 
 ### Training
+* fix scrolling of training table (#1936)
 
 ### League
 
