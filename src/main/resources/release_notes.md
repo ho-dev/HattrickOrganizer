@@ -30,6 +30,7 @@
 * fix transfer scout's copy and paste of own players (#1897)
 
 ### Training
+* fix scrolling of training table (#1936)
 
 ### League
 
