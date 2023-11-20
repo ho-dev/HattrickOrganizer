@@ -12,6 +12,7 @@
 * fix length of owner notes in players' database table (#1816)
 * player avatar image can be reloaded (#1815)
 * fix error player download nickname null pointer exception (#1938)
+* fix initial sorting by player group (#1909)
 
 ### Team Analyzer
 * restore size of match prediction dialog box (#1898)
@@ -42,10 +43,11 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - October 21, 2023
+Reports by Contributors - September 24, 2023 - November 20, 2023
 
 * Georgi 10
 * Lidegand 3
+* sich 3
 * wsbrenk 3
 
-Total 16
+Total 19

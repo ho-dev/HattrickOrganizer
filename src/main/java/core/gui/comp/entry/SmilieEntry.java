@@ -6,6 +6,7 @@ import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.SwingConstants;
@@ -17,10 +18,10 @@ import javax.swing.SwingConstants;
 public class SmilieEntry extends DoubleLabelEntries {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ColorLabelEntry manuell = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final ColorLabelEntry manuell = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                           ColorLabelEntry.BG_STANDARD,
                                                           SwingConstants.RIGHT);
-    private ColorLabelEntry team = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
+    private final ColorLabelEntry team = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
                                                        ColorLabelEntry.BG_STANDARD,
                                                        SwingConstants.LEFT);
     private Player player;
@@ -46,43 +47,40 @@ public class SmilieEntry extends DoubleLabelEntries {
 
     @Override
 	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof SmilieEntry) {
-            final SmilieEntry entry = (SmilieEntry) obj;
+        if (obj instanceof SmilieEntry entry) {
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {
-                int ergebnis = 0;
-
-                //Beide null -> Der ManuelleSmilie entscheidet
-                if (((entry.getPlayer().getTeamGroup() == null)
-                        || entry.getPlayer().getTeamGroup().equals(""))
-                        && ((getPlayer().getTeamGroup() == null)
-                        || getPlayer().getTeamGroup().equals(""))) {
-                } else if ((entry.getPlayer().getTeamGroup() == null)
-                        || entry.getPlayer().getTeamGroup().equals("")) {
-                    ergebnis = 1;
-                } else if ((getPlayer().getTeamGroup() == null)
-                        || getPlayer().getTeamGroup().equals("")) {
-                    ergebnis = -1;
-                } else {
-                    ergebnis = entry.getPlayer().getTeamGroup().compareTo(getPlayer()
-                            .getTeamGroup());
+                int result = 0;
+                var thisGroup = this.getPlayer().getTeamGroup();
+                var entryGroup = entry.getPlayer().getTeamGroup();
+                if (!StringUtils.isEmpty(thisGroup)){
+                    if ( !StringUtils.isEmpty(entryGroup )){
+                        result = thisGroup.compareTo(entryGroup);
+                    }
+                    else {
+                        return -1;
+                    }
+                }
+                else if ( !StringUtils.isEmpty(entryGroup )){
+                    return 1;
                 }
 
                 // if equal check lineup
-                if (ergebnis == 0) {
+                if (result == 0) {
                     var team = HOVerwaltung.instance().getModel().getCurrentLineupTeam();
-                    if (team == null) return 0;
                     final MatchRoleID entrySort = team.getLineup().getPositionByPlayerId(entry.getPlayer().getPlayerID());
                     final MatchRoleID sort = team.getLineup().getPositionByPlayerId(getPlayer().getPlayerID());
-                    if ((sort == null) && (entrySort == null)) {
-                        ergebnis = 0;
-                    } else if (sort == null) {
-                        ergebnis = -1;
-                    } else if (entrySort == null) {
-                        ergebnis = 1;
-                    } else ergebnis = Integer.compare(entrySort.getSortId(), sort.getSortId());
+                    if (sort != null) {
+                        if (entrySort != null) {
+                            result = Integer.compare(entrySort.getSortId(), sort.getSortId()); // inverse direction (Keeper is top)
+                        } else {
+                            return 1;
+                        }
+                    } else if (entrySort != null) {
+                        return -1;
+                    }
                 }
-                return ergebnis;
+                return result;
             }
         }
         return 0;
@@ -91,13 +89,13 @@ public class SmilieEntry extends DoubleLabelEntries {
     @Override
 	public final void updateComponent() {
         if (player != null) {
-            if ((player.getTeamGroup() != null) && !player.getTeamGroup().equals("")) {
+            if ((player.getTeamGroup() != null) && !player.getTeamGroup().isEmpty()) {
                 team.setIcon(GroupTeamFactory.instance().getActiveGroupIcon(player.getTeamGroup()));
             } else {
                 team.clear();
             }
 
-            if ((player.getInfoSmiley() != null) && !player.getInfoSmiley().equals("")) {
+            if ((player.getInfoSmiley() != null) && !player.getInfoSmiley().isEmpty()) {
                 manuell.setIcon(ImageUtilities.getSmileyIcon(player.getInfoSmiley()));
             } else {
                 manuell.clear();

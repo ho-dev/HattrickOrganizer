@@ -106,18 +106,9 @@ public class RatingTableEntry extends AbstractHOTableEntry {
     }
 
 	public final int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof RatingTableEntry) {
-            final RatingTableEntry entry = (RatingTableEntry) obj;
-
-            if (getRating() < entry.getRating()) {
-                return -1;
-            } else if (getRating() > entry.getRating()) {
-                return 1;
-            } else {
-                return 0;
-            }
+        if (obj instanceof RatingTableEntry entry) {
+            return Float.compare(getRating(), entry.getRating());
         }
-
         return 0;
     }
 
