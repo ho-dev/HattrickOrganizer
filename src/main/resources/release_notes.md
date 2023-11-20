@@ -14,6 +14,7 @@
 * fix error player download nickname null pointer exception (#1938)
 
 ### Team Analyzer
+* restore size of match prediction dialog box (#1898)
 
 ### Rating
 * implement schum rating prediction (#1782)

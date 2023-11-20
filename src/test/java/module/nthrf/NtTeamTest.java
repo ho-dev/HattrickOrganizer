@@ -56,7 +56,8 @@ public class NtTeamTest {
                   </Team>
                 </HattrickData>""";
 
-        var ntteam = new NtTeamDetails(xml);
+        var ntteam = new NtTeamDetails();
+        ntteam.parseDetails(xml);
 
         Assertions.assertEquals(9, ntteam.getMorale());
         Assertions.assertEquals(6, ntteam.getSelfConfidence());
