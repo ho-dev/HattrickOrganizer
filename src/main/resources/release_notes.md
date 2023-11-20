@@ -38,10 +38,11 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - October 21, 2023
+Reports by Contributors - September 24, 2023 - November 20, 2023
 
 * Georgi 10
 * Lidegand 3
+* sich 3
 * wsbrenk 3
 
-Total 16
+Total 19
