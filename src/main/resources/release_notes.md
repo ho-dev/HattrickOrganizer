@@ -40,6 +40,7 @@
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
+* Add Kotlin support to codebase
 
 ## Translations
 
