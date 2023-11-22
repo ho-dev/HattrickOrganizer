@@ -154,7 +154,7 @@ public class OutputPanel extends LazyImagePanel {
             for (int i = 0; i < tblModel.getRowCount(); i++) {
                 String val = (String) tblModel.getValueAt(i, tblModel.getPlayerIdColumn());
                 int id = Integer.parseInt(val);
-                if (player.getPlayerID() == id) {
+                if (player.getPlayerId() == id) {
                     int viewIndex = this.outputTable.convertRowIndexToView(i);
                     this.outputTable.setRowSelectionInterval(viewIndex, viewIndex);
                     break;

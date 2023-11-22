@@ -1,6 +1,5 @@
 package tool.injury;
 
-import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -136,7 +135,7 @@ class InjuryDetailPanel extends JPanel {
                 return;
             }
 
-            age.setText("" + player.getAlter());
+            age.setText("" + player.getAge());
             injury.setText("" + player.getInjuryWeeks());
 
             String tsi = player.getLatestTSINotInjured();

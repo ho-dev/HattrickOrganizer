@@ -14,8 +14,6 @@ import module.specialEvents.filter.Filter;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -196,7 +194,7 @@ public class SpecialEventsDM {
 
 			boolean playerFound = false;
 			for (Player player : players) {
-				if (isInvolved(player.getPlayerID(), highlight)) {
+				if (isInvolved(player.getPlayerId(), highlight)) {
 					// player found in list of current players
 					playerFound = true;
 					break;

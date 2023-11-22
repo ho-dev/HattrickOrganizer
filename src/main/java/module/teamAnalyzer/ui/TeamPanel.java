@@ -202,13 +202,13 @@ public class TeamPanel extends JPanel {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
                 spotLineup.setAppearance(0);
                 spotLineup.setName(" " + player.getShortName());
-                spotLineup.setPlayerId(player.getPlayerID());
-                spotLineup.setSpecialEvent(player.getPlayerSpecialty());
+                spotLineup.setPlayerId(player.getPlayerId());
+                spotLineup.setSpecialEvent(player.getSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
                 spotLineup.setRating(ratingPredictionModel.getPlayerMatchAverageRating(player, lineup.getEffectivePos4PositionID(spot)));
 
-                int cards = player.getCards();
+                int cards = player.getTotalCards();
                 int injury =  player.getInjuryWeeks();
 
                 int injuryStatus, bookingStatus;
@@ -226,7 +226,7 @@ public class TeamPanel extends JPanel {
                     default -> injuryStatus = PlayerDataManager.INJURED;
                 }
 
-                int transferListedStatus  = player.getTransferlisted() * PlayerDataManager.TRANSFER_LISTED;
+                int transferListedStatus  = player.getTransferListed() * PlayerDataManager.TRANSFER_LISTED;
 
                 int status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
                 spotLineup.setStatus(status);

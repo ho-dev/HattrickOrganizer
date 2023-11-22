@@ -59,28 +59,28 @@ public class EPVData implements Cloneable {
      */
     public EPVData(Player s) {
         setPlayerName(s.getFullName());
-        setAge(s.getAlter());
+        setAge(s.getAge());
         setAgeDays(s.getAgeDays());
-        setTSI(s.getTSI());
+        setTSI(s.getTsi());
         setForm(s.getForm());
         setStamina(s.getStamina() + s.getSub4Skill(PlayerSkill.STAMINA));
-        setGoalKeeping(s.getGKskill() + s.getSub4Skill(PlayerSkill.KEEPER));
-        setPlayMaking(s.getPMskill()
+        setGoalKeeping(s.getGoalkeeperSkill() + s.getSub4Skill(PlayerSkill.KEEPER));
+        setPlayMaking(s.getPlaymakingSkill()
                       + s.getSub4Skill(PlayerSkill.PLAYMAKING));
-        setPassing(s.getPSskill() + s.getSub4Skill(PlayerSkill.PASSING));
-        setWing(s.getWIskill() + s.getSub4Skill(PlayerSkill.WINGER));
-        setDefense(s.getDEFskill() + s.getSub4Skill(PlayerSkill.DEFENDING));
-        setAttack(s.getSCskill() + s.getSub4Skill(PlayerSkill.SCORING));
-        setSetPieces(s.getSPskill() + s.getSub4Skill(PlayerSkill.SET_PIECES));
+        setPassing(s.getPassingSkill() + s.getSub4Skill(PlayerSkill.PASSING));
+        setWing(s.getWingerSkill() + s.getSub4Skill(PlayerSkill.WINGER));
+        setDefense(s.getDefendingSkill() + s.getSub4Skill(PlayerSkill.DEFENDING));
+        setAttack(s.getScoringSkill() + s.getSub4Skill(PlayerSkill.SCORING));
+        setSetPieces(s.getSetPiecesSkill() + s.getSub4Skill(PlayerSkill.SET_PIECES));
 
         setExperience(s.getExperience());
         setLeadership(s.getLeadership());
-        setAggressivity(s.getAgressivitaet());
-        setHonesty(s.getCharakter());
-        setPopularity(s.getAnsehen());
-        setSpeciality(s.getPlayerSpecialty());
+        setAggressivity(s.getAggressivity());
+        setHonesty(s.getGentleness());
+        setPopularity(s.getHonesty());
+        setSpeciality(s.getSpecialty());
         
-        setPlayerId(s.getPlayerID());
+        setPlayerId(s.getPlayerId());
         
         normalizeSkill();
     }

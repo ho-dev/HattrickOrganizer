@@ -74,7 +74,7 @@ public class LineupTableModel extends HOTableModel {
 	public final @Nullable Player getPlayer(int id) {
 		if (id > 0) {
 			for(Player m_vPlayer : m_vPlayers) {
-				if (m_vPlayer.getPlayerID() == id) return m_vPlayer;
+				if (m_vPlayer.getPlayerId() == id) return m_vPlayer;
 			}
 		}
 

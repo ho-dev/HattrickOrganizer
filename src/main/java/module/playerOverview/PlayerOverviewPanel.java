@@ -40,8 +40,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 *            the id of the player to select.
 	 */
 	public void setPlayer(Player player) {
-		playerOverviewTableName.setPlayer(player.getPlayerID());
-		playerOverviewTable.setSpieler(player.getPlayerID());
+		playerOverviewTableName.setPlayer(player.getPlayerId());
+		playerOverviewTable.setSpieler(player.getPlayerId());
 		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
@@ -232,7 +232,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 					if (row == -1) {
 						var player = HOMainFrame.instance().getSelectedPlayer();
 						if ( player != null){
-							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerID());
+							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerId());
 							selectRow(playerOverviewTableName,row);
 							return;
 						}

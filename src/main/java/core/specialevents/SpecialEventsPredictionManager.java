@@ -121,10 +121,10 @@ public class SpecialEventsPredictionManager {
             Player scorer = getPlayer(mid.getPlayerId());
             int opponentGoalkeeperSkill = 0;
             Player keeper = getOpponentPlayerByPosition(IMatchRoleID.keeper);
-            if (keeper != null) opponentGoalkeeperSkill = keeper.getGKskill();
+            if (keeper != null) opponentGoalkeeperSkill = keeper.getGoalkeeperSkill();
             return SpecialEventsPrediction.createIfInRange(position,type,
                     1, 10-skillbonus, -10-skillbonus,
-                    scorer.getSCskill() -  opponentGoalkeeperSkill);
+                    scorer.getScoringSkill() -  opponentGoalkeeperSkill);
         }
 
         public double getOpponentGoalProbability(IMatchRoleID scorer) {
@@ -149,10 +149,10 @@ public class SpecialEventsPredictionManager {
             Player scorer = getOpponentPlayer(mid.getPlayerId());
             int goalkeeperSkill = 0;
             Player keeper = getPlayerByPosition(IMatchRoleID.keeper);
-            if (keeper != null) goalkeeperSkill = keeper.getGKskill();
+            if (keeper != null) goalkeeperSkill = keeper.getGoalkeeperSkill();
             return SpecialEventsPrediction.createIfInRange(position,type,
                     1, 10-skillbonus, -10-skillbonus,
-                    scorer.getSCskill() -  goalkeeperSkill);
+                    scorer.getScoringSkill() -  goalkeeperSkill);
         }
 
         public double getOpponentRatingIndirectSetPiecesDef() {
@@ -217,7 +217,7 @@ public class SpecialEventsPredictionManager {
             if (!this.playerInLineup.containsKey(matchRoleID.getPlayerId())) {
                 Player player = model.getCurrentPlayer(matchRoleID.getPlayerId());
                 if (player != null) {
-                    this.playerInLineup.put(player.getPlayerID(), player);
+                    this.playerInLineup.put(player.getPlayerId(), player);
                 }
             }
         }
@@ -244,33 +244,33 @@ public class SpecialEventsPredictionManager {
                     int spec = latestPlayerInfo.getSpecialEvent();
                     int role = playerPerformance.getMatchLineupPosition().getPosition();
                     player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
-                    player.setPlayerID(playerPerformance.getSpielerId());
+                    player.setPlayerId(playerPerformance.getSpielerId());
                     player.setLastName(playerPerformance.getSpielerName());
                     player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
                     player.setExperience(latestPlayerInfo.getExperience());
                     player.setAge(age);
-                    player.setGehalt(wage);
-                    player.setTSI(tsi);
+                    player.setWage(wage);
+                    player.setTsi(tsi);
                     player.setForm((int) form);
-                    player.setPlayerSpecialty(spec);
+                    player.setSpecialty(spec);
 
                     String pInfo = String.format(
                             "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
                             player.getFullName(),
-                            player.getAlter(),
-                            player.getTSI(),
-                            player.getSalary(),
+                            player.getAge(),
+                            player.getTsi(),
+                            player.getWage(),
                             player.getForm(),
                             player.getStamina(),
                             player.getExperience(),
-                            player.getGKskill(),
-                            player.getDEFskill(),
-                            player.getWIskill(),
-                            player.getPMskill(),
-                            player.getPSskill(),
-                            player.getSCskill(),
-                            player.getSPskill(),
+                            player.getGoalkeeperSkill(),
+                            player.getDefendingSkill(),
+                            player.getWingerSkill(),
+                            player.getPlaymakingSkill(),
+                            player.getPassingSkill(),
+                            player.getScoringSkill(),
+                            player.getSetPiecesSkill(),
                             playerPerformance.getStatusAsText()
                     );
 //                    HOLogger.instance().debug(getClass(), pInfo);
@@ -290,7 +290,7 @@ public class SpecialEventsPredictionManager {
                 // PLayer SOLD, SUSPENDED or INJURED
                 OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getSpielerId());
                 if (player != null) {
-                    opponentPlayerInLineup.remove(player.getPlayerID());
+                    opponentPlayerInLineup.remove(player.getPlayerId());
                 }
             }
         }

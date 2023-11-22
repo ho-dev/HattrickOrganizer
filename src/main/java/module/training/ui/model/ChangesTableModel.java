@@ -86,9 +86,9 @@ public class ChangesTableModel extends AbstractTableModel {
 		case 4:
 			return PlayerAbility.getNameForSkill(change.getSkillup().getValue(), true);
 		case 5:
-			return Boolean.valueOf(change.getPlayer().isOld());
+			return Boolean.valueOf(change.getPlayer().isGoner());
 		case COL_PLAYER_ID:
-			return Integer.toString(change.getPlayer().getPlayerID());
+			return Integer.toString(change.getPlayer().getPlayerId());
 		default:
 			return "";
 		}

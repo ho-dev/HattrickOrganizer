@@ -346,7 +346,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         if (m_bshowJersey) {
             m_jlName.setIcon(ImageUtilities.getJerseyIcon(
                     m_clPlayerMatchRoleID,
-                    Objects.requireNonNull(m_clPlayer).getTrikotnummer()
+                    Objects.requireNonNull(m_clPlayer).getShirtNumber()
             ));
             showGroupIcon();
         }
@@ -375,14 +375,14 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         // weatherEffect
         m_jlWeatherEffect.setIcon(null);
         if (m_bShowWeatherEffect) {
-            int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWeather(), player.getPlayerSpecialty());
+            int effect = PlayerSpeciality.getWeatherEffect(HOMainFrame.getWeather(), player.getSpecialty());
             if (effect != 0) {
                 final Icon wettericon = ThemeManager.getIcon("weather.effect." + effect);
                 m_jlWeatherEffect.setIcon(wettericon);
             }
         }
 
-        m_jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[player.getPlayerSpecialty()]));
+        m_jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[player.getSpecialty()]));
 
         // positionValue
         if (m_rating != 0f) {
@@ -415,14 +415,14 @@ public final class PlayerLabelEntry implements IHOTableEntry {
             } else if (player.getInjuryWeeks() == 0) {
                 bruisedLabel.setIcon(ImageUtilities.getPlasterIcon(12,12));
             }
-            if (player.getTransferlisted() > 0) {
+            if (player.getTransferListed() > 0) {
                 transferlistedLabel.setIcon(ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, 12, 12));
             }
             if (player.isRedCarded()) {
                 suspendedLabel.setIcon(ImageUtilities.getSvgIcon(SUSPENDED_TINY, 12, 12));
-            } else if (player.getCards() == 2) {
+            } else if (player.getTotalCards() == 2) {
                 twoYellowCardsLabel.setIcon(ImageUtilities.getSvgIcon(TWOYELLOW_TINY, 12, 12));
-            } else if (player.getCards() == 1) {
+            } else if (player.getTotalCards() == 1) {
                 oneYellowCardLabel.setIcon(ImageUtilities.getSvgIcon(ONEYELLOW_TINY, 12, 12));
             }
 

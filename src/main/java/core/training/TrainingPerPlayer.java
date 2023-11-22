@@ -89,7 +89,7 @@ public class TrainingPerPlayer  {
 		}
 		/* Time to perform skill drop */
 		if (SkillDrops.instance().isActive()) {
-			ret -= SkillDrops.instance().getSkillDropAtDate(skillValue, this._Player.getAlter(), skill, date, isTrainedSkill);
+			ret -= SkillDrops.instance().getSkillDropAtDate(skillValue, this._Player.getAge(), skill, date, isTrainedSkill);
 		}
 
 

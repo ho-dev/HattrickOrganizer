@@ -220,7 +220,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		HOLogger.instance().log(getClass(), "Show Player: " + player.getFullName());
 
-		setTitle(player.getFullName() + " (" + player.getPlayerID() + ")");
+		setTitle(player.getFullName() + " (" + player.getPlayerId() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -233,7 +233,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		m_jpRating.setRating((float) matchplayer.getRating() * 2, true);
 		m_jpAktuellRating.setRating(DBManager.instance().getLetzteBewertung4Spieler(
-				player.getPlayerID()));
+				player.getPlayerId()));
 		setLabels(player);
 
 		pack();
@@ -245,23 +245,23 @@ final class SpielerDetailDialog extends JDialog {
 
 	private void setLabels(Player m_clPlayer) {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
-				.getCurrentPlayer(m_clPlayer.getPlayerID());
+				.getCurrentPlayer(m_clPlayer.getPlayerId());
 
 		m_jpName.setText(m_clPlayer.getFullName());
-		m_jpAlter.setText(m_clPlayer.getAlter() + "");
-		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityAsInt()));
+		m_jpAlter.setText(m_clPlayer.getAge() + "");
+		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityId()));
 
 		var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
-		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerID())
-				&& (lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()) != null)) {
+		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerId())
+				&& (lineup.getPositionByPlayerId(m_clPlayer.getPlayerId()) != null)) {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(
-					lineup.getPositionByPlayerId(m_clPlayer.getPlayerID()),
-					m_clPlayer.getTrikotnummer()));
-			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(lineup.getPositionByPlayerId(m_clPlayer.getPlayerID())
+					lineup.getPositionByPlayerId(m_clPlayer.getPlayerId()),
+					m_clPlayer.getShirtNumber()));
+			m_jpAufgestellt.setText(MatchRoleID.getNameForPosition(lineup.getPositionByPlayerId(m_clPlayer.getPlayerId())
 					.getPosition()));
 		} else {
 			m_jpAufgestellt.setIcon(ImageUtilities.getImage4Position(null,
-					m_clPlayer.getTrikotnummer()));
+					m_clPlayer.getShirtNumber()));
 			m_jpAufgestellt.setText("");
 		}
 
@@ -275,7 +275,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		if (m_clVergleichsPlayer == null) {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+			int gehalt = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
 			if (m_clPlayer.getBonus() > 0) {
@@ -285,31 +285,31 @@ final class SpielerDetailDialog extends JDialog {
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
 			m_jpGehalt.getRight().clear();
-			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
+			m_jpMartwert.getLeft().setText(m_clPlayer.getTsi() + "");
 			m_jpMartwert.getRight().clear();
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()));
 			m_jpForm2.clear();
 			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()));
 			m_jpKondition2.clear();
-			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
+			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGoalkeeperSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)));
 			m_jpTorwart2.clear();
-			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
+			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDefendingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)));
 			m_jpVerteidigung2.clear();
-			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
+			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPlaymakingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)));
 			m_jpSpielaufbau2.clear();
-			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
+			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPassingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)));
 			m_jpPasspiel2.clear();
-			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
+			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWingerSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)));
 			m_jpFluegelspiel2.clear();
-			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
+			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSetPiecesSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
 			m_jpStandards2.clear();
-			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
+			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getScoringSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));
 			m_jpTorschuss2.clear();
 			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()));
@@ -323,8 +323,8 @@ final class SpielerDetailDialog extends JDialog {
 			}
 		} else {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
-			int gehalt2 = (int) (m_clVergleichsPlayer.getSalary() / core.model.UserParameter
+			int gehalt = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().FXrate);
+			int gehalt2 = (int) (m_clVergleichsPlayer.getWage() / core.model.UserParameter
 					.instance().FXrate);
 			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
 
@@ -335,71 +335,71 @@ final class SpielerDetailDialog extends JDialog {
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
 			m_jpGehalt.getRight().setSpecialNumber((gehalt2 - gehalt), true);
-			m_jpMartwert.getLeft().setText(m_clPlayer.getTSI() + "");
+			m_jpMartwert.getLeft().setText(m_clPlayer.getTsi() + "");
 			m_jpMartwert.getRight().setSpecialNumber(
-					(m_clVergleichsPlayer.getTSI() - m_clPlayer.getTSI()), false);
+					(m_clVergleichsPlayer.getTsi() - m_clPlayer.getTsi()), false);
 			m_jpForm.setText(PlayerAbility.getNameForSkill(m_clPlayer.getForm()));
 			m_jpForm2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isOld(),
+					m_clVergleichsPlayer.getForm() - m_clPlayer.getForm(), !m_clPlayer.isGoner(),
 					true);
 			m_jpKondition.setText(PlayerAbility.getNameForSkill(m_clPlayer.getStamina()));
 			m_jpKondition2.setGraphicalChangeValue(m_clVergleichsPlayer.getStamina()
-					- m_clPlayer.getStamina(), !m_clVergleichsPlayer.isOld(), true);
-			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGKskill()
+					- m_clPlayer.getStamina(), !m_clVergleichsPlayer.isGoner(), true);
+			m_jpTorwart.setText(PlayerAbility.getNameForSkill(m_clPlayer.getGoalkeeperSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)));
 			m_jpTorwart2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getGKskill() - m_clPlayer.getGKskill(),
+					m_clVergleichsPlayer.getGoalkeeperSkill() - m_clPlayer.getGoalkeeperSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.KEEPER)
 							- m_clPlayer.getSub4Skill(PlayerSkill.KEEPER),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDEFskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpVerteidigung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getDefendingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)));
 			m_jpVerteidigung2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getDEFskill() - m_clPlayer.getDEFskill(),
+					m_clVergleichsPlayer.getDefendingSkill() - m_clPlayer.getDefendingSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.DEFENDING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPMskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpSpielaufbau.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPlaymakingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)));
 			m_jpSpielaufbau2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getPMskill() - m_clPlayer.getPMskill(),
+					m_clVergleichsPlayer.getPlaymakingSkill() - m_clPlayer.getPlaymakingSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPSskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpPasspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getPassingSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.PASSING)));
 			m_jpPasspiel2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getPSskill() - m_clPlayer.getPSskill(),
+					m_clVergleichsPlayer.getPassingSkill() - m_clPlayer.getPassingSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.PASSING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.PASSING),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWIskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpFluegelspiel.setText(PlayerAbility.getNameForSkill(m_clPlayer.getWingerSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)));
 			m_jpFluegelspiel2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getWIskill() - m_clPlayer.getWIskill(),
+					m_clVergleichsPlayer.getWingerSkill() - m_clPlayer.getWingerSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.WINGER)
 							- m_clPlayer.getSub4Skill(PlayerSkill.WINGER),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSPskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSetPiecesSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
 			m_jpStandards2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getSPskill() - m_clPlayer.getSPskill(),
+					m_clVergleichsPlayer.getSetPiecesSkill() - m_clPlayer.getSetPiecesSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
 							- m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
-					!m_clVergleichsPlayer.isOld(), true);
-			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSCskill()
+					!m_clVergleichsPlayer.isGoner(), true);
+			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getScoringSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));
 			m_jpTorschuss2.setGraphicalChangeValue(
-					m_clVergleichsPlayer.getSCskill() - m_clPlayer.getSCskill(),
+					m_clVergleichsPlayer.getScoringSkill() - m_clPlayer.getScoringSkill(),
 					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SCORING)
 							- m_clPlayer.getSub4Skill(PlayerSkill.SCORING),
-					!m_clVergleichsPlayer.isOld(), true);
+					!m_clVergleichsPlayer.isGoner(), true);
 			m_jpErfahrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getExperience()));
 			m_jpErfahrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getExperience()
-					- m_clPlayer.getExperience(), !m_clPlayer.isOld(), true);
+					- m_clPlayer.getExperience(), !m_clPlayer.isGoner(), true);
 			m_jpFuehrung.setText(PlayerAbility.getNameForSkill(m_clPlayer.getLeadership()));
 			m_jpFuehrung2.setGraphicalChangeValue(m_clVergleichsPlayer.getLeadership()
-					- m_clPlayer.getLeadership(), !m_clVergleichsPlayer.isOld(), true);
+					- m_clPlayer.getLeadership(), !m_clVergleichsPlayer.isGoner(), true);
 			m_jpBestPos.setText(MatchRoleID.getNameForPosition(m_clPlayer
 					.getIdealPosition())
 					+ " ("
@@ -410,18 +410,18 @@ final class SpielerDetailDialog extends JDialog {
 						m_clVergleichsPlayer);
 			}
 		}
-		m_jpToreFreund.setText(m_clPlayer.getToreFreund() + "");
-		m_jpToreLiga.setText(m_clPlayer.getSeasonSeriesGoal() + "");
-		m_jpTorePokal.setText(m_clPlayer.getSeasonCupGoal() + "");
-		m_jpToreGesamt.setText(m_clPlayer.getAllOfficialGoals() + "");
-		m_jpHattriks.setText(m_clPlayer.getHattrick() + "");
-		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getPlayerSpecialty()));
-		m_jpSpezialitaet.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getPlayerSpecialty()]));
-		m_jpAggressivitaet.setText(PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()));
+		m_jpToreFreund.setText(m_clPlayer.getFriendlyGoals() + "");
+		m_jpToreLiga.setText(m_clPlayer.getLeagueGoals() + "");
+		m_jpTorePokal.setText(m_clPlayer.getCupGameGoals() + "");
+		m_jpToreGesamt.setText(m_clPlayer.getTotalGoals() + "");
+		m_jpHattriks.setText(m_clPlayer.getHatTricks() + "");
+		m_jpSpezialitaet.setText(PlayerSpeciality.toString(m_clPlayer.getSpecialty()));
+		m_jpSpezialitaet.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[m_clPlayer.getSpecialty()]));
+		m_jpAggressivitaet.setText(PlayerAggressiveness.toString(m_clPlayer.getAggressivity()));
 
 		// Dreher!
-		m_jpAnsehen.setText(PlayerAgreeability.toString(m_clPlayer.getCharakter()));
-		m_jpCharakter.setText(PlayerHonesty.toString(m_clPlayer.getAnsehen()));
+		m_jpAnsehen.setText(PlayerAgreeability.toString(m_clPlayer.getGentleness()));
+		m_jpCharakter.setText(PlayerHonesty.toString(m_clPlayer.getHonesty()));
 
 	}
 
@@ -1043,9 +1043,9 @@ final class SpielerDetailDialog extends JDialog {
 
 		// //////////////////////////////////////////////////////////////////////
 		final float[] rating = core.db.DBManager.instance().getBewertungen4Player(
-				player.getPlayerID());
+				player.getPlayerId());
 		final float[] ratingPos = core.db.DBManager.instance().getBewertungen4PlayerUndPosition(
-				player.getPlayerID(), matchplayer.getPosition());
+				player.getPlayerId(), matchplayer.getPosition());
 
 		// Rating insgesamt
 		GridBagLayout sublayout = new GridBagLayout();

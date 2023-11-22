@@ -41,7 +41,7 @@ public class MatchLineupPosition  extends MatchRoleID {
     }
 
     public MatchLineupPosition(int roleId, byte behaviour, Player player){
-        super(roleId, player.getPlayerID(), behaviour);
+        super(roleId, player.getPlayerId(), behaviour);
         this.player = player;
     }
 
@@ -305,7 +305,7 @@ public class MatchLineupPosition  extends MatchRoleID {
 
     public Player getPlayer() {
 
-        if ( player == null || this.getPlayerId() != player.getPlayerID()){
+        if ( player == null || this.getPlayerId() != player.getPlayerId()){
             if (this.getPlayerId() != 0 ) {
                 player = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId());
             }

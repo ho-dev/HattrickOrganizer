@@ -74,7 +74,7 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
         if ( scorer.hasSpecialty(Specialty.HEAD)) {
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(setPiecesTaker, SpecialEventType.CORNER_HEAD,
                     .3, 10, -10,
-                    .5*p.getSPskill() + offIFK - oppDefIFK);
+                    .5*p.getSetPiecesSkill() + offIFK - oppDefIFK);
             if ( se != null){
                 se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(passReceiver,3));
                 se.setInvolvedPosition(passReceiver);
@@ -84,7 +84,7 @@ public class CornerEventPredictionAnalyzer  implements ISpecialEventPredictionAn
 
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(setPiecesTaker, SpecialEventType.CORNER,
                 .3, 10, -10,
-                .5*p.getSPskill() + offIFK - oppDefIFK);
+                .5*p.getSetPiecesSkill() + offIFK - oppDefIFK);
         if ( se != null){
             se.setGoalProbability(se.getChanceCreationProbability()*analyse.getGoalProbability(passReceiver));
             se.setInvolvedPosition(passReceiver);

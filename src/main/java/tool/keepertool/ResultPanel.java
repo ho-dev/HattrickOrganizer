@@ -103,7 +103,7 @@ class ResultPanel extends JPanel {
         set.addActionListener(arg0 -> {
             final Player sp = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
             if (sp != null) {
-                double decimals = average - sp.getGKskill()
+                double decimals = average - sp.getGoalkeeperSkill()
                         - sp.getSub4Skill(PlayerSkill.KEEPER);
 
                 if (decimals > 1) {

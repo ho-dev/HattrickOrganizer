@@ -52,16 +52,16 @@ public class StatusIcon implements Icon {
     }
 
     public void setPlayer(Player player) {
-        if (player.getTransferlisted() > 0) {
+        if (player.getTransferListed() > 0) {
                 icons.add(TRANSFERLISTED_ICON);
         }
         if (player.isRedCarded()) {
                 icons.add(SUSPENDED_ICON);
         }
-        else if (player.getCards() == 2) {
+        else if (player.getTotalCards() == 2) {
                 icons.add(TWO_YELLOW_ICON);
         }
-        else if (player.getCards() == 1) {
+        else if (player.getTotalCards() == 1) {
                 icons.add(ONE_YELLOW_ICON);
         }
     }

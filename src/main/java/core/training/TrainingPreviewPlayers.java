@@ -124,7 +124,7 @@ public class TrainingPreviewPlayers implements Refreshable {
      */
     private void calculateWeeklyTrainingForPlayer(Player player) {
 
-        final int playerID = player.getPlayerID();
+        final int playerID = player.getPlayerId();
         int fullTrain = 0;
         int partialTrain = 0;
         boolean fullFuturTrain = false;

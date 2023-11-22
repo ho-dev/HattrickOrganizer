@@ -177,13 +177,13 @@ public class Player
 			case 0 -> m_Player.setExperience(wert);
 			case 1 -> m_Player.setForm(wert);
 			case 2 -> m_Player.setStamina(wert);
-			case 3 -> m_Player.setTorwart(wert);
-			case 4 -> m_Player.setVerteidigung(wert);
-			case 5 -> m_Player.setSpielaufbau(wert);
-			case 6 -> m_Player.setPasspiel(wert);
-			case 7 -> m_Player.setFluegelspiel(wert);
-			case 8 -> m_Player.setTorschuss(wert);
-			case 9 -> m_Player.setStandards(wert);
+			case 3 -> m_Player.setGoalkeeperSkill(wert);
+			case 4 -> m_Player.setDefendingSkill(wert);
+			case 5 -> m_Player.setPlaymakingSkill(wert);
+			case 6 -> m_Player.setPassingSkill(wert);
+			case 7 -> m_Player.setWingerSkill(wert);
+			case 8 -> m_Player.setScoringSkill(wert);
+			case 9 -> m_Player.setSetPiecesSkill(wert);
 			case 10 -> m_Player.setLoyalty(wert);
 			case 11 -> {
 				if (wert == 2)
@@ -257,17 +257,17 @@ public class Player
 	
 	public void setPlayerValues()
 	{
-		setID(m_Player.getPlayerID());
+		setID(m_Player.getPlayerId());
 		setFirstName(m_Player.getFirstName());
 		setNickName(m_Player.getNickName());
 		setLastName(m_Player.getLastName());
-		setAge(m_Player.getAlter());
-		setWages(m_Player.getSalary());
-		setTSI(m_Player.getTSI());
-		setNationality(m_Player.getNationalityAsInt());
+		setAge(m_Player.getAge());
+		setWages(m_Player.getWage());
+		setTSI(m_Player.getTsi());
+		setNationality(m_Player.getNationalityId());
 		setLeadership(m_Player.getLeadership());
 		setGroup(m_Player.getTeamGroup());
-		setSpeciality(m_Player.getPlayerSpecialty());
+		setSpeciality(m_Player.getSpecialty());
 	}
 	
 	public void setOldSkillValues()
@@ -275,13 +275,13 @@ public class Player
 		setOldExperience(m_Player.getExperience());
 		setOldForm(m_Player.getForm());
 		setOldStamina(m_Player.getStamina());
-		setOldKeeping(m_Player.getGKskill());
-		setOldDefending(m_Player.getDEFskill());
-		setOldPlaymaking(m_Player.getPMskill());
-		setOldPassing(m_Player.getPSskill());
-		setOldWinger(m_Player.getWIskill());
-		setOldScoring(m_Player.getSCskill());
-		setOldSetPieces(m_Player.getSPskill());
+		setOldKeeping(m_Player.getGoalkeeperSkill());
+		setOldDefending(m_Player.getDefendingSkill());
+		setOldPlaymaking(m_Player.getPlaymakingSkill());
+		setOldPassing(m_Player.getPassingSkill());
+		setOldWinger(m_Player.getWingerSkill());
+		setOldScoring(m_Player.getScoringSkill());
+		setOldSetPieces(m_Player.getSetPiecesSkill());
 		setOldLoyalty(m_Player.getLoyalty());
 		setOldHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}
@@ -308,13 +308,13 @@ public class Player
 		setExperience(m_Player.getExperience());
 		setForm(m_Player.getForm());
 		setStamina(m_Player.getStamina());
-		setKeeping(m_Player.getGKskill());
-		setDefending(m_Player.getDEFskill());
-		setPlaymaking(m_Player.getPMskill());
-		setPassing(m_Player.getPSskill());
-		setWinger(m_Player.getWIskill());
-		setScoring(m_Player.getSCskill());
-		setSetPieces(m_Player.getSPskill());
+		setKeeping(m_Player.getGoalkeeperSkill());
+		setDefending(m_Player.getDefendingSkill());
+		setPlaymaking(m_Player.getPlaymakingSkill());
+		setPassing(m_Player.getPassingSkill());
+		setWinger(m_Player.getWingerSkill());
+		setScoring(m_Player.getScoringSkill());
+		setSetPieces(m_Player.getSetPiecesSkill());
 		setLoyalty(m_Player.getLoyalty());
 		setHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}

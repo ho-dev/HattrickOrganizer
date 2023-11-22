@@ -176,9 +176,9 @@ final class MiscPanel extends JPanel {
         final List<Player> vPlayer = HOVerwaltung.instance().getModel().getCurrentPlayers();
 
         for ( Player p : vPlayer){
-            if (!p.isTrainer()) {
+            if (!p.isCoach()) {
             	// Age Years
-                summe += p.getAlter();
+                summe += p.getAge();
                 // Age Days
                 summe += p.getAgeDays()/112.0;
             }
@@ -198,7 +198,7 @@ final class MiscPanel extends JPanel {
         for ( Player p  : vPlayer){
 
             //Trainer nicht berücksichtigen
-            if (!p.isTrainer()) {
+            if (!p.isCoach()) {
                 summe += p.getExperience();
             }
         }
@@ -216,7 +216,7 @@ final class MiscPanel extends JPanel {
 
         for ( Player p: vPlayer){
             //Trainer nicht berücksichtigen
-            if (!p.isTrainer()) {
+            if (!p.isCoach()) {
                 summe += p.getForm();
             }
         }
@@ -234,8 +234,8 @@ final class MiscPanel extends JPanel {
 
         for (Player p: vPlayer) {
             //Trainer nicht berücksichtigen
-            if (!p.isTrainer()) {
-                summe += p.getTSI();
+            if (!p.isCoach()) {
+                summe += p.getTsi();
             }
         }
 

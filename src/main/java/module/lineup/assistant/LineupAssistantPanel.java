@@ -220,7 +220,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 				boolean include = true;
 				if (isExcludeLastMatch()) {
 					var previousLineup = hoModel.getPreviousLineup();
-					if (previousLineup != null && previousLineup.getLineup().isPlayerInStartingEleven(player.getPlayerID())) {
+					if (previousLineup != null && previousLineup.getLineup().isPlayerInStartingEleven(player.getPlayerId())) {
 						include = false;
 					}
 				}

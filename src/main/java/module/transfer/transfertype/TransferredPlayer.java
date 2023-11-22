@@ -39,8 +39,8 @@ class TransferredPlayer {
      * @param player PlayerId of the Transferred Player
      */
     TransferredPlayer(Player player) {
-        age = player.getAlter();
-        id = player.getPlayerID();
+        age = player.getAge();
+        id = player.getPlayerId();
         experience = player.getExperience();
         leadership = player.getLeadership();
         playerName = player.getFullName();
@@ -54,7 +54,7 @@ class TransferredPlayer {
 
         //player.getAllLevelUp(ISpieler.SKILL_KONDITION).size();
         experienceSkillups = player.getAllLevelUp(PlayerSkill.EXPERIENCE).size();
-        officialMatch = DBManager.instance().getCountOfPlayedMatches(player.getPlayerID(), true);
+        officialMatch = DBManager.instance().getCountOfPlayedMatches(player.getPlayerId(), true);
 
         //testMatch = PlayerMatchesDAO.getAppearance(player.getSpielerID(), false);
         endWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag()

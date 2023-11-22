@@ -177,32 +177,32 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final core.model.player.Player tempPlayer = new core.model.player.Player();
-            tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempPlayer.setPlayerID(getNextTempSpielerID());
+            tempPlayer.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setPlayerId(getNextTempSpielerID());
             if (jtfName.getText().trim().isEmpty()) {
-                tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
+                tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerId()));
             } else {
                 tempPlayer.setLastName(jtfName.getText());
             }
-            tempPlayer.setTSI(Integer.parseInt(jtfTSI.getText()));
-            tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setTsi(Integer.parseInt(jtfTSI.getText()));
+            tempPlayer.setSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
             tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
             tempPlayer.setStamina(((CBItem) jcbStamina.getSelectedItem()).getId());
-            tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
-            tempPlayer.setTorschuss(((CBItem) jcbScoring.getSelectedItem()).getId());
-            tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
-            tempPlayer.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
-            tempPlayer.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
-            tempPlayer.setStandards(((CBItem) jcbSetPieces.getSelectedItem()).getId());
-            tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
+            tempPlayer.setDefendingSkill(((CBItem)jcbDefending.getSelectedItem()).getId());
+            tempPlayer.setScoringSkill(((CBItem) jcbScoring.getSelectedItem()).getId());
+            tempPlayer.setGoalkeeperSkill(((CBItem) jcbKeeper.getSelectedItem()).getId());
+            tempPlayer.setWingerSkill(((CBItem) jcbWinger.getSelectedItem()).getId());
+            tempPlayer.setPassingSkill(((CBItem) jcbPassing.getSelectedItem()).getId());
+            tempPlayer.setSetPiecesSkill(((CBItem) jcbSetPieces.getSelectedItem()).getId());
+            tempPlayer.setPlaymakingSkill(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
             tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
             tempPlayer.setHrfDate(HODateTime.now());
-            tempPlayer.setGehalt(parseCurrencyValue(jtfWage.getText()));
+            tempPlayer.setWage(parseCurrencyValue(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
@@ -367,18 +367,18 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
      */
     private void setLabels() {
         final core.model.player.Player tempPlayer = new core.model.player.Player();
-        tempPlayer.setPlayerSpecialty(((CBItem)jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setSpecialty(((CBItem)jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setExperience(((CBItem)jcbExperience.getSelectedItem()).getId());
         tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem)jcbForm.getSelectedItem()).getId());
         tempPlayer.setStamina(((CBItem)jcbStamina.getSelectedItem()).getId());
-        tempPlayer.setVerteidigung(((CBItem)jcbDefending.getSelectedItem()).getId());
-        tempPlayer.setTorschuss(((CBItem)jcbScoring.getSelectedItem()).getId());
-        tempPlayer.setTorwart(((CBItem)jcbKeeper.getSelectedItem()).getId());
-        tempPlayer.setFluegelspiel(((CBItem)jcbWinger.getSelectedItem()).getId());
-        tempPlayer.setPasspiel(((CBItem)jcbPassing.getSelectedItem()).getId());
-        tempPlayer.setStandards(((CBItem)jcbSetPieces.getSelectedItem()).getId());
-        tempPlayer.setSpielaufbau(((CBItem)jcbPlaymaking.getSelectedItem()).getId());
+        tempPlayer.setDefendingSkill(((CBItem)jcbDefending.getSelectedItem()).getId());
+        tempPlayer.setScoringSkill(((CBItem)jcbScoring.getSelectedItem()).getId());
+        tempPlayer.setGoalkeeperSkill(((CBItem)jcbKeeper.getSelectedItem()).getId());
+        tempPlayer.setWingerSkill(((CBItem)jcbWinger.getSelectedItem()).getId());
+        tempPlayer.setPassingSkill(((CBItem)jcbPassing.getSelectedItem()).getId());
+        tempPlayer.setSetPiecesSkill(((CBItem)jcbSetPieces.getSelectedItem()).getId());
+        tempPlayer.setPlaymakingSkill(((CBItem)jcbPlaymaking.getSelectedItem()).getId());
         tempPlayer.setLoyalty(((CBItem)jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
         tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));

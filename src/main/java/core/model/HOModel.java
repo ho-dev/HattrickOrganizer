@@ -122,9 +122,9 @@ public class HOModel {
     public final void setFormerPlayers(List<Player> playerVector) {
         m_vOldPlayer = new ArrayList<>();
         for (var old : playerVector) {
-            var isCurrent = this.m_vPlayer.stream().anyMatch(i -> i.getPlayerID() == old.getPlayerID());
+            var isCurrent = this.m_vPlayer.stream().anyMatch(i -> i.getPlayerId() == old.getPlayerId());
             if (!isCurrent) {
-                old.setOld(true);
+                old.setGoner(true);
                 m_vOldPlayer.add(old);
             }
         }
@@ -182,7 +182,7 @@ public class HOModel {
 
     private void calcStyleOfPlay() {
         if (m_clAufstellung != null) {
-            var trainerType = getTrainer().getTrainerTyp();
+            var trainerType = getTrainer().getTrainerType();
             var tacticAssistants = getClub().getTacticalAssistantLevels();
             m_clAufstellung.calcStyleOfPlay(trainerType, tacticAssistants);
         }
@@ -323,7 +323,7 @@ public class HOModel {
      */
     public final Player getCurrentPlayer(int id) {
         for (Player p : getCurrentPlayers()) {
-            if (p.getPlayerID() == id)
+            if (p.getPlayerId() == id)
                 return p;
         }
         return null;
@@ -439,7 +439,7 @@ public class HOModel {
     public final Player getTrainer() {
         Player trainer = null;
         for (Player p : getCurrentPlayers()) {
-            if (p.isTrainer()) {
+            if (p.isCoach()) {
                 trainer = p;
                 break;
             }
@@ -448,8 +448,8 @@ public class HOModel {
         // Nt team protection, they may have no coach:
         if (trainer == null) {
             trainer = new Player();
-            trainer.setTrainerSkill(7);
-            trainer.setTrainerTyp(TrainerType.Balanced); // neutral;
+            trainer.setCoachSkill(7);
+            trainer.setTrainerType(TrainerType.Balanced); // neutral;
         }
 
         return trainer;
@@ -520,7 +520,7 @@ public class HOModel {
         TrainingManager.instance().updateHistoricalTrainings();
         var trainingWeeks = getTrainingWeeksSincePreviousDownload();
         for (var player : this.getCurrentPlayers()) {
-            player.calcSubskills(this.getPreviousID(), trainingWeeks);
+            player.calcSubSkills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
         DBManager.instance().saveSpieler( getCurrentPlayers());
@@ -546,7 +546,7 @@ public class HOModel {
 
         var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
         for (var player : this.getCurrentPlayers()) {
-            player.calcSubskills(this.getPreviousID(), trainingWeeks);
+            player.calcSubSkills(this.getPreviousID(), trainingWeeks);
         }
         // store new values of current players
         DBManager.instance().saveSpieler(getCurrentPlayers());
@@ -678,7 +678,7 @@ public class HOModel {
                     team.getTrainingslevel(),
                     team.getStaminaTrainingPart(),
                     this.getClub().getCoTrainer(),
-                    this.getTrainer().getTrainerSkill(),
+                    this.getTrainer().getCoachSkill(),
                     DBDataSource.HRF);
         }
         return null;

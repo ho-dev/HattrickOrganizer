@@ -138,7 +138,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		int spielerid = -1;
 		if (playerComboBox.getSelectedItem() != null) {
 			spielerid = ((PlayerCBItem) playerComboBox.getSelectedItem()).getPlayer()
-					.getPlayerID();
+					.getPlayerId();
 		}
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
@@ -190,9 +190,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		if (playerComboBox.getSelectedIndex() > -1) {
 			// Tabelle updaten
 			m_jtSpielerMatchesTable.refresh(((PlayerCBItem) playerComboBox.getSelectedItem())
-					.getPlayer().getPlayerID());
+					.getPlayer().getPlayerId());
 			m_jtSpielerPositionTable.refresh(((PlayerCBItem) playerComboBox.getSelectedItem())
-					.getPlayer().getPlayerID());
+					.getPlayer().getPlayerId());
 		} else {
 			// Tabelle leeren
 			m_jtSpielerMatchesTable.refresh(-1);

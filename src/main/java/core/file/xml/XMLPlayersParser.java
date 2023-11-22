@@ -394,7 +394,7 @@ public class XMLPlayersParser {
              teamID != HOVerwaltung.instance().getModel().getBasics().getTeamId()) return null; // foreign player
 
         var player = new Player();
-        player.setPlayerID(xmlIntValue(root, "PlayerID"));
+        player.setPlayerId(xmlIntValue(root, "PlayerID"));
         player.setFirstName(xmlValue(root, "FirstName"));
         player.setNickName(xmlValue(root, "NickName"));
         player.setLastName(xmlValue(root, "LastName"));
@@ -409,7 +409,7 @@ public class XMLPlayersParser {
 
         player.setArrivalDate(xmlValue(root, "ArrivalDate"));
         player.setForm(xmlIntValue(root, "PlayerForm"));
-        player.setGelbeKarten(xmlIntValue(root, "Cards"));
+        player.setTotalCards(xmlIntValue(root, "Cards"));
         player.setInjuryWeeks(xmlIntValue(root, "InjuryLevel"));
         player.setPlayerStatement(xmlValue(root, "Statement"));
 
@@ -420,22 +420,22 @@ public class XMLPlayersParser {
 //        This container and its elements is only shown if the user has supporter
 //        The languageID the player speaks in his Statement, if existing.
 
-        player.setAnsehen(xmlIntValue(root, "Agreeability"));
-        player.setAgressivitaet(xmlIntValue(root, "Aggressiveness"));
-        player.setCharakter(xmlIntValue(root, "Honesty"));
+        player.setHonesty(xmlIntValue(root, "Agreeability"));
+        player.setAggressivity(xmlIntValue(root, "Aggressiveness"));
+        player.setGentleness(xmlIntValue(root, "Honesty"));
         player.setExperience(xmlIntValue(root, "Experience"));
         player.setLoyalty(xmlIntValue(root, "Loyalty"));
         player.setHomeGrown(xmlBoolValue(root, "MotherClubBonus"));
         player.setLeadership(xmlIntValue(root, "Leadership"));
-        player.setPlayerSpecialty(xmlIntValue(root, "Specialty"));
-        player.setNationalityAsInt(xmlIntValue(root, "NativeCountryID"));
+        player.setSpecialty(xmlIntValue(root, "Specialty"));
+        player.setNationalityId(xmlIntValue(root, "NativeCountryID"));
 
 //                NativeLeagueID : unsigned Integer
 //        LeagueID of the league where the player was born.
 //                NativeLeagueName : String
 //        LeagueName of the league where the player was born.
 
-        player.setTSI(xmlIntValue(root, "TSI"));
+        player.setTsi(xmlIntValue(root, "TSI"));
 
 //        -OwningTeam
 //        Container for the team that owns the player.
@@ -446,31 +446,31 @@ public class XMLPlayersParser {
 //        LeagueID : unsigned Integer
 //        LeagueID for the league of the team owning the player.
 
-        player.setGehalt(xmlIntValue(root, "Salary"));
+        player.setWage(xmlIntValue(root, "Salary"));
 
 //        IsAbroad : Boolean*
 //                The abroad status of the player, given as an integer. true for beeing in home country, false for beeing in a team abroad. The container is empty If the player has no owner.
 
-        player.setLaenderspiele(xmlIntValue(root, "Caps"));
-        player.setU20Laenderspiele(xmlIntValue(root, "CapsU20"));
-        player.setAllOfficialGoals(xmlIntValue(root, "CareerGoals"));
-        player.setHattrick(xmlIntValue(root, "CareerHattricks"));
-        player.setMatchesCurrentTeam(xmlIntegerValue(root, "MatchesCurrentTeam"));
-        player.setGoalsCurrentTeam(xmlIntValue(root, "GoalsCurrentTeam"));
+        player.setInternationalMatches(xmlIntValue(root, "Caps"));
+        player.setU20InternationalMatches(xmlIntValue(root, "CapsU20"));
+        player.setTotalGoals(xmlIntValue(root, "CareerGoals"));
+        player.setHatTricks(xmlIntValue(root, "CareerHattricks"));
+        player.setCurrentTeamMatches(xmlIntegerValue(root, "MatchesCurrentTeam"));
+        player.setCurrentTeamGoals(xmlIntValue(root, "GoalsCurrentTeam"));
         player.setNationalTeamId(xmlIntegerValue(root, "NationalTeamID"));
 
 //        NationalTeamName : String*
 //                If the player is enrolled on a national team, this is that national team's name.
-        player.setTransferlisted(xmlBoolValue(root, "TransferListed")?1:0);
+        player.setTransferListed(xmlBoolValue(root, "TransferListed")?1:0);
 
         var ele = (Element) root.getElementsByTagName("TrainerData").item(0);
         if ( ele != null) {
-            player.setTrainerTyp(TrainerType.fromInt(xmlIntegerValue(ele, "TrainerType")));
+            player.setTrainerType(TrainerType.fromInt(xmlIntegerValue(ele, "TrainerType")));
             var trainerSkill = xmlIntegerValue(root, "TrainerSkill");
             if ( trainerSkill == null){
                 trainerSkill=0;
             }
-            player.setTrainerSkill(trainerSkill);
+            player.setCoachSkill(trainerSkill);
         }
 
         ele = (Element) root.getElementsByTagName("MotherClub").item(0);
@@ -482,13 +482,13 @@ public class XMLPlayersParser {
         ele = (Element) root.getElementsByTagName("PlayerSkills").item(0);
         if ( ele != null) {
             player.setStamina(xmlIntValue(ele, "StaminaSkill"));
-            player.setTorwart(xmlIntValue(ele, "KeeperSkill"));
-            player.setSpielaufbau(xmlIntValue(ele, "PlaymakerSkill"));
-            player.setTorschuss(xmlIntValue(ele, "ScorerSkill"));
-            player.setPasspiel(xmlIntValue(ele, "PassingSkill"));
-            player.setFluegelspiel(xmlIntValue(ele, "WingerSkill"));
-            player.setVerteidigung(xmlIntValue(ele, "DefenderSkill"));
-            player.setStandards(xmlIntValue(ele, "SetPiecesSkill"));
+            player.setGoalkeeperSkill(xmlIntValue(ele, "KeeperSkill"));
+            player.setPlaymakingSkill(xmlIntValue(ele, "PlaymakerSkill"));
+            player.setScoringSkill(xmlIntValue(ele, "ScorerSkill"));
+            player.setPassingSkill(xmlIntValue(ele, "PassingSkill"));
+            player.setWingerSkill(xmlIntValue(ele, "WingerSkill"));
+            player.setDefendingSkill(xmlIntValue(ele, "DefenderSkill"));
+            player.setSetPiecesSkill(xmlIntValue(ele, "SetPiecesSkill"));
         }
 
         return player;

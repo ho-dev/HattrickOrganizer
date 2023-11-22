@@ -343,7 +343,7 @@ public class LineupAssistant {
 	public static boolean isPlayerEnabledForLineup(int playerID) {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
-			if (player.getPlayerID() == playerID) {
+			if (player.getPlayerId() == playerID) {
 				return player.isLineupDisabled();
 			}
 		}
@@ -369,7 +369,7 @@ public class LineupAssistant {
 				// stk inklusive Wetter effekt errechnen
 //				currentRating = player.calcPosValue(position, considerForm, weather, true);
 
-				if ((!isPlayerInLineup(player.getPlayerID(), positions))
+				if ((!isPlayerInLineup(player.getPlayerId(), positions))
 						&& ((bestPlayer == null) || (maxRating < r))
 						&& ((ignoreRedCarded) || (!player.isRedCarded()))
 						&& ((ignoredInjury) || (player.getInjuryWeeks() < 1))
@@ -417,7 +417,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
 				}
 			}
 		}
@@ -448,7 +448,7 @@ public class LineupAssistant {
 
 				// position besetzen
 				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
 				}
 			}
 		}
@@ -485,7 +485,7 @@ public class LineupAssistant {
 
 				// fill the position
 				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
 				}
 			}
 		}
@@ -515,7 +515,7 @@ public class LineupAssistant {
 
 				// occupy position
 				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerID());
+					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
 				}
 			}
 		}

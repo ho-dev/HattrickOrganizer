@@ -201,10 +201,10 @@ public class PlayerTransfer extends AbstractTable.Storable {
     private int calcPreviousClubFee(int teamId) {
         var player = getPlayerInfo();
         if (player != null) {
-            var matchCount = player.getMatchesCurrentTeam();
+            var matchCount = player.getCurrentTeamMatches();
             if (matchCount==null){
                 matchCount = DBManager.instance().getCountOfPlayedMatches(playerId, true);
-                player.setMatchesCurrentTeam(matchCount);
+                player.setCurrentTeamMatches(matchCount);
             }
             if (matchCount > 0) {
                 // get previous transfer
@@ -395,7 +395,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
             }
 
             if (playerInfo != null) {
-                this.playerId = playerInfo.getPlayerID();
+                this.playerId = playerInfo.getPlayerId();
                 // Don't update database on inserts (causes recursive inserts on transfer updates)
                 if ( doUpdate ) {
                     updatePlayerTransfer(this);
@@ -408,19 +408,19 @@ public class PlayerTransfer extends AbstractTable.Storable {
         if (playerInfo == null) {
             playerInfo = new Player();
             playerInfo.setLastName(this.getPlayerName());
-            playerInfo.setTSI(this.getTsi());
-            playerInfo.setPlayerID(playerId);
+            playerInfo.setTsi(this.getTsi());
+            playerInfo.setPlayerId(playerId);
             playerInfo.setLeadership(-1);
             playerInfo.setExperience(-1);
             playerInfo.setForm(-1);
             playerInfo.setStamina(-1);
-            playerInfo.setTorwart(-1);
-            playerInfo.setVerteidigung(-1);
-            playerInfo.setSpielaufbau(-1);
-            playerInfo.setPasspiel(-1);
-            playerInfo.setFluegelspiel(-1);
-            playerInfo.setTorschuss(-1);
-            playerInfo.setStandards(-1);
+            playerInfo.setGoalkeeperSkill(-1);
+            playerInfo.setDefendingSkill(-1);
+            playerInfo.setPlaymakingSkill(-1);
+            playerInfo.setPassingSkill(-1);
+            playerInfo.setWingerSkill(-1);
+            playerInfo.setScoringSkill(-1);
+            playerInfo.setSetPiecesSkill(-1);
 
             if (doUpdate && oldPLayerId != playerId) {
                 // Don't update database on inserts (causes recursive inserts on transfer updates)

@@ -68,8 +68,8 @@ public class SmilieEntry extends DoubleLabelEntries {
                 // if equal check lineup
                 if (result == 0) {
                     var team = HOVerwaltung.instance().getModel().getCurrentLineupTeam();
-                    final MatchRoleID entrySort = team.getLineup().getPositionByPlayerId(entry.getPlayer().getPlayerID());
-                    final MatchRoleID sort = team.getLineup().getPositionByPlayerId(getPlayer().getPlayerID());
+                    final MatchRoleID entrySort = team.getLineup().getPositionByPlayerId(entry.getPlayer().getPlayerId());
+                    final MatchRoleID sort = team.getLineup().getPositionByPlayerId(getPlayer().getPlayerId());
                     if (sort != null) {
                         if (entrySort != null) {
                             result = Integer.compare(entrySort.getSortId(), sort.getSortId()); // inverse direction (Keeper is top)

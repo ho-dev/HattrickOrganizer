@@ -79,7 +79,7 @@ public class FutureTrainingManager {
 					var trainingPriority = trainingWeekPlayer.getFutureTrainingPrio(weeklyTrainingType, trainingPerWeek.getTrainingDate());
 
 					// process skill drops
-					int ageInYears = this.player.getAlter() + (this.player.getAgeDays() + week * 7) / 112;
+					int ageInYears = this.player.getAge() + (this.player.getAgeDays() + week * 7) / 112;
 					for (int i = 0; i < SKILL_INDEX.length; i++) {
 						var skill = SKILL_INDEX[i];
 						finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, skill,
@@ -162,8 +162,8 @@ public class FutureTrainingManager {
 		fp.setPassing(getFinalValue(PlayerSkill.PASSING));
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
 		fp.setSetpieces(getFinalValue(PlayerSkill.SET_PIECES));
-		fp.setAge(player.getAlter()+(int)(Math.floor((player.getAgeDays()+7* weeksPassed)/112d)));
-		fp.setPlayerId(player.getPlayerID());
+		fp.setAge(player.getAge()+(int)(Math.floor((player.getAgeDays()+7* weeksPassed)/112d)));
+		fp.setPlayerId(player.getPlayerId());
 		return fp;
 	}
 

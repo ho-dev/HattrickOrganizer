@@ -124,7 +124,7 @@ public class TrainingRecapTable extends JScrollPane {
                     +  player.getIdealPositionRating()
                     + ")");
             row.add(Integer.toString(ftm.getTrainingSpeed()));
-            row.add(Integer.toString(player.getPlayerID()));
+            row.add(Integer.toString(player.getPlayerId()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
                 ISkillChange s = maps.get(columns.get(i + fixedColumns));
@@ -136,7 +136,7 @@ public class TrainingRecapTable extends JScrollPane {
                 }
             }
 
-            row.add(Integer.toString(player.getPlayerID()));
+            row.add(Integer.toString(player.getPlayerId()));
             rows.add(row);
         }
 

@@ -178,35 +178,35 @@ final public class UserColumnFactory {
         playerGoalsArray[0] = new PlayerColumn(380, "TG", "ls.player.career_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getAllOfficialGoals();
+                return player.getTotalGoals();
             }
         };
 
         playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getGoalsCurrentTeam();
+                return player.getCurrentTeamGoals();
             }
         };
 
         playerGoalsArray[2] = new PlayerColumn(390, "HT", "ls.player.hattricks", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getHattrick();
+                return player.getHatTricks();
             }
         };
 
         playerGoalsArray[3] = new PlayerColumn(400, "TL", "ls.player.season_series_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getSeasonSeriesGoal();
+                return player.getLeagueGoals();
             }
         };
 
         playerGoalsArray[4] = new PlayerColumn(410, "TP", "ls.player.season_cup_goals", 20) {
             @Override
             public int getValue(Player player) {
-                return player.getSeasonCupGoal();
+                return player.getCupGameGoals();
             }
         };
         return playerGoalsArray;
@@ -242,7 +242,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var team = HOVerwaltung.instance().getModel().getCurrentLineup();
-                var pos = team.getPositionById(player.getPlayerID());
+                var pos = team.getPositionById(player.getPlayerId());
                 return new PlayerLabelEntry(player, pos, 0f, false, false);
             }
 
@@ -255,8 +255,8 @@ final public class UserColumnFactory {
         playerBasicArray[1] = new PlayerColumn(ID, "ls.player.id", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getPlayerID(),
-                        String.valueOf(player.getPlayerID()),
+                return new ColorLabelEntry(player.getPlayerId(),
+                        String.valueOf(player.getPlayerId()),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
@@ -516,7 +516,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                int sort = player.getTrikotnummer();
+                int sort = player.getShirtNumber();
                 if (sort <= 0) {
                     // Temporary players don't have a shirt number
                     sort = 10000;
@@ -535,8 +535,8 @@ final public class UserColumnFactory {
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalityAsInt()),
-                        player.getNationalityAsInt(),
+                return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalityId()),
+                        player.getNationalityId(),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
@@ -551,14 +551,14 @@ final public class UserColumnFactory {
 
                 if (playerCompare == null) {
                     // Birthdays since last HRF
-                    birthdays = (int) (Math.floor(player.getAlterWithAgeDays()) - player.getAlter());
+                    birthdays = (int) (Math.floor(player.getAlterWithAgeDays()) - player.getAge());
                     playerExists = false;
                 } else {
                     // Birthdays since compare
                     birthdays = (int) (Math.floor(player.getAlterWithAgeDays()) - Math.floor(playerCompare.getAlterWithAgeDays()));
                     // Player was not in our team at compare date
                     // Player was in our team at compare date
-                    playerExists = !playerCompare.isOld();
+                    playerExists = !playerCompare.isGoner();
                 }
                 return new ColorLabelEntry(
                         birthdays,
@@ -605,12 +605,12 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 var team = model.getCurrentLineup();
-                final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerID());
-                if (team.isPlayerInLineup(player.getPlayerID()) && positionBySpielerId != null) {
+                final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerId());
+                if (team.isPlayerInLineup(player.getPlayerId()) && positionBySpielerId != null) {
                     final ColorLabelEntry colorLabelEntry = new ColorLabelEntry(
                             ImageUtilities.getJerseyIcon(
                                     positionBySpielerId,
-                                    player.getTrikotnummer()
+                                    player.getShirtNumber()
                             ),
                             -positionBySpielerId
                                     .getSortId(),
@@ -623,8 +623,8 @@ final public class UserColumnFactory {
                 }
 
                 return new ColorLabelEntry(ImageUtilities.getJerseyIcon(null,
-                        player.getTrikotnummer()),
-                        -player.getTrikotnummer() - 1000,
+                        player.getShirtNumber()),
+                        -player.getShirtNumber() - 1000,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -653,7 +653,7 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
-                final int gehalt = (int) (player.getSalary() / core.model.UserParameter.instance().FXrate);
+                final int gehalt = (int) (player.getWage() / core.model.UserParameter.instance().FXrate);
                 final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
@@ -667,7 +667,7 @@ final public class UserColumnFactory {
                                     SwingConstants.RIGHT));
                 }
 
-                final int gehalt2 = (int) (playerCompare.getSalary() / core.model.UserParameter
+                final int gehalt2 = (int) (playerCompare.getWage() / core.model.UserParameter
                         .instance().FXrate);
                 return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                         gehalttext + bonus,
@@ -682,10 +682,10 @@ final public class UserColumnFactory {
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final String text = Helper.getNumberFormat(false, 0).format(player.getTSI());
+                final String text = Helper.getNumberFormat(false, 0).format(player.getTsi());
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(player
-                            .getTSI(),
+                            .getTsi(),
                             text,
                             ColorLabelEntry.FG_STANDARD,
                             ColorLabelEntry.BG_STANDARD,
@@ -698,13 +698,13 @@ final public class UserColumnFactory {
 
 
                 return new DoubleLabelEntries(new ColorLabelEntry(player
-                        .getTSI(),
+                        .getTsi(),
                         text,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT),
-                        new ColorLabelEntry(player.getTSI()
-                                - playerCompare.getTSI(), ColorLabelEntry.BG_STANDARD,
+                        new ColorLabelEntry(player.getTsi()
+                                - playerCompare.getTsi(), ColorLabelEntry.BG_STANDARD,
                                 false, false, 0));
             }
 
@@ -872,7 +872,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[19] = new PlayerColumn(893, "ls.player.motherclub.name", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getOrDownloadMotherclubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                return new ColorLabelEntry(player.getOrDownloadMotherClubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 
@@ -880,7 +880,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[20] = new PlayerColumn(894, "ls.player.matchescurrentteam", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                var m = player.getMatchesCurrentTeam();
+                var m = player.getCurrentTeamMatches();
                 String t;
                 if ( m!= null){
                     t = m.toString();

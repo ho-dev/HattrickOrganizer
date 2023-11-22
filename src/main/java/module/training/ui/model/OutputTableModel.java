@@ -7,14 +7,12 @@ import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
-import core.util.HOLogger;
 import core.util.Helper;
 import module.training.Skills;
 import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
-import java.time.Instant;
 import java.util.*;
 
 import javax.swing.*;
@@ -136,7 +134,7 @@ public class OutputTableModel extends AbstractTableModel {
         var ftm = data.get(rowIndex);
         var player = ftm.getPlayer();
         return switch (columnIndex) {
-            case COL_PLAYER_ID -> Integer.toString(player.getPlayerID());
+            case COL_PLAYER_ID -> Integer.toString(player.getPlayerId());
             case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
             case 1 -> player.getAgeWithDaysAsString();
             case 2 -> createBestPositionCell(player);
@@ -176,11 +174,11 @@ public class OutputTableModel extends AbstractTableModel {
             var model = HOVerwaltung.instance().getModel();
             return 1 / wt.calculateSkillIncreaseOfTrainingWeek(
                     player.getValue4Skill(skillIndex),
-                    model.getTrainer().getTrainerSkill(),
+                    model.getTrainer().getCoachSkill(),
                     model.getClub().getCoTrainer(),
                     model.getTeam().getTrainingslevel(),
                     model.getTeam().getStaminaTrainingPart(),
-                    player.getAlter(),
+                    player.getAge(),
                     90, 0, 0, 0);
         }
         return 0;

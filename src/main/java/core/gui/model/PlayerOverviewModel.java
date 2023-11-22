@@ -91,7 +91,7 @@ public final class PlayerOverviewModel extends HOTableModel {
         // Can be negative for temp player
         if (id != 0) {
 			for (Player m_vPlayer : m_vPlayers) {
-				if (m_vPlayer.getPlayerID() == id) {
+				if (m_vPlayer.getPlayerId() == id) {
 					return m_vPlayer;
 				}
 			}
@@ -120,14 +120,14 @@ public final class PlayerOverviewModel extends HOTableModel {
      * Returns the {@link Player} with the same ID as the instance passed, or <code>null</code>.
      */
     private Player getPreviousPlayerDevelopmentStage(Player currentDevelopmentStage) {
-        final int id = currentDevelopmentStage.getPlayerID();
+        final int id = currentDevelopmentStage.getPlayerId();
 
         for (int i = 0;
 			 (SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage() != null)
              && (i < SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().size()); i++) {
             final Player selectedDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().get(i);
 
-            if (selectedDevelopmentStage.getPlayerID() == id) {
+            if (selectedDevelopmentStage.getPlayerId() == id) {
                 return selectedDevelopmentStage;
             }
         }
@@ -149,7 +149,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 				after = hrf.getDatum();
 			}
 		}
-		return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerID(), after);
+		return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerId(), after);
 	}
     
 

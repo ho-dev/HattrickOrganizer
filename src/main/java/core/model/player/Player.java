@@ -13,6 +13,7 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
 import core.util.*;
+
 import java.time.Duration;
 import java.util.*;
 
@@ -26,23 +27,31 @@ import static core.constants.player.PlayerSkill.*;
 public class Player extends AbstractTable.Storable {
 
     private byte idealPos = IMatchRoleID.UNKNOWN;
+
+    private static final int[] trainingSkills = {KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
     private static final String EMPTY = "";
 
+    private int spielerId;
 
     /**
      * Name
      */
-    private String m_sFirstName = "";
-    private String m_sNickName = "";
-    private String m_sLastName = "";
+    private String firstName = "";
+    private String nickName = "";
+    private String lastName = "";
 
     /**
      * Arrival in team
      */
-    private String m_arrivalDate;
+    private String arrivalDate;
+
+    /**
+     * Trainer contract date
+     */
+    private String contractDate;
 
     public String getContractDate() {
         return contractDate;
@@ -52,221 +61,193 @@ public class Player extends AbstractTable.Storable {
         this.contractDate = contractDate;
     }
 
-    /**
-     * Trainer contract date
-     */
-    private String contractDate;
 
     /**
      * Download date
      */
-    private HODateTime m_clhrfDate;
+    private HODateTime hrfDate;
 
     /**
      * The player is no longer available in the current HRF
      */
-    private boolean m_bOld;
+    private boolean goner;
 
     /**
      * Wing skill
      */
-    private double m_dSubFluegelspiel;
+    private double subWingerSkill;
 
     /**
      * Pass skill
      */
-    private double m_dSubPasspiel;
+    private double subPassingSkill;
 
     /**
      * Playmaking skill
      */
-    private double m_dSubSpielaufbau;
+    private double subPlaymakingSkill;
 
     /**
      * Standards
      */
-    private double m_dSubStandards;
+    private double subSetPiecesSkill;
 
     /**
      * Goal
      */
-    private double m_dSubTorschuss;
+    private double subScoringSkill;
 
     //Subskills
-    private double m_dSubTorwart;
+    private double subGoalkeeperSkill;
 
     /**
      * Verteidigung
      */
-    private double m_dSubVerteidigung;
+    private double subDefendingSkill;
 
     /**
      * Agressivität
      */
-    private int m_iAgressivitaet;
+    private int aggressivity;
 
     /**
      * Alter
      */
-    private int m_iAlter;
+    private int age;
 
     /**
      * Age Days
      */
-    private int m_iAgeDays;
+    private int ageDays;
 
     /**
      * Ansehen (ekel usw. )
      */
-    private int m_iAnsehen = 1;
+    private int honesty = 1;
 
     /**
      * Bewertung
      */
-    private int m_iBewertung;
+    private int rating;
 
     /**
      * charakter ( ehrlich)
      */
-    private int m_iCharakter = 1;
+    private int gentleness = 1;
 
     /**
      * Erfahrung
      */
-    private int m_iErfahrung = 1;
-
-    /**
-     * Fluegelspiel
-     */
-    private int m_iFluegelspiel = 1;
-
+    private int experience = 1;
     /**
      * Form
      */
-    private int m_iForm = 1;
+    private int form = 1;
 
     /**
      * Führungsqualität
      */
-    private int m_iFuehrung = 1;
+    private int leadership = 1;
 
     /**
      * Gehalt
      */
-    private int m_iGehalt = 1;
+    private int wage = 1;
 
     /**
      * Gelbe Karten
      */
-    private int m_iCards;
+    private int totalCards;
 
     /**
      * Hattricks
      */
-    private int m_iHattrick;
+    private int hatTricks;
 
-    private int m_iGoalsCurrentTeam;
+    private int currentTeamGoals;
     /**
      * Home Grown
      */
-    private boolean m_bHomeGrown = false;
+    private boolean homeGrown = false;
 
     /**
      * Kondition
      */
-    private int m_iKondition = 1;
+    private int stamina = 1;
 
     /**
      * Länderspiele
      */
-    private int m_iLaenderspiele;
+    private int internationalMatches;
 
     /**
      * Loyalty
      */
-    private int m_iLoyalty = 0;
+    private int loyalty = 0;
 
     /**
      * Markwert
      */
-    private int m_iTSI;
+    private int tsi;
 
-    private String m_sNationality;
+    private String nationality;
 
     /**
      * Aus welchem Land kommt der Player
      */
-    private int m_iNationalitaet = 49;
-
-    /**
-     * Passpiel
-     */
-    private int m_iPasspiel = 1;
+    private int nationalityId = 49;
 
     /**
      * SpezialitätID
      */
-    private int iPlayerSpecialty;
+    private int specialty;
 
-    /**
-     * Spielaufbau
-     */
-    private int m_iSpielaufbau = 1;
 
-    /**
-     * SpielerID
-     */
-    private int m_iSpielerID;
+    private int wingerSkill = 1;
+    private int passingSkill = 1;
+    private int playmakingSkill = 1;
 
-    /**
-     * Standards
-     */
-    private int m_iStandards = 1;
+    private int setPiecesSkill = 1;
+    private int scoringSkill = 1;
+
+    private int goalkeeperSkill = 1;
+
+    private int defendingSkill = 1;
 
     /**
      * Tore Freundschaftspiel
      */
-    private int m_iToreFreund;
+    private int friendlyGoals;
 
     /**
      * Tore Gesamt
      */
-    private int m_iToreGesamt;
+    private int totalGoals;
 
     /**
      * Tore Liga
      */
-    private int m_iToreLiga;
+    private int leagueGoals;
 
     /**
      * Tore Pokalspiel
      */
-    private int m_iTorePokal;
-
-    /**
-     * Torschuss
-     */
-    private int m_iTorschuss = 1;
-
-    /**
-     * Torwart
-     */
-    private int m_iTorwart = 1;
+    private int cupGameGoals;
 
     /**
      * Trainerfähigkeit
      */
-    private int m_iTrainer;
+    private int coachSkill;
 
     /**
      * Trainertyp
      */
-    private TrainerType m_iTrainerTyp;
+    private TrainerType trainerType;
 
     /**
      * Transferlisted
      */
-    private int m_iTransferlisted;
+    private int transferListed;
 
     /**
      * shirt number (can be edited in hattrick)
@@ -291,34 +272,29 @@ public class Player extends AbstractTable.Storable {
     /**
      * Länderspiele
      */
-    private int m_iU20Laenderspiele;
+    private int u20InternationalMatches;
 
     /**
      * Verletzt Wochen
      */
-    private int m_iInjuryWeeks = -1;
-
-    /**
-     * Verteidigung
-     */
-    private int m_iVerteidigung = 1;
+    private int injuryWeeks = -1;
 
     /**
      * Training block
      */
-    private boolean m_bTrainingBlock = false;
+    private boolean trainingBlock = false;
 
     /**
      * Last match
      */
-    private String m_lastMatchDate;
-    private Integer m_lastMatchId;
+    private String lastMatchDate;
+    private Integer lastMatchId;
     private MatchType lastMatchType;
     private Integer lastMatchPosition;
     private Integer lastMatchMinutes;
     // Rating is number of half stars
     // real rating value is rating/2.0f
-    private Integer m_lastMatchRating;
+    private Integer lastMatchRating;
     private Integer lastMatchRatingEndOfGame;
     private Integer nationalTeamId;
     private double subExperience;
@@ -328,10 +304,14 @@ public class Player extends AbstractTable.Storable {
      */
     private List<FuturePlayerTraining> futurePlayerTrainings;
 
-    private Integer motherclubId;
-    private String motherclubName;
-    private Integer matchesCurrentTeam;
-    private int hrf_id = -1;
+    private Integer motherClubId;
+    private String motherClubName;
+
+    /**
+     * Number of matches with the current team.
+     */
+    private Integer currentTeamMatches;
+    private int hrfId = -1;
     private Integer htms = null;
     private Integer htms28 = null;
 
@@ -353,72 +333,72 @@ public class Player extends AbstractTable.Storable {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(HOProperties properties, HODateTime hrfdate, int hrf_id) {
+    public Player(HOProperties properties, HODateTime hrfDate, int hrfId) {
         // Separate first, nick and last names are available. Utilize them?
 
-        this.hrf_id=hrf_id;
-        m_iSpielerID = properties.getInt("id", 0);
-        m_sFirstName = properties.getProperty("firstname", "");
-        m_sNickName = properties.getProperty("nickname", "");
-        m_sLastName = properties.getProperty("lastname", "");
-        m_arrivalDate = properties.getProperty("arrivaldate");
-        m_iAlter = properties.getInt("ald", 0);
-        m_iAgeDays = properties.getInt("agedays", 0);
-        m_iKondition = properties.getInt("uth", 0);
-        m_iForm = properties.getInt("for", 0);
-        m_iTorwart = properties.getInt("mlv", 0);
-        m_iVerteidigung = properties.getInt("bac", 0);
-        m_iSpielaufbau = properties.getInt("spe", 0);
-        m_iPasspiel = properties.getInt("fra", 0);
-        m_iFluegelspiel = properties.getInt("ytt", 0);
-        m_iTorschuss = properties.getInt("mal", 0);
-        m_iStandards = properties.getInt("fas", 0);
-        iPlayerSpecialty = properties.getInt("speciality", 0);
-        m_iCharakter = properties.getInt("gentleness", 0);
-        m_iAnsehen = properties.getInt("honesty", 0);
-        m_iAgressivitaet = properties.getInt("aggressiveness", 0);
-        m_iErfahrung = properties.getInt("rut", 0);
-        m_bHomeGrown = properties.getBoolean("homegr", false);
-        m_iLoyalty = properties.getInt("loy", 0);
-        m_iFuehrung = properties.getInt("led", 0);
-        m_iGehalt = properties.getInt("sal", 0);
-        m_iNationalitaet = properties.getInt("countryid", 0);
-        m_iTSI = properties.getInt("mkt", 0);
+        this.hrfId = hrfId;
+        spielerId = properties.getInt("id", 0);
+        firstName = properties.getProperty("firstname", "");
+        nickName = properties.getProperty("nickname", "");
+        lastName = properties.getProperty("lastname", "");
+        arrivalDate = properties.getProperty("arrivaldate");
+        age = properties.getInt("ald", 0);
+        ageDays = properties.getInt("agedays", 0);
+        stamina = properties.getInt("uth", 0);
+        form = properties.getInt("for", 0);
+        goalkeeperSkill = properties.getInt("mlv", 0);
+        defendingSkill = properties.getInt("bac", 0);
+        playmakingSkill = properties.getInt("spe", 0);
+        passingSkill = properties.getInt("fra", 0);
+        wingerSkill = properties.getInt("ytt", 0);
+        scoringSkill = properties.getInt("mal", 0);
+        setPiecesSkill = properties.getInt("fas", 0);
+        specialty = properties.getInt("speciality", 0);
+        gentleness = properties.getInt("gentleness", 0);
+        honesty = properties.getInt("honesty", 0);
+        aggressivity = properties.getInt("aggressiveness", 0);
+        experience = properties.getInt("rut", 0);
+        homeGrown = properties.getBoolean("homegr", false);
+        loyalty = properties.getInt("loy", 0);
+        leadership = properties.getInt("led", 0);
+        wage = properties.getInt("sal", 0);
+        nationalityId = properties.getInt("countryid", 0);
+        tsi = properties.getInt("mkt", 0);
 
         // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
-        m_dSubFluegelspiel = properties.getDouble("yttsub", 0.);
-        m_dSubPasspiel = properties.getDouble("frasub", 0);
-        m_dSubSpielaufbau = properties.getDouble("spesub", 0);
-        m_dSubStandards = properties.getDouble("fassub", 0);
-        m_dSubTorschuss = properties.getDouble("malsub", 0);
-        m_dSubTorwart = properties.getDouble("mlvsub", 0);
-        m_dSubVerteidigung = properties.getDouble("bacsub", 0);
+        subWingerSkill = properties.getDouble("yttsub", 0.);
+        subPassingSkill = properties.getDouble("frasub", 0);
+        subPlaymakingSkill = properties.getDouble("spesub", 0);
+        subSetPiecesSkill = properties.getDouble("fassub", 0);
+        subScoringSkill = properties.getDouble("malsub", 0);
+        subGoalkeeperSkill = properties.getDouble("mlvsub", 0);
+        subDefendingSkill = properties.getDouble("bacsub", 0);
         subExperience = properties.getDouble("experiencesub", 0);
 
         //TSI, alles vorher durch 1000 teilen
-        m_clhrfDate = hrfdate;
+        this.hrfDate = hrfDate;
 
-        if (hrfdate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
-            m_iTSI /= 1000d;
+        if (hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
+            tsi /= 1000d;
         }
 
-        m_iCards = properties.getInt("warnings", 0);
-        m_iInjuryWeeks = properties.getInt("ska", 0);
-        m_iToreFreund = properties.getInt("gtt", 0);
-        m_iToreLiga = properties.getInt("gtl", 0);
-        m_iTorePokal = properties.getInt("gtc", 0);
-        m_iToreGesamt = properties.getInt("gev", 0);
-        m_iHattrick = properties.getInt("hat", 0);
-        m_iGoalsCurrentTeam = properties.getInt("goalscurrentteam", 0);
-        matchesCurrentTeam = properties.getInt("matchescurrentteam", 0);
+        totalCards = properties.getInt("warnings", 0);
+        injuryWeeks = properties.getInt("ska", 0);
+        friendlyGoals = properties.getInt("gtt", 0);
+        leagueGoals = properties.getInt("gtl", 0);
+        cupGameGoals = properties.getInt("gtc", 0);
+        totalGoals = properties.getInt("gev", 0);
+        hatTricks = properties.getInt("hat", 0);
+        currentTeamGoals = properties.getInt("goalscurrentteam", 0);
+        currentTeamMatches = properties.getInt("matchescurrentteam", 0);
 
         this.lineupDisabled = properties.getBoolean("lineupdisabled", false);
-        this.m_iBewertung = properties.getInt( "rating", 0);
-        this.m_iTrainerTyp = TrainerType.fromInt(properties.getInt( "trainertype", -1));
-        this.m_iTrainer = properties.getInt( "trainerskilllevel", 0);
-        if (this.m_iTrainer > 0) {
-            this.m_iTrainer+=3;    // trainer level 5 is an excellent (8) trainer
-            m_iGehalt = properties.getInt("cost", 0);
+        this.rating = properties.getInt("rating", 0);
+        this.trainerType = TrainerType.fromInt(properties.getInt("trainertype", -1));
+        this.coachSkill = properties.getInt("trainerskilllevel", 0);
+        if (this.coachSkill > 0) {
+            this.coachSkill += 3;    // trainer level 5 is an excellent (8) trainer
+            wage = properties.getInt("cost", 0);
             contractDate = properties.getProperty("contractdate");
         }
 
@@ -427,138 +407,105 @@ public class Player extends AbstractTable.Storable {
             shirtNumber = Integer.parseInt(temp);
         }
 
-        m_iTransferlisted = properties.getBoolean("transferlisted", false) ? 1 : 0;
-        m_iLaenderspiele = properties.getInt("caps", 0);
-        m_iU20Laenderspiele = properties.getInt("capsu20", 0);
-        this.nationalTeamId = properties.getInt( "nationalteamid", 0);
+        transferListed = properties.getBoolean("transferlisted", false) ? 1 : 0;
+        internationalMatches = properties.getInt("caps", 0);
+        u20InternationalMatches = properties.getInt("capsu20", 0);
+        this.nationalTeamId = properties.getInt("nationalteamid", 0);
 
         // #461-lastmatch
-        m_lastMatchDate = properties.getProperty("lastmatch_date");
-        if (m_lastMatchDate != null && !m_lastMatchDate.isEmpty()) {
-            m_lastMatchId = properties.getInt("lastmatch_id", 0);
-            var pos  = properties.getInt("lastmatch_positioncode", -1);
-            if ( isFieldMatchRoleId(pos)) {
+        lastMatchDate = properties.getProperty("lastmatch_date");
+        if (lastMatchDate != null && !lastMatchDate.isEmpty()) {
+            lastMatchId = properties.getInt("lastmatch_id", 0);
+            var pos = properties.getInt("lastmatch_positioncode", -1);
+            if (isFieldMatchRoleId(pos)) {
                 lastMatchPosition = pos;
             }
             lastMatchMinutes = properties.getInt("lastmatch_playedminutes", 0);
             // rating is stored as number of half stars
-            m_lastMatchRating = (int) (2 * properties.getDouble("lastmatch_rating", 0));
+            lastMatchRating = (int) (2 * properties.getDouble("lastmatch_rating", 0));
             lastMatchRatingEndOfGame = (int) (2 * properties.getDouble("lastmatch_ratingendofgame", 0));
         }
 
         setLastMatchType(MatchType.getById(properties.getInt("lastmatch_type", 0)));
 
-        playerCategory = PlayerCategory.valueOf(properties.getInt("playercategoryid",0));
+        playerCategory = PlayerCategory.valueOf(properties.getInt("playercategoryid", 0));
         playerStatement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
         final HOModel oldmodel = HOVerwaltung.instance().getModel();
-        final Player oldPlayer = oldmodel.getCurrentPlayer(m_iSpielerID);
+        final Player oldPlayer = oldmodel.getCurrentPlayer(spielerId);
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
-            m_bTrainingBlock = oldPlayer.hasTrainingBlock();
-            motherclubId = oldPlayer.getOrDownloadMotherclubId();
-            motherclubName = oldPlayer.getOrDownloadMotherclubName();
+            trainingBlock = oldPlayer.hasTrainingBlock();
+            motherClubId = oldPlayer.getOrDownloadMotherClubId();
+            motherClubName = oldPlayer.getOrDownloadMotherClubName();
         }
     }
 
-    public String getOrDownloadMotherclubName() {
-        downloadMotherclubInfoIfMissing();
-        return this.motherclubName;
+    public String getOrDownloadMotherClubName() {
+        downloadMotherClubInfoIfMissing();
+        return this.motherClubName;
     }
 
-    public Integer getOrDownloadMotherclubId() {
-        downloadMotherclubInfoIfMissing();
-        return this.motherclubId;
+    public Integer getOrDownloadMotherClubId() {
+        downloadMotherClubInfoIfMissing();
+        return this.motherClubId;
     }
-    private void downloadMotherclubInfoIfMissing() {
-        if (motherclubId == null) {
+
+    private void downloadMotherClubInfoIfMissing() {
+        if (motherClubId == null) {
             var connection = MyConnector.instance();
             var isSilentDownload = connection.isSilentDownload();
             try {
                 connection.setSilentDownload(true);
                 // try to download missing mother club info
-                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerID()));
+                var playerDetails = OnlineWorker.downloadPlayerDetails(String.valueOf(this.getPlayerId()));
                 if (playerDetails != null) {
-                    motherclubId = playerDetails.getMotherclubId();
-                    motherclubName = playerDetails.getMotherclubName();
+                    motherClubId = playerDetails.getMotherClubId();
+                    motherClubName = playerDetails.getMotherClubName();
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
-            }
-            finally {
+            } finally {
                 connection.setSilentDownload(isSilentDownload); // reset
             }
         }
     }
 
-    private String getMotherclubName() {
-        return this.motherclubName;
+    private String getMotherClubName() {
+        return this.motherClubName;
     }
 
-    private Integer getMotherclubId() {
-        return this.motherclubId;
+    private Integer getMotherClubId() {
+        return this.motherClubId;
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
-    /**
-     * Setter for property m_iAgressivitaet.
-     *
-     * @param m_iAgressivitaet New value of property m_iAgressivitaet.
-     */
-    public void setAgressivitaet(int m_iAgressivitaet) {
-        this.m_iAgressivitaet = m_iAgressivitaet;
+    public void setAggressivity(int m_iAgressivitaet) {
+        this.aggressivity = m_iAgressivitaet;
     }
 
-    /**
-     * Getter for property m_iAgressivitaet.
-     *
-     * @return Value of property m_iAgressivitaet.
-     */
-    public int getAgressivitaet() {
-        return m_iAgressivitaet;
+    public int getAggressivity() {
+        return aggressivity;
     }
 
-    /**
-     * Setter for property m_iAlter.
-     *
-     * @param m_iAlter New value of property m_iAlter.
-     */
     public void setAge(int m_iAlter) {
         schumRankBenchmark = null;
-        this.m_iAlter = m_iAlter;
+        this.age = m_iAlter;
     }
 
-    /**
-     * Getter for property m_iAlter.
-     *
-     * @return Value of property m_iAlter.
-     */
-    public int getAlter() {
-        return m_iAlter;
+    public int getAge() {
+        return age;
     }
 
-    /**
-     * Setter for property m_iAgeDays.
-     *
-     * @param m_iAgeDays New value of property m_iAgeDays.
-     */
     public void setAgeDays(int m_iAgeDays) {
         schumRankBenchmark = null;
-        this.m_iAgeDays = m_iAgeDays;
+        this.ageDays = m_iAgeDays;
     }
 
-    /**
-     * Getter for property m_iAgeDays.
-     *
-     * @return Value of property m_iAgeDays.
-     */
     public int getAgeDays() {
-        return m_iAgeDays;
+        return ageDays;
     }
 
     /**
@@ -584,7 +531,7 @@ public class Player extends AbstractTable.Storable {
     public double getDoubleAgeFromDate(HODateTime t) {
         var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
         var diff = Duration.between(hrfTime.instant, t.instant);
-        int years = getAlter();
+        int years = getAge();
         int days = getAgeDays();
         return years + (double) (days + diff.toDays()) / 112;
     }
@@ -597,28 +544,31 @@ public class Player extends AbstractTable.Storable {
     public String getAgeWithDaysAsString() {
         return getAgeWithDaysAsString(HODateTime.now());
     }
-    public String getAgeWithDaysAsString(HODateTime t){
-        if (this.m_clhrfDate != null) return getAgeWithDaysAsString(this.getAlter(), this.getAgeDays(), t, this.m_clhrfDate);
+
+    public String getAgeWithDaysAsString(HODateTime t) {
+        if (this.hrfDate != null) return getAgeWithDaysAsString(this.getAge(), this.getAgeDays(), t, this.hrfDate);
         return "";
     }
 
     /**
      * Calculates the player's age at date referencing the current hrf download
+     *
      * @param ageYears int player's age in years in current hrf download
-     * @param ageDays int additional days
-     * @param time HODateTime for which the player's age should be calculated
+     * @param ageDays  int additional days
+     * @param time     HODateTime for which the player's age should be calculated
      * @return String
      */
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time) {
-        return getAgeWithDaysAsString(ageYears, ageDays,time, HOVerwaltung.instance().getModel().getBasics().getDatum());
+        return getAgeWithDaysAsString(ageYears, ageDays, time, HOVerwaltung.instance().getModel().getBasics().getDatum());
     }
 
     /**
      * Calculates the player's age at date referencing the given hrf date
+     *
      * @param ageYears int player's age in years at reference time
-     * @param ageDays int additional days
-     * @param time HODateTime for which the player's age should be calculated
-     * @param hrfTime HODateTime reference date, when player's age was given
+     * @param ageDays  int additional days
+     * @param time     HODateTime for which the player's age should be calculated
+     * @param hrfTime  HODateTime reference date, when player's age was given
      * @return String
      */
     public static String getAgeWithDaysAsString(int ageYears, int ageDays, HODateTime time, HODateTime hrfTime) {
@@ -626,8 +576,9 @@ public class Player extends AbstractTable.Storable {
         return age.seasons + " (" + age.days + ")";
     }
 
-    public HODateTime.HODuration getAgeAtDate(HODateTime date){
-        if ( this.m_clhrfDate != null) return new HODateTime.HODuration(this.getAlter(), this.getAgeDays()).plus(HODateTime.HODuration.between(this.m_clhrfDate, date));
+    public HODateTime.HODuration getAgeAtDate(HODateTime date) {
+        if (this.hrfDate != null)
+            return new HODateTime.HODuration(this.getAge(), this.getAgeDays()).plus(HODateTime.HODuration.between(this.hrfDate, date));
         return null;
     }
 
@@ -639,7 +590,7 @@ public class Player extends AbstractTable.Storable {
      */
     public String getAgeStringFull() {
         var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
-        var oldAge = new HODateTime.HODuration(this.getAlter(), this.getAgeDays());
+        var oldAge = new HODateTime.HODuration(this.getAge(), this.getAgeDays());
         var age = oldAge.plus(HODateTime.HODuration.between(hrfTime, HODateTime.now()));
         var birthday = oldAge.seasons != age.seasons;
         StringBuilder ret = new StringBuilder();
@@ -658,40 +609,20 @@ public class Player extends AbstractTable.Storable {
         return ret.toString();
     }
 
-    /**
-     * Setter for property m_iAnsehen.
-     *
-     * @param m_iAnsehen New value of property m_iAnsehen.
-     */
-    public void setAnsehen(int m_iAnsehen) {
-        this.m_iAnsehen = m_iAnsehen;
+    public void setHonesty(int m_iAnsehen) {
+        this.honesty = m_iAnsehen;
     }
 
-    /**
-     * Getter for property m_iAnsehen.
-     *
-     * @return Value of property m_iAnsehen.
-     */
-    public int getAnsehen() {
-        return m_iAnsehen;
+    public int getHonesty() {
+        return honesty;
     }
 
-    /**
-     * Setter for property m_iBewertung.
-     *
-     * @param m_iBewertung New value of property m_iBewertung.
-     */
-    public void setBewertung(int m_iBewertung) {
-        this.m_iBewertung = m_iBewertung;
+    public void setRating(int m_iBewertung) {
+        this.rating = m_iBewertung;
     }
 
-    /**
-     * Getter for property m_iBewertung.
-     *
-     * @return Value of property m_iBewertung.
-     */
     public int getRating() {
-        return m_iBewertung;
+        return rating;
     }
 
     /**
@@ -702,201 +633,124 @@ public class Player extends AbstractTable.Storable {
     public int getBonus() {
         int bonus = 0;
 
-        if (m_iNationalitaet != HOVerwaltung.instance().getModel().getBasics().getLand()) {
+        if (nationalityId != HOVerwaltung.instance().getModel().getBasics().getLand()) {
             bonus = 20;
         }
 
         return bonus;
     }
 
-    /**
-     * Setter for property m_iCharakter.
-     *
-     * @param m_iCharakter New value of property m_iCharakter.
-     */
-    public void setCharakter(int m_iCharakter) {
-        this.m_iCharakter = m_iCharakter;
+    public void setGentleness(int m_iCharakter) {
+        this.gentleness = m_iCharakter;
+    }
+
+    public int getGentleness() {
+        return gentleness;
     }
 
     public String getArrivalDate() {
-        return m_arrivalDate;
+        return arrivalDate;
     }
 
     public void setArrivalDate(String m_arrivalDate) {
-        this.m_arrivalDate = m_arrivalDate;
+        this.arrivalDate = m_arrivalDate;
     }
 
-    /**
-     * Getter for property m_iCharackter.
-     *
-     * @return Value of property m_iCharackter.
-     */
-    public int getCharakter() {
-        return m_iCharakter;
-    }
 
-    /**
-     * Setter for property m_iErfahrung.
-     *
-     * @param m_iErfahrung New value of property m_iErfahrung.
-     */
     public void setExperience(int m_iErfahrung) {
-        this.m_iErfahrung = m_iErfahrung;
+        this.experience = m_iErfahrung;
     }
 
-    /**
-     * Getter for property m_iErfahrung.
-     *
-     * @return Value of property m_iErfahrung.
-     */
     public int getExperience() {
-        return m_iErfahrung;
+        return experience;
     }
 
 
-    /**
-     * Setter for property m_iFluegelspiel.
-     *
-     * @param m_iFluegelspiel New value of property m_iFluegelspiel.
-     */
-    public void setFluegelspiel(int m_iFluegelspiel) {
+    public void setWingerSkill(int m_iFluegelspiel) {
         schumRank = null;
-        this.m_iFluegelspiel = m_iFluegelspiel;
+        this.wingerSkill = m_iFluegelspiel;
     }
 
-    /**
-     * Getter for property m_iFluegelspiel.
-     *
-     * @return Value of property m_iFluegelspiel.
-     */
-    public int getWIskill() {
-        return m_iFluegelspiel;
+    public int getWingerSkill() {
+        return wingerSkill;
     }
 
-    /**
-     * Setter for property m_iForm.
-     *
-     * @param m_iForm New value of property m_iForm.
-     */
     public void setForm(int m_iForm) {
-        this.m_iForm = m_iForm;
+        this.form = m_iForm;
     }
 
-    /**
-     * Getter for property m_iForm.
-     *
-     * @return Value of property m_iForm.
-     */
     public int getForm() {
-        return m_iForm;
+        return form;
     }
 
-    /**
-     * Setter for property m_iFuehrung.
-     *
-     * @param m_iFuehrung New value of property m_iFuehrung.
-     */
     public void setLeadership(int m_iFuehrung) {
-        this.m_iFuehrung = m_iFuehrung;
+        this.leadership = m_iFuehrung;
     }
 
-    /**
-     * Getter for property m_iFuehrung.
-     *
-     * @return Value of property m_iFuehrung.
-     */
     public int getLeadership() {
-        return m_iFuehrung;
+        return leadership;
+    }
+
+    public void setWage(int m_iGehalt) {
+        this.wage = m_iGehalt;
+    }
+
+    public int getWage() {
+        return wage;
+    }
+
+    public void setTotalCards(int m_iGelbeKarten) {
+        this.totalCards = m_iGelbeKarten;
+    }
+
+    public int getTotalCards() {
+        return totalCards;
     }
 
     /**
-     * Setter for property m_iGehalt.
-     *
-     * @param m_iGehalt New value of property m_iGehalt.
-     */
-    public void setGehalt(int m_iGehalt) {
-        this.m_iGehalt = m_iGehalt;
-    }
-
-    /**
-     * Getter for property m_iGehalt.
-     *
-     * @return Value of property m_iGehalt.
-     */
-    public int getSalary() {
-        return m_iGehalt;
-    }
-
-    /**
-     * Setter for property m_iGelbeKarten.
-     *
-     * @param m_iGelbeKarten New value of property m_iGelbeKarten.
-     */
-    public void setGelbeKarten(int m_iGelbeKarten) {
-        this.m_iCards = m_iGelbeKarten;
-    }
-
-    /**
-     * Getter for property m_iGelbeKarten.
-     *
-     * @return Value of property m_iGelbeKarten.
-     */
-    public int getCards() {
-        return m_iCards;
-    }
-
-    /**
-     * gibt an ob der spieler gesperrt ist
+     * Indicates whether the player is suspended.
      */
     public boolean isRedCarded() {
-        return (m_iCards > 2);
+        return (totalCards > 2);
     }
 
 
-    public void setHattrick(int m_iHattrick) {
-        this.m_iHattrick = m_iHattrick;
+    public void setHatTricks(int m_iHattrick) {
+        this.hatTricks = m_iHattrick;
     }
 
 
-    public int getHattrick() {
-        return m_iHattrick;
+    public int getHatTricks() {
+        return hatTricks;
     }
 
 
-    public int getGoalsCurrentTeam() {
-        return m_iGoalsCurrentTeam;
+    public int getCurrentTeamGoals() {
+        return currentTeamGoals;
     }
 
-    public void setGoalsCurrentTeam(int m_iGoalsCurrentTeam) {
-        this.m_iGoalsCurrentTeam = m_iGoalsCurrentTeam;
+    public void setCurrentTeamGoals(int m_iGoalsCurrentTeam) {
+        this.currentTeamGoals = m_iGoalsCurrentTeam;
     }
 
-    /**
-     * Setter for m_bHomeGrown
-     *
-     */
     public void setHomeGrown(boolean hg) {
-        m_bHomeGrown = hg;
+        homeGrown = hg;
     }
 
-    /**
-     * Getter for m_bHomeGrown
-     *
-     * @return Value of property m_bHomeGrown
-     */
     public boolean isHomeGrown() {
-        return m_bHomeGrown;
+        return homeGrown;
     }
+
 
     public HODateTime getHrfDate() {
-        if ( m_clhrfDate == null){
-            m_clhrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
+        if (hrfDate == null) {
+            hrfDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
         }
-        return m_clhrfDate;
+        return hrfDate;
     }
 
     public void setHrfDate(HODateTime timestamp) {
-        m_clhrfDate = timestamp;
+        hrfDate = timestamp;
     }
 
     public void setHrfDate() {
@@ -905,12 +759,13 @@ public class Player extends AbstractTable.Storable {
 
     static Player referencePlayer;
     static Player referenceKeeper;
-    public static Player getReferencePlayer(){
-        if ( referencePlayer == null){
+
+    public static Player getReferencePlayer() {
+        if (referencePlayer == null) {
             referencePlayer = new Player();
             referencePlayer.setAge(28);
             referencePlayer.setAgeDays(0);
-            referencePlayer.setPlayerID(MAX_VALUE);
+            referencePlayer.setPlayerId(MAX_VALUE);
             referencePlayer.setForm(8);
             referencePlayer.setStamina(9);
             referencePlayer.setSkillValue(KEEPER, 1.);
@@ -924,12 +779,13 @@ public class Player extends AbstractTable.Storable {
         }
         return referencePlayer;
     }
-    public static Player getReferenceKeeper(){
-        if ( referenceKeeper == null){
+
+    public static Player getReferenceKeeper() {
+        if (referenceKeeper == null) {
             referenceKeeper = new Player();
             referenceKeeper.setAge(28);
             referenceKeeper.setAgeDays(0);
-            referenceKeeper.setPlayerID(MAX_VALUE);
+            referenceKeeper.setPlayerId(MAX_VALUE);
             referenceKeeper.setForm(8);
             referenceKeeper.setStamina(9);
             referenceKeeper.setSkillValue(KEEPER, 20.);
@@ -941,7 +797,7 @@ public class Player extends AbstractTable.Storable {
             referenceKeeper.setSkillValue(SCORING, 1);
             referenceKeeper.setSkillValue(EXPERIENCE, 1);
         }
-        return referencePlayer;
+        return referenceKeeper;
     }
 
     public double getIdealPositionRating() {
@@ -952,18 +808,18 @@ public class Player extends AbstractTable.Storable {
         return 0;
     }
 
-    private PlayerPositionRating getMaxRating(){
+    private PlayerPositionRating getMaxRating() {
         var maxRating = getAllPositionRatings().stream().max(Comparator.comparing(PlayerPositionRating::getRating));
         return maxRating.orElse(null);
 
     }
 
-    public MatchLineupPosition getIdealMatchLineupPosition(){
+    public MatchLineupPosition getIdealMatchLineupPosition() {
         var r = getMaxRating();
-        if ( r != null){
-            return new MatchLineupPosition(r.roleId, this.getPlayerID(), r.behaviour);
+        if (r != null) {
+            return new MatchLineupPosition(r.roleId, this.getPlayerId(), r.behaviour);
         }
-        return  null;
+        return null;
     }
 
     public byte getIdealPosition() {
@@ -978,12 +834,12 @@ public class Player extends AbstractTable.Storable {
             return idealPos;
         }
 
-        return (byte)flag;
+        return (byte) flag;
     }
 
     public double getPositionRating(byte position) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        return  ratingPredictionModel.getPlayerMatchAverageRating(this, position);
+        return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
     }
 
     static class PlayerPositionRating {
@@ -1027,11 +883,11 @@ public class Player extends AbstractTable.Storable {
         byte behaviour;
     }
 
-    List<PlayerPositionRating> getAllPositionRatings(){
+    List<PlayerPositionRating> getAllPositionRatings() {
         var ret = new ArrayList<PlayerPositionRating>();
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        for ( var p : RatingPredictionModel.playerRatingPositions){
-            for ( var behaviour : MatchRoleID.getBehaviours(p)){
+        for (var p : RatingPredictionModel.playerRatingPositions) {
+            for (var behaviour : MatchRoleID.getBehaviours(p)) {
                 var d = ratingPredictionModel.getPlayerMatchAverageRating(this, p, behaviour);
                 ret.add(new PlayerPositionRating(p, behaviour, d, ratingPredictionModel.calcRelativePlayerRating(this, p, behaviour, 0)));
             }
@@ -1045,17 +901,15 @@ public class Player extends AbstractTable.Storable {
     public List<Byte> getAlternativeBestPositions() {
         Double threshold = null;
         float tolerance = 1f - UserParameter.instance().alternativePositionsTolerance;
-        var ret  = new ArrayList<Byte>();
+        var ret = new ArrayList<Byte>();
         var allPositionRatings = getAllPositionRatings().stream().sorted(Comparator.comparing(PlayerPositionRating::getRating, Comparator.reverseOrder())).toList();
-        for ( var p : allPositionRatings){
-            if ( threshold == null ){
+        for (var p : allPositionRatings) {
+            if (threshold == null) {
                 threshold = p.getRating() * tolerance;
                 ret.add(MatchRoleID.getPosition(p.getRoleId(), p.getBehaviour()));
-            }
-            else if (p.getRating() >= threshold){
+            } else if (p.getRating() >= threshold) {
                 ret.add(MatchRoleID.getPosition(p.getRoleId(), p.getBehaviour()));
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -1065,74 +919,51 @@ public class Player extends AbstractTable.Storable {
     /**
      * return whether the position is one of the best position for the player
      */
-    public boolean isAnAlternativeBestPosition(byte position){
+    public boolean isAnAlternativeBestPosition(byte position) {
         return getAlternativeBestPositions().contains(position);
     }
 
-
-    /**
-     * Setter for property m_iKondition.
-     *
-     * @param m_iKondition New value of property m_iKondition.
-     */
     public void setStamina(int m_iKondition) {
-        this.m_iKondition = m_iKondition;
+        this.stamina = m_iKondition;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //Accessor
-    ////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Getter for property m_iKondition.
-     *
-     * @return Value of property m_iKondition.
-     */
     public int getStamina() {
-        return m_iKondition;
+        return stamina;
     }
 
-    /**
-     * Setter for property m_iLaenderspiele.
-     *
-     * @param m_iLaenderspiele New value of property m_iLaenderspiele.
-     */
-    public void setLaenderspiele(int m_iLaenderspiele) {
-        this.m_iLaenderspiele = m_iLaenderspiele;
+    public void setInternationalMatches(int m_iLaenderspiele) {
+        this.internationalMatches = m_iLaenderspiele;
     }
 
-    /**
-     * Getter for property m_iLaenderspiele.
-     *
-     * @return Value of property m_iLaenderspiele.
-     */
-    public int getLaenderspiele() {
-        return m_iLaenderspiele;
+    public int getInternalMatches() {
+        return internationalMatches;
     }
 
     private final HashMap<Integer, Skillup> lastSkillups = new HashMap<>();
+
     /**
      * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
      * Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
     public Skillup getLastLevelUp(int skill) {
-        if ( lastSkillups.containsKey(skill)){
+        if (lastSkillups.containsKey(skill)) {
             return lastSkillups.get(skill);
         }
-        var ret =  DBManager.instance().getLastLevelUp(skill, m_iSpielerID);
+        var ret = DBManager.instance().getLastLevelUp(skill, spielerId);
         lastSkillups.put(skill, ret);
         return ret;
     }
 
-    private final HashMap<Integer, List<Skillup> > allSkillUps = new HashMap<>();
+    private final HashMap<Integer, List<Skillup>> allSkillUps = new HashMap<>();
+
     /**
      * gives information of skill ups
      */
     public List<Skillup> getAllLevelUp(int skill) {
-        if ( allSkillUps.containsKey(skill)) {
+        if (allSkillUps.containsKey(skill)) {
             return allSkillUps.get(skill);
         }
-        var ret = DBManager.instance().getAllLevelUp(skill, m_iSpielerID);
+        var ret = DBManager.instance().getAllLevelUp(skill, spielerId);
         allSkillUps.put(skill, ret);
         return ret;
     }
@@ -1146,81 +977,59 @@ public class Player extends AbstractTable.Storable {
      * Returns the loyalty stat
      */
     public int getLoyalty() {
-        return m_iLoyalty;
+        return loyalty;
     }
 
     /**
      * Sets the loyalty stat
      */
     public void setLoyalty(int loy) {
-        m_iLoyalty = loy;
+        loyalty = loy;
     }
 
-
-    /**
-     * Setter for property m_sManuellerSmilie.
-     *
-     * @param manuellerSmilie New value of property m_sManuellerSmilie.
-     */
     public void setManuellerSmilie(String manuellerSmilie) {
         getNotes().setManuelSmilie(manuellerSmilie);
         DBManager.instance().storePlayerNotes(notes);
     }
 
-    /**
-     * Getter for property m_sManuellerSmilie.
-     *
-     * @return Value of property m_sManuellerSmilie.
-     */
     public String getInfoSmiley() {
         return getNotes().getManuelSmilie();
     }
 
-    /**
-     * Sets the TSI
-     *
-     * @param m_iTSI New value of property m_iMarkwert.
-     */
-    public void setTSI(int m_iTSI) {
-        this.m_iTSI = m_iTSI;
+    public void setTsi(int m_iTSI) {
+        this.tsi = m_iTSI;
     }
 
-    /**
-     * Returns the TSI
-     *
-     * @return Value of property m_iMarkwert.
-     */
-    public int getTSI() {
-        return m_iTSI;
+    public int getTsi() {
+        return tsi;
     }
 
     public void setFirstName(String m_sName) {
-        if ( m_sName != null ) this.m_sFirstName = m_sName;
-        else m_sFirstName = "";
+        if (m_sName != null) this.firstName = m_sName;
+        else firstName = "";
     }
 
     public String getFirstName() {
-        return m_sFirstName;
+        return firstName;
     }
 
     public void setNickName(String m_sName) {
-        if ( m_sName != null ) this.m_sNickName = m_sName;
-        else m_sNickName = "";
+        if (m_sName != null) this.nickName = m_sName;
+        else nickName = "";
     }
 
     public String getNickName() {
-        return m_sNickName;
+        return nickName;
     }
 
     public void setLastName(String m_sName) {
-        if (m_sName != null ) this.m_sLastName = m_sName;
-        else this.m_sLastName = "";
+        if (m_sName != null) this.lastName = m_sName;
+        else this.lastName = "";
     }
 
     public String getLastName() {
-        return m_sLastName;
+        return lastName;
     }
-
 
 
     /**
@@ -1229,9 +1038,7 @@ public class Player extends AbstractTable.Storable {
      * Nickname are ignored
      */
     public String getShortName() {
-
-        if (getFirstName().isEmpty())
-        {
+        if (getFirstName().isEmpty()) {
             return getLastName();
         }
         return getFirstName().charAt(0) + ". " + getLastName();
@@ -1239,7 +1046,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     public String getFullName() {
-
         if (getNickName().isEmpty()) {
             if (!getFirstName().isEmpty()) {
                 return getFirstName() + " " + getLastName();
@@ -1250,133 +1056,92 @@ public class Player extends AbstractTable.Storable {
         return getFirstName() + " '" + getNickName() + "' " + getLastName();
     }
 
-    /**
-     * Setter for property m_iNationalitaet.
-     *
-     * @param m_iNationalitaet New value of property m_iNationalitaet.
-     */
-    public void setNationalityAsInt(int m_iNationalitaet) {
-        this.m_iNationalitaet = m_iNationalitaet;
+    public void setNationalityId(int m_iNationalitaet) {
+        this.nationalityId = m_iNationalitaet;
     }
 
-    /**
-     * Getter for property m_iNationalitaet.
-     *
-     * @return Value of property m_iNationalitaet.
-     */
-    public int getNationalityAsInt() {
-        return m_iNationalitaet;
+    public int getNationalityId() {
+        return nationalityId;
     }
 
 
-    public String getNationalityAsString() {
-        if (m_sNationality != null){
-            return m_sNationality;
+    public String getNationality() {
+        if (nationality != null) {
+            return nationality;
         }
-        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(m_iNationalitaet);
-        if ( leagueDetail != null ) {
-            m_sNationality = leagueDetail.getCountryName();
+        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(nationalityId);
+        if (leagueDetail != null) {
+            nationality = leagueDetail.getCountryName();
+        } else {
+            nationality = "";
         }
-        else{
-            m_sNationality = "";
-        }
-        return  m_sNationality;
+        return nationality;
     }
 
-
-    /**
-     * Setter for property m_bOld.
-     *
-     * @param m_bOld New value of property m_bOld.
-     */
-    public void setOld(boolean m_bOld) {
-        this.m_bOld = m_bOld;
+    public void setGoner(boolean m_bOld) {
+        this.goner = m_bOld;
     }
 
-    /**
-     * Getter for property m_bOld.
-     *
-     * @return Value of property m_bOld.
-     */
-    public boolean isOld() {
-        return m_bOld;
+    public boolean isGoner() {
+        return goner;
     }
 
-    /**
-     * Setter for property m_iPasspiel.
-     *
-     * @param m_iPasspiel New value of property m_iPasspiel.
-     */
-    public void setPasspiel(int m_iPasspiel) {
+    public void setPassingSkill(int m_iPasspiel) {
         schumRank = null;
-        this.m_iPasspiel = m_iPasspiel;
+        this.passingSkill = m_iPasspiel;
     }
 
-    /**
-     * Getter for property m_iPasspiel.
-     *
-     * @return Value of property m_iPasspiel.
-     */
-    public int getPSskill() {
-        return m_iPasspiel;
+    public int getPassingSkill() {
+        return passingSkill;
     }
 
     /**
      * Zum speichern! Die Reduzierung des Marktwerts auf TSI wird rückgängig gemacht
      */
     public int getMarktwert() {
-        if (m_clhrfDate == null || m_clhrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
+        if (hrfDate == null || hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
             //Echter Marktwert
-            return m_iTSI * 1000;
+            return tsi * 1000;
         }
 
         //TSI
-        return m_iTSI;
+        return tsi;
     }
 
 
     String latestTSIInjured;
     String latestTSINotInjured;
-    public String getLatestTSINotInjured(){
-        if (latestTSINotInjured == null){
-            latestTSINotInjured = DBManager.instance().loadLatestTSINotInjured(m_iSpielerID);
+
+    public String getLatestTSINotInjured() {
+        if (latestTSINotInjured == null) {
+            latestTSINotInjured = DBManager.instance().loadLatestTSINotInjured(spielerId);
         }
         return latestTSINotInjured;
     }
-    public String getLatestTSIInjured(){
-        if (latestTSIInjured == null){
-            latestTSIInjured = DBManager.instance().loadLatestTSIInjured(m_iSpielerID);
+
+    public String getLatestTSIInjured() {
+        if (latestTSIInjured == null) {
+            latestTSIInjured = DBManager.instance().loadLatestTSIInjured(spielerId);
         }
         return latestTSIInjured;
     }
 
-    /**
-     * Setter for property iPlayerSpecialty.
-     *
-     * @param iPlayerSpecialty New value of property iPlayerSpecialty.
-     */
-    public void setPlayerSpecialty(int iPlayerSpecialty) {
-        this.iPlayerSpecialty = iPlayerSpecialty;
+    public void setSpecialty(int iPlayerSpecialty) {
+        this.specialty = iPlayerSpecialty;
     }
 
-    /**
-     * Getter for property iPlayerSpecialty.
-     *
-     * @return Value of property iPlayerSpecialty.
-     */
-    public int getPlayerSpecialty() {
-        return iPlayerSpecialty;
+    public int getSpecialty() {
+        return specialty;
     }
 
-    public boolean hasSpecialty(Specialty speciality)
-    {
-        Specialty s = Specialty.values()[iPlayerSpecialty];
+    public boolean hasSpecialty(Specialty speciality) {
+        Specialty s = Specialty.values()[specialty];
         return s.equals(speciality);
     }
 
     // returns the name of the speciality in the used language
     public String getSpecialtyName() {
-        Specialty s = Specialty.values()[iPlayerSpecialty];
+        Specialty s = Specialty.values()[specialty];
         if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
@@ -1387,7 +1152,7 @@ public class Player extends AbstractTable.Storable {
     // return the name of the speciality with a break before and in brackets
     // e.g. [br][quick], used for HT-ML export
     public String getSpecialtyExportName() {
-        Specialty s = Specialty.values()[iPlayerSpecialty];
+        Specialty s = Specialty.values()[specialty];
         if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
@@ -1397,7 +1162,7 @@ public class Player extends AbstractTable.Storable {
 
     // no break so that the export looks better
     public String getSpecialtyExportNameForKeeper() {
-        Specialty s = Specialty.values()[iPlayerSpecialty];
+        Specialty s = Specialty.values()[specialty];
         if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
@@ -1405,24 +1170,13 @@ public class Player extends AbstractTable.Storable {
         }
     }
 
-
-    /**
-     * Setter for property m_iSpielaufbau.
-     *
-     * @param m_iSpielaufbau New value of property m_iSpielaufbau.
-     */
-    public void setSpielaufbau(int m_iSpielaufbau) {
+    public void setPlaymakingSkill(int m_iSpielaufbau) {
         schumRank = null;
-        this.m_iSpielaufbau = m_iSpielaufbau;
+        this.playmakingSkill = m_iSpielaufbau;
     }
 
-    /**
-     * Getter for property m_iSpielaufbau.
-     *
-     * @return Value of property m_iSpielaufbau.
-     */
-    public int getPMskill() {
-        return m_iSpielaufbau;
+    public int getPlaymakingSkill() {
+        return playmakingSkill;
     }
 
     /**
@@ -1441,45 +1195,26 @@ public class Player extends AbstractTable.Storable {
         return !this.isLineupDisabled() && getNotes().isEligibleToPlay();
     }
 
-    /**
-     * Setter for property m_iSpielerID.
-     *
-     * @param m_iSpielerID New value of property m_iSpielerID.
-     */
-    public void setPlayerID(int m_iSpielerID) {
-        this.m_iSpielerID = m_iSpielerID;
+    public void setPlayerId(int m_iSpielerID) {
+        this.spielerId = m_iSpielerID;
     }
 
-    /**
-     * Getter for property m_iSpielerID.
-     *
-     * @return Value of property m_iSpielerID.
-     */
-    public int getPlayerID() {
-        return m_iSpielerID;
+    public int getPlayerId() {
+        return spielerId;
     }
 
-    /**
-     * Setter for property m_iStandards.
-     *
-     * @param m_iStandards New value of property m_iStandards.
-     */
-    public void setStandards(int m_iStandards) {
+    public void setSetPiecesSkill(int m_iStandards) {
         schumRank = null;
-        this.m_iStandards = m_iStandards;
+        this.setPiecesSkill = m_iStandards;
     }
 
-    /**
-     * Getter for property m_iStandards.
-     *
-     * @return Value of property m_iStandards.
-     */
-    public int getSPskill() {
-        return m_iStandards;
+    public int getSetPiecesSkill() {
+        return setPiecesSkill;
     }
 
     /**
      * Get skill value including subskill
+     *
      * @param iSkill skill id
      * @return double
      */
@@ -1496,13 +1231,13 @@ public class Player extends AbstractTable.Storable {
      */
     public double getSub4Skill(int skill) {
         double value = switch (skill) {
-            case KEEPER -> m_dSubTorwart;
-            case PLAYMAKING -> m_dSubSpielaufbau;
-            case DEFENDING -> m_dSubVerteidigung;
-            case PASSING -> m_dSubPasspiel;
-            case WINGER -> m_dSubFluegelspiel;
-            case SCORING -> m_dSubTorschuss;
-            case SET_PIECES -> m_dSubStandards;
+            case KEEPER -> subGoalkeeperSkill;
+            case PLAYMAKING -> subPlaymakingSkill;
+            case DEFENDING -> subDefendingSkill;
+            case PASSING -> subPassingSkill;
+            case WINGER -> subWingerSkill;
+            case SCORING -> subScoringSkill;
+            case SET_PIECES -> subSetPiecesSkill;
             case EXPERIENCE -> subExperience;
             case STAMINA -> 0.5;
             default -> 0;
@@ -1514,13 +1249,13 @@ public class Player extends AbstractTable.Storable {
     public void setSubskill4PlayerSkill(int skill, double value) {
         schumRank = null;
         switch (skill) {
-            case KEEPER -> m_dSubTorwart = value;
-            case PLAYMAKING -> m_dSubSpielaufbau = value;
-            case DEFENDING -> m_dSubVerteidigung = value;
-            case PASSING -> m_dSubPasspiel = value;
-            case WINGER -> m_dSubFluegelspiel = value;
-            case SCORING -> m_dSubTorschuss = value;
-            case SET_PIECES -> m_dSubStandards = value;
+            case KEEPER -> subGoalkeeperSkill = value;
+            case PLAYMAKING -> subPlaymakingSkill = value;
+            case DEFENDING -> subDefendingSkill = value;
+            case PASSING -> subPassingSkill = value;
+            case WINGER -> subWingerSkill = value;
+            case SCORING -> subScoringSkill = value;
+            case SET_PIECES -> subSetPiecesSkill = value;
             case EXPERIENCE -> subExperience = value;
         }
     }
@@ -1545,181 +1280,104 @@ public class Player extends AbstractTable.Storable {
         return ret.replaceAll("\\.png$", "");
     }
 
-    /**
-     * Setter for property m_iToreFreund.
-     *
-     * @param m_iToreFreund New value of property m_iToreFreund.
-     */
-    public void setToreFreund(int m_iToreFreund) {
-        this.m_iToreFreund = m_iToreFreund;
+    public void setFriendlyGoals(int m_iToreFreund) {
+        this.friendlyGoals = m_iToreFreund;
     }
 
-    /**
-     * Getter for property m_iToreFreund.
-     *
-     * @return Value of property m_iToreFreund.
-     */
-    public int getToreFreund() {
-        return m_iToreFreund;
+    public int getFriendlyGoals() {
+        return friendlyGoals;
     }
 
-    /**
-     * Setter for property m_iToreGesamt.
-     *
-     * @param m_iToreGesamt New value of property m_iToreGesamt.
-     */
-    public void setAllOfficialGoals(int m_iToreGesamt) {
-        this.m_iToreGesamt = m_iToreGesamt;
+    public void setTotalGoals(int m_iToreGesamt) {
+        this.totalGoals = m_iToreGesamt;
     }
 
-    /**
-     * Getter for property m_iToreGesamt.
-     *
-     * @return Value of property m_iToreGesamt.
-     */
-    public int getAllOfficialGoals() {
-        return m_iToreGesamt;
+    public int getTotalGoals() {
+        return totalGoals;
     }
 
-    /**
-     * Setter for property m_iToreLiga.
-     *
-     * @param m_iToreLiga New value of property m_iToreLiga.
-     */
-    public void setToreLiga(int m_iToreLiga) {
-        this.m_iToreLiga = m_iToreLiga;
+    public void setLeagueGoals(int m_iToreLiga) {
+        this.leagueGoals = m_iToreLiga;
     }
 
-    /**
-     * Getter for property m_iToreLiga.
-     *
-     * @return Value of property m_iToreLiga.
-     */
-    public int getSeasonSeriesGoal() {
-        return m_iToreLiga;
+    public int getLeagueGoals() {
+        return leagueGoals;
     }
 
-    /**
-     * Setter for property m_iTorePokal.
-     *
-     * @param m_iTorePokal New value of property m_iTorePokal.
-     */
-    public void setTorePokal(int m_iTorePokal) {
-        this.m_iTorePokal = m_iTorePokal;
+    public void setCupGameGoals(int m_iTorePokal) {
+        this.cupGameGoals = m_iTorePokal;
     }
 
-    /**
-     * Getter for property m_iTorePokal.
-     *
-     * @return Value of property m_iTorePokal.
-     */
-    public int getSeasonCupGoal() {
-        return m_iTorePokal;
+    public int getCupGameGoals() {
+        return cupGameGoals;
     }
 
-    /**
-     * Setter for property m_iTorschuss.
-     *
-     * @param m_iTorschuss New value of property m_iTorschuss.
-     */
-    public void setTorschuss(int m_iTorschuss) {
+    public void setScoringSkill(int m_iTorschuss) {
         schumRank = null;
-        this.m_iTorschuss = m_iTorschuss;
+        this.scoringSkill = m_iTorschuss;
     }
 
-    /**
-     * Getter for property m_iTorschuss.
-     *
-     * @return Value of property m_iTorschuss.
-     */
-    public int getSCskill() {
-        return m_iTorschuss;
+    public int getScoringSkill() {
+        return scoringSkill;
     }
 
-    /**
-     * Setter for property m_iTorwart.
-     *
-     * @param m_iTorwart New value of property m_iTorwart.
-     */
-    public void setTorwart(int m_iTorwart) {
+    public void setGoalkeeperSkill(int m_iTorwart) {
         schumRank = null;
-        this.m_iTorwart = m_iTorwart;
+        this.goalkeeperSkill = m_iTorwart;
+    }
+
+    public int getGoalkeeperSkill() {
+        return goalkeeperSkill;
+    }
+
+    public void setCoachSkill(Integer m_iTrainer) {
+        this.coachSkill = m_iTrainer;
+    }
+
+    public int getCoachSkill() {
+        return coachSkill;
     }
 
     /**
-     * Getter for property m_iTorwart.
-     *
-     * @return Value of property m_iTorwart.
+     * indicates whether a player is a coach.
      */
-    public int getGKskill() {
-        return m_iTorwart;
+    public boolean isCoach() {
+        return coachSkill > 0 && trainerType != null;
     }
 
-    /**
-     * Setter for property m_iTrainer.
-     *
-     * @param m_iTrainer New value of property m_iTrainer.
-     */
-    public void setTrainerSkill(Integer m_iTrainer) {
-        this.m_iTrainer = m_iTrainer;
+    public void setTrainerType(TrainerType m_iTrainerTyp) {
+        this.trainerType = m_iTrainerTyp;
     }
 
-    /**
-     * Getter for property m_iTrainer.
-     *
-     * @return Value of property m_iTrainer.
-     */
-    public int getTrainerSkill() {
-        return m_iTrainer;
-    }
-
-    /**
-     * gibt an ob der Player Trainer ist
-     */
-    public boolean isTrainer() {
-        return m_iTrainer > 0 && m_iTrainerTyp != null;
-    }
-
-    /**
-     * Setter for property m_iTrainerTyp.
-     *
-     * @param m_iTrainerTyp New value of property m_iTrainerTyp.
-     */
-    public void setTrainerTyp(TrainerType m_iTrainerTyp) {
-        this.m_iTrainerTyp = m_iTrainerTyp;
-    }
-
-    /**
-     * Getter for property m_iTrainerTyp.
-     *
-     * @return Value of property m_iTrainerTyp.
-     */
-    public TrainerType getTrainerTyp() {
-        return m_iTrainerTyp;
+    public TrainerType getTrainerType() {
+        return trainerType;
     }
 
     /**
      * Last match
+     *
      * @return date
      */
-    public String getLastMatchDate(){
-        return m_lastMatchDate;
+    public String getLastMatchDate() {
+        return lastMatchDate;
     }
 
     /**
      * Last match
+     *
      * @return rating
      */
-    public Integer getLastMatchRating(){
-        return m_lastMatchRating;
+    public Integer getLastMatchRating() {
+        return lastMatchRating;
     }
 
     /**
      * Last match id
+     *
      * @return id
      */
-    public Integer getLastMatchId(){
-        return m_lastMatchId;
+    public Integer getLastMatchId() {
+        return lastMatchId;
     }
 
     /**
@@ -1736,105 +1394,77 @@ public class Player extends AbstractTable.Storable {
         this.lastMatchType = matchType;
     }
 
-    /**
-     * Setter for property m_iTransferlisted.
-     *
-     * @param m_iTransferlisted New value of property m_iTransferlisted.
-     */
-    public void setTransferlisted(int m_iTransferlisted) {
-        this.m_iTransferlisted = m_iTransferlisted;
+    public void setTransferListed(int m_iTransferlisted) {
+        this.transferListed = m_iTransferlisted;
     }
 
-    /**
-     * Getter for property m_iTransferlisted.
-     *
-     * @return Value of property m_iTransferlisted.
-     */
-    public int getTransferlisted() {
-        return m_iTransferlisted;
+    public int getTransferListed() {
+        return transferListed;
     }
 
-    /**
-     * Setter for property m_iTrikotnummer.
-     *
-     * @param m_iTrikotnummer New value of property m_iTrikotnummer.
-     */
     public void setShirtNumber(int m_iTrikotnummer) {
         this.shirtNumber = m_iTrikotnummer;
     }
 
-    /**
-     * Getter for property m_iTrikotnummer.
-     *
-     * @return Value of property m_iTrikotnummer.
-     */
-    public int getTrikotnummer() {
+    public int getShirtNumber() {
         return shirtNumber;
     }
 
-    /**
-     * Setter for property m_iU20Laenderspiele.
-     *
-     * @param m_iU20Laenderspiele New value of property m_iU20Laenderspiele.
-     */
-    public void setU20Laenderspiele(int m_iU20Laenderspiele) {
-        this.m_iU20Laenderspiele = m_iU20Laenderspiele;
+    public void setU20InternationalMatches(int m_iU20Laenderspiele) {
+        this.u20InternationalMatches = m_iU20Laenderspiele;
     }
 
-    /**
-     * Getter for property m_iU20Laenderspiele.
-     *
-     * @return Value of property m_iU20Laenderspiele.
-     */
-    public int getU20Laenderspiele() {
-        return m_iU20Laenderspiele;
+    public int getU20InternationalMatches() {
+        return u20InternationalMatches;
     }
 
     public void setHrfId(int hrf_id) {
-        this.hrf_id=hrf_id;
+        this.hrfId = hrf_id;
     }
 
     public int getHrfId() {
-        return this.hrf_id;
+        return this.hrfId;
     }
-    public boolean isTemporary(){return this.hrf_id == -1;}
+
+    public boolean isTemporary() {
+        return this.hrfId == -1;
+    }
 
     public void setLastMatchDate(String v) {
-        this.m_lastMatchDate = v;
+        this.lastMatchDate = v;
     }
 
     public void setLastMatchRating(Integer v) {
-        this.m_lastMatchRating=v;
+        this.lastMatchRating = v;
     }
 
     public void setLastMatchId(Integer v) {
-        this.m_lastMatchId = v;
+        this.lastMatchId = v;
     }
 
     public Integer getHtms28() {
-        if ( htms28 == null){
-            htms28 = Htms.htms28(getSkills(), this.m_iAlter, this.m_iAgeDays);
+        if (htms28 == null) {
+            htms28 = Htms.htms28(getSkills(), this.age, this.ageDays);
         }
         return htms28;
     }
 
-    public Integer getHtms(){
-        if (htms == null){
-            htms= Htms.htms(getSkills());
+    public Integer getHtms() {
+        if (htms == null) {
+            htms = Htms.htms(getSkills());
         }
         return htms;
     }
 
     private Map<Integer, Integer> getSkills() {
-
         var ret = new HashMap<Integer, Integer>();
-        ret.put(KEEPER, getGKskill());
-        ret.put(DEFENDING, getDEFskill());
-        ret.put(PLAYMAKING, getPMskill());
-        ret.put(WINGER, getWIskill());
-        ret.put(PASSING, getPSskill());
-        ret.put(SCORING, getSCskill());
-        ret.put(SET_PIECES, getSPskill());
+        ret.put(KEEPER, getGoalkeeperSkill());
+        ret.put(DEFENDING, getDefendingSkill());
+        ret.put(PLAYMAKING, getPlaymakingSkill());
+        ret.put(WINGER, getWingerSkill());
+        ret.put(PASSING, getPassingSkill());
+        ret.put(SCORING, getScoringSkill());
+        ret.put(SET_PIECES, getSetPiecesSkill());
 
         return ret;
     }
@@ -1847,9 +1477,10 @@ public class Player extends AbstractTable.Storable {
         this.lineupDisabled = Objects.requireNonNullElse(lineupDisabled, false);
     }
 
-    public static class Notes extends  AbstractTable.Storable{
+    public static class Notes extends AbstractTable.Storable {
 
-        public Notes(){}
+        public Notes() {
+        }
 
         private int playerId;
 
@@ -1883,57 +1514,61 @@ public class Player extends AbstractTable.Storable {
             return isFired;
         }
 
-        private String manuelSmilie="";
-        private String note="";
-        private boolean eligibleToPlay=true;
-        private String teamInfoSmilie="";
-        private boolean isFired=false;
+        private String manuelSmilie = "";
+        private String note = "";
+        private boolean eligibleToPlay = true;
+        private String teamInfoSmilie = "";
+        private boolean isFired = false;
 
         public void setPlayerId(int playerId) {
-            this.playerId=playerId;
+            this.playerId = playerId;
         }
 
         public void setNote(String note) {
-            this.note=note;
+            this.note = note;
         }
 
         public void setEligibleToPlay(boolean spielberechtigt) {
-            this.eligibleToPlay=spielberechtigt;
+            this.eligibleToPlay = spielberechtigt;
         }
 
         public void setTeamInfoSmilie(String teamInfoSmilie) {
-            this.teamInfoSmilie=teamInfoSmilie;
+            this.teamInfoSmilie = teamInfoSmilie;
         }
 
         public void setManuelSmilie(String manuellerSmilie) {
-            this.manuelSmilie=manuellerSmilie;
+            this.manuelSmilie = manuellerSmilie;
         }
 
         public void setUserPos(int userPos) {
-            this.userPos=userPos;
+            this.userPos = userPos;
         }
 
         public void setIsFired(boolean isFired) {
-            this.isFired=isFired;
+            this.isFired = isFired;
         }
 
         public int getPlayerId() {
             return this.playerId;
         }
     }
+
     private Notes notes;
-    private Notes getNotes(){
-        if ( notes==null){
-            notes = DBManager.instance().loadPlayerNotes(this.getPlayerID());
+
+    private Notes getNotes() {
+        if (notes == null) {
+            notes = DBManager.instance().loadPlayerNotes(this.getPlayerId());
         }
         return notes;
     }
+
     public void setUserPosFlag(byte flag) {
         schumRankBenchmark = null;
         getNotes().setUserPos(flag);
         DBManager.instance().storePlayerNotes(notes);
         this.setCanBeSelectedByAssistant(flag != IMatchRoleID.UNSELECTABLE);
     }
+
     public void setIsFired(boolean b) {
         getNotes().setIsFired(b);
         DBManager.instance().storePlayerNotes(notes);
@@ -1947,10 +1582,13 @@ public class Player extends AbstractTable.Storable {
      * liefert User Notiz zum Player
      */
     public int getUserPosFlag() {
-        return  getNotes().getUserPos();
+        return getNotes().getUserPos();
     }
 
-    public String getNote() {return getNotes().getNote();}
+    public String getNote() {
+        return getNotes().getNote();
+    }
+
     public void setNote(String text) {
         getNotes().setNote(text);
         DBManager.instance().storePlayerNotes(notes);
@@ -1961,27 +1599,28 @@ public class Player extends AbstractTable.Storable {
      */
     public int getValue4Skill(int skill) {
         return switch (skill) {
-            case KEEPER -> m_iTorwart;
-            case PLAYMAKING -> m_iSpielaufbau;
-            case DEFENDING -> m_iVerteidigung;
-            case PASSING -> m_iPasspiel;
-            case WINGER -> m_iFluegelspiel;
-            case SCORING -> m_iTorschuss;
-            case SET_PIECES -> m_iStandards;
-            case STAMINA -> m_iKondition;
-            case EXPERIENCE -> m_iErfahrung;
-            case FORM -> m_iForm;
-            case LEADERSHIP -> m_iFuehrung;
-            case LOYALTY -> m_iLoyalty;
+            case KEEPER -> goalkeeperSkill;
+            case PLAYMAKING -> playmakingSkill;
+            case DEFENDING -> defendingSkill;
+            case PASSING -> passingSkill;
+            case WINGER -> wingerSkill;
+            case SCORING -> scoringSkill;
+            case SET_PIECES -> setPiecesSkill;
+            case STAMINA -> stamina;
+            case EXPERIENCE -> experience;
+            case FORM -> form;
+            case LEADERSHIP -> leadership;
+            case LOYALTY -> loyalty;
             default -> 0;
         };
     }
 
-    public double getSkillValue(int skill){
+    public double getSkillValue(int skill) {
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
-    public void setSkillValue(int skill, double value){
-        int intVal = (int)value;
+
+    public void setSkillValue(int skill, double value) {
+        int intVal = (int) value;
         setValue4Skill(skill, intVal);
         setSubskill4PlayerSkill(skill, value - intVal);
     }
@@ -1995,13 +1634,13 @@ public class Player extends AbstractTable.Storable {
     public void setValue4Skill(int skill, int value) {
         schumRank = null;
         switch (skill) {
-            case KEEPER -> setTorwart(value);
-            case PLAYMAKING -> setSpielaufbau(value);
-            case PASSING -> setPasspiel(value);
-            case WINGER -> setFluegelspiel(value);
-            case DEFENDING -> setVerteidigung(value);
-            case SCORING -> setTorschuss(value);
-            case SET_PIECES -> setStandards(value);
+            case KEEPER -> setGoalkeeperSkill(value);
+            case PLAYMAKING -> setPlaymakingSkill(value);
+            case PASSING -> setPassingSkill(value);
+            case WINGER -> setWingerSkill(value);
+            case DEFENDING -> setDefendingSkill(value);
+            case SCORING -> setScoringSkill(value);
+            case SET_PIECES -> setSetPiecesSkill(value);
             case STAMINA -> setStamina(value);
             case EXPERIENCE -> setExperience(value);
             case FORM -> setForm(value);
@@ -2017,7 +1656,7 @@ public class Player extends AbstractTable.Storable {
      * @param m_iVerletzt New value of property m_iVerletzt.
      */
     public void setInjuryWeeks(int m_iVerletzt) {
-        this.m_iInjuryWeeks = m_iVerletzt;
+        this.injuryWeeks = m_iVerletzt;
     }
 
     /**
@@ -2026,37 +1665,26 @@ public class Player extends AbstractTable.Storable {
      * @return Value of property m_iVerletzt.
      */
     public int getInjuryWeeks() {
-        return m_iInjuryWeeks;
+        return injuryWeeks;
     }
 
-    /**
-     * Setter for property m_iVerteidigung.
-     *
-     * @param m_iVerteidigung New value of property m_iVerteidigung.
-     */
-    public void setVerteidigung(int m_iVerteidigung) {
+    public void setDefendingSkill(int m_iVerteidigung) {
         schumRank = null;
-        this.m_iVerteidigung = m_iVerteidigung;
+        this.defendingSkill = m_iVerteidigung;
     }
 
-    /**
-     * Getter for property m_iVerteidigung.
-     *
-     * @return Value of property m_iVerteidigung.
-     */
-    public int getDEFskill() {
-        return m_iVerteidigung;
+    public int getDefendingSkill() {
+        return defendingSkill;
     }
 
     /**
      * Calculates training effect for each skill
      *
-     * @param train  Trainingweek giving the matches that should be calculated
-     *
+     * @param train Trainingweek giving the matches that should be calculated
      * @return TrainingPerPlayer
      */
     public TrainingPerPlayer calculateWeeklyTraining(TrainingPerWeek train) {
-        final int playerID = this.getPlayerID();
+        final int playerID = this.getPlayerId();
         TrainingPerPlayer ret = new TrainingPerPlayer(this);
         ret.setTrainingWeek(train);
         if (train == null || train.getTrainingType() < 0) {
@@ -2071,10 +1699,10 @@ public class Player extends AbstractTable.Storable {
                 TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
                 for (var match : matches) {
                     var details = match.getMatchdetails();
-                    if ( details != null ) {
+                    if (details != null) {
                         //Get the MatchLineup by id
                         MatchLineupTeam mlt = details.getOwnTeamLineup();
-                        if ( mlt != null) {
+                        if (mlt != null) {
                             MatchType type = mlt.getMatchType();
                             boolean walkoverWin = details.isWalkoverMatchWin(myID);
                             if (type != MatchType.MASTERS) { // MASTERS counts only for experience
@@ -2086,8 +1714,7 @@ public class Player extends AbstractTable.Storable {
                             var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
                             tp.addPlayedMinutes(minutes);
                             ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
-                        }
-                        else {
+                        } else {
                             HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
                                     " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
                             );
@@ -2097,141 +1724,25 @@ public class Player extends AbstractTable.Storable {
                 TrainingPoints trp = new TrainingPoints(wt, tp);
 
                 // get experience increase of national team matches
-                var id = this.getNationalTeamID();
-                if  ( id != null && id != 0 && id != myID){
+                var id = this.getNationalTeamId();
+                if (id != null && id != 0 && id != myID) {
                     // TODO check if national matches are stored in database
                     var nationalMatches = train.getNTmatches();
-                    for (var match : nationalMatches){
-                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamID());
+                    for (var match : nationalMatches) {
+                        MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamId());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
-                        if ( minutes > 0 ) {
-                            ret.addExperience(match.getExperienceIncrease(min(90,minutes)));
+                        if (minutes > 0) {
+                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         }
                     }
                 }
                 ret.setTrainingPair(trp);
             } catch (Exception e) {
-                HOLogger.instance().log(getClass(),e);
+                HOLogger.instance().log(getClass(), e);
             }
         }
         return ret;
     }
-
-//    /**
-//     * Calculate the player strength on a specific lineup position
-//     * with or without form
-//     *
-//     * @param fo         FactorObject with the skill weights for this position
-//     * @param useForm    consider form?
-//     * @param normalized absolute or normalized contribution?
-//     * @return the player strength on this position
-//     */
-//    float calcPosValue(FactorObject fo, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
-//        if ((fo == null) || (fo.getSum() == 0.0f)) {
-//            return -1.0f;
-//        }
-//
-//        // The stars formulas are changed by the user -> clear the cache
-//        if (!PlayerAbsoluteContributionCache.containsKey("lastChange") || ((Date) PlayerAbsoluteContributionCache.get("lastChange")).before(FormulaFactors.getLastChange())) {
-////    		System.out.println ("Clearing stars cache");
-//            PlayerAbsoluteContributionCache.clear();
-//            PlayerRelativeContributionCache.clear();
-//            PlayerAbsoluteContributionCache.put("lastChange", new Date());
-//        }
-//        /*
-//         * Create a key for the Hashtable cache
-//         * We cache every star rating to speed up calculation
-//         * (calling RPM.calcPlayerStrength() is quite expensive and this method is used very often)
-//         */
-//
-//        var loy = RatingPredictionManager.getLoyaltyEffect(this);
-//
-//        String key = fo.getPosition() + ":"
-//                + Helper.round(getGKskill() + getSub4Skill(KEEPER) + loy, 2) + "|"
-//                + Helper.round(getPMskill() + getSub4Skill(PLAYMAKING) + loy, 2) + "|"
-//                + Helper.round(getDEFskill() + getSub4Skill(DEFENDING) + loy, 2) + "|"
-//                + Helper.round(getWIskill() + getSub4Skill(WINGER) + loy, 2) + "|"
-//                + Helper.round(getPSskill() + getSub4Skill(PASSING) + loy, 2) + "|"
-//                + Helper.round(getSPskill() + getSub4Skill(SET_PIECES) + loy, 2) + "|"
-//                + Helper.round(getSCskill() + getSub4Skill(SCORING) + loy, 2) + "|"
-//                + getForm() + "|"
-//                + getStamina() + "|"
-//                + getExperience() + "|"
-//                + getPlayerSpecialty(); // used for Technical DefFW
-//
-//        // Check if the key already exists in cache
-//        if (PlayerAbsoluteContributionCache.containsKey(key)) {
-//            // System.out.println ("Using star rating from cache, key="+key+", tablesize="+starRatingCache.size());
-//
-//            float rating = normalized ? (float) PlayerRelativeContributionCache.get(key) : (Float) PlayerAbsoluteContributionCache.get(key);
-//            if(useWeatherImpact){
-//                rating *= getImpactWeatherEffect(weather);
-//            }
-//
-//            return rating;
-//        }
-//
-//        // Compute contribution
-//        float gkValue = fo.getGKfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, KEEPER, useForm, false);
-//        float pmValue = fo.getPMfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PLAYMAKING, useForm, false);
-//        float deValue = fo.getDEfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, DEFENDING, useForm, false);
-//        float wiValue = fo.getWIfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, WINGER, useForm, false);
-//        float psValue = fo.getPSfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, PASSING, useForm, false);
-//        float spValue = fo.getSPfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SET_PIECES, useForm, false);
-//        float scValue = fo.getSCfactor() * RatingPredictionManager.calcPlayerStrength(-2, this, SCORING, useForm, false);
-//        float val = gkValue + pmValue + deValue + wiValue + psValue + spValue + scValue;
-//
-//        float absVal = val * 10; // multiplied by 10 for improved visibility
-//        float normVal = val / fo.getNormalizationFactor() * 100;  // scaled between 0 and 100%
-//
-//        // Put to cache
-//        PlayerAbsoluteContributionCache.put(key, absVal);
-//        PlayerRelativeContributionCache.put(key, normVal);
-//
-////    	System.out.println ("Star rating put to cache, key="+key+", val="+val+", tablesize="+starRatingCache.size());
-//        if (normalized) {
-//            return normVal;
-//        } else {
-//            return absVal;
-//        }
-//    }
-//
-//
-//    public float calcPosValue(byte pos, boolean useForm, boolean normalized, @Nullable Weather weather, boolean useWeatherImpact) {
-//        return calcPosValue(pos, useForm, normalized, UserParameter.instance().nbDecimals, weather, useWeatherImpact);
-//    }
-//
-//    public float calcPosValue(byte pos, boolean useForm, @Nullable Weather weather, boolean useWeatherImpact) {
-//        return calcPosValue(pos, useForm, false, weather, useWeatherImpact);
-//    }
-//
-//    /**
-//     * Calculate the player strength on a specific lineup position
-//     * with or without form
-//     *
-//     * @param pos     position from IMatchRoleID (TORWART.. POS_ZUS_INNENV)
-//     * @param useForm consider form?
-//     * @return the player strength on this position
-//     */
-//    public float calcPosValue(byte pos, boolean useForm, boolean normalized, int nb_decimals,  @Nullable Weather weather, boolean useWeatherImpact) {
-//        float es;
-//        FactorObject factor = FormulaFactors.instance().getPositionFactor(pos);
-//
-//        // Fix for TDF
-//        if (pos == IMatchRoleID.FORWARD_DEF && this.getPlayerSpecialty() == PlayerSpeciality.TECHNICAL) {
-//            factor = FormulaFactors.instance().getPositionFactor(IMatchRoleID.FORWARD_DEF_TECH);
-//        }
-//
-//        if (factor != null) {
-//            es = calcPosValue(factor, useForm, normalized, weather, useWeatherImpact);
-//        } else {
-//            //	For Coach or factor not found return 0
-//            return 0.0f;
-//        }
-//
-//        return Helper.round(es, nb_decimals);
-//    }
-
 
     /**
      * Copy the skills of old player.
@@ -2240,7 +1751,6 @@ public class Player extends AbstractTable.Storable {
      * @param old player to copy from
      */
     public void copySkills(Player old) {
-
         for (int skillType = 0; skillType <= LOYALTY; skillType++) {
             setValue4Skill(skillType, old.getValue4Skill(skillType));
         }
@@ -2250,11 +1760,11 @@ public class Player extends AbstractTable.Storable {
     //equals
     /////////////////////////////////////////////////////////////////////////////////
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object other) {
         boolean equals = false;
 
-        if (obj instanceof Player) {
-            equals = ((Player) obj).getPlayerID() == m_iSpielerID;
+        if (other instanceof Player p) {
+            equals = p.getPlayerId() == spielerId;
         }
 
         return equals;
@@ -2266,7 +1776,7 @@ public class Player extends AbstractTable.Storable {
      * @return training block
      */
     public boolean hasTrainingBlock() {
-        return m_bTrainingBlock;
+        return trainingBlock;
     }
 
     /**
@@ -2275,34 +1785,34 @@ public class Player extends AbstractTable.Storable {
      * @param isBlocked new value
      */
     public void setTrainingBlock(boolean isBlocked) {
-        this.m_bTrainingBlock = isBlocked;
+        this.trainingBlock = isBlocked;
     }
 
-    public Integer getNationalTeamID() {
+    public Integer getNationalTeamId() {
         return nationalTeamId;
     }
 
-    public void setNationalTeamId( Integer id){
-        this.nationalTeamId=id;
+    public void setNationalTeamId(Integer id) {
+        this.nationalTeamId = id;
     }
 
     public double getSubExperience() {
         return this.subExperience;
     }
 
-    public void setSubExperience( Double experience){
-        if ( experience != null ) this.subExperience = experience;
-        else this.subExperience=0;
+    public void setSubExperience(Double experience) {
+        if (experience != null) this.subExperience = experience;
+        else this.subExperience = 0;
     }
 
-    public List<FuturePlayerTraining> getFuturePlayerTrainings(){
-        if ( futurePlayerTrainings == null){
-            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerID());
+    public List<FuturePlayerTraining> getFuturePlayerTrainings() {
+        if (futurePlayerTrainings == null) {
+            futurePlayerTrainings = DBManager.instance().getFuturePlayerTrainings(this.getPlayerId());
             if (!futurePlayerTrainings.isEmpty()) {
                 var start = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
                 var remove = new ArrayList<FuturePlayerTraining>();
                 for (var t : futurePlayerTrainings) {
-                    if (t.endsBefore(start)){
+                    if (t.endsBefore(start)) {
                         remove.add(t);
                     }
                 }
@@ -2316,15 +1826,12 @@ public class Player extends AbstractTable.Storable {
      * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
      * returned. If no user plan is available, the training priority is determined by the player's best position.
      *
-     * @param wt
-     *  used to get priority depending from the player's best position.
-     * @param trainingDate
-     *  the training week
-     * @return
-     *  the training priority
+     * @param wt           used to get priority depending from the player's best position.
+     * @param trainingDate the training week
+     * @return the training priority
      */
     public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HODateTime trainingDate) {
-        for ( var t : getFuturePlayerTrainings()) {
+        for (var t : getFuturePlayerTrainings()) {
             if (t.contains(trainingDate)) {
                 return t.getPriority();
             }
@@ -2333,20 +1840,21 @@ public class Player extends AbstractTable.Storable {
         // get Prio from best position
         int position = HelperWrapper.instance().getPosition(this.getIdealPosition());
 
-        for ( var p: wt.getTrainingSkillBonusPositions()){
-            if ( p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
+        for (var p : wt.getTrainingSkillBonusPositions()) {
+            if (p == position) return FuturePlayerTraining.Priority.FULL_TRAINING;
         }
-        for ( var p: wt.getTrainingSkillPositions()){
-            if ( p == position) {
-                if ( wt.getTrainingType() == TrainingType.SET_PIECES) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+        for (var p : wt.getTrainingSkillPositions()) {
+            if (p == position) {
+                if (wt.getTrainingType() == TrainingType.SET_PIECES)
+                    return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
                 return FuturePlayerTraining.Priority.FULL_TRAINING;
             }
         }
-        for ( var p: wt.getTrainingSkillPartlyTrainingPositions()){
-            if ( p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
+        for (var p : wt.getTrainingSkillPartlyTrainingPositions()) {
+            if (p == position) return FuturePlayerTraining.Priority.PARTIAL_TRAINING;
         }
-        for ( var p: wt.getTrainingSkillOsmosisTrainingPositions()){
-            if ( p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
+        for (var p : wt.getTrainingSkillOsmosisTrainingPositions()) {
+            if (p == position) return FuturePlayerTraining.Priority.OSMOSIS_TRAINING;
         }
 
         return null; // No training
@@ -2355,9 +1863,10 @@ public class Player extends AbstractTable.Storable {
     /**
      * Set training priority for a time interval.
      * Previously saved trainings of this interval are overwritten or deleted.
-     *  @param prio new training priority for the given time interval
+     *
+     * @param prio new training priority for the given time interval
      * @param from first week with new training priority
-     * @param to last week with new training priority, null means open end
+     * @param to   last week with new training priority, null means open end
      */
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         var removeIntervals = new ArrayList<FuturePlayerTraining>();
@@ -2369,7 +1878,7 @@ public class Player extends AbstractTable.Storable {
         }
         futurePlayerTrainings.removeAll(removeIntervals);
         if (prio != null) {
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerID(), prio, from, to));
+            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerId(), prio, from, to));
         }
         DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
     }
@@ -2377,7 +1886,7 @@ public class Player extends AbstractTable.Storable {
     public String getBestPositionInfo() {
         return MatchRoleID.getNameForPosition(getIdealPosition())
                 + " ("
-                +  getIdealPositionRating()
+                + getIdealPositionRating()
                 + ")";
     }
 
@@ -2386,40 +1895,38 @@ public class Player extends AbstractTable.Storable {
      *
      * @param nextWeek training priorities after this week will be considered
      * @return if there is one user selected priority, the name of the priority is returned
-     *  if there are more than one selected priorities, "individual priorities" is returned
-     *  if is no user selected priority, the best position information is returned
+     * if there are more than one selected priorities, "individual priorities" is returned
+     * if is no user selected priority, the best position information is returned
      */
     public String getTrainingPriorityInformation(HODateTime nextWeek) {
-        String ret=null;
-        for ( var t : getFuturePlayerTrainings()) {
+        String ret = null;
+        for (var t : getFuturePlayerTrainings()) {
             //
-            if ( !t.endsBefore(nextWeek)){
-                if ( ret != null ){
+            if (!t.endsBefore(nextWeek)) {
+                if (ret != null) {
                     ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
                     break;
                 }
                 ret = t.getPriority().toString();
             }
         }
-        if ( ret != null ) return ret;
+        if (ret != null) return ret;
         return getBestPositionInfo();
 
     }
 
-    private static final int[] trainingSkills= { KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING };
-
     /**
      * Calculates skill status of the player
      *
-     * @param previousID Id of the previous download. Previous player status is loaded by this id.
+     * @param previousID    Id of the previous download. Previous player status is loaded by this id.
      * @param trainingWeeks List of training week information
      */
-    public void calcSubskills(int previousID, List<TrainingPerWeek> trainingWeeks) {
+    public void calcSubSkills(int previousID, List<TrainingPerWeek> trainingWeeks) {
 
         var playerBefore = DBManager.instance().getSpieler(previousID).stream()
-                .filter(i -> i.getPlayerID() == this.getPlayerID()).findFirst().orElse(null);
+                .filter(i -> i.getPlayerId() == this.getPlayerId()).findFirst().orElse(null);
         if (playerBefore == null) {
-            playerBefore = this.CloneWithoutSubskills();
+            playerBefore = this.cloneWithoutSubSkills();
         }
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
@@ -2431,13 +1938,13 @@ public class Player extends AbstractTable.Storable {
             var valueAfterTraining = this.getValue4Skill(skill);
 
             if (!trainingWeeks.isEmpty()) {
-                if ( valueAfterTraining > valueBeforeTraining) {
+                if (valueAfterTraining > valueBeforeTraining) {
                     // Check if skill up is available
                     var skillUps = this.getAllLevelUp(skill);
                     var isAvailable = skillUps.stream().anyMatch(i -> i.getValue() == valueAfterTraining);
                     if (!isAvailable) {
                         var skillUp = new Skillup();
-                        skillUp.setPlayerId(this.getPlayerID());
+                        skillUp.setPlayerId(this.getPlayerId());
                         skillUp.setSkill(skill);
                         skillUp.setDate(trainingWeeks.get(0).getTrainingDate());
                         skillUp.setValue(valueAfterTraining);
@@ -2480,18 +1987,17 @@ public class Player extends AbstractTable.Storable {
                             if (experienceSub > 0.99) experienceSub = 0.99;
 
                             var minutes = 0;
-                            var tp =trainingPerPlayer.getTrainingPair();
-                            if  ( tp != null){
+                            var tp = trainingPerPlayer.getTrainingPair();
+                            if (tp != null) {
                                 minutes = tp.getTrainingDuration().getPlayedMinutes();
-                            }
-                            else {
+                            } else {
                                 HOLogger.instance().warning(getClass(), "no training info found");
                             }
                             HOLogger.instance().info(getClass(),
                                     "Training " + training.getTrainingDate().toLocaleDateTime() +
                                             "; Minutes= " + minutes +
                                             "; Experience increment of " + this.getFullName() +
-                                            "; increment: " +  inc +
+                                            "; increment: " + inc +
                                             "; new sub value=" + experienceSub
                             );
                         }
@@ -2518,12 +2024,12 @@ public class Player extends AbstractTable.Storable {
      * SchumRank(skill) = C0 + C1*skill + C2*skill^2 + C3*skill^3 + C4*skill^4 + C5*skill^5 + C6*skill^6
      */
     Map<Integer, Double[]> schumRankFitCoefficients = Map.of(
-            KEEPER,     new Double[]{-2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0.},
-            DEFENDING,  new Double[]{8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864},
-            WINGER,     new Double[]{0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0.},
+            KEEPER, new Double[]{-2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0.},
+            DEFENDING, new Double[]{8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864},
+            WINGER, new Double[]{0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0.},
             PLAYMAKING, new Double[]{-5.70730805, 6.57044707, -1.78506428, 0.27138439, -0.01625170, 0.00036649, 0.},
-            SCORING,    new Double[]{-6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0.},
-            PASSING,    new Double[]{2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0.},
+            SCORING, new Double[]{-6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0.},
+            PASSING, new Double[]{2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0.},
             SET_PIECES, new Double[]{-1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0.}
     );
 
@@ -2542,16 +2048,16 @@ public class Player extends AbstractTable.Storable {
     /**
      * Calculate the Schum rank
      * Sum of the polynomial functions defined above.
+     *
      * @return Double
      */
-    private double calcSchumRank()
-    {
+    private double calcSchumRank() {
         double ret = 0.;
-        for ( var entry : schumRankFitCoefficients.entrySet()){
+        for (var entry : schumRankFitCoefficients.entrySet()) {
             var value = getSkillValue(entry.getKey());
             var x = 1.;
-            for ( var c : entry.getValue()){
-                ret += c*x;
+            for (var c : entry.getValue()) {
+                ret += c * x;
                 x *= value;
             }
         }
@@ -2560,6 +2066,7 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Schum suggests highlighting values in the range 220 up to 240 (or 195 up to 215 in case of keepers)
+     *
      * @return true, if schum rank is in this optimal range
      */
     public boolean isExcellentSchumRank() {
@@ -2571,35 +2078,36 @@ public class Player extends AbstractTable.Storable {
     /**
      * Calculate a Schum rank value, that could be reached with optimal training.
      * It only depends on the player age.
+     *
      * @return double
      */
     private double calcSchumRankBenchmark() {
-        var ret = getIdealPosition()==KEEPER?25.:50.;
+        var ret = getIdealPosition() == KEEPER ? 25. : 50.;
         var k = 1.0;
-        for ( int age = 17; age < this.getAlter(); age++){
+        for (int age = 17; age < this.getAge(); age++) {
             ret += 16. * k;
-            k = 54. / (age+37);
+            k = 54. / (age + 37);
         }
 
-        return ret + getAgeDays()/112. * 16. * k;
+        return ret + getAgeDays() / 112. * 16. * k;
     }
 
-    public double getSchumRank(){
-        if ( schumRank == null) schumRank = calcSchumRank();
+    public double getSchumRank() {
+        if (schumRank == null) schumRank = calcSchumRank();
         return schumRank;
     }
 
-    public double getSchumRankBenchmark(){
-        if ( schumRankBenchmark == null) schumRankBenchmark = calcSchumRankBenchmark();
+    public double getSchumRankBenchmark() {
+        if (schumRankBenchmark == null) schumRankBenchmark = calcSchumRankBenchmark();
         return schumRankBenchmark;
     }
 
-    private Player CloneWithoutSubskills() {
+    private Player cloneWithoutSubSkills() {
         var ret = new Player();
-        ret.setHrfId(this.hrf_id);
+        ret.setHrfId(this.hrfId);
         ret.copySkills(this);
-        ret.setPlayerID(getPlayerID());
-        ret.setAge(getAlter());
+        ret.setPlayerId(getPlayerId());
+        ret.setAge(getAge());
         ret.setLastName(getLastName());
         return ret;
     }
@@ -2646,6 +2154,7 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Rating at end of game
+     *
      * @return Integer number of half rating stars
      */
     public Integer getLastMatchRatingEndOfGame() {
@@ -2654,6 +2163,7 @@ public class Player extends AbstractTable.Storable {
 
     /**
      * Rating at end of game
+     *
      * @param lastMatchRatingEndOfGame number of half rating stars
      */
     public void setLastMatchRatingEndOfGame(Integer lastMatchRatingEndOfGame) {
@@ -2661,19 +2171,19 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setMotherClubId(Integer teamID) {
-        this.motherclubId = teamID;
+        this.motherClubId = teamID;
     }
 
     public void setMotherClubName(String teamName) {
-        this.motherclubName = teamName;
+        this.motherClubName = teamName;
     }
 
-    public void setMatchesCurrentTeam(Integer matchesCurrentTeam) {
-        this.matchesCurrentTeam=matchesCurrentTeam;
+    public void setCurrentTeamMatches(Integer currentTeamMatches) {
+        this.currentTeamMatches = currentTeamMatches;
     }
 
-    public Integer getMatchesCurrentTeam() {
-        return this.matchesCurrentTeam;
+    public Integer getCurrentTeamMatches() {
+        return this.currentTeamMatches;
     }
 
     private final Player playerAsManMarker = null;
@@ -2684,14 +2194,12 @@ public class Player extends AbstractTable.Storable {
      * Values of Defending, Winger, Playmaking, Scoring and Passing are reduced depending on the distance
      * between man marker and opponent man marked player
      *
-     * @param manMarkingPosition
-     *          null - no man marking changes
-     *          Opposite - reduce skills by 50%
-     *          NotOpposite - reduce skills by 65%
-     *          NotInLineup - reduce skills by 10%
-     * @return
-     *          this player, if no man marking changes are selected
-     *          New modified player, if man marking changes are selected
+     * @param manMarkingPosition null - no man marking changes
+     *                           Opposite - reduce skills by 50%
+     *                           NotOpposite - reduce skills by 65%
+     *                           NotInLineup - reduce skills by 10%
+     * @return this player, if no man marking changes are selected
+     * New modified player, if man marking changes are selected
      */
     public Player getPlayerAsManMarker(ManMarkingPosition manMarkingPosition) {
         if (manMarkingPosition == null) return this;
@@ -2699,12 +2207,12 @@ public class Player extends AbstractTable.Storable {
         this.manMarkingPosition = manMarkingPosition;
         var playerAsManMarker = new Player();
         var skillFactor = (float) (1 - manMarkingPosition.value / 100.);
-        playerAsManMarker.setPlayerSpecialty(this.getPlayerSpecialty());
+        playerAsManMarker.setSpecialty(this.getSpecialty());
         playerAsManMarker.setAgeDays(this.getAgeDays());
-        playerAsManMarker.setAge(this.getAlter());
-        playerAsManMarker.setAgressivitaet(this.getAgressivitaet());
-        playerAsManMarker.setAnsehen(this.getAnsehen());
-        playerAsManMarker.setCharakter(this.getCharakter());
+        playerAsManMarker.setAge(this.getAge());
+        playerAsManMarker.setAggressivity(this.getAggressivity());
+        playerAsManMarker.setHonesty(this.getHonesty());
+        playerAsManMarker.setGentleness(this.getGentleness());
         playerAsManMarker.setExperience(this.getExperience());
         playerAsManMarker.setSubExperience(this.getSubExperience());
         playerAsManMarker.setFirstName(this.getFirstName());
@@ -2714,7 +2222,7 @@ public class Player extends AbstractTable.Storable {
         playerAsManMarker.setStamina(this.getStamina());
         playerAsManMarker.setLoyalty(this.getLoyalty());
         playerAsManMarker.setHomeGrown(this.isHomeGrown());
-        playerAsManMarker.setPlayerID(this.getPlayerID());
+        playerAsManMarker.setPlayerId(this.getPlayerId());
         playerAsManMarker.setInjuryWeeks(this.getInjuryWeeks());
 
         playerAsManMarker.setSkillValue(KEEPER, this.getSkillValue(KEEPER));
@@ -2752,7 +2260,9 @@ public class Player extends AbstractTable.Storable {
 
         private final int value;
 
-        ManMarkingPosition(int v){this.value=v;}
+        ManMarkingPosition(int v) {
+            this.value = v;
+        }
 
         public static ManMarkingPosition fromId(int id) {
             return switch (id) {
@@ -2763,6 +2273,8 @@ public class Player extends AbstractTable.Storable {
             };
         }
 
-        public int getValue() {return value;}
+        public int getValue() {
+            return value;
+        }
     }
 }
