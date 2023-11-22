@@ -13,8 +13,6 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
 import core.util.*;
-import org.apache.commons.lang3.math.NumberUtils;
-
 import java.time.Duration;
 import java.util.*;
 
@@ -355,47 +353,47 @@ public class Player extends AbstractTable.Storable {
     /**
      * Erstellt einen Player aus den Properties einer HRF Datei
      */
-    public Player(Properties properties, HODateTime hrfdate, int hrf_id) {
+    public Player(HOProperties properties, HODateTime hrfdate, int hrf_id) {
         // Separate first, nick and last names are available. Utilize them?
 
         this.hrf_id=hrf_id;
-        m_iSpielerID = Integer.parseInt(properties.getProperty("id", "0"));
+        m_iSpielerID = properties.getInt("id", 0);
         m_sFirstName = properties.getProperty("firstname", "");
         m_sNickName = properties.getProperty("nickname", "");
         m_sLastName = properties.getProperty("lastname", "");
         m_arrivalDate = properties.getProperty("arrivaldate");
-        m_iAlter = Integer.parseInt(properties.getProperty("ald", "0"));
-        m_iAgeDays = Integer.parseInt(properties.getProperty("agedays", "0"));
-        m_iKondition = Integer.parseInt(properties.getProperty("uth", "0"));
-        m_iForm = Integer.parseInt(properties.getProperty("for", "0"));
-        m_iTorwart = Integer.parseInt(properties.getProperty("mlv", "0"));
-        m_iVerteidigung = Integer.parseInt(properties.getProperty("bac", "0"));
-        m_iSpielaufbau = Integer.parseInt(properties.getProperty("spe", "0"));
-        m_iPasspiel = Integer.parseInt(properties.getProperty("fra", "0"));
-        m_iFluegelspiel = Integer.parseInt(properties.getProperty("ytt", "0"));
-        m_iTorschuss = Integer.parseInt(properties.getProperty("mal", "0"));
-        m_iStandards = Integer.parseInt(properties.getProperty("fas", "0"));
-        iPlayerSpecialty = Integer.parseInt(properties.getProperty("speciality", "0"));
-        m_iCharakter = Integer.parseInt(properties.getProperty("gentleness", "0"));
-        m_iAnsehen = Integer.parseInt(properties.getProperty("honesty", "0"));
-        m_iAgressivitaet = Integer.parseInt(properties.getProperty("aggressiveness", "0"));
-        m_iErfahrung = Integer.parseInt(properties.getProperty("rut", "0"));
-        m_bHomeGrown = Boolean.parseBoolean(properties.getProperty("homegr", "FALSE"));
-        m_iLoyalty = Integer.parseInt(properties.getProperty("loy", "0"));
-        m_iFuehrung = Integer.parseInt(properties.getProperty("led", "0"));
-        m_iGehalt = Integer.parseInt(properties.getProperty("sal", "0"));
-        m_iNationalitaet = Integer.parseInt(properties.getProperty("countryid", "0"));
-        m_iTSI = Integer.parseInt(properties.getProperty("mkt", "0"));
+        m_iAlter = properties.getInt("ald", 0);
+        m_iAgeDays = properties.getInt("agedays", 0);
+        m_iKondition = properties.getInt("uth", 0);
+        m_iForm = properties.getInt("for", 0);
+        m_iTorwart = properties.getInt("mlv", 0);
+        m_iVerteidigung = properties.getInt("bac", 0);
+        m_iSpielaufbau = properties.getInt("spe", 0);
+        m_iPasspiel = properties.getInt("fra", 0);
+        m_iFluegelspiel = properties.getInt("ytt", 0);
+        m_iTorschuss = properties.getInt("mal", 0);
+        m_iStandards = properties.getInt("fas", 0);
+        iPlayerSpecialty = properties.getInt("speciality", 0);
+        m_iCharakter = properties.getInt("gentleness", 0);
+        m_iAnsehen = properties.getInt("honesty", 0);
+        m_iAgressivitaet = properties.getInt("aggressiveness", 0);
+        m_iErfahrung = properties.getInt("rut", 0);
+        m_bHomeGrown = properties.getBoolean("homegr", false);
+        m_iLoyalty = properties.getInt("loy", 0);
+        m_iFuehrung = properties.getInt("led", 0);
+        m_iGehalt = properties.getInt("sal", 0);
+        m_iNationalitaet = properties.getInt("countryid", 0);
+        m_iTSI = properties.getInt("mkt", 0);
 
         // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
-        m_dSubFluegelspiel = Double.parseDouble(properties.getProperty("yttsub", "0"));
-        m_dSubPasspiel = Double.parseDouble(properties.getProperty("frasub", "0"));
-        m_dSubSpielaufbau = Double.parseDouble(properties.getProperty("spesub", "0"));
-        m_dSubStandards = Double.parseDouble(properties.getProperty("fassub", "0"));
-        m_dSubTorschuss = Double.parseDouble(properties.getProperty("malsub", "0"));
-        m_dSubTorwart = Double.parseDouble(properties.getProperty("mlvsub", "0"));
-        m_dSubVerteidigung = Double.parseDouble(properties.getProperty("bacsub", "0"));
-        subExperience = Double.parseDouble(properties.getProperty("experiencesub", "0"));
+        m_dSubFluegelspiel = properties.getDouble("yttsub", 0.);
+        m_dSubPasspiel = properties.getDouble("frasub", 0);
+        m_dSubSpielaufbau = properties.getDouble("spesub", 0);
+        m_dSubStandards = properties.getDouble("fassub", 0);
+        m_dSubTorschuss = properties.getDouble("malsub", 0);
+        m_dSubTorwart = properties.getDouble("mlvsub", 0);
+        m_dSubVerteidigung = properties.getDouble("bacsub", 0);
+        subExperience = properties.getDouble("experiencesub", 0);
 
         //TSI, alles vorher durch 1000 teilen
         m_clhrfDate = hrfdate;
@@ -404,23 +402,23 @@ public class Player extends AbstractTable.Storable {
             m_iTSI /= 1000d;
         }
 
-        m_iCards = Integer.parseInt(properties.getProperty("warnings", "0"));
-        m_iInjuryWeeks = Integer.parseInt(properties.getProperty("ska", "0"));
-        m_iToreFreund = Integer.parseInt(properties.getProperty("gtt", "0"));
-        m_iToreLiga = Integer.parseInt(properties.getProperty("gtl", "0"));
-        m_iTorePokal = Integer.parseInt(properties.getProperty("gtc", "0"));
-        m_iToreGesamt = Integer.parseInt(properties.getProperty("gev", "0"));
-        m_iHattrick = Integer.parseInt(properties.getProperty("hat", "0"));
-        m_iGoalsCurrentTeam = Integer.parseInt(properties.getProperty("goalscurrentteam", "0"));
-        matchesCurrentTeam = Integer.parseInt(properties.getProperty("matchescurrentteam", "0"));
+        m_iCards = properties.getInt("warnings", 0);
+        m_iInjuryWeeks = properties.getInt("ska", 0);
+        m_iToreFreund = properties.getInt("gtt", 0);
+        m_iToreLiga = properties.getInt("gtl", 0);
+        m_iTorePokal = properties.getInt("gtc", 0);
+        m_iToreGesamt = properties.getInt("gev", 0);
+        m_iHattrick = properties.getInt("hat", 0);
+        m_iGoalsCurrentTeam = properties.getInt("goalscurrentteam", 0);
+        matchesCurrentTeam = properties.getInt("matchescurrentteam", 0);
 
-        this.lineupDisabled = getBooleanIfNotNull(properties, "lineupdisabled");
-        this.m_iBewertung = getIntegerIfNotNull(properties, "rating", 0);
-        this.m_iTrainerTyp = TrainerType.fromInt(getIntegerIfNotNull(properties, "trainertype", -1));
-        this.m_iTrainer = getIntegerIfNotNull(properties, "trainerskilllevel", 0);
+        this.lineupDisabled = properties.getBoolean("lineupdisabled", false);
+        this.m_iBewertung = properties.getInt( "rating", 0);
+        this.m_iTrainerTyp = TrainerType.fromInt(properties.getInt( "trainertype", -1));
+        this.m_iTrainer = properties.getInt( "trainerskilllevel", 0);
         if (this.m_iTrainer > 0) {
             this.m_iTrainer+=3;    // trainer level 5 is an excellent (8) trainer
-            m_iGehalt = Integer.parseInt(properties.getProperty("cost", "0"));
+            m_iGehalt = properties.getInt("cost", 0);
             contractDate = properties.getProperty("contractdate");
         }
 
@@ -429,30 +427,28 @@ public class Player extends AbstractTable.Storable {
             shirtNumber = Integer.parseInt(temp);
         }
 
-        m_iTransferlisted = Boolean.parseBoolean(properties.getProperty("transferlisted", "False")) ? 1 : 0;
-        m_iLaenderspiele = Integer.parseInt(properties.getProperty("caps", "0"));
-        m_iU20Laenderspiele = Integer.parseInt(properties.getProperty("capsu20", "0"));
-        this.nationalTeamId = getIntegerIfNotNull(properties, "nationalteamid", 0);
+        m_iTransferlisted = properties.getBoolean("transferlisted", false) ? 1 : 0;
+        m_iLaenderspiele = properties.getInt("caps", 0);
+        m_iU20Laenderspiele = properties.getInt("capsu20", 0);
+        this.nationalTeamId = properties.getInt( "nationalteamid", 0);
 
         // #461-lastmatch
         m_lastMatchDate = properties.getProperty("lastmatch_date");
         if (m_lastMatchDate != null && !m_lastMatchDate.isEmpty()) {
-            m_lastMatchId = Integer.parseInt(properties.getProperty("lastmatch_id", "0"));
-            var pos  = Integer.parseInt(properties.getProperty("lastmatch_positioncode", "-1"));
+            m_lastMatchId = properties.getInt("lastmatch_id", 0);
+            var pos  = properties.getInt("lastmatch_positioncode", -1);
             if ( isFieldMatchRoleId(pos)) {
                 lastMatchPosition = pos;
             }
-            lastMatchMinutes = Integer.parseInt(properties.getProperty("lastmatch_playedminutes", "0"));
+            lastMatchMinutes = properties.getInt("lastmatch_playedminutes", 0);
             // rating is stored as number of half stars
-            m_lastMatchRating = (int) (2 * Double.parseDouble(properties.getProperty("lastmatch_rating", "0")));
-            lastMatchRatingEndOfGame = (int) (2 * Double.parseDouble(properties.getProperty("lastmatch_ratingendofgame", "0")));
+            m_lastMatchRating = (int) (2 * properties.getDouble("lastmatch_rating", 0));
+            lastMatchRatingEndOfGame = (int) (2 * properties.getDouble("lastmatch_ratingendofgame", 0));
         }
 
-        setLastMatchType(MatchType.getById(
-                Integer.parseInt(properties.getProperty("lastmatch_type", "0"))
-        ));
+        setLastMatchType(MatchType.getById(properties.getInt("lastmatch_type", 0)));
 
-        playerCategory = PlayerCategory.valueOf(NumberUtils.toInt(properties.getProperty("playercategoryid"),0));
+        playerCategory = PlayerCategory.valueOf(properties.getInt("playercategoryid",0));
         playerStatement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
 
@@ -466,22 +462,6 @@ public class Player extends AbstractTable.Storable {
             motherclubId = oldPlayer.getOrDownloadMotherclubId();
             motherclubName = oldPlayer.getOrDownloadMotherclubName();
         }
-    }
-
-    private int getIntegerIfNotNull(Properties properties, String key, int defaultValue) {
-        var value = properties.getProperty(key);
-        if ( value == null || value.isEmpty()){
-            return defaultValue;
-        }
-        return Integer.parseInt(value);
-    }
-
-    private boolean getBooleanIfNotNull(Properties properties, String key) {
-        var value = properties.getProperty(key);
-        if ( value == null || value.isEmpty()){
-            return false;
-        }
-        return Boolean.parseBoolean(value);
     }
 
     public String getOrDownloadMotherclubName() {
@@ -1045,10 +1025,6 @@ public class Player extends AbstractTable.Storable {
         }
 
         byte behaviour;
-
-        public double getRelativeRating() {
-            return relativeRating;
-        }
     }
 
     List<PlayerPositionRating> getAllPositionRatings(){
@@ -2700,7 +2676,7 @@ public class Player extends AbstractTable.Storable {
         return this.matchesCurrentTeam;
     }
 
-    private Player playerAsManMarker = null;
+    private final Player playerAsManMarker = null;
     private ManMarkingPosition manMarkingPosition = null;
 
     /**

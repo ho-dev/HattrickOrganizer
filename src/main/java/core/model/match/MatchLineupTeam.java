@@ -181,8 +181,11 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeReplacedPlayers) {
 		return this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
 	}
-	public final MatchLineupPosition getPlayerByID(int playerId) {
-		return getPlayerByID(playerId, true);
+	public final MatchLineupPosition getPlayerByID(Integer playerId) {
+		if ( playerId != null ) {
+			return getPlayerByID(playerId, true);
+		}
+		return null;
 	}
 
 	/**
@@ -375,7 +378,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	public int getTrainingMinutesPlayedInSectors(int playerId, List<MatchRoleID.Sector> acceptedSectors, boolean isWalkoverMatchWin) {
 		initMinutesOfPlayersInSectors();
-		if (acceptedSectors != null && acceptedSectors.size() == 0) return 0; // No sectors are accepted
+		if (acceptedSectors != null && acceptedSectors.isEmpty()) return 0; // No sectors are accepted
 		var player = this.getPlayerByID(playerId);
 		if (player == null) return 0;
 		if (isWalkoverMatchWin) {
@@ -626,7 +629,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	}
 
 	public boolean hasPlayerPlayed(int playerId) {
-		return this.getTrainMinutesPlayedInSectors(playerId).size() > 0;
+		return !this.getTrainMinutesPlayedInSectors(playerId).isEmpty();
 	}
 
 	/*

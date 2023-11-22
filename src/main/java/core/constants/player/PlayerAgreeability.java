@@ -17,11 +17,11 @@ public final class PlayerAgreeability {
 	public static final int POPULAR_GUY 			= 4;
 	public static final int BELOVED_TEAM_MEMBER 	= 5;
 
-	private PlayerAgreeability(){};
+	private PlayerAgreeability(){}
 
 
-	public static String toString(int agreeability){
-		if(agreeability >= NASTY_FELLOW && agreeability <= BELOVED_TEAM_MEMBER)
+	public static String toString(Integer agreeability){
+		if(agreeability!=null && agreeability >= NASTY_FELLOW && agreeability <= BELOVED_TEAM_MEMBER)
 			return HOVerwaltung.instance().getLanguageString(languageKeys[agreeability]);
 		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
 	}

@@ -52,8 +52,11 @@ public final class PlayerSpeciality {
 	private PlayerSpeciality() {
 	}
 
-	public static String toString(int speciality) {
-		return ITEMS2.getOrDefault(speciality, HOVerwaltung.instance().getLanguageString("Unbestimmt"));
+	public static String toString(Integer speciality) {
+		if ( speciality != null) {
+			return ITEMS2.getOrDefault(speciality, HOVerwaltung.instance().getLanguageString("Unbestimmt"));
+		}
+		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
 	}
 
 
@@ -86,11 +89,5 @@ public final class PlayerSpeciality {
 		}
 
 		return NoWeatherEffect;
-	}
-
-	public static float getImpactWeatherEffect(Weather weather, int playerSpecialty) {
-		int impact = getWeatherEffect(weather, playerSpecialty);
-		return 1 + impact * ImpactWeatherEffect;
-
 	}
 }
