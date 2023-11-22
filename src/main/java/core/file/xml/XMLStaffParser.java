@@ -35,7 +35,7 @@ public class XMLStaffParser {
 		hash = new MyHashtable();
 		xmlValue2Hash(hash, trainer, "TrainerId");
 		xmlValue2Hash(hash, trainer, "TrainerId", "StaffId");
-		xmlValue2Hash(hash, trainer, "Name");
+		xmlValue2Hash(hash, trainer, "Name", "LastName");
 		xmlValue2Hash(hash, trainer, "Age");
 		xmlValue2Hash(hash, trainer, "AgeDays");
 		xmlValue2Hash(hash, trainer, "ContractDate");

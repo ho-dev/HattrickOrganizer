@@ -52,8 +52,8 @@ public class HRFStringParser {
 		}
 
 		try {
-			final List<Properties> propertiesList = new ArrayList<>();
-			Properties properties = null;
+			final List<HOProperties> propertiesList = new ArrayList<>();
+			HOProperties properties = null;
 
 			// Load hrf string into a stream
 			final ByteArrayInputStream bis = new ByteArrayInputStream(hrf.getBytes(StandardCharsets.UTF_8));
@@ -87,7 +87,7 @@ public class HRFStringParser {
 					}
 
 					// Create a new Property
-					properties = new Properties();
+					properties = new HOProperties();
 					// Player?
 					if (lineString.startsWith("[player")) {
 						properties.setProperty(ENTITY, PLAYER);
@@ -106,7 +106,7 @@ public class HRFStringParser {
 					indexEqualsSign = lineString.indexOf('=');
 					if (indexEqualsSign > 0) {
 						if (properties == null) {
-							properties = new Properties();
+							properties = new HOProperties();
 						}
 						properties.setProperty(lineString.substring(0, indexEqualsSign)
 								.toLowerCase(java.util.Locale.ENGLISH), lineString
@@ -140,12 +140,12 @@ public class HRFStringParser {
 	 * @param hrfdate Date of the HRF file.
 	 * @return HOModel – Model built from the properties.
 	 */
-	private static HOModel createHOModel(List<Properties> propertiesList, HODateTime hrfdate) throws Exception {
+	private static HOModel createHOModel(List<HOProperties> propertiesList, HODateTime hrfdate) throws Exception {
 
 		final HOModel hoModel = new HOModel(hrfdate);
 		int trainerID = -1;
 
-		for (Properties properties : propertiesList) {
+		for (var properties : propertiesList) {
 
 			Object entity = properties.get(ENTITY);
 
@@ -217,8 +217,8 @@ public class HRFStringParser {
 			}
 		}
 
-		// Only keep trainerinformation for player equal to trainerID, rest is
-		// resetted . So later trainer could be found by searching for player
+		// Only keep trainer information for player equal to trainerID, rest is
+		// reset. So later trainer could be found by searching for player
 		// having trainerType != -1
 		if (trainerID > -1) {
 			List<Player> players = hoModel.getCurrentPlayers();

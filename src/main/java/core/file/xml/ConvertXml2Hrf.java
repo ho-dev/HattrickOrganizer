@@ -174,17 +174,17 @@ public class ConvertXml2Hrf {
 		var trainerId = String.valueOf(trainer.get("TrainerId"));
 		if (trainer.containsKey("TrainerId")) {
 			var trainerStatus = TrainerStatus.fromInt(Integer.parseInt(trainer.get("TrainerStatus")));
-			if (trainerStatus == TrainerStatus.PlayingTrainer) {
-				for (var p : playersData) {
-					if (p.get("PlayerID").equals(trainerId)) {
-						p.putAll(trainer);
-						break;
-					}
+			for (var p : playersData) {
+				if (p.get("PlayerID").equals(trainerId)) {
+					p.putAll(trainer);
+					break;
 				}
-			} else {
-				trainer.put("LineupDisabled", "true");
-				playersData.add(trainer);
 			}
+			if (trainerStatus != TrainerStatus.PlayingTrainer) {
+				trainer.put("LineupDisabled", "true");
+			}
+			trainer.put("PlayerID", trainerId);
+			playersData.add(trainer);
 		}
 
 		int arenaId = 0;

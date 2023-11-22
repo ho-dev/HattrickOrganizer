@@ -18,10 +18,10 @@ public final class PlayerHonesty {
 	public static final int RIGHTEOUS 	= 4;
 	public static final int SAINTLY 	= 5;
 
-	private PlayerHonesty(){};
+	private PlayerHonesty(){}
 
-	public static String toString(int honesty){
-		if(honesty >= INFAMOUS && honesty <= SAINTLY)
+	public static String toString(Integer honesty){
+		if(honesty != null && honesty >= INFAMOUS && honesty <= SAINTLY)
 			return HOVerwaltung.instance().getLanguageString(languageKeys[honesty]);
 		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
 	}

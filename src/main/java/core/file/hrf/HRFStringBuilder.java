@@ -452,13 +452,13 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "CountryID", ht.get("CountryID"));
             appendKeyValue(playersStringBuilder, "warnings", ht.get("Cards"));
             appendKeyValue(playersStringBuilder, "speciality", ht.get("Specialty"));
-            appendKeyValue(playersStringBuilder, "specialityLabel", PlayerSpeciality.toString(Integer.parseInt(ht.get("Specialty"))));
+            appendKeyValue(playersStringBuilder, "specialityLabel", PlayerSpeciality.toString(ToInteger(ht.get("Specialty"))));
             appendKeyValue(playersStringBuilder, "gentleness", ht.get("Agreeability"));
-            appendKeyValue(playersStringBuilder, "gentlenessLabel", PlayerAgreeability.toString(Integer.parseInt(ht.get("Agreeability"))));
+            appendKeyValue(playersStringBuilder, "gentlenessLabel", PlayerAgreeability.toString(ToInteger(ht.get("Agreeability"))));
             appendKeyValue(playersStringBuilder, "honesty", ht.get("Honesty"));
-            appendKeyValue(playersStringBuilder, "honestyLabel", PlayerHonesty.toString(Integer.parseInt(ht.get("Honesty"))));
+            appendKeyValue(playersStringBuilder, "honestyLabel", PlayerHonesty.toString(ToInteger(ht.get("Honesty"))));
             appendKeyValue(playersStringBuilder, "Aggressiveness", ht.get("Aggressiveness"));
-            appendKeyValue(playersStringBuilder, "AggressivenessLabel", PlayerAggressiveness.toString(Integer.parseInt(ht.get("Aggressiveness"))));
+            appendKeyValue(playersStringBuilder, "AggressivenessLabel", PlayerAggressiveness.toString(ToInteger(ht.get("Aggressiveness"))));
 
             appendKeyValue(playersStringBuilder, "TrainerType", ht.get("TrainerType"));
             appendKeyValue(playersStringBuilder, "ContractDate", ht.get("ContractDate"));
@@ -476,15 +476,17 @@ public class HRFStringBuilder {
             String lastMatchType = ht.getOrDefault("LastMatch_Type", "0");
             appendKeyValue(playersStringBuilder, "LastMatch_Type", lastMatchType);
 
-            if ((matchLineupTeam != null)
-                    && (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))) != null)
-                    && (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID")))
-                    .getRating() >= 0)) {
-                appendKeyValue(playersStringBuilder, "rating", (int) (matchLineupTeam.getPlayerByID(Integer.parseInt(ht.get("PlayerID"))).getRating() * 2));
-            } else {
-                appendKeyValue(playersStringBuilder, "rating", "0");
+            var rating = 0;
+            if (matchLineupTeam != null){
+                var playerId = ToInteger(ht.get("PlayerID"));
+                if ( playerId != null){
+                    var player = matchLineupTeam.getPlayerByID(playerId);
+                    if ( player != null){
+                        rating = (int)(player.getRating() * 2);
+                    }
+                }
             }
-
+            appendKeyValue(playersStringBuilder, "rating", String.valueOf(rating));
             appendKeyValueIfNotNull(ht, playersStringBuilder, "PlayerNumber", "");
 
             appendKeyValue(playersStringBuilder, "TransferListed", ht.get("TransferListed"));
@@ -499,6 +501,13 @@ public class HRFStringBuilder {
 
             appendKeyValueIfNotNull(ht, playersStringBuilder, "LineupDisabled", "false");
         }
+    }
+
+    private Integer ToInteger(String string) {
+        if (string != null){
+            return Integer.parseInt(string);
+        }
+        return null;
     }
 
     private void appendKeyValueIfNotNull(MyHashtable ht, StringBuilder s, String key, String defaultValue) {
