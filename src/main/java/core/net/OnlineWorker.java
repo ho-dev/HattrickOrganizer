@@ -880,7 +880,7 @@ public class OnlineWorker {
 				String trainerID = "-1";
 				try {
 					trainerID = String.valueOf(HOVerwaltung.instance().getModel().getTrainer()
-							.getPlayerID());
+							.getPlayerId());
 
 				} catch (Exception e) {
 					//It is possible that NTs struggle here.

@@ -85,7 +85,7 @@ public class PlayerSkillColumn extends PlayerColumn {
                   player.getSub4Skill(skill)
                 - comparePlayer
                   .getSub4Skill(skill),
-                !comparePlayer.isOld(),
+                !comparePlayer.isGoner(),
                 background,
                 true);
 		
@@ -98,13 +98,13 @@ public class PlayerSkillColumn extends PlayerColumn {
 	 */
 	private int getSkill(Player player){
         return switch (skill) {
-            case PlayerSkill.KEEPER -> player.getGKskill();
-            case PlayerSkill.DEFENDING -> player.getDEFskill();
-            case PlayerSkill.PASSING -> player.getPSskill();
-            case PlayerSkill.WINGER -> player.getWIskill();
-            case PlayerSkill.PLAYMAKING -> player.getPMskill();
-            case PlayerSkill.SET_PIECES -> player.getSPskill();
-            case PlayerSkill.SCORING -> player.getSCskill();
+            case PlayerSkill.KEEPER -> player.getGoalkeeperSkill();
+            case PlayerSkill.DEFENDING -> player.getDefendingSkill();
+            case PlayerSkill.PASSING -> player.getPassingSkill();
+            case PlayerSkill.WINGER -> player.getWingerSkill();
+            case PlayerSkill.PLAYMAKING -> player.getPlaymakingSkill();
+            case PlayerSkill.SET_PIECES -> player.getSetPiecesSkill();
+            case PlayerSkill.SCORING -> player.getScoringSkill();
             case PlayerSkill.EXPERIENCE -> player.getExperience();
             case PlayerSkill.FORM -> player.getForm();
             case PlayerSkill.STAMINA -> player.getStamina();

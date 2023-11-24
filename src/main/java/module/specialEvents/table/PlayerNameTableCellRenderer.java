@@ -2,7 +2,6 @@ package module.specialEvents.table;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.StringUtils;
@@ -54,7 +53,7 @@ public class PlayerNameTableCellRenderer extends DefaultTableCellRenderer {
 		if ( oValue != null ) {
 			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer((int) oValue.getValue1());
 			if (oPlayer != null) {
-				int iPlayerSpecialty = oPlayer.getPlayerSpecialty();
+				int iPlayerSpecialty = oPlayer.getSpecialty();
 				oPlayerSpecialty = ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[iPlayerSpecialty]);
 			}
 		}

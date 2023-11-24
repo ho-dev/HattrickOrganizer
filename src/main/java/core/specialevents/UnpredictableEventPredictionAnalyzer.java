@@ -112,13 +112,13 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         Player keeper = this.analyse.getPlayerByPosition(IMatchRoleID.keeper);
         double gkSkill = 0;
         if (keeper != null) {
-            gkSkill = keeper.getGKskill();
+            gkSkill = keeper.getGoalkeeperSkill();
         }
 
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                 SpecialEventType.UNPREDICTABLE_OWNGOAL,
                 -.1, 10, -10,
-                20 - p.getPSskill() - gkSkill
+                20 - p.getPassingSkill() - gkSkill
         );
 
         if (se != null) {
@@ -136,20 +136,20 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
         Player opp = analyse.getOpponentPlayerByPosition(leftCentralDefender);
         if (opp != null) {
             n++;
-            opponentDefenceSkill += opp.getDEFskill();
+            opponentDefenceSkill += opp.getDefendingSkill();
             opponentExperience += opp.getExperience();
         }
         opp = analyse.getOpponentPlayerByPosition(middleCentralDefender);
         if (opp != null) {
             n++;
-            opponentDefenceSkill += opp.getDEFskill();
+            opponentDefenceSkill += opp.getDefendingSkill();
             opponentExperience += opp.getExperience();
         }
         if (rightCentralDefender != 0) {
             opp = analyse.getOpponentPlayerByPosition(rightCentralDefender);
             if (opp != null) {
                 n++;
-                opponentDefenceSkill += opp.getDEFskill();
+                opponentDefenceSkill += opp.getDefendingSkill();
                 opponentExperience += opp.getExperience();
             }
         }
@@ -160,7 +160,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
 
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.UNPREDICTABLE,
                 .5, 10, -10,
-                p.getPSskill() + p.getExperience() - opponentDefenceSkill - opponentExperience);
+                p.getPassingSkill() + p.getExperience() - opponentDefenceSkill - opponentExperience);
         if (se != null) {
             getPassReceivers(se);
         }
@@ -190,7 +190,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
             SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                     SpecialEventType.UNPREDICTABLE_MISTAKE,
                     -.5,10, -10,
-                    op.getSCskill()+op.getExperience()-p.getDEFskill()-p.getExperience()
+                    op.getScoringSkill()+op.getExperience()-p.getDefendingSkill()-p.getExperience()
                     );
 
             if ( se != null){
@@ -213,7 +213,7 @@ public class UnpredictableEventPredictionAnalyzer implements  ISpecialEventPredi
                 SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position,
                         SpecialEventType.UNPREDICTABLE_LONGPASS,
                         .1, 10, -10,
-                        p.getPSskill() - opp.getDEFskill()
+                        p.getPassingSkill() - opp.getDefendingSkill()
                 );
 
                 if (se != null) {

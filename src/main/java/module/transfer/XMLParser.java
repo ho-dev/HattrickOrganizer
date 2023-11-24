@@ -246,7 +246,7 @@ public final class XMLParser {
         var players =  updateTeamTransfers(transfers);
         if ( players != null) {
             for (var player : players) {
-                updatePlayerTransfers(player.getPlayerID());
+                updatePlayerTransfers(player.getPlayerId());
             }
             return true;
         }
@@ -265,7 +265,7 @@ public final class XMLParser {
             if (player != null) {
                 if (!players.contains(player)) players.add(player);
                 if (transfer.getPlayerId() == 0) {
-                    int playerIdFound = player.getPlayerID();
+                    int playerIdFound = player.getPlayerId();
                     transfer.setPlayerId(playerIdFound);
                     player.setIsFired(true);
                 }
@@ -277,7 +277,7 @@ public final class XMLParser {
                         if (pl != null) pl.setIsFired(true);
                     } else {
                         Player dummy = new Player();
-                        dummy.setPlayerID(transfer.getPlayerId());
+                        dummy.setPlayerId(transfer.getPlayerId());
                         if (!players.contains(dummy)) players.add(dummy);
                     }
                 }

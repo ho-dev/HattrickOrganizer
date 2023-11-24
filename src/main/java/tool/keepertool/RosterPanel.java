@@ -56,7 +56,7 @@ class RosterPanel extends JPanel {
              iter.hasNext();) {
             final Player element = iter.next();
 
-            if (element.getGKskill() > 4) {
+            if (element.getGoalkeeperSkill() > 4) {
                 players.addItem(new PlayerItem(element));
             }
         }

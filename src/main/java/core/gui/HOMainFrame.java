@@ -227,7 +227,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if ( m_selectedPlayer != player) {
 			m_selectedPlayer = player;
 			var lineupPanel = getLineupPanel();
-			if ( lineupPanel != null ) lineupPanel.setPlayer(player.getPlayerID());
+			if ( lineupPanel != null ) lineupPanel.setPlayer(player.getPlayerId());
 			getSpielerUebersichtPanel().setPlayer(player);
 		}
 	}

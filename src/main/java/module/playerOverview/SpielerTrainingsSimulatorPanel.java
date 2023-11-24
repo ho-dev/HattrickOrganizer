@@ -176,7 +176,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             setCBs();
 
             //Remove for Temp player
-            m_jbRemoveTempSpieler.setEnabled(player.getPlayerID() < 0);
+            m_jbRemoveTempSpieler.setEnabled(player.getPlayerId() < 0);
         } else {
             resetLabels();
             resetCBs();
@@ -191,23 +191,23 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         if (e.getSource().equals(m_jbAddTempSpieler)) {
             final Player tempPlayer = new Player();
             tempPlayer.setHrfDate();
-            tempPlayer.setNationalityAsInt(HOVerwaltung.instance().getModel().getBasics().getLand());
-            tempPlayer.setPlayerID(module.transfer.scout.TransferEingabePanel
+            tempPlayer.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setPlayerId(module.transfer.scout.TransferEingabePanel
                     .getNextTempSpielerID());
-            tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerID()));
+            tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerId()));
             tempPlayer.setAge(getAge());
             tempPlayer.setAgeDays(getAgeDays());
             tempPlayer.setExperience(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
             tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
             tempPlayer.setStamina(((CBItem) m_jcbKondition.getSelectedItem()).getId());
-            tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-            tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
-            tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
-            tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
-            tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
-            tempPlayer.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
-            tempPlayer.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
-            tempPlayer.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
+            tempPlayer.setDefendingSkill(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
+            tempPlayer.setSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+            tempPlayer.setScoringSkill(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
+            tempPlayer.setGoalkeeperSkill(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
+            tempPlayer.setWingerSkill(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
+            tempPlayer.setPassingSkill(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
+            tempPlayer.setSetPiecesSkill(((CBItem) m_jcbStandard.getSelectedItem()).getId());
+            tempPlayer.setPlaymakingSkill(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
             tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
@@ -240,18 +240,18 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private void setCBs() {
         m_jlName.setText(m_clPlayer.getFullName());
-        jtfAge.setText(m_clPlayer.getAlter() + "." + m_clPlayer.getAgeDays());
+        jtfAge.setText(m_clPlayer.getAge() + "." + m_clPlayer.getAgeDays());
         Helper.setComboBoxFromID(m_jcbForm, m_clPlayer.getForm());
         Helper.setComboBoxFromID(m_jcbErfahrung, m_clPlayer.getExperience());
         Helper.setComboBoxFromID(m_jcbKondition, m_clPlayer.getStamina());
-        Helper.setComboBoxFromID(m_jcbSpielaufbau, m_clPlayer.getPMskill());
-        Helper.setComboBoxFromID(m_jcbFluegel, m_clPlayer.getWIskill());
-        Helper.setComboBoxFromID(m_jcbTorschuss, m_clPlayer.getSCskill());
-        Helper.setComboBoxFromID(m_jcbTorwart, m_clPlayer.getGKskill());
-        Helper.setComboBoxFromID(m_jcbPasspiel, m_clPlayer.getPSskill());
-        Helper.setComboBoxFromID(m_jcbVerteidigung, m_clPlayer.getDEFskill());
-        Helper.setComboBoxFromID(m_jcbSpeciality, m_clPlayer.getPlayerSpecialty());
-        Helper.setComboBoxFromID(m_jcbStandard, m_clPlayer.getSPskill());
+        Helper.setComboBoxFromID(m_jcbSpielaufbau, m_clPlayer.getPlaymakingSkill());
+        Helper.setComboBoxFromID(m_jcbFluegel, m_clPlayer.getWingerSkill());
+        Helper.setComboBoxFromID(m_jcbTorschuss, m_clPlayer.getScoringSkill());
+        Helper.setComboBoxFromID(m_jcbTorwart, m_clPlayer.getGoalkeeperSkill());
+        Helper.setComboBoxFromID(m_jcbPasspiel, m_clPlayer.getPassingSkill());
+        Helper.setComboBoxFromID(m_jcbVerteidigung, m_clPlayer.getDefendingSkill());
+        Helper.setComboBoxFromID(m_jcbSpeciality, m_clPlayer.getSpecialty());
+        Helper.setComboBoxFromID(m_jcbStandard, m_clPlayer.getSetPiecesSkill());
         Helper.setComboBoxFromID(m_jcbLoyalty, m_clPlayer.getLoyalty());
         m_jchHomegrown.setSelected(m_clPlayer.isHomeGrown());
 
@@ -287,27 +287,27 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         tempPlayer.setForm(((CBItem) m_jcbForm.getSelectedItem()).getId());
         tempPlayer.setExperience(((CBItem) m_jcbErfahrung.getSelectedItem()).getId());
         tempPlayer.setStamina(((CBItem) m_jcbKondition.getSelectedItem()).getId());
-        tempPlayer.setVerteidigung(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
-        tempPlayer.setPlayerSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
-        tempPlayer.setTorschuss(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
-        tempPlayer.setTorwart(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
-        tempPlayer.setFluegelspiel(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
-        tempPlayer.setPasspiel(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
-        tempPlayer.setStandards(((CBItem) m_jcbStandard.getSelectedItem()).getId());
-        tempPlayer.setSpielaufbau(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
+        tempPlayer.setDefendingSkill(((CBItem) m_jcbVerteidigung.getSelectedItem()).getId());
+        tempPlayer.setSpecialty(((CBItem) m_jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setScoringSkill(((CBItem) m_jcbTorschuss.getSelectedItem()).getId());
+        tempPlayer.setGoalkeeperSkill(((CBItem) m_jcbTorwart.getSelectedItem()).getId());
+        tempPlayer.setWingerSkill(((CBItem) m_jcbFluegel.getSelectedItem()).getId());
+        tempPlayer.setPassingSkill(((CBItem) m_jcbPasspiel.getSelectedItem()).getId());
+        tempPlayer.setSetPiecesSkill(((CBItem) m_jcbStandard.getSelectedItem()).getId());
+        tempPlayer.setPlaymakingSkill(((CBItem) m_jcbSpielaufbau.getSelectedItem()).getId());
         tempPlayer.setLoyalty(((CBItem) m_jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(m_jchHomegrown.isSelected());
 
         m_jlForm.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getForm() - m_clPlayer.getForm(), true));
         m_jlKondition.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getStamina() - m_clPlayer.getStamina(), true));
         m_jlErfahrung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getExperience() - m_clPlayer.getExperience(), true));
-        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPMskill() - m_clPlayer.getPMskill(), true));
-        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWIskill() - m_clPlayer.getWIskill(), true));
-        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSCskill() - m_clPlayer.getSCskill(), true));
-        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getGKskill() - m_clPlayer.getGKskill(), true));
-        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPSskill() - m_clPlayer.getPSskill(), true));
-        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getDEFskill() - m_clPlayer.getDEFskill(), true));
-        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSPskill() - m_clPlayer.getSPskill(), true));
+        m_jlSpielaufbau.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPlaymakingSkill() - m_clPlayer.getPlaymakingSkill(), true));
+        m_jlFluegel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getWingerSkill() - m_clPlayer.getWingerSkill(), true));
+        m_jlTorschuss.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getScoringSkill() - m_clPlayer.getScoringSkill(), true));
+        m_jlTorwart.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getGoalkeeperSkill() - m_clPlayer.getGoalkeeperSkill(), true));
+        m_jlPasspiel.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getPassingSkill() - m_clPlayer.getPassingSkill(), true));
+        m_jlVerteidigung.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getDefendingSkill() - m_clPlayer.getDefendingSkill(), true));
+        m_jlStandard.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getSetPiecesSkill() - m_clPlayer.getSetPiecesSkill(), true));
         m_jlLoyalty.setIcon(ImageUtilities.getImageIcon4Veraenderung(tempPlayer.getLoyalty() - m_clPlayer.getLoyalty(), true));
         int hg = 0;
         if (m_clPlayer.isHomeGrown() != tempPlayer.isHomeGrown()) {
@@ -331,7 +331,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         tempPlayer.setAge(getAge());
         tempPlayer.setAgeDays(getAgeDays());
         tempPlayer.setLeadership(m_clPlayer.getLeadership());
-        tempPlayer.setPlayerSpecialty(m_clPlayer.getPlayerSpecialty());
+        tempPlayer.setSpecialty(m_clPlayer.getSpecialty());
     }
 
     private void showWithCompare(DoubleLabelEntries labelEntry, byte playerPosition) {
@@ -362,7 +362,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     private int getAge() {
         int age = 17;
         if (m_clPlayer != null) {
-            age = m_clPlayer.getAlter();
+            age = m_clPlayer.getAge();
         }
         try {
             age = Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", ""));

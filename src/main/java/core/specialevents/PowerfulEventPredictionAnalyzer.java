@@ -65,7 +65,7 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         Player op = analyse.getOpponentPlayer(opponentScorer.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PDIM,
                 -.1, 10, -10,
-                p.getDEFskill() + p.getStamina() - op.getSCskill() - op.getStamina()
+                p.getDefendingSkill() + p.getStamina() - op.getScoringSkill() - op.getStamina()
         );
         if (se != null) {
             double goalP = analyse.getOpponentGoalProbability(opponentScorer);
@@ -121,14 +121,14 @@ public class PowerfulEventPredictionAnalyzer implements  ISpecialEventPrediction
         for (int i = IMatchRoleID.rightCentralDefender; i <= IMatchRoleID.leftCentralDefender; i++) {
             Player opponentDefender = analyse.getOpponentPlayerByPosition(i);
             if (opponentDefender != null) {
-                defence += opponentDefender.getDEFskill();
+                defence += opponentDefender.getDefendingSkill();
             }
         }
 
         Player p = analyse.getPlayer(position.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, SpecialEventType.PNF,
                 0.5, 10, -20,
-                p.getPMskill() - defence);
+                p.getPlaymakingSkill() - defence);
 
         if (se != null) {
             se.setChanceCreationProbability(se.getChanceCreationProbability() * overcrowdingFactor);

@@ -43,12 +43,12 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
         double ndefence = 0;
         Player oppDefender = this.analyse.getOpponentPlayerByPosition(back);
         if (oppDefender != null) {
-            defence += oppDefender.getDEFskill();
+            defence += oppDefender.getDefendingSkill();
             ndefence++;
         }
         oppDefender = this.analyse.getOpponentPlayerByPosition(centralDefender);
         if (oppDefender != null) {
-            defence += oppDefender.getDEFskill();
+            defence += oppDefender.getDefendingSkill();
             ndefence++;
         }
         if (ndefence > 1) {
@@ -80,7 +80,7 @@ public class WingerEventPredictionAnalyzer implements ISpecialEventPredictionAna
         Player winger = analyse.getPlayer(position.getPlayerId());
         SpecialEventsPrediction se = SpecialEventsPrediction.createIfInRange(position, type,
                 .2, 10, -10,
-                winger.getWIskill() - defence
+                winger.getWingerSkill() - defence
         );
         if (se != null) {
             Player involvedPlayer = analyse.getPlayer(scorer.getPlayerId());

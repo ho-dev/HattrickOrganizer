@@ -40,7 +40,7 @@ public class TrainingModel implements PropertyChangeListener {
 	public void setActivePlayer(Player player) {
 		if (this.activePlayer == null && player != null ||
 				this.activePlayer != null && player == null ||
-				this.activePlayer != null && this.activePlayer.getPlayerID() != player.getPlayerID()) {
+				this.activePlayer != null && this.activePlayer.getPlayerId() != player.getPlayerId()) {
 			this.activePlayer = player;
 			this.skillupManager = null;
 			resetFutureTrainings_();

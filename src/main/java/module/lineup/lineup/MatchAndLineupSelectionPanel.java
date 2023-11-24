@@ -475,7 +475,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         TrainerType trainer;
         int tacticalAssistants;
         try {
-            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerType();
             tacticalAssistants = HOVerwaltung.instance().getModel().getClub().getTacticalAssistantLevels();
 
         } catch (Exception e) {
@@ -508,7 +508,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private StyleOfPlay getDefaultTrainerStyleOfPlay() {
         TrainerType trainer;
         try {
-            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerTyp();
+            trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerType();
         } catch (Exception e) {
             return StyleOfPlay.Neutral();  // Happens for instance with empty db
         }

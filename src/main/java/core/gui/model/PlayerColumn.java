@@ -70,7 +70,7 @@ public class PlayerColumn extends UserColumn {
 	 * @return player id
 	 */
 	public int getValue(Player player){
-		return player.getPlayerID();
+		return player.getPlayerId();
 	}
 	
 

@@ -71,11 +71,11 @@ public class SwapPositionsManager {
 		int playerB_id = 0;
 		
 		if  (playerA != null) {
-			playerA_id = playerA.getPlayerID();
+			playerA_id = playerA.getPlayerId();
 		}
 		
 		if  (playerB != null) {
-			playerB_id = playerB.getPlayerID();
+			playerB_id = playerB.getPlayerId();
 		}
 		
 		lineup.setSpielerAtPosition(positionA, playerB_id);

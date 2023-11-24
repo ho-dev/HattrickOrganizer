@@ -67,7 +67,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		tmp.removeAll(this.oldplayers);
 		allOutdated.addAll(tmp);
 
-        allOutdated.removeIf(player -> player.getPlayerID() < 0);
+        allOutdated.removeIf(player -> player.getPlayerId() < 0);
 		boolean success = false;
 		if ((!allOutdated.isEmpty()) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).isEmpty())) {
 			success = XMLParser.updateTeamTransfers(HOVerwaltung.instance().getModel().getBasics().getTeamId());
@@ -78,7 +78,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		// Also, Db is called to do downloads? Truly messed up. 
 		if (success) {
 			for (final Player player : allOutdated) {
-				XMLParser.updatePlayerTransfers(player.getPlayerID());
+				XMLParser.updatePlayerTransfers(player.getPlayerId());
 			}
 		}
 

@@ -107,7 +107,7 @@ public class PenaltyTakersView extends JPanel {
 
 	private PenaltyTaker getPenaltyTaker(int playerId) {
 		for (PenaltyTaker taker : this.players) {
-			if (taker.getPlayer().getPlayerID() == playerId) {
+			if (taker.getPlayer().getPlayerId() == playerId) {
 				return taker;
 			}
 		}
@@ -484,7 +484,7 @@ public class PenaltyTakersView extends JPanel {
 
 	private Integer getInLineupVal(Player player) {
 		if (lineup != null) {
-			int playerId = player.getPlayerID();
+			int playerId = player.getPlayerId();
 			if (lineup.isPlayerInStartingEleven(playerId)) {
 				return 1;
 			} else if (lineup.isSpielerInReserve(playerId)) {

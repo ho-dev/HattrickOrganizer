@@ -136,18 +136,18 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     public void actionPerformed(java.awt.event.ActionEvent actionevent) {
         if (actionevent.getSource().equals(m_jbStatistics)) {
             HOMainFrame.instance().showTab(IModule.STATISTICS);
-            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerID());
+            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerId());
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerID());
+            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerId());
         } else if (actionevent.getSource().equals(m_jbAnalysisBottom)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
-            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerID());
+            HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerId());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
         }
         else if ( actionevent.getSource().equals(jlPlayerAvatar)){
-            ThemeManager.instance().downloadPlayerAvatar(m_clPlayer.getPlayerID());
+            ThemeManager.instance().downloadPlayerAvatar(m_clPlayer.getPlayerId());
             refresh();
         }
     }
@@ -188,10 +188,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     }
 
     private void setLabels() {
-        Icon playerAvatar = ThemeManager.instance().getPlayerAvatar(m_clPlayer.getPlayerID());
+        Icon playerAvatar = ThemeManager.instance().getPlayerAvatar(m_clPlayer.getPlayerId());
         jlPlayerAvatar.setIcon(playerAvatar);
-        jlNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityAsInt()));
-        jlNationality.setToolTipText(m_clPlayer.getNationalityAsString());
+        jlNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityId()));
+        jlNationality.setToolTipText(m_clPlayer.getNationality());
         jlNationality.setText(m_clPlayer.getAgeStringFull());
 
         setCB(m_jcbSquad, m_clPlayer.getTeamGroup());
@@ -205,9 +205,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final int salary = (int) (m_clPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+        final int salary = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().FXrate);
         final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
-        final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTSI());
+        final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
             m_jllWage.getLeft().setText(salarytext);
             m_jllWage.getRight().clear();
@@ -229,62 +229,62 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
         else {
-            final int previousSalary = (int) (m_clComparisonPlayer.getSalary() / core.model.UserParameter.instance().FXrate);
+            final int previousSalary = (int) (m_clComparisonPlayer.getWage() / core.model.UserParameter.instance().FXrate);
             m_jllWage.getLeft().setText(salarytext);
             m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
             m_jllTSI.getLeft().setText(tsitext);
-            m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTSI() - m_clComparisonPlayer.getTSI(), false);
+            m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
-                    - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isOld(), true);
+                    - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isGoner(), true);
 
             m_jclStaminaChange.setGraphicalChangeValue(m_clPlayer.getStamina()
-                    - m_clComparisonPlayer.getStamina(), !m_clComparisonPlayer.isOld(), true);
-            m_jclGKchange.setGraphicalChangeValue(m_clPlayer.getGKskill()
-                            - m_clComparisonPlayer.getGKskill(),
+                    - m_clComparisonPlayer.getStamina(), !m_clComparisonPlayer.isGoner(), true);
+            m_jclGKchange.setGraphicalChangeValue(m_clPlayer.getGoalkeeperSkill()
+                            - m_clComparisonPlayer.getGoalkeeperSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.KEEPER)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.KEEPER),
-                    !m_clComparisonPlayer.isOld(), true);
-            m_jclDEchange.setGraphicalChangeValue(m_clPlayer.getDEFskill()
-                            - m_clComparisonPlayer.getDEFskill(),
+                    !m_clComparisonPlayer.isGoner(), true);
+            m_jclDEchange.setGraphicalChangeValue(m_clPlayer.getDefendingSkill()
+                            - m_clComparisonPlayer.getDefendingSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.DEFENDING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.DEFENDING),
-                    !m_clComparisonPlayer.isOld(), true);
+                    !m_clComparisonPlayer.isGoner(), true);
 
-            m_jclPMchange.setGraphicalChangeValue(m_clPlayer.getPMskill()
-                            - m_clComparisonPlayer.getPMskill(),
+            m_jclPMchange.setGraphicalChangeValue(m_clPlayer.getPlaymakingSkill()
+                            - m_clComparisonPlayer.getPlaymakingSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.PLAYMAKING),
-                    !m_clComparisonPlayer.isOld(), true);
-            m_jclPSchange.setGraphicalChangeValue(m_clPlayer.getPSskill()
-                            - m_clComparisonPlayer.getPSskill(),
+                    !m_clComparisonPlayer.isGoner(), true);
+            m_jclPSchange.setGraphicalChangeValue(m_clPlayer.getPassingSkill()
+                            - m_clComparisonPlayer.getPassingSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.PASSING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.PASSING),
-                    !m_clComparisonPlayer.isOld(), true);
+                    !m_clComparisonPlayer.isGoner(), true);
 
-            m_jclWIchange.setGraphicalChangeValue(m_clPlayer.getWIskill()
-                            - m_clComparisonPlayer.getWIskill(),
+            m_jclWIchange.setGraphicalChangeValue(m_clPlayer.getWingerSkill()
+                            - m_clComparisonPlayer.getWingerSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.WINGER)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.WINGER),
-                    !m_clComparisonPlayer.isOld(), true);
-            m_jclSPchange.setGraphicalChangeValue(m_clPlayer.getSPskill()
-                            - m_clComparisonPlayer.getSPskill(),
+                    !m_clComparisonPlayer.isGoner(), true);
+            m_jclSPchange.setGraphicalChangeValue(m_clPlayer.getSetPiecesSkill()
+                            - m_clComparisonPlayer.getSetPiecesSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
-                    !m_clComparisonPlayer.isOld(), true);
+                    !m_clComparisonPlayer.isGoner(), true);
 
-            m_jclSCchange.setGraphicalChangeValue(m_clPlayer.getSCskill()
-                            - m_clComparisonPlayer.getSCskill(),
+            m_jclSCchange.setGraphicalChangeValue(m_clPlayer.getScoringSkill()
+                            - m_clComparisonPlayer.getScoringSkill(),
                     m_clPlayer.getSub4Skill(PlayerSkill.SCORING)
                             - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SCORING),
-                    !m_clComparisonPlayer.isOld(), true);
+                    !m_clComparisonPlayer.isGoner(), true);
 
         }
 
-        m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getAllOfficialGoals()));
-        m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getGoalsCurrentTeam()));
-        m_jlHattricks.setText(String.valueOf(m_clPlayer.getHattrick()));
-        m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getSeasonSeriesGoal()));
-        m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getSeasonCupGoal()));
+        m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getTotalGoals()));
+        m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getCurrentTeamGoals()));
+        m_jlHattricks.setText(String.valueOf(m_clPlayer.getHatTricks()));
+        m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getLeagueGoals()));
+        m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getCupGameGoals()));
 
         var bestPosition = m_clPlayer.getIdealPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
@@ -293,7 +293,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 m_clPlayer.getIdealPositionRating())
                 + ")");
 
-        int iSpecialty = m_clPlayer.getPlayerSpecialty();
+        int iSpecialty = m_clPlayer.getSpecialty();
         if (iSpecialty == 0) {
             m_jlSpecialty.setText("-");
         }
@@ -302,7 +302,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         m_jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[iSpecialty]));
 
-        String playerDescription = "<html>" + Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getCharakter()), PlayerAggressiveness.toString(m_clPlayer.getAgressivitaet()), PlayerHonesty.toString(m_clPlayer.getAnsehen()));
+        String playerDescription = "<html>" + Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getGentleness()), PlayerAggressiveness.toString(m_clPlayer.getAggressivity()), PlayerHonesty.toString(m_clPlayer.getHonesty()));
         playerDescription += "<br>";
         playerDescription += Helper.getTranslation("ls.player_details.desc2", PlayerAbility.getNameForSkill(m_clPlayer.getExperience(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLeadership(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty(), true, false, 0));
         playerDescription += "</html>";
@@ -347,7 +347,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         // Refresh Match History Panel
         jpMatchHistory.reset();
 
-        var matches = DBManager.instance().getPlayerMatchCBItems(m_clPlayer.getPlayerID(), true);
+        var matches = DBManager.instance().getPlayerMatchCBItems(m_clPlayer.getPlayerId(), true);
 
         int iMax = Math.min(MATCH_HISTORY_LENGTH, matches.size());
         for (int i=0; i<iMax; i++){
@@ -365,17 +365,17 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
     private Player getComparisonPlayerFirstHRF(Player player) {
         return core.db.DBManager.instance()
-                .loadPlayerFirstHRF(player.getPlayerID());
+                .loadPlayerFirstHRF(player.getPlayerId());
     }
 
     private void findComparisonPlayer() {
-        final int id = m_clPlayer.getPlayerID();
+        final int id = m_clPlayer.getPlayerId();
         for (int i = 0;
              (SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage() != null)
                      && (i < SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().size()); i++) {
             Player comparisonPlayer = SpielerTrainingsVergleichsPanel
                     .getSelectedPlayerDevelopmentStage().get(i);
-            if (comparisonPlayer.getPlayerID() == id) {
+            if (comparisonPlayer.getPlayerId() == id) {
                 m_clComparisonPlayer = comparisonPlayer;
                 return;
             }

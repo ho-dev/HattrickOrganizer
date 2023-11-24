@@ -54,7 +54,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         if (player != null) {
             var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
             MatchLineupPosition matchLineupPosition;
-            matchLineupPosition = lineup.getPositionByPlayerId(player.getPlayerID());
+            matchLineupPosition = lineup.getPositionByPlayerId(player.getPlayerId());
             m_clEntry.updateComponent(player, matchLineupPosition, getPositionsEvaluation(), m_bSetInBestPosition, m_sText);
             JComponent comp = m_clEntry.getComponent(isSelected, index==-1);
             if (m_bMultiLine) comp.setPreferredSize(new Dimension(comp.getPreferredSize().width, PLAYER_COMBO_HEIGHT));
@@ -121,7 +121,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
     public final boolean equals(Object obj) {
         if (obj instanceof final PlayerCBItem temp) {
             if ((this.getPlayer() != null) && (temp.getPlayer() != null)) {
-                return this.getPlayer().getPlayerID() == temp.getPlayer().getPlayerID();
+                return this.getPlayer().getPlayerId() == temp.getPlayer().getPlayerId();
             } else return (this.getPlayer() == null) && (temp.getPlayer() == null);
         }
 
@@ -136,7 +136,7 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
     @Override
     public int getId() {
         if (this.m_clPlayer != null) {
-            return this.m_clPlayer.getPlayerID();
+            return this.m_clPlayer.getPlayerId();
         }
         return -1;
     }

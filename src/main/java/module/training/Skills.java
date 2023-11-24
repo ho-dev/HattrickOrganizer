@@ -202,13 +202,13 @@ public class Skills {
      */
     public static double getSkillValue(Player player, int skillIndex) {
         return switch (skillIndex) {
-            case PlayerSkill.KEEPER -> player.getGKskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.PLAYMAKING -> player.getPMskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.PASSING -> player.getPSskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.WINGER -> player.getWIskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.DEFENDING -> player.getDEFskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.SCORING -> player.getSCskill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.SET_PIECES -> player.getSPskill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.KEEPER -> player.getGoalkeeperSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.PLAYMAKING -> player.getPlaymakingSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.PASSING -> player.getPassingSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.WINGER -> player.getWingerSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.DEFENDING -> player.getDefendingSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.SCORING -> player.getScoringSkill() + player.getSub4Skill(skillIndex);
+            case PlayerSkill.SET_PIECES -> player.getSetPiecesSkill() + player.getSub4Skill(skillIndex);
             case PlayerSkill.STAMINA -> player.getStamina() + player.getSub4Skill(skillIndex);
             case PlayerSkill.FORM -> player.getForm() + player.getSub4Skill(skillIndex);
             case PlayerSkill.EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);

@@ -75,7 +75,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
         //Remove all players on the group and put the new ones in
         for (Player player : lPlayers) {
             // players in starting lineup are put in selected group
-            if (lineup.isPlayerInStartingEleven(player.getPlayerID())) {
+            if (lineup.isPlayerInStartingEleven(player.getPlayerId())) {
                 player.setTeamInfoSmilie(sGroup);
             }
             // all other players are not part of that group

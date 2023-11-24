@@ -348,7 +348,7 @@ public class RatingPredictionModel {
         var ret = p.getPlayer();
         if ( ret != null){
             if (manMarkingOrder != null &&
-                    ret.getPlayerID() == manMarkingOrder.getSubjectPlayerID() &&
+                    ret.getPlayerId() == manMarkingOrder.getSubjectPlayerID() &&
                     p.getStartMinute() + 5 <= minute    // man marking starts 5 minutes after player enters the match
             ) {
                 // create player clone with reduced skill values
@@ -387,7 +387,7 @@ public class RatingPredictionModel {
             contribution *= overcrowdingPenalty;
             var exp = experienceCache.get(player.getSkillValue(EXPERIENCE), sector);
             contribution += exp;
-            contribution *= weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
+            contribution *= weatherCache.get(Specialty.getSpecialty(player.getSpecialty()), weather);
             contribution *= staminaCache.get((double) player.getStamina(), minute, startMinute, tacticType);
 
 //            if ( minute == 0) {
@@ -475,7 +475,7 @@ public class RatingPredictionModel {
                                     var behaviours = r.getValue();
                                     var specialties = behaviours.get(behaviour);
                                     if (specialties != null) {
-                                        var c = specialties.get(Specialty.getSpecialty(player.getPlayerSpecialty()));
+                                        var c = specialties.get(Specialty.getSpecialty(player.getSpecialty()));
                                         var strength = calcStrength(player, skillType);
                                         var res = strength * c;
                                         ret += res;
@@ -959,7 +959,7 @@ public class RatingPredictionModel {
      * @return Player rating value
      */
     public double getPlayerRating(@NotNull Player p, int roleId, byte behaviour, int minute, Weather weather) {
-        return weatherCache.get(Specialty.getSpecialty(p.getPlayerSpecialty()), weather)
+        return weatherCache.get(Specialty.getSpecialty(p.getSpecialty()), weather)
                 * getPlayerRating(p, roleId, behaviour, minute);
     }
 
@@ -1056,7 +1056,7 @@ public class RatingPredictionModel {
      * @return Double
      */
     public double getPlayerMatchAverageRating(Player p, int roleId, byte behaviour, Weather weather) {
-        return weatherCache.get(Specialty.getSpecialty(p.getPlayerSpecialty()), weather)
+        return weatherCache.get(Specialty.getSpecialty(p.getSpecialty()), weather)
                 * getPlayerMatchAverageRating(p, roleId, behaviour);
     }
 
@@ -1221,7 +1221,7 @@ public class RatingPredictionModel {
         ret += calcStrength(player, SET_PIECES) * 0.7;
         ret += calcStrength(player, SCORING) * 0.3;
 
-        if (player.getPlayerSpecialty() == PlayerSpeciality.TECHNICAL) {
+        if (player.getSpecialty() == PlayerSpeciality.TECHNICAL) {
             ret *= 1.1;
         }
         return ret;
@@ -1397,7 +1397,7 @@ public class RatingPredictionModel {
         var player = p.getPlayer();
         if (player != null) {
             var ret = playerTacticStrengthCache.get(player, playerSkill);
-            ret *= weatherCache.get(Specialty.getSpecialty(player.getPlayerSpecialty()), weather);
+            ret *= weatherCache.get(Specialty.getSpecialty(player.getSpecialty()), weather);
             ret *= staminaCache.get((double) player.getStamina(), minute, p.getStartMinute(), tacticType);
             return ret;
         }
@@ -1647,7 +1647,7 @@ public class RatingPredictionModel {
                 var passing = calcStrength(player, PASSING);
                 var experience = calcSkillRating(player.getSkill(EXPERIENCE));
                 var contrib = 4 * passing + experience;
-                if (player.getPlayerSpecialty() == PlayerSpeciality.UNPREDICTABLE) {
+                if (player.getSpecialty() == PlayerSpeciality.UNPREDICTABLE) {
                     contrib *= 2;
                 }
                 sum += contrib;
@@ -1668,7 +1668,7 @@ public class RatingPredictionModel {
             var defending = getPlayerTacticStrength(p, DEFENDING, lineup.getWeather(), lineup.getTacticType(), minute);
             if (defending > 0) {
                 var player = p.getPlayer();
-                if (player.getPlayerSpecialty() == PlayerSpeciality.POWERFUL) {
+                if (player.getSpecialty() == PlayerSpeciality.POWERFUL) {
                     defending *= 2;
                 }
             }

@@ -35,7 +35,7 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 				if (rowindex >= 0){
 					Player player = tableSorter.getSpieler(rowindex);
 					if(player!=null && e.isShiftDown()){
-						HattrickLink.showPlayer(player.getPlayerID());
+						HattrickLink.showPlayer(player.getPlayerId());
 					}
 				}
 			}

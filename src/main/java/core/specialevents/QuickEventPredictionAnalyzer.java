@@ -103,18 +103,18 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
         Player opp = analyse.getOpponentPlayerByPosition(block100PercentIfQuick);
         if (opp != null) {
             n++;
-            opponentDefenceSkill += opp.getDEFskill();
+            opponentDefenceSkill += opp.getDefendingSkill();
         }
         opp = analyse.getOpponentPlayerByPosition(block25PercentIfQuick);
         if (opp != null) {
             n++;
-            opponentDefenceSkill += opp.getDEFskill();
+            opponentDefenceSkill += opp.getDefendingSkill();
         }
         if (useQuick2ForPassCalculation && block25PercentIfQuick2 != 0) {
             opp = analyse.getOpponentPlayerByPosition(block25PercentIfQuick2);
             if (opp != null) {
                 n++;
-                opponentDefenceSkill += opp.getDEFskill();
+                opponentDefenceSkill += opp.getDefendingSkill();
             }
         }
         if (n > 1) {
@@ -140,7 +140,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 position,
                 SpecialEventType.QUICK_PASS,
                 .5, 10, -10,
-                p.getPSskill() - opponentDefenceSkill);
+                p.getPassingSkill() - opponentDefenceSkill);
         if (se != null) {
             se.setInvolvedOpponentPositions(involvedOpponents);
             se.addInvolvedPosition(analyse.getPosition(passReceiver));
@@ -160,7 +160,7 @@ public class QuickEventPredictionAnalyzer  implements ISpecialEventPredictionAna
                 position,
                 SpecialEventType.QUICK_SCORES,
                 .5, 10, -10,
-                p.getSCskill() - opp.getDEFskill());
+                p.getScoringSkill() - opp.getDefendingSkill());
         if ( se != null ) {
             se.setInvolvedOpponentPositions(involvedOpponents);
             se.addInvolvedOpponentPosition(analyse.getOpponentPosition(pos));

@@ -372,18 +372,18 @@ public class TransferTableModel extends AbstractTableModel {
             aktuellerPlayer.setFirstName("");  //TODO: fix this
             aktuellerPlayer.setNickName(" "); //TODO: fix this
             aktuellerPlayer.setLastName(aktuellerScoutEintrag.getName());
-            aktuellerPlayer.setPlayerSpecialty(aktuellerScoutEintrag.getSpeciality());
+            aktuellerPlayer.setSpecialty(aktuellerScoutEintrag.getSpeciality());
             aktuellerPlayer.setExperience(aktuellerScoutEintrag.getErfahrung());
             aktuellerPlayer.setLeadership(aktuellerScoutEintrag.getLeadership());
             aktuellerPlayer.setForm(aktuellerScoutEintrag.getForm());
             aktuellerPlayer.setStamina(aktuellerScoutEintrag.getKondition());
-            aktuellerPlayer.setVerteidigung(aktuellerScoutEintrag.getVerteidigung());
-            aktuellerPlayer.setTorschuss(aktuellerScoutEintrag.getTorschuss());
-            aktuellerPlayer.setTorwart(aktuellerScoutEintrag.getTorwart());
-            aktuellerPlayer.setFluegelspiel(aktuellerScoutEintrag.getFluegelspiel());
-            aktuellerPlayer.setPasspiel(aktuellerScoutEintrag.getPasspiel());
-            aktuellerPlayer.setStandards(aktuellerScoutEintrag.getStandards());
-            aktuellerPlayer.setSpielaufbau(aktuellerScoutEintrag.getSpielaufbau());
+            aktuellerPlayer.setDefendingSkill(aktuellerScoutEintrag.getVerteidigung());
+            aktuellerPlayer.setScoringSkill(aktuellerScoutEintrag.getTorschuss());
+            aktuellerPlayer.setGoalkeeperSkill(aktuellerScoutEintrag.getTorwart());
+            aktuellerPlayer.setWingerSkill(aktuellerScoutEintrag.getFluegelspiel());
+            aktuellerPlayer.setPassingSkill(aktuellerScoutEintrag.getPasspiel());
+            aktuellerPlayer.setSetPiecesSkill(aktuellerScoutEintrag.getStandards());
+            aktuellerPlayer.setPlaymakingSkill(aktuellerScoutEintrag.getSpielaufbau());
             aktuellerPlayer.setLoyalty(aktuellerScoutEintrag.getLoyalty());
             aktuellerPlayer.setHomeGrown(aktuellerScoutEintrag.isHomegrown());
 
@@ -440,43 +440,43 @@ public class TransferTableModel extends AbstractTableModel {
                     SwingConstants.RIGHT);
 
             //Torwart
-            m_clData[i][13] = new ColorLabelEntry(aktuellerPlayer.getGKskill() + "",
+            m_clData[i][13] = new ColorLabelEntry(aktuellerPlayer.getGoalkeeperSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Verteidigung
-            m_clData[i][14] = new ColorLabelEntry(aktuellerPlayer.getDEFskill() + "",
+            m_clData[i][14] = new ColorLabelEntry(aktuellerPlayer.getDefendingSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Spielaufbau
-            m_clData[i][15] = new ColorLabelEntry(aktuellerPlayer.getPMskill() + "",
+            m_clData[i][15] = new ColorLabelEntry(aktuellerPlayer.getPlaymakingSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Passpiel
-            m_clData[i][16] = new ColorLabelEntry(aktuellerPlayer.getPSskill() + "",
+            m_clData[i][16] = new ColorLabelEntry(aktuellerPlayer.getPassingSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Flügelspiel
-            m_clData[i][17] = new ColorLabelEntry(aktuellerPlayer.getWIskill() + "",
+            m_clData[i][17] = new ColorLabelEntry(aktuellerPlayer.getWingerSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Torschuss
-            m_clData[i][18] = new ColorLabelEntry(aktuellerPlayer.getSCskill() + "",
+            m_clData[i][18] = new ColorLabelEntry(aktuellerPlayer.getScoringSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);
 
             //Standards
-            m_clData[i][19] = new ColorLabelEntry(aktuellerPlayer.getSPskill() + "",
+            m_clData[i][19] = new ColorLabelEntry(aktuellerPlayer.getSetPiecesSkill() + "",
                     ColorLabelEntry.FG_STANDARD,
                     ColorLabelEntry.BG_SINGLEPLAYERVALUES,
                     SwingConstants.RIGHT);

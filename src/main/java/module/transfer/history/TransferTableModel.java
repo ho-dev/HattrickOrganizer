@@ -163,7 +163,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getGKskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getGoalkeeperSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.defending") {
@@ -174,7 +174,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getDEFskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getDefendingSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.playmaking") {
@@ -185,7 +185,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getPMskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getPlaymakingSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.passing") {
@@ -196,7 +196,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getPSskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getPassingSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.winger") {
@@ -207,7 +207,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getWIskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getWingerSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.scoring") {
@@ -218,7 +218,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return createPlayerInfoLabelEntry(playerInfo.getSCskill());
+                        return createPlayerInfoLabelEntry(playerInfo.getScoringSkill());
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.setpieces") {
@@ -229,7 +229,7 @@ public class TransferTableModel extends HOTableModel {
 
                     @Override
                     public IHOTableEntry getTableEntry(Player playerInfo) {
-                        return  createPlayerInfoLabelEntry(playerInfo.getSPskill());
+                        return  createPlayerInfoLabelEntry(playerInfo.getSetPiecesSkill());
                     }
                 }
         )).toArray(new TransferTableColumn[0]);

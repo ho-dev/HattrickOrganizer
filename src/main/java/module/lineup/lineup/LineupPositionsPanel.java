@@ -127,9 +127,9 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		for (Player player : allPlayers) {
 			// the first 11
-			if (lineup.isPlayerInStartingEleven(player.getPlayerID())) {
+			if (lineup.isPlayerInStartingEleven(player.getPlayerId())) {
 				selectedPlayers.add(player);
-			} else if (lineup.isSpielerInReserve(player.getPlayerID())) {
+			} else if (lineup.isSpielerInReserve(player.getPlayerId())) {
 				substitutes.add(player);
 			}
 		}
@@ -145,7 +145,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 					var matchlineupTeam = HOVerwaltung.instance().getModel().getPreviousLineup();
 					if (matchlineupTeam != null) {
 						var previousLineup = matchlineupTeam.getLineup();
-						if (previousLineup.isPlayerInStartingEleven(player.getPlayerID())) {
+						if (previousLineup.isPlayerInStartingEleven(player.getPlayerId())) {
 							include = false;
 						}
 					}

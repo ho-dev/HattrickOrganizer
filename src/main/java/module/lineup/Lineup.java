@@ -391,8 +391,8 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
-					int curPlayerId = player.getPlayerID();
+				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), m_vFieldPositions)) {
+					int curPlayerId = player.getPlayerId();
 					float curCaptainsValue = HOVerwaltung.instance().getModel().getCurrentLineupTeam().getLineup()
 							.getAverageExperience(curPlayerId);
 					if (maxValue < curCaptainsValue) {
@@ -426,7 +426,7 @@ public class Lineup{
 		if (players != null) {
 			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), noKeeper)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), noKeeper)) {
 //					double sp = (double) player.getSPskill()
 //							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
 //							+ RatingPredictionManager.getLoyaltyEffect(player);
@@ -434,11 +434,11 @@ public class Lineup{
 					if (sp > maxStandard) {
 						maxStandard = sp;
 						form = player.getForm();
-						m_iKicker = player.getPlayerID();
+						m_iKicker = player.getPlayerId();
 					} else if ((sp == maxStandard) && (form < player.getForm())) {
 						maxStandard = sp;
 						form = player.getForm();
-						m_iKicker = player.getPlayerID();
+						m_iKicker = player.getPlayerId();
 					}
 				}
 			}
@@ -461,13 +461,13 @@ public class Lineup{
 
 		if (players != null) {
 			for (Player player : players) {
-				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerID(), m_vFieldPositions)) {
+				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), m_vFieldPositions)) {
 					value += player.getExperience();
 					if (captainsId > 0) {
-						if (captainsId == player.getPlayerID()) {
+						if (captainsId == player.getPlayerId()) {
 							captain = player;
 						}
-					} else if (m_iKapitaen == player.getPlayerID()) {
+					} else if (m_iKapitaen == player.getPlayerId()) {
 						captain = player;
 					}
 				}
@@ -1285,11 +1285,11 @@ public class Lineup{
 		var tac2 = getTactic4PositionID(pos2);
 
 		if (getPlayerByPositionID(pos1) != null) {
-			id1 = getPlayerByPositionID(pos1).getPlayerID();
+			id1 = getPlayerByPositionID(pos1).getPlayerId();
 			setSpielerAtPosition(pos1, 0);
 		}
 		if (getPlayerByPositionID(pos2) != null) {
-			id2 = getPlayerByPositionID(pos2).getPlayerID();
+			id2 = getPlayerByPositionID(pos2).getPlayerId();
 			setSpielerAtPosition(pos2, 0);
 		}
 		setSpielerAtPosition(pos2, id1, tac1);
@@ -1647,25 +1647,25 @@ public class Lineup{
 
 	public void adjustBackupPlayers() {
 		Player player = this.getPlayerByPositionID(IMatchRoleID.substGK1);
-		int substGK = (player == null) ? 0 : player.getPlayerID();
+		int substGK = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substCD1);
-		int substCD = (player == null) ? 0 : player.getPlayerID();
+		int substCD = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substWB1);
-		int substWB = (player == null) ? 0 : player.getPlayerID();
+		int substWB = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substIM1);
-		int substIM = (player == null) ? 0 : player.getPlayerID();
+		int substIM = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substFW1);
-		int substFW = (player == null) ? 0 : player.getPlayerID();
+		int substFW = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substWI1);
-		int substWI = (player == null) ? 0 : player.getPlayerID();
+		int substWI = (player == null) ? 0 : player.getPlayerId();
 
 		player = this.getPlayerByPositionID(IMatchRoleID.substXT1);
-		int substXT = (player == null) ? 0 : player.getPlayerID();
+		int substXT = (player == null) ? 0 : player.getPlayerId();
 
 		ArrayList<Integer> authorisedBackup = new ArrayList<>(Arrays.asList(substGK, substCD, substWB, substIM, substFW, substWI, substXT));
 
@@ -1683,7 +1683,7 @@ public class Lineup{
 	public void adjustBackupPlayer(int iBackupPositionID, int iPlayerIDCorrespondingSub, ArrayList<Integer> authorisedBackup) {
 		Player player = this.getPlayerByPositionID(iBackupPositionID);
 		if (player != null){
-			int backupID = player.getPlayerID();
+			int backupID = player.getPlayerId();
 			if ((backupID == iPlayerIDCorrespondingSub) || !(authorisedBackup.contains(backupID)))
 			{
 				// need to remove that player from that backup position
@@ -1717,10 +1717,10 @@ public class Lineup{
 		for (var pos : m_vFieldPositions) {
 			Player p = this.getPlayerByPositionID(pos.getId());
 			if ( p != null){
-				teamAtt += p.getSCskill();
-				teamSP += p.getSPskill();
-				if ( p.getPlayerID() == getKicker()){
-					spSP = p.getSPskill();
+				teamAtt += p.getScoringSkill();
+				teamSP += p.getSetPiecesSkill();
+				if ( p.getPlayerId() == getKicker()){
+					spSP = p.getSetPiecesSkill();
 				}
 			}
 			n++;
@@ -1741,16 +1741,16 @@ public class Lineup{
 
 		Player keeper = getPlayerByPositionID(IMatchRoleID.keeper);
 		if ( keeper != null){
-			spGK = keeper.getSPskill();
-			gkGK = keeper.getGKskill();
+			spGK = keeper.getSetPiecesSkill();
+			gkGK = keeper.getGoalkeeperSkill();
 		}
 
 		for (var pos : m_vFieldPositions) {
 			Player p = this.getPlayerByPositionID(pos.getId());
 			if ( p != null){
 				n++;
-				teamDef += p.getDEFskill();
-				teamSP += p.getSPskill();
+				teamDef += p.getDefendingSkill();
+				teamSP += p.getSetPiecesSkill();
 			}
 		}
 		if ( n > 1){

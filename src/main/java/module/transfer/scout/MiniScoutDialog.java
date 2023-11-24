@@ -587,18 +587,18 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      */
     private void spielervalueChanged() {
         final Player tempPlayer = new Player();
-        tempPlayer.setPlayerSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
+        tempPlayer.setSpecialty(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         tempPlayer.setExperience(((CBItem) jcbExperience.getSelectedItem()).getId());
 		tempPlayer.setLeadership(((CBItem) jcbLeadership.getSelectedItem()).getId());
         tempPlayer.setForm(((CBItem) jcbForm.getSelectedItem()).getId());
         tempPlayer.setStamina(((CBItem) jcbStamina.getSelectedItem()).getId());
-        tempPlayer.setVerteidigung(((CBItem) jcbDefense.getSelectedItem()).getId());
-        tempPlayer.setTorschuss(((CBItem) jcbAttacking.getSelectedItem()).getId());
-        tempPlayer.setTorwart(((CBItem) jcbKeeper.getSelectedItem()).getId());
-        tempPlayer.setFluegelspiel(((CBItem) jcbWinger.getSelectedItem()).getId());
-        tempPlayer.setPasspiel(((CBItem) jcbPassing.getSelectedItem()).getId());
-        tempPlayer.setStandards(((CBItem) jcbStandards.getSelectedItem()).getId());
-        tempPlayer.setSpielaufbau(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
+        tempPlayer.setDefendingSkill(((CBItem) jcbDefense.getSelectedItem()).getId());
+        tempPlayer.setScoringSkill(((CBItem) jcbAttacking.getSelectedItem()).getId());
+        tempPlayer.setGoalkeeperSkill(((CBItem) jcbKeeper.getSelectedItem()).getId());
+        tempPlayer.setWingerSkill(((CBItem) jcbWinger.getSelectedItem()).getId());
+        tempPlayer.setPassingSkill(((CBItem) jcbPassing.getSelectedItem()).getId());
+        tempPlayer.setSetPiecesSkill(((CBItem) jcbStandards.getSelectedItem()).getId());
+        tempPlayer.setPlaymakingSkill(((CBItem) jcbPlaymaking.getSelectedItem()).getId());
         tempPlayer.setLoyalty(((CBItem) jcbLoyalty.getSelectedItem()).getId());
         tempPlayer.setHomeGrown(jchHomegrown.isSelected());
         tempPlayer.setAge(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));

@@ -22,12 +22,12 @@ public class PenaltyTaker {
 	}
 
 	public double getScoring() {
-		return ((double) this.player.getSCskill())
+		return ((double) this.player.getScoringSkill())
 				+ this.player.getSub4Skill(PlayerSkill.SCORING);
 	}
 
 	public double getSetPieces() {
-		return ((double) this.player.getSPskill())
+		return ((double) this.player.getSetPiecesSkill())
 				+ this.player.getSub4Skill(PlayerSkill.SET_PIECES);
 	}
 

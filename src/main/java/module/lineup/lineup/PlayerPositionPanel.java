@@ -168,7 +168,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 //set pieces
                 if (m_iPositionID == IMatchRoleID.setPieces) {
                     if (player != null) {
-                        lineup.setKicker(player.getPlayerID());
+                        lineup.setKicker(player.getPlayerId());
                     } else {
                         lineup.setKicker(0);
                     }
@@ -176,7 +176,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 //captain
                 else if (m_iPositionID == IMatchRoleID.captain) {
                     if (player != null) {
-                        lineup.setCaptain(player.getPlayerID());
+                        lineup.setCaptain(player.getPlayerId());
                     } else {
                         lineup.setCaptain(0);
                     }
@@ -184,7 +184,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 //Others
                 else {
                     if (player != null) {
-                        lineup.setSpielerAtPosition(m_iPositionID, player.getPlayerID());
+                        lineup.setSpielerAtPosition(m_iPositionID, player.getPlayerId());
                     } else {
                         lineup.setSpielerAtPosition(m_iPositionID, 0);
                     }
@@ -247,19 +247,19 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         if (m_iPositionID == IMatchRoleID.setPieces) {
             selectedPlayer = model.getCurrentPlayer(lineup.getKicker());
             if (selectedPlayer != null) {
-                iSelectedPlayerId = selectedPlayer.getPlayerID();
+                iSelectedPlayerId = selectedPlayer.getPlayerId();
             }
 
             // Filter keeper from the candidates for SetPieces taker (not allowed by HT)
             Player keeper = lineup.getPlayerByPositionID(IMatchRoleID.keeper);
             if (keeper != null) {
-                int iKeeperID = keeper.getPlayerID();
-                plCandidates.removeIf(pl -> pl.getPlayerID() == iKeeperID);
+                int iKeeperID = keeper.getPlayerId();
+                plCandidates.removeIf(pl -> pl.getPlayerId() == iKeeperID);
             }
         } else if (m_iPositionID == IMatchRoleID.captain) {
             selectedPlayer = model.getCurrentPlayer(lineup.getCaptain());
             if (selectedPlayer != null) {
-                iSelectedPlayerId = selectedPlayer.getPlayerID();
+                iSelectedPlayerId = selectedPlayer.getPlayerId();
             }
 
         } else {
@@ -270,7 +270,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
 
                 if (selectedPlayer != null) {
                     m_jcbPlayer.setEnabled(true); // To be sure
-                    iSelectedPlayerId = selectedPlayer.getPlayerID();
+                    iSelectedPlayerId = selectedPlayer.getPlayerId();
                 } else {
                     // We want to enable the combobox if there is room in the lineup or if it is a substitute position
                     m_jcbPlayer.setEnabled((lineup.hasFreePosition()) || (m_iPositionID >= IMatchRoleID.startReserves));
@@ -299,7 +299,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 if (obj != null) {
                     if (obj.getPlayer() != null) {
                         for (Player value : plStartingLineup) {
-                            if (obj.getPlayer().getPlayerID() == value.getPlayerID()) {
+                            if (obj.getPlayer().getPlayerId() == value.getPlayerId()) {
                                 obj.getEntry().setIsSelect(true);
                                 isInLineup = true;
                                 break;
@@ -307,7 +307,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                         }
                         if (!isInLineup) {
                             for (Player value : plSubstitutes) {
-                                if (obj.getPlayer().getPlayerID() == value.getPlayerID()) {
+                                if (obj.getPlayer().getPlayerId() == value.getPlayerId()) {
                                     obj.getEntry().setIsAssit(true);
                                     break;
                                 }
@@ -377,9 +377,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         //Put back current player if new filters allows it
         this.iSelectedPlayerId = -1;
         if (oSelectedPlayer != null) {
-            int iSelectedPlayerID = oSelectedPlayer.getPlayerID();
+            int iSelectedPlayerID = oSelectedPlayer.getPlayerId();
             for (Player p : oCandidates) {
-                if (p.getPlayerID() == iSelectedPlayerID) {
+                if (p.getPlayerId() == iSelectedPlayerID) {
                     cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, oSelectedPlayer));
                     this.iSelectedPlayerId = iSelectedPlayerID;
                     break;
@@ -429,7 +429,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         List<Player> lSubs = new ArrayList<>();
         Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
         for (Player player : allPlayers) {
-            if (lineup.isPlayerASub(player.getPlayerID())) {
+            if (lineup.isPlayerASub(player.getPlayerId())) {
                 lSubs.add(player);
             }
         }
@@ -463,7 +463,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         //Remove current Player if not a sub anymore
         if (selectedPlayer != null) {
             for (Player p : lSubs) {
-                if (p.getPlayerID() == selectedPlayer.getPlayerID())
+                if (p.getPlayerId() == selectedPlayer.getPlayerId())
                     cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, selectedPlayer));
             }
         }
@@ -477,7 +477,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         Player pp;
         for (int i = 0; i < lSubs.size(); i++) {
             pp = lSubs.get(i);
-            if (pp.getPlayerID() != playerIDcorrespondingSub) {
+            if (pp.getPlayerId() != playerIDcorrespondingSub) {
                 cbItems[i] = createPlayerCBItem(m_clCBItems[i], pp);
             }
         }
@@ -645,7 +645,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             } else if (m_iPositionID == IMatchRoleID.captain) {
                 item.setValues(playerName,
                         Helper.round(
-                                HOVerwaltung.instance().getModel().getCurrentLineup().getAverageExperience(player.getPlayerID()),
+                                HOVerwaltung.instance().getModel().getCurrentLineup().getAverageExperience(player.getPlayerId()),
                                 core.model.UserParameter.instance().nbDecimals),
                         player, true);
                 return item;

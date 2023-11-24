@@ -24,9 +24,9 @@ public class PlayerItem {
      * @param player the roster player to include in the Combo
      */
     public PlayerItem(Player player) {
-        tsi = player.getTSI();
+        tsi = player.getTsi();
         form = player.getForm();
-        id = player.getPlayerID();
+        id = player.getPlayerId();
         name = player.getFullName();
     }
 

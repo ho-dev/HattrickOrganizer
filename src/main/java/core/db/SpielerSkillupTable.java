@@ -64,15 +64,15 @@ final class SpielerSkillupTable extends AbstractTable {
 	void importNewSkillup(HOModel homodel) {
 		List<Player> players = homodel.getCurrentPlayers();
 		for (Player nPlayer : players) {
-			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getPlayerID());
+			Player oPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(nPlayer.getPlayerId());
 			if (oPlayer != null) {
-				checkNewSkillup(nPlayer, nPlayer.getGKskill(), oPlayer.getGKskill(), PlayerSkill.KEEPER, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getPMskill(), oPlayer.getPMskill(), PlayerSkill.PLAYMAKING, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getPSskill(), oPlayer.getPSskill(), PlayerSkill.PASSING, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getWIskill(), oPlayer.getWIskill(), PlayerSkill.WINGER, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getDEFskill(), oPlayer.getDEFskill(), PlayerSkill.DEFENDING, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getSCskill(), oPlayer.getSCskill(), PlayerSkill.SCORING, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getSPskill(), oPlayer.getSPskill(), PlayerSkill.SET_PIECES, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getGoalkeeperSkill(), oPlayer.getGoalkeeperSkill(), PlayerSkill.KEEPER, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getPlaymakingSkill(), oPlayer.getPlaymakingSkill(), PlayerSkill.PLAYMAKING, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getPassingSkill(), oPlayer.getPassingSkill(), PlayerSkill.PASSING, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getWingerSkill(), oPlayer.getWingerSkill(), PlayerSkill.WINGER, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getDefendingSkill(), oPlayer.getDefendingSkill(), PlayerSkill.DEFENDING, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getScoringSkill(), oPlayer.getScoringSkill(), PlayerSkill.SCORING, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getSetPiecesSkill(), oPlayer.getSetPiecesSkill(), PlayerSkill.SET_PIECES, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getStamina(), oPlayer.getStamina(), PlayerSkill.STAMINA, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getExperience(), oPlayer.getExperience(), PlayerSkill.EXPERIENCE, homodel.getHrfId());
 			}
@@ -85,7 +85,7 @@ final class SpielerSkillupTable extends AbstractTable {
 			skillup.setHrfId(hrf);
 			skillup.setDate(nPlayer.getHrfDate());
 			skillup.setSkill(skill);
-			skillup.setPlayerId(nPlayer.getPlayerID());
+			skillup.setPlayerId(nPlayer.getPlayerId());
 			skillup.setValue(newValue);
 			storeSkillup(skillup);
 			nPlayer.resetSkillUpInformation();

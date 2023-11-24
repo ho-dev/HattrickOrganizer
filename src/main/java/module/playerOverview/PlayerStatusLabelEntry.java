@@ -64,7 +64,7 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
                 } else if (entry.getPlayer().getInjuryWeeks() < getPlayer().getInjuryWeeks()) {
                     return -1;
                 } else {
-                    return Integer.compare(entry.getPlayer().getCards(), getPlayer().getCards());
+                    return Integer.compare(entry.getPlayer().getTotalCards(), getPlayer().getTotalCards());
                 }
             }
         }

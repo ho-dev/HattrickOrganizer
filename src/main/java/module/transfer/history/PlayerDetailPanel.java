@@ -189,7 +189,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         this.player = PlayerRetriever.getPlayer(playerid);
 
         if (this.player != null) {
-            this.playerId = player.getPlayerID();
+            this.playerId = player.getPlayerId();
             this.playerName = player.getFullName();
         } else {
             this.playerId = playerid;
@@ -203,7 +203,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public final void setPlayer(PlayerTransfer transfer) {
         this.player = transfer.getPlayerInfo();
 
-        this.playerId = player.getPlayerID();
+        this.playerId = player.getPlayerId();
         this.playerName = player.getFullName();
 
         clearPanel();
@@ -282,19 +282,19 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             HODateTime arrivalDate = null;
             if (player != null) {
                 arrivalDate = HODateTime.fromHT(player.getArrivalDate());
-                age.setText(Integer.toString(this.player.getAlter()));
+                age.setText(Integer.toString(this.player.getAge()));
 
-                if (!player.isOld()) {
-                    currTSI.setText(Integer.toString(this.player.getTSI()));
+                if (!player.isGoner()) {
+                    currTSI.setText(Integer.toString(this.player.getTsi()));
                 }
 
-                skill_keeper.setText(SKILL_KEEPER + " (" + player.getGKskill() + ")");
-                skill_playmaking.setText(SKILL_PLAYMAKING + " (" + player.getPMskill() + ")");
-                skill_passing.setText(SKILL_PASSING + " (" + player.getPSskill() + ")");
-                skill_wing.setText(SKILL_WING + " (" + player.getWIskill() + ")");
-                skill_defense.setText(SKILL_DEFENSE + " (" + player.getDEFskill() + ")");
-                skill_scoring.setText(SKILL_SCORING + " (" + player.getSCskill() + ")");
-                skill_setpieces.setText(SKILL_SETPIECES + " (" + player.getSPskill() + ")");
+                skill_keeper.setText(SKILL_KEEPER + " (" + player.getGoalkeeperSkill() + ")");
+                skill_playmaking.setText(SKILL_PLAYMAKING + " (" + player.getPlaymakingSkill() + ")");
+                skill_passing.setText(SKILL_PASSING + " (" + player.getPassingSkill() + ")");
+                skill_wing.setText(SKILL_WING + " (" + player.getWingerSkill() + ")");
+                skill_defense.setText(SKILL_DEFENSE + " (" + player.getDefendingSkill() + ")");
+                skill_scoring.setText(SKILL_SCORING + " (" + player.getScoringSkill() + ")");
+                skill_setpieces.setText(SKILL_SETPIECES + " (" + player.getSetPiecesSkill() + ")");
                 skill_stamina.setText(SKILL_STAMINA + " (" + player.getStamina() + ")");
                 skill_experience.setText(SKILL_EXPERIENCE + " (" + player.getExperience() + ")");
 
