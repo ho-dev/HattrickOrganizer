@@ -1,6 +1,6 @@
 package module.nthrf;
 
-import core.file.xml.MyHashtable;
+import core.file.xml.SafeInsertMap;
 import core.file.xml.XMLManager;
 import core.net.MyConnector;
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ class NtPlayersParser {
 	/**
 	 * Parse player details and store the IDs and Players in local objects.
 	 */
-	private static List<MyHashtable>  parsePlayerDetails(List<String> playerIds) {
-		List<MyHashtable> ret = new ArrayList<>();
+	private static List<SafeInsertMap> parsePlayerDetails(List<String> playerIds) {
+		List<SafeInsertMap> ret = new ArrayList<>();
 		try {
 			for (var playerId : playerIds) {
 				String xmlData = MyConnector.instance().downloadPlayerDetails(playerId);
@@ -39,10 +39,6 @@ class NtPlayersParser {
 			try {
 				Element root = doc.getDocumentElement();
 //
-//				var fetchedDate = xmlValue(root,"FetchedDate" );
-//				var teamId = xmlValue(root,"TeamID" );
-//				var teamName = xmlValue(root,"TeamName" );
-//
 				// players
 				root = (Element) root.getElementsByTagName("Players").item(0);
 				NodeList playersNode = root.getElementsByTagName("Player");
@@ -57,7 +53,7 @@ class NtPlayersParser {
 		return ret;
 	}
 
-	public static List<MyHashtable> parsePlayersFromString(String xml) {
+	public static List<SafeInsertMap> parsePlayersFromString(String xml) {
 			var ids = parseBasics(XMLManager.parseString(xml));
 			return parsePlayerDetails(ids);
 	}

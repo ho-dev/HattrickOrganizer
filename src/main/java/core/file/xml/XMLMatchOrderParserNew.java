@@ -4,7 +4,6 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import module.lineup.substitution.model.GoalDiffCriteria;
-import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 

@@ -55,7 +55,7 @@ public class XMLEconomyParser {
 	}
 
 	private static Map<String, String> parseDetails(@Nullable Document doc) {
-		Map<String, String> map = new MyHashtable();
+		Map<String, String> map = new SafeInsertMap();
 
 		if (doc == null) {
 			return map;

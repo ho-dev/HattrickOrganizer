@@ -75,7 +75,7 @@ public class XMLWorldDetailsParser {
 	}
 
 	private static Map<String, String> initWorldDetailsMap(){
-		var map = new MyHashtable();
+		var map = new SafeInsertMap();
 		var model = HOVerwaltung.instance().getModel();
 		if ( model != null ){
 			var basics = model.getBasics();

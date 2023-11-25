@@ -19,20 +19,20 @@ public class XMLStaffParser {
 	}
 
 
-	public static List<MyHashtable> parseStaffFromString(String inputStream) {
+	public static List<SafeInsertMap> parseStaffFromString(String inputStream) {
 		Document doc;
 		doc = XMLManager.parseString(inputStream);
 		return createList(doc);
 	}
 
-	private static List<MyHashtable> createList(Document doc) {
+	private static List<SafeInsertMap> createList(Document doc) {
 
-		final List<MyHashtable> returnList = new ArrayList<>();
+		final List<SafeInsertMap> returnList = new ArrayList<>();
 		NodeList nodeList;
-		MyHashtable hash;
+		SafeInsertMap hash;
 		Element root = doc.getDocumentElement();
 		var trainer = (Element) root.getElementsByTagName("Trainer").item(0);
-		hash = new MyHashtable();
+		hash = new SafeInsertMap();
 		xmlValue2Hash(hash, trainer, "TrainerId");
 		xmlValue2Hash(hash, trainer, "TrainerId", "StaffId");
 		xmlValue2Hash(hash, trainer, "Name", "LastName");
@@ -52,7 +52,7 @@ public class XMLStaffParser {
 		root = (Element) root.getElementsByTagName("StaffMembers").item(0);
 		nodeList = root.getElementsByTagName("Staff");
 		for (int i = 0; i < nodeList.getLength(); i++) {
-			hash = new MyHashtable();
+			hash = new SafeInsertMap();
 			root = (Element) nodeList.item(i);
 
 			xmlValue2Hash(hash, root, "Name");

@@ -6,7 +6,6 @@
  */
 package core.file.xml;
 
-import core.model.misc.Verein;
 import core.util.HOLogger;
 import java.util.Map;
 import org.w3c.dom.Document;
@@ -30,7 +29,7 @@ public class XMLClubParser {
     }
 
     private static Map<String, String> parseDetails(Document doc) {
-        Map<String, String> map = new MyHashtable();
+        Map<String, String> map = new SafeInsertMap();
 
         if (doc == null) {
             return map;

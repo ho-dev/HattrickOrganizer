@@ -8,7 +8,7 @@ import core.constants.player.PlayerAggressiveness;
 import core.constants.player.PlayerAgreeability;
 import core.constants.player.PlayerHonesty;
 import core.constants.player.PlayerSpeciality;
-import core.file.xml.MyHashtable;
+import core.file.xml.SafeInsertMap;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchTacticType;
@@ -405,7 +405,7 @@ public class HRFStringBuilder {
     /**
      * Create the player data.
      */
-    public void createPlayers(MatchLineupTeam matchLineupTeam, List<MyHashtable> playersData) {
+    public void createPlayers(MatchLineupTeam matchLineupTeam, List<SafeInsertMap> playersData) {
         playersStringBuilder = new StringBuilder();
         for (int i = 0; (playersData != null) && (i < playersData.size()); i++) {
             var ht = playersData.get(i);
@@ -510,7 +510,7 @@ public class HRFStringBuilder {
         return null;
     }
 
-    private void appendKeyValueIfNotNull(MyHashtable ht, StringBuilder s, String key, String defaultValue) {
+    private void appendKeyValueIfNotNull(SafeInsertMap ht, StringBuilder s, String key, String defaultValue) {
         var property = ht.get(key);
         if (property == null || property.isEmpty()) {
             property = defaultValue;
@@ -528,7 +528,7 @@ public class HRFStringBuilder {
     /**
      * Append youth player data to buffer
      */
-    public void appendYouthPlayers(List<MyHashtable> playersData) {
+    public void appendYouthPlayers(List<SafeInsertMap> playersData) {
         youthPlayersStringBuilder = new StringBuilder();
 
         for (var player: playersData ) {
@@ -571,7 +571,7 @@ public class HRFStringBuilder {
         }
     }
 
-    private boolean appendScoutComment(StringBuilder buffer, MyHashtable player, int i) {
+    private boolean appendScoutComment(StringBuilder buffer, SafeInsertMap player, int i) {
         var prefix = "ScoutComment"+i;
 
         var text = player.get(prefix+"Text");
@@ -586,7 +586,7 @@ public class HRFStringBuilder {
         return false;
     }
 
-    private void appendHRFSkillLines(StringBuilder buffer, MyHashtable player, Skills.HTSkillID skillId) {
+    private void appendHRFSkillLines(StringBuilder buffer, SafeInsertMap player, Skills.HTSkillID skillId) {
         var skill = skillId.toString() + "Skill";
         appendHRFLine(buffer, player, skill);
         appendHRFLine(buffer, player, skill+"IsAvailable");
@@ -598,7 +598,7 @@ public class HRFStringBuilder {
         appendHRFLine(buffer, player, skill+"MayUnlock");
     }
 
-    private void appendHRFLine(StringBuilder buffer, MyHashtable player, String key) {
+    private void appendHRFLine(StringBuilder buffer, SafeInsertMap player, String key) {
         appendKeyValue( buffer, key, player.get(key));
     }
 
@@ -661,11 +661,11 @@ public class HRFStringBuilder {
         appendKeyValue(xtraStringBuilder, "LeagueLevelUnitID", teamdetailsDataMap.get("LeagueLevelUnitID"));
     }
 
-    public void createStaff(List<MyHashtable> staffList) {
+    public void createStaff(List<SafeInsertMap> staffList) {
         staffStringBuilder = new StringBuilder("[staff]\n");
 
         for (int i = 0; (staffList != null) && (i < staffList.size()); i++) {
-            MyHashtable hash = staffList.get(i);
+            SafeInsertMap hash = staffList.get(i);
 
             appendKeyValue(staffStringBuilder,"staff"+i+"Name",hash.get("Name"));
             appendKeyValue(staffStringBuilder,"staff"+i+"StaffId",hash.get("StaffId"));

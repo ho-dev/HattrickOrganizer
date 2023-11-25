@@ -16,7 +16,7 @@ public class XMLRatingParser {
     }
 
     private static Map<String, String> parseDetails(Document doc) {
-        Map<String, String> map = new MyHashtable();
+        Map<String, String> map = new SafeInsertMap();
 
         if (doc == null) {
             return map;

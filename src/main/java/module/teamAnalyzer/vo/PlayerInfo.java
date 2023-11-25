@@ -1,7 +1,7 @@
 package module.teamAnalyzer.vo;
 
 import core.db.AbstractTable;
-import core.file.xml.MyHashtable;
+import core.file.xml.SafeInsertMap;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -35,7 +35,7 @@ public class PlayerInfo extends AbstractTable.Storable {
     int loyalty;
     private int week;
 
-    public PlayerInfo(MyHashtable i) {
+    public PlayerInfo(SafeInsertMap i) {
         this.age = Integer.parseInt(i.get("Age"));
         this.experience = Integer.parseInt(i.get("Experience"));
         this.form = Integer.parseInt(i.get("PlayerForm"));

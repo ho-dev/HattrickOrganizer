@@ -1,6 +1,7 @@
 package module.nthrf;
 
 import core.db.AbstractTable;
+import core.file.xml.SafeInsertMap;
 import core.file.xml.XMLManager;
 import core.util.HODateTime;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -196,7 +197,7 @@ public class NtTeamDetails extends AbstractTable.Storable {
 
 	public Map<String, String> parseDetails(String xmlData) {
 		var doc = XMLManager.parseString(xmlData);
-		var hash = new core.file.xml.MyHashtable();
+		var hash = new SafeInsertMap();
 
 		if (doc == null) {
             return hash;

@@ -37,7 +37,7 @@ public class XMLTrainingParser {
 	 * erstellt das MAtchlineup Objekt
 	 */
 	private static Map<String, String> parseDetails(Document doc) {
-		Map<String, String> map = new MyHashtable();
+		Map<String, String> map = new SafeInsertMap();
 
 		if (doc == null) {
 			return map;
@@ -57,10 +57,10 @@ public class XMLTrainingParser {
 			map.put("TrainingLevel", (XMLManager.getFirstChildNodeValue(ele)));
 			ele = (Element) root.getElementsByTagName("StaminaTrainingPart").item(0);
 			map.put("StaminaTrainingPart", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("NewTrainingLevel ").item(0);
+			ele = (Element) root.getElementsByTagName("NewTrainingLevel").item(0);
 
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				map.put("NewTrainingLevel ", (XMLManager.getFirstChildNodeValue(ele)));
+				map.put("NewTrainingLevel", (XMLManager.getFirstChildNodeValue(ele)));
 			}
 
 			ele = (Element) root.getElementsByTagName("TrainingType").item(0);

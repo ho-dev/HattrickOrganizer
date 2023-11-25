@@ -129,14 +129,14 @@ public class ConvertXml2Hrf {
 		}
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
-		List<MyHashtable> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
+		List<SafeInsertMap> playersData = new XMLPlayersParser().parsePlayersFromString(mc.downloadPlayers(teamId));
 
 		// Download players' avatar
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_avatars"), progressIncrement);
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 		ThemeManager.instance().generateAllPlayerAvatar(playersAvatar, 1);
 
-		List<MyHashtable> youthplayers = null;
+		List<SafeInsertMap> youthplayers = null;
 		if (youthTeamId != null && youthTeamId > 0) {
 			youthplayers = new XMLPlayersParser().parseYouthPlayersFromString(mc.downloadYouthPlayers(youthTeamId));
 		}
@@ -169,7 +169,7 @@ public class ConvertXml2Hrf {
 		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
 
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.staff"), progressIncrement);
-		List<MyHashtable> staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId));
+		List<SafeInsertMap> staffData = XMLStaffParser.parseStaffFromString(mc.getStaff(teamId));
 		var trainer = staffData.get(0);
 		var trainerId = String.valueOf(trainer.get("TrainerId"));
 		if (trainer.containsKey("TrainerId")) {
