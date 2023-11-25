@@ -58,7 +58,7 @@ public class XMLTeamDetailsParser {
 
 	private static Map<String, String> parseDetails(@Nullable Document doc, int teamId) {
 		Element ele, root;
-		Map<String, String> hash = new core.file.xml.MyHashtable();
+		Map<String, String> hash = new SafeInsertMap();
 
 //		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
 
@@ -83,7 +83,7 @@ public class XMLTeamDetailsParser {
 			if (supporterTier.getLength() > 0) {
 				ele = (Element) supporterTier.item(0);
 				String supportValue = XMLManager.getFirstChildNodeValue(ele);
-				if (supportValue.trim().length() > 0) {
+				if (!supportValue.trim().isEmpty()) {
 					supportStatus = "True";
 				}
 			}

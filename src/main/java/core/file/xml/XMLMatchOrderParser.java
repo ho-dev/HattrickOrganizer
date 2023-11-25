@@ -1,4 +1,3 @@
-// %3261485518:de.hattrickorganizer.logik.xml%
 /*
  * xmlMatchOrderParser.java
  *
@@ -8,8 +7,8 @@ package core.file.xml;
 
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
-import java.io.File;
-import java.util.Hashtable;
+
+import java.util.HashMap;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,7 +43,7 @@ public class XMLMatchOrderParser {
 		tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
 		String spielerID = XMLManager.getFirstChildNodeValue(tmp);
 
-		if (spielerID.trim().equals("")) {spielerID = "-1";}
+		if (spielerID.trim().isEmpty()) {spielerID = "-1";}
 
 		tmp = (Element) ele.getElementsByTagName("RoleID").item(0);
 		if (tmp != null) {
@@ -350,10 +349,10 @@ public class XMLMatchOrderParser {
 	 * Creates the Matchlineup object
 	 * parsing of xml adapted to version 3.0 of match orders
 	 */
-	private static Hashtable<String, String> parseDetails(Document doc) {
+	private static HashMap<String, String> parseDetails(Document doc) {
 		Element ele;
 		Element root;
-		final MyHashtable hash = new MyHashtable();
+		final SafeInsertMap hash = new SafeInsertMap();
 		NodeList list;
 
 		if (doc == null) {
@@ -364,9 +363,9 @@ public class XMLMatchOrderParser {
 
 		try {
 			ele = (Element) root.getElementsByTagName("FetchedDate").item(0);
-			hash.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("FetchedDate", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("MatchID").item(0);
-			hash.put("MatchID", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("MatchID", XMLManager.getFirstChildNodeValue(ele));
 
 			// change root to Match data
 			root = (Element) root.getElementsByTagName("MatchData").item(0);
@@ -378,7 +377,7 @@ public class XMLMatchOrderParser {
 			ele = (Element) root.getElementsByTagName("Attitude").item(0);
 
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				hash.put("Attitude", (XMLManager.getFirstChildNodeValue(ele)));
+				hash.put("Attitude", XMLManager.getFirstChildNodeValue(ele));
 			} else {
 				// in case attitude is not available TODO: check if this is really mandatory
 				hash.put("Attitude", "0");
@@ -388,35 +387,32 @@ public class XMLMatchOrderParser {
 			
 			// 'coachModifier' is called 'styleOfPlay' in HT
 			if (XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true")) {
-				hash.put("StyleOfPlay", (XMLManager.getFirstChildNodeValue(ele)));
+				hash.put("StyleOfPlay", XMLManager.getFirstChildNodeValue(ele));
 			} else {
 				hash.put("StyleOfPlay", "0");
 			}
 			
 
 			ele = (Element) root.getElementsByTagName("HomeTeamID").item(0);
-			hash.put("HomeTeamID", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("HomeTeamID", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("HomeTeamName").item(0);
-			hash.put("HomeTeamName", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("HomeTeamName", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("AwayTeamID").item(0);
-			hash.put("AwayTeamID", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("AwayTeamID", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("AwayTeamName").item(0);
-			hash.put("AwayTeamName", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("AwayTeamName", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("MatchDate").item(0);
-			hash.put("MatchDate", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("MatchDate", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("MatchType").item(0);
-			hash.put("MatchType", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("MatchType", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("ArenaID").item(0);
-			hash.put("ArenaID", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("ArenaID", XMLManager.getFirstChildNodeValue(ele));
 			ele = (Element) root.getElementsByTagName("ArenaName").item(0);
-			hash.put("ArenaName", (XMLManager.getFirstChildNodeValue(ele)));
+			hash.put("ArenaName", XMLManager.getFirstChildNodeValue(ele));
 			
 			ele = (Element) root.getElementsByTagName("TacticType").item(0);
 
-			hash.put("TacticType", (XMLManager.getFirstChildNodeValue(ele)));
-			
-			// Root wechseln
-//			Node Lineup = doc.getElementsByTagName("Lineup").item(0);
+			hash.put("TacticType", XMLManager.getFirstChildNodeValue(ele));
 
 			// Treatment of Players in starting Lineup
 			Element Positions = (Element) doc.getElementsByTagName("Positions").item(0);
@@ -466,6 +462,4 @@ public class XMLMatchOrderParser {
 
 		return hash;
 	}
-
-
 }

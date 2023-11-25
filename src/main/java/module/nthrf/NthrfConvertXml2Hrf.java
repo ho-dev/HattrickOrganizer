@@ -63,14 +63,14 @@ class NthrfConvertXml2Hrf {
 
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
-			List<MyHashtable> playersData = NtPlayersParser.parsePlayersFromString(xml);
+			List<SafeInsertMap> playersData = NtPlayersParser.parsePlayersFromString(xml);
 
 			if (playersData.size() == 0) {
 				// training area closed or all players are released
 				return "";
 			}
 
-			var empty = new MyHashtable();
+			var empty = new SafeInsertMap();
 			hrfStringBuilder.createPlayers(matchLineupTeam, playersData);
 			hrfStringBuilder.createLastLineUp(matchLineupTeam, detailsMap);
 			hrfStringBuilder.createLineUp("", (int)teamId, nextLineupDataMap);

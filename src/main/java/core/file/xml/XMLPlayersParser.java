@@ -33,12 +33,12 @@ public class XMLPlayersParser {
     /////////////////////////////////////////////////////////////////////////////////
     //parse public
     ////////////////////////////////////////////////////////////////////////////////
-    public final Vector<MyHashtable> parsePlayersFromString(String inputStream) {
+    public final Vector<SafeInsertMap> parsePlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createListe(doc);
     }
 
-    public final MyHashtable parsePlayerDetails(String inputStream){
+    public final SafeInsertMap parsePlayerDetails(String inputStream){
         Document doc = XMLManager.parseString(inputStream);
         Element root = doc.getDocumentElement();
         Element ele = (Element) root.getElementsByTagName("Player").item(0);
@@ -52,8 +52,8 @@ public class XMLPlayersParser {
     /**
      * erzeugt das Team aus dem xml
      */
-    protected final Vector<MyHashtable> createListe(Document doc) {
-        final Vector<MyHashtable> liste = new Vector<>();
+    protected final Vector<SafeInsertMap> createListe(Document doc) {
+        final Vector<SafeInsertMap> liste = new Vector<>();
 
         try {
             var root = doc.getDocumentElement();
@@ -78,7 +78,7 @@ public class XMLPlayersParser {
         return liste;
     }
 
-    public static MyHashtable createPlayerDetails(Element root) {
+    public static SafeInsertMap createPlayerDetails(Element root) {
 
         var owningTeam = (Element)root.getElementsByTagName("OwningTeam").item(0);
         var teamID = xmlValue(owningTeam, "TeamID");
@@ -105,9 +105,9 @@ public class XMLPlayersParser {
         return hash;
     }
 
-    private static MyHashtable createPlayer(Element root, String teamID) {
+    private static SafeInsertMap createPlayer(Element root, String teamID) {
 
-        var hash = new MyHashtable();
+        var hash = new SafeInsertMap();
 
         //ht füllen
         hash.put("TeamID", teamID);
@@ -237,13 +237,13 @@ public class XMLPlayersParser {
         return hash;
     }
 
-    public List<MyHashtable> parseYouthPlayersFromString(String inputStream) {
+    public List<SafeInsertMap> parseYouthPlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createYouthPlayerList(doc);
     }
 
-    private List<MyHashtable> createYouthPlayerList(Document doc) {
-        final Vector<MyHashtable> ret = new Vector<>();
+    private List<SafeInsertMap> createYouthPlayerList(Document doc) {
+        final Vector<SafeInsertMap> ret = new Vector<>();
 
         try {
             var root = doc.getDocumentElement();
@@ -252,7 +252,7 @@ public class XMLPlayersParser {
             // <YouthPlayer>
             var list = root.getElementsByTagName("YouthPlayer");
             for (int i = 0; i < list.getLength(); i++) {
-                var hash = new core.file.xml.MyHashtable();
+                var hash = new SafeInsertMap();
 
                 root = (Element) list.item(i);
 
@@ -367,7 +367,7 @@ public class XMLPlayersParser {
         return ret;
     }
 
-    private void youthplayerSkills2Hash(MyHashtable hash, Element playerSkills, Skills.HTSkillID skillId) {
+    private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, Skills.HTSkillID skillId) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
         var attr = skillId.toString() + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);

@@ -1263,7 +1263,7 @@ public class OnlineWorker {
 		}
 		catch (Exception ignore) {
 		}
-		return new MyHashtable();
+		return new SafeInsertMap();
 	}
 
 }

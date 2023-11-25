@@ -43,7 +43,7 @@ public class XMLTrainingEventsParser {
 
     private static Map<String, String> parseElementDetails(Element item) {
 
-        Map<String, String> map = new MyHashtable();
+        Map<String, String> map = new SafeInsertMap();
 
         extract(item, map, "SkillID");
         extract(item, map, "OldLevel");
