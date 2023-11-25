@@ -9,8 +9,6 @@ import core.model.match.*;
 import core.util.HODateTime;
 import module.training.Skills;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -27,18 +25,11 @@ public class YouthTraining extends AbstractTable.Storable {
         Primary,
         Secondary
     }
-
-    private static double[] trainingPrioFactor = {
-            UserParameter.instance().youthtrainingFactorPrimary,
-            UserParameter.instance().youthtrainingFactorSecondary
-    };
-
     private MatchLineup matchLineup;
     private Matchdetails matchdetails;
     private int youthMatchId;
     private MatchType youthMatchType;
     private final YouthTrainingType[] training = new YouthTrainingType[2];
-    private final List<YouthTrainerComment> commentList = new ArrayList<>();
 
     private void setMatchLineup(MatchLineup youthMatch) {
         this.youthMatchId = youthMatch.getMatchID();
@@ -84,10 +75,6 @@ public class YouthTraining extends AbstractTable.Storable {
 
     public void store() {
         DBManager.instance().storeYouthTraining(this);
-    }
-
-    public List<YouthTrainerComment> getCommentList() {
-        return commentList;
     }
 
     public int getYouthMatchId() {
@@ -207,13 +194,26 @@ public class YouthTraining extends AbstractTable.Storable {
         return ret;
     }
 
-    static final double TRAINING_FRIENDLYFACTOR = .5;
+    /**
+     * Training friendly factor before season 86
+     */
+    static final double TRAINING_FRIENDLY_FACTOR_BEFORE_8601 = .5;
+
+    /**
+     * With <a href="https://www88.hattrick.org/World/News/?messageId=8641&isEditorial=1">...</a>
+     * a new training speed of youth friendly matches was introduced.
+     */
+    static final double TRAINING_FRIENDLY_FACTOR = .9;
 
     public double getMatchTypeFactor() {
-        if (this.getMatchLineup().getMatchType() == MatchType.YOUTHLEAGUE) {
+        var lineup = this.getMatchLineup();
+        if (lineup.getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
         }
-        return TRAINING_FRIENDLYFACTOR;
+        if (lineup.getMatchDate().isAfter(HODateTime.fromHTWeek(new HODateTime.HTWeek(86,1)))){
+            return TRAINING_FRIENDLY_FACTOR;
+        }
+        return TRAINING_FRIENDLY_FACTOR_BEFORE_8601;
     }
 
     public String getPlayerTrainedSectors(int playerId) {
@@ -230,12 +230,16 @@ public class YouthTraining extends AbstractTable.Storable {
         return ret.toString();
     }
 
-    static final double fullTrainingsPerWeek = (6 * 21 + 44 * TRAINING_FRIENDLYFACTOR) / (21 * 44) * 7;
-    static final double equalTrainings = 1.33;
+    /**
+     * leage match training per week : 1
+     * friendly match training per week : 1/3
+     */
+    static final double fullTrainingsPerWeek = 1 + TRAINING_FRIENDLY_FACTOR / 3.;
+    static final double efficiencyOfEqualPrimaryAndSecondaryTraining = 1.33;
 
     /**
      * Calc most effective training for given skill id
-     * training rate is 6 league matches/training in 44 days
+     * training rate is 6 league matches/training in 42 days
      * plus             1 friendly match in 21 days
      *
      * @param skillId skill id
@@ -244,6 +248,7 @@ public class YouthTraining extends AbstractTable.Storable {
      * @return maximum skill increment with optimal training
      */
     public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
+        var f = efficiencyOfEqualPrimaryAndSecondaryTraining * fullTrainingsPerWeek * 90.;
 
         // TODO check if shooting as secondary training is more effective
         // TODO check if defending position as secondary training is more effective
@@ -251,13 +256,13 @@ public class YouthTraining extends AbstractTable.Storable {
         // TODO check if through passes as secondary training is more effective
         // TODO check if shooting as secondary training is more effective
         return switch (skillId) {
-            case Keeper -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case Playmaker -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case SetPieces -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case Defender -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case Winger -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case Passing -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
-            case Scorer -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * equalTrainings * fullTrainingsPerWeek * 90.;
+            case Keeper -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case Playmaker -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case SetPieces -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case Defender -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case Winger -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case Passing -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case Scorer -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
             default -> 0;
         };
     }

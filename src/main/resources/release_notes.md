@@ -37,6 +37,7 @@
 ### League
 
 ### Youth
+* increase effect of youth friendly match training (#1950)
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
