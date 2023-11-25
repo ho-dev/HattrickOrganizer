@@ -41,8 +41,9 @@ public final class FaktorenTable extends AbstractTable {
 	}
 
 	void getFaktorenFromDB() {
+		//final FormulaFactors factors = FormulaFactors.instance();
 		var factors = load(FactorObject.class);
-		if (!factors.isEmpty()) {
+		if (factors.size() > 0) {
 			for (var factor : factors) {
 				FormulaFactors.instance().setPositionFactor(factor.getPosition(), factor);
 			}

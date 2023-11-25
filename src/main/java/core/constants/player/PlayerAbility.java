@@ -1,0 +1,172 @@
+package core.constants.player;
+
+import core.datatype.CBItem;
+import core.model.HOVerwaltung;
+import core.model.UserParameter;
+import core.util.Helper;
+
+public final class PlayerAbility {
+	private static final String[] languageKeys = {
+		"ls.player.skill.value.non-existent",
+		"ls.player.skill.value.disastrous",
+		"ls.player.skill.value.wretched",
+		"ls.player.skill.value.poor",
+		"ls.player.skill.value.weak",
+		"ls.player.skill.value.inadequate",
+		"ls.player.skill.value.passable",
+		"ls.player.skill.value.solid",
+		"ls.player.skill.value.excellent",
+		"ls.player.skill.value.formidable",
+		"ls.player.skill.value.outstanding",
+		"ls.player.skill.value.brilliant",
+		"ls.player.skill.value.magnificent",
+		"ls.player.skill.value.worldclass",
+		"ls.player.skill.value.supernatural",
+		"ls.player.skill.value.titanic",
+		"ls.player.skill.value.extra-terrestrial",
+		"ls.player.skill.value.mythical",
+		"ls.player.skill.value.magical",
+		"ls.player.skill.value.utopian",
+		"ls.player.skill.value.divine"};
+
+	public static final int NON_EXISTENT 	= 0;
+	public static final int DISASTROUS 		= 1;
+	public static final int WRETCHED 		= 2;
+	public static final int POOR 			= 3;
+	public static final int WEAK			= 4;
+	public static final int INADEQUATE 		= 5;
+	public static final int PASSABLE 		= 6;
+	public static final int SOLID 			= 7;
+	public static final int EXCELLENT 		= 8;
+	public static final int FORMIDABLE 		= 9;
+	public static final int OUTSTANDING 	= 10;
+	public static final int BRILLIANT 		= 11;
+	public static final int MAGNIFICENT 	= 12;
+	public static final int WORLD_CLASS 	= 13;
+	public static final int SUPERNATURAL 	= 14;
+	public static final int TITANIC 		= 15;
+	public static final int EXTRA_TERRESTRIAL = 16;
+	public static final int MYTHICAL 		= 17;
+	public static final int MAGICAL 		= 18;
+	public static final int UTOPIAN 		= 19;
+	public static final int DIVINE 			= 20;
+
+	public static final CBItem[] ITEMS = {
+			new CBItem(getNameForSkill(NON_EXISTENT), NON_EXISTENT),
+			new CBItem(getNameForSkill(DISASTROUS), DISASTROUS),
+			new CBItem(getNameForSkill(WRETCHED), WRETCHED),
+			new CBItem(getNameForSkill(POOR), POOR),
+			new CBItem(getNameForSkill(WEAK), WEAK),
+			new CBItem(getNameForSkill(INADEQUATE), INADEQUATE),
+			new CBItem(getNameForSkill(PASSABLE), PASSABLE),
+			new CBItem(getNameForSkill(SOLID), SOLID),
+			new CBItem(getNameForSkill(EXCELLENT), EXCELLENT),
+			new CBItem(getNameForSkill(FORMIDABLE), FORMIDABLE),
+			new CBItem(getNameForSkill(OUTSTANDING), OUTSTANDING),
+			new CBItem(getNameForSkill(BRILLIANT), BRILLIANT),
+			new CBItem(getNameForSkill(MAGNIFICENT), MAGNIFICENT),
+			new CBItem(getNameForSkill(WORLD_CLASS), WORLD_CLASS),
+			new CBItem(getNameForSkill(SUPERNATURAL), SUPERNATURAL),
+			new CBItem(getNameForSkill(TITANIC), TITANIC),
+			new CBItem(getNameForSkill(EXTRA_TERRESTRIAL), EXTRA_TERRESTRIAL),
+			new CBItem(getNameForSkill(MYTHICAL), MYTHICAL),
+			new CBItem(getNameForSkill(MAGICAL), MAGICAL),
+			new CBItem(getNameForSkill(UTOPIAN), UTOPIAN),
+			new CBItem(getNameForSkill(DIVINE), DIVINE) };
+
+	private PlayerAbility(){}
+
+	public static String toString(int ability){
+		if( ability >= NON_EXISTENT && ability <= DIVINE) {
+			return HOVerwaltung.instance().getLanguageString(languageKeys[ability]);
+		}
+		else {
+			String value = HOVerwaltung.instance().getLanguageString(ability>DIVINE ? languageKeys[DIVINE]: "Unbestimmt");
+			if (ability > 20)
+				value +=  "(+" + (ability - 20) + ")";
+			
+			return value;
+		}
+	}
+
+
+	/**
+	 * get string representation of rating values
+	 *
+	 * @param ratingValue double [0..20]
+	 * @param showNumbers true for numerical representation
+	 * @param isMatch true shows' sub-level representations
+	 * @param nbDecimal nbDecimalDisplayed
+	 * @return String
+	 */
+	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch, int nbDecimal) {
+		int bewertungwert = (int) ratingValue;
+		int sublevel = 0;
+		if (isMatch) {
+			sublevel = (int)(ratingValue*4) % 4;
+		}
+
+		var bewertung = toString(bewertungwert);
+		if (isMatch) {
+			bewertung += PlayerAbility.getName4Sublevel(sublevel);
+		}
+
+		if (showNumbers) {
+			if (isMatch) {
+				bewertung += (" ("
+						+  Helper.getNumberFormat(false, nbDecimal)
+						.format(Helper.round(bewertungwert + PlayerAbility.getValue4Sublevel(sublevel), 2))
+						+ ")");
+			} else {
+				bewertung += (" ("
+						+ Helper.getNumberFormat(false, nbDecimal)
+						.format(Helper.round(ratingValue, nbDecimal)) + ")");
+			}
+		}
+		return bewertung;
+	}
+
+	/**
+	 * get string representation of rating values
+	 *
+	 * @param ratingValue double [0..20]
+	 * @param showNumbers true for numerical representation
+	 * @param isMatch true shows' sub-level representations
+	 * @return String
+	 */
+	public static String getNameForSkill(double ratingValue, boolean showNumbers, boolean isMatch) {
+	   return getNameForSkill(ratingValue, showNumbers, isMatch, UserParameter.instance().nbDecimals);
+	}
+
+	public static String getNameForSkill(boolean isMatch, double bewertungwert) {
+	    return getNameForSkill(bewertungwert, UserParameter.instance().zahlenFuerSkill, isMatch);
+	}
+
+	public static String getNameForSkill(double bewertungwert, boolean zahlen) {
+	    return getNameForSkill(bewertungwert, zahlen, false);
+	}
+
+	public static String getNameForSkill(double bewertung) {
+	    return getNameForSkill(bewertung, UserParameter.instance().zahlenFuerSkill);
+	}
+
+	public static double getValue4Sublevel(int sub) {
+		return switch (sub) {
+			case 0 -> 0;
+			case 1 -> 0.25;
+			case 2 -> 0.5;
+			case 3 -> 0.75;
+			default -> 0;
+		};
+	}
+
+	private static String getName4Sublevel(int sub) {
+		return switch (sub) {
+			case 0 -> " ("	+ HOVerwaltung.instance().getLanguageString("verylow")	+ ")";
+			case 1 -> " (" 	+ HOVerwaltung.instance().getLanguageString("low")	+ ")";
+			case 2 -> " ("	+ HOVerwaltung.instance().getLanguageString("high")	+ ")";
+			case 3 -> " ("	+ HOVerwaltung.instance().getLanguageString("veryhigh")	+ ")";
+			default -> "";
+		};
+	}
+}
