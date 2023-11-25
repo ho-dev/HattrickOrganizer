@@ -871,23 +871,23 @@ public class RatingPredictionModel {
             r0 = 102. + 23. / 7. * s;
             delta = p * (27. / 70. * s - 5.95);
         } else {
-            r0 = 102 + 23 + (s - 7) * 100. / 7.;
+            r0 = 102. + 23. + (s - 7.) * 100. / 7.;
             delta = -3.25 * p;
         }
 
         var r = r0;
-        var m = min(45, minute);
-        if (startMinute < m) {
-            r += (m - startMinute) * delta / 5.;
+        var to = min(45, minute);
+        if (startMinute < to) {
+            r += (to - startMinute) * delta / 5.;
         }
         var from = max(45, startMinute);
         if (minute >= 45) {
             if (startMinute < 45) {
                 r = min(r0, r + 120.75 - 102);
             }
-            m = min(90, minute);
-            if (from < m) {
-                r += (m - from) * delta / 5.;
+            to = min(90, minute);
+            if (from < to) {
+                r += (to - from) * delta / 5.;
             }
         }
         if (minute >= 90) {
@@ -895,7 +895,7 @@ public class RatingPredictionModel {
             if (startMinute < 90) {
                 r = min(r0, r + 127 - 120.75);
             }
-            if (s < minute) {
+            if (from < minute) {
                 r += (minute - from) * delta / 5.;
             }
         }
