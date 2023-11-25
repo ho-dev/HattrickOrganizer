@@ -182,11 +182,10 @@ public class ConvertXml2Hrf {
 			}
 			if (trainerStatus != TrainerStatus.PlayingTrainer) {
 				trainer.put("LineupDisabled", "true");
+				trainer.put("PlayerID", trainerId);
+				playersData.add(trainer);
 			}
-			trainer.put("PlayerID", trainerId);
-			playersData.add(trainer);
 		}
-
 		int arenaId = 0;
 		try {
 			arenaId = Integer.parseInt(teamdetailsDataMap.get("ArenaID"));
