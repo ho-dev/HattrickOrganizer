@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 
 public class HOVerwaltung {
@@ -45,13 +44,9 @@ public class HOVerwaltung {
 		return id;
 	}
 
-	public int getPreviousID() {
-		return m_clHoModel.getPreviousID();
-	}
-
 	private int id = -1;
 
-	private PropertyChangeSupport support;
+	private final PropertyChangeSupport support;
 
 	/**
 	 * Creates a new HOVerwaltung object.
@@ -86,6 +81,9 @@ public class HOVerwaltung {
 	public static HOVerwaltung instance() {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
+
+			// TODO This seems to have side effects other than loading
+			//   parameters from DB, this probably should be wrapped properly.
 			DBManager.instance().getFaktorenFromDB();
 		}
 		return m_clInstance;
@@ -109,8 +107,6 @@ public class HOVerwaltung {
 	public ResourceBundle getResource() {
 		return languageBundle;
 	}
-
-	public Locale getM_locale() {return m_locale;}
 
 	/**
 	 * läadt das zuletzt importtiert model ein
@@ -214,16 +210,18 @@ public class HOVerwaltung {
 	public String getLanguageString(String key) {
 		String temp = null;
 		try {
-			temp = languageBundle.getString(key);
+			if (languageBundle != null) {
+				temp = languageBundle.getString(key);
+			}
 		} catch (Exception e) {
 			// Do nothing, it just throws error if key is missing. 
 		}
-			if (temp != null)
+
+		if (temp != null)
 			return temp;
 		// Search in english.properties if nothing found and active language not
 		// english
-		if (!core.model.UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
-			
+		if (!UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
 			ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
 
 			try {
@@ -266,14 +264,6 @@ public class HOVerwaltung {
 		final Vector<String> sprachdateien = new Vector<>();
 
 		try {
-			// java.net.URL resource = new
-			// gui.vorlagen.ImagePanel().getClass().getClassLoader().getResource(
-			// "sprache" );
-
-//            java.net.URL url = HOVerwaltung.class.getClassLoader().getResource("sprache");
-//            java.net.JarURLConnection connection = (java.net.JarURLConnection) url.openConnection();
-//            String filepath = (String)connection.getJarFileURL().toURI();
-
             java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
             java.util.Scanner s = new java.util.Scanner(is);
             java.util.ArrayList<String> llist = new java.util.ArrayList<>();
@@ -309,5 +299,9 @@ public class HOVerwaltung {
 			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
 			UserParameter.instance().sprachDatei = "English";
 		}
+	}
+
+	public void setLanguageBundle(ResourceBundle bundle) {
+		this.languageBundle = bundle;
 	}
 }
