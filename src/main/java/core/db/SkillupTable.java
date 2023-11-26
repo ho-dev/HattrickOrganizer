@@ -10,7 +10,7 @@ import core.util.HODateTime;
 import java.sql.*;
 import java.util.*;
 
-final class SpielerSkillupTable extends AbstractTable {
+final class SkillupTable extends AbstractTable {
 
 	/**
 	 * tablename
@@ -18,7 +18,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	final static String TABLENAME = "SPIELERSKILLUP";
 //	private static Map<String, Vector<Object[]>> playerSkillup = null;
 
-	SpielerSkillupTable(JDBCAdapter adapter) {
+	SkillupTable(JDBCAdapter adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -27,7 +27,7 @@ final class SpielerSkillupTable extends AbstractTable {
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
 				ColumnDescriptor.Builder.newInstance().setColumnName("SpielerID").setGetter((o) -> ((Skillup) o).getPlayerId()).setSetter((o, v) -> ((Skillup) o).setPlayerId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Skill").setGetter((o) -> ((Skillup) o).getSkill()).setSetter((o, v) -> ((Skillup) o).setSkill((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Skill").setGetter((o) -> ((Skillup) o).getSkill()).setSetter((o, v) -> ((Skillup) o).setSkill(PlayerSkill.fromInteger((Integer) v))).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HRF_ID").setGetter((o) -> ((Skillup) o).getHrfId()).setSetter((o, v) -> ((Skillup) o).setHrfId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Datum").setGetter((o) -> ((Skillup) o).getDate().toDbTimestamp()).setSetter((o, v) -> ((Skillup) o).setDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Value").setGetter((o) -> ((Skillup) o).getValue()).setSetter((o, v) -> ((Skillup) o).setValue((int) v)).setType(Types.INTEGER).isNullable(false).build()
@@ -52,12 +52,12 @@ final class SpielerSkillupTable extends AbstractTable {
 
 	private final PreparedSelectStatementBuilder loadLastLevelUpStatementBuilder = new PreparedSelectStatementBuilder(this,
 			"WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
-	Skillup getLastLevelUp(int skillCode, int spielerId) {
-		return loadOne(Skillup.class, this.adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, skillCode));
+	Skillup getLastLevelUp(PlayerSkill skillCode, int spielerId) {
+		return loadOne(Skillup.class, this.adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, PlayerSkill.toInteger(skillCode)));
 	}
 
-	List<Skillup> getAllLevelUp(int skillCode, int spielerId) {
-		return load(Skillup.class, spielerId, skillCode);
+	List<Skillup> getAllLevelUp(PlayerSkill skillCode, int spielerId) {
+		return load(Skillup.class, spielerId, PlayerSkill.toInteger(skillCode));
 	}
 
 
@@ -72,14 +72,14 @@ final class SpielerSkillupTable extends AbstractTable {
 				checkNewSkillup(nPlayer, nPlayer.getWingerSkill(), oPlayer.getWingerSkill(), PlayerSkill.WINGER, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getDefendingSkill(), oPlayer.getDefendingSkill(), PlayerSkill.DEFENDING, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getScoringSkill(), oPlayer.getScoringSkill(), PlayerSkill.SCORING, homodel.getHrfId());
-				checkNewSkillup(nPlayer, nPlayer.getSetPiecesSkill(), oPlayer.getSetPiecesSkill(), PlayerSkill.SET_PIECES, homodel.getHrfId());
+				checkNewSkillup(nPlayer, nPlayer.getSetPiecesSkill(), oPlayer.getSetPiecesSkill(), PlayerSkill.SETPIECES, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getStamina(), oPlayer.getStamina(), PlayerSkill.STAMINA, homodel.getHrfId());
 				checkNewSkillup(nPlayer, nPlayer.getExperience(), oPlayer.getExperience(), PlayerSkill.EXPERIENCE, homodel.getHrfId());
 			}
 		}
 	}
 
-	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, int skill, int hrf) {
+	private void checkNewSkillup(Player nPlayer, int newValue, int oldValue, PlayerSkill skill, int hrf) {
 		if (newValue > oldValue) {
 			var skillup = new Skillup();
 			skillup.setHrfId(hrf);

@@ -22,6 +22,9 @@ import java.io.Serial;
 
 import javax.swing.*;
 
+import static core.constants.player.PlayerSkill.FORM;
+import static core.constants.player.PlayerSkill.STAMINA;
+
 /**
  * Panel where the future training predictions are shown.
  *
@@ -93,8 +96,10 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
 
-        for (int i = 0; i < skillNumber; i++) {
-            int skillIndex = Skills.getSkillAtPosition(i);
+        for (var skill : PlayerSkill.values()) {
+            var i = skill.toInt();
+            if (i >= skillNumber) break;
+            var skillIndex = Skills.getSkillAtPosition(i);
             var skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
             skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
@@ -104,40 +109,40 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             float skillValueInt = (int) skillValue;
             var skillValueDecimal = skillValue - skillValueInt;
 
-            levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(i), skillValueInt);
-            levelBar[i].setSkillDecimalLevel((float) (skillValueDecimal / getSkillMaxValue(i)));
-            levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(i));
+            levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(skill), skillValueInt);
+            levelBar[i].setSkillDecimalLevel((float) (skillValueDecimal / getSkillMaxValue(skill)));
+            levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(skill));
         }
     }
 
     /**
      * Get maximum value of the skill.
      *
-     * @param index
+     * @param index Player skill type
      * @return float Max value
      */
-    private float getSkillMaxValue(int index) {
+    private float getSkillMaxValue(PlayerSkill index) {
         // form 8, stamina 9
-        if (index == 0) {
+        if (index == FORM) {
             return 8f;
-        } else if (index == 1) {
+        } else if (index == STAMINA) {
             return 9f;
         } else {
             return 20f;
         }
     }
 
-    private double getSkillValue(FuturePlayer spieler, int skillIndex) {
+    private double getSkillValue(FuturePlayer spieler, PlayerSkill skillIndex) {
         return switch (skillIndex) {
-            case PlayerSkill.KEEPER -> spieler.getGoalkeeping();
-            case PlayerSkill.SCORING -> spieler.getAttack();
-            case PlayerSkill.DEFENDING -> spieler.getDefense();
-            case PlayerSkill.PASSING -> spieler.getPassing();
-            case PlayerSkill.PLAYMAKING -> spieler.getPlaymaking();
-            case PlayerSkill.SET_PIECES -> spieler.getSetpieces();
-            case PlayerSkill.STAMINA -> spieler.getStamina();
-            case PlayerSkill.FORM -> spieler.getForm();
-            case PlayerSkill.WINGER -> spieler.getCross();
+            case KEEPER -> spieler.getGoalkeeping();
+            case SCORING -> spieler.getAttack();
+            case DEFENDING -> spieler.getDefense();
+            case PASSING -> spieler.getPassing();
+            case PLAYMAKING -> spieler.getPlaymaking();
+            case SETPIECES -> spieler.getSetpieces();
+            case STAMINA -> spieler.getStamina();
+            case FORM -> spieler.getForm();
+            case WINGER -> spieler.getCross();
             default -> 0;
         };
     }
@@ -163,7 +168,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         levelBar = new HTColorBar[skillNumber];
         skillLabel = new JLabel[skillNumber];
 
-        for (int i = 0; i < skillNumber; i++) {
+        for ( var skill: PlayerSkill.values()){
+            int i = skill.toInt();
+            if ( i>=skillNumber) break;
             if (i == 1) {
                 gbc.insets = new Insets(2, 4, 8, 4);
             } else {
@@ -174,16 +181,16 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             gbc.weightx = 0.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            int skillIndex = Skills.getSkillAtPosition(i);
+            var skillIndex = Skills.getSkillAtPosition(i);
             gbc.gridx = 0;
-            bottom.add(new JLabel(PlayerSkill.toString(skillIndex)), gbc);
+            bottom.add(new JLabel(skillIndex.toString()), gbc);
 
             skillLabel[i] = new JLabel("");
             skillLabel[i].setOpaque(false);
             gbc.gridx = 1;
             bottom.add(skillLabel[i], gbc);
 
-            int len = (int) getSkillMaxValue(i) * 10;
+            int len = (int) getSkillMaxValue(skill) * 10;
 
             levelBar[i] = new HTColorBar(skillIndex, 0f, len, 16);
             levelBar[i].setOpaque(false);

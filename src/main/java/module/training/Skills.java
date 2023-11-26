@@ -58,19 +58,19 @@ public class Skills {
             }
         }
 
-        public static HTSkillID valueOf(int skill) {
-            return map.get(skill);
+        public static HTSkillID valueOf(PlayerSkill skill) {
+            return map.get(skill.toInt());
         }
 
         public int getValue() {
             return value;
         }
 
-        public int convertToPlayerSkill(){
+        public PlayerSkill convertToPlayerSkill(){
             return switch (this) {
                 case Keeper -> PlayerSkill.KEEPER;
                 case Stamina -> PlayerSkill.STAMINA;
-                case SetPieces -> PlayerSkill.SET_PIECES;
+                case SetPieces -> PlayerSkill.SETPIECES;
                 case Defender -> PlayerSkill.DEFENDING;
                 case Scorer -> PlayerSkill.SCORING;
                 case Winger -> PlayerSkill.WINGER;
@@ -78,7 +78,7 @@ public class Skills {
                 case Playmaker -> PlayerSkill.PLAYMAKING;
                 case Leadership -> PlayerSkill.LEADERSHIP;
                 case Experience -> PlayerSkill.EXPERIENCE;
-                case Trainer -> -1;
+                case Trainer -> null;
             };
         }
 
@@ -155,7 +155,7 @@ public class Skills {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
-    public static int getSkillAtPosition(int position) {
+    public static PlayerSkill getSkillAtPosition(int position) {
         return switch (position) {
             case 0 -> PlayerSkill.FORM;
             case 1 -> PlayerSkill.STAMINA;
@@ -165,9 +165,9 @@ public class Skills {
             case 5 -> PlayerSkill.WINGER;
             case 6 -> PlayerSkill.PASSING;
             case 7 -> PlayerSkill.SCORING;
-            case 8 -> PlayerSkill.SET_PIECES;
+            case 8 -> PlayerSkill.SETPIECES;
             case 9 -> PlayerSkill.EXPERIENCE;
-            default -> 0;
+            default -> null;
         };
 
     }
@@ -178,19 +178,21 @@ public class Skills {
      * @param skillIndex skill to train
      * @return base training type for that skill
      */
-    public static Color getSkillColor(int skillIndex) {
-        return switch (skillIndex) {
-            case PlayerSkill.KEEPER -> Color.BLACK;
-            case PlayerSkill.PLAYMAKING -> Color.ORANGE.darker();
-            case PlayerSkill.PASSING -> Color.GREEN.darker();
-            case PlayerSkill.WINGER -> Color.MAGENTA;
-            case PlayerSkill.DEFENDING -> Color.BLUE;
-            case PlayerSkill.SCORING -> Color.RED;
-            case PlayerSkill.SET_PIECES -> Color.CYAN.darker();
-            case PlayerSkill.STAMINA -> new Color(85, 26, 139);
-            default -> Color.BLACK;
-        };
-
+    public static Color getSkillColor(PlayerSkill skillIndex) {
+        if ( skillIndex != null ) {
+            return switch (skillIndex) {
+                case KEEPER -> Color.BLACK;
+                case PLAYMAKING -> Color.ORANGE.darker();
+                case PASSING -> Color.GREEN.darker();
+                case WINGER -> Color.MAGENTA;
+                case DEFENDING -> Color.BLUE;
+                case SCORING -> Color.RED;
+                case SETPIECES -> Color.CYAN.darker();
+                case STAMINA -> new Color(85, 26, 139);
+                default -> Color.BLACK;
+            };
+        }
+        return Color.BLACK;
     }
 
     /**
@@ -200,18 +202,18 @@ public class Skills {
      * @param skillIndex constant index value of the skill we want to see
      * @return The Skill value or 0 if the index is incorrect
      */
-    public static double getSkillValue(Player player, int skillIndex) {
+    public static double getSkillValue(Player player, PlayerSkill skillIndex) {
         return switch (skillIndex) {
-            case PlayerSkill.KEEPER -> player.getGoalkeeperSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.PLAYMAKING -> player.getPlaymakingSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.PASSING -> player.getPassingSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.WINGER -> player.getWingerSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.DEFENDING -> player.getDefendingSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.SCORING -> player.getScoringSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.SET_PIECES -> player.getSetPiecesSkill() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.STAMINA -> player.getStamina() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.FORM -> player.getForm() + player.getSub4Skill(skillIndex);
-            case PlayerSkill.EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);
+            case KEEPER -> player.getGoalkeeperSkill() + player.getSub4Skill(skillIndex);
+            case PLAYMAKING -> player.getPlaymakingSkill() + player.getSub4Skill(skillIndex);
+            case PASSING -> player.getPassingSkill() + player.getSub4Skill(skillIndex);
+            case WINGER -> player.getWingerSkill() + player.getSub4Skill(skillIndex);
+            case DEFENDING -> player.getDefendingSkill() + player.getSub4Skill(skillIndex);
+            case SCORING -> player.getScoringSkill() + player.getSub4Skill(skillIndex);
+            case SETPIECES -> player.getSetPiecesSkill() + player.getSub4Skill(skillIndex);
+            case STAMINA -> player.getStamina() + player.getSub4Skill(skillIndex);
+            case FORM -> player.getForm() + player.getSub4Skill(skillIndex);
+            case EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);
             default -> 0;
         };
     }
@@ -222,15 +224,15 @@ public class Skills {
      * @param skillIndex skill to train
      * @return base training type for that skill
      */
-    public static int getTrainingTypeForSkill(int skillIndex) {
+    public static int getTrainingTypeForSkill(PlayerSkill skillIndex) {
         return switch (skillIndex) {
-            case PlayerSkill.KEEPER -> TrainingType.GOALKEEPING;
-            case PlayerSkill.PLAYMAKING -> TrainingType.PLAYMAKING;
-            case PlayerSkill.PASSING -> TrainingType.SHORT_PASSES;
-            case PlayerSkill.WINGER -> TrainingType.CROSSING_WINGER;
-            case PlayerSkill.DEFENDING -> TrainingType.DEFENDING;
-            case PlayerSkill.SCORING -> TrainingType.SCORING;
-            case PlayerSkill.SET_PIECES -> TrainingType.SET_PIECES;
+            case KEEPER -> TrainingType.GOALKEEPING;
+            case PLAYMAKING -> TrainingType.PLAYMAKING;
+            case PASSING -> TrainingType.SHORT_PASSES;
+            case WINGER -> TrainingType.CROSSING_WINGER;
+            case DEFENDING -> TrainingType.DEFENDING;
+            case SCORING -> TrainingType.SCORING;
+            case SETPIECES -> TrainingType.SET_PIECES;
             default -> 0;
         };
 

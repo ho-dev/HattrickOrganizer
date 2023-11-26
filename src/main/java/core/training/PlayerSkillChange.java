@@ -1,10 +1,8 @@
 package core.training;
 
+import core.constants.player.PlayerSkill;
 import core.model.player.ISkillChange;
 import core.util.HODateTime;
-
-import java.time.Instant;
-import java.util.Date;
 
 /**
  * Base Object for the Skillup table
@@ -25,7 +23,7 @@ public class PlayerSkillChange implements ISkillChange
     private int trainType;
 
     /** type of skill changed */
-    private int type;
+    private PlayerSkill type;
 
     /** Value of skill */
     private double value;
@@ -81,20 +79,20 @@ public class PlayerSkillChange implements ISkillChange
     /**
 * Set training type
 *
-* @param type
+* @param type Player skill type
 */
-    public void setType(int type)
+    public void setType(PlayerSkill type)
     {
         this.type = type;
     }
 
     /**
-* Get Training type
-*
-* @return type
-*/
+     * Get Training type
+     *
+     * @return type
+     */
     @Override
-	public int getType()
+	public PlayerSkill getType()
     {
         return type;
     }
@@ -102,7 +100,7 @@ public class PlayerSkillChange implements ISkillChange
     /**
 * Set the new value of the skill
 *
-* @param newValue
+* @param newValue Double
 */
     public void setValue(double newValue)
     {

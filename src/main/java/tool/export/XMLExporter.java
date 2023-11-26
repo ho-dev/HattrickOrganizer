@@ -454,10 +454,10 @@ public class XMLExporter  {
 					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.SCORING, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubStandards");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.SET_PIECES))));
+					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.SETPIECES))));
 					ele = doc.createElement("SubStandardsHadLevelUp");
 					tmpEle.appendChild(ele);
-					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.SET_PIECES, playerData, details.getMatchDate())));
+					ele.appendChild(doc.createTextNode(hadSkillup(PlayerSkill.SETPIECES, playerData, details.getMatchDate())));
 					ele = doc.createElement("SubSpielaufbau");
 					tmpEle.appendChild(ele);
 					ele.appendChild(doc.createTextNode(String.valueOf(playerData.getSub4Skill(PlayerSkill.PLAYMAKING))));
@@ -488,7 +488,7 @@ public class XMLExporter  {
 	/**
 	 * Check for skillup.
 	 */
-	private String hadSkillup(int skill, Player player, HODateTime matchdate) {
+	private String hadSkillup(PlayerSkill skill, Player player, HODateTime matchdate) {
 		var value = player.getLastLevelUp(skill);
 
 		if ( value != null && value.getDate().isBefore(matchdate)) {

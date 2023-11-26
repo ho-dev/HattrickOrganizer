@@ -167,7 +167,7 @@ public class CsvPlayerExport {
 						df3.format(curPlayer.getPlaymakingSkill() + curPlayer.getSub4Skill(PlayerSkill.PLAYMAKING)),
 						df3.format(curPlayer.getPassingSkill() + curPlayer.getSub4Skill(PlayerSkill.PASSING)),
 						df3.format(curPlayer.getScoringSkill() + curPlayer.getSub4Skill(PlayerSkill.SCORING)),
-						df3.format(curPlayer.getSetPiecesSkill() + curPlayer.getSub4Skill(PlayerSkill.SET_PIECES)),
+						df3.format(curPlayer.getSetPiecesSkill() + curPlayer.getSub4Skill(PlayerSkill.SETPIECES)),
 						// ls.player.position_short
 						df2.format(ratingPredictionModel.getPlayerMatchAverageRating(curPlayer, IMatchRoleID.KEEPER)),
 						df2.format(ratingPredictionModel.getPlayerMatchAverageRating(curPlayer, IMatchRoleID.CENTRAL_DEFENDER)),

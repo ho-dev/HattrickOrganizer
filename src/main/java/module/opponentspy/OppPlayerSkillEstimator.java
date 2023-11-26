@@ -6,8 +6,8 @@ import core.constants.player.PlayerSkill;
 
 public class OppPlayerSkillEstimator {
 	
-	private CalcPlayerBaseProvider calcPlayerBaseProvider;
-	private SkillAdjuster skillAdjuster;
+	private final CalcPlayerBaseProvider calcPlayerBaseProvider;
+	private final SkillAdjuster skillAdjuster;
 	
 	public OppPlayerSkillEstimator() {
 		calcPlayerBaseProvider = new CalcPlayerBaseProvider();
@@ -42,7 +42,7 @@ public class OppPlayerSkillEstimator {
     	player.setScoringSkill((int)Math.floor(calcPlayer.getScoring()));
     	player.setSubskill4PlayerSkill(PlayerSkill.SCORING, getSubskillFromSkill(calcPlayer.getScoring()));
     	player.setSetPiecesSkill((int)Math.floor(calcPlayer.getSetPieces()));
-    	player.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
+    	player.setSubskill4PlayerSkill(PlayerSkill.SETPIECES, getSubskillFromSkill(calcPlayer.getSetPieces()));
     	player.setStamina((int) Math.floor(calcPlayer.getStamina()));
     	
     	return player;

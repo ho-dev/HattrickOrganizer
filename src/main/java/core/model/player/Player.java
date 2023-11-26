@@ -1,6 +1,7 @@
 package core.model.player;
 
 import core.constants.TrainingType;
+import core.constants.player.PlayerSkill;
 import core.constants.player.Specialty;
 import core.db.AbstractTable;
 import core.db.DBManager;
@@ -28,7 +29,7 @@ public class Player extends AbstractTable.Storable {
 
     private byte idealPos = IMatchRoleID.UNKNOWN;
 
-    private static final int[] trainingSkills = {KEEPER, SET_PIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
+    private static final PlayerSkill[] trainingSkills = {KEEPER, SETPIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
@@ -774,7 +775,7 @@ public class Player extends AbstractTable.Storable {
             referencePlayer.setSkillValue(PASSING, 20.);
             referencePlayer.setSkillValue(WINGER, 20.);
             referencePlayer.setSkillValue(SCORING, 20.);
-            referencePlayer.setSkillValue(SET_PIECES, 20.);
+            referencePlayer.setSkillValue(SETPIECES, 20.);
             referencePlayer.setSkillValue(EXPERIENCE, 20.);
         }
         return referencePlayer;
@@ -790,7 +791,7 @@ public class Player extends AbstractTable.Storable {
             referenceKeeper.setStamina(9);
             referenceKeeper.setSkillValue(KEEPER, 20.);
             referenceKeeper.setSkillValue(DEFENDING, 20.);
-            referenceKeeper.setSkillValue(SET_PIECES, 20.);
+            referenceKeeper.setSkillValue(SETPIECES, 20.);
             referenceKeeper.setSkillValue(PLAYMAKING, 1);
             referenceKeeper.setSkillValue(PASSING, 1);
             referenceKeeper.setSkillValue(WINGER, 1);
@@ -843,13 +844,11 @@ public class Player extends AbstractTable.Storable {
     }
 
     static class PlayerPositionRating {
-        private final double relativeRating;
 
         public PlayerPositionRating(Integer p, Byte behaviour, double rating, double ralativeRating) {
             this.roleId = p;
             this.behaviour = behaviour;
             this.rating = rating;
-            this.relativeRating = ralativeRating;
         }
 
         public double getRating() {
@@ -939,13 +938,13 @@ public class Player extends AbstractTable.Storable {
         return internationalMatches;
     }
 
-    private final HashMap<Integer, Skillup> lastSkillups = new HashMap<>();
+    private final HashMap<PlayerSkill, Skillup> lastSkillups = new HashMap<>();
 
     /**
      * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
      * Änderung [1] = Boolean: false=Keine Änderung gefunden
      */
-    public Skillup getLastLevelUp(int skill) {
+    public Skillup getLastLevelUp(PlayerSkill skill) {
         if (lastSkillups.containsKey(skill)) {
             return lastSkillups.get(skill);
         }
@@ -954,12 +953,12 @@ public class Player extends AbstractTable.Storable {
         return ret;
     }
 
-    private final HashMap<Integer, List<Skillup>> allSkillUps = new HashMap<>();
+    private final HashMap<PlayerSkill, List<Skillup>> allSkillUps = new HashMap<>();
 
     /**
      * gives information of skill ups
      */
-    public List<Skillup> getAllLevelUp(int skill) {
+    public List<Skillup> getAllLevelUp(PlayerSkill skill) {
         if (allSkillUps.containsKey(skill)) {
             return allSkillUps.get(skill);
         }
@@ -1218,7 +1217,7 @@ public class Player extends AbstractTable.Storable {
      * @param iSkill skill id
      * @return double
      */
-    public double getSkill(int iSkill) {
+    public double getSkill(PlayerSkill iSkill) {
         return getValue4Skill(iSkill) + getSub4Skill(iSkill);
     }
 
@@ -1229,7 +1228,7 @@ public class Player extends AbstractTable.Storable {
      * @param skill skill number
      * @return subskill between 0.0-0.999
      */
-    public double getSub4Skill(int skill) {
+    public double getSub4Skill(PlayerSkill skill) {
         double value = switch (skill) {
             case KEEPER -> subGoalkeeperSkill;
             case PLAYMAKING -> subPlaymakingSkill;
@@ -1237,7 +1236,7 @@ public class Player extends AbstractTable.Storable {
             case PASSING -> subPassingSkill;
             case WINGER -> subWingerSkill;
             case SCORING -> subScoringSkill;
-            case SET_PIECES -> subSetPiecesSkill;
+            case SETPIECES -> subSetPiecesSkill;
             case EXPERIENCE -> subExperience;
             case STAMINA -> 0.5;
             default -> 0;
@@ -1246,7 +1245,7 @@ public class Player extends AbstractTable.Storable {
         return (float) Math.min(0.999, value);
     }
 
-    public void setSubskill4PlayerSkill(int skill, double value) {
+    public void setSubskill4PlayerSkill(PlayerSkill skill, double value) {
         schumRank = null;
         switch (skill) {
             case KEEPER -> subGoalkeeperSkill = value;
@@ -1255,7 +1254,7 @@ public class Player extends AbstractTable.Storable {
             case PASSING -> subPassingSkill = value;
             case WINGER -> subWingerSkill = value;
             case SCORING -> subScoringSkill = value;
-            case SET_PIECES -> subSetPiecesSkill = value;
+            case SETPIECES -> subSetPiecesSkill = value;
             case EXPERIENCE -> subExperience = value;
         }
     }
@@ -1456,15 +1455,15 @@ public class Player extends AbstractTable.Storable {
         return htms;
     }
 
-    private Map<Integer, Integer> getSkills() {
-        var ret = new HashMap<Integer, Integer>();
+    private Map<PlayerSkill, Integer> getSkills() {
+        var ret = new HashMap<PlayerSkill, Integer>();
         ret.put(KEEPER, getGoalkeeperSkill());
         ret.put(DEFENDING, getDefendingSkill());
         ret.put(PLAYMAKING, getPlaymakingSkill());
         ret.put(WINGER, getWingerSkill());
         ret.put(PASSING, getPassingSkill());
         ret.put(SCORING, getScoringSkill());
-        ret.put(SET_PIECES, getSetPiecesSkill());
+        ret.put(SETPIECES, getSetPiecesSkill());
 
         return ret;
     }
@@ -1597,7 +1596,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * get Skillvalue 4 skill
      */
-    public int getValue4Skill(int skill) {
+    public int getValue4Skill(PlayerSkill skill) {
         return switch (skill) {
             case KEEPER -> goalkeeperSkill;
             case PLAYMAKING -> playmakingSkill;
@@ -1605,21 +1604,20 @@ public class Player extends AbstractTable.Storable {
             case PASSING -> passingSkill;
             case WINGER -> wingerSkill;
             case SCORING -> scoringSkill;
-            case SET_PIECES -> setPiecesSkill;
+            case SETPIECES -> setPiecesSkill;
             case STAMINA -> stamina;
             case EXPERIENCE -> experience;
             case FORM -> form;
             case LEADERSHIP -> leadership;
             case LOYALTY -> loyalty;
-            default -> 0;
         };
     }
 
-    public double getSkillValue(int skill) {
+    public double getSkillValue(PlayerSkill skill) {
         return getSub4Skill(skill) + getValue4Skill(skill);
     }
 
-    public void setSkillValue(int skill, double value) {
+    public void setSkillValue(PlayerSkill skill, double value) {
         int intVal = (int) value;
         setValue4Skill(skill, intVal);
         setSubskill4PlayerSkill(skill, value - intVal);
@@ -1631,7 +1629,7 @@ public class Player extends AbstractTable.Storable {
      * @param skill the skill to change
      * @param value the new skill value
      */
-    public void setValue4Skill(int skill, int value) {
+    public void setValue4Skill(PlayerSkill skill, int value) {
         schumRank = null;
         switch (skill) {
             case KEEPER -> setGoalkeeperSkill(value);
@@ -1640,7 +1638,7 @@ public class Player extends AbstractTable.Storable {
             case WINGER -> setWingerSkill(value);
             case DEFENDING -> setDefendingSkill(value);
             case SCORING -> setScoringSkill(value);
-            case SET_PIECES -> setSetPiecesSkill(value);
+            case SETPIECES -> setSetPiecesSkill(value);
             case STAMINA -> setStamina(value);
             case EXPERIENCE -> setExperience(value);
             case FORM -> setForm(value);
@@ -1751,8 +1749,8 @@ public class Player extends AbstractTable.Storable {
      * @param old player to copy from
      */
     public void copySkills(Player old) {
-        for (int skillType = 0; skillType <= LOYALTY; skillType++) {
-            setValue4Skill(skillType, old.getValue4Skill(skillType));
+        for ( var s : PlayerSkill.values()){
+            setValue4Skill(s, old.getValue4Skill(s));
         }
     }
 
@@ -2023,14 +2021,14 @@ public class Player extends AbstractTable.Storable {
      * The following coefficients defines a polynomial fit of the table Schum provided in <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17404127&n=73&v=0&mr=0">...</a>
      * SchumRank(skill) = C0 + C1*skill + C2*skill^2 + C3*skill^3 + C4*skill^4 + C5*skill^5 + C6*skill^6
      */
-    Map<Integer, Double[]> schumRankFitCoefficients = Map.of(
+    Map<PlayerSkill, Double[]> schumRankFitCoefficients = Map.of(
             KEEPER, new Double[]{-2.90430547, 2.20134952, -0.17288917, 0.01490328, 0., 0., 0.},
             DEFENDING, new Double[]{8.78549747, -13.89441249, 7.20818523, -1.42920262, 0.14104285, -0.00660499, 0.00011864},
             WINGER, new Double[]{0.68441693, -0.63873590, 0.42587817, -0.02909820, 0.00108502, 0., 0.},
             PLAYMAKING, new Double[]{-5.70730805, 6.57044707, -1.78506428, 0.27138439, -0.01625170, 0.00036649, 0.},
             SCORING, new Double[]{-6.61486533, 7.65566042, -2.14396084, 0.32264321, -0.01935220, 0.00043442, 0.},
             PASSING, new Double[]{2.61223942, -2.42601757, 0.95573380, -0.07250134, 0.00239775, 0., 0.},
-            SET_PIECES, new Double[]{-1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0.}
+            SETPIECES, new Double[]{-1.54485655, 1.45506372, -0.09224842, 0.00525752, 0., 0., 0.}
     );
 
     /**
@@ -2071,7 +2069,7 @@ public class Player extends AbstractTable.Storable {
      */
     public boolean isExcellentSchumRank() {
         var r = getSchumRank();
-        var lower = this.getIdealPosition() == KEEPER ? 195 : 220;
+        var lower = this.getIdealPosition() == IMatchRoleID.KEEPER ? 195 : 220;
         return r >= lower && r <= lower + 20;
     }
 
@@ -2082,7 +2080,7 @@ public class Player extends AbstractTable.Storable {
      * @return double
      */
     private double calcSchumRankBenchmark() {
-        var ret = getIdealPosition() == KEEPER ? 25. : 50.;
+        var ret = getIdealPosition() == IMatchRoleID.KEEPER ? 25. : 50.;
         var k = 1.0;
         for (int age = 17; age < this.getAge(); age++) {
             ret += 16. * k;
@@ -2233,7 +2231,7 @@ public class Player extends AbstractTable.Storable {
         playerAsManMarker.setSkillValue(PASSING, skillFactor * this.getSkillValue(PASSING));
         playerAsManMarker.setSkillValue(STAMINA, this.getSkillValue(STAMINA));
         playerAsManMarker.setSkillValue(FORM, this.getSkillValue(FORM));
-        playerAsManMarker.setSkillValue(SET_PIECES, this.getSkillValue(SET_PIECES));
+        playerAsManMarker.setSkillValue(SETPIECES, this.getSkillValue(SETPIECES));
         playerAsManMarker.setSkillValue(LEADERSHIP, this.getSkillValue(LEADERSHIP));
         playerAsManMarker.setSkillValue(LOYALTY, this.getSkillValue(LOYALTY));
         return playerAsManMarker;

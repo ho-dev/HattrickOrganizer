@@ -1,12 +1,10 @@
 package module.training.ui.renderer;
 
 import core.constants.player.PlayerSkill;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import module.training.ui.TrainingLegendPanel;
 
-import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -19,9 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class ChangeTableRenderer extends DefaultTableCellRenderer {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-	private static final long serialVersionUID = -8664774318961127994L;
-    private static final Color SILVER = new Color(239, 239, 239);
-    private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+	@Serial
+    private static final long serialVersionUID = -8664774318961127994L;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -33,26 +30,15 @@ public class ChangeTableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-        boolean isOld = ((Boolean) table.getValueAt(row, 5)).booleanValue();
-
-//        if (!isSelected) {
-//            if (isOld) {
-//                this.setBackground(SILVER);
-//            } else {
-//                this.setBackground(TABLE_BG);
-//            }
-//        }
-
         if (column == 3) {
             try {
-                int skill = Integer.parseInt((String) table.getValueAt(row, 3));
-                setText(PlayerSkill.toString(skill));
+                var skillID = (Integer)table.getValueAt(row, 3);
+                var skill = PlayerSkill.fromInteger(skillID);
+                setText(skill.toString());
                 setIcon(TrainingLegendPanel.getSkillupTypeIcon(skill, 1));
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
             }
         }
-
         return this;
     }
 }

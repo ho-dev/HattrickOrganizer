@@ -13,7 +13,7 @@ public class ShootingWeeklyTraining extends WeeklyTrainingType {
 		_Name = "Shooting";
 		_TrainingType = TrainingType.SHOOTING;
 		_PrimaryTrainingSkill = PlayerSkill.SCORING;
-		_SecondaryTrainingSkill = PlayerSkill.SET_PIECES;
+		_SecondaryTrainingSkill = PlayerSkill.SETPIECES;
 
 		factorTrainingTypeKoeff = 1.5;
 

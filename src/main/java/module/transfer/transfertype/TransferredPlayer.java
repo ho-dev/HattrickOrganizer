@@ -21,11 +21,11 @@ class TransferredPlayer {
     private boolean bought = false;
     private boolean sold = false;
     private double officialMatch = 0;
-    private int age;
+    private final int age;
     private int endWeek = 0;
     private int experience = 0;
     private int experienceSkillups = 0;
-    private int id;
+    private final int id;
     private int income;
     private int leadership = 0;
     private int skillups = 0;
@@ -50,7 +50,7 @@ class TransferredPlayer {
         skillups += player.getAllLevelUp(PlayerSkill.WINGER).size();
         skillups += player.getAllLevelUp(PlayerSkill.DEFENDING).size();
         skillups += player.getAllLevelUp(PlayerSkill.SCORING).size();
-        skillups += player.getAllLevelUp(PlayerSkill.SET_PIECES).size();
+        skillups += player.getAllLevelUp(PlayerSkill.SETPIECES).size();
 
         //player.getAllLevelUp(ISpieler.SKILL_KONDITION).size();
         experienceSkillups = player.getAllLevelUp(PlayerSkill.EXPERIENCE).size();

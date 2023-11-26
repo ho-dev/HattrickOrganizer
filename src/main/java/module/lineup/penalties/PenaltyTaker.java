@@ -28,7 +28,7 @@ public class PenaltyTaker {
 
 	public double getSetPieces() {
 		return ((double) this.player.getSetPiecesSkill())
-				+ this.player.getSub4Skill(PlayerSkill.SET_PIECES);
+				+ this.player.getSub4Skill(PlayerSkill.SETPIECES);
 	}
 
 	public double getExperience() {

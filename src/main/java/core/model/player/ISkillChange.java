@@ -1,8 +1,7 @@
 package core.model.player;
 
+import core.constants.player.PlayerSkill;
 import core.util.HODateTime;
-
-import java.util.Date;
 
 public interface ISkillChange {
 	
@@ -20,11 +19,11 @@ public interface ISkillChange {
 	String getAge();
 
 	/**
-	* Get Training type
-	*
-	* @return type
-	*/
-	int getType();
+     * Get Training type
+     *
+     * @return type
+     */
+	PlayerSkill getType();
 
 	/**
 	* Set the new value of the skill

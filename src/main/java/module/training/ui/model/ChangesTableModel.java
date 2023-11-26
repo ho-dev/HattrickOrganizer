@@ -5,6 +5,7 @@ import core.constants.player.PlayerAbility;
 import core.model.HOVerwaltung;
 import module.training.PlayerSkillChange;
 
+import java.io.Serial;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
@@ -13,15 +14,14 @@ import javax.swing.table.AbstractTableModel;
  * TableModel representing skill changes for individual players.
  * 
  * @author NetHyperon
- * 
- * @see hoplugins.trainingExperience.vo.SkillChange
  */
 public class ChangesTableModel extends AbstractTableModel {
 
 	public final static int COL_PLAYER_ID = 6;
+	@Serial
 	private static final long serialVersionUID = -9082549798814304017L;
-	private List<PlayerSkillChange> values;
-	private String[] colNames = new String[7];
+	private final List<PlayerSkillChange> values;
+	private final String[] colNames = new String[7];
 
 		/**
 	 * Creates a new ChangesTableModel object.
@@ -73,24 +73,15 @@ public class ChangesTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		PlayerSkillChange change = values.get(rowIndex);
-
-		switch (columnIndex) {
-		case 0:
-			return Integer.toString(change.getSkillup().getHtWeek());
-		case 1:
-			return Integer.toString(change.getSkillup().getHtSeason());
-		case 2:
-			return change.getPlayer().getFullName();
-		case 3:
-			return Integer.toString(change.getSkillup().getType());
-		case 4:
-			return PlayerAbility.getNameForSkill(change.getSkillup().getValue(), true);
-		case 5:
-			return Boolean.valueOf(change.getPlayer().isGoner());
-		case COL_PLAYER_ID:
-			return Integer.toString(change.getPlayer().getPlayerId());
-		default:
-			return "";
-		}
+		return switch (columnIndex) {
+            case 0 -> Integer.toString(change.getSkillup().getHtWeek());
+            case 1 -> Integer.toString(change.getSkillup().getHtSeason());
+            case 2 -> change.getPlayer().getFullName();
+            case 3 -> change.getSkillup().getType().toInt();
+            case 4 -> PlayerAbility.getNameForSkill(change.getSkillup().getValue(), true);
+            case 5 -> change.getPlayer().isGoner();
+            case COL_PLAYER_ID -> Integer.toString(change.getPlayer().getPlayerId());
+            default -> "";
+        };
 	}
 }

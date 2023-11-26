@@ -1,13 +1,9 @@
 package core.training.type;
 
-import core.model.StaffMember;
+import core.constants.player.PlayerSkill;
 import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.training.WeeklyTrainingType;
-import module.training.Skills;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class IndividualWeeklyTraining extends WeeklyTrainingType {
@@ -20,62 +16,61 @@ public class IndividualWeeklyTraining extends WeeklyTrainingType {
         return m_ciInstance;
     }
 
-    private static Map<MatchRoleID.Sector, Map<Integer, Double>> probabilities;
+    private static final Map<MatchRoleID.Sector, Map<PlayerSkill, Double>> probabilities;
     static {
         probabilities = new HashMap<>();
         probabilities.put(MatchRoleID.Sector.Goal, new HashMap<>() {{
-            put(Skills.HTSkillID.Keeper.getValue(), 0.4);
-            put(Skills.HTSkillID.Defender.getValue(), 0.4);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.2);
+            put(PlayerSkill.KEEPER, 0.4);
+            put(PlayerSkill.DEFENDING, 0.4);
+            put(PlayerSkill.SETPIECES, 0.2);
         }});
         probabilities.put(MatchRoleID.Sector.Back, new HashMap<>() {{
-            put(Skills.HTSkillID.Defender.getValue(), 0.3);
-            put(Skills.HTSkillID.Winger.getValue(), 0.22);
-            put(Skills.HTSkillID.Playmaker.getValue(), 0.2);
-            put(Skills.HTSkillID.Passing.getValue(), 0.15);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.1);
+            put(PlayerSkill.DEFENDING, 0.3);
+            put(PlayerSkill.WINGER, 0.22);
+            put(PlayerSkill.PLAYMAKING, 0.2);
+            put(PlayerSkill.PASSING, 0.15);
+            put(PlayerSkill.SETPIECES, 0.1);
         }});
         probabilities.put(MatchRoleID.Sector.CentralDefence, new HashMap<>() {{
-            put(Skills.HTSkillID.Defender.getValue(), 0.35);
-            put(Skills.HTSkillID.Playmaker.getValue(), 0.3);
-            put(Skills.HTSkillID.Passing.getValue(), 0.25);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.1);
+            put(PlayerSkill.DEFENDING, 0.35);
+            put(PlayerSkill.PLAYMAKING, 0.3);
+            put(PlayerSkill.PASSING, 0.25);
+            put(PlayerSkill.SETPIECES, 0.1);
         }});
         probabilities.put(MatchRoleID.Sector.Wing, new HashMap<>() {{
-            put(Skills.HTSkillID.Defender.getValue(), 0.16);
-            put(Skills.HTSkillID.Playmaker.getValue(), 0.22);
-            put(Skills.HTSkillID.Passing.getValue(), 0.19);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.11);
-            put(Skills.HTSkillID.Winger.getValue(), 0.32);
+            put(PlayerSkill.DEFENDING, 0.16);
+            put(PlayerSkill.PLAYMAKING, 0.22);
+            put(PlayerSkill.PASSING, 0.19);
+            put(PlayerSkill.SETPIECES, 0.11);
+            put(PlayerSkill.WINGER, 0.32);
         }});
         probabilities.put(MatchRoleID.Sector.InnerMidfield, new HashMap<>() {{
-            put(Skills.HTSkillID.Defender.getValue(), 0.28);
-            put(Skills.HTSkillID.Playmaker.getValue(), 0.36);
-            put(Skills.HTSkillID.Passing.getValue(), 0.24);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.12);
+            put(PlayerSkill.DEFENDING, 0.28);
+            put(PlayerSkill.PLAYMAKING, 0.36);
+            put(PlayerSkill.PASSING, 0.24);
+            put(PlayerSkill.SETPIECES, 0.12);
         }});
         probabilities.put(MatchRoleID.Sector.Forward, new HashMap<>() {{
-            put(Skills.HTSkillID.Scorer.getValue(), 0.38);
-            put(Skills.HTSkillID.Winger.getValue(), 0.29);
-            put(Skills.HTSkillID.Passing.getValue(), 0.22);
-            put(Skills.HTSkillID.SetPieces.getValue(), 0.11);
+            put(PlayerSkill.SCORING, 0.38);
+            put(PlayerSkill.WINGER, 0.29);
+            put(PlayerSkill.PASSING, 0.22);
+            put(PlayerSkill.SETPIECES, 0.11);
         }});
     }
 
-    public double calcSkillIncrementPerMinute(int skillId, int currentValue, MatchRoleID.Sector sector, int ageYears) {
+    public double calcSkillIncrementPerMinute(PlayerSkill skillId, int currentValue, MatchRoleID.Sector sector, int ageYears) {
         var probs = probabilities.get(sector);
         if ( probs != null){
             var ret = probs.get(skillId);
             if ( ret != null){
-                var skill = Skills.HTSkillID.valueOf(skillId);
-                switch (skill){
-                    case Keeper: return 0.5 * ret * GoalkeepingWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.Keeper.getValue(), currentValue, ageYears);
-                    case Defender: return 0.9 * ret * DefendingWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.Defender.getValue(), currentValue, ageYears);
-                    case Winger: return 0.6 * ret * CrossingWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.Winger.getValue(), currentValue, ageYears);
-                    case Playmaker: return 0.8 * ret * PlaymakingWeeklyTraining.instance().getFullYouthTrainingPerMinute((Skills.HTSkillID.Playmaker.getValue()), currentValue, ageYears);
-                    case Scorer: return 0.6 * ret * ScoringWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.Scorer.getValue(), currentValue, ageYears);
-                    case Passing: return 0.9 * ret * ShortPassesWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.Passing.getValue(), currentValue, ageYears);
-                    case SetPieces: return 0.9 * ret * SetPiecesWeeklyTraining.instance().getFullYouthTrainingPerMinute(Skills.HTSkillID.SetPieces.getValue(), currentValue, ageYears);
+                switch (skillId){
+                    case KEEPER: return 0.5 * ret * GoalkeepingWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case DEFENDING: return 0.9 * ret * DefendingWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case WINGER: return 0.6 * ret * CrossingWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case PLAYMAKING: return 0.8 * ret * PlaymakingWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case SCORING: return 0.6 * ret * ScoringWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case PASSING: return 0.9 * ret * ShortPassesWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
+                    case SETPIECES: return 0.9 * ret * SetPiecesWeeklyTraining.instance().getFullYouthTrainingPerMinute(skillId, currentValue, ageYears);
                 }
             }
         }

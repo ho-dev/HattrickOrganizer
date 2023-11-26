@@ -15,17 +15,18 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
+import java.io.Serial;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class TrainingLegendPanel extends ImagePanel {
     //~ Constructors -------------------------------------------------------------------------------
-	private static final long serialVersionUID = 7019803928403346886L;
+	@Serial
+    private static final long serialVersionUID = 7019803928403346886L;
 
 	/**
      * Default constructor.
@@ -37,15 +38,17 @@ public class TrainingLegendPanel extends ImagePanel {
         this.add(title);
 
         for (int i = 0; i < 4; i++) {
-            int skill = Skills.getSkillAtPosition(i);
-            this.add(getSkillupLabel(PlayerSkill.toString(skill), skill));
+            PlayerSkill skill = Skills.getSkillAtPosition(i);
+            if ( skill != null) {
+                this.add(getSkillupLabel(skill.toString(), skill));
+            }
         }
 
         this.add(new JLabel(""));
 
         for (int i = 4; i < 8; i++) {
-            int skill = Skills.getSkillAtPosition(i);
-            this.add(getSkillupLabel(PlayerSkill.toString(skill), skill));
+            PlayerSkill skill = Skills.getSkillAtPosition(i);
+            this.add(getSkillupLabel(skill.toString(), skill));
         }
 
         this.setBorder(BorderFactory.createEtchedBorder(0));
@@ -61,13 +64,13 @@ public class TrainingLegendPanel extends ImagePanel {
      *
      * @return a label
      */
-    public static final JLabel getSkillupLabel(String title, int skill) {
+    public static JLabel getSkillupLabel(String title, PlayerSkill skill) {
         Icon icon = getSkillupTypeIcon(skill, 1);
 
         return new JLabel(title, icon, SwingConstants.LEFT);
     }
 
-    public static final Icon getSkillupTypeIcon(int skill, int count) {
+    public static Icon getSkillupTypeIcon(PlayerSkill skill, int count) {
         Color color = Skills.getSkillColor(skill);
 
         Color lcolor = new Color(Math.min(color.getRed() + 20, 255),
@@ -119,8 +122,8 @@ public class TrainingLegendPanel extends ImagePanel {
     public static final class ColorReplaceFilter extends RGBImageFilter {
         //~ Instance fields ------------------------------------------------------------------------
         boolean transparency = false;
-        int newColor = 0;
-        int oldColor = 0;
+        int newColor;
+        int oldColor;
         int transparentColor = 0;
 
         //~ Constructors ---------------------------------------------------------------------------

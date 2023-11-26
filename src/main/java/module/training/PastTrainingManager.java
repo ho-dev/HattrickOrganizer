@@ -34,7 +34,7 @@ public class PastTrainingManager {
 		allSkillups = new ArrayList<>();
 		trainSkillups = new ArrayList<>();
 
-		for (int skill = 0; skill < 10; skill++) {
+		for (var skill : PlayerSkill.values()) {
 			// Skip Form ups
 			if (skill == PlayerSkill.FORM) {
 				continue;
@@ -57,7 +57,7 @@ public class PastTrainingManager {
 				if (skill == PlayerSkill.KEEPER || skill == PlayerSkill.DEFENDING
 						|| skill == PlayerSkill.WINGER || skill == PlayerSkill.PLAYMAKING
 						|| skill == PlayerSkill.SCORING || skill == PlayerSkill.PASSING
-						|| skill == PlayerSkill.SET_PIECES) {
+						|| skill == PlayerSkill.SETPIECES) {
 					trainSkillups.add(su);
 				}
 

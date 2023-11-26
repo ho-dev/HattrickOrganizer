@@ -13,11 +13,9 @@ import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.ModelChange;
-import module.training.ui.model.ModelChangeListener;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.ChangeTableRenderer;
 import module.training.ui.renderer.SkillupTypeTableCellRenderer;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -25,14 +23,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serial;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
@@ -42,8 +37,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.TableColumn;
 
 /**
@@ -54,6 +47,7 @@ import javax.swing.table.TableColumn;
  */
 public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
+	@Serial
 	private static final long serialVersionUID = -2152169077412317532L;
 	private static final String CMD_SELECT_ALL = "selectAll";
 	private static final String CMD_CLEAR_ALL = "clearAll";
@@ -61,9 +55,9 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	private JPanel filterPanel;
 	private JTable changesTable;
 	private JCheckBox oldPlayersCheckBox;
-	private Map<Integer, ButtonModel> buttonModels = new HashMap<Integer, ButtonModel>();
-	private Map<Integer, List<PlayerSkillChange>> skillups;
-	private Map<Integer, List<PlayerSkillChange>> skillupsOld;
+	private final Map<PlayerSkill, ButtonModel> buttonModels = new HashMap<>();
+	private Map<PlayerSkill, List<PlayerSkillChange>> skillups;
+	private Map<PlayerSkill, List<PlayerSkillChange>> skillupsOld;
 	private final TrainingModel model;
 
 	/**
@@ -108,49 +102,45 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * Sets the model for skill changes table.
 	 */
 	private void updateTableModel() {
-		List<PlayerSkillChange> values = new ArrayList<PlayerSkillChange>();
+		List<PlayerSkillChange> values = new ArrayList<>();
 
-		for (Iterator<Integer> iter = this.buttonModels.keySet().iterator(); iter.hasNext();) {
-			Integer skillType = iter.next();
-			ButtonModel bModel = this.buttonModels.get(skillType);
+        for (var skillType : this.buttonModels.keySet()) {
+            ButtonModel bModel = this.buttonModels.get(skillType);
 
-			if (this.skillups.containsKey(skillType) && bModel.isSelected()) {
-				values.addAll(this.skillups.get(skillType));
-			}
+            if (this.skillups.containsKey(skillType) && bModel.isSelected()) {
+                values.addAll(this.skillups.get(skillType));
+            }
 
-			if (this.oldPlayers.isSelected() && bModel.isSelected()
-					&& this.skillupsOld.containsKey(skillType)) {
-				values.addAll(this.skillupsOld.get(skillType));
-			}
-		}
+            if (this.oldPlayers.isSelected() && bModel.isSelected()
+                    && this.skillupsOld.containsKey(skillType)) {
+                values.addAll(this.skillupsOld.get(skillType));
+            }
+        }
 
-		Collections.sort(values, new Comparator<PlayerSkillChange>() {
-			@Override
-			public int compare(PlayerSkillChange sc1, PlayerSkillChange sc2) {
-				if (sc1.getSkillup().getHtSeason() > sc2.getSkillup().getHtSeason()) {
-					return -1;
-				} else if (sc1.getSkillup().getHtSeason() < sc2.getSkillup().getHtSeason()) {
-					return 1;
-				} else {
-					if (sc1.getSkillup().getHtWeek() > sc2.getSkillup().getHtWeek()) {
-						return -1;
-					} else if (sc1.getSkillup().getHtWeek() < sc2.getSkillup().getHtWeek()) {
-						return 1;
-					} else {
-						if ((sc1.getPlayer().equals(sc2.getPlayer()))
-								&& (sc1.getSkillup().getType() == sc2.getSkillup().getType())) {
-							if (sc1.getSkillup().getValue() > sc2.getSkillup().getValue()) {
-								return -1;
-							} else {
-								return 1;
-							}
-						} else {
-							return sc1.getPlayer().getFullName().compareTo(sc2.getPlayer().getFullName());
-						}
-					}
-				}
-			}
-		});
+		values.sort((sc1, sc2) -> {
+            if (sc1.getSkillup().getHtSeason() > sc2.getSkillup().getHtSeason()) {
+                return -1;
+            } else if (sc1.getSkillup().getHtSeason() < sc2.getSkillup().getHtSeason()) {
+                return 1;
+            } else {
+                if (sc1.getSkillup().getHtWeek() > sc2.getSkillup().getHtWeek()) {
+                    return -1;
+                } else if (sc1.getSkillup().getHtWeek() < sc2.getSkillup().getHtWeek()) {
+                    return 1;
+                } else {
+                    if ((sc1.getPlayer().equals(sc2.getPlayer()))
+                            && (sc1.getSkillup().getType() == sc2.getSkillup().getType())) {
+                        if (sc1.getSkillup().getValue() > sc2.getSkillup().getValue()) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    } else {
+                        return sc1.getPlayer().getFullName().compareTo(sc2.getPlayer().getFullName());
+                    }
+                }
+            }
+        });
 
 		changesTable.setModel(new ChangesTableModel(values));
 		changesTable.setDefaultRenderer(Object.class, new ChangeTableRenderer());
@@ -179,23 +169,13 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	}
 
 	private void addListeners() {	
-		this.model.addModelChangeListener(new ModelChangeListener() {
+		this.model.addModelChangeListener(change -> {
+            if (change == ModelChange.ACTIVE_PLAYER) {
+                selectPlayerFromModel();
+            }
+        });
 
-			@Override
-			public void modelChanged(ModelChange change) {
-				if (change == ModelChange.ACTIVE_PLAYER) {
-					selectPlayerFromModel();
-				}
-			}
-		});
-
-		this.oldPlayersCheckBox.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				updateFilterPanel();
-			}
-		});
+		this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
 
 		this.changesTable.getSelectionModel().addListSelectionListener(
 				new PlayerSelectionListener(this.model, this.changesTable,
@@ -203,10 +183,9 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	}
 
 	private void setAllSelected(boolean selected) {
-		for (Iterator<ButtonModel> iter = this.buttonModels.values().iterator(); iter.hasNext();) {
-			ButtonModel bModel = iter.next();
-			bModel.setSelected(selected);
-		}
+        for (ButtonModel bModel : this.buttonModels.values()) {
+            bModel.setSelected(selected);
+        }
 		this.oldPlayers.setSelected(selected);
 	}
 
@@ -219,22 +198,16 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	 * 
 	 * @return Map of skillups
 	 */
-	private Map<Integer, List<PlayerSkillChange>> getSkillups(List<Player> players) {
-		Map<Integer, List<PlayerSkillChange>> skillupsByType = new HashMap<Integer, List<PlayerSkillChange>>();
+	private Map<PlayerSkill, List<PlayerSkillChange>> getSkillups(List<Player> players) {
+		Map<PlayerSkill, List<PlayerSkillChange>> skillupsByType = new HashMap<>();
 
 		for (Player player : players) {
 			PastTrainingManager otm = new PastTrainingManager(player);
 			List<ISkillChange> skillups = otm.getAllSkillups();
 
 			for (ISkillChange skillup : skillups) {
-				Integer skillType = skillup.getType();
-				List<PlayerSkillChange> playerSkillChanges = skillupsByType.get(skillType);
-
-				if (playerSkillChanges == null) {
-					playerSkillChanges = new ArrayList<>();
-					skillupsByType.put(skillType, playerSkillChanges);
-				}
-
+				var skillType = skillup.getType();
+                List<PlayerSkillChange> playerSkillChanges = skillupsByType.computeIfAbsent(skillType, k -> new ArrayList<>());
 				playerSkillChanges.add(new PlayerSkillChange(player, skillup));
 			}
 		}
@@ -245,13 +218,12 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	/**
 	 * Creates a panel with a skill increases number and a checkbox.
 	 * 
-	 * @param skill
+	 * @param skillType
 	 *            skill type
 	 * 
 	 * @return a panel
 	 */
-	private JPanel createSkillSelector(int skill) {
-		Integer skillType = skill;
+	private JPanel createSkillSelector(PlayerSkill skillType) {
 
 		int change = 0;
 
@@ -271,14 +243,10 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 			cBox.setModel(this.buttonModels.get(skillType));
 		} else {
 			this.buttonModels.put(skillType, cBox.getModel());
-			if (change > 0) {
-				cBox.setSelected(true);
-			} else {
-				cBox.setSelected(false);
-			}
+            cBox.setSelected(change > 0);
 		}
 
-		cBox.setText(PlayerSkill.toString(skill));
+		cBox.setText(skillType.toString());
 		cBox.addActionListener(this);
 
 		JPanel panel = new ImagePanel(new FlowLayout(FlowLayout.LEFT));
@@ -378,7 +346,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		gbc.gridy++;
 		filterPanel.add(createSkillSelector(PlayerSkill.SCORING), gbc);
 		gbc.gridy++;
-		filterPanel.add(createSkillSelector(PlayerSkill.SET_PIECES), gbc);
+		filterPanel.add(createSkillSelector(PlayerSkill.SETPIECES), gbc);
 		gbc.gridy++;
 		filterPanel.add(createSkillSelector(PlayerSkill.STAMINA), gbc);
 		gbc.gridy++;

@@ -3,6 +3,7 @@ package core.db;
 import core.HO;
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
+import core.constants.player.PlayerSkill;
 import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
@@ -276,7 +277,7 @@ public class DBManager {
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(adapter));
 		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(adapter));
 		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(adapter));
-		tables.put(SpielerSkillupTable.TABLENAME, new SpielerSkillupTable(adapter));
+		tables.put(SkillupTable.TABLENAME, new SkillupTable(adapter));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(adapter));
 		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(adapter));
 		tables.put(TransferTable.TABLENAME, new TransferTable(adapter));
@@ -375,8 +376,8 @@ public class DBManager {
 	 * @param spielerId player ID
 	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
 	 */
-	public Skillup getLastLevelUp(int skill, int spielerId) {
-		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
+	public Skillup getLastLevelUp(PlayerSkill skill, int spielerId) {
+		return ((SkillupTable) getTable(SkillupTable.TABLENAME))
 				.getLastLevelUp(skill, spielerId);
 	}
 
@@ -388,8 +389,8 @@ public class DBManager {
 	 * @param m_iSpielerID the m i spieler id
 	 * @return the all level up
 	 */
-	public List<Skillup> getAllLevelUp(int skill, int m_iSpielerID) {
-		return ((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
+	public List<Skillup> getAllLevelUp(PlayerSkill skill, int m_iSpielerID) {
+		return ((SkillupTable) getTable(SkillupTable.TABLENAME))
 				.getAllLevelUp(skill, m_iSpielerID);
 	}
 
@@ -399,12 +400,12 @@ public class DBManager {
 	 * @param homodel the homodel
 	 */
 	public void checkSkillup(HOModel homodel) {
-		((SpielerSkillupTable) getTable(SpielerSkillupTable.TABLENAME))
+		((SkillupTable) getTable(SkillupTable.TABLENAME))
 				.importNewSkillup(homodel);
 	}
 
 	public void storeSkillup(Skillup skillup){
-		getTable(SpielerSkillupTable.TABLENAME)
+		getTable(SkillupTable.TABLENAME)
 				.store(skillup);
 	}
 
@@ -1852,7 +1853,7 @@ public class DBManager {
 		getTable(EconomyTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(BasicsTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(SpielerTable.TABLENAME).executePreparedDelete(hrfid);
-		getTable(SpielerSkillupTable.TABLENAME).executePreparedDelete(hrfid);
+		getTable(SkillupTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(XtraDataTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(StaffTable.TABLENAME).executePreparedDelete(hrfid);
 	}

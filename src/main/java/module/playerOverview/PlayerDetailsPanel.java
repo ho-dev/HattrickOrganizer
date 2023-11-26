@@ -268,8 +268,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     !m_clComparisonPlayer.isGoner(), true);
             m_jclSPchange.setGraphicalChangeValue(m_clPlayer.getSetPiecesSkill()
                             - m_clComparisonPlayer.getSetPiecesSkill(),
-                    m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
-                            - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
+                    m_clPlayer.getSub4Skill(PlayerSkill.SETPIECES)
+                            - m_clComparisonPlayer.getSub4Skill(PlayerSkill.SETPIECES),
                     !m_clComparisonPlayer.isGoner(), true);
 
             m_jclSCchange.setGraphicalChangeValue(m_clPlayer.getScoringSkill()
@@ -342,7 +342,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         formatBar(jpbWI, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.WINGER), 2));
         formatBar(jpbPS, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.PASSING), 2));
         formatBar(jpbSC, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.SCORING), 2));
-        formatBar(jpbSP, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.SET_PIECES), 2));
+        formatBar(jpbSP, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.SETPIECES), 2));
 
         // Refresh Match History Panel
         jpMatchHistory.reset();

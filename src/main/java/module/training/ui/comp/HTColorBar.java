@@ -13,16 +13,16 @@ import java.awt.*;
  */
 public final class HTColorBar extends JComponent {
 
-    private int length;
-    private Color backgroundColor;
+    private final int length;
+    private final Color backgroundColor;
     private Color firstColor;
     private Color secondColor;
     private Color thirdColor;
-    private int thickness;
+    private final int thickness;
     private int end;
     private float secondValue;
     private float thirdValue;
-    private int skillIndex;
+    private final PlayerSkill skillIndex;
 
     Color COLOR_BACKGROUND = ThemeManager.getColor(HOColorName.PANEL_BG);
     Color COLOR_SKILL_GOOD = new Color(89, 150, 93); //Form, Stamina >6
@@ -36,7 +36,7 @@ public final class HTColorBar extends JComponent {
     /**
      * ColorBar: initialize a color bar
      */
-    public HTColorBar(int skillIndex, float value, int len, int thickness) {
+    public HTColorBar(PlayerSkill skillIndex, float value, int len, int thickness) {
         this.length = len;
         this.end = (int) (len * value);
         this.thickness = thickness;
@@ -56,16 +56,16 @@ public final class HTColorBar extends JComponent {
         this.firstColor = COLOR_SKILL_GOOD;
 
         switch (skillIndex) {
-            case PlayerSkill.KEEPER:
-            case PlayerSkill.PLAYMAKING:
-            case PlayerSkill.PASSING:
-            case PlayerSkill.WINGER:
-            case PlayerSkill.DEFENDING:
-            case PlayerSkill.SCORING:
-            case PlayerSkill.SET_PIECES:
+            case KEEPER:
+            case PLAYMAKING:
+            case PASSING:
+            case WINGER:
+            case DEFENDING:
+            case SCORING:
+            case SETPIECES:
                 break;
-            case PlayerSkill.STAMINA:
-            case PlayerSkill.FORM:
+            case STAMINA:
+            case FORM:
                 if (skillValue > 4 && skillValue <= 6) {
                     firstColor = COLOR_SKILL_MEDIUM;
                 } else if (skillValue > 2 && skillValue <= 4) {

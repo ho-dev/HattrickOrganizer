@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 public class PlayerSkillColumn extends PlayerColumn {
 	
 	/** id for the skill **/
-	private final int skill;
+	private final PlayerSkill skill;
 	
 	/** different color for some skills **/
 	private final Color background;
@@ -35,7 +35,7 @@ public class PlayerSkillColumn extends PlayerColumn {
 	 * @param tooltip
 	 * @param skill
 	 */
-	protected PlayerSkillColumn(int id,String name, String tooltip,int skill){
+	protected PlayerSkillColumn(int id,String name, String tooltip,PlayerSkill skill){
 		super(id,name,tooltip);
 		this.skill = skill;
 		background = (skill == PlayerSkill.EXPERIENCE
@@ -98,19 +98,18 @@ public class PlayerSkillColumn extends PlayerColumn {
 	 */
 	private int getSkill(Player player){
         return switch (skill) {
-            case PlayerSkill.KEEPER -> player.getGoalkeeperSkill();
-            case PlayerSkill.DEFENDING -> player.getDefendingSkill();
-            case PlayerSkill.PASSING -> player.getPassingSkill();
-            case PlayerSkill.WINGER -> player.getWingerSkill();
-            case PlayerSkill.PLAYMAKING -> player.getPlaymakingSkill();
-            case PlayerSkill.SET_PIECES -> player.getSetPiecesSkill();
-            case PlayerSkill.SCORING -> player.getScoringSkill();
-            case PlayerSkill.EXPERIENCE -> player.getExperience();
-            case PlayerSkill.FORM -> player.getForm();
-            case PlayerSkill.STAMINA -> player.getStamina();
-            case PlayerSkill.LEADERSHIP -> player.getLeadership();
-            case PlayerSkill.LOYALTY -> player.getLoyalty();
-            default -> 0;
+            case KEEPER -> player.getGoalkeeperSkill();
+            case DEFENDING -> player.getDefendingSkill();
+            case PASSING -> player.getPassingSkill();
+            case WINGER -> player.getWingerSkill();
+            case PLAYMAKING -> player.getPlaymakingSkill();
+            case SETPIECES -> player.getSetPiecesSkill();
+            case SCORING -> player.getScoringSkill();
+            case EXPERIENCE -> player.getExperience();
+            case FORM -> player.getForm();
+            case STAMINA -> player.getStamina();
+            case LEADERSHIP -> player.getLeadership();
+            case LOYALTY -> player.getLoyalty();
         };
     }
 	

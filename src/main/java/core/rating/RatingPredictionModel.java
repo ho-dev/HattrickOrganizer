@@ -538,7 +538,7 @@ public class RatingPredictionModel {
      * the contribution factor
      */
     protected static Map<RatingContributionParameterSet,
-            Map<Integer,
+            Map<PlayerSkill,
                     Map<MatchRoleID.Sector,
                             Map<SideRestriction,
                                     Map<Byte,
@@ -706,7 +706,7 @@ public class RatingPredictionModel {
      * @param specialty NoSpecialty, Technical, Quick, Powerful, Unpredictable, Head, Regainer, Support
      * @param v Double
      */
-    protected static void initRatingContributionParameter(RatingContributionParameterSet ratingContributionParameter, int skill, MatchRoleID.Sector sector, SideRestriction sideRestriction, byte behaviour, Specialty specialty, double v) {
+    protected static void initRatingContributionParameter(RatingContributionParameterSet ratingContributionParameter, PlayerSkill skill, MatchRoleID.Sector sector, SideRestriction sideRestriction, byte behaviour, Specialty specialty, double v) {
         var sr = initSideRestriction(ratingContributionParameter, skill, sector, sideRestriction);
         var specialties = sr.computeIfAbsent(behaviour, k -> new HashMap<>());
         specialties.put(specialty, v);
@@ -727,7 +727,7 @@ public class RatingPredictionModel {
         return ratingContributionParameterMap.get(ratingContributionParameter).get(skill).get(sector).get(sideRestriction).get(behaviour).get(specialty);
     }
 
-    private static void initAllSpecialties(RatingContributionParameterSet ratingContributionParameter, int skill, MatchRoleID.Sector sector, SideRestriction sideRestriction, byte behaviour, double v) {
+    private static void initAllSpecialties(RatingContributionParameterSet ratingContributionParameter, PlayerSkill skill, MatchRoleID.Sector sector, SideRestriction sideRestriction, byte behaviour, double v) {
         Map<Specialty, Double> specialtyMap = new HashMap<>();
         for (var specialty : Specialty.values()) {
             specialtyMap.put(specialty, v);
@@ -736,7 +736,7 @@ public class RatingPredictionModel {
         sr.put(behaviour, specialtyMap);
     }
 
-    private static Map<Byte, Map<Specialty, Double>> initSideRestriction(RatingContributionParameterSet ratingContributionParameter, int skill, MatchRoleID.Sector sector, SideRestriction sideRestriction) {
+    private static Map<Byte, Map<Specialty, Double>> initSideRestriction(RatingContributionParameterSet ratingContributionParameter, PlayerSkill skill, MatchRoleID.Sector sector, SideRestriction sideRestriction) {
         var p = ratingContributionParameterMap.computeIfAbsent(ratingContributionParameter, k -> new HashMap<>());
         var s = p.computeIfAbsent(skill, k -> new HashMap<>());
         var se = s.computeIfAbsent(sector, k -> new HashMap<>());
@@ -1124,9 +1124,9 @@ public class RatingPredictionModel {
      * Cache of player's tactic strength
      * Player->Skill->strength (Double)
      */
-    RatingCalculationCache2<Player, Integer> playerTacticStrengthCache = new RatingCalculationCache2<>() {
+    RatingCalculationCache2<Player, PlayerSkill> playerTacticStrengthCache = new RatingCalculationCache2<>() {
         @Override
-        public double calc(Player player, Integer skill) {
+        public double calc(Player player, PlayerSkill skill) {
             return calcPlayerTacticStrength(player, skill);
         }
 
@@ -1149,7 +1149,7 @@ public class RatingPredictionModel {
      * @param skill Skill
      * @return Double
      */
-    protected double calcPlayerTacticStrength(Player player, Integer skill) {
+    protected double calcPlayerTacticStrength(Player player, PlayerSkill skill) {
         var ret = calcStrength(player, skill);
         var xp = calcSkillRating(player.getSkillValue(EXPERIENCE));
         var f = Math.log10(xp) * 4. / 3.;
@@ -1218,7 +1218,7 @@ public class RatingPredictionModel {
      */
     protected Double calcPlayerPenaltyStrength(@NotNull Player player) {
         var ret = calcSkillRating(player.getSkill(EXPERIENCE)) * 1.5;
-        ret += calcStrength(player, SET_PIECES) * 0.7;
+        ret += calcStrength(player, SETPIECES) * 0.7;
         ret += calcStrength(player, SCORING) * 0.3;
 
         if (player.getSpecialty() == PlayerSpeciality.TECHNICAL) {
@@ -1289,20 +1289,11 @@ public class RatingPredictionModel {
      * @param playerSkill, Skill
      * @return Double
      */
-    protected double calcStrength(@NotNull Player player, Integer playerSkill) {
+    protected double calcStrength(@NotNull Player player, PlayerSkill playerSkill) {
         var skillRating = calcSkillRating(player.getSkill(playerSkill));
         var loyalty = calcLoyalty(player);
         var form = calcForm(player);
-        var ret = (skillRating + loyalty) * form;
-//        HOLogger.instance().debug(getClass(), "calcStrength " + player.getFullName()
-//                + " " + PlayerSkill.toString(playerSkill)
-//                + "=" + skillRating
-//                + " Loyalty=" + loyalty
-//                + " form=" + player.getForm()
-//                + " K(F)= " + form
-//                + " (S+L)*K(F)= " + ret
-//        );
-        return ret;
+        return (skillRating + loyalty) * form;
     }
 
     /**
@@ -1381,7 +1372,7 @@ public class RatingPredictionModel {
      * @return Double
      */
     public double getPlayerSetPiecesStrength(Player p) {
-        return getPlayerTacticStrength(new MatchLineupPosition(setPieces, NORMAL, p), SET_PIECES, null, TAKTIK_NORMAL, 0);
+        return getPlayerTacticStrength(new MatchLineupPosition(setPieces, NORMAL, p), SETPIECES, null, TAKTIK_NORMAL, 0);
     }
 
     /**
@@ -1393,7 +1384,7 @@ public class RatingPredictionModel {
      * @param minute, match minute
      * @return Double
      */
-    public double getPlayerTacticStrength(@NotNull MatchLineupPosition p, int playerSkill, Weather weather, int tacticType, int minute) {
+    public double getPlayerTacticStrength(@NotNull MatchLineupPosition p, PlayerSkill playerSkill, Weather weather, int tacticType, int minute) {
         var player = p.getPlayer();
         if (player != null) {
             var ret = playerTacticStrengthCache.get(player, playerSkill);
@@ -1709,7 +1700,7 @@ public class RatingPredictionModel {
             if (player != null) {
                 n++;
                 sumScoring += calcSkillRating(player.getSkill(SCORING));
-                sumSetPieces += calcSkillRating(player.getSkill(SET_PIECES));
+                sumSetPieces += calcSkillRating(player.getSkill(SETPIECES));
             }
         }
 
