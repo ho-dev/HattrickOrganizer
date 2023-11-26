@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
 /**
  * The type Db manager.
  */
-public class DBManager {
+public class DBManager implements PersistenceManager {
 
 	/** database versions */
 	private static final int DBVersion = 800; // HO 8.0 version
@@ -413,10 +413,11 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * gibt alle Player zurück, auch ehemalige
+	 * Returns all the players, including the former ones.
 	 *
-	 * @return the all spieler
+	 * @return List
 	 */
+	@Override
 	public List<Player> loadAllPlayers() {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.loadAllPlayers();
@@ -434,14 +435,15 @@ public class DBManager {
 	}
 
 	/**
-	 * lädt die Player zum angegeben HRF file ein
+	 * Returns the players present in the HRF with id <code>hrfId</code>
 	 *
-	 * @param hrfID the hrf id
-	 * @return the spieler
+	 * @param hrfId ID of HRF to consider.
+	 * @return List<Player> – Players present in HRF.  Empty list if none found.
 	 */
-	public List<Player> getSpieler(int hrfID) {
+	@Override
+	public List<Player> getSpieler(int hrfId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayersBefore(hrfID);
+				.loadPlayersBefore(hrfId);
 	}
 
 	public Player getLatestPlayerDownloadBefore(int playerId, Timestamp before) {
@@ -588,13 +590,14 @@ public class DBManager {
 	}
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * Returns the {@link Liga} details, as defined by HRF ID <code>hrfId</code>.
 	 *
-	 * @param hrfID the hrf id
-	 * @return the liga
+	 * @param hrfId ID of reference HRF.
+	 * @return Liga – Liga details if found.  Returns <code>null</code> if not found.
 	 */
-	public Liga getLiga(int hrfID) {
-		return ((LigaTable) getTable(LigaTable.TABLENAME)).getLiga(hrfID);
+	@Override
+	public Liga getLiga(int hrfId) {
+		return ((LigaTable) getTable(LigaTable.TABLENAME)).getLiga(hrfId);
 	}
 
 	/**
@@ -638,6 +641,7 @@ public class DBManager {
 		return ret;
 	}
 
+	@Override
 	public Spielplan getLatestSpielplan() {
 		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getLatestSpielplan();
 		if ( ret != null ){
@@ -762,13 +766,14 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * Returns {@link Basics} details, as defined by HRF ID <code>hrfId</code>.
 	 *
-	 * @param hrfID the hrf id
-	 * @return the basics
+	 * @param hrfId ID of reference HRF
+	 * @return Basics – Basics details if found.  Returns an empty {@link Basics} object if not found.
 	 */
-	public Basics getBasics(int hrfID) {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).loadBasics(hrfID);
+	@Override
+	public Basics getBasics(int hrfId) {
+		return ((BasicsTable) getTable(BasicsTable.TABLENAME)).loadBasics(hrfId);
 	}
 
 	/**
@@ -839,13 +844,14 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * fetch the Economy table from the DB for the specified HRF ID
+	 * Fetches the Economy table from the DB for the specified HRF ID
 	 *
-	 * @param hrfID the hrf id
+	 * @param hrfId the hrf id
 	 * @return the economy
 	 */
-	public Economy getEconomy(int hrfID) {
-		return ((EconomyTable) getTable(EconomyTable.TABLENAME)).getEconomy(hrfID);
+	@Override
+	public Economy getEconomy(int hrfId) {
+		return ((EconomyTable) getTable(EconomyTable.TABLENAME)).getEconomy(hrfId);
 	}
 
 	/**
@@ -877,6 +883,7 @@ public class DBManager {
 	 * this does not have to be the latest downloaded, if the user imported hrf files in any order from files
 	 * @return HRF object
 	 */
+	@Override
 	public HRF getMaxIdHrf() {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getMaxHrf();
 	}
@@ -889,6 +896,7 @@ public class DBManager {
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).getLatestHrf();
 	}
 
+	@Override
 	public HRF loadHRF(int id){
 		return ((HRFTable) getTable(HRFTable.TABLENAME)).loadHRF(id);
 	}
@@ -1225,12 +1233,11 @@ public class DBManager {
 	/**
 	 * lädt die Finanzen zum angegeben HRF file ein
 	 *
-	 * @param hrfID the hrf id
+	 * @param hrfId the hrf id
 	 * @return the stadion
 	 */
-	public Stadium getStadion(int hrfID) {
-		return ((StadionTable) getTable(StadionTable.TABLENAME))
-				.getStadion(hrfID);
+	public Stadium getStadion(int hrfId) {
+		return ((StadionTable) getTable(StadionTable.TABLENAME)).getStadion(hrfId);
 	}
 
 	/**
@@ -1249,11 +1256,12 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * Fetch a list of staff store din a hrf
+	 * Fetch a list of staff stored in a hrf
 	 *
 	 * @param hrfId the hrf id
 	 * @return A list of StaffMembers belonging to the given hrf
 	 */
+	@Override
 	public List<StaffMember> getStaffByHrfId(int hrfId) {
 		return ((StaffTable) getTable(StaffTable.TABLENAME)).getStaffByHrfId(hrfId);
 	}
@@ -1286,38 +1294,14 @@ public class DBManager {
 				.getMatchSubstitutionsByMatchTeam(matchType.getId(), teamId, matchId);
 	}
 
-//	/**
-//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-//	 * Stimmung [1] = Selbstvertrauen
-//	 *
-//	 * @param hrfid the hrfid
-//	 * @return the string [ ]
-//	 */
-//	public String[] getStimmmungSelbstvertrauen(int hrfid) {
-//		return ((TeamTable) getTable(TeamTable.TABLENAME))
-//				.getStimmmungSelbstvertrauen(hrfid);
-//	}
-//
-//	/**
-//	 * Gibt die Teamstimmung und das Selbstvertrauen für ein HRFID zurück [0] =
-//	 * Stimmung [1] = Selbstvertrauen
-//	 *
-//	 * @param hrfid the hrfid
-//	 * @return the int [ ]
-//	 */
-//	public int[] getStimmmungSelbstvertrauenValues(int hrfid) {
-//		return ((TeamTable) getTable(TeamTable.TABLENAME))
-//				.getStimmmungSelbstvertrauenValues(hrfid);
-//	}
-
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
-	 *
-	 * @param hrfID the hrf id
-	 * @return the team
+	 * Returns the team details, as defined by HRF ID <code>hrfId</code>.
+	 * @param hrfId ID of reference HRF.
+	 * @return Team – Team details if found.  Returns an empty {@link Team} object if not found.
 	 */
-	public Team getTeam(int hrfID) {
-		return ((TeamTable) getTable(TeamTable.TABLENAME)).getTeam(hrfID);
+	@Override
+	public Team getTeam(int hrfId) {
+		return ((TeamTable) getTable(TeamTable.TABLENAME)).getTeam(hrfId);
 	}
 
 	/**
@@ -1379,13 +1363,14 @@ public class DBManager {
 	}
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * Returns the club details, as defined by HRF ID <code>hrfId</code>.
 	 *
-	 * @param hrfID the hrf id
-	 * @return the verein
+	 * @param hrfId ID of reference HRF.
+	 * @return Verein – Club details if found.  Returns an empty {@link Verein} object if not found.
 	 */
-	public Verein getVerein(int hrfID) {
-		return ((VereinTable) getTable(VereinTable.TABLENAME)).loadVerein(hrfID);
+	@Override
+	public Verein getVerein(int hrfId) {
+		return ((VereinTable) getTable(VereinTable.TABLENAME)).loadVerein(hrfId);
 	}
 
 	/**
@@ -1415,14 +1400,14 @@ public class DBManager {
 	// -------------------------------------------------
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * Returns the {@link XtraData} details, as defined by HRF ID <code>hrfId</code>.
 	 *
-	 * @param hrfID the hrf id
-	 * @return the xtra daten
+	 * @param hrfId ID of reference HRF.
+	 * @return XtraData – XtraData details if found.  Returns <code>null</code> if not found.
 	 */
-	public XtraData getXtraDaten(int hrfID) {
-		return ((XtraDataTable) getTable(XtraDataTable.TABLENAME))
-				.loadXtraData(hrfID);
+	@Override
+	public XtraData getXtraDaten(int hrfId) {
+		return ((XtraDataTable) getTable(XtraDataTable.TABLENAME)).loadXtraData(hrfId);
 	}
 
 	/**
@@ -2372,8 +2357,15 @@ public class DBManager {
 		return ret;
 	}
 
-	public MatchLineupTeam loadPreviousMatchLineup(int teamID) { return loadLineup(getLastMatchesKurzInfo(teamID), teamID);}
-	public MatchLineupTeam loadNextMatchLineup(int teamID) { return loadLineup(getNextMatchesKurzInfo(teamID), teamID);}
+	@Override
+	public MatchLineupTeam loadPreviousMatchLineup(int teamId) {
+		return loadLineup(getLastMatchesKurzInfo(teamId), teamId);
+	}
+
+	@Override
+	public MatchLineupTeam loadNextMatchLineup(int teamId) {
+		return loadLineup(getNextMatchesKurzInfo(teamId), teamId);
+	}
 
 	private MatchLineupTeam loadLineup(MatchKurzInfo match, int teamID) {
 		if (match != null) {

@@ -43,10 +43,6 @@ public class HOVerwaltung {
 		return id;
 	}
 
-	public int getPreviousID() {
-		return m_clHoModel.getPreviousID();
-	}
-
 	private int id = -1;
 
 	private final PropertyChangeSupport support;
@@ -84,6 +80,9 @@ public class HOVerwaltung {
 	public static HOVerwaltung instance() {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
+
+			// TODO This seems to have side effects other than loading
+			//   parameters from DB, this probably should be wrapped properly.
 			DBManager.instance().getFaktorenFromDB();
 		}
 		return m_clInstance;
@@ -210,7 +209,9 @@ public class HOVerwaltung {
 	public String getLanguageString(String key) {
 		String temp = null;
 		try {
-			temp = languageBundle.getString(key);
+			if (languageBundle != null) {
+				temp = languageBundle.getString(key);
+			}
 		} catch (Exception e) {
 			// Do nothing, it just throws error if key is missing. 
 		}
@@ -218,8 +219,7 @@ public class HOVerwaltung {
 			return temp;
 		// Search in english.properties if nothing found and active language not
 		// english
-		if (!core.model.UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
-
+		if (!UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
 			ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
 
 			try {
@@ -297,5 +297,9 @@ public class HOVerwaltung {
 			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
 			UserParameter.instance().sprachDatei = "English";
 		}
+	}
+
+	public void setLanguageBundle(ResourceBundle bundle) {
+		this.languageBundle = bundle;
 	}
 }
