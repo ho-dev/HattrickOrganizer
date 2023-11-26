@@ -53,16 +53,16 @@ public class PlayerSkillColumn extends PlayerColumn {
 	}
 	
 	public  IHOTableEntry getSkillValue(Player player){
+		var value = player.getValue4Skill(skill);
 		if( skill == PlayerSkill.FORM
 				|| skill == PlayerSkill.STAMINA
 				|| skill == PlayerSkill.LEADERSHIP
 				|| skill == PlayerSkill.LOYALTY){
-		return new ColorLabelEntry(getSkill(player),
+		return new ColorLabelEntry(value,
                 background,
                 false, 0);
 		}
-		return new SkillEntry(getSkill(player)
-                + player.getSub4Skill(skill),
+		return new SkillEntry(value + player.getSub4Skill(skill),
               ColorLabelEntry.FG_STANDARD,
               background);
 	}
@@ -80,39 +80,16 @@ public class PlayerSkillColumn extends PlayerColumn {
 	                   SwingConstants.RIGHT);
 		}
 		
-		return new ColorLabelEntry(getSkill(player)
-                - getSkill(comparePlayer),
+		return new ColorLabelEntry(player.getValue4Skill(skill)
+                - comparePlayer.getValue4Skill(skill),
                   player.getSub4Skill(skill)
-                - comparePlayer
-                  .getSub4Skill(skill),
+                - comparePlayer.getSub4Skill(skill),
                 !comparePlayer.isGoner(),
                 background,
                 true);
 		
 	}
-	
-	/**
-	 * returns right value for the skill
-	 * @param player
-	 * @return
-	 */
-	private int getSkill(Player player){
-        return switch (skill) {
-            case KEEPER -> player.getGoalkeeperSkill();
-            case DEFENDING -> player.getDefendingSkill();
-            case PASSING -> player.getPassingSkill();
-            case WINGER -> player.getWingerSkill();
-            case PLAYMAKING -> player.getPlaymakingSkill();
-            case SETPIECES -> player.getSetPiecesSkill();
-            case SCORING -> player.getScoringSkill();
-            case EXPERIENCE -> player.getExperience();
-            case FORM -> player.getForm();
-            case STAMINA -> player.getStamina();
-            case LEADERSHIP -> player.getLeadership();
-            case LOYALTY -> player.getLoyalty();
-        };
-    }
-	
+
 	/**
 	 * overwrite the method from UserColumn
 	 */
