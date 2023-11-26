@@ -43,7 +43,7 @@ public enum  PlayerSkill {
 		return id;
 	}
 
-	public String toString() {
+	public String getLanguageString() {
 		var b = new StringBuilder("ls.player.");
 		switch (this) {
 			case KEEPER, DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING, STAMINA, SETPIECES -> b.append("skill.");

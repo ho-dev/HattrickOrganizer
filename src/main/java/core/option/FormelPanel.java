@@ -224,36 +224,36 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         panel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BORDER)));
 
         short FAKTOR = 1770;
-        m_jpSpielaufbau = new SliderPanel(PlayerSkill.PLAYMAKING.toString(),100, 0, FAKTOR, 1.0f, 80);
+        m_jpSpielaufbau = new SliderPanel(PlayerSkill.PLAYMAKING.getLanguageString(),100, 0, FAKTOR, 1.0f, 80);
         m_jpSpielaufbau.addChangeListener(this);
         panel.add(m_jpSpielaufbau);
 
-        m_jpFluegelspiel = new SliderPanel(PlayerSkill.WINGER.toString(),
+        m_jpFluegelspiel = new SliderPanel(PlayerSkill.WINGER.getLanguageString(),
                                            100, 0, FAKTOR, 1.0f, 80);
         m_jpFluegelspiel.addChangeListener(this);
         panel.add(m_jpFluegelspiel);
 
-        m_jpTorschuss = new SliderPanel(PlayerSkill.SCORING.toString(),
+        m_jpTorschuss = new SliderPanel(PlayerSkill.SCORING.getLanguageString(),
                                         100, 0, FAKTOR, 1.0f, 80);
         m_jpTorschuss.addChangeListener(this);
         panel.add(m_jpTorschuss);
 
-        m_jpTorwart = new SliderPanel(PlayerSkill.KEEPER.toString(),
+        m_jpTorwart = new SliderPanel(PlayerSkill.KEEPER.getLanguageString(),
                                       100, 0, FAKTOR, 1.0f, 80);
         m_jpTorwart.addChangeListener(this);
         panel.add(m_jpTorwart);
 
-        m_jpPasspiel = new SliderPanel(PlayerSkill.PASSING.toString(),
+        m_jpPasspiel = new SliderPanel(PlayerSkill.PASSING.getLanguageString(),
                                        100, 0, FAKTOR, 1.0f, 80);
         m_jpPasspiel.addChangeListener(this);
         panel.add(m_jpPasspiel);
 
-        m_jpVerteidigung = new SliderPanel(PlayerSkill.DEFENDING.toString(),
+        m_jpVerteidigung = new SliderPanel(PlayerSkill.DEFENDING.getLanguageString(),
                                            100, 0, FAKTOR, 1.0f, 80);
         m_jpVerteidigung.addChangeListener(this);
         panel.add(m_jpVerteidigung);
 
-        m_jpStandard = new SliderPanel(PlayerSkill.SETPIECES.toString(),
+        m_jpStandard = new SliderPanel(PlayerSkill.SETPIECES.getLanguageString(),
                                        100, 0, FAKTOR, 1.0f, 80);
         m_jpStandard.addChangeListener(this);
         panel.add(m_jpStandard);

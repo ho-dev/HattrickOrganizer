@@ -369,7 +369,7 @@ public class XMLPlayersParser {
 
     private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, PlayerSkill skillId) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-        var attr = skillId.toString() + "Skill";
+        var attr = skillId.getLanguageString() + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
         xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");

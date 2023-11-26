@@ -583,7 +583,7 @@ public class HRFStringBuilder {
     }
 
     private void appendHRFSkillLines(StringBuilder buffer, SafeInsertMap player, PlayerSkill skillId) {
-        var skill = skillId.toString() + "Skill";
+        var skill = skillId.getLanguageString() + "Skill";
         appendHRFLine(buffer, player, skill);
         appendHRFLine(buffer, player, skill+"IsAvailable");
         appendHRFLine(buffer, player, skill+"IsMaxReached");

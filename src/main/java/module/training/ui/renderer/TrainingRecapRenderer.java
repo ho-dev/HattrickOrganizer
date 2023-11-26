@@ -88,7 +88,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
         		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, change);
         		double val = Double.parseDouble(skills[1]);
         		String skillLevelName = PlayerAbility.getNameForSkill(val, true);
-        		tooltip = skillType.toString()+": " + skillLevelName;
+        		tooltip = skillType.getLanguageString()+": " + skillLevelName;
         		text = skillLevelName;
         	}
 

@@ -33,7 +33,7 @@ public class SkillupTypeTableCellRenderer extends ChangeTableRenderer {
 
         try {
             var skill = PlayerSkill.fromInteger((Integer) value);
-            setText(skill.toString());
+            setText(skill.getLanguageString());
             setIcon(TrainingLegendPanel.getSkillupTypeIcon(skill, 1));
             setForeground(Skills.getSkillColor(skill));
         } catch (NumberFormatException ignored) {

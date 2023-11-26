@@ -40,7 +40,7 @@ public class TrainingLegendPanel extends ImagePanel {
         for (int i = 0; i < 4; i++) {
             PlayerSkill skill = Skills.getSkillAtPosition(i);
             if ( skill != null) {
-                this.add(getSkillupLabel(skill.toString(), skill));
+                this.add(getSkillupLabel(skill.getLanguageString(), skill));
             }
         }
 
@@ -48,7 +48,7 @@ public class TrainingLegendPanel extends ImagePanel {
 
         for (int i = 4; i < 8; i++) {
             PlayerSkill skill = Skills.getSkillAtPosition(i);
-            this.add(getSkillupLabel(skill.toString(), skill));
+            this.add(getSkillupLabel(skill.getLanguageString(), skill));
         }
 
         this.setBorder(BorderFactory.createEtchedBorder(0));

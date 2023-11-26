@@ -34,7 +34,7 @@ public class ChangeTableRenderer extends DefaultTableCellRenderer {
             try {
                 var skillID = (Integer)table.getValueAt(row, 3);
                 var skill = PlayerSkill.fromInteger(skillID);
-                setText(skill.toString());
+                setText(skill.getLanguageString());
                 setIcon(TrainingLegendPanel.getSkillupTypeIcon(skill, 1));
             } catch (NumberFormatException ignored) {
             }

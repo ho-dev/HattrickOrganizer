@@ -33,7 +33,7 @@ public class SkillupTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		ISkillChange skillup = this.data.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> skillup.getType().toString() + ": "
+            case 0 -> skillup.getType().getLanguageString() + ": "
                     + PlayerAbility.getNameForSkill(skillup.getValue(), true);
             case 1 -> skillup.getHtWeek();
             case 2 -> skillup.getHtSeason();

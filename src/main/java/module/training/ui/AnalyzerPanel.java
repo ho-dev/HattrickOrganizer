@@ -246,7 +246,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
             cBox.setSelected(change > 0);
 		}
 
-		cBox.setText(skillType.toString());
+		cBox.setText(skillType.getLanguageString());
 		cBox.addActionListener(this);
 
 		JPanel panel = new ImagePanel(new FlowLayout(FlowLayout.LEFT));

@@ -183,7 +183,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
             var skillIndex = Skills.getSkillAtPosition(i);
             gbc.gridx = 0;
-            bottom.add(new JLabel(skillIndex.toString()), gbc);
+            bottom.add(new JLabel(skillIndex.getLanguageString()), gbc);
 
             skillLabel[i] = new JLabel("");
             skillLabel[i].setOpaque(false);
