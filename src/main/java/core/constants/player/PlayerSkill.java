@@ -3,31 +3,68 @@ package core.constants.player;
 import core.model.HOVerwaltung;
 
 
-public final class PlayerSkill {
+public enum  PlayerSkill {
 
-	private static final String[] languageKeys = {
-		"ls.player.skill.keeper", "ls.player.skill.defending","ls.player.skill.winger","ls.player.skill.playmaking","ls.player.skill.scoring","ls.player.skill.passing","ls.player.skill.stamina","ls.player.form","ls.player.skill.setpieces","ls.player.experience","ls.player.leadership","ls.player.loyalty"
-	};
+//	private static final String[] languageKeys = {
+//			"ls.player.skill.keeper",
+//			"ls.player.skill.defending",
+//			"ls.player.skill.winger",
+//			"ls.player.skill.playmaking",
+//			"ls.player.skill.scoring",
+//			"ls.player.skill.passing",
+//			"ls.player.skill.stamina",
+//			"ls.player.form",
+//			"ls.player.skill.setpieces",
+//			"ls.player.experience",
+//			"ls.player.leadership",
+//			"ls.player.loyalty"
+//	};
 
-	public static final int KEEPER = 0;
-	public static final int DEFENDING = 1;
-	public static final int WINGER = 2;
-	public static final int PLAYMAKING = 3;
-	public static final int SCORING = 4;
-	public static final int PASSING = 5;
-	public static final int STAMINA = 6;
-	public static final int FORM = 7;
-	public static final int SET_PIECES = 8;
-	public static final int EXPERIENCE = 9;
-	public static final int LEADERSHIP = 10;
-	public static final int LOYALTY = 11;
+	KEEPER(0),
+	DEFENDING(1),
+	WINGER(2),
+	PLAYMAKING(3),
+	SCORING(4),
+	PASSING(5),
+	STAMINA(6),
+	FORM(7),
+	SETPIECES(8),
+	EXPERIENCE(9),
+	LEADERSHIP(10),
+	LOYALTY(11);
 
-    private PlayerSkill(){}
+	private final int id;
 
-	public static String toString(int skill){
-    	if( skill >= KEEPER && skill <= LOYALTY)
-			return HOVerwaltung.instance().getLanguageString(languageKeys[skill]);
-		else
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
-    }
+	PlayerSkill(int id) {
+		this.id = id;
+	}
+
+	public int toInt() {
+		return id;
+	}
+
+	public String toString() {
+		var b = new StringBuilder("ls.player.");
+		switch (this) {
+			case KEEPER, DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING, STAMINA, SETPIECES -> b.append("skill.");
+		}
+		b.append(super.toString().toLowerCase());
+		return HOVerwaltung.instance().getLanguageString(b.toString());
+	}
+
+	public static PlayerSkill fromInteger(Integer i) {
+		if (i != null) {
+			for (var s : PlayerSkill.values()) {
+				if (s.id == i) {
+					return s;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Integer toInteger(PlayerSkill s) {
+		if (s != null) return s.id;
+		return null;
+	}
 }
