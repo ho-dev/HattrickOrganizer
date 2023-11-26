@@ -208,8 +208,11 @@ distributions {
 }
 
 install4j {
-    if (install4jHomeDir != null && install4jHomeDir != "") installDir = file(install4jHomeDir)
-    else installDir = file(System.getenv('INSTALL4J_HOME'))
+    if (install4jHomeDir != null && install4jHomeDir != "") {
+        installDir = file(install4jHomeDir)
+    } else if (System.getenv('INSTALL4J_HOME')) {
+        installDir = file(System.getenv('INSTALL4J_HOME')) as File
+    }
     disableSigning = true
     license = System.getenv('INSTALL4J_LICENSE')
 }
@@ -283,7 +286,7 @@ task media(type: com.install4j.gradle.Install4jTask) {
     variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
 }
 
-task preparingBuild(dependsOn: clean) {
+task preparingBuild {
     group 'sub tasks'
     doLast {
         if (releaseArtefacts) {
@@ -484,6 +487,8 @@ markdownToHtml.dependsOn pushmd
 poeditorPull.dependsOn markdownToHtml
 createLanguageFileList.dependsOn poeditorPull
 processResources.dependsOn createLanguageFileList
+compileJava.dependsOn(clean)
 compileJava.dependsOn processResources
+
 
 // endregion ======================================================================================================================
