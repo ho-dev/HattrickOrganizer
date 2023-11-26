@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static module.youth.YouthSkillInfo.getSkillName;
+
 public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     YouthSkillInfo skillInfo;
@@ -20,7 +22,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     private static final int bar_width = 100; // pixels to display skill range from 0 to 9 (8.3)
     private static final int bar_thickness = 12;
 
-    private Color[] cellSkillRatingColor = new Color[]{
+    private final Color[] cellSkillRatingColor = new Color[]{
             new Color(255,204,204),         // light red
             new Color(255,255,160),         // yellow
             new Color(230,255,204),         // lightest green
@@ -41,8 +43,9 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     private String createToolTipText() {
         var hov = HOVerwaltung.instance();
         var unknown = hov.getLanguageString("unknown");
+        var skillName = getSkillName(this.skillInfo.getSkillID());
         return "<html>" +
-                hov.getLanguageString("ls.youth.player."+this.skillInfo.getSkillID().toString()) + "<br>" +
+                hov.getLanguageString("ls.youth.player."+skillName) + "<br>" +
                 String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>", this.skillInfo.getStartValue()) +
                 String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue()) +
                 (this.skillInfo.getPotential17Value() != null ? String.format(hov.getLanguageString("ls.youth.skill.17") + ": %.2f<br>", this.skillInfo.getPotential17Value()) : "") +
@@ -67,8 +70,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public int compareTo(@NotNull IHOTableEntry obj) {
-        if (obj instanceof YouthSkillInfoColumn) {
-            final YouthSkillInfoColumn entry = (YouthSkillInfoColumn) obj;
+        if (obj instanceof YouthSkillInfoColumn entry) {
             return Double.compare(this.skillInfo.getCurrentValue(), entry.skillInfo.getCurrentValue());
         }
         return 0;

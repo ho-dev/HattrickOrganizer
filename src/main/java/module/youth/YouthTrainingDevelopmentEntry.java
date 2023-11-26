@@ -1,14 +1,12 @@
 package module.youth;
 
+import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.match.MatchLineupTeam;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.Specialty;
 import core.util.HODateTime;
-import module.training.Skills;
-
-import java.util.stream.Collectors;
 
 public class YouthTrainingDevelopmentEntry {
 
@@ -175,7 +173,7 @@ public class YouthTrainingDevelopmentEntry {
      * @param skillID skill id
      * @return String
      */
-    public String getSkillValue(Skills.HTSkillID skillID) {
+    public String getSkillValue(PlayerSkill skillID) {
         var val = this.skills.get(skillID);
         if ( val != null ) return String.format("%,.2f", val.getCurrentValue());
         return "";

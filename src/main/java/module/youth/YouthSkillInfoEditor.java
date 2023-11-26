@@ -8,11 +8,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
+import static module.youth.YouthSkillInfo.getSkillName;
+
 public class YouthSkillInfoEditor extends JPanel {
 
     private YouthSkillInfo skillInfo;
 
-    private static int SliderWidth = 1660;
+    private static final int SliderWidth = 1660;
 
     /**
      * Calculate slider position from skill value
@@ -39,11 +41,11 @@ public class YouthSkillInfoEditor extends JPanel {
     }
 
 
-    class SkillInfoSlider extends JPanel {
+    static class SkillInfoSlider extends JPanel {
         private YouthSkillInfo skillInfo;
-        private JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
-        private JLabel minLabel = new JLabel("0.00", SwingConstants.RIGHT);
-        private JLabel maxLabel = new JLabel("8.30", SwingConstants.LEFT);
+        private final JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, SliderWidth, 0);
+        private final JLabel minLabel = new JLabel("0.00", SwingConstants.RIGHT);
+        private final JLabel maxLabel = new JLabel("8.30", SwingConstants.LEFT);
 
         public SkillInfoSlider(String label){
             super(new BorderLayout());
@@ -90,8 +92,8 @@ public class YouthSkillInfoEditor extends JPanel {
     }
 
     private JLabel skillLabel = new JLabel();
-    private SkillInfoSlider skillStartValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue")+": ");
-    private SkillInfoSlider skillCurrentValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue")+": ");
+    private final SkillInfoSlider skillStartValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue") + ": ");
+    private final SkillInfoSlider skillCurrentValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue") + ": ");
     private ImageIcon getImageIcon4Color(Color color) {
         final BufferedImage bufferedImage = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 
@@ -117,7 +119,7 @@ public class YouthSkillInfoEditor extends JPanel {
 
     public void setSkillInfo(YouthSkillInfo skillInfo) {
         this.skillInfo = skillInfo;
-        skillLabel.setText(HOVerwaltung.instance().getLanguageString("ls.youth.player." + skillInfo.getSkillID().toString()) + ": ");
+        skillLabel.setText(HOVerwaltung.instance().getLanguageString("ls.youth.player." + getSkillName(skillInfo.getSkillID())) + ": ");
         skillStartValue.set(skillInfo, skillInfo.getStartValue(), skillInfo.getStartValueRange());
         skillCurrentValue.set(skillInfo, skillInfo.getCurrentValue(), skillInfo.getCurrentValueRange());
     }

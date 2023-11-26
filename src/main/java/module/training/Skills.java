@@ -31,59 +31,6 @@ public class Skills {
      */
 
 
-    public enum HTSkillID {
-        Keeper(1),
-        Stamina(2),
-        SetPieces(3),
-        Defender(4),
-        Scorer(5),
-        Winger(6),
-        Passing(7),
-        Playmaker(8),
-        Trainer(9),
-        Leadership(10),
-        Experience(11);
-
-        private final int value;
-        private static final HashMap<Integer, HTSkillID> map = new HashMap<>();
-
-        HTSkillID(int value) {
-            this.value = value;
-        }
-
-        // Init mapping
-        static {
-            for (HTSkillID skill : HTSkillID.values()) {
-                map.put(skill.value, skill);
-            }
-        }
-
-        public static HTSkillID valueOf(PlayerSkill skill) {
-            return map.get(skill.toInt());
-        }
-
-        public int getValue() {
-            return value;
-        }
-
-        public PlayerSkill convertToPlayerSkill(){
-            return switch (this) {
-                case Keeper -> PlayerSkill.KEEPER;
-                case Stamina -> PlayerSkill.STAMINA;
-                case SetPieces -> PlayerSkill.SETPIECES;
-                case Defender -> PlayerSkill.DEFENDING;
-                case Scorer -> PlayerSkill.SCORING;
-                case Winger -> PlayerSkill.WINGER;
-                case Passing -> PlayerSkill.PASSING;
-                case Playmaker -> PlayerSkill.PLAYMAKING;
-                case Leadership -> PlayerSkill.LEADERSHIP;
-                case Experience -> PlayerSkill.EXPERIENCE;
-                case Trainer -> null;
-            };
-        }
-
-    }
-
     /*
         ScoutCommentSkillTypeID
     Value	Description
@@ -139,17 +86,17 @@ public class Skills {
             return value;
         }
 
-        final static private EnumMap<ScoutCommentSkillTypeID, HTSkillID> hTskillIdmap = new EnumMap<>(ScoutCommentSkillTypeID.class) {{
-            put(KEEPER, HTSkillID.Keeper);
-            put(DEFENDING, HTSkillID.Defender);
-            put(PLAYMAKER, HTSkillID.Playmaker);
-            put(WINGER, HTSkillID.Winger);
-            put(PASSING, HTSkillID.Passing);
-            put(SCORER, HTSkillID.Scorer);
-            put(SET_PIECES, HTSkillID.SetPieces);
+        final static private EnumMap<ScoutCommentSkillTypeID, PlayerSkill> hTskillIdmap = new EnumMap<>(ScoutCommentSkillTypeID.class) {{
+            put(KEEPER, PlayerSkill.KEEPER);
+            put(DEFENDING, PlayerSkill.DEFENDING);
+            put(PLAYMAKER, PlayerSkill.PLAYMAKING);
+            put(WINGER, PlayerSkill.WINGER);
+            put(PASSING, PlayerSkill.PASSING);
+            put(SCORER, PlayerSkill.SCORING);
+            put(SET_PIECES, PlayerSkill.SETPIECES);
         }};
 
-        public HTSkillID toHTSkillId() {
+        public PlayerSkill toHTSkillId() {
             return hTskillIdmap.get(this);
         }
     }

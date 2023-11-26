@@ -1,13 +1,15 @@
 package core.db;
 
+import core.constants.player.PlayerSkill;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import module.youth.YouthPlayer;
 import core.util.HOLogger;
-import module.training.Skills;
 
 import java.sql.*;
 import java.util.*;
+
+import static module.youth.YouthSkillInfo.getSkillName;
 
 public class YouthPlayerTable  extends AbstractTable {
 
@@ -62,8 +64,8 @@ public class YouthPlayerTable  extends AbstractTable {
         columns = tmp.toArray(new ColumnDescriptor[0]);
     }
 
-    private Collection<ColumnDescriptor> createColumnDescriptors(Skills.HTSkillID skillId) {
-        var prefix = skillId.toString();
+    private Collection<ColumnDescriptor> createColumnDescriptors(PlayerSkill skillId) {
+        var prefix = getSkillName(skillId);
         return new ArrayList<>(List.of(
                 ColumnDescriptor.Builder.newInstance().setColumnName(prefix).setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getCurrentLevel()).setSetter((p, v) -> ((YouthPlayer) p).setCurrentLevel(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName(prefix + "Max").setGetter((p) -> ((YouthPlayer) p).getSkillInfo(skillId).getMax()).setSetter((p, v) -> ((YouthPlayer) p).setMax(skillId, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),

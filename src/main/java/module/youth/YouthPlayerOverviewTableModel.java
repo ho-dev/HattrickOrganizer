@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static module.youth.YouthSkillInfo.getSkillName;
+
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
@@ -50,7 +52,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(player.getCanBePromotedIn(), "" + player.getCanBePromotedInAtDate(HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return new ColorLabelEntry(player.getCanBePromotedIn(), player.getCanBePromotedInAtDate(HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 // TODO: Specialty column should include the specialty icon
@@ -93,7 +95,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         ));
 
         for (var skillId : YouthPlayer.skillIds) {
-            tmp.add(new YouthPlayerColumn("ls.youth.player." + skillId.toString(), 200) {
+            var skillName = getSkillName(skillId);
+            tmp.add(new YouthPlayerColumn("ls.youth.player." + skillName, 200) {
                 @Override
                 public IHOTableEntry getTableEntry(YouthPlayer player) {
                     return new YouthSkillInfoColumn(player.getSkillInfo(skillId));

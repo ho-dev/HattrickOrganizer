@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -7,8 +8,6 @@ import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.util.HODateTime;
-import module.training.Skills;
-
 import java.util.Map;
 import java.util.Vector;
 
@@ -247,7 +246,7 @@ public class YouthTraining extends AbstractTable.Storable {
      * @param age player age in years
      * @return maximum skill increment with optimal training
      */
-    public static double getMaxTrainingPerWeek(Skills.HTSkillID skillId, int skillVal, int age) {
+    public static double getMaxTrainingPerWeek(PlayerSkill skillId, int skillVal, int age) {
         var f = efficiencyOfEqualPrimaryAndSecondaryTraining * fullTrainingsPerWeek * 90.;
 
         // TODO check if shooting as secondary training is more effective
@@ -256,25 +255,25 @@ public class YouthTraining extends AbstractTable.Storable {
         // TODO check if through passes as secondary training is more effective
         // TODO check if shooting as secondary training is more effective
         return switch (skillId) {
-            case Keeper -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case Playmaker -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case SetPieces -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case Defender -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case Winger -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case Passing -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
-            case Scorer -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case KEEPER -> YouthTrainingType.Goalkeeping.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case PLAYMAKING -> YouthTrainingType.Playmaking.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case SETPIECES -> YouthTrainingType.SetPieces.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case DEFENDING -> YouthTrainingType.Defending.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case WINGER -> YouthTrainingType.Winger.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case PASSING -> YouthTrainingType.Passing.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
+            case SCORING -> YouthTrainingType.Scoring.calcSkillIncrementPerMinute(skillId, skillVal, 1, age) * f;
             default -> 0;
         };
     }
 
-    public static Map<Skills.HTSkillID, Double> potentialNormingFactor = Map.of(
-            Skills.HTSkillID.Defender, getMaxTrainingPerWeek(Skills.HTSkillID.Defender, 7, 17),
-            Skills.HTSkillID.Keeper, getMaxTrainingPerWeek(Skills.HTSkillID.Keeper, 7, 17),
-            Skills.HTSkillID.Passing, getMaxTrainingPerWeek(Skills.HTSkillID.Passing, 7, 17),
-            Skills.HTSkillID.SetPieces, getMaxTrainingPerWeek(Skills.HTSkillID.SetPieces, 7, 17),
-            Skills.HTSkillID.Scorer, getMaxTrainingPerWeek(Skills.HTSkillID.Scorer, 7, 17),
-            Skills.HTSkillID.Playmaker, getMaxTrainingPerWeek(Skills.HTSkillID.Playmaker, 7, 17),
-            Skills.HTSkillID.Winger, getMaxTrainingPerWeek(Skills.HTSkillID.Winger, 7, 17)
+    public static Map<PlayerSkill, Double> potentialNormingFactor = Map.of(
+            PlayerSkill.DEFENDING, getMaxTrainingPerWeek(PlayerSkill.DEFENDING, 7, 17),
+            PlayerSkill.KEEPER, getMaxTrainingPerWeek(PlayerSkill.KEEPER, 7, 17),
+            PlayerSkill.PASSING, getMaxTrainingPerWeek(PlayerSkill.PASSING, 7, 17),
+            PlayerSkill.SETPIECES, getMaxTrainingPerWeek(PlayerSkill.SETPIECES, 7, 17),
+            PlayerSkill.SCORING, getMaxTrainingPerWeek(PlayerSkill.SCORING, 7, 17),
+            PlayerSkill.PLAYMAKING, getMaxTrainingPerWeek(PlayerSkill.PLAYMAKING, 7, 17),
+            PlayerSkill.WINGER, getMaxTrainingPerWeek(PlayerSkill.WINGER, 7, 17)
     );
 
     public double getRating(int playerId) {

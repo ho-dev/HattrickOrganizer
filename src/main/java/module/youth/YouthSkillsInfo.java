@@ -1,11 +1,11 @@
 package module.youth;
 
-import module.training.Skills;
+import core.constants.player.PlayerSkill;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
-public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
+public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
 
     /**
      * Determine if skills are keeper skills
@@ -20,12 +20,12 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
             if (skill.getMax() != null && skill.getMax() >= 5 ||
                     skill.getCurrentLevel() != null && skill.getCurrentLevel() >= 5) {
                 var skillId = skill.getSkillID();
-                if (skillId == Skills.HTSkillID.Keeper) return true;
-                else if (skillId == Skills.HTSkillID.Winger ||
-                        skillId == Skills.HTSkillID.Playmaker ||
-                        skillId == Skills.HTSkillID.Passing ||
-                        skillId == Skills.HTSkillID.Scorer) return false;
-                else if (skillId == Skills.HTSkillID.Defender){
+                if (skillId == PlayerSkill.KEEPER) return true;
+                else if (skillId == PlayerSkill.WINGER ||
+                        skillId == PlayerSkill.PLAYMAKING ||
+                        skillId == PlayerSkill.PASSING ||
+                        skillId == PlayerSkill.SCORING) return false;
+                else if (skillId == PlayerSkill.DEFENDING){
                     if ( skill.getMax() != null && skill.getMax() > 6 ||
                             skill.getCurrentLevel() != null && skill.getCurrentLevel() > 6) return false; // keeper max 6
                 }
@@ -46,20 +46,20 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         for (var skill : this.values()) {
             if (skill.getMax() == null || skill.getMax() > 4) {
                 switch (skill.getSkillID()) {
-                    case Winger:
-                    case Playmaker:
-                    case Passing:
-                    case Scorer:
+                    case WINGER:
+                    case PLAYMAKING:
+                    case PASSING:
+                    case SCORING:
                         if (isKeeper) {
                             skill.setMax(4);
                         }
                         break;
-                    case Defender:
+                    case DEFENDING:
                         if ( isKeeper && (skill.getMax() == null || skill.getMax() > 6)){
                             skill.setMax(6);
                         }
                         break;
-                    case Keeper:
+                    case KEEPER:
                         if (!isKeeper) {
                             skill.setMax(4);
                         }
@@ -97,7 +97,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
         // Those skills are marked as top3 skills
         var notTop3Yet = new ArrayList<YouthSkillInfo>();   // list skill that are not surely in top3
         for (var skill : this.values()) {
-            if ( skill.getSkillID() == Skills.HTSkillID.SetPieces) continue;
+            if ( skill.getSkillID() == PlayerSkill.SETPIECES) continue;
             if (skill.isMaxAvailable() && skill.getMax() > minTop3Max ||
                     skill.isCurrentLevelAvailable() && skill.getCurrentLevel() > minTop3Max) {
                 if (skill.isTop3() == null || !skill.isTop3()) {
@@ -143,7 +143,7 @@ public class YouthSkillsInfo extends HashMap<Skills.HTSkillID, YouthSkillInfo> {
             // three skills are marked as top3 skill
             // mark other skills and set maximum to lowest top3 max
             for (var skill : this.values()) {
-                if ( skill.getSkillID() == Skills.HTSkillID.SetPieces) continue; // set pieces is not part of the top3 rules
+                if ( skill.getSkillID() == PlayerSkill.SETPIECES) continue; // set pieces is not part of the top3 rules
                 if (skill.isTop3() == null || !skill.isTop3()) {
                     skill.setIsTop3(false);
                     if (!skill.isMaxAvailable()) {

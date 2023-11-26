@@ -20,8 +20,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.stream.Collectors;
-
 
 public class HOVerwaltung {
 
@@ -51,7 +49,7 @@ public class HOVerwaltung {
 
 	private int id = -1;
 
-	private PropertyChangeSupport support;
+	private final PropertyChangeSupport support;
 
 	/**
 	 * Creates a new HOVerwaltung object.
@@ -109,8 +107,6 @@ public class HOVerwaltung {
 	public ResourceBundle getResource() {
 		return languageBundle;
 	}
-
-	public Locale getM_locale() {return m_locale;}
 
 	/**
 	 * läadt das zuletzt importtiert model ein
@@ -218,12 +214,12 @@ public class HOVerwaltung {
 		} catch (Exception e) {
 			// Do nothing, it just throws error if key is missing. 
 		}
-			if (temp != null)
+		if (temp != null)
 			return temp;
 		// Search in english.properties if nothing found and active language not
 		// english
 		if (!core.model.UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
-			
+
 			ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
 
 			try {
@@ -231,7 +227,7 @@ public class HOVerwaltung {
 			} catch (Exception e) {
 				// Ignore
 			}
-			
+
 			if (temp != null)
 				return temp;
 		}
@@ -263,18 +259,10 @@ public class HOVerwaltung {
 
 	public static String[] getLanguageFileNames() {
 		String[] files = null;
-		final Vector<String> sprachdateien = new Vector<>();
 
 		try {
-			// java.net.URL resource = new
-			// gui.vorlagen.ImagePanel().getClass().getClassLoader().getResource(
-			// "sprache" );
-
-//            java.net.URL url = HOVerwaltung.class.getClassLoader().getResource("sprache");
-//            java.net.JarURLConnection connection = (java.net.JarURLConnection) url.openConnection();
-//            String filepath = (String)connection.getJarFileURL().toURI();
-
             java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
+            assert is != null;
             java.util.Scanner s = new java.util.Scanner(is);
             java.util.ArrayList<String> llist = new java.util.ArrayList<>();
             while (s.hasNext()){

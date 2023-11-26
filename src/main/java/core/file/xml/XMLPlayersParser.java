@@ -3,6 +3,7 @@ package core.file.xml;
 import java.util.List;
 import java.util.Vector;
 
+import core.constants.player.PlayerSkill;
 import core.db.user.UserManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
@@ -10,7 +11,6 @@ import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import module.youth.YouthPlayer;
-import module.training.Skills;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -367,7 +367,7 @@ public class XMLPlayersParser {
         return ret;
     }
 
-    private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, Skills.HTSkillID skillId) {
+    private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, PlayerSkill skillId) {
         //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
         var attr = skillId.toString() + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);

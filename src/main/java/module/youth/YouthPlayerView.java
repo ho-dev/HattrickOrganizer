@@ -1,5 +1,6 @@
 package module.youth;
 
+import core.constants.player.PlayerSkill;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
@@ -11,8 +12,6 @@ import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
 import module.statistics.Colors;
-import module.training.Skills;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -245,14 +244,14 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private boolean isRefreshingPlayerDetails =false;
 
-    final private Map<Skills.HTSkillID, Color> skillIDColorMap = Map.of(
-            Skills.HTSkillID.Keeper, Colors.getColor(Colors.COLOR_PLAYER_GK),
-            Skills.HTSkillID.SetPieces, Colors.getColor(Colors.COLOR_PLAYER_SP),
-            Skills.HTSkillID.Defender, Colors.getColor(Colors.COLOR_PLAYER_DE),
-            Skills.HTSkillID.Scorer, Colors.getColor(Colors.COLOR_PLAYER_SC),
-            Skills.HTSkillID.Winger, Colors.getColor(Colors.COLOR_PLAYER_WI),
-            Skills.HTSkillID.Passing, Colors.getColor(Colors.COLOR_PLAYER_PS),
-            Skills.HTSkillID.Playmaker, Colors.getColor(Colors.COLOR_PLAYER_PM)
+    final private Map<PlayerSkill, Color> skillIDColorMap = Map.of(
+            PlayerSkill.KEEPER, Colors.getColor(Colors.COLOR_PLAYER_GK),
+            PlayerSkill.SETPIECES, Colors.getColor(Colors.COLOR_PLAYER_SP),
+            PlayerSkill.DEFENDING, Colors.getColor(Colors.COLOR_PLAYER_DE),
+            PlayerSkill.SCORING, Colors.getColor(Colors.COLOR_PLAYER_SC),
+            PlayerSkill.WINGER, Colors.getColor(Colors.COLOR_PLAYER_WI),
+            PlayerSkill.PASSING, Colors.getColor(Colors.COLOR_PLAYER_PS),
+            PlayerSkill.PLAYMAKING, Colors.getColor(Colors.COLOR_PLAYER_PM)
     );
 
     private void refreshPlayerDetails() {
