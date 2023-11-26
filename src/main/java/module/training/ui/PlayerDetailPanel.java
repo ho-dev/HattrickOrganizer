@@ -100,7 +100,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             var i = skill.toInt();
             if (i >= skillNumber) break;
             var skillIndex = Skills.getSkillAtPosition(i);
-            var skillValue = Skills.getSkillValue(this.model.getActivePlayer(), skillIndex);
+            var skillValue = this.model.getActivePlayer().getSkillValue(skillIndex);
             skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
             FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);

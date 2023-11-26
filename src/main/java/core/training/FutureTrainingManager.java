@@ -7,9 +7,7 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
-import module.training.Skills;
 import java.util.*;
-
 
 public class FutureTrainingManager {
 	/** Actual Training sub */
@@ -60,7 +58,7 @@ public class FutureTrainingManager {
 			actual[i] = getOffset(SKILL_INDEX[i]);
 			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
-			finalSkill[i] = Skills.getSkillValue(this.player, SKILL_INDEX[i]);
+			finalSkill[i] = player.getSkill(SKILL_INDEX[i]);
 		}
 
 		trainingSpeed = 0;

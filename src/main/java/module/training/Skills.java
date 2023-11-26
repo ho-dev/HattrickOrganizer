@@ -2,8 +2,6 @@ package module.training;
 
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
-import core.model.player.Player;
-
 import java.awt.Color;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -140,29 +138,6 @@ public class Skills {
             };
         }
         return Color.BLACK;
-    }
-
-    /**
-     * Returns the Skill value for the player
-     *
-     * @param player     player which should be inspected
-     * @param skillIndex constant index value of the skill we want to see
-     * @return The Skill value or 0 if the index is incorrect
-     */
-    public static double getSkillValue(Player player, PlayerSkill skillIndex) {
-        return switch (skillIndex) {
-            case KEEPER -> player.getGoalkeeperSkill() + player.getSub4Skill(skillIndex);
-            case PLAYMAKING -> player.getPlaymakingSkill() + player.getSub4Skill(skillIndex);
-            case PASSING -> player.getPassingSkill() + player.getSub4Skill(skillIndex);
-            case WINGER -> player.getWingerSkill() + player.getSub4Skill(skillIndex);
-            case DEFENDING -> player.getDefendingSkill() + player.getSub4Skill(skillIndex);
-            case SCORING -> player.getScoringSkill() + player.getSub4Skill(skillIndex);
-            case SETPIECES -> player.getSetPiecesSkill() + player.getSub4Skill(skillIndex);
-            case STAMINA -> player.getStamina() + player.getSub4Skill(skillIndex);
-            case FORM -> player.getForm() + player.getSub4Skill(skillIndex);
-            case EXPERIENCE -> player.getExperience() + player.getSub4Skill(skillIndex);
-            default -> 0;
-        };
     }
 
     /**
