@@ -1,7 +1,6 @@
 package module.youth;
 
-import module.training.Skills;
-
+import core.constants.player.PlayerSkill;
 import java.util.Objects;
 
 public class YouthSkillInfo {
@@ -11,7 +10,7 @@ public class YouthSkillInfo {
     /**
      * Skill Id
      */
-    private Skills.HTSkillID skillID;
+    private final PlayerSkill skillID;
 
     /**
      * Value at scouting date, edited by the user (user's estimation)
@@ -44,7 +43,7 @@ public class YouthSkillInfo {
     /**
      * Range of possible current values
      */
-    private SkillRange currentValueRange = new SkillRange();
+    private final SkillRange currentValueRange = new SkillRange();
 
     /**
      * Maximum reachable skill level (potential)
@@ -78,7 +77,7 @@ public class YouthSkillInfo {
      * Constructor, only setting the skill id
      * @param id HTSkillId
      */
-    public YouthSkillInfo(Skills.HTSkillID id) {
+    public YouthSkillInfo(PlayerSkill id) {
         this.skillID = id;
     }
 
@@ -235,7 +234,7 @@ public class YouthSkillInfo {
         this.startValueRange = range;
     }
 
-    public Skills.HTSkillID getSkillID() {
+    public PlayerSkill getSkillID() {
         return skillID;
     }
 
@@ -287,12 +286,12 @@ public class YouthSkillInfo {
         else if ( isKeeper != null){
             if ( isKeeper) {
                 switch (this.skillID) {
-                    case Keeper, Defender, SetPieces -> setMax(minTop3Max);
+                    case KEEPER, DEFENDING, SETPIECES -> setMax(minTop3Max);
                 }
             }
             else {
                 switch (this.skillID) {
-                    case Defender, Winger, Playmaker, Passing, Scorer, SetPieces -> setMax(minTop3Max);
+                    case DEFENDING, WINGER, PLAYMAKING, PASSING, SCORING, SETPIECES -> setMax(minTop3Max);
                 }
             }
         }
@@ -359,5 +358,23 @@ public class YouthSkillInfo {
             }
         }
     }
+
+    public static String getSkillName(PlayerSkill skillId) {
+        return switch (skillId)    {
+            case KEEPER -> "Keeper";
+            case DEFENDING -> "Defender";
+            case WINGER -> "Winger";
+            case PLAYMAKING -> "Playmaker";
+            case SCORING -> "Scorer";
+            case PASSING -> "Passing";
+            case STAMINA -> "Stamina";
+            case FORM -> "Form";
+            case SETPIECES -> "SetPieces";
+            case EXPERIENCE -> "Experience";
+            case LEADERSHIP -> "Leadership";
+            case LOYALTY -> "Loyalty";
+        };
+    }
+
 }
 

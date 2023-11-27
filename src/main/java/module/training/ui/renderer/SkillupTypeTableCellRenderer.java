@@ -6,6 +6,7 @@ import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
 
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.JTable;
 
@@ -17,7 +18,8 @@ import javax.swing.JTable;
  * @author NetHyperon
  */
 public class SkillupTypeTableCellRenderer extends ChangeTableRenderer {
-	private static final long serialVersionUID = -8584898772728443298L;
+	@Serial
+    private static final long serialVersionUID = -8584898772728443298L;
 
  
     /**
@@ -30,12 +32,11 @@ public class SkillupTypeTableCellRenderer extends ChangeTableRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         try {
-            int skill = Integer.parseInt((String) value);
-
-            setText(PlayerSkill.toString(skill));
+            var skill = PlayerSkill.fromInteger((Integer) value);
+            setText(skill.getLanguageString());
             setIcon(TrainingLegendPanel.getSkillupTypeIcon(skill, 1));
             setForeground(Skills.getSkillColor(skill));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
 
         return this;

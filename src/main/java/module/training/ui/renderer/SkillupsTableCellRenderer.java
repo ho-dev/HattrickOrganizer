@@ -1,9 +1,11 @@
 // %292731377:hoplugins.trainingExperience.ui.renderer%
 package module.training.ui.renderer;
 
+import core.constants.player.PlayerSkill;
 import module.training.ui.TrainingLegendPanel;
 
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -20,7 +22,8 @@ public class SkillupsTableCellRenderer extends DefaultTableCellRenderer {
     /**
 	 * 
 	 */
-	private static final long serialVersionUID = 2836512590615874682L;
+	@Serial
+    private static final long serialVersionUID = 2836512590615874682L;
 
 	/**
      * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
@@ -33,11 +36,10 @@ public class SkillupsTableCellRenderer extends DefaultTableCellRenderer {
 
         try {
             int count = Integer.parseInt((String) value);
-            int skill = Integer.parseInt((String) table.getValueAt(row, 8));
-
+            var skill = (PlayerSkill) table.getValueAt(row, 8);
             setText(null);
             setIcon(TrainingLegendPanel.getSkillupTypeIcon(skill, count));
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
 
         return this;

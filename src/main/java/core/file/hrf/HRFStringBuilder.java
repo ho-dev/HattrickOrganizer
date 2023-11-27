@@ -4,10 +4,7 @@ import core.HO;
 import core.constants.TeamConfidence;
 import core.constants.TeamSpirit;
 import core.constants.TrainingType;
-import core.constants.player.PlayerAggressiveness;
-import core.constants.player.PlayerAgreeability;
-import core.constants.player.PlayerHonesty;
-import core.constants.player.PlayerSpeciality;
+import core.constants.player.*;
 import core.file.xml.SafeInsertMap;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupTeam;
@@ -18,7 +15,6 @@ import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import core.util.StringUtils;
 import module.lineup.substitution.model.Substitution;
-import module.training.Skills;
 import module.youth.YouthPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
 import java.util.List;
@@ -586,8 +582,8 @@ public class HRFStringBuilder {
         return false;
     }
 
-    private void appendHRFSkillLines(StringBuilder buffer, SafeInsertMap player, Skills.HTSkillID skillId) {
-        var skill = skillId.toString() + "Skill";
+    private void appendHRFSkillLines(StringBuilder buffer, SafeInsertMap player, PlayerSkill skillId) {
+        var skill = skillId.getLanguageString() + "Skill";
         appendHRFLine(buffer, player, skill);
         appendHRFLine(buffer, player, skill+"IsAvailable");
         appendHRFLine(buffer, player, skill+"IsMaxReached");

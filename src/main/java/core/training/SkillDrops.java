@@ -179,7 +179,7 @@ public class SkillDrops {
 	 *
 	 * @return A percentage number for the skill to drop. On return 2, a skill of 4.50 should move to 4.52.
 	 */
-	public double getSkillDrop(int skill, int age, int skillType, boolean isTrainedSkill) {
+	public double getSkillDrop(int skill, int age, PlayerSkill skillType, boolean isTrainedSkill) {
 
 		if (skillType == PlayerSkill.STAMINA)
 			return 0; // don't calc stamina subs (curious usage in FutureTrainingManager)
@@ -318,11 +318,11 @@ public class SkillDrops {
 		*/
 
 		var ageP = switch (skillType) {
-			case PlayerSkill.KEEPER -> age - 29;
-			case PlayerSkill.DEFENDING -> age - 28;
-			case PlayerSkill.PLAYMAKING, PlayerSkill.WINGER, PlayerSkill.PASSING -> age - 27;
-			case PlayerSkill.SCORING -> age - 26;
-			case PlayerSkill.SET_PIECES -> age - 30;
+			case KEEPER -> age - 29;
+			case DEFENDING -> age - 28;
+			case PLAYMAKING, WINGER, PASSING -> age - 27;
+			case SCORING -> age - 26;
+			case SETPIECES -> age - 30;
 			default -> throw new IllegalStateException("Unexpected value: " + skillType);
 		};
 
@@ -348,7 +348,7 @@ public class SkillDrops {
 	}
 
 	private final HODateTime skillDropChanged = HODateTime.fromHT("2017-05-08 00:00:00");
-	public double getSkillDropAtDate(int skill, int age, int skillType, HODateTime date, boolean isTrainedSkill){
+	public double getSkillDropAtDate(int skill, int age, PlayerSkill skillType, HODateTime date, boolean isTrainedSkill){
 		if ( date.isAfter(skillDropChanged)){
 			return getSkillDrop(skill,age,skillType, isTrainedSkill);
 		}
@@ -356,18 +356,18 @@ public class SkillDrops {
 			return getSkillDropBeforeMay082017(skill, age, skillType);
 		}
 	}
-	private double getSkillDropBeforeMay082017(int skill,  int age,  int skillType) {
+	private double getSkillDropBeforeMay082017(int skill,  int age,  PlayerSkill skillType) {
 		// skill losses only begin at the age of 28 years
 		if (age < 28) return 0;
 		double[][] array;
 		switch (skillType) {
-			case PlayerSkill.KEEPER -> array = keeper;
-			case PlayerSkill.DEFENDING -> array = defending;
-			case PlayerSkill.PLAYMAKING -> array = playmaking;
-			case PlayerSkill.WINGER -> array = winger;
-			case PlayerSkill.SCORING -> array = scoring;
-			case PlayerSkill.PASSING -> array = passing;
-			case PlayerSkill.SET_PIECES -> array = setpieces;
+			case KEEPER -> array = keeper;
+			case DEFENDING -> array = defending;
+			case PLAYMAKING -> array = playmaking;
+			case WINGER -> array = winger;
+			case SCORING -> array = scoring;
+			case PASSING -> array = passing;
+			case SETPIECES -> array = setpieces;
 			default -> {
 				return 0;
 			}
@@ -408,7 +408,7 @@ public class SkillDrops {
 			    
 			    // we turn the characters into doubles
 			    for(int i =0; i < doubleLine.length; i++){
-			        if (oneLine[i].trim().equals(""))
+			        if (oneLine[i].trim().isEmpty())
 			            doubleLine[i] = 0;
 			        else
 			            doubleLine[i] = Double.parseDouble(oneLine[i].trim());

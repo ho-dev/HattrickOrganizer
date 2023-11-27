@@ -7,9 +7,7 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
-import module.training.Skills;
 import java.util.*;
-
 
 public class FutureTrainingManager {
 	/** Actual Training sub */
@@ -21,14 +19,14 @@ public class FutureTrainingManager {
 	/** Number of skill ups with maximum training */
 	public double[] finalSkill = new double[8];
 
-	private static final int[] SKILL_INDEX = {
+	private static final PlayerSkill[] SKILL_INDEX = {
 			PlayerSkill.KEEPER,
 			PlayerSkill.PLAYMAKING,
 			PlayerSkill.PASSING,
 			PlayerSkill.WINGER,
 			PlayerSkill.DEFENDING,
 			PlayerSkill.SCORING,
-			PlayerSkill.SET_PIECES,
+			PlayerSkill.SETPIECES,
 			PlayerSkill.STAMINA
 	};
 
@@ -60,7 +58,7 @@ public class FutureTrainingManager {
 			actual[i] = getOffset(SKILL_INDEX[i]);
 			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
-			finalSkill[i] = Skills.getSkillValue(this.player, SKILL_INDEX[i]);
+			finalSkill[i] = player.getSkill(SKILL_INDEX[i]);
 		}
 
 		trainingSpeed = 0;
@@ -161,7 +159,7 @@ public class FutureTrainingManager {
 		fp.setGoalkeeping(getFinalValue(PlayerSkill.KEEPER));
 		fp.setPassing(getFinalValue(PlayerSkill.PASSING));
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
-		fp.setSetpieces(getFinalValue(PlayerSkill.SET_PIECES));
+		fp.setSetpieces(getFinalValue(PlayerSkill.SETPIECES));
 		fp.setAge(player.getAge()+(int)(Math.floor((player.getAgeDays()+7* weeksPassed)/112d)));
 		fp.setPlayerId(player.getPlayerId());
 		return fp;
@@ -173,7 +171,7 @@ public class FutureTrainingManager {
 	 * @param skillIndex	index of the skill
 	 * @return				value for this skill
 	 */
-	private double getFinalValue(int skillIndex) {
+	private double getFinalValue(PlayerSkill skillIndex) {
 		int pos = getSkillPosition(skillIndex);
 		return finalSkill[pos];
 	}
@@ -212,7 +210,7 @@ public class FutureTrainingManager {
 	*
 	* @return the sub with offset of a player
 	*/
-	private double getOffset(int skill) {
+	private double getOffset(PlayerSkill skill) {
 		return player.getSub4Skill(skill);
 	}
 
@@ -248,16 +246,17 @@ public class FutureTrainingManager {
 		return 0;
 	}
 
-	private int getSkillPosition(int skillIndex) {
+	private int getSkillPosition(PlayerSkill skillIndex) {
+		if (skillIndex==null) return -1;
 		return switch (skillIndex) {
-			case PlayerSkill.KEEPER -> 0;
-			case PlayerSkill.PLAYMAKING -> 1;
-			case PlayerSkill.PASSING -> 2;
-			case PlayerSkill.WINGER -> 3;
-			case PlayerSkill.DEFENDING -> 4;
-			case PlayerSkill.SCORING -> 5;
-			case PlayerSkill.SET_PIECES -> 6;
-			case PlayerSkill.STAMINA -> 7;
+			case KEEPER -> 0;
+			case PLAYMAKING -> 1;
+			case PASSING -> 2;
+			case WINGER -> 3;
+			case DEFENDING -> 4;
+			case SCORING -> 5;
+			case SETPIECES -> 6;
+			case STAMINA -> 7;
 			default -> -1;
 		};
 

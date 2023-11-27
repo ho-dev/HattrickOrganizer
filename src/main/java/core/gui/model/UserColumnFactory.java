@@ -26,6 +26,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 
+import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 
 /**
@@ -80,12 +81,15 @@ final public class UserColumnFactory {
                         -MatchRoleID.getSortId((byte) spielerCBItem.getPosition(), false),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-                var r = ratingPredictionModel.getPlayerMatchAverageRating(spielerCBItem.getSpieler(), (byte)spielerCBItem.getPosition());
-                colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) spielerCBItem.getPosition())
-                        + " ("
-                        + r
-                        + ")");
+                var position = spielerCBItem.getPosition();
+                if (aPositionBehaviours.contains(position)) {
+                    var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+                    var r = ratingPredictionModel.getPlayerMatchAverageRating(spielerCBItem.getSpieler(), (byte) position);
+                    colorLabelEntry.setText(MatchRoleID.getNameForPosition((byte) position)
+                            + " ("
+                            + r
+                            + ")");
+                }
                 return colorLabelEntry;
             }
         };
@@ -226,7 +230,7 @@ final public class UserColumnFactory {
         playerSkillArray[6] = new PlayerSkillColumn(150, "ls.player.skill_short.passing", "ls.player.skill.passing", PlayerSkill.PASSING);
         playerSkillArray[7] = new PlayerSkillColumn(160, "ls.player.skill_short.winger", "ls.player.skill.winger", PlayerSkill.WINGER);
         playerSkillArray[8] = new PlayerSkillColumn(170, "ls.player.skill_short.scoring", "ls.player.skill.scoring", PlayerSkill.SCORING);
-        playerSkillArray[9] = new PlayerSkillColumn(180, "ls.player.skill_short.setpieces", "ls.player.skill.setpieces", PlayerSkill.SET_PIECES);
+        playerSkillArray[9] = new PlayerSkillColumn(180, "ls.player.skill_short.setpieces", "ls.player.skill.setpieces", PlayerSkill.SETPIECES);
         playerSkillArray[10] = new PlayerSkillColumn(80, "ls.player.short_leadership", "ls.player.leadership", PlayerSkill.LEADERSHIP);
         playerSkillArray[11] = new PlayerSkillColumn(90, "ls.player.short_experience", "ls.player.experience", PlayerSkill.EXPERIENCE);
 

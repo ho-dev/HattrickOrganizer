@@ -12,7 +12,7 @@ public class SetPiecesWeeklyTraining extends WeeklyTrainingType {
 	{
 		_Name = "Set Pieces";
 		_TrainingType = TrainingType.SET_PIECES;
-		_PrimaryTrainingSkill = PlayerSkill.SET_PIECES;
+		_PrimaryTrainingSkill = PlayerSkill.SETPIECES;
 
 		factorTrainingTypeKoeff = 14.7;
 

@@ -132,7 +132,7 @@ public class TrainingRecapTable extends JScrollPane {
                 if (s == null) {
                     row.add("");
                 } else {
-                    row.add(s.getType() + " " + s.getValue() + " " + s.getChange());
+                    row.add(s.getType().toInt() + " " + s.getValue() + " " + s.getChange());
                 }
             }
 
@@ -266,8 +266,8 @@ public class TrainingRecapTable extends JScrollPane {
 
         fixed.setDefaultRenderer(Object.class, new FixedTrainingRecapRenderer());
         scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer(this.trainingModel));
-        // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
-        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
+//        // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
+//        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
 

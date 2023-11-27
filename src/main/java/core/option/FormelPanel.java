@@ -15,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,15 +44,13 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     private SliderPanel m_jpTorwart;
     private SliderPanel m_jpVerteidigung;
     private SliderPanel m_jpNORMALISATIONFACTOR;
-    private short FAKTOR = 1770;
-    private short NORM_FAKTOR = 52;
 
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new FormelPanel object.
      */
-    protected FormelPanel() {
+    FormelPanel() {
         initComponents();
     }
 
@@ -59,7 +58,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
 
     //---------------Listener-------------------------------------------
     @Override
-	public final void actionPerformed(java.awt.event.ActionEvent actionEvent) {
+	public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(m_jbResetToDefaults)) {
             final int value = JOptionPane.showConfirmDialog(this,
                                                             HOVerwaltung.instance().getLanguageString("FrageFormelwertReset"),
@@ -131,18 +130,18 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     }
 
     @Override
-	public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
+	public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             refresh();
         }
     }
 
     //---------------Hilfsmethoden--------------------------------------
-    public final void refresh() {
+    public void refresh() {
     	final FormulaFactors factors = FormulaFactors.instance();
         FactorObject factorObject;
 
-        factorObject = factors.getPositionFactor((byte) ((CBItem) m_jcbPosition.getSelectedItem()).getId());
+        factorObject = factors.getPositionFactor((byte) ((CBItem) Objects.requireNonNull(m_jcbPosition.getSelectedItem())).getId());
 
         m_jpSpielaufbau.removeChangeListener(this);
         m_jpFluegelspiel.removeChangeListener(this);
@@ -173,11 +172,11 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     }
 
     @Override
-	public final void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
+	public void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
         //saven der aktuellen Einstellungen
     	final FormulaFactors factors = FormulaFactors.instance();
-        final FactorObject factorObject = new FactorObject((byte) (((CBItem) m_jcbPosition
-                                                                    .getSelectedItem()).getId()),
+        final FactorObject factorObject = new FactorObject((byte) (((CBItem) Objects.requireNonNull(m_jcbPosition
+                .getSelectedItem())).getId()),
                                                            m_jpTorwart.getValue(),
                                                            m_jpSpielaufbau.getValue(),
                                                            m_jpPasspiel.getValue(),
@@ -224,41 +223,42 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         panel.setLayout(new GridLayout(8, 1, 4, 4));
         panel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BORDER)));
 
-        m_jpSpielaufbau = new SliderPanel(PlayerSkill.toString(PlayerSkill.PLAYMAKING),
-                                          100, 0, FAKTOR, 1.0f, 80);
+        short FAKTOR = 1770;
+        m_jpSpielaufbau = new SliderPanel(PlayerSkill.PLAYMAKING.getLanguageString(),100, 0, FAKTOR, 1.0f, 80);
         m_jpSpielaufbau.addChangeListener(this);
         panel.add(m_jpSpielaufbau);
 
-        m_jpFluegelspiel = new SliderPanel(PlayerSkill.toString(PlayerSkill.WINGER),
+        m_jpFluegelspiel = new SliderPanel(PlayerSkill.WINGER.getLanguageString(),
                                            100, 0, FAKTOR, 1.0f, 80);
         m_jpFluegelspiel.addChangeListener(this);
         panel.add(m_jpFluegelspiel);
 
-        m_jpTorschuss = new SliderPanel(PlayerSkill.toString(PlayerSkill.SCORING),
+        m_jpTorschuss = new SliderPanel(PlayerSkill.SCORING.getLanguageString(),
                                         100, 0, FAKTOR, 1.0f, 80);
         m_jpTorschuss.addChangeListener(this);
         panel.add(m_jpTorschuss);
 
-        m_jpTorwart = new SliderPanel(PlayerSkill.toString(PlayerSkill.KEEPER),
+        m_jpTorwart = new SliderPanel(PlayerSkill.KEEPER.getLanguageString(),
                                       100, 0, FAKTOR, 1.0f, 80);
         m_jpTorwart.addChangeListener(this);
         panel.add(m_jpTorwart);
 
-        m_jpPasspiel = new SliderPanel(PlayerSkill.toString(PlayerSkill.PASSING),
+        m_jpPasspiel = new SliderPanel(PlayerSkill.PASSING.getLanguageString(),
                                        100, 0, FAKTOR, 1.0f, 80);
         m_jpPasspiel.addChangeListener(this);
         panel.add(m_jpPasspiel);
 
-        m_jpVerteidigung = new SliderPanel(PlayerSkill.toString(PlayerSkill.DEFENDING),
+        m_jpVerteidigung = new SliderPanel(PlayerSkill.DEFENDING.getLanguageString(),
                                            100, 0, FAKTOR, 1.0f, 80);
         m_jpVerteidigung.addChangeListener(this);
         panel.add(m_jpVerteidigung);
 
-        m_jpStandard = new SliderPanel(PlayerSkill.toString(PlayerSkill.SET_PIECES),
+        m_jpStandard = new SliderPanel(PlayerSkill.SETPIECES.getLanguageString(),
                                        100, 0, FAKTOR, 1.0f, 80);
         m_jpStandard.addChangeListener(this);
         panel.add(m_jpStandard);
 
+        short NORM_FAKTOR = 52;
         m_jpNORMALISATIONFACTOR = new SliderPanel(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor.Short"),
                 100, 0, NORM_FAKTOR, 1.0f, 80);
         m_jpNORMALISATIONFACTOR.setToolTipText(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor"));

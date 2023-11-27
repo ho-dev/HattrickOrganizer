@@ -307,7 +307,7 @@ final class SpielerDetailDialog extends JDialog {
                     + m_clPlayer.getSub4Skill(PlayerSkill.WINGER)));
 			m_jpFluegelspiel2.clear();
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSetPiecesSkill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SETPIECES)));
 			m_jpStandards2.clear();
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getScoringSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));
@@ -381,11 +381,11 @@ final class SpielerDetailDialog extends JDialog {
 							- m_clPlayer.getSub4Skill(PlayerSkill.WINGER),
 					!m_clVergleichsPlayer.isGoner(), true);
 			m_jpStandards.setText(PlayerAbility.getNameForSkill(m_clPlayer.getSetPiecesSkill()
-                    + m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES)));
+                    + m_clPlayer.getSub4Skill(PlayerSkill.SETPIECES)));
 			m_jpStandards2.setGraphicalChangeValue(
 					m_clVergleichsPlayer.getSetPiecesSkill() - m_clPlayer.getSetPiecesSkill(),
-					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SET_PIECES)
-							- m_clPlayer.getSub4Skill(PlayerSkill.SET_PIECES),
+					m_clVergleichsPlayer.getSub4Skill(PlayerSkill.SETPIECES)
+							- m_clPlayer.getSub4Skill(PlayerSkill.SETPIECES),
 					!m_clVergleichsPlayer.isGoner(), true);
 			m_jpTorschuss.setText(PlayerAbility.getNameForSkill(m_clPlayer.getScoringSkill()
                     + m_clPlayer.getSub4Skill(PlayerSkill.SCORING)));

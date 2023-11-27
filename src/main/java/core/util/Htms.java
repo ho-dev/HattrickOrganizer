@@ -66,7 +66,7 @@ public class Htms {
             /*47 + 0 */ -1980
     };
 
-    public static int htms(Map<Integer, Integer> skills) {
+    public static int htms(Map<PlayerSkill, Integer> skills) {
         var ret = 0;
         for (var skill : skills.entrySet()) {
             var id = skill.getKey();
@@ -74,12 +74,12 @@ public class Htms {
             if (level <= 0) continue;
             if (level > 20) level = 20;
             int skillIndex = switch (id) {
-                case PlayerSkill.DEFENDING -> 1;
-                case PlayerSkill.PLAYMAKING -> 2;
-                case PlayerSkill.WINGER -> 3;
-                case PlayerSkill.PASSING -> 4;
-                case PlayerSkill.SCORING -> 5;
-                case PlayerSkill.SET_PIECES -> 6;
+                case DEFENDING -> 1;
+                case PLAYMAKING -> 2;
+                case WINGER -> 3;
+                case PASSING -> 4;
+                case SCORING -> 5;
+                case SETPIECES -> 6;
                 default -> 0; // Keeper
             };
 
@@ -88,7 +88,7 @@ public class Htms {
         return ret;
     }
 
-    public static int htms28(Map<Integer, Integer> skills, int ageYears, int ageDays) {
+    public static int htms28(Map<PlayerSkill, Integer> skills, int ageYears, int ageDays) {
         int index = ageYears - 17;
         if (index < 0) return 0;
         int increment;

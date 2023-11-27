@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-
 public class HOVerwaltung {
 
 
@@ -216,7 +215,6 @@ public class HOVerwaltung {
 		} catch (Exception e) {
 			// Do nothing, it just throws error if key is missing. 
 		}
-
 		if (temp != null)
 			return temp;
 		// Search in english.properties if nothing found and active language not
@@ -229,7 +227,7 @@ public class HOVerwaltung {
 			} catch (Exception e) {
 				// Ignore
 			}
-			
+
 			if (temp != null)
 				return temp;
 		}
@@ -261,10 +259,10 @@ public class HOVerwaltung {
 
 	public static String[] getLanguageFileNames() {
 		String[] files = null;
-		final Vector<String> sprachdateien = new Vector<>();
 
 		try {
             java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
+            assert is != null;
             java.util.Scanner s = new java.util.Scanner(is);
             java.util.ArrayList<String> llist = new java.util.ArrayList<>();
             while (s.hasNext()){

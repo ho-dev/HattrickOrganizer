@@ -1,5 +1,6 @@
 package core.model.player;
 
+import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.util.HODateTime;
 
@@ -8,7 +9,7 @@ public class Skillup extends AbstractTable.Storable {
     private int hrfId;
     private HODateTime date;
     private int playerId;
-    private int skill;
+    private PlayerSkill skill;
     private int value;
 
     public Skillup(){}
@@ -37,11 +38,11 @@ public class Skillup extends AbstractTable.Storable {
         return playerId;
     }
 
-    public void setSkill(int v) {
+    public void setSkill(PlayerSkill v) {
         this.skill=v;
     }
 
-    public int getSkill() {
+    public PlayerSkill getSkill() {
         return skill;
     }
 

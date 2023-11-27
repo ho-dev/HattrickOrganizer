@@ -1,5 +1,6 @@
 package core.training;
 
+import core.constants.player.PlayerSkill;
 import core.model.player.Player;
 import core.util.HODateTime;
 
@@ -77,10 +78,10 @@ public class TrainingPerPlayer  {
 		return experienceSub;
 	}
 
-    public float calcSubskillIncrement(int skill, double skillValueBeforeTraining, HODateTime date) {
+    public double calcSubskillIncrement(PlayerSkill skill, double skillValueBeforeTraining, HODateTime date) {
 
 		int skillValue = (int) skillValueBeforeTraining;
-		float ret = 0;
+		double ret = 0;
 
 		var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
 		boolean isTrainedSkill = wt != null && wt.isTraining(skill);
@@ -94,30 +95,8 @@ public class TrainingPerPlayer  {
 
 
 		if (ret > 1) ret = 1; // limit 1
-
-//		HOLogger.instance().info(this.getClass(),
-//				_Player.getLastName() +
-//						"; Age=" + _Player.getAlter() +
-//						"; Minutes=" + this.logTrainingMinutes() +
-//						"; Training: " + (wt!=null?wt._Name:"unknown") +
-//						"; " + PlayerSkill.toString(skill) + " before Training: " + skillValueBeforeTraining +
-//						" Increment=" + ret
-//		);
-
 		return ret;
 	}
-//
-//	private String logTrainingMinutes() {
-//		if ( this.getTrainingPair() != null){
-//			var duration = this.getTrainingPair().getTrainingDuration();
-//			if ( duration != null){
-//				return duration.getFullTrainingMinutes() +
-//						";" + duration.getPartlyTrainingMinutes() +
-//						";" + duration.getOsmosisTrainingMinutes();
-//			}
-//		}
-//		return "0;0;0";
-//	}
 
 	/**
 	 * Calculate player's age in years at the given training date

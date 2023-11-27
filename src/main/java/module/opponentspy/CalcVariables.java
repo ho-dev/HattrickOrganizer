@@ -18,15 +18,15 @@ public class CalcVariables {
 	public int role;
 	public int specialty;
 
-	private Skill 	goalkeeping	= new Skill(PlayerSkill.KEEPER);
-	private Skill 	playmaking	= new Skill(PlayerSkill.PLAYMAKING);
-	private Skill 	defending	= new Skill(PlayerSkill.DEFENDING);
-	private Skill 	wing		= new Skill(PlayerSkill.WINGER);
-	private Skill 	scoring		= new Skill(PlayerSkill.SCORING);
-	private Skill 	passing		= new Skill(PlayerSkill.PASSING);
-	private Skill 	setPieces	= new Skill(PlayerSkill.SET_PIECES);	
+	private final Skill 	goalkeeping	= new Skill(PlayerSkill.KEEPER);
+	private final Skill 	playmaking	= new Skill(PlayerSkill.PLAYMAKING);
+	private final Skill 	defending	= new Skill(PlayerSkill.DEFENDING);
+	private final Skill 	wing		= new Skill(PlayerSkill.WINGER);
+	private final Skill 	scoring		= new Skill(PlayerSkill.SCORING);
+	private final Skill 	passing		= new Skill(PlayerSkill.PASSING);
+	private final Skill 	setPieces	= new Skill(PlayerSkill.SETPIECES);
 	
-	private List<Skill> skills;
+	private final List<Skill> skills;
 	
 	public int 		calculatedTSI;
 	public int		calculatedWage;
@@ -150,13 +150,13 @@ public class CalcVariables {
 		return stamina;
 	}
 	
-	public class Skill {
-		Skill(int skillType) {
+	public static class Skill {
+		Skill(PlayerSkill skillType) {
 			this.skillType = skillType;
 		}
 		
 		public double skillValue = 0;
-		public int skillType = 0;
+		public PlayerSkill skillType;
 		public double priority = 0;
 		public boolean isMainSkill = false;
 	}

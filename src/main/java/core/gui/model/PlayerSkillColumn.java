@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 public class PlayerSkillColumn extends PlayerColumn {
 	
 	/** id for the skill **/
-	private final int skill;
+	private final PlayerSkill skill;
 	
 	/** different color for some skills **/
 	private final Color background;
@@ -35,7 +35,7 @@ public class PlayerSkillColumn extends PlayerColumn {
 	 * @param tooltip
 	 * @param skill
 	 */
-	protected PlayerSkillColumn(int id,String name, String tooltip,int skill){
+	protected PlayerSkillColumn(int id,String name, String tooltip,PlayerSkill skill){
 		super(id,name,tooltip);
 		this.skill = skill;
 		background = (skill == PlayerSkill.EXPERIENCE
@@ -53,16 +53,16 @@ public class PlayerSkillColumn extends PlayerColumn {
 	}
 	
 	public  IHOTableEntry getSkillValue(Player player){
+		var value = player.getValue4Skill(skill);
 		if( skill == PlayerSkill.FORM
 				|| skill == PlayerSkill.STAMINA
 				|| skill == PlayerSkill.LEADERSHIP
 				|| skill == PlayerSkill.LOYALTY){
-		return new ColorLabelEntry(getSkill(player),
+		return new ColorLabelEntry(value,
                 background,
                 false, 0);
 		}
-		return new SkillEntry(getSkill(player)
-                + player.getSub4Skill(skill),
+		return new SkillEntry(value + player.getSub4Skill(skill),
               ColorLabelEntry.FG_STANDARD,
               background);
 	}
@@ -80,40 +80,16 @@ public class PlayerSkillColumn extends PlayerColumn {
 	                   SwingConstants.RIGHT);
 		}
 		
-		return new ColorLabelEntry(getSkill(player)
-                - getSkill(comparePlayer),
+		return new ColorLabelEntry(player.getValue4Skill(skill)
+                - comparePlayer.getValue4Skill(skill),
                   player.getSub4Skill(skill)
-                - comparePlayer
-                  .getSub4Skill(skill),
+                - comparePlayer.getSub4Skill(skill),
                 !comparePlayer.isGoner(),
                 background,
                 true);
 		
 	}
-	
-	/**
-	 * returns right value for the skill
-	 * @param player
-	 * @return
-	 */
-	private int getSkill(Player player){
-        return switch (skill) {
-            case PlayerSkill.KEEPER -> player.getGoalkeeperSkill();
-            case PlayerSkill.DEFENDING -> player.getDefendingSkill();
-            case PlayerSkill.PASSING -> player.getPassingSkill();
-            case PlayerSkill.WINGER -> player.getWingerSkill();
-            case PlayerSkill.PLAYMAKING -> player.getPlaymakingSkill();
-            case PlayerSkill.SET_PIECES -> player.getSetPiecesSkill();
-            case PlayerSkill.SCORING -> player.getScoringSkill();
-            case PlayerSkill.EXPERIENCE -> player.getExperience();
-            case PlayerSkill.FORM -> player.getForm();
-            case PlayerSkill.STAMINA -> player.getStamina();
-            case PlayerSkill.LEADERSHIP -> player.getLeadership();
-            case PlayerSkill.LOYALTY -> player.getLoyalty();
-            default -> 0;
-        };
-    }
-	
+
 	/**
 	 * overwrite the method from UserColumn
 	 */

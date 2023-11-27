@@ -144,7 +144,7 @@ public class OutputTableModel extends AbstractTableModel {
             case 6 -> createIcon(player, PlayerSkill.PASSING);
             case 7 -> createIcon(player, PlayerSkill.WINGER);
             case 8 -> createIcon(player, PlayerSkill.SCORING);
-            case 9 -> createIcon(player, PlayerSkill.SET_PIECES);
+            case 9 -> createIcon(player, PlayerSkill.SETPIECES);
             case 10 -> createIcon(player, PlayerSkill.STAMINA);
             default -> "";
         };
@@ -168,7 +168,7 @@ public class OutputTableModel extends AbstractTableModel {
      * @param skillIndex skill trained
      * @return predicted training length
      */
-    private double getTrainingLength(Player player, int skillIndex) {
+    private double getTrainingLength(Player player, PlayerSkill skillIndex) {
         WeeklyTrainingType wt = WeeklyTrainingType.instance(Skills.getTrainingTypeForSkill(skillIndex));
         if (wt != null) {
             var model = HOVerwaltung.instance().getModel();
@@ -191,7 +191,7 @@ public class OutputTableModel extends AbstractTableModel {
      * @param skillIndex points to skillup
      * @return the VerticalIndicator object
      */
-    private VerticalIndicator createIcon(Player player, int skillIndex) {
+    private VerticalIndicator createIcon(Player player, PlayerSkill skillIndex) {
         double trainingLength = getTrainingLength(player, skillIndex);
         double point = trainingLength * player.getSub4Skill(skillIndex);
         return new VerticalIndicator(Helper.round(point, 1), Helper.round(

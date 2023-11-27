@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static module.youth.YouthSkillInfo.getSkillName;
+
 public class YouthPlayerDetailsTableModel extends HOTableModel {
 
     // TODO examine rating and compare to hattrick's values to help adjust start skills
@@ -97,7 +99,8 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
 
         // TODO a final version should show skill development by a 2d-plot (graphic)
         for (var skillId : YouthPlayer.skillIds) {
-            tmp.add(new YouthPlayerDetailsColumn("ls.youth.player." + skillId.toString()) {
+            var skillName = getSkillName(skillId);
+            tmp.add(new YouthPlayerDetailsColumn("ls.youth.player." + skillName) {
                 @Override
                 public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                     return new ColorLabelEntry(entry.getSkillValue(skillId));

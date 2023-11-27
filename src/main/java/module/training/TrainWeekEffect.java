@@ -1,5 +1,7 @@
 package module.training;
 
+import core.constants.player.PlayerSkill;
+
 /**
  * This value object represents a week of training. It contains the last hrf id before a training
  * update and the first hrf id after the update. It also contains the effect of the training as a
@@ -23,23 +25,23 @@ public class TrainWeekEffect {
     private int formIncrease;
 
     /** HRF id after training update */
-    private int hrfIdAfter;
+    private final int hrfIdAfter;
 
     /** HRF id before training update */
-    private int hrfIdBefore;
+    private final int hrfIdBefore;
 
     /** Number of skillups */
     private int skillups;
 
     /** Value for total TSI */
     private int totalTSI;
-    private int trainingType;
+    private PlayerSkill trainingType;
 
     /** Training season */
-    private int trainseason;
+    private final int trainseason;
 
     /** Training week */
-    private int trainweek;
+    private final int trainweek;
 
     /** Value for total decrease in TSI */
     private int tsiDecrease;
@@ -210,11 +212,11 @@ public class TrainWeekEffect {
         return totalTSI;
     }
 
-    public void setTrainingType(int trainingType) {
+    public void setTrainingType(PlayerSkill trainingType) {
         this.trainingType = trainingType;
     }
 
-    public int getTrainingType() {
+    public PlayerSkill getTrainingType() {
         return trainingType;
     }
 
@@ -246,15 +248,11 @@ public class TrainWeekEffect {
 
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
-
-        buffer.append("TrainWeekEffect[");
-        buffer.append(" HT season = " + trainseason);
-        buffer.append(", HT week = " + trainweek);
-        buffer.append(", hrf before = " + hrfIdBefore);
-        buffer.append(", hrf after = " + hrfIdAfter);
-        buffer.append("]");
-
-        return buffer.toString();
+        return "TrainWeekEffect[" +
+                " HT season = " + trainseason +
+                ", HT week = " + trainweek +
+                ", hrf before = " + hrfIdBefore +
+                ", hrf after = " + hrfIdAfter +
+                "]";
     }
 }

@@ -1,9 +1,8 @@
 package module.training;
 
+import core.constants.player.PlayerSkill;
 import core.model.player.ISkillChange;
 import core.util.HODateTime;
-
-import java.util.Date;
 
 
 /**
@@ -25,7 +24,7 @@ public class PastSkillChange implements ISkillChange {
     private int trainType;
 
     /** type of skill changed */
-    private int type;
+    private PlayerSkill type;
 
     /** Value of skill */
     private double value;
@@ -69,9 +68,9 @@ public class PastSkillChange implements ISkillChange {
     /**
      * Set training type
      *
-     * @param type
+     * @param type PLayer skill type
      */
-    public void setType(int type) {
+    public void setType(PlayerSkill type) {
         this.type = type;
     }
 
@@ -80,14 +79,14 @@ public class PastSkillChange implements ISkillChange {
      *
      * @return type
      */
-    public int getType() {
+    public PlayerSkill getType() {
         return type;
     }
 
     /**
      * Set the new value of the skill
      *
-     * @param newValue
+     * @param newValue Double
      */
     public void setValue(double newValue) {
         value = newValue;

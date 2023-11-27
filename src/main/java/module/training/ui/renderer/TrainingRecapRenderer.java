@@ -81,14 +81,14 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 			 *      "3 10.99 -1" for skilldrop to outstanding playmaking
         	 */
 
-        	if (s != null && s.length() > 0) {
+        	if (s != null && !s.isEmpty()) {
         		String[] skills = s.split(" "); //$NON-NLS-1$
-        		int skillType = Integer.parseInt(skills[0]);
+        		var skillType = PlayerSkill.fromInteger(Integer.parseInt(skills[0]));
         		int change = Integer.parseInt((skills[2])); // +1: skillup; -1: skilldrop
         		icon = TrainingLegendPanel.getSkillupTypeIcon(skillType, change);
         		double val = Double.parseDouble(skills[1]);
         		String skillLevelName = PlayerAbility.getNameForSkill(val, true);
-        		tooltip = PlayerSkill.toString(skillType)+": " + skillLevelName;
+        		tooltip = skillType.getLanguageString()+": " + skillLevelName;
         		text = skillLevelName;
         	}
 
@@ -128,7 +128,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
     								+  HOVerwaltung.instance().getLanguageString("ls.player.age.years")
     								+ ")";
 
-            		if (text == null || text.length() == 0) {
+            		if (text == null || text.isEmpty()) {
             			text = ageText;
             		} else {
             			tooltip = "<html>" + tooltip + "<br>" + ageText + "</html>";

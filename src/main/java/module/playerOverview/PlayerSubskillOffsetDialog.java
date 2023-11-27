@@ -70,7 +70,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.WINGER, wingerOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.PASSING, passingOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.PLAYMAKING, playmakingOffsetSlider.getValue() / 100);
-			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.SET_PIECES, setPiecesOffsetSlider.getValue() / 100);
+			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.SETPIECES, setPiecesOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.SCORING, scoringOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.KEEPER, keeperOffsetSlider.getValue() / 100);
 			m_clPlayer.setSubskill4PlayerSkill(PlayerSkill.DEFENDING, defendingOffsetSlider.getValue() / 100);
@@ -113,7 +113,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		keeperOffsetSlider = createSliderPanel(panel, "ls.player.skill.keeper", PlayerSkill.KEEPER);
 		passingOffsetSlider = createSliderPanel(panel, "ls.player.skill.passing", PlayerSkill.PASSING);
 		defendingOffsetSlider = createSliderPanel(panel, "ls.player.skill.defending", PlayerSkill.DEFENDING);
-		setPiecesOffsetSlider = createSliderPanel(panel, "ls.player.skill.setpieces", PlayerSkill.SET_PIECES);
+		setPiecesOffsetSlider = createSliderPanel(panel, "ls.player.skill.setpieces", PlayerSkill.SETPIECES);
 		experienceOffsetSlider = createSliderPanel(panel, "ls.player.experience", PlayerSkill.EXPERIENCE);
 
 		constraints.anchor = GridBagConstraints.WEST;
@@ -148,7 +148,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		getContentPane().add(cancelButton);
 	}
 
-	private SliderPanel createSliderPanel(JPanel panel, String languageString, int skill) {
+	private SliderPanel createSliderPanel(JPanel panel, String languageString, PlayerSkill skill) {
 		SliderPanel ret = new SliderPanel(Helper.getTranslation(languageString),100, 0, 1, 1f,80);
 
 		ret.setValue((float)m_clPlayer.getSub4Skill(skill) * 100f);

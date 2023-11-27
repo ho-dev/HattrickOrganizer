@@ -3,6 +3,7 @@ package module.training.ui.model;
 import core.model.HOVerwaltung;
 import module.training.TrainWeekEffect;
 
+import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.List;
 
@@ -14,8 +15,6 @@ import javax.swing.table.AbstractTableModel;
  * TableModel representing the effect of training.
  *
  * @author NetHyperon
- *
- * @see hoplugins.trainingExperience.vo.TrainWeekEffect
  */
 public class EffectTableModel extends AbstractTableModel {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -23,14 +22,15 @@ public class EffectTableModel extends AbstractTableModel {
     /**
 	 *
 	 */
-	private static final long serialVersionUID = 6647124384624067021L;
+	@Serial
+    private static final long serialVersionUID = 6647124384624067021L;
 
     private static final NumberFormat FORMATTER = NumberFormat.getInstance();
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private List<TrainWeekEffect> values;
-    private String[] colNames = new String[9];
+    private final List<TrainWeekEffect> values;
+    private final String[] colNames = new String[9];
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -87,38 +87,19 @@ public class EffectTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         TrainWeekEffect effect = values.get(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return Integer.toString(effect.getHattrickWeek());
-
-            case 1:
-                return Integer.toString(effect.getHattrickSeason());
-
-            case 2:
-                return Integer.toString(effect.getTotalTSI());
-
-            case 3:
-                return Integer.toString(effect.getAverageTSI());
-
-            case 4:
-                return "+" + effect.getTSIIncrease() + " / " //$NON-NLS-1$ //$NON-NLS-2$
-                       + effect.getTSIDecrease();
-
-            case 5:
-                return FORMATTER.format(effect.getAverageForm());
-
-            case 6:
-                return "+" + effect.getFormIncrease() + " / " //$NON-NLS-1$ //$NON-NLS-2$
-                       + effect.getFormDecrease();
-
-            case 7:
-                return Integer.toString(effect.getAmountSkillups());
-
-            case 8:
-                return Integer.toString(effect.getTrainingType());
-
-            default:
-                return ""; //$NON-NLS-1$
-        }
+        return switch (columnIndex) {
+            case 0 -> Integer.toString(effect.getHattrickWeek());
+            case 1 -> Integer.toString(effect.getHattrickSeason());
+            case 2 -> Integer.toString(effect.getTotalTSI());
+            case 3 -> Integer.toString(effect.getAverageTSI());
+            case 4 -> "+" + effect.getTSIIncrease() + " / " //$NON-NLS-1$ //$NON-NLS-2$
+                    + effect.getTSIDecrease();
+            case 5 -> FORMATTER.format(effect.getAverageForm());
+            case 6 -> "+" + effect.getFormIncrease() + " / " //$NON-NLS-1$ //$NON-NLS-2$
+                    + effect.getFormDecrease();
+            case 7 -> Integer.toString(effect.getAmountSkillups());
+            case 8 -> effect.getTrainingType();
+            default -> ""; //$NON-NLS-1$
+        };
     }
 }

@@ -19,9 +19,9 @@ import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,12 +30,12 @@ import java.util.List;
  * Bietet Übersicht über alle Player
  */
 public class SpielerAnalysePanel extends LazyImagePanel {
+	@Serial
 	private static final long serialVersionUID = 7705544952029589545L;
 	private JComboBox playerComboBox;
-	private JSplitPane horizontalSplitPane;
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
 	private SpielerPositionTable m_jtSpielerPositionTable;
-	private int columnModelInstance;
+	private final int columnModelInstance;
 
 	/**
 	 * Creates a new SpielerAnalysePanel object.
@@ -67,15 +67,11 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.playerComboBox.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-					showSelectedPlayer();
-				}
-			}
-		});
+		this.playerComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                showSelectedPlayer();
+            }
+        });
 		m_jtSpielerMatchesTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -90,7 +86,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 						MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
 						HattrickLink.showMatch(matchId+"",info.getMatchType().isOfficial());
 					}
-				}catch (Exception ex){
+				}catch (Exception ignored){
 
 				}
 
@@ -100,7 +96,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 	private void fillSpielerCB() {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<PlayerCBItem> playerCBItems = new ArrayList<PlayerCBItem>(players.size());
+		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
 
 		for (Player player : players) {
 			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
@@ -109,7 +105,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		// Alte Player
 		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		List<PlayerCBItem> spielerOldCBItems = new ArrayList<PlayerCBItem>(oldPlayers.size());
+		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(oldPlayers.size());
 
 		for (Player player : oldPlayers) {
 			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
@@ -117,8 +113,8 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		Collections.sort(spielerOldCBItems);
 
 		// Zusammenfügen
-		List<PlayerCBItem> cbItems = new ArrayList<PlayerCBItem>(playerCBItems.size()
-				+ spielerOldCBItems.size() + 1);
+		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size()
+                + spielerOldCBItems.size() + 1);
 
 		cbItems.addAll(playerCBItems);
 		// Fur die Leerzeile;
@@ -141,11 +137,11 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 					.getPlayerId();
 		}
 
-		horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
+		JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
 				initSpielerMatchesTabelle(spielerid), initSpielerPositionTabelle(spielerid));
 
 		horizontalSplitPane
-				.setDividerLocation((core.model.UserParameter.instance().hoMainFrame_height * 1) / 3);
+				.setDividerLocation((core.model.UserParameter.instance().hoMainFrame_height) / 3);
 		add(horizontalSplitPane, BorderLayout.CENTER);
 	}
 
@@ -184,7 +180,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	/**
-	 * Aktualisiert die beiden Tabellen mit den Werten des ausgewählten Spielers
+	 * Update both tables with current player's values
 	 */
 	private void showSelectedPlayer() {
 		if (playerComboBox.getSelectedIndex() > -1) {

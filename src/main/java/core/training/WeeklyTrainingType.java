@@ -3,6 +3,7 @@ package core.training;
 import java.util.ArrayList;
 import java.util.List;
 import core.constants.TrainingType;
+import core.constants.player.PlayerSkill;
 import core.model.player.MatchRoleID;
 import core.training.type.*;
 import core.util.HOLogger;
@@ -10,8 +11,8 @@ import core.util.HOLogger;
 public abstract class WeeklyTrainingType {
 	protected String _Name = "";
 	protected int _TrainingType = 0;
-	protected int _PrimaryTrainingSkill = -1;
-	protected int _SecondaryTrainingSkill = -1;
+	protected PlayerSkill _PrimaryTrainingSkill = null;
+	protected PlayerSkill _SecondaryTrainingSkill = null;
 
 	protected List<MatchRoleID.Sector> bonusTrainingSectors = new ArrayList<>();
 	protected List<MatchRoleID.Sector> fullTrainingSectors = new ArrayList<>();
@@ -71,11 +72,11 @@ public abstract class WeeklyTrainingType {
 		return _TrainingType;
 	}
 
-	public int getPrimaryTrainingSkill() {
+	public PlayerSkill getPrimaryTrainingSkill() {
 		return _PrimaryTrainingSkill;
 	}
 
-	public int getSecondaryTrainingSkill() {
+	public PlayerSkill getSecondaryTrainingSkill() {
 		return _SecondaryTrainingSkill;
 	}
 
@@ -435,7 +436,7 @@ public abstract class WeeklyTrainingType {
 	 * @param ageYears     current age of the player
 	 * @return training skill increment of bonus training
 	 */
-	public double getBonusYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
+	public double getBonusYouthTrainingPerMinute(PlayerSkill skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) * (1 + this.getPrimaryTrainingSkillBonus());
 	}
 
@@ -447,7 +448,7 @@ public abstract class WeeklyTrainingType {
 	 * @param ageYears     current age of the player
 	 * @return training skill increment of full training
 	 */
-	public double getFullYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
+	public double getFullYouthTrainingPerMinute(PlayerSkill skillId, int currentValue, int ageYears) {
 		double nweeks = (0.5 + 0.1 * currentValue) * (1 + (ageYears - 15) * 0.14);    // approximation
 		if (isTraining(skillId)) {
 			nweeks *= this.getTrainingDurationInWeeks();
@@ -466,7 +467,7 @@ public abstract class WeeklyTrainingType {
 	 * @param ageYears     current age of the player
 	 * @return training skill increment of partly training
 	 */
-	public double getPartlyYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
+	public double getPartlyYouthTrainingPerMinute(PlayerSkill skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillPartlyBaseLengthRate();
 	}
 
@@ -478,7 +479,7 @@ public abstract class WeeklyTrainingType {
 	 * @param ageYears     current age of the player
 	 * @return training skill increment of osmosis training
 	 */
-	public double getOsmosisYouthTrainingPerMinute(int skillId, int currentValue, int ageYears) {
+	public double getOsmosisYouthTrainingPerMinute(PlayerSkill skillId, int currentValue, int ageYears) {
 		return getFullYouthTrainingPerMinute(skillId, currentValue, ageYears) / this.getPrimaryTrainingSkillOsmosisBaseLengthRate();
 	}
 
@@ -498,7 +499,7 @@ public abstract class WeeklyTrainingType {
 		return this.osmosisTrainingSectors;
 	}
 
-	public boolean isTraining(int skill) {
+	public boolean isTraining(PlayerSkill skill) {
 		return skill == getPrimaryTrainingSkill() || skill == getSecondaryTrainingSkill();
 	}
 }
