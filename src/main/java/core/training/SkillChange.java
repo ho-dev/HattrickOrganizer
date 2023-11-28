@@ -7,7 +7,7 @@ import core.util.HODateTime;
 /**
  * Base Object for the Skillup table
  */
-public class PlayerSkillChange implements ISkillChange
+public class SkillChange implements ISkillChange
 {
 
     /** Skillup Date */
