@@ -7,6 +7,7 @@
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
 ### Database
+* fix `unexpected token` issue with Transfer table query (#1965)
 
 ### Squad
 * fix length of owner notes in players' database table (#1816)
