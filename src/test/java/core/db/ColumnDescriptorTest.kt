@@ -38,7 +38,6 @@ class ColumnDescriptorTest {
         // Check length
         Assertions.assertEquals(" TEST VARCHAR(42) PRIMARY KEY",
             descriptor.getCreateString(createDbInfo()))
-        
     }
 
     @Test
@@ -58,8 +57,9 @@ class ColumnDescriptorTest {
     fun testColumnDescriptorNameTypeNullableAndPrimaryKey() {
         val col = arrayOf(
             arrayOf<Any>("NAME", Types.BOOLEAN, false, true, " NAME BOOLEAN NOT NULL PRIMARY KEY"),
-            arrayOf<Any>("NAME", Types.BOOLEAN, false, true, " NAME BOOLEAN NOT NULL PRIMARY KEY"),
-            arrayOf<Any>("NAME", Types.BOOLEAN, true, true, " NAME BOOLEAN PRIMARY KEY")
+            arrayOf<Any>("NAME", Types.BOOLEAN, false, false, " NAME BOOLEAN NOT NULL"),
+            arrayOf<Any>("NAME", Types.BOOLEAN, true, true, " NAME BOOLEAN PRIMARY KEY"),
+            arrayOf<Any>("NAME", Types.BOOLEAN, true, false, " NAME BOOLEAN")
         )
 
         col.forEach {
