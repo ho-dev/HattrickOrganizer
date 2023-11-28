@@ -5,6 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.training.SkillChange;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -98,13 +99,13 @@ public class PastTrainingManager {
 	 * 
 	 * @return a skillup object with season and week value
 	 */
-	private PastSkillChange getSkillup(HODateTime skillupDate) {
-		PastSkillChange skillup = new PastSkillChange();
+	private SkillChange getSkillup(HODateTime skillupDate) {
+		var skillChange = new SkillChange();
 		var htWeek = skillupDate.toLocaleHTWeek();
-		skillup.setHtSeason(htWeek.season);
-		skillup.setHtWeek(htWeek.week);
-		skillup.setDate(skillupDate);
-		return skillup;
+		skillChange.setHtSeason(htWeek.season);
+		skillChange.setHtWeek(htWeek.week);
+		skillChange.setDate(skillupDate);
+		return skillChange;
 	}
 
 	private static class SkillupComperator implements Comparator<ISkillChange> {

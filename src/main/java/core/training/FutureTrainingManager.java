@@ -7,7 +7,6 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
-
 import java.util.*;
 
 public class FutureTrainingManager {
@@ -132,7 +131,7 @@ public class FutureTrainingManager {
 								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 								var trainingDate = trainingPerWeek.getTrainingDate();
 								var htWeek = trainingDate.toLocaleHTWeek();
-								PlayerSkillChange su = new PlayerSkillChange();
+								SkillChange su = new SkillChange();
 								su.setHtSeason(htWeek.season);
 								su.setHtWeek(htWeek.week);
 								su.setType(SKILL_INDEX[i]);
