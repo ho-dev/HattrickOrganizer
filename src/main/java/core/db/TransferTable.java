@@ -203,7 +203,7 @@ public class TransferTable extends AbstractTable {
         return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, teamId));
     }
 
-    DBManager.PreparedStatementBuilder getSumTransferCommissionsStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(motherclubfee+previousclubcommission) FROM " + TABLENAME + " WHERE date=>? AND dete<?");
+    DBManager.PreparedStatementBuilder getSumTransferCommissionsStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(motherclubfee+previousclubcommission) FROM " + TABLENAME + " WHERE date>=? AND date<?");
 
     public int getSumTransferCommissions(HODateTime startOfWeek) {
         var from = startOfWeek.toDbTimestamp();
