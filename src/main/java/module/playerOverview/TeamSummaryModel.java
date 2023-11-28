@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TeamSummaryModel {
 
-    class TeamStatistics {
+    static class TeamStatistics {
         int numPlayers;
         double averageAge;
         double averageSalary;

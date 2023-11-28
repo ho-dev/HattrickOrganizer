@@ -7,6 +7,7 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
+
 import java.util.*;
 
 public class FutureTrainingManager {
@@ -152,8 +153,12 @@ public class FutureTrainingManager {
 			);
 		}
 
-		FuturePlayer fp = new FuturePlayer();
-		fp.setAttack(getFinalValue(PlayerSkill.SCORING));		
+        return getFuturePlayer(weeksPassed);
+	}
+
+	private FuturePlayer getFuturePlayer(int weeksPassed) {
+		final FuturePlayer fp = new FuturePlayer();
+		fp.setAttack(getFinalValue(PlayerSkill.SCORING));
 		fp.setCross(getFinalValue(PlayerSkill.WINGER));
 		fp.setDefense(getFinalValue(PlayerSkill.DEFENDING));
 		fp.setGoalkeeping(getFinalValue(PlayerSkill.KEEPER));
