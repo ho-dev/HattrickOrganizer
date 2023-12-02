@@ -15,6 +15,10 @@ public class ConnectionManager {
 
 	private StatementCache statementCache;
 
+	public StatementCache getStatementCache() {
+		return this.statementCache;
+	}
+
 	/**
 	 * Closes the connection
 	 */

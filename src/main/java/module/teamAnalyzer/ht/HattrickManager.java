@@ -1,4 +1,3 @@
-// %1667190662:hoplugins.teamAnalyzer.ht%
 package module.teamAnalyzer.ht;
 
 import core.db.DBManager;

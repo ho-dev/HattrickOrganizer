@@ -15,7 +15,7 @@ import java.util.StringTokenizer;
  */
 public final class RatingUtil {
     /**
-     * Private default constuctor to prevent class instantiation.
+     * Private default constructor to prevent class instantiation.
      */
     private RatingUtil() {
     }
@@ -74,7 +74,7 @@ public final class RatingUtil {
 	
 	            final String number = st2.nextToken();
 	
-	            if (level.length() > 0) {
+	            if (!level.isEmpty()) {
 	                level = level + " (" + number + ")";
 	            }
 	            else {

@@ -251,8 +251,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		// Add overlays to player panels
 
-		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
-				.entrySet()) {
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			if (entry.getValue() == null) {
 				boolean selected = true;
 				LineupAssistantSelectorOverlay laso = new LineupAssistantSelectorOverlay();

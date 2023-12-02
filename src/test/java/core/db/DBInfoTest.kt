@@ -1,5 +1,6 @@
 package core.db
 
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.sql.DriverManager
@@ -38,5 +39,14 @@ internal class DBInfoTest {
         assertEquals("TEST", tableNames[0])
 
         conn?.close()
+    }
+
+    companion object {
+        @AfterAll
+        @JvmStatic
+        fun cleanUp() {
+            val conn = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "")
+            conn.createStatement().execute("DROP TABLE TEST")
+        }
     }
 }

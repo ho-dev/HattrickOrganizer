@@ -1170,7 +1170,7 @@ public class Lineup{
 	}
 
 	/**
-	 * Assitant to create automatically the lineup
+	 * Assistant to create automatically the lineup
 	 */
 	public final void optimizeLineup(List<Player> players, byte sectorsStrengthPriority, boolean withForm,
 									 boolean idealPosFirst, boolean considerInjured, boolean considereSuspended) {
@@ -1179,32 +1179,6 @@ public class Lineup{
 		setAutoKicker(null);
 		setAutoKapitaen(null);
 	}
-
-//	/**
-//	 * Clone this lineup, creates and returns a new Lineup object.
-//	 */
-//	public final @NotNull Lineup duplicate() {
-//
-//		Lineup clone = new Lineup();
-//		clone.setPenaltyTakers(getPenaltyTakers());
-//		clone.setLocation(getLocation());
-//		clone.setPullBackMinute(getPullBackMinute());
-//		clone.setWeather(getWeather());
-//		clone.setWeatherForecast(getWeatherForecast());
-//		clone.setArenaId(getArenaId());
-//		clone.setRegionId(getRegionId());
-//
-//		clone.m_vFieldPositions = copyPositions(m_vFieldPositions);
-//		clone.m_vBenchPositions = copyPositions(m_vBenchPositions);
-//		clone.setKicker(this.getKicker());
-//		clone.setCaptain(this.getCaptain());
-//		clone.setTacticType(this.getTacticType());
-//		clone.setAttitude(this.getAttitude());
-//		clone.setStyleOfPlay(this.getCoachModifier());
-//
-//		clone.substitutions = copySubstitutions();
-//		return clone;
-//	}
 
 	public final String getCurrentTeamFormationString() {
 		final int iNbDefs = getNbDefenders();

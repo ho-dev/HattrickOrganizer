@@ -15,7 +15,7 @@ import javax.swing.KeyStroke;
 
 public final class TeamAnalyzerModule extends DefaultModule {
 
-	private TeamAnalyzerPanel teamAnalyzerPanel=null;
+	private TeamAnalyzerPanel teamAnalyzerPanel = null;
 
 	public TeamAnalyzerModule(){
 		super(true);

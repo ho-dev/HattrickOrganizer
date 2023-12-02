@@ -8,6 +8,7 @@ import core.gui.SplashFrame;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.jmx.StatementCacheMonitor;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.training.TrainingManager;
@@ -16,7 +17,9 @@ import core.util.HOLogger;
 import core.util.OSUtils;
 import java.io.File;
 import javax.imageio.ImageIO;
+import javax.management.*;
 import javax.swing.*;
+import java.lang.management.ManagementFactory;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -212,6 +215,7 @@ public class HO {
 			DBManager.instance().updateConfig();
 		}
 
+		initJmxSupport();
 
 		// Training
 		interruptionWindow.setInfoText(8, "Initialize Training");
@@ -228,6 +232,21 @@ public class HO {
 			interruptionWindow.setVisible(false);
 			interruptionWindow.dispose();
 		});
+	}
+
+	private static void initJmxSupport() {
+		if (HO.isDevelopment()) {
+			try {
+				MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
+				platformMBeanServer.registerMBean(
+						new StatementCacheMonitor(),
+						new ObjectName("io.github.ho-dev:name=StatementCacheMonitor")
+				);
+			} catch (MalformedObjectNameException | NotCompliantMBeanException | InstanceAlreadyExistsException |
+					 MBeanRegistrationException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	private static Object[] createOptionsArray() {

@@ -1,10 +1,7 @@
 package core.db
 
 import core.model.misc.Basics
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
@@ -47,5 +44,14 @@ internal class BasicsTableTest {
         }
         rs?.close()
         stmt.close()
+    }
+
+    companion object {
+        @AfterAll
+        @JvmStatic
+        fun cleanUp() {
+            val conn = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "")
+            conn.createStatement().execute("DROP TABLE BASICS")
+        }
     }
 }
