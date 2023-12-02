@@ -12,7 +12,7 @@ public class FuturePlayerTrainingTable extends AbstractTable {
     /**
      * constructor
      */
-    public FuturePlayerTrainingTable(JDBCAdapter adapter) {
+    public FuturePlayerTrainingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
     }
 

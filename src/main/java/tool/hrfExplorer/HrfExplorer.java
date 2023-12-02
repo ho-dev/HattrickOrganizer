@@ -187,7 +187,10 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	@SuppressWarnings("unchecked")
 	private Hashtable m_HashTable_EventGUI = new Hashtable();			// KEY: Der Tag des Events							VALUE: Vector mit Zeit(sek) und Eventtyp
 
+	private final DBManager dbManager;
+
 	public HrfExplorer() {
+		dbManager = DBManager.instance();
 		initialize();
 	}
 	/**
@@ -197,6 +200,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private void initialize() {
 
 		HOVerwaltung hoV = HOVerwaltung.instance();
+
 		// Aktuelles Datum ermitteln und in die Members schreiben
 		m_gc = new GregorianCalendar();
 		m_int_selectedMonth = m_gc.get(GregorianCalendar.MONTH);
@@ -207,7 +211,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		m_TeamID = hoV.getModel().getBasics().getTeamId();
 
 		// Matches für das Team holen und in die Hashtable m_HashTable_MatchTyp füllen
-		m_kurzInfo = DBManager.instance().getMatchesKurzInfo(m_TeamID);
+		m_kurzInfo = dbManager.getMatchesKurzInfo(m_TeamID);
 		for (MatchKurzInfo matchKurzInfo : m_kurzInfo) {
 			m_HashTable_MatchTyp.put(matchKurzInfo.getMatchID(), matchKurzInfo.getMatchType().getId());
 		}
@@ -1043,11 +1047,10 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 			if(m_files != null && state == JFileChooser.APPROVE_OPTION)
 			{
-				int anzFiles = m_files.length;
 				String tmp_Datum;
 				String tmp_Pfad;
 				for (File m_file : m_files) {
-					HrfFileDetails tmp = new HrfFileDetails(m_file.getPath());
+					HrfFileDetails tmp = new HrfFileDetails(dbManager, m_file.getPath());
 					tmp_Datum = tmp.getFilename();
 					tmp_Pfad = tmp.getPfad();
 					if (!m_V_Filelist_Keys.contains(tmp_Pfad)) {
@@ -1181,7 +1184,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					m_V_Filelist_Keys.remove(deleteHRF_ID);
         			anzRows = m_TableModel_Filelist.getRowCount();
    					i--;
-   					DBManager.instance().deleteHRF(deleteHRF_ID);
+   					dbManager.deleteHRF(deleteHRF_ID);
         		}
         	}
 			RefreshManager.instance().doReInit();
@@ -1319,8 +1322,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     			id = (Integer) TagesIDs.elementAt(ii);
 	    		if(id != 0)
 	    		{
-	    			//doSelect("SELECT NAME,DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,TWTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
-		    		HrfDbDetails dbDetail = new HrfDbDetails(id);
+	    			HrfDbDetails dbDetail = new HrfDbDetails(dbManager, id);
 		    		if(!m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()))
 		    		{
 		    			m_TableModel_Filelist.addRow(dbDetail.getDatenVector());
@@ -1412,7 +1414,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	{
 		try
 		{
-			m_queryResult = DBManager.instance().getAdapter().executeQuery(query);
+			// FIXME Break coupling with connection manager.
+			m_queryResult = dbManager.getConnectionManager().executeQuery(query);
 		}
 		catch(Exception e)
 		{
@@ -1457,7 +1460,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			if(m_V_Filelist_Keys.elementAt(ii).getClass().equals(Integer.class))
 			{
 				int tmp_id = Integer.parseInt(m_V_Filelist_Keys.elementAt(ii).toString());
-				HrfDbDetails dbDetail = new HrfDbDetails(tmp_id);
+				HrfDbDetails dbDetail = new HrfDbDetails(dbManager, tmp_id);
 	    		if(!m_HashTable_Details.containsKey("" + dbDetail.getHrf_ID()))
 	    		{
 	    			m_TableModel_Filelist.addRow(dbDetail.getDatenVector());
@@ -1468,9 +1471,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			}
 			else
 			{
-				//debugWindow.append("Wert im else: " + m_V_Filelist_Keys.elementAt(ii));
-				//HrfFileDetails tmp = new HrfFileDetails(m_files[ii].getPath(),m_clModel);
-				HrfFileDetails tmp = new HrfFileDetails(m_V_Filelist_Keys.elementAt(ii).toString());
+				HrfFileDetails tmp = new HrfFileDetails(dbManager, m_V_Filelist_Keys.elementAt(ii).toString());
 				String tmp_Datum = tmp.getFilename();
 				String tmp_Pfad = tmp.getPfad();
 				m_TableModel_Filelist.addRow(tmp.getDatenVector());

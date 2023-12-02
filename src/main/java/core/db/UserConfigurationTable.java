@@ -18,7 +18,7 @@ import java.util.Map;
 final class UserConfigurationTable extends AbstractTable {
 	final static String TABLENAME = "USERCONFIGURATION";
 
-	UserConfigurationTable(JDBCAdapter adapter) {
+	UserConfigurationTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -38,11 +38,9 @@ final class UserConfigurationTable extends AbstractTable {
 		store(_config);
 	}
 
-	private final PreparedSelectStatementBuilder getAllStringValuesStatementBuilder = new PreparedSelectStatementBuilder(this, "");
-
 	private HashMap<String, String> getAllStringValues() {
 		HashMap<String, String> map = new HashMap<>();
-		var _configs = load(_Configuration.class, adapter.executePreparedQuery(getAllStringValuesStatementBuilder.getStatement()));
+		var _configs = load(_Configuration.class, connectionManager.executePreparedQuery(createSelectStatement("")));
 		for (var _config : _configs) {
 			map.put(_config.getKey(), _config.getValue());
 		}
@@ -52,9 +50,8 @@ final class UserConfigurationTable extends AbstractTable {
 	int getDBVersion() {
 		var config = loadOne(_Configuration.class, "DBVersion");
 		if (config != null) return Integer.parseInt(config.getValue());
-		try {
-			HOLogger.instance().log(getClass(), "Old DB version.");
-			final ResultSet rs = adapter.executeQuery("SELECT DBVersion FROM UserParameter");
+		HOLogger.instance().log(getClass(), "Old DB version.");
+		try (final ResultSet rs = connectionManager.executeQuery("SELECT DBVersion FROM UserParameter")) {
 			if ((rs != null) && rs.next()) {
 				var ret = rs.getInt(1);
 				rs.close();

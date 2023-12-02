@@ -8,7 +8,7 @@ import java.util.List;
 final class NtTeamTable extends AbstractTable {
 	public final static String TABLENAME = "NTTEAM";
 
-	NtTeamTable(JDBCAdapter adapter) {
+	NtTeamTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -56,14 +56,14 @@ final class NtTeamTable extends AbstractTable {
 		}
 	}
 
-	private final PreparedSelectStatementBuilder selectBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
-	private final PreparedSelectStatementBuilder selectTeamStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAM_ID=? AND MORALE IS NOT NULL ORDER BY HRF_ID DESC LIMIT 1");
+	private final String selectBeforeSql = createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL AND FETCHEDDATE<? ORDER BY HRF_ID DESC LIMIT 1");
+	private final String selectTeamStatementSql = createSelectStatement("WHERE TEAM_ID=? AND MORALE IS NOT NULL ORDER BY HRF_ID DESC LIMIT 1");
 	public NtTeamDetails loadNTTeam(int teamId, Timestamp matchDate) {
 		if ( matchDate!=null){
-			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectBeforeStatementBuilder.getStatement(), teamId, matchDate));
+			return loadOne(NtTeamDetails.class, connectionManager.executePreparedQuery(selectBeforeSql, teamId, matchDate));
 		}
 		else {
-			return loadOne(NtTeamDetails.class, adapter.executePreparedQuery(selectTeamStatementBuilder.getStatement(), teamId));
+			return loadOne(NtTeamDetails.class, connectionManager.executePreparedQuery(selectTeamStatementSql, teamId));
 		}
 	}
 

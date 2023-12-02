@@ -13,7 +13,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	 **/
 	public final static String TABLENAME = "MATCHLINEUPTEAM";
 
-	MatchLineupTeamTable(JDBCAdapter adapter) {
+	MatchLineupTeamTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 3;
 	}
@@ -54,24 +54,21 @@ public final class MatchLineupTeamTable extends AbstractTable {
 		}
 	}
 
-	private final PreparedSelectStatementBuilder loadTemplateStatementBuilder = new PreparedSelectStatementBuilder(this,
-			" WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1");
-
 	public List<MatchLineupTeam> getTemplateMatchLineupTeams() {
-		return load(MatchLineupTeam.class, adapter.executePreparedQuery(loadTemplateStatementBuilder.getStatement()));
+		return load(MatchLineupTeam.class, connectionManager.executePreparedQuery(
+				createSelectStatement("*", " WHERE TeamID<0 AND MATCHTYP=0 AND MATCHID=-1"))
+		);
 	}
 
 	public int getTemplateMatchLineupTeamNextNumber() {
-		try {
-			var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
-			var rs = adapter.executeQuery(sql);
+		var sql = "SELECT MIN(TEAMID) FROM " + getTableName() + " WHERE MatchTyp=0 AND MATCHID=-1";
+		try (var rs = connectionManager.executeQuery(sql)) {
 			if (rs != null) {
 				if (rs.next()) {
-					return Math.min(-1,rs.getInt(1)-1);
+					return Math.min(-1, rs.getInt(1) - 1);
 				}
 			}
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			HOLogger.instance().log(getClass(),e);
 		}
 		return -1;

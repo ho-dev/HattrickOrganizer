@@ -1,7 +1,7 @@
 package module.training;
 
 import core.db.DBManager;
-import core.db.JDBCAdapter;
+import core.db.ConnectionManager;
 import core.model.HOVerwaltung;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
@@ -34,21 +34,21 @@ public class EffectDAO {
         return trainWeeks;
     }
 
-    private static final DBManager.PreparedStatementBuilder trainingDatesStatementBuilder = new DBManager.PreparedStatementBuilder(
+    private static final String trainingDatesSql =
             "SELECT HRFMIN.hrf_id, HRFMAX.hrf_id, trainingdate" +
             " FROM HRF as HRFMIN, HRF as HRFMAX, (SELECT max(HRF.datum) as maxdate, min(HRF.datum) as mindate, trainingdate" +
             " FROM HRF, XTRADATA" +
             " WHERE HRF.hrf_id=XTRADATA.hrf_id" +
             " GROUP BY trainingdate) AS X" +
-            " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC" );
-    private static final DBManager.PreparedStatementBuilder weeksStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
+            " WHERE maxdate = HRFMAX.datum AND mindate = HRFMIN.datum ORDER BY trainingdate DESC" ;
+    private static final String weeksSql =
+            "SELECT SUM(marktwert) as totaltsi, AVG(marktwert) as avgtsi , SUM(form) as form, COUNT(form) as number FROM SPIELER WHERE trainer = 0 AND hrf_id = ?";
 
-    private static final DBManager.PreparedStatementBuilder playersStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = ?");
+    private static final String playersSql =
+            "SELECT * FROM SPIELER WHERE trainer = 0 AND hrf_id = ?";
 
-    private static final DBManager.PreparedStatementBuilder playerbasicsStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = ?");
+    private static final String playersBasics =
+            "SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = ?";
 
             /**
              * Calculates the training weeks and returns a list of TrainWeek instances. These value object
@@ -76,9 +76,9 @@ public class EffectDAO {
                 }
             }
 
-            JDBCAdapter db = DBManager.instance().getAdapter();
+            ConnectionManager db = DBManager.instance().getConnectionManager();
             trainWeeks.clear();
-            ResultSet tDateset = db.executePreparedQuery(trainingDatesStatementBuilder.getStatement());
+            ResultSet tDateset = db.executePreparedQuery(trainingDatesSql);
             List<TrainWeekEffect> trainingDates = new Vector<>();
 
             try {
@@ -99,7 +99,7 @@ public class EffectDAO {
             }
 
             for (TrainWeekEffect week : trainingDates) {
-                ResultSet set = db.executePreparedQuery(weeksStatementBuilder.getStatement(),week.getHRFafterUpdate());
+                ResultSet set = db.executePreparedQuery(weeksSql, week.getHRFafterUpdate());
                 if (set != null) {
                     set.next();
                     week.setTotalTSI(set.getInt("totaltsi")); //$NON-NLS-1$
@@ -117,7 +117,7 @@ public class EffectDAO {
 
                 Map<Integer, PlayerValues> valuesBeforeUpdate = new HashMap<>();
 
-                set = db.executePreparedQuery(playersStatementBuilder.getStatement(),week.getHRFbeforeUpdate());
+                set = db.executePreparedQuery(playersSql, week.getHRFbeforeUpdate());
 
                 if (set != null) {
                     while (set.next()) {
@@ -130,7 +130,7 @@ public class EffectDAO {
                     set.close();
                 }
 
-                set = db.executePreparedQuery(playerbasicsStatementBuilder.getStatement(),week.getHRFafterUpdate());
+                set = db.executePreparedQuery(playersBasics, week.getHRFafterUpdate());
 
                 if (set != null) {
                     while (set.next()) {
@@ -155,7 +155,7 @@ public class EffectDAO {
                     List<ISkillChange> wsList = weeklySkillups.get(key);
                     week.setAmountSkillups(wsList.size());
 
-                    if (wsList.size() > 0) {
+                    if (!wsList.isEmpty()) {
                         ISkillChange su = wsList.get(0);
                         week.setTrainingType(su.getType());
                     }

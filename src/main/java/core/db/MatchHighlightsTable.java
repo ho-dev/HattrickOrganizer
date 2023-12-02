@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 final class MatchHighlightsTable extends AbstractTable {
 	final static String TABLENAME = "MATCHHIGHLIGHTS";
 
-	MatchHighlightsTable(JDBCAdapter adapter) {
+	MatchHighlightsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -67,8 +67,8 @@ final class MatchHighlightsTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder  createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this,"WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute");
+	protected String createSelectStatement() {
+		return createSelectStatement(" WHERE MatchId=? AND MatchTyp=? ORDER BY EVENT_INDEX, Minute");
 	}
 
 	/**
@@ -78,9 +78,6 @@ final class MatchHighlightsTable extends AbstractTable {
 	List<MatchEvent> getMatchHighlights(int iMatchType, int matchId) {
 		return load(MatchEvent.class, matchId, iMatchType);
 	}
-
-	private final PreparedDeleteStatementBuilder deleteYouthMatchHighlightsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this,
-			getDeleteYouthMatchHighlightsBeforeStatementSQL());
 
 	private String getDeleteYouthMatchHighlightsBeforeStatementSQL() {
 		var lMatchTypes = MatchType.fromSourceSystem(SourceSystem.valueOf(SourceSystem.YOUTH.getValue()));
@@ -92,7 +89,7 @@ final class MatchHighlightsTable extends AbstractTable {
 
 	public void deleteYouthMatchHighlightsBefore(Timestamp before) {
 		try {
-			adapter.executePreparedUpdate(deleteYouthMatchHighlightsBeforeStatementBuilder.getStatement(), before);
+			connectionManager.executePreparedUpdate(createDeleteStatement(getDeleteYouthMatchHighlightsBeforeStatementSQL()), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

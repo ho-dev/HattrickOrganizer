@@ -9,7 +9,7 @@ public final class EconomyTable extends AbstractTable {
 
 	public final static String TABLENAME = "ECONOMY";
 	
-	EconomyTable(JDBCAdapter  adapter){
+	EconomyTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 

@@ -15,7 +15,7 @@ public final class FutureTrainingTable extends AbstractTable {
 	 **/
 	public final static String TABLENAME = "FUTURETRAINING";
 
-	FutureTrainingTable(JDBCAdapter adapter) {
+	FutureTrainingTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -32,11 +32,11 @@ public final class FutureTrainingTable extends AbstractTable {
 		};
 	}
 
-	private final PreparedSelectStatementBuilder loadAllFutureTrainingStatementBuilder = new PreparedSelectStatementBuilder(this,
+	private final String loadAllFutureTrainingSql = createSelectStatement(
 			" ORDER BY TRAINING_DATE");
 
 	List<TrainingPerWeek> getFutureTrainingsVector() {
-		return load(TrainingPerWeek.class, this.adapter.executePreparedQuery(loadAllFutureTrainingStatementBuilder.getStatement()));
+		return load(TrainingPerWeek.class, this.connectionManager.executePreparedQuery(loadAllFutureTrainingSql));
 	}
 
 	TrainingPerWeek loadFutureTrainings(Timestamp trainingDate) {
@@ -56,9 +56,10 @@ public final class FutureTrainingTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, " WHERE TRUE");
+	protected String createDeleteStatement() {
+		return createDeleteStatement(" WHERE TRUE");
 	}
+
 	void clearFutureTrainingsTable(){
 		executePreparedDelete();
 		HOLogger.instance().debug(getClass(), "FutureTraining table has been cleared !");

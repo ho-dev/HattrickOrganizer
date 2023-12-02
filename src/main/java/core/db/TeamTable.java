@@ -6,7 +6,7 @@ import java.sql.Types;
 final class TeamTable extends AbstractTable {
 	public final static String TABLENAME = "TEAM";
 	
-	TeamTable(JDBCAdapter adapter){
+	TeamTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 

@@ -3,6 +3,7 @@
 ## Highlights
 * refactoring rating prediction (implement Schum rating)
 * refactoring of the transfer module. Calculation of transfer fee income.
+* refactoring of the database prepared statement caching.
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 

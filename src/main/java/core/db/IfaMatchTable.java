@@ -12,7 +12,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	public final static String TABLENAME = "IFA_MATCHES";
 
-	IfaMatchTable(JDBCAdapter adapter) {
+	IfaMatchTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -44,7 +44,7 @@ public class IfaMatchTable extends AbstractTable {
 
 	Timestamp getLastMatchDate() {
 		String select = "SELECT MAX(" + "PLAYEDDATE" + ") FROM " + getTableName();
-		ResultSet rs = adapter.executeQuery(select);
+		ResultSet rs = connectionManager.executeQuery(select);
 		try {
 			if ((rs != null) && (rs.next())) {
 				return rs.getTimestamp(1);
@@ -55,12 +55,12 @@ public class IfaMatchTable extends AbstractTable {
 		return null;
 	}
 
-	private final PreparedSelectStatementBuilder getHomeMatchesStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE HOMETEAMID=? ORDER BY AWAY_LEAGUEID ASC");
-	private final PreparedSelectStatementBuilder getAwayMatchesStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC");
+	private final String getHomeMatchesSql = createSelectStatement("WHERE HOMETEAMID=? ORDER BY AWAY_LEAGUEID ASC");
+	private final String getAwayMatchesSql = createSelectStatement("WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC");
 
 	IfaMatch[] getMatches(boolean home) {
 		var list = load(IfaMatch.class,
-				adapter.executePreparedQuery(home?getHomeMatchesStatementBuilder.getStatement():getAwayMatchesStatementBuilder.getStatement(),
+				connectionManager.executePreparedQuery(home? getHomeMatchesSql: getAwayMatchesSql,
 						HOVerwaltung.instance().getModel().getBasics().getTeamId()));
 		return list.toArray(new IfaMatch[0]);
 	}
@@ -70,8 +70,8 @@ public class IfaMatchTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "");
+	protected String createSelectStatement(){
+		return createSelectStatement("");
 	}
 	void deleteAllMatches() {
 		executePreparedDelete();

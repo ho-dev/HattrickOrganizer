@@ -16,9 +16,8 @@ final class SkillupTable extends AbstractTable {
 	 * tablename
 	 **/
 	final static String TABLENAME = "SPIELERSKILLUP";
-//	private static Map<String, Vector<Object[]>> playerSkillup = null;
 
-	SkillupTable(JDBCAdapter adapter) {
+	SkillupTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -42,18 +41,17 @@ final class SkillupTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+	protected String createDeleteStatement() {
+		return createDeleteStatement(" WHERE HRF_ID=?");
 	}
 
 	private void storeSkillup(Skillup skillup) {
 		store(skillup);
 	}
 
-	private final PreparedSelectStatementBuilder loadLastLevelUpStatementBuilder = new PreparedSelectStatementBuilder(this,
-			"WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
+	private final String loadLastLevelUpSql = createSelectStatement("WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
 	Skillup getLastLevelUp(PlayerSkill skillCode, int spielerId) {
-		return loadOne(Skillup.class, this.adapter.executePreparedQuery(loadLastLevelUpStatementBuilder.getStatement(), spielerId, PlayerSkill.toInteger(skillCode)));
+		return loadOne(Skillup.class, this.connectionManager.executePreparedQuery(loadLastLevelUpSql, spielerId, PlayerSkill.toInteger(skillCode)));
 	}
 
 	List<Skillup> getAllLevelUp(PlayerSkill skillCode, int spielerId) {

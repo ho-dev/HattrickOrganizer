@@ -14,10 +14,10 @@ import static core.model.match.MatchEvent.isGoalEvent;
 
 class MatchesOverviewQuery  {
 
-	static int getMatchesKurzInfoStatisticsCount(int teamId, int matchtype, int statistic){
+	static int getMatchesKurzInfoStatisticsCount(int teamId, int matchtype, int statistic) {
 		int tmp = 0;
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs;
+
 		String whereHomeClause = "";
 		String whereAwayClause = "";
 		sql.append("SELECT COUNT(*) AS C ");
@@ -49,8 +49,7 @@ class MatchesOverviewQuery  {
 		sql.append(" OR (GASTID = ?").append(whereAwayClause);
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(matchtype));
 
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
-		try {
+		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager()).executePreparedQuery(sql.toString(), teamId, teamId)) {
 			if(rs.next()){
 				tmp = rs.getInt("C");
 			}
@@ -62,7 +61,6 @@ class MatchesOverviewQuery  {
 
 	static int getChangeGameStat(int teamId, int statistic){
 		StringBuilder sql = new StringBuilder(200);
-		ResultSet rs;
 		int tmp = 0;
 		sql.append("""
 				SELECT MK_MatchTyp, DIFFH, DIFF, MK_HEIMID, MK_GASTID, MATCHID \s
@@ -79,8 +77,8 @@ class MatchesOverviewQuery  {
 		}
 		sql.append("AND (MK_MatchTyp=2 OR MK_MatchTyp=1 OR MK_MatchTyp=3 )");
 
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId, teamId);
-		try {
+
+		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager()).executePreparedQuery(sql.toString(), teamId, teamId)) {
 			for (int i = 0; rs.next(); i++) {
 				tmp=i;
 			}
@@ -126,7 +124,7 @@ class MatchesOverviewQuery  {
 		sql.append(MatchesKurzInfoTable.getMatchTypWhereClause(iMatchType));
 		sql.append(getMatchLocationWhereClause(matchLocation, teamId));
 		sql.append(" GROUP BY MATCH_EVENT_ID");
-		rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), params.toArray());
+		rs = Objects.requireNonNull(DBManager.instance().getConnectionManager()).executePreparedQuery(sql.toString(), params.toArray());
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 		}
@@ -238,28 +236,26 @@ class MatchesOverviewQuery  {
 		return sql;
 	}
 
-	private static void setFormationRows(ArrayList<MatchesOverviewRow> rows,StringBuilder whereClause, boolean home){
+	private static void setFormationRows(ArrayList<MatchesOverviewRow> rows, StringBuilder whereClause, boolean home) {
 
-		StringBuilder sql = new StringBuilder(500);
-		sql.append("select MATCHID,HEIMTORE,GASTTORE, ");
-		sql.append("LOCATE('5-5-0',MATCHREPORT) AS F550,");
-		sql.append("LOCATE('5-4-1',MATCHREPORT) AS F541,");
-		sql.append("LOCATE('5-3-2',MATCHREPORT) AS F532,");
-		sql.append("LOCATE('5-2-3',MATCHREPORT) AS F523,");
-		sql.append("LOCATE('4-5-1',MATCHREPORT) AS F451,");
-		sql.append("LOCATE('4-4-2',MATCHREPORT) AS F442,");
-		sql.append("LOCATE('4-3-3',MATCHREPORT) AS F433,");
-		sql.append("LOCATE('3-5-2',MATCHREPORT) AS F352,");
-		sql.append("LOCATE('3-4-3',MATCHREPORT) AS F343,");
-		sql.append("LOCATE('2-5-3',MATCHREPORT) AS F253");
-		sql.append(" FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID ");
-		sql.append(" where 1=1 ");
-		sql.append(whereClause);
-		try{
-			ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
+		String sql = "select MATCHID,HEIMTORE,GASTTORE, " +
+				"LOCATE('5-5-0',MATCHREPORT) AS F550," +
+				"LOCATE('5-4-1',MATCHREPORT) AS F541," +
+				"LOCATE('5-3-2',MATCHREPORT) AS F532," +
+				"LOCATE('5-2-3',MATCHREPORT) AS F523," +
+				"LOCATE('4-5-1',MATCHREPORT) AS F451," +
+				"LOCATE('4-4-2',MATCHREPORT) AS F442," +
+				"LOCATE('4-3-3',MATCHREPORT) AS F433," +
+				"LOCATE('3-5-2',MATCHREPORT) AS F352," +
+				"LOCATE('3-4-3',MATCHREPORT) AS F343," +
+				"LOCATE('2-5-3',MATCHREPORT) AS F253" +
+				" FROM MATCHDETAILS inner join MATCHESKURZINFO ON MATCHDETAILS.MATCHID = MATCHESKURZINFO.MATCHID " +
+				" where 1=1 " +
+				whereClause;
+		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager()).executePreparedQuery(sql)) {
 
-			while(rs.next()){
-				String[] fArray = {"0","",""};
+			while (rs.next()) {
+				String[] fArray = {"0", "", ""};
 				setSystem(rs.getInt("F550"), "5-5-0", fArray);
 				setSystem(rs.getInt("F541"), "5-4-1", fArray);
 				setSystem(rs.getInt("F532"), "5-3-2", fArray);
@@ -270,18 +266,17 @@ class MatchesOverviewQuery  {
 				setSystem(rs.getInt("F352"), "3-5-2", fArray);
 				setSystem(rs.getInt("F343"), "3-4-3", fArray);
 				setSystem(rs.getInt("F253"), "2-5-3", fArray);
-				for (int i = 1; i <rows.size(); i++) {
-					String txt = home?fArray[1]:fArray[2].length()==0?fArray[1]:fArray[2];
+				for (int i = 1; i < rows.size(); i++) {
+					String txt = home ? fArray[1] : fArray[2].isEmpty() ? fArray[1] : fArray[2];
 
-					if(rows.get(i).getType() == 1 && rows.get(i).getDescription().equals(txt)){
+					if (rows.get(i).getType() == 1 && rows.get(i).getDescription().equals(txt)) {
 						rows.get(i).setMatchResult(rs.getInt("HEIMTORE"), rs.getInt("GASTTORE"), home);
 					}
 				}
 			}
-			} catch(Exception e){
-
-				HOLogger.instance().log(MatchesOverviewQuery.class,e);
-			}
+		} catch (Exception e) {
+			HOLogger.instance().log(MatchesOverviewQuery.class, e);
+		}
 	}
 
 	private static void setSystem(int column,String formation, String[] fArray){
@@ -322,8 +317,7 @@ class MatchesOverviewQuery  {
 		sql.append("select  0 AS ANZAHL,  0 AS G1, 0 AS U1, COUNT(*) AS V1, 0 AS HTORE1, 0 AS GTORE1 ").append(from).append(" where HEIMTORE ").append(home ? "<" : ">").append(" GASTTORE ");
 		sql.append(whereClause);
 		sql.append(")");
-		try{
-		ResultSet rs = Objects.requireNonNull(DBManager.instance().getAdapter()).executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()));
+		try (ResultSet rs = Objects.requireNonNull(DBManager.instance().getConnectionManager()).executePreparedQuery(sql.toString())) {
 		if(rs == null){
 			HOLogger.instance().log(MatchesOverviewQuery.class, sql.toString());
 			return;

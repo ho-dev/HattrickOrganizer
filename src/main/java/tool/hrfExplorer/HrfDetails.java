@@ -44,29 +44,22 @@ class HrfDetails {
 	private int m_TeamID;
 	private Icon m_bild;
 
-	public HrfDetails() {
+	final DBManager dbManager;
+
+	public HrfDetails(DBManager dbManager) {
+		this.dbManager = dbManager;
 	}
 
-	private static final DBManager.PreparedStatementBuilder maxHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT MAX(DATUM) FROM HRF WHERE DATUM < ?"
-	);
-	private static final DBManager.PreparedStatementBuilder minHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT MIN(DATUM) FROM HRF WHERE DATUM > ?"
-	);
-	private static final DBManager.PreparedStatementBuilder countHrfDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT count(*) FROM HRF WHERE DATUM = ?"
-	);
+	private static final String maxHrfDateSql = "SELECT MAX(DATUM) FROM HRF WHERE DATUM < ?";
+	private static final String minHrfDateSql = "SELECT MIN(DATUM) FROM HRF WHERE DATUM > ?";
+	private static final String countHrfDateSql = "SELECT count(*) FROM HRF WHERE DATUM = ?";
 
 	/*****************
 	 * Berechnet das vorhergehende und das folgende Datum in der DB und pr�ft,
 	 * ob das File/der Eintrag in DB angelegt ist
 	 */
 	void createDates() {
-		ResultSet m_rs = Objects.requireNonNull(DBManager
-						.instance()
-						.getAdapter())
-				.executePreparedQuery(maxHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
-		try {
+		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(maxHrfDateSql, m_Datum.toDbTimestamp())) {
 			while (true) {
 				assert m_rs != null;
 				if (!m_rs.next()) break;
@@ -82,11 +75,8 @@ class HrfDetails {
 		} catch (SQLException sexc) {
 			HrfExplorer.appendText("" + sexc);
 		}
-		m_rs = Objects.requireNonNull(DBManager
-						.instance()
-						.getAdapter())
-				.executePreparedQuery(minHrfDateStatementBuilder.getStatement(), m_Datum.toDbTimestamp());
-		try {
+
+		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(minHrfDateSql, m_Datum.toDbTimestamp())) {
 			while (true) {
 				assert m_rs != null;
 				if (!m_rs.next()) break;
@@ -102,11 +92,8 @@ class HrfDetails {
 		} catch (SQLException sexc) {
 			HrfExplorer.appendText("" + sexc);
 		}
-		m_rs = Objects.requireNonNull(DBManager
-						.instance()
-						.getAdapter())
-				.executePreparedQuery(countHrfDateStatementBuilder.getStatement(),m_Datum.toDbTimestamp());
-		try {
+
+		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(countHrfDateSql,m_Datum.toDbTimestamp())) {
 			while (true) {
 				assert m_rs != null;
 				if (!m_rs.next()) break;
@@ -131,15 +118,6 @@ class HrfDetails {
 		var value = localDate.getDayOfWeek();
 		String[] tage = HrfExplorer.getTage();
 		setWochentag(tage[value.getValue()-1]);
-//		switch (value) {
-//			case Calendar.MONDAY -> setWochentag(tage[0]);
-//			case Calendar.TUESDAY -> setWochentag(tage[1]);
-//			case Calendar.WEDNESDAY -> setWochentag(tage[2]);
-//			case Calendar.THURSDAY -> setWochentag(tage[3]);
-//			case Calendar.FRIDAY -> setWochentag(tage[4]);
-//			case Calendar.SATURDAY -> setWochentag(tage[5]);
-//			case Calendar.SUNDAY -> setWochentag(tage[6]);
-//		}
 	}
 
 	/**
@@ -154,13 +132,6 @@ class HrfDetails {
 	 */
 	int getAnzSpieler() {
 		return m_anzSpieler;
-	}
-
-	/**
-	 * @return Returns the m_anzTwTrainer.
-	 */
-	int getAnzTwTrainer() {
-		return m_anzTwTrainer;
 	}
 
 	/**

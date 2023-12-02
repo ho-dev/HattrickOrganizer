@@ -20,8 +20,8 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
+import core.db.ConnectionManager;
 import core.db.DBManager;
-import core.db.JDBCAdapter;
 import core.model.match.IMatchDetails;
 import core.model.enums.MatchType;
 import core.util.HODateTime;
@@ -29,9 +29,6 @@ import core.util.HODateTime;
 import java.awt.Color;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 class Curve {
@@ -50,7 +47,7 @@ class Curve {
 	static final int TRAINER_DOWN_PT = 11;
 	static final int START_TRAINER_PT = 12;
 
-	protected JDBCAdapter m_clJDBC;
+	protected DBManager dbManager;
 
 	protected ArrayList<Point> m_clPoints = new ArrayList<>();
 
@@ -110,8 +107,8 @@ class Curve {
 		}
 	}
 
-	Curve() {
-		m_clJDBC = DBManager.instance().getAdapter();
+	Curve(DBManager dbManager) {
+		this.dbManager = dbManager;
 	}
 
 	boolean first() {

@@ -50,8 +50,8 @@ abstract class ForecastCurve extends Curve {
 	protected double m_dTrainerLeadership = 0.6D;
 	protected int m_iNoWeeksForecast = 4;
 
-	public ForecastCurve(boolean future) throws SQLException {
-		super();
+	public ForecastCurve(DBManager dbManager, boolean future) throws SQLException {
+		super(dbManager);
 		if (future)
 			readFutureMatches();
 		else
@@ -160,7 +160,7 @@ abstract class ForecastCurve extends Curve {
 
 		// find last match (League, Cup or Qualification)
 		if (ibasics != null && iliga != null) {
-			var matchesKurzInfo = DBManager.instance().getMatchesKurzInfo(
+			var matchesKurzInfo = dbManager.getMatchesKurzInfo(
 					"where (HEIMID=? or GASTID=?) and MATCHDATE = (select MAX(MATCHDATE) from MATCHESKURZINFO where (HEIMID=? or GASTID=?) and (MATCHTYP=? or MATCHTYP=? or MATCHTYP=?) and STATUS=1)",
 							ibasics.getTeamId(),
 					ibasics.getTeamId(),
@@ -170,15 +170,8 @@ abstract class ForecastCurve extends Curve {
 					MatchType.QUALIFICATION.getId(),
 					MatchType.CUP.getId()
 			);
-			/*
-			 * select MATCHDATE, MATCHTYP from MATCHESKURZINFO where
-			 * (HEIMID=132932 OR GASTID=132932) and MATCHDATE = select
-			 * MAX(MATCHDATE) from MATCHESKURZINFO where (HEIMID=132932 OR
-			 * GASTID=132932) and (MATCHTYP = 1 OR MATCHTYP= 2 OR MATCHTYP = 3)
-			 * and STATUS = 1
-			 */
 
-			if (matchesKurzInfo.size()>0) {
+			if (!matchesKurzInfo.isEmpty()) {
 				var match = matchesKurzInfo.get(0);
 				short start = 0;
 				Curve.Point point;
@@ -259,60 +252,8 @@ abstract class ForecastCurve extends Curve {
 			var types = new ArrayList<Integer>();
 			types.add(MatchType.CUP.getId());
 			types.add(MatchType.LEAGUE.getId());
-			var matches = DBManager.instance().getMatchesKurzInfo(ibasics.getTeamId(), MatchKurzInfo.FINISHED, start, types );
-//			// PAARUNG contains all Leaguematches, but no other
-//			// MATCHESKURZINFO contains all other matches but no matchday
-//			ResultSet resultset = m_clJDBC
-//					.executeQuery("select * from (select MATCHESKURZINFO.MATCHDATE as SORTDATE, -1 as SPIELTAG, MATCHESKURZINFO.MATCHTYP, "
-//							+ "MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID "
-//							+ "from MATCHESKURZINFO, MATCHDETAILS "
-//							+ "where (MATCHDETAILS.HEIMID="
-//							+ ibasics.getTeamId()
-//							+ " OR MATCHDETAILS.GASTID="
-//							+ ibasics.getTeamId()
-//							+ ") "
-//							+ "and MATCHESKURZINFO.MATCHTYP="
-//							+ MatchType.CUP.getId()
-//							+ "and MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID "
-//							+ "and MATCHESKURZINFO.MATCHDATE < '"
-//							+ ibasics.getDatum().toDbTimestamp()
-//							+ "' and MATCHESKURZINFO.MATCHDATE > '"
-//							+ start
-//							+ "' "
-//							+ "union "
-//							+ "select PAARUNG.DATUM as SORTDATE, PAARUNG.SPIELTAG, "
-//							+ MatchType.LEAGUE.getId()
-//							+ " as MATCHTYP, "
-//							+ "MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID "
-//							+ "from PAARUNG, MATCHDETAILS "
-//							+ "where (MATCHDETAILS.HEIMID="
-//							+ ibasics.getTeamId()
-//							+ " OR MATCHDETAILS.GASTID="
-//							+ ibasics.getTeamId()
-//							+ ") "
-//							+ "and PAARUNG.MATCHID=MATCHDETAILS.MATCHID "
-//							+ "and PAARUNG.DATUM < '"
-//							+ ibasics.getDatum().toDbTimestamp()
-//							+ "' "
-//							+ "and PAARUNG.DATUM > '"
-//							+ start
-//							+ "') "
-//							+ "order by SORTDATE");
-//			/*
-//			 * select MATCHESKURZINFO.MATCHDATE as SORTDATE, -1 as SPIELTAG,
-//			 * MATCHESKURZINFO.MATCHTYP, MATCHDETAILS.GASTEINSTELLUNG,
-//			 * MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID from
-//			 * MATCHESKURZINFO, MATCHDETAILS where (MATCHDETAILS.HEIMID=132932
-//			 * OR MATCHDETAILS.GASTID=132932) and MATCHESKURZINFO.MATCHTYP=3 and
-//			 * MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID and SORTDATE <
-//			 * '2006-09-01' and SORTDATE > '2006-01-01' union select
-//			 * PAARUNG.DATUM as SORTDATE, PAARUNG.SPIELTAG, 1 as MATCHTYP,
-//			 * MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG,
-//			 * MATCHDETAILS.HEIMID from PAARUNG, MATCHDETAILS where
-//			 * (MATCHDETAILS.HEIMID=132932 OR MATCHDETAILS.GASTID=132932) and
-//			 * PAARUNG.MATCHID=MATCHDETAILS.MATCHID and SORTDATE < '2006-09-01'
-//			 * and SORTDATE > '2006-01-01' order by SORTDATE
-//			 */
+			var matches = dbManager.getMatchesKurzInfo(ibasics.getTeamId(), MatchKurzInfo.FINISHED, start, types );
+
 			int iMatchDay = 0;
 			HODateTime maxDate = null;
 
@@ -324,24 +265,7 @@ abstract class ForecastCurve extends Curve {
 					iMatchDay = sortDate.toLocaleHTWeek().week;
 					var attitude = ibasics.getTeamId()==details.getHomeTeamId()?details.getHomeEinstellung():details.getGuestEinstellung();
 					point = new Point(sortDate, attitude, iMatchDay, details.getMatchType());
-//			if (resultset != null) {
-//				for (boolean flag = resultset.first(); flag; flag = resultset
-//						.next()) {
-//					if (resultset.getInt("SPIELTAG") > 0) {
-//						iMatchDay = resultset.getInt("SPIELTAG");
-//					}
-//					var sortDate = HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE"));
-//					if (ibasics.getTeamId() == resultset.getInt("HEIMID")) {
-//						point = new Curve.Point(
-//								sortDate,
-//								resultset.getInt("HEIMEINSTELLUNG"), iMatchDay,
-//								MatchType.getById(resultset.getInt("MATCHTYP")));
-//					} else {
-//						point = new Curve.Point(
-//								sortDate,
-//								resultset.getInt("GASTEINSTELLUNG"), iMatchDay,
-//								MatchType.getById(resultset.getInt("MATCHTYP")));
-//					}
+
 					m_clPoints.add(point);
 					maxDate = point.m_dDate;
 				}
@@ -419,5 +343,4 @@ abstract class ForecastCurve extends Curve {
 			}
 		}
 	}
-
 }

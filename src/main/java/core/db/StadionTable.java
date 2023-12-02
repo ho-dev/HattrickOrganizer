@@ -6,7 +6,7 @@ import java.sql.Types;
 final class StadionTable extends AbstractTable {
 	final static String TABLENAME = "STADION";
 
-	StadionTable(JDBCAdapter adapter) {
+	StadionTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
