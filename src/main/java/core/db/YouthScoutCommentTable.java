@@ -11,7 +11,7 @@ public class YouthScoutCommentTable extends AbstractTable {
     /** tablename **/
     final static String TABLENAME = "YOUTHSCOUTCOMMENT";
 
-    YouthScoutCommentTable(JDBCAdapter adapter) {
+    YouthScoutCommentTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
     }
 
@@ -37,8 +37,8 @@ public class YouthScoutCommentTable extends AbstractTable {
         }
     }
     @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "WHERE YOUTHPLAYER_ID=? order by INDEX");
+    protected String createSelectStatement() {
+        return createSelectStatement("WHERE YOUTHPLAYER_ID=? order by INDEX");
     }
     public List<ScoutComment> loadYouthScoutComments(int youthplayer_id) {
         return load(ScoutComment.class, youthplayer_id);

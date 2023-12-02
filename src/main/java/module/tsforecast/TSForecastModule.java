@@ -2,6 +2,7 @@ package module.tsforecast;
 
 import java.awt.event.KeyEvent;
 
+import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.module.DefaultModule;
 
@@ -22,7 +23,7 @@ public final class TSForecastModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new TSForecast();
+		return new TSForecast(DBManager.instance());
 	}
 
 	@Override

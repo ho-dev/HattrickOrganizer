@@ -10,7 +10,7 @@ public class YouthTrainingTable extends AbstractTable{
     /** tablename **/
     final static String TABLENAME = "YOUTHTRAINING";
 
-    YouthTrainingTable(JDBCAdapter adapter) {
+    YouthTrainingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
     }
 
@@ -25,9 +25,10 @@ public class YouthTrainingTable extends AbstractTable{
     }
 
     @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "");
+    protected String createSelectStatement() {
+        return createSelectStatement("");
     }
+
     public List<YouthTraining> loadYouthTrainings() {
         return load(YouthTraining.class);
     }

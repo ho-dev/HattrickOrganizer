@@ -15,7 +15,7 @@ import java.sql.Types;
 final class TAPlayerTable extends AbstractTable {
 	final static String TABLENAME = "TA_PLAYER";
 
-	TAPlayerTable(JDBCAdapter adapter) {
+	TAPlayerTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -52,8 +52,7 @@ final class TAPlayerTable extends AbstractTable {
 		return ret;
 	}
 
-	private final PreparedSelectStatementBuilder loadLatestPlayerInfoStatementBuilder = new PreparedSelectStatementBuilder(this,
-			" WHERE PLAYERID = ? ORDER BY WEEK DESC LIMIT 1");
+	private final String loadLatestPlayerInfoSql = createSelectStatement(" WHERE PLAYERID = ? ORDER BY WEEK DESC LIMIT 1");
 
 	/**
 	 * Returns the specialEvent code for a player
@@ -64,7 +63,7 @@ final class TAPlayerTable extends AbstractTable {
 	 * @return a numeric code
 	 */
 	PlayerInfo getLatestPlayerInfo(int playerId) {
-		var ret = loadOne(PlayerInfo.class, this.adapter.executePreparedQuery(loadLatestPlayerInfoStatementBuilder.getStatement(), playerId));
+		var ret = loadOne(PlayerInfo.class, this.connectionManager.executePreparedQuery(loadLatestPlayerInfoSql, playerId));
 		if ( ret == null ) ret = new PlayerInfo();
 		return ret;
 	}

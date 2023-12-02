@@ -77,23 +77,22 @@ public class DBManager implements PersistenceManager {
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
-	/** DB-Adapter */
-	private @Nullable JDBCAdapter m_clJDBCAdapter; // new JDBCAdapter();
+	/** Connection Manager */
+	private @Nullable ConnectionManager connectionManager;
 
 	/** all Tables */
-	private final Hashtable<String, AbstractTable> tables = new Hashtable<>();
+	private final Map<String, AbstractTable> tables = new Hashtable<>();
 
-	/** Erster Start */
-	private boolean m_bFirstStart;
+	private boolean firstStart;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
 
 	/**
-	 * Creates a new instance of DBZugriff
+	 * Creates a new instance of DBManager
 	 */
 	private DBManager() {
-		m_clJDBCAdapter = new JDBCAdapter();
+		connectionManager = new ConnectionManager();
 	}
 
 	// ~ Methods
@@ -226,16 +225,6 @@ public class DBManager implements PersistenceManager {
 		return m_clInstance;
 	}
 
-	private static final HashMap<String,PreparedStatement> preparedStatements = new HashMap<>();
-	protected PreparedStatement getPreparedStatement(String sql) {
-		PreparedStatement ret = preparedStatements.get(sql);
-		if ( ret == null){
-			ret = Objects.requireNonNull(m_clJDBCAdapter).createPreparedStatement(sql);
-			preparedStatements.put(sql, ret);
-		}
-		return ret;
-	}
-
 	public static double getDBConfigVersion() {
 		return DBConfigVersion;
 	}
@@ -248,51 +237,51 @@ public class DBManager implements PersistenceManager {
 	}
 
 	private void initAllTables() {
-		var adapter = this.m_clJDBCAdapter;
-		tables.put(BasicsTable.TABLENAME, new BasicsTable(adapter));
-		tables.put(TeamTable.TABLENAME, new TeamTable(adapter));
-		tables.put(NtTeamTable.TABLENAME, new NtTeamTable(adapter));
-		tables.put(FaktorenTable.TABLENAME, new FaktorenTable(adapter));
-		tables.put(HRFTable.TABLENAME, new HRFTable(adapter));
-		tables.put(StadionTable.TABLENAME, new StadionTable(adapter));
-		tables.put(VereinTable.TABLENAME, new VereinTable(adapter));
-		tables.put(LigaTable.TABLENAME, new LigaTable(adapter));
-		tables.put(SpielerTable.TABLENAME, new SpielerTable(adapter));
-		tables.put(EconomyTable.TABLENAME, new EconomyTable(adapter));
-		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(adapter));
-		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(adapter));
-		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(adapter));
-		tables.put(TeamsLogoTable.TABLENAME, new TeamsLogoTable(adapter));
-		tables.put(ScoutTable.TABLENAME, new ScoutTable(adapter));
-		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(adapter));
-		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(adapter));
-		tables.put(SpielplanTable.TABLENAME, new SpielplanTable(adapter));
-		tables.put(PaarungTable.TABLENAME, new PaarungTable(adapter));
-		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(adapter));
-		tables.put(MatchLineupTable.TABLENAME, new MatchLineupTable(adapter));
-		tables.put(XtraDataTable.TABLENAME, new XtraDataTable(adapter));
-		tables.put(MatchLineupPlayerTable.TABLENAME,new MatchLineupPlayerTable(adapter));
-		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(adapter));
-		tables.put(MatchDetailsTable.TABLENAME, new MatchDetailsTable(adapter));
-		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(adapter));
-		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(adapter));
-		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(adapter));
-		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(adapter));
-		tables.put(SkillupTable.TABLENAME, new SkillupTable(adapter));
-		tables.put(StaffTable.TABLENAME,  new StaffTable(adapter));
-		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(adapter));
-		tables.put(TransferTable.TABLENAME, new TransferTable(adapter));
-		tables.put(TransferTypeTable.TABLENAME, new TransferTypeTable(adapter));
-		tables.put(ModuleConfigTable.TABLENAME, new ModuleConfigTable(adapter));
-		tables.put(TAFavoriteTable.TABLENAME, new TAFavoriteTable(adapter));
-		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
-		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
-		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
-		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
-		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable((adapter)));
-		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
-		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(adapter));
+		var connectionManager = this.connectionManager;
+		tables.put(BasicsTable.TABLENAME, new BasicsTable(connectionManager));
+		tables.put(TeamTable.TABLENAME, new TeamTable(connectionManager));
+		tables.put(NtTeamTable.TABLENAME, new NtTeamTable(connectionManager));
+		tables.put(FaktorenTable.TABLENAME, new FaktorenTable(connectionManager));
+		tables.put(HRFTable.TABLENAME, new HRFTable(connectionManager));
+		tables.put(StadionTable.TABLENAME, new StadionTable(connectionManager));
+		tables.put(VereinTable.TABLENAME, new VereinTable(connectionManager));
+		tables.put(LigaTable.TABLENAME, new LigaTable(connectionManager));
+		tables.put(SpielerTable.TABLENAME, new SpielerTable(connectionManager));
+		tables.put(EconomyTable.TABLENAME, new EconomyTable(connectionManager));
+		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(connectionManager));
+		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(connectionManager));
+		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(connectionManager));
+		tables.put(TeamsLogoTable.TABLENAME, new TeamsLogoTable(connectionManager));
+		tables.put(ScoutTable.TABLENAME, new ScoutTable(connectionManager));
+		tables.put(UserColumnsTable.TABLENAME, new UserColumnsTable(connectionManager));
+		tables.put(SpielerNotizenTable.TABLENAME, new SpielerNotizenTable(connectionManager));
+		tables.put(SpielplanTable.TABLENAME, new SpielplanTable(connectionManager));
+		tables.put(PaarungTable.TABLENAME, new PaarungTable(connectionManager));
+		tables.put(MatchLineupTeamTable.TABLENAME, new MatchLineupTeamTable(connectionManager));
+		tables.put(MatchLineupTable.TABLENAME, new MatchLineupTable(connectionManager));
+		tables.put(XtraDataTable.TABLENAME, new XtraDataTable(connectionManager));
+		tables.put(MatchLineupPlayerTable.TABLENAME,new MatchLineupPlayerTable(connectionManager));
+		tables.put(MatchesKurzInfoTable.TABLENAME, new MatchesKurzInfoTable(connectionManager));
+		tables.put(MatchDetailsTable.TABLENAME, new MatchDetailsTable(connectionManager));
+		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(connectionManager));
+		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(connectionManager));
+		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(connectionManager));
+		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(connectionManager));
+		tables.put(SkillupTable.TABLENAME, new SkillupTable(connectionManager));
+		tables.put(StaffTable.TABLENAME,  new StaffTable(connectionManager));
+		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(connectionManager));
+		tables.put(TransferTable.TABLENAME, new TransferTable(connectionManager));
+		tables.put(TransferTypeTable.TABLENAME, new TransferTypeTable(connectionManager));
+		tables.put(ModuleConfigTable.TABLENAME, new ModuleConfigTable(connectionManager));
+		tables.put(TAFavoriteTable.TABLENAME, new TAFavoriteTable(connectionManager));
+		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(connectionManager));
+		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(connectionManager));
+		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(connectionManager));
+//		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(connectionManager));
+		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(connectionManager));
+		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((connectionManager)));
+		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(connectionManager));
+		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
 	}
 
 	/**
@@ -311,12 +300,12 @@ public class DBManager implements PersistenceManager {
 	 * @return the adapter
 	 */
 // Accessor
-	public JDBCAdapter getAdapter() {
-		return m_clJDBCAdapter;
+	public ConnectionManager getConnectionManager() {
+		return connectionManager;
 	}
 
-	private void setFirstStart(boolean firststart) {
-		m_bFirstStart = firststart;
+	private void setFirstStart(boolean firstStart) {
+		this.firstStart = firstStart;
 	}
 
 	/**
@@ -325,16 +314,16 @@ public class DBManager implements PersistenceManager {
 	 * @return the boolean
 	 */
 	public boolean isFirstStart() {
-		return m_bFirstStart;
+		return firstStart;
 	}
 
 	/**
 	 * disconnect from database
 	 */
 	public void disconnect() {
-		if ( m_clJDBCAdapter != null) {
-			m_clJDBCAdapter.disconnect();
-			m_clJDBCAdapter = null;
+		if ( connectionManager != null) {
+			connectionManager.disconnect();
+			connectionManager = null;
 		}
 		m_clInstance = null;
 	}
@@ -344,21 +333,21 @@ public class DBManager implements PersistenceManager {
 	 */
 	private void connect() throws Exception {
 		User current_user = UserManager.instance().getCurrentUser();
-		if (m_clJDBCAdapter != null) {
-			m_clJDBCAdapter.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
+		if (connectionManager != null) {
+			connectionManager.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
 		}
 	}
 
 	/**
 	 * check if tables in DB exists
-	 * 
+	 *
 	 * @return boolean
 	 */
 	private boolean checkIfDBExists() {
-		if ( m_clJDBCAdapter==null) return false;
+		if ( connectionManager ==null) return false;
 		boolean exists;
 		try {
-			ResultSet rs = m_clJDBCAdapter.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
+			ResultSet rs = connectionManager.executeQuery("SELECT Count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'PUBLIC'");
 			assert rs != null;
 			rs.next();
 			exists = rs.getInt(1) > 0;
@@ -778,18 +767,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 * Returns an HRF before the matchData and after previous TrainingTime
-	 *
-	 * @param matchTime matchData
-	 * @return hrfId hrf id same training
-	 */
-	public int getHrfIDSameTraining(Timestamp matchTime) {
-		return ((BasicsTable) getTable(BasicsTable.TABLENAME))
-				.getHrfIDSameTraining(matchTime);
-	}
-
-	/**
-	 * speichert die Basdics
+	 * speichert die Basics
 	 *
 	 * @param hrfId  the hrf id
 	 * @param basics the basics
@@ -1251,8 +1229,8 @@ public class DBManager implements PersistenceManager {
 		((StadionTable) getTable(StadionTable.TABLENAME)).saveStadion(hrfId,
 				stadion);
 	}
-	
-	
+
+
 	// ------------------------------- StaffTable
 	// -------------------------------------------------
 
@@ -1276,8 +1254,8 @@ public class DBManager implements PersistenceManager {
 	public void saveStaff(int hrfId, List<StaffMember> list) {
 		((StaffTable) getTable(StaffTable.TABLENAME)).storeStaff(hrfId, list);
 	}
-	
-	
+
+
 	// ------------------------------- MatchSubstitutionTable
 	// -------------------------------------------------
 
@@ -1721,8 +1699,8 @@ public class DBManager implements PersistenceManager {
 				"INNER JOIN MATCHESKURZINFO ON MATCHESKURZINFO.matchid = MATCHLINEUPPLAYER.matchid " +
 				"where spielerId = "+ playerId +
 				" and ROLEID BETWEEN 100 AND 113 and matchtyp " + officialWhere;
-		assert getAdapter() != null;
-		final ResultSet rs = getAdapter().executeQuery(sqlStmt);
+		assert getConnectionManager() != null;
+		final ResultSet rs = getConnectionManager().executeQuery(sqlStmt);
 		if (rs == null) {
 			return 0;
 		}
@@ -1763,17 +1741,16 @@ public class DBManager implements PersistenceManager {
 				WHERE MATCHLINEUPPLAYER.SpielerID=? AND MATCHLINEUPPLAYER.Rating>0""";
 
 		if(officialOnly){
-			var lMatchTypes =  MatchType.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
+			var lMatchTypes = MatchType.fromSourceSystem(Objects.requireNonNull(SourceSystem.valueOf(SourceSystem.HATTRICK.getValue())));
 			var inValues = lMatchTypes.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(","));
 			sql += " AND MATCHTYP IN (" + inValues + ")";
 		}
 		sql += " ORDER BY MATCHDETAILS.SpielDatum DESC";
 
+		assert connectionManager != null;
 		// Get all data on the player
-		try {
+		try (final ResultSet rs = connectionManager.executePreparedQuery(sql, playerID)) {
 			final Vector<PlayerMatchCBItem> playerMatchCBItems = new Vector<>();
-			assert m_clJDBCAdapter != null;
-			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql), playerID);
 			PlayerMatchCBItem playerMatchCBItem;
 			assert rs != null;
 			// Get all data on the player
@@ -1912,10 +1889,10 @@ public class DBManager implements PersistenceManager {
 		((MatchesKurzInfoTable) getTable(MatchesKurzInfoTable.TABLENAME))
 				.update(match);
 	}
-	
+
 	private void createAllTables() throws SQLException {
-		assert m_clJDBCAdapter != null;
-		m_clJDBCAdapter.executeUpdate("SET FILES SPACE TRUE");
+		assert connectionManager != null;
+		connectionManager.executeUpdate("SET FILES SPACE TRUE");
 		Object[] allTables = tables.values().toArray();
 		for (Object allTable : allTables) {
 			AbstractTable table = (AbstractTable) allTable;
@@ -1923,8 +1900,8 @@ public class DBManager implements PersistenceManager {
 			table.createTable();
 			String[] statements = table.getCreateIndexStatement();
 			for (String statement : statements) {
-                assert m_clJDBCAdapter != null;
-                m_clJDBCAdapter.executeUpdate(statement);
+                assert connectionManager != null;
+                connectionManager.executeUpdate(statement);
 			}
 		}
 	}
@@ -2411,84 +2388,24 @@ public class DBManager implements PersistenceManager {
 		((NtTeamTable)getTable(NtTeamTable.TABLENAME)).storeNTTeam(details);
 	}
 
-	private final String sql = "SELECT TRAININGDATE, TRAININGSART, TRAININGSINTENSITAET, STAMINATRAININGPART, COTRAINER, TRAINER" +
-			" FROM XTRADATA INNER JOIN TEAM on XTRADATA.HRF_ID = TEAM.HRF_ID" +
-			" INNER JOIN VEREIN on XTRADATA.HRF_ID = VEREIN.HRF_ID" +
-			" INNER JOIN SPIELER on XTRADATA.HRF_ID = SPIELER.HRF_ID AND SPIELER.TRAINER > 0" +
-			" INNER JOIN (SELECT TRAININGDATE, %s(HRF_ID) J_HRF_ID FROM XTRADATA GROUP BY TRAININGDATE) IJ1 ON XTRADATA.HRF_ID = IJ1.J_HRF_ID" +
-			" WHERE XTRADATA.TRAININGDATE >= ?";
-
-	private final PreparedStatementBuilder loadTrainingPerWeekMaxStatement = new PreparedStatementBuilder(String.format(sql, "max"));
-	private final PreparedStatementBuilder loadTrainingPerWeekMinStatement = new PreparedStatementBuilder(String.format(sql, "min"));
-
 	public List<TrainingPerWeek> loadTrainingPerWeek(Timestamp startDate, boolean all) {
-
-		var ret = new ArrayList<TrainingPerWeek>();
-		try {
-			assert m_clJDBCAdapter != null;
-			final ResultSet rs = m_clJDBCAdapter.executePreparedQuery(
-					all?loadTrainingPerWeekMaxStatement.getStatement():loadTrainingPerWeekMinStatement.getStatement(),
-					startDate);
-			if ( rs != null ) {
-				while (rs.next()) {
-					int trainType = rs.getInt("TRAININGSART");
-					int trainIntensity = rs.getInt("TRAININGSINTENSITAET");
-					int trainStaminaPart = rs.getInt("STAMINATRAININGPART");
-					// subtract one week from next training date to get the past week training date
-					var nextTrainingDate = HODateTime.fromDbTimestamp(rs.getTimestamp("TRAININGDATE"));
-					var trainingDate = nextTrainingDate.plusDaysAtSameLocalTime(-7);
-					int coachLevel = rs.getInt("TRAINER");
-					int trainingAssistantLevel = rs.getInt("COTRAINER");
-					TrainingPerWeek tpw = new TrainingPerWeek(trainingDate,
-							trainType,
-							trainIntensity,
-							trainStaminaPart,
-							trainingAssistantLevel,
-							coachLevel,
-							DBDataSource.HRF);
-					ret.add( tpw);
-				}
-			}
-			return ret;
-		}
-		catch (Exception e) {
-			HOLogger.instance().error(this.getClass(), "Error while performing loadTrainingPerWeek():  " + e);
-		}
-		return null;
+		return ((TrainingsTable)getTable(TrainingsTable.TABLENAME)).loadTrainingPerWeek(startDate, all);
 	}
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
 	}
 
-	private static final DBManager.PreparedStatementBuilder preStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc");
-	private static final DBManager.PreparedStatementBuilder postStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc");
-
-	public String loadLatestTSINotInjured(int m_iSpielerID) {
-		return loadLatestTSI(preStatementBuilder, m_iSpielerID);
+	public String loadLatestTSINotInjured(int playerId) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSINotInjured(playerId);
 	}
-	public String loadLatestTSIInjured(int m_iSpielerID) {
-		return loadLatestTSI(postStatementBuilder, m_iSpielerID);
+	public String loadLatestTSIInjured(int playerId) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSIInjured(playerId);
 	}
 
-	private String loadLatestTSI(DBManager.PreparedStatementBuilder preparedStatementBuilder, int m_iSpielerID) {
-		try {
-			ResultSet rs = Objects.requireNonNull(this.getAdapter()).executePreparedQuery(preparedStatementBuilder.getStatement(), m_iSpielerID);
-			if (rs.next()) {
-				return  rs.getString("marktwert");
-			}
-		} catch (Exception ignored) {
-		}
-		return "";
-	}
-
-
-	public static String getPlaceholders(int count){
+	public static String getPlaceholders(int count) {
 		return String.join(",", Collections.nCopies(count, "?"));
 	}
-
 	public void storeSquadInfo(SquadInfo squadInfo) {
 		((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).storeSquadInfo(squadInfo);
 	}

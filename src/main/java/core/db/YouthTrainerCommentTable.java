@@ -12,7 +12,7 @@ public class YouthTrainerCommentTable extends AbstractTable {
      **/
     final static String TABLENAME = "YOUTHTRAINERCOMMENT";
 
-    YouthTrainerCommentTable(JDBCAdapter adapter) {
+    YouthTrainerCommentTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
     }
 

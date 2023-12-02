@@ -1,4 +1,3 @@
-// %4089797104:de.hattrickorganizer.database%
 package core.db;
 
 import core.util.ExceptionUtils;
@@ -9,29 +8,25 @@ import java.sql.*;
 /**
  * Provides the connection functions to the database
  */
-public class JDBCAdapter {
-	private Connection m_clConnection;
-	private Statement m_clStatement;
-	private DBInfo m_clDBInfo;
+public class ConnectionManager {
+	Connection connection;
+	private Statement statement;
+	private DBInfo dbInfo;
 
-	/**
-	 * Creates new JDBCApapter
-	 */
-	public JDBCAdapter() {
-	}
+	private StatementCache statementCache;
 
 	/**
 	 * Closes the connection
 	 */
 	public final void disconnect() {
 		try {
-			var statement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			var statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			statement.execute("SHUTDOWN");
-			m_clConnection.close();
-			m_clConnection = null;
+			connection.close();
+			connection = null;
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "JDBCAdapter.disconnect : " + e);
-			m_clConnection = null;
+			connection = null;
 		}
 	}
 
@@ -45,10 +40,10 @@ public class JDBCAdapter {
 	 */
 	public final ResultSet executeQuery(String sqlStatement) {
 		try {
-			if (m_clConnection.isClosed()) {
+			if (connection.isClosed()) {
 				return null;
 			}
-			return m_clStatement.executeQuery(sqlStatement);
+			return statement.executeQuery(sqlStatement);
 		} catch (Exception e) {
 			HOLogger.instance().error(
 					getClass(),
@@ -59,27 +54,27 @@ public class JDBCAdapter {
 	}
 
 	public final PreparedStatement createPreparedStatement(String sql) {
-		try {
-			return m_clConnection.prepareStatement(sql);
-		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "createPreparedStatement : " + e + "\nStatement: " + sql + "\n" + ExceptionUtils.getStackTrace(e));
-		}
-		return null;
+		return statementCache.getPreparedStatement(sql);
 	}
 
-	public final ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object ... params) {
-		if ( preparedStatement==null) return null;
+	public final ResultSet executePreparedQuery(String query, Object... params) {
+		return executePreparedQuery(statementCache.getPreparedStatement(query), params);
+    }
+
+	private ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object... params) {
 		try {
-			if (m_clConnection.isClosed()) {
+			if (connection.isClosed()) {
 				return null;
 			}
 			int i = 0;
-			for ( var p: params) {
+			for (var p : params) {
 				preparedStatement.setObject(++i, p);
 			}
-			return  preparedStatement.executeQuery();
+			return preparedStatement.executeQuery();
 		} catch (Exception e) {
-			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e + "\nStatement: " + preparedStatement.toString() + "\n" 	+ ExceptionUtils.getStackTrace(e));
+			HOLogger.instance().error(getClass(), "executePreparedQuery : " + e
+					+ "\nStatement: " + preparedStatement
+					+ "\n" + ExceptionUtils.getStackTrace(e));
 			return null;
 		}
 	}
@@ -100,11 +95,11 @@ public class JDBCAdapter {
 		int ret = 0;
 
 		try {
-			if (m_clConnection.isClosed()) {
+			if (connection.isClosed()) {
 				return 0;
 			}
 			// HOLogger.instance().log(getClass(), Sql );
-			ret = m_clStatement.executeUpdate(sqlStatement);
+			ret = statement.executeUpdate(sqlStatement);
 			return ret;
 		} catch (Exception e) {
 			HOLogger.instance().error(
@@ -115,11 +110,15 @@ public class JDBCAdapter {
 		}
 	}
 
-	public final int executePreparedUpdate(PreparedStatement preparedStatement, Object ... params) {
-		int ret = 0;
+	public final int executePreparedUpdate(String insert, Object... params) {
+		return executePreparedUpdate(statementCache.getPreparedStatement(insert), params);
+	}
+
+	private int executePreparedUpdate(PreparedStatement preparedStatement, Object... params) {
+		int ret;
 
 		try {
-			if (m_clConnection.isClosed()) {
+			if (connection.isClosed()) {
 				return 0;
 			}
 			int i = 0;
@@ -151,26 +150,28 @@ public class JDBCAdapter {
 	 * 
 	 */
 	public final void connect(String URL, String User, String PWD, String Driver) throws Exception {
-		try {
-			// Initialise the Database Driver Object
-			Class.forName(Driver);
-			m_clConnection = DriverManager.getConnection(URL, User, PWD);
-			m_clStatement = m_clConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		// Initialise the Database Driver Object
+		Class.forName(Driver);
+		var connection = DriverManager.getConnection(URL, User, PWD);
+		connect(connection);
+	}
 
-		} catch (Exception e) {
-			if (m_clConnection != null) {
+	public final void connect(Connection conn) throws Exception {
+		try {
+			connection = conn;
+			statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			statementCache = new StatementCache(this);
+		} catch (SQLException e) {
+			if (connection != null) {
 				try {
-					m_clConnection.close();
+					connection.close();
 				} catch (Exception ex) {
-					HOLogger.instance().error(getClass(),
-							"JDBCAdapter.connect : " + ex.getMessage());
+					HOLogger.instance().error(getClass(), "ConnectionManager.connect : " + ex.getMessage());
 				}
 			}
-			HOLogger.instance().error(getClass(), "JDBCAdapter.connect : " + e.getMessage());
+			HOLogger.instance().error(getClass(), "ConnectionManager.connect : " + e.getMessage());
 			throw e;
 		}
-
 	}
 
 	/**
@@ -179,9 +180,9 @@ public class JDBCAdapter {
 	 * @throws Exception
 	 */
 	public DBInfo getDBInfo() throws Exception {
-		if (m_clDBInfo == null)
-			m_clDBInfo = new DBInfo(m_clConnection.getMetaData());
-		return m_clDBInfo;
+		if (dbInfo == null)
+			dbInfo = new DBInfo(connection.getMetaData());
+		return dbInfo;
 	}
 
 	public Object[] getAllTableNames() {

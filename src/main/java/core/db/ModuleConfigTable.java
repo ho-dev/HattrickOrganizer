@@ -9,7 +9,7 @@ import java.util.Map;
 final class ModuleConfigTable extends AbstractTable {
 	final static String TABLENAME = "MODULE_CONFIGURATION";
 
-	ModuleConfigTable(JDBCAdapter adapter) {
+	ModuleConfigTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -34,18 +34,18 @@ final class ModuleConfigTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
+	protected String createSelectStatement() {
+		return createSelectStatement("");
 	}
+
 	 Map<String,Object> findAll() {
 		 final HashMap<String, Object> values = new HashMap<>();
-		 try {
-			 final ResultSet rs = executePreparedSelect();
+		 try (final ResultSet rs = executePreparedSelect()) {
+
 			 if (rs != null) {
 				 while (rs.next()) {
 					 values.put(rs.getString(this.columns[0].getColumnName()), createObject(rs.getString(this.columns[1].getColumnName()), rs.getInt(this.columns[2].getColumnName())));
 				 }
-				 rs.close();
 			 }
 		 } catch (SQLException e) {
 			 HOLogger.instance().error(this.getClass(), e);

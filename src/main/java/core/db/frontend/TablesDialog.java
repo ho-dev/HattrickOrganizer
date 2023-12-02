@@ -52,7 +52,7 @@ final class TablesDialog extends JDialog implements MouseListener {
     {
         if(tablelist == null)
         {
-            tablelist = new JList(DBManager.instance().getAdapter().getAllTableNames());
+            tablelist = new JList(DBManager.instance().getConnectionManager().getAllTableNames());
             tablelist.addMouseListener(this);
         }
         return tablelist;
@@ -71,7 +71,7 @@ final class TablesDialog extends JDialog implements MouseListener {
     private Object[][] setTable(String tablename)
         throws Exception
     {
-        ResultSet rs = DBManager.instance().getAdapter().executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
+        ResultSet rs = DBManager.instance().getConnectionManager().executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
         int columns = rs.getMetaData().getColumnCount();
         Object columnData[][] = new Object[columns][4];
         for(int i = 0; i < columns; i++)

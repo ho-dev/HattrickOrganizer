@@ -8,7 +8,7 @@ class WorldDetailsTable extends AbstractTable {
 
 	final static String TABLENAME = "HT_WORLDDETAILS";
 	
-	WorldDetailsTable(JDBCAdapter  adapter){
+	WorldDetailsTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 	@Override
@@ -22,9 +22,10 @@ class WorldDetailsTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
+	protected String createSelectStatement() {
+		return createSelectStatement("");
 	}
+
 	void insertWorldDetailsLeague(WorldDetailLeague league){
 		if(league == null)
 			return;
@@ -33,7 +34,7 @@ class WorldDetailsTable extends AbstractTable {
 
 	List<WorldDetailLeague> getAllWorldDetailLeagues(){
 		var ret = load(WorldDetailLeague.class);
-		if ( ret.size() == 0){
+		if (ret.isEmpty()) {
 			insertDefaultValues();
 			ret = load(WorldDetailLeague.class);
 		}

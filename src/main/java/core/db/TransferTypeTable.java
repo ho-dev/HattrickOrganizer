@@ -8,7 +8,7 @@ public class TransferTypeTable extends AbstractTable {
 
 	final static String TABLENAME = "TRANSFERTYPE";
 	
-	TransferTypeTable(JDBCAdapter adapter){
+	TransferTypeTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 	

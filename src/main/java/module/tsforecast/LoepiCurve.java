@@ -18,6 +18,8 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
+import core.db.DBManager;
+
 import java.sql.SQLException;
 
 // Referenced classes of package hoplugins.tsforecast:
@@ -27,8 +29,8 @@ public class LoepiCurve extends ForecastCurve {
 
 	private TrainerCurve m_TrainerCurve = null;
 
-	public LoepiCurve(TrainerCurve t, boolean future) throws SQLException {
-		super(future);
+	public LoepiCurve(DBManager dbManager, TrainerCurve t, boolean future) throws SQLException {
+		super(dbManager, future);
 		m_TrainerCurve = t;
 	}
 

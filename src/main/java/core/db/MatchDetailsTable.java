@@ -15,7 +15,7 @@ final class MatchDetailsTable extends AbstractTable {
 
 	public final static String TABLENAME = "MATCHDETAILS";
 
-	MatchDetailsTable(JDBCAdapter adapter) {
+	MatchDetailsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -113,11 +113,10 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 	}
 
-	private final DBManager.PreparedStatementBuilder isMatchIFKRatingAvailableStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?");
+	private final String isMatchIFKRatingAvailableSql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?";
+
 	public boolean isMatchIFKRatingAvailable(int matchId){
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(isMatchIFKRatingAvailableStatementBuilder.getStatement(), matchId);
+		try (final ResultSet rs = connectionManager.executePreparedQuery(isMatchIFKRatingAvailableSql, matchId)) {
 			assert rs != null;
 			if (rs.next()) {
 				rs.getInt(1);
@@ -140,30 +139,29 @@ final class MatchDetailsTable extends AbstractTable {
 		return placeHolderYouthMatchTypes;
 	}
 
-	private final PreparedDeleteStatementBuilder deleteYouthMatchDetailsBeforeStatementBuilder= new PreparedDeleteStatementBuilder(this, "WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
+	private final String deleteYouthMatchDetailsBeforeSql = createSelectStatement("WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
 		try {
 			var params = new ArrayList<>();
 			params.addAll(MatchType.getYouthMatchType().stream().map(MatchType::getId).toList());
 			params.add(before);
-			adapter.executePreparedUpdate(deleteYouthMatchDetailsBeforeStatementBuilder.getStatement(), params.toArray());
+			connectionManager.executePreparedUpdate(deleteYouthMatchDetailsBeforeSql, params.toArray());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}
 	}
 
-	private final DBManager.PreparedStatementBuilder getLastYouthMatchDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"select max(SpielDatum) from " + getTableName() + " WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
+	private final String getLastYouthMatchDateSql = createSelectStatement("max(SpielDatum)",
+			" WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes());
 	public Timestamp getLastYouthMatchDate() {
-		try {
-			var rs = adapter.executePreparedQuery(getLastYouthMatchDateStatementBuilder.getStatement(), MatchType.getYouthMatchType().stream().map(MatchType::getId).toArray());
+		try (var rs = connectionManager.executePreparedQuery(getLastYouthMatchDateSql,
+				MatchType.getYouthMatchType().stream().map(MatchType::getId).toArray())) {
 			assert rs != null;
 			if ( rs.next()){
 				return rs.getTimestamp(1);
 			}
 		}
 		catch (Exception ignored){
-
 		}
 		return null;
 	}

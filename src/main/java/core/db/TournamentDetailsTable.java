@@ -8,7 +8,7 @@ public final class TournamentDetailsTable extends AbstractTable {
 
 	public final static String TABLENAME = "TOURNAMENTDETAILS";
 
-	TournamentDetailsTable(JDBCAdapter adapter){
+	TournamentDetailsTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 

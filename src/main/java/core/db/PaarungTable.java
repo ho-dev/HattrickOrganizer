@@ -11,7 +11,7 @@ public final class PaarungTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "PAARUNG";
 	
-	PaarungTable(JDBCAdapter adapter){
+	PaarungTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 		idColumns = 2;
 	}

@@ -184,7 +184,7 @@ public class OnlineWorker {
 			}
 
 			// Store in the db if store is true
-			if (store && (allMatches.size() > 0)) {
+			if (store && (!allMatches.isEmpty())) {
 
 				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
 				DBManager.instance().storeMatchKurzInfos(allMatches);

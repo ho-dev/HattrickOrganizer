@@ -11,7 +11,7 @@ import java.util.Vector;
 final class SpielplanTable extends AbstractTable {
 	final static String TABLENAME = "SPIELPLAN";
 	
-	SpielplanTable(JDBCAdapter adapter){
+	SpielplanTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 		idColumns = 2;
 	}
@@ -26,13 +26,13 @@ final class SpielplanTable extends AbstractTable {
 		};
 	}
 
-	private final PreparedSelectStatementBuilder getAllSpielplaeneStatementBuilder = new PreparedSelectStatementBuilder(this, "ORDER BY Saison DESC");
+	private final String getAllSpielplaeneSql = createSelectStatement("ORDER BY Saison DESC");
 
 	/**
 	 * Returns all the game schedules from the database.
 	 */
 	List<Spielplan> getAllSpielplaene() {
-		return load(Spielplan.class, adapter.executePreparedQuery(getAllSpielplaeneStatementBuilder.getStatement()));
+		return load(Spielplan.class, connectionManager.executePreparedQuery(getAllSpielplaeneSql));
 	}
 
 	/**
@@ -45,8 +45,7 @@ final class SpielplanTable extends AbstractTable {
 		return loadOne(Spielplan.class, ligaId, saison);
 	}
 
-	private final DBManager.PreparedStatementBuilder getLigaID4SaisonIDStatementBuilder=new DBManager.PreparedStatementBuilder(
-			"SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1");
+	private final String getLigaID4SaisonIDSql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1";
 
 	/**
 	 * Gibt eine Ligaid zu einer Seasonid zurück, oder -1, wenn kein Eintrag in der DB gefunden
@@ -55,8 +54,7 @@ final class SpielplanTable extends AbstractTable {
 	int getLigaID4SaisonID(int seasonid) {
 		int ligaid = -1;
 
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(getLigaID4SaisonIDStatementBuilder.getStatement(), seasonid);
+		try (final ResultSet rs = connectionManager.executePreparedQuery(getLigaID4SaisonIDSql, seasonid)) {
 			assert rs != null;
 			if (rs.next()) {
 				ligaid = rs.getInt("LigaID");
@@ -79,11 +77,10 @@ final class SpielplanTable extends AbstractTable {
 		}
 	}
 
-	private final PreparedSelectStatementBuilder loadLatestSpielplanStatementBuilder = new PreparedSelectStatementBuilder(this,
-			" ORDER BY FetchDate DESC LIMIT 1");
+	private final String loadLatestSpielplanSql = createSelectStatement(" ORDER BY FetchDate DESC LIMIT 1");
 
 	public Spielplan getLatestSpielplan() {
-		return loadOne(Spielplan.class, this.adapter.executePreparedQuery(loadLatestSpielplanStatementBuilder.getStatement()));
+		return loadOne(Spielplan.class, this.connectionManager.executePreparedQuery(loadLatestSpielplanSql));
 	}
 
 	/**
@@ -92,10 +89,9 @@ final class SpielplanTable extends AbstractTable {
 	Integer[] getAllLigaIDs() {
 		final Vector<Integer> vligaids = new Vector<>();
 		Integer[] ligaids = null;
+		final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
 
-		try {
-			final String sql = "SELECT DISTINCT LigaID FROM SPIELPLAN";
-			final ResultSet rs = adapter.executeQuery(sql);
+		try (final ResultSet rs = connectionManager.executeQuery(sql)) {
 			while (rs != null && rs.next()) {
 				vligaids.add(rs.getInt("LigaID"));
 			}

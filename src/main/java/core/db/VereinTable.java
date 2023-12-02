@@ -7,7 +7,7 @@ import java.sql.Types;
 final class VereinTable extends AbstractTable {
 	final static String TABLENAME = "VEREIN";
 
-	VereinTable(JDBCAdapter adapter){
+	VereinTable(ConnectionManager adapter){
 		super( TABLENAME, adapter );
 	}
 

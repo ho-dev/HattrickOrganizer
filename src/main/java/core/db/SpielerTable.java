@@ -8,6 +8,7 @@ import core.model.player.TrainerType;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
@@ -18,7 +19,7 @@ final class SpielerTable extends AbstractTable {
 	/** Table name **/
 	final static String TABLENAME = "SPIELER";
 
-	SpielerTable(JDBCAdapter adapter) {
+	SpielerTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -121,13 +122,13 @@ final class SpielerTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+	protected String createDeleteStatement() {
+		return createDeleteStatement("WHERE HRF_ID=?");
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
+	protected String createSelectStatement() {
+		return createSelectStatement("WHERE HRF_ID=?");
 	}
 
 	/**
@@ -139,7 +140,7 @@ final class SpielerTable extends AbstractTable {
 		return load(Player.class, hrfID);
 	}
 
-	private final PreparedSelectStatementBuilder loadAllPlayersStatementBuilder = new PreparedSelectStatementBuilder(this, " t inner join (" +
+	private final String loadAllPlayersSql = createSelectStatement(" t inner join (" +
 			"    select SPIELERID, max(DATUM) as MaxDate from " +
 			getTableName() +
 			"    group by SPIELERID" +
@@ -150,11 +151,10 @@ final class SpielerTable extends AbstractTable {
 	 * @return List of latest records stored in database of all players.
 	 */
 	List<Player> loadAllPlayers() {
-		return load(Player.class, adapter.executePreparedQuery(loadAllPlayersStatementBuilder.getStatement()),-1);
+		return load(Player.class, connectionManager.executePreparedQuery(loadAllPlayersSql),-1);
 	}
 
-	private final DBManager.PreparedStatementBuilder getLetzteBewertung4SpielerStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1" );
+	private final String getLetzteBewertung4SpielerSql = "SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1";
 
 	/**
 	 * Get latest rating of player
@@ -162,8 +162,7 @@ final class SpielerTable extends AbstractTable {
 	int getLatestRatingOfPlayer(int playerId) {
 		int bewertung = 0;
 
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(getLetzteBewertung4SpielerStatementBuilder.getStatement(), playerId);
+		try (final ResultSet rs = connectionManager.executePreparedQuery(getLetzteBewertung4SpielerSql, playerId)) {
 			if ((rs != null) && rs.next()) {
 				bewertung = rs.getInt("Bewertung");
 			}
@@ -173,8 +172,8 @@ final class SpielerTable extends AbstractTable {
 		return bewertung;
 	}
 
-	private final PreparedSelectStatementBuilder getSpielerNearDateBeforeStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
-	private final PreparedSelectStatementBuilder getSpielerNearDateAfterStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
+	private final String getSpielerNearDateBeforeSql = createSelectStatement("WHERE Datum<=? AND Datum>=? AND SpielerID=? ORDER BY Datum DESC LIMIT 1");
+	private final String getSpielerNearDateAfterSql = createSelectStatement("WHERE Datum>=? AND SpielerID=? ORDER BY Datum LIMIT 1");
 
 	Player getSpielerNearDate(int spielerid, Timestamp time) {
 		Player player;
@@ -189,18 +188,18 @@ final class SpielerTable extends AbstractTable {
 		//--- Zuerst x Tage vor dem Datum suchen -------------------------------
 		//x Tage vorher
 		final Timestamp time2 = new Timestamp(time.getTime() - spanne);
-		player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time, time2, spielerid));
+		player = loadOne(Player.class, connectionManager.executePreparedQuery(getSpielerNearDateBeforeSql, time, time2, spielerid));
 
 		//--- Dann ein HRF später versuchen, Dort muss er dann eigenlich vorhanden sein! ---
 		if (player == null) {
-			player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateAfterStatementBuilder.getStatement(), time, spielerid));
+			player = loadOne(Player.class, connectionManager.executePreparedQuery(getSpielerNearDateAfterSql, time, spielerid));
 		}
 
 		//----Dann noch die dopplete Spanne vor der Spanne suchen---------------
 		if (player == null) {
 			//x Tage vorher
 			final Timestamp time3 = new Timestamp(time2.getTime() - (spanne * 2));
-			player = loadOne(Player.class, adapter.executePreparedQuery(getSpielerNearDateBeforeStatementBuilder.getStatement(), time2, time3, spielerid));
+			player = loadOne(Player.class, connectionManager.executePreparedQuery(getSpielerNearDateBeforeSql, time2, time3, spielerid));
 		}
 
 		return player;
@@ -208,23 +207,21 @@ final class SpielerTable extends AbstractTable {
 
 	//------------------------------------------------------------------------------
 
-	private final PreparedSelectStatementBuilder getSpielerFirstHRFStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum>? ORDER BY Datum ASC LIMIT 1");
+	private final String getSpielerFirstHRFSql = createSelectStatement(" WHERE SpielerID=? AND Datum>? ORDER BY Datum ASC LIMIT 1");
 	/**
 	 * load first player appearance
 	 */
-	Player getSpielerFirstHRF(int spielerid, Timestamp after) {
-		var ret = loadOne(Player.class, adapter.executePreparedQuery(getSpielerFirstHRFStatementBuilder.getStatement(), spielerid, after));
+	Player getSpielerFirstHRF(int playerId, Timestamp after) {
+		var ret = loadOne(Player.class, connectionManager.executePreparedQuery(getSpielerFirstHRFSql, playerId, after));
 		if ( ret != null){
 			ret.setGoner(true);
 		}
 		return ret;
 	}
 
-	private final PreparedSelectStatementBuilder getTrainerTypeStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
+	private final String getTrainerTypeSql = createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
 	int getTrainerType(int hrfID) {
-		ResultSet rs;
-		rs = adapter.executePreparedQuery(getTrainerTypeStatementBuilder.getStatement(), hrfID);
-		try {
+		try (ResultSet rs = connectionManager.executePreparedQuery(getTrainerTypeSql, hrfID)) {
 			if (rs != null) {
 				if (rs.next()) {
 					return rs.getInt("TrainerTyp");
@@ -236,30 +233,52 @@ final class SpielerTable extends AbstractTable {
 		return -99;
 	}
 
-	private final PreparedSelectStatementBuilder loadPlayerBeforeStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");
+	private final String loadPlayerBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");
 	public Player loadPlayerBefore(int playerId, Timestamp before) {
-		return loadOne(Player.class, adapter.executePreparedQuery(loadPlayerBeforeStatementBuilder.getStatement(), playerId, before));
+		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerBeforeSql, playerId, before));
 	}
 
-	private final PreparedSelectStatementBuilder loadPlayerAfterStatementBuilder = new PreparedSelectStatementBuilder(this," WHERE SpielerID=? AND Datum>=? ORDER BY Datum ASC LIMIT 1");
+	private final String loadPlayerAfterSql = createSelectStatement(" WHERE SpielerID=? AND Datum>=? ORDER BY Datum ASC LIMIT 1");
 	public Player loadPlayerAfter(int playerId, Timestamp before) {
-		return loadOne(Player.class, adapter.executePreparedQuery(loadPlayerAfterStatementBuilder.getStatement(), playerId, before));
+		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerAfterSql, playerId, before));
 	}
 
-	private final DBManager.PreparedStatementBuilder loadPlayersBeforeStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM");
+	private final String loadPlayersBeforeSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
 	public List<Player> loadPlayersBefore(String playerName, Timestamp before) {
-		return loadPlayers(loadPlayersBeforeStatementBuilder, playerName, before);
+		return loadPlayers(loadPlayersBeforeSql, playerName, before);
 	}
 
-	private final DBManager.PreparedStatementBuilder loadPlayersAfterStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM");
+	private final String loadPlayersAfterSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
 	public List<Player> loadPlayersAfter(String playerName, Timestamp after) {
-		return loadPlayers(loadPlayersAfterStatementBuilder, playerName, after);
+		return loadPlayers(loadPlayersAfterSql, playerName, after);
 	}
 
-	private List<Player> loadPlayers(DBManager.PreparedStatementBuilder builder, String playerName, Timestamp time){
+	private List<Player> loadPlayers(String query, String playerName, Timestamp time) {
 		var nameParts = playerName.split(" ");
 		var lastName = nameParts[nameParts.length-1];
-		var firstName =  Arrays.stream(nameParts).limit(nameParts.length-1).collect(Collectors.joining(" "));
-		return load(Player.class, adapter.executePreparedQuery(builder.getStatement(), time, playerName, firstName, lastName));
+		var firstName = Arrays.stream(nameParts).limit(nameParts.length-1).collect(Collectors.joining(" "));
+		return load(Player.class, connectionManager.executePreparedQuery(query, time, playerName, firstName, lastName));
+	}
+
+	private final String preSql = "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc";
+
+	private final String postSql = "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc";
+
+	public String loadLatestTSINotInjured(int playerId) {
+		return loadLatestTSI(preSql, playerId);
+	}
+	public String loadLatestTSIInjured(int playerId) {
+		return loadLatestTSI(postSql, playerId);
+	}
+
+	private String loadLatestTSI(String query, int playerId) {
+		try (ResultSet rs = connectionManager.executePreparedQuery(query, playerId)) {
+			if (rs.next()) {
+				return rs.getString("markwert");
+			}
+		} catch (SQLException e) {
+            HOLogger.instance().error(SpielerTable.class, "Error retrieving TSI: " + e);
+        }
+        return "";
 	}
 }
