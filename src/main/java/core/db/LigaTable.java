@@ -8,7 +8,7 @@ public final class LigaTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "LIGA";
 	
-	LigaTable(JDBCAdapter adapter){
+	LigaTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 	

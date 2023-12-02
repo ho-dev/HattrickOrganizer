@@ -2,7 +2,6 @@ package core.db;
 
 import core.util.HODateTime;
 import core.util.HOLogger;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -32,16 +31,16 @@ public abstract class AbstractTable {
 	/**
 	 * Database connection
 	 **/
-	protected JDBCAdapter adapter;
+	protected ConnectionManager connectionManager;
 
 	/**
 	 * constructor
 	 *
 	 * @param tableName String table name
 	 */
-	public AbstractTable(String tableName, JDBCAdapter adapter) {
+	public AbstractTable(String tableName, ConnectionManager connectionManager) {
 		this.tableName = tableName;
-		this.adapter = adapter;
+		this.connectionManager = connectionManager;
 		initColumns();
 	}
 
@@ -187,7 +186,7 @@ public abstract class AbstractTable {
 	 * @param <T> the object class to create
 	 * @return list of objects of type T
 	 */
-	protected <T extends  Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
+	protected <T extends Storable> List<T> load(Class<T> tClass, ResultSet rs, int max){
 		var ret = new ArrayList<T>();
 		ColumnDescriptor columnDescriptor = null;
 		try{
@@ -213,10 +212,9 @@ public abstract class AbstractTable {
 				}
 				rs.close();
 			}
-		}
-		catch (Exception exception){
+		} catch (Exception exception) {
 			var stringBuilder = new StringBuilder("load");
-			if ( columnDescriptor != null){
+			if (columnDescriptor != null) {
 				stringBuilder.append(" ").append(columnDescriptor.getColumnName());
 			}
 			stringBuilder.append(": ").append(exception);
@@ -319,33 +317,6 @@ public abstract class AbstractTable {
 	// Insert
 
 	/**
-	 * Statement builder class used to create the insert statement.
-	 */
-	public static class PreparedInsertStatementBuilder extends DBManager.PreparedStatementBuilder {
-		/**
-		 * constructor creates the insert statement
-		 * @param table table that should create the insert statement
-		 */
-		public PreparedInsertStatementBuilder(AbstractTable table) {
-			super(table.createInsertStatement());
-		}
-	}
-
-	/**
-	 * the standard insert statement builder object
-	 */
-	protected PreparedInsertStatementBuilder preparedInsertStatementBuilder;
-
-	/**
-	 * standard method to create the insert statement builder.
-	 * This method should be overridden if a specialized insert is required by a derived class.
-	 * @return PreparedInsertStatementBuilder
-	 */
-	protected PreparedInsertStatementBuilder createPreparedInsertStatementBuilder(){
-		return new PreparedInsertStatementBuilder(this);
-	}
-
-	/**
 	 * create sql string of the standard insert statement.
 	 * @return sql string of the prepared statement.
 	 */
@@ -363,11 +334,8 @@ public abstract class AbstractTable {
 	 * @param values array of column values must match the defined columns of the table
 	 * @return 1 on success, 0 on error
 	 */
-	protected int executePreparedInsert(Object ... values){
-		if ( preparedInsertStatementBuilder==null){
-			preparedInsertStatementBuilder=createPreparedInsertStatementBuilder();
-		}
-		return adapter.executePreparedUpdate(preparedInsertStatementBuilder.getStatement(), values);
+	protected int executePreparedInsert(Object... values) {
+		return connectionManager.executePreparedUpdate(createInsertStatement(), values);
 	}
 
 	// Update
@@ -387,94 +355,22 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * Update statement builder class used to create a prepared update statement
-	 */
-	public static class PreparedUpdateStatementBuilder extends DBManager.PreparedStatementBuilder {
-		/**
-		 * constructor with user defined set part
-		 * @param table derived table
-		 * @param set String
-		 */
-		public PreparedUpdateStatementBuilder(AbstractTable table, String set) {
-			super("UPDATE " + table.getTableName() + " " + set);
-		}
-
-		/**
-		 * construct a standard update statement builder
-		 * @param table table
-		 */
-		public PreparedUpdateStatementBuilder(AbstractTable table) {
-			super(table.createUpdateStatement());
-		}
-	}
-
-	/**
-	 * the standard update statement builder object.
-	 */
-	protected PreparedUpdateStatementBuilder preparedUpdateStatementBuilder;
-
-	/**
-	 * create the standard update statement builder.
-	 * This method should be overridden if a specialized update is required by a derived class.
-	 * @return PreparedUpdateStatementBuilder
-	 */
-	protected PreparedUpdateStatementBuilder createPreparedUpdateStatementBuilder(){
-		return new PreparedUpdateStatementBuilder(this);
-	}
-
-	/**
 	 * execute the standard update statement
 	 * @param values set first values must match the where clause value (idcolumns). the remaining columns are used in the SET part
 	 * @return 1 on success, 0 on error, -1 if no update statement builder was defined.
 	 */
-	protected int executePreparedUpdate(Object ... values){
-		if (preparedUpdateStatementBuilder==null){
-			preparedUpdateStatementBuilder=createPreparedUpdateStatementBuilder();
-		}
-		if ( preparedUpdateStatementBuilder != null) {
-			return adapter.executePreparedUpdate(preparedUpdateStatementBuilder.getStatement(), values);
-		}
-		HOLogger.instance().error(getClass(), "no update statement builder created");
-		return  -1;
+	protected int executePreparedUpdate(Object... values){
+		return connectionManager.executePreparedUpdate(createUpdateStatement(), values);
 	}
 
 	// Delete
 
-
-	/**
-	 * Delete statement builder class
-	 */
-	public static class PreparedDeleteStatementBuilder extends DBManager.PreparedStatementBuilder {
-		/**
-		 * standard constructor uses the first id columns to create the standard delete statement
-		 * @param table table
-		 */
-		public PreparedDeleteStatementBuilder(AbstractTable table) {
-			this(table, table.createSQLWhere());
-		}
-
-		/**
-		 * constructor with user defined where clause used to create the delete statement
-		 * @param table derived table
-		 * @param where sql where clause
-		 */
-		public PreparedDeleteStatementBuilder(AbstractTable table, String where) {
-			super("DELETE FROM " + table.getTableName() + " " + where);
-		}
+	protected String createDeleteStatement() {
+		return createDeleteStatement(createSQLWhere());
 	}
 
-	/**
-	 * the standard delete statement builder object
-	 */
-	protected  PreparedDeleteStatementBuilder preparedDeleteStatementBuilder;
-
-	/**
-	 * create the standard delete statement builder.
-	 * This method should be overridden if a specialized delete is required by a derived class.
-	 * @return PreparedDeleteStatementBuilder
-	 */
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this);
+	protected String createDeleteStatement(String whereClause) {
+		return "DELETE FROM " + getTableName() + " " + whereClause;
 	}
 
 	/**
@@ -482,99 +378,38 @@ public abstract class AbstractTable {
 	 * @param whereValues the values must match the where clause value (idcolumns)
 	 * @return 1 on success, 0 on error
 	 */
-	protected int executePreparedDelete(Object ... whereValues) {
-		if ( preparedDeleteStatementBuilder==null){
-			preparedDeleteStatementBuilder=createPreparedDeleteStatementBuilder();
-		}
-		return adapter.executePreparedUpdate(preparedDeleteStatementBuilder.getStatement(), whereValues);
+	protected int executePreparedDelete(Object... whereValues) {
+		return connectionManager.executePreparedUpdate(createDeleteStatement(), whereValues);
 	}
 
 	// Select
-
-	/**
-	 * select statement builder class
-	 */
-	public static class PreparedSelectStatementBuilder extends DBManager.PreparedStatementBuilder {
-		/**
-		 * Construct select statement with user defined where clause
-		 * @param table Table name
-		 * @param where String sql where clause
-		 * @param select Selected column list
-		 */
-		public PreparedSelectStatementBuilder(AbstractTable table, String where, String select) {
-			super("SELECT " + select + " FROM " + table.getTableName() + " " + where);
-		}
-
-		/**
-		 * Construct standard select * from table where ... statement
-		 * @param table Table name
-		 * @param where Where clause inclusive WHERE
-		 */
-		public PreparedSelectStatementBuilder(AbstractTable table, String where) {
-			this(table, where, "*");
-		}
-
-		/**
-		 * Construct standard select statement using the first idcolumns to build the where clause
-		 * @param table derived table
-		 */
-		public PreparedSelectStatementBuilder(AbstractTable table) {
-			this(table, table.createSQLWhere());
-		}
-	}
 
 	/**
 	 * create the standard where clause using the first idcolumns of the table
 	 * @return String sql where clause
 	 */
 	private String createSQLWhere() {
-		return " WHERE " + Arrays.stream(this.columns).limit(this.idColumns).map(i->i.getColumnName()+"=?").collect(Collectors.joining(" AND "));
+		return " WHERE " + Arrays.stream(this.columns)
+				.limit(this.idColumns)
+				.map(i -> i.getColumnName() + " = ?")
+				.collect(Collectors.joining(" AND "));
 	}
 
-	/**
-	 * the standard select statement builder object
-	 */
-	protected PreparedSelectStatementBuilder preparedSelectStatementBuilder;
-
-	/**
-	 * create the standard select statement builder
-	 * This method should be overridden if a specialized select is required by a derived class.
-	 * @return PreparedSelectStatementBuilder
-	 */
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-		return new PreparedSelectStatementBuilder(this);
+	protected String createSelectStatement(String selectColumns, String whereClause) {
+		return "SELECT " + selectColumns + " FROM " + getTableName() + " " + whereClause;
 	}
 
-	/**
-	 * create the standard prepared select statement
-	 * @return PreparedStatement
-	 */
-	protected PreparedStatement getPreparedSelectStatement(){
-		if ( preparedSelectStatementBuilder==null){
-			preparedSelectStatementBuilder=createPreparedSelectStatementBuilder();
-		}
-		return preparedSelectStatementBuilder.getStatement();
+	protected String createSelectStatement(String whereClause) {
+		return createSelectStatement("*", whereClause);
 	}
 
-	public static class PreparedCheckIfExistStatementBuilder extends PreparedSelectStatementBuilder {
-		public PreparedCheckIfExistStatementBuilder(AbstractTable table, String where) {
-			super(table, where, "1");
-		}
-
-		public PreparedCheckIfExistStatementBuilder(AbstractTable table) {
-			this(table, table.createSQLWhere());
-		}
+	protected String createSelectStatement() {
+		return createSelectStatement(createSQLWhere());
 	}
 
-	protected PreparedCheckIfExistStatementBuilder preparedCheckIfExistStatementBuilder;
-	protected PreparedStatement getPreparedCheckIfExistStatement(){
-		if ( preparedCheckIfExistStatementBuilder==null){
-			preparedCheckIfExistStatementBuilder=createPreparedCheckIfExistStatementBuilder();
-		}
-		return preparedCheckIfExistStatementBuilder.getStatement();
-	}
-	protected PreparedCheckIfExistStatementBuilder createPreparedCheckIfExistStatementBuilder() {
-		return new PreparedCheckIfExistStatementBuilder(this);
+
+	protected String getPreparedCheckIfExistStatement() {
+		return createSelectStatement("1", createSQLWhere());
 	}
 
 	/**
@@ -582,8 +417,8 @@ public abstract class AbstractTable {
 	 * @param whereValues where values
 	 * @return result set
 	 */
-	protected ResultSet executePreparedSelect (Object ... whereValues){
-		return adapter.executePreparedQuery(getPreparedSelectStatement(), whereValues);
+	protected ResultSet executePreparedSelect(Object... whereValues) {
+		return connectionManager.executePreparedQuery(createSelectStatement(), whereValues);
 	}
 
 	/**
@@ -612,7 +447,7 @@ public abstract class AbstractTable {
 	 * @return Non-empty result set, if records exists
 	 */
 	private ResultSet executePreparedCheckIfExist(Object ... whereValues) {
-		return adapter.executePreparedQuery(getPreparedCheckIfExistStatement(), whereValues);
+		return connectionManager.executePreparedQuery(getPreparedCheckIfExistStatement(), whereValues);
 	}
 
 	/**
@@ -629,7 +464,7 @@ public abstract class AbstractTable {
 
 			for (int i = 0; i < columns.length; i++) {
 				try {
-					DBInfo dbInfo = adapter.getDBInfo();
+					DBInfo dbInfo = connectionManager.getDBInfo();
 					sql.append(columns[i].getCreateString(dbInfo));
 				} catch (Exception e) {
 					HOLogger.instance().log(getClass(), e);
@@ -647,7 +482,7 @@ public abstract class AbstractTable {
 			}
 			sql.append(" ) ");
 
-			adapter.executeUpdate(sql.toString());
+			connectionManager.executeUpdate(sql.toString());
 
 			insertDefaultValues();
 		}
@@ -660,26 +495,30 @@ public abstract class AbstractTable {
 	 * Drop the current table
 	 */
 	protected void tryDropTable() {
-		adapter.executeUpdate("DROP TABLE IF EXISTS " + getTableName());
+		connectionManager.executeUpdate("DROP TABLE IF EXISTS " + getTableName());
 	}
 
 	/**
 	 * Truncate the current table (i.e. remove all rows)
 	 */
 	protected void truncateTable() {
-		adapter.executeUpdate("DELETE FROM " + getTableName());
+		connectionManager.executeUpdate("DELETE FROM " + getTableName());
 	}
 
 	private boolean tableExists(String tableName) throws SQLException {
 		String sql = "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE TABLE_NAME = '" + tableName + "'";
-		ResultSet rs = this.adapter.executeQuery(sql);
-		return rs != null && rs.next();
+		ResultSet rs = this.connectionManager.executeQuery(sql);
+		boolean result = rs != null && rs.next();
+		if (rs != null) {
+			rs.close();
+		}
+		return result;
 	}
 
 	public boolean tryAddColumn(String columnName, String columnType) throws SQLException {
 		if (!columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ADD COLUMN " + columnName + " " + columnType;
-			adapter.executeUpdate(sql);
+			connectionManager.executeUpdate(sql);
 			return true;
 		}
 		return false;
@@ -691,57 +530,59 @@ public abstract class AbstractTable {
 				+ "' AND COLUMN_NAME = '"
 				+ columnName.toUpperCase()
 				+ "'";
-		ResultSet rs = adapter.executeQuery(sql);
-		if (rs != null) return rs.next();
+		try (ResultSet rs = connectionManager.executeQuery(sql)) {
+			if (rs != null) return rs.next();
+		}
 		return false;
 	}
 
 	public void tryChangeColumn(String columnName, String type_not_null) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
-			adapter.executeUpdate(sql);
+			connectionManager.executeUpdate(sql);
 		}
 	}
 
 	public void tryRenameColumn(String from, String to) throws SQLException {
 		if (columnExistsInTable(from)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
-			adapter.executeUpdate(sql);
+			connectionManager.executeUpdate(sql);
 		}
 	}
 
 	public boolean tryDeleteColumn(String columnName) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " DROP COLUMN " + columnName;
-			adapter.executeUpdate(sql);
+			connectionManager.executeUpdate(sql);
 			return true;
 		}
 		return false;
 	}
 
 	public void addPrimaryKey(String columns) {
-		adapter.executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
+		connectionManager.executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
 	}
 
 	public void tryDropPrimaryKey() throws SQLException {
 		if (primaryKeyExists()) {
-			adapter.executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+			connectionManager.executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
 		}
 	}
 
 	public void tryDropIndex(String index) {
-		adapter.executeUpdate("DROP INDEX " + index + " IF EXISTS");
+		connectionManager.executeUpdate("DROP INDEX " + index + " IF EXISTS");
 	}
 
 	public void tryAddIndex(String indexName, String columns) {
-		adapter.executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
+		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {
 		String sql = "SELECT 1 FROM information_schema.table_constraints WHERE constraint_type = 'PRIMARY KEY' AND table_name = '"
 				+ getTableName().toUpperCase() + "'";
-		ResultSet rs = adapter.executeQuery(sql);
-		if (rs != null) return rs.next();
+		try (ResultSet rs = connectionManager.executeQuery(sql)) {
+			if (rs != null) return rs.next();
+		}
 		return false;
 	}
 

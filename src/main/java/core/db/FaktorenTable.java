@@ -10,7 +10,7 @@ public final class FaktorenTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "FAKTOREN";
 	
-	FaktorenTable(JDBCAdapter adapter){
+	FaktorenTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);
 	}
 
@@ -30,8 +30,8 @@ public final class FaktorenTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
+	protected String createSelectStatement() {
+		return createSelectStatement("");
 	}
 
 	void pushFactorsIntoDB(FactorObject fo) {

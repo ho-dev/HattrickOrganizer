@@ -20,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -29,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class TSForecast extends LazyImagePanel implements ActionListener, ItemListener {
+	private final DBManager dbManager;
 
 	private static final long serialVersionUID = 1L;
 	final static String TS_SHOWCUPMATCHES = "TS_ShowCupMatches";
@@ -53,6 +53,10 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	private LoepiCurve m_LoepiHist;
 	private TrainerCurve m_Trainer;
 	private ConfidenceCurve m_Confidence;
+
+	TSForecast(DBManager dbManager) {
+		this.dbManager = dbManager;
+	}
 
 	@Override
 	protected void initialize() {
@@ -122,9 +126,9 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 */
 	private boolean isInCup() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		var matches = DBManager.instance().getMatchesKurzInfo(
+		var matches = dbManager.getMatchesKurzInfo(
 				" WHERE ( GastID = ? OR HeimID = ? ) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId,MatchType.CUP.getId(),MatchKurzInfo.FINISHED);
-		return matches.size() != 0;
+		return !matches.isEmpty();
 	}
 
 	/**
@@ -132,9 +136,9 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	 */
 	private boolean hasQualificationMatch() {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		var matches = DBManager.instance().getMatchesKurzInfo(
+		var matches = dbManager.getMatchesKurzInfo(
 				" WHERE ( GastID = ? OR HeimID = ?) AND MatchTyp = ? AND Status <> ? LIMIT 1", teamId, teamId, MatchType.QUALIFICATION.getId(), MatchKurzInfo.FINISHED);
-		return matches.size() != 0;
+		return !matches.isEmpty();
 	}
 
 	private void initializeConfig() {
@@ -340,44 +344,44 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 
 	private void createCurves() throws Exception {
 		if (m_Trainer != null && m_jpGraphics.removeCurve(m_Trainer)) {
-			m_Trainer = new TrainerCurve();
+			m_Trainer = new TrainerCurve(dbManager);
 			m_jpGraphics.addCurve(m_Trainer);
 		} else {
-			m_Trainer = new TrainerCurve();
+			m_Trainer = new TrainerCurve(dbManager);
 		}
 
 		if (m_History != null && m_jpGraphics.removeCurve(m_History)) {
-			m_History = new HistoryCurve();
+			m_History = new HistoryCurve(dbManager);
 			m_jpGraphics.addCurve(m_History, true);
 		} else {
-			m_History = new HistoryCurve();
+			m_History = new HistoryCurve(dbManager);
 		}
 		m_History.setColor(Color.black);
 		m_History.first();
 		m_History.next();
 
 		if (m_Confidence != null && m_jpGraphics.removeCurve(m_Confidence)) {
-			m_Confidence = new ConfidenceCurve();
+			m_Confidence = new ConfidenceCurve(dbManager);
 			m_jpGraphics.addCurve(m_Confidence);
 		} else {
-			m_Confidence = new ConfidenceCurve();
+			m_Confidence = new ConfidenceCurve(dbManager);
 		}
 		m_Confidence.setColor(Color.blue);
 
 		if (m_LoepiHist != null && m_jpGraphics.removeCurve(m_LoepiHist)) {
-			m_LoepiHist = new LoepiCurve(m_Trainer, false);
+			m_LoepiHist = new LoepiCurve(dbManager, m_Trainer, false);
 			m_jpGraphics.addCurve(m_LoepiHist);
 		} else {
-			m_LoepiHist = new LoepiCurve(m_Trainer, false);
+			m_LoepiHist = new LoepiCurve(dbManager, m_Trainer, false);
 		}
 		m_LoepiHist.setSpirit(0, m_History.getSpirit());
 		m_LoepiHist.setColor(Color.orange);
 
 		if (m_LoepiForecast != null && m_jpGraphics.removeCurve(m_LoepiForecast)) {
-			m_LoepiForecast = new LoepiCurve(m_Trainer, true);
+			m_LoepiForecast = new LoepiCurve(dbManager, m_Trainer, true);
 			m_jpGraphics.addCurve(m_LoepiForecast);
 		} else {
-			m_LoepiForecast = new LoepiCurve(m_Trainer, true);
+			m_LoepiForecast = new LoepiCurve(dbManager, m_Trainer, true);
 		}
 		m_LoepiForecast.setStartPoint(m_History.getLastPoint());
 		m_LoepiForecast.forecast(0);

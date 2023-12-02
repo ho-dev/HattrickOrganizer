@@ -15,7 +15,7 @@ import java.util.List;
 final class TAFavoriteTable extends AbstractTable {
 	final static String TABLENAME = "TA_FAVORITE";
 
-	TAFavoriteTable(JDBCAdapter adapter) {
+	TAFavoriteTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -40,13 +40,13 @@ final class TAFavoriteTable extends AbstractTable {
         return isStored(teamId);
     }
 
-    private final PreparedSelectStatementBuilder getTAFavoriteTeamsBuilder = new PreparedSelectStatementBuilder(this, "");
+    private final String getTAFavoriteTeamsSql = createSelectStatement("");
     /**
      * Returns all favourite teams
      *
      * @return List of Teams Object
      */
     List<Team> getTAFavoriteTeams() {
-        return load(Team.class, adapter.executePreparedQuery(getTAFavoriteTeamsBuilder.getStatement()));
+        return load(Team.class, connectionManager.executePreparedQuery(getTAFavoriteTeamsSql));
     }
 }

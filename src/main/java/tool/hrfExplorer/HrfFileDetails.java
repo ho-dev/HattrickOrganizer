@@ -1,5 +1,6 @@
 package tool.hrfExplorer;
 
+import core.db.DBManager;
 import core.util.HODateTime;
 
 import java.io.BufferedReader;
@@ -20,15 +21,14 @@ public class HrfFileDetails extends HrfDetails
 	
 	private File m_Datei;
 	private File m_Ordner;
-	private ResultSet m_rs = null;
 	
 	private static FileReader fr;
     private static BufferedReader br;
     
     
-	public HrfFileDetails(String pfad)
+	public HrfFileDetails(DBManager dbManager, String pfad)
 	{
-		super();
+		super(dbManager);
 		
 		setPfad(pfad);
 		

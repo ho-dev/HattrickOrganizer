@@ -9,7 +9,7 @@ import java.sql.Types;
 class UserColumnsTable extends AbstractTable {
 	final static String TABLENAME = "USERCOLUMNS";
 
-	protected UserColumnsTable(JDBCAdapter adapter) {
+	protected UserColumnsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -24,13 +24,13 @@ class UserColumnsTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder() {
-		return new PreparedDeleteStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
+	protected String createDeleteStatement() {
+		return createDeleteStatement(" WHERE COLUMN_ID BETWEEN ? AND ?");
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder() {
-		return new PreparedSelectStatementBuilder(this, "WHERE COLUMN_ID BETWEEN ? AND ?");
+	protected String createSelectStatement() {
+		return createSelectStatement("WHERE COLUMN_ID BETWEEN ? AND ?");
 	}
 
 	void deleteModel(int modelId) {

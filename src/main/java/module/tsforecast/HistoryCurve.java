@@ -1,5 +1,6 @@
 package module.tsforecast;
 
+import core.db.ConnectionManager;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
@@ -38,8 +39,8 @@ public class HistoryCurve extends Curve {
 
 	static final double m_dMaxSpirit = 10.2D;
 
-	public HistoryCurve() throws SQLException {
-		super();
+	public HistoryCurve(DBManager dbManager) throws SQLException {
+		super(dbManager);
 
 		readSpiritHistory();
 		readPastMatches();
@@ -48,20 +49,19 @@ public class HistoryCurve extends Curve {
 		fillupSpirit();
 	}
 
-	private static final DBManager.PreparedStatementBuilder readSpiritHistoryStatementBuilder  = new DBManager.PreparedStatementBuilder(
-			"select DATUM, ISTIMMUNG from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM"
-	);
+	private static final String readSpiritHistorySql  = "select DATUM, ISTIMMUNG from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM";
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		var start = ibasics.getDatum().minus(WEEKS_BACK * 7, ChronoUnit.DAYS).toDbTimestamp();
-		ResultSet rs = m_clJDBC.executePreparedQuery(readSpiritHistoryStatementBuilder.getStatement(), ibasics.getDatum().toDbTimestamp(), start);
-		if (rs != null) {
-			while (rs.next()) {
-				double dSpirit = rs.getInt("ISTIMMUNG") + 0.5D;
-				if (dSpirit > m_dMaxSpirit)
-					dSpirit = m_dMaxSpirit;
-				m_clPoints.add(new Point(HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM")), dSpirit));
+		try (ResultSet rs = dbManager.getConnectionManager().executePreparedQuery(readSpiritHistorySql, ibasics.getDatum().toDbTimestamp(), start)) {
+			if (rs != null) {
+				while (rs.next()) {
+					double dSpirit = rs.getInt("ISTIMMUNG") + 0.5D;
+					if (dSpirit > m_dMaxSpirit)
+						dSpirit = m_dMaxSpirit;
+					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM")), dSpirit));
+				}
 			}
 		}
 	}
@@ -80,87 +80,21 @@ public class HistoryCurve extends Curve {
 		// Table MATCHDETAILS includes EINSTELLUNG
 		if (iliga != null) {
 			// reverse order - loadOfficial loads descending order
-			var matches = DBManager.instance().loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i,j)->j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
+			var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i,j)->j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
 
-//			ResultSet resultset = m_clJDBC
-//					.executeQuery("SELECT * FROM (select MATCHESKURZINFO.MATCHDATE as SORTDATE, -1 AS SPIELTAG, MATCHESKURZINFO.MATCHTYP, "
-//							+ "MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID "
-//							+ "from MATCHESKURZINFO, MATCHDETAILS "
-//							+ "where (MATCHDETAILS.HEIMID="
-//							+ ibasics.getTeamId()
-//							+ " OR MATCHDETAILS.GASTID="
-//							+ ibasics.getTeamId()
-//							+ ") "
-//							+ "and MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID "
-//							+ "and MATCHESKURZINFO.MATCHDATE < '"
-//							+ ibasics.getDatum().toDbTimestamp()
-//							+ "' and MATCHESKURZINFO.MATCHDATE > '"
-//							+ start
-//							+ "' "
-//							+ "and MATCHTYP <> "
-//							+ MatchType.LEAGUE.getId()
-//							+ " union "
-//							+ "select PAARUNG.DATUM as SORTDATE, PAARUNG.SPIELTAG, "
-//							+ MatchType.LEAGUE.getId()
-//							+ " as MATCHTYP, "
-//							+ "MATCHDETAILS.GASTEINSTELLUNG, MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID "
-//							+ "from PAARUNG, MATCHDETAILS "
-//							+ "where (MATCHDETAILS.HEIMID="
-//							+ ibasics.getTeamId()
-//							+ " OR MATCHDETAILS.GASTID="
-//							+ ibasics.getTeamId()
-//							+ ") "
-//							+ "and PAARUNG.MATCHID=MATCHDETAILS.MATCHID "
-//							+ "and PAARUNG.DATUM < '"
-//							+ ibasics.getDatum().toDbTimestamp()
-//							+ "' and PAARUNG.DATUM > '"
-//							+ start
-//							+ "') "
-//							+ "order by SORTDATE");
-//			/*
-//			 * select MATCHESKURZINFO.MATCHDATE as SORTDATE, -1 as SPIELTAG,
-//			 * MATCHESKURZINFO.MATCHTYP, MATCHDETAILS.GASTEINSTELLUNG,
-//			 * MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID from
-//			 * MATCHESKURZINFO, MATCHDETAILS where (MATCHDETAILS.HEIMID=132932
-//			 * OR MATCHDETAILS.GASTID=132932) and
-//			 * MATCHESKURZINFO.MATCHID=MATCHDETAILS.MATCHID and SORTDATE <
-//			 * '2006-09-01' and SORTDATE > '2006-01-01' and MATCHTYP <> 1 union
-//			 * select PAARUNG.DATUM as SORTDATE, PAARUNG.SPIELTAG, 1 as
-//			 * MATCHTYP, MATCHDETAILS.GASTEINSTELLUNG,
-//			 * MATCHDETAILS.HEIMEINSTELLUNG, MATCHDETAILS.HEIMID from PAARUNG,
-//			 * MATCHDETAILS where (MATCHDETAILS.HEIMID=132932 OR
-//			 * MATCHDETAILS.GASTID=132932) and
-//			 * PAARUNG.MATCHID=MATCHDETAILS.MATCHID and SORTDATE < '2006-09-01'
-//			 * and SORTDATE > '2006-01-01' order by SORTDATE
-//			 */
 			int i;
 			for ( var match : matches){
 				var details = match.getMatchdetails();
 				if (details != null) {
-//				for (boolean flag = resultset.first(); flag; flag = resultset
-//						.next()) {
 					var sortDate = match.getMatchSchedule();
 					i = sortDate.toHTWeek().week;
-//					if (resultset.getInt("SPIELTAG") > 0) {
-//						i = resultset.getInt("SPIELTAG");
-//					}
 					Curve.Point pNextLeagueMatch = new Point(
 							sortDate,
 							ibasics.getTeamId()==match.getHomeTeamID()?details.getHomeEinstellung():details.getGuestEinstellung(),
 							i,
 							details.getMatchType()
 					);
-//					if (ibasics.getTeamId() == resultset.getInt("HEIMID")) {
-//						pNextLeagueMatch = new Point(
-//								HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE")),
-//								resultset.getInt("HEIMEINSTELLUNG"), i,
-//								MatchType.getById(resultset.getInt("MATCHTYP")));
-//					} else {
-//						pNextLeagueMatch = new Point(
-//								HODateTime.fromDbTimestamp(resultset.getTimestamp("SORTDATE")),
-//								resultset.getInt("GASTEINSTELLUNG"), i,
-//								MatchType.getById(resultset.getInt("MATCHTYP")));
-//					}
+
 					m_clPoints.add(pNextLeagueMatch);
 
 					// correction of matchdays at end of season for non league

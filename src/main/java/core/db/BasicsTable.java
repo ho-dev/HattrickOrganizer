@@ -2,16 +2,13 @@ package core.db;
 
 import core.model.misc.Basics;
 import core.util.HODateTime;
-import core.util.HOLogger;
-
-import java.sql.Timestamp;
 import java.sql.Types;
 
 final class BasicsTable extends AbstractTable {
 	final static String TABLENAME = "BASICS";
 
-	BasicsTable(JDBCAdapter adapter) {
-		super(TABLENAME, adapter);
+	BasicsTable(ConnectionManager connectionManager) {
+		super(TABLENAME, connectionManager);
 	}
 
 	@Override
@@ -51,50 +48,19 @@ final class BasicsTable extends AbstractTable {
 	}
 
 	/**
-	 * lädt die Basics zum angegeben HRF file ein
+	 * Loads the {@link Basics} instance for the given HRF ID <code>hrfId</code>.
+	 *
+	 * @return Basics – {@link Basics} instance for HRF ID, empty object otherwise.
 	 */
-	Basics loadBasics(int hrfID) {
-		var ret = loadOne(Basics.class, hrfID);
-		if ( ret == null ) ret = new Basics();
+	Basics loadBasics(int hrfId) {
+		var ret = loadOne(Basics.class, hrfId);
+		if (ret == null) ret = new Basics();
 		else if (ret.getSeasonOffset() == 0) {
 			var season0 = ret.getDatum().toHTWeek().season;
 			if (season0 != ret.getSeason()) {
-				ret.setSeasonOffset( ret.getSeason() - season0 ) ;
+				ret.setSeasonOffset(ret.getSeason() - season0);
 			}
 		}
 		return ret;
-	}
-
-	private final DBManager.PreparedStatementBuilder getHrfIDSameTrainingStatementBuilder =  new DBManager.PreparedStatementBuilder(
-			"SELECT HRF_ID, Datum FROM " + getTableName() + " WHERE Datum<= ? ORDER BY Datum DESC LIMIT 1");
-
-	/**
-	 * Gibt die HRFId vor dem Datum zurï¿½ck, wenn mï¿½glich
-	 */
-	int getHrfIDSameTraining(Timestamp time) {
-
-		int hrfID = -1;
-		Timestamp hrfDate = null;
-		var rs = adapter.executePreparedQuery(getHrfIDSameTrainingStatementBuilder.getStatement(), time);
-		try {
-			if (rs != null) {
-				//HRF vorher vorhanden?
-				if (rs.next()) {
-					hrfID = rs.getInt("HRF_ID");
-					hrfDate = rs.getTimestamp("Datum");
-				}
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), "XMLExporter.getHRFID4Time: " + e);
-		}
-		if (hrfID != -1) {
-			//todo sicherstellen das kein Trainingsdatum zwischen matchdate und hrfdate liegt
-			var training4Hrf = DBManager.instance().getXtraDaten(hrfID).getNextTrainingDate().toDbTimestamp();
-			if ((training4Hrf.after(hrfDate)) && (training4Hrf.before(time))) //wenn hrfDate vor TrainingsDate und Matchdate nach Trainigsdate ->Abbruch!
-			{
-				hrfID = -1;
-			}
-		}
-		return hrfID;
 	}
 }

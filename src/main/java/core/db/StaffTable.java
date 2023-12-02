@@ -9,7 +9,7 @@ public class StaffTable extends AbstractTable{
 	/** tablename **/
 	public final static String TABLENAME = "STAFF";
 
-	protected StaffTable(JDBCAdapter adapter) {
+	protected StaffTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 
@@ -28,8 +28,8 @@ public class StaffTable extends AbstractTable{
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "WHERE HrfID = ? ORDER BY index");
+	protected String createSelectStatement() {
+		return createSelectStatement(" WHERE HrfID = ? ORDER BY index");
 	}
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
 		return load(StaffMember.class, hrfId);

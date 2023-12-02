@@ -3,14 +3,13 @@ package core.db;
 import core.util.HODateTime;
 import module.teamAnalyzer.vo.SquadInfo;
 
-import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.List;
 
 public class SquadInfoTable extends AbstractTable {
     final static String TABLENAME = "SQUAD";
 
-    SquadInfoTable(JDBCAdapter adapter) {
+    SquadInfoTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
         idColumns = 2;
     }
@@ -46,8 +45,8 @@ public class SquadInfoTable extends AbstractTable {
         store(squadInfo);
     }
 
-    private final PreparedSelectStatementBuilder loadAllSquadInfoStatementBuilder = new PreparedSelectStatementBuilder(this, "WHERE TEAMID=?");
+    private final String loadAllSquadInfoSql = createSelectStatement("WHERE TEAMID=?");
     public List<SquadInfo> loadSquadInfo(int teamId){
-        return load(SquadInfo.class, adapter.executePreparedQuery(loadAllSquadInfoStatementBuilder.getStatement(), teamId));
+        return load(SquadInfo.class, connectionManager.executePreparedQuery(loadAllSquadInfoSql, teamId));
     }
 }

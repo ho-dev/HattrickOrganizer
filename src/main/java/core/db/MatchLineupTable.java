@@ -13,7 +13,7 @@ public final class MatchLineupTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "MATCHLINEUP";
 	
-	MatchLineupTable(JDBCAdapter adapter){
+	MatchLineupTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 		idColumns = 2;
 	}
@@ -34,7 +34,8 @@ public final class MatchLineupTable extends AbstractTable {
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
-			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(MatchID)"};
+			"CREATE INDEX IMATCHLINEUP_1 ON " + getTableName() + "(MatchID)"
+		};
 	}
 
 	MatchLineup loadMatchLineup(int iMatchType, int matchID) {
@@ -50,12 +51,10 @@ public final class MatchLineupTable extends AbstractTable {
 		}
 	}
 
-	private final PreparedSelectStatementBuilder loadYouthMatchLineupsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
 	public List<MatchLineup> loadYouthMatchLineups() {
-		return load(MatchLineup.class,  adapter.executePreparedQuery(loadYouthMatchLineupsStatementBuilder.getStatement()));
+		String selectStatement = createSelectStatement("*", " WHERE MATCHTYP IN (" + getMatchTypeInValues() + ")");
+		return load(MatchLineup.class, connectionManager.executePreparedQuery(selectStatement));
 	}
-
-	private final PreparedDeleteStatementBuilder deleteYouthMatchLineupsBeforeStatementBuilder = new PreparedDeleteStatementBuilder(this, getDeleteYouthMatchLineupsBeforeStatementSQL());
 
 	private String getDeleteYouthMatchLineupsBeforeStatementSQL() {
 		var matchTypes = getMatchTypeInValues();
@@ -67,7 +66,7 @@ public final class MatchLineupTable extends AbstractTable {
 
 	public void deleteYouthMatchLineupsBefore(Timestamp before) {
 		try {
-			this.adapter.executePreparedUpdate(deleteYouthMatchLineupsBeforeStatementBuilder.getStatement(), before);
+			this.connectionManager.executePreparedUpdate(createDeleteStatement(getDeleteYouthMatchLineupsBeforeStatementSQL()), before);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
 		}

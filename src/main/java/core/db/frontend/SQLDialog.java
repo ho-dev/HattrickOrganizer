@@ -186,7 +186,7 @@ public class SQLDialog extends JDialog implements ActionListener {
             table.setModel(model);
         } else {
             try {
-                int rows = DBManager.instance().getAdapter().executeUpdate(getTextArea().getText());
+                int rows = DBManager.instance().getConnectionManager().executeUpdate(getTextArea().getText());
                 getInfoLabel().setText(rows + " rows updated");
             }
             catch(Exception ex)
@@ -212,7 +212,7 @@ public class SQLDialog extends JDialog implements ActionListener {
         try
         {
             long start = System.currentTimeMillis();
-            ResultSet rs = DBManager.instance().getAdapter().executeQuery(select + " " + sql);
+            ResultSet rs = DBManager.instance().getConnectionManager().executeQuery(select + " " + sql);
             rs.last();
             rowCount = rs.getRow();
             rs.beforeFirst();

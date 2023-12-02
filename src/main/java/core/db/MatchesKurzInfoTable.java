@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 final class MatchesKurzInfoTable extends AbstractTable {
 	final static String TABLENAME = "MATCHESKURZINFO";
 
-	MatchesKurzInfoTable(JDBCAdapter adapter) {
+	MatchesKurzInfoTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
@@ -89,16 +88,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		store(match);
 	}
 
-	private final HashMap<String, PreparedStatement> preparedStatements = new HashMap<>();
-//	private PreparedStatement getPreparedStatement(String sql){
-//		var ret = preparedStatements.get(sql);
-//		if ( ret == null ){
-//			ret = this.adapter.createPreparedStatement(sql);
-//			preparedStatements.put(sql, ret);
-//		}
-//		return ret;
-//	}
-	MatchKurzInfo getMatchesKurzInfo(int teamId, int matchtyp, int statistic, boolean home) {
+	MatchKurzInfo getMatchesKurzInfo(int teamId, int matchType, int statistic, boolean home) {
 		StringBuilder sql = new StringBuilder(200);
 		String column = "";
 		String column2 = "";
@@ -120,9 +110,9 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		sql.append(" FROM ").append(getTableName());
 		sql.append(" WHERE ").append(home ? "HEIMID=?" : "GASTID=?");
 		sql.append(" AND HEIMTORE ").append(column2).append(" GASTTORE ");
-		sql.append(getMatchTypWhereClause(matchtyp));
+		sql.append(getMatchTypWhereClause(matchType));
 		sql.append(" ORDER BY DIFF DESC ");
-		return loadOne(MatchKurzInfo.class, adapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), teamId));
+		return loadOne(MatchKurzInfo.class, connectionManager.executePreparedQuery(sql.toString(), teamId));
 
 	}
 
@@ -298,20 +288,15 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return isStored(matchid, matchType.getId());
 	}
 
-	private final DBManager.PreparedStatementBuilder hasUnsureWeatherForecastStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?");
-	boolean hasUnsureWeatherForecast(int matchId)
-	{
-		try{
-			final ResultSet rs = adapter.executePreparedQuery(hasUnsureWeatherForecastStatementBuilder.getStatement(),matchId);
+	boolean hasUnsureWeatherForecast(int matchId) {
+		try (final ResultSet rs = connectionManager.executePreparedQuery("SELECT WeatherForecast FROM " + getTableName() + " WHERE MatchId=?", matchId)) {
 			assert rs != null;
 			if (rs.next()) {
 				Weather.Forecast forecast = Weather.Forecast.getById(rs.getInt(1));
 				if (rs.wasNull()) return true;
 				return !forecast.isSure();
 			}
-		}
-		catch(Exception e){
+		} catch(Exception e){
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.hasUnsureWeatherForecast : " + e);
 		}
 		return false;
@@ -350,7 +335,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	}
 
 	public List<MatchKurzInfo> loadMatchesKurzInfo(String sql, Object ... params) {
-		return load(MatchKurzInfo.class, adapter.executePreparedQuery(getMatchKurzInfoStatement(sql), params));
+		return load(MatchKurzInfo.class, connectionManager.executePreparedQuery(createSelectStatement(sql), params));
 	}
 
 	/**
@@ -381,7 +366,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		// Find latest match with id = matchId
 		// Here we order by MatchDate, which happens to be string, which is somehow risky,
 		// but it seems to be done in other places.
-		return  loadOneMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId, MatchKurzInfo.FINISHED);
+		return loadOneMatchesKurzInfo(" WHERE MATCHID=? AND Status=? ORDER BY MATCHDATE DESC LIMIT 1", matchId, MatchKurzInfo.FINISHED);
 	}
 
 	/**
@@ -395,18 +380,6 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				teamId,
 				teamId,
 				MatchKurzInfo.UPCOMING);
-	}
-	private PreparedStatement getMatchKurzInfoStatement(String where) {
-		PreparedStatement ret = preparedStatements.get(where);
-		if ( ret == null){
-			ret = createSelectStatement(where);
-			preparedStatements.put(where, ret);
-		}
-		return ret;
-	}
-
-	private PreparedStatement createSelectStatement(String where) {
-		return  new PreparedSelectStatementBuilder(this, where).getStatement();
 	}
 
 	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, int status, Timestamp from, List<Integer> matchTypes) {

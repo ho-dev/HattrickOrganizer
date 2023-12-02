@@ -18,7 +18,7 @@ public class YouthPlayerTable  extends AbstractTable {
      **/
     final static String TABLENAME = "YOUTHPLAYER";
 
-    YouthPlayerTable(JDBCAdapter adapter) {
+    YouthPlayerTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
         idColumns = 2;
     }
@@ -83,8 +83,8 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     @Override
-    protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-        return new PreparedDeleteStatementBuilder(this, "WHERE HRF_ID=?");
+    public String createDeleteStatement() {
+        return createDeleteStatement("WHERE HRF_ID=?");
     }
     /**
      * delete youth players
@@ -104,8 +104,8 @@ public class YouthPlayerTable  extends AbstractTable {
     }
 
     @Override
-    protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-        return new PreparedSelectStatementBuilder(this, "WHERE HRF_ID=?");
+    public String createSelectStatement() {
+        return createSelectStatement("WHERE HRF_ID=?");
     }
 
     /**
@@ -115,23 +115,18 @@ public class YouthPlayerTable  extends AbstractTable {
         return load(YouthPlayer.class, hrfID);
     }
 
-    private final PreparedSelectStatementBuilder loadYouthPlayerOfMatchDateStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE ID=? AND YOUTHMATCHDATE=?");
     public YouthPlayer loadYouthPlayerOfMatchDate(int id, Timestamp date) {
-        return loadOne(YouthPlayer.class, adapter.executePreparedQuery(loadYouthPlayerOfMatchDateStatementBuilder.getStatement(), id, date));
+        return loadOne(YouthPlayer.class, connectionManager.executePreparedQuery(createSelectStatement(" WHERE ID=? AND YOUTHMATCHDATE=?"), id, date));
     }
 
-    private final DBManager.PreparedStatementBuilder loadMinScoutingDateStatementBuilder = new DBManager.PreparedStatementBuilder(
-            "select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" );
     public Timestamp loadMinScoutingDate() {
-        try {
-            var rs = adapter.executePreparedQuery(loadMinScoutingDateStatementBuilder.getStatement());
+        try (var rs = connectionManager.executePreparedQuery("select min(ArrivalDate) from " + getTableName() + " where PromotionDate is NULL" )) {
             if (rs != null) {
                 if (rs.next()) {
                     return rs.getTimestamp(1);
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e){
             HOLogger.instance().log(getClass(),e);
         }
         return null;

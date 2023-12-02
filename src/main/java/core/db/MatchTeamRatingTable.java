@@ -8,7 +8,7 @@ import java.util.List;
 public class MatchTeamRatingTable extends AbstractTable {
     public final static String TABLENAME = "MATCHTEAMRATING";
 
-    protected MatchTeamRatingTable(JDBCAdapter adapter) {
+    protected MatchTeamRatingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
         idColumns = 3;
     }
@@ -34,11 +34,10 @@ public class MatchTeamRatingTable extends AbstractTable {
         return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP, TEAMID)"};
     }
 
-    private final PreparedSelectStatementBuilder loadBothTeamRatingStatementBuilder = new PreparedSelectStatementBuilder(this,
-                   "WHERE MatchID = ? AND MatchTyp = ?");
-
     List<MatchTeamRating> load(int matchID, int matchType) {
-        return load(MatchTeamRating.class, this.adapter.executePreparedQuery(loadBothTeamRatingStatementBuilder.getStatement(), matchID, matchType));
+        return load(MatchTeamRating.class, this.connectionManager.executePreparedQuery(
+                createSelectStatement("WHERE MatchID = ? AND MatchTyp = ?"), matchID, matchType)
+        );
     }
 
     void storeTeamRating(MatchTeamRating teamRating) {

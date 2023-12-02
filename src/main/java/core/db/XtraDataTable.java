@@ -7,7 +7,7 @@ import java.sql.Types;
 final class XtraDataTable extends AbstractTable {
 	final static String TABLENAME = "XTRADATA";
 
-	XtraDataTable(JDBCAdapter adapter) {
+	XtraDataTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 	}
 

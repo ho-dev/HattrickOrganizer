@@ -20,7 +20,7 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 	 **/
 	public final static String TABLENAME = "MATCHLINEUPPLAYER";
 
-	MatchLineupPlayerTable(JDBCAdapter adapter) {
+	MatchLineupPlayerTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 3;
 	}
@@ -77,18 +77,15 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return ratings;
 	}
 
-	private final DBManager.PreparedStatementBuilder getBewertungen4PlayerStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?");
 	/**
 	 * Gibt die beste, schlechteste und durchschnittliche Bewertung für den Player, sowie die
 	 * Anzahl der Bewertungen zurück // Match
 	 */
-	float[] getBewertungen4Player(int spielerid) {
+	float[] getBewertungen4Player(int playerId) {
 		//Max, Min, Durchschnitt
 		final float[] bewertungen = {0f, 0f, 0f, 0f};
 
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(getBewertungen4PlayerStatementBuilder.getStatement(), spielerid);
+		try (final ResultSet rs = connectionManager.executePreparedQuery("SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=?", playerId)) {
 			assert rs != null;
 			int i = 0;
 			while (rs.next()) {
@@ -116,21 +113,17 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return bewertungen;
 	}
 
-	private final DBManager.PreparedStatementBuilder getPlayerRatingForPositionStatementBuilder = new DBManager.PreparedStatementBuilder(
-			"SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?" );
-
 	/**
 	 * Returns the best, worst, and average rating for the player, as well as the number of ratings // match
 	 *
-	 * @param spielerid Spielerid
+	 * @param playerId Spielerid
 	 * @param position  Usere positionscodierung mit taktik
 	 */
-	float[] getPlayerRatingForPosition(int spielerid, int position) {
+	float[] getPlayerRatingForPosition(int playerId, int position) {
 		//Max, Min, average
 		final float[] starsStatistics = {0f, 0f, 0f, 0f};
 
-		try {
-			final ResultSet rs = adapter.executePreparedQuery(getPlayerRatingForPositionStatementBuilder.getStatement(), spielerid, position);
+		try (final ResultSet rs = connectionManager.executePreparedQuery("SELECT MatchID, Rating FROM " + getTableName() + " WHERE SpielerID=? AND HoPosCode=?", playerId, position)) {
 			assert rs != null;
 			int i = 0;
 			while (rs.next()) {
@@ -174,9 +167,8 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 		return load(MatchLineupPosition.class, matchID, matchType.getId(), teamID);
 	}
 
-	private final PreparedSelectStatementBuilder getMatchInsertsStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE SpielerID = ?");
 	public List<MatchLineupPosition> getMatchInserts(int objectPlayerID) {
-		return load(MatchLineupPosition.class, adapter.executePreparedQuery(getMatchInsertsStatementBuilder.getStatement(), objectPlayerID));
+		return load(MatchLineupPosition.class, connectionManager.executePreparedQuery(createSelectStatement("*", " WHERE SpielerID = ?"), objectPlayerID));
 	}
 
 	public List<MatchLineupPosition> loadTopFlopRatings( List<Paarung> matches, int position, int count, boolean isBest){
@@ -236,6 +228,6 @@ public final class MatchLineupPlayerTable extends AbstractTable {
 			sql.append("ASC");
 		}
 		sql.append(" LIMIT ").append(count);
-		return load(MatchLineupPosition.class, adapter.executePreparedQuery(DBManager.instance().getPreparedStatement(sql.toString()), args.toArray()));
+		return load(MatchLineupPosition.class, connectionManager.executePreparedQuery(sql.toString(), args.toArray()));
 	}
 }

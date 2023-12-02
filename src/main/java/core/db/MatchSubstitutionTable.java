@@ -17,7 +17,7 @@ public class MatchSubstitutionTable extends AbstractTable {
 	// Dummy value for ids not used (hrf, team, match)
 	private final static int DUMMY = -101;
 
-	protected MatchSubstitutionTable(JDBCAdapter adapter) {
+	protected MatchSubstitutionTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
 		idColumns = 3;
 	}

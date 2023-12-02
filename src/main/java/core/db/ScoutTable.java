@@ -12,7 +12,7 @@ final class ScoutTable extends AbstractTable {
 	/** tablename **/
 	public final static String TABLENAME = "SCOUT";
 	
-	ScoutTable(JDBCAdapter  adapter){
+	ScoutTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
 
@@ -62,13 +62,13 @@ final class ScoutTable extends AbstractTable {
 	}
 
 	@Override
-	protected PreparedSelectStatementBuilder createPreparedSelectStatementBuilder(){
-		return new PreparedSelectStatementBuilder(this, "");
+	protected String createSelectStatement() {
+		return createSelectStatement("");
 	}
 
 	@Override
-	protected PreparedDeleteStatementBuilder createPreparedDeleteStatementBuilder(){
-		return new PreparedDeleteStatementBuilder(this, "");
+	protected String createDeleteStatement() {
+		return createDeleteStatement( "");
 	}
 
 	/**

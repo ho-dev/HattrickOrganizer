@@ -4,20 +4,17 @@ import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class TransferTable extends AbstractTable {
 	final static String TABLENAME = "TRANSFER";
-    private final HashMap<String, PreparedStatement> getTransferStatements = new HashMap<>();
 
-    TransferTable(JDBCAdapter adapter){
-		super(TABLENAME,adapter);
+    TransferTable(ConnectionManager adapter){
+		super(TABLENAME, adapter);
 	}
 
 	@Override
@@ -70,8 +67,8 @@ public class TransferTable extends AbstractTable {
         return loadOne(PlayerTransfer.class, transferId);
     }
 
-    private final PreparedSelectStatementBuilder getAllTransfersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE playerid = ? ORDER BY date DESC");
-    private final PreparedSelectStatementBuilder getTransfersStatementBuilder = new PreparedSelectStatementBuilder(this, " WHERE playerid = ? AND (buyerid=? OR sellerid=?) ORDER BY date DESC");
+    private final String getAllTransfersSql = createSelectStatement(" WHERE playerid = ? ORDER BY date DESC");
+    private final String getTransfersSql = createSelectStatement(" WHERE playerid = ? AND (buyerid=? OR sellerid=?) ORDER BY date DESC");
 
     /**
      * Gets a list of transfers.
@@ -85,9 +82,9 @@ public class TransferTable extends AbstractTable {
     public List<PlayerTransfer> getTransfers(int playerid, boolean allTransfers) {
         if (!allTransfers) {
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            return load(PlayerTransfer.class, this.adapter.executePreparedQuery(getTransfersStatementBuilder.getStatement(), playerid, teamid, teamid));
+            return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(getTransfersSql, playerid, teamid, teamid));
         }
-        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(getAllTransfersStatementBuilder.getStatement(), playerid));
+        return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(getAllTransfersSql, playerid));
     }
     
     /**
@@ -107,14 +104,14 @@ public class TransferTable extends AbstractTable {
     /**
      * Gets a list of transfers.
      *
-     * @param teamid Team id to select transfers for.
+     * @param teamId Team id to select transfers for.
      * @param season Season number for selecting transfers.
      * @param bought <code>true</code> to include BUY transfers.
      * @param sold <code>true</code> to include SELL transfers.
      *
      * @return List of transfers.
      */
-    public List<PlayerTransfer> getTransfers(int teamid, int season, boolean bought, boolean sold) {
+    public List<PlayerTransfer> getTransfers(int teamId, int season, boolean bought, boolean sold) {
         final StringBuilder sqlStmt = new StringBuilder(); //$NON-NLS-1$
 
         var params = new ArrayList<>();
@@ -130,7 +127,7 @@ public class TransferTable extends AbstractTable {
 
             if (bought) {
                 sqlStmt.append(" buyerid = ?");
-                params.add(teamid); //$NON-NLS-1$
+                params.add(teamId); //$NON-NLS-1$
             }
 
             if (bought && sold) {
@@ -139,7 +136,7 @@ public class TransferTable extends AbstractTable {
 
             if (sold) {
                 sqlStmt.append(" sellerid = ?");
-                params.add(teamid); //$NON-NLS-1$
+                params.add(teamId); //$NON-NLS-1$
             }
 
             sqlStmt.append(")"); //$NON-NLS-1$
@@ -148,12 +145,7 @@ public class TransferTable extends AbstractTable {
         sqlStmt.append(" ORDER BY date DESC"); //$NON-NLS-1$
 
         var sql = sqlStmt.toString();
-        var statement = getTransferStatements.get(sql);
-        if ( statement == null){
-            statement = new PreparedSelectStatementBuilder(this, sql).getStatement();
-            getTransferStatements.put(sql, statement);
-        }
-        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, params.toArray()));
+        return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(createSelectStatement(sql), params.toArray()));
     }
 
 	/**
@@ -169,12 +161,12 @@ public class TransferTable extends AbstractTable {
         store(transfer);
     }
 
-    DBManager.PreparedStatementBuilder transferIncomeSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE SELLERID=?");
-    DBManager.PreparedStatementBuilder transferCostSumStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(PRICE) FROM " + TABLENAME + " WHERE BUYERID=?");
+    private String transferIncomeSumSql = "SELECT SUM(PRICE) FROM " + getTableName() + " WHERE SELLERID=?";
+    private String transferCostSumSql = "SELECT SUM(PRICE) FROM " + getTableName() + " WHERE BUYERID=?";
     public long getTransferIncomeSum(int teamId, boolean isSold) {
-        var statementBuilder = isSold?transferIncomeSumStatementBuilder:transferCostSumStatementBuilder;
-        var rs = this.adapter.executePreparedQuery(statementBuilder.getStatement(), teamId);
-        try {
+        var statement = isSold? transferIncomeSumSql : transferCostSumSql;
+
+        try (var rs = this.connectionManager.executePreparedQuery(statement, teamId)) {
             if (rs != null) {
                 rs.next();
                 return rs.getLong(1);
@@ -195,21 +187,16 @@ public class TransferTable extends AbstractTable {
         }
         sqlStmt.append("=? ORDER BY DATE DESC");
         var sql = sqlStmt.toString();
-        var statement = getTransferStatements.get(sql);
-        if (statement == null) {
-            statement = new PreparedSelectStatementBuilder(this, sql).getStatement();
-            getTransferStatements.put(sql, statement);
-        }
-        return load(PlayerTransfer.class, this.adapter.executePreparedQuery(statement, teamId));
+        return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(createSelectStatement(sql), teamId));
     }
 
-    DBManager.PreparedStatementBuilder getSumTransferCommissionsStatementBuilder = new DBManager.PreparedStatementBuilder("SELECT SUM(motherclubfee+previousclubcommission) FROM " + TABLENAME + " WHERE date>=? AND date<?");
+    private String getSumTransferCommissionsSql = "SELECT SUM(motherclubfee+previousclubcommission) FROM " + getTableName() + " WHERE date>=? AND date<?";
 
     public int getSumTransferCommissions(HODateTime startOfWeek) {
         var from = startOfWeek.toDbTimestamp();
         var to = startOfWeek.plus(7, ChronoUnit.DAYS).toDbTimestamp();
-        var rs = this.adapter.executePreparedQuery(getSumTransferCommissionsStatementBuilder.getStatement(), from, to);
-        try {
+
+        try (var rs = this.connectionManager.executePreparedQuery(getSumTransferCommissionsSql, from, to)) {
             if (rs != null) {
                 rs.next();
                 return rs.getInt(1);

@@ -19,11 +19,14 @@ class HrfDbDetails extends HrfDetails {
 	String m_name;
 	int m_hrf_ID;
 
-	HrfDbDetails(int id) {
-		super();
+	HrfDbDetails(DBManager dbManager, int id) {
+		super(dbManager);
 
-		ResultSet m_result = Objects.requireNonNull(DBManager.instance().getAdapter()).executeQuery("SELECT DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '" + id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '" + id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID");
-		try {
+		String sqlStatement = "SELECT DATUM,LIGANAME,PUNKTE,TOREFUER,TOREGEGEN,PLATZ,TEAMID,TEAMNAME,SPIELTAG,SAISON,TRAININGSINTENSITAET,TRAININGSART,ISTIMMUNG,ISELBSTVERTRAUEN,COTRAINER,FANS,HRF_ID,(SELECT COUNT(*) FROM SPIELER WHERE HRF_ID = '"
+				+ id + "') AS \"ANZAHL\" FROM HRF a, LIGA b, BASICS c, TEAM d, VEREIN e WHERE a.HRF_ID = '"
+				+ id + "' AND b.HRF_ID=a.HRF_ID AND c.HRF_ID=a.HRF_ID AND d.HRF_ID=a.HRF_ID AND e.HRF_ID=a.HRF_ID";
+
+		try (ResultSet m_result = Objects.requireNonNull(dbManager.getConnectionManager()).executeQuery(sqlStatement)) {
 			while(m_result != null && m_result.next())	{
 				m_result.getObject(1);
 				if( !m_result.wasNull())	{
