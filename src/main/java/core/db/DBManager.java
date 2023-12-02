@@ -14,7 +14,6 @@ import core.gui.model.PlayerMatchCBItem;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.enums.DBDataSource;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
@@ -47,7 +46,6 @@ import org.hsqldb.error.ErrorCode;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import java.io.File;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -266,6 +264,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(connectionManager));
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(connectionManager));
 		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(connectionManager));
+		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable(connectionManager));
 		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(connectionManager));
 		tables.put(SkillupTable.TABLENAME, new SkillupTable(connectionManager));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(connectionManager));
@@ -2418,18 +2417,4 @@ public class DBManager implements PersistenceManager {
 		return ((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).loadFuturePlayerSkillTraining(playerId);
 	}
 
-
-	public static class PreparedStatementBuilder{
-		private final String sql;
-		public PreparedStatementBuilder(String sql){
-			this.sql=sql;
-		}
-		private PreparedStatement statement;
-		public PreparedStatement getStatement() {
-			if (statement == null) {
-				statement = Objects.requireNonNull(DBManager.instance().getAdapter()).createPreparedStatement(sql);
-			}
-			return statement;
-		}
-	}
 }

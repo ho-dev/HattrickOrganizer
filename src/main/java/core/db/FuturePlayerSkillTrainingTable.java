@@ -15,7 +15,7 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
     /**
      * constructor
      */
-    public FuturePlayerSkillTrainingTable(JDBCAdapter adapter) {
+    public FuturePlayerSkillTrainingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);
     }
 
