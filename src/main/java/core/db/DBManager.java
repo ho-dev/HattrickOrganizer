@@ -22,6 +22,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.Skillup;
+import core.training.FuturePlayerSkillTraining;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
@@ -287,9 +288,9 @@ public class DBManager implements PersistenceManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(adapter));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(adapter));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(adapter));
-//		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(adapter));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(adapter));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((adapter)));
+		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable((adapter)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(adapter));
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(adapter));
 	}
@@ -2494,6 +2495,10 @@ public class DBManager implements PersistenceManager {
 
 	public List<SquadInfo> loadSquadInfo(int teamId) {
 		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
+	}
+
+	public List<FuturePlayerSkillTraining> loadFuturePlayerSkillTrainings(int playerId) {
+		return ((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).loadFuturePlayerSkillTraining(playerId);
 	}
 
 

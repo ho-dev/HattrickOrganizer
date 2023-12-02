@@ -83,6 +83,10 @@ final class DBUpdater {
 	}
 
 	private void updateDBv800(int dbVersion) throws SQLException {
+		if (!tableExists(FuturePlayerSkillTrainingTable.TABLENAME)) {
+			dbManager.getTable(FuturePlayerSkillTrainingTable.TABLENAME).createTable();
+		}
+
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");
 		playerTable.tryAddColumn("ContractDate", "VARCHAR(100)");

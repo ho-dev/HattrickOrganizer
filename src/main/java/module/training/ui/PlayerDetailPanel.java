@@ -10,15 +10,19 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.MatchRoleID;
+import core.training.FuturePlayerSkillTraining;
+import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import module.training.Skills;
 import module.training.ui.comp.HTColorBar;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.Serial;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -38,8 +42,10 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private JLabel playerLabel;
     private JTextArea m_jtaNotes;
     private HTColorBar[] levelBar;
+    private JComboBox[] trainingPlanSelection;
     private JLabel[] skillLabel;
     private final TrainingModel model;
+    private FuturePlayerSkillTraining futurePlayerSkillTraining;
 
     /**
      * Creates the panel and its components
@@ -73,6 +79,12 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
      * Method that populates this panel for the selected player
      */
     private void loadFromModel() {
+        for (var select : trainingPlanSelection) {
+            if (select != null) {
+                select.setSelectedItem(null);
+                select.setEnabled(this.model.getActivePlayer() != null);
+            }
+        }
         if (this.model.getActivePlayer() == null) {
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             m_jtaNotes.setEditable(false);
@@ -82,12 +94,13 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
                 skillLabel[i].setText("");
                 levelBar[i].setSkillLevel(0f, 0);
             }
+
             return;
         }
 
         // sets player number
-        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
-                + this.model.getActivePlayer().getIdealPositionRating() + ")";
+        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition())
+                + String.format(" (%.2f)", this.model.getActivePlayer().getIdealPositionRating());
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
@@ -112,8 +125,33 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(skill), skillValueInt);
             levelBar[i].setSkillDecimalLevel((float) (skillValueDecimal / getSkillMaxValue(skill)));
             levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(skill));
+
+            if (trainingPlanSelection[i] != null) {
+                trainingPlanSelection[i].setSelectedItem(this.model.getActivePlayer().getTrainingPriority(skillIndex));
+            }
         }
     }
+
+    private boolean isFullTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case KEEPER, DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING, SETPIECES -> true;
+            default -> false;
+        };
+    }
+    private boolean isPartialTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case WINGER, PLAYMAKING, SETPIECES -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isOsmosisTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING -> true;
+            default -> false;
+        };
+    }
+
 
     /**
      * Get maximum value of the skill.
@@ -167,6 +205,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         gbc.anchor = GridBagConstraints.WEST;
         levelBar = new HTColorBar[skillNumber];
         skillLabel = new JLabel[skillNumber];
+        trainingPlanSelection = new JComboBox[skillNumber];
 
         for ( var skill: PlayerSkill.values()){
             int i = skill.toInt();
@@ -199,6 +238,30 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             gbc.gridx = 2;
             gbc.weightx = 1.0;
             bottom.add(levelBar[i], gbc);
+
+            gbc.gridx = 3;
+            if ( isFullTrainingAvailable(skillIndex)) {
+                var prios = new ArrayList<FuturePlayerTraining.Priority>();
+                prios.add(FuturePlayerTraining.Priority.FULL_TRAINING);
+
+                if ( isPartialTrainingAvailable(skillIndex)){
+                    prios.add(FuturePlayerTraining.Priority.PARTIAL_TRAINING);
+                }
+                if ( isOsmosisTrainingAvailable(skillIndex)){
+                    prios.add(FuturePlayerTraining.Priority.OSMOSIS_TRAINING);
+                }
+                prios.add(FuturePlayerTraining.Priority.NO_TRAINING);
+                prios.add(null);
+                if (trainingPlanSelection[i] == null ){
+                    trainingPlanSelection[i] = new JComboBox<>(prios.toArray());
+                    trainingPlanSelection[i].addActionListener(e->selectTraining(e, skillIndex));
+                }
+                bottom.add(trainingPlanSelection[i], gbc); // individual training
+            }
+            else if ( i == 0){
+                bottom.add(new JLabel(HOVerwaltung.instance().getLanguageString("training.plan")), gbc);
+            }
+
         }
 
         maingbc.gridy = 1;
@@ -229,6 +292,15 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         maingbc.gridy++;
         gbc.weighty = 1.0;
         add(dummyPanelToConsumeAllExtraSpace, maingbc);
+    }
+
+    private void selectTraining(ActionEvent e, PlayerSkill skillIndex) {
+        var player = this.model.getActivePlayer();
+        if (player!=null) {
+            var combox = (JComboBox<FuturePlayerTraining.Priority>) e.getSource();
+            var prio = (FuturePlayerTraining.Priority) combox.getSelectedItem();
+            player.setFutureSkillTrainingPriority(skillIndex, prio);
+        }
     }
 
     @Override

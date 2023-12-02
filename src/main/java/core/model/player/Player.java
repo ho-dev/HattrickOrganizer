@@ -304,6 +304,7 @@ public class Player extends AbstractTable.Storable {
      * future training priorities planed by the user
      */
     private List<FuturePlayerTraining> futurePlayerTrainings;
+    private List<FuturePlayerSkillTraining> futurePlayerSkillTrainings;
 
     private Integer motherClubId;
     private String motherClubName;
@@ -841,6 +842,37 @@ public class Player extends AbstractTable.Storable {
     public double getPositionRating(byte position) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
+    }
+
+    public FuturePlayerTraining.Priority getTrainingPriority(PlayerSkill skillIndex) {
+        var s = getFuturePlayerSkillTraining(skillIndex);
+        if ( s != null){
+            return s.getPriority();
+        }
+        return null;
+    }
+
+    private List <FuturePlayerSkillTraining>  getFuturePlayerSkillTrainings() {
+        if ( futurePlayerSkillTrainings == null){
+            futurePlayerSkillTrainings = DBManager.instance().loadFuturePlayerSkillTrainings(getPlayerId());
+        }
+        return futurePlayerSkillTrainings;
+    }
+
+    public void setFutureSkillTrainingPriority(PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
+        var futureSkillTraining = getFuturePlayerSkillTraining(skillIndex);
+        if (futureSkillTraining == null) {
+            futureSkillTraining = new FuturePlayerSkillTraining(getPlayerId(), prio, skillIndex);
+            futurePlayerSkillTrainings.add(futureSkillTraining);
+        } else {
+            futureSkillTraining.setPriority(prio);
+        }
+        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
+    }
+
+    private FuturePlayerSkillTraining getFuturePlayerSkillTraining(PlayerSkill skillIndex) {
+        var skillTrainingPlans = getFuturePlayerSkillTrainings();
+        return skillTrainingPlans.stream().filter(e->e.getSkillId()==skillIndex).findAny().orElse(null);
     }
 
     static class PlayerPositionRating {
