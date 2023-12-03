@@ -4,7 +4,9 @@ import core.db.AbstractTable;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FuturePlayerTraining extends AbstractTable.Storable {
 
@@ -189,23 +191,34 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
      *
      * @param from HattrickDate
      * @param to   HattrickDate, null means open end
-     * @return false if remaining training interval is not empty
-     * true if training is completely replaced by the new interval
+     * @return list of remaining training intervals
+     *  if nothing has to be changed the list contains the current interval itself
+     *  otherwise the list contains
+     *  no entry, it the new range overlaps this interval completely
+     *  one entry, if the current interval is shortened
+     *  two intervals, if this interval overlaps the given time range
      */
-    public boolean cut(HODateTime from, HODateTime to) {
+    public List<FuturePlayerTraining> cut(HODateTime from, HODateTime to) {
+        var ret = new ArrayList<FuturePlayerTraining>();
+
         if (this.getTo() != null && from.isAfter(this.getTo()) || to != null && this.getFrom().isAfter(to)) {
             // this is outside the given interval
-            return false;
+            ret.add(this);
+            return ret; // nothing changed
         }
 
         if (from.isAfter(this.getFrom())) {
-            setTo(from.minus(7, ChronoUnit.DAYS));
-            return false;
+            if (this.getTo() != null && to != null && !this.getTo().isAfter(to)) {
+                ret.add(new FuturePlayerTraining(this.playerId, this.priority, this.getFrom(), from.minus(7, ChronoUnit.DAYS)));
+            }
+            else {
+                var newFutureTraining = new FuturePlayerTraining(this.playerId, this.priority, this.getFrom(), from.minus(7, ChronoUnit.DAYS));
+                ret.add(newFutureTraining);
+            }
         }
         if (to != null && (this.getTo() == null || this.getTo().isAfter(to))) {
-            setFrom(to.plus(7, ChronoUnit.DAYS));
-            return false;
+            ret.add(new FuturePlayerTraining(this.playerId, this.priority, to, getTo()));
         }
-        return true; // completely replaced
+        return ret; // completely replaced
     }
 }
