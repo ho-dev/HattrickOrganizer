@@ -32,7 +32,7 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance()
                         .setColumnName("skillId")
                         .setGetter((o) -> ((FuturePlayerSkillTraining) o).getSkillId().toInt())
-                        .setSetter((o, v) -> ((FuturePlayerSkillTraining) o).setSkillId(PlayerSkill.fromInteger((Integer) v)))
+                        .setSetter((o, v) -> ((FuturePlayerSkillTraining) o).setSkillId(PlayerSkill.fromInteger((int) v)))
                         .setType(Types.INTEGER)
                         .isNullable(false)
                         .build(),

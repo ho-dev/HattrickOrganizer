@@ -1871,7 +1871,7 @@ public class Player extends AbstractTable.Storable {
             newFuturePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerId(), prio, from, to));
         }
         futurePlayerTrainings = newFuturePlayerTrainings;
-        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
+        DBManager.instance().storeFuturePlayerTrainings(getPlayerId(), futurePlayerTrainings);
     }
 
     public String getBestPositionInfo() {

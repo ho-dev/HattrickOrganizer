@@ -2165,11 +2165,12 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Store future player trainings.
 	 *
+	 * @param playerId Player id (used to delete old trainings)
 	 * @param futurePlayerTrainings the future player trainings
 	 */
-	public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
+	public void storeFuturePlayerTrainings(int playerId, List<FuturePlayerTraining> futurePlayerTrainings) {
 		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
-				.storeFuturePlayerTrainings(futurePlayerTrainings);
+				.storeFuturePlayerTrainings(playerId, futurePlayerTrainings);
 
 	}
 

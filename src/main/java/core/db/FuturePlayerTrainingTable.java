@@ -32,7 +32,8 @@ public class FuturePlayerTrainingTable extends AbstractTable {
         return load(FuturePlayerTraining.class, playerId);
     }
 
-    public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
+    public void storeFuturePlayerTrainings(int playerId, List<FuturePlayerTraining> futurePlayerTrainings) {
+        executePreparedDelete(playerId);
         for (var t : futurePlayerTrainings) {
             store(t);
         }
