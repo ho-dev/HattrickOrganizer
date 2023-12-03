@@ -10,7 +10,6 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.MatchRoleID;
-import core.training.FuturePlayerSkillTraining;
 import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import module.training.Skills;
@@ -45,7 +44,6 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private JComboBox[] trainingPlanSelection;
     private JLabel[] skillLabel;
     private final TrainingModel model;
-    private FuturePlayerSkillTraining futurePlayerSkillTraining;
 
     /**
      * Creates the panel and its components
@@ -79,13 +77,13 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
      * Method that populates this panel for the selected player
      */
     private void loadFromModel() {
-        for (var select : trainingPlanSelection) {
-            if (select != null) {
-                select.setSelectedItem(null);
-                select.setEnabled(this.model.getActivePlayer() != null);
-            }
-        }
         if (this.model.getActivePlayer() == null) {
+            for (var select : trainingPlanSelection) {
+                if (select != null) {
+                    select.setSelectedItem(null);
+                    select.setEnabled(false);
+                }
+            }
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             m_jtaNotes.setEditable(false);
             m_jtaNotes.setText("");
@@ -127,6 +125,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(skill));
 
             if (trainingPlanSelection[i] != null) {
+                trainingPlanSelection[i].setEnabled(true);
                 trainingPlanSelection[i].setSelectedItem(this.model.getActivePlayer().getTrainingPriority(skillIndex));
             }
         }
@@ -299,7 +298,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         if (player!=null) {
             var combox = (JComboBox<FuturePlayerTraining.Priority>) e.getSource();
             var prio = (FuturePlayerTraining.Priority) combox.getSelectedItem();
-            player.setFutureSkillTrainingPriority(skillIndex, prio);
+            player.setFutureSkillTrainingPriority(player.getPlayerId(), skillIndex, prio);
         }
     }
 

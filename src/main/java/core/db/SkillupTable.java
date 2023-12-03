@@ -49,15 +49,9 @@ final class SkillupTable extends AbstractTable {
 		store(skillup);
 	}
 
-	private final String loadLastLevelUpSql = createSelectStatement("WHERE SPIELERID=? AND SKILL = ? ORDER BY Datum DESC LIMIT 1");
-	Skillup getLastLevelUp(PlayerSkill skillCode, int spielerId) {
-		return loadOne(Skillup.class, this.connectionManager.executePreparedQuery(loadLastLevelUpSql, spielerId, PlayerSkill.toInteger(skillCode)));
-	}
-
 	List<Skillup> getAllLevelUp(PlayerSkill skillCode, int spielerId) {
 		return load(Skillup.class, spielerId, PlayerSkill.toInteger(skillCode));
 	}
-
 
 	void importNewSkillup(HOModel homodel) {
 		List<Player> players = homodel.getCurrentPlayers();

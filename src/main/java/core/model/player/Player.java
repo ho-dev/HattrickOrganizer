@@ -859,15 +859,26 @@ public class Player extends AbstractTable.Storable {
         return futurePlayerSkillTrainings;
     }
 
-    public void setFutureSkillTrainingPriority(PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
+    public void setFutureSkillTrainingPriority(int playerId, PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
         var futureSkillTraining = getFuturePlayerSkillTraining(skillIndex);
         if (futureSkillTraining == null) {
-            futureSkillTraining = new FuturePlayerSkillTraining(getPlayerId(), prio, skillIndex);
-            futurePlayerSkillTrainings.add(futureSkillTraining);
-        } else {
+            if ( prio != null) {
+                futureSkillTraining = new FuturePlayerSkillTraining(getPlayerId(), prio, skillIndex);
+                futurePlayerSkillTrainings.add(futureSkillTraining);
+            }
+            else {
+                return; // nothing changed
+            }
+        } else if ( prio == null ) {
+            futurePlayerSkillTrainings.remove(futureSkillTraining);
+        }
+        else if (!prio.equals(futureSkillTraining.getPriority())){
             futureSkillTraining.setPriority(prio);
         }
-        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
+        else {
+            return; // nothing changed
+        }
+        DBManager.instance().storeFuturePlayerSkillTrainings(playerId, futurePlayerSkillTrainings);
     }
 
     private FuturePlayerSkillTraining getFuturePlayerSkillTraining(PlayerSkill skillIndex) {
@@ -971,19 +982,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     private final HashMap<PlayerSkill, Skillup> lastSkillups = new HashMap<>();
-
-    /**
-     * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
-     * Änderung [1] = Boolean: false=Keine Änderung gefunden
-     */
-    public Skillup getLastLevelUp(PlayerSkill skill) {
-        if (lastSkillups.containsKey(skill)) {
-            return lastSkillups.get(skill);
-        }
-        var ret = DBManager.instance().getLastLevelUp(skill, spielerId);
-        lastSkillups.put(skill, ret);
-        return ret;
-    }
 
     private final HashMap<PlayerSkill, List<Skillup>> allSkillUps = new HashMap<>();
 

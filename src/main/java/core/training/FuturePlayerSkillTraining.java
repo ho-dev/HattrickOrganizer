@@ -2,12 +2,7 @@ package core.training;
 
 import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
-import core.model.HOVerwaltung;
 import core.training.FuturePlayerTraining.Priority;
-import core.util.HODateTime;
-
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 
 public class FuturePlayerSkillTraining extends AbstractTable.Storable {
 
@@ -15,6 +10,13 @@ public class FuturePlayerSkillTraining extends AbstractTable.Storable {
      * Player Id
      */
     private int playerId;
+
+    public static Integer getPriorityAsInteger(FuturePlayerSkillTraining o) {
+        if (o != null && o.getPriority() != null) {
+            return o.getPriority().getValue();
+        }
+        return null;
+    }
 
     public PlayerSkill getSkillId() {
         return skillId;

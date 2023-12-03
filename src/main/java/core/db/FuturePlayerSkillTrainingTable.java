@@ -38,10 +38,10 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
                         .build(),
                 ColumnDescriptor.Builder.newInstance()
                         .setColumnName("prio")
-                        .setGetter((o) -> ((FuturePlayerSkillTraining) o).getPriority().getValue())
+                        .setGetter((o) -> FuturePlayerSkillTraining.getPriorityAsInteger((FuturePlayerSkillTraining)o))
                         .setSetter((o, v) -> ((FuturePlayerSkillTraining) o).setPriority(FuturePlayerTraining.Priority.valueOf((int) v)))
                         .setType(Types.INTEGER)
-                        .isNullable(false)
+                        .isNullable(true)
                         .build()
         };
     }
@@ -50,7 +50,8 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
         return load(FuturePlayerSkillTraining.class, playerId);
     }
 
-    public void storeFuturePlayerSkillTraining(List<FuturePlayerSkillTraining> futurePlayerTrainings) {
+    public void storeFuturePlayerSkillTraining(int playerId, List<FuturePlayerSkillTraining> futurePlayerTrainings) {
+        executePreparedDelete(playerId);
         for (var t : futurePlayerTrainings) {
             store(t);
         }

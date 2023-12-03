@@ -357,19 +357,6 @@ public class DBManager implements PersistenceManager {
 		return exists;
 	}
 
-
-	/**
-	 * get the date of the last level increase of given player
-	 *
-	 * @param skill     integer code for the skill
-	 * @param spielerId player ID
-	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
-	 */
-	public Skillup getLastLevelUp(PlayerSkill skill, int spielerId) {
-		return ((SkillupTable) getTable(SkillupTable.TABLENAME))
-				.getLastLevelUp(skill, spielerId);
-	}
-
 	/**
 	 * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill
 	 * Vector filled with Skillup Objects
@@ -2417,4 +2404,7 @@ public class DBManager implements PersistenceManager {
 		return ((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).loadFuturePlayerSkillTraining(playerId);
 	}
 
+	public void storeFuturePlayerSkillTrainings(int playerId, List<FuturePlayerSkillTraining> futurePlayerSkillTrainings) {
+		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
+	}
 }
