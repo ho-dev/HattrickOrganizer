@@ -4,6 +4,7 @@
 * refactoring rating prediction (implement Schum rating)
 * refactoring of the transfer module. Calculation of transfer fee income.
 * refactoring of the database prepared statement caching.
+* improve training planning 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -35,6 +36,7 @@
 
 ### Training
 * fix scrolling of training table (#1936)
+* improve training planning. Each skill training can be prioritized (#1886)
 
 ### League
 

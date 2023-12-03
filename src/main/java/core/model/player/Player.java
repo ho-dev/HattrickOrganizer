@@ -304,6 +304,7 @@ public class Player extends AbstractTable.Storable {
      * future training priorities planed by the user
      */
     private List<FuturePlayerTraining> futurePlayerTrainings;
+    private List<FuturePlayerSkillTraining> futurePlayerSkillTrainings;
 
     private Integer motherClubId;
     private String motherClubName;
@@ -938,21 +939,6 @@ public class Player extends AbstractTable.Storable {
         return internationalMatches;
     }
 
-    private final HashMap<PlayerSkill, Skillup> lastSkillups = new HashMap<>();
-
-    /**
-     * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill [0] = Time der
-     * Änderung [1] = Boolean: false=Keine Änderung gefunden
-     */
-    public Skillup getLastLevelUp(PlayerSkill skill) {
-        if (lastSkillups.containsKey(skill)) {
-            return lastSkillups.get(skill);
-        }
-        var ret = DBManager.instance().getLastLevelUp(skill, spielerId);
-        lastSkillups.put(skill, ret);
-        return ret;
-    }
-
     private final HashMap<PlayerSkill, List<Skillup>> allSkillUps = new HashMap<>();
 
     /**
@@ -968,7 +954,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void resetSkillUpInformation() {
-        lastSkillups.clear();
         allSkillUps.clear();
     }
 
@@ -1828,10 +1813,17 @@ public class Player extends AbstractTable.Storable {
      * @param trainingDate the training week
      * @return the training priority
      */
-    public FuturePlayerTraining.Priority getTrainingPriority(WeeklyTrainingType wt, HODateTime trainingDate) {
+    public FuturePlayerTraining.Priority getFuturePlayerTrainingPriority(WeeklyTrainingType wt, HODateTime trainingDate) {
         for (var t : getFuturePlayerTrainings()) {
             if (t.contains(trainingDate)) {
                 return t.getPriority();
+            }
+        }
+
+        // get training from skill settings
+        for (var futureSkillTraining : getFuturePlayerSkillTrainings()){
+            if (wt.isTraining(futureSkillTraining.getSkillId())){
+                return futureSkillTraining.getPriority();
             }
         }
 
@@ -1867,18 +1859,19 @@ public class Player extends AbstractTable.Storable {
      * @param to   last week with new training priority, null means open end
      */
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
-        var removeIntervals = new ArrayList<FuturePlayerTraining>();
+        var newFuturePlayerTrainings = new ArrayList<FuturePlayerTraining>();
         for (var t : getFuturePlayerTrainings()) {
-            if (t.cut(from, to) ||
-                    t.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek())) {
-                removeIntervals.add(t);
+            var tmpList = t.cut(from, to);
+            for (var ft : tmpList){
+                // cut the past
+                newFuturePlayerTrainings.addAll(ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));
             }
         }
-        futurePlayerTrainings.removeAll(removeIntervals);
         if (prio != null) {
-            futurePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerId(), prio, from, to));
+            newFuturePlayerTrainings.add(new FuturePlayerTraining(this.getPlayerId(), prio, from, to));
         }
-        DBManager.instance().storeFuturePlayerTrainings(futurePlayerTrainings);
+        futurePlayerTrainings = newFuturePlayerTrainings;
+        DBManager.instance().storeFuturePlayerTrainings(getPlayerId(), futurePlayerTrainings);
     }
 
     public String getBestPositionInfo() {
@@ -1887,6 +1880,50 @@ public class Player extends AbstractTable.Storable {
                 + getIdealPositionRating()
                 + ")";
     }
+
+    public FuturePlayerTraining.Priority getFuturePlayerSkillTrainingPriority(PlayerSkill skillIndex) {
+        var s = getFuturePlayerSkillTraining(skillIndex);
+        if ( s != null){
+            return s.getPriority();
+        }
+        return null;
+    }
+
+    public  List <FuturePlayerSkillTraining>  getFuturePlayerSkillTrainings() {
+        if ( futurePlayerSkillTrainings == null){
+            futurePlayerSkillTrainings = DBManager.instance().loadFuturePlayerSkillTrainings(getPlayerId());
+        }
+        return futurePlayerSkillTrainings;
+    }
+
+    public boolean setFutureSkillTrainingPriority(int playerId, PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
+        var futureSkillTraining = getFuturePlayerSkillTraining(skillIndex);
+        if (futureSkillTraining == null) {
+            if ( prio != null) {
+                futureSkillTraining = new FuturePlayerSkillTraining(getPlayerId(), prio, skillIndex);
+                futurePlayerSkillTrainings.add(futureSkillTraining);
+            }
+            else {
+                return false; // nothing changed
+            }
+        } else if ( prio == null ) {
+            futurePlayerSkillTrainings.remove(futureSkillTraining);
+        }
+        else if (!prio.equals(futureSkillTraining.getPriority())){
+            futureSkillTraining.setPriority(prio);
+        }
+        else {
+            return false; // nothing changed
+        }
+        DBManager.instance().storeFuturePlayerSkillTrainings(playerId, futurePlayerSkillTrainings);
+        return true;
+    }
+
+    private FuturePlayerSkillTraining getFuturePlayerSkillTraining(PlayerSkill skillIndex) {
+        var skillTrainingPlans = getFuturePlayerSkillTrainings();
+        return skillTrainingPlans.stream().filter(e->e.getSkillId()==skillIndex).findAny().orElse(null);
+    }
+
 
     /**
      * training priority information of the training panel

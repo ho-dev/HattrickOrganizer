@@ -14,7 +14,6 @@ import core.gui.model.PlayerMatchCBItem;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.enums.DBDataSource;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
@@ -22,6 +21,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.Skillup;
+import core.training.FuturePlayerSkillTraining;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
@@ -46,7 +46,6 @@ import org.hsqldb.error.ErrorCode;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
 import java.io.File;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -265,6 +264,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(MatchHighlightsTable.TABLENAME, new MatchHighlightsTable(connectionManager));
 		tables.put(TrainingsTable.TABLENAME, new TrainingsTable(connectionManager));
 		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(connectionManager));
+		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable(connectionManager));
 		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(connectionManager));
 		tables.put(SkillupTable.TABLENAME, new SkillupTable(connectionManager));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(connectionManager));
@@ -355,19 +355,6 @@ public class DBManager implements PersistenceManager {
 			exists = false;
 		  }
 		return exists;
-	}
-
-
-	/**
-	 * get the date of the last level increase of given player
-	 *
-	 * @param skill     integer code for the skill
-	 * @param spielerId player ID
-	 * @return [0] = Time of change  [1] = Boolean: false=no skill change found
-	 */
-	public Skillup getLastLevelUp(PlayerSkill skill, int spielerId) {
-		return ((SkillupTable) getTable(SkillupTable.TABLENAME))
-				.getLastLevelUp(skill, spielerId);
 	}
 
 	/**
@@ -2178,11 +2165,12 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Store future player trainings.
 	 *
+	 * @param playerId Player id (used to delete old trainings)
 	 * @param futurePlayerTrainings the future player trainings
 	 */
-	public void storeFuturePlayerTrainings(List<FuturePlayerTraining> futurePlayerTrainings) {
+	public void storeFuturePlayerTrainings(int playerId, List<FuturePlayerTraining> futurePlayerTrainings) {
 		((FuturePlayerTrainingTable) getTable(FuturePlayerTrainingTable.TABLENAME))
-				.storeFuturePlayerTrainings(futurePlayerTrainings);
+				.storeFuturePlayerTrainings(playerId, futurePlayerTrainings);
 
 	}
 
@@ -2411,5 +2399,13 @@ public class DBManager implements PersistenceManager {
 
 	public List<SquadInfo> loadSquadInfo(int teamId) {
 		return ((SquadInfoTable)getTable(SquadInfoTable.TABLENAME)).loadSquadInfo(teamId);
+	}
+
+	public List<FuturePlayerSkillTraining> loadFuturePlayerSkillTrainings(int playerId) {
+		return ((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).loadFuturePlayerSkillTraining(playerId);
+	}
+
+	public void storeFuturePlayerSkillTrainings(int playerId, List<FuturePlayerSkillTraining> futurePlayerSkillTrainings) {
+		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
 	}
 }

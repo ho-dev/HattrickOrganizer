@@ -1,12 +1,9 @@
 package core.training;
 
 import core.model.player.Player;
-import core.util.HODateTime;
-
-import java.time.Instant;
 
 public class TrainingWeekPlayer {
-	private Player player;
+	private final Player player;
 	private int fullTrainingMinutes = 0;
 	private int bonusTrainingMinutes = 0;
 	private int partlyTrainingMinutes = 0;
@@ -71,10 +68,6 @@ public class TrainingWeekPlayer {
 
 	public String Name() {
 		return this.player.getFullName();
-	}
-
-	public FuturePlayerTraining.Priority getFutureTrainingPrio(WeeklyTrainingType wt, HODateTime trainingDate) {
-		return player.getTrainingPriority(wt, trainingDate);
 	}
 
 	public boolean hasTrainingMinutes() {

@@ -97,7 +97,7 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 					// Check player's training priority
 					var training = this.trainingModel.getFutureTrainings().get(column);
 					var	wt = WeeklyTrainingType.instance(training.getTrainingType());
-					var prio = player.getTrainingPriority(wt, training.getTrainingDate());
+					var prio = player.getFuturePlayerTrainingPriority(wt, training.getTrainingDate());
 					if (prio != null) {
 						switch (prio) {
 							case FULL_TRAINING:

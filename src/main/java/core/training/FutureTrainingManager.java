@@ -7,7 +7,6 @@ import core.model.player.FuturePlayer;
 import core.model.player.ISkillChange;
 import core.model.player.Player;
 import core.util.HOLogger;
-
 import java.util.*;
 
 public class FutureTrainingManager {
@@ -53,8 +52,8 @@ public class FutureTrainingManager {
 	public FuturePlayer previewPlayer(int numberOfWeeks) {
 
 		this.futureSkillups = new ArrayList<>();
-				
-		for (int i=0; i<8; i++) {
+
+		for (int i = 0; i < 8; i++) {
 			// Sets the actual training levels
 			actual[i] = getOffset(SKILL_INDEX[i]);
 			// rest the other 4 arrays min and max level are equals to actual at beginning
@@ -75,7 +74,17 @@ public class FutureTrainingManager {
 				final WeeklyTrainingType weeklyTrainingType = WeeklyTrainingType.instance(trainingType);
 				if (weeklyTrainingType != null) {
 					final TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(player);
-					var trainingPriority = trainingWeekPlayer.getFutureTrainingPrio(weeklyTrainingType, trainingPerWeek.getTrainingDate());
+					// Precedence of individual trainings plans
+					var trainingPriority = player.getFuturePlayerTrainingPriority(weeklyTrainingType, trainingPerWeek.getTrainingDate());
+					if (trainingPriority == null) {
+						var skillPrios = player.getFuturePlayerSkillTrainings();
+						for (var prio : skillPrios) {
+							if (weeklyTrainingType.isTraining(prio.getSkillId())) {
+								trainingPriority = prio.getPriority();
+								break;
+							}
+						}
+					}
 
 					// process skill drops
 					int ageInYears = this.player.getAge() + (this.player.getAgeDays() + week * 7) / 112;
@@ -123,7 +132,7 @@ public class FutureTrainingManager {
 						finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
 						pos = getSkillPosition(weeklyTrainingType.getSecondaryTrainingSkill());
 						if (pos != -1) {
-							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek( (int) finalSkill[pos], trainingPerPlayer);
+							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
 						}
 
 						for (int i = 0; i < SKILL_INDEX.length; i++) {
@@ -132,7 +141,7 @@ public class FutureTrainingManager {
 								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 								var trainingDate = trainingPerWeek.getTrainingDate();
 								var htWeek = trainingDate.toLocaleHTWeek();
-								PlayerSkillChange su = new PlayerSkillChange();
+								SkillChange su = new SkillChange();
 								su.setHtSeason(htWeek.season);
 								su.setHtWeek(htWeek.week);
 								su.setType(SKILL_INDEX[i]);
@@ -153,7 +162,7 @@ public class FutureTrainingManager {
 			);
 		}
 
-        return getFuturePlayer(weeksPassed);
+		return getFuturePlayer(weeksPassed);
 	}
 
 	private FuturePlayer getFuturePlayer(int weeksPassed) {

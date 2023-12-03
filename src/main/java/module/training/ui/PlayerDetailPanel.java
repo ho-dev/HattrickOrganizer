@@ -10,15 +10,20 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.MatchRoleID;
+import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
+import core.training.WeeklyTrainingType;
 import module.training.Skills;
 import module.training.ui.comp.HTColorBar;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.Serial;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -38,6 +43,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private JLabel playerLabel;
     private JTextArea m_jtaNotes;
     private HTColorBar[] levelBar;
+    private JComboBox[] trainingPlanSelection;
     private JLabel[] skillLabel;
     private final TrainingModel model;
 
@@ -74,6 +80,12 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
      */
     private void loadFromModel() {
         if (this.model.getActivePlayer() == null) {
+            for (var select : trainingPlanSelection) {
+                if (select != null) {
+                    select.setSelectedItem(null);
+                    select.setEnabled(false);
+                }
+            }
             playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
             m_jtaNotes.setEditable(false);
             m_jtaNotes.setText("");
@@ -86,8 +98,8 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         }
 
         // sets player number
-        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition()) + " ("
-                + this.model.getActivePlayer().getIdealPositionRating() + ")";
+        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition())
+                + String.format(" (%.2f)", this.model.getActivePlayer().getIdealPositionRating());
         playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
@@ -96,15 +108,13 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
 
-        for (var skill : PlayerSkill.values()) {
-            var i = skill.toInt();
-            if (i >= skillNumber) break;
-            var skillIndex = Skills.getSkillAtPosition(i);
-            var skillValue = this.model.getActivePlayer().getSkillValue(skillIndex);
+        for (int i=0; i<skillNumber; i++) {
+            var skill = Skills.getSkillAtPosition(i);
+            var skillValue = this.model.getActivePlayer().getSkillValue(skill);
             skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
             FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
-            double finalValue = getSkillValue(fp, skillIndex);
+            double finalValue = getSkillValue(fp, skill);
 
             float skillValueInt = (int) skillValue;
             var skillValueDecimal = skillValue - skillValueInt;
@@ -112,8 +122,34 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             levelBar[i].setSkillLevel(skillValueInt / getSkillMaxValue(skill), skillValueInt);
             levelBar[i].setSkillDecimalLevel((float) (skillValueDecimal / getSkillMaxValue(skill)));
             levelBar[i].setFutureSkillLevel((float) (finalValue - skillValue) / getSkillMaxValue(skill));
+
+            if (trainingPlanSelection[i] != null) {
+                trainingPlanSelection[i].setEnabled(true);
+                trainingPlanSelection[i].setSelectedItem(this.model.getActivePlayer().getFuturePlayerSkillTrainingPriority(skill));
+            }
         }
     }
+
+    private boolean isFullTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case KEEPER, DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING, SETPIECES -> true;
+            default -> false;
+        };
+    }
+    private boolean isPartialTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case WINGER, PLAYMAKING, SETPIECES -> true;
+            default -> false;
+        };
+    }
+
+    private boolean isOsmosisTrainingAvailable(PlayerSkill skill) {
+        return switch (skill){
+            case DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING -> true;
+            default -> false;
+        };
+    }
+
 
     /**
      * Get maximum value of the skill.
@@ -167,10 +203,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         gbc.anchor = GridBagConstraints.WEST;
         levelBar = new HTColorBar[skillNumber];
         skillLabel = new JLabel[skillNumber];
+        trainingPlanSelection = new JComboBox[skillNumber];
 
-        for ( var skill: PlayerSkill.values()){
-            int i = skill.toInt();
-            if ( i>=skillNumber) break;
+        for (int i=0; i<skillNumber; i++){
             if (i == 1) {
                 gbc.insets = new Insets(2, 4, 8, 4);
             } else {
@@ -181,9 +216,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
             gbc.weightx = 0.0;
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            var skillIndex = Skills.getSkillAtPosition(i);
+            var skill = Skills.getSkillAtPosition(i);
             gbc.gridx = 0;
-            bottom.add(new JLabel(skillIndex.getLanguageString()), gbc);
+            bottom.add(new JLabel(skill.getLanguageString()), gbc);
 
             skillLabel[i] = new JLabel("");
             skillLabel[i].setOpaque(false);
@@ -192,13 +227,37 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
             int len = (int) getSkillMaxValue(skill) * 10;
 
-            levelBar[i] = new HTColorBar(skillIndex, 0f, len, 16);
+            levelBar[i] = new HTColorBar(skill, 0f, len, 16);
             levelBar[i].setOpaque(false);
             levelBar[i].setMinimumSize(new Dimension(200, 16));
             gbc.fill = GridBagConstraints.BOTH;
             gbc.gridx = 2;
             gbc.weightx = 1.0;
             bottom.add(levelBar[i], gbc);
+
+            gbc.gridx = 3;
+            if ( isFullTrainingAvailable(skill)) {
+                var prios = new ArrayList<FuturePlayerTraining.Priority>();
+                prios.add(FuturePlayerTraining.Priority.FULL_TRAINING);
+
+                if ( isPartialTrainingAvailable(skill)){
+                    prios.add(FuturePlayerTraining.Priority.PARTIAL_TRAINING);
+                }
+                if ( isOsmosisTrainingAvailable(skill)){
+                    prios.add(FuturePlayerTraining.Priority.OSMOSIS_TRAINING);
+                }
+                prios.add(FuturePlayerTraining.Priority.NO_TRAINING);
+                prios.add(null);
+                if (trainingPlanSelection[i] == null ){
+                    trainingPlanSelection[i] = new JComboBox<>(prios.toArray());
+                    trainingPlanSelection[i].addActionListener(e->selectTraining(e, skill));
+                }
+                bottom.add(trainingPlanSelection[i], gbc); // individual training
+            }
+            else if ( i == 0){
+                bottom.add(new JLabel(HOVerwaltung.instance().getLanguageString("trainpre.plan")), gbc);
+            }
+
         }
 
         maingbc.gridy = 1;
@@ -229,6 +288,27 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         maingbc.gridy++;
         gbc.weighty = 1.0;
         add(dummyPanelToConsumeAllExtraSpace, maingbc);
+    }
+
+    private void selectTraining(ActionEvent e, PlayerSkill skillIndex) {
+        var player = this.model.getActivePlayer();
+        if (player != null) {
+            var combox = (JComboBox<FuturePlayerTraining.Priority>) e.getSource();
+            var prio = (FuturePlayerTraining.Priority) combox.getSelectedItem();
+            if (player.setFutureSkillTrainingPriority(player.getPlayerId(), skillIndex, prio)) {
+                if (prio != null) {
+                    // clear any individual training override by this selection
+                    var futureTrainings = this.model.getFutureTrainings();
+                    for (var training : futureTrainings) {
+                        var trainingType = WeeklyTrainingType.instance(training.getTrainingType());
+                        if (trainingType.isTraining(skillIndex)) {
+                            player.setFutureTraining(null, training.getTrainingDate(), training.getTrainingDate().plus(7, ChronoUnit.DAYS));
+                        }
+                    }
+                }
+                this.setNeedsRefresh(true);
+            }
+        }
     }
 
     @Override
