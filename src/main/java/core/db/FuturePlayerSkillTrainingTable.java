@@ -39,7 +39,7 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance()
                         .setColumnName("prio")
                         .setGetter((o) -> FuturePlayerSkillTraining.getPriorityAsInteger((FuturePlayerSkillTraining)o))
-                        .setSetter((o, v) -> ((FuturePlayerSkillTraining) o).setPriority(FuturePlayerTraining.Priority.valueOf((int) v)))
+                        .setSetter((o, v) -> ((FuturePlayerSkillTraining) o).setPriority(FuturePlayerTraining.Priority.valueOf((Integer) v)))
                         .setType(Types.INTEGER)
                         .isNullable(true)
                         .build()

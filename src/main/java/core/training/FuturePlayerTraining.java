@@ -76,7 +76,7 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
             }
         }
 
-        public static Priority valueOf(int p) {
+        public static Priority valueOf(Integer p) {
             return map.get(p);
         }
 

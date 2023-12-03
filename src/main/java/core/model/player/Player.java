@@ -954,7 +954,6 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void resetSkillUpInformation() {
-        //lastSkillups.clear();
         allSkillUps.clear();
     }
 
@@ -1862,7 +1861,7 @@ public class Player extends AbstractTable.Storable {
     public void setFutureTraining(FuturePlayerTraining.Priority prio, HODateTime from, HODateTime to) {
         var newFuturePlayerTrainings = new ArrayList<FuturePlayerTraining>();
         for (var t : getFuturePlayerTrainings()) {
-            var tmpList = (t.cut(from, to));
+            var tmpList = t.cut(from, to);
             for (var ft : tmpList){
                 // cut the past
                 newFuturePlayerTrainings.addAll(ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));

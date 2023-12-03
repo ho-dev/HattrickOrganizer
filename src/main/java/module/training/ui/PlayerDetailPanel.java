@@ -255,7 +255,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
                 bottom.add(trainingPlanSelection[i], gbc); // individual training
             }
             else if ( i == 0){
-                bottom.add(new JLabel(HOVerwaltung.instance().getLanguageString("training.plan")), gbc);
+                bottom.add(new JLabel(HOVerwaltung.instance().getLanguageString("trainpre.plan")), gbc);
             }
 
         }
