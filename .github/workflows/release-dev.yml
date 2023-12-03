@@ -56,7 +56,7 @@ jobs:
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
           body_path: docs/md/release_notes.md
           target_commitish: ${{ github.sha }}
-          draft: false
+          draft: ${{ null }}
           prerelease: true
       - name: If not dev-release delete previous short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
