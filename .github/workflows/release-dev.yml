@@ -45,17 +45,6 @@ jobs:
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      - name: Create tag
-        if: ${{ steps.read_version_properties.outputs.tag == 'dev'}}
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/dev',
-              sha: context.sha
-            })          
       - name: Create a Release
         uses: softprops/action-gh-release@v1
         env:
@@ -66,7 +55,7 @@ jobs:
           name: ${{ steps.read_version_properties.outputs.version }}
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
           body_path: docs/md/release_notes.md
-          target_commitish: ${{ steps.read_version_properties.outputs.branch }}
+          target_commitish: ${{ github.sha }}
           draft: false
           prerelease: true
       - name: If not dev-release delete previous short version tag
