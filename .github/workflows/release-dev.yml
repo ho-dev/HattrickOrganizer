@@ -49,6 +49,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
@@ -60,6 +61,15 @@ jobs:
           body_path: docs/md/release_notes.md
           target_commitish: ${{ steps.read_version_properties.outputs.branch }}
           prerelease: true
+      # Well, yuck...  but hopefully this does the trick:    
+      - name: Publish Release
+        run: |
+          curl --request PATCH \
+          --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'Content-type: application/json' \
+          --header 'User-Agent: Github-Action' \
+          --url https://api.github.com/repos/ho-dev/HattrickOrganizer/releases/${{ steps.create_release.outputs.id }} \
+          --data '{ "draft": false }'
       - name: If not dev-release delete previous short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
         uses: ClementTsang/delete-tag-and-release@v0.3.1
