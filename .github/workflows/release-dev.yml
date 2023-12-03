@@ -9,6 +9,9 @@ on:
 jobs:
   release-dev:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      discussions: write
     steps:
       - uses: actions/checkout@v3
         with:
