@@ -306,6 +306,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
                         }
                     }
                 }
+                this.model.resetFutureTrainings();
                 this.setNeedsRefresh(true);
             }
         }
