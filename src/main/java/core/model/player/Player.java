@@ -942,8 +942,6 @@ public class Player extends AbstractTable.Storable {
         return internationalMatches;
     }
 
-    //private final HashMap<PlayerSkill, List<Skillup>> allSkillUps = new HashMap<>();
-
     /**
      * gives information of skill ups
      */
@@ -1973,21 +1971,6 @@ public class Player extends AbstractTable.Storable {
             var valueAfterTraining = this.getValue4Skill(skill);
 
             if (!trainingWeeks.isEmpty()) {
-//                if (valueAfterTraining > valueBeforeTraining) {
-//                    // Check if skill up is available
-//                    var skillUps = this.getAllLevelUp(skill);
-//                    var isAvailable = skillUps.stream().anyMatch(i -> i.getValue() == valueAfterTraining);
-//                    if (!isAvailable) {
-//                        var skillUp = new Skillup();
-//                        skillUp.setPlayerId(this.getPlayerId());
-//                        skillUp.setSkill(skill);
-//                        skillUp.setDate(trainingWeeks.get(0).getTrainingDate());
-//                        skillUp.setValue(valueAfterTraining);
-//                        skillUp.setHrfId(this.getHrfId());
-//                        DBManager.instance().storeSkillup(skillUp);
-//                        resetSkillUpInformation();
-//                    }
-//                }
                 for (var training : trainingWeeks) {
 
                     var trainingPerPlayer = calculateWeeklyTraining(training);

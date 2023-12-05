@@ -264,7 +264,6 @@ public class DBManager implements PersistenceManager {
 		tables.put(FutureTrainingTable.TABLENAME, new FutureTrainingTable(connectionManager));
 		tables.put(FuturePlayerSkillTrainingTable.TABLENAME, new FuturePlayerSkillTrainingTable(connectionManager));
 		tables.put(UserConfigurationTable.TABLENAME,new UserConfigurationTable(connectionManager));
-//		tables.put(SkillupTable.TABLENAME, new SkillupTable(connectionManager));
 		tables.put(StaffTable.TABLENAME,  new StaffTable(connectionManager));
 		tables.put(MatchSubstitutionTable.TABLENAME, new MatchSubstitutionTable(connectionManager));
 		tables.put(TransferTable.TABLENAME, new TransferTable(connectionManager));
@@ -274,7 +273,6 @@ public class DBManager implements PersistenceManager {
 		tables.put(TAPlayerTable.TABLENAME, new TAPlayerTable(connectionManager));
 		tables.put(WorldDetailsTable.TABLENAME, new WorldDetailsTable(connectionManager));
 		tables.put(IfaMatchTable.TABLENAME, new IfaMatchTable(connectionManager));
-//		tables.put(PenaltyTakersTable.TABLENAME, new PenaltyTakersTable(connectionManager));
 		tables.put(TournamentDetailsTable.TABLENAME, new TournamentDetailsTable(connectionManager));
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((connectionManager)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(connectionManager));
@@ -354,37 +352,6 @@ public class DBManager implements PersistenceManager {
 		  }
 		return exists;
 	}
-
-//	/**
-//	 * liefert das Datum des letzen LevelAufstiegs für den angeforderten Skill
-//	 * Vector filled with Skillup Objects
-//	 *
-//	 * @param skill        the skill
-//	 * @param m_iSpielerID the m i spieler id
-//	 * @return the all level up
-//	 */
-//	public List<Skillup> getAllLevelUp(PlayerSkill skill, int m_iSpielerID) {
-//		return ((SkillupTable) getTable(SkillupTable.TABLENAME))
-//				.getAllLevelUp(skill, m_iSpielerID);
-//	}
-//
-//	/**
-//	 * Check skillup.
-//	 *
-//	 * @param homodel the homodel
-//	 */
-//	public void checkSkillup(HOModel homodel) {
-//		((SkillupTable) getTable(SkillupTable.TABLENAME))
-//				.importNewSkillup(homodel);
-//	}
-//
-//	public void storeSkillup(Skillup skillup){
-//		getTable(SkillupTable.TABLENAME)
-//				.store(skillup);
-//	}
-
-	// ------------------------------- SpielerTable
-	// -------------------------------------------------
 
 	/**
 	 * Returns all the players, including the former ones.
@@ -1805,7 +1772,6 @@ public class DBManager implements PersistenceManager {
 		getTable(EconomyTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(BasicsTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(SpielerTable.TABLENAME).executePreparedDelete(hrfid);
-//		getTable(SkillupTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(XtraDataTable.TABLENAME).executePreparedDelete(hrfid);
 		getTable(StaffTable.TABLENAME).executePreparedDelete(hrfid);
 	}
