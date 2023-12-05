@@ -120,7 +120,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      **/
     private int soldVIP = -1;
 
-    private int m_iRegionId;
+    private Integer m_iRegionId;
     private int ratingIndirectSetPiecesAtt = -1;
     private int ratingIndirectSetPiecesDef = -1;
 
@@ -257,7 +257,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
 
     public int getLastMinute() {
         var highlights = downloadHighlightsIfMissing();
-        if (highlights != null && highlights.size() > 0) {
+        if (highlights != null && !highlights.isEmpty()) {
             return highlights.get(highlights.size() - 1).getMinute();
         }
         return -1;
@@ -948,7 +948,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      */
     public final List<MatchEvent> downloadHighlightsIfMissing() {
         if (getHighlights() == null && maxMatchdetailsReloadsPerSession > 0 && this.m_MatchTyp.isOfficial()) {
-            if (m_vHighlights == null || m_vHighlights.size() == 0 || m_vHighlights.get(0).getMatchPartId() == null) {
+            if (m_vHighlights == null || m_vHighlights.isEmpty() || m_vHighlights.get(0).getMatchPartId() == null) {
                 HOLogger.instance().info(Matchdetails.class,
                         "Reload Matchdetails id: " + this.getMatchID());
                 boolean silenDownloadMode = OnlineWorker.isSilentDownload();
@@ -973,7 +973,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
     public List<MatchEvent> getHighlights() {
-        if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.size() == 0)) {
+        if (this.getMatchID() > -1 && (m_vHighlights == null || m_vHighlights.isEmpty())) {
             m_vHighlights = DBManager.instance().getMatchHighlights(this.getMatchType().getId(), this.getMatchID());
         }
         return m_vHighlights;
@@ -1374,7 +1374,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @param regionId region Id
      */
-    public void setRegionId(int regionId) {
+    public void setRegionId(Integer regionId) {
         this.m_iRegionId = regionId;
     }
 
