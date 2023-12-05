@@ -3,10 +3,8 @@ package module.training;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillChange;
 import core.model.player.Player;
-import core.training.SkillChange;
-import core.util.HODateTime;
+import core.model.player.SkillChange;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,9 +16,9 @@ import java.util.List;
 public class PastTrainingManager {
 
 	/** List of all skill up */
-	private List<ISkillChange> allSkillups = new ArrayList<>();
+	private List<SkillChange> allSkillups = new ArrayList<>();
 	/** List of trained skill up */
-	private List<ISkillChange> trainSkillups = new ArrayList<>();
+	private List<SkillChange> trainSkillups = new ArrayList<>();
 
 	/**
 	 * Calculates data for the player
@@ -41,31 +39,26 @@ public class PastTrainingManager {
 				continue;
 			}
 
-			var levelUps = player.getAllLevelUp(skill);
-
-			for (var element : levelUps) {
+			var skillChanges = player.getAllSkillChanges(skill);
+			for (var element : skillChanges) {
 				var skillUpDate =  element.getDate();
 				var trainingDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
 				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(7, ChronoUnit.DAYS);
 				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(7, ChronoUnit.DAYS);
-				var su = getSkillup(trainingDate);
-				su.setValue(element.getValue());
-				su.setType(skill);
-				su.setTrainType(ISkillChange.SKILLUP_REAL);
-				su.setAge(player.getAgeWithDaysAsString(trainingDate));
-				allSkillups.add(su);
+				element.setDate(trainingDate);
+				allSkillups.add(element);
 
 				if (skill == PlayerSkill.KEEPER || skill == PlayerSkill.DEFENDING
 						|| skill == PlayerSkill.WINGER || skill == PlayerSkill.PLAYMAKING
 						|| skill == PlayerSkill.SCORING || skill == PlayerSkill.PASSING
 						|| skill == PlayerSkill.SETPIECES) {
-					trainSkillups.add(su);
+					trainSkillups.add(element);
 				}
 
 			}
 		}
 
-		SkillupComperator comp = new SkillupComperator();
+		var comp = new SkillChangeComparator();
 
 		allSkillups.sort(comp);
 		trainSkillups.sort(comp);
@@ -76,7 +69,7 @@ public class PastTrainingManager {
 	 * 
 	 * @return list of all skillups
 	 */
-	public List<ISkillChange> getAllSkillups() {
+	public List<SkillChange> getAllSkillups() {
 		return allSkillups;
 	}
 
@@ -86,35 +79,16 @@ public class PastTrainingManager {
 	 * 
 	 * @return list of trained skillups
 	 */
-	public List<ISkillChange> getTrainedSkillups() {
+	public List<SkillChange> getTrainedSkillups() {
 		return trainSkillups;
 	}
-
-	/**
-	 * Calculates the HT Week and Season from the SkillupDate and initialize the
-	 * Skillup Object
-	 * 
-	 * @param skillupDate
-	 *            Skillup Date
-	 * 
-	 * @return a skillup object with season and week value
-	 */
-	private SkillChange getSkillup(HODateTime skillupDate) {
-		var skillChange = new SkillChange();
-		var htWeek = skillupDate.toLocaleHTWeek();
-		skillChange.setHtSeason(htWeek.season);
-		skillChange.setHtWeek(htWeek.week);
-		skillChange.setDate(skillupDate);
-		return skillChange;
-	}
-
-	private static class SkillupComperator implements Comparator<ISkillChange> {
+	private static class SkillChangeComparator implements Comparator<SkillChange> {
 
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
 		@Override
-		public int compare(ISkillChange o1, ISkillChange o2) {
+		public int compare(SkillChange o1, SkillChange o2) {
 			var ret = o1.getDate().compareTo(o2.getDate());
 			if ( ret == 0){
 				if (o1.getType() == o2.getType()) {

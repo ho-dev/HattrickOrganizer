@@ -6,8 +6,8 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.model.player.SkillChange;
 import core.util.GUIUtils;
 import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
@@ -118,19 +118,19 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
         }
 
 		values.sort((sc1, sc2) -> {
-            if (sc1.getSkillup().getHtSeason() > sc2.getSkillup().getHtSeason()) {
+            if (sc1.getSkillChange().getHtSeason() > sc2.getSkillChange().getHtSeason()) {
                 return -1;
-            } else if (sc1.getSkillup().getHtSeason() < sc2.getSkillup().getHtSeason()) {
+            } else if (sc1.getSkillChange().getHtSeason() < sc2.getSkillChange().getHtSeason()) {
                 return 1;
             } else {
-                if (sc1.getSkillup().getHtWeek() > sc2.getSkillup().getHtWeek()) {
+                if (sc1.getSkillChange().getHtWeek() > sc2.getSkillChange().getHtWeek()) {
                     return -1;
-                } else if (sc1.getSkillup().getHtWeek() < sc2.getSkillup().getHtWeek()) {
+                } else if (sc1.getSkillChange().getHtWeek() < sc2.getSkillChange().getHtWeek()) {
                     return 1;
                 } else {
                     if ((sc1.getPlayer().equals(sc2.getPlayer()))
-                            && (sc1.getSkillup().getType() == sc2.getSkillup().getType())) {
-                        if (sc1.getSkillup().getValue() > sc2.getSkillup().getValue()) {
+                            && (sc1.getSkillChange().getType() == sc2.getSkillChange().getType())) {
+                        if (sc1.getSkillChange().getValue() > sc2.getSkillChange().getValue()) {
                             return -1;
                         } else {
                             return 1;
@@ -203,9 +203,9 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 		for (Player player : players) {
 			PastTrainingManager otm = new PastTrainingManager(player);
-			List<ISkillChange> skillups = otm.getAllSkillups();
+			List<SkillChange> skillups = otm.getAllSkillups();
 
-			for (ISkillChange skillup : skillups) {
+			for (SkillChange skillup : skillups) {
 				var skillType = skillup.getType();
                 List<PlayerSkillChange> playerSkillChanges = skillupsByType.computeIfAbsent(skillType, k -> new ArrayList<>());
 				playerSkillChanges.add(new PlayerSkillChange(player, skillup));

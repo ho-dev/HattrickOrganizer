@@ -7,19 +7,19 @@
  */
 package module.training.ui.renderer;
 
-import core.model.player.ISkillChange;
+import core.model.HOVerwaltung;
 import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
 import module.training.ui.model.SkillupTableModel;
-
 import java.awt.Color;
 import java.awt.Component;
-
+import java.io.Serial;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class SkillupTableRenderer extends DefaultTableCellRenderer {
 
+	@Serial
 	private static final long serialVersionUID = 4941016016981672099L;
 
 	/*
@@ -36,7 +36,7 @@ public class SkillupTableRenderer extends DefaultTableCellRenderer {
 				row, column);
 
 		SkillupTableModel model = (SkillupTableModel)table.getModel();
-		ISkillChange skillup = model.getSkillup(table.convertRowIndexToModel(row));
+		var skillup = model.getSkillup(table.convertRowIndexToModel(row));
 
 		if ( column == 0 ){
 			setIcon(TrainingLegendPanel.getSkillupTypeIcon(skillup.getType(), skillup.getChange()));
@@ -44,7 +44,7 @@ public class SkillupTableRenderer extends DefaultTableCellRenderer {
 		else {
 			setIcon(null);
 		}
-		if (skillup.getTrainType() == ISkillChange.SKILLUP_FUTURE) {
+		if (skillup.getDate().isAfter(HOVerwaltung.instance().getModel().getBasics().getDatum()) ) {
 			cell.setForeground(Skills.getSkillColor(skillup.getType()));
 		} else {
 			cell.setForeground(Color.BLACK);

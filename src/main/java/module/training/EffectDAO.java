@@ -3,8 +3,8 @@ package module.training;
 import core.db.DBManager;
 import core.db.ConnectionManager;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.model.player.SkillChange;
 import core.util.HODateTime;
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class EffectDAO {
              */
     public static void reload() {
         try {
-            Map<String,List<ISkillChange>> weeklySkillups = new HashMap<>();
+            Map<String,List<SkillChange>> weeklySkillups = new HashMap<>();
 
             // Loop through all player (also old players) to get all trained skillups.
             // Group these skillups by season and week.
@@ -66,11 +66,11 @@ public class EffectDAO {
 
             for (Player player : players) {
                 PastTrainingManager otm = new PastTrainingManager(player);
-                List<ISkillChange> skillups = otm.getTrainedSkillups();
+                List<SkillChange> skillups = otm.getTrainedSkillups();
 
-                for (ISkillChange skillup : skillups) {
+                for (SkillChange skillup : skillups) {
                     String key = skillup.getHtSeason() + "-" + skillup.getHtWeek(); //$NON-NLS-1$
-                    List<ISkillChange> collectedSkillups = weeklySkillups.computeIfAbsent(key, k -> new Vector<>());
+                    List<SkillChange> collectedSkillups = weeklySkillups.computeIfAbsent(key, k -> new Vector<>());
 
                     collectedSkillups.add(skillup);
                 }
@@ -152,11 +152,11 @@ public class EffectDAO {
 
                 if (weeklySkillups.containsKey(key)) {
 
-                    List<ISkillChange> wsList = weeklySkillups.get(key);
+                    List<SkillChange> wsList = weeklySkillups.get(key);
                     week.setAmountSkillups(wsList.size());
 
                     if (!wsList.isEmpty()) {
-                        ISkillChange su = wsList.get(0);
+                        SkillChange su = wsList.get(0);
                         week.setTrainingType(su.getType());
                     }
                 }

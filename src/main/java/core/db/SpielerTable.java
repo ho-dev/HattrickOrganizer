@@ -154,6 +154,12 @@ final class SpielerTable extends AbstractTable {
 		return load(Player.class, connectionManager.executePreparedQuery(loadAllPlayersSql),-1);
 	}
 
+	String loadPlayerHistorySql = createSelectStatement("WHERE SpielerID=? ORDER BY Datum");
+
+	List<Player> loadPlayerHistory(int playerId){
+		return load(Player.class, connectionManager.executePreparedQuery(loadPlayerHistorySql, playerId), -1);
+	}
+
 	private final String getLetzteBewertung4SpielerSql = "SELECT Bewertung from "+getTableName()+" WHERE SpielerID=? AND Bewertung>0 ORDER BY Datum DESC  LIMIT 1";
 
 	/**

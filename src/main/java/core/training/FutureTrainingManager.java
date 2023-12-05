@@ -4,8 +4,8 @@ import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
-import core.model.player.ISkillChange;
 import core.model.player.Player;
+import core.model.player.SkillChange;
 import core.util.HOLogger;
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class FutureTrainingManager {
 	/** Active player */
 	private final Player player;
 	private final List<TrainingPerWeek> futureTrainings;
-	private List<ISkillChange> futureSkillups;
+	private List<SkillChange> futureSkillups;
 	private double trainingSpeed;
 
 	/**
@@ -140,15 +140,10 @@ public class FutureTrainingManager {
 							if (change != 0) {
 								if (!UserParameter.instance().TRAINING_SHOW_SKILLDROPS && change < 0) continue;
 								var trainingDate = trainingPerWeek.getTrainingDate();
-								var htWeek = trainingDate.toLocaleHTWeek();
 								SkillChange su = new SkillChange();
-								su.setHtSeason(htWeek.season);
-								su.setHtWeek(htWeek.week);
 								su.setType(SKILL_INDEX[i]);
 								su.setValue(finalSkill[i]);
-								su.setTrainType(ISkillChange.SKILLUP_FUTURE);
 								su.setDate(trainingDate);
-								su.setAge(player.getAgeWithDaysAsString(su.getDate()));
 								su.setChange(change);
 								futureSkillups.add(su);
 							}
@@ -204,7 +199,7 @@ public class FutureTrainingManager {
 	*
 	* @return List of Skillups
 	*/
-	public List<ISkillChange> getFutureSkillups() {
+	public List<SkillChange> getFutureSkillups() {
 		return futureSkillups;
 	}
 
