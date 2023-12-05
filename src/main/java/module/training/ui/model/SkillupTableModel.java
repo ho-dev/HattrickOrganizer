@@ -2,7 +2,8 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerAbility;
 import core.model.HOVerwaltung;
-import core.model.player.ISkillChange;
+import core.model.player.Player;
+import core.model.player.SkillChange;
 
 import java.io.Serial;
 import java.util.List;
@@ -12,9 +13,12 @@ public class SkillupTableModel extends AbstractTableModel {
 
 	@Serial
 	private static final long serialVersionUID = 1636458081835657412L;
-	private List<ISkillChange> data;
+	private List<SkillChange> data;
 
-	public void setData(List<ISkillChange> data) {
+	private Player player;
+
+	public void setData(Player player, List<SkillChange> data) {
+		this.player = player;
 		this.data = data;
 		fireTableDataChanged();
 	}
@@ -31,13 +35,13 @@ public class SkillupTableModel extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		ISkillChange skillup = this.data.get(rowIndex);
+		SkillChange skillup = this.data.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> skillup.getType().getLanguageString() + ": "
                     + PlayerAbility.getNameForSkill(skillup.getValue(), true);
             case 1 -> skillup.getHtWeek();
             case 2 -> skillup.getHtSeason();
-            case 3 -> skillup.getAge();
+            case 3 -> player.getAgeAtDate(skillup.getDate()).toString();
             default -> null;
         };
 	}
@@ -53,7 +57,7 @@ public class SkillupTableModel extends AbstractTableModel {
         };
 	}
 
-	public ISkillChange getSkillup(int row) {
+	public SkillChange getSkillup(int row) {
 		return this.data.get(row);
 	}
 }

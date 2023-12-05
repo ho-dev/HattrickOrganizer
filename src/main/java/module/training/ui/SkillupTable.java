@@ -1,11 +1,8 @@
-// %827897234:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
-import core.model.player.ISkillChange;
 import module.training.ui.model.SkillupTableModel;
-
 import java.awt.event.MouseEvent;
-
+import java.io.Serial;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
@@ -16,6 +13,7 @@ import javax.swing.table.TableModel;
  */
 public class SkillupTable extends JTable {
 
+	@Serial
 	private static final long serialVersionUID = 8692544698980743170L;
 
 	/**
@@ -39,7 +37,7 @@ public class SkillupTable extends JTable {
 	@Override
 	public String getToolTipText(MouseEvent e) {
 		SkillupTableModel model = (SkillupTableModel) getModel();
-		ISkillChange skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
+		var skillup = model.getSkillup(convertRowIndexToModel(rowAtPoint(e.getPoint())));
 
 		if (skillup != null ) {
 			return skillup.getDate().toLocaleDateTime();

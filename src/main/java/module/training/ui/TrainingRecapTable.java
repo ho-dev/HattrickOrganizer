@@ -6,10 +6,10 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.ISkillChange;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
+import core.model.player.SkillChange;
 import core.training.TrainingPreviewPlayers;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.TrainingRecapRenderer;
@@ -107,9 +107,9 @@ public class TrainingRecapTable extends JScrollPane {
         for (Player player : players) {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
                     this.trainingModel.getFutureTrainings());
-            List<ISkillChange> skillChanges = ftm.getFutureSkillups();
+            var skillChanges = ftm.getFutureSkillups();
 
-            HashMap<String, ISkillChange> maps = new HashMap<>();
+            HashMap<String, SkillChange> maps = new HashMap<>();
             for ( var s: skillChanges){
                 maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
             }
@@ -127,7 +127,7 @@ public class TrainingRecapTable extends JScrollPane {
             row.add(Integer.toString(player.getPlayerId()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                ISkillChange s = maps.get(columns.get(i + fixedColumns));
+                var s = maps.get(columns.get(i + fixedColumns));
 
                 if (s == null) {
                     row.add("");

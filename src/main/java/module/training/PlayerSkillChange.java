@@ -1,9 +1,7 @@
-// %3284418725:hoplugins.trainingExperience.vo%
 package module.training;
 
-import core.model.player.ISkillChange;
 import core.model.player.Player;
-
+import core.model.player.SkillChange;
 
 /**
  * This value object represent a change in skill for a player.
@@ -13,8 +11,8 @@ import core.model.player.Player;
 public class PlayerSkillChange {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private ISkillChange skillup;
-    private Player player;
+    private final SkillChange skillChange;
+    private final Player player;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -24,9 +22,9 @@ public class PlayerSkillChange {
      * @param player Player
      * @param skillup Skillup
      */
-    public PlayerSkillChange(Player player, ISkillChange skillup) {
+    public PlayerSkillChange(Player player, SkillChange skillup) {
         this.player = player;
-        this.skillup = skillup;
+        this.skillChange = skillup;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -45,7 +43,7 @@ public class PlayerSkillChange {
      *
      * @return Skillup
      */
-    public ISkillChange getSkillup() {
-        return skillup;
+    public SkillChange getSkillChange() {
+        return skillChange;
     }
 }

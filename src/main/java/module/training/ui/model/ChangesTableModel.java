@@ -74,11 +74,11 @@ public class ChangesTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		PlayerSkillChange change = values.get(rowIndex);
 		return switch (columnIndex) {
-            case 0 -> Integer.toString(change.getSkillup().getHtWeek());
-            case 1 -> Integer.toString(change.getSkillup().getHtSeason());
+            case 0 -> Integer.toString(change.getSkillChange().getHtWeek());
+            case 1 -> Integer.toString(change.getSkillChange().getHtSeason());
             case 2 -> change.getPlayer().getFullName();
-            case 3 -> change.getSkillup().getType().toInt();
-            case 4 -> PlayerAbility.getNameForSkill(change.getSkillup().getValue(), true);
+            case 3 -> change.getSkillChange().getType().toInt();
+            case 4 -> PlayerAbility.getNameForSkill(change.getSkillChange().getValue(), true);
             case 5 -> change.getPlayer().isGoner();
             case COL_PLAYER_ID -> Integer.toString(change.getPlayer().getPlayerId());
             default -> "";

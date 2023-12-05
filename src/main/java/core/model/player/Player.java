@@ -322,6 +322,8 @@ public class Player extends AbstractTable.Storable {
      */
     private boolean lineupDisabled = false;
 
+    private List<SkillChange> skillChanges;
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -844,6 +846,7 @@ public class Player extends AbstractTable.Storable {
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
     }
 
+
     static class PlayerPositionRating {
 
         public PlayerPositionRating(Integer p, Byte behaviour, double rating, double ralativeRating) {
@@ -939,22 +942,20 @@ public class Player extends AbstractTable.Storable {
         return internationalMatches;
     }
 
-    private final HashMap<PlayerSkill, List<Skillup>> allSkillUps = new HashMap<>();
-
     /**
      * gives information of skill ups
      */
-    public List<Skillup> getAllLevelUp(PlayerSkill skill) {
-        if (allSkillUps.containsKey(skill)) {
-            return allSkillUps.get(skill);
-        }
-        var ret = DBManager.instance().getAllLevelUp(skill, spielerId);
-        allSkillUps.put(skill, ret);
-        return ret;
+    public List<SkillChange> getAllLevelUp(PlayerSkill skill) {
+        return getSkillChanges().stream().filter(e->e.getType().equals(skill) && e.getChange()>0).toList();
     }
 
-    public void resetSkillUpInformation() {
-        allSkillUps.clear();
+    /**
+     * Get all skill changes of one type
+     * @param skill Skill type
+     * @return List of skill changes
+     */
+    public List<SkillChange> getAllSkillChanges(PlayerSkill skill) {
+        return getSkillChanges().stream().filter(e->e.getType().equals(skill)).toList();
     }
 
     /**
@@ -1734,7 +1735,7 @@ public class Player extends AbstractTable.Storable {
      * @param old player to copy from
      */
     public void copySkills(Player old) {
-        for ( var s : PlayerSkill.values()){
+        for (var s : PlayerSkill.values()) {
             setValue4Skill(s, old.getValue4Skill(s));
         }
     }
@@ -1821,8 +1822,8 @@ public class Player extends AbstractTable.Storable {
         }
 
         // get training from skill settings
-        for (var futureSkillTraining : getFuturePlayerSkillTrainings()){
-            if (wt.isTraining(futureSkillTraining.getSkillId())){
+        for (var futureSkillTraining : getFuturePlayerSkillTrainings()) {
+            if (wt.isTraining(futureSkillTraining.getSkillId())) {
                 return futureSkillTraining.getPriority();
             }
         }
@@ -1862,7 +1863,7 @@ public class Player extends AbstractTable.Storable {
         var newFuturePlayerTrainings = new ArrayList<FuturePlayerTraining>();
         for (var t : getFuturePlayerTrainings()) {
             var tmpList = t.cut(from, to);
-            for (var ft : tmpList){
+            for (var ft : tmpList) {
                 // cut the past
                 newFuturePlayerTrainings.addAll(ft.cut(HODateTime.HT_START, HOVerwaltung.instance().getModel().getBasics().getHattrickWeek()));
             }
@@ -1883,14 +1884,14 @@ public class Player extends AbstractTable.Storable {
 
     public FuturePlayerTraining.Priority getFuturePlayerSkillTrainingPriority(PlayerSkill skillIndex) {
         var s = getFuturePlayerSkillTraining(skillIndex);
-        if ( s != null){
+        if (s != null) {
             return s.getPriority();
         }
         return null;
     }
 
-    public  List <FuturePlayerSkillTraining>  getFuturePlayerSkillTrainings() {
-        if ( futurePlayerSkillTrainings == null){
+    public List<FuturePlayerSkillTraining> getFuturePlayerSkillTrainings() {
+        if (futurePlayerSkillTrainings == null) {
             futurePlayerSkillTrainings = DBManager.instance().loadFuturePlayerSkillTrainings(getPlayerId());
         }
         return futurePlayerSkillTrainings;
@@ -1899,20 +1900,17 @@ public class Player extends AbstractTable.Storable {
     public boolean setFutureSkillTrainingPriority(int playerId, PlayerSkill skillIndex, FuturePlayerTraining.Priority prio) {
         var futureSkillTraining = getFuturePlayerSkillTraining(skillIndex);
         if (futureSkillTraining == null) {
-            if ( prio != null) {
+            if (prio != null) {
                 futureSkillTraining = new FuturePlayerSkillTraining(getPlayerId(), prio, skillIndex);
                 futurePlayerSkillTrainings.add(futureSkillTraining);
-            }
-            else {
+            } else {
                 return false; // nothing changed
             }
-        } else if ( prio == null ) {
+        } else if (prio == null) {
             futurePlayerSkillTrainings.remove(futureSkillTraining);
-        }
-        else if (!prio.equals(futureSkillTraining.getPriority())){
+        } else if (!prio.equals(futureSkillTraining.getPriority())) {
             futureSkillTraining.setPriority(prio);
-        }
-        else {
+        } else {
             return false; // nothing changed
         }
         DBManager.instance().storeFuturePlayerSkillTrainings(playerId, futurePlayerSkillTrainings);
@@ -1921,7 +1919,7 @@ public class Player extends AbstractTable.Storable {
 
     private FuturePlayerSkillTraining getFuturePlayerSkillTraining(PlayerSkill skillIndex) {
         var skillTrainingPlans = getFuturePlayerSkillTrainings();
-        return skillTrainingPlans.stream().filter(e->e.getSkillId()==skillIndex).findAny().orElse(null);
+        return skillTrainingPlans.stream().filter(e -> e.getSkillId() == skillIndex).findAny().orElse(null);
     }
 
 
@@ -1973,21 +1971,6 @@ public class Player extends AbstractTable.Storable {
             var valueAfterTraining = this.getValue4Skill(skill);
 
             if (!trainingWeeks.isEmpty()) {
-                if (valueAfterTraining > valueBeforeTraining) {
-                    // Check if skill up is available
-                    var skillUps = this.getAllLevelUp(skill);
-                    var isAvailable = skillUps.stream().anyMatch(i -> i.getValue() == valueAfterTraining);
-                    if (!isAvailable) {
-                        var skillUp = new Skillup();
-                        skillUp.setPlayerId(this.getPlayerId());
-                        skillUp.setSkill(skill);
-                        skillUp.setDate(trainingWeeks.get(0).getTrainingDate());
-                        skillUp.setValue(valueAfterTraining);
-                        skillUp.setHrfId(this.getHrfId());
-                        DBManager.instance().storeSkillup(skillUp);
-                        resetSkillUpInformation();
-                    }
-                }
                 for (var training : trainingWeeks) {
 
                     var trainingPerPlayer = calculateWeeklyTraining(training);
@@ -2311,5 +2294,30 @@ public class Player extends AbstractTable.Storable {
         public int getValue() {
             return value;
         }
+    }
+
+    List<SkillChange> getSkillChanges() {
+        if (skillChanges == null) {
+            skillChanges = new ArrayList<>();
+            Player previousPlayer = null;
+            for (var p : DBManager.instance().loadPlayerHistory(this.getPlayerId())) {
+                if (previousPlayer != null) {
+                    for (var skillType : PlayerSkill.values()) {
+                        var newValue = p.getValue4Skill(skillType);
+                        var change = newValue - previousPlayer.getValue4Skill(skillType);
+                        if (change != 0) {
+                            var skillChange = new SkillChange();
+                            skillChange.setChange(change);
+                            skillChange.setDate(p.getHrfDate());
+                            skillChange.setType(skillType);
+                            skillChange.setValue(newValue);
+                            skillChanges.add(skillChange);
+                        }
+                    }
+                }
+                previousPlayer = p;
+            }
+        }
+        return skillChanges;
     }
 }

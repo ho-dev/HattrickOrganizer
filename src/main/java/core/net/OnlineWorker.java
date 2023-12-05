@@ -109,8 +109,6 @@ public class OnlineWorker {
 						homodel.setFormerPlayers(DBManager.instance().loadAllPlayers());
 						// Only update when the model is newer than existing
 						if (HOVerwaltung.isNewModel(homodel)) {
-							// Reimport Skillup
-							DBManager.instance().checkSkillup(homodel);
 							// Show
 							hov.setModel(homodel);
 							// reset value of TS, confidence in Lineup Settings Panel after data download
@@ -507,7 +505,7 @@ public class OnlineWorker {
 
 		try {
 			matchesString = MyConnector.instance().getMatches(teamId, forceRefresh, upcoming);
-			bOK = (matchesString != null && matchesString.length() > 0);
+			bOK = (matchesString != null && !matchesString.isEmpty());
 			if (bOK)
 				HOMainFrame.instance().setWaitInformation();
 		} catch (Exception e) {
@@ -714,7 +712,7 @@ public class OnlineWorker {
 
 		try {
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LEAGUE);
-			if((matchDetails != null) && (! matchDetails.equals(""))) {
+			if((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
 			}
 			else{
@@ -732,7 +730,7 @@ public class OnlineWorker {
 			}
 
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.LADDER);
-			if((matchDetails != null) && (! matchDetails.equals(""))) {
+			if((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
 			}
 			else{
@@ -750,7 +748,7 @@ public class OnlineWorker {
 			}
 
 			matchDetails = conn.downloadMatchdetails(_match.getMatchID(), MatchType.YOUTHLEAGUE);
-			if((matchDetails != null) && (! matchDetails.equals(""))) {
+			if((matchDetails != null) && (!matchDetails.isEmpty())) {
 				details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
 			}
 			else{
@@ -786,7 +784,7 @@ public class OnlineWorker {
 
 		try {
 			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
-			if (matchDetails.length() == 0) {
+			if (matchDetails.isEmpty()) {
 				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
 				return null;
 			}
@@ -817,7 +815,7 @@ public class OnlineWorker {
 		boolean bOK;
 		try {
 			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
-			bOK = (matchLineup != null && matchLineup.length() > 0);
+			bOK = (matchLineup != null && !matchLineup.isEmpty());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
 			// Info
