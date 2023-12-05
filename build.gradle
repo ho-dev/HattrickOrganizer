@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id 'java'
     id 'groovy'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.21'
     id 'application'
     id 'de.jansauer.poeditor' version '1.1.0'
     id 'org.kordamp.gradle.markdown' version '2.2.0'
@@ -109,6 +111,12 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 //    modularity.inferModulePath.set(true)
+}
+
+tasks.withType(KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
 }
 
 sourceSets {

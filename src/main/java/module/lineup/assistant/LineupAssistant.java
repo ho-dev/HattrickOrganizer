@@ -52,7 +52,7 @@ public class LineupAssistant {
     }
 
 	/**
-	 * Assitant to create automatic lineup
+	 * Assistant to create automatic lineup
 	 * 
 	 * @param lPositions: list of positions to be filled
 	 * @param lPlayers: list of available players
@@ -361,14 +361,9 @@ public class LineupAssistant {
 
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 
-		if ( players != null) {
-			for ( var player : players){
-
+		if (players != null) {
+			for (var player : players) {
 				var r = ratingPredictionModel.getPlayerMatchAverageRating(player, RatingPredictionModel.getPlayerRatingPosition(position), getBehaviour(position));
-
-				// stk inklusive Wetter effekt errechnen
-//				currentRating = player.calcPosValue(position, considerForm, weather, true);
-
 				if ((!isPlayerInLineup(player.getPlayerId(), positions))
 						&& ((bestPlayer == null) || (maxRating < r))
 						&& ((ignoreRedCarded) || (!player.isRedCarded()))
