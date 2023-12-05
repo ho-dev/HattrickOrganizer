@@ -24,6 +24,7 @@
 * implement schum rating prediction (#1782)
 
 ### Matches
+* fix bug loading matches with no region id (#1975)
 
 ### Lineup
 * fix missing player id column in lineup assistant's player table (#1930)
