@@ -399,7 +399,7 @@ task CreateDistribution (dependsOn: installDist) {
         }
 
         copy {
-            from "${projectDir}/src/main/resources/prediction"
+            from "${projectDir}/prediction"
             into "${distribDir}/prediction"
         }
 

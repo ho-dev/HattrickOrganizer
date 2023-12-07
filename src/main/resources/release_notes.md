@@ -49,11 +49,12 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - November 20, 2023
+Reports by Contributors - September 24, 2023 - December 07, 2023
 
+* Sebastien 157
 * Georgi 10
 * Lidegand 3
 * sich 3
 * wsbrenk 3
 
-Total 19
+Total 176
