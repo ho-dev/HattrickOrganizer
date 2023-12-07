@@ -139,7 +139,7 @@ final class MatchDetailsTable extends AbstractTable {
 		return placeHolderYouthMatchTypes;
 	}
 
-	private final String deleteYouthMatchDetailsBeforeSql = createSelectStatement("WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
+	private final String deleteYouthMatchDetailsBeforeSql = createDeleteStatement("WHERE MATCHTYP IN " + getPlaceHolderYouthMatchTypes() + " AND SPIELDATUM<?");
 	public void deleteYouthMatchDetailsBefore(Timestamp before) {
 		try {
 			var params = new ArrayList<>();

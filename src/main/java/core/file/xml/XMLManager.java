@@ -112,14 +112,6 @@ public class XMLManager {
         }
     }
 
-    public static Boolean xmlBooleanValue(Element ele, String xmlKey) {
-        var value = xmlValue(ele, xmlKey);
-        if (!value.isEmpty()) {
-            return Boolean.parseBoolean(value);
-        }
-        return null;
-    }
-
     public static String xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
         var value =  xmlValue(element, xmlKey);
         hash.put(hashKey, value);
@@ -137,7 +129,11 @@ public class XMLManager {
 
     public static void xmlAttribute2Hash(Map<String, String> hash, Element root, String xmlElementname, String xmlAttributename) {
         var ele = (Element) root.getElementsByTagName(xmlElementname).item(0);
-        hash.put(xmlElementname+xmlAttributename, ele.getAttribute(xmlAttributename));
+        var value = "";
+        if (ele != null) {
+            value = ele.getAttribute(xmlAttributename);
+        }
+        hash.put(xmlElementname + xmlAttributename,value);
     }
 
     /**
@@ -267,30 +263,4 @@ public class XMLManager {
             HOLogger.instance().log(XMLManager.class,e);
         }
     }
-
-	/**
-	 * speichert das übergebene Dokument in der angegebenen Datei Datei wird überschrieben falls
-	 * vorhanden
-	 */
-	public static String getXML(Document doc) {
-		//Transformer creation for DOM rewriting into XML String
-		Transformer serializer;
-		DOMSource source;
-		StreamResult result;
-		String xml = "";
-		try {
-			//You can do any modification to the document here
-			serializer = TransformerFactory.newInstance().newTransformer();
-			source = new DOMSource(doc);
-			StringWriter sw = new StringWriter();
-			result = new StreamResult(sw);
-			serializer.transform(source, result);
-			xml = sw.toString();
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLManager.class,"XMLManager.writeXML: " + e);
-			HOLogger.instance().log(XMLManager.class,e);
-		}
-		return xml;
-	}
-
 }

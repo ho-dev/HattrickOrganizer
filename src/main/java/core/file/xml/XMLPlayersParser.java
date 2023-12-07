@@ -38,13 +38,6 @@ public class XMLPlayersParser {
         return createListe(doc);
     }
 
-    public final SafeInsertMap parsePlayerDetails(String inputStream){
-        Document doc = XMLManager.parseString(inputStream);
-        Element root = doc.getDocumentElement();
-        Element ele = (Element) root.getElementsByTagName("Player").item(0);
-        return createPlayerDetails(ele);
-    }
-
     /////////////////////////////////////////////////////////////////////////////////
     //Parser Helper private
     ////////////////////////////////////////////////////////////////////////////////
@@ -367,14 +360,24 @@ public class XMLPlayersParser {
         return ret;
     }
 
+    String getXMLElementName(PlayerSkill playerSkill){
+        return switch (playerSkill){
+            case KEEPER -> "Keeper";
+            case DEFENDING -> "Defender";
+            case PLAYMAKING -> "Playmaker";
+            case WINGER -> "Winger";
+            case PASSING -> "Passing";
+            case SCORING -> "Scorer";
+            case SETPIECES -> "SetPieces";
+            default -> "unknown";
+        };
+    }
     private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, PlayerSkill skillId) {
-        //        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
-        var attr = skillId.getLanguageString() + "Skill";
+        var attr = getXMLElementName(skillId) + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
         xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
         xmlAttribute2Hash(hash, playerSkills, attr, "MayUnlock");
-        //        <KeeperSkillMax IsAvailable="True">2</KeeperSkillMax>
         attr += "Max";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
