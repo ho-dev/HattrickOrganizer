@@ -253,7 +253,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	public void setWaitInformation(){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), 1);}
 	public void resetInformation(){setInformation("",-100);}
 	public void setInformation( String information) { setInformation(information,-100);}
-	public void setInformationCompleted() { setInformation(Helper.getTranslation("ls.update_status.complete"), 100);}
+	public void setInformationCompleted() { setInformation(Helper.getTranslation("ls.update_status.complete"), -100);}
 	public void setInformation( String information, int progress){
 		if (launching.get()) return;
 		getInfoPanel().setInformation(information, progress);
