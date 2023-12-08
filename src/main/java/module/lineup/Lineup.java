@@ -23,6 +23,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.jetbrains.annotations.Nullable;
 
+import static java.lang.Math.max;
+
 
 public class Lineup{
 
@@ -649,27 +651,6 @@ public class Lineup{
 	public final short getLocation() {
 		if ( m_sLocation == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
 		return m_sLocation;
-	}
-
-	public final void setArenaId(int id){
-		ratingRevision++;
-		this.m_iArenaId=id;
-	}
-	public final int getArenaId() {
-		if (m_iArenaId == -1) {
-			getUpcomingMatch();
-		}
-		return m_iArenaId;
-	}
-
-	public void setRegionId(int id){
-		ratingRevision++;
-		this.m_iRegionId=id;
-	}
-	public final int getRegionId()
-	{
-		if (m_iRegionId == -1 && !isUpcomingMatchLoaded()) {	getUpcomingMatch();	}
-		return  m_iRegionId;
 	}
 
 	public final  void setWeather( Weather weather)
@@ -1447,7 +1428,7 @@ public class Lineup{
 	}
 
 	public Set<Integer> getLineupChangeMinutes(){
-		return this.substitutions.stream().map(Substitution::getMatchMinuteCriteria).collect(Collectors.toSet());
+		return this.substitutions.stream().map(e->max(0,e.getMatchMinuteCriteria())).collect(Collectors.toSet());
 	}
 
 	public static void applySubstitution(List<MatchLineupPosition> positions, Substitution s) {
