@@ -654,7 +654,12 @@ public class Player extends AbstractTable.Storable {
     public HODateTime getArrivalDate() {
         if ( arrivalDate == null){
             var firstDownload = DBManager.instance().loadPlayerFirstHRF(this.getPlayerId());
-            arrivalDate = firstDownload.getHrfDate();
+            if (firstDownload != null) {
+                arrivalDate = firstDownload.getHrfDate();
+            }
+            else {
+                arrivalDate = this.getHrfDate();
+            }
         }
         return arrivalDate;
     }
