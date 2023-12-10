@@ -361,20 +361,8 @@ public class XMLPlayersParser {
         return ret;
     }
 
-    String getXMLElementName(PlayerSkill playerSkill){
-        return switch (playerSkill){
-            case KEEPER -> "Keeper";
-            case DEFENDING -> "Defender";
-            case PLAYMAKING -> "Playmaker";
-            case WINGER -> "Winger";
-            case PASSING -> "Passing";
-            case SCORING -> "Scorer";
-            case SETPIECES -> "SetPieces";
-            default -> "unknown";
-        };
-    }
     private void youthplayerSkills2Hash(SafeInsertMap hash, Element playerSkills, PlayerSkill skillId) {
-        var attr = getXMLElementName(skillId) + "Skill";
+        var attr = skillId.getXMLElementName() + "Skill";
         xmlValue2Hash(hash, playerSkills, attr);
         xmlAttribute2Hash(hash, playerSkills, attr, "IsAvailable");
         xmlAttribute2Hash(hash, playerSkills, attr, "IsMaxReached");
