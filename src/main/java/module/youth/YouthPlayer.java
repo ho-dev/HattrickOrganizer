@@ -879,7 +879,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     }
 
     private YouthSkillInfo parseSkillInfo(Properties properties, PlayerSkill skillID) {
-        var skill = skillID.getLanguageString().toLowerCase(java.util.Locale.ENGLISH) + "skill";
+        var skill = skillID.toString().toLowerCase() + "skill";
         var skillInfo = new YouthSkillInfo(skillID);
         skillInfo.setCurrentLevel(getInteger(properties, skill));
         skillInfo.setMax(getInteger(properties, skill + "max"));
