@@ -4,7 +4,7 @@
 * Refactoring rating prediction (implement Schum rating)
 * Refactoring of the transfer module. Calculation of transfer fee income.
 * Refactoring of the database prepared statement caching.
-* Improve training planning 
+* Improve training planning
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -51,6 +51,7 @@
 * Add a Linux-friendly default theme, called “Gnome.”
 * Add Kotlin support to codebase
 * Reset progress bar when action is finished (#1955)
+* Upgrade Gradle to version 8.5
 
 ## Translations
 
