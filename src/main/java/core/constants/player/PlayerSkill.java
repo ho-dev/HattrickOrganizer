@@ -63,8 +63,16 @@ public enum  PlayerSkill {
 		return null;
 	}
 
-	public static Integer toInteger(PlayerSkill s) {
-		if (s != null) return s.id;
-		return null;
+	public String getXMLElementName(){
+		return switch (this){
+			case KEEPER -> "Keeper";
+			case DEFENDING -> "Defender";
+			case PLAYMAKING -> "Playmaker";
+			case WINGER -> "Winger";
+			case PASSING -> "Passing";
+			case SCORING -> "Scorer";
+			case SETPIECES -> "SetPieces";
+			default -> "unknown";
+		};
 	}
 }

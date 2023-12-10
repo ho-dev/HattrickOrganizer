@@ -527,7 +527,7 @@ public class HRFStringBuilder {
     public void appendYouthPlayers(List<SafeInsertMap> playersData) {
         youthPlayersStringBuilder = new StringBuilder();
 
-        for (var player: playersData ) {
+        for (var player : playersData) {
             youthPlayersStringBuilder.append("[youthplayer").append(player.get("YouthPlayerID")).append(']').append('\n');
             appendHRFLine(youthPlayersStringBuilder, player, "FirstName");
             appendHRFLine(youthPlayersStringBuilder, player, "NickName");
@@ -549,7 +549,7 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "LeagueGoals");
             appendHRFLine(youthPlayersStringBuilder, player, "FriendlyGoals");
 
-            for ( var skillId: YouthPlayer.skillIds){
+            for (var skillId : YouthPlayer.skillIds) {
                 appendHRFSkillLines(youthPlayersStringBuilder, player, skillId);
             }
 
@@ -557,7 +557,10 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutName");
             appendHRFLine(youthPlayersStringBuilder, player, "ScoutingRegionID");
 
-            for (int i = 0; appendScoutComment(youthPlayersStringBuilder, player, i); i++) {}
+            int i = 0;
+            while (true) {
+                if (!appendScoutComment(youthPlayersStringBuilder, player, i++)) break;
+            }
 
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchID");
             appendHRFLine(youthPlayersStringBuilder, player, "YouthMatchDate");
@@ -583,7 +586,7 @@ public class HRFStringBuilder {
     }
 
     private void appendHRFSkillLines(StringBuilder buffer, SafeInsertMap player, PlayerSkill skillId) {
-        var skill = skillId.getLanguageString() + "Skill";
+        var skill = skillId.getXMLElementName() + "Skill";
         appendHRFLine(buffer, player, skill);
         appendHRFLine(buffer, player, skill+"IsAvailable");
         appendHRFLine(buffer, player, skill+"IsMaxReached");
