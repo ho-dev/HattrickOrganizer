@@ -12,6 +12,7 @@ import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
+import core.util.Helper;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -58,6 +59,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private Player player;
     private final JButton updBtn = new JButton();
     private final JLabel age = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel lengthOfStayInTeam = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel sumOfWage = new JLabel("", SwingConstants.LEFT);
     private final JLabel currTSI = new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"),
                                         SwingConstants.LEFT);
     private final JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
@@ -124,12 +127,14 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         final TableLayout layout = new TableLayout(sizes);
         detailPanel.setLayout(layout);
 
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"),
-                                   SwingConstants.LEFT), "1, 0"); //$NON-NLS-1$
+        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"), SwingConstants.LEFT), "1, 0"); //$NON-NLS-1$
         detailPanel.add(name, "2, 0"); //$NON-NLS-1$
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"),
-                                   SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$
+        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"), SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$
+        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.lengthofstayinteam"), SwingConstants.LEFT), "4, 1"); //$NON-NLS-1$
+        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.sumofwage"), SwingConstants.LEFT), "4, 2"); //$NON-NLS-1$
         detailPanel.add(age, "2, 1"); //$NON-NLS-1$
+        detailPanel.add(lengthOfStayInTeam, "5, 1");
+        detailPanel.add(sumOfWage, "5, 2");
         detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Income"), SwingConstants.LEFT), "1, 2"); //$NON-NLS-1$ //$NON-NLS-2$
         detailPanel.add(income, "2, 2"); //$NON-NLS-1$
 
@@ -137,7 +142,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         detailPanel.add(currTSI, "5, 0");
 
         fired.setVisible(false);
-        detailPanel.add(fired, "4, 1");
+        detailPanel.add(fired, "6, 1");
 
         detailPanel.add(arrow_scoring, "7, 0"); //$NON-NLS-1$
         detailPanel.add(skill_scoring, "8, 0"); //$NON-NLS-1$
@@ -226,6 +231,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         fired.setVisible(false);
         name.setText(""); //$NON-NLS-1$
         age.setText(""); //$NON-NLS-1$
+        lengthOfStayInTeam.setText("");
         income.setText("");
         currTSI.setText(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"));
 
@@ -281,8 +287,16 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
             HODateTime arrivalDate = null;
             if (player != null) {
-                arrivalDate = HODateTime.fromHT(player.getArrivalDate());
-                age.setText(Integer.toString(this.player.getAge()));
+                arrivalDate = player.getArrivalDate();
+                String ageText;
+                var hrfDate = this.player.getHrfDate();
+                if (hrfDate!=null){
+                    ageText = this.player.getAgeAtDate(this.player.getHrfDate()).toString();
+                }
+                else {
+                    ageText = String.valueOf(this.player.getAge());
+                }
+                age.setText(ageText);
 
                 if (!player.isGoner()) {
                     currTSI.setText(Integer.toString(this.player.getTsi()));
@@ -331,12 +345,22 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             }
 
             income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
-            if ( arrivalDate != null && soldDate != null) {
-                var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
-                if (activeDuration.seasons > 0) {
-                    var ageText = age.getText();
-                    age.setText(ageText + " +" + activeDuration.seasons);
+            lengthOfStayInTeam.setText("");
+            sumOfWage.setText("");
+            if ( arrivalDate != null ){
+                HODateTime wageTo;
+                if( soldDate != null) {
+                    var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
+                    if (activeDuration.seasons >= 0) {
+                        lengthOfStayInTeam.setText(activeDuration.toString());
+                    }
+                    wageTo = soldDate;
                 }
+                else {
+                    var latestPlayerInfo = this.player.getLatestPlayerInfo();
+                    wageTo = latestPlayerInfo.getHrfDate();
+                }
+                sumOfWage.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(this.player.getSumOfWage(arrivalDate, wageTo))));
             }
 
             refreshPlayerTable(transfers);

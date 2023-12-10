@@ -312,9 +312,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jlName.setText(playerName);
 
         var arrival = m_clPlayer.getArrivalDate();
-        if ( arrival != null &&  !arrival.isEmpty()) {
-            var dtArrivalDate = HODateTime.fromHT(arrival);
-            String arrivalDate = dtArrivalDate.toLocaleDateTime();
+        if ( arrival != null ) {
+            String arrivalDate = arrival.toLocaleDateTime();
             m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
         }
         else {

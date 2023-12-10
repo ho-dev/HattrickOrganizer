@@ -10,6 +10,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
+import core.util.HODateTime;
 import module.youth.YouthPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -410,7 +411,7 @@ public class XMLPlayersParser {
 //        NextBirthDay : DateTime
 //        The aproximate Date/time of next birthday.
 
-        player.setArrivalDate(xmlValue(root, "ArrivalDate"));
+        player.setArrivalDate(HODateTime.fromHT(xmlValue(root, "ArrivalDate")));
         player.setForm(xmlIntValue(root, "PlayerForm"));
         player.setTotalCards(xmlIntValue(root, "Cards"));
         player.setInjuryWeeks(xmlIntValue(root, "InjuryLevel"));
