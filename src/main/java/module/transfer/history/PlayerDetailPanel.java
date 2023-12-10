@@ -12,6 +12,7 @@ import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
+import core.util.Helper;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -33,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-
 import static core.util.CurrencyUtils.convertCurrency;
 
 /**
@@ -42,9 +42,9 @@ import static core.util.CurrencyUtils.convertCurrency;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 public class PlayerDetailPanel extends JPanel implements ActionListener {
-	@Serial
+    @Serial
     private static final long serialVersionUID = -6855218725568752692L;
-	private static final HOVerwaltung hov = HOVerwaltung.instance();
+    private static final HOVerwaltung hov = HOVerwaltung.instance();
     private static final String SKILL_PLAYMAKING = hov.getLanguageString("ls.player.skill.playmaking");
     private static final String SKILL_PASSING = hov.getLanguageString("ls.player.skill.passing");
     private static final String SKILL_WING = hov.getLanguageString("ls.player.skill.winger");
@@ -58,8 +58,11 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private Player player;
     private final JButton updBtn = new JButton();
     private final JLabel age = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel lengthOfStayInTeam = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel totalCostOfOwnership = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
+    private final JLabel sumOfWage = new JLabel("", SwingConstants.LEFT);
     private final JLabel currTSI = new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"),
-                                        SwingConstants.LEFT);
+            SwingConstants.LEFT);
     private final JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel fired = new JLabel(HOVerwaltung.instance().getLanguageString("FiredPlayer"), SwingConstants.LEFT);
@@ -109,56 +112,57 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         add(playerPane, BorderLayout.CENTER);
 
         final double[][] sizes = {
-                               {
-                                   10, 95, 150, 20, 100, 75, TableLayoutConstants.FILL, 30, 110, 30, 110, 30,
-                                   110, 30, 120, 10
-                               },
-                               {20, 20, 20}
-                           };
+                {10, 95, 150, 20, 100, 75, 100, TableLayoutConstants.FILL, 30, 110, 30, 110, 30, 110, 30, 120, 10},
+                {20, 20, 20}
+        };
 
         final JPanel detailPanel = new ImagePanel();
         detailPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY),
-                                                               HOVerwaltung.instance().getLanguageString("SpielerDetails"))); //$NON-NLS-1$
+                HOVerwaltung.instance().getLanguageString("SpielerDetails"))); //$NON-NLS-1$
         detailPanel.setOpaque(false);
 
         final TableLayout layout = new TableLayout(sizes);
         detailPanel.setLayout(layout);
 
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"),
-                                   SwingConstants.LEFT), "1, 0"); //$NON-NLS-1$
+        detailPanel.add(createPlayerDetailLabel("ls.player.name"), "1, 0"); //$NON-NLS-1$
         detailPanel.add(name, "2, 0"); //$NON-NLS-1$
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"),
-                                   SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$
+        detailPanel.add(createPlayerDetailLabel("ls.player.age"), "1, 1"); //$NON-NLS-1$
+        detailPanel.add(createPlayerDetailLabel("ls.player.lengthofstayinteam"), "4, 1"); //$NON-NLS-1$
+        detailPanel.add(createPlayerDetailLabel("ls.player.sumofwage"), "4, 2"); //$NON-NLS-1$
+        detailPanel.add(createPlayerDetailLabel("ls.player.toc"), "6, 2"); //$NON-NLS-1$
         detailPanel.add(age, "2, 1"); //$NON-NLS-1$
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Income"), SwingConstants.LEFT), "1, 2"); //$NON-NLS-1$ //$NON-NLS-2$
+        detailPanel.add(lengthOfStayInTeam, "5, 1");
+        detailPanel.add(sumOfWage, "5, 2");
+        detailPanel.add(totalCostOfOwnership, "7, 2");
+        detailPanel.add(createPlayerDetailLabel("Income"), "1, 2"); //$NON-NLS-1$ //$NON-NLS-2$
         detailPanel.add(income, "2, 2"); //$NON-NLS-1$
 
-        detailPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("PlayerDetail.CurrentTSI")), "4, 0");
+        detailPanel.add(createPlayerDetailLabel("PlayerDetail.CurrentTSI"), "4, 0");
         detailPanel.add(currTSI, "5, 0");
 
         fired.setVisible(false);
-        detailPanel.add(fired, "4, 1");
+        detailPanel.add(fired, "6, 1");
 
-        detailPanel.add(arrow_scoring, "7, 0"); //$NON-NLS-1$
-        detailPanel.add(skill_scoring, "8, 0"); //$NON-NLS-1$
-        detailPanel.add(arrow_playmaking, "7, 1"); //$NON-NLS-1$
-        detailPanel.add(skill_playmaking, "8, 1"); //$NON-NLS-1$
-        detailPanel.add(arrow_defense, "7, 2"); //$NON-NLS-1$
-        detailPanel.add(skill_defense, "8, 2"); //$NON-NLS-1$
+        detailPanel.add(arrow_scoring, "8, 0"); //$NON-NLS-1$
+        detailPanel.add(skill_scoring, "9, 0"); //$NON-NLS-1$
+        detailPanel.add(arrow_playmaking, "8, 1"); //$NON-NLS-1$
+        detailPanel.add(skill_playmaking, "9, 1"); //$NON-NLS-1$
+        detailPanel.add(arrow_defense, "8, 2"); //$NON-NLS-1$
+        detailPanel.add(skill_defense, "9, 2"); //$NON-NLS-1$
 
-        detailPanel.add(arrow_wing, "9, 0"); //$NON-NLS-1$
-        detailPanel.add(skill_wing, "10, 0"); //$NON-NLS-1$
-        detailPanel.add(arrow_passing, "9, 1"); //$NON-NLS-1$
-        detailPanel.add(skill_passing, "10, 1"); //$NON-NLS-1$
-        detailPanel.add(arrow_stamina, "9, 2"); //$NON-NLS-1$
-        detailPanel.add(skill_stamina, "10, 2"); //$NON-NLS-1$
+        detailPanel.add(arrow_wing, "10, 0"); //$NON-NLS-1$
+        detailPanel.add(skill_wing, "11, 0"); //$NON-NLS-1$
+        detailPanel.add(arrow_passing, "10, 1"); //$NON-NLS-1$
+        detailPanel.add(skill_passing, "11, 1"); //$NON-NLS-1$
+        detailPanel.add(arrow_stamina, "10, 2"); //$NON-NLS-1$
+        detailPanel.add(skill_stamina, "11, 2"); //$NON-NLS-1$
 
-        detailPanel.add(arrow_keeper, "11, 0"); //$NON-NLS-1$
-        detailPanel.add(skill_keeper, "12, 0"); //$NON-NLS-1$
-        detailPanel.add(arrow_setpieces, "11, 1"); //$NON-NLS-1$
-        detailPanel.add(skill_setpieces, "12, 1"); //$NON-NLS-1$
-        detailPanel.add(arrow_experience, "11, 2"); //$NON-NLS-1$
-        detailPanel.add(skill_experience, "12, 2"); //$NON-NLS-1$
+        detailPanel.add(arrow_keeper, "12, 0"); //$NON-NLS-1$
+        detailPanel.add(skill_keeper, "13, 0"); //$NON-NLS-1$
+        detailPanel.add(arrow_setpieces, "12, 1"); //$NON-NLS-1$
+        detailPanel.add(skill_setpieces, "13, 1"); //$NON-NLS-1$
+        detailPanel.add(arrow_experience, "12, 2"); //$NON-NLS-1$
+        detailPanel.add(skill_experience, "13, 2"); //$NON-NLS-1$
 
         updBtn.setEnabled(false);
         updBtn.setText(HOVerwaltung.instance().getLanguageString("ls.button.update"));
@@ -166,11 +170,18 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         updBtn.addActionListener(this);
         updBtn.setFocusable(false);
 
-        detailPanel.add(updBtn, "14, 0, 14, 1");
+        detailPanel.add(updBtn, "15, 0, 15, 1");
         add(new JScrollPane(detailPanel), BorderLayout.NORTH);
         setOpaque(false);
 
         clearPanel();
+    }
+
+    private JLabel createPlayerDetailLabel(String s) {
+        var languageString = HOVerwaltung.instance().getLanguageString(s);
+        var ret = new JLabel(languageString, SwingConstants.LEFT);
+        ret.setToolTipText(languageString);
+        return ret;
     }
 
     private PlayerTransferTableModel getTableModel() {
@@ -182,7 +193,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     /**
      * Sets the player to display information for.
      *
-     * @param playerid Player id
+     * @param playerid   Player id
      * @param playerName Player Name
      */
     public final void setPlayer(int playerid, String playerName) {
@@ -210,10 +221,12 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         updatePanel();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public final void actionPerformed(ActionEvent e) {
         if (this.playerId > 0) {
-        	XMLParser.updatePlayerTransfers(this.playerId);
+            XMLParser.updatePlayerTransfers(this.playerId);
             updatePanel();
         }
     }
@@ -226,6 +239,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         fired.setVisible(false);
         name.setText(""); //$NON-NLS-1$
         age.setText(""); //$NON-NLS-1$
+        lengthOfStayInTeam.setText("");
+        totalCostOfOwnership.setText("");
         income.setText("");
         currTSI.setText(HOVerwaltung.instance().getLanguageString("PlayerDetail.NotAvail"));
 
@@ -275,14 +290,19 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             } else {
                 fired.setVisible(false);
                 updBtn.setEnabled(true);
-              }
+            }
 
             name.setText(this.playerName);
 
             HODateTime arrivalDate = null;
             if (player != null) {
-                arrivalDate = HODateTime.fromHT(player.getArrivalDate());
-                age.setText(Integer.toString(this.player.getAge()));
+                arrivalDate = player.getArrivalDate();
+                String ageText = "";
+                var hrfDate = this.player.getHrfDate();
+                if (hrfDate != null) {
+                    ageText = this.player.getAgeAtDate(this.player.getHrfDate()).toString();
+                }
+                age.setText(ageText);
 
                 if (!player.isGoner()) {
                     currTSI.setText(Integer.toString(this.player.getTsi()));
@@ -299,15 +319,15 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 skill_experience.setText(SKILL_EXPERIENCE + " (" + player.getExperience() + ")");
 
 
-                arrow_keeper.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.KEEPER).size(),true));
-                arrow_playmaking.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PLAYMAKING).size(),true));
-                arrow_passing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PASSING).size(),true));
-                arrow_wing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.WINGER).size(),true));
-                arrow_defense.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.DEFENDING).size(),true));
-                arrow_scoring.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SCORING).size(),true));
-                arrow_setpieces.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SETPIECES).size(),true));
-                arrow_stamina.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.STAMINA).size(),true));
-                arrow_experience.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.EXPERIENCE).size(),true));
+                arrow_keeper.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.KEEPER).size(), true));
+                arrow_playmaking.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PLAYMAKING).size(), true));
+                arrow_passing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PASSING).size(), true));
+                arrow_wing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.WINGER).size(), true));
+                arrow_defense.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.DEFENDING).size(), true));
+                arrow_scoring.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SCORING).size(), true));
+                arrow_setpieces.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SETPIECES).size(), true));
+                arrow_stamina.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.STAMINA).size(), true));
+                arrow_experience.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.EXPERIENCE).size(), true));
             }
 
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);
@@ -317,26 +337,40 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
                     valIncome -= transfer.getPrice();
-                    if ( arrivalDate == null || transfer.getDate().isAfter(arrivalDate)) {
+                    if (arrivalDate == null || transfer.getDate().isAfter(arrivalDate)) {
                         arrivalDate = transfer.getDate();
                     }
                 }
 
                 if (transfer.getSellerid() == teamid) {
                     valIncome += transfer.getPrice();
-                    if (soldDate == null || transfer.getDate().isAfter(soldDate)){
+                    if (soldDate == null || transfer.getDate().isAfter(soldDate)) {
                         soldDate = transfer.getDate();
                     }
                 }
             }
 
             income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
-            if ( arrivalDate != null && soldDate != null) {
-                var activeDuration = HODateTime.HODuration.between(arrivalDate, soldDate);
-                if (activeDuration.seasons > 0) {
-                    var ageText = age.getText();
-                    age.setText(ageText + " +" + activeDuration.seasons);
+            lengthOfStayInTeam.setText("");
+            sumOfWage.setText("");
+            if (arrivalDate != null) {
+                HODateTime to = soldDate;
+                if (to == null) {
+                    var latestPlayerInfo = this.player.getLatestPlayerInfo();
+                    if (latestPlayerInfo != null) {
+                        to = latestPlayerInfo.getHrfDate();
+                    } else {
+                        to = HODateTime.now();
+                    }
                 }
+
+                var activeDuration = HODateTime.HODuration.between(arrivalDate, to);
+                if (activeDuration.seasons >= 0) {
+                    lengthOfStayInTeam.setText(activeDuration.toString());
+                }
+                var sum = this.player.getSumOfWage(arrivalDate, to);
+                sumOfWage.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum)));
+                totalCostOfOwnership.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum - valIncome)));
             }
 
             refreshPlayerTable(transfers);

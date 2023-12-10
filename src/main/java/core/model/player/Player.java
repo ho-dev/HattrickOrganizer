@@ -14,7 +14,6 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
 import core.util.*;
-
 import java.time.Duration;
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Arrival in team
      */
-    private String arrivalDate;
+    private HODateTime arrivalDate = null;
 
     /**
      * Trainer contract date
@@ -345,7 +344,7 @@ public class Player extends AbstractTable.Storable {
         firstName = properties.getProperty("firstname", "");
         nickName = properties.getProperty("nickname", "");
         lastName = properties.getProperty("lastname", "");
-        arrivalDate = properties.getProperty("arrivaldate");
+        arrivalDate = HODateTime.fromHT(properties.getProperty("arrivaldate"));
         age = properties.getInt("ald", 0);
         ageDays = properties.getInt("agedays", 0);
         stamina = properties.getInt("uth", 0);
@@ -652,11 +651,19 @@ public class Player extends AbstractTable.Storable {
         return gentleness;
     }
 
-    public String getArrivalDate() {
+    public HODateTime getArrivalDate() {
+        if (arrivalDate == null) {
+            var firstDownload = DBManager.instance().loadPlayerFirstHRF(this.getPlayerId());
+            if (firstDownload != null) {
+                arrivalDate = firstDownload.getHrfDate();
+            } else {
+                arrivalDate = this.getHrfDate();
+            }
+        }
         return arrivalDate;
     }
 
-    public void setArrivalDate(String m_arrivalDate) {
+    public void setArrivalDate(HODateTime m_arrivalDate) {
         this.arrivalDate = m_arrivalDate;
     }
 
@@ -846,6 +853,37 @@ public class Player extends AbstractTable.Storable {
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
     }
 
+    private Map<Integer, Integer> wagesHistory = null; // age->wage
+
+    private Integer getWageAtAge(int age) {
+        if (wagesHistory == null) {
+            wagesHistory = DBManager.instance().loadWageHistory(this.getPlayerId());
+        }
+        return wagesHistory.get(age);
+    }
+
+    public int getSumOfWage(HODateTime from, HODateTime to) {
+        var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
+        while (!economyDate.isBefore(to)) economyDate = economyDate.plusDaysAtSameLocalTime(-7);
+        var sum = 0;
+        while (economyDate.isAfter(from)) {
+            var wageAtDate = getWageAtAge(this.getAgeAtDate(economyDate).seasons);
+            if (wageAtDate != null) {
+                sum += wageAtDate;
+            }
+            economyDate = economyDate.plusDaysAtSameLocalTime(-7);
+        }
+        return sum;
+    }
+
+    private Player latestPlayerInformation = null;
+
+    public Player getLatestPlayerInfo() {
+        if (latestPlayerInformation == null) {
+            latestPlayerInformation = DBManager.instance().loadLatestPlayerInfo(this.getPlayerId());
+        }
+        return latestPlayerInformation;
+    }
 
     static class PlayerPositionRating {
 
@@ -946,16 +984,17 @@ public class Player extends AbstractTable.Storable {
      * gives information of skill ups
      */
     public List<SkillChange> getAllLevelUp(PlayerSkill skill) {
-        return getSkillChanges().stream().filter(e->e.getType().equals(skill) && e.getChange()>0).toList();
+        return getSkillChanges().stream().filter(e -> e.getType().equals(skill) && e.getChange() > 0).toList();
     }
 
     /**
      * Get all skill changes of one type
+     *
      * @param skill Skill type
      * @return List of skill changes
      */
     public List<SkillChange> getAllSkillChanges(PlayerSkill skill) {
-        return getSkillChanges().stream().filter(e->e.getType().equals(skill)).toList();
+        return getSkillChanges().stream().filter(e -> e.getType().equals(skill)).toList();
     }
 
     /**

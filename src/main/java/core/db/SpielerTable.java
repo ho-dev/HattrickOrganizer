@@ -84,7 +84,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchRating").setGetter((p)->((Player)p).getLastMatchRating()).setSetter((p,v)->((Player)p).setLastMatchRating((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("LastMatchId").setGetter((p)->((Player)p).getLastMatchId()).setSetter((p,v)->((Player)p).setLastMatchId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("LAST_MATCH_TYPE").setGetter((p)->((Player)p).getLastMatchType().getId()).setSetter((p,v)->((Player)p).setLastMatchType(MatchType.getById((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p)->((Player)p).getArrivalDate()).setSetter((p,v)->((Player)p).setArrivalDate((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("ArrivalDate").setGetter((p)->((Player)p).getArrivalDate().toHT()).setSetter((p,v)->((Player)p).setArrivalDate(HODateTime.fromHT((String)v))).setType(Types.VARCHAR).isNullable(true).setLength(100).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("GoalsCurrentTeam").setGetter((p)->((Player)p).getCurrentTeamGoals()).setSetter((p, v)->((Player)p).setCurrentTeamGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategory").setGetter((p)->(PlayerCategory.idOf(((Player)p).getPlayerCategory()))).setSetter((p,v)->((Player)p).setPlayerCategory(PlayerCategory.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p)->((Player)p).getPlayerStatement()).setSetter((p,v)->((Player)p).setPlayerStatement((String)v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
@@ -225,6 +225,11 @@ final class SpielerTable extends AbstractTable {
 		return ret;
 	}
 
+	private final String loadLatestPlayerInfoSql = createSelectStatement(" WHERE SpielerID=? ORDER BY Datum Desc LIMIT 1");
+	public Player loadLatestPlayerInfo(int playerId) {
+		return loadOne(Player.class, connectionManager.executePreparedQuery(loadLatestPlayerInfoSql, playerId));
+	}
+
 	private final String getTrainerTypeSql = createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
 	int getTrainerType(int hrfID) {
 		try (ResultSet rs = connectionManager.executePreparedQuery(getTrainerTypeSql, hrfID)) {
@@ -287,4 +292,18 @@ final class SpielerTable extends AbstractTable {
         }
         return "";
 	}
+
+	public Map<Integer, Integer> loadWageHistory(int playerId) {
+		Map<Integer, Integer> ret = new HashMap<>();
+		String loadWageHistorySql = "select age, max(gehalt) from spieler where spielerid=? group by age";
+		try (ResultSet rs = connectionManager.executePreparedQuery(loadWageHistorySql, playerId)) {
+			while (rs.next()) {
+				ret.put(rs.getInt(1), rs.getInt(2));
+			}
+		} catch (SQLException e) {
+			HOLogger.instance().error(SpielerTable.class, "Error retrieving TSI: " + e);
+		}
+		return ret;
+	}
+
 }

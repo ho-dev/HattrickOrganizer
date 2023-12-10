@@ -2359,6 +2359,14 @@ public class DBManager implements PersistenceManager {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSIInjured(playerId);
 	}
 
+	public Map<Integer, Integer> loadWageHistory(int playerId) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadWageHistory(playerId);
+	}
+
+	public Player loadLatestPlayerInfo(int playerId) {
+		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestPlayerInfo(playerId);
+	}
+
 	public static String getPlaceholders(int count) {
 		return String.join(",", Collections.nCopies(count, "?"));
 	}
@@ -2377,4 +2385,5 @@ public class DBManager implements PersistenceManager {
 	public void storeFuturePlayerSkillTrainings(int playerId, List<FuturePlayerSkillTraining> futurePlayerSkillTrainings) {
 		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
 	}
+
 }
