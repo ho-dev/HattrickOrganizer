@@ -32,8 +32,9 @@
 ### Statistics
 
 ### Transfer
-* Eefactoring of the transfer module. Calculation of transfer fee income. (#245)
+* Refactoring of the transfer module. Calculation of transfer fee income. (#245)
 * Fix transfer scout's copy and paste of own players (#1897)
+* Calculation of player's total cost of ownership (#741)
 
 ### Training
 * Fix scrolling of training table (#1936)
