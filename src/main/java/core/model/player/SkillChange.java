@@ -37,7 +37,7 @@ public class SkillChange {
     }
 
     public int getHtSeason() {
-        return date.toHTWeek().season;
+        return date.toLocaleHTWeek().season;
     }
 
     public int getHtWeek() {
