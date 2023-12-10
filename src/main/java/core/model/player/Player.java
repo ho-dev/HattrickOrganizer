@@ -652,12 +652,11 @@ public class Player extends AbstractTable.Storable {
     }
 
     public HODateTime getArrivalDate() {
-        if ( arrivalDate == null){
+        if (arrivalDate == null) {
             var firstDownload = DBManager.instance().loadPlayerFirstHRF(this.getPlayerId());
             if (firstDownload != null) {
                 arrivalDate = firstDownload.getHrfDate();
-            }
-            else {
+            } else {
                 arrivalDate = this.getHrfDate();
             }
         }
@@ -854,9 +853,10 @@ public class Player extends AbstractTable.Storable {
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
     }
 
-    private Map<Integer, Integer> wagesHistory = new HashMap<>(); // age->wage
-    private Integer getWageAtAge(int age){
-        if ( wagesHistory.isEmpty()){
+    private Map<Integer, Integer> wagesHistory = null; // age->wage
+
+    private Integer getWageAtAge(int age) {
+        if (wagesHistory == null) {
             wagesHistory = DBManager.instance().loadWageHistory(this.getPlayerId());
         }
         return wagesHistory.get(age);
@@ -866,9 +866,9 @@ public class Player extends AbstractTable.Storable {
         var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
         while (!economyDate.isBefore(to)) economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         var sum = 0;
-        while (economyDate.isAfter(from)){
+        while (economyDate.isAfter(from)) {
             var wageAtDate = getWageAtAge(this.getAgeAtDate(economyDate).seasons);
-            if ( wageAtDate != null ) {
+            if (wageAtDate != null) {
                 sum += wageAtDate;
             }
             economyDate = economyDate.plusDaysAtSameLocalTime(-7);
@@ -877,8 +877,9 @@ public class Player extends AbstractTable.Storable {
     }
 
     private Player latestPlayerInformation = null;
+
     public Player getLatestPlayerInfo() {
-        if ( latestPlayerInformation == null){
+        if (latestPlayerInformation == null) {
             latestPlayerInformation = DBManager.instance().loadLatestPlayerInfo(this.getPlayerId());
         }
         return latestPlayerInformation;
@@ -983,16 +984,17 @@ public class Player extends AbstractTable.Storable {
      * gives information of skill ups
      */
     public List<SkillChange> getAllLevelUp(PlayerSkill skill) {
-        return getSkillChanges().stream().filter(e->e.getType().equals(skill) && e.getChange()>0).toList();
+        return getSkillChanges().stream().filter(e -> e.getType().equals(skill) && e.getChange() > 0).toList();
     }
 
     /**
      * Get all skill changes of one type
+     *
      * @param skill Skill type
      * @return List of skill changes
      */
     public List<SkillChange> getAllSkillChanges(PlayerSkill skill) {
-        return getSkillChanges().stream().filter(e->e.getType().equals(skill)).toList();
+        return getSkillChanges().stream().filter(e -> e.getType().equals(skill)).toList();
     }
 
     /**
