@@ -36,10 +36,8 @@ public class ConnectionManager {
 
 	/**
 	 * Execute a SQL Select statement
-	 * 
-	 * @param sqlStatement
-	 *            Sql query with placeholders
-	 * 
+	 *
+	 * @param sqlStatement Sql query with placeholders
 	 * @return ResultSet of the query
 	 */
 	public final ResultSet executeQuery(String sqlStatement) {
@@ -62,8 +60,12 @@ public class ConnectionManager {
 	}
 
 	public final ResultSet executePreparedQuery(String query, Object... params) {
-		return executePreparedQuery(statementCache.getPreparedStatement(query), params);
-    }
+		var statement = statementCache.getPreparedStatement(query);
+		if (statement != null) {
+			return executePreparedQuery(statement, params);
+		}
+		return null;
+	}
 
 	private ResultSet executePreparedQuery(PreparedStatement preparedStatement, Object... params) {
 		try {
@@ -87,16 +89,13 @@ public class ConnectionManager {
 	 * Executes an SQL INSERT, UPDATE or DELETE statement. In addition, SQL
 	 * statements that return nothing, such as SQL DDL statements, can be
 	 * executed.
-	 * 
-	 * @param sqlStatement
-	 *            INSERT, UPDATE or DELETE statement
-	 * 
+	 *
+	 * @param sqlStatement INSERT, UPDATE or DELETE statement
 	 * @return either the row count for SQL Data Manipulation Language (DML)
-	 *         statements or 0 for SQL statements that return nothing
-	 * 
+	 * statements or 0 for SQL statements that return nothing
 	 */
 	public final int executeUpdate(String sqlStatement) {
-		int ret = 0;
+		int ret;
 
 		try {
 			if (connection.isClosed()) {
@@ -115,7 +114,11 @@ public class ConnectionManager {
 	}
 
 	public final int executePreparedUpdate(String insert, Object... params) {
-		return executePreparedUpdate(statementCache.getPreparedStatement(insert), params);
+		var statement = statementCache.getPreparedStatement(insert);
+		if (statement != null) {
+			return executePreparedUpdate(statement, params);
+		}
+		return 0;
 	}
 
 	private int executePreparedUpdate(PreparedStatement preparedStatement, Object... params) {
@@ -126,7 +129,7 @@ public class ConnectionManager {
 				return 0;
 			}
 			int i = 0;
-			for ( var p: params) {
+			for (var p : params) {
 				preparedStatement.setObject(++i, p);
 			}
 			ret = preparedStatement.executeUpdate();
@@ -142,16 +145,11 @@ public class ConnectionManager {
 
 	/**
 	 * Connects to the requested database
-	 * 
-	 * @param URL
-	 *            The path to the Server
-	 * @param User
-	 *            User
-	 * @param PWD
-	 *            Password
-	 * @param Driver
-	 *            The driver to user
-	 * 
+	 *
+	 * @param URL    The path to the Server
+	 * @param User   User
+	 * @param PWD    Password
+	 * @param Driver The driver to user
 	 */
 	public final void connect(String URL, String User, String PWD, String Driver) throws Exception {
 		// Initialise the Database Driver Object
@@ -179,7 +177,6 @@ public class ConnectionManager {
 	}
 
 	/**
-	 * 
 	 * @return DBInfo
 	 * @throws Exception
 	 */
@@ -194,7 +191,7 @@ public class ConnectionManager {
 			return getDBInfo().getAllTablesNames();
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), "JDBCAdapter.getAllTableNames : " + e);
-			return new String[] { e.getMessage() };
+			return new String[]{e.getMessage()};
 		}
 	}
 }
