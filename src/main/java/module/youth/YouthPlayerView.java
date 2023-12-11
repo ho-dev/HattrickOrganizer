@@ -134,9 +134,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         this.add(split2, BorderLayout.CENTER);
     }
 
-    private void setDividerLocation(JSplitPane split, String configKey) {
+    private void setDividerLocation(JSplitPane split, String configKey, int defaultPosition) {
         var dividerLocation = ModuleConfig.instance().getInteger(configKey);
-        if (dividerLocation != null) split.setDividerLocation(dividerLocation);
+        split.setDividerLocation(dividerLocation != null ? dividerLocation : defaultPosition);
     }
 
     @Override
