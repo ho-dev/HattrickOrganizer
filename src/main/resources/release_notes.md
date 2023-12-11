@@ -52,12 +52,13 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - December 07, 2023
+Reports by Contributors - September 24, 2023 - December 11, 2023
 
 * Sebastien 157
+* _KOHb_ 22
 * Georgi 10
 * Lidegand 3
 * sich 3
 * wsbrenk 3
 
-Total 176
+Total 198
