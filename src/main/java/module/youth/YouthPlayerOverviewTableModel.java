@@ -96,7 +96,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
         for (var skillId : YouthPlayer.skillIds) {
             var skillName = getSkillName(skillId);
-            tmp.add(new YouthPlayerColumn("ls.youth.player." + skillName, 200) {
+            tmp.add(new YouthPlayerColumn("ls.youth.player." + skillName, 130) {
                 @Override
                 public IHOTableEntry getTableEntry(YouthPlayer player) {
                     return new YouthSkillInfoColumn(player.getSkillInfo(skillId));

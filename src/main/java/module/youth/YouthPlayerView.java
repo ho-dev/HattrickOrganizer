@@ -56,9 +56,9 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         split2.setLeftComponent(split1);
         split2.setRightComponent(split3);
 
-        setDividerLocation(split1, VERTICALSPLIT1_POSITION);
-        setDividerLocation(split2, VERTICALSPLIT2_POSITION);
-        setDividerLocation(split3, HORIZONTALSPLIT_POSITION);
+        setDividerLocation(split1, VERTICALSPLIT1_POSITION, 200);
+        setDividerLocation(split2, VERTICALSPLIT2_POSITION, 400);
+        setDividerLocation(split3, HORIZONTALSPLIT_POSITION, 800);
 
         // First section
         split1.setLeftComponent(new JScrollPane(playerOverviewTable));
