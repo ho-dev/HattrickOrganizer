@@ -64,6 +64,7 @@ public class ConnectionManager {
 		if (statement != null) {
 			return executePreparedQuery(statement, params);
 		}
+		HOLogger.instance().error(getClass(), "executePreparedQuery : " + query);
 		return null;
 	}
 
@@ -118,6 +119,7 @@ public class ConnectionManager {
 		if (statement != null) {
 			return executePreparedUpdate(statement, params);
 		}
+		HOLogger.instance().error(getClass(), "executePreparedUpdate : " + insert);
 		return 0;
 	}
 
