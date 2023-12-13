@@ -89,9 +89,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         scoutAndChartPanel.add(playerScoutCommentField, scoutAndChartPanelConstraints);
         scoutAndChartPanelConstraints.gridy++;
         scoutAndChartPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.development")+":"), scoutAndChartPanelConstraints);
-        youthSkillChart = new HOLinesChart(false, "skill", null,"#,##0", null );
-        youthSkillChart.setYAxisMin(1, 0.);
-        youthSkillChart.setYAxisMax(1, 9.);
+        youthSkillChart = new HOLinesChart(false, "skill", null,null, null, 0., 9. );
         var panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
         panel.add(youthSkillChart.getPanel());
