@@ -29,7 +29,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     private YouthTrainingColumn[] initColumns() {
         return new YouthTrainingColumn[]{
-                new YouthTrainingColumn(0, "ls.youth.training.date", 0) {
+                new YouthTrainingColumn(0, "ls.youth.training.date", 200) {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -47,7 +47,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                         return new ColorLabelEntry(youthTraining.getGuestTeamName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthTrainingColumn(3, "ls.youth.training.primary"){
+                new YouthTrainingColumn(3, "ls.youth.training.primary", 200){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Primary));
@@ -55,7 +55,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable(){return true;}
                 },
-                new YouthTrainingColumn(4, "ls.youth.training.secondary"){
+                new YouthTrainingColumn(4, "ls.youth.training.secondary", 200){
                     @Override
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));

@@ -10,7 +10,7 @@ public class YouthPlayerColumn extends UserColumn {
     static int nextId = 0;
 
     protected YouthPlayerColumn(String name) {
-        this(name, name, 50);
+        this(name, name, 100);
     }
 
     public YouthPlayerColumn(String name, int minWidth) {

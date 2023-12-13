@@ -6,7 +6,7 @@ import core.gui.comp.table.UserColumn;
 
 public class YouthTrainingColumn extends UserColumn {
     protected YouthTrainingColumn(int id, String name) {
-        super(id, name);
+        this(id, name, 100);
         this.setDisplay(true);
     }
     public YouthTrainingColumn(int id,String name,int minWidth){

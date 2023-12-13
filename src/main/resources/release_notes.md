@@ -44,6 +44,8 @@
 
 ### Youth
 * Increase effect of youth friendly match training (#1950)
+* Modify youth module layout (#1449)
+* Set initial youth module view layout (#1558)
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
@@ -55,7 +57,7 @@
 Reports by Contributors - September 24, 2023 - December 11, 2023
 
 * Sebastien 157
-* _KOHb_ 22
+* \_KOHb\_ 22
 * Georgi 10
 * Lidegand 3
 * sich 3
