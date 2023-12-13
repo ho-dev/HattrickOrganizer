@@ -43,7 +43,7 @@
 ### League
 
 ### Youth
-* Increase effect of youth friendly match training (#1950)
+* Increase effect of youth friendly match training (#1950, #1994)
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
 
