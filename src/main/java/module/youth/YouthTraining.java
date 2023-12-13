@@ -201,8 +201,9 @@ public class YouthTraining extends AbstractTable.Storable {
     /**
      * With <a href="https://www88.hattrick.org/World/News/?messageId=8641&isEditorial=1">...</a>
      * a new training speed of youth friendly matches was introduced.
+     * Correct value is given here: <a href="https://www85.hattrick.org/Forum/Read.aspx?t=17565882&v=0&a=1&n=12">...</a>
      */
-    static final double TRAINING_FRIENDLY_FACTOR = .9;
+    static final double TRAINING_FRIENDLY_FACTOR = .8;
 
     public double getMatchTypeFactor() {
         var lineup = this.getMatchLineup();
