@@ -464,7 +464,7 @@ public abstract class AbstractTable {
 
 			for (int i = 0; i < columns.length; i++) {
 				try {
-					DBInfo dbInfo = connectionManager.getDBInfo();
+					DBInfo dbInfo = connectionManager.getDbInfo();
 					sql.append(columns[i].getCreateString(dbInfo));
 				} catch (Exception e) {
 					HOLogger.instance().log(getClass(), e);

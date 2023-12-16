@@ -32,10 +32,9 @@ class StatementCache(private val connectionManager: ConnectionManager) {
             }
         }
 
-    private val cache = Collections.synchronizedMap(HashMap<String, PreparedStatement?>())
+    private val cache = Collections.synchronizedMap(HashMap<String, PreparedStatement>())
 
     val statementStats: MutableMap<String, CachedStatementStats> = Collections.synchronizedMap(HashMap())
-
     private fun getFromCache(query: String): PreparedStatement? {
         if (cachedEnabled) {
             val statement = cache[query]
@@ -49,20 +48,21 @@ class StatementCache(private val connectionManager: ConnectionManager) {
     }
 
     private fun createStatement(query: String): PreparedStatement? {
-        var statement: PreparedStatement? = null
         try {
-            statement = connectionManager.connection.prepareStatement(query)
-            if (cachedEnabled) {
+            val statement:PreparedStatement? = connectionManager.connection?.prepareStatement(query)
+            if (cachedEnabled && statement != null) {
                 cache[query] = statement
                 statementStats[query] = CachedStatementStats(Instant.now(), Instant.now(), 1)
             }
+
+            return statement
         } catch (e: SQLException) {
             HOLogger.instance().error(
                 StatementCache::class.java, """Error creating statement: $query
  Error: ${e.message}"""
             )
+            throw e
         }
-        return statement
     }
 
     fun getPreparedStatement(query: String): PreparedStatement? {
@@ -73,7 +73,7 @@ class StatementCache(private val connectionManager: ConnectionManager) {
         return statement
     }
 
-    fun clearCache() {
+    private fun clearCache() {
         for ((key, value) in cache) {
             try {
                 value!!.close()

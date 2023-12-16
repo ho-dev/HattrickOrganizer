@@ -4,12 +4,13 @@
 * Refactoring rating prediction (implement Schum rating)
 * Refactoring of the transfer module. Calculation of transfer fee income.
 * Refactoring of the database prepared statement caching.
-* Improve training planning 
+* Improve training planning
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
 ### Database
 * Fix `unexpected token` issue with Transfer table query (#1965)
+* Fix potential NPE when using a prepared statement (#1941)
 
 ### Squad
 * Fix length of owner notes in players' database table (#1816)

@@ -21,7 +21,7 @@ class StatementCacheTest {
         conn = DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "")
         val connectionManager = ConnectionManager()
         connectionManager.connect(conn)
-        conn.createStatement().execute("CREATE TABLE TEST (ID INT PRIMARY KEY, CONTENT VARCHAR(255))");
+        conn.createStatement().execute("CREATE TABLE TEST (ID INT PRIMARY KEY, CONTENT VARCHAR(255))")
 
         statementCache = StatementCache(connectionManager)
     }
