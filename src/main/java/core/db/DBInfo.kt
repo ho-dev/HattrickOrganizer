@@ -42,7 +42,7 @@ class DBInfo(private val databaseMetaData: DatabaseMetaData?) {
      * return all TableNames from current Database
      * @return Object []
      */
-    fun getAllTablesNames(): Array<Any> {
+    fun getAllTablesNames(): Array<String> {
         val types = arrayOf("TABLES", "TABLE")
         val tables = ArrayList<String>()
         var rs:ResultSet? = null
