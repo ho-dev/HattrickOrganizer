@@ -20,9 +20,9 @@ abstract class PullRunnable : WorkAction<PullWorkParameters> {
         val parameters = parameters
         logger.info("Pulling language '{}' from project '{}'", parameters.lang.get(), parameters.projectId.get())
         val client = OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
         val body: RequestBody = FormBody.Builder()
