@@ -318,13 +318,19 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			dbCleanupTool.showDialog(HOMainFrame.instance());
 		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
 			var from = HODateTime.now().minus(64*7, ChronoUnit.DAYS);
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("SubskillRecalcFull"),
+			if (JOptionPane.showConfirmDialog(this,
+					HOVerwaltung.instance().getLanguageString("Subskill.Recalc.Full")+"\n"+HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)
-			var from = HODateTime.now().minus(7*7, ChronoUnit.DAYS);
-			if (JOptionPane.showConfirmDialog(this, Helper.getTranslation("subskillRecalc7w", Date.from(from.instant)),
+			var nextTraining = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+			var from = nextTraining.minus(7*7, ChronoUnit.DAYS);
+			if (JOptionPane.showConfirmDialog(this,
+					HOVerwaltung.instance().getLanguageString("subskill.Recalc.7w")+"\n"+
+							HOVerwaltung.instance().getLanguageString("subskill.Recalc.1stTrainingweek") + ": " +
+							from.toLocaleHTWeek().toString() + "\n" +
+							HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}

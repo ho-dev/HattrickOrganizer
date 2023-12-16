@@ -292,6 +292,11 @@ public class HODateTime implements Comparable<HODateTime> {
         public long sinceOrigin() {
             return (season-1) * 16L + week -1L;
         }
+
+        @Override
+        public String toString(){
+            return season + " (" + week + ")";
+        }
     }
 
     /**
