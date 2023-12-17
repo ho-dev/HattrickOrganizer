@@ -40,6 +40,7 @@
 ### Training
 * Fix scrolling of training table (#1936)
 * Improve training planning. Each skill training can be prioritized (#1886)
+* Change subskill recalculation dialog display (#1556)
 
 ### League
 

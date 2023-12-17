@@ -124,7 +124,7 @@ public class TrainingManager implements PropertyChangeListener {
     @Deprecated
     public void recalcSubskills(boolean showBar) {
         if (JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-        		HOVerwaltung.instance().getLanguageString("SubskillRecalcFull"),
+        		HOVerwaltung.instance().getLanguageString("Subskill.Recalc.Full")+"\n"+HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
 				HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
             HOVerwaltung.instance().recalcSubskills(showBar, null);
         }
