@@ -22,8 +22,6 @@ import java.util.Vector;
  */
 public final class UserColumnController {
 
-
-
 	public enum ColumnModelId {
 		MATCHES(1),
 		PLAYEROVERVIEW(2),

@@ -5,6 +5,7 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
+import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
@@ -55,11 +56,15 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                         return new ColorLabelEntry(player.getCanBePromotedIn(), player.getCanBePromotedInAtDate(HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
-                // TODO: Specialty column should include the specialty icon
                 new YouthPlayerColumn("ls.youth.player.Specialty") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(player.getSpecialtyString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var specialty = player.getSpecialtyString();
+                        var ret =  new ColorLabelEntry(specialty, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        if (!specialty.isEmpty()){
+                            ret.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(player.getSpecialty()));
+                        }
+                        return ret;
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.potential") {
