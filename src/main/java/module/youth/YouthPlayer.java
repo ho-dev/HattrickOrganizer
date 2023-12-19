@@ -1008,15 +1008,6 @@ public class YouthPlayer extends AbstractTable.Storable {
                     .sorted(trainingUsefulnessComparator)
                     .forEach(s -> calcPotential17Value(s, trainingContext));
         }
-
-        /*
-        var skills = new StringBuilder(this.getFullName()+": " );
-        for ( var skill : this.currentSkills.values()){
-            skills.append(skill.getSkillID().toString()).append("=").append(skill.getPotential17Value()).append(";");
-        }
-
-        HOLogger.instance().info(this.getClass(), skills.toString());
-        */
     }
 
     private void calcPotential17Value(YouthSkillInfo s, YouthTrainingContext trainingContext) {
@@ -1059,10 +1050,20 @@ public class YouthPlayer extends AbstractTable.Storable {
         s.setPotential17Value(max);
     }
 
+    /**
+     * Get a value describing the usefulness of training the given skill
+     * It is a weighted sum of current and maximum skill values.
+     * If player's age is 15.0 the maximum skill is weighted with 1 (100%). At age of 17.0 maximum skill gets weight 0.
+     * The current skill value gets weight 0 at age of 15 and 2 (200%) at age of 17.
+     * Above 17 zero is returned.
+     *
+     * @param skillInfo
+     * @return Integer, the returned value is a weighted sum of current and maximum skill value
+     */
     private Integer getTrainingUsefulness(YouthSkillInfo skillInfo) {
         if (this.ageYears < 17 && skillInfo.isTrainingUsefull()) {
             var trainingDaysUntil17 = (17-this.ageYears)*112 - this.ageDays;
-            var factorMax = trainingDaysUntil17/2.24;       // [15:100..17:0]
+            var factorMax = trainingDaysUntil17/2.24;       // [15.000:100%..17.000:0%]
             var factorCurrent = (200-factorMax);     // [15:100..17:200]
             var max = 8.3;
             if (skillInfo.isMaxAvailable() && skillInfo.getMax() < 8) max = skillInfo.getMax() + .99;
