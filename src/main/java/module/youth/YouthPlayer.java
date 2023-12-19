@@ -437,7 +437,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         var model = HOVerwaltung.instance().getModel();
         var teamId = model.getBasics().getYouthTeamId();
 
-        // set start skill values (may be edited by the user)
+        // set start skill values (they may be edited by the user)
         var skills = getStartSkills();
         var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
         for (var training : trainings) {
@@ -461,7 +461,6 @@ public class YouthPlayer extends AbstractTable.Storable {
         }
         this.currentSkills = skills;
         DBManager.instance().storeYouthPlayer(this.hrfid, this);
-
     }
 
     /**

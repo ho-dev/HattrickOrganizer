@@ -4,6 +4,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
+import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.enums.MatchType;
 import core.util.HODateTime;
@@ -76,11 +77,15 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                         return new ColorLabelEntry(entry.getPlayerSector(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                // TODO: Specialty column should include the specialty icon
                 new YouthPlayerDetailsColumn("ls.youth.player.Specialty") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
-                        return new ColorLabelEntry(entry.getSpecialtyString());
+                        var specialty = entry.getSpecialtyString();
+                        var ret =  new ColorLabelEntry(specialty, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        if (!specialty.isEmpty()){
+                            ret.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(entry.getSpecialty()));
+                        }
+                        return ret;
                     }
                 },
                 new YouthPlayerDetailsColumn("ls.player.warningstatus.suspended") {

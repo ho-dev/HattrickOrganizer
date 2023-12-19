@@ -26,6 +26,10 @@ public class YouthTrainingDevelopmentEntry {
      */
     private YouthSkillsInfo skills;
 
+    public Specialty getSpecialty() {
+        return specialty;
+    }
+
     /**
      * Specialty of the player mentioned in the match highlights
      */
