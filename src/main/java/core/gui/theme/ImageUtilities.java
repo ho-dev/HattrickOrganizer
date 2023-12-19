@@ -11,6 +11,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+import core.model.player.Specialty;
 import core.util.HOLogger;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,10 +29,10 @@ import javax.swing.*;
 public class ImageUtilities {
 
     /** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
-    private static Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
-    private static Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
+    private static final Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
+    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
+    private static final Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
+    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
     /** Cache für Transparent gemachte Bilder */
     public static HashMap<Image,Image> m_clTransparentsCache = new HashMap<>();
     public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
@@ -95,10 +96,8 @@ public class ImageUtilities {
 	            final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
 	
 	            //g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-	            if (wert == 0) {
-	                //                g2d.setColor ( Color.darkGray );
-	                //                g2d.drawLine ( 3, 8, 9, 8 );
-	            } else if (wert > 0) {
+
+				if (wert > 0) {
 	                final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
 	                final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
 	
@@ -573,6 +572,9 @@ public class ImageUtilities {
 		return null;
 	}
 
+	public static Icon getSmallPlayerSpecialtyIcon(Specialty specialty) {
+		return getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[specialty.getValue()]);
+	}
 
 	public static Icon getTransferInIcon(int size) {
 		return ImageUtilities.getSvgIcon(HOIconName.ARROW_LEFT_3, Map.of("colorBG", ThemeManager.getColor(HOColorName.TRANSFER_IN_COLOR)), size, size);
@@ -667,7 +669,7 @@ public class ImageUtilities {
 
 	/**
 	 * Transforms an icon into an image.
-	 * Cf. 	https://stackoverflow.com/a/5831357
+	 * Cf. 	<a href="https://stackoverflow.com/a/5831357">...</a>
 	 * @param icon
 	 * @return
 	 */
@@ -1054,9 +1056,6 @@ public class ImageUtilities {
 
 		return _icon;
 	}
-
-
-
 
 
 }
