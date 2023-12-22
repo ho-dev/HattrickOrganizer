@@ -60,13 +60,13 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(WEATHER_SUN_POS, "gui/bilder/Fugue/weather-sun-pos-se.png");
 		put(WEATHER_SUN_NEG, "gui/bilder/Fugue/weather-sun-neg-se.png");
 
-		put(SPECIALTIES[1], "gui/bilder/player overview/speciality-1.svg");
-		put(SPECIALTIES[2], "gui/bilder/player overview/speciality-2.svg");
-		put(SPECIALTIES[3], "gui/bilder/player overview/speciality-3.svg");
-		put(SPECIALTIES[4], "gui/bilder/player overview/speciality-4.svg");
-		put(SPECIALTIES[5], "gui/bilder/player overview/speciality-5.svg");
-		put(SPECIALTIES[6], "gui/bilder/player overview/speciality-6.svg");
-		put(SPECIALTIES[8], "gui/bilder/player overview/speciality-8.svg");
+		put(SPECIALTIES[1], "gui/bilder/player overview/player_specialty_1.svg");
+		put(SPECIALTIES[2], "gui/bilder/player overview/player_specialty_2.svg");
+		put(SPECIALTIES[3], "gui/bilder/player overview/player_specialty_3.svg");
+		put(SPECIALTIES[4], "gui/bilder/player overview/player_specialty_4.svg");
+		put(SPECIALTIES[5], "gui/bilder/player overview/player_specialty_5.svg");
+		put(SPECIALTIES[6], "gui/bilder/player overview/player_specialty_6.svg");
+		put(SPECIALTIES[8], "gui/bilder/player overview/player_specialty_8.svg");
 
 		put(TOOTHEDWHEEL, "gui/bilder/automatic.png");
 		put(HAND, "gui/bilder/manual.png");
@@ -113,11 +113,17 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(FORMATION, "gui/bilder/match_events/mo-select(green).png");
 		put(REPLACEMENT, "gui/bilder/match_events/in-out.png");
 		put(ROTATE, "gui/bilder/match_events/rotate.png");
-		put(GOAL, "gui/bilder/match_events/goal.png");
+		put(GOAL, "gui/bilder/goal.svg");
 		put(MISS, "gui/bilder/match_events/miss.png");
-		put(GOAL_MID, "gui/bilder/match_events/goal_C.png");
-		put(GOAL_LEFT, "gui/bilder/match_events/goal_L.png");
-		put(GOAL_RIGHT, "gui/bilder/match_events/goal_R.png");
+		put(PENALTY, "gui/bilder/match_events/penalty.png");
+		put(EXPERIENCE, "gui/bilder/match_events/experience.png");
+		put(WHISTLE, "gui/bilder/match_events/whistle.png");
+		put(CORNER, "gui/bilder/match_events/corner.png");
+		put(TIRED, "gui/bilder/match_events/tired.png");
+		put(WINGER, "gui/bilder/match_events/winger.png");
+		put(GOAL_MID, "gui/bilder/goal_C.svg");
+		put(GOAL_LEFT, "gui/bilder/goal_L.svg");
+		put(GOAL_RIGHT, "gui/bilder/goal_R.svg");
 		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
 		put(MISSED_PENALTY, "gui/bilder/match_events/missed_penalty.png");
 		put(NO_GOAL_MID, "gui/bilder/match_events/miss_C.png");

@@ -14,7 +14,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Specialty;
 import core.util.HOLogger;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -562,10 +561,10 @@ public class ImageUtilities {
 			String key = playerSpecialtyName + "_" + size;
 			Icon specialtyIcon = ThemeManager.getIcon(key);
 			if (specialtyIcon == null) {
-			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
-			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
-			specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
-			ThemeManager.instance().put(key, specialtyIcon);
+				String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
+				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+				specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+				ThemeManager.instance().put(key, specialtyIcon);
 			}
 			return specialtyIcon;
 		}
@@ -618,16 +617,16 @@ public class ImageUtilities {
     public static Icon getSvgIcon(String key, int width, int height) {
 		final String index = key + "_" + width + "_" + height;
 		Icon icon = ThemeManager.getIcon(index);
-
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
-
+			if ( imagePath == null){
+				HOLogger.instance().error(ImageUtilities.class, "Icon path not found:  " + key);
+			}
 			icon = IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
 			ThemeManager.instance().put(index, icon);
 		}
-
 		return icon;
-    }
+	}
 
     private static Map<Object, Object> normalizeColorMap(Map<Object, Object> inputColorMap){
 		Map<Object, Object> newColorMap= new HashMap<>(inputColorMap);

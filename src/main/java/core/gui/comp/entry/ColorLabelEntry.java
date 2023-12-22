@@ -216,7 +216,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     /**
      * Sets the change graphics (For values with sub-skills, e.g. the normal skills)
      */
-    public final void setGraphicalChangeValue(int integerNumber, double number, boolean current,
+    public void setGraphicalChangeValue(int integerNumber, double number, boolean current,
                                               boolean withText) {
 
         setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(integerNumber, 1), current));
@@ -236,15 +236,39 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                 true);
     }
 
+    private void initAdd() {
+        var isInitDone = this.getLayout() != null && this.getLayout().getClass() == BoxLayout.class;
+        if (!isInitDone){
+            this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            var icon = this.getIcon();
+            if (icon!=null){
+                super.setIcon(null);
+                this.add(new JLabel(icon));
+            }
+            var text = this.getText();
+            if (!text.isEmpty()){
+                super.setText("");
+                this.add(new JLabel(text));
+            }
+        }
+    }
+    public void addIcon(Icon icon){
+        initAdd();
+        this.add(new JLabel(icon));
+    }
 
-    public final void setIcon(Icon icon, int imageAusrichtung) {
+    public void addText(String text){
+        initAdd();
+        this.add(new JLabel(text));
+    }
+
+    public void setIcon(Icon icon, int imageAusrichtung) {
         setIcon(icon);
         setHorizontalTextPosition(imageAusrichtung);
         updateComponent();
     }
 
-
-    public final void setSpecialNumber(int number, boolean currencyformat) {
+    public void setSpecialNumber(int number, boolean currencyformat) {
         setSpecialNumber(number, currencyformat, false);
     }
 

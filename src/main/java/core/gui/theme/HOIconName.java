@@ -8,7 +8,10 @@ public interface HOIconName {
 
 	 String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP", "DIVISION_BATTLE"};
 	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3", "weather4"};
-	 String[] SPECIALTIES = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
+	String[] SPECIALTIES = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
+
+	// TODO: same as SPECIALTIES but "negative" color
+	String[] SPECIAL_EVENT = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
 	 String[] SMILEYS = { "", "smiley-coach","smiley-sale", "smiley-happy", "smiley-sad", "smiley-neutral"};
 
 	 String GROUP_TEAM = "Group-Team.svg";
@@ -117,6 +120,7 @@ public interface HOIconName {
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
+	String PENALTY = "penalty";
 	String CONVERTED_PENALTY = "convertedPenalty";
 	String MISSED_PENALTY = "missedPenalty";
 	String PIECES = "pieces";
@@ -193,4 +197,9 @@ public interface HOIconName {
 
 	String ORDERS_SENT = "orders.sents";
 	String ORDERS_MISSING = "orders.missing";
+	String WHISTLE = "whistle";
+	String TIRED = "tired";
+	String CORNER = "corner";
+	String EXPERIENCE = "experience";
+	String WINGER = "winger";
 }

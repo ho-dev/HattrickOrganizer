@@ -175,7 +175,7 @@ public final class ThemeManager {
 	}
 
 	public static Icon getIcon(String key) {
-		return instance().getIconImpl(key);
+		return  instance().getIconImpl(key);
 	}
 
 	public static Object getIconPath(String key){
