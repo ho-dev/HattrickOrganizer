@@ -1186,7 +1186,7 @@ public class MatchEvent extends AbstractTable.Storable {
                             INCREASE_GOAL_AWAY_TEAM_RIGHT_WING -> ret.add(getIcon(HOIconName.GOAL_RIGHT));
                     case SE_GOAL_UNPREDICTABLE_LONG_PASS, SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN, SE_GOAL_UNPREDICTABLE_SPECIAL_ACTION -> {
                         ret.add(getIcon(HOIconName.GOAL));
-                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Unpredictable.getValue()]));
+                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Unpredictable.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     }
                     case SE_GOAL_UNPREDICTABLE_MISTAKE -> {
                         ret.add(getIcon(HOIconName.GOAL));
@@ -1260,7 +1260,8 @@ public class MatchEvent extends AbstractTable.Storable {
                             NO_EQUALIZER_GOAL_AWAY_TEAM_FREE_KICK,
                             NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_FREE_KICK,
                             NO_INCREASE_GOAL_AWAY_TEAM_FREE_KICK,
-                            NO_GOAL_INDIRECT_FREE_KICK -> {
+                            NO_GOAL_INDIRECT_FREE_KICK,
+                            NO_GOAL_TO_TAKE_LEAD_HOME_TEAM_FREE_KICK -> {
                         ret.add(getIcon(HOIconName.MISS));
                         ret.add(getIcon(HOIconName.WHISTLE));
                     }
@@ -1312,12 +1313,12 @@ public class MatchEvent extends AbstractTable.Storable {
                     }
                     case SE_NO_GOAL_UNPREDICTABLE_MISTAKE -> {
                         ret.add(getIcon(HOIconName.MISS));
-                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Unpredictable.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
+                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Unpredictable.getValue()]));
                     }
                     case SE_NO_GOAL_CORNER_HEAD_SPECIALIST -> {
                         ret.add(getIcon(HOIconName.MISS));
                         ret.add(getIcon(HOIconName.CORNER));
-                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Head.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
+                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Head.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     }
                     case SE_SPEEDY_MISSES_AFTER_RUSH,
                             SE_QUICK_RUSHES_PASSES_BUT_RECEIVER_FAILS -> {
@@ -1384,10 +1385,17 @@ public class MatchEvent extends AbstractTable.Storable {
                     case SE_POWERFUL_SUFFERS_FROM_SUN -> {
                         ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Powerful.getValue()]));
                     }
+                    case SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE ->
+                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     case SE_QUICK_LOSES_IN_RAIN,
                             SE_QUICK_LOSES_IN_SUN -> {
                         ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Quick.getValue()]));
                     }
+                    case SE_SUPPORT_PLAYER_BOOST_FAILED,
+                            SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED ->
+                            ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Support.getValue()]));
+                    case SE_SUPPORT_PLAYER_BOOST_SUCCEEDED ->
+                            ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Support.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     case TACTIC_TYPE_PRESSING -> {
                         ret.add(getIcon(HOIconName.TACTIC_PRESSING));
                     }
@@ -1436,6 +1444,16 @@ public class MatchEvent extends AbstractTable.Storable {
                     }
                     case RED_CARD_WITHOUT_WARNING -> {
                         ret.add(getIcon(HOIconName.REDCARD));
+                    }
+                    case SE_GOAL_UNPREDICTABLE_OWN_GOAL -> {
+                        // TODO: color mapping does not work
+                        ret.add(getIcon(HOIconName.GOAL, HOColorName.RED));
+                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Unpredictable.getValue()]));
+                    }
+                    case SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST -> {
+                        // TODO: color mapping does not work
+                        ret.add(getIcon(HOIconName.MISS, HOColorName.PINK));
+                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Unpredictable.getValue()]));
                     }
                 }
             }
