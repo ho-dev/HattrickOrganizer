@@ -10,8 +10,6 @@ import core.model.enums.MatchType;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import org.jetbrains.annotations.ApiStatus;
-
 import javax.swing.*;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -1373,78 +1371,47 @@ public class MatchEvent extends AbstractTable.Storable {
                         ret.add(getIcon(HOIconName.MISS));
                         ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     }
-                    case SE_TECHNICAL_SUFFERS_FROM_RAIN -> {
-                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Technical.getValue()]));
-                    }
-                    case SE_POWERFUL_THRIVES_IN_RAIN -> {
-                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
-                    }
-                    case SE_TECHNICAL_THRIVES_IN_SUN -> {
-                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Technical.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
-                    }
-                    case SE_POWERFUL_SUFFERS_FROM_SUN -> {
-                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Powerful.getValue()]));
-                    }
+                    case SE_TECHNICAL_SUFFERS_FROM_RAIN ->
+                            ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Technical.getValue()]));
+                    case SE_POWERFUL_THRIVES_IN_RAIN ->
+                            ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
+                    case SE_TECHNICAL_THRIVES_IN_SUN ->
+                            ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Technical.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
+                    case SE_POWERFUL_SUFFERS_FROM_SUN ->
+                            ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Powerful.getValue()]));
                     case SE_POWERFUL_DEFENSIVE_INNER_PRESSES_CHANCE ->
-                        ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
+                            ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Powerful.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
                     case SE_QUICK_LOSES_IN_RAIN,
-                            SE_QUICK_LOSES_IN_SUN -> {
-                        ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Quick.getValue()]));
-                    }
+                            SE_QUICK_LOSES_IN_SUN ->
+                            ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Quick.getValue()]));
                     case SE_SUPPORT_PLAYER_BOOST_FAILED,
                             SE_SUPPORT_PLAYER_BOOST_FAILED_AND_ORGANIZATION_DROPPED ->
                             ret.add(getIcon(HOIconName.SPECIAL_EVENT[Specialty.Support.getValue()]));
                     case SE_SUPPORT_PLAYER_BOOST_SUCCEEDED ->
                             ret.add(getIcon(HOIconName.SPECIALTIES[Specialty.Support.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR));
-                    case TACTIC_TYPE_PRESSING -> {
-                        ret.add(getIcon(HOIconName.TACTIC_PRESSING));
-                    }
-                    case TACTIC_TYPE_COUNTER_ATTACKING -> {
-                        ret.add(getIcon(HOIconName.TACTIC_COUNTER_ATTACKING));
-                    }
+                    case TACTIC_TYPE_PRESSING -> ret.add(getIcon(HOIconName.TACTIC_PRESSING));
+                    case TACTIC_TYPE_COUNTER_ATTACKING -> ret.add(getIcon(HOIconName.TACTIC_COUNTER_ATTACKING));
                     case TACTIC_TYPE_ATTACK_IN_MIDDLE,
-                            TACTIC_ATTACK_IN_MIDDLE_USED -> {
-                        ret.add(getIcon(HOIconName.TACTIC_AIM));
-                    }
+                            TACTIC_ATTACK_IN_MIDDLE_USED -> ret.add(getIcon(HOIconName.TACTIC_AIM));
                     case TACTIC_TYPE_ATTACK_ON_WINGS,
-                            TACTIC_ATTACK_ON_WINGS_USED -> {
-                        ret.add(getIcon(HOIconName.TACTIC_AOW));
-                    }
-                    case TACTIC_TYPE_PLAY_CREATIVELY -> {
-                        ret.add(getIcon(HOIconName.TACTIC_PLAY_CREATIVELY));
-                    }
-                    case TACTIC_TYPE_LONG_SHOTS -> {
-                        ret.add(getIcon(HOIconName.TACTIC_LONG_SHOTS));
-                    }
+                            TACTIC_ATTACK_ON_WINGS_USED -> ret.add(getIcon(HOIconName.TACTIC_AOW));
+                    case TACTIC_TYPE_PLAY_CREATIVELY -> ret.add(getIcon(HOIconName.TACTIC_PLAY_CREATIVELY));
+                    case TACTIC_TYPE_LONG_SHOTS -> ret.add(getIcon(HOIconName.TACTIC_LONG_SHOTS));
                     case PLAYER_SUBSTITUTION_TEAM_IS_BEHIND,
                             PLAYER_SUBSTITUTION_TEAM_IS_AHEAD,
                             PLAYER_SUBSTITUTION_MINUTE,
-                            INJURED_PLAYER_REPLACED -> {
-                        ret.add(getIcon(HOIconName.REPLACEMENT));
-                    }
+                            INJURED_PLAYER_REPLACED -> ret.add(getIcon(HOIconName.REPLACEMENT));
                     case CHANGE_OF_TACTIC_TEAM_IS_BEHIND,
                             CHANGE_OF_TACTIC_TEAM_IS_AHEAD,
-                            CHANGE_OF_TACTIC_MINUTE -> {
-                        ret.add(getIcon(HOIconName.ROTATE));
-                    }
-                    case PLAYER_POSITION_SWAP_MINUTE -> {
-                        ret.add(getIcon(HOIconName.SWAP));
-                    }
+                            CHANGE_OF_TACTIC_MINUTE -> ret.add(getIcon(HOIconName.ROTATE));
+                    case PLAYER_POSITION_SWAP_MINUTE -> ret.add(getIcon(HOIconName.SWAP));
                     case MAN_MARKING_SUCCESS_SHORT_DISTANCE,
-                            MAN_MARKING_SUCCESS_LONG_DISTANCE -> {
-                        ret.add(getIcon(HOIconName.ME_MAN_MARKING));
-                    }
+                            MAN_MARKING_SUCCESS_LONG_DISTANCE -> ret.add(getIcon(HOIconName.ME_MAN_MARKING));
                     case YELLOW_CARD_NASTY_PLAY,
-                            YELLOW_CARD_CHEATING -> {
-                        ret.add(getIcon(HOIconName.YELLOWCARD));
-                    }
+                            YELLOW_CARD_CHEATING -> ret.add(getIcon(HOIconName.YELLOWCARD));
                     case RED_CARD_2ND_WARNING_NASTY_PLAY,
-                            RED_CARD_2ND_WARNING_CHEATING -> {
-                        ret.add(getIcon(HOIconName.ME_YELLOW_THEN_RED));
-                    }
-                    case RED_CARD_WITHOUT_WARNING -> {
-                        ret.add(getIcon(HOIconName.REDCARD));
-                    }
+                            RED_CARD_2ND_WARNING_CHEATING -> ret.add(getIcon(HOIconName.ME_YELLOW_THEN_RED));
+                    case RED_CARD_WITHOUT_WARNING -> ret.add(getIcon(HOIconName.REDCARD));
                     case SE_GOAL_UNPREDICTABLE_OWN_GOAL -> {
                         // TODO: color mapping does not work
                         ret.add(getIcon(HOIconName.GOAL, HOColorName.RED));

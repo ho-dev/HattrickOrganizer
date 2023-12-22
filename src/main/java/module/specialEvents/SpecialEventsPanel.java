@@ -30,7 +30,7 @@ import javax.swing.table.TableColumnModel;
 
 public class SpecialEventsPanel extends LazyImagePanel {
 
-	private static SpecialEventsTable specialEventsTable;
+	private SpecialEventsTable specialEventsTable;
 	private Filter filter;
 
 	@Override
@@ -46,6 +46,9 @@ public class SpecialEventsPanel extends LazyImagePanel {
 //		updateRowHeights();
 	}
 
+	public void storeUserSettings(){
+		specialEventsTable.storeUserSettings();
+	}
 	private void initComponents() {
 		this.filter = new Filter();
 		FilterHelper.loadSettings(this.filter);
@@ -58,9 +61,6 @@ public class SpecialEventsPanel extends LazyImagePanel {
 		JPanel filterPanel = new FilterPanel(filter);
 		specialEventsTable = new SpecialEventsTable();
 		specialEventsTable.getTableHeader().setReorderingAllowed(false);
-		SpecialEventsTableModel tblModel = UserColumnController.instance().getSpecialEventsTableModel();
-
-		specialEventsTable.setModel(tblModel);
 //		TableColumnModel columnModel = specialEventsTable.getColumnModel();
 //		specialEventsTable.setDefaultRenderer(Object.class, new DefaultSETableCellRenderer());
 //		TacticsTableCellRenderer tacticsTableCellRenderer = new TacticsTableCellRenderer();

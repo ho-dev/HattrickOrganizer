@@ -47,7 +47,16 @@ public class SpecialEventsTable extends JTable {
 		});
 		setOpaque(false);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+		SpecialEventsTableModel tblModel = UserColumnController.instance().getSpecialEventsTableModel();
+		setModel(tblModel);
+		tblModel.restoreUserSettings(this);
 	}
+
+	public void storeUserSettings() {
+		var tableModel = (HOTableModel)getModel();
+		tableModel.storeUserSettings(this);
+	}
+
 
 //	@Override
 //	protected JTableHeader createDefaultTableHeader() {
