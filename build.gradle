@@ -168,9 +168,11 @@ poeditor {
 jar {
     archiveFileName = "HO.jar"
     manifest {
-        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
-                   'Main-Class': 'core.HOLauncher',
-                    "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        attributes 'Manifest-Version': 1.0,
+                'Implementation-Title': 'HO',
+                'Implementation-Version': project.version,
+                'Main-Class': 'core.HOLauncher',
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
     }
     exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
 }
@@ -225,9 +227,13 @@ tasks.register("createVersion") {
         def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
 
         project.version = "${major}.${minor}.${buildNumber}.${developmentStage}".toString()
+        // Version in jar extension is set eagerly, override after computing version.
+        jar.manifest {
+            attributes('Implementation-Version': project.version)
+        }
 
         versionProps['buildNumber'] = buildNumber
-        versionProps['version'] = project.version
+        versionProps['version'] = project.version.toString()
         versionProps['shortVersion'] = "${major}.${minor}".toString()
         versionProps['tag'] = ['dev', 'beta', 'tag_stable'].get(developmentStage)
         versionProps['branch'] = currentBranch
