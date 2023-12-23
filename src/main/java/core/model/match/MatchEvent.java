@@ -1076,7 +1076,7 @@ public class MatchEvent extends AbstractTable.Storable {
     }
 
     public static String getEventTextDescription(int iMatchEventID) {
-        return String.valueOf(iMatchEventID) + ": " + HOVerwaltung.instance().getLanguageString("MatchEvent_" + iMatchEventID);
+        return iMatchEventID + ": " + HOVerwaltung.instance().getLanguageString("MatchEvent_" + iMatchEventID);
     }
 
     @Deprecated

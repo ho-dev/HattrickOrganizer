@@ -11,11 +11,11 @@ import core.model.match.Matchdetails;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +27,7 @@ import javax.swing.border.CompoundBorder;
  */
 public class SpielHighlightPanel extends LazyImagePanel {
 
+	@Serial
 	private static final long serialVersionUID = -6491501224900464573L;
 	private GridBagConstraints constraints;
 	private GridBagLayout layout;
