@@ -46,9 +46,10 @@ public class SpecialEventsPanel extends LazyImagePanel {
 //		updateRowHeights();
 	}
 
-	public void storeUserSettings(){
-		specialEventsTable.storeUserSettings();
+	public void storeUserSettings() {
+		if (this.specialEventsTable != null) specialEventsTable.storeUserSettings();
 	}
+
 	private void initComponents() {
 		this.filter = new Filter();
 		FilterHelper.loadSettings(this.filter);

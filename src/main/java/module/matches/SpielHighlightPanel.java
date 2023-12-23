@@ -65,10 +65,10 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			
 			Matchdetails details = this.matchesModel.getDetails();
 
-			JLabel playerlabel, matchEventPlayer, resultlabel ;
+			//JLabel playerlabel, matchEventPlayer, resultlabel ;
 
 			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
-			Icon icon;
+			List<Icon> icons;
 			boolean bEventHighlighted;
 
 			int homeScore = 0;
@@ -92,7 +92,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 				if (bEventHighlighted) {
 
 					homeAction = (highlight.getTeamID() == info.getHomeTeamID());
-					icon = highlight.getIcon();
+					icons = highlight.getIcons();
 
 					String spielername = highlight.getPlayerName();
 					if (spielername.length() > 30) {
@@ -129,15 +129,14 @@ public class SpielHighlightPanel extends LazyImagePanel {
 						spielername = "<html>" + spielername + "<br>" + playerEntering + " (" + highlight.getMinute() + "')</html>";
 
 					}
-					playerlabel = new JLabel("", icon, SwingConstants.LEFT)
-					{
-						@Override
-						public Dimension getMinimumSize() {
-							return new Dimension(48, 30);
-						}};
+					var playerlabel = new JPanel();
+					playerlabel.setLayout(new BoxLayout(playerlabel, BoxLayout.Y_AXIS));
+					for ( var icon : icons){
+						playerlabel.add(new JLabel(icon));
+					}
 					playerlabel.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
-					resultlabel = new JLabel(scoreText);
+					var resultlabel = new JLabel(scoreText);
 
 				    // Add labels to the highlight vector
 					highlightLabels.add(playerlabel);
@@ -164,7 +163,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 					layout.setConstraints(playerlabel, constraints);
 					panel.add(playerlabel);
 
-					matchEventPlayer = new JLabel(spielername);
+					var matchEventPlayer = new JLabel(spielername);
 					highlightLabels.add(matchEventPlayer);
 					constraints.anchor = GridBagConstraints.LINE_START;
 					constraints.fill = GridBagConstraints.HORIZONTAL;

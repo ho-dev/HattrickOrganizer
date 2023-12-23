@@ -80,8 +80,8 @@ public class MatchReportPanel extends LazyImagePanel {
 			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
 			if ( matchHighlights == null) return;
 
-			JLabel timeLabel, eventIcon, eventDescription;
-			Icon icon;
+//			JLabel timeLabel, eventIcon, eventDescription;
+			//Icon icon;
 			boolean bEventHighlighted;
 			boolean bMatchFinished = false;
 
@@ -126,13 +126,17 @@ public class MatchReportPanel extends LazyImagePanel {
 						actionType = ActionTypeCategory.ACTION_TYPE_AWAY;
 					}
 
-					icon = highlight.getIcon();
+					var icons = highlight.getIcons();
 
 
-					eventIcon = new JLabel("", icon, SwingConstants.LEFT);
+					var eventIcon = new JPanel();
+					eventIcon.setLayout(new BoxLayout(eventIcon, BoxLayout.Y_AXIS));
+					for ( var icon : icons){
+						eventIcon.add(new JLabel(icon));
+					}
 					eventIcon.setToolTipText(MatchEvent.getEventTextDescription(highlight.getiMatchEventID()));
 
-					timeLabel = new JLabel("", SwingConstants.CENTER)
+					var timeLabel = new JLabel("", SwingConstants.CENTER)
 					{
 						@Override
 						public Dimension getMinimumSize() {
@@ -185,7 +189,7 @@ public class MatchReportPanel extends LazyImagePanel {
 					layout.setConstraints(eventIcon, constraints);
 					panel.add(eventIcon);
 
-					eventDescription = new JLabel();
+					var eventDescription = new JLabel();
 					eventDescription.setText("<html><body style='width: 350px'>"+highlight.getEventText()+"</p></html>");
 					highlightLabels.add(eventDescription);
 					constraints.anchor = GridBagConstraints.LINE_START;
