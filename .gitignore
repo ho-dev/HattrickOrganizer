@@ -49,6 +49,7 @@ version.properties
 .idea/*.iml
 .idea/modules
 
+.idea/vcs.xml
 
 # Compiled class file
 *.class
