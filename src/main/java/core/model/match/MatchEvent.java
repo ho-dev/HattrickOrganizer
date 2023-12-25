@@ -778,15 +778,6 @@ public class MatchEvent extends AbstractTable.Storable {
                         this.m_matchEventID == MatchEventID.SUNNY_WEATHER_MANY_PLAYERS_AFFECTED);
     }
 
-    /**
-     * Check, if it is a positive SE related both to player specialty and weather
-     */
-    public boolean isPositiveSpecialtyWeatherSE() {
-        return
-                (m_iMatchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN.value ||
-                        m_iMatchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN.value);
-    }
-
     public String getEventTextDescription() {
         return getEventTextDescription(m_matchEventID.value);
     }
