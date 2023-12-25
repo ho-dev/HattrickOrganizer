@@ -417,10 +417,6 @@ public class MatchEvent extends AbstractTable.Storable {
         return this.m_matchEventID;
     }
 
-    public final void setMatchEventCategory(int m_iMatchEventCategory) {
-        this.m_iMatchEventCategory = m_iMatchEventCategory;
-    }
-
     public final int getMatchEventCategory() {
         return m_iMatchEventCategory;
     }
@@ -534,10 +530,6 @@ public class MatchEvent extends AbstractTable.Storable {
             MatchEventID.RED_CARD_WITHOUT_WARNING);              // #514
 
 
-    public boolean isSpecialEvent() {
-        return specialME.contains(this.m_matchEventID);
-    }
-
     public static List<MatchEventID> specialME = Arrays.asList(
             MatchEventID.SE_GOAL_UNPREDICTABLE_LONG_PASS,                                         // #105
             MatchEventID.SE_GOAL_UNPREDICTABLE_SCORES_ON_HIS_OWN,                                 // #106
@@ -610,12 +602,6 @@ public class MatchEvent extends AbstractTable.Storable {
             MatchEventID.COUNTER_ATTACK_NO_GOAL_RIGHT,                  // #243
             MatchEventID.COUNTER_ATTACK_NO_GOAL_INDIRECT_FREE_KICK);    // #286
 
-    /**
-     * Check, if it is an attack on Right wing
-     */
-    public boolean isCentralAttack() {
-        return CentralAttackME.contains(this.m_matchEventID);
-    }
 
     public static List<MatchEventID> CentralAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_MIDDLE,                // #101
@@ -635,12 +621,6 @@ public class MatchEvent extends AbstractTable.Storable {
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_MIDDLE,         // #271
             MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_MIDDLE);           // #281)
 
-    /**
-     * Check, if it is an attack on Right wing
-     */
-    public boolean isRightAttack() {
-        return RightAttackME.contains(this.m_matchEventID);
-    }
 
     public static List<MatchEventID> RightAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_RIGHT_WING,                // #103
@@ -659,14 +639,6 @@ public class MatchEvent extends AbstractTable.Storable {
             MatchEventID.NO_EQUALIZER_GOAL_AWAY_TEAM_RIGHT_WING,            // #263
             MatchEventID.NO_GOAL_TO_TAKE_LEAD_AWAY_TEAM_RIGHT_WING,         // #273
             MatchEventID.NO_INCREASE_GOAL_AWAY_TEAM_RIGHT_WING);           // #283)
-
-
-    /**
-     * Check, if it is an attack on left wing
-     */
-    public boolean isLeftAttack() {
-        return leftAttackME.contains(this.m_matchEventID);
-    }
 
     public static List<MatchEventID> leftAttackME = Arrays.asList(
             MatchEventID.REDUCING_GOAL_HOME_TEAM_LEFT_WING,                // #102
@@ -813,13 +785,6 @@ public class MatchEvent extends AbstractTable.Storable {
         return
                 (m_iMatchEventID == MatchEventID.SE_TECHNICAL_THRIVES_IN_SUN.value ||
                         m_iMatchEventID == MatchEventID.SE_POWERFUL_THRIVES_IN_RAIN.value);
-    }
-
-    /**
-     * Check, if it is a negative SE related both to player specialty and weather
-     */
-    public boolean isNegativeSpecialtyWeatherSE() {
-        return (this.isSpecialtyWeatherSE() && (!this.isPositiveSpecialtyWeatherSE()));
     }
 
     public String getEventTextDescription() {

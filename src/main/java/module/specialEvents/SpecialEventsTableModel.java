@@ -107,9 +107,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 						var ret =   new ColorLabelEntry(SpecialEventsDM.getSEText(matchHighlight), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						var eventText = matchHighlight.getEventText();
 						if (eventText != null) {
-							var sb = new StringBuilder("<html>");
-							sb.append("<table width='300'><tr><td>").append(eventText).append("</td></tr></table></html>");
-							ret.setToolTipText(sb.toString());
+                            ret.setToolTipText("<html>" + "<table width='300'><tr><td>" + eventText + "</td></tr></table></html>");
 						}
 						return ret;
 					}
