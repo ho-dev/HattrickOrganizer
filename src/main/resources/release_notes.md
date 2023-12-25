@@ -30,7 +30,8 @@
 ### Lineup
 * Fix missing player id column in lineup assistant's player table (#1930)
 
-### Statistics
+### Special events
+* Refactoring special events table layout (#816)
 
 ### Transfer
 * Refactoring of the transfer module. Calculation of transfer fee income. (#245)
