@@ -150,70 +150,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 	public void setData(List<MatchRow> data) {
 		this.data = data;
 		initData();
-//		fireTableDataChanged();
 	}
-
-//	@Nullable
-//	@Override
-//	public Object getValueAt(int row, int column) {
-//		MatchRow matchRow = this.data.get(row);
-//
-//		// if not a match event line and not a header line -> return null
-//		if ((!matchRow.isMatchHeaderLine()) & HEADER_ROWS.contains(column)) return null;
-//
-//		MatchEvent highlight = matchRow.getMatchHighlight();
-//		return switch (column) {
-//			case MATCH_DATE_TYPE_COLUMN -> Pair.with(matchRow.getMatch().getMatchDate(), matchRow.getMatch().getMatchType());
-//			case HOMETACTICCOLUMN -> matchRow.getMatch().getHostingTeamTactic();
-//			case HOMETEAMCOLUMN -> formatTeamName(matchRow.getMatch(), matchRow.getMatch().getHostingTeam());
-//			case RESULTCOLUMN -> matchRow.getMatch().getMatchResult();
-//			case AWAYTEAMCOLUMN -> formatTeamName(matchRow.getMatch(), matchRow.getMatch().getVisitingTeam());
-//			case AWAYTACTICCOLUMN -> matchRow.getMatch().getVisitingTeamTactic();
-//			case MINUTECOLUMN -> ((highlight == null) || (highlight.getMinute() == 0)) ? null : highlight.getMinute() + "'";
-//			case EVENTCOLUMN -> highlight;
-//			case PLAYER_NAME_COLUMN -> (highlight == null) ? null : Pair.with(SpecialEventsDM.getSpielerName(highlight), highlight.getPlayerId());
-//			default -> null; };
-//	 }
-//
-//	 private String formatTeamName(Match oMatch, String teamName)
-//	 {
-//	 	if (oMatch.isWinningTeam(teamName))
-//		 {
-//		 	return "<html><B>" + teamName + "</B></html>";
-//		 }
-//	 	else
-//		 {
-//			 return teamName;
-//		 }
-//	 }
-
-//	@Override
-//	public int getRowCount() {
-//		if (this.data == null) {
-//			return 0;
-//		}
-//		return this.data.size();
-//	}
-
-//	@Override
-//	public int getColumnCount() {
-//		return 9;
-//	}
-
-//	@Override
-//	public String getColumnName(int columnIndex) {
-//		return switch (columnIndex) {
-//			case MATCH_DATE_TYPE_COLUMN -> WordUtils.capitalizeFully(getLangStr("SpieleDetails"));
-//			case HOMETACTICCOLUMN, AWAYTACTICCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.team.tactic"));
-//			case HOMETEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Heim"));
-//			case AWAYTEAMCOLUMN -> WordUtils.capitalizeFully(getLangStr("Gast"));
-//			case EVENTCOLUMN -> WordUtils.capitalizeFully(getLangStr("Event"));
-//			case PLAYER_NAME_COLUMN -> WordUtils.capitalizeFully(getLangStr("Spieler"));
-//			case RESULTCOLUMN -> WordUtils.capitalizeFully(getLangStr("ls.match.result"));
-//			default -> " ";
-//		};
-//	}
-
 	@Override
 	protected void initData() {
 		UserColumn[] displayedColumns = getDisplayedColumns();

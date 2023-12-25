@@ -109,10 +109,10 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		// Highlights
 
 		put(YELLOWCARD, "img/icons/made/yellow-card(yellow).svg");
-		put(REDCARD, "gui/bilder/match_events/red-card(red).png");
-		put(FORMATION, "gui/bilder/match_events/mo-select(green).png");
+		put(REDCARD, "gui/bilder//red-card.svg");
+		put(FORMATION, "gui/bilder/mo-select.svg");
 		put(REPLACEMENT, "gui/bilder/in-out.svg");
-		put(ROTATE, "gui/bilder/match_events/rotate.png");
+		put(ROTATE, "gui/bilder/rotate.svg");
 		put(GOAL, "gui/bilder/goal.svg");
 		put(MISS, "gui/bilder/miss.svg");
 		put(PENALTY, "gui/bilder/penalty.svg");
@@ -124,8 +124,6 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(GOAL_MID, "gui/bilder/goal_C.svg");
 		put(GOAL_LEFT, "gui/bilder/goal_L.svg");
 		put(GOAL_RIGHT, "gui/bilder/goal_R.svg");
-		put(CONVERTED_PENALTY, "gui/bilder/match_events/converted_penalty.png");
-		put(MISSED_PENALTY, "gui/bilder/match_events/missed_penalty.png");
 		put(NO_GOAL_MID, "gui/bilder/miss_C.svg");
 		put(NO_GOAL_LEFT, "gui/bilder/miss_L.svg");
 		put(NO_GOAL_RIGHT, "gui/bilder/miss_R.svg");
@@ -136,53 +134,11 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(TACTIC_PLAY_CREATIVELY, "gui/bilder/creative.svg");
 		put(TACTIC_LONG_SHOTS, "gui/bilder/longshot.svg");
 
-		put(ME_GOAL_AND_QUICK, "gui/bilder/match_events/me_goal_and_quick.png");
-		put(ME_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_goal_and_head_spec.png");
-		put(ME_GOAL_AND_TECHNICAL, "gui/bilder/match_events/me_goal_and_technical.png");
-		put(ME_GOAL_AND_UNPREDICTABLE, "gui/bilder/match_events/me_goal_and_unpredictable.png");
 		put(PIECES, "gui/bilder/set_pieces.svg");
 		put(CONFUSION, "gui/bilder/confusion.svg");
 		put(REORGANIZE, "gui/bilder/reorganize.svg");
 		put(CAPTAIN, "gui/bilder/captain.svg");
-		put(ME_109, "gui/bilder/match_events/me_109.png");
-		put(ME_117, "gui/bilder/match_events/me_117.png");
-		put(ME_118, "gui/bilder/match_events/me_118.png");
-		put(ME_135, "gui/bilder/match_events/me_135.png");
-		put(ME_136, "gui/bilder/match_events/me_136.png");
-		put(ME_137, "gui/bilder/match_events/me_137.png");
-		put(ME_138, "gui/bilder/match_events/me_138.png");
-        put(ME_139, "gui/bilder/match_events/me_139.png");
-		put(ME_140, "gui/bilder/match_events/me_140.png");
-		put(ME_141, "gui/bilder/match_events/me_141.png");
-		put(ME_142, "gui/bilder/match_events/me_142.png");
-		put(ME_143, "gui/bilder/match_events/me_143.png");
-		put(ME_GOAL_AND_WHISTLE, "gui/bilder/match_events/me_goal_and_whistle.png");
-		put(ME_184, "gui/bilder/match_events/me_184.png");
-		put(ME_185, "gui/bilder/match_events/me_185.png");
-		put(ME_190, "gui/bilder/match_events/me_190.png");
-		put(ME_NO_GOAL_UNPREDICTABLE, "gui/bilder/match_events/me_no_goal_unpredictable.png");
-		put(ME_GOAL_LONGSHOT_PNG, "gui/bilder/match_events/me_goal_longshot.png");
-		put(ME_MISS_LONGSHOT_PNG, "gui/bilder/match_events/me_miss_longshot.png");
-		put(ME_209, "gui/bilder/match_events/me_209.png");
-		put(ME_217, "gui/bilder/match_events/me_217.png");
-		put(ME_NO_GOAL_AND_HEAD_SPEC, "gui/bilder/match_events/me_no_goal_and_head_spec.png");
-		put(ME_ME_MISS_AND_QUICK, "gui/bilder/match_events/me_miss_and_quick.png");
-		put(ME_MISSED_CORNER, "gui/bilder/match_events/missed_corner.png");
-		put(ME_235, "gui/bilder/match_events/me_235.png");
-        put(ME_236, "gui/bilder/match_events/me_236.png");
-		put(ME_237, "gui/bilder/match_events/me_237.png");
-        put(ME_239, "gui/bilder/match_events/me_239.png");
-		put(ME_240, "gui/bilder/match_events/me_240.png");
-		put(ME_241, "gui/bilder/match_events/me_241.png");
-		put(ME_242, "gui/bilder/match_events/me_242.png");
-		put(ME_243, "gui/bilder/match_events/me_243.png");
-		put(ME_MISS_AND_WHISTLE, "gui/bilder/match_events/me_miss_and_whistle.png");
-		put(ME_285, "gui/bilder/match_events/me_285.png");
-		put(ME_186, "gui/bilder/match_events/me_186.png");
-		put(ME_286, "gui/bilder/match_events/me_286.png");
-		put(ME_289, "gui/bilder/match_events/me_289.png");
-		put(ME_290, "gui/bilder/match_events/me_290.png");
-		put(ME_YELLOW_THEN_RED, "gui/bilder/match_events/me_YellowThenRed.png");
+		put(ME_YELLOW_THEN_RED, "gui/bilder/yellow-red-card.svg");
 		put(ME_SWAP, "gui/bilder/swap.svg");
 		put(ME_MAN_MARKING, "gui/bilder/manmark.svg");
 
