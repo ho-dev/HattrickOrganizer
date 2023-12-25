@@ -282,11 +282,11 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * Set the icon
      * (would be overwritten by added components)
      * @param icon Icon to be set
-     * @param imageAusrichtung
+     * @param textPosition Horizontal text position (swing constant value)
      */
-    public void setIcon(Icon icon, int imageAusrichtung) {
+    public void setIcon(Icon icon, int textPosition) {
         setIcon(icon);
-        setHorizontalTextPosition(imageAusrichtung);
+        setHorizontalTextPosition(textPosition);
         updateComponent();
     }
 

@@ -159,7 +159,4 @@ public class SpecialEventsTableModel extends HOTableModel {
 		return this.data.get(row).getMatch();
 	}
 
-	public int getMatchCount(int row) {
-		return this.data.get(row).getMatchCount();
-	}
 }

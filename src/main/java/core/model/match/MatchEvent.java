@@ -29,9 +29,6 @@ public class MatchEvent extends AbstractTable.Storable {
     private boolean m_sSpielerHeim = true;
 
     private int m_iGehilfeID;
-
-    private int m_iMatchEventCategory;
-
     private int m_iMatchEventID;
     private Integer eventVariation;
     private HODateTime matchDate;
@@ -415,10 +412,6 @@ public class MatchEvent extends AbstractTable.Storable {
 
     public final MatchEventID getMatchEventID() {
         return this.m_matchEventID;
-    }
-
-    public final int getMatchEventCategory() {
-        return m_iMatchEventCategory;
     }
 
     /**
