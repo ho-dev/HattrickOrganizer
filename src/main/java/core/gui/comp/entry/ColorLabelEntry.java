@@ -236,6 +236,11 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                 true);
     }
 
+    /**
+     * Initialize adding of icons to this entry
+     * Previously set icon (or text) will be moved to newly created child components of this entry.
+     * Layout is initialized to box layout.
+     */
     private void initAdd() {
         var isInitDone = this.getLayout() != null && this.getLayout().getClass() == BoxLayout.class;
         if (!isInitDone){
@@ -252,16 +257,33 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
             }
         }
     }
+
+    /**
+     * Add an icon to the entry
+     * A child Jlabel is added, which holds the specified icon.
+     * @param icon Icon to be added
+     */
     public void addIcon(Icon icon){
         initAdd();
         this.add(new JLabel(icon));
     }
 
+    /**
+     * Add a text label to the entry
+     * A child JLabel is added, which holds the specified text.
+     * @param text Text of the new child component
+     */
     public void addText(String text){
         initAdd();
         this.add(new JLabel(text));
     }
 
+    /**
+     * Set the icon
+     * (would be overwritten by added components)
+     * @param icon Icon to be set
+     * @param imageAusrichtung
+     */
     public void setIcon(Icon icon, int imageAusrichtung) {
         setIcon(icon);
         setHorizontalTextPosition(imageAusrichtung);
