@@ -24,7 +24,6 @@ public class SpecialEventsPanel extends LazyImagePanel {
 	@Override
 	protected void update() {
 		setTableData();
-//		updateRowHeights();
 	}
 
 	public void storeUserSettings() {

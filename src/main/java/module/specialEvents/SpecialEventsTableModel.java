@@ -17,17 +17,6 @@ import javax.swing.*;
 
 public class SpecialEventsTableModel extends HOTableModel {
 
-//	static final int MATCH_DATE_TYPE_COLUMN = 0;
-//	static final int HOMETACTICCOLUMN = 1;
-//	static final int HOMETEAMCOLUMN = 2;
-//	static final int RESULTCOLUMN = 3;
-//	static final int AWAYTEAMCOLUMN = 4;
-//	static final int AWAYTACTICCOLUMN = 5;
-//	static final int MINUTECOLUMN = 6;
-//	static final int EVENTCOLUMN = 7;
-//	static final int PLAYER_NAME_COLUMN = 8;
-//	static final List<Integer> HEADER_ROWS = List.of(MATCH_DATE_TYPE_COLUMN, HOMETACTICCOLUMN, HOMETEAMCOLUMN, RESULTCOLUMN, AWAYTEAMCOLUMN, AWAYTACTICCOLUMN);
-
 	private List<MatchRow> data;
 
 	/**
@@ -149,6 +138,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 		this.data = data;
 		initData();
 	}
+
 	@Override
 	protected void initData() {
 		UserColumn[] displayedColumns = getDisplayedColumns();
