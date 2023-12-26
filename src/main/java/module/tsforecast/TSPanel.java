@@ -47,6 +47,7 @@ import java.awt.RenderingHints;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.io.Serial;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -54,14 +55,11 @@ import java.util.Calendar;
 
 import javax.swing.*;
 
-
-// Referenced classes of package hoplugins.tsforecast:
-//            Curve
-
 class TSPanel extends JPanel {
 
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 	static final int DXFrame = 10;
 	static final int DXAxis = 5;
 	static final int DYFrame = 20;
@@ -88,13 +86,12 @@ class TSPanel extends JPanel {
 
 
   private HODateTime m_startDate  = null;
-  private HODateTime m_endDate    = null;
-  private int m_iDaysToDisplay           = 0;
+    private int m_iDaysToDisplay           = 0;
   private int m_iTodayPosition           = 0;
   private boolean m_bShowTeamspiritScale = true;
   private boolean m_bShowConfidenceScale = true;
 
-  private ArrayList<Curve> m_Curves = new ArrayList<>();
+  private final ArrayList<Curve> m_Curves = new ArrayList<>();
 
 
   TSPanel() {
@@ -196,7 +193,6 @@ protected void paintComponent( Graphics g) {
       int dayOffset = m_startDate.DayOfWeek().getValue() - 1;
       if( dayOffset < 0) dayOffset += 7;
 
-      HelperWrapper ihelper = HelperWrapper.instance();
       for(; flag; flag = curve.next()) {
         var xCoord = (double)Duration.between(m_startDate.instant, curve.getDate().instant).toHours()/24D + dayOffset;
         int yCoord = (int)(((curve.getSpirit() + 0.5D) * (double)m_iMaxY) / m_dValues);
@@ -237,9 +233,7 @@ protected void paintComponent( Graphics g) {
   private void drawCoordSystem( Graphics2D graphics2d) {
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
     Font font = new Font( "SansSerif", Font.BOLD, UserParameter.instance().fontSize);
-    HelperWrapper ihelper = HelperWrapper.instance();
     Rectangle2D rectangle2d;
-
     drawSeason( graphics2d);
     drawWeeks( graphics2d);
 
@@ -378,7 +372,7 @@ protected void paintComponent( Graphics g) {
   //depending on which curves are switched on
   private void setStartEndDate() {
     m_startDate = HOVerwaltung.instance().getModel().getBasics().getDatum();
-    m_endDate = new HODateTime( m_startDate);
+      HODateTime m_endDate = new HODateTime(m_startDate);
 
     Curve curve;
     for (Curve m_curve : m_Curves) {
@@ -396,7 +390,7 @@ protected void paintComponent( Graphics g) {
     m_endDate = m_endDate.plus(7, ChronoUnit.DAYS);
 
     //calculate days to display
-    m_iDaysToDisplay = (int)Duration.between(m_startDate.instant,m_endDate.instant).toDays();
+    m_iDaysToDisplay = (int)Duration.between(m_startDate.instant, m_endDate.instant).toDays();
 
     //calculate days from start to today
     m_iTodayPosition = 0;
@@ -407,8 +401,6 @@ protected void paintComponent( Graphics g) {
   //Calculate longest string at y-axis
   private double getMaxTextWidth( Graphics2D graphics2d) {
     Font font = new Font( "SansSerif", Font.BOLD, UserParameter.instance().fontSize);
-    HelperWrapper ihelper = HelperWrapper.instance();
-
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
     Rectangle2D rectangle2d;
     double maxWidth = 0D;

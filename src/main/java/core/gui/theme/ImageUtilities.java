@@ -810,12 +810,6 @@ public class ImageUtilities {
 		return trainingBarIcon;
 	}
 
-
-
-	public static Icon getSetPiecesIcon() {
-		return getSetPiecesIcon(16, 16);
-	}
-
 	public static Icon getSetPiecesIcon(int width, int height) {
 
 		String key = "captain_" + width + "x" + height;
@@ -889,10 +883,6 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	public static Icon getDownloadIcon(Color color) {
-		return getDownloadIcon(color, 16, 16);
-	}
-
 	public static Icon getDownloadIcon(Color fillColor, int width, int height) {
 
 		String key = "downloadIcon_" + fillColor.toString() + "_" + width + "x" + height;
@@ -909,11 +899,6 @@ public class ImageUtilities {
 		}
 
 		return _icon;
-	}
-
-
-	public static Icon getUnavailableIcon(Color color) {
-		return getUnavailableIcon(color, 16, 16);
 	}
 
 	public static Icon getUnavailableIcon(Color fillColor, int width, int height) {
@@ -933,8 +918,6 @@ public class ImageUtilities {
 
 		return _icon;
 	}
-
-
 
 	public static Icon getSmallPlasterIcon() {
 		return getPlasterIcon(16, 16);

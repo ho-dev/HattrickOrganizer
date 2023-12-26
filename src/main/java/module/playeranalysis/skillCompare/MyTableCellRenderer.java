@@ -26,28 +26,19 @@ import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
 class MyTableCellRenderer  implements TableCellRenderer{
+	private Color gelb;
+	private Color gruen;
+	private final Color dklgruen = new Color (0,200,0);
+	private final Color rot = new Color (255,200,200);
+	private final Color dklrot = new Color (200,0,0);
+	private final Color hellblau;
+	private final Color dunkelblau;
 
-	private final long serialVersionUID = -6249868492929346343L;
-	private Color gelb = new Color(255,255,200);
-	private Color gruen = new Color (220,255,220);
-	private Color dklgruen = new Color (0,200,0);
-	private Color rot = new Color (255,200,200);
-	private Color dklrot = new Color (200,0,0);
-	private Color hellblau = new Color (235,235,255);
-	private Color dunkelblau = new Color (220,220,255);
-	//***** Anlegen der JLabel *****
-	private JLabel label;
-	private JLabel wertNeu;
-	private JLabel wertAlt;
-	//***** weitere Klassenvariablen *****
-	private String[] name = new String[2];
-	private int natWert;
-	private DecimalFormat df = new DecimalFormat("#,###,##0.00");
+	private final String[] name = new String[2];
+    private final DecimalFormat df = new DecimalFormat("#,###,##0.00");
 
-	//***** Konstruktor *****
 	public MyTableCellRenderer()
 	{
-
 		gelb = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
 		gruen= ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
 		hellblau = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);
@@ -62,7 +53,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
             int row,
             int column)
 	{
-		label = new JLabel();
+        JLabel label = new JLabel();
 
 		if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.name"))) {
 			int i = 0;
@@ -75,7 +66,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			try	{
 				spezWert = Integer.parseInt(name[1]);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 
 			Icon ic = ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[spezWert]);
 			label.setLayout(new BorderLayout());
@@ -86,7 +77,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.validate();
 		}
 		else if(column == 2) {
-			natWert = ((Integer)table.getValueAt(row,column)).intValue();
+            int natWert = (Integer) table.getValueAt(row, column);
 			label.setIcon(ImageUtilities.getCountryFlagIcon(natWert));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setBackground(table.getBackground());
@@ -94,24 +85,24 @@ class MyTableCellRenderer  implements TableCellRenderer{
 		else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("Gruppe")))	{
 
 
-			String group = ((String)table.getValueAt(row,column)).toString();
+			String group = ((String)table.getValueAt(row,column));
 			if(group != null && group.length() > 3)
 				label.setIcon(ThemeManager.getIcon(group));
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("BestePosition")))		{
 			// we parse back into best position and best rating value
 			byte tmpPos = ((Float)table.getValueAt(row,column)).byteValue();
-			float ratingValue = (((Float)table.getValueAt(row,column)).floatValue() - tmpPos) * 1000;
+			float ratingValue = ((Float) table.getValueAt(row, column) - tmpPos) * 1000;
 			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ String.format("%.1f", ratingValue) +"%)");
 			label.setBackground(table.getBackground());
 		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))) {
 			double skillwert = 0;
-			String skillwertS = "";
+			String skillwertS;
 			try	{
 				skillwertS = (table.getValueAt(row,column)).toString();
 				skillwert = Double.parseDouble(skillwertS);
 
-			} catch(Exception e){}
+			} catch(Exception ignored){}
 
 			int skillWertNew = (int) skillwert;
 			int skillWertOld = (int) ((skillwert - skillWertNew) * 100 + 0.1);
@@ -144,13 +135,13 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				)
 		{
 			double skillwert = 0;
-			String skillwertS = "";
+			String skillwertS;
 			try
 			{
 				skillwertS = (table.getValueAt(row,column)).toString();
 				skillwert = Double.parseDouble(skillwertS);
 			}
-			catch(Exception e){}
+			catch(Exception ignored){}
 
 			int skillWertNew = (int) skillwert;
 			int skillWertOld = (int) ((skillwert - skillWertNew) * 100 + 0.1);
@@ -210,9 +201,9 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				neuerWert = Float.parseFloat(skill[0]);
 				changeValue = Helper.round(Float.parseFloat(skill[1]),UserParameter.instance().nbDecimals);
 			}
-			catch(Exception exc){}
+			catch(Exception ignored){}
 
-			wertAlt = new JLabel();
+            JLabel wertAlt = new JLabel();
 
 			if(changeValue > 0)
 			{
@@ -229,7 +220,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				wertAlt.setText("" + changeValue);
 			}
 
-			wertNeu = new JLabel("" + neuerWert);
+            JLabel wertNeu = new JLabel("" + neuerWert);
 			wertNeu.setHorizontalAlignment(SwingConstants.RIGHT);
 			wertAlt.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -270,7 +261,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setBackground(table.getBackground());
 		}
-		else if((table.getValueAt(0,column) instanceof Boolean) == false) {
+		else if(!(table.getValueAt(0, column) instanceof Boolean)) {
 			label.setText(value.toString());
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setBackground(table.getBackground());

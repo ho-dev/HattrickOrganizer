@@ -8,6 +8,7 @@ import module.teamAnalyzer.ui.model.UiRatingTableModel;
 import module.teamAnalyzer.ui.renderer.RatingTableCellRenderer;
 import module.teamAnalyzer.vo.TeamLineup;
 import java.awt.BorderLayout;
+import java.io.Serial;
 import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.JPanel;
@@ -16,13 +17,14 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 
 public class RatingPanel extends JPanel {
-	private static final long serialVersionUID = -1086256822169689318L;
+	@Serial
+    private static final long serialVersionUID = -1086256822169689318L;
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
 	private JTable table;
     private UiRatingTableModel tableModel;
-    private String[] columns = {
+    private final String[] columns = {
     		HOVerwaltung.instance().getLanguageString("RatingPanel.Area"),
     		HOVerwaltung.instance().getLanguageString("Rating"),
     		HOVerwaltung.instance().getLanguageString("Differenz_kurz"),
@@ -80,7 +82,7 @@ public class RatingPanel extends JPanel {
         Vector<Object> rowData = new Vector<>();
 
         rowData.add(label);
-        rowData.add("" + getRating((int) myRating));
+        rowData.add(getRating((int) myRating));
 
         int diff = (int) myRating - (int) opponentRating;
 

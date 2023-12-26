@@ -9,17 +9,19 @@ import module.teamAnalyzer.ui.RatingUtil;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.Serial;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 class RatingBox extends JPanel {
-	private static final long serialVersionUID = 7739872564097601073L;
+	@Serial
+    private static final long serialVersionUID = 7739872564097601073L;
 
-    private JLabel arrow = new JLabel();
-    private JLabel myValue = new JLabel();
-    private JLabel opponentValue = new JLabel();
+    private final JLabel arrow = new JLabel();
+    private final JLabel myValue = new JLabel();
+    private final JLabel opponentValue = new JLabel();
 
 
     RatingBox() {

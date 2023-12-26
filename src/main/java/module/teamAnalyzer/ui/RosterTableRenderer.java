@@ -9,6 +9,7 @@ import module.teamAnalyzer.vo.PlayerInfo;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.io.Serial;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -17,33 +18,24 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 public class RosterTableRenderer extends DefaultTableCellRenderer {
-    //~ Methods ------------------------------------------------------------------------------------
+    @Serial
+    private static final long serialVersionUID = -3338455733573545222L;
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3338455733573545222L;
-
-	/*
+    /*
      * (non-Javadoc)
      *
      * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
      *      java.lang.Object, boolean, boolean, int, int)
      */
     @Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         try {
-            // setBackground(Color.WHITE);
             setOpaque(true);
             setToolTipText(null);
             setIcon(null);
-
-            if (isSelected) {
-                // this.setBackground(Color.LIGHT_GRAY);
-            }
 
             if (column > 3) {
                 setHorizontalAlignment(SwingConstants.CENTER);
@@ -79,33 +71,9 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     break;
             }
 
-            /*
-               int pos = ((Integer) table.getValueAt(row, 2)).intValue();
-               int posCode = Commons.getModel().getHelper().getPosition(pos);
-               switch (posCode) {
-               case IMatchRoleID.keeper:
-                   setForeground(Color.BLACK);
-                   break;
-               case IMatchRoleID.insideBack1:
-                   setForeground(Color.BLUE.darker().darker());
-                   break;
-               case IMatchRoleID.leftBack:
-                   setForeground(Color.GREEN.darker().darker());
-                   break;
-               case IMatchRoleID.insideMid1:
-                   setForeground(Color.YELLOW.darker().darker());
-                   break;
-               case IMatchRoleID.leftWinger:
-                   setForeground(Color.ORANGE.darker().darker());
-                   break;
-               case IMatchRoleID.forward1:
-                   setForeground(Color.RED.darker().darker());
-                   break;
-               }
-             */
             int playerId = Integer.parseInt("" + table.getModel().getValueAt(row, 14));
             PlayerInfo oldInfo = SystemManager.getPlugin().getMainPanel().getRosterPanel()
-                                              .getPrevious(playerId);
+                    .getPrevious(playerId);
 
             if (oldInfo.getPlayerId() == 0) {
                 return this;
@@ -116,8 +84,8 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     int v = Integer.parseInt("" + value);
                     int diff = v - oldInfo.getForm();
 
-                    
-                   setIcon( ImageUtilities.getImageIcon4Change(diff,true));
+
+                    setIcon(ImageUtilities.getImageIcon4Change(diff, true));
 
 
                     break;
@@ -128,7 +96,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     int diff = v - oldInfo.getExperience();
 
 
-                        setIcon( ImageUtilities.getImageIcon4Change(diff,true));
+                    setIcon(ImageUtilities.getImageIcon4Change(diff, true));
 
 
                     break;
@@ -136,9 +104,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
 
                 case 8: {
                     int v = Integer.parseInt("" + value);
-                    int diff = v - oldInfo.getTSI();
                     String desc = "";
-
                     setText(getText() + " " + desc);
                     break;
                 }
