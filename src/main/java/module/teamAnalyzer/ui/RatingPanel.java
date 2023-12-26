@@ -2,7 +2,6 @@ package module.teamAnalyzer.ui;
 
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.module.config.ModuleConfig;
 import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.model.UiRatingTableModel;
@@ -101,7 +100,7 @@ public class RatingPanel extends JPanel {
         	relValString = "-" + relValString;
 
         // Add difference as icon
-        rowData.add(  ImageUtilities.getImageIcon4Veraenderung(diff,true));
+        rowData.add(  ImageUtilities.getImageIcon4Change(diff,true));
         // Add relative difference [%]
         rowData.add(relValString);
 

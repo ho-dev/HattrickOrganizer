@@ -4,7 +4,6 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.module.config.ModuleConfig;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RatingUtil;
 
@@ -31,7 +30,7 @@ class RatingBox extends JPanel {
     void reload(int r1, int r2) {
         myValue.setText(RatingUtil.getRating(r1, SystemManager.isNumericRating.isSet(), SystemManager.isDescriptionRating.isSet()));
         opponentValue.setText(RatingUtil.getRating(r2, SystemManager.isNumericRating.isSet(), SystemManager.isDescriptionRating.isSet()));
-        arrow.setIcon( ImageUtilities.getImageIcon4Veraenderung(r1 - r2,true));
+        arrow.setIcon( ImageUtilities.getImageIcon4Change(r1 - r2,true));
     }
 
     private void jbInit() {

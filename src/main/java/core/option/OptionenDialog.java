@@ -102,6 +102,8 @@ public class OptionenDialog extends JDialog {
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(
 				m_jpUserColumns));
 
+		// Colors
+
 		// Tabs der plugins
 		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
 				&& (i < HOMainFrame.instance().getOptionPanels().size()); ++i) {

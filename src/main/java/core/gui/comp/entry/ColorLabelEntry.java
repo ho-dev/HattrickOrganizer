@@ -73,7 +73,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     public ColorLabelEntry(int integerNumber, double number, boolean current, Color background, boolean withText) {
         if ((integerNumber != 0) || !withText) {
-            setIcon(ImageUtilities.getImageIcon4Veraenderung(integerNumber, current));
+            setIcon(ImageUtilities.getImageIcon4Change(integerNumber, current));
         }
 
         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -104,7 +104,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                            boolean withText) {
 
         if ((changeVal != 0) || !withText) {
-            setIcon(ImageUtilities.getImageIcon4Veraenderung(changeVal, current));
+            setIcon(ImageUtilities.getImageIcon4Change(changeVal, current));
         }
 
         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -205,7 +205,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     public final void setGraphicalChangeValue(double number, boolean current, boolean withText) {
 
-        setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(number, 1), current));
+        setIcon(ImageUtilities.getImageIcon4Change((int) Helper.round(number, 1), current));
 
         if (withText) {
             setGraphicalChangeValue(number);
@@ -219,7 +219,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     public final void setGraphicalChangeValue(int integerNumber, double number, boolean current,
                                               boolean withText) {
 
-        setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(integerNumber, 1), current));
+        setIcon(ImageUtilities.getImageIcon4Change((int) Helper.round(integerNumber, 1), current));
 
         if (withText) {
             setGraphicalChangeValue(integerNumber + number);

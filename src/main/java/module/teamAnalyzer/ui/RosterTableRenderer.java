@@ -117,7 +117,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     int diff = v - oldInfo.getForm();
 
                     
-                   setIcon( ImageUtilities.getImageIcon4Veraenderung(diff,true));
+                   setIcon( ImageUtilities.getImageIcon4Change(diff,true));
 
 
                     break;
@@ -128,7 +128,7 @@ public class RosterTableRenderer extends DefaultTableCellRenderer {
                     int diff = v - oldInfo.getExperience();
 
 
-                        setIcon( ImageUtilities.getImageIcon4Veraenderung(diff,true));
+                        setIcon( ImageUtilities.getImageIcon4Change(diff,true));
 
 
                     break;

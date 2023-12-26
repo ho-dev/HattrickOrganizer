@@ -48,15 +48,11 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.time.Duration;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.swing.*;
-
-import static java.time.temporal.ChronoField.DAY_OF_WEEK;
 
 
 // Referenced classes of package hoplugins.tsforecast:
@@ -206,9 +202,9 @@ protected void paintComponent( Graphics g) {
         int yCoord = (int)(((curve.getSpirit() + 0.5D) * (double)m_iMaxY) / m_dValues);
         switch (curve.getPointType()) {
           case Curve.TRAINER_DOWN_PT -> {
-            graphics2d.drawImage(ImageUtilities.getImageIcon4Veraenderung(-1, true).getImage(),
+            graphics2d.drawImage(ImageUtilities.getImageIcon4Change(-1, true).getImage(),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
-                    ImageUtilities.getImageIcon4Veraenderung(-1, true).getImageObserver());
+                    ImageUtilities.getImageIcon4Change(-1, true).getImageObserver());
             graphics2d.drawString(HOVerwaltung.instance().getLanguageString("trainer_down"),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
             graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),

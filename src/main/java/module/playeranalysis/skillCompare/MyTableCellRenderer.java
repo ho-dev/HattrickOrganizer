@@ -156,7 +156,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			int skillWertOld = (int) ((skillwert - skillWertNew) * 100 + 0.1);
 			int changeWert = skillWertNew - skillWertOld;
 
-			Icon ii =  ImageUtilities.getImageIcon4Veraenderung(changeWert,true);
+			Icon ii =  ImageUtilities.getImageIcon4Change(changeWert,true);
 			label = new JLabel(""+skillWertNew,ii,SwingConstants.CENTER);
 			label.setHorizontalTextPosition(SwingConstants.LEADING);
 			if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_experience"))
