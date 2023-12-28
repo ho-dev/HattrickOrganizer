@@ -805,7 +805,7 @@ public class MatchEvent extends AbstractTable.Storable {
                     case ORGANIZATION_BREAKS -> ret.add(getIcon(HOIconName.CONFUSION));
                     case REORGANIZE -> ret.add(getIcon(HOIconName.REORGANIZE));
                     case SUCCESSFUL_PRESSING -> ret.add(getIcon(HOIconName.TACTIC_PRESSING));
-                    case NEW_CAPTAIN -> ret.add(getIcon(HOIconName.CAPTAIN));
+                    case NEW_CAPTAIN -> ret.add(getIcon(HOIconName.CAPTAIN, HOColorName.PLAYER_SPECIALTY_COLOR));
                     case NEW_SET_PIECES_TAKER -> ret.add(getIcon(HOIconName.PIECES));
                     case REDUCING_GOAL_HOME_TEAM_FREE_KICK,
                             EQUALIZER_GOAL_HOME_TEAM_FREE_KICK,
@@ -889,12 +889,12 @@ public class MatchEvent extends AbstractTable.Storable {
                     }
                     case SE_WINGER_TO_HEAD_SPEC_SCORES -> {
                         ret.add(getIcon(HOIconName.GOAL));
-                        ret.add(getIcon(HOIconName.WINGER));
+                        ret.add(getIcon(HOIconName.WINGER, HOColorName.PLAYER_SPECIALTY_COLOR));
                         ret.add(getSpecialtyIcon(Specialty.Head));
                     }
                     case SE_WINGER_TO_ANYONE_SCORES -> {
                         ret.add(getIcon(HOIconName.GOAL));
-                        ret.add(getIcon(HOIconName.WINGER));
+                        ret.add(getIcon(HOIconName.WINGER, HOColorName.PLAYER_SPECIALTY_COLOR));
                     }
                     case SE_TECHNICAL_GOES_AROUND_HEAD_PLAYER -> {
                         ret.add(getIcon(HOIconName.GOAL));
@@ -997,7 +997,7 @@ public class MatchEvent extends AbstractTable.Storable {
                     }
                     case SE_WINGER_TO_SOMEONE_NO_GOAL -> {
                         ret.add(getIcon(HOIconName.MISS));
-                        ret.add(getIcon(HOIconName.WINGER));
+                        ret.add(getIcon(HOIconName.WINGER, HOColorName.PLAYER_SPECIALTY_COLOR));
                     }
                     case SE_TIRED_DEFENDER_MISTAKE_BUT_NO_GOAL -> {
                         ret.add(getIcon(HOIconName.MISS));
