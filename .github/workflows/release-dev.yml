@@ -26,12 +26,13 @@ jobs:
       - name: Download and install install4j
         run: wget https://download-gcdn.ej-technologies.com/install4j/install4j_linux-x64_10_0_6.deb && sudo dpkg -i install4j_linux-x64_10_0_6.deb
       - name: Build with Gradle
-        run: ./gradlew build makeAllmedias -x test
+        run: ./gradlew release
         env:
           INSTALL4J_HOME: /opt/install4j10
           INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
           POEDITOR_APIKEY: ${{ secrets.POEDITOR_APIKEY }}
           RUN_NUMBER: ${{ github.run_number }}
+          RELEASE_ARTEFACTS: true
       - name: Read version properties
         id: read_version_properties
         uses: christian-draeger/read-properties@1.1.1
@@ -61,7 +62,7 @@ jobs:
           body_path: docs/md/release_notes.md
           target_commitish: ${{ steps.read_version_properties.outputs.branch }}
           prerelease: true
-      # Well, yuck...  but hopefully this does the trick:    
+      # Well, yuck...  but hopefully this does the trick:
       - name: Publish Release
         run: |
           curl --request PATCH \

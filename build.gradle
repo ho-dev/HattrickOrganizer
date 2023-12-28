@@ -1,116 +1,71 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+// Some useful commands:
+//
+//   `./gradlew tasks` lists the available tasks
+//   `./gradlew run` runs HO locally
+//   `./gradlew tiTree <task>` shows the task graph for the task <task>
+
 plugins {
-    id 'java'
-    id 'groovy'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.21'
-    id 'application'
-    id 'de.jansauer.poeditor' version '1.1.0'
-    id 'org.kordamp.gradle.markdown' version '2.2.0'
-    id 'com.github.breadmoirai.github-release' version '2.2.10'
-    id 'com.install4j.gradle' version '9.0.5'
+    id "java"
+    id "groovy"
+    id "org.jetbrains.kotlin.jvm" version "1.9.21"
+    id "application"
+    id "org.kordamp.gradle.markdown" version "2.2.0"
+    id "com.github.breadmoirai.github-release" version "2.5.2"
+    id "com.install4j.gradle" version "9.0.6"
+    id "org.barfuin.gradle.taskinfo" version "2.1.0"
+}
+apply plugin: de.jansauer.poeditor.POEditorPlugin
+
+version = '8.0'
+ext {
+    // Development_stage (DEV:0  BETA:1  STABLE:2)
+    development_stage = project.properties['DEV_STAGE'] ?: 0
+    version_type = "-DEV"
+    target_dir = "${buildDir}/artefacts"
 }
 
 repositories {
     mavenCentral()
-    maven {url 'https://maven.ej-technologies.com/repository'}
+    maven { url 'https://maven.ej-technologies.com/repository' }
 }
 
 dependencies {
-    implementation 'com.install4j:install4j-runtime:10.0.6'
-    implementation 'com.github.scribejava:scribejava-core:8.3.3'
-    implementation 'org.hsqldb:hsqldb:2.7.2'
-    implementation 'com.google.code.gson:gson:2.10'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.okhttp3:okhttp-tls:4.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation 'com.github.weisj:darklaf-core:3.0.2'               //'darklaf-core:latest.integration'
-    implementation 'com.github.weisj:darklaf-theme:3.0.2'              //'darklaf-theme:latest.integration'
-    implementation 'com.github.weisj:darklaf-property-loader:3.0.2'    //'darklaf-property-loader:latest.integration'
-    implementation 'org.javatuples:javatuples:1.2'
-    implementation 'org.apache.commons:commons-text:1.10.0'
-    implementation 'org.knowm.xchart:xchart:3.8.3'
-    implementation 'org.jsoup:jsoup:1.15.3'
-    implementation 'org.jetbrains:annotations:24.0.0'
-    implementation 'org.codehaus.groovy:groovy-all:3.0.19'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    implementation "com.install4j:install4j-runtime:10.0.6"
+    implementation "com.github.scribejava:scribejava-core:8.3.3"
+    implementation "org.hsqldb:hsqldb:2.7.2"
+    implementation "com.google.code.gson:gson:2.10"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation "com.squareup.okhttp3:okhttp-tls:4.10.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.github.weisj:darklaf-core:3.0.2"
+    implementation "com.github.weisj:darklaf-theme:3.0.2"
+    implementation "com.github.weisj:darklaf-property-loader:3.0.2"
+    implementation "org.javatuples:javatuples:1.2"
+    implementation "org.apache.commons:commons-text:1.10.0"
+    implementation "org.knowm.xchart:xchart:3.8.3"
+    implementation "org.jsoup:jsoup:1.15.3"
+    implementation "org.jetbrains:annotations:24.0.0"
+    implementation "org.codehaus.groovy:groovy-all:3.0.19"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.9.0"
 }
 
 test {
     useJUnitPlatform()
 }
 
-
-//  Version ============================================================
-// Development_stage (DEV:0  BETA:1  STABLE:2)
-def major = '8'
-def minor = '0'
-def development_stage = 0
-def releaseArtefacts = true
-def development_tag = ["dev", "beta", "tag_stable"]
-def version_type = ["-DEV", "-BETA", ""]
-
-def development_message = [
-        "Latest alpha release - planned features are still missing and the version might be instable, so don't use it without backups of your database and program directories",
-        "Latest beta release - the version is feature complete - feedback from early users is welcome",
-        "Latest stable release"
-]
-
-// region configuration ==============================================================================================
-println "Configuration start"
-
-ext {
-    target_dir = "${buildDir}/artefacts"
-}
-
-ext.callGit = { param ->
-    def p = param.execute()
-    p.waitFor()
-    //println "error: " + p.errorStream.text
-    return p.text.trim()
-}
-
-ext.filter = { string, filters ->
-    def lines = string.split('\n')
-    String res=""
-    lines.each{ l->
-        for ( String f in filters ) {
-            if ( l.contains(f) ) return
-        }
-        res = res + l + "\n"
-    }
-    return res
-}
-
-// Define HO version  =================
-def currentBranch = callGit('git branch --show-current')
-def versionPropsFile = file('version.properties')
-Properties versionProps = new Properties()
-def buildNumber = System.getenv("RUN_NUMBER") ?: 0
-def version_short = major + '.' + minor
-buildNumber = buildNumber.toString()
-project.version = major + '.' + minor + '.' + buildNumber + '.' + development_stage.toString()
-versionProps['buildNumber'] = buildNumber
-versionProps['version'] = project.version
-versionProps['shortVersion'] = version_short
-versionProps['tag'] = development_tag[development_stage]
-versionProps['branch'] = currentBranch
-versionProps.store(versionPropsFile.newWriter(), null)
-
-println "Project:  $project.name $project.version ....................."
-
 //  configure application plugin --------------------------------
 application {
-    mainClass = 'core.HOLauncher'
+    mainClass = "core.HOLauncher"
 }
 
 //  configure java plugin --------------------------------
 java {
-    compileJava.options.encoding = 'UTF-8'
+    compileJava.options.encoding = "UTF-8"
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-//    modularity.inferModulePath.set(true)
 }
 
 tasks.withType(KotlinCompile).all {
@@ -138,13 +93,25 @@ sourceSets {
     }
 }
 
-// Returns the build version number
-// This is required by the Automated build, in this format:
-//      version=<version_number>
-task printVersion {
-     doFirst {
-          print "version=${project.version}"
-     }
+// region configuration ==============================================================================================
+ext.callGit = { param ->
+    def p = param.execute()
+    p.waitFor()
+    //println "error: " + p.errorStream.text
+    return p.text.trim()
+}
+
+// Used to filter contributors
+ext.filter = { string, filters ->
+    def lines = string.split('\n')
+    String res = ""
+    lines.each{ l->
+        for ( String f in filters ) {
+            if ( l.contains(f) ) return
+        }
+        res = res + l + "\n"
+    }
+    return res
 }
 
 //  configure markdownToHtml --------------------------------
@@ -154,46 +121,46 @@ markdownToHtml {
 
 // Configure poeditor plugin ================================
 poeditor {
-    apiKey = System.getenv('POEDITOR_APIKEY')
+    apiKey = System.getenv('POEDITOR_APIKEY') ?: 'xxx'
     projectId = '206221'
 
-    trans type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/sprache/Bulgarian.properties"
-    trans type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/sprache/Catalan.properties"
-    trans type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/sprache/Hrvatski(Croatian).properties"
-    trans type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/sprache/Czech.properties"
-    trans type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/sprache/Danish.properties"
-    trans type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/sprache/Nederlands.properties"
-    trans type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/sprache/Finnish.properties"
-    trans type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/sprache/French.properties"
-    trans type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/sprache/Deutsch.properties"
-    trans type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/sprache/Greeklish.properties"
-    trans type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/sprache/Hebrew.properties" //Hebrew
-    trans type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/sprache/Magyar.properties"  //Hungarian
-    trans type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/sprache/Italiano.properties"
-    trans type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/sprache/Hangul(Korean).properties"
-    trans type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/sprache/Latvija.properties" //Lettonie
-    trans type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/sprache/Lithuanian.properties"
-    trans type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/sprache/Persian.properties"
-    trans type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/sprache/Polish.properties"
-    trans type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/sprache/Portugues.properties"
-    trans type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/sprache/PortuguesBrasil.properties"
-    trans type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/sprache/Romanian.properties"
-    trans type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/sprache/Russian.properties"
-    trans type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/sprache/Serbian(Cyrillic).properties"
-    trans type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/sprache/Slovak.properties" //Slovak
-    trans type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
-    trans type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
-    trans type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
-    trans type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/sprache/Norsk.properties"     // Norwegian
-    trans type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/sprache/Indonesian.properties"
-    trans type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/sprache/Japanese.properties"
-    trans type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/sprache/Slovenian.properties"
-    trans type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/sprache/Ukranian.properties"
-    trans type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/sprache/Georgian.properties"
-    trans type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
-    trans type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
-    trans type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
-    trans type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AR).properties"    // Argentina
+    trans.add type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/sprache/Bulgarian.properties"
+    trans.add type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/sprache/Catalan.properties"
+    trans.add type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/sprache/Hrvatski(Croatian).properties"
+    trans.add type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/sprache/Czech.properties"
+    trans.add type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/sprache/Danish.properties"
+    trans.add type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/sprache/Nederlands.properties"
+    trans.add type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/sprache/Finnish.properties"
+    trans.add type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/sprache/French.properties"
+    trans.add type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/sprache/Deutsch.properties"
+    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/sprache/Greeklish.properties"
+    trans.add type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/sprache/Hebrew.properties" //Hebrew
+    trans.add type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/sprache/Magyar.properties"  //Hungarian
+    trans.add type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/sprache/Italiano.properties"
+    trans.add type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/sprache/Hangul(Korean).properties"
+    trans.add type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/sprache/Latvija.properties" //Lettonie
+    trans.add type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/sprache/Lithuanian.properties"
+    trans.add type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/sprache/Persian.properties"
+    trans.add type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/sprache/Polish.properties"
+    trans.add type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/sprache/Portugues.properties"
+    trans.add type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/sprache/PortuguesBrasil.properties"
+    trans.add type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/sprache/Romanian.properties"
+    trans.add type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/sprache/Russian.properties"
+    trans.add type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/sprache/Serbian(Cyrillic).properties"
+    trans.add type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/sprache/Slovak.properties" //Slovak
+    trans.add type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
+    trans.add type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
+    trans.add type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
+    trans.add type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/sprache/Norsk.properties"     // Norwegian
+    trans.add type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/sprache/Indonesian.properties"
+    trans.add type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/sprache/Japanese.properties"
+    trans.add type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/sprache/Slovenian.properties"
+    trans.add type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/sprache/Ukranian.properties"
+    trans.add type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/sprache/Georgian.properties"
+    trans.add type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
+    trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
+    trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
+    trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AR).properties"    // Argentina
 }
 
 
@@ -201,9 +168,11 @@ poeditor {
 jar {
     archiveFileName = "HO.jar"
     manifest {
-        attributes 'Manifest-Version': 1.0, 'Implementation-Title': 'HO', 'Implementation-Version': project.version,
-                   'Main-Class': 'core.HOLauncher',
-                    "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        attributes 'Manifest-Version': 1.0,
+                'Implementation-Title': 'HO',
+                'Implementation-Version': project.version,
+                'Main-Class': 'core.HOLauncher',
+                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
     }
     exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
 }
@@ -225,12 +194,62 @@ install4j {
     license = System.getenv('INSTALL4J_LICENSE')
 }
 
+
+poeditorPull {
+    outputs.upToDateWhen { false }
+}
+
+markdownToHtml {
+    // create html from md sources for both release notes and changelog
+    sourceDir = new File("${projectDir}/docs/md")
+    outputDir = new File("${projectDir}/docs/html")
+    markdownToHtml.hardwraps = true
+}
+
+
 //endregion ======================================================================================================================
 
 
 // region my tasks ================================================================================================
 
-task makeAllmedias(dependsOn: 'media') {
+tasks.register("createVersion") {
+    description "Creates the version file required by the GitHub Actions release process."
+    doLast {
+        def coords = project.version.split(/\./)
+        def major = coords[0]
+        def minor = coords[1]
+        def developmentStage = project.ext.development_stage
+
+        println "development stage: ${project.ext.development_stage}"
+
+        def currentBranch = callGit('git branch --show-current')
+        Properties versionProps = new Properties()
+        def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
+
+        project.version = "${major}.${minor}.${buildNumber}.${developmentStage}".toString()
+        // Version in jar extension is set eagerly, override after computing version.
+        jar.manifest {
+            attributes('Implementation-Version': project.version)
+        }
+
+        versionProps['buildNumber'] = buildNumber
+        versionProps['version'] = project.version.toString()
+        versionProps['shortVersion'] = "${major}.${minor}".toString()
+        versionProps['tag'] = ['dev', 'beta', 'tag_stable'].get(developmentStage)
+        versionProps['branch'] = currentBranch
+
+        project.ext.version_type = ["-DEV", "-BETA", ""].get(developmentStage)
+
+        // Write to version.properties file
+        def versionPropsFile = new File('version.properties')
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        println "Project:  $project.name $project.version ....................."
+    }
+}
+
+tasks.register("makeAllMedias") {
+    dependsOn tasks.media
     doLast {
         delete "${projectDir}/build/artefacts/output.txt"
 
@@ -249,7 +268,7 @@ task makeAllmedias(dependsOn: 'media') {
 
         // compatibility to HO3 Updater
         // which used other zip file name
-        def versionType=version_type[development_stage]
+        def versionType = project.ext.version_type ?: '-DEV'
         println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
         copy {
             from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
@@ -259,9 +278,9 @@ task makeAllmedias(dependsOn: 'media') {
     }
 }
 
-task media(type: com.install4j.gradle.Install4jTask) {
+tasks.register("media", com.install4j.gradle.Install4jTask) {
     group 'sub tasks'
-    dependsOn 'CreateDistribution'
+    dependsOn tasks.createDistribution
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
 
     // 60 -> Windows Setup
@@ -290,35 +309,31 @@ task media(type: com.install4j.gradle.Install4jTask) {
 
     buildIds = [60, 485, 64, 481, 172, 473, 173, 477, 1062, 1064, 1203, 1206, 1208, 1211]
     //buildIds = [60]
-    String versionType=version_type[development_stage]
-    variables = [HO_version: project.version, projectDir: projectDir, versionType: versionType]
+
+    variables = [HO_version: project.version, projectDir: projectDir, versionType: project.ext.version_type]
 }
 
-task preparingBuild {
+tasks.register("preparingBuild") {
     group 'sub tasks'
     doLast {
-        if (releaseArtefacts) {
-            //     Deleting build project     ---------------------------------------------------------------------
-            println("Deleting build and execution files ....")
-            project.delete(files("${projectDir}/db"))
-            project.delete(files("${projectDir}/logs"))
-            project.delete(files("${projectDir}/themes"))
-            project.delete(files("${projectDir}/user.xml"))
-            //     Creating Target directory ...  ---------------------------------------------------------------------
-            mkdir project.ext.target_dir
-        }
+        //     Deleting build project     ---------------------------------------------------------------------
+        println("Deleting build and execution files ....")
+        project.delete(files("${projectDir}/db"))
+        project.delete(files("${projectDir}/logs"))
+        project.delete(files("${projectDir}/themes"))
+        project.delete(files("${projectDir}/user.xml"))
+        //     Creating Target directory ...  ---------------------------------------------------------------------
+        mkdir project.ext.target_dir
     }
 }
 
-task pushmd(dependsOn: preparingBuild)  {
+tasks.register("pushmd")  {
     group 'sub tasks'
+    dependsOn tasks.preparingBuild
     doLast {
-
-        // changelog copied in md source folder
-        //copy {
-        //    from "${projectDir}/src/main/resources/changelog.md"
-        //    into "${projectDir}/docs/md"
-        //}
+        def coords = project.version.split(/\./)
+        def major = coords[0]
+        def minor = coords[1]
 
         // create release notes ========
         // list the contributors that don't want to be mentioned in release notes
@@ -330,10 +345,15 @@ task pushmd(dependsOn: preparingBuild)  {
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
+        def development_message = [
+                "Latest alpha release – planned features are still missing and the version might be unstable, so don't use it without backups of your database and program directories",
+                "Latest beta release – the version is feature complete – feedback from early users is welcome",
+                "Latest stable release"
+        ]
         List<String> intro = [
                 "# HO! $major.$minor Release Notes",
                 "",
-                development_message[development_stage],
+                development_message[project.ext.development_stage],
                 "",
                 "latest commit: ${latestCommit}",
                 "",
@@ -361,11 +381,11 @@ task pushmd(dependsOn: preparingBuild)  {
         toConcatenate.each { f -> changeLog << f.text }
 
     }
-
 }
 
-task CreateDistribution (dependsOn: installDist) {
+tasks.register("createDistribution") {
     group 'sub tasks'
+    dependsOn tasks.installDist
     outputs.upToDateWhen { false }
     def distribDir = file("${buildDir}/install/XXX")
     doLast {
@@ -376,21 +396,19 @@ task CreateDistribution (dependsOn: installDist) {
             into "${distribDir}"
         }
 
-        if (development_stage == '0') {
+        if (project.ext.development_stage == '0') {
             copy {
                 from "${projectDir}/utils/buildResources/Logo_dev.png"
                 into "${projectDir}/utils/buildResources"
                 rename "Logo_dev.png", "Logo.png"
             }
-        }
-        else if (development_stage == '1') {
+        } else if (project.ext.development_stage == '1') {
             copy {
                 from "${projectDir}/utils/buildResources/Logo_beta.png"
                 into "${projectDir}/utils/buildResources"
                 rename "Logo_beta.png", "Logo.png"
             }
-        }
-        else {
+        } else {
             copy {
                 from "${projectDir}/utils/buildResources/Logo_stable.png"
                 into distribDir
@@ -420,8 +438,9 @@ task CreateDistribution (dependsOn: installDist) {
     }
 }
 
-task createLanguageFileList(dependsOn: poeditorPull)  {
+tasks.register("createLanguageFileList")  {
     group 'sub tasks'
+    dependsOn tasks.poeditorPull
     outputs.upToDateWhen { false }
 
     def lTranslationFiles = []
@@ -438,7 +457,7 @@ task createLanguageFileList(dependsOn: poeditorPull)  {
     }
 }
 
-task resetDB {
+tasks.register("resetDB") {
     group 'tool'
     description 'copy the database from existing install into project'
 
@@ -459,17 +478,17 @@ task resetDB {
     }
 }
 
-task pushDB {
+tasks.register("pushDB") {
     group 'tool'
     description 'copy the database from project to temp folder for analysis'
 
     doLast {
         try {
-            println("Pushing DB: copying DB from ${projectDir} into `${tempDir}`/db/`")
+            println("Pushing DB: copying DB from ${projectDir} into `${tempDir}/db/`")
             project.delete(files("${tempDir}/db"))
             copy {
-                from "${projectDir}/db/"
-                into "${tempDir}/db/"
+                from"${projectDir}/db"
+                into "${tempDir}/db"
                 exclude "**/logs/**"
             }
 
@@ -480,23 +499,15 @@ task pushDB {
     }
 }
 
-poeditorPull {
-    outputs.upToDateWhen { false }
+tasks.register("release", GradleBuild) {
+    tasks = ['clean', 'createVersion', 'poeditorPull', 'processResources', 'createLanguageFileList', 'makeAllMedias']
 }
 
-markdownToHtml {
-    // create html from md sources for both release notes and changelog
-    sourceDir = new File("${projectDir}/docs/md")
-    outputDir = new File("${projectDir}/docs/html")
-    markdownToHtml.hardwraps = true
-}
-
-markdownToHtml.dependsOn pushmd
-poeditorPull.dependsOn markdownToHtml
-createLanguageFileList.dependsOn poeditorPull
-processResources.dependsOn createLanguageFileList
+markdownToHtml.dependsOn(pushmd)
+poeditorPull.dependsOn(markdownToHtml)
+processResources.dependsOn(poeditorPull)
 compileJava.dependsOn(clean)
-compileJava.dependsOn processResources
+compileJava.dependsOn(processResources)
 
 
 // endregion ======================================================================================================================

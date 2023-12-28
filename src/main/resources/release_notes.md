@@ -54,6 +54,8 @@
 * Add a Linux-friendly default theme, called “Gnome.”
 * Add Kotlin support to codebase
 * Reset progress bar when action is finished (#1955)
+* Upgrade Gradle to version 8.5
+* Fix issue with startup post-installation (#2002)
 
 ## Translations
 
