@@ -111,7 +111,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOColorName, 
 		put(YELLOWCARD, "img/icons/made/yellow-card(yellow).svg");
 		put(REDCARD, "gui/bilder//red-card.svg");
 		put(FORMATION, "gui/bilder/mo-select.svg");
-		put(REPLACEMENT, "gui/bilder/in-out.svg");
+		put(REPLACEMENT, "gui/bilder/exchange.svg");
 		put(ROTATE, "gui/bilder/rotate.svg");
 		put(GOAL, "gui/bilder/goal.svg");
 		put(MISS, "gui/bilder/miss.svg");
