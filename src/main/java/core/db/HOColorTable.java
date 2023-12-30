@@ -1,11 +1,6 @@
 package core.db;
 
-import core.db.AbstractTable;
-import core.db.ConnectionManager;
-import core.file.hrf.HRF;
 import core.gui.theme.HOColor;
-import core.util.HODateTime;
-
 import java.sql.Types;
 import java.util.List;
 
@@ -16,7 +11,7 @@ public class HOColorTable extends AbstractTable {
     /**
      * constructor
      *
-     * @param connectionManager
+     * @param connectionManager Connection manager
      */
     public HOColorTable(ConnectionManager connectionManager) {
         super(TABLENAME, connectionManager);

@@ -8,7 +8,7 @@ public class HOColor extends AbstractTable.Storable {
 
     public enum Name {
         RED,
-        BLACK;
+        BLACK
 
     }
 
