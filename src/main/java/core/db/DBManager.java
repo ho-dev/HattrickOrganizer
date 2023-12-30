@@ -10,6 +10,7 @@ import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
+import core.gui.theme.HOColor;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
@@ -2386,4 +2387,7 @@ public class DBManager implements PersistenceManager {
 		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
 	}
 
+    public List<HOColor> loadHOColors(String theme) {
+		return ((HOColorTable)getTable(HOColorTable.TABLENAME)).load(theme);
+    }
 }
