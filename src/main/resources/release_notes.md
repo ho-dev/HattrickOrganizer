@@ -49,6 +49,7 @@
 * Increase effect of youth friendly match training (#1950, #1994)
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
+* Display specialty icons in youth player tables (#1999)
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
