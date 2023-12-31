@@ -18,14 +18,14 @@ import java.awt.*;
 final class SeriesHistoryPanel extends JPanel {
 
 	private final Color[] COLOR4LINES = {
-			ThemeManager.getColor(HOColorName.PALETTE13[0]),
-			ThemeManager.getColor(HOColorName.PALETTE13[1]),
-			ThemeManager.getColor(HOColorName.PALETTE13[2]),
-			ThemeManager.getColor(HOColorName.PALETTE13[8]),
-			ThemeManager.getColor(HOColorName.PALETTE13[4]),
-			ThemeManager.getColor(HOColorName.PALETTE13[5]),
-			ThemeManager.getColor(HOColorName.PALETTE13[6]),
-			ThemeManager.getColor(HOColorName.PALETTE13[9])
+			ThemeManager.getColor(HOColorName.PALETTE13_0),
+			ThemeManager.getColor(HOColorName.PALETTE13_1),
+			ThemeManager.getColor(HOColorName.PALETTE13_2),
+			ThemeManager.getColor(HOColorName.PALETTE13_8),
+			ThemeManager.getColor(HOColorName.PALETTE13_4),
+			ThemeManager.getColor(HOColorName.PALETTE13_5),
+			ThemeManager.getColor(HOColorName.PALETTE13_6),
+			ThemeManager.getColor(HOColorName.PALETTE13_9)
 	};
 
 	private Color STANDARD_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);

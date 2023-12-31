@@ -7,6 +7,13 @@ import java.awt.*;
 
 public abstract class BaseTheme implements Theme {
 
+   protected void addColor(HOColorName name, Color color){
+      HOColor.addColor(new HOColor(name, this.getName(), color));
+   }
+   protected void addColor(HOColorName name, HOColorName colorReference){
+      HOColor.addColor(new HOColor(name, this.getName(), colorReference));
+   }
+
      protected void setFont(int fontSize) {
         UIDefaults uid = UIManager.getLookAndFeelDefaults();
 

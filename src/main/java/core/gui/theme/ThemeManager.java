@@ -109,22 +109,24 @@ public final class ThemeManager {
 		return new ArrayList<>(themes.values());
 	}
 
-	public static Color getColor(String key) {
-		Object obj;
-
-		obj = instance().classicSchema.getThemeColor(key);
-		if(obj instanceof Color)
-			return (Color)obj;
-		if(obj instanceof String)
-			return getColor(obj.toString());
-
-		if(obj == null)
-			obj = UIManager.getColor(key);
-
-		if(obj == null)
-			return instance().classicSchema.getDefaultColor(key);
-
-		return (Color)obj;
+	public static Color getColor(HOColorName key) {
+		var theme = getCurrentThemeName();
+		return HOColor.getColor(key, theme);
+//		Object obj;
+//
+//		obj = instance().classicSchema.getThemeColor(key);
+//		if(obj instanceof Color)
+//			return (Color)obj;
+//		if(obj instanceof String)
+//			return getColor(obj.toString());
+//
+//		if(obj == null)
+//			obj = UIManager.getColor(key);
+//
+//		if(obj == null)
+//			return instance().classicSchema.getDefaultColor(key);
+//
+//		return (Color)obj;
 	}
 
 	public boolean isSet(String key) {
@@ -350,6 +352,14 @@ public final class ThemeManager {
 		}
 
 		return scaledIcon;
+	}
+
+	private static String getCurrentThemeName(){
+		var ret = themes.get(UserParameter.instance().skin);
+		if (ret==null){
+			ret = themes.get(DEFAULT_THEME_NAME);
+		}
+		return ret.getName();
 	}
 
 	public void setCurrentTheme() {

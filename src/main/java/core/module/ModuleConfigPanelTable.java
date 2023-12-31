@@ -20,6 +20,8 @@ import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 
+import static core.gui.theme.HOColorName.DARK_GRAY;
+
 
 class ModuleConfigPanelTable extends JTable implements ActionListener{
 	@Serial
@@ -48,7 +50,7 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 			value[i][0] = getComboBox(modules[i]);
 			value[i][1] = new ColorLabelEntry(modules[i].getDescription());
 			if(modules[i].getStatus() == IModule.STATUS_DEACTIVATED)
-				((ColorLabelEntry)value[i][1]).setFGColor(ThemeManager.getColor("dark_gray"));
+				((ColorLabelEntry)value[i][1]).setFGColor(ThemeManager.getColor(DARK_GRAY));
 			value[i][2] = modules[i].hasConfigPanel()?getButton(modules[i]):"";
 		}
 

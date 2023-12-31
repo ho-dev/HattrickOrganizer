@@ -56,7 +56,7 @@ public class DetailsView extends JPanel {
 
 	private void updateView() {
 		if (this.substitution != null) {
-			String color = (this.substitution.getSubjectPlayerID() != -1) ? HOColorName.SUBST_CHANGED_VALUE_BG
+			HOColorName color = (this.substitution.getSubjectPlayerID() != -1) ? HOColorName.SUBST_CHANGED_VALUE_BG
 					: HOColorName.TABLEENTRY_BG;
 			this.firstPlayerEntry.setBackground(ThemeManager.getColor(color));
 

@@ -33,66 +33,66 @@ public class SolarizedLightTheme extends BaseTheme {
             ThemeManager.instance().put(HOBooleanName.IMAGEPANEL_BG_PAINTED, false);
 
             // DEFAULT COLOR
-            ThemeManager.instance().put(HOColorName.RED, defaults.getColor("palette.red"));
-            ThemeManager.instance().put(HOColorName.BLUE, defaults.getColor("palette.blue"));
-            ThemeManager.instance().put(HOColorName.GREEN, defaults.getColor("palette.green"));
-            ThemeManager.instance().put(HOColorName.YELLOW, defaults.getColor("palette.yellow"));
-            ThemeManager.instance().put(HOColorName.ORANGE, defaults.getColor("palette.orange"));
+            addColor(HOColorName.RED, defaults.getColor("palette.red"));
+            addColor(HOColorName.BLUE, defaults.getColor("palette.blue"));
+            addColor(HOColorName.GREEN, defaults.getColor("palette.green"));
+            addColor(HOColorName.YELLOW, defaults.getColor("palette.yellow"));
+            addColor(HOColorName.ORANGE, defaults.getColor("palette.orange"));
 
             // Use defaults from LAF
-            ThemeManager.instance().put(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.PANEL_BG, defaults.getColor("background"));
-            ThemeManager.instance().put(HOColorName.TABLEENTRY_BG, Color.WHITE);
-            ThemeManager.instance().put(HOColorName.BACKGROUND_CONTAINER, Color.WHITE);
-            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_FG, defaults.getColor("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.TABLE_SELECTION_BG, new Color(200, 200, 200));
+            addColor(HOColorName.TABLEENTRY_FG, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.LABEL_FG, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.PANEL_BG, defaults.getColor("background"));
+            addColor(HOColorName.TABLEENTRY_BG, Color.WHITE);
+            addColor(HOColorName.BACKGROUND_CONTAINER, Color.WHITE);
+            addColor(HOColorName.TABLE_SELECTION_FG, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.TABLE_SELECTION_BG, new Color(200, 200, 200));
 
             // Smileys
-            ThemeManager.instance().put(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.SMILEYS_COLOR, defaults.getColor("Label.foreground"));
 
             // Player Specialties
-            ThemeManager.instance().put(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.PLAYER_SPECIALTY_COLOR, defaults.getColor("Label.foreground"));
 
             // Statistics
-            ThemeManager.instance().put(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
+            addColor(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
 
             //training bar
-            ThemeManager.instance().put(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.forest"));
-            ThemeManager.instance().put(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
-            ThemeManager.instance().put(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
+            addColor(HOColorName.FULL_TRAINING_DONE, defaults.getColor("palette.forest"));
+            addColor(HOColorName.PARTIAL_TRAINING_DONE, defaults.getColor("palette.lime"));
+            addColor(HOColorName.FULL_STAMINA_DONE, defaults.getColor("palette.blue"));
 
             // borders training position in lineup
-            ThemeManager.instance().put(HOColorName.PLAYER_POSITION_PANEL_BORDER, ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
+            addColor(HOColorName.PLAYER_POSITION_PANEL_BORDER, ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
             // League Details
-            ThemeManager.instance().put(HOColorName.SHOW_MATCH, defaults.getColor("palette.forest"));
-            ThemeManager.instance().put(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
-            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").darker());
-            ThemeManager.instance().put(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").darker());
-            ThemeManager.instance().put(HOColorName.HOME_TEAM_FG, new Color(179,60,180));
-            ThemeManager.instance().put(HOColorName.SELECTED_TEAM_FG, new Color(36,175,235));
-            ThemeManager.instance().put(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
+            addColor(HOColorName.SHOW_MATCH, defaults.getColor("palette.forest"));
+            addColor(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
+            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").darker());
+            addColor(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").darker());
+            addColor(HOColorName.HOME_TEAM_FG, new Color(179,60,180));
+            addColor(HOColorName.SELECTED_TEAM_FG, new Color(36,175,235));
+            addColor(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             // Lineup
-            ThemeManager.instance().put(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
-            ThemeManager.instance().put(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
-            ThemeManager.instance().put(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
-            ThemeManager.instance().put(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
-            ThemeManager.instance().put(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
-            ThemeManager.instance().put(HOColorName.LINEUP_COLOR, defaults.getColor("palette.brown"));
-            ThemeManager.instance().put(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.brown"));
+            addColor(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
+            addColor(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
+            addColor(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
+            addColor(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));
+            addColor(HOColorName.CLEAR_LINEUP, defaults.getColor("palette.red"));
+            addColor(HOColorName.LINEUP_COLOR, defaults.getColor("palette.brown"));
+            addColor(HOColorName.LINEUP_HIGHLIGHT_FG, defaults.getColor("palette.brown"));
 
-            ThemeManager.instance().put(HOColorName.LINK_LABEL_FG, new Color(61,64,66));
+            addColor(HOColorName.LINK_LABEL_FG, new Color(61,64,66));
 
             // Transfer module
-            ThemeManager.instance().put(HOColorName.TRANSFER_IN_COLOR, defaults.getColor("palette.green"));
-            ThemeManager.instance().put(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
+            addColor(HOColorName.TRANSFER_IN_COLOR, defaults.getColor("palette.green"));
+            addColor(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
 
             //players details
-            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, defaults.getColor("Label.foreground"));
-            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN, new Color(0, 255, 0));
-            ThemeManager.instance().put(HOColorName.PLAYER_DETAILS_STARS_FILL, defaults.getColor("palette.yellow"));
+            addColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR, defaults.getColor("Label.foreground"));
+            addColor(HOColorName.PLAYER_DETAILS_BAR_FILL_GREEN, new Color(0, 255, 0));
+            addColor(HOColorName.PLAYER_DETAILS_STARS_FILL, defaults.getColor("palette.yellow"));
 
 
             return true;
