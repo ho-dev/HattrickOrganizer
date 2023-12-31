@@ -112,21 +112,6 @@ public final class ThemeManager {
 	public static Color getColor(HOColorName key) {
 		var theme = getCurrentThemeName();
 		return HOColor.getColor(key, theme);
-//		Object obj;
-//
-//		obj = instance().classicSchema.getThemeColor(key);
-//		if(obj instanceof Color)
-//			return (Color)obj;
-//		if(obj instanceof String)
-//			return getColor(obj.toString());
-//
-//		if(obj == null)
-//			obj = UIManager.getColor(key);
-//
-//		if(obj == null)
-//			return instance().classicSchema.getDefaultColor(key);
-//
-//		return (Color)obj;
 	}
 
 	public boolean isSet(String key) {

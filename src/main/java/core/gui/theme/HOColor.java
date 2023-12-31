@@ -70,6 +70,7 @@ public class HOColor extends AbstractTable.Storable {
         addColor(LEAGUE_DEMOTED_BG, new Color(255, 220, 220));
         addColor(LEAGUE_BG, WHITE);
         addColor(LEAGUE_FG, BLACK);
+        addColor(LEAGUE_PANEL_BG, Color.WHITE);
 
         // league history panel
         addColor(LEAGUEHISTORY_LINE1_FG, Color.GREEN);
@@ -164,6 +165,7 @@ public class HOColor extends AbstractTable.Storable {
         addColor(STAT_LODDAR, new Color(150, 20, 20));
         addColor(STAT_PANEL_BG, Color.WHITE);
         addColor(STAT_PANEL_FG, Color.DARK_GRAY);
+        addColor(STAT_PANEL_FG_HELPING_LINES, Color.BLACK);
 
         // matchtypes
         addColor(MATCHTYPE_BG, WHITE);
@@ -275,22 +277,35 @@ public class HOColor extends AbstractTable.Storable {
 
     private static Color getColor(HOColorName name, String theme, List<String> colorNames) {
         if (!colorNames.contains(name.name())) { // break endless recursion
-            var colorMap = colors.get(name);
-            if (colorMap != null) {
-                var hoColor = colorMap.get(theme);
-                if (hoColor == null) {
-                    hoColor = colorMap.get("default");
-                }
-                if (hoColor != null) {
-                    var ref = hoColor.colorReference;
-                    if (ref != null) {
-                        colorNames.add(hoColor.getName());
-                        return getColor(ref, theme, colorNames);
-                    } else {
-                        return hoColor.getColor();
-                    }
+            var hoColor = getHOColor(name, theme);
+            if (hoColor != null) {
+                var ref = hoColor.colorReference;
+                if (ref != null) {
+                    colorNames.add(hoColor.getName());
+                    return getColor(ref, theme, colorNames);
+                } else {
+                    return hoColor.getColor();
                 }
             }
+        }
+        return null;
+    }
+
+    public static List<HOColor> getColors(String theme) {
+        var ret = new ArrayList<HOColor>();
+        for ( var name : HOColorName.values()){
+            ret.add(getHOColor(name, theme));
+        }
+        return ret;
+    }
+
+    private static HOColor getHOColor(HOColorName name, String theme) {
+        var colorMap = colors.get(name);
+        if (colorMap!=null){
+            var hoColor = colorMap.get(theme);
+            if (hoColor != null) return hoColor;
+            hoColor = colorMap.get("default");
+            if (hoColor != null) return hoColor;
         }
         return null;
     }
@@ -383,7 +398,8 @@ public class HOColor extends AbstractTable.Storable {
     }
 
     public String getColorReference() {
-        return colorReference.name();
+        if (colorReference!=null) return colorReference.name();
+        return null;
     }
 
     public void setColorReference(String colorReference) {
@@ -415,5 +431,9 @@ public class HOColor extends AbstractTable.Storable {
 
     public void setDefaultValue(HOColor o) {
         this.defaultValue = o;
+    }
+
+    public HOColor getDefaultValue() {
+        return this.defaultValue;
     }
 }
