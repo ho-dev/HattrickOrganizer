@@ -190,9 +190,9 @@ public abstract class AbstractTable {
 		var ret = new ArrayList<T>();
 		ColumnDescriptor columnDescriptor = null;
 		try{
-			var constructor = tClass.getConstructor();
 			if (rs != null) {
 				while (rs.next() && 0 != max--) {
+					var constructor = tClass.getConstructor();
 					var object = constructor.newInstance();
 					for (var c : columns) {
 						columnDescriptor = c;

@@ -339,7 +339,7 @@ public final class ThemeManager {
 		return scaledIcon;
 	}
 
-	private static String getCurrentThemeName(){
+	public static String getCurrentThemeName(){
 		var ret = themes.get(UserParameter.instance().skin);
 		if (ret==null){
 			ret = themes.get(DEFAULT_THEME_NAME);

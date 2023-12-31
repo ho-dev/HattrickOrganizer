@@ -358,7 +358,10 @@ public class HOColor extends AbstractTable.Storable {
      */
     private HOColor defaultValue;
 
-    HOColor() {
+    /**
+     * Used by HOColorTable
+     */
+    public HOColor() {
         super();
     }
 

@@ -1,8 +1,8 @@
 package core.option;
 
+import core.db.user.UserManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColor;
-import core.gui.theme.HOColorName;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -48,15 +48,13 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		add(getMiddlePanel(),BorderLayout.CENTER);
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	private JPanel getTopPanel(){
 		JPanel panel = new ImagePanel();
 		var themes = ThemeManager.instance().getRegisteredThemes();
 		var names = themes.stream().map(Theme::getName).toArray();
 		skins = new JComboBox(names);
+		var selected = ThemeManager.getCurrentThemeName();
+		skins.setSelectedItem(selected);
 		skins.addActionListener( this );
 		panel.add(skins);
 		return panel;
@@ -116,7 +114,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	private JLabel createColorLabel(Color color) {
 		var label = new JLabel();
-		label.setBackground(color);
+		label.setOpaque(true);
+		if (color != null) {
+			label.setBackground(color);
+			label.setToolTipText(color.toString());
+		}
 		return label;
 	}
 
