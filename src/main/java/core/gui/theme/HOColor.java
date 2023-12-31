@@ -1,6 +1,7 @@
 package core.gui.theme;
 
 import core.db.AbstractTable;
+import org.junit.Assert;
 
 import java.awt.*;
 import java.util.*;
@@ -27,16 +28,16 @@ public class HOColor extends AbstractTable.Storable {
         addColor(LIGHTGREEN, new Color(220, 255, 220));
         addColor(LIGHTYELLOW, new Color(255, 255, 200));
         addColor(HO_GRAY1, new Color(230, 230, 230));
-        addColor(FOREST_GREEN, new Color(34,139,34));
+        addColor(FOREST_GREEN, new Color(34, 139, 34));
 
         addColor(URL_PANEL_BG, new Color(9, 9, 167));
 
-        addColor(PANEL_BG, new Color(214,217,223));
+        addColor(PANEL_BG, new Color(214, 217, 223));
         addColor(PANEL_BORDER, DARK_GRAY);
         addColor(PLAYER_POSITION_PANEL_BORDER, LIGHT_GRAY);
         addColor(BUTTON_BG, WHITE);
-        addColor(BUTTON_ASSIST_CANCEL_BG,  new Color(226, 31, 31));
-        addColor(BUTTON_ASSIST_OK_BG,  new Color(34, 225, 36));
+        addColor(BUTTON_ASSIST_CANCEL_BG, new Color(226, 31, 31));
+        addColor(BUTTON_ASSIST_OK_BG, new Color(34, 225, 36));
         addColor(LABEL_ERROR_FG, Color.RED);
         addColor(LABEL_SUCCESS_FG, GREEN);
         addColor(LABEL_ONGREEN_FG, WHITE);
@@ -63,8 +64,8 @@ public class HOColor extends AbstractTable.Storable {
         addColor(SKILLENTRY2_BG, GRAY);
 
         // league Table
-        addColor(HOME_TEAM_FG, new Color(179,60,180));
-        addColor(HOColorName.SELECTED_TEAM_FG, new Color(36,90,235));
+        addColor(HOME_TEAM_FG, new Color(179, 60, 180));
+        addColor(HOColorName.SELECTED_TEAM_FG, new Color(36, 90, 235));
         addColor(LEAGUE_TITLE_BG, HO_GRAY1);
         addColor(LEAGUE_PROMOTED_BG, LIGHTGREEN);
         addColor(LEAGUE_RELEGATION_BG, LIGHTYELLOW);
@@ -138,7 +139,7 @@ public class HOColor extends AbstractTable.Storable {
         addColor(PLAYER_SPECIALTY_NEGATIVE_COLOR, RED);
 
 
-        addColor(PLAYER_STAR_COLOR, new Color(255,215,0));
+        addColor(PLAYER_STAR_COLOR, new Color(255, 215, 0));
 
         addColor(STAT_CASH, BLACK);
         addColor(STAT_WINLOST, Color.GRAY);
@@ -206,8 +207,8 @@ public class HOColor extends AbstractTable.Storable {
 
         // Training
         addColor(TRAINING_BIRTHDAY_BG, new Color(255, 240, 175));
-        addColor(TRAINING_FULL_BG,LIGHTGREEN);
-        addColor(TRAINING_PARTIAL_BG,LIGHTYELLOW);
+        addColor(TRAINING_FULL_BG, LIGHTGREEN);
+        addColor(TRAINING_PARTIAL_BG, LIGHTYELLOW);
         addColor(TRAINING_OSMOSIS_BG, Color.LIGHT_GRAY);
         addColor(HOColorName.TRAINING_ICON_COLOR_1, new Color(0, 0, 0));
         addColor(HOColorName.TRAINING_ICON_COLOR_2, new Color(255, 255, 255));
@@ -224,10 +225,10 @@ public class HOColor extends AbstractTable.Storable {
         addColor(TSFORECAST_ALT_COLOR, Color.BLUE);
 
         // HRF Explorer
-        addColor(HOColorName.HRF_GREEN_BG, new Color(220,255,220));
-        addColor(HOColorName.HRF_LIGHTBLUE_BG, new Color(235,235,255));
-        addColor(HOColorName.HRF_DARKBLUE_BG, new Color(220,220,255));
-        addColor(HOColorName.HRF_RED_BG, new Color(255,200,200));
+        addColor(HOColorName.HRF_GREEN_BG, new Color(220, 255, 220));
+        addColor(HOColorName.HRF_LIGHTBLUE_BG, new Color(235, 235, 255));
+        addColor(HOColorName.HRF_DARKBLUE_BG, new Color(220, 220, 255));
+        addColor(HOColorName.HRF_RED_BG, new Color(255, 200, 200));
 
         // Player State colours
         addColor(HOColorName.FG_STANDARD, Color.BLACK);
@@ -248,19 +249,19 @@ public class HOColor extends AbstractTable.Storable {
         addColor(HOColorName.FG_PROMOTION_INFO, new Color(238, 39, 39, 255));
 
         // palettes
-        addColor(PALETTE13_0,  new Color(255, 204, 0));
-        addColor(PALETTE13_1,  new Color(23, 111, 36));
-        addColor(PALETTE13_2,  new Color(255, 59, 48));
-        addColor(PALETTE13_3,  new Color(49, 220, 209));
-        addColor(PALETTE13_4,  new Color(162, 132, 94));
-        addColor(PALETTE13_5,  new Color(147, 250, 45));
-        addColor(PALETTE13_6,  new Color(0, 122, 255));
-        addColor(PALETTE13_7,  new Color(255, 149, 0));
-        addColor(PALETTE13_8,  new Color(88, 86, 214));
-        addColor(PALETTE13_9,  new Color(142, 142, 147));
-        addColor(PALETTE13_10,  new Color(175, 82, 222));
-        addColor(PALETTE13_11,  new Color(40, 205, 65));
-        addColor(PALETTE13_12,  new Color(90, 200, 250));
+        addColor(PALETTE13_0, new Color(255, 204, 0));
+        addColor(PALETTE13_1, new Color(23, 111, 36));
+        addColor(PALETTE13_2, new Color(255, 59, 48));
+        addColor(PALETTE13_3, new Color(49, 220, 209));
+        addColor(PALETTE13_4, new Color(162, 132, 94));
+        addColor(PALETTE13_5, new Color(147, 250, 45));
+        addColor(PALETTE13_6, new Color(0, 122, 255));
+        addColor(PALETTE13_7, new Color(255, 149, 0));
+        addColor(PALETTE13_8, new Color(88, 86, 214));
+        addColor(PALETTE13_9, new Color(142, 142, 147));
+        addColor(PALETTE13_10, new Color(175, 82, 222));
+        addColor(PALETTE13_11, new Color(40, 205, 65));
+        addColor(PALETTE13_12, new Color(90, 200, 250));
 
         // League Details
         addColor(HOColorName.SHOW_MATCH, new Color(23, 111, 36));
@@ -270,9 +271,10 @@ public class HOColor extends AbstractTable.Storable {
 
     }
 
-    public static Color getColor(HOColorName name, String theme){
+    public static Color getColor(HOColorName name, String theme) {
         return getColor(name, theme, new ArrayList<>());
     }
+
     private static Color getColor(HOColorName name, String theme, List<String> colorNames) {
         if (!colorNames.contains(name.name())) { // break endless recursion
             var colorMap = colors.get(name);
@@ -298,12 +300,20 @@ public class HOColor extends AbstractTable.Storable {
     private static void addColor(HOColorName name, Color color) {
         addColor(new HOColor(name, color));
     }
+
     private static void addColor(HOColorName name, HOColorName colorReference) {
         addColor(new HOColor(name, colorReference));
     }
 
-    public static void addColor(HOColor color){
+    public static void addColor(HOColor color) {
         var colorMap = colors.computeIfAbsent(color.name, k -> new HashMap<>());
+        var defaultValue = colorMap.get(color.theme);
+        if (defaultValue!=null){
+            if( defaultValue.defaultValue != null){
+                defaultValue = defaultValue.defaultValue;
+            }
+        }
+        color.defaultValue = defaultValue;
         colorMap.put(color.theme, color);
     }
 
@@ -333,23 +343,26 @@ public class HOColor extends AbstractTable.Storable {
      */
     private HOColor defaultValue;
 
-    HOColor(){
+    HOColor() {
         super();
     }
 
     public HOColor(HOColorName name, HOColorName o) {
-        this(name, "default",  o);
+        this(name, "default", o);
     }
 
     private HOColor(HOColorName name, Color o) {
-        this(name, "default",  o);
+        this(name, "default", o);
     }
+
     public HOColor(HOColorName name, String theme, Color o) {
         this.name = name;
         this.theme = theme;
         this.color = o;
     }
+
     public HOColor(HOColorName name, String theme, HOColorName o) {
+        assert null != getColor(o, theme) : "Color " + o.name() + " not found";
         this.name = name;
         this.theme = theme;
         this.colorReference = o;
@@ -402,12 +415,7 @@ public class HOColor extends AbstractTable.Storable {
         this.theme = v;
     }
 
-    public void setDefaultValue(Object o) {
-        if ( o instanceof String){
-            this.defaultValue = new HOColor(this.name, HOColorName.valueOf((String)o));
-        }
-        else if (o instanceof Color){
-            this.defaultValue = new HOColor(this.name, (Color)o);
-        }
+    public void setDefaultValue(HOColor o) {
+        this.defaultValue = o;
     }
 }

@@ -386,35 +386,11 @@ public final class ThemeManager {
 		}
 	}
 
-	List<HOColor> userDefinedColors;
-	private List<HOColor> loadUserDefinedColors(String theme) {
-		if (userDefinedColors == null) {
-			userDefinedColors = DBManager.instance().loadHOColors(theme);
-			for (var color : userDefinedColors) {
-				color.setDefaultValue(get(color.getName()));
-				var ref = color.getColorReference();
-				if (ref == null || ref.isEmpty()) {
-					put(color.getName(), color.getColor());
-				} else if (isValidColorName(color.getColorReference(), new ArrayList<>())) {
-					put(color.getName(), color.getColorReference());
-				}
-			}
+	private void loadUserDefinedColors(String theme) {
+		var userDefinedColors = DBManager.instance().loadHOColors(theme);
+		for (var color : userDefinedColors) {
+			HOColor.addColor(color);
 		}
-		return userDefinedColors;
-	}
-
-	private boolean isValidColorName(String colorReference, ArrayList<Object> colornames) {
-		var isRecursion = colornames.stream().anyMatch(i -> i.equals(colorReference));
-		if (!isRecursion) {
-			var entry = get(colorReference);
-			if (entry instanceof Color) {
-				return true;
-			} else if (entry instanceof String) {
-				colornames.add(colorReference);
-				return isValidColorName((String) entry, colornames);
-			}
-		}
-		return false;
 	}
 
 	private void initializeMacKeyBindings(boolean success) {

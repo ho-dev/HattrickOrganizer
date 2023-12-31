@@ -45,7 +45,7 @@ public class DarculaDarkTheme extends DarkTheme {
             addColor(HOColorName.PANEL_BG, defaults.getColor("background"));
             addColor(HOColorName.BACKGROUND_CONTAINER, defaults.getColor("backgroundContainer"));
             addColor(HOColorName.TABLEENTRY_BG, neutralGrey);
-            addColor(HOColorName.BACKGROUND_CONTAINER, neutralGrey);
+//            addColor(HOColorName.BACKGROUND_CONTAINER, neutralGrey);
 
             addColor(HOColorName.TABLE_SELECTION_FG, Color.WHITE);
             addColor(HOColorName.TABLE_SELECTION_BG, new Color(65, 65, 65));
@@ -162,8 +162,6 @@ public class DarculaDarkTheme extends DarkTheme {
             addColor(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             addColor(HOColorName.LINK_LABEL_FG, new Color(251,252,254));
-
-
 
             return super.enableTheme();
         } catch (Exception e) {
