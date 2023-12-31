@@ -3,7 +3,6 @@ package module.lineup.substitution;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;

@@ -1,8 +1,6 @@
 package core.gui.theme;
 
 import core.db.AbstractTable;
-import org.junit.Assert;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
