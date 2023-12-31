@@ -1,12 +1,8 @@
 package core.option;
 
-import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.UserColumn;
-import core.gui.model.UserColumnController;
 import core.gui.theme.HOColor;
-import core.gui.theme.HOIconName;
+import core.gui.theme.HOColorName;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
@@ -94,8 +90,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
         table.getColumn(columnNames[0]).setCellEditor(new TableEditor());
 
         final TableColumnModel tableColumnModel = table.getColumnModel();
-        tableColumnModel.getColumn(0).setMaxWidth(50);
-        tableColumnModel.getColumn(0).setPreferredWidth(50);
+		tableColumnModel.getColumn(0).setMaxWidth(200);
+		tableColumnModel.getColumn(0).setPreferredWidth(200);
+		tableColumnModel.getColumn(1).setMaxWidth(200);
+		tableColumnModel.getColumn(1).setPreferredWidth(200);
 
 		return new JScrollPane(table);
     }
@@ -106,17 +104,36 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 		int i=0;
 		for (var color : colors){
-			value[i][0] = HOVerwaltung.instance().getLanguageString("ls.color."+ color.getName().toLowerCase());
-			value[i][1] = color.getColorReference()!=null?HOVerwaltung.instance().getLanguageString("ls.color."+ color.getColorReference().toLowerCase()):null;
-			value[i][2] = color.getColor();
-			value[i][3] = color.getDefaultValue()!=null?color.getDefaultValue().getColor():null;
+			value[i][0] = createNameLabel(color.getName());
+			value[i][1] = createNameLabel(color.getColorReference());
+			value[i][2] = createColorLabel(HOColor.getColor(color));
+			value[i][3] = createColorLabel(color.getDefaultValue()!=null?HOColor.getColor(color.getDefaultValue()):null);
 			i++;
 		}
 
 		return new TableModel(value, columnNames);
     }
 
-    /**
+	private JLabel createColorLabel(Color color) {
+		var label = new JLabel();
+		label.setBackground(color);
+		return label;
+	}
+
+	private JLabel createNameLabel(String colorName) {
+		String text;
+		if (colorName != null) {
+			text = HOVerwaltung.instance().getLanguageString("ls.color." + colorName.toLowerCase());
+		}
+		else {
+			text = "";
+		}
+		var label = new JLabel(text);
+		label.setToolTipText(text);
+		return label;
+	}
+
+	/**
      * action
      */
 	public void actionPerformed(ActionEvent arg0) {

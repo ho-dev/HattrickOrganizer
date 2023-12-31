@@ -69,43 +69,34 @@ public class OptionenDialog extends JDialog {
 
 		// Misc
 		GeneralSettingsPanel m_jpSonstigeOptionen = new GeneralSettingsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"),
-				new JScrollPane(m_jpSonstigeOptionen));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"), new JScrollPane(m_jpSonstigeOptionen));
 
 		// Lineup settings
 		LineupSettingsPanel m_jpLineupSettings = new LineupSettingsPanel();
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Aufstellung"), new JScrollPane(m_jpLineupSettings));
 
 		// Modules
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(
-				new ModuleConfigPanel()));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(new ModuleConfigPanel()));
 
 		// Formula
 		FormelPanel m_jpFormeln = new FormelPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Formeln"), new JScrollPane(
-				m_jpFormeln));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Formeln"), new JScrollPane(m_jpFormeln));
 
 		// Training
 		TrainingPreferencesPanel m_jpTrainingsOptionen = new TrainingPreferencesPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane(
-				m_jpTrainingsOptionen));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane(m_jpTrainingsOptionen));
 
 		// Release Channels
 		m_jpReleaseChannelsPanel = new ReleaseChannelPanel();
-		tabbedPane.addTab(
-				core.model.HOVerwaltung.instance()
-						.getLanguageString("options.tabtitle.release_channels"), new JScrollPane(
-						m_jpReleaseChannelsPanel));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("options.tabtitle.release_channels"), new JScrollPane(m_jpReleaseChannelsPanel));
 
 		// Columns
 		UserColumnsPanel m_jpUserColumns = new UserColumnsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(
-				m_jpUserColumns));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(m_jpUserColumns));
 
 		// Colors
 		UserColorsPanel userColors = new UserColorsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(
-				m_jpUserColumns));
+		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("colors"), new JScrollPane(userColors));
 
 		// Tabs der plugins
 		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())

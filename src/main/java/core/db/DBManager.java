@@ -278,6 +278,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((connectionManager)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(connectionManager));
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
+		tables.put(HOColorTable.TABLENAME, new HOColorTable(connectionManager));
 	}
 
 	/**

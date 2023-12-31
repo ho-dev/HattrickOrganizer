@@ -85,6 +85,9 @@ final class DBUpdater {
 		if (!tableExists(FuturePlayerSkillTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerSkillTrainingTable.TABLENAME).createTable();
 		}
+		if (!tableExists(HOColorTable.TABLENAME)) {
+			dbManager.getTable(HOColorTable.TABLENAME).createTable();
+		}
 
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");

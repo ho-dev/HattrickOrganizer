@@ -115,7 +115,6 @@ public class HOColor extends AbstractTable.Storable {
         addColor(HOColorName.NEUTRAL_ACTION, new Color(166, 166, 166));
         addColor(HOColorName.BORDER_RATING_BAR, Color.BLACK);
 
-
         // shirts
         addColor(SHIRT_KEEPER, BLACK);
         addColor(SHIRT_CENTRALDEFENCE, new Color(0, 0, 220));
@@ -271,6 +270,9 @@ public class HOColor extends AbstractTable.Storable {
 
     }
 
+    public static Color getColor(HOColor color) {
+        return getColor(color.name, color.theme);
+    }
     public static Color getColor(HOColorName name, String theme) {
         return getColor(name, theme, new ArrayList<>());
     }
