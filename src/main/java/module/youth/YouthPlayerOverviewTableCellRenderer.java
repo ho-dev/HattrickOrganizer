@@ -1,6 +1,5 @@
 package module.youth;
 
-import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 
 import javax.swing.*;

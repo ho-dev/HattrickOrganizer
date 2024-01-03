@@ -3,10 +3,7 @@ package tool.updater;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import java.awt.Component;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
 /**
@@ -20,7 +17,9 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 
 		double site = 0;
 		double ho = 0;
-		
+		if ( value == null){
+			return new JLabel();
+		}
 		
 		if (value instanceof JCheckBox) {
 			return (JCheckBox) value;

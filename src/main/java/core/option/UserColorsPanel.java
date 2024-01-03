@@ -1,37 +1,38 @@
 package core.option;
 
-import core.db.user.UserManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColor;
+import core.gui.theme.HOColorName;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
+import module.youth.YouthTrainingTableEntry;
 import tool.updater.TableEditor;
-import tool.updater.TableModel;
 import tool.updater.UpdaterCellRenderer;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
-/**
- * Panel to select preferred columns to display in the various HO tables.
- *
- * @author Thorsten Dietz
- * @since 1.36
- *
- */
 public class UserColorsPanel extends JPanel implements ActionListener {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
 	private JComboBox skins 	= null;
-	private JTable table 				= null;
-	private final String [] columnNames = new String[]{
+	private DefaultTableModel tableModel = new DefaultTableModel(){
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return column == 1 || column == 2;
+		}
+	};
+
+    private final String [] columnNames = new String[]{
 			HOVerwaltung.instance().getLanguageString("Name"),
 			HOVerwaltung.instance().getLanguageString("Reference"),
 			HOVerwaltung.instance().getLanguageString("Value"),
@@ -60,15 +61,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return panel;
 	}
 	
-	/**
-	 * return the panel within JTable
-	 * @return JPanel
-	 */
 	private JPanel getMiddlePanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(createTable());
-		panel.setPreferredSize(new Dimension(100, 300));
 		return panel;
 	}
 	
@@ -76,41 +72,48 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return (String)skins.getSelectedItem();
 	}
 
-    /**
-     * Creates a table with checkboxes for UserColumns of the selected model
-     *
-     * @return JScrollPane including the table
-     */
     protected JScrollPane createTable() {
-        table = new JTable(getModel(getSelectedSkin()));
+
+		initData(getSelectedSkin());
+        JTable table = new JTable(tableModel);
         table.getTableHeader().setReorderingAllowed(false);
+		table.setSelectionMode(SINGLE_SELECTION);
+		table.setRowSelectionAllowed(false);
+		table.setCellSelectionEnabled(true);
         table.setDefaultRenderer(Object.class, new UpdaterCellRenderer());
-        table.getColumn(columnNames[0]).setCellEditor(new TableEditor());
 
         final TableColumnModel tableColumnModel = table.getColumnModel();
 		tableColumnModel.getColumn(0).setMaxWidth(200);
 		tableColumnModel.getColumn(0).setPreferredWidth(200);
 		tableColumnModel.getColumn(1).setMaxWidth(200);
 		tableColumnModel.getColumn(1).setPreferredWidth(200);
+		tableColumnModel.getColumn(1).setCellEditor(new DefaultCellEditor(createNameCombobox()));
 
 		return new JScrollPane(table);
     }
 
-    protected TableModel getModel(String skin) {
+	protected void initData(String skin) {
 		var colors = HOColor.getColors(skin);
         Object[][] value = new Object[colors.size()][4];
 
 		int i=0;
 		for (var color : colors){
 			value[i][0] = createNameLabel(color.getName());
-			value[i][1] = createNameLabel(color.getColorReference());
+			value[i][1] = color.colorReference();
 			value[i][2] = createColorLabel(HOColor.getColor(color));
 			value[i][3] = createColorLabel(color.getDefaultValue()!=null?HOColor.getColor(color.getDefaultValue()):null);
 			i++;
 		}
 
-		return new TableModel(value, columnNames);
-    }
+		tableModel.setDataVector(value, columnNames);
+	}
+
+	private JComboBox createNameCombobox() {
+		var box = new JComboBox<>(HOColorName.values());
+		box.insertItemAt(null, 0);
+		box.addActionListener(this);
+		return box;
+	}
 
 	private JLabel createColorLabel(Color color) {
 		var label = new JLabel();
@@ -140,11 +143,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
      */
 	public void actionPerformed(ActionEvent arg0) {
 		if(arg0.getSource() == skins){
-//			table.setModel(getModel(getSelectedModel().getColumns()));
-//			 table.getColumn(columnNames[0]).setCellEditor(new TableEditor());
-//			final TableColumnModel tableColumnModel = table.getColumnModel();
-//		        tableColumnModel.getColumn(0).setMaxWidth(50);
-//		        tableColumnModel.getColumn(0).setPreferredWidth(50);
+			UserParameter.temp().skin = (String) skins.getSelectedItem();
+//			ThemeManager.instance().setCurrentTheme();	// load theme colors
+			initData(UserParameter.instance().skin);
+			// TODO change the look and feel dynamically
+			OptionManager.instance().setRestartNeeded();
 		}
 
 	}

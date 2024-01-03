@@ -7,7 +7,7 @@ import java.awt.*;
 public abstract class BaseTheme implements Theme {
 
    protected void addColor(HOColorName name, Color color){
-      var newColor = new Color(color.getRGB());
+      var newColor = new Color(color.getRGB()); // UIColor objects are not displayed in settings table
       HOColor.addColor(new HOColor(name, this.getName(), newColor));
    }
 

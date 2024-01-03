@@ -307,7 +307,7 @@ public class HOColor extends AbstractTable.Storable {
             var hoColor = colorMap.get(theme);
             if (hoColor != null) return hoColor;
             hoColor = colorMap.get("default");
-            if (hoColor != null) return hoColor;
+            return hoColor;
         }
         return null;
     }
@@ -400,6 +400,10 @@ public class HOColor extends AbstractTable.Storable {
 
     public void setName(String name) {
         this.name = HOColorName.valueOf(name);
+    }
+
+    public HOColorName colorReference(){
+        return colorReference;
     }
 
     public String getColorReference() {
