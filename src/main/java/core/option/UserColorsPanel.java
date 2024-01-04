@@ -19,7 +19,7 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 public class UserColorsPanel extends JPanel implements ActionListener {
 
-	private JComboBox skins 	= null;
+	private JComboBox<String> skins 	= null;
 	private final DefaultTableModel tableModel = new DefaultTableModel(){
 		@Override
 		public boolean isCellEditable(int row, int column) {
