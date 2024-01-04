@@ -7,8 +7,6 @@ import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import module.youth.YouthTrainingTableEntry;
-import tool.updater.TableEditor;
 import tool.updater.UpdaterCellRenderer;
 
 import javax.swing.*;
@@ -17,18 +15,22 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 public class UserColorsPanel extends JPanel implements ActionListener {
 
 	private JComboBox skins 	= null;
-	private DefaultTableModel tableModel = new DefaultTableModel(){
+	private final DefaultTableModel tableModel = new DefaultTableModel(){
 		@Override
 		public boolean isCellEditable(int row, int column) {
-			return column == 1 || column == 2;
+            return switch (column) {
+                case 1 -> true; // colorReference is editable
+                case 2 -> { 	// color is only editable if colorReference is not set
+                    var colorReference = this.getDataVector().get(row).get(1);
+                    yield colorReference == null;
+                }
+				default -> false; // others are not editable
+			};
 		}
 	};
 
