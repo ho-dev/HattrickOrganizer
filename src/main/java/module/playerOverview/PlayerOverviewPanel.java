@@ -72,11 +72,10 @@ public class PlayerOverviewPanel extends ImagePanel {
 	}
 
 	/**
-	 * Erneuert alle Spalten, die bei von einem Vergleich betroffen sind (Google
-	 * translate) Renewed all the columns that are affected by a comparison with
+	 * Updates all the columns affected by a comparison.
 	 */
-	public final void refreshHRFVergleich() {
-		playerOverviewTable.refreshHRFVergleich();
+	public final void refreshHRFComparison() {
+		playerOverviewTable.refreshHRFComparison();
 
 		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
 		playerDetailsPanel.setPlayer(player);
