@@ -55,6 +55,8 @@
 * Reset progress bar when action is finished (#1955)
 * Upgrade Gradle to version 8.5
 * Fix issue with startup post-installation (#2002)
+* Fix NPE when saving preferences on un-managed HO install (#1992)
+  HO now downloads the update in the browser when HO install is un-managed.
 
 ## Translations
 
