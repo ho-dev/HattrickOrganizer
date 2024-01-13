@@ -270,9 +270,6 @@ public class HOColor extends AbstractTable.Storable {
 
     }
 
-    public static Color getColor(HOColor color) {
-        return getColor(color.name, color.theme);
-    }
     public static Color getColor(HOColorName name, String theme) {
         return getColor(name, theme, new ArrayList<>());
     }
@@ -301,7 +298,7 @@ public class HOColor extends AbstractTable.Storable {
         return ret;
     }
 
-    private static HOColor getHOColor(HOColorName name, String theme) {
+    public static HOColor getHOColor(HOColorName name, String theme) {
         var colorMap = colors.get(name);
         if (colorMap!=null){
             var hoColor = colorMap.get(theme);
@@ -398,6 +395,10 @@ public class HOColor extends AbstractTable.Storable {
         return name.name();
     }
 
+    public HOColorName getHOColorName(){
+        return name;
+    }
+
     public void setName(String name) {
         this.name = HOColorName.valueOf(name);
     }
@@ -444,5 +445,20 @@ public class HOColor extends AbstractTable.Storable {
 
     public HOColor getDefaultValue() {
         return this.defaultValue;
+    }
+
+    public void setDefaultValueIfNotSet(){
+        if ( this.defaultValue==null){
+            if ( this.colorReference != null){
+                this.defaultValue = HOColor.getHOColor(this.colorReference, this.theme);
+            }
+            else {
+                this.defaultValue = new HOColor();
+                this.defaultValue.name = this.name;
+                this.defaultValue.color = this.color;
+                this.defaultValue.colorReference = null;
+                this.defaultValue.theme = this.theme;
+            }
+        }
     }
 }
