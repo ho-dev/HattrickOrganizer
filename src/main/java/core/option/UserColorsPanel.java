@@ -33,7 +33,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			};
 		}
 	};
-	private JTable colorTable = new JTable(tableModel);
+	private final JTable colorTable = new JTable(tableModel);
 
     private final String [] columnNames = new String[]{
 			HOVerwaltung.instance().getLanguageString("Name"),
@@ -41,6 +41,9 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			HOVerwaltung.instance().getLanguageString("Value"),
 			HOVerwaltung.instance().getLanguageString("Default"),
 	};
+	private boolean toggled = false;
+	private JPanel tablePanel;
+	private JColorChooser colorChooser;
 
 	protected UserColorsPanel(){
 		initComponents();
@@ -49,7 +52,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	private void initComponents(){
 		setLayout(new BorderLayout());
 		add(getTopPanel(),BorderLayout.NORTH);
-		add(getMiddlePanel(),BorderLayout.CENTER);
+		add(getTablePanel(),BorderLayout.CENTER);
 	}
 	
 	private JPanel getTopPanel(){
@@ -64,13 +67,22 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return panel;
 	}
 	
-	private JPanel getMiddlePanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.add(createTable());
-		return panel;
+	private JPanel getTablePanel() {
+		if ( tablePanel == null) {
+			tablePanel = new JPanel();
+			tablePanel.setLayout(new BorderLayout());
+			tablePanel.add(createTable());
+
+			colorChooser = new JColorChooser(Color.BLACK); // default color is black
+			colorChooser.setBorder(null);
+			colorChooser.getSelectionModel().addChangeListener(e -> {
+				var button = (JButton)e.getSource();
+				button.setBackground(colorChooser.getSelectionModel().getSelectedColor()); // change background color of "button"
+            });
+		}
+		return tablePanel;
 	}
-	
+
 	private String getSelectedSkin(){
 		return (String)skins.getSelectedItem();
 	}
@@ -89,7 +101,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		tableColumnModel.getColumn(0).setPreferredWidth(200);
 		tableColumnModel.getColumn(1).setMaxWidth(200);
 		tableColumnModel.getColumn(1).setPreferredWidth(200);
-		tableColumnModel.getColumn(1).setCellEditor(new DefaultCellEditor(createNameCombobox()));
+		tableColumnModel.getColumn(1).setCellEditor(new DefaultCellEditor(createNameChooser()));
 
 		return new JScrollPane(colorTable);
     }
@@ -104,7 +116,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		}
 	}
 
-	private JComboBox<HOColorName> createNameCombobox() {
+	private JComboBox<HOColorName> createNameChooser() {
 		var box = new JComboBox<>(HOColorName.values());
 		box.insertItemAt(null, 0);
 		box.addItemListener(e -> {
@@ -116,7 +128,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 					var hoColor = HOColor.getHOColor(colorName, (String) skins.getSelectedItem());
 					if (hoColor != null) {
 						if (e.getStateChange() == DESELECTED || hoColor.colorReference() == null) {
-							hoColor.setDefaultValueIfNotSet();
+							hoColor.initDefaultValue();
 							var currentColor = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
 							var selection = (HOColorName) box1.getSelectedItem();
 							if (selection != null) {
@@ -139,7 +151,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		var tableModel = (DefaultTableModel)colorTable.getModel();
 		tableModel.setValueAt(createNameLabel(color.getName()), row, 0);
 		tableModel.setValueAt(color.colorReference(), row, 1);
-		tableModel.setValueAt(createColorLabel(HOColor.getColor(color.getHOColorName(), color.getTheme())), row, 2);
+		tableModel.setValueAt(createColorChooser("ls.color.selectcolor", HOColor.getColor(color.getHOColorName(), color.getTheme())), row, 2);
 		Color defaultColor = null;
 		var value = color.getDefaultValue();
 		if ( value != null){
@@ -150,17 +162,35 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 				defaultColor = value.getColor();
 			}
 		}
-		tableModel.setValueAt(createColorLabel(defaultColor), row, 3);
+		tableModel.setValueAt(createColorChooser("ls.color.resetdefault", defaultColor), row, 3);
 	}
 
-	private JLabel createColorLabel(Color color) {
-		var label = new JLabel();
-		label.setOpaque(true);
+	private JButton createColorChooser(String toolTip, Color color) {
+		var component = new JButton();
+		component.setOpaque(true);
 		if (color != null) {
-			label.setBackground(color);
-			label.setToolTipText(color.toString());
+			component.setBackground(color);
+			component.setToolTipText(HOVerwaltung.instance().getLanguageString(toolTip));
+			component.addActionListener(arg0 -> {
+                toggleColorChooser(); // show and hide the color chooser
+            });
 		}
-		return label;
+		return component;
+	}
+
+	// This is an adaptation of Tom's stackoverflow answer given in
+	// https://stackoverflow.com/questions/26565166/how-to-display-a-color-selector-when-clicking-a-button
+	private void toggleColorChooser() {
+		var contentPane = getTablePanel();
+		if (toggled) {
+			contentPane.remove(colorChooser);
+		} else {
+			colorChooser.setVisible(true);
+			contentPane.add(colorChooser);
+		}
+		toggled = !toggled;
+		contentPane.validate();
+		contentPane.repaint();
 	}
 
 	private JLabel createNameLabel(String colorName) {

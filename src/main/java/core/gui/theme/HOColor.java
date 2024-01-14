@@ -447,7 +447,7 @@ public class HOColor extends AbstractTable.Storable {
         return this.defaultValue;
     }
 
-    public void setDefaultValueIfNotSet(){
+    public void initDefaultValue(){
         if ( this.defaultValue==null){
             if ( this.colorReference != null){
                 this.defaultValue = HOColor.getHOColor(this.colorReference, this.theme);
