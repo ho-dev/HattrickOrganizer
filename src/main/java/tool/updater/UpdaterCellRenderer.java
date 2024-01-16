@@ -2,7 +2,8 @@ package tool.updater;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import java.awt.Component;
+
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
@@ -17,14 +18,14 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 
 		double site = 0;
 		double ho = 0;
-		if ( value == null){
+		if (value == null) {
 			return new JLabel();
 		}
-		
+
 		if (value instanceof JCheckBox) {
 			return (JCheckBox) value;
 		}
-		
+
 		try {
 			site = Double.parseDouble(((JLabel) table.getModel().getValueAt(row, 3)).getText());
 		} catch (Exception e) {
@@ -53,9 +54,13 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 			return b;
 		}
 
+
 		JLabel label;
 		if (value instanceof JLabel) {
 			label = (JLabel) value;
+		} else if (value instanceof Color) {
+			label = new JLabel();
+			label.setBackground((Color) value);
 		} else {
 			label = new JLabel(value.toString());
 		}
