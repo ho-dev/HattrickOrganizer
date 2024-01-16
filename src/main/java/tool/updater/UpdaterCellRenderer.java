@@ -28,21 +28,17 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 
 		try {
 			site = Double.parseDouble(((JLabel) table.getModel().getValueAt(row, 3)).getText());
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 		try {
 			ho = Double.parseDouble(((JLabel) table.getModel().getValueAt(row, 2)).getText());
-		} catch (Exception e1) {
+		} catch (Exception ignored) {
 		}
 
-		boolean color = false;
-		if ((ho > 0) && (ho < site)) {
-			color = true;
-		}
+		boolean color = (ho > 0) && (ho < site);
 
-		if (value instanceof JButton) {
-			JButton b = (JButton) value;
-			b.setBorderPainted(false);
+        if (value instanceof JButton b) {
+            b.setBorderPainted(false);
 			if (color) {
 				b.setForeground(ThemeManager.getColor(HOColorName.LABEL_ERROR_FG));
 			}
