@@ -14,6 +14,9 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.awt.event.ItemEvent.*;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
@@ -42,6 +45,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			HOVerwaltung.instance().getLanguageString("Default"),
 	};
 	private JPanel tablePanel;
+	private List<HOColor> colors;
 
 	protected UserColorsPanel(){
 		initComponents();
@@ -79,17 +83,12 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	}
 
     protected JScrollPane createTable() {
-
 		initData(getSelectedSkin());
 		colorTable.getTableHeader().setReorderingAllowed(false);
 		colorTable.setSelectionMode(SINGLE_SELECTION);
 		colorTable.setRowSelectionAllowed(false);
 		colorTable.setCellSelectionEnabled(true);
 		colorTable.setDefaultRenderer(Object.class, new UpdaterCellRenderer());
-
-//		colorTable.setDefaultEditor(Color.class, new ColorTableCellEditor());
-
-
 
 		final TableColumnModel tableColumnModel = colorTable.getColumnModel();
 		tableColumnModel.getColumn(0).setMaxWidth(200);
@@ -102,7 +101,9 @@ public class UserColorsPanel extends JPanel implements ActionListener {
     }
 
 	protected void initData(String skin) {
-		var colors = HOColor.getColors(skin);
+		// Clone the static color list for the editor
+		colors = new ArrayList<>();
+		for ( var c : HOColor.getColors(skin) ) colors.add(c.clone());
         Object[][] value = new Object[colors.size()][4];
 		tableModel.setDataVector(value, columnNames);
 		int i=0;
@@ -158,17 +159,6 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		}
 		tableModel.setValueAt(defaultColor, row, 3);
 	}
-
-//	private JButton createColorChooser() {
-//		var component = new JButton();
-//		component.setOpaque(true);
-//			component.setBackground(color);
-//			component.setToolTipText(HOVerwaltung.instance().getLanguageString(toolTip));
-//			component.addActionListener(arg0 -> {
-//                toggleColorChooser(); // show and hide the color chooser
-//            });
-//		return component;
-//	}
 
 	private JLabel createNameLabel(String colorName) {
 		String text;

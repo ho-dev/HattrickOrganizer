@@ -1,6 +1,8 @@
 package core.gui.theme;
 
 import core.db.AbstractTable;
+import core.util.HOLogger;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -381,6 +383,21 @@ public class HOColor extends AbstractTable.Storable {
         this.name = name;
         this.theme = theme;
         this.colorReference = o;
+    }
+
+    @Override
+    public HOColor clone() {
+        HOColor ret = new HOColor();
+        ret.name = this.name;
+        ret.theme = this.theme;
+        ret.colorReference = this.colorReference;
+        if (this.color != null){
+            ret.color = new Color(this.color.getRGB());
+        }
+        if (this.defaultValue != null) {
+            ret.defaultValue = this.defaultValue.clone();
+        }
+        return ret;
     }
 
     public Color getColor() {
