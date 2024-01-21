@@ -8,6 +8,7 @@ import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -46,7 +47,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			HOVerwaltung.instance().getLanguageString("Default"),
 	};
 	private JPanel tablePanel;
-	private List<HOColor> colors;
+	private List<HOColor> colors = new ArrayList<>();
 
 	protected UserColorsPanel(){
 		initComponents();
@@ -170,16 +171,6 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		tableModel.setValueAt(color.colorReference(), row, 1);
 		tableModel.setValueAt(color, row, 2);
 		tableModel.setValueAt(color.getDefaultValue(), row, 3);
-//		Color defaultColor = null;
-//		var value = color.getDefaultValue();
-//		if (value != null) {
-//			if (value.getColorReference() != null) {
-//				defaultColor = HOColor.getColor(value.getHOColorName(), value.getTheme());
-//			} else {
-//				defaultColor = value.getColor();
-//			}
-//		}
-//		tableModel.setValueAt(defaultColor, row, 3);
 	}
 
 	private JLabel createNameLabel(String colorName) {
@@ -209,16 +200,23 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	}
 
-	private void storeChangedColorSettings(){
+	public void storeChangedColorSettings(){
 		for ( var color : colors){
 			var origValue = HOColor.getHOColor(color.getHOColorName(), color.getTheme());
             assert origValue != null;
-            if (origValue.colorReference() != color.colorReference() ||
-					origValue.getColor() != color.getColor() ||
-					origValue.getDefaultValue() != color.getDefaultValue()){
+            if (AreDifferent(origValue.colorReference(), color.colorReference()) ||
+					AreDifferent(origValue.getColor(), color.getColor()) ||
+					AreDifferent(origValue.getDefaultValue(), color.getDefaultValue())){
 				DBManager.instance().storeHOColor(color);
+				HOColor.addColor(color);
 			}
 		}
+	}
+
+	private boolean AreDifferent(Object o1, Object o2) {
+		if (o1 == o2) return false;
+		if (o1 == null) return true;
+		return !o1.equals(o2);
 	}
 
 }

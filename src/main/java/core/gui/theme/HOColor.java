@@ -392,7 +392,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
             throw new RuntimeException(e);
         }
         if (this.color != null){
-            ret.color = new Color(this.color.getRGB());
+            ret.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.color.getAlpha());
         }
         if (this.defaultValue != null) {
             ret.defaultValue = this.defaultValue.clone();

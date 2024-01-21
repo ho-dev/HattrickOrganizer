@@ -30,6 +30,7 @@ public class OptionenDialog extends JDialog {
 	private ReleaseChannelPanel m_jpReleaseChannelsPanel;
 	private JButton saveButton;
 	private JButton cancelButton;
+	private UserColorsPanel userColorsPanel;
 
 	public OptionenDialog(JFrame owner) {
 		super(owner, HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"), true);
@@ -95,8 +96,8 @@ public class OptionenDialog extends JDialog {
 		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(m_jpUserColumns));
 
 		// Colors
-		UserColorsPanel userColors = new UserColorsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("colors"), new JScrollPane(userColors));
+		userColorsPanel = new UserColorsPanel();
+        tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("colors"), new JScrollPane(userColorsPanel));
 
 		// Tabs der plugins
 		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
@@ -143,6 +144,8 @@ public class OptionenDialog extends JDialog {
 
 		//save release channel information in java store
 		Updater.instance().saveReleaseChannelPreference(m_jpReleaseChannelsPanel.getRc());
+
+		userColorsPanel.storeChangedColorSettings();
 
 		if (OptionManager.instance().isRestartNeeded()) {
 			Helper.showMessage(OptionenDialog.this,
