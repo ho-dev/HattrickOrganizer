@@ -50,7 +50,6 @@ public final class UpdaterCellRenderer implements TableCellRenderer {
 			return b;
 		}
 
-
 		JLabel label;
 		if (value instanceof JLabel) {
 			label = (JLabel) value;

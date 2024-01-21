@@ -8,7 +8,6 @@ import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import tool.updater.UpdaterCellRenderer;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -33,6 +32,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
                     var colorReference = this.getDataVector().get(row).get(1);
                     yield colorReference == null;
                 }
+				case 3 -> this.getDataVector().get(row).get(3) != null; // default reset is only possible if not null
 				default -> false; // others are not editable
 			};
 		}
@@ -51,7 +51,22 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	protected UserColorsPanel(){
 		initComponents();
 	}
-	
+
+	private static Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+		var component = new JLabel();
+		if (value != null) {
+			var hoColor = (HOColor) value;
+			Color color;
+			if (hoColor.getColorReference() != null) {
+				color = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
+			} else {
+				color = hoColor.getColor();
+			}
+			component.setBackground(color);
+		}
+		return component;
+	}
+
 	private void initComponents(){
 		setLayout(new BorderLayout());
 		add(getTopPanel(),BorderLayout.NORTH);
@@ -89,30 +104,20 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		colorTable.setSelectionMode(SINGLE_SELECTION);
 		colorTable.setRowSelectionAllowed(false);
 		colorTable.setCellSelectionEnabled(true);
-		colorTable.setDefaultRenderer(Object.class, new UpdaterCellRenderer());
 
 		final TableColumnModel tableColumnModel = colorTable.getColumnModel();
 		tableColumnModel.getColumn(0).setMaxWidth(200);
 		tableColumnModel.getColumn(0).setPreferredWidth(200);
+		tableColumnModel.getColumn(0).setCellRenderer((table, value, isSelected, hasFocus, row, column) -> (JLabel) value);
 		tableColumnModel.getColumn(1).setMaxWidth(200);
 		tableColumnModel.getColumn(1).setPreferredWidth(200);
 		tableColumnModel.getColumn(1).setCellEditor(new DefaultCellEditor(createNameChooser()));
-		tableColumnModel.getColumn(2).setCellEditor(new ColorTableCellEditor());
-		tableColumnModel.getColumn(2).setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
-            var hoColor = (HOColor)value;
-			Color color;
-			if (hoColor.getColorReference() != null){
-				color = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
-			}
-			else {
-				color = hoColor.getColor();
-			}
-            var component = new JLabel();
-            component.setBackground(color);
-            return component;
-        });
+		tableColumnModel.getColumn(2).setCellEditor(new ColorTableCellEditor(this, ColorTableCellEditor.EDIT));
+		tableColumnModel.getColumn(2).setCellRenderer(UserColorsPanel::getTableCellRendererComponent);
+		tableColumnModel.getColumn(3).setCellEditor(new ColorTableCellEditor(this, ColorTableCellEditor.RESET_DEFAULT));
+		tableColumnModel.getColumn(3).setCellRenderer(UserColorsPanel::getTableCellRendererComponent);
 		return new JScrollPane(colorTable);
-    }
+	}
 
 	protected void initData(String skin) {
 		// Clone the static color list for the editor
@@ -146,9 +151,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 							} else {
 								hoColor.setColor(currentColor);
 							}
-
 							updateRow(tableSelection, hoColor);
-
 						}
 					}
 				}
@@ -157,21 +160,26 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return box;
 	}
 
+	public void updateRow(HOColor color){
+		updateRow(colorTable.getEditingRow(), color);
+	}
+
 	private void updateRow(int row, HOColor color) {
 		var tableModel = (DefaultTableModel) colorTable.getModel();
 		tableModel.setValueAt(createNameLabel(color.getName()), row, 0);
 		tableModel.setValueAt(color.colorReference(), row, 1);
 		tableModel.setValueAt(color, row, 2);
-		Color defaultColor = null;
-		var value = color.getDefaultValue();
-		if (value != null) {
-			if (value.getColorReference() != null) {
-				defaultColor = HOColor.getColor(value.getHOColorName(), value.getTheme());
-			} else {
-				defaultColor = value.getColor();
-			}
-		}
-		tableModel.setValueAt(defaultColor, row, 3);
+		tableModel.setValueAt(color.getDefaultValue(), row, 3);
+//		Color defaultColor = null;
+//		var value = color.getDefaultValue();
+//		if (value != null) {
+//			if (value.getColorReference() != null) {
+//				defaultColor = HOColor.getColor(value.getHOColorName(), value.getTheme());
+//			} else {
+//				defaultColor = value.getColor();
+//			}
+//		}
+//		tableModel.setValueAt(defaultColor, row, 3);
 	}
 
 	private JLabel createNameLabel(String colorName) {
