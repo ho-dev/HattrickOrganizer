@@ -2391,4 +2391,8 @@ public class DBManager implements PersistenceManager {
     public List<HOColor> loadHOColors(String theme) {
 		return ((HOColorTable)getTable(HOColorTable.TABLENAME)).load(theme);
     }
+
+	public void storeHOColor(HOColor color) {
+		getTable(HOColorTable.TABLENAME).store(color);
+	}
 }

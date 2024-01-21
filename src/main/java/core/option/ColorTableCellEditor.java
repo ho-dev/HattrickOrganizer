@@ -1,5 +1,7 @@
 package core.option;
 
+import core.gui.theme.HOColor;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.awt.event.ActionListener;
 
 // Source: https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TableDialogEditDemoProject/src/components/ColorEditor.java
 public class ColorTableCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
-    Color currentColor;
+    HOColor currentColor;
     JButton button;
     JColorChooser colorChooser;
     JDialog dialog;
@@ -42,15 +44,16 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
         if (EDIT.equals(e.getActionCommand())) {
             //The user has clicked the cell, so
             //bring up the dialog.
-            button.setBackground(currentColor);
-            colorChooser.setColor(currentColor);
+            var color = HOColor.getColor(currentColor.getHOColorName(), currentColor.getTheme());
+            button.setBackground(color);
+            colorChooser.setColor(color);
             dialog.setVisible(true);
 
             //Make the renderer reappear.
             fireEditingStopped();
 
         } else { //User pressed dialog's "OK" button.
-            currentColor = colorChooser.getColor();
+            currentColor.setColor( colorChooser.getColor());
         }
     }
 
@@ -65,7 +68,7 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
                                                  boolean isSelected,
                                                  int row,
                                                  int column) {
-        currentColor = (Color)value;
+        currentColor = (HOColor)value;
         return button;
     }
 }

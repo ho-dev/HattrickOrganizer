@@ -1,15 +1,13 @@
 package core.gui.theme;
 
 import core.db.AbstractTable;
-import core.util.HOLogger;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 import static core.gui.theme.HOColorName.*;
 
-public class HOColor extends AbstractTable.Storable {
+public class HOColor extends AbstractTable.Storable implements Cloneable{
 
 
     static EnumMap<HOColorName, Map<String, HOColor>> colors = new EnumMap<>(HOColorName.class);
@@ -387,10 +385,12 @@ public class HOColor extends AbstractTable.Storable {
 
     @Override
     public HOColor clone() {
-        HOColor ret = new HOColor();
-        ret.name = this.name;
-        ret.theme = this.theme;
-        ret.colorReference = this.colorReference;
+        HOColor ret;
+        try {
+            ret = (HOColor) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
         if (this.color != null){
             ret.color = new Color(this.color.getRGB());
         }

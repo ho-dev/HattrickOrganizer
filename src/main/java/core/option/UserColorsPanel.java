@@ -1,5 +1,6 @@
 package core.option;
 
+import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColor;
 import core.gui.theme.HOColorName;
@@ -97,6 +98,19 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		tableColumnModel.getColumn(1).setPreferredWidth(200);
 		tableColumnModel.getColumn(1).setCellEditor(new DefaultCellEditor(createNameChooser()));
 		tableColumnModel.getColumn(2).setCellEditor(new ColorTableCellEditor());
+		tableColumnModel.getColumn(2).setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
+            var hoColor = (HOColor)value;
+			Color color;
+			if (hoColor.getColorReference() != null){
+				color = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
+			}
+			else {
+				color = hoColor.getColor();
+			}
+            var component = new JLabel();
+            component.setBackground(color);
+            return component;
+        });
 		return new JScrollPane(colorTable);
     }
 
@@ -147,7 +161,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		var tableModel = (DefaultTableModel) colorTable.getModel();
 		tableModel.setValueAt(createNameLabel(color.getName()), row, 0);
 		tableModel.setValueAt(color.colorReference(), row, 1);
-		tableModel.setValueAt(HOColor.getColor(color.getHOColorName(), color.getTheme()), row, 2);
+		tableModel.setValueAt(color, row, 2);
 		Color defaultColor = null;
 		var value = color.getDefaultValue();
 		if (value != null) {
@@ -185,6 +199,18 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			OptionManager.instance().setRestartNeeded();
 		}
 
+	}
+
+	private void storeChangedColorSettings(){
+		for ( var color : colors){
+			var origValue = HOColor.getHOColor(color.getHOColorName(), color.getTheme());
+            assert origValue != null;
+            if (origValue.colorReference() != color.colorReference() ||
+					origValue.getColor() != color.getColor() ||
+					origValue.getDefaultValue() != color.getDefaultValue()){
+				DBManager.instance().storeHOColor(color);
+			}
+		}
 	}
 
 }
