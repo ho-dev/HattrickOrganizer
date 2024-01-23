@@ -374,6 +374,8 @@ public final class ThemeManager {
 	private void loadUserDefinedColors(String theme) {
 		var userDefinedColors = DBManager.instance().loadHOColors(theme);
 		for (var color : userDefinedColors) {
+			var defaultColor = HOColor.getHOColor(color.getHOColorName(), theme);
+			color.setDefaultValue(defaultColor);
 			HOColor.addColor(color);
 		}
 	}

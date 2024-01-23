@@ -23,16 +23,16 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 public class UserColorsPanel extends JPanel implements ActionListener {
 
-	private JComboBox skins 	= null;
-	private final DefaultTableModel tableModel = new DefaultTableModel(){
+	private JComboBox skins = null;
+	private final DefaultTableModel tableModel = new DefaultTableModel() {
 		@Override
 		public boolean isCellEditable(int row, int column) {
-            return switch (column) {
-                case 1 -> true; // colorReference is editable
-                case 2 -> { 	// color is only editable if colorReference is not set
-                    var colorReference = this.getDataVector().get(row).get(1);
-                    yield colorReference == null;
-                }
+			return switch (column) {
+				case 1 -> true; // colorReference is editable
+				case 2 -> {    // color is only editable if colorReference is not set
+					var colorReference = this.getDataVector().get(row).get(1);
+					yield colorReference == null;
+				}
 				case 3 -> this.getDataVector().get(row).get(3) != null; // default reset is only possible if not null
 				default -> false; // others are not editable
 			};
@@ -40,7 +40,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	};
 	private final JTable colorTable = new JTable(tableModel);
 
-    private final String [] columnNames = new String[]{
+	private final String[] columnNames = new String[]{
 			HOVerwaltung.instance().getLanguageString("Name"),
 			HOVerwaltung.instance().getLanguageString("Reference"),
 			HOVerwaltung.instance().getLanguageString("Value"),
@@ -49,7 +49,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	private JPanel tablePanel;
 	private List<HOColor> colors = new ArrayList<>();
 
-	protected UserColorsPanel(){
+	protected UserColorsPanel() {
 		initComponents();
 	}
 
@@ -68,26 +68,26 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return component;
 	}
 
-	private void initComponents(){
+	private void initComponents() {
 		setLayout(new BorderLayout());
-		add(getTopPanel(),BorderLayout.NORTH);
-		add(getTablePanel(),BorderLayout.CENTER);
+		add(getTopPanel(), BorderLayout.NORTH);
+		add(getTablePanel(), BorderLayout.CENTER);
 	}
-	
-	private JPanel getTopPanel(){
+
+	private JPanel getTopPanel() {
 		JPanel panel = new ImagePanel();
 		var themes = ThemeManager.instance().getRegisteredThemes();
 		var names = themes.stream().map(Theme::getName).toArray();
 		skins = new JComboBox(names);
 		var selected = ThemeManager.getCurrentThemeName();
 		skins.setSelectedItem(selected);
-		skins.addActionListener( this );
+		skins.addActionListener(this);
 		panel.add(skins);
 		return panel;
 	}
-	
+
 	private JPanel getTablePanel() {
-		if ( tablePanel == null) {
+		if (tablePanel == null) {
 			tablePanel = new JPanel();
 			tablePanel.setLayout(new BorderLayout());
 			tablePanel.add(createTable());
@@ -95,11 +95,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return tablePanel;
 	}
 
-	private String getSelectedSkin(){
-		return (String)skins.getSelectedItem();
+	private String getSelectedSkin() {
+		return (String) skins.getSelectedItem();
 	}
 
-    protected JScrollPane createTable() {
+	protected JScrollPane createTable() {
 		initData(getSelectedSkin());
 		colorTable.getTableHeader().setReorderingAllowed(false);
 		colorTable.setSelectionMode(SINGLE_SELECTION);
@@ -123,11 +123,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	protected void initData(String skin) {
 		// Clone the static color list for the editor
 		colors = new ArrayList<>();
-		for ( var c : HOColor.getColors(skin) ) colors.add(c.clone());
-        Object[][] value = new Object[colors.size()][4];
+		for (var c : HOColor.getColors(skin)) colors.add(c.clone());
+		Object[][] value = new Object[colors.size()][4];
 		tableModel.setDataVector(value, columnNames);
-		int i=0;
-		for (var color : colors){
+		int i = 0;
+		for (var color : colors) {
 			updateRow(i++, color);
 		}
 	}
@@ -136,8 +136,8 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		var box = new JComboBox<>(HOColorName.values());
 		box.insertItemAt(null, 0);
 		box.addItemListener(e -> {
-            var tableSelection = colorTable.getEditingRow();
-            if (tableSelection >= 0 && tableSelection < HOColorName.values().length) {
+			var tableSelection = colorTable.getEditingRow();
+			if (tableSelection >= 0 && tableSelection < HOColorName.values().length) {
 				if (e != null) {
 					var box1 = (JComboBox<HOColorName>) e.getSource();
 					var colorName = HOColorName.values()[tableSelection];
@@ -157,11 +157,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 					}
 				}
 			}
-        });
+		});
 		return box;
 	}
 
-	public void updateRow(HOColor color){
+	public void updateRow(HOColor color) {
 		updateRow(colorTable.getEditingRow(), color);
 	}
 
@@ -177,8 +177,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		String text;
 		if (colorName != null) {
 			text = HOVerwaltung.instance().getLanguageString("ls.color." + colorName.toLowerCase());
-		}
-		else {
+		} else {
 			text = "";
 		}
 		var label = new JLabel(text);
@@ -187,12 +186,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	}
 
 	/**
-     * action
-     */
+	 * action
+	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getSource() == skins){
+		if (arg0.getSource() == skins) {
 			UserParameter.temp().skin = (String) skins.getSelectedItem();
-//			ThemeManager.instance().setCurrentTheme();	// load theme colors
 			initData(UserParameter.instance().skin);
 			// TODO change the look and feel dynamically
 			OptionManager.instance().setRestartNeeded();
@@ -200,17 +198,24 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	}
 
-	public void storeChangedColorSettings(){
-		for ( var color : colors){
+	public void storeChangedColorSettings() {
+		for (var color : colors) {
 			var origValue = HOColor.getHOColor(color.getHOColorName(), color.getTheme());
-            assert origValue != null;
-            if (AreDifferent(origValue.colorReference(), color.colorReference()) ||
-					AreDifferent(origValue.getColor(), color.getColor()) ||
-					AreDifferent(origValue.getDefaultValue(), color.getDefaultValue())){
+			assert origValue != null;
+
+			if (AreDifferentColors(origValue, color) ||
+					AreDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
+				color.setTheme(UserParameter.temp().skin);
+				color.initDefaultValue();
 				DBManager.instance().storeHOColor(color);
 				HOColor.addColor(color);
 			}
 		}
+	}
+
+	private boolean AreDifferentColors(HOColor c1, HOColor c2) {
+		if (c1 == null || c2 == null) return c1 != c2;
+		return AreDifferent(c1.getColor(), c2.getColor()) || AreDifferent(c1.colorReference(), c2.colorReference());
 	}
 
 	private boolean AreDifferent(Object o1, Object o2) {
@@ -218,5 +223,4 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		if (o1 == null) return true;
 		return !o1.equals(o2);
 	}
-
 }

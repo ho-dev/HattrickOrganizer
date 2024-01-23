@@ -319,13 +319,6 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
 
     public static void addColor(HOColor color) {
         var colorMap = colors.computeIfAbsent(color.name, k -> new HashMap<>());
-        var defaultValue = colorMap.get(color.theme);
-        if (defaultValue!=null){
-            if( defaultValue.defaultValue != null){
-                defaultValue = defaultValue.defaultValue;
-            }
-        }
-        color.defaultValue = defaultValue;
         colorMap.put(color.theme, color);
     }
 
@@ -430,7 +423,12 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
     }
 
     public void setColorReference(String colorReference) {
-        this.colorReference = HOColorName.valueOf(colorReference);
+        if (colorReference != null && !colorReference.isEmpty() ) {
+            this.colorReference = HOColorName.valueOf(colorReference);
+        }
+        else {
+            this.colorReference = null;
+        }
     }
 
     public Integer getValue() {
