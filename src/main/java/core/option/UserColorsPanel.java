@@ -172,6 +172,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		tableModel.setValueAt(color, row, 2);
 		tableModel.setValueAt(color.getDefaultValue(), row, 3);
 	}
+	public void resetRow(HOColor color) {
+		colors.set(colorTable.getEditingRow(), color);
+		updateRow(color);
+	}
 
 	private JLabel createNameLabel(String colorName) {
 		String text;
@@ -183,6 +187,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		var label = new JLabel(text);
 		label.setToolTipText(text);
 		return label;
+	}
+
+	private String getSelectedTheme(){
+		return UserParameter.temp().skin;
 	}
 
 	/**
@@ -200,14 +208,20 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	public void storeChangedColorSettings() {
 		for (var color : colors) {
-			var origValue = HOColor.getHOColor(color.getHOColorName(), color.getTheme());
+			var theme = getSelectedTheme();
+			var origValue = HOColor.getHOColor(color.getHOColorName(), theme);
 			assert origValue != null;
-
 			if (AreDifferentColors(origValue, color) ||
 					AreDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
-				color.setTheme(UserParameter.temp().skin);
-				color.initDefaultValue();
-				DBManager.instance().storeHOColor(color);
+				if (!color.getTheme().equals("default")) {
+					color.setTheme(theme);
+					color.initDefaultValue();
+					DBManager.instance().storeHOColor(color);
+				}
+				else {
+					// reset default
+					DBManager.instance().deleteHOColor(origValue);
+				}
 				HOColor.addColor(color);
 			}
 		}
@@ -223,4 +237,5 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		if (o1 == null) return true;
 		return !o1.equals(o2);
 	}
+
 }

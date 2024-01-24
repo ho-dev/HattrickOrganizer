@@ -87,10 +87,21 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * stores the given object.
-	 * if the object is already stored in database, update is called otherwise insert
+	 * Delete the given object from table
+	 * @param object to be deleted
+	 * @return number of deleted objects
+	 * @param <T> Storable class (extends AbstractTable.Storable)
+	 */
+	public <T extends Storable> int delete(T object){
+		var values = new ArrayList<>(Arrays.stream(columns).limit(idColumns).map(c -> c.getter.apply(object)).toList()); // where
+		return executePreparedDelete(values.toArray());
+	}
+
+	/**
+	 * Stores the given object.
+	 * If the object is already stored in database, update is called otherwise insert
 	 * @param object that should be stored
-	 * @param <T> Storable class (extends AbstractStorable)
+	 * @param <T> Storable class (extends AbstractTable.Storable)
 	 */
 	public <T extends Storable> void store(T object){
 		if (object.isStored()) {
@@ -101,9 +112,9 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * create a new record of the storable object
+	 * Create a new record of the storable object
 	 * @param object that should be created
-	 * @param <T> Storable class (extends AbstractStorable)
+	 * @param <T> Storable class (extends AbstractTable.Storable)
 	 * @return 1 on success, 0 on error
 	 */
 	private <T extends Storable> int insert(T object) {
@@ -113,11 +124,11 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * update an existing record.
+	 * Update an existing record.
 	 * The first columns of the table are used in the where clause, the remaining as set values.
 	 * Count of id columns is defined by field idcolumns.
 	 * @param object that should be updated
-	 * @param <T> Storable class (extends AbstractStorable)
+	 * @param <T> Storable class (extends AbstractTable.Storable)
 	 * @return 1 on success, 0 on error
 	 */
 	private <T extends Storable> int update(T object) {
@@ -128,11 +139,11 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * load one object.
+	 * Load one object.
 	 * The first columns of the table are used as id columns.
 	 * the specified where values must match the first id columns of the table.
 	 * The count of where values is defined by idColumns
-	 * @param tClass Storable class (extends Abstract.Storable)
+	 * @param tClass Storable class (extends AbstractTable.Storable)
 	 * @param whereValues variable arguments describing the where values (count must match idColumns)
 	 * @param <T> the object class to create
 	 * @return one Object of type T
@@ -142,8 +153,8 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * load one object of an externally created result set.
-	 * @param tClass Storable class (extends AbstractStorable)
+	 * Load one object of an externally created result set.
+	 * @param tClass Storable class (extends AbstractTable.Storable)
 	 * @param rs result set
 	 * @param <T> the object class to create
 	 * @return one object of type T
@@ -157,8 +168,8 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * load a list of records
-	 * @param tClass Storable class (extends AbstractStorable)
+	 * Load a list of records
+	 * @param tClass Storable class (extends AbstractTable.Storable)
 	 * @param whereValues variable arguments describing the where values (count must match idColumns)
 	 * @param <T> the object class to create
 	 * @return List of objects of type T
@@ -168,8 +179,8 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * load a list of records of an externally created result set
-	 * @param tClass Storable class (extends AbstractStorable)
+	 * Load a list of records of an externally created result set
+	 * @param tClass Storable class (extends AbstractTable.Storable)
 	 * @param rs result set
 	 * @param <T> the object class to create
 	 * @return List of objects of type T
@@ -179,8 +190,8 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * load a list of records
-	 * @param tClass Storable class (extends AbstractStorable)
+	 * Load a list of records
+	 * @param tClass Storable class (extends AbstractTable.Storable)
 	 * @param rs result set
 	 * @param max 1 to load one object, -1 to load all objects
 	 * @param <T> the object class to create
@@ -224,7 +235,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return a float from a result set column
+	 * Return a float from a result set column
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Float, null if the column was empty (null)
@@ -239,7 +250,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return String from a result set column
+	 * Return String from a result set column
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return String, null if column was empty (null)
@@ -254,7 +265,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return HODateTime from a result set column
+	 * Return HODateTime from a result set column
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return HODateTime, null if the column was empty (null)
@@ -269,7 +280,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return Double from a result set column
+	 * Return Double from a result set column
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Double, null if column was empty (null)
@@ -284,7 +295,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return Boolean from result set column
+	 * Return Boolean from result set column
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Boolean, null if column was empty (null)
@@ -299,7 +310,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * return Integer from result set colum
+	 * Return Integer from result set colum
 	 * @param rs result set
 	 * @param columnName column name
 	 * @return Integer, null if column was empty (null)
@@ -317,7 +328,7 @@ public abstract class AbstractTable {
 	// Insert
 
 	/**
-	 * create sql string of the standard insert statement.
+	 * Create sql string of the standard insert statement.
 	 * @return sql string of the prepared statement.
 	 */
 	private String createInsertStatement() {
@@ -330,7 +341,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * execute the prepared insert statement.
+	 * Execute the prepared insert statement.
 	 * @param values array of column values must match the defined columns of the table
 	 * @return 1 on success, 0 on error
 	 */
@@ -342,7 +353,7 @@ public abstract class AbstractTable {
 
 
 	/**
-	 * create sql string of the standard update statement.
+	 * Create sql string of the standard update statement.
 	 * the first columns of table are used in the where clause, the remaining columns in the SET part.
 	 * The count of where values if given by the field id columns
 	 * @return sql string of the prepared statement
@@ -355,7 +366,7 @@ public abstract class AbstractTable {
 	}
 
 	/**
-	 * execute the standard update statement
+	 * Execute the standard update statement
 	 * @param values set first values must match the where clause value (idcolumns). the remaining columns are used in the SET part
 	 * @return 1 on success, 0 on error, -1 if no update statement builder was defined.
 	 */
@@ -365,16 +376,25 @@ public abstract class AbstractTable {
 
 	// Delete
 
+	/**
+	 * Create the standard delete statement
+	 * @return String
+	 */
 	protected String createDeleteStatement() {
 		return createDeleteStatement(createSQLWhere());
 	}
 
+	/**
+	 * Create delete statement
+	 * @param whereClause Where clause of the delete statement
+	 * @return String
+	 */
 	protected String createDeleteStatement(String whereClause) {
 		return "DELETE FROM " + getTableName() + " " + whereClause;
 	}
 
 	/**
-	 * execute the standard delete statement
+	 * Execute the standard delete statement
 	 * @param whereValues the values must match the where clause value (idcolumns)
 	 * @return 1 on success, 0 on error
 	 */
@@ -385,7 +405,7 @@ public abstract class AbstractTable {
 	// Select
 
 	/**
-	 * create the standard where clause using the first idcolumns of the table
+	 * Create the standard where clause using the first idcolumns of the table
 	 * @return String sql where clause
 	 */
 	private String createSQLWhere() {

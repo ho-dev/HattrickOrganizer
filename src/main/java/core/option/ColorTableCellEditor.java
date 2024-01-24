@@ -59,7 +59,7 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
             fireEditingStopped();
         } else if (RESET_DEFAULT.equals(action)){
             // current color is the default color
-            userColorsPanel.updateRow(currentColor);
+            userColorsPanel.resetRow(currentColor);
         } else { //User pressed dialog's "OK" button.
             currentColor.initDefaultValue();
             currentColor.setColor( colorChooser.getColor());

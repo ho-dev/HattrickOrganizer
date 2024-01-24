@@ -2395,4 +2395,8 @@ public class DBManager implements PersistenceManager {
 	public void storeHOColor(HOColor color) {
 		getTable(HOColorTable.TABLENAME).store(color);
 	}
+
+	public void deleteHOColor(HOColor color) {
+		getTable(HOColorTable.TABLENAME).delete(color);
+	}
 }
