@@ -306,8 +306,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
-		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-				DownloadDialog.instance();
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(userAdministrationOptionsMenu)) {
@@ -470,7 +468,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
-		m_jmDownloadItem.addActionListener(this);
+		m_jmDownloadItem.addActionListener(e -> DownloadDialog.instance());
 		m_jmFile.add(m_jmDownloadItem);
 
 		// Import HRF

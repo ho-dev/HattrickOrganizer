@@ -177,7 +177,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 						params.add(teamId);
 					}
 					case AWAY -> {
-						sql.append(" AND GastID = ? AND (is Neutral is NULL OR isNeutral=false) ");
+						sql.append(" AND GastID = ? AND (isNeutral is NULL OR isNeutral=false) ");
 						params.add(teamId);
 					}
 					case NEUTRAL -> {

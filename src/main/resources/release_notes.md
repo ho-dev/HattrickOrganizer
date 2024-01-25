@@ -11,6 +11,7 @@
 ### Database
 * Fix `unexpected token` issue with Transfer table query (#1965)
 * Fix potential NPE when using a prepared statement (#1941)
+* Improve Database Cleanup tool by adding additional match types (#1587)
 
 ### Squad
 * Fix length of owner notes in players' database table (#1816)
