@@ -50,7 +50,7 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
         if (EDIT.equals(action)) {
             //The user has clicked the cell, so
             //bring up the dialog.
-            var color = HOColor.getColor(currentColor.getHOColorName(), currentColor.getTheme());
+            var color = userColorsPanel.getColor(currentColor); // HOColor.getColor(currentColor.getHOColorName(), currentColor.getTheme());
             button.setBackground(color);
             colorChooser.setColor(color);
             dialog.setVisible(true);
@@ -63,6 +63,7 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
         } else { //User pressed dialog's "OK" button.
             currentColor.initDefaultValue();
             currentColor.setColor( colorChooser.getColor());
+            currentColor.setTheme(userColorsPanel.getSelectedTheme());
             userColorsPanel.updateRow(currentColor);
         }
     }

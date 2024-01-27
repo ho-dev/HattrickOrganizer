@@ -189,7 +189,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return label;
 	}
 
-	private String getSelectedTheme(){
+	public String getSelectedTheme(){
 		return UserParameter.temp().skin;
 	}
 
@@ -215,7 +215,6 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 					AreDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
 				if (!color.getTheme().equals("default")) {
 					color.setTheme(theme);
-					color.initDefaultValue();
 					DBManager.instance().storeHOColor(color);
 				}
 				else {
@@ -223,6 +222,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 					DBManager.instance().deleteHOColor(origValue);
 				}
 				HOColor.addColor(color);
+				OptionManager.instance().setRestartNeeded();
 			}
 		}
 	}
@@ -236,6 +236,20 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		if (o1 == o2) return false;
 		if (o1 == null) return true;
 		return !o1.equals(o2);
+	}
+
+	public Color getColor(HOColor currentColor) {
+		var ret = currentColor.getColor();
+		if ( ret == null){
+			var colorReference = currentColor.getColorReference();
+			if (colorReference != null){
+				var hoColor = colors.stream().filter(i->i.getName().equals(currentColor.getName())).findFirst();
+				if ( hoColor.isPresent()){
+					ret = getColor(hoColor.get());
+				}
+			}
+		}
+		return ret;
 	}
 
 }

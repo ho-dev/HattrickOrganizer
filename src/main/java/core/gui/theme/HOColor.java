@@ -7,7 +7,7 @@ import java.util.List;
 
 import static core.gui.theme.HOColorName.*;
 
-public class HOColor extends AbstractTable.Storable implements Cloneable{
+public class HOColor extends AbstractTable.Storable implements Cloneable {
 
 
     static EnumMap<HOColorName, Map<String, HOColor>> colors = new EnumMap<>(HOColorName.class);
@@ -292,7 +292,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
 
     public static List<HOColor> getColors(String theme) {
         var ret = new ArrayList<HOColor>();
-        for ( var name : HOColorName.values()){
+        for (var name : HOColorName.values()) {
             ret.add(getHOColor(name, theme));
         }
         return ret;
@@ -300,7 +300,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
 
     public static HOColor getHOColor(HOColorName name, String theme) {
         var colorMap = colors.get(name);
-        if (colorMap!=null){
+        if (colorMap != null) {
             var hoColor = colorMap.get(theme);
             if (hoColor != null) return hoColor;
             hoColor = colorMap.get("default");
@@ -384,7 +384,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
-        if (this.color != null){
+        if (this.color != null) {
             ret.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.color.getAlpha());
         }
         if (this.defaultValue != null) {
@@ -405,7 +405,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
         return name.name();
     }
 
-    public HOColorName getHOColorName(){
+    public HOColorName getHOColorName() {
         return name;
     }
 
@@ -413,20 +413,19 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
         this.name = HOColorName.valueOf(name);
     }
 
-    public HOColorName colorReference(){
+    public HOColorName colorReference() {
         return colorReference;
     }
 
     public String getColorReference() {
-        if (colorReference!=null) return colorReference.name();
+        if (colorReference != null) return colorReference.name();
         return null;
     }
 
     public void setColorReference(String colorReference) {
-        if (colorReference != null && !colorReference.isEmpty() ) {
+        if (colorReference != null && !colorReference.isEmpty()) {
             this.colorReference = HOColorName.valueOf(colorReference);
-        }
-        else {
+        } else {
             this.colorReference = null;
         }
     }
@@ -462,12 +461,11 @@ public class HOColor extends AbstractTable.Storable implements Cloneable{
         return this.defaultValue;
     }
 
-    public void initDefaultValue(){
-        if ( this.defaultValue==null){
-            if ( this.colorReference != null){
+    public void initDefaultValue() {
+        if (this.defaultValue == null) {
+            if (this.colorReference != null) {
                 this.defaultValue = HOColor.getHOColor(this.colorReference, this.theme);
-            }
-            else {
+            } else {
                 this.defaultValue = new HOColor();
                 this.defaultValue.name = this.name;
                 this.defaultValue.color = this.color;
